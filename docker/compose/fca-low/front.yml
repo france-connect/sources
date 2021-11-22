@@ -1,0 +1,36 @@
+version: '3.4'
+
+####################
+####################
+services:
+  ####################
+  ##
+  ##   FCA-LOW-FRONT
+  ##   chrome://inspect/#devices
+  ##
+  ####################
+
+  fca-low-front:
+    hostname: fca-low-front
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'squid'
+      - 'core-fca-low'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/front:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+    environment:
+      - 'API_PROXY_HOST=http://core-fca-low:3000'
+      - 'API_PROXY_FOR_PATH=/api/v2'
+      - 'VIRTUAL_HOST=fca-low-front.docker.dev-franceconnect.fr'
+      - 'EVT_LOG_FILE=/var/log/app/fca-low-front.log'
+    networks:
+      - fc
+    command: 'pm2 logs'

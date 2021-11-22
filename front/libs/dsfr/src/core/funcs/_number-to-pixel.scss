@@ -1,0 +1,5 @@
+// permet de convertir un chiffre sans unité en pixel
+// voir les helpers, margin-padding/font-size
+@function number-to-pixel($size: 0) {
+  @return ($size * 1px);
+}

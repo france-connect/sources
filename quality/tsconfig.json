@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "lib": ["ES2020", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2020",
+    "types": ["cypress", "cypress-xpath", "node"]
+  },
+  "include": ["**/*.ts"]
+}

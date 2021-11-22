@@ -1,0 +1,323 @@
+version: '3.4'
+
+####################
+####################
+services:
+  all:
+    image: alpine
+    depends_on:
+      - 'rp-all'
+      - 'all-fcp-high'
+      - 'all-fca-low'
+      - 'all-fcp-low'
+
+  ####################
+  # Shared Services
+  ####################
+
+  rp-all:
+    image: nginx:1.14.2
+    container_name: fc-rp-all
+    environment:
+      DHPARAM_GENERATION: 'false'
+    depends_on:
+      - docker-gen
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ${VOLUMES_DIR}/nginx-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${VOLUMES_DIR}/nginx-proxy/etc:/etc/nginx/conf.d:ro
+      - ${VOLUMES_DIR}/nginx-proxy/includes:/etc/nginx/includes:ro
+      - ${VOLUMES_DIR}/nginx-proxy/public:/var/www:ro
+      - ${VOLUMES_DIR}/nginx-proxy/default-vhost:/etc/nginx/html:ro
+      - ${VOLUMES_DIR}/ssl:/etc/nginx/docker_host:ro
+    networks:
+      public:
+        aliases:
+          # FCP HIGH
+          - fsp1-high.docker.dev-franceconnect.fr
+          - fsp2-high.docker.dev-franceconnect.fr
+          - fsp3-high.docker.dev-franceconnect.fr
+          - fsp5-high.docker.dev-franceconnect.fr
+          - fsp6-high.docker.dev-franceconnect.fr
+          - rnipp.docker.dev-franceconnect.fr
+          - ud-back.docker.dev-franceconnect.fr
+          - ud-front.docker.dev-franceconnect.fr
+          - core-fcp-high.docker.dev-franceconnect.fr
+          - fip1-high.docker.dev-franceconnect.fr
+          - fip2-high.docker.dev-franceconnect.fr
+          - fip6-high.docker.dev-franceconnect.fr
+          - fip13-high.docker.dev-franceconnect.fr
+          - fip14-high.docker.dev-franceconnect.fr
+          - fip15-high.docker.dev-franceconnect.fr
+          - fip16-high.docker.dev-franceconnect.fr
+          - fip17-high.docker.dev-franceconnect.fr
+          - fip18-high.docker.dev-franceconnect.fr
+          - fip19-high.docker.dev-franceconnect.fr
+          - fip20-high.docker.dev-franceconnect.fr
+          # FCP LOW
+          - core-fcp-low.docker.dev-franceconnect.fr
+          - fsp1-low.docker.dev-franceconnect.fr
+          - fip1-low.docker.dev-franceconnect.fr
+          # FCA LOW
+          - core-fca-low.docker.dev-franceconnect.fr
+          - rie-bridge-proxy.docker.dev-franceconnect.fr
+          - fca-low-front.docker.dev-franceconnect.fr
+          - fsa1-low.docker.dev-franceconnect.fr
+          - fsa2-low.docker.dev-franceconnect.fr
+          - fsa3-low.docker.dev-franceconnect.fr
+          - fsa4-low.docker.dev-franceconnect.fr
+          - fia1-low.docker.dev-franceconnect.fr
+          - fia2-low.docker.dev-franceconnect.fr
+          - fia4-low.docker.dev-franceconnect.fr
+          - fia5-low.docker.dev-franceconnect.fr
+          # EIDAS
+          - eidas-bridge.docker.dev-franceconnect.fr
+          - eidas-fr.docker.dev-franceconnect.fr
+          - eidas-mock.docker.dev-franceconnect.fr
+          # Aliases to access exploitation from test runner
+          # TODO: Move those aliases to exploitation network once runner workaround found
+          - exploitation-fca-low.docker.dev-franceconnect.fr
+          - exploitation-high.docker.dev-franceconnect.fr
+          # Documentation
+          - styleguide.docker.dev-franceconnect.fr
+          # Generic
+          - docker.dev-franceconnect.fr
+      fc:
+      rie:
+        aliases:
+          - auth.llng.docker.dev-franceconnect.fr
+      exploitation:
+        aliases:
+          - exploit-fcp-high.docker.dev-franceconnect.fr
+          - exploit-fca-low.docker.dev-franceconnect.fr
+          - exploit-fcp-high-fi-mock.docker.dev-franceconnect.fr
+          - exploit-fca-low-fi-mock.docker.dev-franceconnect.fr
+
+  docker-gen:
+    user: ${CURRENT_UID}
+    image: jwilder/docker-gen
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ${VOLUMES_DIR}/nginx-proxy/default-vhost:/etc/nginx/html
+      - ${VOLUMES_DIR}/nginx-proxy/etc:/etc/nginx/conf.d
+      - ${VOLUMES_DIR}/docker-gen/config:/etc/docker-gen/config:ro
+      - ${VOLUMES_DIR}/nginx-proxy/templates:/etc/docker-gen/templates:ro
+    networks:
+      - public
+      - fc
+      - exploitation
+      - rie
+    command: -config /etc/docker-gen/config
+
+  squid:
+    image: ${FC_DOCKER_REGISTRY}/squid:4.6
+    extra_hosts:
+      - auth.llng.docker.dev-franceconnect.fr:172.16.1.254
+    networks:
+      - public
+      - fc
+      - exploitation
+
+  haproxy:
+    image: haproxy:2.3
+    ports:
+      - 8404:8404
+    volumes:
+      - '${VOLUMES_DIR}/haproxy:/usr/local/etc/haproxy:ro'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    networks:
+      - public
+      - fc
+    depends_on:
+      - rp-all
+
+  elasticsearch:
+    image: elasticsearch:7.9.2
+    volumes:
+      - '${VOLUMES_DIR}/elasticsearch/data:/usr/share/elasticsearch/data'
+      - '${VOLUMES_DIR}/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml'
+      - '$FC_ROOT/elasticsearch/elasticsearch-snapshots:/data/elasticsearch-snapshots'
+    networks:
+      - data
+      - public
+    ports:
+      - '9200:9200'
+    environment:
+      - 'discovery.type=single-node'
+      - 'ES_JAVA_OPTS=-Xms64m -Xmx256m'
+
+  redis-pwd:
+    image: redis:5.0.3
+    command: redis-server --requirepass Ivae1feiThoogahquohDei7iwie0ceeM
+    networks:
+      - data
+
+  rnipp:
+    hostname: rnipp
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/rnipp-mock:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+    environment:
+      - 'VIRTUAL_HOST=rnipp.docker.dev-franceconnect.fr'
+      - 'VIRTUAL_PORT=3000'
+      - 'NODE_ENV=development'
+      - 'PORT=3000'
+      - 'PM2_SCRIPT=index.js'
+      - 'PM2_CI_SCRIPT=index.js'
+      - 'PM2_CWD=/var/www/app/src'
+      - 'HOME=/home'
+      - 'PM2_HOME=/tmp/.pm2'
+      - 'TZ=Europe/Paris'
+    networks:
+      - public
+    command: 'tail -f /dev/null'
+
+  csmr-hsm:
+    hostname: csmr-hsm
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'broker'
+      - 'hsm'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/csmr-hsm:/etc/hsm'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - ${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+    environment:
+      - 'PM2_SCRIPT=yarn start csmr-hsm-high'
+      - 'PM2_CI_SCRIPT=yarn start csmr-hsm-high'
+      - 'REQUEST_TIMEOUT=6000'
+      # Logger
+      - 'Logger_FILE=/var/log/app/csmr-hsm.log'
+      # Hsm
+      - 'PROTECCIO_CONF_DIR=/etc/hsm'
+      - 'HSM_HOST=hsm'
+      # Locale PKCS11 library
+      #   Use libpkcs11-proxy lib for development HSM (softHSM)
+      #   Use Bull's library for production HSM
+      #
+      # - "HSM_LIB=/etc/hsm/libnethsm.so"
+      - 'Hsm_LIB=/etc/hsm/libpkcs11-proxy.so'
+      - 'Hsm_PIN=1234'
+      - 'Hsm_VIRTUAL_HSM_SLOT=0'
+      - 'Hsm_SIG_HSM_PUB_KEY_CKA_LABEL=key-prime256v1'
+      - 'PKCS11_PROXY_SOCKET=tcp://hsm:5551'
+      - 'CryptographyBroker_URLS=["amqp://broker:5672"]'
+      - 'CryptographyBroker_QUEUE=crypto'
+    networks:
+      - data
+    command: 'pm2 logs'
+
+  csmr-hsm-prod:
+    hostname: csmr-hsm
+    image: ${FC_DOCKER_REGISTRY}/csmr-hsm-high:latest
+    volumes:
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/log/:/var/log/fc-evt'
+    depends_on:
+      - 'broker'
+      - 'hsm'
+    environment:
+      - 'REQUEST_TIMEOUT=6000'
+      # Logger
+      - 'LoggerFILE=/var/log/app/csmr-hsm.log'
+      # Hsm
+      - 'PROTECCIO_CONF_DIR=/etc/hsm'
+      - 'HSM_HOST=hsm'
+      - 'HSM_LIB=/etc/hsm/libpkcs11-proxy.so'
+      - 'HSM_PIN=1234'
+      - 'HSM_VIRTUAL_HSM_SLOT=0'
+      - 'HSM_SIG_HSM_PUB_KEY_CKA_LABEL=key-prime256v1'
+      - 'PKCS11_PROXY_SOCKET=tcp://hsm:5551'
+      - 'CryptographyBroker_URLS=["amqp://broker:5672"]'
+      - 'CryptographyBroker_QUEUE=crypto'
+      - 'LOG_LEVEL=info'
+    networks:
+      - data
+
+  broker:
+    build:
+      context: '${WORKING_DIR}'
+      dockerfile: '${WORKING_DIR}/builds/broker/Dockerfile'
+    # Specify hostname to fix cluster name
+    hostname: broker
+    depends_on:
+      - 'squid'
+    networks:
+      - data
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
+  hsm:
+    image: ${FC_DOCKER_REGISTRY}/softhsm
+    networks:
+      - data
+    ports:
+      - '5551:5551'
+
+  styleguide:
+    hostname: styleguide
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'rp-all'
+      - 'squid'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/front:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/shared/.env/styleguide.env'
+    networks:
+      - fc
+    command: 'pm2 logs'
+
+  openldap:
+    image: ${FC_DOCKER_REGISTRY}/openldap:0.2
+    networks:
+    - rie
+
+####################
+
+networks:
+  public:
+    ipam:
+      config:
+        - subnet: 172.16.1.0/24
+  fc:
+    ipam:
+      config:
+        - subnet: 172.16.2.0/24
+  exploitation:
+    ipam:
+      config:
+        - subnet: 172.16.3.0/24
+  data:
+    ipam:
+      config:
+        - subnet: 172.16.4.0/24
+  eidas:
+    ipam:
+      config:
+        - subnet: 172.16.5.0/24
+  rie:
+    ipam:
+      config:
+        - subnet: 172.16.6.0/24

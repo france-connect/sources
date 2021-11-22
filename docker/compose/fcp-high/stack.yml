@@ -1,0 +1,49 @@
+version: '3.4'
+
+####################
+####################
+services:
+  min-fcp-high:
+    image: alpine
+    depends_on:
+      - 'core-fcp-high'
+      - 'fsp1-high'
+      - 'fip1-high'
+      # --
+      - 'rnipp'
+      - 'csmr-hsm'
+
+  exploit-fcp-high:
+    image: alpine
+    depends_on:
+      - 'exploit-fcp-high-back'
+      - 'exploit-fcp-high-front'
+
+  all-fcp-high:
+    image: alpine
+    depends_on:
+      - 'core-fcp-high'
+      - 'exploitation-high'
+      # -- SP
+      - 'fsp1-high'
+      - 'fsp2-high'
+      - 'fsp3-high'
+      - 'fsp5-high'
+      - 'fsp6-high'
+      # -- IdP
+      - 'fip1-high'
+      - 'fip2-high'
+      - 'fip6-high'
+      - 'fip13-high'
+      - 'fip14-high'
+      - 'fip15-high'
+      - 'fip16-high'
+      - 'fip17-high'
+      - 'fip18-high'
+      - 'fip19-high'
+      - 'fip20-high'
+      # --
+      - 'rnipp'
+      - 'csmr-hsm'
+      - 'exploit-fcp-high-back'
+      - 'exploit-fcp-high-front'

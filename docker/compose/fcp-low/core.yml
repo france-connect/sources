@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  ####################
+  # CORE FCP LOW
+  ####################
+
+  core-fcp-low:
+    hostname: core-fcp-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'rnipp'
+      - 'mongo-fcp-low'
+      - 'redis-pwd'
+      - 'squid'
+      - 'haproxy'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-low/.env/core-fcp-low.env'
+    ports:
+      - 9300:9300
+    tty: true
+    networks:
+      - public
+      - public-fcp-low
+      - data
+    command: 'pm2 logs'
+    environment:
+      # Mailer
+      - 'Mailer_TEMPLATES_PATHS=["/var/www/app/apps/core-fcp/src/mails", "/var/www/app/instances/core-fcp-high/src/mails"]'
+
+networks:
+  public-fcp-low:

@@ -1,0 +1,1 @@
+export const APP_TRACKING_SERVICE = Symbol('APP_TRACKING_SERVICE');

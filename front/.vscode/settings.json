@@ -1,0 +1,31 @@
+{
+  "editor.formatOnSave": true,
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "stylelint.validate": [
+    "css",
+    "html",
+    "less",
+    "markdown",
+    "postcss",
+    "sass",
+    "scss",
+    "source.css.styled",
+    "source.markdown.math",
+    "styled-css",
+    "sugarss",
+    "svelte",
+    "vue",
+    "vue-html",
+    "vue-postcss",
+    "xml",
+    "xsl"
+  ]
+}

@@ -1,0 +1,91 @@
+[
+  {
+    "name": "fsp1-high",
+    "descriptions": [
+      "par défaut",
+      "public"
+    ],
+    "mocked": true,
+    "url": "https://fsp1-high.{{TEST_ENV}}.dev-franceconnect.fr",
+    "clientId": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
+    "acrValue": "eidas2",
+    "claims": [
+      "amr"
+    ],
+    "scopes": [
+      "tous les scopes"
+    ],
+    "explicitConsent": false,
+    "selectors": {
+      "fcButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsp2-high",
+    "descriptions": [
+      "habilité à demander le scope identite_pivot",
+      "avec une blacklist de FI"
+    ],
+    "mocked": true,
+    "url": "https://fsp2-high.{{TEST_ENV}}.dev-franceconnect.fr",
+    "clientId": "7a79e45107f9ccc6a3a5971d501220dc4fd9e87bb5e3fc62ce4104c756e22775",
+    "acrValue": "eidas2",
+    "claims": [
+      "amr"
+    ],
+    "scopes": [
+      "identite_pivot"
+    ],
+    "explicitConsent": false,
+    "selectors": {
+      "fcButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsp5-high",
+    "descriptions": [
+      "privé avec consentement obligatoire",
+      "avec une whitelist de FI"
+    ],
+    "mocked": true,
+    "url": "https://fsp5-high.{{TEST_ENV}}.dev-franceconnect.fr",
+    "clientId": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39555",
+    "acrValue": "eidas2",
+    "claims": [
+      "amr"
+    ],
+    "scopes": [
+      "tous les scopes"
+    ],
+    "explicitConsent": true,
+    "selectors": {
+      "fcButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsp6-high",
+    "descriptions": ["privé sans consentement obligatoire"],
+    "mocked": true,
+    "url": "https://fsp6-high.{{TEST_ENV}}.dev-franceconnect.fr",
+    "clientId": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
+    "acrValue": "eidas3",
+    "claims": [
+      "amr"
+    ],
+    "scopes": [
+      "tous les scopes"
+    ],
+    "explicitConsent": false,
+    "selectors": {
+      "fcButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
+  }
+]

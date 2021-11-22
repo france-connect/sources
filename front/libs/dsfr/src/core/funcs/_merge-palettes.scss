@@ -1,0 +1,9 @@
+@function merge-palettes($palettes...) {
+  // hack immutable default palette
+  $merged: map-merge((), $PALETTE);
+
+  @each $palette in $palettes {
+    $merged: map-merge($merged, $palette);
+  }
+  @return $merged;
+}

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head role="banner">
+    <meta charset="utf-8" />
+    <title>Redirecting to FR node Connector...</title>
+  </head>
+  <body role="main">
+    <p lang="en">
+      Redirecting... If nothing happens in a few seconds, please click on
+      "submit" to continue...
+    </p>
+    <form
+      name="post-light-request-token"
+      method="POST"
+      action="<%= connectorRequestCacheUrl %>"
+    >
+      <input type="hidden" name="token" value="<%= token %>" />
+      <input type="submit" />
+    </form>
+
+    <script type="text/javascript">
+      window.onload = function onload() {
+        document.forms['post-light-request-token'].submit();
+      };
+    </script>
+  </body>
+</html>

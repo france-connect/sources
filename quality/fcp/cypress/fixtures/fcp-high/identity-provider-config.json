@@ -1,0 +1,42 @@
+{
+    "default": {
+        "name": "test-idp-default",
+        "title": "FI de test pour la discovery url",
+        "issuer": "https://issuer.fr",
+        "authorizationUrl": "https://issuer.fr/auth",
+        "tokenUrl": "https://issuer.fr/token",
+        "userInfoUrl": "https://issuer.fr/me",
+        "statusUrl": "https://issuer.fr/state",
+        "jwksUrl": "https://issuer.fr/jwks",
+        "clientId": "09a1a257648c1742c74d6a3d84b31943",
+        "client_secret": "1234567890AZERTYUIOP",
+        "messageToDisplayWhenInactive": "SUPER MESSAGE !!!",
+        "redirectionTargetWhenInactive": "https://issuer.fr/promo",
+        "alt": "MonFI Image",
+        "image": "AliceM.svg",
+        "imageFocus": "AliceM.svg",
+        "trustedIdentity": "false",
+        "eidas": 2,
+        "order": 1,
+        "emails": "test1@yopmail.com\ntest2@yopmail.com",
+        "specificText": "Veuillez fournir une capture d'écran de votre page de profil !",
+        "token_endpoint_auth_method": "client_secret_post"
+    },
+    "defaultDiscoveryUrl": {
+        "title": "FI de test pour la discovery url",
+        "issuer": "https://issuer.fr",
+        "clientId": "09a1a257648c1742c74d6a3d84b31943",
+        "client_secret": "1234567890AZERTYUIOP",
+        "messageToDisplayWhenInactive": "SUPER MESSAGE !!!",
+        "redirectionTargetWhenInactive": "https://issuer.fr/promo",
+        "alt": "MonFI Image",
+        "image": "AliceM.svg",
+        "imageFocus": "AliceM.svg",
+        "trustedIdentity": "false",
+        "eidas": 2,
+        "order": 1,
+        "emails": "test1@yopmail.com\ntest2@yopmail.com",
+        "specificText": "Veuillez fournir une capture d'écran de votre page de profil !",
+        "token_endpoint_auth_method": "client_secret_post"
+    }
+}

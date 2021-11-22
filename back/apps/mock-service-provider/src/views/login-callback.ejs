@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <%- include('includes/head') %>
+    <title><%= locals.titleFront %></title>
+  </head>
+  <body>
+    <%- include('includes/menu') %>
+
+    <section class="welcome">
+      <div class="container text-center">
+        <h1>Mes données</h1>
+      </div>
+    </section>
+
+
+    <%
+    const defaultTransform = value => value;
+
+    const claims = [
+      {
+        label: 'Sexe',
+        key: 'gender',
+        transform: v => v === 'female' ? 'Femme' : 'Homme',
+      },
+      {
+        label: 'Prénom(s)',
+        key: 'given_name',
+      },
+      {
+        label: 'Nom de naissance',
+        key: 'family_name',
+      },
+      {
+        label: 'Email',
+        key: 'email',
+      },
+      {
+        label: 'Siret',
+        key: 'siret',
+      },
+      {
+        label: 'Siren',
+        key: 'siren',
+      },
+      {
+        label: 'Date de naissance',
+        key: 'birthdate',
+      },
+      {
+        label: 'Organisation',
+        key: 'organizational_unit',
+      },
+      {
+        label: 'Population',
+        key: 'belonging_population',
+      },
+      {
+        label: 'Téléphone',
+        key: 'phone_number',
+      }
+    ].map((claim) => claim.transform ? claim : { ...claim, transform: defaultTransform });
+    %>
+
+    <section class="container">
+      <div class="row">
+        <section class="col-lg-6">
+          <br />
+          <h2>Identité</h2>
+          <br />
+          <div id="html-output" class="jumbotron">
+            <% if (locals.idpIdentity) { %>
+
+              <% claims
+                .filter(({ key }) => Boolean(locals.idpIdentity[key]))
+                .forEach(({ label, key, transform }) => { %>
+                <p>
+                  <%= label %> : <strong><%= transform(locals.idpIdentity[key]) %></strong>
+                </p>
+
+              <% }); %>
+
+
+              <% if (locals.idpIdentity.address) { %>
+              <p>Addresse : <strong><%=locals.idpIdentity.address.street_address;%>,
+                  <%=locals.idpIdentity.address.postal_code;%>
+                  <%=locals.idpIdentity.address.locality%> (<%=locals.idpIdentity.address.country;%>)</strong></p>
+              <% } %>
+
+              <p>Nom d'usage : <strong><%=(locals.idpIdentity.preferred_username) ? locals.idpIdentity.preferred_username : '/';%></strong></p>
+
+
+              <% if (locals.idpIdentity.birthplace && locals.idpIdentity.birthcountry) { %>
+                <p>COG (lieu de naissance) : <strong><%=locals.idpIdentity.birthplace;%></strong></p>
+              <% } %>
+
+              <p>COG (Pays de naissance) : <strong><%=locals.idpIdentity.birthcountry;%></strong></p>
+              <p id="info-acr">ACR value : <strong><%=locals.idpAcr;%></strong></p>
+              <p id="info-amr">AMR value : <strong><%=locals.amr && locals.amr.join(' ') || 'N/A';%></strong></p>
+
+            <% } else { %>
+            <p class="col d-flex justify-content-center">
+              Vous devez vous authentifier afin d'accéder à vos données personnelles.
+            </p>
+            <% } %>
+          </div>
+        </section>
+        <section class="col-lg-6">
+          <br />
+          <h2>JSON</h2>
+          <br />
+          <div class="jumbotron">
+            <pre id="json-output"><%- JSON.stringify(locals.idpIdentity, null, 2) %></pre>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <%- include('includes/footer') %>
+  </body>
+</html>

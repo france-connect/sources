@@ -1,0 +1,26 @@
+<!-- As a link -->
+<nav class="navbar navbar-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">
+      <img src="/img/ac-logo@3x.svg" alt="Logo AC" height="42" class="d-inline-block align-top">
+    </a>
+
+    <% if (locals.accessToken) { %>
+    <form class="form-inline" action="/revocation" method="POST">
+      <input id="access-token" class="form-control" type="hidden" name="accessToken" value="<%= locals.accessToken %>">
+      <input id="revoke-token" class="form-control" type="submit" value="Révoquer token">
+    </form>
+    <form class="form-inline" action="/me" method="POST">
+      <input id="access-token" class="form-control" type="hidden" name="accessToken" value="<%= locals.accessToken %>">
+      <input id="reload-userinfo" class="form-control" type="submit" value="Recharger userinfo">
+    </form>
+    <% } %>
+    <ul class="navbar-nav">
+      <% if (locals.idpIdentity) { %>
+      <li class="nav-item">
+        <a class="nav-link nav-logout" href="/logout">Se déconnecter</a>
+      </li>
+      <% } %>
+    </ul>
+  </div>
+</nav>

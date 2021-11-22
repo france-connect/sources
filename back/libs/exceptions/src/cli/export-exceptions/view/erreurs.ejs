@@ -1,0 +1,7 @@
+# Erreur specs
+
+<% for(var i=0; i < markdown.length; i++) { %>
+| Code | Message utilisateur | Description |
+|---|---|---|<% for(var j=0; j < markdown[i].length; j++) { %>
+| [<%= markdown[i][j].errorCode %>](<%=projectRootPath%><%=markdown[i][j].path%> "<%=markdown[i][j].exception%>") | <%= markdown[i][j].message %> | <%= markdown[i][j].description %> | <% } %>
+<% } %>

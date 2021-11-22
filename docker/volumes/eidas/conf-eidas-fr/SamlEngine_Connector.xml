@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+#   Copyright (c) 2017 European Commission  
+#   Licensed under the EUPL, Version 1.2 or – as soon they will be 
+#   approved by the European Commission - subsequent versions of the 
+#    EUPL (the "Licence"); 
+#    You may not use this work except in compliance with the Licence. 
+#    You may obtain a copy of the Licence at: 
+#    * https://joinup.ec.europa.eu/page/eupl-text-11-12  
+#    *
+#    Unless required by applicable law or agreed to in writing, software 
+#    distributed under the Licence is distributed on an "AS IS" basis, 
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+#    See the Licence for the specific language governing permissions and limitations under the Licence.
+ -->
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+	<comment>SAML constants for AuthnRequests and Responses.</comment>
+
+	<!-- Types of consent obtained from the user for this authentication and
+		data transfer. Allow values: 'obtained', 'prior', 'current-implicit', 'current-explicit',
+		'unspecified', 'unavailable', 'inapplicable'. -->
+	<entry key="consentAuthnRequest">unspecified</entry>
+
+	<!--URI representing the classification of the identifier Allow values:
+		'entity'. -->
+	<entry key="formatEntity">entity</entry>
+
+	<!--Only HTTP-POST binding is only supported for inter PEPS -->
+	<!--The SOAP binding is only supported for direct communication between
+		SP-MW and VIdP -->
+	<entry key="protocolBinding">HTTP-POST</entry>
+
+	<entry key="eIDSectorShare">false</entry>
+	<entry key="eIDCrossSectorShare">false</entry>
+	<entry key="eIDCrossBorderShare">false</entry>
+
+	<!-- A friendly name for the attribute that can be displayed to a user -->
+	<entry key="friendlyName">false</entry>
+
+	<!--PEPS in the Service Provider's country -->
+	<entry key="requester">http://S-PEPS.gov.xx</entry>
+
+	<!--PEPS in the citizen's origin country -->
+	<entry key="responder">http://C-PEPS.gov.xx</entry>
+
+	<!--Subject cannot be confirmed on or after this seconds time (positive
+		number) -->
+	<entry key="timeNotOnOrAfter">300</entry>
+
+	<!--Validation IP of the response -->
+	<entry key="ipAddrValidation">false</entry>
+
+</properties>

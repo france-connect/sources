@@ -1,0 +1,14 @@
+@import '@fc/dsfr/styles.scss';
+
+.card {
+  &:focus,
+  &:hover {
+    border: 2px $blue-france-400 solid;
+  }
+
+  background: $white;
+  border: 2px transparent solid;
+  border-radius: 4px;
+  transition-duration: 0.2s;
+  transition-property: border-color;
+}

@@ -1,0 +1,17 @@
+/**
+* USAGE:
+* ---------------------
+*
+* .ln12 -> line-height 12px converted to rem
+*/
+@mixin lineHeight($value) {
+  @include rem(line-height, $value);
+}
+
+@each $size in $line-height-map {
+  $pixelValue: number-to-pixel($size);
+
+  .lh#{$size} {
+    @include lineHeight($pixelValue);
+  }
+}

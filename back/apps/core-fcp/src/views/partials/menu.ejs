@@ -1,0 +1,26 @@
+<header role="banner">
+  <nav>
+    <div class="menu-container">
+        <div class="logos-container">
+              <img id="marianne-logo" src="/img/marianne-logo.svg" alt="Logo de la marianne">
+              <img id="fc-plus-logo" src="/img/logo-fc-plus.svg" alt="Logo FC Plus">
+        </div>
+
+        <%if(locals.params){%>
+         <a class="previous-link-container" href="<%= locals.params.redirect_uri %>?error=access_denied&error_description=User%20auth%20aborted&state=<%= locals.params.state %>">
+          <div class="previous-link">
+            <div class="previous-link-icon"></div>
+            <span>Revenir sur <%= locals.spName %></span>
+          </div>
+        </a>
+        <%} else if (locals.session && locals.session.OidcClient) { %>
+          <a class="previous-link-container" href="/api/v2/redirect-to-sp-with-error?error=<%= code %>&error_description=<%= message %>">
+            <div class="previous-link">
+              <div class="previous-link-icon"></div>
+              <span>Revenir sur <%= locals.session.OidcClient.spName %></span>
+            </div>
+          </a>
+       <% }%>
+    </div>
+  </nav>
+</header>

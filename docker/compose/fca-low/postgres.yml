@@ -1,0 +1,23 @@
+version: '3.4'
+
+####################
+####################
+services:
+  pg-exploit-fca-low:
+    image: postgres:11
+    environment:
+      - 'POSTGRES_DB=pg-db'
+      - 'POSTGRES_USER=pg-user'
+      - 'POSTGRES_PASSWORD=pg-password'
+    networks:
+      - data
+
+  # deprecated: remove when new fc-apps ready
+  pg-exploitation-fca-low:
+    image: postgres:11
+    environment:
+      - 'POSTGRES_DB=pg-db'
+      - 'POSTGRES_USER=pg-user'
+      - 'POSTGRES_PASSWORD=pg-password'
+    networks:
+      - data

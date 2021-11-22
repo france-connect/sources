@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="fr">
+  <head role="banner">
+    <%- include('includes/head') %>
+    <title><%= locals.titleFront %></title>
+  </head>
+  <body role="main">
+    <%- include('includes/menu') %>
+
+    <section class="welcome">
+      <div class="container text-center">
+        <h1>Mes données</h1>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="row">
+        <section class="col-lg-6">
+          <br />
+          <h2>Identité</h2>
+          <br />
+          <div class="jumbotron">
+            <% if (locals.idpIdentity) { %>
+            <p>Civilité : <strong><%= locals.idpIdentity.gender === 'female' ? 'Femme' : 'Homme'; %></strong></p>
+            <p>Prénom(s) : <strong><%=locals.idpIdentity.given_name%></strong></p>
+            <p>Nom de naissance : <strong><%=locals.idpIdentity.family_name%></strong></p>
+            <p>Nom d'usage :
+              <strong><%= (locals.idpIdentity.preferred_username) ? locals.idpIdentity.preferred_username : '/';%></strong>
+            </p>
+            <p>Date de naissance : <strong><%=locals.idpIdentity.birthdate%></strong></p>
+            <% if (locals.idpIdentity.address) { %>
+            <p>Addresse : <strong><%=locals.idpIdentity.address.street_address%>,
+                <%=locals.idpIdentity.address.postal_code%>
+                <%=locals.idpIdentity.address.locality%> (<%=locals.idpIdentity.address.country%>)</strong></p>
+            <% } %>
+            <% if (locals.idpIdentity.birthplace && locals.idpIdentity.birthcountry) { %>
+            <p>COG (lieu de naissance) : <strong><%=locals.idpIdentity.birthplace%></strong></p>
+            <% } %>
+            <p>COG (Pays de naissance) : <strong><%=locals.idpIdentity.birthcountry%></strong></p>
+            <p id="info-acr">ACR value : <strong><%= locals.acr %></strong></p>
+            <% } else { %>
+            <p class="col d-flex justify-content-center">
+              Vous devez vous authentifier afin d'accéder à vos données personnelles.
+            </p>
+            <% } %>
+          </div>
+        </section>
+        <section class="col-lg-6">
+          <br />
+          <h2>JSON</h2>
+          <br />
+          <div class="jumbotron">
+            <pre id="json"><%- JSON.stringify(locals.idpIdentity, null, 2) %></pre>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <%- include('includes/footer') %>
+  </body>
+</html>

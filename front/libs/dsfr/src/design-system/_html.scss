@@ -1,0 +1,54 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  color: $g700;
+  font-family: $main-font;
+}
+
+ul,
+li,
+ol {
+  @extend .ml20;
+
+  list-style-type: disc;
+}
+
+input,
+textarea,
+button {
+  color: $g700;
+  font-family: $main-font;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+header[role='banner'] a,
+footer[role='contentinfo'] a {
+  color: inherit;
+}
+
+thead {
+  background: $beige;
+}
+
+thead,
+tbody {
+  border-bottom: 2px solid $blue-france-100;
+}
+
+th,
+td {
+  @extend .p12;
+}
+
+th {
+  border-bottom: 2px solid $g600;
+  text-align: left;
+}
+
+tbody tr:nth-child(even) {
+  background-color: $beige;
+}

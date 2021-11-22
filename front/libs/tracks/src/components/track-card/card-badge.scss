@@ -1,0 +1,24 @@
+@import '@fc/dsfr/styles.scss';
+
+.badge {
+  &.is-mobile {
+    font-size: 11px;
+    left: 8px;
+  }
+
+  &.is-small-mobile {
+    font-size: 10rem;
+    left: 8px;
+  }
+
+  left: 20px;
+  top: -16px;
+}
+
+@media (max-width: $breakpoints-md) {
+  // is-mobile
+}
+
+@media (max-width: $breakpoints-xs) {
+  // is-small-mobile
+}

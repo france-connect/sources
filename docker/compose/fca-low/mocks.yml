@@ -1,0 +1,237 @@
+version: '3.4'
+
+####################
+####################
+services:
+  ####################
+  # SP Mocks
+  ####################
+
+  fsa1-low:
+    hostname: fsa1-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+      - 'squid'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fca-low/.env/fsa1-low.env'
+    ports:
+      - 9231:9231
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fsa2-low:
+    hostname: fsa2-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+      - 'squid'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fca-low/.env/fsa2-low.env'
+    ports:
+      - 9232:9232
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fsa3-low:
+    hostname: fsa3-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+      - 'squid'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fca-low/.env/fsa3-low.env'
+    ports:
+      - 9233:9233
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fsa4-low:
+    hostname: fsa4-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+      - 'squid'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fca-low/.env/fsa4-low.env'
+    ports:
+      - 9245:9245
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  ####################
+  # IDP Mocks
+  ####################
+
+  fia1-low:
+    hostname: fia1-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/fca-low/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fca-low/.env/fia1-low.env'
+    ports:
+      - 9230:9230
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fia2-low:
+    hostname: fia2-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/fca-low/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fca-low/.env/fia2-low.env'
+    ports:
+      - 9234:9234
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fia4-low:
+    hostname: fia4-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/fca-low/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fca-low/.env/fia4-low.env'
+    ports:
+      - 9248:9248
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fia5-low:
+    hostname: fia5-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/fca-low/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fca-low/.env/fia5-low.env'
+    ports:
+      - 9246:9246
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  # Remove this mock when we have something to connect to with exploit apps
+  exploit-fca-low-fi-mock:
+    hostname: exploit-fca-low-fi-mock
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      # The next line is not an error
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fca-low/.env/exploit-fca-low-fi-mock.env'
+    ports:
+      - 9260:9260
+    tty: true
+    networks:
+      - exploitation
+      - data
+    command: 'pm2 logs'

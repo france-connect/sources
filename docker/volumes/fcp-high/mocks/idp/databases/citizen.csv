@@ -1,0 +1,71 @@
+login,family_name,preferred_username,given_name,gender,email,phone_number,birthdate,birthplace,birthcountry,country,postal_code,locality,street_address
+test,DUBOIS,,Angela Claire Louise,female,wossewodda-3728@yopmail.com,123456789,1962-08-24,75107,99100,France,75107,Paris,20 avenue de Ségur
+sans_nom_dusage,DUPONT,,Paul Louis,male,etabage-0159@yopmail.com,123456789,1962-08-24,75107,99100,France,75107,Paris,20 avenue de Ségur
+avec_nom_dusage,MERCIER,DUBOIS,Pierre,male,ymmyffarapp-1777@yopmail.com,623456789,1969-03-17,95277,99100,France,75107,Paris,20 avenue de Ségur
+nom_composé,TROIS-DUPRE,,Melissandre Juliette,female,imyllommo-2736@yopmail.com,723456789,1981-07-27,13012,99100,France,75107,Paris,20 avenue de Ségur
+prénom_composé,HUCHE,,Anne-Laure,female,owallottim-1136@yopmail.com,923456789,1945-09-30,31555,99100,France,75107,Paris,20 avenue de Ségur
+plusieurs_prénoms_2,HOCHON,,Valentin Emmanuel,male,lippizucis-4803@yopmail.com,223456789,1955-01-01,69674,99100,France,75107,Paris,20 avenue de Ségur
+plusieurs_prénoms_3,DUBIGNOT,,Jean Philippe Arnaud,male,ecuhebup-9337@yopmail.com,123456789,1943-06-15,75109,99100,France,75107,Paris,20 avenue de Ségur
+caractères_spéciaux,DUBINÔRE,,Joëlle Françoise,female,effannopiq-4009@yopmail.com,123456789,1992-08-15,75117,99100,France,75107,Paris,20 avenue de Ségur
+nom_prénom_long,DELALALALANDE,,Emmanuel Alexandre Nicolas,male,holisadduppe-5969@yopmail.com,123456789,1991-01-07,75101,99100,France,75107,Paris,20 avenue de Ségur
+sans_nom_naissance,,,Anne-Laure Angélique,female,nepocajapp-8174@yopmail.com,123456789,1992-08-12,75103,99100,France,75107,Paris,20 avenue de Ségur
+moins_18_ans,CHAMPION,,Alice Juliette,female,tonegellaf-0100@yopmail.com,123456789,2003-11-02,44109,99100,France,75107,Paris,20 avenue de Ségur
+naissance_Algérie,MARTIN,,Vincent Guillaume,male,senossammab-2430@yopmail.com,123456789,1963-12-05,,99352,France,75107,Paris,20 avenue de Ségur
+bdd_default,DURAND,MARTIN,Jeanne,female,x1_bdd_default@yopmail.com,,1962-08-24,75107,99100,,,,
+bdd_last_connection,DULAC,,Angela Claire Louise,female,x1_bdd_last_connection@yopmail.com,,1962-08-24,75107,99100,,,,
+bdd_enable_disable,DUPOND,,François,male,x1_bdd_enable_disable@yopmail.com,,1962-08-24,75107,99100,,,,
+test_CLEMENT,CORSE,,CLEMENT,male,baterollu-5399@yopmail.com,123456789,1991-02-12,2A115,99100,France,75107,Paris,20 avenue de Ségur
+étranger_présumé_né_jour,FLEURET,,Jean,male,jean-fleuret@yopmail.com,123456789,1992-11-00,,99217,,,,
+étranger_présumé_né_jour_et_mois,TARGE,,Jean,male,jean-targe@yopmail.com,123456789,1992-00-00,,99217,,,,
+test_INVALID_COG,Sofa,Canapé,Canapé,male,canape.sofa@france.fr,0123456789,1981-02-03,AAAAA,99100,France,AAAAA,Ikea,1 Place Salengro
+naissance_Maroc,GODIN,,Ermengardi,female,ammixaffa-0022@yopmail.com,123456789,1985-09-05,,99350,France,75107,Paris,20 avenue de Ségur
+naissance_Portugal,SÉGUIN,,Henry,male,sanellaffilu-1962@yopmail.com,123456789,1955-06-19,,99139,France,75107,Paris,20 avenue de Ségur
+naissance_Belgique,LAPRISE,DULIN,Saber,male,cynnepovaz-0031@yopmail.com,123456789,1946-08-17,,99131,France,75107,Paris,20 avenue de Ségur
+test_JEROME,BERGERE,,JEROME PIERRE ERIC,male,ydozicah-3776@yopmail.com,123456789,1959-08-15,75112,99100,France,75107,Paris,20 avenue de Ségur
+test_GERALDINE,LAMPE,LIT,GERALDINE,female,ducowanet-7006@yopmail.com,123456789,1976-09-21,68066,99100,France,75107,Paris,20 avenue de Ségur
+test_CLEMENT,CORSE,,CLEMENT,male,baterollu-5399@yopmail.com,123456789,1991-02-12,2A115,99100,France,75107,Paris,20 avenue de Ségur
+test_PHILIPPE,LIT,,PHILIPPE,male,daddalassux-1955@yopmail.com,123456789,1991-02-12,,99137,France,75107,Paris,20 avenue de Ségur
+test_BERTRAND,GUERIDON,,BERTRAND,male,uvebaffollo-9913@yopmail.com,123456789,1959-08-15,35118,99100,France,75107,Paris,20 avenue de Ségur
+test_ALAIN,BUREAU,,ALAIN,male,raxihuda-0514@yopmail.com,123456789,2003-04-04,75115,99100,France,75107,Paris,20 avenue de Ségur
+test_NICOLAS,BUFFET,,NICOLAS,male,ycofolarr-1534@yopmail.com,123456789,1972-01-08,35124,99100,France,75107,Paris,20 avenue de Ségur
+test_CINDY,COMMODE,ARMOIRE,CINDY,female,itittotuq-6673@yopmail.com,123456789,1980-06-27,57431,99100,France,75107,Paris,20 avenue de Ségur
+test_DAVID,ARMOIRE,,DAVID,male,dicipumo-1782@yopmail.com,123456789,1975-10-28,57530,99100,France,75107,Paris,20 avenue de Ségur
+test_STEPHANE,FAUTEUIL,,STEPHANE,male,awakussarri-3287@yopmail.com,123456789,1970-04-10,57253,99100,France,75107,Paris,20 avenue de Ségur
+test_JENNIFER,CANAPE,FAUTEUIL,JENNIFER,female,saqetyde-2764@yopmail.com,123456789,1978-05-16,57117,99100,France,75107,Paris,20 avenue de Ségur
+test_WILLIAM,BALDAQUIN,,WILLIAM,male,axitamaff-9064@yopmail.com,123456789,1951-08-14,82195,99100,France,75107,Paris,20 avenue de Ségur
+test_LAURENT,COIFFEUSE,,LAURENT,male,xarrinedodd-0173@yopmail.com,123456789,1951-07-20,82195,99100,France,75107,Paris,20 avenue de Ségur
+test_ELSA,PLACARD,,ELSA,female,ywiwyne-1268@yopmail.com,123456789,1987-04-13,59226,99100,France,75107,Paris,20 avenue de Ségur
+test_FABIEN,PENDERIE,,FABIEN,male,doqenaxeq-1682@yopmail.com,123456789,1986-03-25,83028,99100,France,75107,Paris,20 avenue de Ségur
+test_THIBAULT,TABLE,,THIBAULT,male,iffikeppano-9064@yopmail.com,123456789,1991-02-13,75116,99100,France,75107,Paris,20 avenue de Ségur
+insee_ancien,ACNUSER,ACNTEST,SARAH SOPHIE,female,ucassefa-7807@yopmail.com,123456789,1996-12-06,75012,99100,France,75107,Paris,20 avenue de Ségur
+nom_50+_caractères,AZERTYUIOPMLKJHGFDSQWXCVBNAZERTYUIOPMLKJHGFDSQWXCVBN,,Bertrand Cyril,male,cyxoxudaj-2393@yopmail.com,123456789,2000-03-01,75119,99100,France,75107,Paris,20 avenue de Ségur
+test_doublon,CASA,,MILA,female,Testcas123@yopmail.com,123456789,1986-01-01,,93100,France,93100,Montreuil,9 rue de l'Eglise
+test_doublon1,CASA,,MILA,female,Testcas456@yopmail.com,123456789,1986-01-01,,75015,France,75015,Paris,10 rue de l'Opera
+test_doublon2,CASA,,MILA,female,Testcas678@yopmail.com,123456789,1972-06-26,,75018,France,75018,Paris,45 rue du Pasteur
+test_droits,DURAND,Fournier,Audrey,female,adurand@yopmail.com,143356789,1978-02-15,75108,99200,France,75109,Paris,20 avenue de Ségur
+sans_mail,DUFOUR,DUFOUR,Amandine,female,,123456789,1989-03-02,75119,99100,France,75107,Paris,20 avenue de Ségur
+sans_telephone,MEUNIER,MEUNIER,Hugo,male,sans_tel@test.fr,,1990-12-19,75119,99100,France,75107,Paris,20 avenue de Ségur
+sans_mail_sans_tel,DUPAIN,DUPAIN,Eva,female,,,1990-12-06,75119,99100,France,75107,Paris,20 avenue de Ségur
+Désactivé,DUPLANTY,,Mélodie,female,duplanty.test@gmail.com,123456789,1962-08-24,75107,99100,France,75107,Paris,20 avenue de Ségur
+moins_25_ans,CUILLERE,,Paul,male,minnannuxammi-4532@yopmail.com,123456789,1998-01-23,42218,99100,France,75107,Paris,20 avenue de Ségur
+naissance_Espagne,CHEVAL,POULAIN,Marphisa,female,yttenneje-5416@yopmail.com,123456789,1982-02-24,,99134,France,75107,Paris,20 avenue de Ségur
+naissance_Italie,LIVRE,,Julien Bernard Pierre,male,inaqyzome-0621@yopmail.com,123456789,1984-01-23,,99127,France,75107,Paris,20 avenue de Ségur
+étranger_présumé_né_jour,FLEURET,,Jean,male,jean-fleuret@yopmail.com,123456789,1992-11-00,,99217,,,,
+étranger_présumé_né_jour_et_mois,TARGE,,Jean,male,jean-targe@yopmail.com,123456789,1992-00-00,,99217,,,,
+test_TRACE_USER,TRACE_USER,,utilisateur traces,male,aucun@email.com,123456789,1985-01-01,75107,99100,France,75107,Paris,20 avenue de Ségur
+test_CORSE_2A,Brosse,Mario,Mario,male,mario.brosse@france.fr,0123456789,1981-02-03,2A004,99100,France,20000,Ajaccio,1 Place Salengro
+test_CORSE_2B,Brosse,Luigi,Luigi,male,luigi.brosse@france.fr,0123456789,1981-02-03,2B050,99100,France,20260,Calvi,1 Place Salengro
+test_INVALID_COG,Sofa,Canapé,Canapé,male,canape.sofa@france.fr,0123456789,1981-02-03,AAAAA,99100,France,AAAAA,Ikea,1 Place Salengro
+Y180001,Martin,Martin,Jean_Y180001,male,jean_Y180001.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E010004,Martin,Martin,Jean_E010004,male,jean_E010004.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E010005,Martin,Martin,Jean_E010005,male,jean_E010005.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E010006,Martin,Martin,Jean_E010006,male,jean_E010006.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E010007,Martin,Martin,Jean_E010007,male,jean_E010007.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E010008,Martin,Martin,Jean_E010008,male,jean_E010008.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E010009,Martin,Martin,Jean_E010009,male,jean_E010009.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E010010,Martin,Martin,Jean_E010010,male,jean_E010010.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E010011,Martin,Martin,Jean_E010011,male,jean_E010011.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E010012,Martin,Martin,Jean_E010012,male,jean_E010012.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E010013,Martin,Martin,Jean_E010013,male,jean_E010013.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E010015,Martin,Martin,Jean_E010015,male,jean_E010015.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert
+E020025,Martin,Martin,Jean_E020025,male,jean_E020025.martin@france.fr,0123456789,1981-02-03,75112,99100,France,13016,Marseille,97 Boulevard François Robert

@@ -1,0 +1,421 @@
+version: '3.4'
+
+####################
+####################
+services:
+  ####################
+  # SP Mocks
+  ####################
+
+  fsp1-high:
+    hostname: fsp1-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'csmr-hsm'
+      - 'redis-pwd'
+      - 'broker'
+      - 'squid'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fsp1-high.env'
+    ports:
+      - 9238:9238
+    tty: true
+
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fsp2-high:
+    hostname: fsp2-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'csmr-hsm'
+      - 'redis-pwd'
+      - 'broker'
+      - 'squid'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fsp2-high.env'
+    ports:
+      - 9239:9239
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fsp3-high:
+    hostname: fsp3-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'csmr-hsm'
+      - 'redis-pwd'
+      - 'broker'
+      - 'squid'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fsp3-high.env'
+    ports:
+      - 9240:9240
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fsp5-high:
+    hostname: fsp5-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'csmr-hsm'
+      - 'redis-pwd'
+      - 'broker'
+      - 'squid'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fsp5-high.env'
+    ports:
+      - 9249:9249
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fsp6-high:
+    hostname: fsp6-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'csmr-hsm'
+      - 'redis-pwd'
+      - 'broker'
+      - 'squid'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fsp6-high.env'
+    ports:
+      - 9250:9250
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip1-high:
+    hostname: fip1-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fip1-high.env'
+    ports:
+      - 9236:9236
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip2-high:
+    hostname: fip2-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fip2-high.env'
+    ports:
+      - 9237:9237
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip6-high:
+    hostname: fip6-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fip6-high.env'
+    ports:
+      - 9241:9241
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip13-high:
+    hostname: fip13-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fip13-high.env'
+    ports:
+      - 9244:9244
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip14-high:
+    hostname: fip14-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fip14-high.env'
+    ports:
+      - 9252:9252
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip15-high:
+    hostname: fip15-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fip15-high.env'
+    ports:
+      - 9253:9253
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip16-high:
+    hostname: fip16-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fip16-high.env'
+    ports:
+      - 9254:9254
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip17-high:
+    hostname: fip17-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fip17-high.env'
+    ports:
+      - 9255:9255
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip18-high:
+    hostname: fip18-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fip18-high.env'
+    ports:
+      - 9256:9256
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip19-high:
+    hostname: fip19-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fip19-high.env'
+    ports:
+      - 9257:9257
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip20-high:
+    hostname: fip20-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/fip20-high.env'
+    ports:
+      - 9258:9258
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  # Remove this mock when we have something to connect to with exploit apps
+  exploit-fcp-high-fi-mock:
+    hostname: exploit-fcp-high-fi-mock
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-high/.env/exploit-fcp-high-fi-mock.env'
+    ports:
+      - 9259:9259
+    tty: true
+    networks:
+      - exploitation
+      - data
+    command: 'pm2 logs'

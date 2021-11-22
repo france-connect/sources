@@ -1,0 +1,9 @@
+{
+  "chromeWebSecurity": false,
+  "videoUploadOnPasses": false,
+  "viewportHeight": 1800,
+  "viewportWidth": 1000,
+  "pageLoadTimeout": 180000,
+  "env": {},
+  "ignoreTestFiles": "*.util.js"
+}

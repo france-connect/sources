@@ -1,0 +1,433 @@
+[
+  {
+    "enabled": true,
+    "criteria": [
+      "par défaut"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "bdd_default",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "Jeanne",
+      "family_name": "DURAND",
+      "preferred_username": "MARTIN",
+      "birthdate": "1962-08-24",
+      "birthplace": "75107",
+      "birthcountry": "99100",
+      "email": "x1_bdd_default@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "pour le test de désactivation"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "bdd_enable_disable",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "François",
+      "family_name": "DUPOND",
+      "birthdate": "1962-08-24",
+      "birthplace": "75107",
+      "birthcountry": "99100",
+      "email": "x1_bdd_enable_disable@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "non trouvé avec un echo RNIPP"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010004",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean_E010004",
+      "family_name": "Martin",
+      "birthdate": "1981-02-03",
+      "birthplace": "75112",
+      "birthcountry": "99100",
+      "email": "jean_E010004.martin@france.fr"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "non trouvé avec plusieurs echos RNIPP"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010006",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean_E010006",
+      "family_name": "Martin",
+      "birthdate": "1981-02-03",
+      "birthplace": "75112",
+      "birthcountry": "99100",
+      "email": "jean_E010006.martin@france.fr"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "non trouvé avec aucun echo RNIPP"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010008",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean_E010008",
+      "family_name": "Martin",
+      "birthdate": "1981-02-03",
+      "birthplace": "75112",
+      "birthcountry": "99100",
+      "email": "jean_E010008.martin@france.fr"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec erreur RNIPP mauvaise requête"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010009",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean_E010009",
+      "family_name": "Martin",
+      "birthdate": "1981-02-03",
+      "birthplace": "75112",
+      "birthcountry": "99100",
+      "email": "jean_E010009.martin@france.fr"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec erreur RNIPP mauvais format"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010012",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean_E010012",
+      "family_name": "Martin",
+      "birthdate": "1981-02-03",
+      "birthplace": "75112",
+      "birthcountry": "99100",
+      "email": "jean_E010012.martin@france.fr"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "sans nom de naissance"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010013",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Arthur Philip",
+      "birthdate": "1978-03-08",
+      "birthplace": "42424",
+      "birthcountry": "99100"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec date de naissance erronée"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010014",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Arthur Philip",
+      "family_name": "DENT",
+      "birthdate": "2001-03-08",
+      "birthplace": "42424",
+      "birthcountry": "99100"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "décédé"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010015",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Pierre Eugène",
+      "family_name": "Beregovoy",
+      "birthdate": "1925-12-23",
+      "birthplace": "76216",
+      "birthcountry": "99100"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "décédée"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E010016",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "Simone",
+      "family_name": "Veil",
+      "birthdate": "1927-07-13",
+      "birthplace": "06000",
+      "birthcountry": "99100"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "né en Corse"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "test_CLEMENT",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "CLEMENT",
+      "family_name": "CORSE",
+      "birthdate": "1991-02-12",
+      "birthplace": "2A115",
+      "birthcountry": "99100",
+      "email": "baterollu-5399@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "présumé né jour"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "étranger_présumé_né_jour",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean",
+      "family_name": "FLEURET",
+      "birthdate": "1992-11-00",
+      "birthcountry": "99217",
+      "email": "jean-fleuret@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "présumé né jour et mois"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "étranger_présumé_né_jour_et_mois",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean",
+      "family_name": "TARGE",
+      "birthdate": "1992-00-00",
+      "birthcountry": "99217",
+      "email": "jean-targe@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "né en Algérie"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "naissance_Algérie",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Vincent Guillaume ",
+      "family_name": "MARTIN",
+      "birthdate": "1963-12-05",
+      "birthcountry": "99352",
+      "email": "senossammab-2430@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "né dans l'Aisne"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "dep_moins_dix",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Depart",
+      "family_name": "DUBOIS",
+      "preferred_username": "POULAIN",
+      "birthdate": "1985-09-10",
+      "birthplace": "02408",
+      "birthcountry": "99100",
+      "email": "testmodac@gmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "désactivé"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "Y180001",
+        "password": "123"
+      }
+    ]
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "pour le test de dernière connexion"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "bdd_last_connection",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "Angela Claire Louise",
+      "family_name": "DULAC",
+      "birthdate": "1962-08-24",
+      "birthplace": "75107",
+      "birthcountry": "99100",
+      "email": "x1_bdd_last_connection@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "n'ayant jamais utilisé FranceConnect"
+    ],
+    "credentials": [],
+    "claims": {
+      "gender": "male",
+      "given_name": "Nicolas",
+      "family_name": "Inconnu",
+      "birthdate": "1987-07-29",
+      "birthplace": "93051",
+      "birthcountry": "99100"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "pour les tests de traces"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "test",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "Angela Claire Louise",
+      "family_name": "DUBOIS",
+      "birthdate": "1962-08-24",
+      "birthplace": "75107",
+      "birthcountry": "99100",
+      "email": "wossewodda-3728@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec un COG invalide"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "test_INVALID_COG",
+        "password": "123"
+      }
+    ]
+  }
+]

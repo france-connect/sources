@@ -1,0 +1,2 @@
+## Dont format on save this files with ESLint
+**/*.ejs

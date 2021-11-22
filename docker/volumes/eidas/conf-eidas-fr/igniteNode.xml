@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright (c) 2018 by European Commission
+  ~
+  ~ Licensed under the EUPL, Version 1.2 or - as soon they will be
+  ~ approved by the European Commission - subsequent versions of the
+  ~ EUPL (the "Licence");
+  ~ You may not use this work except in compliance with the Licence.
+  ~ You may obtain a copy of the Licence at:
+  ~ https://joinup.ec.europa.eu/page/eupl-text-11-12
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the Licence is distributed on an "AS IS" basis,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+  ~ implied.
+  ~ See the Licence for the specific language governing permissions and
+  ~ limitations under the Licence.
+  -->
+
+<!--
+    Ignite Spring configuration file to startup Ignite cache.
+
+    This file demonstrates how to configure cache using Spring. Provided cache
+    will be created on node startup.
+
+    Use this configuration file when running HTTP REST examples (see 'examples/rest' folder).
+
+    When starting a standalone node, you need to execute the following command:
+    {IGNITE_HOME}/bin/ignite.{bat|sh} examples/config/ignite-cache.xml
+
+    When starting Ignite from Java IDE, pass path to this file to Ignition:
+    Ignition.start("examples/config/ignite-cache.xml");
+-->
+
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="igniteNode.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
+
+        <property name="igniteInstanceName" value="igniteNodeTOM"/>
+
+        <property name="cacheConfiguration">
+            <list>
+                <!-- Partitioned cache example configuration (Atomic mode). -->
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="antiReplayCacheService"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="3_hours_duration"/>
+                </bean>
+                <!-- Partitioned cache example configuration (Atomic mode). -->
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="antiReplayCacheConnector"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="3_hours_duration"/>
+                </bean>
+                <!-- Partitioned cache example configuration (Atomic mode). -->
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="connectorRequestCorrelationCacheService"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="7_minutes_duration"/>
+                </bean>
+                <!-- Partitioned cache example configuration (Atomic mode). -->
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="proxyServiceRequestCorrelationCacheService"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="7_minutes_duration"/>
+                </bean>
+                <!-- Partitioned cache example configuration (Atomic mode). -->
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="specificConnectorLtRequestCorrelationCacheService"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="7_minutes_duration"/>
+                </bean>
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="connectorFlowIdCacheService"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="7_minutes_duration"/>
+                </bean>
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="proxyServiceFlowIdCacheService"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="7_minutes_duration"/>
+                </bean>
+                <!-- Partitioned cache example configuration (Atomic mode). -->
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="eidasmetadata"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="backups" value="1"/>
+                    <property name="expiryPolicyFactory" ref="24_hours_duration"/>
+                </bean>
+            </list>
+        </property>
+
+        <!--Multicast discover of other nodes in the grid configuration-->
+        <property name="discoverySpi">
+            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+                <property name="ipFinder">
+                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder">
+                        <property name="multicastGroup" value="228.10.10.165"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+
+        <!-- Ssl/Tls context. -->
+        <!--IMPORTANT: THIS IS A DEMO CONFIGURATION AND DEMO KEYSTORES, IT NEEDS TO BE CHANGED FOR PRODUCTION ALSO THE KEYS IN THE KEYSTORES NEED TO BE CREATED AS WELL-->
+        <property name="sslContextFactory">
+            <bean class="org.apache.ignite.ssl.SslContextFactory">
+                <!--uncomment the below keyAlgorithm when IBM JRE is used e.g. websphere 8.5.5-->
+                <!--<property name="keyAlgorithm" value="IBMX509" />-->
+                <property name="keyStoreFilePath" value="${EIDAS_CONFIG_REPOSITORY}/ignite/KeyStore/server.jks"/>
+                <property name="keyStorePassword" value="123456"/>
+                <property name="trustStoreFilePath" value="${EIDAS_CONFIG_REPOSITORY}/ignite/KeyStore/trust.jks"/>
+                <property name="trustStorePassword" value="123456"/>
+                <property name="protocol" value="TLSv1.2"/>
+            </bean>
+        </property>
+
+        <!-- how frequently Ignite will output basic node metrics into the log-->
+        <property name="metricsLogFrequency" value="#{60 * 10 * 1000}"/>
+
+    </bean>
+
+    <!--
+        Initialize property configurer so we can reference environment variables.
+    -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_FALLBACK"/>
+        <property name="searchSystemEnvironment" value="true"/>
+    </bean>
+
+    <!--
+        Defines expiry policy based on moment of creation for ignite cache.
+    -->
+    <bean id="7_minutes_duration" class="javax.cache.expiry.CreatedExpiryPolicy" factory-method="factoryOf" scope="prototype">
+        <constructor-arg>
+            <bean class="javax.cache.expiry.Duration">
+                <constructor-arg value="MINUTES"/>
+                <constructor-arg value="7"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <!--
+    Defines expiry policy based on moment of creation for ignite cache.
+-->
+    <bean id="3_hours_duration" class="javax.cache.expiry.CreatedExpiryPolicy" factory-method="factoryOf" scope="prototype">
+        <constructor-arg>
+            <bean class="javax.cache.expiry.Duration">
+                <constructor-arg value="HOURS"/>
+                <constructor-arg value="3"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+
+    <!--
+    Defines expiry policy based on moment of creation for ignite cache.
+-->
+    <bean id="24_hours_duration" class="javax.cache.expiry.CreatedExpiryPolicy" factory-method="factoryOf" scope="prototype">
+        <constructor-arg>
+            <bean class="javax.cache.expiry.Duration">
+                <constructor-arg value="HOURS"/>
+                <constructor-arg value="24"/>
+            </bean>
+        </constructor-arg>
+    </bean>
+</beans>

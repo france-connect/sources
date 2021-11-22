@@ -1,0 +1,34 @@
+.is-hidden {
+  display: none;
+  visibility: hidden;
+}
+
+.is-visible {
+  display: inherit;
+  visibility: inherit;
+}
+
+.hide {
+  @extend .is-hidden;
+
+  font-size: 0;
+  height: 0;
+  line-height: 0;
+  max-height: 0;
+  max-width: 0;
+  min-height: 0;
+  min-width: 0;
+  width: 0;
+
+  &::before {
+    @extend .is-hidden;
+
+    content: none;
+  }
+
+  &::after {
+    @extend .is-hidden;
+
+    content: none;
+  }
+}

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+#   Copyright (c) 2017 European Commission  
+#   Licensed under the EUPL, Version 1.2 or – as soon they will be 
+#   approved by the European Commission - subsequent versions of the 
+#    EUPL (the "Licence"); 
+#    You may not use this work except in compliance with the Licence. 
+#    You may obtain a copy of the Licence at: 
+#    * https://joinup.ec.europa.eu/page/eupl-text-11-12  
+#    *
+#    Unless required by applicable law or agreed to in writing, software 
+#    distributed under the Licence is distributed on an "AS IS" basis, 
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+#    See the Licence for the specific language governing permissions and limitations under the Licence.
+ -->
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<!-- issuer name -->
+	<entry key="issuer.name">specificProxyServiceFR</entry>
+	<!--hazelcast distributed maps activation-->
+	<entry key="distributedMapsSpecificProxyService">false</entry>
+	<!-- the IdP's url to where the simple protocol request is send -->
+	<entry key="idp.url">https://eidas-fr.docker.dev-franceconnect.fr/IdP/AuthenticateCitizen</entry>
+	<!--specific service URL for processing IdP simple protocol responses-->
+	<entry key="specific.proxyservice.idp.response.service.url">https://eidas-fr.docker.dev-franceconnect.fr/SpecificProxyService/IdpResponse</entry>
+	<!-- the specific service URL for processing IdP simple protocol responses: when specific modules are included in node as JAR-->
+	<entry key="default.specific.proxyservice.idp.response.service.url">http://localhost:8080/EidasNode/IdpResponse</entry>
+	<!-- node's url to send the binary light token related to the request -->
+	<entry key="specific.proxyservice.response.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNode/SpecificProxyServiceResponse</entry>
+	<!-- ask consent for the request attributes -->
+	<entry key="ask.consent.request">true</entry>
+	<!-- ask consent for the response -->
+	<entry key="ask.consent.response">true</entry>
+	<!-- ask consent for the response: displaying or not eIDAS attributes-->
+	<entry key="ask.consent.response.show.only.eidas.attributes">true</entry>
+	<!-- ask consent for the response: displaying or not the attributes values-->
+	<entry key="ask.consent.response.show.attribute.values">true</entry>
+	<!--secrets and algorithms for request consent token-->
+	<entry key="consent.Request.LightToken.Secret">mySecretRequest</entry>
+	<entry key="consent.Request.LightToken.Algorithm">SHA-256</entry>
+	<!--secrets and algorithms for response consent token-->
+	<entry key="consent.Response.LightToken.Secret">mySecretResponse</entry>
+	<entry key="consent.Response.LightToken.Algorithm">SHA-256</entry>
+	
+	<entry key="relaystate.randomize.null">false</entry>
+	
+</properties>

@@ -1,0 +1,62 @@
+*,
+a {
+  color: #034ea2;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+body {
+  width: 100%;
+}
+/**
+ * @todo
+ * @summary I need to change the way to set the min-height value
+ * see https://stackoverflow.com/questions/23090136/how-can-i-make-my-flexbox-layout-take-100-vertical-space
+ * @file FC-342
+ * @author Kevin N
+ * @since 17/03/2020
+ */
+main {
+  padding: 8px 16px 0;
+  min-height: calc(100vh - (95px + 136px));
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.list-container {
+  margin-top: 32px;
+  padding: 0 16px;
+}
+
+.list-container h3 {
+  margin-bottom: 16px;
+}
+
+.list-container li, .list-container p {
+  margin-bottom: 16px;
+}
+
+.detail-error-container {
+  padding: 24px 16px;
+  border-radius: 4px;
+  background-color: #f2f4ff;
+}
+
+.detail-error-container p + p {
+  margin-top: 16px;
+}
+
+@media screen and (min-width: 576px) {
+ .list-container {
+  margin: 40px auto 0;
+  max-width: 600px;
+ }
+ 
+ .detail-error-container {
+  margin: 24px auto 0;
+  max-width: 600px;
+ }
+}

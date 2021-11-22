@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+  <head role="banner">
+    <%- include('includes/head') %>
+    <title><%= locals.titleFront %></title>
+  </head>
+  <body role="main">
+    <%- include('includes/menu') %>
+    <section class="welcome">
+      <div class="container text-center">
+        <h1><%= locals.message %></h1>
+      </div>
+    </section>
+
+    <div class="container">
+      <br />
+      <div class="text-center text-danger">Vous devez vous authentifier afin d'accéder à vos données personnelles.</div>
+
+      <section class="connect bg-light">
+        <h2>Connectez-vous via FranceConnect (GET sur authorize)</h2>
+        <a id="get-authorize" href="/login" class="btn no-pad" role="button">
+          <img src="/img/FCboutons-10.svg" alt="Connexion FC" class="d-inline-block align-top">
+        </a>
+      </section>
+    </div>
+
+    <%- include('includes/footer') %>
+  </body>
+</html>

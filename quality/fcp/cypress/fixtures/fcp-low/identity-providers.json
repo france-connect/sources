@@ -1,0 +1,21 @@
+[
+  {
+    "idpId": "fip1-low",
+    "descriptions": [
+      "par défaut",
+      "actif"
+    ],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip1-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#idp-fip1-low",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "button[type='submit']"
+    }
+  }
+]

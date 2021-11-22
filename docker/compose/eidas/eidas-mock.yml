@@ -1,0 +1,30 @@
+version: '3.4'
+
+####################
+####################
+services:
+  ####################
+  # Eidas BE
+  ####################
+  eidas-mock:
+    hostname: eidas-mock
+    build:
+      context: '${WORKING_DIR}'
+      dockerfile: '${WORKING_DIR}/builds/eidas/Dockerfile'
+      args:
+        FC_DOCKER_REGISTRY: ${FC_DOCKER_REGISTRY}
+    volumes:
+      - '${VOLUMES_DIR}/eidas/conf-eidas-mock:/data/conf-eidas:ro'
+      - '${VOLUMES_DIR}/eidas/keystore-mock:/data/keystore:ro'
+      - '${VOLUMES_DIR}/log/eidas/eidas-mock:/data/log/tomcat'
+      - '${VOLUMES_DIR}/log/eidas/eidas-mock:/data/log/eidas'
+    environment:
+      - 'VIRTUAL_HOST=eidas-mock.docker.dev-franceconnect.fr'
+      - 'VIRTUAL_PORT=8080'
+      - 'TZ=Europe/Paris'
+      - 'JAVA_OPTS=-Xms1G -Xmx1G'
+      - 'LOG_LEVEL=INFO'
+    networks:
+      - eidas
+      - public
+    command: 'tail -f /dev/null'

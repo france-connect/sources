@@ -1,0 +1,20 @@
+login,family_name,preferred_username,given_name,gender,email,phone_number,birthdate,birthplace,birthcountry,country,postal_code,locality,street_address
+test,DUBOIS,,Angela Claire Louise,female,wossewodda-3728@yopmail.com,123456789,1962-08-24,75107,99100,France,75107,Paris,20 avenue de Ségur
+sans_nom_dusage,MERCIER,,Paul Louis,male,etabage-0159@yopmail.com,123456789,1962-08-24,75107,99100,France,75107,Paris,20 avenue de Ségur
+avec_nom_dusage,MERCIER,DUBOIS,Pierre,male,ymmyffarapp-1777@yopmail.com,623456789,1969-03-17,95277,99100,France,75107,Paris,20 avenue de Ségur
+nom_composé,TROIS-DUPRE,,Melissandre Juliette,female,imyllommo-2736@yopmail.com,723456789,1981-07-27,13012,99100,France,75107,Paris,20 avenue de Ségur
+prénom_composé,HUCHE,,Anne-Laure,female,owallottim-1136@yopmail.com,923456789,1945-09-30,31555,99100,France,75107,Paris,20 avenue de Ségur
+plusieurs_prénoms_2,HOCHON,,Valentin Emmanuel,male,lippizucis-4803@yopmail.com,223456789,1955-01-01,69674,99100,France,75107,Paris,20 avenue de Ségur
+plusieurs_prénoms_3,DUBIGNOT,,Jean Philippe Arnaud,male,ecuhebup-9337@yopmail.com,123456789,1943-06-15,75109,99100,France,75107,Paris,20 avenue de Ségur
+caractères_spéciaux,DUBINÔRE,,Joëlle Françoise,female,effannopiq-4009@yopmail.com,123456789,1992-08-15,75117,99100,France,75107,Paris,20 avenue de Ségur
+nom_prénom_long,DELALALALANDE,,Emmanuel Alexandre Nicolas,male,holisadduppe-5969@yopmail.com,123456789,1991-01-07,75101,99100,France,75107,Paris,20 avenue de Ségur
+sans_nom_naissance,,,Anne-Laure Angélique,female,nepocajapp-8174@yopmail.com,123456789,1992-08-12,75103,99100,France,75107,Paris,20 avenue de Ségur
+moins_18_ans,CHAMPION,,Alice Juliette,female,tonegellaf-0100@yopmail.com,123456789,2003-11-02,44109,99100,France,75107,Paris,20 avenue de Ségur
+naissance_Algérie,MARTIN,,Vincent Guillaume,male,senossammab-2430@yopmail.com,123456789,1963-12-05,,99352,France,75107,Paris,20 avenue de Ségur
+bdd_default,DURAND,MARTIN,Jeanne,female,x1_bdd_default@yopmail.com,,1962-08-24,75107,99100,,,,
+bdd_last_connection,DULAC,,Angela Claire Louise,female,x1_bdd_last_connection@yopmail.com,,1962-08-24,75107,99100,,,,
+bdd_enable_disable,DUPOND,,François,male,x1_bdd_enable_disable@yopmail.com,,1962-08-24,75107,99100,,,,
+test_CLEMENT,CORSE,,CLEMENT,male,baterollu-5399@yopmail.com,123456789,1991-02-12,2A115,99100,France,75107,Paris,20 avenue de Ségur
+étranger_présumé_né_jour,FLEURET,,Jean,male,jean-fleuret@yopmail.com,123456789,1992-11-00,,99217,,,,
+étranger_présumé_né_jour_et_mois,TARGE,,Jean,male,jean-targe@yopmail.com,123456789,1992-00-00,,99217,,,,
+test_INVALID_COG,Sofa,Canapé,Canapé,male,canape.sofa@france.fr,0123456789,1981-02-03,AAAAA,99100,France,AAAAA,Ikea,1 Place Salengro

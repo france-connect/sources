@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2019 by European Commission
+  ~
+  ~ Licensed under the EUPL, Version 1.2 or - as soon they will be
+  ~ approved by the European Commission - subsequent versions of the
+  ~ EUPL (the "Licence");
+  ~ You may not use this work except in compliance with the Licence.
+  ~ You may obtain a copy of the Licence at:
+  ~ https://joinup.ec.europa.eu/page/eupl-text-11-12
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the Licence is distributed on an "AS IS" basis,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+  ~ implied.
+  ~ See the Licence for the specific language governing permissions and
+  ~ limitations under the Licence
+  -->
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- issuer name -->
+	<entry key="lightToken.connector.request.issuer.name">specificCommunicationDefinitionConnectorRequest</entry>
+	<entry key="lightToken.connector.request.node.id">specificConnector</entry>
+	<!--secrets and algorithms for request consent token-->
+	<entry key="lightToken.connector.request.secret">mySecretConnectorRequest123456789</entry>
+	<entry key="lightToken.connector.request.algorithm">SHA-256</entry>
+
+	<!-- issuer name -->
+	<entry key="lightToken.connector.response.issuer.name">specificCommunicationDefinitionConnectorResponse</entry>
+	<entry key="lightToken.connector.response.node.id">specificConnector</entry>
+	<!--secrets and algorithms for response consent token-->
+	<entry key="lightToken.connector.response.secret">mySecretConnectorResponse123456789</entry>
+	<entry key="lightToken.connector.response.algorithm">SHA-256</entry>
+
+	<!--The value of incoming lightRequest maximum number characters allowed-->
+	<entry key="incoming.lightRequest.max.number.characters">65535</entry>
+</properties>

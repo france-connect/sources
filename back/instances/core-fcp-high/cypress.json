@@ -1,0 +1,103 @@
+{
+  "chromeWebSecurity": false,
+  "videoUploadOnPasses": false,
+  "viewportHeight": 1000,
+  "viewportWidth": 1400,
+  "pageLoadTimeout": 30000,
+  "baseUrl": "https://core-fcp-high.docker.dev-franceconnect.fr",
+  "env": {
+    "APP_DOMAIN": "core-fcp-high.docker.dev-franceconnect.fr",
+    "APP_NAME": "core-fcp-high",
+    "LOG_FILE_PATH": "../../../docker/volumes/log/core-fcp-high.log",
+    "LOG_CONSOLE_FILE_PATH": "../../../docker/volumes/log/core-fcp-high-console-0.log",
+    "FC_DOCKER_PATH": "../../../docker",
+    "FC_ROOT_URL": "https://core-fcp-high.docker.dev-franceconnect.fr",
+    "FC_INTERACTION_URL": "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/interaction",
+    "IDP_NAME": "fip",
+    "IDP_AVAILABLES": [
+      {
+        "ID": "fip1-high",
+        "IDP_ROOT_URL": "https://fip1-high.docker.dev-franceconnect.fr",
+        "IDP_INTERACTION_URL": "https://fip1-high.docker.dev-franceconnect.fr/interaction"
+      },
+      {
+        "ID": "fip2-high",
+        "IDP_ROOT_URL": "https://fip2-high.docker.dev-franceconnect.fr",
+        "IDP_INTERACTION_URL": "https://fip2-high.docker.dev-franceconnect.fr/interaction"
+      },
+      {
+        "ID": "fip6-high",
+        "IDP_ROOT_URL": "https://fip6-high.docker.dev-franceconnect.fr",
+        "IDP_INTERACTION_URL": "https://fip6-high.docker.dev-franceconnect.fr/interaction"
+      },
+      {
+        "ID": "fip13-high",
+        "IDP_ROOT_URL": "https://fip13-high.docker.dev-franceconnect.fr",
+        "IDP_INTERACTION_URL": "https://fip13-high.docker.dev-franceconnect.fr/interaction"
+      },
+      {
+        "ID": "fip14-high",
+        "IDP_ROOT_URL": "https://fip14-high.docker.dev-franceconnect.fr",
+        "IDP_INTERACTION_URL": "https://fip14-high.docker.dev-franceconnect.fr/interaction"
+      },
+      {
+        "ID": "fip15-high",
+        "IDP_ROOT_URL": "https://fip15-high.docker.dev-franceconnect.fr",
+        "IDP_INTERACTION_URL": "https://fip15-high.docker.dev-franceconnect.fr/interaction"
+      },
+      {
+        "ID": "fip16-high",
+        "IDP_ROOT_URL": "https://fip16-high.docker.dev-franceconnect.fr",
+        "IDP_INTERACTION_URL": "https://fip16-high.docker.dev-franceconnect.fr/interaction"
+      },
+      {
+        "ID": "fip17-high",
+        "IDP_ROOT_URL": "https://fip17-high.docker.dev-franceconnect.fr",
+        "IDP_INTERACTION_URL": "https://fip17-high.docker.dev-franceconnect.fr/interaction"
+      },
+      {
+        "ID": "fip18-high",
+        "IDP_ROOT_URL": "https://fip18-high.docker.dev-franceconnect.fr",
+        "IDP_INTERACTION_URL": "https://fip18-high.docker.dev-franceconnect.fr/interaction"
+      },
+      {
+        "ID": "fip19-high",
+        "IDP_ROOT_URL": "https://fip19-high.docker.dev-franceconnect.fr",
+        "IDP_INTERACTION_URL": "https://fip19-high.docker.dev-franceconnect.fr/interaction"
+      },
+      {
+        "ID": "fip20-high",
+        "IDP_ROOT_URL": "https://fip20-high.docker.dev-franceconnect.fr",
+        "IDP_INTERACTION_URL": "https://fip20-high.docker.dev-franceconnect.fr/interaction"
+      }
+    ],
+    "SP1_ID": "#fsp1-high",
+    "SP1_ROOT_URL": "https://fsp1-high.docker.dev-franceconnect.fr",
+    "SP1_CLIENT_ID": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
+    "SP2_ID": "#fsp2-high",
+    "SP2_ROOT_URL": "https://fsp2-high.docker.dev-franceconnect.fr",
+    "SP2_CLIENT_ID": "7a79e45107f9ccc6a3a5971d501220dc4fd9e87bb5e3fc62ce4104c756e22775",
+    "SP5_ID": "#fsp5-high",
+    "SP5_ROOT_URL": "https://fsp5-high.docker.dev-franceconnect.fr",
+    "SP5_CLIENT_ID": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39555",
+    "SP6_ID": "#fsp6-high",
+    "SP6_ROOT_URL": "https://fsp6-high.docker.dev-franceconnect.fr",
+    "WELL_KNOWN": "/api/v2/.well-known/openid-configuration",
+    "ALL_APPS_LISTED": "https://docker.dev-franceconnect.fr/fcp.html",
+    "EXPLOITATION": [
+      {
+        "USER_NAME": "jean_patoche",
+        "USER_PASS": "georgesmoustaki",
+        "ROLE": "operator"
+      },
+      {
+        "USER_NAME": "jean_moust",
+        "USER_PASS": "georgesmoustaki",
+        "ROLE": "admin"
+      }
+    ],
+    "SECRET_TOTP": "KVKFKRCPNZQUYMLXOVYDSQKJKZDTSRLD"
+  },
+  "ignoreTestFiles": "*.utils.js",
+  "projectId": "ob8yho"
+}

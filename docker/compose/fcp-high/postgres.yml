@@ -1,0 +1,19 @@
+version: '3.4'
+
+####################
+####################
+services:
+  pg-exploit-fcp-high:
+    image: postgres:11
+    env_file:
+      - '${COMPOSE_DIR}/fcp-high/.env/postgres.env'
+    networks:
+      - data
+
+  # deprecated: remove when new fc-apps ready
+  pg-exploitation-high:
+    image: postgres:11
+    env_file:
+      - '${COMPOSE_DIR}/fcp-high/.env/postgres.env'
+    networks:
+      - data

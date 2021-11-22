@@ -1,0 +1,186 @@
+[
+  {
+    "idpId": "fip1-high",
+    "descriptions": [
+      "par défaut",
+      "actif",
+      "whitelisté",
+      "non blacklisté"
+    ],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip1-high.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas3",
+    "encryption": "RSA-OAEP,A256GCM",
+    "signature": "ES256",
+    "selectors": {
+      "idpButton": "#idp-fip1-high",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip2-high",
+    "descriptions": ["eidas 3 - nodiscov - crypted (none) - signed (RS256)"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip2-high.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas3",
+    "encryption": "",
+    "signature": "RS256",
+    "selectors": {
+      "idpButton": "#idp-fip2-high",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip3-desactive-visible",
+    "descriptions": ["désactivé et visible"],
+    "mocked": true,
+    "usable": false,
+    "url": "https://fip3-high.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas3",
+    "encryption": "RSA-OAEP,A256GCM",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#idp-fip3-desactive-visible",
+      "username": "",
+      "password": "",
+      "loginButton": ""
+    }
+  },
+  {
+    "idpId": "fip4-desactive-invisible",
+    "descriptions": ["désactivé et non visible"],
+    "mocked": true,
+    "usable": false,
+    "url": "https://fip1-high.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas3",
+    "encryption": "RSA-OAEP,A256GCM",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#idp-fip4-desactive-invisible",
+      "username": "",
+      "password": "",
+      "loginButton": ""
+    }
+  },
+  {
+    "idpId": "fip5-active-invisible",
+    "descriptions": ["actif et non visible"],
+    "mocked": true,
+    "usable": false,
+    "url": "https://fip1-high.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas3",
+    "encryption": "RSA-OAEP,A256GCM",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#idp-fip5-active-invisible",
+      "username": "",
+      "password": "",
+      "loginButton": ""
+    }
+  },
+  {
+    "idpId": "fip8-high",
+    "descriptions": [
+      "non whitelisté",
+      "blacklisté"
+    ],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip1-high.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas3",
+    "encryption": "",
+    "signature": "ES256",
+    "selectors": {
+      "idpButton": "#idp-fip8-high",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip13-high",
+    "descriptions": ["eidas 3 - crypted (ECDH-ES + A256GCM) - signed (ES256)"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip13-high.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas3",
+    "encryption": "ECDH-ES,A256GCM",
+    "signature": "ES256",
+    "selectors": {
+      "idpButton": "#idp-fip13-high",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip14-high",
+    "descriptions": ["eidas 3 - crypted (RSA-OAEP + A256GCM) - signed (RS256)"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip14-high.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas3",
+    "encryption": "RSA-OAEP,A256GCM",
+    "signature": "RS256",
+    "selectors": {
+      "idpButton": "#idp-fip14-high",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip15-high",
+    "descriptions": ["eidas 2 - crypted (RSA-OAEP + A256GCM) - signed (ES256)"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip15-high.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas2",
+    "encryption": "RSA-OAEP,A256GCM",
+    "signature": "ES256",
+    "selectors": {
+      "idpButton": "#idp-fip15-high",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip16-high",
+    "descriptions": ["eidas 2 - crypted (ECDH-ES + A256GCM) - signed (RS256)"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip16-high.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas2",
+    "encryption": "ECDH-ES,A256GCM",
+    "signature": "RS256",
+    "selectors": {
+      "idpButton": "#idp-fip16-high",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip17-high",
+    "descriptions": ["eidas 2 - crypted (none) - signed (ES256)"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip17-high.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas2",
+    "encryption": "",
+    "signature": "ES256",
+    "selectors": {
+      "idpButton": "#idp-fip17-high",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  }
+]

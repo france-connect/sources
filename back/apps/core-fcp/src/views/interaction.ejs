@@ -1,0 +1,93 @@
+<% const eidasBridgeProvider = locals.providers.find((p) => p.uid === 'eidas-bridge' && p.display) %>
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <%- include('partials/head.ejs'); %>
+    <link rel="stylesheet" href="/css/interaction.css">
+    <link rel="stylesheet" href="/css/numeric-identity.css">
+    <title>Connexion - choix du fournisseur d\'identité</title>
+  </head>
+  <body>
+    <%- include('partials/menu.ejs'); %>
+    <% if(locals.notifications){ %>
+    <div id="notifications" role="alert">
+      <div>
+        <p>
+          <img src="/img/warning.svg" alt=""/>
+            <%- locals.notifications.message %>
+        </p>
+      </div>
+    </div>
+    <% } %>
+    <div id="mire">
+      <div class="content">
+        <main role="main">
+          <h1>Je choisis un moyen pour me connecter sur:</h1>
+          <h2><%= locals.spName %></h2>
+          <div id="idp-list" class="main__providers">
+            <% locals.providers.filter(p => p.display).filter(p => p.uid !== 'eidas-bridge').forEach(provider => { %>
+              <form  method="POST" action="/api/v2/redirect-to-idp" id="fs-request-<%= provider.uid %>" name="fs-request">
+                <div class="identity-provider">
+                  <button id="idp-<%= provider.uid %>" <%= (!provider.active)? 'disabled' : '' %>>
+                    <img src='/img/fi/<%-provider.image%>' alt="Logo de <%= provider.name %>" onerror="this.style.display='none'" />
+                    <span id="idp-<%= provider.uid %>-title">
+                      <%- (!provider.active) ?
+                        `<strong>${provider.title}</strong> est actuellement indisponible` :
+                        `J’utilise l’application <strong>${provider.title}</strong>`;
+                      %>
+                    </span>
+                  </button>
+                </div>
+                <input type="hidden" name="providerUid" id="providerUid" value="<%= provider.uid %>" />
+                <input type="hidden" name="uid" id="uid" value="<%= locals.uid %>" />
+                <input type="hidden" name="acr_values" value="<%= params.acr_values %>" />
+                <input type="hidden" name="scope" value="<%= locals.scope %>" />
+                <input type="hidden" name="csrfToken" value="<%= locals.csrfToken %>" />
+              </form>
+            <% }) %>
+
+            <% if(eidasBridgeProvider) {%>
+              <span id="or-label" lang="en">or</span>
+              <form method="POST" action="/api/v2/redirect-to-idp" id="fs-request-<%= eidasBridgeProvider.uid %>" name="fs-request">
+              <div class="identity-provider overflow">
+                <button
+                  id="idp-<%= eidasBridgeProvider.uid %>">
+                  <img src='/img/fi/fi-europe.svg' alt="Logo de <%= eidasBridgeProvider.name %>"/>
+                  <span lang="en">
+                    Sign in with <strong>a digital identity from another European country</strong>
+                  </span>
+                </button>
+              </div>
+              <input type="hidden" name="providerUid" value="<%= eidasBridgeProvider.uid %>" />
+              <input type="hidden" name="uid" value="<%= locals.uid %>" />
+              <input type="hidden" name="acr_values" value="<%= params.acr_values %>" />
+              <input type="hidden" name="scope" value="<%= locals.scope %>" />
+              <input type="hidden" name="csrfToken" value="<%= locals.csrfToken %>" />
+            </form>
+          <% } %>
+
+          </div>
+          <div class="tuto-container" - role="contentinfo">
+            <h3>Pourquoi je ne retrouve pas mes comptes habituels ?</h3>
+            <div class="logos-container">
+              <img src="/img/logo-impots-couleurs.svg" alt="impots" />
+              <img src="/img/logo-ameli-couleurs.svg" alt="ameli" />
+              <img src="/img/logo-msa-couleurs.svg" alt="Msa" />
+              <img src="/img/logo-mcm.svg" alt="Mobile connect et moi" />
+            </div>
+            <p>
+              FranceConnect+ est la nouvelle solution FranceConnect qui vous permet d’accéder à encore plus de démarches en ligne.
+              Le service auquel vous souhaitez accéder nécessite l’utilisation d’un compte ayant un niveau de sécurité plus élevé.
+            </p>
+              <button id="tuto-numeric-identity">
+                Comment créer une identité numérique
+              </button>
+            </div>
+        </main>
+      </div>
+    </div>
+    <%- include('partials/footer.ejs'); %>
+    <%- include('partials/numeric-identity.ejs'); %>
+    <script type="text/javascript" src="/js/numeric-identity.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "target": "esnext",
+    "module": "es2015",
+    "sourceMap": true,
+    "inlineSources": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "outDir": "../../dist/apps/user-dashboard"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+}

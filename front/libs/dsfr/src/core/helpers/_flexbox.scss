@@ -1,0 +1,139 @@
+/**
+* USAGE:
+* ---------------------
+*
+* .flex-1 -> flex: 1
+*/
+$flexSpaceSizes: (0, 1, 2, 3, 4, 5, 6, 7, 8);
+
+@each $space in $flexSpaceSizes {
+  .flex-#{$space} {
+    flex: #{$space};
+  }
+}
+
+/* -----------------------------------------------------
+
+  FLEXBOX GRID
+
+----------------------------------------------------- */
+
+.flex-columns {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
+.flex-rows {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-wrap-inverse {
+  flex-wrap: wrap-reverse;
+}
+
+/* -----------------------------------------------------
+
+  FLEXBOX LAYOUTS (DISTRIBUTION)
+
+----------------------------------------------------- */
+
+.flex-start {
+  justify-content: start;
+}
+
+.flex-center {
+  justify-content: center;
+}
+
+.flex-end {
+  justify-content: flex-end;
+}
+
+.flex-between {
+  justify-content: space-between;
+}
+
+.flex-around {
+  justify-content: space-around;
+}
+
+.flex-evenly {
+  justify-content: space-evenly;
+}
+
+.flex-justify > * {
+  flex-basis: auto;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.flex-stretch {
+  justify-content: stretch;
+}
+
+/* -----------------------------------------------------
+
+  ITEMS SPACERS
+
+----------------------------------------------------- */
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+/* -----------------------------------------------------
+
+  WRAPPERS
+
+----------------------------------------------------- */
+
+.flex-wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.wrap-1 > *,
+.wrap-2 > *,
+.wrap-3 > *,
+.wrap-4 > *,
+.wrap-5 > * {
+  flex: 0 0 auto;
+}
+
+.wrap-1 > * {
+  width: 100%;
+}
+
+.wrap-2 > * {
+  width: 50%;
+}
+
+.wrap-3 > * {
+  width: 33.333333%;
+}
+
+.wrap-4 > * {
+  width: 25%;
+}
+
+.wrap-5 > * {
+  width: 12.5%;
+}

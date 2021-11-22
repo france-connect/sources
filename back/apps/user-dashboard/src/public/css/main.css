@@ -1,0 +1,26 @@
+body {
+  margin-bottom: 5rem;
+}
+
+section {
+  padding-bottom: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+section.welcome {
+  background-color: #209cee;
+  color: #fff;
+}
+
+section.connect {
+  margin-top: 1.0rem;
+  margin-bottom: 1.0rem;
+}
+
+.no-pad {
+  padding: 0;
+}
+
+#json {
+  height: 22rem;
+}

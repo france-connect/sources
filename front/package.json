@@ -1,0 +1,91 @@
+{
+  "name": "fc-front",
+  "version": "0.1.0",
+  "description": "FC Front Apps mono repository",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "scripts": {
+    "start:ud": "cd apps/user-dashboard && yarn start",
+    "start:fca": "cd apps/agent-connect && yarn start",
+    "start:exploit-fcp-high": "cd apps/exploit-fcp-high && yarn start",
+    "start:exploit-fca-low": "cd apps/exploit-fca-low && yarn start",
+    "start:styleguide": "docsify serve ./libs/styleguide",
+    "build:fca-low-front": "./scripts/yarn-build-libs agent-connect",
+    "build": "./scripts/yarn-build-libs",
+    "docs": "docsify serve ./libs/styleguide",
+    "cleanup": "./scripts/yarn-cleanup",
+    "prettier": "prettier -c \"{apps,libs}/**/*.(ts|tsx|scss)\" --config .prettierrc.json",
+    "test": "jest"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "libs/**/*.ts",
+      "apps/**/*.ts"
+    ],
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/apps/",
+      "<rootDir>/libs/"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "cypress"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/setupTests.ts"
+    ],
+    "moduleNameMapper": {
+      "\\.(scss|css|svg)$": "<rootDir>/__mocks__/styleMock.js",
+      "@fc/routing/(.*)": "<rootDir>/libs/routing/src/$1",
+      "@fc/routing": "<rootDir>/libs/routing/src",
+      "@fc/oidc-client/(.*)": "<rootDir>/libs/oidc-client/src/$1",
+      "@fc/oidc-client": "<rootDir>/libs/oidc-client/src",
+      "@fc/loading/(.*)": "<rootDir>/libs/loading/src/$1",
+      "@fc/loading": "<rootDir>/libs/loading/src",
+      "@fc/state-management/(.*)": "<rootDir>/libs/state-management/src/$1",
+      "@fc/state-management": "<rootDir>/libs/state-management/src",
+      "@fc/common/(.*)": "<rootDir>/libs/common/src/$1",
+      "@fc/common": "<rootDir>/libs/common/src",
+      "@fc/tracks/(.*)": "<rootDir>/libs/tracks/src/$1",
+      "@fc/tracks": "<rootDir>/libs/tracks/src",
+      "@fc/dsfr/(.*)": "<rootDir>/libs/dsfr/src/$1",
+      "@fc/dsfr": "<rootDir>/libs/dsfr/src",
+      "@fc/backoffice/(.*)": "<rootDir>/libs/backoffice/src/$1",
+      "@fc/backoffice": "<rootDir>/libs/backoffice/src"
+    },
+    "preset": "ts-jest"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^27.0.2",
+    "eslint": "^7.11.0",
+    "jest-cli": "^27.2.5",
+    "ts-jest": "^27.0.5",
+    "type-fest": "^2.5.0",
+    "typescript": "^4.4.4"
+  }
+}

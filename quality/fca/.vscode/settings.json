@@ -1,0 +1,23 @@
+{
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "cucumberautocomplete.customParameters": [],
+  "cucumberautocomplete.steps": ["cypress/support/**/steps/*.ts"],
+  "cucumberautocomplete.strictGherkinCompletion": false,
+  "cucumberautocomplete.formatConfOverride": {
+    "Fonctionnalité": 0,
+    "Contexte": 1,
+    "Scénario": 1,
+    "Plan du Scénario:": 1,
+    "Etant donné que": 2,
+    "Et que": 2,
+    "Quand": 2,
+    "Alors": 2,
+    "Et": 2,
+    "Exemples:": 2,
+    "\\*": 2,
+    "\\|": 3,
+    "#": "relative",
+    "@": "relative"
+  }
+}

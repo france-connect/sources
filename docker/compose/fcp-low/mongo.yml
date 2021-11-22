@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:
+  ####################
+  # MONGO FCP LOW
+  ####################
+
+  mongo-fcp-low:
+    hostname: mongo-fcp-low
+    build:
+      context: '${WORKING_DIR}'
+      dockerfile: '${WORKING_DIR}/builds/mongodb/Dockerfile'
+    volumes:
+      - '${VOLUMES_DIR}/mongo-fcp-low/scripts:/opt/scripts'
+      - '${VOLUMES_DIR}/mongo-fcp-low/initdb.d:/docker-entrypoint-initdb.d'
+    env_file:
+      - '${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env'
+    networks:
+      - data

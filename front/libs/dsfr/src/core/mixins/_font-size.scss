@@ -1,0 +1,17 @@
+/**
+* USAGE:
+* ---------------------
+*
+* .fs12 -> font-size 12px converted to rem
+*/
+@mixin fontSize($value) {
+  @include rem(font-size, $value);
+}
+
+@each $size in $font-sizes-map {
+  $pixelValue: number-to-pixel($size);
+
+  .fs#{$size} {
+    @include fontSize($pixelValue);
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "name": "fc-system-testing",
+  "version": "1.0.0",
+  "description": "Cypress/Cucumber Framework Dependencies",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "fca",
+      "fcp"
+    ]
+  },
+  "keywords": [
+    "Cypress",
+    "QA",
+    "Cucumber"
+  ],
+  "engines": {
+    "node": "^14.17.0",
+    "npm": "DO-NOT-USE-NPM"
+  },
+  "dependencies": {
+    "@cucumber/cucumber": "^7.3.0",
+    "@types/cypress-cucumber-preprocessor": "^4.0.0",
+    "@types/node": "^14.17.4",
+    "cypress": "7.7.0",
+    "cypress-cucumber-preprocessor": "^4.1.2",
+    "cypress-template-fixtures": "^1.0.3",
+    "cypress-xpath": "^1.6.2",
+    "enquirer": "^2.3.5",
+    "otplib": "^12.0.1",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.2"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
+    "eslint": "^7.27.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-cypress": "^2.11.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-sort-destructure-keys": "^1.3.5",
+    "eslint-plugin-sort-keys-fix": "^1.1.1",
+    "eslint-plugin-typescript-sort-keys": "^1.6.0",
+    "fs-extra": "^10.0.0",
+    "multiple-cucumber-html-reporter": "^1.18.0",
+    "prettier": "^2.3.0"
+  },
+  "scripts": {
+    "prettier": "prettier -c \"{fca,fcp}/{cypress,scripts}/**/*.ts\" --config .prettierrc",
+    "lint": "eslint \"{fca,fcp}/{cypress,scripts}/**/*.ts\""
+  },
+  "cypress-cucumber-preprocessor": {
+    "step_definitions": "cypress/support/**/steps",
+    "cucumberJson": {
+      "generate": true,
+      "outputFolder": "cypress/reports/cucumber",
+      "filePrefix": "",
+      "fileSuffix": ".cucumber"
+    }
+  }
+}

@@ -1,0 +1,183 @@
+/* -------------------------------------------------
+
+ NEGATES
+
+------------------------------------------------- */
+
+.no-display {
+  display: none;
+}
+
+.no-no-display {
+  display: none !important;
+}
+
+.no-events {
+  pointer-events: none;
+}
+
+.no-no-events {
+  pointer-events: none !important;
+}
+
+.no-flex-grow {
+  flex: 0 1;
+}
+
+.no-no-flex-grow {
+  flex: 0 1 !important;
+}
+
+.no-flex-shrink {
+  flex: 1 0;
+}
+
+.no-no-flex-shrink {
+  flex: 1 0 !important;
+}
+
+.no-float {
+  float: none;
+}
+
+.no-no-float {
+  float: none !important;
+}
+
+.no-flex {
+  flex: none;
+}
+
+.no-no-flex {
+  flex: none !important;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.no-no-margin {
+  margin: 0 !important;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.no-no-padding {
+  padding: 0 !important;
+}
+
+.no-margin-padding {
+  margin: 0;
+  padding: 0;
+}
+
+.no-no-margin-padding {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.no-border {
+  border: 0;
+}
+
+.no-no-border {
+  border: 0 !important;
+}
+
+.no-radius {
+  border-radius: 0;
+}
+
+.no-no-radius {
+  border-radius: 0 !important;
+}
+
+.no-background {
+  background-color: transparent;
+}
+
+.no-no-background {
+  background: none !important;
+}
+
+.no-outline {
+  outline: none;
+}
+
+.no-no-outline {
+  outline: none !important;
+}
+
+.no-pointer {
+  cursor: default;
+}
+
+.no-no-pointer {
+  cursor: default !important;
+}
+
+.no-click {
+  cursor: not-allowed;
+}
+
+.no-no-click {
+  cursor: not-allowed !important;
+}
+
+.no-select {
+  user-select: none;
+}
+
+.no-no-select {
+  user-select: none !important;
+}
+
+.no-underline,
+a.no-underline,
+a.no-underline:hover,
+a.no-underline:active,
+a.no-underline:visited {
+  text-decoration: none;
+}
+
+.no-no-underline,
+a.no-no-underline,
+a.no-no-underline:hover,
+a.no-no-underline:active,
+a.no-no-underline:visited {
+  text-decoration: none !important;
+}
+
+.no-overflow {
+  overflow: hidden;
+}
+
+.no-no-overflow {
+  overflow: hidden !important;
+}
+
+.no-scroll-x {
+  overflow-x: hidden;
+}
+
+.no-no-scroll-x {
+  overflow-x: hidden !important;
+}
+
+.no-scroll-y {
+  overflow-y: hidden;
+}
+
+.no-no-scroll-y {
+  overflow-y: hidden !important;
+}
+
+.no-wrap {
+  white-space: nowrap;
+}
+
+.no-no-wrap {
+  white-space: nowrap !important;
+}

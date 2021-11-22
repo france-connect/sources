@@ -1,0 +1,39 @@
+.clearfix {
+  *zoom: 1;
+
+  &::after,
+  &::before {
+    content: '.';
+    display: block;
+    font-size: 0;
+    height: 0;
+    line-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    width: 0;
+  }
+
+  &::after {
+    clear: both;
+  }
+}
+
+.clear {
+  clear: both;
+}
+
+.clear-right {
+  clear: right;
+}
+
+.clear-left {
+  clear: left;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}

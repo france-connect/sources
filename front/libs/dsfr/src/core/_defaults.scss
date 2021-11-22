@@ -1,0 +1,60 @@
+$PALETTE: (
+  'white': rgba(255, 255, 255, 1),
+  'black': rgba(0, 0, 0, 1),
+  'success': rgba(38, 135, 68, 1),
+  'error': rgba(255, 6, 0, 1),
+  'info': rgba(7, 98, 200, 1),
+) !default;
+
+/* -----------------------------------------------
+*
+* DEFAULTS OVERRIDABLES VARIABLES
+*
+----------------------------------------------- */
+$body-width: 100vw !default;
+$body-font-size: 16px !default;
+$rem-baseline: $body-font-size !default;
+
+$main-font: arial, sans-serif !default;
+$secondary-font: verdana, serif !default;
+
+$font-sizes-map: (12) !default;
+$line-height-map: (12) !default;
+$spacings-map: (4) !default;
+$dimensions_map: (
+  3,
+  5,
+  6,
+  10,
+  15,
+  20,
+  25,
+  30,
+  33,
+  35,
+  40,
+  45,
+  50,
+  55,
+  60,
+  66,
+  70,
+  75,
+  80,
+  85,
+  90,
+  95,
+  100
+) !default;
+
+$breakpoints-xs: 320px !default; // Mobile Small
+$breakpoints-sm: 576px !default; // Mobile
+$breakpoints-md: 768px !default; // Tablet
+$breakpoints-lg: 1024px !default; // Desktop
+$breakpoints-xl: 1248px !default; // Desktop Extra Large
+
+$breakpoint-mobile-sm: $breakpoints-xs;
+$breakpoint-mobile: $breakpoints-sm;
+$breakpoint-tablet: $breakpoints-md;
+$breakpoint-desktop: $breakpoints-lg;
+$breakpoint-desktop-xl: $breakpoints-xl;

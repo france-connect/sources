@@ -1,0 +1,17 @@
+// https://developer.mozilla.org/en-US/docs/Web/CSS/cursor#Values
+
+.use-pointer {
+  cursor: pointer;
+}
+
+.use-cursor {
+  cursor: none;
+}
+
+.use-move {
+  cursor: move;
+}
+
+.use-disabled {
+  cursor: not-allowed;
+}

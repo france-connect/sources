@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- # Copyright (c) 2017 European Commission # Licensed under the EUPL,
+	Version 1.2 or – as soon they will be # approved by the European Commission
+	- subsequent versions of the # EUPL (the "Licence"); # You may not use this
+	work except in compliance with the Licence. # You may obtain a copy of the
+	Licence at: # * https://joinup.ec.europa.eu/page/eupl-text-11-12 # * # Unless
+	required by applicable law or agreed to in writing, software # distributed
+	under the Licence is distributed on an "AS IS" basis, # WITHOUT WARRANTIES
+	OR CONDITIONS OF ANY KIND, either express or implied. # See the Licence for
+	the specific language governing permissions and limitations under the Licence. -->
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<!-- Connector -->
+
+	<!-- Connector assertion URL -->
+	<entry key="connector.assertion.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNode/ColleagueResponse</entry>
+	<!-- Locations Whitelist -->
+	<entry key="connector.url.redirect.location.whitelist">
+	</entry>
+	<entry key="connector.url.post.location.whitelist">
+	</entry>
+	<!-- Protocol engines for the Nodes -->
+	<entry key="saml.connector">Connector</entry>
+	<entry key="saml.service">Service</entry>
+	<!-- Logging incoming/outgoing messages in the Node -->
+	<entry key="saml.audit">true</entry>
+
+
+	<!-- Number of known Service -->
+	<entry key="service.number">2</entry>
+
+	<entry key="service1.id">FR</entry>
+	<!-- Name of the first Service -->
+	<entry key="service1.name">EIDAS-FR</entry>
+	<!-- URL of the first Service -->
+	<!-- Skew time for Service -->
+	<entry key="service1.skew.notbefore">0</entry>
+	<entry key="service1.skew.notonorafter">0</entry>
+	<!-- the url under which service11 is publishing its metadata -->
+	<entry key="service1.metadata.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNode/ServiceMetadata</entry>
+	<entry key="service2.id">CB</entry>
+	<!-- Name of the second Service -->
+	<entry key="service2.name">EIDAS-CB</entry>
+	<!-- URL of the first Service -->
+	<entry key="service2.skew.notbefore">0</entry>
+	<entry key="service2.skew.notonorafter">0</entry>
+	<entry key="service2.metadata.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNode/ServiceMetadata</entry>
+
+	<!-- service -->
+	<!-- Id of this Service -->
+	<entry key="service.id">FR</entry>
+	<!-- Country Code of this Service -->
+	<entry key="service.countrycode">FR</entry>
+	<!-- QAALevel of this Service -->
+	<entry key="service.maxQAAlevel">4</entry>
+
+	<!-- SECURITY POLICY -->
+	<!-- Bypass SP validation -->
+	<entry key="validation.bypass">true</entry>
+	<!-- Validate SP by ID and Domain or only by Domain (spid|domain) -->
+	<entry key="validation.method">spid</entry>
+	<!-- limit of requests per IP during max.time.ip (-1 unlimited) -->
+	<entry key="max.requests.ip">-1</entry>
+	<!-- limit of requests per SP during max.time.ip (-1 unlimited) -->
+	<entry key="max.requests.sp">-1</entry>
+	<!-- time frame for IP requests (seconds) -->
+	<entry key="max.time.ip">60</entry>
+	<!-- time frame for SP requests (seconds) -->
+	<entry key="max.time.sp">60</entry>
+	<!-- allowed SP domains (none|all|list;Of;Domains) -->
+	<entry key="trusted.sp.domains">all</entry>
+	<!-- min QAA level allowed -->
+	<entry key="min.qaaLevel.value">1</entry>
+	<!-- max QAA level allowed -->
+	<entry key="max.qaaLevel.value">4</entry>
+	<!-- New Configuration -->
+	<!-- SP's ProviderName alias could be none or the PROVIDERNAME -->
+	<entry key="SP-CB.validation">none</entry>
+	<entry key="SP-FR.validation">none</entry>
+
+	<!-- PLugin connector -->
+	<entry key="active.module.connector">true</entry>
+
+	<!-- PLugin service -->
+	<entry key="active.module.service">true</entry>
+
+
+
+	<!-- Binding -->
+	<entry key="allow.redirect.binding">true</entry>
+	<entry key="validate.binding">true</entry>
+
+	<!-- Certificates -->
+	<entry key="check_certificate_validity_period">true</entry>
+	<entry key="disallow_self_signed_certificate">true</entry>
+
+	<!-- signing Algorithm SHA_512(default),SHA_384,SHA_256 -->
+	<!-- http://www.w3.org/2001/04/xmldsig-more#rsa-sha256 -->
+	<!-- http://www.w3.org/2001/04/xmldsig-more#rsa-sha384 -->
+	<!-- http://www.w3.org/2001/04/xmldsig-more#rsa-sha512 -->
+
+	<entry key="signature.algorithm">http://www.w3.org/2001/04/xmldsig-more#rsa-sha512</entry>
+
+	<entry key="signature.algorithm.whitelist">
+		http://www.w3.org/2001/04/xmldsig-more#rsa-sha256;
+		http://www.w3.org/2001/04/xmldsig-more#rsa-sha384;
+		http://www.w3.org/2001/04/xmldsig-more#rsa-sha512;
+		http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256;
+		http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384;
+		http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512
+	</entry>
+
+	<!-- signing response assertion true/false (default false) -->
+	<entry key="response.sign.assertions">true</entry>
+	<entry key="request.sign.with.key.value">false</entry>
+	<entry key="response.sign.with.key.value">false</entry>
+	<entry key="assertion.encrypt.with.key.value">false</entry>
+
+	<!-- Encryption algorithm -->
+	<entry key="data.encryption.algorithm"></entry>
+	<!-- List of Encryption algorithms http://www.w3.org/2009/xmlenc11#aes128-gcm;
+		http://www.w3.org/2009/xmlenc11#aes256-gcm; http://www.w3.org/2009/xmlenc11#aes192-gcm -->
+	<!-- Decryption algorithm Whitelist -->
+
+	<entry key="encryption.algorithm.whitelist">
+		http://www.w3.org/2009/xmlenc11#aes128-gcm;
+		http://www.w3.org/2009/xmlenc11#aes256-gcm;
+		http://www.w3.org/2009/xmlenc11#aes192-gcm
+	</entry>
+
+
+	<!--Metadata -->
+	<entry key="metadata.activate">true</entry>
+
+	<!--connector Metadata -->
+	<entry key="connector.node.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNode/</entry>
+	<entry key="connector.contact.email">test@com</entry>
+	<entry key="connector.metadata.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNode/ConnectorMetadata</entry>
+
+	<!--service Metadata -->
+	<entry key="service.node.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNode/</entry>
+	<entry key="service.contact.email">test@com</entry>
+	<entry key="service.metadata.url">https://eidas-fr.docker.dev-franceconnect.fr/EidasNode/ServiceMetadata</entry>
+
+	<!--entry key="metadata.file.repository">c:\Pgm\projects\configEidas\tomcat\metadata</entry -->
+	<entry key="metadata.http.retrieval">true</entry>
+
+	<!-- Eidas Node Service Metadata Single Sign On locations for ServiceMetadata -->
+	<entry key="ssos.serviceMetadataGeneratorIDP.redirect.location">https://eidas-fr.docker.dev-franceconnect.fr/EidasNode/ColleagueRequest</entry>
+	<entry key="ssos.serviceMetadataGeneratorIDP.post.location">https://eidas-fr.docker.dev-franceconnect.fr/EidasNode/ColleagueRequest</entry>
+
+
+	<!-- Check that the citizen country code in the SAMLRequest is the same
+		than the country of the Service signing certificate -->
+	<entry key="check.citizenCertificate.serviceCertificate">false</entry>
+	<!-- Feature selector for the security header added to the EidasNode -->
+	<!-- This feature once disabled, switch off the content security policy -->
+	<entry key="security.header.CSP.enabled">true</entry>
+	<!-- uri used for the CSP reporting feature -->
+	<entry key="security.header.CSP.report.uri">https://eidas-fr.docker.dev-franceconnect.fr/EidasNode</entry>
+	<!-- Header specific for mozilla browser backwards compatibility : xhr-src:
+		'self' -->
+	<entry key="security.header.CSP.includeMozillaDirectives">true</entry>
+	<!-- X-XSS-Protection:1; mode=block -->
+	<entry key="security.header.XXssProtection.block">true</entry>
+	<!-- X-Content-Type-Options:nosniff -->
+	<entry key="security.header.XContentTypeOptions.noSniff">true</entry>
+	<!-- X-Frame-Options:SAMEORIGIN -->
+	<entry key="security.header.XFrameOptions.sameOrigin">true</entry>
+	<!-- Strict-Transport-Security:max-age=600000; includeSubdomains -->
+	<entry key="security.header.HSTS.includeSubDomains">true</entry>
+	<!-- Include CSP fallback debug mode in JSPs -->
+	<entry key="security.header.CSP.fallbackCheckMode">false</entry>
+
+	<!-- value of the SPType to be published in the metadata -->
+	<entry key="metadata.sector">public</entry>
+
+	<entry key="hashDigest.className">org.bouncycastle.crypto.digests.SHA512Digest</entry>
+
+	<!-- Retention period for simple metadata cache in seconds, for distributed
+		environment, set in hazelcastNode.xml -->
+	<entry key="nonDistributedMetadata.retention">86400</entry>
+
+	<!-- check signature of entitydescriptors in metadata -->
+	<entry key="metadata.check.signature">true</entry>
+	<!-- allows metadata retrieval only using https -->
+	<entry key="metadata.restrict.http">true</entry>
+	<!-- SSL/TLS enabled protocols -->
+	<entry key="tls.enabled.protocols">TLSv1.2</entry>
+	<!-- SSL/TLS enabled cipher suites -->
+
+
+	<!--java 8 supported ciphers. Please see https://ec.europa.eu/cefdigital/wiki/x/6MXuAw -->
+	<entry key="tls.enabled.ciphers">
+		TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
+		TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+		TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,
+		TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+		TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384,
+		TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+		TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+		TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+		TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+		TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
+		TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+		TLS_DHE_RSA_WITH_AES_128_CBC_SHA,
+		TLS_DHE_RSA_WITH_AES_256_CBC_SHA,
+		TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,
+		TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,
+		TLS_DHE_RSA_WITH_AES_256_CBC_SHA256,
+		TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,
+		TLS_EMPTY_RENEGOTIATION_INFO_SCSV
+	</entry>
+
+	<!-- empty means no restriction -->
+	<!--<entry key="tls.enabled.ciphers"></entry> -->
+	<!-- enforce encryption of the SAML response -->
+	<entry key="response.encryption.mandatory">true</entry>
+
+	<!-- disable the check that the list of attributes contains at least the
+		minimum set (when set to true) -->
+	<entry key="disable.check.mandatory.eidas.attributes">false</entry>
+	<!-- disable the check of representative attributes in the request (when
+		set to true) -->
+	<entry key="disable.check.representative.attributes">false</entry>
+
+	<entry key="insert.prefix.identifiers.country.code">true</entry>
+	<entry key="validate.prefix.country.code.identifiers">true</entry>
+
+	<!-- Adds ipAddress to SubjectConfirmationData for response assertion if
+		set to true -->
+	<!--<entry key="enable.address.attribute.subject.confirmation.data">true</entry> -->
+
+	<!-- level of assurance for the service -->
+	<!-- entry key="service.LoA">http://eidas.europa.eu/LoA/low</entry -->
+	<!-- <entry key="service.LoA">http://eidas.europa.eu/LoA/substantial</entry> -->
+	<entry key="service.LoA">http://eidas.europa.eu/LoA/high</entry>
+
+
+	<!-- duration of validity for dynamic metadata (in seconds) -->
+	<entry key="metadata.validity.duration">86400</entry>
+	<!-- Remove xsi:type from LOA's metadata's attribute value This is a temporary
+		configuration parameter -->
+
+	<entry key="metadata.hide.loatype">false</entry>
+
+	<!-- list of urls corresponding to entity descriptors whose signatures have
+		not to be checked the format to use is http://descriptorurl1;https://descriptorurl2; -->
+	<entry key="node.metadata.not.signed.descriptors"></entry>
+
+	<!-- METADATA configuration -->
+	<!-- Connector contact -->
+	<entry key="connector.contact.support.email">contact.support@eidas-connector.eu</entry>
+	<entry key="connector.contact.support.company">eIDAS Connector Operator</entry>
+	<entry key="connector.contact.support.givenname">John</entry>
+	<entry key="connector.contact.support.surname">Doe</entry>
+	<entry key="connector.contact.support.phone">+40 123456</entry>
+	<entry key="connector.contact.technical.email">contact.technical@eidas-connector.eu</entry>
+	<entry key="connector.contact.technical.company">eIDAS Connector Operator</entry>
+	<entry key="connector.contact.technical.givenname">John</entry>
+	<entry key="connector.contact.technical.surname">Doe</entry>
+	<entry key="connector.contact.technical.phone">+41 123456</entry>
+	<!-- Connector organization -->
+	<entry key="connector.organization.name">Sample Country Connector</entry>
+	<entry key="connector.organization.displayname">Connector</entry>
+	<entry key="connector.organization.url">https://connector.sample/info</entry>
+	<!-- ProxyService contact -->
+	<entry key="service.contact.support.email">contact.support@eidas-proxyservice.eu</entry>
+	<entry key="service.contact.support.company">eIDAS ProxyService Operator</entry>
+	<entry key="service.contact.support.givenname">John</entry>
+	<entry key="service.contact.support.surname">Doe</entry>
+	<entry key="service.contact.support.phone">+42 123456</entry>
+	<entry key="service.contact.technical.email">contact.technical@eidas-proxyservice.eu</entry>
+	<entry key="service.contact.technical.company">eIDAS ProxyService Operator</entry>
+	<entry key="service.contact.technical.givenname">John</entry>
+	<entry key="service.contact.technical.surname">Doe</entry>
+	<entry key="service.contact.technical.phone">+43 123456</entry>
+	<!-- ProxyService organization -->
+	<entry key="service.organization.name">Sample Country Proxy Service</entry>
+	<entry key="service.organization.displayname">Service</entry>
+	<entry key="service.organization.url">https://service.sample/info</entry>
+	<!--URL for specific-proxyService requests receiver only needed when specific -->
+	<entry key="specific.proxyservice.request.receiver">https://eidas-bridge.docker.dev-franceconnect.fr/eidas-provider/request-handler</entry>
+	<!--URL for specific-connector response receiver -->
+	<entry key="specific.connector.response.receiver">https://eidas-bridge.docker.dev-franceconnect.fr/eidas-client/response-handler</entry>
+
+	<!--eidas protocol version value to be published in the node's metadata
+		URLs -->
+	<entry key="eidas.protocol.version">1.1</entry>
+	<!--eidas application identifier value to be published in the node's metadata
+		URLs -->
+	<entry key="eidas.application.identifier">CEF:eIDAS-ref:2.4</entry>
+
+	<!--eidas application identifier values which failure responses should contain
+		assertion this is a transition property to be removed in the future when
+		transition period ends -->
+	<entry
+		key="include.assertion.fail.response.application.identifiers">CEF:eIDAS-ref:1.4.2;CEF:eIDAS-ref:2.1</entry>
+
+	<!--Boolean that replaces the citizen country code by sp country code on
+		Proxy-Service's Light Request side if set to true -->
+	<!--<entry key="replace.citizenCountryCode.by.spCountryCode.in.proxyService.lightRequest">true</entry> -->
+</properties>

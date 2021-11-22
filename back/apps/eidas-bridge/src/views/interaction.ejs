@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head role="banner">
+    <%- include('includes/head-v2') %>
+    <title>Choose your country</title>
+  </head>
+
+  <body role="main">
+    <%- include('includes/menu-v2') %>
+    <div class="page-title-container">
+      <h1>From which country does your digital identity come ?</h1>
+    </div>
+    <div class="container-flags">
+      <% locals.countryList.forEach(({iso, icon, name}) => {%>
+      <div class="country">
+        <form action="/<%= locals.uid %>/login" method="POST">
+          <button id="country-<%= iso %>" type="submit" class="country-btn" name="country" value="<%= iso %>">
+            <img
+              src="<%= icon %>"
+              alt=""
+            />
+            <span><%= name %></span>
+          </button>
+        </form>
+      </div>
+      <%});%>
+    </div>
+    <div class="ibid-container">
+      <p>
+        If your country is not on this list then the cross-border authentication
+        option might not be available yet.<br /><br />
+        <a href="https://ec.europa.eu/digital-single-market/en/learn-about-eidas">Learn more about the eIDAS regulation</a>
+      </p>
+    </div>
+    <%- include('includes/footer-v2') %>
+  </body>
+</html>

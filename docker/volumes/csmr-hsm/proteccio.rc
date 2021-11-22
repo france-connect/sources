@@ -1,0 +1,7 @@
+[PROTECCIO]
+IPaddr=192.168.142.10
+SSL=0
+
+[CLIENT]
+Mode=2
+LoggingLevel=0

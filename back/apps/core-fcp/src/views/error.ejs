@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <%- include('partials/head.ejs'); %>
+    <link rel="stylesheet" href="/css/error.css">
+    <link rel="stylesheet" href="/css/common/typo.css">
+    <link rel="stylesheet" href="/css/numeric-identity.css">
+    <title>Connexion - choix du fournisseur d\'identité</title>
+  </head>
+  <body>
+    <%- include('partials/menu.ejs'); %>
+    <div id="error">
+      <div class="content">
+        <main>    
+          <h1 class="main-title">Une erreur technique est survenue lors de la connexion.</h1>
+          <div class="list-container">
+            <h3>Que faire ?</h3>
+            <ul>
+              <li>
+                Fermez l’onglet de votre navigateur et reconnectez-vous en cliquant sur le bouton FranceConnect.
+              </li>
+              <li>
+                Contactez le support FranceConnect si le problème persiste en utilisant notre formulaire d’aide.
+              </li>
+            </ul>
+            <h3>Besoin d'aide ?</h3>
+            <p>Pour contacter le service support FranceConnect, merci d’utiliser notre formulaire.</p>
+          </div>
+          <div class="detail-error-container">
+            <p>
+              Informations à nous transmettre dans le mail pour faciliter la prise en charge de votre demande :
+            </p>
+            <% if(locals.code){%><p id="error-code"><strong>Code d'erreur : </strong><%= locals.code %></p><%}%> 
+            <% if(locals.id){%><p id="error-id"><strong>ID : </strong><%= locals.id %></p><%}%> 
+            <% if(locals.message){%><p id="error-message"><strong>Message : </strong><%= locals.message %></p><%}%> 
+          </div>
+        </main>
+      </div>
+    </div>
+    <%- include('partials/footer.ejs'); %>
+  </body>
+</html>

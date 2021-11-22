@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<%- include('partials/heads.ejs', { title: 'Connexion - consentement', style: 'consent-low' }); %>
+
+<body>
+  <header>
+    <img src="/img/fc_logo.png" alt="" class="header__logo">
+  </header>
+  <% if (locals.scopes.every(scope => scope === 'openid')) { %>
+  <main class="anonymous">
+    <section>
+      <p class="section__identity">Vous avez été connecté de façon anonyme</p>
+
+      <p class="section__more-info">
+        Aucune donnée n'a été échangée pour vous connecter.
+      </p>
+    </section>
+
+    <a href="/api/v2/login?_csrf=<%=locals.code%>" id="consent"
+      class="content__continue">Continuer sur
+      <%= locals.spName %></a>
+
+    <p><% JSON.stringify(locals.identity); %></p>
+    <% } else { %>
+    <main>
+      <section>
+        <p class="section__welcome">Bienvenue</p>
+        <p class="section__identity"><%= locals.identity.given_name %> <%= locals.identity.family_name %></p>
+
+        <a href="#" class="section__more-info">Ce n’est pas vous ?</a>
+      </section>
+
+      <form method="POST" action="/api/v2/login" name="fc-consent">
+        <button type="submit" id="consent" class="content__continue">Continuer sur <%= locals.spName %></button>
+
+        <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>" />
+      </form>
+
+      <article>
+        <p class="content__success">
+          À la demande du service, certaines données vont être transmises.
+        </p>
+
+        <div id="openCloseMenu" class="content__details">
+          <div id="toggleOpenCloseMenu" class="content-details__header">
+            <span class="close">Voir le détail</span>
+            <span class="open">Masquer le détail</span>
+          </div>
+          <div class="content-details__content">
+            <p>
+              Pour confirmer votre identité, FranceConnect doit partager ces informations :
+            </p>
+
+            <ul>
+              <% locals.scopes.forEach(scope => {
+                if (scope !== 'openid') { %>
+              <li><%= scope %></li>
+              <% } %>
+              <% }) %>
+            </ul>
+
+            <a href="https://franceconnect.gouv.fr/cgu" class="more-informations">
+              En savoir plus sur le traitement des données personnelles
+            </a>
+          </div>
+        </div>
+      </article>
+      <% } %>
+    </main>
+    <footer>
+      <ul>
+        <li><a href="https://franceconnect.gouv.fr">FranceConnect <%= new Date().getFullYear() %></a></li>
+        <li><a href="https://franceconnect.gouv.fr/cgu">Conditions Générales d'Utilisation</a></li>
+        <li><a href="https://franceconnect.gouv.fr/faq">Foire aux questions</a></li>
+      </ul>
+      <img src="/img/marianne_logo.png" alt="logo de marianne" class="footer__marianne">
+    </footer>
+    <script type="text/javascript" src="/js/consent.js"></script>
+</body>
+
+</html>

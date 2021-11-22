@@ -1,0 +1,79 @@
+version: "3.4"
+
+####################
+##
+##   RIE
+##
+####################
+services:
+
+  rp-bridge-proxy:
+    image: nginx:1.14.2
+    volumes:
+      - ${VOLUMES_DIR}/nginx-proxy/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${VOLUMES_DIR}/nginx-proxy/includes:/etc/nginx/includes:ro
+      - ${VOLUMES_DIR}/rp-bridge-proxy/:/etc/nginx/conf.d:ro
+      - ${VOLUMES_DIR}/ssl:/etc/nginx/docker_host:ro
+    networks:
+      public:
+        ipv4_address: 172.16.1.254
+    depends_on:
+      - rie-bridge-proxy
+
+  rie-bridge-proxy:
+    hostname: rie-bridge-proxy
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'squid'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fca-low/.env/rie-bridge-proxy.env'
+    tty: true
+    ports:
+      - 9262:9262
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  csmr-rie:
+    hostname: csmr-rie
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - broker
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - ${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fca-low/.env/csmr-rie.env'
+    tty: true
+    ports: 
+      - 9263:9263
+    networks:
+      - rie
+    command: 'pm2 logs'
+
+  fia-llng-low:
+    image: coudot/lemonldap-ng:2.0.13
+    volumes:
+      - "${VOLUMES_DIR}/llng/scripts/:/scripts:ro"
+      - "${VOLUMES_DIR}/llng/llng-conf.json:/llng-conf.json:ro"
+    env_file:
+      - '${COMPOSE_DIR}/fca-low/.env/fia-llng-low.env'
+    networks:
+      - rie
+      

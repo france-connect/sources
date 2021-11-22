@@ -1,0 +1,14 @@
+@import '@fc/dsfr/styles.scss';
+
+.identiy-provider-card {
+  max-width: 260px;
+  width: 100%;
+}
+
+@media (min-width: $breakpoints-sm) {
+  #identity-providers-user-history {
+    .wrapper {
+      justify-content: center;
+    }
+  }
+}

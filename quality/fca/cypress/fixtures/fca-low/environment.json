@@ -1,0 +1,7 @@
+{
+  "name": "{{TEST_ENV}}",
+  "allAppsUrl": "https://{{TEST_ENV}}.dev-franceconnect.fr/fca.html",
+  "exploitAppId": "exploitation-fca-low",
+  "exploitRootUrl": "https://exploitation-fca-low.{{TEST_ENV}}.dev-franceconnect.fr",
+  "fcaRootUrl": "https://core-fca-low.{{TEST_ENV}}.dev-franceconnect.fr"
+}

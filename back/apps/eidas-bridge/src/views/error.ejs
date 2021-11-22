@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="fr">
+  <head role="banner">
+    <%- include('includes/head') %>
+    <title><%= locals.titleFront %></title>
+  </head>
+  <body role="main">
+    <%- include('includes/menu') %>
+    <section class="welcome">
+      <div class="container text-center">
+        <h1>Une erreur est survenue</h1>
+      </div>
+    </section>
+
+  <section class="container">
+    <h2 id="error-title" class=text-center>
+      Error: <span id="error-title"><%= locals.error %></span>
+    </h1>
+    <p id="error-description" class="text-center">
+      <%= locals.error_description %>
+    </p>
+  </section>
+
+  <%- include('includes/footer') %>
+  </body>
+</html>

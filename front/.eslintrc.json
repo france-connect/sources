@@ -1,0 +1,74 @@
+{
+  "root": true,
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "plugins": [
+    "simple-import-sort",
+    "import",
+    "sort-destructure-keys",
+    "sort-keys-fix",
+    "jest"
+  ],
+  "extends": [
+    "airbnb-typescript",
+    "prettier",
+    "plugin:jest/recommended",
+    "plugin:jest/style"
+  ],
+  "rules": {
+    "import/first": 2,
+    "import/newline-after-import": 2,
+    "import/no-extraneous-dependencies": [
+      2,
+      {
+        "devDependencies": [
+          "**/*.spec.ts",
+          "**/*.spec.tsx",
+          "**/*.spec.js",
+          "**/*.spec.jsx"
+        ]
+      }
+    ],
+    "import/no-duplicates": 2,
+    "react/react-in-jsx-scope": 0,
+    "react/jsx-closing-bracket-location": [
+      2,
+      { "nonEmpty": "after-props", "selfClosing": false }
+    ],
+    "react/jsx-fragments": [2, "element"],
+    "react/jsx-indent": [
+      2,
+      2,
+      { "checkAttributes": false, "indentLogicalExpressions": true }
+    ],
+    "react/display-name": [2, { "ignoreTranspilerName": false }],
+    "react/jsx-props-no-spreading": 0,
+    "react/jsx-sort-props": [
+      2,
+      {
+        "noSortAlphabetically": false,
+        "ignoreCase": true,
+        "callbacksLast": true,
+        "shorthandFirst": true,
+        "reservedFirst": true
+      }
+    ],
+    "simple-import-sort/imports": 2,
+    "simple-import-sort/exports": 2,
+    "sort-imports": "off",
+    "sort-keys-fix/sort-keys-fix": 2,
+    "sort-destructure-keys/sort-destructure-keys": 2,
+    "sort-keys": [
+      2,
+      "asc",
+      { "caseSensitive": true, "natural": false, "minKeys": 2 }
+    ]
+  }
+}

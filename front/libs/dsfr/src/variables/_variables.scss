@@ -1,0 +1,31 @@
+$body-width: 100vw !default;
+$body-font-size: 16px !default;
+$rem-baseline: $body-font-size;
+
+// @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/223019527/Typographie+-+Typography
+$main-font: 'Marianne', arial, sans-serif;
+$secondary-font: 'Spectral', arial, sans-serif;
+
+// @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/223019527/Typographie+-+Typography#Titres-et-titres-alternatifs----Heading-and-display
+$font-sizes-map: (
+  12,
+  14,
+  16,
+  20,
+  22,
+  24,
+  28,
+  32,
+  40,
+  48,
+  56,
+  64,
+  72,
+  80
+) !default;
+
+// @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/222396724/Espacement+-+Spacing
+$spacings-map: (4, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64, 72, 96, 120) !default;
+
+// @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/223019527/Typographie+-+Typography#Titres-et-titres-alternatifs----Heading-and-display
+$line-height-map: (20, 24, 28, 32, 36, 40, 48, 56, 64, 72, 80, 88) !default;

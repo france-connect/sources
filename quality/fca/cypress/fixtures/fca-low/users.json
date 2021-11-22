@@ -1,0 +1,28 @@
+[
+  {
+    "enabled": true,
+    "criteria": [
+      "par défaut"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "test",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "uid": "1",
+      "given_name": "Angela Claire Louise",
+      "usual_name": "DUBOIS",
+      "email": "test@abcd.com",
+      "siren": "343293775",
+      "siret": "34329377500037",
+      "organizational_unit": "comptabilite",
+      "belonging_population": "agent",
+      "phone_number": "+331-12-44-45-23",
+      "chorusdt:matricule": "USER_AGC",
+      "chorusdt:societe": "CHT"
+    }
+  }
+]

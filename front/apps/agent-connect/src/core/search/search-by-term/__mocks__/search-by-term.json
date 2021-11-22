@@ -1,0 +1,36 @@
+[
+  {
+    "id": "ministere-culture-1",
+    "identityProviders": ["cinéma", "livres", "dessins"],
+    "name": "Ministère Culture 1"
+  },
+  {
+    "id": "ministere-defense-1",
+    "identityProviders": ["pompiers", "gendarmerie", "armée de l'air"],
+    "name": "Ministère Défense 1"
+  },
+  {
+    "id": "ministere-interieur-1",
+    "identityProviders": ["police", "igpn"],
+    "name": "Ministère Intérieur 1"
+  },
+  {
+    "id": "ministere-culture-2",
+    "identityProviders": ["cinéma 2", "livres 2", "dessins 2"],
+    "name": "Ministère Culture 2"
+  },
+  {
+    "id": "ministere-de-la-gendarmerie-1",
+    "identityProviders": [
+      "cinéma gendarmerie",
+      "livres gendarmerie",
+      "dessins gendarmerie"
+    ],
+    "name": "Ministere de la Gendarmerie 1"
+  },
+  {
+    "id": "ministere-de-la-gendarmerie-2",
+    "identityProviders": ["canape"],
+    "name": "Ministere de la Gendarmerie 2"
+  }
+]

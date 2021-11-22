@@ -1,0 +1,19 @@
+version: '3.4'
+
+####################
+####################
+services:
+  mongo-fcp-high:
+    hostname: mongo-fcp-high
+    build:
+      context: '${WORKING_DIR}'
+      dockerfile: '${WORKING_DIR}/builds/mongodb/Dockerfile'
+    volumes:
+      - '${VOLUMES_DIR}/mongo-fcp-high/scripts:/opt/scripts'
+      - '${VOLUMES_DIR}/mongo-fcp-high/initdb.d:/docker-entrypoint-initdb.d'
+    env_file:
+      - '${COMPOSE_DIR}/fcp-high/.env/mongo.env'
+    ports:
+      - '127.0.0.1:27017:27017'
+    networks:
+      - data

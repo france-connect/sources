@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <%- include('partials/head.ejs'); %>
+    <link rel="stylesheet" href="/css/consent.css">
+    <title>Connexion - consentement</title>
+  </head>
+  <body>
+    <header>
+      <img src="/img/logo-marianne.svg" alt="logo république française marianne" class="header__logo-marianne">
+      <img src="/img/logo-fc-plus.svg" alt="logo franceconnect plus" class="header__logo-fc-plus">
+    </header>
+    <% if (locals.scopes.every(scope => scope === 'openid')) { %>
+    <main class="anonymous">
+      <section>
+        <p class="section__identity">Vous avez été connecté de façon anonyme</p>
+
+        <p class="section__more-info">
+          Aucune donnée n'a été échangée pour vous connecter.
+        </p>
+      </section>
+
+      <form method="POST" action="/api/v2/login" name="fc-consent">
+        <button type="submit" id="consent" class="content__continue">
+          Continuer sur <%= locals.spName %>
+        </button>
+
+        <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>" />
+      </form>
+
+    </main>
+
+    <% } else { %>
+    <main>
+
+      <section>
+        <p class="section__welcome">Bienvenue</p>
+        <p role="heading" aria-level="1" class="section__identity"><%= locals.identity.given_name %> <%= locals.identity.family_name %></p>
+      </section>
+
+      <form method="POST" action="/api/v2/login" name="fc-consent">
+        <% if (locals.consentRequired) { %>
+          <div id="fc-ask-consent">
+            <input type="checkbox" id= "fc-ask-consent-checkbox" name="fc-consent-checkbox">
+            <label class="fc-ask-consent-label" for="fc-ask-consent-checkbox">
+                J'accepte que FranceConnect transmette mes données au service pour me connecter.
+            </label>
+          </div>
+          <% } %> 
+        <div>  
+         <button type="submit" id="consent" class="content__continue">Continuer sur <%= locals.spName %></button>
+        </div>
+        <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>" />
+      </form>
+
+      <article>
+        <p class="content__success">
+          À la demande du service auquel vous souhaitez accéder, certaines données vont être transmises.
+        </p>
+
+        <div id="openCloseMenu" class="content__details">
+          <% if (locals.consentRequired) { %>
+            <div class="fc-content-details-header-consent">
+              <span>Détail des données à transmettre :</span>
+            </div>
+          <% } else { %>
+            <div id="toggleOpenCloseMenu" role="button" tabindex="0" class="content-details__header">
+              <span class="close">Voir le détail des données</span>
+              <span class="open">Masquer le détail des données</span>
+            </div>
+          <% } %>
+          <div class="content-details__content">
+            <% if (!locals.consentRequired) { %>
+              <p>
+                Pour confirmer votre identité, FranceConnect+ doit partager ces informations :
+              </p>
+            <% } %>
+        
+            <ul>
+              <% claims
+                  .forEach(label => { %>
+                  <li><%= label %></li>
+                <% }); %>
+            </ul>
+
+            <p>
+              <a href="https://franceconnect.gouv.fr/cgu" class="more-informations">
+                En savoir plus sur le traitement des données personnelles
+              </a>
+            </p>
+          </div>
+        </div>
+      </article>
+    </main>
+    <% } %>
+
+    <%- include('partials/footer.ejs') %>
+
+    <script type="text/javascript" src="/js/consent.js"></script>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+/**
+* USAGE:
+* ---------------------
+*
+* .w33 -> width 33%
+*/
+
+@each $size in $dimensions_map {
+  $percentValue: ($size * 1%);
+
+  .w#{$size} {
+    width: $percentValue;
+  }
+
+  .h#{$size} {
+    height: $percentValue;
+  }
+}

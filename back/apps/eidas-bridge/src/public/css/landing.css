@@ -1,0 +1,17 @@
+section.welcome {
+  background-color: #209cee;
+  color: #fff;
+}
+
+section.connect {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.no-pad {
+  padding: 0;
+}
+
+#json {
+  height: 22rem;
+}

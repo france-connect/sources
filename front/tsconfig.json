@@ -1,0 +1,38 @@
+{
+  "include": ["src/**/*.tsx?"],
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@fc/routing": ["../../libs/routing/src"],
+      "@fc/routing/*": ["../../libs/routing/src/*"],
+      "@fc/oidc-client": ["../../libs/oidc-client/src"],
+      "@fc/oidc-client/*": ["../../libs/oidc-client/src/*"],
+      "@fc/loading": ["../../libs/loading/src"],
+      "@fc/loading/*": ["../../libs/loading/src/*"],
+      "@fc/state-management": ["../../libs/state-management/src"],
+      "@fc/state-management/*": ["../../libs/state-management/src/*"],
+      "@fc/common": ["../../libs/common/src"],
+      "@fc/common/*": ["../../libs/common/src/*"],
+      "@fc/tracks": ["../../libs/tracks/src"],
+      "@fc/tracks/*": ["../../libs/tracks/src/*"],
+      "@fc/dsfr": ["../../libs/dsfr/src"],
+      "@fc/dsfr/*": ["../../libs/dsfr/src/*"],
+      "@fc/backoffice": ["../../libs/backoffice/src"],
+      "@fc/backoffice/*": ["../../libs/backoffice/src/*"]
+    }
+  }
+}

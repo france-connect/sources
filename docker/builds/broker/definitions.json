@@ -1,0 +1,102 @@
+{
+    "rabbit_version": "3.8.11",
+    "rabbitmq_version": "3.8.11",
+    "bindings": [],
+    "exchanges": [],
+    "global_parameters": [
+        {
+            "name": "cluster_name",
+            "value": "rabbit@broker"
+        }
+    ],
+    "parameters": [],
+    "vhosts": [
+        {
+            "limits": [],
+            "metadata": {
+                "description": "Default virtual host (à supprimer)",
+                "tags": []
+            },
+            "name": "/"
+        },
+        {
+            "limits": [],
+            "metadata": {
+                "description": "HSM",
+                "tags": []
+            },
+            "name": "crypto"
+        },
+        {
+            "limits": [],
+            "metadata": {
+                "description": "Hybridge FCA RIE",
+                "tags": []
+            },
+            "name": "fca-rie"
+        }
+    ],
+    "users": [
+        {
+            "hashing_algorithm": "rabbit_password_hashing_sha256",
+            "limits": {},
+            "name": "fca-rie_user",
+            "password_hash": "oOj94Vrq0njbmgsdXHUN54u/HgkQylqAxzW8h4NlARZ9wKCH",
+            "tags": ""
+        },
+        {
+            "hashing_algorithm": "rabbit_password_hashing_sha256",
+            "limits": {},
+            "name": "crypto_user",
+            "password_hash": "NgO55diUsIxW4p96xbQ02fo1tj8BlgTM99eztXHsY1McJMqZ",
+            "tags": ""
+        },
+        {
+            "hashing_algorithm": "rabbit_password_hashing_sha256",
+            "limits": {},
+            "name": "guest",
+            "password_hash": "tGBPUBUP7gOBxT+N/KGGTc4clczntmNhe8HzSDOUs+5tz1y3",
+            "tags": "administrator"
+        }
+    ],
+    "permissions": [
+        {
+            "configure": ".*",
+            "read": ".*",
+            "user": "fca-rie_user",
+            "vhost": "fca-rie",
+            "write": ".*"
+        },
+        {
+            "configure": ".*",
+            "read": ".*",
+            "user": "guest",
+            "vhost": "fca-rie",
+            "write": ".*"
+        },
+        {
+            "configure": ".*",
+            "read": ".*",
+            "user": "guest",
+            "vhost": "crypto",
+            "write": ".*"
+        },
+        {
+            "configure": ".*",
+            "read": ".*",
+            "user": "guest",
+            "vhost": "/",
+            "write": ".*"
+        },
+        {
+            "configure": ".*",
+            "read": ".*",
+            "user": "crypto_user",
+            "vhost": "crypto",
+            "write": ".*"
+        }
+    ],
+    "policies": [],
+    "queues": [],
+    "topic_permissions": []
+}

@@ -1,0 +1,65 @@
+version: '3.4'
+
+services:
+  ####################
+  # SP Mocks
+  ####################
+
+  fsp1-low:
+    hostname: fsp1-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+      - 'squid'
+      - 'haproxy'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-low/.env/fsp1-low.env'
+    ports:
+      - 9301:9301
+    tty: true
+    networks:
+      - public
+      - public-fcp-low
+      - data
+    command: 'pm2 logs'
+
+  ####################
+  # IDP Mocks V2
+  ####################
+
+  fip1-low:
+    hostname: fip1-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+      - 'squid'
+      - 'haproxy'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/fcp-low/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-low/.env/fip1-low.env'
+    ports:
+      - 9360:9360
+    tty: true
+    networks:
+      - public
+      - public-fcp-low
+      - data
+    command: 'pm2 logs'

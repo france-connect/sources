@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# -----------------------------------------------
+# @TODO les styles CSS devront être compilés
+# une fois que la librairie principale DSFR
+# sera exportée dans le dossier libs
+# -----------------------------------------------
+INPUT_FILE=./libs/styleguide/scss/theme.scss
+OUTPUT_FILE=./libs/styleguide/styles.css
+
+if [ -f $OUTPUT_FILE ];
+then
+  rm $OUTPUT_FILE
+fi
+
+$(yarn bin)/node-sass --recursive --output-style=compressed $INPUT_FILE $OUTPUT_FILE
+
+exit 0

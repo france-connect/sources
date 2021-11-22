@@ -1,0 +1,12 @@
+[[config]]
+template = "/etc/docker-gen/templates/nginx.tmpl"
+dest = "/etc/nginx/conf.d/_current.conf"
+watch = true
+
+[[config]]
+template = "/etc/docker-gen/templates/index.html.tmpl"
+dest = "/etc/nginx/html/index.html"
+watch = true
+
+[config.NotifyContainers]
+fc-rp-all = 1

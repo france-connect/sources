@@ -1,0 +1,54 @@
+body {
+  margin-bottom: 5rem;
+}
+
+section {
+  padding-bottom: 1.5rem;
+  padding-top: 1.5rem;
+}
+
+section.welcome {
+  background-color: #209cee;
+  color: #fff;
+}
+
+section.connect {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.no-pad {
+  padding: 0;
+}
+
+#json {
+  height: 22rem;
+}
+
+#scopes .claim-input-wrapper,
+#scopes .scope-input-wrapper {
+  display: inline-block;
+  padding: 6px;
+  margin: 3px;
+  border: 1px solid #ccc;
+  background-color: #eee;
+}
+
+select {
+  padding: 6px;
+  margin: 3px;
+  border: 1px solid #ccc;
+  background-color: #eee;
+}
+
+#call-authorize-button {
+  background-image: url('/img/FCboutons-10.svg');
+  width: 232px;
+  height: 62px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+#call-authorize-button:hover {
+  background-image: url('/img/FCboutons-10-hover.svg');
+}

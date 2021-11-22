@@ -1,0 +1,24 @@
+{
+  "name": "fca-system-testing",
+  "version": "1.0.0",
+  "description": "FCA - System Testing using Cypress/Cucumber",
+  "private": true,
+  "keywords": [
+    "Cypress",
+    "QA",
+    "Cucumber"
+  ],
+  "scripts": {
+    "clean": "rm -rf cypress/fixtures.out && rm -rf cypress/reports && rm -rf cypress/screenshots && rm -rf cypress/videos",
+    "prettier": "prettier -c \"{cypress,scripts}/**/*.ts\" --config ../.prettierrc",
+    "lint": "eslint \"{cypress,scripts}/**/*.ts\"",
+    "test:low:base": "cypress-tags run --config-file cypress-fca-low.json",
+    "test:low:chrome-desktop": "yarn test:low:base --browser chrome --headless",
+    "test:low:chrome-mobile": "yarn test:low:base --browser chrome --headless --config viewportWidth=320,viewportHeight=568",
+    "test:low:ci": "yarn test:low:chrome-desktop --env TAGS='not @ignore'",
+    "test:low": "yarn clean && yarn test:low:ci",
+    "start:low": "cypress open --config-file cypress-fca-low.json",
+    "report:prepare": "ts-node ../scripts/prepare-cucumber-logs && rm -f cypress/reports/cucumber/empty.cucumber.json",
+    "report:generate": "ts-node ../scripts/multiple-cucumber-html-reporter"
+  }
+}

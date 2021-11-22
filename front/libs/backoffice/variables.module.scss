@@ -1,0 +1,27 @@
+@use 'sass:map';
+@use 'sass:meta';
+
+@use 'src/variables/colors';
+@use 'src/variables/breakpoints';
+
+/* unable to declare @import after @user stylelint rule */
+// stylelint-disable-next-line
+@import 'src/core/funcs/strings';
+
+$colors: meta.module-variables('colors');
+$breakpoints: meta.module-variables('breakpoints');
+
+/* unable to declare :export into stylelintrc like a known keyword */
+// stylelint-disable-next-line
+:export {
+  @each $name, $value in $colors {
+    $var: camelize(quote($name));
+
+    #{$var}: #{$value};
+  }
+  @each $name, $value in $breakpoints {
+    $var: camelize(quote($name));
+
+    #{$var}: #{$value};
+  }
+}

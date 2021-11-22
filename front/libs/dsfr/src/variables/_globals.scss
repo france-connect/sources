@@ -1,0 +1,13 @@
+/**
+ * Ce fichier permet de transformer
+ * Les fichiers de variables
+ * Vers des `sass:map` nécessaire à la surcharge
+ * Des mixins du dossier `core`
+ */
+@use 'sass:meta';
+
+@use 'colors';
+@use 'breakpoints';
+
+$PALETTE: meta.module-variables('colors');
+$BREAKPOINTS: meta.module-variables('breakpoints');

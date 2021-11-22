@@ -1,0 +1,5 @@
+./compose
+./volumes/.home
+./volumes/src
+./volumes/log
+./volumes/elasticsearch

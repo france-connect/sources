@@ -1,0 +1,11 @@
+a:not(.is-underline) {
+  &:link,
+  &:visited,
+  &:active {
+    text-decoration: none;
+  }
+}
+
+a:hover:not(.no-underline) {
+  text-decoration: underline;
+}

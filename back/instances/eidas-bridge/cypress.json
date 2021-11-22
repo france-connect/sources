@@ -1,0 +1,26 @@
+{
+  "chromeWebSecurity": false,
+  "videoUploadOnPasses": false,
+  "viewportHeight": 1000,
+  "viewportWidth": 1400,
+  "pageLoadTimeout": 30000,
+  "baseUrl": "https://eidas-bridge.docker.dev-franceconnect.fr",
+  "env": {
+    "CORE_LOG_FILE_PATH": "../../../docker/volumes/log/core-fcp-high.log",
+    "CORE_ROOT_URL": "https://core-fcp-high.docker.dev-franceconnect.fr",
+
+    "MOCK_EIDAS_SP_URL": "https://eidas-mock.docker.dev-franceconnect.fr/SP/populateIndexPage",
+
+    "BRIDGE_ROOT_URL": "https://eidas-bridge.docker.dev-franceconnect.fr",
+
+    "IDP_NAME": "fip",
+    "IDP_ROOT_URL": "https://IDP_NAME.docker.dev-franceconnect.fr",
+
+    "SP1_ROOT_URL": "https://fsp1-high.docker.dev-franceconnect.fr",
+    "SP1_CLIENT_ID": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
+
+    "WELL_KNOWN": "/.well-known/openid-configuration"
+  },
+  "ignoreTestFiles": "*.utils.js",
+  "projectId": "m4rv1n"
+}

@@ -1,0 +1,136 @@
+/* --------------------------------------------
+
+ VERTICAL ALIGN
+
+-------------------------------------------- */
+
+.v-align-top {
+  vertical-align: top;
+}
+
+.v-align-middle {
+  vertical-align: middle;
+}
+
+.v-align-bottom {
+  vertical-align: bottom;
+}
+
+/* --------------------------------------------
+
+ DISPLAYS
+
+-------------------------------------------- */
+
+.is-flex {
+  display: flex;
+}
+
+.is-block {
+  display: block;
+}
+
+.is-inline {
+  display: inline;
+}
+
+.is-inline-flex {
+  display: inline-flex;
+}
+
+.is-inline-block {
+  display: inline-block;
+}
+
+/* --------------------------------------------
+
+ POSITIONING
+
+-------------------------------------------- */
+
+.is-relative {
+  position: relative;
+}
+
+.is-absolute {
+  position: absolute;
+}
+
+.is-fixed {
+  position: fixed;
+}
+
+.is-sticky {
+  position: sticky;
+}
+
+/* --------------------------------------------
+
+ ABSOLUTE PLACEMENTS
+
+-------------------------------------------- */
+
+.is-trbl {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+.is-top-left-abs {
+  left: 0;
+  top: 0;
+}
+
+.is-top-right-abs {
+  right: 0;
+  top: 0;
+}
+
+.is-bottom-right-abs {
+  bottom: 0;
+  right: 0;
+}
+
+.is-bottom-left-abs {
+  bottom: 0;
+  left: 0;
+}
+
+.is-top-to-bottom-abs {
+  bottom: 0;
+  top: 0;
+}
+
+.is-left-to-right-abs {
+  left: 0;
+  right: 0;
+}
+
+/* --------------------------------------------
+
+ SIZES
+
+-------------------------------------------- */
+
+.is-full-width {
+  max-width: 100%;
+  min-width: 100%;
+  width: 100%;
+}
+
+.is-full-height {
+  height: 100%;
+  max-height: 100%;
+  min-height: 100%;
+}
+
+.is-full-layout {
+  @extend .is-full-width;
+  @extend .is-full-height;
+}
+
+.is-overlay {
+  @extend .is-absolute;
+  @extend .is-trbl;
+}

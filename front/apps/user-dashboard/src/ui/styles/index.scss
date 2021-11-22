@@ -1,0 +1,20 @@
+body,
+html,
+#root {
+  height: 100%;
+  min-height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#page-container {
+  max-width: 600px;
+}
+
+.is-blue-shadow {
+  box-shadow: 0 0 7px -2px #66a1e4;
+}

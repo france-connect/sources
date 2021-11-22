@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="stylesheet" href="/css/interaction.css" />
+    <title>Fournisseur d&apos;identit&eacute; de d&eacute;monstration</title>
+  </head>
+
+  <body>
+    <div id="mire">
+      <img
+        class="header-logo"
+        src="/img/logo@3x.svg"
+        alt="AgentConnect - application de démonstration"
+      />
+      <div id="container">
+        <div class="inner">
+          <h3 class="title">
+            Fournisseur d&apos;identité de d&eacute;monstration - FCA-LOW
+          </h3>
+          <form method="POST" action="/login">
+            <input
+              type="hidden"
+              name="interactionId"
+              id="interactionId"
+              value="<%= locals.uid %>"
+            />
+            <label for="login">
+              <span>Identifiant</span>
+              <input type="text" name="login" id="login" value="test" />
+            </label>
+            <label for="password">
+              <span>Mot de passe</span>
+              <input type="password" name="password" id="password" value="" />
+            </label>
+            <label for="acr">
+              <span>Niveau de sécurité (acr_values)</span>
+              <input type="text" name="acr" id="acr" value="<%= locals.params.acr_values %>" />
+            </label>    
+            <button type="submit">Envoyer</button>
+          </form>
+        </div>
+      </div>
+      <% if (finalSpId) { %>
+      <h6 id="final-sp-id">Identifiant du client final: <%= finalSpId %></h6>
+      <% } %>
+    </div>
+  </body>
+</html>

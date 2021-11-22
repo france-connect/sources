@@ -1,0 +1,3 @@
+# styleguide ignore external libs
+libs/styleguide/libs/**/*.js
+libs/styleguide/libs/**/*.css

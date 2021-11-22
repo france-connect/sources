@@ -1,0 +1,102 @@
+/* ----------------------------
+
+Alignments
+
+---------------------------- */
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.text-overflow,
+.text-ellipsis {
+  @extend .no-wrap;
+
+  text-overflow: ellipsis;
+}
+
+/* ----------------------------
+
+Font Weight
+
+---------------------------- */
+
+.is-thin {
+  font-weight: 100;
+}
+
+.is-light {
+  font-weight: 300;
+}
+
+.is-normal,
+.is-regular {
+  font-weight: 400;
+}
+
+.is-medium {
+  font-weight: 500;
+}
+
+.is-semi-bold {
+  font-weight: 600;
+}
+
+.is-bold {
+  font-weight: 700;
+}
+
+.is-black,
+.is-extra-bold {
+  font-weight: 900;
+}
+
+/* ----------------------------
+
+Font Style
+
+---------------------------- */
+
+.is-italic {
+  font-style: italic;
+}
+
+.is-lowercase {
+  text-transform: lowercase;
+}
+
+.is-uppercase {
+  text-transform: uppercase;
+}
+
+.is-capitalize {
+  text-transform: capitalize;
+}
+
+.is-underline {
+  text-decoration: underline;
+}
+
+.is-stroked {
+  text-decoration: line-through;
+}
+
+.is-small-caps {
+  font-variant: small-caps;
+}
+
+.force-line-break {
+  white-space: normal;
+}

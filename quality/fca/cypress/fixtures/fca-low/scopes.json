@@ -1,0 +1,96 @@
+[
+  {
+    "type": "tous les scopes",
+    "scopes": [
+      "openid",
+      "uid",
+      "given_name",
+      "usual_name",
+      "email",
+      "siren",
+      "siret",
+      "organizational_unit",
+      "belonging_population",
+      "phone",
+      "chorusdt"
+    ]
+  },
+  {
+    "type": "obligatoires",
+    "scopes": [
+      "openid",
+      "uid",
+      "given_name",
+      "usual_name",
+      "email"
+    ]
+  },
+  {
+    "type": "obligatoires et siren/siret",
+    "scopes": [
+      "openid",
+      "uid",
+      "given_name",
+      "usual_name",
+      "email",
+      "siren",
+      "siret"
+    ]
+  },
+  {
+    "type": "obligatoires et organizational_unit/phone",
+    "scopes": [
+      "openid",
+      "uid",
+      "given_name",
+      "usual_name",
+      "email",
+      "organizational_unit",
+      "phone"
+    ]
+  },
+  {
+    "type": "obligatoires et belonging_population",
+    "scopes": [
+      "openid",
+      "uid",
+      "given_name",
+      "usual_name",
+      "email",
+      "belonging_population"
+    ]
+  },
+  {
+    "type": "obligatoires sans openid",
+    "scopes": [
+      "uid",
+      "given_name",
+      "usual_name",
+      "email"
+    ]
+  },
+  {
+    "type": "chorusdt",
+    "scopes": [
+      "openid",
+      "chorusdt"
+    ]
+  },
+  {
+    "type": "email avec scope inconnu",
+    "scopes": ["openid", "email", "inconnu"]
+  },
+  {
+    "type": "email",
+    "scopes": ["openid", "email"]
+  },
+  {
+    "type": "anonyme",
+    "scopes": ["openid"]
+  },
+  {
+    "type": "vide",
+    "scopes": [
+    ]
+  }
+]

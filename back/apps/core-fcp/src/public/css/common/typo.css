@@ -1,0 +1,68 @@
+.main-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #000091;
+    line-height: 1.7rem;
+}
+
+.content main li, .content main p {
+    font-size: 1rem;
+    color: #3e4553;
+    line-height: 1.4rem;
+    font-weight: 500;
+}
+.content main strong {
+    color: #3e4553;
+    font-weight: bold;
+}
+
+.list-container h3 {
+    color: #000091;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.list-container li {
+    position: relative;
+}
+
+/* Set custom list dots */
+.list-container li:before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background-color: #3e4553;
+    border-radius: 50px;
+    position: absolute;
+    left: -1rem;
+    top: 0.4rem;
+}
+
+@media screen and (min-width: 576px) {
+    .content main li, .content main p {
+        font-size: 1.13rem;
+        line-height: 1.6rem;
+        font-weight: 500;
+    }
+    
+    .main-title {
+        font-size: 2rem;
+        text-align: center;
+        line-height: 3rem;
+    }
+
+    .list-container h3 {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .list-container li:before {
+        top: 0.6rem;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .main-title {
+        font-size: 2.5rem;
+    }
+}

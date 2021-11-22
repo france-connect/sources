@@ -1,0 +1,84 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "cypress",
+    "simple-import-sort",
+    "import",
+    "sort-destructure-keys",
+    "sort-keys-fix"
+  ],
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "eslint:recommended",
+    "prettier",
+    "plugin:cypress/recommended"
+  ],
+  "root": true,
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "no-console": 2,
+    "@typescript-eslint/explicit-module-boundary-types": 2,
+    "@typescript-eslint/camelcase": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "import/first": 2,
+    "import/newline-after-import": 2,
+    "import/no-duplicates": 2,
+    "linebreak-style": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "padding-line-between-statements": [
+      2,
+      { "blankLine": "always", "prev": ["function"], "next": "*" }
+    ],
+    "simple-import-sort/exports": 2,
+    "simple-import-sort/imports": [
+      2,
+      {
+        "groups": [
+          // CSS... Side effect imports.
+          ["^\\u0000"],
+          // NodeJS packages
+          ["^fs$", "^path$", "^crypto$", "^fs-extra$", "^glob$"],
+          // Things that start with a letter
+          ["^@?\\w"],
+          //
+          ["^@nestjs"],
+          ["^@fc"],
+          // Anything not matched in another group.
+          ["^"],
+          // Relative imports.
+          ["^\\."]
+        ]
+      }
+    ],
+    "sort-imports": "off",
+    "sort-keys-fix/sort-keys-fix": 2,
+    "sort-destructure-keys/sort-destructure-keys": 2,
+    "sort-keys": [
+      2,
+      "asc",
+      { "caseSensitive": true, "natural": false, "minKeys": 2 }
+    ]
+  }
+}

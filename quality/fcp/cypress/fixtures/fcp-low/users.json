@@ -1,0 +1,102 @@
+[
+  {
+    "enabled": true,
+    "criteria": [
+      "par défaut"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "bdd_default",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "Jeanne",
+      "family_name": "DURAND",
+      "preferred_username": "MARTIN",
+      "birthdate": "1962-08-24",
+      "birthplace": "75107",
+      "birthcountry": "99100",
+      "email": "x1_bdd_default@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "né en Corse"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "test_CLEMENT",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "CLEMENT",
+      "family_name": "CORSE",
+      "birthdate": "1991-02-12",
+      "birthplace": "2A115",
+      "birthcountry": "99100",
+      "email": "baterollu-5399@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "présumé né jour"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "étranger_présumé_né_jour",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean",
+      "family_name": "FLEURET",
+      "birthdate": "1992-11-00",
+      "birthcountry": "99217",
+      "email": "jean-fleuret@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "présumé né jour et mois"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "étranger_présumé_né_jour_et_mois",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean",
+      "family_name": "TARGE",
+      "birthdate": "1992-00-00",
+      "birthcountry": "99217",
+      "email": "jean-targe@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec un COG invalide"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "test_INVALID_COG",
+        "password": "123"
+      }
+    ]
+  }
+]

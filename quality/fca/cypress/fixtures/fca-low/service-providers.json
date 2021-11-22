@@ -1,0 +1,43 @@
+[
+  {
+    "name": "fsa1-low",
+    "descriptions": [
+      "par défaut",
+      "avec une blacklist de FI"
+    ],
+    "mocked": true,
+    "url": "https://fsa1-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "selectors": {
+      "fcaButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsa2-low",
+    "descriptions": [
+      "avec une whitelist de FI"
+    ],
+    "mocked": true,
+    "url": "https://fsa2-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "selectors": {
+      "fcaButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsa4-low",
+    "descriptions": ["non habilité à demander le scope belonging_population"],
+    "mocked": true,
+    "url": "https://fsa4-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "selectors": {
+      "fcaButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
+  }
+]

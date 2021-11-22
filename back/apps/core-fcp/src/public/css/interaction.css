@@ -1,0 +1,322 @@
+*,
+a {
+  color: #034ea2;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+body {
+  width: 100%;
+}
+
+#notifications {
+  margin: 16px 0;
+}
+
+#notifications div {
+  background-color: #f2f4ff;
+  padding: 8px 16px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+#notifications p {
+  padding-top: 4px;
+  line-height: 20px;
+  font-size: 0.9rem;
+  color: #000091;
+  text-align: left;
+  font-weight: bold;
+  position: relative;
+}
+
+#notifications img {
+  margin-right: 4px;
+  width: 20px;
+  vertical-align: top;
+}
+
+#mire {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#mire > .content {
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+main {
+  padding: 16px 16px 80px;
+  min-height: calc(100vh - (95px + 136px));
+}
+
+main > h1 {
+  width: 100%;
+  font-size: 1.13rem;
+  max-width: 768px;
+  color: #3e4553;
+}
+
+main > h1 + h2 {
+  margin-top: 16px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000091;
+  display: block;
+}
+
+.main__providers {
+  width: 100%;
+  margin: 16px 0 80px;
+}
+
+@media screen and (min-width: 576px) {
+  main {
+    min-height: calc(100vh - (95px + 117px));
+  }
+
+  main > h2,
+  main > h1 {
+    text-align: center;
+  }
+
+  main > h1 {
+    font-size: 1.3rem;
+  }
+
+  main > h1 + h2 {
+    font-size: 2rem;
+  }
+
+  #notifications {
+    padding: 0 16px;
+  }
+
+  #notifications div {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  #notifications p {
+    text-align: center;
+  }
+
+  #notifications img {
+    margin-right: 8px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  main {
+    padding: 16px 32px 80px;
+  }
+
+  main > h1 {
+    font-size: 1.5rem;
+  }
+
+  main > h1 + h2 {
+    font-size: 2.5rem;
+  }
+}
+
+/** Identity providers [Overflow] **/
+#or-label {
+  text-align: center;
+  display: block;
+  font-weight: bold;
+  color: #3e4553;
+  font-size: 1.6em;
+  margin: 16px 0;
+}
+.identity-provider.overflow button {
+  flex-direction: row;
+  max-width: 400px;
+}
+
+.identity-provider.overflow img {
+  border-radius: 0;
+  width: 60px;
+  height: 60px;
+  margin: 0 16px 0 0;
+}
+
+.identity-provider.overflow button span,
+.identity-provider.overflow button strong {
+  display: initial;
+  margin: 0;
+  text-align: left;
+}
+
+@media screen and (min-width: 768px) {
+  .identity-provider.overflow button {
+    max-width: 665px;
+    padding: 16px 0 16px 16px;
+  }
+}
+
+/** Identity providers **/
+.identity-provider {
+  display: flex;
+  justify-content: center;
+}
+
+.identity-provider img {
+  border-radius: 8px;
+  width: 100%;
+  width: 55%;
+  max-width: 155px;
+  margin-bottom: 8px;
+}
+
+.identity-provider button {
+  outline: none;
+  width: 100%;
+  max-width: 310px;
+  padding: 16px 12px;
+  border: solid 2px transparent;
+  margin: 8px 0;
+  box-shadow: 0 0 3px rgba(0, 0, 145, 0.3);
+  border-radius: 8px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 150ms ease, box-shadow 150ms ease;
+  position: relative;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #3e4553;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.identity-provider button span,
+.identity-provider button strong {
+  font-size: 16px;
+  display: block;
+  text-align: center;
+  color: #3e4553;
+  line-height: 1.31;
+}
+
+.identity-provider button span {
+  font-weight: normal;
+  margin-bottom: 5px;
+}
+
+.identity-provider button strong {
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.identity-provider button:disabled {
+  cursor: not-allowed;
+  border: none;
+  box-shadow: none;
+  background-color: rgba(232, 232, 232, 0.3);
+  opacity: 0.7;
+}
+
+.identity-provider button:not(:disabled):hover,
+.identity-provider button:not(:disabled):focus {
+  background-color: transparent;
+  box-shadow: 0 0 9px 0 #b4b4dc;
+  border: solid 2px #000091;
+}
+
+@media screen and (min-width: 576px) {
+  .identity-provider button {
+    padding: 24px;
+  }
+}
+
+/** tuto section **/
+.tuto-container {
+  background-color: #f2f4ff;
+  border-radius: 8px;
+  padding: 24px 16px;
+  max-width: 728px;
+}
+
+.tuto-container .logos-container {
+  display: none;
+  justify-content: space-around;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.tuto-container h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000091;
+}
+
+.tuto-container p {
+  margin: 16px 0 24px;
+  font-size: 0.9rem;
+  line-height: 1.43rem;
+  color: #3e4553;
+}
+
+.tuto-container a {
+  outline: none;
+}
+
+.tuto-container button {
+  width: 100%;
+  height: 68px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  background-color: transparent;
+  border-radius: 8px;
+  border: solid 1px #000091;
+  color: #000091;
+  max-width: 350px;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.tuto-container button:disabled {
+  cursor: not-allowed;
+}
+
+.tuto-container button:hover,
+.tuto-container a:focus button {
+  background-color: #000091;
+  color: #fff;
+  text-transform: underline;
+}
+
+@media screen and (min-width: 576px) {
+  .tuto-container {
+    text-align: center;
+  }
+
+  .tuto-container .logos-container {
+    display: flex;
+  }
+
+  .tuto-container button {
+    height: 50px;
+    padding: auto;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .tuto-container {
+    padding: 24px 16px;
+  }
+
+  .tuto-container .logos-container {
+    margin: 25px 0;
+  }
+}

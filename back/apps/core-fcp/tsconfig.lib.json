@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "target": "esnext",
+    "module": "esnext",
+    "sourceMap": true,
+    "inlineSources": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "outDir": "../../dist/apps/core-fcp"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+}

@@ -1,0 +1,60 @@
+table {
+  @extend .text-left;
+
+  border-collapse: collapse;
+  border-spacing: 0;
+  display: table;
+}
+
+tbody {
+  border-color: inherit;
+  display: table-row-group;
+  vertical-align: top;
+}
+
+thead {
+  border-color: inherit;
+  display: table-header-group;
+  vertical-align: top;
+}
+
+tfoot {
+  border-color: inherit;
+  display: table-footer-group;
+  vertical-align: top;
+}
+
+caption {
+  @extend .text-center;
+
+  caption-side: top;
+  display: table-caption;
+}
+
+colgroup {
+  display: table-column-group;
+}
+
+tr {
+  border-color: inherit;
+  display: table-row;
+  vertical-align: inherit;
+}
+
+th {
+  @extend .is-bold;
+  @extend .text-center;
+
+  display: table-cell;
+  vertical-align: inherit;
+}
+
+td {
+  display: table-cell;
+  vertical-align: inherit;
+}
+
+th:last-child,
+td:last-child {
+  border-right: 0;
+}

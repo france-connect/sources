@@ -1,0 +1,76 @@
+[
+  {
+    "type": "tous les scopes",
+    "scopes": [
+      "openid",
+      "profile",
+      "gender",
+      "birthdate",
+      "birthcountry",
+      "birthplace",
+      "given_name",
+      "family_name",
+      "email",
+      "preferred_username",
+      "birth",
+      "identite_pivot"
+    ]
+  },
+  {
+    "type": "identite_pivot sans alias",
+    "scopes": [
+      "openid",
+      "gender",
+      "birthdate",
+      "birthcountry",
+      "birthplace",
+      "given_name",
+      "family_name",
+      "preferred_username"
+    ]
+  },
+  {
+    "type": "profile sans alias",
+    "scopes": [
+      "openid",
+      "gender",
+      "birthdate",
+      "given_name",
+      "family_name",
+      "preferred_username"
+    ]
+  },
+  {
+    "type": "email",
+    "scopes": ["openid", "email"]
+  },
+  {
+    "type": "birth",
+    "scopes": ["openid", "birth"]
+  },
+  {
+    "type": "profile",
+    "scopes": ["openid", "profile"]
+  },
+  {
+    "type": "profile avec scope inconnu",
+    "scopes": ["openid", "profile", "inconnu"]
+  },
+  {
+    "type": "profile sans openid",
+    "scopes": ["profile"]
+  },
+  {
+    "type": "identite_pivot",
+    "scopes": ["openid", "identite_pivot"]
+  },
+  {
+    "type": "anonyme",
+    "scopes": ["openid"]
+  },
+  {
+    "type": "vide",
+    "scopes": [
+    ]
+  }
+]

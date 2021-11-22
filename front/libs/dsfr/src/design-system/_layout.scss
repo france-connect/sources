@@ -1,0 +1,57 @@
+// MOBILE FIRST
+
+.sticky-body {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 100vh;
+
+  .sticky-content {
+    @extend .mb64;
+  }
+
+  .sticky-footer {
+    grid-row-end: 3;
+    grid-row-start: 2;
+  }
+}
+
+.content-wrapper-sm,
+.content-wrapper-md,
+.content-wrapper-lg,
+.content-wrapper-xl {
+  @extend .margin-x-auto;
+}
+
+.content-wrapper-xl {
+  // wrapper pour les sections
+  // avec un fond de couleur sur toute la page
+  max-width: 100%;
+}
+
+.content-wrapper-lg {
+  // wrapper pour des footer/header
+  max-width: 1200px;
+}
+
+.content-wrapper-md {
+  // wrapper pour les sections
+  max-width: 548px;
+}
+
+@media (min-width: $breakpoint-tablet) {
+  .content-wrapper-sm {
+    max-width: 792px;
+  }
+}
+
+@media (min-width: $breakpoint-desktop) {
+  .content-wrapper-md {
+    max-width: 824px;
+  }
+}
+
+@media (min-width: $breakpoint-desktop-xl) {
+  .content-wrapper-md {
+    max-width: 996px;
+  }
+}

@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# ------------------------
+#
+# Description
+# ---
+# Build des sous projets
+# Par défaut, sans arguments, build les Projets présents
+# dans le champs workspaces du package.json
+#
+# ------------------------
+
+if [ -z $1 ]; then
+  # recupere les sous projets definis dans le main ./package.json
+  APPS=$(
+    PKG=$(cat package.json)
+    node -pe 'JSON.parse(process.argv[1]).workspaces.packages.join(" ")' "$PKG"
+  )
+else
+  APPS="apps/$1"
+fi
+
+# ---- Boucle sur APPS ----
+CURRENT_DIRECTORY=$PWD
+for FOLDER in $APPS
+do
+  if [[ "$FOLDER" =~ ^apps/.* ]]; then
+    cd $FOLDER
+    yarn build
+    cd $CURRENT_DIRECTORY
+  fi
+done
+
+exit 0

@@ -1,0 +1,63 @@
+// Mobile First
+
+h1 {
+  @include rem(font-size, 32px);
+  @include rem(line-height, 40px);
+}
+
+h2 {
+  @include rem(font-size, 28px);
+  @include rem(line-height, 36px);
+}
+
+h3 {
+  @include rem(font-size, 24px);
+  @include rem(line-height, 32px);
+}
+
+h4 {
+  @include rem(font-size, 22px);
+  @include rem(line-height, 28px);
+}
+
+h5 {
+  @include rem(font-size, 20px);
+  @include rem(line-height, 28px);
+}
+
+h6 {
+  @include rem(font-size, 18px);
+  @include rem(line-height, 24px);
+}
+
+@media (min-width: $breakpoint-tablet) {
+  h1 {
+    @include rem(font-size, 40px);
+    @include rem(line-height, 48px);
+  }
+
+  h2 {
+    @include rem(font-size, 32px);
+    @include rem(line-height, 40px);
+  }
+
+  h3 {
+    @include rem(font-size, 28px);
+    @include rem(line-height, 36px);
+  }
+
+  h4 {
+    @include rem(font-size, 24px);
+    @include rem(line-height, 32px);
+  }
+
+  h5 {
+    @include rem(font-size, 22px);
+    @include rem(line-height, 28px);
+  }
+
+  h6 {
+    @include rem(font-size, 20px);
+    @include rem(line-height, 28px);
+  }
+}

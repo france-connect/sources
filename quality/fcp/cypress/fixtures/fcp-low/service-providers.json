@@ -1,0 +1,25 @@
+[
+  {
+    "name": "fsp1-low",
+    "descriptions": [
+      "par défaut",
+      "public"
+    ],
+    "mocked": true,
+    "url": "https://fsp1-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "clientId": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
+    "acrValue": "eidas1",
+    "claims": [
+      "amr"
+    ],
+    "scopes": [
+      "tous les scopes"
+    ],
+    "explicitConsent": false,
+    "selectors": {
+      "fcButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
+  }
+]

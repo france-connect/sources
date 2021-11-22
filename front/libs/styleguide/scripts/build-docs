@@ -1,0 +1,13 @@
+#!/bin/bash
+
+INPUT_FILE=./docs/_docs.styles.scss
+OUTPUT_FILE=./docs/styles.css
+
+if [ -f $OUTPUT_FILE ];
+then
+  rm $OUTPUT_FILE
+fi
+
+$(yarn bin)/node-sass --recursive --output-style=compressed $INPUT_FILE $OUTPUT_FILE
+
+exit 0
