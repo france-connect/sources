@@ -1,5 +1,7 @@
 import './search-form.scss';
-import React, { FormEvent, useCallback } from 'react';
+import React, { FormEvent, useRef, useCallback } from 'react';
+import classNames from 'classnames'
+import { useMediaQuery } from 'react-responsive';
 import { RiSearchLine as SearchIcon } from 'react-icons/ri';
 
 type SearchFormComponentProps = {
@@ -9,6 +11,9 @@ type SearchFormComponentProps = {
 
 const SearchFormComponent = React.memo(
   ({ label, onChange }: SearchFormComponentProps): JSX.Element => {
+    const inputField = useRef(null);
+    const gtTablet = useMediaQuery({ query: '(min-width: 768px)' });
+
     const onInputChangeHandler = useCallback(
       ({ target }) => {
         const { value } = target;
@@ -19,34 +24,38 @@ const SearchFormComponent = React.memo(
 
     const onSubmitSearchForm = (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+      const { current: input } = inputField;
 
-      const input = document.getElementById('fi-search-term') as any;
       if (input) {
-        const { value } = input.value;
+        const { value } = input as HTMLInputElement;
         onChange(value);
       }
+
+      return null;
     };
+
     return (
-      <div className="text-center">
-        <h4 className="my16 is-bold mt20 mx120 mb4">
+      <div>
+        <h3 className={classNames("fs20 is-bold mx16", { "mb8": !gtTablet })}>
           Je recherche mon administration
-        </h4>
+        </h3>
         <form onSubmit={onSubmitSearchForm}>
-          <label htmlFor="fi-search-term" className="my4 mb8">
-            <span>Veuillez taper le nom complet de votre administration</span>
+          <label htmlFor="fi-search-term" className="mx16 mb16 fr-text is-g600">
+            Veuillez taper le nom complet de votre administration
           </label>
-          <p className="is-block search-form">
+          <p className="flex-columns px16 mb16 is-block search-form">
             <input
-              className="search-input"
+              ref={inputField}
+              className="search-input px16 py8 flex-1"
               id="fi-search-term"
               name="fi-search-term"
-              placeholder="ex: ministère de la mer, ministère de..."
+              placeholder="ex&nbsp;:&nbsp;ministère de la mer, ministère de..."
               type="text"
               onChange={onInputChangeHandler}
             />
-            <button type="submit" className="search-button">
-              <SearchIcon />
-              <b>Rechercher</b>
+            <button type="submit" className={classNames("search-button is-white bg-blue-agentconnect fr-text-lg", { "pl32": gtTablet })}>
+              <SearchIcon  role={"img"} />
+              {gtTablet && <span className="pl12 pr32 py12">Rechercher</span>}
             </button>
           </p>
         </form>

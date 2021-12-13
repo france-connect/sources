@@ -96,7 +96,7 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     const subIdp = this.cryptographyFcp.computeSubV1(spId, idpIdentityHash);
 
     // Save interaction to database & get sp's sub to avoid double computation
-    await this.core.computeInteraction(
+    const accountId = await this.core.computeInteraction(
       {
         entityId,
         hashSp,
@@ -118,11 +118,12 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     const spIdentity = { ...idpIdentity, sub: subSp };
 
     // Delete idp identity from volatile memory but keep the sub for the business logs.
-    const idpIdentityCleaned = { sub: subIdp };
+    const idpIdentityCleaned = { sub: idpIdentity.sub };
     const session: OidcClientSession = {
       amr: ['fc'],
       idpIdentity: idpIdentityCleaned,
       spIdentity,
+      accountId,
     };
 
     this.logger.trace({ session });

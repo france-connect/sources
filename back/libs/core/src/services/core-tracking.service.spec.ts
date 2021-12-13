@@ -61,6 +61,8 @@ describe('CoreTrackingService', () => {
   };
 
   const sessionDataMock: OidcSession = {
+    accountId: 'accountId Mock Value',
+
     spId: 'some spId',
     spName: 'some spName',
     spAcr: 'some spAcr',
@@ -468,6 +470,8 @@ describe('CoreTrackingService', () => {
     it('Should return partial data from session.get', async () => {
       // Given
       const expectedResult = {
+        accountId: 'accountId Mock Value',
+
         spId: 'some spId',
         spName: 'some spName',
         spAcr: 'some spAcr',
@@ -487,6 +491,8 @@ describe('CoreTrackingService', () => {
     it('should return null values for idp info and spSub if not set in session', async () => {
       // Given
       const expectedResult = {
+        accountId: null,
+
         spId: 'spIdMock',
         spName: 'spNameMock',
         spAcr: 'spAcrMock',
@@ -513,6 +519,8 @@ describe('CoreTrackingService', () => {
     it('should return null values for `idp` info if not set in session', async () => {
       // Given
       const expectedResult = {
+        accountId: null,
+
         spId: 'spIdMock',
         spName: 'spNameMock',
         spAcr: 'spAcrMock',
@@ -542,6 +550,8 @@ describe('CoreTrackingService', () => {
     it('should return null values for `sp` info if not set in session', async () => {
       // Given
       const expectedResult = {
+        accountId: null,
+
         spId: null,
         spName: null,
         spAcr: null,
@@ -570,6 +580,8 @@ describe('CoreTrackingService', () => {
     it('Should return partial data from context and null values', () => {
       // Given
       const expectedResult = {
+        accountId: null,
+
         spId: 'spIdMock',
         spName: 'spNameMock',
         spAcr: 'spAcrMock',

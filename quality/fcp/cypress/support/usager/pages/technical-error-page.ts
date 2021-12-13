@@ -9,6 +9,10 @@ export default class TechnicalErrorPage {
     cy.get('#error-code').contains(errorCode);
   }
 
+  checkErrorMessage(message: string): void {
+    cy.get('#error-message').contains(message);
+  }
+
   checkSessionNumberVisible(): void {
     /**
      * @TODO Change css selector once unique selector will be implemented

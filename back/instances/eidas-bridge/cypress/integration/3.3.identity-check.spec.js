@@ -15,7 +15,7 @@ const SCOPES_FR =
 const SCOPES_EIDAS = 'openid given_name family_name birthdate';
 
 const SCOPES_FULL =
-  'openid profile email address phone preferred_username birthplace birthcountry';
+  'openid profile email preferred_username birthplace birthcountry';
 
 describe('Identity Check', () => {
   describe('Sp from EU to idp from FR >', () => {

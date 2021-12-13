@@ -21,7 +21,7 @@ const SearchResultsComponent = ({
     <React.Fragment>
       {hasResults && <ResultsList results={results} />}
       {showNoSearchResults && (
-        <div className="m20 text-center">
+        <div className="mx16 fr-text-lg">
           Aucun fournisseur d&apos;identité n&apos;a été trouvé
         </div>
       )}

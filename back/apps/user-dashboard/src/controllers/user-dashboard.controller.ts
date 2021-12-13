@@ -8,9 +8,9 @@ import {
 import { LoggerService } from '@fc/logger';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService, Session, SessionCsrfService } from '@fc/session';
+import { TracksService } from '@fc/tracks';
 
-import { TracksService } from '../services/tracks.service';
-import { UserDashboardBackRoutes } from './../enums';
+import { UserDashboardBackRoutes } from '../enums';
 
 @Injectable()
 @Controller()

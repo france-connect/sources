@@ -17,6 +17,8 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     warn: jest.fn(),
   };
 
+  const accountIdMock = 'accountIdMock value';
+
   const coreServiceMock = {
     checkIfAccountIsBlocked: jest.fn(),
     checkIfAcrIsValid: jest.fn(),
@@ -94,6 +96,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     cryptographyFcaServiceMock.computeSubV1.mockReturnValueOnce(
       'computedSubSp',
     );
+    coreServiceMock.computeInteraction.mockResolvedValue(accountIdMock);
   });
 
   it('should be defined', () => {
@@ -212,7 +215,6 @@ describe('CoreFcaDefaultVerifyHandler', () => {
 
     it('Should patch the session with idp and sp identity', async () => {
       // Given
-
       const calledMock = {
         idpIdentity: { sub: idpIdentityMock.sub },
         spIdentity: {
@@ -222,6 +224,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
           given_name: idpIdentityMock.given_name,
           uid: idpIdentityMock.uid,
         },
+        accountId: accountIdMock,
       };
 
       // When

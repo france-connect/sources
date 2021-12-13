@@ -49,6 +49,12 @@ async function bootstrap() {
   });
 
   /**
+   * @see https://expressjs.com/fr/api.html#app.set
+   * @see https://github.com/expressjs/express/issues/3361
+   */
+  app.set('query parser', 'simple');
+
+  /**
    * Protect app from common risks
    * @see https://helmetjs.github.io/
    */

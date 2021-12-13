@@ -28,7 +28,7 @@ export function submitFSAuthorizeForm() {
 }
 
 export function beforeSuccessScenario(params) {
-  const { method, scopes, sp = 'fsa1-low' } = params;
+  const { acrValues = 'eidas1', method, scopes, sp = 'fsa1-low' } = params;
 
   const { SP_CLIENT_ID, SP_ROOT_URL } = getServiceProvider(sp);
   // FS: Click on FC button
@@ -56,7 +56,7 @@ export function beforeSuccessScenario(params) {
     idpAcr: null,
     idpId: null,
     idpName: null,
-    spAcr: params.acr_values,
+    spAcr: acrValues,
     spId: SP_CLIENT_ID,
   });
   cy.hasBusinessLog({
@@ -65,7 +65,7 @@ export function beforeSuccessScenario(params) {
     idpAcr: null,
     idpId: null,
     idpName: null,
-    spAcr: params.acr_values,
+    spAcr: acrValues,
     spId: SP_CLIENT_ID,
   });
 }
@@ -85,7 +85,7 @@ export function basicSuccessScenario(idpId) {
 }
 
 export function afterSuccessScenario(params) {
-  const { idpId, sp = 'fsa1-low', userName } = params;
+  const { acrValues = 'eidas1', idpId, sp = 'fsa1-low', userName } = params;
   const password = params.password || '123';
   const { SP_CLIENT_ID } = getServiceProvider(sp);
   const { IDP_INTERACTION_URL } = getIdentityProvider(idpId);
@@ -97,7 +97,7 @@ export function afterSuccessScenario(params) {
     event: 'IDP_CHOSEN',
     idpAcr: null, // idpAct is still null
     idpId, // idpId is set
-    spAcr: params.acr_values,
+    spAcr: acrValues,
     spId: SP_CLIENT_ID,
   });
 
@@ -110,7 +110,7 @@ export function afterSuccessScenario(params) {
     event: 'FC_REQUESTED_IDP_TOKEN',
     idpAcr: null, // idpAcr is still null
     idpId, // idpId is now set
-    spAcr: params.acr_values,
+    spAcr: acrValues,
     spId: SP_CLIENT_ID,
   });
 
@@ -119,34 +119,34 @@ export function afterSuccessScenario(params) {
     event: 'FC_REQUESTED_IDP_USERINFO',
     idpAcr: null, // idpAcr is still null
     idpId,
-    spAcr: params.acr_values,
+    spAcr: acrValues,
     spId: SP_CLIENT_ID,
   });
 
   cy.hasBusinessLog({
     category: 'FRONT_CINEMATIC',
     event: 'FC_REDIRECTED_TO_SP',
-    idpAcr: params.acr_values,
+    idpAcr: acrValues,
     idpId,
-    spAcr: params.acr_values,
+    spAcr: acrValues,
     spId: SP_CLIENT_ID,
   });
 
   cy.hasBusinessLog({
     category: 'BACK_CINEMATIC',
     event: 'SP_REQUESTED_FC_TOKEN',
-    idpAcr: params.acr_values,
+    idpAcr: acrValues,
     idpId,
-    spAcr: params.acr_values,
+    spAcr: acrValues,
     spId: SP_CLIENT_ID,
   });
 
   cy.hasBusinessLog({
     category: 'BACK_CINEMATIC',
     event: 'SP_REQUESTED_FC_USERINFO',
-    idpAcr: params.acr_values,
+    idpAcr: acrValues,
     idpId,
-    spAcr: params.acr_values,
+    spAcr: acrValues,
     spId: SP_CLIENT_ID,
   });
 }
@@ -182,20 +182,33 @@ export function chooseIdpOnCore(idpId) {
   cy.get(`#idp-${ID}-button`).click();
 }
 
+/**
+ * @param params
+ *
+ * Available params :
+ *  - acrValues
+ *  - idpAcr 
+ *  - idpId
+ *  - method
+ *  - scope
+ *  - sp Name of the SP, possible values: SP1, SP2
+ *  - userName
+ */
 export function basicScenario(params) {
   const {
+    acrValues,
+    idpAcr,
     idpId,
-    login = 'test',
-    // eidasLevel, see comment below
-    overrideParams = {},
+    method = 'GET',
+    scope,
     sp = 'fsa1-low',
+    userName = 'test'
   } = params;
   const password = '123';
   const { IDP_INTERACTION_URL } = getIdentityProvider(idpId);
   const { SP_ROOT_URL } = getServiceProvider(sp);
   cy.visit(SP_ROOT_URL);
 
-  const { method = 'GET', scope, acr_values: acrValues } = overrideParams;
   setFSAuthorizeMethod(method);
   if (scope) {
     setFSAuthorizeScope(scope);
@@ -209,17 +222,12 @@ export function basicScenario(params) {
 
   // FI: Authenticate
   cy.url().should('include', IDP_INTERACTION_URL);
-  cy.get('input[name="login"]').clear().type(login);
+  cy.get('input[name="login"]').clear().type(userName);
   cy.get('input[name="password"]').clear().type(password);
 
-  /**
-   * @todo #422 This section should be impplemented in te IDP Mock instance
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/422
-   */
-  //if (eidasLevel) {
-  //  cy.get('select[name="acr"]').select(eidasLevel);
-  //}
-  // --
+  if (idpAcr) {
+    cy.get('input[name="acr"]').clear().type(idpAcr);
+  }
 
   cy.get('button[type="submit"]').click();
 }
@@ -229,7 +237,7 @@ export function basicErrorScenario(params) {
   Reflect.deleteProperty(params, 'errorCode');
   basicScenario({
     ...params,
-    login: errorCode,
+    userName: errorCode,
   });
 }
 

@@ -14,15 +14,6 @@ describe('Idp activation & visibility', () => {
 
   const mireUrl = new RegExp('/interaction/[^/]+');
 
-  it('should display active and visible IdP', () => {
-    cy.visit(getAuthorizeUrl());
-    cy.url().should('match', mireUrl);
-    cy.get('#fi-search-term').type(MINISTRY_NAME);
-    cy.get(
-      '#identity-provider-search input[name="providerUid"][value="fia1-low"]',
-    ).should('exist');
-  });
-
   it('should find an existing idp, case insensitive, with space, with accent', () => {
     cy.visit(getAuthorizeUrl());
     cy.url().should('match', mireUrl);
@@ -95,24 +86,6 @@ describe('Idp activation & visibility', () => {
     // Then
     cy.url().should('contain', '/api/v2/redirect-to-idp');
     cy.hasError('Y190007');
-  });
-
-  it('should redirect when click on enabled IdP', () => {
-    cy.visit(getAuthorizeUrl());
-    cy.url().should('match', mireUrl);
-    cy.get('#fi-search-term').type(
-      'MOCK - Ministére de la transition écologique - ALL FIS - SORT 2',
-    );
-    cy.get(
-      '#identity-provider-search input[name="providerUid"][value="fia1-low"]',
-    )
-      .first()
-      .next()
-      .click();
-    cy.url().should(
-      'contain',
-      getIdentityProvider('fia1-low').IDP_INTERACTION_URL,
-    );
   });
 
   // TODO -> find how to update ministry

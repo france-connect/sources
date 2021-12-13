@@ -1,6 +1,3 @@
 export enum ErrorCode {
-  LOGIN_CALLBACK = 1,
-  TOKEN_REVOCATION = 2,
-  USERINFO = 3,
-  TRACKS_RESPONSE = 4,
+  TOKEN_REVOCATION = 1,
 }

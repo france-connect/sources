@@ -20,6 +20,9 @@ describe('1.0 - Successful scenarios', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
       idpId: idpId2,
+      accountId: '3ec64565-a907-4284-935a-0ff0213cc120',
+      idpSub:
+        '9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08',
     });
 
     checkInformationsServiceProvider({
@@ -92,6 +95,7 @@ describe('1.0 - Successful scenarios', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas2',
         idpId,
+        accountId: '3ec64565-a907-4284-935a-0ff0213cc120',
       });
 
       checkInformationsServiceProvider({

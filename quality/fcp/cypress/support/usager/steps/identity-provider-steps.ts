@@ -1,4 +1,4 @@
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
 
 import { User } from '../../common/helpers';
 import { UserCredentials } from '../../common/types';
@@ -16,6 +16,13 @@ Then(
     } else {
       identityProviderPage.checkIsNotVisible();
     }
+  },
+);
+
+Given(
+  "le fournisseur d'identité garantit un niveau de sécurité {string}",
+  function (idpAcr) {
+    identityProviderPage.setMockAcrValue(idpAcr);
   },
 );
 

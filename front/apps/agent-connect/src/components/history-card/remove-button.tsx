@@ -19,8 +19,8 @@ const RemoveButtonComponent = React.memo(
     }, [dispatch, uid]);
 
     return (
-      <button className="m16" type="button" onClick={onClickRemoveButton}>
-        Retirer de cette liste
+      <button className="m8 fr-text-sm" type="button" onClick={onClickRemoveButton}>
+        Supprimer de cette liste
       </button>
     );
   },

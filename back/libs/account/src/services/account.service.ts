@@ -1,5 +1,4 @@
 import { Model } from 'mongoose';
-import { v4 as uuid } from 'uuid';
 
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -39,12 +38,14 @@ export class AccountService {
    * @param {IInteraction} interaction
    * @returns {Promise<void>}
    */
-  async storeInteraction(interaction: IInteraction): Promise<void> {
+  async storeInteraction(interaction: IInteraction): Promise<string> {
     this.logger.debug('Save interaction to database');
 
     const account = await this.getAccountWithInteraction(interaction);
 
     await account.save();
+
+    return account.id;
   }
 
   /**
@@ -83,7 +84,6 @@ export class AccountService {
 
     // Update last connection timestamp
     account.lastConnection = interaction.lastConnection;
-    account.id = interaction.id || uuid();
 
     return account;
   }

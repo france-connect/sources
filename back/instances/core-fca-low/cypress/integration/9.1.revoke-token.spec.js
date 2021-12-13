@@ -17,9 +17,9 @@ describe('Revoke token', () => {
 
   it('should trigger error Y030116 when token is revoked and we call userInfo endpoint', () => {
     const params = {
+      acrValues: 'eidas1',
       userName: 'test',
       password: '123',
-      eidasLevel: 1,
       idpId,
     };
     beforeSuccessScenario(params);

@@ -1,0 +1,17 @@
+@import '../../core/funcs/pixel-to-rem';
+
+.header {
+  @include rem(height, 90px);
+  @include rem(margin-bottom, 80px);
+  position: relative;
+
+  .logo-marianne {
+    height: 66px;
+    width: auto;
+  }
+
+  @media screen and (min-width: 768px) {
+    @include rem(margin-bottom, 64px);
+  }
+
+}

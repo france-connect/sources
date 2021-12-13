@@ -1,8 +1,8 @@
 @import '@fc/dsfr/styles.scss';
+@import '@fc/dsfr/core/funcs/pixel-to-rem';
 
-.identiy-provider-card {
-  max-width: 260px;
-  width: 100%;
+.identity-provider-card {
+  max-width: 100%;
 
   .title {
     line-height: 1;
@@ -14,19 +14,23 @@
   }
 
   .card-wrapper {
-    border: 2px #1890ff solid;
-    border-radius: 0.25rem;
-    box-shadow: 0 0 9px -2px #2e94fa;
+    height: calc(100% - 24px);
+    height: calc(100% - 1.5rem);
+    border-bottom: 4px $blue-agentconnect solid;
   }
 
   .form-title {
-    color: #3e4553;
+    color: $g700;
     font-family: 'Montserrat', sans-serif;
   }
 
   .form-button {
-    color: #1890ff;
-    font-size: 1rem;
-    text-decoration: underline;
+    color: $blue-agentconnect;
+    text-decoration: none;
+  }
+
+  @media screen and (min-width: 768px) {
+    @include rem(max-width, 343px);
+    width: 33.3%;
   }
 }

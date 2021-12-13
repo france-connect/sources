@@ -25,7 +25,7 @@ export const TrackCardComponent = React.memo(
     const { accountId, datetime, event, spAcr, spName, trackId } = track;
 
     // @TODO ajuster quand on aura récupérer l'origine/source des traces
-    const isFromFranceConnectPlus = false;
+    const isFromFranceConnectPlus = true;
 
     const cardA11YId = `card::a11y::${trackId}`;
     return (

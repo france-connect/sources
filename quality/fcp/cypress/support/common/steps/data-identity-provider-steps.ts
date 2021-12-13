@@ -24,7 +24,7 @@ Given(
 );
 
 Given(
-  /^j'utilise un fournisseur d'identité supportant "([^"]*)"(?: avec chiffrement "([^"]*)" et signature "([^"]*)")?$/,
+  /^j'utilise un fournisseur d'identité avec niveau de sécurité "([^"]*)"(?:, chiffrement "([^"]*)")?(?: et signature "([^"]*)")?$/,
   function (acrValue, encryption, signature) {
     getIdentityProviderByAttributes(this.identityProviders, {
       acrValue,

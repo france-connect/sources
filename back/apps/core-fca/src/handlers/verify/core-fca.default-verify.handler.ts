@@ -67,7 +67,7 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
     const { sub: subIdp } = agentIdentity;
 
     // Save interaction to database & get sp's sub to avoid double computation
-    await this.core.computeInteraction(
+    const accountId = await this.core.computeInteraction(
       {
         spId,
         subSp,
@@ -89,6 +89,7 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
     await sessionOidc.set({
       idpIdentity: idpIdentityCleaned,
       spIdentity: spIdentity,
+      accountId,
     });
   }
 }

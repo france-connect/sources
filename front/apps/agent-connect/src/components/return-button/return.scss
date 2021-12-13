@@ -1,13 +1,18 @@
-.button {
-  &:hover > i {
-    border: 1px solid #2d91fc;
+@import '@fc/dsfr/styles.scss';
+@import '@fc/dsfr/core/funcs/pixel-to-rem';
+
+a.button {
+  font-size: 14px;
+
+  &:hover {
+    color: $blue-agentconnect;
+    text-decoration: underline;
   }
 
-  font-size: 14px;
+  &.is-mobile {
+    @include rem(height, 40px);
+    border-radius: 4px;
+  }
 }
 
-.icon {
-  border: 1px solid #3e4553;
-  border-radius: 4px;
-  padding: 3px 5px 3px 5px;
-}
+

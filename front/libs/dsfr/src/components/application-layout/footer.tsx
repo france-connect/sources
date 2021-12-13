@@ -9,16 +9,19 @@ import { LogoMarianneComponent } from '../logo-marianne';
 
 const useStyles = createUseStyles({
   bottomNav: {
-    borderColor: '#CECECE',
+    borderColor: '#cecece',
     borderStyle: 'solid',
     borderTopWidth: 1,
   },
   footer: {
-    borderBottomColor: '#CECECE',
+    borderBottomColor: '#cecece',
     borderBottomWidth: 1,
     borderStyle: 'solid',
     borderTopColor: '#000091',
     borderTopWidth: 2,
+    '& .logo-agentconnect': {
+      width: 140,
+    },
   },
   licence: {
     '& svg': {
@@ -57,9 +60,8 @@ export const LayoutFooterComponent = React.memo(
     description,
     topLinks,
     linkTitle,
-    logo,
+    logo: Logo,
   }: LayoutFooterProps): JSX.Element => {
-    const Logo = logo;
     // @TODO move to fc/front/libs
     const classes = useStyles();
     // @TODO exporter les variables responsive : $breakpoint-tablet
@@ -110,46 +112,30 @@ export const LayoutFooterComponent = React.memo(
             </nav>
           </div>
         </div>
-        <div className="content-wrapper-lg px20">
-          <nav className={classnames(classes.bottomNav, 'fr-text-xs pb16 pt8')}>
-            {bottomLinks.map((linkObj: LinkObject, index: number) => {
-              const isfirst = index === 0;
-              const { a11y, href, label } = linkObj;
-              const uniqkey = `${href}::${index}`;
-              return (
-                <React.Fragment key={uniqkey}>
-                  {!isfirst && <span className="mx12 is-grey-400">|</span>}
-                  <a
-                    key={uniqkey}
-                    className="is-inline-block"
-                    href={href}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    title={a11y}
-                  >
-                    {label}
-                  </a>
-                </React.Fragment>
-              );
-            })}
-          </nav>
-          <div className="pb8">
-            <p className="fr-text-xs is-grey-600">
-              Sauf mention contraire, tous les textes de ce site sont sous{' '}
-              <a
-                className={classnames(
-                  classes.licence,
-                  'is-underline is-inline-block',
-                )}
-                href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
-                rel="noopener noreferrer"
-                target="_blank"
-                title="télécharger la licence etalab 2.0"
-              >
-                <span>licence&nbsp;etalab-2.0</span>
-                <RiExternalLinkLine />
-              </a>
-            </p>
+        <div className={classnames(classes.bottomNav, "px20")}>
+          <div className="content-wrapper-lg">
+            <nav className="fr-text-xs pb16 pt8">
+              {bottomLinks.map((linkObj: LinkObject, index: number) => {
+                const isfirst = index === 0;
+                const { a11y, href, label } = linkObj;
+                const uniqkey = `${href}::${index}`;
+                return (
+                  <React.Fragment key={uniqkey}>
+                    {!isfirst && <span className="mx12 is-g400">|</span>}
+                    <a
+                      key={uniqkey}
+                      className="is-inline-block"
+                      href={href}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                      title={a11y}
+                    >
+                      {label}
+                    </a>
+                  </React.Fragment>
+                );
+              })}
+            </nav>
           </div>
         </div>
       </footer>

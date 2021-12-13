@@ -4,8 +4,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { SessionCsrfService } from '@fc/session';
+import { TracksService } from '@fc/tracks';
 
-import { TracksService } from '../services/tracks.service';
 import { UserDashboardController } from './user-dashboard.controller';
 
 describe('UserDashboardController', () => {

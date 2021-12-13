@@ -1,6 +1,3 @@
-import { mocked } from 'ts-jest/utils';
-import * as uuid from 'uuid';
-
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -9,8 +6,6 @@ import { LoggerService } from '@fc/logger';
 import { IInteraction } from '../interfaces';
 import { Account } from '../schemas';
 import { AccountService } from './account.service';
-
-jest.mock('uuid');
 
 describe('AccountService', () => {
   let service: AccountService;
@@ -39,6 +34,7 @@ describe('AccountService', () => {
 
   const modelMock = {
     save: jest.fn(),
+    id: 'Account Mock Id Value',
   };
 
   beforeEach(async () => {
@@ -88,6 +84,19 @@ describe('AccountService', () => {
       expect(modelMock.save).toHaveBeenCalledTimes(1);
     });
 
+    it('should return account.id', async () => {
+      // Given
+      service['getAccountWithInteraction'] = jest
+        .fn()
+        .mockResolvedValueOnce(modelMock);
+
+      // When
+      const result = await service.storeInteraction(interactionMock);
+
+      // Then
+      expect(result).toBe(modelMock.id);
+    });
+
     it("should throw if it can't retrieve the account", async () => {
       // Given
       service['getAccountWithInteraction'] = jest
@@ -114,7 +123,6 @@ describe('AccountService', () => {
     const identityHash = 'my identityHash mock';
     const id = 'mock-id';
     const newInteractionMock = {
-      id,
       identityHash,
       idpFederation: { idp1Id: { sub: 'idp1Sub' } },
       spFederation: { sp1Id: { sub: 'sp1Sub' } },
@@ -132,7 +140,6 @@ describe('AccountService', () => {
       expect(constructorSpy).toHaveBeenCalledTimes(1);
       expect(constructorSpy).toHaveBeenCalledWith(newInteractionMock);
       expect(result).toEqual({
-        id,
         identityHash,
         idpFederation: { idp1Id: { sub: 'idp1Sub' } },
         spFederation: { sp1Id: { sub: 'sp1Sub' } },
@@ -167,34 +174,6 @@ describe('AccountService', () => {
           sp1Id: { sub: 'sp1Sub' },
           sp2Id: { sub: 'sp2Sub' },
         },
-        lastConnection: new Date('2020-05-01'),
-      });
-    });
-
-    it('should return an uuid if accountId is not defined', async () => {
-      // Given
-      const customUuid = 'mock-uuid';
-      const uuidMock = mocked(uuid, true);
-      uuidMock.v4.mockReturnValue(customUuid);
-
-      // When
-      const result = await service['getAccountWithInteraction']({
-        ...newInteractionMock,
-        id: null,
-      });
-
-      // Then
-      expect(constructorSpy).toHaveBeenCalledTimes(1);
-      expect(uuidMock.v4).toHaveBeenCalledTimes(1);
-      expect(constructorSpy).toHaveBeenCalledWith({
-        ...newInteractionMock,
-        id: customUuid,
-      });
-      expect(result).toEqual({
-        id: customUuid,
-        identityHash,
-        idpFederation: { idp1Id: { sub: 'idp1Sub' } },
-        spFederation: { sp1Id: { sub: 'sp1Sub' } },
         lastConnection: new Date('2020-05-01'),
       });
     });

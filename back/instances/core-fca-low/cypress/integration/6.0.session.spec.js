@@ -59,9 +59,9 @@ describe('Session', () => {
 
   it('should have cookie stored for IdP with the property `sameSite` value set to `lax`', () => {
     const loginInfo = {
+      acrValues: 'eidas1',
       userName: 'test',
       password: '123',
-      eidasLevel: 1,
       idpId,
     };
 

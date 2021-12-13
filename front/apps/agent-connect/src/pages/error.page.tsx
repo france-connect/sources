@@ -3,26 +3,26 @@
 /**
  * Not yet implemented
  */
+ import './error.scss';
+
 import classnames from 'classnames';
 import { useMediaQuery } from 'react-responsive';
 
 const ErrorPage = () => {
-  const isMobile = useMediaQuery({ query: '(max-width: 425px)' });
+  const gtTablet = useMediaQuery({ query: '(min-width: 768px)' });
 
   return (
     <div>
       <h1
-        className={classnames('is-blue-agentconnect', {
-          'text-center': !isMobile,
-          'text-left': isMobile,
+        className={classnames('is-blue-agentconnect is-bold px16', {
+          'text-center': gtTablet,
+          'text-left': !gtTablet,
         })}
       >
         Une erreur est survenue lors de la connexion.
       </h1>
       <div
-        className={classnames('content-wrapper-sm my32 px120 fr-text-lg', {
-          'no-no-padding': isMobile,
-        })}
+        className="content-error my32 px16 fr-text-lg"
       >
         <p className="mb32">Description de l’erreur :</p>
         <p className="mb32">

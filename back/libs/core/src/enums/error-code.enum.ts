@@ -11,4 +11,5 @@ export enum ErrorCode {
    * @todo core-fcp specific error, to be moved when we remove @fc/core
    */
   INVALID_CONSENT_PROCESS = 7,
+  FAILED_PERSISTENCE = 8,
 }

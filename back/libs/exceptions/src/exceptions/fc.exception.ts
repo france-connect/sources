@@ -26,6 +26,7 @@ export class FcException extends Error {
    * - 19: Session
    * - 20: Feature Handler
    * - 27: Mailer
+   * - 30: Rie Proxy Broker
    * - 80: Exceptions
    */
   public scope: number;

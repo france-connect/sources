@@ -22,3 +22,5 @@ services:
       - 'core-fcp-low'
       - 'fsp1-low'
       - 'fip1-low'
+      - 'fip2-low'
+      - 'fip3-low'

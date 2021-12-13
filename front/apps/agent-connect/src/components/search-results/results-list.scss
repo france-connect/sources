@@ -1,9 +1,18 @@
+@import '@fc/dsfr/styles.scss';
+@import '@fc/dsfr/core/funcs/pixel-to-rem';
+
+.ministry-result {
+  border-bottom-style: solid;
+  border-color: $blue-france-100;
+  @include rem(border-width, 1px);
+}
+
 .ministry-name {
   font-weight: 700;
 }
 
 .fi-name {
-  margin-bottom: 2rem;
+  @include rem(margin-bottom, 16px);
 }
 
 .text-center {

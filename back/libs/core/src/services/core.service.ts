@@ -19,7 +19,11 @@ import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter
 import { ISessionBoundContext, SessionService } from '@fc/session';
 import { IEventContext, TrackingService } from '@fc/tracking';
 
-import { CoreInvalidAcrException, CoreLowAcrException } from '../exceptions';
+import {
+  CoreFailedPersistenceException,
+  CoreInvalidAcrException,
+  CoreLowAcrException,
+} from '../exceptions';
 import { AcrValues, pickAcr } from '../transforms';
 import { ComputeIdp, ComputeSp } from '../types';
 
@@ -282,7 +286,7 @@ export class CoreService {
   async computeInteraction(
     { entityId, hashSp, spId, subSp }: ComputeSp,
     { idpId, subIdp }: ComputeIdp,
-  ) {
+  ): Promise<string> {
     const spFederation = this.getFederation(spId, subSp, entityId);
     const idpFederation = this.getFederation(idpId, subIdp);
 
@@ -299,16 +303,11 @@ export class CoreService {
     this.logger.trace(interaction);
 
     try {
-      await this.account.storeInteraction(interaction);
+      const accountId = await this.account.storeInteraction(interaction);
+
+      return accountId;
     } catch (error) {
-      /**
-       * Log a warning but do not throw,
-       * since this is not a blocking failure for business.
-       *
-       * If interaction is not persisted, login can occur anyway.
-       * Primary tracing info is keeped by business logs.
-       */
-      this.logger.warn('Could not persist interaction to database');
+      throw new CoreFailedPersistenceException(error);
     }
   }
 

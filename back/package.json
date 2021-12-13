@@ -13,6 +13,7 @@
     "build:csmr-rie": "nest build csmr-rie",
     "build:eidas-bridge": "nest build eidas-bridge-instance",
     "build:rie-bridge-proxy": "nest build rie-bridge-proxy-instance",
+    "build:tracks-data-provider": "nest build tracks-data-provider-instance",
     "build:exploit-fcp": "nest build exploit-fcp-instance",
     "build:exploit-fca-low": "nest build exploit-fca-low-instance",
     "build:mock-service-provider-fcp-low": "nest build mock-service-provider-fcp-low",
@@ -31,6 +32,7 @@
     "start:prod:csmr-hsm-high": "node dist/instances/csmr-hsm-high/main.js > /tmp/.pm2/logs/csmr-hsm-high-out-0.log 2> /tmp/.pm2/csmr-hsm-high-error-0.log",
     "start:prod:csmr-tracks": "node dist/instances/csmr-tracks/main.js > /tmp/.pm2/logs/csmr-tracks-out-0.log 2> /tmp/.pm2/csmr-tracks-error-0.log",
     "start:prod:csmr-rie": "node dist/instances/csmr-rie/main.js > /tmp/.pm2/logs/csmr-rie-out-0.log 2> /tmp/.pm2/csmr-rie-error-0.log",
+    "start:prod:tracks-data-provider": "node dist/instances/tracks-data-provider/main.js > /tmp/.pm2/logs/tracks-data-provider-out-0.log 2> /tmp/.pm2/tracks-data-provider-error-0.log",
     "start:prod:mock-service-provider-fcp-low": "node dist/instances/mock-service-provider-fcp-low/main.js > /tmp/.pm2/logs/mock-service-provider-fcp-low-out-0.log 2> /tmp/.pm2/mock-service-provider-fcp-low-error-0.log",
     "start:prod:mock-service-provider-fcp-high": "node dist/instances/mock-service-provider-fcp-high/main.js > /tmp/.pm2/logs/mock-service-provider-fcp-high-out-0.log 2> /tmp/.pm2/mock-service-provider-fcp-high-error-0.log",
     "start:prod:mock-service-provider-fca-low": "node dist/instances/mock-service-provider-fca-low/main.js > /tmp/.pm2/logs/mock-service-provider-fca-low-out-0.log 2> /tmp/.pm2/mock-service-provider-fca-low-error-0.log",
@@ -277,7 +279,13 @@
       "@fc/rie-bridge-proxy/(.*)": "<rootDir>/apps/rie-bridge-proxy/src/$1",
       "@fc/rie-bridge-proxy": "<rootDir>/apps/rie-bridge-proxy/src",
       "@fc/user-preferences-fcp/(.*)": "<rootDir>/apps/user-preferences-fcp/src/$1",
-      "@fc/user-preferences-fcp": "<rootDir>/apps/user-preferences-fcp/src"
+      "@fc/user-preferences-fcp": "<rootDir>/apps/user-preferences-fcp/src",
+      "@fc/tracks-data-provider/(.*)": "<rootDir>/apps/tracks-data-provider/src/$1",
+      "@fc/tracks-data-provider": "<rootDir>/apps/tracks-data-provider/src",
+      "^@fc/data-provider-core-auth(|/.*)$": "<rootDir>/libs/data-provider-core-auth/src/$1",
+      "^@fc/tracks(|/.*)$": "<rootDir>/libs/tracks/src/$1",
+      "@fc/rie/(.*)": "<rootDir>/libs/rie/src/$1",
+      "@fc/rie": "<rootDir>/libs/rie/src"
     },
     "preset": "ts-jest"
   }

@@ -32,7 +32,7 @@ export function ApplicationLayout({
   config,
 }: ApplicationLayoutProps): JSX.Element {
   const { pathname } = useLocation();
-  const { logo, bottomLinks, footerLinkTitle, footerDescription } = config;
+  const { logo, bottomLinks, footerLinkTitle, footerDescription, returnButton } = config;
   const currentRouteObj = getCurrentRouteObjectByPath(routes, pathname);
   const documentTitle = getDocumentTitle(currentRouteObj);
 
@@ -42,7 +42,7 @@ export function ApplicationLayout({
         <Helmet>
           <title>{documentTitle}</title>
         </Helmet>
-        <LayoutHeaderComponent logo={logo} title={footerLinkTitle} />
+        <LayoutHeaderComponent logo={logo} title={footerLinkTitle} returnButton={returnButton} />
         <Switch>
           {routes.map((route) => (
             <Route {...route} key={route.path} />

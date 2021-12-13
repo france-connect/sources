@@ -11,17 +11,17 @@ Fonctionnalité: Affichage Fournisseur Identité
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton FranceConnect
     Alors je suis redirigé vers la page sélection du fournisseur d'identité
-    Et j'utilise un fournisseur d'identité supportant "eidas2" avec chiffrement "" et signature "ES256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "" et signature "ES256"
     Et le fournisseur d'identité est affiché dans la mire
-    Et j'utilise un fournisseur d'identité supportant "eidas2" avec chiffrement "RSA-OAEP,A256GCM" et signature "ES256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "RSA-OAEP,A256GCM" et signature "ES256"
     Et le fournisseur d'identité est affiché dans la mire
-    Et j'utilise un fournisseur d'identité supportant "eidas2" avec chiffrement "ECDH-ES,A256GCM" et signature "RS256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "ECDH-ES,A256GCM" et signature "RS256"
     Et le fournisseur d'identité est affiché dans la mire
-    Et j'utilise un fournisseur d'identité supportant "eidas3" avec chiffrement "" et signature "RS256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "" et signature "RS256"
     Et le fournisseur d'identité est affiché dans la mire
-    Et j'utilise un fournisseur d'identité supportant "eidas3" avec chiffrement "RSA-OAEP,A256GCM" et signature "RS256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "RSA-OAEP,A256GCM" et signature "RS256"
     Et le fournisseur d'identité est affiché dans la mire
-    Et j'utilise un fournisseur d'identité supportant "eidas3" avec chiffrement "ECDH-ES,A256GCM" et signature "ES256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "ECDH-ES,A256GCM" et signature "ES256"
     Et le fournisseur d'identité est affiché dans la mire
 
   @ignoreInteg01
@@ -30,17 +30,17 @@ Fonctionnalité: Affichage Fournisseur Identité
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton FranceConnect
     Alors je suis redirigé vers la page sélection du fournisseur d'identité
-    Et j'utilise un fournisseur d'identité supportant "eidas2" avec chiffrement "" et signature "ES256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "" et signature "ES256"
     Et le fournisseur d'identité n'est pas affiché dans la mire
-    Et j'utilise un fournisseur d'identité supportant "eidas2" avec chiffrement "RSA-OAEP,A256GCM" et signature "ES256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "RSA-OAEP,A256GCM" et signature "ES256"
     Et le fournisseur d'identité n'est pas affiché dans la mire
-    Et j'utilise un fournisseur d'identité supportant "eidas2" avec chiffrement "ECDH-ES,A256GCM" et signature "RS256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2", chiffrement "ECDH-ES,A256GCM" et signature "RS256"
     Et le fournisseur d'identité n'est pas affiché dans la mire
-    Et j'utilise un fournisseur d'identité supportant "eidas3" avec chiffrement "" et signature "RS256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "" et signature "RS256"
     Et le fournisseur d'identité est affiché dans la mire
-    Et j'utilise un fournisseur d'identité supportant "eidas3" avec chiffrement "RSA-OAEP,A256GCM" et signature "RS256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "RSA-OAEP,A256GCM" et signature "RS256"
     Et le fournisseur d'identité est affiché dans la mire
-    Et j'utilise un fournisseur d'identité supportant "eidas3" avec chiffrement "ECDH-ES,A256GCM" et signature "ES256"
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3", chiffrement "ECDH-ES,A256GCM" et signature "ES256"
     Et le fournisseur d'identité est affiché dans la mire
 
   Scénario: Affichage des FI sur la mire - aucun FI désactivé et non visible

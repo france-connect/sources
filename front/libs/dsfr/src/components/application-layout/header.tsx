@@ -1,5 +1,8 @@
+import './header.scss';
+
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
 
 import { LogoMarianneComponent } from '../logo-marianne';
 
@@ -13,11 +16,13 @@ type LayoutHeaderProps = {
 export const LayoutHeaderComponent = React.memo(
   // @TODO move to fc/front/libs
   ({ logo, title, returnButton }: LayoutHeaderProps): JSX.Element => {
+    const gtTablet = useMediaQuery({ query: '(min-width: 768px)' });
+
     const Logo = logo;
     const ReturnButton = returnButton;
     return (
-      <header className="shadow-bottom mb40" role="banner">
-        <div className="is-flex content-wrapper-lg px8 py12">
+      <header className="header shadow-bottom" role="banner">
+        <div className="is-flex content-wrapper-lg px16 py12">
           <Link
             className="flex-columns flex-start items-center"
             title={title}
@@ -26,8 +31,9 @@ export const LayoutHeaderComponent = React.memo(
             <LogoMarianneComponent className="mr40" />
             <Logo />
           </Link>
-          {ReturnButton && <ReturnButton />}
+          {ReturnButton && gtTablet && <ReturnButton />}
         </div>
+        {ReturnButton && !gtTablet && <ReturnButton />}
       </header>
     );
   },

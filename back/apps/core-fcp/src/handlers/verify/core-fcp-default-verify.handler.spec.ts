@@ -78,6 +78,8 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     track: jest.fn(),
   };
 
+  const accountIdMock = 'accountIdMock value';
+
   const coreServiceMock = {
     checkIfAccountIsBlocked: jest.fn(),
     checkIfAcrIsValid: jest.fn(),
@@ -151,6 +153,8 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     cryptographyFcpServiceMock.computeSubV1
       .mockReturnValueOnce('computedSubSp')
       .mockReturnValueOnce('computedSubIdp');
+
+    coreServiceMock.computeInteraction.mockResolvedValue(accountIdMock);
   });
 
   it('should be defined', () => {
@@ -237,8 +241,9 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith({
+        accountId: accountIdMock,
         amr: ['fc'],
-        idpIdentity: { sub: 'computedSubIdp' },
+        idpIdentity: idpIdentityMock,
         spIdentity: { ...idpIdentityMock, sub: 'computedSubSp' },
       });
     });

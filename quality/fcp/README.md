@@ -44,25 +44,131 @@ In order to run tests with Cypress,
 
 ## Scripts
 
-### Run the Cypress test in the terminal (deleting previous results)
+### Run the Cypress tests on FCP-LOW
 
+#### Start the local stack for FCP-LOW
+
+- [More information regarding the local development stack](../../docker/_doc/README.md)
+
+```shell
+docker-stack prune && \
+docker-stack up all-fcp-low && \
+docker-stack dependencies-all && \
+docker-stack start-all
 ```
-# Run Cypress on fcpLow against docker environment
+
+#### Run the tests in the terminal (deleting previous results)
+
+1. [Start the local stack of FCP-LOW using the docker-stack command](#start-the-local-stack-for-fcp-low)
+1. Run Cypress tests on FCP-LOW against docker environment
+
+```shell
 yarn test:low
-
-# Run Cypress on fcpHigh against integ01 environment
-CYPRESS_TEST_ENV=integ01 yarn test:high
 ```
 
-### Open Cypress window
+#### Run the tests from Cypress UI
 
+1. [Start the local stack of FCP-LOW using the docker-stack command](#start-the-local-stack-for-fcp-low)
+1. Open Cypress UI to run tests on FCP-LOW against docker environment
+
+```shell
+yarn start:low
 ```
-# Run Cypress on fcpHigh against docker environment
+
+### Run the Cypress tests on FCP-HIGH
+
+#### Start the local stack for FCP-HIGH
+
+- [More information regarding the local development stack](../../docker/_doc/README.md)
+
+```shell
+docker-stack prune && \
+docker-stack up all-fcp-high && \
+docker-stack dependencies-all && \
+docker-stack fixtures-v2
+# Start all containers if the computer has more than 16GB of RAM
+docker-stack start-all
+# Start fewer containers otherwise (only tests using FIP1-high will pass)
+docker-stack start csmr-hsm rnipp fsp1-high fsp2-high fsp5-high fsp6-high fip1-high core-fcp-high exploitation-high
+```
+
+#### Run the tests on docker environment in the terminal (deleting previous results)
+
+1. [Start the local stack of FCP-HIGH using the docker-stack command](#start-the-local-stack-for-fcp-high)
+1. Run Cypress tests on FCP-HIGH against docker environment
+
+```shell
+yarn test:high
+```
+
+#### Run the tests from Cypress UI for docker environment
+
+1. [Start the local stack of FCP-HIGH using the docker-stack command](#start-the-local-stack-for-fcp-high)
+1. Open Cypress UI to run tests on FCP-HIGH against docker environment
+
+```shell
 yarn start:high
-
-# Run Cypress on fcpLow against integ01 environment
-CYPRESS_TEST_ENV=integ01 yarn start:low
 ```
+
+#### Run the tests from Cypress UI for recette environment
+
+1. Duplicate `cypress-fcp-high.json` and rename it `cypress-recette.json`
+2. Change the following env attributes
+
+  ```json
+  "TEST_ENV": "recette",
+  "FC_ACCESS_USER": "<FranceConnect access user for HTTP Basic Authentication>",
+  "FC_ACCESS_PASS": "<FranceConnect access password for HTTP Basic Authentication>",
+  ```
+
+3. Run the job `review-fcp-high` on the merge request, in order to deploy the recette environment
+4. Check that the recette environment is up and running navigating from `https://recette.dev-franceconnect.fr/fcp.html`
+5. Open Cypress UI to run tests on FCP-HIGH against recette environment
+
+  ```shell
+  yarn start:high --config-file cypress-recette.json
+  ```
+
+6. Run the `usager` tests (user connection) or `exploitation` tests (admin configuration)
+
+#### Run the tests from Cypress UI for integ01 environment
+
+1. Duplicate `cypress-fcp-high.json` and rename it `cypress-integ01.json`
+2. Change the following env attributes
+
+  ```json
+  "TEST_ENV": "integ01",
+  "EXPLOIT_USER_NAME": "<your integ01 operator user>",
+  "EXPLOIT_USER_PASS": "<your integ01 operator password>",
+  "EXPLOIT_USER_TOTP": "<your integ01 operator totp secret",
+  "FC_ACCESS_USER": "<FranceConnect access user for HTTP Basic Authentication>",
+  "FC_ACCESS_PASS": "<FranceConnect access password for HTTP Basic Authentication>",
+  ```
+
+3. Start the proxy to access `https://docker.dev-franceconnect.fr/integ01/fcp.html`
+
+  ```shell
+  docker-stack up rp-all
+  ```
+
+4. Open Cypress UI to run tests on FCP-HIGH against integ01 environment
+
+  ```shell
+  yarn start:high --config-file cypress-integ01.json
+  ```
+
+5. Run the `usager` tests (user connection) or `exploitation` tests (if you have an operator user)
+
+#### Run the user-dashboard tests from Cypress UI on user-dashboard local stack
+
+1. Start the [user-dashboard local stack](/front/apps/user-dashboard/README.md)
+2. Open Cypress UI to run tests on user-dashboard
+
+  ```shell
+  yarn start:high
+  ```
+  
+3. Run the dashboard tests
 
 ### Generate the Cucumber HTML report
 
@@ -70,7 +176,7 @@ CYPRESS_TEST_ENV=integ01 yarn start:low
 # Add Screenshots/Videos to the Cucumber logs
 yarn report:prepare
 
-# Generate the report
+# Generate the report for fcp-high integ01
 CYPRESS_PLATFORM=fcp-high CYPRESS_TEST_ENV=integ01 yarn report:generate
 ```
 
@@ -78,14 +184,14 @@ CYPRESS_PLATFORM=fcp-high CYPRESS_TEST_ENV=integ01 yarn report:generate
 
 ### Cucumber (Gherkin) Full Support
 
-https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete
+Link: [CucumberAutoComplete plugin](https://marketplace.visualstudio.com/items?itemName=alexkrechik.cucumberautocomplete)
 
 This plugin provides support for writing/maintaining scenarios in the feature files.
 It automatically lists the implemented steps while editing the scenarios.
 
 In order to setup the VSCode extension for FCP, you can either open the workspace from the `/quality/fcp` folder or copy the following settings in your VSCode User settings.
 
-```
+```json
 {
   "cucumberautocomplete.customParameters": [],
   "cucumberautocomplete.steps": ["quality/fcp/cypress/support/**/steps/*.ts"],

@@ -67,13 +67,9 @@
 | Code | Message utilisateur | Description |
 |---|---|---|
 | [Y090001](../apps/mock-service-provider/src/exceptions/mock-service-provider-login-callback.exception.ts "MockServiceProviderLoginCallbackException") | Ne semble pas utilisée - FS Mock | Ne semble pas utilisée - FS Mock | 
-| [Y090001](../apps/user-dashboard/src/exceptions/user-dashboard-login-callback.exception.ts "UserDashboardLoginCallbackException") | Ne semble pas utilisée - User Dashboard | Ne semble pas utilisée - User Dashboard | 
+| [Y090001](../apps/user-dashboard/src/exceptions/user-dashboard-token-revocation.exception.ts "UserDashboardTokenRevocationException") | Une erreur s&#39;est produite lors de la fermeture de votre session, fermez l’onglet de votre navigateur et reconnectez-vous. Si le problème persiste, contacter le support. | Une erreur s&#39;est produite lors de la révocation d&#39;un token par le userdashboard. Le token a dû expirer avec révocation. Si le problème persiste, contacter le support N3. | 
 | [Y090002](../apps/mock-service-provider/src/exceptions/mock-service-provider-token-revocation.exception.ts "MockServiceProviderTokenRevocationException") | Une erreur s&#39;est produite lors de la fermeture de votre session, fermez l’onglet de votre navigateur et reconnectez-vous. Si le problème persiste, contacter le support. | Une erreur s&#39;est produite lors de la révocation d&#39;un token par un FS de démo. Le token a dû expirer avec révocation. Si le problème persiste, contacter le support N3. | 
-| [Y090002](../apps/user-dashboard/src/exceptions/user-dashboard-token-revocation.exception.ts "UserDashboardTokenRevocationException") | Une erreur s&#39;est produite lors de la fermeture de votre session, fermez l’onglet de votre navigateur et reconnectez-vous. Si le problème persiste, contacter le support. | Une erreur s&#39;est produite lors de la révocation d&#39;un token par le userdashboard. Le token a dû expirer avec révocation. Si le problème persiste, contacter le support N3. | 
 | [Y090003](../apps/mock-service-provider/src/exceptions/mock-service-provider-userinfo.exception.ts "MockServiceProviderUserinfoException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. Si le problème persiste, contacter le support. | Une erreur s&#39;est produite lors de la récupération des données utilisateurs depuis un FS de démo. Il faut recommencer la cinématique. Si le problème persiste, contacter le support N3 | 
-| [Y090003](../apps/user-dashboard/src/exceptions/user-dashboard-userinfo.exception.ts "UserDashboardUserinfoException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. Si le problème persiste, contacter le support. | Une erreur s&#39;est produite lors de la récupération des données utilisateurs depuis le userdashboard. Il faut recommencer la cinématique. Si le problème persiste, contacter le support N3 | 
-| [Y090004](../apps/user-dashboard/src/exceptions/user-dashboard-tracks-response.exception.ts "UserDashboardTracksResponseException") |  | N/A | 
-| [Y090006](../apps/user-dashboard/src/exceptions/user-dashboard-invalid-identity.exception.ts "UserDashboardInvalidIdentityException") | Ne semble pas utilisée - UserDashboard | Ne semble pas utilisée - UserDashboard | 
 
 | Code | Message utilisateur | Description |
 |---|---|---|
@@ -106,6 +102,18 @@
 |---|---|---|
 | [Y200001](../libs/feature-handler/src/exceptions/feature-handler-empty.exception.ts "FeatureHandlerEmptyException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. | N/A | 
 | [Y200002](../libs/feature-handler/src/exceptions/feature-handler-unregistered.exception.ts "FeatureHandlerUnregisteredException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. | N/A | 
+
+| Code | Message utilisateur | Description |
+|---|---|---|
+| [Y210001](../libs/data-provider-core-auth/src/exceptions/invalid-http-auth-token.exception.ts "InvalidHttpAuthTokenException") |  | Impossible d&#39;extraire le token d&#39;authentification, le format est invalide | 
+| [Y210002](../libs/data-provider-core-auth/src/exceptions/missing-http-auth-token.exception.ts "MissingHttpAuthTokenException") |  | Impossible d&#39;extraire le token d&#39;authentification, le header authorization est absent | 
+| [Y210003](../libs/data-provider-core-auth/src/exceptions/invalid-identity.exception.ts "InvalidIdentityException") |  | L&#39;identité reçue lors du checktoken n&#39;a pas passé la validation DTO | 
+| [Y210004](../libs/data-provider-core-auth/src/exceptions/received-invalid-scope.exception.ts "ReceivedInvalidScopeException") |  | Le scope reçu lors du checktoken ne correspond pas à celui configuré pour ce FD | 
+| [Y210005](../libs/data-provider-core-auth/src/exceptions/check-token-failed.exception.ts "CheckTokenFailedException") |  | La vérification du token par le core a échoué, plus de détails dans le message d&#39;erreur | 
+
+| Code | Message utilisateur | Description |
+|---|---|---|
+| [Y220001](../libs/tracks/src/exceptions/tracks-response.exception.ts "TracksResponseException") |  | Une erreur s&#39;est produite lors de la récupération des traces via le broker | 
 
 | Code | Message utilisateur | Description |
 |---|---|---|

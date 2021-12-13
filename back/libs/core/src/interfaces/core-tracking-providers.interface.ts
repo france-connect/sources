@@ -2,6 +2,8 @@
 
 // Declarative code
 export interface ICoreTrackingProviders {
+  readonly accountId: string;
+
   readonly spId: string;
   readonly spAcr: string;
   readonly spName: string;

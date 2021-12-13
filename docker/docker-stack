@@ -436,7 +436,7 @@ case "$action" in
       fip2-high core-fcp-high rnipp exploitation-high fsa1-low fsa2-low fsa3-low fsa4-low \
       fia1-low fia2-low fia4-low fia5-low core-fca-low fca-low-front csmr-hsm eidas-bridge \
       exploitation-fca-low exploit-fcp-high-back exploit-fca-low-back core-fcp-low \
-      fsp1-low fip1-low exploit-fcp-high-front exploit-fca-low-front rie-bridge-proxy \
+      fsp1-low fip1-low fip2-low fip3-low exploit-fcp-high-front exploit-fca-low-front rie-bridge-proxy \
       exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
       csmr-rie
     ;;
@@ -488,7 +488,7 @@ case "$action" in
     fsa1-low fsa2-low fsa3-low fia1-low fia2-low core-fca-low fca-low-front csmr-hsm \
     eidas-bridge exploitation-fca-low exploit-fcp-high-back exploit-fcp-high-front \
     exploit-fca-low-back exploit-fca-low-front exploit-fcp-high-fi-mock rie-bridge-proxy \
-    exploit-fca-low-fi-mock core-fcp-low fsp1-low fip1-low \
+    exploit-fca-low-fi-mock core-fcp-low fsp1-low fip1-low fip2-low fip3-low\
     csmr-rie
     ;;
   reset-db-core-fcp-high)
@@ -519,7 +519,7 @@ case "$action" in
       fsp1-high fsp2-high fsp3-high fsp5-high fsp6-high \
       fsp1-low \
       fip1-high fip2-high fip6-high fip13-high fip14-high fip15-high fip16-high fip17-high fip18-high fip19-high fip20-high \
-      fip1-low \
+      fip1-low fip2-low fip3-low \
       exploit-fcp-high-front exploit-fca-low-front \
       \
       core-fca-low fca-low-front exploitation-fca-low exploit-fca-low-back rie-bridge-proxy \
@@ -538,7 +538,7 @@ case "$action" in
     fsp1-high fsp2-high fsp3-high fsp5-high fsp6-high \
     fsp1-low \
     fip1-high fip2-high fip6-high fip13-high fip14-high fip15-high fip16-high fip17-high fip18-high fip19-high fip20-high \
-    fip1-low \
+    fip1-low fip2-low fip3-low \
     exploit-fcp-high-front \
     \
     core-fca-low fca-low-front exploitation-fca-low exploit-fca-low-back exploit-fca-low-front \
@@ -552,8 +552,8 @@ case "$action" in
   test-all)
     _test rnipp core-fcp-high exploitation-high core-fca-low fca-low-front eidas-bridge \
     exploitation-fca-low exploit-fcp-high-back exploit-fca-low-back exploit-fca-low-front \
-    exploit-fcp-high-fi-mock exploit-fca-low-fi-mock core-fcp-low fsp1-low fip1-low rie-bridge-proxy \
-    csmr-rie
+    exploit-fcp-high-fi-mock exploit-fca-low-fi-mock core-fcp-low fsp1-low \
+    fip1-low fip2-low fip3-low rie-bridge-proxy csmr-rie
     ;;
   e2e)
     _e2e $@

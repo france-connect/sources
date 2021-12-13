@@ -17,5 +17,37 @@
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
+  },
+  {
+    "idpId": "fip2-low",
+    "descriptions": [],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip2-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "ES256",
+    "selectors": {
+      "idpButton": "#idp-fip2-low",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "button[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip3-low",
+    "descriptions": [],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip3-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "RS256",
+    "selectors": {
+      "idpButton": "#idp-fip3-low",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "button[type='submit']"
+    }
   }
 ]

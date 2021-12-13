@@ -1,4 +1,5 @@
 import { Document, Schema as SchemaNative } from 'mongoose';
+import { v4 as uuid } from 'uuid';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
@@ -16,7 +17,7 @@ export class Account extends Document {
   @Prop({ type: Date, default: Date.now })
   createdAt: Date;
 
-  @Prop({ type: String })
+  @Prop({ type: String, default: uuid })
   id: string;
 
   @Prop({ type: Date, default: Date.now, index: { expires: '3y' } })

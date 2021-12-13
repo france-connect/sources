@@ -55,8 +55,8 @@ db.client.replaceOne(
     userinfo_encrypted_response_enc: "A256GCM",
     jwks_uri:
       "https://fsp1-low.docker.dev-franceconnect.fr/client/.well-known/keys",
-    idpFilterExclude: false,
-    idpFilterList: ["fip1-low"],
+    idpFilterExclude: true,
+    idpFilterList: [],
     identityConsent: false,
     trustedIdentity: false,
   },

@@ -2,6 +2,7 @@
 
 // Declarative code
 export * from './core-base.exception';
+export * from './core-failed-persistence-exception';
 export * from './core-invalid-acr.exception';
 export * from './core-low-acr.exception';
 export * from './core-missing-authentication-email.exception';

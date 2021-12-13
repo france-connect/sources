@@ -38,7 +38,7 @@ const ResultItemComponent = React.memo(
           />
         ))}
         <button
-          className="button-style"
+          className="button-style fr-text-lg text-left"
           id={`idp-${uid}-button`}
           type="submit"
           onClick={buttonClickHandler}

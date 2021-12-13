@@ -27,7 +27,7 @@ export function setFSAuthorizeClaims(claims) {
   if (typeof claims !== 'string') {
     throw new Error('claims must be a string');
   }
-  cy.get('#claims').clear().type(claims, {parseSpecialCharSequences: false});
+  cy.get('#claims').clear().type(claims, { parseSpecialCharSequences: false });
 }
 
 export function submitFSAuthorizeForm() {
@@ -88,7 +88,9 @@ export function basicSuccessScenario(params) {
     acr_values: acrValues,
     idpId,
     userName,
-    sp = 'SP1'
+    sp = 'SP1',
+    accountId,
+    idpSub,
   } = params;
   const password = '123';
   const idpInfo = getIdentityProvider(idpId);
@@ -172,6 +174,7 @@ export function basicSuccessScenario(params) {
     spId: serviceProvider.id,
     spAcr: acrValues,
     idpId,
+    idpSub,
     idpAcr: params.acr_values, // idpAcr is set
   });
 
@@ -181,24 +184,29 @@ export function basicSuccessScenario(params) {
     spId: serviceProvider.id,
     spAcr: acrValues,
     idpId,
+    idpSub,
     idpAcr: acrValues,
   });
 
   cy.hasBusinessLog({
     category: 'FRONT_CINEMATIC',
     event: 'FC_VERIFIED',
+    accountId,
     spId: serviceProvider.id,
     spAcr: acrValues,
     idpId,
+    idpSub,
     idpAcr: acrValues,
   });
 
   cy.hasBusinessLog({
     category: 'FRONT_CINEMATIC',
     event: 'FC_SHOWED_CONSENT',
+    accountId,
     spId: serviceProvider.id,
     spAcr: acrValues,
     idpId,
+    idpSub,
     idpAcr: acrValues,
   });
 
@@ -207,27 +215,33 @@ export function basicSuccessScenario(params) {
   cy.hasBusinessLog({
     category: 'FRONT_CINEMATIC',
     event: 'FC_REDIRECTED_TO_SP',
+    accountId,
     spId: serviceProvider.id,
     spAcr: acrValues,
     idpId,
+    idpSub,
     idpAcr: acrValues,
   });
 
   cy.hasBusinessLog({
     category: 'BACK_CINEMATIC',
     event: 'SP_REQUESTED_FC_TOKEN',
+    accountId,
     spId: serviceProvider.id,
     spAcr: acrValues,
     idpId,
+    idpSub,
     idpAcr: acrValues,
   });
 
   cy.hasBusinessLog({
     category: 'BACK_CINEMATIC',
     event: 'SP_REQUESTED_FC_USERINFO',
+    accountId,
     spId: serviceProvider.id,
     spAcr: acrValues,
     idpId,
+    idpSub,
     idpAcr: acrValues,
   });
 }

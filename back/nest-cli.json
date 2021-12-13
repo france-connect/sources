@@ -287,6 +287,15 @@
         "tsConfigPath": "instances/user-preferences-fcp-high/tsconfig.app.json"
       }
     },
+    "tracks-data-provider-instance": {
+      "type": "application",
+      "root": "instances/tracks-data-provider",
+      "entryFile": "main",
+      "sourceRoot": "instances/tracks-data-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/tracks-data-provider/tsconfig.app.json"
+      }
+    },
     "rnipp": {
       "type": "library",
       "root": "libs/rnipp",
@@ -456,6 +465,15 @@
       "sourceRoot": "apps/csmr-tracks/src",
       "compilerOptions": {
         "tsConfigPath": "apps/csmr-tracks/tsconfig.lib.json"
+      }
+    },
+    "tracks-data-provider": {
+      "type": "library",
+      "root": "apps/tracks-data-provider",
+      "entryFile": "index",
+      "sourceRoot": "apps/tracks-data-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/tracks-data-provider/tsconfig.app.json"
       }
     },
     "common": {
@@ -798,6 +816,33 @@
       "sourceRoot": "instances/csmr-rie/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-rie/tsconfig.app.json"
+      }
+    },
+    "data-provider-core-auth": {
+      "type": "library",
+      "root": "libs/data-provider-core-auth",
+      "entryFile": "index",
+      "sourceRoot": "libs/data-provider-core-auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/data-provider-core-auth/tsconfig.lib.json"
+      }
+    },
+    "tracks": {
+      "type": "library",
+      "root": "libs/tracks",
+      "entryFile": "index",
+      "sourceRoot": "libs/tracks/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tracks/tsconfig.lib.json"
+      }
+    },
+    "rie": {
+      "type": "library",
+      "root": "libs/rie",
+      "entryFile": "index",
+      "sourceRoot": "libs/rie/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/rie/tsconfig.lib.json"
       }
     }
   }

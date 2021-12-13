@@ -60,6 +60,8 @@ describe('CoreFcpEidasVerifyHandler', () => {
     track: jest.fn(),
   };
 
+  const accountIdMock = 'accountIdMock value';
+
   const coreServiceMock = {
     checkIfAccountIsBlocked: jest.fn(),
     checkIfAcrIsValid: jest.fn(),
@@ -127,6 +129,8 @@ describe('CoreFcpEidasVerifyHandler', () => {
     cryptographyEidasServiceMock.computeSubV1
       .mockReturnValueOnce('computedSubSp')
       .mockReturnValueOnce('computedSubIdp');
+
+    coreServiceMock.computeInteraction.mockResolvedValue(accountIdMock);
   });
 
   it('should be defined', () => {
@@ -188,8 +192,9 @@ describe('CoreFcpEidasVerifyHandler', () => {
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith({
+        accountId: accountIdMock,
         amr: ['eidas'],
-        idpIdentity: { sub: 'computedSubIdp' },
+        idpIdentity: idpIdentityMock,
         spIdentity: { ...idpIdentityMock, sub: 'computedSubSp' },
       });
     });

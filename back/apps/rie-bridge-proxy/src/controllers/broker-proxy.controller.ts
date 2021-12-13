@@ -1,12 +1,16 @@
-import { Body, Controller, Get, Headers, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Post, Req, Res } from '@nestjs/common';
 
 import { LoggerService } from '@fc/logger';
 
 import { RieBridgeProxyRoutes } from '../enums';
+import { BrokerProxyService } from '../services';
 
 @Controller()
 export class BrokerProxyController {
-  constructor(private readonly logger: LoggerService) {
+  constructor(
+    private readonly logger: LoggerService,
+    private readonly broker: BrokerProxyService,
+  ) {
     this.logger.setContext(this.constructor.name);
   }
 
@@ -16,50 +20,57 @@ export class BrokerProxyController {
    * * /authorize
    * * /userinfo
    * * /jwks
-   * @returns string | JSON
+   *
+   * @param { originalUrl, method } from req
+   * @param headers
+   * @param res
    */
   @Get(RieBridgeProxyRoutes.WILDCARD)
-  async get(@Req() { url }: { url: string }, @Body() body, @Headers() headers) {
-    this.logger.debug(`GET ${url}`);
-    this.logger.trace(`REQ.body ===========\n${JSON.stringify(body, null, 2)}`);
-    this.logger.trace(
-      `Headers ============\n${JSON.stringify(headers, null, 2)}`,
-    );
+  async get(@Req() req, @Headers() headers, @Res() res): Promise<void> {
+    const { originalUrl } = req;
+    const { host, 'x-forwarded-proto': xForwardedProto } = headers;
 
-    /* @TODO : to remove when #739 will be implement
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/739
-     */
-    const mockPartialWellKnownResponse = {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      authorization_endpoint:
-        'https://auth.llng.docker.dev-franceconnect.fr/oauth2/authorize',
-    };
+    this.logger.debug(`GET ${xForwardedProto}://${host}${originalUrl}`);
 
-    return mockPartialWellKnownResponse;
+    await this.allRequest(req, headers, res);
   }
 
   /**
    * Catch all 'POST' routes needed for a cinematic
    * * /token
-   * @returns string | JSON
+   *
+   * @param { originalUrl, method } from req
+   * @param headers
+   * @param body
+   * @param res
    */
   @Post(RieBridgeProxyRoutes.WILDCARD)
   async post(
-    @Req() { url }: { url: string },
-    @Body() body,
+    @Req() req,
     @Headers() headers,
-  ) {
-    this.logger.debug(`POST ${url}`);
-    this.logger.trace(`REQ.body ===========\n${JSON.stringify(body, null, 2)}`);
-    this.logger.trace(
-      `Headers ============\n${JSON.stringify(headers, null, 2)}`,
-    );
+    @Res() res,
+    @Body() body: string,
+  ): Promise<void> {
+    const { originalUrl } = req;
+    const { host, 'x-forwarded-proto': xForwardedProto } = headers;
 
-    /* @TODO : to remove when #739 will be implement
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/739
-     */
-    const mockResponse = { status: 200, message: 'ok' };
+    this.logger.debug(`POST ${xForwardedProto}://${host}${originalUrl}`);
 
-    return mockResponse;
+    await this.allRequest(req, headers, res, body);
+  }
+
+  private async allRequest(req, headers, res, body?: string): Promise<void> {
+    const { originalUrl, method } = req;
+
+    const {
+      headers: headerResponse,
+      data,
+      status: statusCode,
+    } = await this.broker.proxyRequest(originalUrl, method, headers, body);
+
+    // set headers with headers return by idp through csmr-rie
+    this.broker.setHeaders(res, headerResponse);
+
+    res.status(statusCode).send(data);
   }
 }

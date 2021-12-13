@@ -46,7 +46,7 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     const subIdp = this.cryptographyEidas.computeSubV1(spId, hashSp);
 
     // Save interaction to database
-    await this.core.computeInteraction(
+    const accountId = await this.core.computeInteraction(
       {
         spId,
         entityId,
@@ -68,12 +68,13 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     const spIdentityCleaned = { ...idpIdentity, sub: subSp };
 
     // Delete idp identity from volatile memory but keep the sub for the business logs.
-    const idpIdentityCleaned = { sub: subIdp };
+    const idpIdentityCleaned = { sub: idpIdentity.sub };
 
     await sessionOidc.set({
       amr: ['eidas'],
       idpIdentity: idpIdentityCleaned,
       spIdentity: spIdentityCleaned,
+      accountId,
     });
   }
 }

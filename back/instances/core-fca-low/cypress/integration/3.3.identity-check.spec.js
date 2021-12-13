@@ -37,7 +37,7 @@ describe('Identity Check', () => {
     });
 
     basicScenario({
-      login: 'E020025',
+      userName: 'E020025',
       idpId,
     });
 

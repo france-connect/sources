@@ -19,7 +19,11 @@ import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter
 import { ISessionBoundContext, SessionService } from '@fc/session';
 import { IEventContext, TrackingService } from '@fc/tracking';
 
-import { CoreInvalidAcrException, CoreLowAcrException } from '../exceptions';
+import {
+  CoreFailedPersistenceException,
+  CoreInvalidAcrException,
+  CoreLowAcrException,
+} from '../exceptions';
 import { ComputeIdp, ComputeSp } from '../types';
 import { CoreService } from './core.service';
 
@@ -288,6 +292,19 @@ describe('CoreService', () => {
       );
     });
 
+    it('should throw CoreFailedPersistenceException if persistence fails', async () => {
+      // Given
+      service['getFederation'] = jest
+        .fn()
+        .mockReturnValueOnce({ myEntityId: { sub: subSpMock } })
+        .mockReturnValueOnce({ [sessionDataMock.idpId]: { sub: subIdpMock } });
+      accountServiceMock.storeInteraction.mockRejectedValueOnce('fail!!!');
+      // Then
+      await expect(
+        service.computeInteraction(computeSp, computeIdp),
+      ).rejects.toThrow(CoreFailedPersistenceException);
+    });
+
     it('should call storeInteraction with interaction object well formatted', async () => {
       // Given
       service['getFederation'] = jest
@@ -307,19 +324,21 @@ describe('CoreService', () => {
       });
     });
 
-    it('should call storeInteraction with interaction object well formatted', async () => {
+    it('should return accountId if all goes well', async () => {
       // Given
       service['getFederation'] = jest
         .fn()
         .mockReturnValueOnce({ myEntityId: { sub: subSpMock } })
         .mockReturnValueOnce({ [sessionDataMock.idpId]: { sub: subIdpMock } });
-      accountServiceMock.storeInteraction.mockRejectedValueOnce('fail!!!');
+
+      const accountIdMock = 'accountIdMockValue';
+
+      accountServiceMock.storeInteraction.mockResolvedValueOnce(accountIdMock);
       // When
-      try {
-        await service.computeInteraction(computeSp, computeIdp);
-      } catch (e) {
-        expect(loggerServiceMock.warn).toHaveBeenCalledTimes(1);
-      }
+      const result = await service.computeInteraction(computeSp, computeIdp);
+
+      // Then
+      expect(result).toBe(accountIdMock);
     });
   });
 

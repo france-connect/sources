@@ -133,6 +133,8 @@ export class CoreTrackingService implements IAppTrackingService {
     }
 
     const {
+      accountId = null,
+
       spId = null,
       spAcr = null,
       spName = null,
@@ -145,6 +147,8 @@ export class CoreTrackingService implements IAppTrackingService {
     } = sessionData;
 
     return {
+      accountId,
+
       spId,
       spAcr,
       spName,
@@ -172,6 +176,8 @@ export class CoreTrackingService implements IAppTrackingService {
     const { spId, spAcr, spName, spSub } = context.req;
 
     return {
+      accountId: null,
+
       spId,
       spAcr,
       spName,

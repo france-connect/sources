@@ -44,7 +44,7 @@ const TraceCardBadgeComponent = React.memo(
             // @TODO ajuster quand on aura récupérer l'origine/source des traces
             style={{ backgroundColor: fromFcPlus ? '#1e78f3' : '#000d8f' }}
           >
-            <b>FranceConnect</b>
+            <b>FranceConnect {fromFcPlus && '+'}</b>
           </div>
           <div
             className="flex-columns items-center py8 px12"

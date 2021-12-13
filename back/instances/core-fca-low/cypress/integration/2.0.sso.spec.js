@@ -6,9 +6,9 @@ describe('No SSO', () => {
   const idpId = `${Cypress.env('IDP_NAME')}1-low`;
 
   const loginInfo = {
+    acrValues: 'eidas1',
     userName: 'test',
     password: '123',
-    eidasLevel: 1,
     idpId,
   };
 

@@ -8,6 +8,7 @@ import {
   IsObject,
   IsOptional,
   IsString,
+  IsUUID,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -21,6 +22,10 @@ export class OidcSession {
   @IsAscii()
   @MinLength(1)
   readonly sessionId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  readonly accountId?: string;
 
   @IsOptional()
   @IsAscii()

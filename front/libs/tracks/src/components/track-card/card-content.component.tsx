@@ -2,13 +2,14 @@ import classnames from 'classnames';
 import { DateTime } from 'luxon';
 import React from 'react';
 import { TracksConfig } from '../../interfaces';
+import { EidasToLabel } from '../../enums';
 
 type TraceCardContentProps = {
   accessibleId: string;
   accountId: string;
   datetime: DateTime;
   opened: boolean;
-  spAcr: string;
+  spAcr: keyof typeof EidasToLabel;
   options: TracksConfig;
 };
 
@@ -57,9 +58,9 @@ const TraceCardContentComponent = React.memo(
               <a
                 className="is-g700"
                 href="/"
-                title={`En savoir plus sur le niveau de sécurité ${spAcr}`}
+                title={`En savoir plus sur le niveau de sécurité ${EidasToLabel[spAcr]}`}
               >
-                <b>{spAcr}</b>
+                <b>{EidasToLabel[spAcr]}</b>
               </a>
             </li>
           </ul>
