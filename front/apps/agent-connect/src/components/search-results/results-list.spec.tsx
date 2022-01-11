@@ -1,5 +1,5 @@
 import { renderWithRedux } from '../../testUtils';
-import SearchResultsList from './results-list';
+import { SearchResultsComponent } from './results-list';
 
 const identityProviders = [
   {
@@ -22,24 +22,22 @@ const identityProviders = [
   },
 ];
 
-const props = {
-  results: [
-    {
-      id: 'mock-ministry-id-0',
-      identityProviders: ['mock-idp-uid-0.1'],
-      name: 'MOCK-MINISTRY-NAME-0',
-    },
-    {
-      id: 'mock-ministry-id-1',
-      identityProviders: ['mock-idp-uid-1.1', 'mock-idp-uid-1.2'],
-      name: 'MOCK-MINISTRY-NAME-1',
-    },
-  ],
-};
+const resultsMock = [
+  {
+    id: 'mock-ministry-id-0',
+    identityProviders: ['mock-idp-uid-0.1'],
+    name: 'MOCK-MINISTRY-NAME-0',
+  },
+  {
+    id: 'mock-ministry-id-1',
+    identityProviders: ['mock-idp-uid-1.1', 'mock-idp-uid-1.2'],
+    name: 'MOCK-MINISTRY-NAME-1',
+  },
+];
 
-describe('SearchResultsList', () => {
+describe('SearchResultsComponent', () => {
   it('should render ministries names', () => {
-    const { getByText } = renderWithRedux(<SearchResultsList {...props} />, {
+    const { getByText } = renderWithRedux(<SearchResultsComponent results={resultsMock} />, {
       initialState: { identityProviders },
     });
 
@@ -51,7 +49,7 @@ describe('SearchResultsList', () => {
   });
 
   it('should render identity providers', () => {
-    const { getByText } = renderWithRedux(<SearchResultsList {...props} />, {
+    const { getByText } = renderWithRedux(<SearchResultsComponent results={resultsMock} />, {
       initialState: { identityProviders },
     });
 
@@ -67,7 +65,7 @@ describe('SearchResultsList', () => {
 
   describe('should render identity providers as child of ministries', () => {
     it('should render idps as childs of theirs parent ministry', () => {
-      const { getByText } = renderWithRedux(<SearchResultsList {...props} />, {
+      const { getByText } = renderWithRedux(<SearchResultsComponent results={resultsMock} />, {
         initialState: { identityProviders },
       });
       // then

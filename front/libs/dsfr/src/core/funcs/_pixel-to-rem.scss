@@ -36,14 +36,7 @@ $rem-px-only: false !default;
     @if type-of($value) == 'number' and unit($value) == 'rem' and $to == 'px' {
       $relativePixel: math.div($value, 1rem);
       $result: append($result, $relativePixel * $rem-baseline, $separator);
-    } @else if
-      type-of($value) ==
-      'number' and
-      unit($value) ==
-      'px' and
-      $to ==
-      'rem'
-    {
+    } @else if type-of($value) == 'number' and unit($value) == 'px' and $to == 'rem' {
       $relativeRem: math.div($value, $rem-baseline);
       $result: append($result, $relativeRem * 1rem, $separator);
     } @else if type-of($value) == 'list' {

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { AnyAction } from 'redux';
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 
@@ -24,8 +25,8 @@ describe('loadMinistries', () => {
 
     // action
     const action = loadMinistries();
-    await store.dispatch(action);
 
+    await store.dispatch(action as unknown as AnyAction);
     // expect
     const actions = store.getActions();
     expect(actions).toStrictEqual([

@@ -1,7 +1,11 @@
-import { LayoutConfig } from '@fc/dsfr';
-import { LogoFranceConnectComponent } from '../ui/components/logo-france-connect/logo-france-connect.component';
+/* istanbul ignore file */
 
-const Layout: LayoutConfig = {
+// declarative file
+import { LayoutConfig } from '@fc/dsfr';
+
+import { LogoFranceConnectComponent } from '../ui/components/logo-france-connect';
+
+export const Layout: LayoutConfig = {
   bottomLinks: [
     {
       a11y: 'Plan du site',
@@ -9,9 +13,9 @@ const Layout: LayoutConfig = {
       label: 'Plan du site',
     },
     {
-      a11y: 'Accesibilité',
+      a11y: 'Accessibilité',
       href: 'https://franceconnect.gouv.fr/accessibilite',
-      label: 'Accesibilité',
+      label: 'Accessibilité',
     },
     {
       a11y: 'Mentions légales',
@@ -34,5 +38,3 @@ const Layout: LayoutConfig = {
   footerLinkTitle: 'Agent connect',
   logo: LogoFranceConnectComponent,
 };
-
-export default Layout;

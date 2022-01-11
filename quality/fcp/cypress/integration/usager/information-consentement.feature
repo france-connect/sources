@@ -1,5 +1,5 @@
 #language: fr
-@usager @informationConsentement
+@usager @informationConsentement @ci
 Fonctionnalité: Information Consentement
   # En tant qu'usager FranceConnect,
   # je veux être informé des données personnelles transmises au fournisseur de service

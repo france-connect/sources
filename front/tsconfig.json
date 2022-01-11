@@ -1,5 +1,15 @@
 {
-  "include": ["src/**/*.tsx?"],
+  "include": [
+    "*.js",
+    "*.ts",
+    "test-utils/*",
+    "libs/**/*.ts",
+    "libs/**/*.tsx",
+    "apps/**/*.ts",
+    "apps/**/*.d.ts",
+    "apps/**/*.tsx",
+    "apps/**/*.js"
+  ],
   "compilerOptions": {
     "target": "es6",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -17,22 +27,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "@fc/routing": ["../../libs/routing/src"],
-      "@fc/routing/*": ["../../libs/routing/src/*"],
-      "@fc/oidc-client": ["../../libs/oidc-client/src"],
-      "@fc/oidc-client/*": ["../../libs/oidc-client/src/*"],
-      "@fc/loading": ["../../libs/loading/src"],
-      "@fc/loading/*": ["../../libs/loading/src/*"],
-      "@fc/state-management": ["../../libs/state-management/src"],
-      "@fc/state-management/*": ["../../libs/state-management/src/*"],
-      "@fc/common": ["../../libs/common/src"],
-      "@fc/common/*": ["../../libs/common/src/*"],
-      "@fc/tracks": ["../../libs/tracks/src"],
-      "@fc/tracks/*": ["../../libs/tracks/src/*"],
-      "@fc/dsfr": ["../../libs/dsfr/src"],
-      "@fc/dsfr/*": ["../../libs/dsfr/src/*"],
-      "@fc/backoffice": ["../../libs/backoffice/src"],
-      "@fc/backoffice/*": ["../../libs/backoffice/src/*"]
+      "@fc/tests-utils": ["./tests-utils"]
     }
   }
 }

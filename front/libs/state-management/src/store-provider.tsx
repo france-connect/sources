@@ -5,7 +5,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import configure from './configure';
+import { configure } from './configure';
 import { StoreProviderContextProps } from './types';
 
 function getStoreProvider({
@@ -16,13 +16,7 @@ function getStoreProvider({
   reducers,
   states,
 }: StoreProviderContextProps): JSX.Element {
-  const { persistor, store } = configure(
-    persistKey,
-    states,
-    reducers,
-    middlewares,
-    debugMode,
-  );
+  const { persistor, store } = configure(persistKey, states, reducers, middlewares, debugMode);
 
   return (
     <Provider store={store}>

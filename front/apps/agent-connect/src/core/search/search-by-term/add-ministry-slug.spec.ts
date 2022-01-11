@@ -1,4 +1,4 @@
-import addMinistrySlug from './add-ministry-slug';
+import { addMinistrySlug } from './add-ministry-slug';
 
 const ministries = [
   {

@@ -1,6 +1,6 @@
-import { RouteItem } from './interfaces';
 import { HOMEPAGE_PATH, NOTFOUND_PATH } from './constants';
 import { MissingSpecialRouteException } from './exceptions';
+import { RouteItem } from './interfaces';
 
 const mandatoryRoutes = [HOMEPAGE_PATH, NOTFOUND_PATH];
 

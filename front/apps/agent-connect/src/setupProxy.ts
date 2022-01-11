@@ -21,7 +21,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const { API_PROXY_FOR_PATH, API_PROXY_HOST } = process.env;
 
-module.exports = app => {
+module.exports = (app) => {
   app.use(
     API_PROXY_FOR_PATH,
     createProxyMiddleware({

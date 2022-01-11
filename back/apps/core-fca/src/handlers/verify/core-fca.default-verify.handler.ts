@@ -79,17 +79,30 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
       },
     );
 
-    const spIdentity = { ...idpIdentity, sub: subSp };
+    const spIdentity = {
+      ...idpIdentity,
+      sub: subSp,
+      // AgentConnect claims naming convention
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      idp_id: idpId,
+      // AgentConnect claims naming convention
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      idp_acr: idpAcr,
+    };
 
     // Delete idp identity from volatile memory but keep the sub for the business logs.
     const idpIdentityCleaned = {
       sub: idpIdentity.sub,
     };
-
-    await sessionOidc.set({
+    const session: OidcClientSession = {
+      amr: ['fca'],
       idpIdentity: idpIdentityCleaned,
       spIdentity: spIdentity,
       accountId,
-    });
+    };
+
+    this.logger.trace({ session });
+
+    await sessionOidc.set(session);
   }
 }

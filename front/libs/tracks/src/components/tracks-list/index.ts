@@ -1,4 +1,4 @@
 /* istanbul ignore file */
 
 // declarative file
-export * from './track-list.component';
+export * from './tracks-list.component';

@@ -1,11 +1,10 @@
 import * as redux from 'redux';
 import * as reduxPersist from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 
-import bindMiddlewares from './bind-middlewares';
-import configure from './configure';
-import getInitialState from './get-initial-state';
-import getPersistLists from './get-persist-lists';
+import { bindMiddlewares } from './bind-middlewares';
+import { configure } from './configure';
+import { getInitialState } from './get-initial-state';
+import { getPersistLists } from './get-persist-lists';
 
 jest.mock('redux');
 jest.mock('redux-persist');
@@ -68,13 +67,7 @@ describe('configure', () => {
 
   it('should have called bindMiddlewares method', () => {
     // when
-    configure(
-      mockPersistKey,
-      mockStates,
-      mockReducers,
-      [expect.any(Function)],
-      true,
-    );
+    configure(mockPersistKey, mockStates, mockReducers, [expect.any(Function)], true);
     // then
     expect(bindMiddlewares).toHaveBeenCalledTimes(1);
     expect(bindMiddlewares).toHaveBeenCalledWith([expect.any(Function)], true);
@@ -82,13 +75,7 @@ describe('configure', () => {
 
   it('should have called redux.createStore method', () => {
     // when
-    configure(
-      mockPersistKey,
-      mockStates,
-      mockReducers,
-      [expect.any(Function)],
-      true,
-    );
+    configure(mockPersistKey, mockStates, mockReducers, [expect.any(Function)], true);
     // then
     expect(redux.createStore).toHaveBeenCalledTimes(1);
   });

@@ -1,4 +1,4 @@
 /* istanbul ignore file */
 
 // declarative file
-export * from './use-api-get.effet';
+export * from './use-api-get.hook';

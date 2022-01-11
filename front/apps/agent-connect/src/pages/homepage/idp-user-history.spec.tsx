@@ -1,5 +1,5 @@
 import { renderWithRedux } from '../../testUtils';
-import IdentityProvidersUserHistory from './idp-user-history';
+import { IdentityProvidersUserHistoryComponent } from './idp-user-history';
 
 const identityProvidersHistory = ['mock-uid-1', 'mock-uid-2'];
 
@@ -20,7 +20,7 @@ const initialState = {
   ],
 };
 
-describe('IdentityProvidersUserHistory', () => {
+describe('IdentityProvidersUserHistoryComponent', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -30,7 +30,7 @@ describe('IdentityProvidersUserHistory', () => {
   it('should render the title of the section', () => {
     // setup
     const { getByText } = renderWithRedux(
-      <IdentityProvidersUserHistory items={identityProvidersHistory} />,
+      <IdentityProvidersUserHistoryComponent items={identityProvidersHistory} />,
       { initialState },
     );
     // action
@@ -42,7 +42,7 @@ describe('IdentityProvidersUserHistory', () => {
   it('should render a list with two historycard from the store', () => {
     // setup
     const { getByText } = renderWithRedux(
-      <IdentityProvidersUserHistory items={identityProvidersHistory} />,
+      <IdentityProvidersUserHistoryComponent items={identityProvidersHistory} />,
       { initialState },
     );
     // action

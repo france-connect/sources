@@ -28,7 +28,8 @@ main {
 
 .list-container {
   margin-top: 32px;
-  padding: 0 16px;
+  /* Set padding to 14px to avoid horizontal scroll on mobile */
+  padding: 0 14px;
 }
 
 .list-container h3 {

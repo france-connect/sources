@@ -1,5 +1,5 @@
 import { ACTION_TYPES } from '../../constants';
-import identityProviders from './identity-providers';
+import { identityProviders } from './identity-providers';
 
 describe('identityProviders', () => {
   beforeEach(() => {

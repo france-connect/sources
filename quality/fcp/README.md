@@ -172,12 +172,36 @@ yarn start:high
 
 ### Generate the Cucumber HTML report
 
-```
+```shell
 # Add Screenshots/Videos to the Cucumber logs
 yarn report:prepare
 
 # Generate the report for fcp-high integ01
 CYPRESS_PLATFORM=fcp-high CYPRESS_TEST_ENV=integ01 yarn report:generate
+```
+
+## Visual Validation
+
+We are running visual validation using the cypress plugin [cypress-image-snapshot](https://github.com/jaredpalmer/cypress-image-snapshot).
+
+The visual validations are done on Electron 89 headless in the terminal.
+
+### Run the snapshot tests
+
+```shell
+yarn test:high:snapshot
+```
+
+### Update the base image files for all of your tests
+
+```shell
+yarn test:high:snapshot --env updateSnapshots=true
+```
+
+### Prevent test failures when an image diff does not pass
+
+```shell
+yarn test:high:snapshot --env failOnSnapshotDiff=false
 ```
 
 ## Plugins VSCode

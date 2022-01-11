@@ -1,6 +1,7 @@
 import { useContext } from 'react';
+
 import { useApiGet } from '@fc/common';
-import { AppContextInterface, AppContext } from '@fc/state-management';
+import { AppContext, AppContextInterface } from '@fc/state-management';
 
 import { UserInterface } from '../interfaces';
 
@@ -15,7 +16,7 @@ export const useUserinfos = (): UserInterface => {
     {
       endpoint: getUserInfos,
     },
-    (user: UserInterface) => update({ user }),
+    (value: UserInterface) => update({ user: value }),
   );
 
   return user;

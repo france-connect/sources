@@ -1,5 +1,5 @@
+import { mocked } from 'jest-mock';
 import { lastValueFrom } from 'rxjs';
-import { mocked } from 'ts-jest/utils';
 
 import { HttpService } from '@nestjs/axios';
 import { ValidationError } from '@nestjs/common';

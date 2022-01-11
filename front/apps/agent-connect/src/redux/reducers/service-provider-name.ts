@@ -1,6 +1,6 @@
 import { ACTION_TYPES } from '../../constants';
 
-const serviceProviderName = (state = '', action: any) => {
+export const serviceProviderName = (state = '', action: any) => {
   switch (action.type) {
     case ACTION_TYPES.MINISTRY_LIST_LOAD_START:
       return '';
@@ -10,5 +10,3 @@ const serviceProviderName = (state = '', action: any) => {
       return state;
   }
 };
-
-export default serviceProviderName;

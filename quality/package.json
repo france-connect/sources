@@ -21,9 +21,11 @@
   "dependencies": {
     "@cucumber/cucumber": "^7.3.1",
     "@types/cypress-cucumber-preprocessor": "^4.0.0",
+    "@types/cypress-image-snapshot": "^3.1.6",
     "@types/node": "^14.17.4",
     "cypress": "7.7.0",
     "cypress-cucumber-preprocessor": "^4.3.0",
+    "cypress-image-snapshot": "^4.0.1",
     "cypress-template-fixtures": "^1.0.3",
     "cypress-xpath": "^1.6.2",
     "enquirer": "^2.3.5",

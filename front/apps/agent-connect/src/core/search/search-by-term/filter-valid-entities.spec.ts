@@ -1,4 +1,4 @@
-import filterValidEntities from './filter-valid-entities';
+import { filterValidEntities } from './filter-valid-entities';
 
 describe('filterValidEntities', () => {
   it('should filter an array of entities, remove all entities missing uid/id and name', () => {
@@ -11,8 +11,6 @@ describe('filterValidEntities', () => {
       { id: 'oh yeah!', name: 'i am the only one' },
     ] as any[]);
     // then
-    expect(result).toStrictEqual([
-      { id: 'oh yeah!', name: 'i am the only one' },
-    ]);
+    expect(result).toStrictEqual([{ id: 'oh yeah!', name: 'i am the only one' }]);
   });
 });

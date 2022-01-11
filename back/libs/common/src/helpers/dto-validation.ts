@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 
 import {
-  classToPlain,
   ClassTransformOptions,
-  plainToClass,
+  instanceToPlain,
+  plainToInstance,
 } from 'class-transformer';
 import { validate, ValidationError, ValidatorOptions } from 'class-validator';
 
@@ -19,7 +19,7 @@ export function getTransformed<T = any>(
   dto: Type<any>,
   options?: ClassTransformOptions,
 ): T {
-  return plainToClass(dto, plain, options);
+  return plainToInstance(dto, plain, options);
 }
 
 export async function validateDto(
@@ -62,7 +62,7 @@ export async function filteredByDto<T = any>(
   if (errors.length) {
     return { errors, result: null };
   }
-  const result = classToPlain(data) as T;
+  const result = instanceToPlain(data) as T;
   return { errors, result };
 }
 

@@ -4,15 +4,9 @@ type LogoAgentConnectProps = {
   className?: string;
 };
 
-export const LogoAgentConnectComponent = ({
-  className,
-}: LogoAgentConnectProps) => (
+export const LogoAgentConnectComponent = ({ className }: LogoAgentConnectProps) => (
   <div className={className}>
-    <img
-      className="logo-agentconnect"
-      src={LogoSVG}
-      alt="marianne hexagonale agentconnect"
-    />
+    <img className="logo-agentconnect" src={LogoSVG} alt="marianne hexagonale agentconnect" />
   </div>
 );
 

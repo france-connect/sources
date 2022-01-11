@@ -1,10 +1,6 @@
 import { MissingSpecialRouteException } from './exceptions';
-import {
-  validateSpecialRoutes,
-  registerRoutes,
-  sortRouteByPathDesc,
-} from './register-routes';
 import { RouteItem } from './interfaces';
+import { registerRoutes, sortRouteByPathDesc, validateSpecialRoutes } from './register-routes';
 import { generics, homepage, notfound } from './routes.mock';
 
 describe('validateSpecialRoutes', () => {
@@ -48,11 +44,7 @@ describe('validateSpecialRoutes', () => {
 describe('concatApplicationRoutes', () => {
   it('should throw if homepage path is not a valid path', () => {
     // given
-    const input: RouteItem[] = [
-      { ...notfound, path: '/not-valid' },
-      ...generics,
-      homepage,
-    ];
+    const input: RouteItem[] = [{ ...notfound, path: '/not-valid' }, ...generics, homepage];
     // then
     expect(() => {
       registerRoutes(input);

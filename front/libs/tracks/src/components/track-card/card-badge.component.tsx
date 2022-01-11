@@ -1,64 +1,65 @@
+import './card-badge.scss';
+
+import classnames from 'classnames';
 import React from 'react';
 import {
   RiAccountCircleFill as UserIcon,
   RiArrowLeftRightFill as ArrowsIcon,
   RiCheckboxCircleFill as CheckIcon,
 } from 'react-icons/ri';
-import './card-badge.scss';
+
+import { Badges } from '../../interfaces';
 
 const TYPE_CONFIG = {
   FC_REQUESTED_IDP_USERINFO: {
+    Icon: UserIcon,
     backgroundColor: '#66a1e4',
-    icon: UserIcon,
     label: 'Connexion',
   },
-  SP_REQUESTED_FC_USERINFO: {
-    backgroundColor: '#40d496',
-    icon: CheckIcon,
-    label: 'Autorisation',
-  },
-  not_relevant_event: {
+  NOT_RELEVANT_EVENT: {
+    Icon: ArrowsIcon,
     backgroundColor: '#f4a381',
-    icon: ArrowsIcon,
     label: 'Échange de Données',
   },
-} as any;
+  SP_REQUESTED_FC_USERINFO: {
+    Icon: CheckIcon,
+    backgroundColor: '#40d496',
+    label: 'Autorisation',
+  },
+} as Badges;
 
 type TraceCardBadgeProps = {
-  type: string;
+  type: string | undefined;
   fromFcPlus: boolean;
 };
 
-const TraceCardBadgeComponent = React.memo(
-  ({ fromFcPlus, type }: TraceCardBadgeProps) => {
-    const {
-      backgroundColor: backgroundcolor,
-      icon: Icon,
-      label,
-    } = TYPE_CONFIG[type];
-    return (
-      <div className="badge is-absolute fr-text-xs is-white">
-        <div className="is-relative flex-columns flex-start items-center is-uppercase">
-          <div
-            className="py8 px12 mr8"
-            // @TODO ajuster quand on aura récupérer l'origine/source des traces
-            style={{ backgroundColor: fromFcPlus ? '#1e78f3' : '#000d8f' }}
-          >
-            <b>FranceConnect {fromFcPlus && '+'}</b>
-          </div>
+export const TrackCardBadgeComponent = React.memo(({ fromFcPlus, type }: TraceCardBadgeProps) => {
+  const badge = !type ? null : TYPE_CONFIG[type.toUpperCase()];
+
+  return (
+    <div className="badge is-absolute fr-text-xs is-white">
+      <div className="is-relative flex-columns flex-start items-center is-uppercase">
+        <div
+          // @TODO ajuster quand on aura récupérer l'origine/source des traces
+          className={classnames('py8 px12 mr8', {
+            'bg-blue-agentconnect': fromFcPlus,
+            'bg-blue-france': !fromFcPlus,
+          })}>
+          {fromFcPlus && <b>FranceConnect+</b>}
+          {!fromFcPlus && <b>FranceConnect</b>}
+        </div>
+        {badge && (
           <div
             className="flex-columns items-center py8 px12"
-            style={{ backgroundColor: backgroundcolor }}
-          >
-            <Icon size={18} />
-            <b className="ml8">{label}</b>
+            data-testid="badge"
+            style={{ backgroundColor: badge.backgroundColor }}>
+            <badge.Icon size={18} />
+            <b className="ml8">{badge.label}</b>
           </div>
-        </div>
+        )}
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
 
-TraceCardBadgeComponent.displayName = 'TraceCardBadgeComponent';
-
-export default TraceCardBadgeComponent;
+TrackCardBadgeComponent.displayName = 'TraceCardBadgeComponent';

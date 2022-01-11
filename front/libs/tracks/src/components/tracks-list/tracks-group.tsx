@@ -1,6 +1,7 @@
 import { ucfirst } from '@fc/common';
+
 import { EnhancedTrack, TracksConfig } from '../../interfaces';
-import { orderTracksByDateAsc } from '../../utils';
+import { orderTracksByDateDesc } from '../../utils';
 import { TrackCardComponent } from '../track-card/track-card.component';
 
 export type TracksMonthGroupProps = {
@@ -9,17 +10,13 @@ export type TracksMonthGroupProps = {
   options: TracksConfig;
 };
 
-export const TracksGroupComponent = ({
-  label,
-  tracks,
-  options,
-}: TracksMonthGroupProps) => (
+export const TracksGroupComponent = ({ label, options, tracks }: TracksMonthGroupProps) => (
   <section className="mb40">
     <h6 className="pb12 mb16">
       <b>{ucfirst(label)}</b>
     </h6>
-    {tracks.sort(orderTracksByDateAsc).map((track: EnhancedTrack) => (
-      <TrackCardComponent key={track.trackId} track={track} options={options} />
+    {tracks.sort(orderTracksByDateDesc).map((track: EnhancedTrack) => (
+      <TrackCardComponent key={track.trackId} options={options} track={track} />
     ))}
   </section>
 );

@@ -22,6 +22,20 @@ Given(
 );
 
 Given(
+  /^le fournisseur de service (requiert|ne requiert pas) le claim "([^"]+)"$/,
+  function (text, currentClaim) {
+    const isRequested = text === 'requiert';
+    const { claims } = this.serviceProvider;
+
+    const filteredClaims = claims.filter((claim) => claim != currentClaim);
+    if (isRequested) {
+      filteredClaims.push(currentClaim);
+    }
+    this.serviceProvider.claims = filteredClaims;
+  },
+);
+
+Given(
   /^le fournisseur de service a configuré sa requête authorize avec (?:un scope|des scopes) "([^"]+)"$/,
   function (type) {
     const scope = this.scopes.find((scope) => scope.type === type);

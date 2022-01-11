@@ -1,6 +1,7 @@
 import { ACTION_TYPES } from '../../constants';
-import identityProvidersHistory, {
+import {
   addIdentityProviderToHistory,
+  identityProvidersHistory,
   removeIdentityProviderFromHistory,
   removeUnusedIdentityProviders,
 } from './identity-providers-history';

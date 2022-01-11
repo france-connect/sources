@@ -5,14 +5,14 @@ import { useSelector } from 'react-redux';
 
 import { selectIdentityProviderByUID } from '../../redux/selectors';
 import { RootState } from '../../types';
-import CardContent from './card-content';
-import RemoveButton from './remove-button';
+import { IdentityProviderCardContentComponent } from './card-content';
+import { RemoveButtonComponent } from './remove-button';
 
 type IdentityProviderCardProps = {
   uid: string;
 };
 
-const IdentityProviderHistoryCardComponent = React.memo(
+export const IdentityProviderHistoryCardComponent = React.memo(
   ({ uid }: IdentityProviderCardProps): JSX.Element => {
     const identityProvider = useSelector((state: RootState) =>
       selectIdentityProviderByUID(state, uid),
@@ -22,8 +22,8 @@ const IdentityProviderHistoryCardComponent = React.memo(
       <div className="flex-column text-center m16 identity-provider-card">
         {identityProvider && (
           <React.Fragment>
-            <CardContent identityProvider={identityProvider} />
-            <RemoveButton uid={uid} />
+            <IdentityProviderCardContentComponent identityProvider={identityProvider} />
+            <RemoveButtonComponent uid={uid} />
           </React.Fragment>
         )}
       </div>
@@ -31,7 +31,4 @@ const IdentityProviderHistoryCardComponent = React.memo(
   },
 );
 
-IdentityProviderHistoryCardComponent.displayName =
-  'IdentityProviderHistoryCardComponent';
-
-export default IdentityProviderHistoryCardComponent;
+IdentityProviderHistoryCardComponent.displayName = 'IdentityProviderHistoryCardComponent';

@@ -1,10 +1,8 @@
 import { DateTime } from 'luxon';
 import React from 'react';
-import {
-  AiOutlineMinus as MinusIcon,
-  AiOutlinePlus as PlusIcon,
-} from 'react-icons/ai';
-import { TracksConfig } from '../..';
+import { AiOutlineMinus as MinusIcon, AiOutlinePlus as PlusIcon } from 'react-icons/ai';
+
+import { TracksConfig } from '../../interfaces';
 
 type TraceCardHeaderProps = {
   datetime: DateTime;
@@ -13,13 +11,8 @@ type TraceCardHeaderProps = {
   options: TracksConfig;
 };
 
-const TraceCardHeaderComponent = React.memo(
-  ({
-    datetime,
-    identityProviderName,
-    opened,
-    options,
-  }: TraceCardHeaderProps) => {
+export const TrackCardHeaderComponent = React.memo(
+  ({ datetime, identityProviderName, opened, options }: TraceCardHeaderProps) => {
     const formattedDay = datetime.toFormat(options.LUXON_FORMAT_DAY);
     return (
       <div className="pt12 flex-columns flex-between items-center">
@@ -30,14 +23,13 @@ const TraceCardHeaderComponent = React.memo(
           </div>
         </div>
         <div>
-          {opened && <MinusIcon color="#034ea2" size={30} />}
-          {!opened && <PlusIcon color="#034ea2" size={30} />}
+          {/* @TODO replace color value with DSFR CSS Modules-Variable value */}
+          {opened && <MinusIcon color="#034ea2" size={30} title="Icone moins" />}
+          {!opened && <PlusIcon color="#034ea2" size={30} title="Icone plus" />}
         </div>
       </div>
     );
   },
 );
 
-TraceCardHeaderComponent.displayName = 'TraceCardHeaderComponent';
-
-export default TraceCardHeaderComponent;
+TrackCardHeaderComponent.displayName = 'TraceCardHeaderComponent';

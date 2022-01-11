@@ -211,10 +211,10 @@ describe('UserDashboardController', () => {
         },
       });
       // When
-      const { userInfos } = await controller.getUserInfos(sessionServiceMock);
+      const { userinfos } = await controller.getUserInfos(sessionServiceMock);
       // Then
-      expect(userInfos.givenName).toStrictEqual('angela');
-      expect(userInfos.familyName).toStrictEqual('dubois');
+      expect(userinfos.given_name).toStrictEqual('angela');
+      expect(userinfos.family_name).toStrictEqual('dubois');
     });
   });
 });

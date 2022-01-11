@@ -2,4 +2,4 @@
 
 // declarative file
 export * from './track-card/track-card.component';
-export * from './tracks-list/track-list.component';
+export * from './tracks-list/tracks-list.component';

@@ -2,5 +2,5 @@
 
 // declarative file
 export * from './oidc-client.config';
-export * from './userinfos.interface';
 export * from './user.interface';
+export * from './userinfos.interface';

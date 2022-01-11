@@ -1,12 +1,11 @@
-import axios from 'axios';
-import classNames from 'classnames'
-import { useMediaQuery } from 'react-responsive';
+import './return.scss';
 
+import axios from 'axios';
+import classNames from 'classnames';
 import queryString from 'query-string';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { RiArrowLeftLine as BackIcon } from 'react-icons/ri';
-
-import './return.scss';
+import { useMediaQuery } from 'react-responsive';
 
 export const ReturnButtonComponent = () => {
   const mounted = useRef(false);
@@ -15,7 +14,7 @@ export const ReturnButtonComponent = () => {
 
   const [showButton, setShowButton] = useState(true);
   const [historyBackURL, setHistoryBackURL] = useState('/');
-  const [serviceProviderName, setServiceProviderName] = useState("FSA - FSA1-LOW");
+  const [serviceProviderName, setServiceProviderName] = useState('FSA - FSA1-LOW');
 
   const errorHandler = useCallback(() => {
     setShowButton(false);
@@ -43,10 +42,14 @@ export const ReturnButtonComponent = () => {
   }
   return (
     <a
-      className={classNames("button flex-columns items-center no-underline px12", { "flex-end": isTablet, "is-mobile": !isTablet, "bg-g200": !isTablet, "m16": !isTablet })}
+      className={classNames('button flex-columns items-center no-underline px12', {
+        'bg-g200': !isTablet,
+        'flex-end': isTablet,
+        'is-mobile': !isTablet,
+        m16: !isTablet,
+      })}
       href={historyBackURL}
-      title="retourner à l'écran précédent"
-    >
+      title="retourner à l'écran précédent">
       <i className="is-block mr8 p5">
         <BackIcon />
       </i>

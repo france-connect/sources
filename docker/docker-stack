@@ -57,6 +57,9 @@ _up() {
       min-eidas-high)
         services="$services min-eidas-high"
       ;;
+      lemon-ldap)
+        services="$services lemon-ldap"
+        ;;
       hybridge-fca-low)
         services="$services hybridge-fca-low"
         ;;
@@ -81,8 +84,8 @@ _up() {
       exploit-fcp-high)
         services="$services exploit-fcp-high"
         ;;
-      rie-bridge-proxy)
-        services="$services rie-bridge-proxy"
+      bridge-proxy-rie)
+        services="$services bridge-proxy-rie"
         ;;
       eidas-bridge)
         services="$services eidas-bridge"
@@ -139,7 +142,8 @@ _up() {
         echo "  - min-fca-low => up minimal needed services to run core-fca-low fsa1-low fia1-low"
         echo "  - exploit-fca-low => up minimal needed services to run the Agentconnect Low fc-apps"
         echo "  - all-fca-low => all needed services to run fca-low stack (core-fca-low, fsa[n]-low, fia[n]-low, exploit, hsm, etc.)"
-        echo "  - hybridge-fca-low => up minimal needed services to run core-fca-low fca-low-front rie-bridge-proxy fsa1-low Lemon-ldap"
+        echo "  - lemon-ldap => up needed services to run lemon-ldap and to access his manager"
+        echo "  - hybridge-fca-low => up minimal needed services to run core-fca-low fca-low-front bridge-proxy-rie fsa1-low lemon-ldap"
         echo "  - all => run all services"
         echo "----"
         exit 1
@@ -151,6 +155,12 @@ _up() {
     cd ${WORKING_DIR} && docker-compose up --build -d $services
 
     case $services in
+      *"lemon-ldap"*)
+        # Sleep to wait for configuration initialization
+        echo "Restore LemonLDAP configuration"
+        cd ${WORKING_DIR} && docker-compose exec fia-llng-low bash /scripts/init.sh
+        echo "Loaded !"
+        ;;
       *"hybridge-"*)
         # Sleep to wait for configuration initialization
         echo "Restore LemonLDAP configuration"
@@ -436,7 +446,7 @@ case "$action" in
       fip2-high core-fcp-high rnipp exploitation-high fsa1-low fsa2-low fsa3-low fsa4-low \
       fia1-low fia2-low fia4-low fia5-low core-fca-low fca-low-front csmr-hsm eidas-bridge \
       exploitation-fca-low exploit-fcp-high-back exploit-fca-low-back core-fcp-low \
-      fsp1-low fip1-low fip2-low fip3-low exploit-fcp-high-front exploit-fca-low-front rie-bridge-proxy \
+      fsp1-low fip1-low fip2-low fip3-low exploit-fcp-high-front exploit-fca-low-front bridge-proxy-rie \
       exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
       csmr-rie
     ;;
@@ -487,7 +497,7 @@ case "$action" in
     fdp1v2 fip1-high fip2-high fip6-high fia4-low fia5-low core-fcp-high rnipp exploitation-high \
     fsa1-low fsa2-low fsa3-low fia1-low fia2-low core-fca-low fca-low-front csmr-hsm \
     eidas-bridge exploitation-fca-low exploit-fcp-high-back exploit-fcp-high-front \
-    exploit-fca-low-back exploit-fca-low-front exploit-fcp-high-fi-mock rie-bridge-proxy \
+    exploit-fca-low-back exploit-fca-low-front exploit-fcp-high-fi-mock bridge-proxy-rie \
     exploit-fca-low-fi-mock core-fcp-low fsp1-low fip1-low fip2-low fip3-low\
     csmr-rie
     ;;
@@ -522,7 +532,7 @@ case "$action" in
       fip1-low fip2-low fip3-low \
       exploit-fcp-high-front exploit-fca-low-front \
       \
-      core-fca-low fca-low-front exploitation-fca-low exploit-fca-low-back rie-bridge-proxy \
+      core-fca-low fca-low-front exploitation-fca-low exploit-fca-low-back bridge-proxy-rie \
       exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
       fsa1-low fsa2-low fsa3-low fsa4-low \
       fia1-low fia2-low fia4-low fia5-low \
@@ -532,7 +542,7 @@ case "$action" in
   stop-all)
     _stop \
     rnipp exploitation-high csmr-hsm ud-back ud-front \
-    fdp1v2 eidas-bridge rie-bridge-proxy \
+    fdp1v2 eidas-bridge bridge-proxy-rie \
     \
     core-fcp-high exploit-fcp-high-back core-fcp-low \
     fsp1-high fsp2-high fsp3-high fsp5-high fsp6-high \
@@ -553,7 +563,7 @@ case "$action" in
     _test rnipp core-fcp-high exploitation-high core-fca-low fca-low-front eidas-bridge \
     exploitation-fca-low exploit-fcp-high-back exploit-fca-low-back exploit-fca-low-front \
     exploit-fcp-high-fi-mock exploit-fca-low-fi-mock core-fcp-low fsp1-low \
-    fip1-low fip2-low fip3-low rie-bridge-proxy csmr-rie
+    fip1-low fip2-low fip3-low bridge-proxy-rie csmr-rie
     ;;
   e2e)
     _e2e $@

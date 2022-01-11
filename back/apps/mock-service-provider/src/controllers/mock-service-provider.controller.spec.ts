@@ -1,5 +1,5 @@
+import { mocked } from 'jest-mock';
 import { encode } from 'querystring';
-import { mocked } from 'ts-jest/utils';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -254,34 +254,6 @@ describe('MockServiceProviderController', () => {
       controller['getInteractionParameters'] = jest
         .fn()
         .mockResolvedValue(interactionParametersMock);
-    });
-    it('Should generate a random sessionId of 32 characters', async () => {
-      // setup
-      sessionServiceMock.set.mockResolvedValueOnce(undefined);
-
-      // action
-      const randSize = 32;
-      await controller.index(sessionServiceMock);
-
-      // assert
-      expect(cryptographyMock.genRandomString).toHaveBeenCalledTimes(1);
-      expect(cryptographyMock.genRandomString).toHaveBeenCalledWith(randSize);
-    });
-
-    it('Should init the session', async () => {
-      // setup
-      sessionServiceMock.set.mockResolvedValueOnce(undefined);
-
-      // action
-      await controller.index(sessionServiceMock);
-
-      // assert
-      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.set).toHaveBeenCalledWith({
-        sessionId: randomStringMock,
-        idpState: interactionParametersMock.params.state,
-        idpNonce: interactionParametersMock.params.nonce,
-      });
     });
 
     it("Should throw if the session can't be initialized", async () => {

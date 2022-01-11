@@ -7,7 +7,7 @@ import { UserInterface } from './user.interface';
 export interface AppContextStateInterface {
   config: ConfigInterface;
   user: UserInterface;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface AppContextInterface {

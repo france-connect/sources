@@ -34,18 +34,24 @@ services:
       - 'pg-exploit-fca-low'
       - 'exploit-fca-low-back'
       - 'exploit-fca-low-front'
-      ### RIE
+      ### Hybridge
+      - 'lemon-ldap'
       - 'rp-bridge-proxy'
-      - 'rie-bridge-proxy'
+      - 'bridge-proxy-rie'
       - 'csmr-rie'
+
+  lemon-ldap:
+    image: alpine
+    depends_on:
+    - 'fia-llng-low'
+    - 'openldap'
 
   hybridge-fca-low:
     image: alpine
     depends_on:
       - 'min-fca-low'
-      - 'fia-llng-low'
-      - 'openldap'
-      ### RIE
       - 'rp-bridge-proxy'
-      - 'rie-bridge-proxy'
+      - 'bridge-proxy-rie'
+      ### RIE
+      - 'lemon-ldap'
       - 'csmr-rie'

@@ -4,7 +4,6 @@ import { mocked } from 'ts-jest/utils';
 import { useApiGet } from '@fc/common';
 import { AppContext } from '@fc/state-management';
 
-import { UserInterface } from '../interfaces';
 import { useUserinfos } from './userinfo.hook';
 
 jest.mock('react', () => ({
@@ -74,10 +73,6 @@ describe('useUserInfosHook', () => {
   });
 
   describe('useUserinfos callback', () => {
-    // Given
-    const userMock = {} as UserInterface;
-    // const useApiGetMocked = jest.fn();
-
     it('should call update', () => {
       // Given
       useUserinfos();

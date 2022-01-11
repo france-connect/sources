@@ -4,8 +4,14 @@ import {
   ServiceProviderBase,
   UserClaims,
 } from '../../common/types';
-import { getClaims } from '../helpers';
 
+const mandatoryData = {
+  aud: /^\w+$/,
+  exp: /^\d+/,
+  iat: /^\d+/,
+  iss: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+  sub: /^[0-9a-f]{64}$/,
+};
 export default class ServiceProviderPage {
   fcaButtonSelector: string;
   logoutButtonSelector: string;
@@ -60,56 +66,31 @@ export default class ServiceProviderPage {
     cy.get('input[name="acr_values"]').clear().type(acrValue);
   }
 
-  checkMockInformationAccess(
-    requestedScope: ScopeContext,
-    userClaims: UserClaims,
-  ): void {
-    const expectedClaims = getClaims(requestedScope);
-    cy.get('#json')
+  setMockRequestedAmr(isRequested: boolean): void {
+    if (isRequested) {
+      cy.get('#claim_amr').check();
+    } else {
+      cy.get('#claim_amr').uncheck();
+    }
+  }
+
+  getUserInfo(): Cypress.Chainable<unknown> {
+    return cy
+      .get('#json')
       .invoke('text')
       .then((text) => {
         const responseBody = JSON.parse(text.trim());
-
-        // Check mandatory data
-        const mandatoryData = {
-          aud: /^\w+$/,
-          exp: /^\d+/,
-          iat: /^\d+/,
-          iss: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
-          sub: /^[0-9a-f]{64}$/,
-        };
-        Object.keys(mandatoryData).forEach((key) =>
-          expect(responseBody[key]).to.match(
-            mandatoryData[key],
-            `${key} should be present.`,
-          ),
-        );
-
-        // Check expected claims (except sub)
-        expectedClaims
-          .filter((claimName) => claimName !== 'sub')
-          .forEach((claimName) => {
-            expect(responseBody[claimName]).to.deep.equal(
-              userClaims[claimName],
-              `The claim ${claimName} should be ${JSON.stringify(
-                userClaims[claimName],
-              )}`,
-            );
-          });
-
-        // Check no extra claims
-        const extraClaimsName = Object.keys(responseBody).filter(
-          (key) => !mandatoryData[key] && !expectedClaims.includes(key),
-        );
-        expect(extraClaimsName).to.deep.equal(
-          [],
-          'No extra claims should be sent.',
-        );
+        expect(Array.isArray(responseBody)).to.be.false;
+        return responseBody;
       });
   }
 
   checkMockAcrValue(acrValue: string): void {
     cy.get('[id="info-acr"] strong').contains(acrValue);
+  }
+
+  checkMockAmrValue(amrValue: string): void {
+    cy.get('[id="info-amr"] strong').contains(amrValue);
   }
 
   checkMockErrorCallback(): void {
@@ -131,5 +112,47 @@ export default class ServiceProviderPage {
       'match',
       new RegExp(`(?<=[&|?])error_description=${encodedDescription}(?=&|$)`),
     );
+  }
+
+  checkMandatoryData(): void {
+    this.getUserInfo().then((responseBody: Record<string, unknown>) => {
+      Object.keys(mandatoryData).forEach((key) =>
+        expect(responseBody[key]).to.match(
+          mandatoryData[key],
+          `${key} should be present.`,
+        ),
+      );
+    });
+  }
+
+  // Check the userInfo claims against the user fixtures
+  checkExpectedUserClaims(
+    expectedClaims: string[],
+    userClaims: UserClaims,
+  ): void {
+    this.getUserInfo().then((responseBody: Record<string, unknown>) => {
+      Object.keys(userClaims)
+        .filter((userClaim) => expectedClaims.includes(userClaim))
+        .forEach((claimName) => {
+          expect(responseBody[claimName]).to.deep.equal(
+            userClaims[claimName],
+            `The claim ${claimName} should be ${JSON.stringify(
+              userClaims[claimName],
+            )}`,
+          );
+        });
+    });
+  }
+
+  checkNoExtraClaims(expectedClaims: string[]): void {
+    this.getUserInfo().then((responseBody: Record<string, unknown>) => {
+      const extraClaimsName = Object.keys(responseBody).filter(
+        (key) => !mandatoryData[key] && !expectedClaims.includes(key),
+      );
+      expect(extraClaimsName).to.deep.equal(
+        [],
+        'No extra claims should be sent.',
+      );
+    });
   }
 }

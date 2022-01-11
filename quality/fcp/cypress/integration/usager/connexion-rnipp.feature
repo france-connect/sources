@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionRnipp
+@usager @connexionRnipp @ci
 Fonctionnalité: Connexion Usager - RNIPP
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter en utilisant un fournisseur d'identité et récupérer mes informations du RNIPP

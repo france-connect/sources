@@ -1,31 +1,28 @@
-import {
-  IsIn,
-  IsObject,
-  IsOptional,
-  IsUrl,
-  ValidateNested,
-} from 'class-validator';
+/* istanbul ignore file */
 
-export class BridgePayloadDto {
+// Declarative code
+import { Transform } from 'class-transformer';
+import { IsIn, IsObject, IsOptional, IsString, IsUrl } from 'class-validator';
+
+import { BridgePayload, ValidateHttpHeaders } from '@fc/hybridge-http-proxy';
+
+export class BridgePayloadDto implements BridgePayload {
   @IsUrl()
   readonly url: string;
 
-  @IsIn(['get', 'post', 'GET', 'POST'])
+  @IsIn(['get', 'post'])
+  @Transform(({ value }) => value.toLowerCase())
   readonly method: string;
 
-  /**
-   * @todo
-   * set the correct type for headers and data
-   *
-   * Author: Arnaud PSA
-   * Date: 02/11/2021
-   */
   @IsObject()
-  @ValidateNested()
-  readonly headers: Record<string, unknown>;
+  @ValidateHttpHeaders()
+  readonly headers: Record<string, string>;
 
-  @IsObject()
+  /**
+   * this parameter is voluntary abstract.
+   * the proxy is not in charge to validate the exactness of the data itself
+   */
+  @IsString()
   @IsOptional()
-  @ValidateNested()
-  readonly data?: Record<string, unknown>;
+  readonly data?: string;
 }

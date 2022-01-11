@@ -1,7 +1,7 @@
 import { ACTION_TYPES } from '../../constants';
 import { Ministry } from '../../types';
 
-const ministries = (state: Ministry[] | undefined = [], action: any) => {
+export const ministries = (state: Ministry[] | undefined = [], action: any) => {
   switch (action.type) {
     case ACTION_TYPES.MINISTRY_LIST_LOAD_START:
       return [];
@@ -11,5 +11,3 @@ const ministries = (state: Ministry[] | undefined = [], action: any) => {
       return state;
   }
 };
-
-export default ministries;

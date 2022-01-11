@@ -1,5 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import {
+  BridgeError,
+  BridgeProtocol,
+  BridgeResponse,
+  MessageType,
+} from '@fc/hybridge-http-proxy';
 import { LoggerService } from '@fc/logger';
 
 import { BridgePayloadDto } from '../dto';
@@ -13,6 +19,7 @@ describe('CsmrHttpProxyController', () => {
     setContext: jest.fn(),
     debug: jest.fn(),
     error: jest.fn(),
+    trace: jest.fn(),
   };
 
   const csmrHttpProxyMock = {
@@ -40,34 +47,59 @@ describe('CsmrHttpProxyController', () => {
 
   describe('CsmHttpProxyController', () => {
     it('should get the controller defined', () => {
+      // Arrange
+      // Action
+      // Assert
       expect(csmrHttpProxyController).toBeDefined();
+    });
+
+    it('should call logger at init', () => {
+      // Arrange
+      // Action
+      // Assert
       expect(loggerMock.setContext).toHaveBeenCalledTimes(1);
       expect(loggerMock.setContext).toHaveBeenCalledWith(
         'CsmrHttpProxyController',
       );
     });
 
-    describe('computeRequest()', () => {
-      it('should get the token from FI by GET request', async () => {
+    describe('proxyRequest()', () => {
+      const baseBridgePayloadMock: BridgePayloadDto = Object.freeze({
+        url: 'https://test.com/getToken',
+        method: 'get',
+        headers: {
+          test: 'world',
+        },
+        data: null,
+      });
+
+      it('should get the data from external service without data params', async () => {
         // Arrange
         const payload: BridgePayloadDto = {
-          url: 'https://test.com/getToken',
-          method: 'get',
-          headers: {
-            test: 'world',
-          },
-          data: null,
+          ...baseBridgePayloadMock,
         };
 
-        const resultMock = {
+        const dataMock = {
           status: 200,
           data: null,
-          message: 'Success',
+          statusText: 'Success',
           headers: {
             'content-type': 'text/html; charset=UTF-8',
           },
         };
-        csmrHttpProxyMock.forwardRequest.mockResolvedValueOnce(resultMock);
+
+        const resultMock: BridgeProtocol<BridgeResponse> = {
+          type: MessageType.DATA,
+          data: {
+            status: 200,
+            data: null,
+            statusText: 'Success',
+            headers: {
+              'content-type': 'text/html; charset=UTF-8',
+            },
+          },
+        };
+        csmrHttpProxyMock.forwardRequest.mockResolvedValueOnce(dataMock);
 
         // Action
         const result = await csmrHttpProxyController.proxyRequest(payload);
@@ -75,44 +107,44 @@ describe('CsmrHttpProxyController', () => {
         expect(result).toStrictEqual(resultMock);
       });
 
-      it('should get the token from FI by POST request', async () => {
+      it('should get the data from external ressources with data params', async () => {
         // Arrange
         const payload: BridgePayloadDto = {
-          url: 'https://test.com/getToken',
+          ...baseBridgePayloadMock,
           method: 'post',
-          headers: {
-            test: 'world',
-          },
-          data: {
-            sarah: 'connor',
-          },
+          data: '{"sarah":"connor"}',
         };
-        const resultMock = {
+
+        const dataMock = {
           status: 200,
-          message: 'Success',
+          statusText: 'Success',
           headers: {
             'content-type': 'text/html; charset=UTF-8',
           },
+          data: "{\nhello: 'world'\n}",
+        };
+
+        const resultMock: BridgeProtocol<BridgeResponse> = {
+          type: MessageType.DATA,
           data: {
-            hello: 'world',
+            status: 200,
+            statusText: 'Success',
+            headers: {
+              'content-type': 'text/html; charset=UTF-8',
+            },
+            data: "{\nhello: 'world'\n}",
           },
         };
-        csmrHttpProxyMock.forwardRequest.mockResolvedValueOnce(resultMock);
+        csmrHttpProxyMock.forwardRequest.mockResolvedValueOnce(dataMock);
         // Action
         const result = await csmrHttpProxyController.proxyRequest(payload);
         // Assert
         expect(result).toStrictEqual(resultMock);
       });
 
-      /**
-       * @todo
-       * this test must be killed when fakeCall disappear
-       *
-       * Author: Arnaud PSA
-       * Date: 26/10/21
-       */
-      it('should failed to get the token from FI', async () => {
+      it('should fail to get the data from external ressource with unknown error', async () => {
         const errorMock = new Error('Unknown Error');
+
         csmrHttpProxyMock.forwardRequest.mockImplementationOnce(() => {
           throw errorMock;
         });
@@ -123,8 +155,15 @@ describe('CsmrHttpProxyController', () => {
           headers: {
             test: 'world',
           },
+          data: '{"sarah":"connor"}',
+        };
+
+        const resultMock: BridgeProtocol<BridgeError> = {
+          type: MessageType.ERROR,
           data: {
-            sarah: 'connor',
+            name: 'Error',
+            reason: 'Unknown Error',
+            code: 1000,
           },
         };
 
@@ -132,9 +171,53 @@ describe('CsmrHttpProxyController', () => {
         const result = await csmrHttpProxyController.proxyRequest(payload);
 
         // Assert
-        expect(result).toStrictEqual({ message: 'Unknown Error', status: 500 });
+        expect(result).toStrictEqual(resultMock);
+
         expect(loggerMock.error).toHaveBeenCalledTimes(1);
         expect(loggerMock.error).toHaveBeenCalledWith(errorMock);
+      });
+
+      it('should trace and debug request and debug on response', async () => {
+        // Arrange
+        const payload: BridgePayloadDto = {
+          ...baseBridgePayloadMock,
+        };
+
+        const dataMock = {
+          status: 200,
+          data: null,
+          statusText: 'Success',
+          headers: {
+            'content-type': 'text/html; charset=UTF-8',
+          },
+        };
+
+        const resultMock: BridgeProtocol<BridgeResponse> = {
+          data: {
+            data: null,
+            headers: { 'content-type': 'text/html; charset=UTF-8' },
+            status: 200,
+            statusText: 'Success',
+          },
+          type: MessageType.DATA,
+        };
+        csmrHttpProxyMock.forwardRequest.mockResolvedValueOnce(dataMock);
+
+        // Action
+        await csmrHttpProxyController.proxyRequest(payload);
+        // Assert
+        expect(loggerMock.debug).toHaveBeenCalledTimes(1);
+        expect(loggerMock.debug).toHaveBeenCalledWith(
+          'received new HTTP_PROXY command',
+        );
+
+        expect(loggerMock.trace).toHaveBeenNthCalledWith(1, {
+          payload,
+        });
+
+        expect(loggerMock.trace).toHaveBeenNthCalledWith(2, {
+          response: resultMock,
+        });
       });
     });
   });

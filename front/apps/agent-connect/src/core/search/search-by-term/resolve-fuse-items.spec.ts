@@ -1,4 +1,4 @@
-import resolveFuseItems from './resolve-fuse-items';
+import { resolveFuseItems } from './resolve-fuse-items';
 
 describe('resolveFuseItems', () => {
   it('should return an array from a fuse search results', () => {

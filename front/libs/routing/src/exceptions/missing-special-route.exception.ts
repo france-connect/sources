@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+
+// declarative file
 import { RoutingBaseException } from './routing-base.exception';
 
 export class MissingSpecialRouteException extends RoutingBaseException {

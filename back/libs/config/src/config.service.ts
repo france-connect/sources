@@ -1,4 +1,4 @@
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import { isString, validateSync, ValidatorOptions } from 'class-validator';
 import * as deepFreeze from 'deep-freeze';
 import * as lodash from 'lodash';
@@ -27,7 +27,7 @@ export class ConfigService {
   }
 
   private static validate(config, schema) {
-    const object = plainToClass(schema, config);
+    const object = plainToInstance(schema, config);
     const errors = validateSync(object, validationOptions);
 
     if (errors.length > 0) {

@@ -1,16 +1,16 @@
 import './search-form.scss';
-import React, { FormEvent, useRef, useCallback } from 'react';
-import classNames from 'classnames'
-import { useMediaQuery } from 'react-responsive';
+
+import classNames from 'classnames';
+import React, { FormEvent, useCallback, useRef } from 'react';
 import { RiSearchLine as SearchIcon } from 'react-icons/ri';
+import { useMediaQuery } from 'react-responsive';
 
 type SearchFormComponentProps = {
-  label: string;
   onChange: Function;
 };
 
-const SearchFormComponent = React.memo(
-  ({ label, onChange }: SearchFormComponentProps): JSX.Element => {
+export const SearchFormComponent = React.memo(
+  ({ onChange }: SearchFormComponentProps): JSX.Element => {
     const inputField = useRef(null);
     const gtTablet = useMediaQuery({ query: '(min-width: 768px)' });
 
@@ -36,7 +36,7 @@ const SearchFormComponent = React.memo(
 
     return (
       <div>
-        <h3 className={classNames("fs20 is-bold mx16", { "mb8": !gtTablet })}>
+        <h3 className={classNames('fs20 is-bold mx16', { mb8: !gtTablet })}>
           Je recherche mon administration
         </h3>
         <form onSubmit={onSubmitSearchForm}>
@@ -47,14 +47,19 @@ const SearchFormComponent = React.memo(
             <input
               ref={inputField}
               className="search-input px16 py8 flex-1"
+              data-testid="fi-search-term"
               id="fi-search-term"
               name="fi-search-term"
               placeholder="ex&nbsp;:&nbsp;ministère de la mer, ministère de..."
               type="text"
               onChange={onInputChangeHandler}
             />
-            <button type="submit" className={classNames("search-button is-white bg-blue-agentconnect fr-text-lg", { "pl32": gtTablet })}>
-              <SearchIcon  role={"img"} />
+            <button
+              type="submit"
+              className={classNames('search-button is-white bg-blue-agentconnect fr-text-lg', {
+                pl32: gtTablet,
+              })}>
+              <SearchIcon role={'img'} />
               {gtTablet && <span className="pl12 pr32 py12">Rechercher</span>}
             </button>
           </p>
@@ -65,5 +70,3 @@ const SearchFormComponent = React.memo(
 );
 
 SearchFormComponent.displayName = 'SearchFormComponent';
-
-export default SearchFormComponent;

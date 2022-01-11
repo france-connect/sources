@@ -6,6 +6,7 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 
 import { ApacheIgniteConfig } from './dto';
+import { ApacheIgniteInvalidSocketException } from './exceptions';
 
 const { ObjectType, IgniteClientConfiguration, STATE } = IgniteClient;
 
@@ -33,15 +34,24 @@ export class ApacheIgniteService {
   /**
    * Connect to the apache ignite server defined in the configuration and the
    * client initialized by the constructor
-   * @returns A promise that resolves when the cache is connected
    */
-  async onModuleInit(): Promise<unknown> {
-    const { endpoint } = this.config.get<ApacheIgniteConfig>('ApacheIgnite');
+  async onModuleInit(): Promise<void> {
+    const { endpoint, socketKeepAlive } =
+      this.config.get<ApacheIgniteConfig>('ApacheIgnite');
 
     this.logger.debug('Connecting to apache-ignite cache...');
 
-    return this.igniteClient.connect(
+    await this.igniteClient.connect(
       new ApacheIgniteService.IgniteClientConfigurationProxy(endpoint),
+    );
+
+    this.logger.debug(
+      `[setSocketKeepAlive]: enable = ${socketKeepAlive.enable} ; initialDelay = ${socketKeepAlive.initialDelay}`,
+    );
+
+    this.setSocketKeepAlive(
+      socketKeepAlive.enable,
+      socketKeepAlive.initialDelay,
     );
   }
 
@@ -55,7 +65,7 @@ export class ApacheIgniteService {
 
   /**
    * Retrieve a particular cache in the the apache ignite client
-   * @param name The name of the cache to retreive
+   * @param name The name of the cache to retrieve
    * @param keyType The type of the cache key (as one in the IgniteClient.ObjectType)
    * @param valueType The type of the cache value (as one in the IgniteClient.ObjectType)
    * @returns A cache instance with methods to read or write data
@@ -90,5 +100,22 @@ export class ApacheIgniteService {
         this.logger.debug(reason);
       }
     }
+  }
+
+  /**
+   * This is used to prevent the disconnection of the ignite client socket in production.
+   * @param enable Enable or disable
+   * @param initialDelay Delay in Ms
+   */
+  private setSocketKeepAlive(enable: boolean, initialDelay: number): void {
+    if (!this.igniteClient._socket) {
+      throw new ApacheIgniteInvalidSocketException();
+    }
+
+    // We need to access the low level NodeJs socket instance
+    this.igniteClient._socket._socket._socket.setKeepAlive(
+      enable,
+      initialDelay,
+    );
   }
 }

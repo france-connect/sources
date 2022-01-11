@@ -6,8 +6,7 @@ const rootState = {
   ministries: [],
   redirectToIdentityProviderInputs: {
     acr_values: 'eidas2',
-    redirectUriServiceProvider:
-      'https://fsa1-low.docker.dev-franceconnect.fr/login-callback',
+    redirectUriServiceProvider: 'https://fsa1-low.docker.dev-franceconnect.fr/login-callback',
     response_type: 'code',
     scope:
       'openid gender birthdate birthcountry birthplace given_name family_name email preferred_username address usual_name siret organizational_unit',
@@ -23,10 +22,7 @@ describe('selectIdentityProviderInputs', () => {
     // expected
     const expected = [
       ['acr_values', 'eidas2'],
-      [
-        'redirectUriServiceProvider',
-        'https://fsa1-low.docker.dev-franceconnect.fr/login-callback',
-      ],
+      ['redirectUriServiceProvider', 'https://fsa1-low.docker.dev-franceconnect.fr/login-callback'],
       ['response_type', 'code'],
       [
         'scope',

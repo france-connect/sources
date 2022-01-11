@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+
+// declarative file
 export interface TracksConfig {
   LUXON_FORMAT_HOUR_MINS: string;
   LUXON_FORMAT_TIMEZONE: string;

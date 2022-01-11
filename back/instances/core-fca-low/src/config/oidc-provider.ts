@@ -66,6 +66,7 @@ export default {
       backchannelLogout: { enabled: true },
       revocation: { enabled: true },
       rpInitiatedLogout: { enabled: true },
+      claimsParameter: { enabled: true },
     },
     acceptQueryParamAccessTokens: true,
     ttl: {
@@ -78,6 +79,7 @@ export default {
     acrValues: ['eidas1'],
     scopes: ['openid'],
     claims: {
+      amr: ['amr'],
       uid: ['uid'],
       openid: ['sub'],
       // node-oidc-provider defined key
@@ -97,6 +99,12 @@ export default {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       belonging_population: ['belonging_population'],
       chorusdt: ['chorusdt:matricule', 'chorusdt:societe'],
+      // AgentConnect claims naming convention
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      idp_id: ['idp_id'],
+      // AgentConnect claims naming convention
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      idp_acr: ['idp_acr'],
     },
     clientDefaults: {
       // node-oidc-provider defined key

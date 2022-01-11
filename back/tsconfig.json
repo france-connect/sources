@@ -136,8 +136,8 @@
       "@fc/csv/*": ["libs/csv/src/*"],
       "@fc/cog": ["libs/cog/src"],
       "@fc/cog/*": ["libs/cog/src/*"],
-      "@fc/rie-bridge-proxy": ["apps/rie-bridge-proxy/src"],
-      "@fc/rie-bridge-proxy/*": ["apps/rie-bridge-proxy/src/*"],
+      "@fc/bridge-http-proxy": ["apps/bridge-http-proxy/src"],
+      "@fc/bridge-http-proxy/*": ["apps/bridge-http-proxy/src/*"],
       "@fc/user-preferences-fcp": ["apps/user-preferences-fcp/src"],
       "@fc/user-preferences-fcp/*": ["apps/user-preferences-fcp/src/*"],
       "@fc/tracks-data-provider": ["apps/tracks-data-provider/src"],
@@ -146,8 +146,8 @@
       "@fc/data-provider-core-auth/*": ["libs/data-provider-core-auth/src/*"],
       "@fc/tracks": ["libs/tracks/src"],
       "@fc/tracks/*": ["libs/tracks/src/*"],
-      "@fc/rie": ["libs/rie/src"],
-      "@fc/rie/*": ["libs/rie/src/*"]
+      "@fc/hybridge-http-proxy": ["libs/hybridge-http-proxy/src"],
+      "@fc/hybridge-http-proxy/*": ["libs/hybridge-http-proxy/src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

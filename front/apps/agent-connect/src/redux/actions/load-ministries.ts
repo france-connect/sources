@@ -17,5 +17,3 @@ export const loadMinistries: ThunkActionType =
       type: ACTION_TYPES.MINISTRY_LIST_LOAD_COMPLETED,
     });
   };
-
-export default loadMinistries;

@@ -7,8 +7,10 @@ const {
 module.exports = {
   plugins: [
     {
+      options: {
+        alias: configPaths(path.resolve('../../tsconfig.shared.json')),
+      },
       plugin: CracoAliasPlugin,
-      options: { alias: configPaths(path.resolve('../../tsconfig.json')) },
     },
   ],
 };

@@ -1,4 +1,13 @@
+coverage/
+node_modules/
+
 **/*.ts
 **/*.tsx
 **/*.js
 **/*.jsx
+**/build/**/*.css
+**/build/**/*.css
+
+libs/styleguide/**/*.css
+libs/styleguide/**/*.scss
+libs/dsfr/src/fonts/**

@@ -1,4 +1,4 @@
-import isSearchTermValid from './is-search-term-valid';
+import { isSearchTermValid } from './is-search-term-valid';
 
 describe('isSearchTermValid', () => {
   it('should return false, term is undefined', () => {

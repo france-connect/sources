@@ -15,6 +15,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     setContext: jest.fn(),
     debug: jest.fn(),
     warn: jest.fn(),
+    trace: jest.fn(),
   };
 
   const accountIdMock = 'accountIdMock value';
@@ -109,11 +110,6 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       await expect(service.handle(sessionServiceMock)).resolves.not.toThrow();
     });
 
-    it('Should not throw if verified', async () => {
-      // Then
-      await expect(service.handle(sessionServiceMock)).resolves.not.toThrow();
-    });
-
     // Dependencies sevices errors
     it('Should throw if acr is not validated', async () => {
       // Given
@@ -148,14 +144,26 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       );
     });
 
-    it('Should throw if identity storage for service provider fails', async () => {
-      // Given
-      const errorMock = new Error('my error');
-      sessionServiceMock.set.mockRejectedValueOnce(errorMock);
+    it('Should call session set with amr parameter', async () => {
+      // When
+      await service.handle(sessionServiceMock);
       // Then
-      await expect(service.handle(sessionServiceMock)).rejects.toThrow(
-        errorMock,
-      );
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.set).toHaveBeenCalledWith({
+        accountId: accountIdMock,
+        amr: ['fca'],
+        idpIdentity: { sub: 'computedSubIdp' },
+        spIdentity: {
+          ...idpIdentityMock,
+          sub: 'computedSubSp',
+          // AgentConnect claims naming convention
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          idp_id: '42',
+          // AgentConnect claims naming convention
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          idp_acr: 'eidas3',
+        },
+      });
     });
 
     it('Should call computeInteraction()', async () => {
@@ -223,8 +231,15 @@ describe('CoreFcaDefaultVerifyHandler', () => {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           given_name: idpIdentityMock.given_name,
           uid: idpIdentityMock.uid,
+          // AgentConnect claims naming convention
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          idp_id: sessionDataMock.idpId,
+          // AgentConnect claims naming convention
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          idp_acr: sessionDataMock.idpAcr,
         },
         accountId: accountIdMock,
+        amr: ['fca'],
       };
 
       // When

@@ -1,4 +1,9 @@
+/* istanbul ignore file */
+
+// declarative file
 import { DateTime } from 'luxon';
+
+import { EidasToLabel } from '../enums';
 
 export interface Track {
   accountId: string;
@@ -6,7 +11,7 @@ export interface Track {
   country: string;
   date: string;
   event: string;
-  spAcr: string;
+  spAcr: keyof typeof EidasToLabel;
   spId: string;
   spName: string;
   trackId: string;

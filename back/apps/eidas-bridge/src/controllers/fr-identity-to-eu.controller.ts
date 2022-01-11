@@ -59,15 +59,11 @@ export class FrIdentityToEuController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const sessionIdLength = 32;
-    const sessionId: string = this.crypto.genRandomString(sessionIdLength);
-
     const { stateLength } = await this.oidcClientConfig.get();
     const idpState: string = this.crypto.genRandomString(stateLength);
 
     await sessionOidc.set({
       idpState,
-      sessionId,
       idpId: IDP_ID,
     });
 

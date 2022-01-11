@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import jsonMock from './__mocks__/search-by-term.json';
-import searchByTerm from './index';
+import { searchByTerm } from './index';
 
 describe('searchByTerm', () => {
   beforeEach(() => {

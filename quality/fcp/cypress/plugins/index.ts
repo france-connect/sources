@@ -17,6 +17,7 @@
  */
 import * as browserify from '@cypress/browserify-preprocessor';
 import cucumber from 'cypress-cucumber-preprocessor';
+import { addMatchImageSnapshotPlugin } from 'cypress-image-snapshot/plugin';
 import * as processFixtureTemplate from 'cypress-template-fixtures';
 import * as resolve from 'resolve';
 
@@ -26,6 +27,7 @@ import { addTracks } from './tracks-plugin';
 
 module.exports = (on, config) => {
   processFixtureTemplate(on, config);
+  addMatchImageSnapshotPlugin(on, config);
 
   const options = {
     ...browserify.defaultOptions,

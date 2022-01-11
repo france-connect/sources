@@ -393,12 +393,13 @@ export class CoreFcaController {
       sp_id: spId,
     };
 
-    const { accessToken, acr } = await this.oidcClient.getTokenFromProvider(
-      idpId,
-      tokenParams,
-      req,
-      extraParams,
-    );
+    const { accessToken, acr, amr } =
+      await this.oidcClient.getTokenFromProvider(
+        idpId,
+        tokenParams,
+        req,
+        extraParams,
+      );
 
     const userInfoParams = {
       accessToken,
@@ -413,6 +414,7 @@ export class CoreFcaController {
     await this.validateIdentity(idpId, identity);
 
     const identityExchange: OidcSession = {
+      amr,
       idpAccessToken: accessToken,
       idpAcr: acr,
       idpIdentity: identity,

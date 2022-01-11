@@ -1,6 +1,6 @@
 import { AxiosError } from 'axios';
+import { mocked } from 'jest-mock';
 import { lastValueFrom } from 'rxjs';
-import { mocked } from 'ts-jest/utils';
 
 import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';

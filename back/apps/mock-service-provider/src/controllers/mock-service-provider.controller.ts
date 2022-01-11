@@ -75,11 +75,7 @@ export class MockServiceProviderController {
       provider,
     );
 
-    const sessionIdLength = 32;
-    const sessionId: string = this.crypto.genRandomString(sessionIdLength);
-
     await sessionOidc.set({
-      sessionId,
       idpId: provider.uid,
       idpState: params.state,
       idpNonce: params.nonce,

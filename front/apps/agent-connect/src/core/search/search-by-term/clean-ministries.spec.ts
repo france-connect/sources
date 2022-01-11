@@ -1,4 +1,4 @@
-import cleanMinistries from './clean-ministries';
+import { cleanMinistries } from './clean-ministries';
 
 describe('cleanMinistries', () => {
   it('should remove unused props from ministries', () => {

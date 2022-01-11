@@ -1,7 +1,7 @@
 // @see _doc/jest.md
 // import { mocked } from 'ts-jest/utils';
 // import { renderWithRedux } from '../../testUtils';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import MyModule from './my-module';
 
@@ -14,9 +14,9 @@ describe('MyModule', () => {
 
   it('should render something', () => {
     // given
-    const { getByText } = render(<MyModule />);
+    const { getByText, debug } = render(<MyModule />);
     // when
-    screen.debug();
+    debug();
     const linkElement = getByText(/learn react/i);
     // then
     expect(linkElement).toBeInTheDocument();

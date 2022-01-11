@@ -1,4 +1,4 @@
-import getPersistLists from './get-persist-lists';
+import { getPersistLists } from './get-persist-lists';
 
 jest.mock('redux-persist/lib/storage');
 
@@ -18,8 +18,6 @@ const mockStates = {
 };
 
 describe('getPersistLists', () => {
-  beforeEach(() => {});
-
   it('should return a redux-persist configuration object, using default persist storage', () => {
     // when
     const result = getPersistLists(mockStates);

@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionClaims
+@usager @connexionClaims @ci
 Fonctionnalité: Connexion avec Claims
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter en utilisant des claims

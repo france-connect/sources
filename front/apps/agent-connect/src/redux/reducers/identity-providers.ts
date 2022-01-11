@@ -1,10 +1,7 @@
 import { ACTION_TYPES } from '../../constants';
 import { IdentityProvider } from '../../types';
 
-const identityProviders = (
-  state: IdentityProvider[] | undefined = [],
-  action: any,
-) => {
+export const identityProviders = (state: IdentityProvider[] | undefined = [], action: any) => {
   switch (action.type) {
     case ACTION_TYPES.MINISTRY_LIST_LOAD_START:
       return [];
@@ -14,5 +11,3 @@ const identityProviders = (
       return state;
   }
 };
-
-export default identityProviders;

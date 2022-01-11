@@ -1,4 +1,5 @@
 import { Action } from '@fc/state-management';
+
 import { Events } from '../events/events';
 import * as states from '../states/loading.state';
 

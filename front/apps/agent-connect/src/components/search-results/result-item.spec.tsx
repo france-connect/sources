@@ -11,21 +11,19 @@
 **************************************************** */
 import { mocked } from 'ts-jest/utils';
 
-import { choosenIdentityProvider } from '../../redux/actions';
+import { chosenIdentityProvider } from '../../redux/actions';
 import { fireEvent, renderWithRedux } from '../../testUtils';
 import { IdentityProvidersHistoryAction } from '../../types';
-import ResultItem from './result-item';
+import { ResultItemComponent } from './result-item';
 
 jest.mock('../../redux/actions');
 
 // setup
-const props = {
-  identityProvider: {
-    active: true,
-    display: true,
-    name: 'mock-name',
-    uid: 'mock-uid',
-  },
+const identityProviderMock = {
+  active: true,
+  display: true,
+  name: 'mock-name',
+  uid: 'mock-uid',
 };
 
 const initialState = {
@@ -37,7 +35,7 @@ const initialState = {
   redirectURL: 'mock-form-url',
 };
 
-describe('ResultItem', () => {
+describe('ResultItemComponent', () => {
   beforeEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -47,9 +45,12 @@ describe('ResultItem', () => {
   describe('form element', () => {
     it('should have method post and action from store', () => {
       // action
-      const { getByRole } = renderWithRedux(<ResultItem {...props} />, {
-        initialState,
-      });
+      const { getByRole } = renderWithRedux(
+        <ResultItemComponent identityProvider={identityProviderMock} />,
+        {
+          initialState,
+        },
+      );
       const formElement = getByRole('form');
       // expect
       expect(formElement).toBeInTheDocument();
@@ -61,9 +62,12 @@ describe('ResultItem', () => {
   describe('submit button', () => {
     it('should render a button with the mock name', () => {
       // action
-      const { getByText } = renderWithRedux(<ResultItem {...props} />, {
-        initialState,
-      });
+      const { getByText } = renderWithRedux(
+        <ResultItemComponent identityProvider={identityProviderMock} />,
+        {
+          initialState,
+        },
+      );
       const submitElement = getByText('mock-name');
       // expect
       expect(submitElement).toBeInTheDocument();
@@ -74,12 +78,12 @@ describe('ResultItem', () => {
     it('should render a disabled button with the mock name', () => {
       // setup
       const identityProvider = {
-        ...props.identityProvider,
+        ...identityProviderMock,
         active: false,
       };
       // action
       const { getByText } = renderWithRedux(
-        <ResultItem identityProvider={identityProvider} />,
+        <ResultItemComponent identityProvider={identityProvider} />,
         {
           initialState,
         },
@@ -97,13 +101,16 @@ describe('ResultItem', () => {
         type: 'mock-action-type',
       } as IdentityProvidersHistoryAction;
 
-      const spy = mocked(choosenIdentityProvider, true);
+      const spy = mocked(chosenIdentityProvider, true);
       spy.mockReturnValueOnce(action);
 
       // action
-      const { getByText } = renderWithRedux(<ResultItem {...props} />, {
-        initialState,
-      });
+      const { getByText } = renderWithRedux(
+        <ResultItemComponent identityProvider={identityProviderMock} />,
+        {
+          initialState,
+        },
+      );
 
       const submitElement = getByText('mock-name');
       fireEvent.click(submitElement);
@@ -115,9 +122,12 @@ describe('ResultItem', () => {
   describe('hidden inputs', () => {
     it('should render hidden inputs from the redux store', () => {
       // action
-      const { getByDisplayValue } = renderWithRedux(<ResultItem {...props} />, {
-        initialState,
-      });
+      const { getByDisplayValue } = renderWithRedux(
+        <ResultItemComponent identityProvider={identityProviderMock} />,
+        {
+          initialState,
+        },
+      );
       // expect
       const inputElement1 = getByDisplayValue('mock-input-1');
       expect(inputElement1).toBeInTheDocument();
@@ -139,9 +149,12 @@ describe('ResultItem', () => {
   describe('providerUid hidden input', () => {
     it('should have an hidden input with value from the identityProvider', () => {
       // action
-      const { getByDisplayValue } = renderWithRedux(<ResultItem {...props} />, {
-        initialState,
-      });
+      const { getByDisplayValue } = renderWithRedux(
+        <ResultItemComponent identityProvider={identityProviderMock} />,
+        {
+          initialState,
+        },
+      );
       // expect
       const inputElement3 = getByDisplayValue('mock-uid');
       expect(inputElement3).toBeInTheDocument();

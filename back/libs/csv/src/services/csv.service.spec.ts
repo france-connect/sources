@@ -1,4 +1,4 @@
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -63,7 +63,7 @@ describe('CsvService', () => {
       forbidNonWhitelisted: true,
       forbidUnknownValues: true,
     };
-    let filteredByDtoMock: jest.Mock;
+    let filteredByDtoMock;
 
     const inputMock = {
       alpha: 'omega',
@@ -172,7 +172,7 @@ describe('CsvService', () => {
   describe('parse()', () => {
     const fileMock = 'path/to/file.csv';
 
-    let parseCsvMock: jest.Mock;
+    let parseCsvMock;
     let pickDataMock: jest.SpyInstance;
 
     const csvMock = [

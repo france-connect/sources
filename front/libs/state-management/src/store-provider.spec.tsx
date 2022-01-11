@@ -4,15 +4,16 @@
 import { render } from '@testing-library/react';
 import { combineReducers, createStore } from 'redux';
 import { persistStore } from 'redux-persist';
+import { PersistGateProps } from 'redux-persist/integration/react';
 import { mocked } from 'ts-jest/utils';
 
-import configure from './configure';
+import { configure } from './configure';
 import { StoreProvider } from './store-provider';
 
 jest.mock('./configure');
 jest.mock('redux-persist/integration/react', () => ({
   // Fix PesistGate rehydrate event
-  PersistGate: (props: any) => props.children,
+  PersistGate: (props: PersistGateProps) => props.children,
 }));
 
 const mockReducer = (v = null) => v;
@@ -43,8 +44,7 @@ describe('StoreProvider', () => {
         middlewares={middlewares}
         persistKey={persistKey}
         reducers={mockReducers}
-        states={mockStates}
-      >
+        states={mockStates}>
         <MockChildren />
       </StoreProvider>,
     );
@@ -74,8 +74,7 @@ describe('StoreProvider', () => {
         middlewares={[jest.fn()]}
         persistKey="mock-key"
         reducers={mockReducers}
-        states={mockStates}
-      >
+        states={mockStates}>
         <MockChildren />
       </StoreProvider>,
     );

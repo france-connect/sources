@@ -14,3 +14,17 @@
 // ***********************************************************
 
 import 'cypress-xpath';
+
+import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';
+
+addMatchImageSnapshotCommand({
+  blackout: [
+    '#error-id', // ignore FranceConnect Session Id on error page
+  ],
+  capture: 'fullPage',
+  customDiffConfig: { threshold: 0.3 },
+  customDiffDir: './cypress/snapshots/diff',
+  customSnapshotsDir: './cypress/snapshots/base',
+  failureThreshold: 0,
+  failureThresholdType: 'percent',
+});

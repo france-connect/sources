@@ -1,19 +1,19 @@
+import './result-item.scss';
+
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { RedirectToIdpFormComponent } from '@fc/oidc-client';
 
-import { choosenIdentityProvider } from '../../redux/actions';
+import { chosenIdentityProvider } from '../../redux/actions';
 import { selectIdentityProviderInputs } from '../../redux/selectors';
 import { IdentityProvider, RootState } from '../../types';
-
-import './result-item.scss';
 
 type SearchResultsProps = {
   identityProvider: IdentityProvider;
 };
 
-const ResultItemComponent = React.memo(
+export const ResultItemComponent = React.memo(
   ({ identityProvider }: SearchResultsProps): JSX.Element => {
     const { name, uid } = identityProvider;
 
@@ -23,26 +23,20 @@ const ResultItemComponent = React.memo(
 
     const dispatch = useDispatch();
     const buttonClickHandler = useCallback(() => {
-      const action = choosenIdentityProvider(uid);
+      const action = chosenIdentityProvider(uid);
       dispatch(action);
     }, [uid, dispatch]);
 
     return (
       <RedirectToIdpFormComponent id={`fca-search-idp-${uid}`}>
         {redirectToIdentityProviderInputs.map(([inputKey, inputValue]) => (
-          <input
-            key={inputKey}
-            defaultValue={inputValue}
-            name={inputKey}
-            type="hidden"
-          />
+          <input key={inputKey} defaultValue={inputValue} name={inputKey} type="hidden" />
         ))}
         <button
           className="button-style fr-text-lg text-left"
           id={`idp-${uid}-button`}
           type="submit"
-          onClick={buttonClickHandler}
-        >
+          onClick={buttonClickHandler}>
           {name}
         </button>
       </RedirectToIdpFormComponent>
@@ -51,5 +45,3 @@ const ResultItemComponent = React.memo(
 );
 
 ResultItemComponent.displayName = 'ResultItemComponent';
-
-export default ResultItemComponent;

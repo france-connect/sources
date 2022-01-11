@@ -11,11 +11,13 @@ describe('selectIdentityProviderByUID', () => {
   it('should return a identity provider with an uid', () => {
     // setup
     const state = {
+      csrfToken: 'mock-csrf',
       identityProviders,
       identityProvidersHistory: [],
       ministries: [],
       redirectToIdentityProviderInputs: {
         acr_values: 'mock-acr',
+        csrfToken: 'mock-csrf',
         redirectUriServiceProvider: 'mock-uri',
         response_type: 'mock-type',
         scope: 'mock-scope',

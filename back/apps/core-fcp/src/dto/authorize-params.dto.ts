@@ -4,7 +4,7 @@ import {
   IsOptional,
   IsString,
   IsUrl,
-  Length,
+  MinLength,
 } from 'class-validator';
 
 import { Split } from '@fc/common';
@@ -38,7 +38,7 @@ export class AuthorizeParamsDto {
 
   @IsString()
   @IsAlphanumeric()
-  @Length(64, 64)
+  @MinLength(32)
   readonly nonce: string;
 
   @IsString()

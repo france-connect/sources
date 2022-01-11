@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+
+// declarative file
 import { UserinfosInterface } from './userinfos.interface';
 
 export interface UserInterface {

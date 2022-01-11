@@ -11,10 +11,10 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { ApplicationLayout as DsfrLayout } from '@fc/dsfr';
 import { AppContextProvider } from '@fc/state-management';
 
-import { configure, initialState } from './redux';
-import routes from './routes';
-import { LayoutConfig } from './config';
+import { Layout } from './config';
 import * as config from './config';
+import { configure, initialState } from './redux';
+import { routes } from './routes';
 
 const { persistor, store } = configure(initialState);
 
@@ -23,7 +23,7 @@ ReactDOM.render(
     <PersistGate persistor={persistor}>
       <BrowserRouter>
         <AppContextProvider value={{ config }}>
-          <DsfrLayout routes={routes} config={LayoutConfig} />
+          <DsfrLayout config={Layout} routes={routes} />
         </AppContextProvider>
       </BrowserRouter>
     </PersistGate>

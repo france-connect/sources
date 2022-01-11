@@ -1,5 +1,5 @@
 import { ACTION_TYPES } from '../../constants';
-import redirectURL from './redirect-url';
+import { redirectURL } from './redirect-url';
 
 describe('redirectURL', () => {
   describe('ACTION_TYPES.MINISTRY_LIST_LOAD_START', () => {

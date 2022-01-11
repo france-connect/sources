@@ -2,12 +2,12 @@ import { mocked } from 'ts-jest/utils';
 
 import { removeIdentityProvider } from '../../redux/actions';
 import { fireEvent, renderWithRedux } from '../../testUtils';
-import IdentityProviderHistoryCard from './index';
+import { IdentityProviderHistoryCardComponent } from './index';
 
 jest.mock('../../redux/actions');
 
 // setup
-const props = { uid: 'mock-uid' };
+const uid = 'mock-uid';
 const action = { payload: 'mock-uid', type: 'mock-action-type' };
 const initialState = {
   identityProviders: [
@@ -37,10 +37,9 @@ describe('IdentityProviderHistoryCard', () => {
   describe('when user click on remove button', () => {
     it('should call redux action removeIdentityProvider', () => {
       // setup
-      const { getByText } = renderWithRedux(
-        <IdentityProviderHistoryCard {...props} />,
-        { initialState },
-      );
+      const { getByText } = renderWithRedux(<IdentityProviderHistoryCardComponent uid={uid} />, {
+        initialState,
+      });
       const removeButton = getByText('Retirer de cette liste');
       const spy = mocked(removeIdentityProvider, true);
       spy.mockReturnValueOnce(action);
@@ -52,17 +51,16 @@ describe('IdentityProviderHistoryCard', () => {
 
     it('should call redux action removeIdentityProvider with the uid property', () => {
       // setup
-      const { getByText } = renderWithRedux(
-        <IdentityProviderHistoryCard {...props} />,
-        { initialState },
-      );
+      const { getByText } = renderWithRedux(<IdentityProviderHistoryCardComponent uid={uid} />, {
+        initialState,
+      });
       const removeButton = getByText('Retirer de cette liste');
       const spy = mocked(removeIdentityProvider, true);
       spy.mockReturnValueOnce(action);
       // action
       fireEvent.click(removeButton);
       // expect
-      expect(spy).toHaveBeenCalledWith(props.uid);
+      expect(spy).toHaveBeenCalledWith(uid);
     });
   });
 });

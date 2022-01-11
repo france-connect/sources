@@ -1,4 +1,4 @@
-import searchTheTermInside from './search-the-term-inside';
+import { searchTheTermInside } from './search-the-term-inside';
 
 describe('searchTheTermInside', () => {
   it('should return nothing, not found', () => {

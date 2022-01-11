@@ -36,6 +36,21 @@
         </div>
         <% }) %>
 
+        <h2>Claims</h2>
+        <% ['amr'].forEach(elem => { %>
+          <div class="claim-input-wrapper">
+            <input
+              id="claim_<%=elem%>"
+              type="checkbox"
+              name="selected-claim"
+              value="<%=elem%>"
+              checked
+              onChange="updateClaim()"
+            />
+            <label for="claim_<%=elem%>"><%=elem%></label>
+          </div>
+        <% }) %>
+
         <h2>ACR</h2>
         <select name="acr" id="acrSelector" aria-label="ACR Value" onChange="updateAcr();">
           <% ['eidas1', 'eidas2', 'eidas3'].forEach(acr => { %>
@@ -67,6 +82,12 @@
             <label class="col-2 col-form-label" for="acrValues"> ACR values : </label>
             <div class="col-10">
               <input id="acrValues" name="acr_values" type="text" value="" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-2 col-form-label" for="claims"> Claims : </label>
+            <div class="col-10">
+              <input id="claims" name="claims" type="text" value="" class="form-control" />
             </div>
           </div>
 
@@ -124,12 +145,32 @@
         document.getElementById('acrValues').value = acr;
       }
 
+      function transformClaimsToJsonString (claims) {
+        const values = claims.reduce((acc, key) => ({ ...acc, [key]: { essential: true }}), {});
+        const json = JSON.stringify({ id_token: values });
+        return json;
+      }
+
+      function getClaims() {
+        const selector = 'input[name="selected-claim"]:checked';
+        const elements = [...document.querySelectorAll(selector)];
+        return elements.map(elem => elem.value);
+      }
+
+      function updateClaim() {
+        const claims = getClaims();
+        const claimsAreValid = claims && claims.length > 0;
+        const json = !claimsAreValid ? '' : transformClaimsToJsonString(claims);
+        document.getElementById('claims').value = json;
+      }
+
       function changeHttpMethod() {
         const httpMethod = document.getElementById('httpMethod').value;
         document.forms['authorizeForm'].method = httpMethod;
       }
 
       updateAcr();
+      updateClaim();
       updateScope();
     </script>
   </body>

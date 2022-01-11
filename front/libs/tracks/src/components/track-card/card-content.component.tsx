@@ -1,8 +1,9 @@
 import classnames from 'classnames';
 import { DateTime } from 'luxon';
 import React from 'react';
-import { TracksConfig } from '../../interfaces';
+
 import { EidasToLabel } from '../../enums';
+import { TracksConfig } from '../../interfaces';
 
 type TraceCardContentProps = {
   accessibleId: string;
@@ -13,15 +14,8 @@ type TraceCardContentProps = {
   options: TracksConfig;
 };
 
-const TraceCardContentComponent = React.memo(
-  ({
-    accessibleId,
-    accountId,
-    datetime,
-    opened,
-    spAcr,
-    options,
-  }: TraceCardContentProps) => {
+export const TrackCardContentComponent = React.memo(
+  ({ accessibleId, accountId, datetime, opened, options, spAcr }: TraceCardContentProps) => {
     const formattedTime = datetime.toFormat(options.LUXON_FORMAT_HOUR_MINS);
     const formattedLocation = datetime.toFormat(options.LUXON_FORMAT_TIMEZONE);
 
@@ -34,8 +28,7 @@ const TraceCardContentComponent = React.memo(
         })}
         id={accessibleId}
         role="region"
-        tabIndex={-1}
-      >
+        tabIndex={-1}>
         <dt className="mb12">
           <span>Le service a récupéré les données suivantes</span>
         </dt>
@@ -58,8 +51,7 @@ const TraceCardContentComponent = React.memo(
               <a
                 className="is-g700"
                 href="/"
-                title={`En savoir plus sur le niveau de sécurité ${EidasToLabel[spAcr]}`}
-              >
+                title={`En savoir plus sur le niveau de sécurité ${EidasToLabel[spAcr]}`}>
                 <b>{EidasToLabel[spAcr]}</b>
               </a>
             </li>
@@ -70,6 +62,4 @@ const TraceCardContentComponent = React.memo(
   },
 );
 
-TraceCardContentComponent.displayName = 'TraceCardContentComponent';
-
-export default TraceCardContentComponent;
+TrackCardContentComponent.displayName = 'TrackCardContentComponent';

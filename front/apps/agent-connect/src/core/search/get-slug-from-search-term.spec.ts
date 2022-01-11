@@ -1,4 +1,4 @@
-import getSlugFromSearchTerm from './get-slug-from-search-term';
+import { getSlugFromSearchTerm } from './get-slug-from-search-term';
 
 describe('getSlugFromSearchTerm', () => {
   it('should return a string without accent', () => {

@@ -6,6 +6,7 @@ import {
   navigateTo,
 } from '../../common/helpers';
 import { ServiceProvider } from '../../common/types';
+import { getClaims } from '../helpers/scope-helper';
 import ServiceProviderPage from '../pages/service-provider-page';
 
 let serviceProviderPage: ServiceProviderPage;
@@ -23,6 +24,9 @@ When('je clique sur le bouton AgentConnect', function () {
   if (this.serviceProvider.mocked === true) {
     serviceProviderPage.setMockAuthorizeHttpMethod(
       this.serviceProvider.authorizeHttpMethod,
+    );
+    serviceProviderPage.setMockRequestedAmr(
+      this.serviceProvider.claims.includes('amr'),
     );
     serviceProviderPage.setMockRequestedScope(this.requestedScope);
     serviceProviderPage.setMockRequestedAcr(this.serviceProvider.acrValue);
@@ -47,7 +51,22 @@ Then(
   function (type) {
     if (this.serviceProvider.mocked === true) {
       const scope = this.scopes.find((scope) => scope.type === type);
-      serviceProviderPage.checkMockInformationAccess(scope, this.user.claims);
+      serviceProviderPage.checkMandatoryData();
+
+      const expectedClaims: string[] = getClaims(scope);
+
+      // Dynamic claims
+      const claims = this.user.claims;
+      if (expectedClaims.includes('idpId')) {
+        claims.idpId = this.identityProvider.idpId;
+      }
+
+      if (expectedClaims.includes('idpAcr')) {
+        claims.idpAcr = this.identityProvider.idpAcr;
+      }
+
+      serviceProviderPage.checkExpectedUserClaims(expectedClaims, claims);
+      serviceProviderPage.checkNoExtraClaims(expectedClaims);
     }
   },
 );
@@ -58,6 +77,14 @@ Then(
     serviceProviderPage.checkMockAcrValue(acrValue);
   },
 );
+
+Then("la cinématique a renvoyé l'amr {string}", function (amrValue) {
+  serviceProviderPage.checkMockAmrValue(amrValue);
+});
+
+Then("la cinématique n'a pas renvoyé d'amr", function () {
+  serviceProviderPage.checkMockAmrValue('N/A');
+});
 
 Then(
   'je suis redirigé vers la page erreur du fournisseur de service',

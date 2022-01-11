@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -61,7 +61,6 @@ describe('FrIdentityToEuController', () => {
 
   const sessionServiceOidcMock = {
     get: jest.fn(),
-    getId: jest.fn(),
     set: jest.fn(),
   };
 
@@ -81,7 +80,6 @@ describe('FrIdentityToEuController', () => {
   const providerUidMock = 'envIssuer';
   const randomStringMock = 'randomStringMockValue';
   const stateMock = randomStringMock;
-  const sessionIdMock = randomStringMock;
   const idpStateMock = 'idpStateMockValue';
   const idpNonceMock = 'idpNonceMockValue';
 
@@ -149,7 +147,6 @@ describe('FrIdentityToEuController', () => {
     });
 
     sessionServiceOidcMock.get.mockResolvedValue(sessionMockValue);
-    sessionServiceOidcMock.getId.mockReturnValue(sessionIdMock);
 
     cryptographyMock.genRandomString.mockReturnValue(randomStringMock);
   });
@@ -170,7 +167,7 @@ describe('FrIdentityToEuController', () => {
       expect(oidcClientConfigServiceMock.get).toHaveBeenCalledTimes(1);
     });
 
-    it('Should generate a random sessionId and state of 32 characters', async () => {
+    it('Should generate a random state of 32 characters', async () => {
       // setup
       sessionServiceOidcMock.set.mockResolvedValueOnce(undefined);
       const randSize = 32;
@@ -179,23 +176,14 @@ describe('FrIdentityToEuController', () => {
       await frIdentityToEuController.initSession(sessionServiceOidcMock);
 
       // assert
-      expect(cryptographyMock.genRandomString).toHaveBeenCalledTimes(2);
-      expect(cryptographyMock.genRandomString).toHaveBeenNthCalledWith(
-        1,
-        randSize,
-      );
-      expect(cryptographyMock.genRandomString).toHaveBeenNthCalledWith(
-        2,
-        randSize,
-      );
+      expect(cryptographyMock.genRandomString).toHaveBeenCalledTimes(1);
+      expect(cryptographyMock.genRandomString).toHaveBeenCalledWith(randSize);
     });
 
     it('Should init the session', async () => {
       // setup
       sessionServiceOidcMock.set.mockResolvedValueOnce(undefined);
-      cryptographyMock.genRandomString
-        .mockReturnValueOnce('random1')
-        .mockReturnValueOnce('random2');
+      cryptographyMock.genRandomString.mockReturnValueOnce('random');
 
       // action
       await frIdentityToEuController.initSession(sessionServiceOidcMock);
@@ -204,8 +192,7 @@ describe('FrIdentityToEuController', () => {
       expect(sessionServiceOidcMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceOidcMock.set).toHaveBeenCalledWith({
         idpId: IDP_ID,
-        idpState: 'random2',
-        sessionId: 'random1',
+        idpState: 'random',
       });
     });
 

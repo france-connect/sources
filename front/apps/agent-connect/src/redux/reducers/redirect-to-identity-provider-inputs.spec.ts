@@ -1,5 +1,5 @@
 import { ACTION_TYPES } from '../../constants';
-import redirectToIdentityProviderInputs from './redirect-to-identity-provider-inputs';
+import { redirectToIdentityProviderInputs } from './redirect-to-identity-provider-inputs';
 
 describe('redirectToIdentityProviderInputs', () => {
   describe('ACTION_TYPES.MINISTRY_LIST_LOAD_START', () => {
@@ -49,8 +49,7 @@ describe('redirectToIdentityProviderInputs', () => {
       const result = redirectToIdentityProviderInputs(state, action);
       expect(result).toStrictEqual({
         acr_values: 'eidas2',
-        redirectUriServiceProvider:
-          'https://fsa1-low.docker.dev-franceconnect.fr/login-callback',
+        redirectUriServiceProvider: 'https://fsa1-low.docker.dev-franceconnect.fr/login-callback',
         response_type: 'code',
         scope:
           'openid gender birthdate birthcountry birthplace given_name family_name email preferred_username address usual_name siret organizational_unit',

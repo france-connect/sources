@@ -1,7 +1,13 @@
 {
   "root": true,
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   },
   "env": {
     "browser": true,
@@ -10,6 +16,7 @@
     "jest": true
   },
   "plugins": [
+    "@typescript-eslint",
     "simple-import-sort",
     "import",
     "sort-destructure-keys",
@@ -17,39 +24,63 @@
     "jest"
   ],
   "extends": [
-    "airbnb-typescript",
-    "prettier",
+    "react-app",
+    "react-app/jest",
     "plugin:jest/recommended",
-    "plugin:jest/style"
+    "plugin:jest/style",
+    "airbnb",
+    "airbnb-typescript",
+    "prettier"
   ],
   "rules": {
-    "import/first": 2,
-    "import/newline-after-import": 2,
-    "import/no-extraneous-dependencies": [
+    "@typescript-eslint/naming-convention": [
       2,
       {
-        "devDependencies": [
-          "**/*.spec.ts",
-          "**/*.spec.tsx",
-          "**/*.spec.js",
-          "**/*.spec.jsx"
+        "format": ["camelCase", "PascalCase", "UPPER_CASE"],
+        "leadingUnderscore": "allow",
+        "selector": "variableLike"
+      },
+      {
+        "format": ["camelCase", "PascalCase", "UPPER_CASE"],
+        "leadingUnderscore": "allow",
+        "selector": "memberLike"
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": 2,
+    "import/no-extraneous-dependencies": 0,
+    "import/no-default-export": 2,
+    "import/prefer-default-export": 0,
+    "simple-import-sort/imports": [
+      2,
+      {
+        "groups": [
+          ["^\\u0000"],
+          ["^fs$", "^path$", "^crypto$"],
+          ["^@?\\w"],
+          ["^@nestjs"],
+          ["^@fc/"],
+          ["^"],
+          ["^\\."]
         ]
       }
     ],
-    "import/no-duplicates": 2,
+    "jsx-a11y/label-has-associated-control": [
+      1,
+      {
+        "labelComponents": ["CustomLabel"],
+        "labelAttributes": ["inputLabel"],
+        "controlComponents": ["CustomInput"],
+        "assert": "both",
+        "depth": 3
+      }
+    ],
     "react/react-in-jsx-scope": 0,
-    "react/jsx-closing-bracket-location": [
-      2,
-      { "nonEmpty": "after-props", "selfClosing": false }
-    ],
+    "react/jsx-closing-bracket-location": [2, { "nonEmpty": "after-props", "selfClosing": false }],
     "react/jsx-fragments": [2, "element"],
-    "react/jsx-indent": [
-      2,
-      2,
-      { "checkAttributes": false, "indentLogicalExpressions": true }
-    ],
+    "react/jsx-indent": [2, 2, { "checkAttributes": false, "indentLogicalExpressions": true }],
     "react/display-name": [2, { "ignoreTranspilerName": false }],
-    "react/jsx-props-no-spreading": 0,
+    "react/jsx-props-no-spreading": 1,
+    "react/button-has-type": 0,
     "react/jsx-sort-props": [
       2,
       {
@@ -60,15 +91,10 @@
         "reservedFirst": true
       }
     ],
-    "simple-import-sort/imports": 2,
     "simple-import-sort/exports": 2,
-    "sort-imports": "off",
+    "sort-imports": 0,
     "sort-keys-fix/sort-keys-fix": 2,
     "sort-destructure-keys/sort-destructure-keys": 2,
-    "sort-keys": [
-      2,
-      "asc",
-      { "caseSensitive": true, "natural": false, "minKeys": 2 }
-    ]
+    "sort-keys": [2, "asc", { "caseSensitive": true, "natural": false, "minKeys": 2 }]
   }
 }

@@ -2,11 +2,16 @@ import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { ValidationException } from '@fc/exceptions';
+import {
+  BridgeError,
+  BridgeProtocol,
+  BridgeResponse,
+  MessageType,
+} from '@fc/hybridge-http-proxy';
 import { LoggerService } from '@fc/logger';
 import { HttpProxyProtocol } from '@fc/microservices';
 
 import { BridgePayloadDto } from '../dto';
-import { HttpProxyRequest, HttpProxyResponse } from '../interfaces';
 import { CsmrHttpProxyService } from '../services';
 
 @Controller()
@@ -21,19 +26,18 @@ export class CsmrHttpProxyController {
   @MessagePattern(HttpProxyProtocol.Commands.HTTP_PROXY)
   @UsePipes(
     new ValidationPipe({
-      transform: true,
+      forbidNonWhitelisted: true,
       whitelist: true,
+      transform: true,
       exceptionFactory: ValidationException.factory,
     }),
   )
   async proxyRequest(
     @Payload() payload: BridgePayloadDto,
-  ): Promise<HttpProxyResponse> {
+  ): Promise<BridgeProtocol<BridgeResponse | BridgeError>> {
     this.logger.debug(
       `received new ${HttpProxyProtocol.Commands.HTTP_PROXY} command`,
     );
-
-    const { url, method, headers, data } = payload;
 
     /**
      * @todo add Proxy and HttpsAgent options
@@ -42,32 +46,46 @@ export class CsmrHttpProxyController {
      * Date: 21/10/21
      */
 
-    const options: HttpProxyRequest = {
-      url,
-      method,
-      responseType: 'json',
-      headers,
-    };
+    this.logger.trace({ payload });
 
-    if (data) {
-      options.data = data;
-    }
-
-    /**
-     * @todo gestion de 3 cas d'erreur:
-     * - le RMQ est mal formatté
-     * - le FI renvoie une erreur HTTP
-     * - le FI est injoignable (échec proxy, timeout réseaux...)
-     */
-
+    let response;
     try {
-      return this.proxy.forwardRequest(options);
+      const data = await this.proxy.forwardRequest(payload);
+
+      response = {
+        type: MessageType.DATA,
+        data,
+      };
     } catch (error) {
       this.logger.error(error);
-      return {
-        status: 500,
-        message: error.message,
-      };
+      response = this.formatError(error);
     }
+
+    this.logger.trace({ response });
+
+    return response;
+  }
+
+  formatError(error: Error): BridgeProtocol<BridgeError> {
+    this.logger.debug('build error message from internal Error');
+    const { message: reason, name } = error;
+    /**
+     * @todo #825
+     * Gestion des erreurs améliorée attendues avec code et documentation
+     *
+     * Author: Arnaud PSA
+     * Date: 02/12/21
+     */
+    const { code = 1000 } = error as any;
+    const response = {
+      type: MessageType.ERROR,
+      data: {
+        reason,
+        name,
+        code,
+      },
+    };
+
+    return response;
   }
 }

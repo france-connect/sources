@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionChiffrement @fcpLow
+@usager @connexionChiffrement @ci @fcpLow
 Fonctionnalité: Connexion avec chiffrement
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter à un FI en utilisant du chiffrement

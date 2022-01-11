@@ -1,2 +1,4 @@
-export * from './mailjet-transport';
+/* istanbul ignore file */
+
+// Declarative code
 export * from './stdout-transport';

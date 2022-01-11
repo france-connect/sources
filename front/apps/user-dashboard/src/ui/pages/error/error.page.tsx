@@ -1,4 +1,4 @@
-function ErrorPage(): JSX.Element {
+export function ErrorPage(): JSX.Element {
   return (
     <div className="container">
       <h1 className="text-center">Une erreur est survenue</h1>
@@ -9,5 +9,3 @@ function ErrorPage(): JSX.Element {
     </div>
   );
 }
-
-export default ErrorPage;

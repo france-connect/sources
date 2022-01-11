@@ -6,6 +6,7 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 
 import { ApacheIgniteService } from './apache-ignite.service';
+import { ApacheIgniteInvalidSocketException } from './exceptions';
 
 describe('ApacheIgniteService', () => {
   let service: ApacheIgniteService;
@@ -20,6 +21,13 @@ describe('ApacheIgniteService', () => {
   };
 
   const igniteClientMock = {
+    _socket: {
+      _socket: {
+        _socket: {
+          setKeepAlive: jest.fn(),
+        },
+      },
+    },
     connect: jest.fn(),
     disconnect: jest.fn(),
     getCache: jest.fn(),
@@ -71,6 +79,10 @@ describe('ApacheIgniteService', () => {
   describe('onModuleInit', () => {
     const configMock = {
       endpoint: 'apache-ignite:1644',
+      socketKeepAlive: {
+        enable: true,
+        initialDelay: 150000,
+      },
     };
 
     beforeEach(() => {
@@ -122,6 +134,24 @@ describe('ApacheIgniteService', () => {
       // expect
       expect(igniteClientMock.connect).toHaveBeenCalledTimes(1);
       expect(igniteClientMock.connect).toHaveBeenCalledWith(configMock);
+    });
+
+    it('should set the keep alive of the socket', async () => {
+      // setup
+      service['setSocketKeepAlive'] = jest.fn();
+      ApacheIgniteService['IgniteClientConfigurationProxy'].mockReturnValueOnce(
+        configMock,
+      );
+
+      // action
+      await service['onModuleInit']();
+
+      // expect
+      expect(service['setSocketKeepAlive']).toHaveBeenCalledTimes(1);
+      expect(service['setSocketKeepAlive']).toHaveBeenCalledWith(
+        configMock.socketKeepAlive.enable,
+        configMock.socketKeepAlive.initialDelay,
+      );
     });
   });
 
@@ -256,6 +286,50 @@ describe('ApacheIgniteService', () => {
 
       // expect
       expect(loggerServiceMock.debug).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('setSocketKeepAlive', () => {
+    it('should set the keep alive of the low level NodeJs socket instance', () => {
+      // setup
+      const socketKeepAliveConfig = {
+        enable: true,
+        initialDelay: 150000,
+      };
+
+      // action
+      service['setSocketKeepAlive'](
+        socketKeepAliveConfig.enable,
+        socketKeepAliveConfig.initialDelay,
+      );
+
+      // expect
+      expect(
+        igniteClientMock._socket._socket._socket.setKeepAlive,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        igniteClientMock._socket._socket._socket.setKeepAlive,
+      ).toHaveBeenCalledWith(
+        socketKeepAliveConfig.enable,
+        socketKeepAliveConfig.initialDelay,
+      );
+    });
+
+    it('should throw an ApacheIgniteInvalidSocketException id there is no socket', () => {
+      // setup
+      service['igniteClient'] = { _socket: undefined };
+      const socketKeepAliveConfig = {
+        enable: true,
+        initialDelay: 150000,
+      };
+
+      // action
+      expect(() =>
+        service['setSocketKeepAlive'](
+          socketKeepAliveConfig.enable,
+          socketKeepAliveConfig.initialDelay,
+        ),
+      ).toThrow(ApacheIgniteInvalidSocketException);
     });
   });
 });

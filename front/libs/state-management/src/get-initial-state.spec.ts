@@ -1,4 +1,4 @@
-import getInitialState from './get-initial-state';
+import { getInitialState } from './get-initial-state';
 
 const mockStates = {
   mockState1: {

@@ -70,6 +70,7 @@
                 </p>
               <% }); %>
               <p id="info-acr">ACR value : <strong><%= locals.idpAcr %></strong></p>
+              <p id="info-amr">AMR value : <strong><%=locals.amr && locals.amr.join(' ') || 'N/A';%></strong></p>
 
             <% } else { %>
             <p class="col d-flex justify-content-center">

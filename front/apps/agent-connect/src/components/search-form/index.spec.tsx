@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react';
 
-import SearchFormComponent from './index';
+import { SearchFormComponent } from './index';
 
 describe('SearchFormComponent', () => {
   beforeEach(() => {
@@ -9,13 +9,13 @@ describe('SearchFormComponent', () => {
     jest.clearAllMocks();
   });
 
+  // given
+  const onChangeMock = jest.fn();
+
   it('should render a title above the search form', () => {
     // given
-    const props = {
-      label: 'mock input title',
-      onChange: jest.fn(),
-    };
-    const { getByText } = render(<SearchFormComponent {...props} />);
+
+    const { getByText } = render(<SearchFormComponent onChange={onChangeMock} />);
     // when
     const textElement = getByText('mock input title');
     // then
@@ -23,27 +23,17 @@ describe('SearchFormComponent', () => {
   });
 
   it('should render a text input, when user type will fire a change event', () => {
-    // given
-    const props = {
-      label: 'mock input title',
-      onChange: jest.fn(),
-    };
-    const { getByTestId } = render(<SearchFormComponent {...props} />);
+    const { getByTestId } = render(<SearchFormComponent onChange={onChangeMock} />);
     // when
     const inputElement = getByTestId('fi-search-term');
     fireEvent.change(inputElement, { target: { value: 'mock search value' } });
     // then
-    expect(props.onChange).toHaveBeenCalledTimes(1);
-    expect(props.onChange).toHaveBeenCalledWith('mock search value');
+    expect(onChangeMock).toHaveBeenCalledTimes(1);
+    expect(onChangeMock).toHaveBeenCalledWith('mock search value');
   });
 
   it('should call callback parameters when submitting form', () => {
-    // given
-    const props = {
-      label: 'mock input title',
-      onChange: jest.fn(),
-    };
-    const { getByTestId } = render(<SearchFormComponent {...props} />);
+    const { getByTestId } = render(<SearchFormComponent onChange={onChangeMock} />);
     // when
     const inputElement = getByTestId('fi-search-term');
     fireEvent.change(inputElement, {
@@ -53,7 +43,7 @@ describe('SearchFormComponent', () => {
     const submitButton = getByTestId('fi-search-term-submit-button');
     submitButton.click();
     // then
-    expect(props.onChange).toHaveBeenCalledTimes(1);
-    expect(props.onChange).toHaveBeenCalledWith('mock search value submit');
+    expect(onChangeMock).toHaveBeenCalledTimes(1);
+    expect(onChangeMock).toHaveBeenCalledWith('mock search value submit');
   });
 });

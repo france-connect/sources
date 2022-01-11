@@ -15,20 +15,14 @@
  - Permet de d'injecter des valeurs de tests pour le store redux
 
 */
-/* eslint
-  import/no-extraneous-dependencies: 0
-*/
-import {
-  render as rtlRender,
-  RenderOptions,
-  RenderResult,
-} from '@testing-library/react';
+// @TODO should be replaced by @fc/tests-utils
+import { render as rtlRender, RenderOptions, RenderResult } from '@testing-library/react';
 import { ReactElement } from 'react';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
 import { initialState as defaultInitialState } from './redux/config';
-import createRootReducer from './redux/reducers';
+import { createRootReducer } from './redux/reducers';
 
 type WrapperProps = {
   children: JSX.Element;

@@ -15,7 +15,7 @@ const FUSE_SEARCH_BASE_OPTIONS = {
   threshold: 0.1,
 };
 
-const searchTheTermInside =
+export const searchTheTermInside =
   (term: string) =>
   (ministries: Ministry[]): FuseResult[] | [] => {
     const fuse = new Fuse(ministries, FUSE_SEARCH_BASE_OPTIONS);
@@ -30,5 +30,3 @@ const searchTheTermInside =
     });
     return fuseResults;
   };
-
-export default searchTheTermInside;

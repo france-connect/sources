@@ -1,6 +1,6 @@
 import { CsvParserStream, parseFile, Row } from '@fast-csv/parse';
+import { mocked } from 'jest-mock';
 import { PassThrough } from 'stream';
-import { mocked } from 'ts-jest/utils';
 
 import { parseCsv } from './csv-parser';
 

@@ -9,23 +9,19 @@ type RemoveButtonProps = {
   uid: string;
 };
 
-const RemoveButtonComponent = React.memo(
-  ({ uid }: RemoveButtonProps): JSX.Element => {
-    const dispatch = useDispatch();
+export const RemoveButtonComponent = React.memo(({ uid }: RemoveButtonProps): JSX.Element => {
+  const dispatch = useDispatch();
 
-    const onClickRemoveButton = useCallback(() => {
-      const action = removeIdentityProvider(uid);
-      dispatch(action);
-    }, [dispatch, uid]);
+  const onClickRemoveButton = useCallback(() => {
+    const action = removeIdentityProvider(uid);
+    dispatch(action);
+  }, [dispatch, uid]);
 
-    return (
-      <button className="m8 fr-text-sm" type="button" onClick={onClickRemoveButton}>
-        Supprimer de cette liste
-      </button>
-    );
-  },
-);
+  return (
+    <button className="m8 fr-text-sm" type="button" onClick={onClickRemoveButton}>
+      Supprimer de cette liste
+    </button>
+  );
+});
 
 RemoveButtonComponent.displayName = 'RemoveButtonComponent';
-
-export default RemoveButtonComponent;

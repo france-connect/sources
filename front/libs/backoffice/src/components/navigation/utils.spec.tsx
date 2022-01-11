@@ -1,19 +1,16 @@
 import { NavigationItem } from '@fc/routing';
 
-import {
-  filterRouteHasOrderProperty,
-  sortNavigationRouteByOrder,
-} from './utils';
+import { filterRouteHasOrderProperty, sortNavigationRouteByOrder } from './utils';
 
 const routes = [
   {
     // eslint-disable-next-line react/display-name
     component: () => <div />,
+    exact: false,
     id: 'mock-mock-id',
     label: 'mock',
     order: 1,
     path: '/mock/:id',
-    exact: false,
   },
   {
     // eslint-disable-next-line react/display-name

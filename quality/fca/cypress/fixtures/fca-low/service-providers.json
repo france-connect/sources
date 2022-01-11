@@ -8,6 +8,9 @@
     "mocked": true,
     "url": "https://fsa1-low.{{TEST_ENV}}.dev-franceconnect.fr",
     "acrValue": "eidas1",
+    "claims": [
+      "amr"
+    ],
     "selectors": {
       "fcaButton": "#call-authorize-button",
       "logoutButton": ".nav-logout"
@@ -22,6 +25,9 @@
     "mocked": true,
     "url": "https://fsa2-low.{{TEST_ENV}}.dev-franceconnect.fr",
     "acrValue": "eidas1",
+    "claims": [
+      "amr"
+    ],
     "selectors": {
       "fcaButton": "#call-authorize-button",
       "logoutButton": ".nav-logout"
@@ -34,6 +40,9 @@
     "mocked": true,
     "url": "https://fsa4-low.{{TEST_ENV}}.dev-franceconnect.fr",
     "acrValue": "eidas1",
+    "claims": [
+      "amr"
+    ],
     "selectors": {
       "fcaButton": "#call-authorize-button",
       "logoutButton": ".nav-logout"

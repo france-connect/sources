@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 
+import { mocked } from 'jest-mock';
 import * as moment from 'moment';
-import { mocked } from 'ts-jest/utils';
 
 import { Test, TestingModule } from '@nestjs/testing';
 

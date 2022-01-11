@@ -1,31 +1,16 @@
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { lastValueFrom } from 'rxjs';
+
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
-import { HttpProxyRequest, HttpProxyResponse } from '../interfaces';
+import { BridgePayload, BridgeResponse } from '@fc/hybridge-http-proxy';
+import { LoggerService } from '@fc/logger';
 
 @Injectable()
 export class CsmrHttpProxyService {
-  /**
-   * this function is just a mock until we create the calls.
-   */
-  /* istanbul ignore next */
-  private async fakeCall(
-    options: HttpProxyRequest,
-  ): Promise<HttpProxyResponse> {
-    const response: HttpProxyResponse<any> = {
-      status: 200,
-      message: 'Success',
-      headers: {
-        'content-type': 'text/html; charset=UTF-8',
-      },
-      data: null,
-    };
-
-    if (options.data) {
-      response.data = {
-        hello: 'world',
-      };
-    }
-    return response;
+  constructor(private logger: LoggerService, private http: HttpService) {
+    this.logger.setContext(this.constructor.name);
   }
 
   /**
@@ -33,19 +18,36 @@ export class CsmrHttpProxyService {
    * @param {HttpProxyRequest} options
    * @returns {Promise<HttpProxyResponse>}
    */
-  async forwardRequest(options: HttpProxyRequest): Promise<HttpProxyResponse> {
-    const {
-      status,
-      message,
-      headers: responseHeaders,
-      data,
-    } = await this.fakeCall(options);
+  async forwardRequest(commands: BridgePayload): Promise<BridgeResponse> {
+    this.logger.debug('forwardRequest()');
+    this.logger.trace({ commands });
 
-    return {
+    const {
+      url,
+      method,
+      headers: requestHeaders,
+      data: requestData,
+    } = commands;
+
+    const config: AxiosRequestConfig = {
+      headers: requestHeaders,
+    };
+
+    const options: Array<unknown> = [url, requestData, config].filter(Boolean);
+
+    const { status, statusText, headers, data } = await lastValueFrom<
+      AxiosResponse<string>
+    >(this.http[method](...options));
+
+    const response: BridgeResponse = {
       status,
       data,
-      message,
-      headers: responseHeaders,
+      statusText,
+      headers,
     };
+
+    this.logger.trace({ response });
+
+    return response;
   }
 }

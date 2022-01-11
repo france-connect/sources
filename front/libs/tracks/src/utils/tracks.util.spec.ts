@@ -1,12 +1,12 @@
 import { DateTime } from 'luxon';
-import { TracksConfig } from '../interfaces';
 
+import { EidasToLabel } from '../enums';
+import { EnhancedTrack, TrackList, TracksConfig } from '../interfaces';
 import {
   groupTracksByMonth,
-  createUniqueGroupKeyFromTrackDate,
-  transformTrackToEnhanced,
   orderGroupByKeyAsc,
-  orderTracksByDateAsc,
+  orderTracksByDateDesc,
+  transformTrackToEnhanced,
 } from './tracks.util';
 
 // Fixtures
@@ -16,9 +16,9 @@ const track1 = {
   city: 'Acme City',
   country: 'Acme Country',
   date: dateTrack1,
-  datetime: DateTime.fromISO(dateTrack1),
+  datetime: DateTime.fromISO(dateTrack1, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO',
-  spAcr: 'eidas1',
+  spAcr: 'eidas1' as keyof typeof EidasToLabel,
   spId: '01',
   spName: 'Acme Service Provider',
   trackId: 'trackId-1',
@@ -30,9 +30,9 @@ const track2 = {
   city: 'Acme City',
   country: 'Acme Country',
   date: dateTrack2,
-  datetime: DateTime.fromISO(dateTrack2),
+  datetime: DateTime.fromISO(dateTrack2, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO',
-  spAcr: 'eidas1',
+  spAcr: 'eidas1' as keyof typeof EidasToLabel,
   spId: '02',
   spName: 'Acme Service Provider',
   trackId: 'trackId-2',
@@ -44,9 +44,9 @@ const track3 = {
   city: 'Acme City',
   country: 'Acme Country',
   date: dateTrack3,
-  datetime: DateTime.fromISO(dateTrack3),
+  datetime: DateTime.fromISO(dateTrack3, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO',
-  spAcr: 'eidas1',
+  spAcr: 'eidas1' as keyof typeof EidasToLabel,
   spId: '03',
   spName: 'Acme Service Provider',
   trackId: 'trackId-3',
@@ -59,11 +59,10 @@ const configMock = {
 describe('groupTracksByMonth', () => {
   it('doit retourner une track dans un seul groupe', () => {
     // when
-    const results = groupTracksByMonth(configMock, [], track1, 0);
+    const results = groupTracksByMonth(configMock)([], track1, 0);
     // then
-    expect(results.length).toStrictEqual(1);
-    expect(results[0][0]).toStrictEqual(1317420000000);
-    expect(results[0][1].tracks.length).toStrictEqual(1);
+    expect(results).toHaveLength(1);
+    expect(results[0][1].tracks).toHaveLength(1);
     expect(results[0][1].tracks[0]).toStrictEqual(track1);
     expect(results[0][1].label).toStrictEqual('October 2011');
   });
@@ -72,14 +71,10 @@ describe('groupTracksByMonth', () => {
     // given
     const tracks = [track1, track2];
     // when
-    const results = tracks.reduce(
-      groupTracksByMonth.bind(null, configMock),
-      [],
-    );
+    const results = tracks.reduce(groupTracksByMonth(configMock), []);
     // then
-    expect(results.length).toStrictEqual(1);
-    expect(results[0][0]).toStrictEqual(1317420000000);
-    expect(results[0][1].tracks.length).toStrictEqual(2);
+    expect(results).toHaveLength(1);
+    expect(results[0][1].tracks).toHaveLength(2);
     expect(results[0][1].tracks[0]).toStrictEqual(track1);
     expect(results[0][1].tracks[1]).toStrictEqual(track2);
     expect(results[0][1].label).toStrictEqual('October 2011');
@@ -89,61 +84,51 @@ describe('groupTracksByMonth', () => {
     // given
     const tracks = [track1, track2, track3];
     // when
-    const results = tracks.reduce(
-      groupTracksByMonth.bind(null, configMock),
-      [],
-    );
+    const results = tracks.reduce(groupTracksByMonth(configMock), []);
     // then
-    expect(results.length).toStrictEqual(2);
+    expect(results).toHaveLength(2);
     // first group
-    expect(results[0][0]).toStrictEqual(1317420000000);
-    expect(results[0][1].tracks.length).toStrictEqual(2);
+    expect(results[0][1].tracks).toHaveLength(2);
     expect(results[0][1].tracks[0]).toStrictEqual(track1);
     expect(results[0][1].tracks[1]).toStrictEqual(track2);
     expect(results[0][1].label).toStrictEqual('October 2011');
     // seconds group
-    expect(results[1][0]).toStrictEqual(1349042400000);
-    expect(results[1][1].tracks.length).toStrictEqual(1);
+    expect(results[1][1].tracks).toHaveLength(1);
     expect(results[1][1].tracks[0]).toStrictEqual(track3);
     expect(results[1][1].label).toStrictEqual('October 2012');
-  });
-});
-
-describe('createUniqueGroupKeyFromTrackDate', () => {
-  it("doit retourner un timestamp unix(ms) à partir d'un objet date luxon (mois+année)", () => {
-    // when
-    const result = createUniqueGroupKeyFromTrackDate(track1);
-    // then
-    expect(result).toStrictEqual(1317420000000);
   });
 });
 
 describe('orderGroupByKeyAsc', () => {
   it('doit retourner un tableau ordonner par la clé unique (timestamp)', () => {
     // given
-    const sortable = [[456] as any, [789] as any, [123] as any];
+    const sortable = [[456, {}] as TrackList, [789, {}] as TrackList, [123, {}] as TrackList];
     // when
     const result = sortable.sort(orderGroupByKeyAsc);
     // then
-    expect(result).toStrictEqual([[789], [456], [123]]);
+    expect(result).toStrictEqual([
+      [789, {}],
+      [456, {}],
+      [123, {}],
+    ]);
   });
 });
 
-describe('orderTracksByDateAsc', () => {
+describe('orderTracksByDateDesc', () => {
   it('doit retourner un tableau ordonner par la clé unique (timestamp)', () => {
     // given
     const sortable = [
-      { date: '2012-10-06T14:48:00.000Z' } as any,
-      { date: '2011-10-05T14:48:00.000Z' } as any,
-      { date: '2012-10-05T14:48:00.000Z' } as any,
+      { date: '2011-09-02T14:48:00.000Z' } as EnhancedTrack,
+      { date: '2011-10-06T14:48:00.000Z' } as EnhancedTrack,
+      { date: '2011-09-01T14:48:00.000Z' } as EnhancedTrack,
     ];
     // when
-    const result = sortable.sort(orderTracksByDateAsc);
+    const result = sortable.sort(orderTracksByDateDesc);
     // then
     expect(result).toStrictEqual([
-      { date: '2012-10-06T14:48:00.000Z' },
-      { date: '2012-10-05T14:48:00.000Z' },
-      { date: '2011-10-05T14:48:00.000Z' },
+      { date: '2011-10-06T14:48:00.000Z' },
+      { date: '2011-09-02T14:48:00.000Z' },
+      { date: '2011-09-01T14:48:00.000Z' },
     ]);
   });
 });

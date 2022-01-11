@@ -1,0 +1,7 @@
+#! /bin/bash
+
+APP=$1
+
+cp ../../tsconfig.app.json tsconfig.json
+
+craco start

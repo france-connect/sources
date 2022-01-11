@@ -1,6 +1,12 @@
 /* istanbul ignore file */
 
 // declarative file
-export { default as TracksConfig } from './tracks';
-export { default as LayoutConfig } from './layout';
-export * from './oidc-client';
+import { Layout } from './layout';
+import { OidcClient } from './oidc-client';
+import { Tracks } from './tracks';
+
+export const AppConfig = {
+  Layout,
+  OidcClient,
+  Tracks,
+};

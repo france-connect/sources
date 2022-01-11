@@ -12,7 +12,9 @@
       "organizational_unit",
       "belonging_population",
       "phone",
-      "chorusdt"
+      "chorusdt",
+      "idp_id",
+      "idp_acr"
     ]
   },
   {
@@ -58,6 +60,28 @@
       "usual_name",
       "email",
       "belonging_population"
+    ]
+  },
+  {
+    "type": "obligatoires et idp_id",
+    "scopes": [
+      "openid",
+      "uid",
+      "given_name",
+      "usual_name",
+      "email",
+      "idp_id"
+    ]
+  },
+  {
+    "type": "obligatoires et idp_acr",
+    "scopes": [
+      "openid",
+      "uid",
+      "given_name",
+      "usual_name",
+      "email",
+      "idp_acr"
     ]
   },
   {

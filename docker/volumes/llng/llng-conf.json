@@ -421,7 +421,7 @@
       "Directory":"/var/lib/lemonldap-ng/psessions",
       "LockDirectory":"/var/lib/lemonldap-ng/psessions/lock"
    },
-   "port":-1,
+   "port": 443,
    "portal":"https://auth.llng.docker.dev-franceconnect.fr/",
    "portalAntiFrame":1,
    "portalCheckLogins":1,

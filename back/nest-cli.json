@@ -269,13 +269,13 @@
         "tsConfigPath": "instances/csmr-tracks/tsconfig.app.json"
       }
     },
-    "rie-bridge-proxy-instance": {
+    "bridge-http-proxy-rie-instance": {
       "type": "application",
-      "root": "instances/rie-bridge-proxy",
+      "root": "instances/bridge-http-proxy-rie",
       "entryFile": "main",
-      "sourceRoot": "instances/rie-bridge-proxy/src",
+      "sourceRoot": "instances/bridge-http-proxy-rie/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/rie-bridge-proxy/tsconfig.app.json"
+        "tsConfigPath": "instances/bridge-http-proxy-rie/tsconfig.app.json"
       }
     },
     "user-preferences-fcp-high": {
@@ -791,13 +791,13 @@
         "tsConfigPath": "libs/csv/tsconfig.lib.json"
       }
     },
-    "rie-bridge-proxy": {
+    "bridge-http-proxy": {
       "type": "library",
-      "root": "apps/rie-bridge-proxy",
+      "root": "apps/bridge-http-proxy",
       "entryFile": "index",
-      "sourceRoot": "apps/rie-bridge-proxy/src",
+      "sourceRoot": "apps/bridge-http-proxy/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/rie-bridge-proxy/tsconfig.lib.json"
+        "tsConfigPath": "apps/bridge-http-proxy/tsconfig.lib.json"
       }
     },
     "csmr-http-proxy": {
@@ -836,13 +836,13 @@
         "tsConfigPath": "libs/tracks/tsconfig.lib.json"
       }
     },
-    "rie": {
+    "hybridge-http-proxy": {
       "type": "library",
-      "root": "libs/rie",
+      "root": "libs/hybridge-http-proxy",
       "entryFile": "index",
-      "sourceRoot": "libs/rie/src",
+      "sourceRoot": "libs/hybridge-http-proxy/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/rie/tsconfig.lib.json"
+        "tsConfigPath": "libs/hybridge-http-proxy/tsconfig.lib.json"
       }
     }
   }

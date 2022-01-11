@@ -9,15 +9,16 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { loadMinistries } from '../../redux/actions';
 import { RootState } from '../../types';
-import SpinLoader from './spin-loader';
+import { SpinLoaderComponent } from './spin-loader';
 
 type FCAApiContextProps = {
   children: ReactElement;
 };
 
-const FCAApiContextComponent = React.memo(
+export const FCAApiContextComponent = React.memo(
   ({ children }: FCAApiContextProps): JSX.Element => {
     const dispatch = useDispatch();
+
     const ministries = useSelector((state: RootState) => state.ministries);
     const [isMounted, setIsMounted] = useState(false);
 
@@ -34,7 +35,7 @@ const FCAApiContextComponent = React.memo(
 
     return (
       <React.Fragment>
-        {shouldShowLoader && <SpinLoader />}
+        {shouldShowLoader && <SpinLoaderComponent />}
         {!shouldShowLoader && children}
       </React.Fragment>
     );
@@ -42,5 +43,3 @@ const FCAApiContextComponent = React.memo(
 );
 
 FCAApiContextComponent.displayName = 'FCAApiContextComponent';
-
-export default FCAApiContextComponent;

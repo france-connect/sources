@@ -1,5 +1,5 @@
 #language: fr
-@usager @affichageFournisseurIdentité @fcpHigh
+@usager @affichageFournisseurIdentité @ci @fcpHigh
 Fonctionnalité: Affichage Fournisseur Identité
   # En tant qu'usager d'un fournisseur de service,
   # je veux visualiser la liste des fournisseurs d'identité disponibles

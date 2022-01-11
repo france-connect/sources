@@ -1,5 +1,5 @@
+import { mocked } from 'jest-mock';
 import { encode } from 'querystring';
-import { mocked } from 'ts-jest/utils';
 
 import { Test, TestingModule } from '@nestjs/testing';
 

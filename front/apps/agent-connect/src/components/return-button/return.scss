@@ -11,8 +11,7 @@ a.button {
 
   &.is-mobile {
     @include rem(height, 40px);
+
     border-radius: 4px;
   }
 }
-
-

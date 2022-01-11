@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionAcr @fcpLow
+@usager @connexionAcr @ci @fcpLow
 Fonctionnalité: Connexion ACR
   # En tant qu'usager d'un fournisseur de service,
   # je veux utiliser un niveau de sécurité spécifique lors de ma connexion

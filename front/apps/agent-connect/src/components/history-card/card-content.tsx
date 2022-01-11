@@ -4,8 +4,8 @@
  * @TODO #493 untested
  * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/493
  */
-import React from 'react';
 import classnames from 'classnames';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { useMediaQuery } from 'react-responsive';
 
@@ -18,7 +18,7 @@ type IdentityProviderCardProps = {
   identityProvider: IdentityProvider;
 };
 
-const IdentityProviderCardContentComponent = React.memo(
+export const IdentityProviderCardContentComponent = React.memo(
   ({ identityProvider }: IdentityProviderCardProps): JSX.Element => {
     const { active, name, uid } = identityProvider;
 
@@ -28,16 +28,15 @@ const IdentityProviderCardContentComponent = React.memo(
     );
 
     return (
-      <div className={classnames("flex-center rounded card-wrapper bg-blue-france-100", {"px24 pt24": gtTablet, "p24": !gtTablet})}>
+      <div
+        className={classnames('flex-center rounded card-wrapper bg-blue-france-100', {
+          p24: !gtTablet,
+          'px24 pt24': gtTablet,
+        })}>
         <div className="mb8 form-title">Mon compte</div>
         <RedirectToIdpFormComponent id={`fca-history-idp-${uid}`}>
           {redirectToIdentityProviderInputs.map(([inputKey, inputValue]) => (
-            <input
-              key={inputKey}
-              defaultValue={inputValue}
-              name={inputKey}
-              type="hidden"
-            />
+            <input key={inputKey} defaultValue={inputValue} name={inputKey} type="hidden" />
           ))}
           <button className="form-button is-bold fr-text-lead" disabled={!active} type="submit">
             {name}
@@ -48,7 +47,4 @@ const IdentityProviderCardContentComponent = React.memo(
   },
 );
 
-IdentityProviderCardContentComponent.displayName =
-  'IdentityProviderCardContentComponent';
-
-export default IdentityProviderCardContentComponent;
+IdentityProviderCardContentComponent.displayName = 'IdentityProviderCardContentComponent';

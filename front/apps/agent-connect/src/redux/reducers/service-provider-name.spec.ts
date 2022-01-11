@@ -1,5 +1,5 @@
 import { ACTION_TYPES } from '../../constants';
-import serviceProviderName from './service-provider-name';
+import { serviceProviderName } from './service-provider-name';
 
 describe('serviceProviderName', () => {
   describe('ACTION_TYPES.MINISTRY_LIST_LOAD_START', () => {

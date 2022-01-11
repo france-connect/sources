@@ -1,6 +1,6 @@
 import { ACTION_TYPES } from '../../constants';
 import { Ministry } from '../../types';
-import ministries from './ministries';
+import { ministries } from './ministries';
 
 const mockMinistries = [
   {

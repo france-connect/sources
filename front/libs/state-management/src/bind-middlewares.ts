@@ -1,8 +1,8 @@
-import { applyMiddleware, StoreEnhancer } from 'redux';
+import { applyMiddleware, Middleware, StoreEnhancer } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-const bindMiddlewares = (
-  middlewares: any,
+export const bindMiddlewares = (
+  middlewares: Middleware[],
   useReduxDevToolsExtension: boolean,
 ): StoreEnhancer => {
   const appliedMiddlewares = applyMiddleware(...middlewares);
@@ -13,5 +13,3 @@ const bindMiddlewares = (
   const composed = composeEnhancers(appliedMiddlewares);
   return composed;
 };
-
-export default bindMiddlewares;

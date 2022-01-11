@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'fs';
 
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 
 import { parseBoolean, parseJsonProperty } from '@fc/common';
 

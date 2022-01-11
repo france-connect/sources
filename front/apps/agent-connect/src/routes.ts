@@ -1,11 +1,11 @@
 /* istanbul ignore file */
 
 // declarative file
-import ErrorPage from './pages/error.page';
-import Homepage from './pages/homepage';
-import NotFoundPage from './pages/not-found.page';
+import { ErrorPage } from './pages/error.page';
+import { HomePage } from './pages/homepage';
+import { NotFoundPage } from './pages/not-found.page';
 
-const routes = [
+export const routes = [
   {
     component: ErrorPage,
     exact: true,
@@ -14,7 +14,7 @@ const routes = [
     title: "Erreur lors de l'authentification",
   },
   {
-    component: Homepage,
+    component: HomePage,
     exact: true,
     id: 'homepage',
     path: '/api/v2/interaction/:uid',
@@ -28,5 +28,3 @@ const routes = [
     title: '404',
   },
 ];
-
-export default routes;

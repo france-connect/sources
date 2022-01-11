@@ -22,5 +22,3 @@ export const useSearch = (): SearchHook => {
 
   return { onFormChange, results, searchTerm };
 };
-
-export default useSearch;

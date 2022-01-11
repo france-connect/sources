@@ -52,16 +52,29 @@ export class UserDashboardController {
   async getUserInfos(
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
-  ): Promise<{ userInfos: { givenName: string; familyName: string } }> {
+  ): Promise<{
+    userinfos: {
+      // OIDC defined variable
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      given_name: string;
+      // OIDC defined variable
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      family_name: string;
+    };
+  }> {
     const session = await sessionOidc.get();
     if (!session) {
       throw new UnauthorizedException();
     }
     const { idpIdentity } = session;
-    const userInfos = {
-      familyName: idpIdentity?.family_name,
-      givenName: idpIdentity?.given_name,
+    const userinfos = {
+      // OIDC defined variable
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      family_name: idpIdentity?.family_name,
+      // OIDC defined variable
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      given_name: idpIdentity?.given_name,
     };
-    return { userInfos };
+    return { userinfos };
   }
 }

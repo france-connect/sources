@@ -4,16 +4,16 @@
  * Tested with cypress snapshots
  */
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { RiQuestionFill as QuestionIcon } from 'react-icons/ri';
+import { useSelector } from 'react-redux';
 
-import FCAApiContext from '../../components/fca-api-context';
+import { FCAApiContextComponent } from '../../components/fca-api-context';
 import { RootState } from '../../types';
-import IdentityProvidersUserHistory from './idp-user-history';
-import Search from './search';
-import ServiceProviderName from './sp-name';
+import { IdentityProvidersUserHistoryComponent } from './idp-user-history';
+import { SearchComponent } from './search';
+import { ServiceProviderNameComponent } from './sp-name';
 
-const HomePage = React.memo((): JSX.Element => {
+export const HomePage = React.memo((): JSX.Element => {
   const identityProvidersHistory = useSelector(
     (state: RootState) => state.identityProvidersHistory,
   );
@@ -21,32 +21,24 @@ const HomePage = React.memo((): JSX.Element => {
   const showUserHistory = identityProvidersHistory?.length > 0;
 
   return (
-    <FCAApiContext>
+    <FCAApiContextComponent>
       <React.Fragment>
-        <ServiceProviderName />
+        <ServiceProviderNameComponent />
         {showUserHistory && (
-          <IdentityProvidersUserHistory items={identityProvidersHistory} />
+          <IdentityProvidersUserHistoryComponent items={identityProvidersHistory} />
         )}
-        <Search />
+        <SearchComponent />
         <div className="mt48">
           <a
             href="https://agentconnect.gouv.fr/aide"
-            className="is-g600 flex-columns flex-center items-center"
-          >
-            <QuestionIcon
-              color="#0579EE"
-              size="20"
-              role="img"
-              className="mr4"
-            />
+            className="is-g600 flex-columns flex-center items-center">
+            <QuestionIcon color="#0579EE" size="20" role="img" className="mr4" />
             J’ai besoin d’aide
           </a>
         </div>
       </React.Fragment>
-    </FCAApiContext>
+    </FCAApiContextComponent>
   );
 });
 
 HomePage.displayName = 'HomePage';
-
-export default HomePage;

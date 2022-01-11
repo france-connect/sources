@@ -2,7 +2,7 @@ import { applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { mocked } from 'ts-jest/utils';
 
-import bindMiddlewares from './bind-middlewares';
+import { bindMiddlewares } from './bind-middlewares';
 
 jest.mock('redux');
 jest.mock('redux-devtools-extension');

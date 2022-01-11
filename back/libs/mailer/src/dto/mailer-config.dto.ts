@@ -1,15 +1,21 @@
+/* istanbul ignore file */
+
+// Declarative code
 import { Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
+  IsBoolean,
   IsEmail,
+  IsNumber,
   IsObject,
   IsString,
   NotContains,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
-type MailerType = 'logs' | 'mailjet';
+type MailerType = 'logs' | 'smtp';
 
 export class MailFrom {
   @IsEmail()
@@ -27,10 +33,18 @@ export class MailTo {
   @IsString()
   readonly name: string;
 }
-
-class MailjetOptions {
+class SmtpOptions {
   @IsString()
   readonly proxyUrl: string;
+
+  @IsString()
+  readonly host: string;
+
+  @IsNumber()
+  readonly port: number;
+
+  @IsBoolean()
+  readonly secure: boolean;
 }
 
 export class MailerConfig {
@@ -42,18 +56,13 @@ export class MailerConfig {
   @IsString()
   readonly transport: MailerType;
 
-  @IsString()
-  readonly key: string;
-
-  @IsString()
-  readonly secret: string;
-
   @ValidateNested()
-  @Type(/* istanbul ignore next */ () => MailjetOptions)
-  readonly options: MailjetOptions;
+  @Type(() => SmtpOptions)
+  @ValidateIf(({ transport }) => transport === 'smtp')
+  readonly options: SmtpOptions;
 
   @IsObject()
   @ValidateNested()
-  @Type(/* istanbul ignore next */ () => MailFrom)
+  @Type(() => MailFrom)
   readonly from: MailFrom;
 }
