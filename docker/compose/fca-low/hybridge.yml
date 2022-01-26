@@ -48,6 +48,11 @@ services:
   ##   RIE network
   ##
   ####################
+  
+  squid-rie:
+    image: ${FC_DOCKER_REGISTRY}/squid:4.6
+    networks:
+      - rie
 
   csmr-rie:
     hostname: csmr-rie
@@ -56,6 +61,7 @@ services:
     working_dir: /var/www/app
     depends_on:
       - broker
+      - squid-rie
     volumes:
       - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
       - '${VOLUMES_DIR}/app:/opt/scripts'
@@ -73,7 +79,9 @@ services:
     command: 'pm2 logs'
 
   fia-llng-low:
-    image: coudot/lemonldap-ng:2.0.13
+    build:
+      context: '${WORKING_DIR}'
+      dockerfile: '${WORKING_DIR}/builds/lemonldap/Dockerfile'
     volumes:
       - '${VOLUMES_DIR}/llng/scripts/:/scripts:ro'
       - '${VOLUMES_DIR}/llng/llng-conf.json:/llng-conf.json:ro'
@@ -82,3 +90,26 @@ services:
     networks:
       - rie
 
+  fia-rie-low:
+    hostname: fia-rie-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - "redis-pwd"
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/fca-low/mocks/idp/databases:/var/databases"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fca-low/.env/fia-rie-low.env"
+    ports:
+      - 9242:9242
+    tty: true
+    networks:
+      - rie
+    command: "pm2 logs"

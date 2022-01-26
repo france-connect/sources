@@ -11,7 +11,7 @@ function join_by { local IFS="$1"; shift; echo "$*"; }
 
 #### Global Variables:
 COMPOSE_PROJECT_NAME=fc
-DEFAULT_NODE_VERSION=v14.18.1
+DEFAULT_NODE_VERSION=v14.18.2
 COMPOSE_DIR="$FC_ROOT/fc/docker/compose"
 COMPOSE_FILES=$(find $COMPOSE_DIR -name "*.yml")
 VOLUMES_DIR="$FC_ROOT/fc/docker/volumes"
@@ -448,7 +448,7 @@ case "$action" in
       exploitation-fca-low exploit-fcp-high-back exploit-fca-low-back core-fcp-low \
       fsp1-low fip1-low fip2-low fip3-low exploit-fcp-high-front exploit-fca-low-front bridge-proxy-rie \
       exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
-      csmr-rie
+      csmr-rie fia-rie-low
     ;;
   exec)
     _exec $@
@@ -499,7 +499,7 @@ case "$action" in
     eidas-bridge exploitation-fca-low exploit-fcp-high-back exploit-fcp-high-front \
     exploit-fca-low-back exploit-fca-low-front exploit-fcp-high-fi-mock bridge-proxy-rie \
     exploit-fca-low-fi-mock core-fcp-low fsp1-low fip1-low fip2-low fip3-low\
-    csmr-rie
+    csmr-rie fia-rie-low
     ;;
   reset-db-core-fcp-high)
     _reset_db_fcp_high $@
@@ -536,7 +536,7 @@ case "$action" in
       exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
       fsa1-low fsa2-low fsa3-low fsa4-low \
       fia1-low fia2-low fia4-low fia5-low \
-      csmr-rie
+      csmr-rie fia-rie-low
     ;;
   # -- stop all up's containers (FCP and/or FCA)
   stop-all)
@@ -555,6 +555,7 @@ case "$action" in
     exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
     fsa1-low fsa2-low fsa3-low fsa4-low \
     fia1-low fia2-low fia4-low fia5-low \
+    csmr-rie fia-rie-low
     ;;
   test)
     _test $@
@@ -563,7 +564,7 @@ case "$action" in
     _test rnipp core-fcp-high exploitation-high core-fca-low fca-low-front eidas-bridge \
     exploitation-fca-low exploit-fcp-high-back exploit-fca-low-back exploit-fca-low-front \
     exploit-fcp-high-fi-mock exploit-fca-low-fi-mock core-fcp-low fsp1-low \
-    fip1-low fip2-low fip3-low bridge-proxy-rie csmr-rie
+    fip1-low fip2-low fip3-low bridge-proxy-rie csmr-rie fia-rie-low
     ;;
   e2e)
     _e2e $@

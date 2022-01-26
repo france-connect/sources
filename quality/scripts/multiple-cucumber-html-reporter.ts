@@ -68,7 +68,7 @@ const customData = {
 const metadata = {
   browser: {
     name: 'chrome',
-    version: '91',
+    version: '96',
   },
   device,
   platform: {

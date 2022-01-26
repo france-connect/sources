@@ -180,6 +180,21 @@ yarn report:prepare
 CYPRESS_PLATFORM=fcp-high CYPRESS_TEST_ENV=integ01 yarn report:generate
 ```
 
+## Accessibility Validation
+
+We are running accessibility validation using the cypress plugin [cypress-axe](https://github.com/component-driven/cypress-axe).
+
+Those tests are run alongside the other functional tests on the CI job.
+
+### Run all the accessibility validations skipping the failures
+
+It is possible to run all the accessibility validations without stopping on the first error, by defining the environment variable `skipFailures` when starting Cypress.
+
+```shell
+yarn start:high --env skipFailures=true
+
+```
+
 ## Visual Validation
 
 We are running visual validation using the cypress plugin [cypress-image-snapshot](https://github.com/jaredpalmer/cypress-image-snapshot).

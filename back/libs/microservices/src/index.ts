@@ -16,3 +16,10 @@ export const HttpProxyProtocol = {
     HTTP_PROXY: 'HTTP_PROXY',
   },
 };
+
+export const UserPreferencesFcpProtocol = {
+  Commands: {
+    GET_IDP_SETTINGS: 'GET_IDP_SETTINGS',
+    SET_IDP_SETTINGS: 'SET_IDP_SETTINGS',
+  },
+};

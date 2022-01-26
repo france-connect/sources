@@ -117,13 +117,17 @@
 
 | Code | Message utilisateur | Description |
 |---|---|---|
+| [Y230001](../libs/apache-ignite/src/exceptions/invalid-socket.exception.ts "ApacheIgniteInvalidSocketException") | Invalid socket, unable to set keep alive. | Le socket entre le bridge et le cache apache ignite n&#39;existe pas. Problème de connexion entre le bridge et le noeud. Impossible de mettre en place le keep alive. | 
+
+| Code | Message utilisateur | Description |
+|---|---|---|
 | [Y270001](../libs/mailer/src/exceptions/no-email.exception.ts "NoEmailException") | Les informations sur votre identité sont incomplètes et ne permettent pas de vous connecter à votre service. Veuillez contacter le support. | L&#39;identité de l&#39;utilisateur transmise par le fournisseur d&#39;identité ne contient pas de mail. Il n&#39;est pas possible de lui envoyer le mail de notification. Demander au FI de compléter l&#39;identité de l&#39;utilisateur | 
 | [Y270002](../libs/mailer/src/exceptions/mailer-notification-connect.exception.ts "MailerNotificationConnectException") | Une erreur technique est survenue, veuillez contacter le support. | Une erreur s&#39;est produite lors de l&#39;envoi du mail de notification. Cela peut être dû à des données obligatoires manquantes dans l&#39;identité de l&#39;usager ( given_name, family_name ), des données manquantes en session ( nom du FS ou du FI ), date du jour ou la configuration. Vérifier les données de l&#39;utilisateur. Si les données sont bien présentes, contacter le support N3. | 
 | [Y270003](../libs/mailer/src/exceptions/template-not-found.exception.ts "TemplateNotFoundException") | Une erreur technique est survenue, veuillez contacter le support. | Le modèle de mail n&#39;est pas présent. Il faut contacter d&#39;urgence le support N3 car aucun mail ne peut partir. | 
 
 | Code | Message utilisateur | Description |
 |---|---|---|
-| [Y300001](../apps/rie-bridge-proxy/src/exceptions/rie-broker-proxy-rabbitmq.exception.ts "RieBrokerProxyRabbitmqException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous | Une erreur technique est survenue au moment de la récupération des informations à travers le broker rabbitmq | 
-| [Y300002](../apps/rie-bridge-proxy/src/exceptions/rie-broker-proxy-variable-missing.exception.ts "RieBrokerProxyMissingVariableException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous | Il manque des variables dans la réponse renvoyée par le broker rabbitmq | 
-| [Y300003](../apps/rie-bridge-proxy/src/exceptions/rie-broker-proxy-csmr.exception.ts "RieBrokerProxyCsmrException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous | Une erreur technique est survenue dans le consumer au moment de la récupération des informations à travers le broker rabbitmq | 
+| [Y300001](../apps/bridge-http-proxy/src/exceptions/bridge-http-proxy-rabbitmq.exception.ts "BridgeHttpProxyRabbitmqException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous | Une erreur technique est survenue au moment de la récupération des informations à travers le broker rabbitmq | 
+| [Y300002](../apps/bridge-http-proxy/src/exceptions/bridge-http-proxy-variable-missing.exception.ts "BridgeHttpProxyMissingVariableException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous | Il manque des variables dans la réponse renvoyée par le broker rabbitmq | 
+| [Y300003](../apps/bridge-http-proxy/src/exceptions/bridge-http-proxy-csmr.exception.ts "BridgeHttpProxyCsmrException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous | Une erreur technique est survenue dans le consumer au moment de la récupération des informations à travers le broker rabbitmq | 
 

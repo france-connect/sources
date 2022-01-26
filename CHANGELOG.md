@@ -4,11 +4,35 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.77.0 & v3.78.0
+
+### Features
+
+- [User Dashboard] The backend consumer can read and edit user preferences regarding IdPs
+- [AgentConnect] Now the RIE consumer can use a GLOBAL_AGENT_HTTP_PROXY
+
+### Fixes
+
+- [AgentConnect]
+  - Rename `build:bridge-http-proxy` yarn command to `build:bridge-http-proxy-rie`
+  - Better error handling for `hybridge-http-proxy`
+
+### Hardening & QA
+
+- Upgrade cypress to 9.2.0
+- Upgrade NodeJS to 14.18.2
+- [AgentConnect] Update integration test data
+- [FranceConnect+] Add more accessibility and E2E to test its resilience
+
+## v3.76.1 (🔥 hotfix 🔥)
+
+- Fixed notification mail compatibility with yahoo mailer
+
 ## v3.75.0 & v3.76.0 🎉 Happy new year ! 🎉
 
 ### Features
 
-- [AgentConnect] 
+- [AgentConnect]
   - A new scope and a new claim `idp_id` are now available for the SP to know which IdP was used by the agent
   - A new scope and a new claim `idp_acr` are now available for the SP to know which acr value was sent by the Idp
   - A new claim `amr` is now available for the SP to know which authentication method was used

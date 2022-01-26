@@ -98,6 +98,7 @@ export class BridgeHttpProxyController {
       validationOptions,
     );
     if (dtoProtocolErrors.length) {
+      this.logger.trace({ dtoProtocolErrors });
       throw new BridgeHttpProxyMissingVariableException();
     }
 
@@ -116,6 +117,7 @@ export class BridgeHttpProxyController {
       validationOptions,
     );
     if (dtoProtocolErrors.length) {
+      this.logger.trace({ dtoProtocolErrors });
       throw new BridgeHttpProxyMissingVariableException();
     }
 

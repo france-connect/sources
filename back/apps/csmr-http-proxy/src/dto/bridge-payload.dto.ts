@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { AxiosResponseHeaders } from 'axios';
 import { Transform } from 'class-transformer';
 import { IsIn, IsObject, IsOptional, IsString, IsUrl } from 'class-validator';
 
@@ -11,12 +12,15 @@ export class BridgePayloadDto implements BridgePayload {
   readonly url: string;
 
   @IsIn(['get', 'post'])
-  @Transform(({ value }) => value.toLowerCase())
+  @Transform(
+    /* istanbul ignore next */
+    ({ value }) => value.toLowerCase(),
+  )
   readonly method: string;
 
   @IsObject()
   @ValidateHttpHeaders()
-  readonly headers: Record<string, string>;
+  readonly headers: AxiosResponseHeaders;
 
   /**
    * this parameter is voluntary abstract.

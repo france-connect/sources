@@ -10,7 +10,7 @@ fi
 function join_by { local IFS="$1"; shift; echo "$*"; }
 
 #### Global Variables:
-DEFAULT_NODE_VERSION=v14.18.0
+DEFAULT_NODE_VERSION=v14.18.2
 COMPOSE_DIR="$FC_ROOT/fc/docker/compose"
 COMPOSE_FILES=$(find $COMPOSE_DIR -name "*.yml")
 VOLUMES_DIR="$FC_ROOT/fc/docker/volumes"

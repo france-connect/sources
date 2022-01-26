@@ -24,7 +24,7 @@
         <main role="main">
           <h1>Je choisis un moyen pour me connecter sur:</h1>
           <h2><%= locals.spName %></h2>
-          <div id="idp-list" class="main__providers">
+          <section title="liste des fournisseurs d'identité" id="idp-list" class="main__providers">
             <% locals.providers.filter(p => p.display).filter(p => p.uid !== 'eidas-bridge').forEach(provider => { %>
               <form  method="POST" action="/api/v2/redirect-to-idp" id="fs-request-<%= provider.uid %>" name="fs-request">
                 <div class="identity-provider">
@@ -38,8 +38,8 @@
                     </span>
                   </button>
                 </div>
-                <input type="hidden" name="providerUid" id="providerUid" value="<%= provider.uid %>" />
-                <input type="hidden" name="uid" id="uid" value="<%= locals.uid %>" />
+                <input type="hidden" name="providerUid" value="<%= provider.uid %>" />
+                <input type="hidden" name="uid" value="<%= locals.uid %>" />
                 <input type="hidden" name="acr_values" value="<%= params.acr_values %>" />
                 <input type="hidden" name="scope" value="<%= locals.scope %>" />
                 <input type="hidden" name="csrfToken" value="<%= locals.csrfToken %>" />
@@ -66,8 +66,8 @@
             </form>
           <% } %>
 
-          </div>
-          <div class="tuto-container" - role="contentinfo">
+          </section>
+          <section title="tutoriel de FranceConnect+" id="tutoriel" class="tuto-container">
             <h3>Pourquoi je ne retrouve pas mes comptes habituels ?</h3>
             <div class="logos-container">
               <img src="/img/logo-impots-couleurs.svg" alt="impots" />
@@ -79,10 +79,10 @@
               FranceConnect+ est la nouvelle solution FranceConnect qui vous permet d’accéder à encore plus de démarches en ligne.
               Le service auquel vous souhaitez accéder nécessite l’utilisation d’un compte ayant un niveau de sécurité plus élevé.
             </p>
-              <button id="tuto-numeric-identity">
-                Comment créer une identité numérique
-              </button>
-            </div>
+            <button id="tuto-numeric-identity">
+              Comment créer une identité numérique
+            </button>
+          </section>
         </main>
       </div>
     </div>

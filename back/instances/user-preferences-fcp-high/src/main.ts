@@ -2,9 +2,10 @@
 
 // Not to be tested
 import { NestFactory } from '@nestjs/core';
-import { MicroserviceOptions } from '@nestjs/microservices';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 import { ConfigService } from '@fc/config';
+import { RabbitmqConfig } from '@fc/rabbitmq';
 import { UserPreferencesFcpConfig } from '@fc/user-preferences-fcp';
 
 import { AppModule } from './app.module';
@@ -17,14 +18,20 @@ async function bootstrap() {
   };
 
   const configService = new ConfigService(configOptions);
+  const options = configService.get<RabbitmqConfig>('Broker');
 
   const appModule = AppModule.forRoot(configService);
 
   const consumer = await NestFactory.createMicroservice<MicroserviceOptions>(
     appModule,
+    {
+      transport: Transport.RMQ,
+      options,
+    },
   );
 
   await consumer.listen();
+  console.log(`Consumer is listening "${options.queue}" queue`);
 }
 
 bootstrap();

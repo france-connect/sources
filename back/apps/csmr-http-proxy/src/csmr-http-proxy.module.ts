@@ -5,6 +5,7 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
+import { HttpProxyModule } from '@fc/http-proxy';
 
 import { rawTransform, validateStatus } from './config';
 import { CsmrHttpProxyController } from './controllers';
@@ -13,7 +14,7 @@ import { CsmrHttpProxyService } from './services';
 @Module({
   imports: [
     HttpModule.registerAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule, HttpProxyModule],
       useFactory: async (configService: ConfigService) => {
         const { requestTimeout: timeout } =
           configService.get('HttpProxyBroker');

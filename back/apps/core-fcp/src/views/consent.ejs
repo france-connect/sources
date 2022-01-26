@@ -13,7 +13,7 @@
     <% if (locals.scopes.every(scope => scope === 'openid')) { %>
     <main class="anonymous">
       <section>
-        <p class="section__identity">Vous avez été connecté de façon anonyme</p>
+        <h1 class="section__identity">Vous avez été connecté de façon anonyme</h1>
 
         <p class="section__more-info">
           Aucune donnée n'a été échangée pour vous connecter.
@@ -35,7 +35,7 @@
 
       <section>
         <p class="section__welcome">Bienvenue</p>
-        <p role="heading" aria-level="1" class="section__identity"><%= locals.identity.given_name %> <%= locals.identity.family_name %></p>
+        <h1 class="section__identity"><%= locals.identity.given_name %> <%= locals.identity.family_name %></h1>
       </section>
 
       <form method="POST" action="/api/v2/login" name="fc-consent">

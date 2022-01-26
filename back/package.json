@@ -12,7 +12,7 @@
     "build:csmr-hsm-high": "nest build csmr-hsm-high",
     "build:csmr-rie": "nest build csmr-rie",
     "build:eidas-bridge": "nest build eidas-bridge-instance",
-    "build:bridge-http-proxy": "nest build bridge-http-proxy-rie-instance",
+    "build:bridge-http-proxy-rie": "nest build bridge-http-proxy-rie-instance",
     "build:tracks-data-provider": "nest build tracks-data-provider-instance",
     "build:exploit-fcp": "nest build exploit-fcp-instance",
     "build:exploit-fca-low": "nest build exploit-fca-low-instance",

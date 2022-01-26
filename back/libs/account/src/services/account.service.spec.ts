@@ -21,6 +21,8 @@ describe('AccountService', () => {
   const constructorSpy = jest.fn();
 
   const findOneSpy = jest.fn();
+  const findOneAndUpdateSpy = jest.fn();
+
   class ModelClassMock {
     constructor(obj) {
       constructorSpy(obj);
@@ -29,6 +31,10 @@ describe('AccountService', () => {
 
     static async findOne(...args) {
       return findOneSpy(...args);
+    }
+
+    static async findOneAndUpdate(...args) {
+      return findOneAndUpdateSpy(...args);
     }
   }
 
@@ -241,6 +247,58 @@ describe('AccountService', () => {
       const account = service['getAccountByIdentityHash'](identityHashMock);
       // Then
       await expect(account).resolves.toEqual(accountMock);
+    });
+  });
+
+  describe('updateIdpSettings', () => {
+    it('Should update `includeList` property of account and return the updated account', async () => {
+      // Given
+      const identityHashMock = 'identityHashMockValue';
+      const accountMock: Account = {
+        createdAt: new Date(),
+        id: '0001',
+        updatedAt: new Date(),
+        lastConnection: new Date(),
+        identityHash: identityHashMock,
+        active: true,
+        idpFederation: {},
+        spFederation: {},
+        idpSettings: {
+          updatedAt: new Date(),
+          includeList: [],
+        },
+      } as Account;
+      const idpList = ['foo', 'bar'];
+      const updatedAccountToReturn = {
+        ...accountMock,
+        idpSettings: {
+          updatedAt: new Date(),
+          includeList: idpList,
+        },
+      } as Account;
+      findOneAndUpdateSpy.mockResolvedValueOnce(updatedAccountToReturn);
+      // When
+      const updatedAccount = await service['updateIdpSettings'](
+        identityHashMock,
+        idpList,
+      );
+      // Then
+      await expect(updatedAccount).toEqual(updatedAccountToReturn);
+    });
+
+    it('Should return an empty Account if account to update has not been found', async () => {
+      // Given
+      const identityHashMock = 'identityHashMockValue';
+      const idpListMock = ['foo', 'bar'];
+      const accountMock: Account = { id: null } as Account;
+      findOneAndUpdateSpy.mockResolvedValueOnce(null);
+      // When
+      const account = await service['updateIdpSettings'](
+        identityHashMock,
+        idpListMock,
+      );
+      // Then
+      await expect(account).toEqual(accountMock);
     });
   });
 });

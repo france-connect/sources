@@ -1,3 +1,4 @@
+export * from './accessibility-helper';
 export * from './basic-authorization-helper';
 export * from './cookie-helper';
 export * from './idp-provider';

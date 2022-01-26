@@ -10,7 +10,7 @@
   <% if (locals.scopes.every(scope => scope === 'openid')) { %>
   <main class="anonymous">
     <section>
-      <p class="section__identity">Vous avez été connecté de façon anonyme</p>
+      <h1 class="section__identity">Vous avez été connecté de façon anonyme</h1>
 
       <p class="section__more-info">
         Aucune donnée n'a été échangée pour vous connecter.
@@ -26,7 +26,7 @@
     <main>
       <section>
         <p class="section__welcome">Bienvenue</p>
-        <p class="section__identity"><%= locals.identity.given_name %> <%= locals.identity.family_name %></p>
+        <h1 class="section__identity"><%= locals.identity.given_name %> <%= locals.identity.family_name %></h1>
 
         <a href="#" class="section__more-info">Ce n’est pas vous ?</a>
       </section>

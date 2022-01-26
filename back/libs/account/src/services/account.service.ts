@@ -108,4 +108,34 @@ export class AccountService {
 
     return account;
   }
+
+  /**
+   * Update an Account idpSettings
+   * @param {string} identityHash
+   * @param {string[]} idpList
+   * @returns {Promise<Account>}
+   */
+  async updateIdpSettings(
+    identityHash: string,
+    idpList: string[],
+  ): Promise<Account> {
+    this.logger.debug(`Update account ${identityHash} with ${idpList}`);
+    const updatedAccount = await this.model.findOneAndUpdate(
+      { identityHash },
+      {
+        idpSettings: {
+          updatedAt: Date.now(),
+          includeList: idpList,
+        },
+      },
+      { new: true },
+    );
+    this.logger.trace({ updatedAccount });
+
+    if (!updatedAccount) {
+      return { id: null } as Account;
+    }
+
+    return updatedAccount;
+  }
 }

@@ -1,37 +1,81 @@
 import { Injectable } from '@nestjs/common';
 
-import {
-  UserPreferencesFcpRequest,
-  UserPreferencesFcpResponse,
-} from '../interfaces';
+import { AccountNotFoundException, AccountService } from '@fc/account';
+import { CryptographyFcpService, IPivotIdentity } from '@fc/cryptography-fcp';
+import { LoggerLevelNames, LoggerService } from '@fc/logger';
+
+import { IIdpSettings } from '../interfaces';
 
 @Injectable()
 export class UserPreferencesFcpService {
-  /**
-   * @todo #FC-779
-   * This function is just a mock until we create the calls.
-   *
-   * Author: Annouar LAIFA
-   * Date: 18/11/2021
-   */
-  /* istanbul ignore next */
-  private async mockCall(
-    options: UserPreferencesFcpRequest,
-  ): Promise<UserPreferencesFcpResponse> {
-    const response: UserPreferencesFcpResponse<unknown> = {
-      status: 200,
-      message: 'Success',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data: null,
-    };
+  constructor(
+    private readonly logger: LoggerService,
+    private readonly account: AccountService,
+    private readonly cryptographyFcp: CryptographyFcpService,
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
-    if (options?.data) {
-      response.data = {
-        foo: 'bar',
+  async getIdpSettings(identity: IPivotIdentity): Promise<IIdpSettings> {
+    this.logger.debug(`Identity received : ${identity}`);
+    const identityHash = this.cryptographyFcp.computeIdentityHash(identity);
+    const { id, idpSettings } = await this.account.getAccountByIdentityHash(
+      identityHash,
+    );
+    if (!id) {
+      this.logger.trace(
+        { error: 'No account found', identityHash },
+        LoggerLevelNames.WARN,
+      );
+      throw new AccountNotFoundException();
+    }
+
+    this.logger.trace({
+      accountId: id,
+      identity,
+      identityHash,
+      idpSettings: idpSettings,
+    });
+
+    if (!idpSettings) {
+      return {
+        updatedAt: null,
+        includeList: [],
       };
     }
-    return response;
+
+    return idpSettings;
+  }
+
+  async setIdpSettings(
+    identity: IPivotIdentity,
+    includeList: string[],
+  ): Promise<IIdpSettings> {
+    this.logger.debug(`Identity received : ${identity}`);
+    const identityHash = this.cryptographyFcp.computeIdentityHash(identity);
+
+    this.logger.debug(`includeList received : ${includeList}`);
+    const { id, idpSettings } = await this.account.updateIdpSettings(
+      identityHash,
+      includeList,
+    );
+    if (!id) {
+      this.logger.trace(
+        { error: 'No account found', identityHash },
+        LoggerLevelNames.WARN,
+      );
+
+      throw new AccountNotFoundException();
+    }
+
+    this.logger.trace({
+      accountId: id,
+      identity,
+      identityHash,
+      includeList,
+      idpSettings: idpSettings,
+    });
+
+    return idpSettings;
   }
 }

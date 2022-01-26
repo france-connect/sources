@@ -39,13 +39,6 @@ export class CsmrHttpProxyController {
       `received new ${HttpProxyProtocol.Commands.HTTP_PROXY} command`,
     );
 
-    /**
-     * @todo add Proxy and HttpsAgent options
-     * the call to FI RIE will require proxy and https options to work
-     * Author: Arnaud PSA
-     * Date: 21/10/21
-     */
-
     this.logger.trace({ payload });
 
     let response;

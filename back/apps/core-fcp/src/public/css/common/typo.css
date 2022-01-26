@@ -16,7 +16,7 @@
     font-weight: bold;
 }
 
-.list-container h3 {
+.list-container h2 {
     color: #000091;
     font-size: 1.2rem;
     font-weight: bold;
@@ -51,7 +51,7 @@
         line-height: 3rem;
     }
 
-    .list-container h3 {
+    .list-container h2 {
         font-size: 1.5rem;
         font-weight: bold;
     }

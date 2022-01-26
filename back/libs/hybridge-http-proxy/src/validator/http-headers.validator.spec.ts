@@ -54,6 +54,48 @@ describe('isHttpHeaders()', () => {
     // expect
     expect(result).toStrictEqual(false);
   });
+
+  describe('special param "set-cookie"', () => {
+    it('should return true if set-cookie has ascii value', () => {
+      // setup
+      const values = {
+        test: 'hello world',
+        'set-cookie': ['hello', 'world'],
+      };
+
+      // action
+      const result = isHttpHeaders(values);
+
+      // expect
+      expect(result).toStrictEqual(true);
+    });
+    it('should return false if set-cookie has no-ascii value', () => {
+      // setup
+      const values = {
+        test: 'hello world',
+        'set-cookie': ['hello', '£'],
+      };
+
+      // action
+      const result = isHttpHeaders(values);
+
+      // expect
+      expect(result).toStrictEqual(false);
+    });
+    it('should return false if set-cookie has a wrong type', () => {
+      // setup
+      const values = {
+        test: 'hello world',
+        'set-cookie': 42,
+      };
+
+      // action
+      const result = isHttpHeaders(values);
+
+      // expect
+      expect(result).toStrictEqual(false);
+    });
+  });
 });
 describe('ValidateHttpHeadersConstraint', () => {
   let instance;

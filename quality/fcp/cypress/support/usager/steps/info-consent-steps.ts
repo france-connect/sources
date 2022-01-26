@@ -20,6 +20,10 @@ Then('je suis redirigé vers la page de consentement', function () {
   infoConsentPage.consentCheckbox.should('be.visible').and('not.be.checked');
 });
 
+When('je clique pour afficher les claims', function () {
+  infoConsentPage.showClaimsToggle.click();
+});
+
 Then(
   /les informations demandées par le fournisseur de service correspondent aux? scopes? "([^"]+)"/,
   function (type) {

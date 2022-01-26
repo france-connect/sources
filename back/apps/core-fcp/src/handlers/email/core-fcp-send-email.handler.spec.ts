@@ -118,7 +118,7 @@ const template = `
     </style>
   </head>
 
-  <body yahoo>
+  <body>
     <table
       width="100%"
       bgcolor="#ffffff"
@@ -256,7 +256,7 @@ const template = `
                       class="bodycopy bold innerpadding25"
                       style="padding-bottom: 25px; padding-left: 25px;"
                     >
-                      <strong><%= locals.idpName %></strong>
+                      <strong><%= locals.idpTitle %></strong>
                     </td>
                   </tr>
                 </table>
@@ -273,21 +273,18 @@ const template = `
               <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td class="bodycopy">
-                    Merci d'avoir utilis&eacute; notre service.
+                    Merci d&rsquo;avoir utilis&eacute; notre service.
                   </td>
                 </tr>
                 <tr>
                   <td class="bodycopy bold" style="padding-top: 15px;">
-                    <strong>Si ce n'&eacute;tait pas vous,
+                    <strong>Si ce n&rsquo;&eacute;tait pas vous,
                     <a href="https://franceconnect.gouv.fr/faq#SECURITE" style="color: #034ea2;">cliquez ici</a></strong>.
                   </td>
                 </tr>
                 <tr>
                   <td class="bodycopy" style="padding-top: 15px;">
-                    Pour plus d'informations, consultez notre FAQ Usagers &agrave;
-                    l&apos;adresse suivante&nbsp;:
-                    <a href="https://franceconnect.gouv.fr/faq"
-                      style="color: #034ea2;">https://franceconnect.gouv.fr/faq</a>
+                    Pour plus d&rsquo;informations, consultez notre FAQ Usagers &agrave; l&rsquo;adresse suivante:  https://franceconnect.gouv.fr/faq .
                   </td>
                 </tr>
                 <tr>

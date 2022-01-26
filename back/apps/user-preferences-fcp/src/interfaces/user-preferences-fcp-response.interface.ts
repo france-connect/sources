@@ -1,16 +1,14 @@
-/**
- * @todo #FC-779
- * Temporary interface for mock
- *
- * Author: Annouar LAIFA
- * Date: 18/11/2021
- */
 /* istanbul ignore file */
 
 // Declarative code
-export interface UserPreferencesFcpResponse<T = unknown> {
-  status: number;
-  message: string;
-  data?: T;
-  headers?: unknown;
-}
+import { IIdpSettings } from './user-preferences-fcp-idp-settings.interface';
+
+/**
+ * This format is used by user-preferences-fcp controllers
+ *
+ * @example {
+ *   updatedAt: ISODate("2020....."),
+ *   includeList: ['idp_id_x', 'idp_id_y']
+ * }
+ */
+export type IIdpSettingsResponse = IIdpSettings | 'ERROR';

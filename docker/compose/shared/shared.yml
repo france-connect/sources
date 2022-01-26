@@ -90,6 +90,7 @@ services:
       rie:
         aliases:
           - auth.llng.docker.dev-franceconnect.fr
+          - fia-rie-low.docker.dev-franceconnect.fr
       exploitation:
         aliases:
           - exploit-fcp-high.docker.dev-franceconnect.fr
@@ -117,10 +118,12 @@ services:
     image: ${FC_DOCKER_REGISTRY}/squid:4.6
     extra_hosts:
       - auth.llng.docker.dev-franceconnect.fr:172.16.1.254
+      - fia-rie-low.docker.dev-franceconnect.fr:172.16.1.254
     networks:
       - public
       - fc
       - exploitation
+      - rie
 
   haproxy:
     image: haproxy:2.3
@@ -155,6 +158,7 @@ services:
     command: redis-server --requirepass Ivae1feiThoogahquohDei7iwie0ceeM
     networks:
       - data
+      - rie
 
   rnipp:
     hostname: rnipp
