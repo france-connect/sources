@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { LoggerService } from '@fc/logger';
 
+import { AccountNotFoundException } from '../exceptions';
 import { IInteraction } from '../interfaces';
 import { Account } from '../schemas';
 
@@ -99,33 +100,37 @@ export class AccountService {
   async getAccountByIdentityHash(identityHash: string): Promise<Account> {
     this.logger.debug(`Recherche d'un compte avec via son hash`);
     const account: Account = await this.model.findOne({ identityHash });
+    this.logger.trace({ account });
 
     if (!account) {
       return { id: null } as Account;
     }
 
-    this.logger.trace({ account });
-
     return account;
   }
 
   /**
-   * Update an Account idpSettings
+   * Update an Account preferences
    * @param {string} identityHash
-   * @param {string[]} idpList
+   * @param {string[]} identityProviderList
+   * @param {boolean} isExcludeList
    * @returns {Promise<Account>}
    */
-  async updateIdpSettings(
+  async updatePreferences(
     identityHash: string,
-    idpList: string[],
+    identityProviderList: string[],
+    isExcludeList: boolean,
   ): Promise<Account> {
-    this.logger.debug(`Update account ${identityHash} with ${idpList}`);
+    this.logger.debug(
+      `Update account preferences ${identityHash} with ${identityProviderList} (isExcludeList: ${isExcludeList})`,
+    );
     const updatedAccount = await this.model.findOneAndUpdate(
       { identityHash },
       {
-        idpSettings: {
+        preferences: {
           updatedAt: Date.now(),
-          includeList: idpList,
+          identityProviderList,
+          isExcludeList,
         },
       },
       { new: true },
@@ -133,7 +138,7 @@ export class AccountService {
     this.logger.trace({ updatedAccount });
 
     if (!updatedAccount) {
-      return { id: null } as Account;
+      throw new AccountNotFoundException();
     }
 
     return updatedAccount;

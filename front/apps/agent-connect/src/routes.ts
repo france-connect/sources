@@ -1,30 +1,22 @@
 /* istanbul ignore file */
 
 // declarative file
-import { ErrorPage } from './pages/error.page';
 import { HomePage } from './pages/homepage';
-import { NotFoundPage } from './pages/not-found.page';
+import { ErrorPage } from './pages/error';
 
 export const routes = [
-  {
-    component: ErrorPage,
-    exact: true,
-    id: 'error-page',
-    path: '/api/v2/error',
-    title: "Erreur lors de l'authentification",
-  },
   {
     component: HomePage,
     exact: true,
     id: 'homepage',
     path: '/api/v2/interaction/:uid',
-    title: '',
+    title: 'AgentConnect',
   },
   {
-    component: NotFoundPage,
+    component: ErrorPage,
     exact: true,
-    id: 'homepage',
+    id: 'error',
     path: '*',
-    title: '404',
+    title: 'Error',
   },
 ];

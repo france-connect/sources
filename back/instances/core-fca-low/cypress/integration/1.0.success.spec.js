@@ -64,12 +64,13 @@ describe('Successful scenarios', () => {
     };
     beforeSuccessScenario(params);
     basicSuccessScenario(idp2);
-    afterSuccessScenario(params);
 
+    afterSuccessScenario(params);
     checkInformations({
       givenName: 'Angela Claire Louise',
       usualName: 'DUBOIS',
     });
+
     checkInStringifiedJson('sub', SUB_SP1_IDP2);
   });
 

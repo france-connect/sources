@@ -403,18 +403,18 @@
     "credentials": [
       {
         "idpId": "default",
-        "username": "test",
+        "username": "test_TRACE_USER",
         "password": "123"
       }
     ],
     "claims": {
-      "gender": "female",
-      "given_name": "Angela Claire Louise",
-      "family_name": "DUBOIS",
-      "birthdate": "1962-08-24",
-      "birthplace": "75107",
+      "given_name": "utilisateur traces",
+      "family_name": "TRACE_USER",
+      "birthdate": "1985-01-01",
+      "gender": "male",
       "birthcountry": "99100",
-      "email": "wossewodda-3728@yopmail.com"
+      "birthplace": "75107",
+      "email": "aucun@email.com"
     }
   },
   {

@@ -15,6 +15,7 @@ import {
 } from '@fc/service-provider-adapter-env';
 import { SessionModule } from '@fc/session';
 import { TracksModule } from '@fc/tracks';
+import { UserPreferencesModule } from '@fc/user-preferences';
 
 import { OidcClientController, UserDashboardController } from './controllers';
 import { UserDashboardSession } from './dto';
@@ -34,6 +35,7 @@ const oidcClientModule = OidcClientModule.register(
     oidcClientModule,
     SessionModule.forRoot({ schema: UserDashboardSession }),
     TracksModule,
+    UserPreferencesModule,
   ],
 })
 export class UserDashboardModule {}

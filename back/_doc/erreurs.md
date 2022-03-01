@@ -131,3 +131,14 @@
 | [Y300002](../apps/bridge-http-proxy/src/exceptions/bridge-http-proxy-variable-missing.exception.ts "BridgeHttpProxyMissingVariableException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous | Il manque des variables dans la réponse renvoyée par le broker rabbitmq | 
 | [Y300003](../apps/bridge-http-proxy/src/exceptions/bridge-http-proxy-csmr.exception.ts "BridgeHttpProxyCsmrException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous | Une erreur technique est survenue dans le consumer au moment de la récupération des informations à travers le broker rabbitmq | 
 
+| Code | Message utilisateur | Description |
+|---|---|---|
+| [Y310001](../libs/user-preferences/src/exceptions/get-user-preferences-response.exception.ts "GetUserPreferencesResponseException") |  | Une erreur s&#39;est produite lors de la récupération des préferences utilisateur via le broker | 
+| [Y310002](../libs/user-preferences/src/exceptions/set-user-preferences-response.exception.ts "SetUserPreferencesResponseException") |  | Une erreur s&#39;est produite lors de la modification des préferences utilisateur via le broker | 
+| [Y310003](../libs/user-preferences/src/exceptions/get-user-preferences-consumer-error.exception.ts "GetUserPreferencesConsumerErrorException") | Une erreur technique s&#39;est produite, merci de réessayer ultérieurement. | Le consumer csmr-user-preferences a retourné un code erreur lors de la récupération des préferences utilisateur | 
+| [Y310004](../libs/user-preferences/src/exceptions/set-user-preferences-consumer-error.exception.ts "SetUserPreferencesConsumerErrorException") | Une erreur technique s&#39;est produite, merci de réessayer ultérieurement. | Le consumer csmr-user-preferences a retourné un code erreur lors de la modification des préferences utilisateur | 
+
+| Code | Message utilisateur | Description |
+|---|---|---|
+| [Y320001](../apps/csmr-user-preferences/src/exceptions/csmr-user-preferences-idp-not-found.exception.ts "CsmrUserPreferencesIdpNotFoundException") | Le fournisseur d&#39;identité en entrée est inconnu | Le fournisseur d&#39;identité en entrée n&#39;existe pas dans la liste des idp | 
+

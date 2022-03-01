@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const placeholders = require('../enums/placeholders.enum');
 
-const accountId = '3ec64565-a907-4284-935a-0ff0213cc120';
+const accountId = 'test_TRACE_USER';
 let count = 0;
 const datamock = [
   {

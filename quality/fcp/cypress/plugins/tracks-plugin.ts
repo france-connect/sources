@@ -19,7 +19,7 @@ export async function addTracks(args: addTracksArgs): Promise<void> {
 
   // eslint-disable-next-line no-console
   console.log(`Add tracks '${tracksType}' using ${script}`);
-  const command = `${DOCKER_STACK} exec ${CSMR_TRACKS_APP} node --trace-warnings ${scriptPath}/${script}`;
+  const command = `export CI=1; ${DOCKER_STACK} exec ${CSMR_TRACKS_APP} node --trace-warnings ${scriptPath}/${script}`;
   const { stderr, stdout } = await asyncExec(command);
 
   if (stderr) {

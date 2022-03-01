@@ -278,13 +278,13 @@
         "tsConfigPath": "instances/bridge-http-proxy-rie/tsconfig.app.json"
       }
     },
-    "user-preferences-fcp-high": {
+    "csmr-user-preferences-high": {
       "type": "application",
-      "root": "instances/user-preferences-fcp-high",
+      "root": "instances/csmr-user-preferences-high",
       "entryFile": "main",
-      "sourceRoot": "instances/user-preferences-fcp-high/src",
+      "sourceRoot": "instances/csmr-user-preferences-high/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/user-preferences-fcp-high/tsconfig.app.json"
+        "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json"
       }
     },
     "tracks-data-provider-instance": {

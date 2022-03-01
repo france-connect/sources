@@ -1,8 +1,9 @@
-<center>
-  <h1>🚨 Erreur 😓 !</h1>
-  <pre>
-code : <%= locals.code %>
-id: <%= locals.id %>
-message: <%= locals.message %>
-</pre>
-</center>
+<script>
+  window.appError = {
+    code: `<%= locals.code %>`,
+    id: `<%= locals.id %>`,
+    message: `<%- locals.message %>`,
+  };
+</script>
+
+<%- include('./interaction.ejs') %>

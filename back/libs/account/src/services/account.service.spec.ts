@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { LoggerService } from '@fc/logger';
 
+import { AccountNotFoundException } from '../exceptions';
 import { IInteraction } from '../interfaces';
 import { Account } from '../schemas';
 import { AccountService } from './account.service';
@@ -250,8 +251,8 @@ describe('AccountService', () => {
     });
   });
 
-  describe('updateIdpSettings', () => {
-    it('Should update `includeList` property of account and return the updated account', async () => {
+  describe('updatePreferences', () => {
+    it('Should update `preferences` property of account and return the updated account', async () => {
       // Given
       const identityHashMock = 'identityHashMockValue';
       const accountMock: Account = {
@@ -263,42 +264,41 @@ describe('AccountService', () => {
         active: true,
         idpFederation: {},
         spFederation: {},
-        idpSettings: {
+        preferences: {
           updatedAt: new Date(),
-          includeList: [],
+          identityProviderList: [],
+          isExcludeList: false,
         },
       } as Account;
       const idpList = ['foo', 'bar'];
       const updatedAccountToReturn = {
         ...accountMock,
-        idpSettings: {
+        preferences: {
           updatedAt: new Date(),
-          includeList: idpList,
+          identityProviderList: idpList,
+          isExcludeList: true,
         },
       } as Account;
       findOneAndUpdateSpy.mockResolvedValueOnce(updatedAccountToReturn);
       // When
-      const updatedAccount = await service['updateIdpSettings'](
+      const updatedAccount = await service['updatePreferences'](
         identityHashMock,
         idpList,
+        true,
       );
       // Then
       await expect(updatedAccount).toEqual(updatedAccountToReturn);
     });
 
-    it('Should return an empty Account if account to update has not been found', async () => {
+    it('Should throw an AccountNotFoundException if account has not been found', async () => {
       // Given
       const identityHashMock = 'identityHashMockValue';
       const idpListMock = ['foo', 'bar'];
-      const accountMock: Account = { id: null } as Account;
       findOneAndUpdateSpy.mockResolvedValueOnce(null);
-      // When
-      const account = await service['updateIdpSettings'](
-        identityHashMock,
-        idpListMock,
-      );
-      // Then
-      await expect(account).toEqual(accountMock);
+      // When/Then
+      expect(
+        service['updatePreferences'](identityHashMock, idpListMock, false),
+      ).rejects.toThrow(AccountNotFoundException);
     });
   });
 });

@@ -138,8 +138,8 @@
       "@fc/cog/*": ["libs/cog/src/*"],
       "@fc/bridge-http-proxy": ["apps/bridge-http-proxy/src"],
       "@fc/bridge-http-proxy/*": ["apps/bridge-http-proxy/src/*"],
-      "@fc/user-preferences-fcp": ["apps/user-preferences-fcp/src"],
-      "@fc/user-preferences-fcp/*": ["apps/user-preferences-fcp/src/*"],
+      "@fc/csmr-user-preferences": ["apps/csmr-user-preferences/src"],
+      "@fc/csmr-user-preferences/*": ["apps/csmr-user-preferences/src/*"],
       "@fc/tracks-data-provider": ["apps/tracks-data-provider/src"],
       "@fc/tracks-data-provider/*": ["apps/tracks-data-provider/src/*"],
       "@fc/data-provider-core-auth": ["libs/data-provider-core-auth/src"],
@@ -147,7 +147,9 @@
       "@fc/tracks": ["libs/tracks/src"],
       "@fc/tracks/*": ["libs/tracks/src/*"],
       "@fc/hybridge-http-proxy": ["libs/hybridge-http-proxy/src"],
-      "@fc/hybridge-http-proxy/*": ["libs/hybridge-http-proxy/src/*"]
+      "@fc/hybridge-http-proxy/*": ["libs/hybridge-http-proxy/src/*"],
+      "@fc/user-preferences": ["libs/user-preferences/src"],
+      "@fc/user-preferences/*": ["libs/user-preferences/src/*"],
     }
   },
   "exclude": ["node_modules", "dist"]

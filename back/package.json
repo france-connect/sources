@@ -280,14 +280,16 @@
       "@fc/csv": "<rootDir>/libs/csv/src",
       "@fc/bridge-http-proxy/(.*)": "<rootDir>/apps/bridge-http-proxy/src/$1",
       "@fc/bridge-http-proxy": "<rootDir>/apps/bridge-http-proxy/src",
-      "@fc/user-preferences-fcp/(.*)": "<rootDir>/apps/user-preferences-fcp/src/$1",
-      "@fc/user-preferences-fcp": "<rootDir>/apps/user-preferences-fcp/src",
+      "@fc/csmr-user-preferences/(.*)": "<rootDir>/apps/csmr-user-preferences/src/$1",
+      "@fc/csmr-user-preferences": "<rootDir>/apps/csmr-user-preferences/src",
       "@fc/tracks-data-provider/(.*)": "<rootDir>/apps/tracks-data-provider/src/$1",
       "@fc/tracks-data-provider": "<rootDir>/apps/tracks-data-provider/src",
       "^@fc/data-provider-core-auth(|/.*)$": "<rootDir>/libs/data-provider-core-auth/src/$1",
       "^@fc/tracks(|/.*)$": "<rootDir>/libs/tracks/src/$1",
       "@fc/hybridge-http-proxy/(.*)": "<rootDir>/libs/hybridge-http-proxy/src/$1",
-      "@fc/hybridge-http-proxy": "<rootDir>/libs/hybridge-http-proxy/src"
+      "@fc/hybridge-http-proxy": "<rootDir>/libs/hybridge-http-proxy/src",
+      "@fc/user-preferences/(.*)": "<rootDir>/libs/user-preferences/src/$1",
+      "@fc/user-preferences": "<rootDir>/libs/user-preferences/src"
     },
     "preset": "ts-jest"
   }

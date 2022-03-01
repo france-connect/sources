@@ -1,4 +1,5 @@
 export enum UserDashboardBackRoutes {
+  USER_PREFERENCES = '/user-preferences',
   ERROR = '/error',
   LOGIN = '/login',
   LOGIN_CALLBACK = '/login-callback',

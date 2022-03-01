@@ -5,6 +5,7 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { SessionCsrfService } from '@fc/session';
 import { TracksService } from '@fc/tracks';
+import { UserPreferencesService } from '@fc/user-preferences';
 
 import { UserDashboardController } from './user-dashboard.controller';
 
@@ -58,6 +59,16 @@ describe('UserDashboardController', () => {
     getList: jest.fn(),
   };
 
+  const userPreferencesMock = {
+    getUserPreferencesList: jest.fn(),
+    setUserPreferencesList: jest.fn(),
+  };
+
+  const updatePreferencesBodyMock = {
+    idpList: [],
+    allowFutureIdp: false,
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -69,6 +80,7 @@ describe('UserDashboardController', () => {
         LoggerService,
         SessionCsrfService,
         TracksService,
+        UserPreferencesService,
       ],
     })
       .overrideProvider(ConfigService)
@@ -79,6 +91,8 @@ describe('UserDashboardController', () => {
       .useValue(sessionGenericCsrfServiceMock)
       .overrideProvider(TracksService)
       .useValue(tracksServiceMock)
+      .overrideProvider(UserPreferencesService)
+      .useValue(userPreferencesMock)
       .compile();
 
     controller = module.get<UserDashboardController>(UserDashboardController);
@@ -215,6 +229,113 @@ describe('UserDashboardController', () => {
       // Then
       expect(userinfos.given_name).toStrictEqual('angela');
       expect(userinfos.family_name).toStrictEqual('dubois');
+    });
+  });
+
+  describe('getUserPreferences', () => {
+    it('should fetch session', async () => {
+      // When
+      await controller.getUserPreferences(sessionServiceMock);
+      // Then
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw UnauthorizedException if no session', async () => {
+      // Given
+      sessionServiceMock.get.mockResolvedValueOnce(undefined);
+      // When / Then
+      await expect(
+        controller.getUserPreferences(sessionServiceMock),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+
+    it('should call userPreferences.getUserPreferencesList', async () => {
+      // Given
+      const identityMock = { foo: 'bar' };
+      sessionServiceMock.get.mockResolvedValueOnce({
+        idpIdentity: identityMock,
+      });
+      // When
+      await controller.getUserPreferences(sessionServiceMock);
+      // Then
+      expect(userPreferencesMock.getUserPreferencesList).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(userPreferencesMock.getUserPreferencesList).toHaveBeenCalledWith(
+        identityMock,
+      );
+    });
+
+    it('should return userPreferences.getUserPreferencesList', async () => {
+      // Given
+      const resolvedValueMock = 'resolvedValueMock';
+      userPreferencesMock.getUserPreferencesList.mockResolvedValueOnce(
+        resolvedValueMock,
+      );
+      // When
+      const result = await controller.getUserPreferences(sessionServiceMock);
+      // Then
+      expect(result).toBe(resolvedValueMock);
+    });
+  });
+
+  describe('updateUserPreferences', () => {
+    it('should fetch session', async () => {
+      // When
+      await controller.updateUserPreferences(
+        updatePreferencesBodyMock,
+        sessionServiceMock,
+      );
+      // Then
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw UnauthorizedException if no session', async () => {
+      // Given
+      sessionServiceMock.get.mockResolvedValueOnce(undefined);
+      // When / Then
+      await expect(
+        controller.updateUserPreferences(
+          updatePreferencesBodyMock,
+          sessionServiceMock,
+        ),
+      ).rejects.toThrow(UnauthorizedException);
+    });
+
+    it('should call userPreferences.setUserPreferencesList', async () => {
+      // Given
+      const identityMock = { foo: 'bar' };
+      sessionServiceMock.get.mockResolvedValueOnce({
+        idpIdentity: identityMock,
+      });
+      // When
+      await controller.updateUserPreferences(
+        updatePreferencesBodyMock,
+        sessionServiceMock,
+      );
+      // Then
+      expect(userPreferencesMock.setUserPreferencesList).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(userPreferencesMock.setUserPreferencesList).toHaveBeenCalledWith(
+        identityMock,
+        updatePreferencesBodyMock,
+      );
+    });
+
+    it('should return userPreferences.setUserPreferencesList', async () => {
+      // Given
+      const resolvedValueMock = 'resolvedValueMock';
+      userPreferencesMock.setUserPreferencesList.mockResolvedValueOnce(
+        resolvedValueMock,
+      );
+      // When
+      const result = await controller.updateUserPreferences(
+        updatePreferencesBodyMock,
+        sessionServiceMock,
+      );
+      // Then
+      expect(result).toBe(resolvedValueMock);
     });
   });
 });

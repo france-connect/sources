@@ -3,19 +3,18 @@
 // Declarative code
 import { Expose } from 'class-transformer';
 import {
-  IsAscii,
   IsEnum,
   IsOptional,
+  IsString,
   MaxLength,
   MinLength,
 } from 'class-validator';
 
-import { IsSafeString } from '@fc/common';
 import { EidasGenders } from '@fc/eidas-oidc-mapper';
 import { MinIdentityDto } from '@fc/oidc-client';
 
 export class EidasIdentityDto extends MinIdentityDto {
-  @IsSafeString()
+  @IsString()
   @MinLength(1)
   @MaxLength(256)
   @Expose()
@@ -23,7 +22,7 @@ export class EidasIdentityDto extends MinIdentityDto {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly given_name: string;
 
-  @IsSafeString()
+  @IsString()
   @MinLength(1)
   @MaxLength(256)
   @Expose()
@@ -31,22 +30,22 @@ export class EidasIdentityDto extends MinIdentityDto {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly family_name: string;
 
-  @IsSafeString()
+  @IsString()
   @Expose()
   readonly birthdate: string;
 
-  @IsSafeString()
+  @IsString()
   @IsEnum(EidasGenders)
   @IsOptional()
   @Expose()
   readonly gender?: string;
 
-  @IsAscii()
+  @IsString()
   @IsOptional()
   @Expose()
   readonly birthplace?: string;
 
-  @IsSafeString()
+  @IsString()
   @IsOptional()
   @Expose()
   // oidc naming convention

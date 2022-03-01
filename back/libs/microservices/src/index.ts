@@ -17,7 +17,7 @@ export const HttpProxyProtocol = {
   },
 };
 
-export const UserPreferencesFcpProtocol = {
+export const UserPreferencesProtocol = {
   Commands: {
     GET_IDP_SETTINGS: 'GET_IDP_SETTINGS',
     SET_IDP_SETTINGS: 'SET_IDP_SETTINGS',

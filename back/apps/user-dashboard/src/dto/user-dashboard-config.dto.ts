@@ -47,4 +47,9 @@ export class UserDashboardConfig {
   @ValidateNested()
   @Type(() => RabbitmqConfig)
   readonly TracksBroker: RabbitmqConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => RabbitmqConfig)
+  readonly UserPreferencesBroker: RabbitmqConfig;
 }

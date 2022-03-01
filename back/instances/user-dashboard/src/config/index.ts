@@ -10,6 +10,7 @@ import OidcClient from './oidc-client';
 import Redis from './redis';
 import Session from './session';
 import TracksBroker from './tracks-broker';
+import UserPreferencesBroker from './user-preferences-broker';
 
 export default {
   App,
@@ -19,4 +20,5 @@ export default {
   Redis,
   Session,
   TracksBroker,
+  UserPreferencesBroker,
 } as UserDashboardConfig;

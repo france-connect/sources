@@ -339,6 +339,7 @@ describe('CoreFcaController', () => {
     // Given
     const res = {
       json: jest.fn(),
+      status: jest.fn(),
     };
     const idps = [
       { active: true, display: true, title: 'toto', uid: '12345' },
@@ -367,6 +368,7 @@ describe('CoreFcaController', () => {
         },
       });
 
+      res.status.mockReturnValueOnce(res);
       ministriesServiceMock.getList.mockResolvedValueOnce(ministries);
       identityProviderServiceMock.getFilteredList.mockResolvedValueOnce(idps);
     });
@@ -392,7 +394,7 @@ describe('CoreFcaController', () => {
       await coreController.getFrontData(req, res, sessionServiceMock);
 
       // Then
-      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledTimes(2);
       expect(configServiceMock.get).toHaveBeenCalledWith('OidcClient');
     });
 
@@ -453,19 +455,31 @@ describe('CoreFcaController', () => {
     it('should return a SessionBadFormatException if no session is found', async () => {
       // given
       sessionServiceMock.get.mockResolvedValueOnce(undefined);
+      const expectedError = new Error(
+        'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
+      );
       // then
-      expect(
-        coreController.getFrontData(req, res, sessionServiceMock),
-      ).rejects.toThrow(SessionBadFormatException);
+      await coreController.getFrontData(req, res, sessionServiceMock);
+
+      expect(res.status).toHaveBeenCalledTimes(1);
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledWith(expectedError);
     });
 
     it('should return a SessionBadFormatException session do not contains spName', async () => {
       // given
       sessionServiceMock.get.mockResolvedValueOnce({});
+      const expectedError = new Error(
+        'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
+      );
       // then
-      expect(
-        coreController.getFrontData(req, res, sessionServiceMock),
-      ).rejects.toThrow(SessionBadFormatException);
+      await coreController.getFrontData(req, res, sessionServiceMock);
+
+      expect(res.status).toHaveBeenCalledTimes(1);
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledTimes(1);
+      expect(res.json).toHaveBeenCalledWith(expectedError);
     });
   });
 

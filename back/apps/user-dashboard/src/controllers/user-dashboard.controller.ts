@@ -1,15 +1,24 @@
 import {
+  Body,
   Controller,
   Get,
   Injectable,
+  Post,
   UnauthorizedException,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 
 import { LoggerService } from '@fc/logger';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService, Session, SessionCsrfService } from '@fc/session';
 import { TracksService } from '@fc/tracks';
+import {
+  UserPreferencesDto,
+  UserPreferencesService,
+} from '@fc/user-preferences';
 
+import { UserPreferencesBodyDto } from '../dto/user-preferences-body.dto';
 import { UserDashboardBackRoutes } from '../enums';
 
 @Injectable()
@@ -19,6 +28,7 @@ export class UserDashboardController {
     private readonly logger: LoggerService,
     private readonly csrfService: SessionCsrfService,
     private readonly tracks: TracksService,
+    private readonly userPreferences: UserPreferencesService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -76,5 +86,44 @@ export class UserDashboardController {
       given_name: idpIdentity?.given_name,
     };
     return { userinfos };
+  }
+
+  @Get(UserDashboardBackRoutes.USER_PREFERENCES)
+  async getUserPreferences(
+    @Session('OidcClient')
+    sessionOidc: ISessionService<OidcClientSession>,
+  ): Promise<UserPreferencesDto[]> {
+    const session = await sessionOidc.get();
+    if (!session) {
+      throw new UnauthorizedException();
+    }
+    const { idpIdentity } = session;
+
+    const preferences =
+      this.userPreferences.getUserPreferencesList(idpIdentity);
+
+    return preferences;
+  }
+
+  @Post(UserDashboardBackRoutes.USER_PREFERENCES)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async updateUserPreferences(
+    @Body() body: UserPreferencesBodyDto,
+    @Session('OidcClient')
+    sessionOidc: ISessionService<OidcClientSession>,
+  ): Promise<UserPreferencesDto[]> {
+    const session = await sessionOidc.get();
+    if (!session) {
+      throw new UnauthorizedException();
+    }
+    const { idpIdentity } = session;
+    const { idpList, allowFutureIdp } = body;
+
+    const preferences = this.userPreferences.setUserPreferencesList(
+      idpIdentity,
+      { idpList, allowFutureIdp },
+    );
+
+    return preferences;
   }
 }

@@ -20,6 +20,7 @@ const accounts = [
       __v: 1,
       noDisplayConfirmation: false,
     },
+
     {
       active : true,
       identityHash: "Sr1x7B9YHc4uoiIcvqx8lzxq6nvLg1rN/n1klPFSgGA=",
@@ -37,6 +38,27 @@ const accounts = [
         }
       },
       id : "3ec64565-a907-4284-935a-0ff0213cc120",
+      __v : 0
+    },
+    {
+      active : true,
+      identityHash: "m+yf8zrTpLBGrSjYIL+kzpjNkTtE6LTbl9dikcHd7A0=",      
+
+      lastConnection : ISODate("2022-02-01T13:06:06.029Z"),
+      updatedAt : ISODate("2022-02-01T13:06:06.039Z"),
+      createdAt : ISODate("2021-08-19T14:49:39.950Z"),
+     
+      idpFederation : {
+        "fip1-high" : {
+          sub : "d3b57b2d664198a340c315c2b11dc129b982b13274512564ba8e1b1e2eab9cc5v1"
+        }
+      },
+      spFederation : {
+        a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc : {
+          sub : "bfac09b3bd2d4d729c051b9f63186532ed5410c098c2c9eb10db51c6fe6a9ae9v1"
+        }
+      },
+      id : "test_TRACE_USER",
       __v : 0
     }
     

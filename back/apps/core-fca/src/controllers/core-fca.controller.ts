@@ -127,73 +127,79 @@ export class CoreFcaController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const { spName } = (await sessionOidc.get()) || {};
-    if (!spName) {
-      throw new SessionBadFormatException();
+    try {
+      const { spName } = (await sessionOidc.get()) || {};
+      if (!spName) {
+        throw new SessionBadFormatException();
+      }
+      const { params } = await this.oidcProvider.getInteraction(req, res);
+      const { scope } = this.config.get<OidcClientConfig>('OidcClient');
+      const { urlPrefix } = this.config.get<AppConfig>('App');
+
+      // -- generate and store in session the CSRF token
+      const csrfToken = this.csrfService.get();
+      await this.csrfService.save(sessionOidc, csrfToken);
+
+      const {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        acr_values,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        client_id,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        redirect_uri,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        response_type,
+      } = params;
+
+      const redirectToIdentityProviderInputs = {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        acr_values,
+        csrfToken,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        redirect_uri,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        response_type,
+        scope,
+      };
+
+      const ministries = await this.ministries.getList();
+      const { idpFilterExclude, idpFilterList } =
+        await this.serviceProvider.getById(client_id);
+
+      const identityProvidersList = await this.identityProvider.getFilteredList(
+        {
+          blacklist: idpFilterExclude,
+          idpList: idpFilterList,
+        },
+      );
+
+      const identityProviders = identityProvidersList.map(
+        ({ active, display, title, uid }) => ({
+          active,
+          display,
+          name: title,
+          uid,
+        }),
+      );
+
+      const jsonResponse = {
+        identityProviders,
+        ministries,
+        redirectToIdentityProviderInputs,
+        redirectURL: `${urlPrefix}${OidcClientRoutes.REDIRECT_TO_IDP}`,
+        serviceProviderName: spName,
+      };
+
+      this.logger.trace({
+        method: 'GET',
+        name: 'CoreRoutes.FCA_FRONT_DATAS',
+        response: jsonResponse,
+        route: CoreRoutes.FCA_FRONT_DATAS,
+      });
+      return res.json(jsonResponse);
+    } catch (err) {
+      return res.status(500).json(err);
     }
-    const { params } = await this.oidcProvider.getInteraction(req, res);
-    const { scope } = this.config.get<OidcClientConfig>('OidcClient');
-
-    // -- generate and store in session the CSRF token
-    const csrfToken = this.csrfService.get();
-    await this.csrfService.save(sessionOidc, csrfToken);
-
-    const {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      acr_values,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      client_id,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      redirect_uri,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      response_type,
-    } = params;
-
-    const redirectToIdentityProviderInputs = {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      acr_values,
-      csrfToken,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      redirect_uri,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      response_type,
-      scope,
-    };
-
-    const ministries = await this.ministries.getList();
-    const { idpFilterExclude, idpFilterList } =
-      await this.serviceProvider.getById(client_id);
-
-    const identityProvidersList = await this.identityProvider.getFilteredList({
-      blacklist: idpFilterExclude,
-      idpList: idpFilterList,
-    });
-
-    const identityProviders = identityProvidersList.map(
-      ({ active, display, title, uid }) => ({
-        active,
-        display,
-        name: title,
-        uid,
-      }),
-    );
-
-    const jsonResponse = {
-      identityProviders,
-      ministries,
-      redirectToIdentityProviderInputs,
-      redirectURL: '/api/v2/redirect-to-idp',
-      serviceProviderName: spName,
-    };
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'CoreRoutes.FCA_FRONT_DATAS',
-      response: jsonResponse,
-      route: CoreRoutes.FCA_FRONT_DATAS,
-    });
-
-    return res.json(jsonResponse);
   }
 
   @Get(CoreRoutes.INTERACTION)

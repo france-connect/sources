@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-import { IFederation, IIdpSettings } from '../interfaces';
+import { IFederation, IPreferences } from '../interfaces';
 
 @Schema({
   strict: true,
@@ -55,7 +55,7 @@ export class Account extends Document {
   spFederation: IFederation;
 
   @Prop({ type: SchemaNative.Types.Mixed })
-  idpSettings: IIdpSettings;
+  preferences: IPreferences;
 }
 
 export const AccountSchema = SchemaFactory.createForClass(Account);
