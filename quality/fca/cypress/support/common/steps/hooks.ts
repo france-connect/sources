@@ -9,7 +9,12 @@ import {
   getDefaultUser,
   isUsingFCBasicAuthorization,
 } from '../helpers';
-import { IdentityProvider, ServiceProvider, UserData } from '../types';
+import {
+  Environment,
+  IdentityProvider,
+  ServiceProvider,
+  UserData,
+} from '../types';
 
 const skipTest = (): void => {
   /**
@@ -99,4 +104,14 @@ Before({ tags: '@ignoreInteg01' }, function () {
   if (Cypress.env('TEST_ENV') === 'integ01') {
     skipTest();
   }
+});
+
+Before({ tags: '@validationVisuelle' }, function () {
+  // Clear the localstorage before each visual test
+  // @link: https://github.com/cypress-io/cypress/issues/2573
+  cy.get<Environment>('@env').then((env) => {
+    cy.visit(env.fcaRootUrl, { failOnStatusCode: false }).then((win) => {
+      win.localStorage.clear();
+    });
+  });
 });

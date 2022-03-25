@@ -3,7 +3,12 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { useApiGet } from '@fc/common';
 
-import { FormValues, UserPreferencesConfig, UserPreferencesData } from '../interfaces';
+import {
+  FormValues,
+  IGetCsrfTokenResponse,
+  UserPreferencesConfig,
+  UserPreferencesData,
+} from '../interfaces';
 import { UserPreferencesService } from '../services';
 
 export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
@@ -21,24 +26,35 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
   }, []);
 
   const commitSuccessHandler = useCallback(({ data }) => {
-    const values = UserPreferencesService.parseFormData(data);
-    setFormValues(values);
+    const { allowFutureIdp, idpList } = UserPreferencesService.parseFormData(data);
+    setFormValues({ allowFutureIdp: !allowFutureIdp, idpList });
     setSubmitErrors(undefined);
     setSubmitWithSuccess(true);
   }, []);
 
   const commit = useCallback(
-    ({ allowFutureIdp, idpList }) => {
+    async ({ allowFutureIdp, idpList }) => {
+      const {
+        data: { csrfToken },
+      } = await axios.get<IGetCsrfTokenResponse>(options.API_ROUTE_CSRF_TOKEN);
+
       const data = UserPreferencesService.encodeFormData({
-        allowFutureIdp,
+        allowFutureIdp: !allowFutureIdp,
+        csrfToken,
         idpList,
       });
+
       return axios
         .post(options.API_ROUTE_USER_PREFERENCES, data)
         .then(commitSuccessHandler)
         .catch(commitErrorHandler);
     },
-    [commitSuccessHandler, commitErrorHandler, options.API_ROUTE_USER_PREFERENCES],
+    [
+      commitSuccessHandler,
+      commitErrorHandler,
+      options.API_ROUTE_CSRF_TOKEN,
+      options.API_ROUTE_USER_PREFERENCES,
+    ],
   );
 
   useEffect(() => {
@@ -48,8 +64,8 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
       // when
       // if initial userPreferences has already been loaded
       // and if form values has not yet been set
-      const values = UserPreferencesService.parseFormData(userPreferences);
-      setFormValues(values);
+      const { allowFutureIdp, idpList } = UserPreferencesService.parseFormData(userPreferences);
+      setFormValues({ allowFutureIdp: !allowFutureIdp, idpList });
     }
   }, [userPreferences, formValues]);
 

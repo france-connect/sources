@@ -6,15 +6,15 @@ import { DateTime } from 'luxon';
 import { EidasToLabel } from '../enums';
 
 export interface Track {
-  accountId: string;
   city: string;
   country: string;
   date: string;
   event: string;
   spAcr: keyof typeof EidasToLabel;
-  spId: string;
   spName: string;
   trackId: string;
+  platform: 'FranceConnect' | 'FranceConnect+';
+  claims: string[] | null;
 }
 
 export interface EnhancedTrack extends Track {

@@ -11,7 +11,12 @@ import {
 
 import { LoggerService } from '@fc/logger';
 import { OidcClientSession } from '@fc/oidc-client';
-import { ISessionService, Session, SessionCsrfService } from '@fc/session';
+import {
+  ISessionService,
+  Session,
+  SessionCsrfService,
+  SessionInvalidCsrfSelectIdpException,
+} from '@fc/session';
 import { TracksService } from '@fc/tracks';
 import {
   FormattedIdpSettingDto,
@@ -38,6 +43,7 @@ export class UserDashboardController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<{ csrfToken: string }> {
+    this.logger.debug('getCsrfToken()');
     const csrfToken = this.csrfService.get();
     await this.csrfService.save(sessionOidc, csrfToken);
 
@@ -49,12 +55,15 @@ export class UserDashboardController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<unknown> {
+    this.logger.debug('getUserTraces()');
     const session = await sessionOidc.get();
     if (!session) {
       throw new UnauthorizedException();
     }
     const { idpIdentity } = session;
+    this.logger.trace({ idpIdentity });
     const tracks = await this.tracks.getList(idpIdentity);
+    this.logger.trace({ tracks });
     return tracks;
   }
 
@@ -72,6 +81,7 @@ export class UserDashboardController {
       family_name: string;
     };
   }> {
+    this.logger.debug('getUserInfos()');
     const session = await sessionOidc.get();
     if (!session) {
       throw new UnauthorizedException();
@@ -85,6 +95,7 @@ export class UserDashboardController {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name: idpIdentity?.given_name,
     };
+    this.logger.trace({ userinfos });
     return { userinfos };
   }
 
@@ -117,8 +128,18 @@ export class UserDashboardController {
     if (!session) {
       throw new UnauthorizedException();
     }
+    const { csrfToken, idpList, allowFutureIdp } = body;
+
+    // -- control if the CSRF provided is the same as the one previously saved in session.
+    try {
+      await this.csrfService.validate(sessionOidc, csrfToken);
+    } catch (error) {
+      this.logger.trace({ error });
+
+      throw new SessionInvalidCsrfSelectIdpException(error);
+    }
+
     const { idpIdentity } = session;
-    const { idpList, allowFutureIdp } = body;
 
     const preferences = await this.userPreferences.setUserPreferencesList(
       idpIdentity,

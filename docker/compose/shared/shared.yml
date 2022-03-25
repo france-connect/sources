@@ -59,6 +59,7 @@ services:
           # FCP LOW
           - core-fcp-low.docker.dev-franceconnect.fr
           - fsp1-low.docker.dev-franceconnect.fr
+          - fsp2-low.docker.dev-franceconnect.fr
           - fip1-low.docker.dev-franceconnect.fr
           - fip2-low.docker.dev-franceconnect.fr
           - fip3-low.docker.dev-franceconnect.fr

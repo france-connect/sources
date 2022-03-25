@@ -16,4 +16,7 @@ export class UserPreferencesBodyDto {
   @Transform(enforceBoolean)
   @IsBoolean()
   allowFutureIdp: boolean;
+
+  @IsString()
+  csrfToken: string;
 }

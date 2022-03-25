@@ -1,9 +1,9 @@
 #language: fr
-@usager @connexionAcr
+@usager @connexionAcr @ci
 Fonctionnalité: Connexion Usager - Acr
-  En tant qu'usager d'un fournisseur de service,
-  je veux me connecter en utilisant un fournisseur d'identité
-  et recevoir sur mon FS un niveau de sécurité eidas1
+  # En tant qu'usager d'un fournisseur de service,
+  # je veux me connecter en utilisant un fournisseur d'identité
+  # et recevoir sur mon FS un niveau de sécurité eidas1
 
   Plan du Scénario: Connexion ACR - identification niveau "<acrValues>" (méthode <method>) utilise eidas1
     Etant donné que j'utilise le fournisseur de service "par défaut"

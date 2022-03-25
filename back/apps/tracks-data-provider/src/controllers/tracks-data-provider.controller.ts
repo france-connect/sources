@@ -27,6 +27,12 @@ export class TracksDataProviderController {
     this.logger.trace({ identity });
 
     const tracks = await this.tracks.getList(identity);
+    /**
+     * @todo Add Dto Validatation with TrackDto
+     *
+     * Author: Arnaud
+     * Date: 18/02/2022
+     */
     this.logger.trace({ tracks });
 
     return tracks;

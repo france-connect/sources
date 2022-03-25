@@ -21,6 +21,7 @@ services:
     depends_on:
       - 'core-fcp-low'
       - 'fsp1-low'
+      - 'fsp2-low'
       - 'fip1-low'
       - 'fip2-low'
       - 'fip3-low'

@@ -11,7 +11,10 @@ jest.mock('../hooks');
 jest.mock('./services-list.component');
 jest.mock('./user-preferences-form.component');
 
-const optionsMock = { API_ROUTE_USER_PREFERENCES: 'any-endpoint' };
+const optionsMock = {
+  API_ROUTE_CSRF_TOKEN: 'csrf-token-endpoint',
+  API_ROUTE_USER_PREFERENCES: 'any-endpoint',
+};
 const commitMock = jest.fn();
 const initialValuesMock = { allowFutureIdp: false, idpList: expect.any(Object) };
 const userPreferencesMock = {

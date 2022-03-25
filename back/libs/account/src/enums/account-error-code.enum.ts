@@ -5,7 +5,7 @@
  * An entry should be used by one and only one exception.
  *
  * Codes are documented here:
- * @see https://confluence.kaliop.net/display/FC/Codes+erreurs+des+applications
+ * @see ../../../../back/_doc/erreurs.md
  */
 export enum ErrorCode {
   ACCOUNT_BLOCKED = 1,

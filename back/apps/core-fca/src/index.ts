@@ -5,3 +5,4 @@ export * from './controllers';
 export * from './core-fca.module';
 export * from './dto';
 export * from './handlers';
+export * from './services';

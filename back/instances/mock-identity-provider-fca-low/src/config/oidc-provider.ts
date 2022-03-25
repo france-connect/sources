@@ -68,6 +68,7 @@ export default {
       backchannelLogout: { enabled: true },
       revocation: { enabled: true },
       rpInitiatedLogout: { enabled: true },
+      claimsParameter: { enabled: true },
     },
     acceptQueryParamAccessTokens: true,
     ttl: {
@@ -80,6 +81,7 @@ export default {
     acrValues: ['eidas2', 'eidas3'],
     scopes: ['openid'],
     claims: {
+      amr: ['amr'],
       uid: ['uid'],
       openid: ['sub'],
       // node-oidc-provider defined key

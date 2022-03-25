@@ -62,9 +62,9 @@ export class ScopesService {
 
   /**
    * extract the unit scopes from a grouped scope (Profile -> gender,family_name...)
-   * @param {*} scopes
+   * @param {Array} scopes
    */
-  getClaimsFromScopes(scopes): string[] {
+  getClaimsFromScopes(scopes: string[]): string[] {
     return unique(
       scopes.flatMap((alias) => MAPPING_ALIAS_SCOPES[alias] || alias),
     );

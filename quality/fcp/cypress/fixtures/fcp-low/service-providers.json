@@ -21,5 +21,23 @@
       "logoutButton": ".nav-logout"
     },
     "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsp2-low",
+    "descriptions": ["non habilité à demander le claim amr"],
+    "mocked": true,
+    "url": "https://fsp2-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "clientId": "7a79e45107f9ccc6a3a5971d501220dc4fd9e87bb5e3fc62ce4104c756e22775",
+    "acrValue": "eidas1",
+    "claims": [],
+    "scopes": [
+      "tous les scopes"
+    ],
+    "explicitConsent": false,
+    "selectors": {
+      "fcButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
   }
 ]

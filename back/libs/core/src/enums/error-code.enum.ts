@@ -12,4 +12,5 @@ export enum ErrorCode {
    */
   INVALID_CONSENT_PROCESS = 7,
   FAILED_PERSISTENCE = 8,
+  CLAIM_AMR = 9,
 }

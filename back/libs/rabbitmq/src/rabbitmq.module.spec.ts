@@ -11,6 +11,10 @@ describe('RabbitmqModule', () => {
     get: jest.fn(),
   };
 
+  const loggerMock = {
+    trace: jest.fn(),
+  };
+
   const configServiceReturnValue = Symbol('configServiceReturnValue');
 
   beforeEach(() => {
@@ -59,7 +63,7 @@ describe('RabbitmqModule', () => {
       const module = RabbitmqModule.registerFor(moduleNameMock);
       const provider = module.providers[0] as any;
       // When
-      provider.useFactory(configServiceMock);
+      provider.useFactory(loggerMock, configServiceMock);
       // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
       expect(configServiceMock.get).toHaveBeenCalledWith('FoobarBroker');

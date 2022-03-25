@@ -3,10 +3,12 @@
 // Declarative code
 import { Module } from '@nestjs/common';
 
-import { mongooseProvider } from './mongoose.provider';
+import { mongooseModuleBuilder } from './mongoose.module.builder';
+
+const mongooseModuleGenerated = mongooseModuleBuilder();
 
 @Module({
-  imports: [mongooseProvider],
-  exports: [mongooseProvider],
+  imports: [mongooseModuleGenerated],
+  exports: [mongooseModuleGenerated],
 })
 export class MongooseModule {}

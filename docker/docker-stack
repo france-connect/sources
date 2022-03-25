@@ -309,7 +309,7 @@ _styleguide() {
   cd ${WORKING_DIR} && docker-compose exec $NO_TTY styleguide "/opt/scripts/start.sh" || err=true
 }
 
-_fixturesv2() {
+_fixtures_fcp_high() {
   echo "**************************************"
   echo " Resetting fixtures in database..."
   echo "**************************************"
@@ -446,7 +446,7 @@ case "$action" in
       fip2-high core-fcp-high rnipp exploitation-high fsa1-low fsa2-low fsa3-low fsa4-low \
       fia1-low fia2-low fia4-low fia5-low core-fca-low fca-low-front csmr-hsm eidas-bridge \
       exploitation-fca-low exploit-fcp-high-back exploit-fca-low-back core-fcp-low \
-      fsp1-low fip1-low fip2-low fip3-low exploit-fcp-high-front exploit-fca-low-front bridge-proxy-rie \
+      fsp1-low fsp2-low fip1-low fip2-low fip3-low exploit-fcp-high-front exploit-fca-low-front bridge-proxy-rie \
       exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
       csmr-rie fia-rie-low
     ;;
@@ -468,8 +468,8 @@ case "$action" in
   styleguide)
     _styleguide
     ;;
-  fixtures-v2)
-    _fixturesv2
+  fixtures-fcp-high)
+    _fixtures_fcp_high
     ;;
   fixtures-fca-low)
     _fixtures_fca_low
@@ -498,7 +498,7 @@ case "$action" in
     fsa1-low fsa2-low fsa3-low fia1-low fia2-low core-fca-low fca-low-front csmr-hsm \
     eidas-bridge exploitation-fca-low exploit-fcp-high-back exploit-fcp-high-front \
     exploit-fca-low-back exploit-fca-low-front exploit-fcp-high-fi-mock bridge-proxy-rie \
-    exploit-fca-low-fi-mock core-fcp-low fsp1-low fip1-low fip2-low fip3-low\
+    exploit-fca-low-fi-mock core-fcp-low fsp1-low fsp2-low fip1-low fip2-low fip3-low\
     csmr-rie fia-rie-low
     ;;
   reset-db-core-fcp-high)
@@ -527,7 +527,7 @@ case "$action" in
       \
       core-fcp-high exploit-fcp-high-back core-fcp-low \
       fsp1-high fsp2-high fsp3-high fsp5-high fsp6-high \
-      fsp1-low \
+      fsp1-low fsp2-low \
       fip1-high fip2-high fip6-high fip13-high fip14-high fip15-high fip16-high fip17-high fip18-high fip19-high fip20-high \
       fip1-low fip2-low fip3-low \
       exploit-fcp-high-front exploit-fca-low-front \
@@ -546,7 +546,7 @@ case "$action" in
     \
     core-fcp-high exploit-fcp-high-back core-fcp-low \
     fsp1-high fsp2-high fsp3-high fsp5-high fsp6-high \
-    fsp1-low \
+    fsp1-low fsp2-low \
     fip1-high fip2-high fip6-high fip13-high fip14-high fip15-high fip16-high fip17-high fip18-high fip19-high fip20-high \
     fip1-low fip2-low fip3-low \
     exploit-fcp-high-front \
@@ -563,7 +563,7 @@ case "$action" in
   test-all)
     _test rnipp core-fcp-high exploitation-high core-fca-low fca-low-front eidas-bridge \
     exploitation-fca-low exploit-fcp-high-back exploit-fca-low-back exploit-fca-low-front \
-    exploit-fcp-high-fi-mock exploit-fca-low-fi-mock core-fcp-low fsp1-low \
+    exploit-fcp-high-fi-mock exploit-fca-low-fi-mock core-fcp-low fsp1-low fsp2-low \
     fip1-low fip2-low fip3-low bridge-proxy-rie csmr-rie fia-rie-low
     ;;
   e2e)
@@ -624,7 +624,8 @@ case "$action" in
     echo "* halt => stop docker-compose and delete containers"
     echo "* llng-configure => Restore LemonLDAP configuration from ./docker/volumes/llng/llng-conf.json dump file"
     echo "* log [<app>] => exec pm2 logs for given instance (Ex. core-fcp-high)"
-    echo "* fixtures => drop and restore default postgres database in fc-apps"
+    echo "* fixtures-fca-low => drop and restore default postgres database for exploitation fca low"
+    echo "* fixtures-fcp-high => drop and restore default postgres database for exploitation fcp high"
     echo "* mongo-shell-core-fcp-high => open mongo-fcp-high shell for core-fcp-high stack"
     echo "* mongo-shell-core-fca-low => open mongo-fca-low shell for core-fca-low stack"
     echo "* reload [<app1> <app2> <...>] => (re)start given pm2 instances (Ex. core-fcp-high)"

@@ -2,11 +2,12 @@ import { FormValues, UserPreferencesData } from '../interfaces';
 
 interface UserPreferencesServiceInterface {
   allowFutureIdp: boolean;
+  csrfToken: string;
   idpList: { [key: string]: boolean };
 }
 
 export class UserPreferencesService {
-  static encodeFormData({ allowFutureIdp, idpList }: UserPreferencesServiceInterface) {
+  static encodeFormData({ allowFutureIdp, csrfToken, idpList }: UserPreferencesServiceInterface) {
     const formData = new URLSearchParams();
     Object.entries(idpList)
       .filter(([, value]) => value)
@@ -14,6 +15,7 @@ export class UserPreferencesService {
         formData.append('idpList', key);
       });
     formData.append('allowFutureIdp', allowFutureIdp.toString());
+    formData.append('csrfToken', csrfToken);
     return formData;
   }
 

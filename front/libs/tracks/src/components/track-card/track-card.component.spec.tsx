@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { DateTime } from 'luxon';
 
 import { EidasToLabel } from '../../enums';
+import { EnhancedTrack } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';
@@ -21,16 +22,15 @@ describe('TrackCardComponent', () => {
     LUXON_FORMAT_MONTH_YEAR: 'LLLL yyyy',
     LUXON_FORMAT_TIMEZONE: 'z',
   };
-  const track = {
-    accountId: 'mock-account-id',
+  const track: EnhancedTrack = {
     city: 'mock-city',
+    claims: ['claims1', 'claims2'],
     country: 'mock-country',
     date: '2021-10-01T00:00:00.000+01:00',
     datetime: DateTime.fromObject({ day: 1, month: 10, year: 2021 }, { zone: 'Europe/Paris' }),
-    datetimeId: 'mock-datetimeid',
     event: 'mock-event',
+    platform: 'FranceConnect',
     spAcr: 'eidas1' as keyof typeof EidasToLabel,
-    spId: 'mock-spid',
     spName: 'mock-spname',
     trackId: 'mock-track-id',
   };
@@ -53,7 +53,7 @@ describe('TrackCardComponent', () => {
       // then
       expect(TrackCardBadgeComponent).toHaveBeenCalled();
       expect(TrackCardBadgeComponent).toHaveBeenCalledWith(
-        { fromFcPlus: true, type: track.event },
+        { fromFcPlus: false, type: track.event },
         {},
       );
     });
@@ -78,10 +78,11 @@ describe('TrackCardComponent', () => {
       expect(TrackCardContentComponent).toHaveBeenCalledWith(
         {
           accessibleId: `card::a11y::${track.trackId}`,
-          accountId: track.accountId,
+          city: 'mock-city',
+          claims: ['claims1', 'claims2'],
+          country: 'mock-country',
           datetime: track.datetime,
           opened: false,
-          options,
           spAcr: track.spAcr,
         },
         {},

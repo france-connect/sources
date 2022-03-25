@@ -18,9 +18,9 @@ describe('CsmrTracksController', () => {
     getList: jest.fn(),
   };
 
+  const identityHashMock = Symbol('identityHash') as unknown as string;
   const payloadMock = {
-    pattern: 'SOME_PATTERN',
-    data: {},
+    identityHash: identityHashMock,
   };
 
   beforeEach(async () => {
@@ -48,15 +48,21 @@ describe('CsmrTracksController', () => {
       expect(result).toEqual(expected);
     });
 
-    it('Should return an empty array if an error is throwed by csmrTracks.getList()', async () => {
+    /**
+     * @todo #825 implement Error protocol
+     *
+     * Author: Arnaud PSA
+     * Date: 22/02/2022
+     */
+    it('Should return an ERROR message if an error is throwed by csmrTracks.getList()', async () => {
       // Given
       csmrTracksMock.getList.mockImplementationOnce(() => {
-        throw new Error();
+        throw new Error('Unknown Error');
       });
       // When
       const result = await controller.getTracks(payloadMock);
       // Then
-      expect(result).toEqual([]);
+      expect(result).toEqual('ERROR');
     });
   });
 });

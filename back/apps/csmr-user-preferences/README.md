@@ -87,7 +87,10 @@ The Payload can be tested here: http://localhost:15673/#/queues/%2F/idp_settings
       }
     },
     "idpSettings": {
-      "idpList": ["fip1-high", "fip2-high"],
+      "idpList": [
+        "0adf04be-536e-4986-b639-73ea8d38493e",
+        "c88c1574-b97c-473d-8be8-96d55aa001e5"
+      ],
       "allowFutureIdp": true
     }
   }

@@ -8,6 +8,7 @@ import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { ExceptionsModule } from '@fc/exceptions';
 import { IdentityProviderAdapterMongoModule } from '@fc/identity-provider-adapter-mongo';
 import { LoggerModule } from '@fc/logger';
+import { MailerModule } from '@fc/mailer';
 import { MongooseModule } from '@fc/mongoose';
 
 import { CsmrUserPreferencesController } from './controllers';
@@ -22,6 +23,7 @@ import { CsmrUserPreferencesService } from './services';
     AccountModule,
     CryptographyFcpModule,
     IdentityProviderAdapterMongoModule,
+    MailerModule,
   ],
   controllers: [CsmrUserPreferencesController],
   providers: [CsmrUserPreferencesService, CsmrUserPreferenceHandler],

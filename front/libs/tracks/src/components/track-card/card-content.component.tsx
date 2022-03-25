@@ -3,21 +3,30 @@ import { DateTime } from 'luxon';
 import React from 'react';
 
 import { EidasToLabel } from '../../enums';
-import { TracksConfig } from '../../interfaces';
 
 type TraceCardContentProps = {
   accessibleId: string;
-  accountId: string;
+
   datetime: DateTime;
   opened: boolean;
   spAcr: keyof typeof EidasToLabel;
-  options: TracksConfig;
+  /**
+   * @todo #820
+   *
+   * Use to set up time format
+   *
+   * Author: Arnaud PSA
+   * Date: 10/02/2022
+   */
+  // options: TracksConfig;
+  city: string;
+  country: string;
+  claims: string[] | null;
 };
 
 export const TrackCardContentComponent = React.memo(
-  ({ accessibleId, accountId, datetime, opened, options, spAcr }: TraceCardContentProps) => {
-    const formattedTime = datetime.toFormat(options.LUXON_FORMAT_HOUR_MINS);
-    const formattedLocation = datetime.toFormat(options.LUXON_FORMAT_TIMEZONE);
+  ({ accessibleId, city, claims, country, datetime, opened, spAcr }: TraceCardContentProps) => {
+    const formattedTime = datetime.setLocale('fr-FR').toLocaleString(DateTime.DATETIME_MED);
 
     return (
       <dl
@@ -35,19 +44,18 @@ export const TrackCardContentComponent = React.memo(
         <dd className="ml32">
           <ul>
             <li>
-              <span>Heure&nbsp;:&nbsp;</span>
+              <span>Connexion à ce service a eu lieu le &nbsp;:&nbsp;</span>
+              <br />
               <b>{formattedTime} (heure de Paris)</b>
             </li>
             <li>
-              <span>Localisation&nbsp;:&nbsp;</span>
-              <b>{formattedLocation}</b>
+              <span>Localisation &nbsp;:&nbsp;</span>
+              <b>
+                {city} ({country})
+              </b>
             </li>
             <li>
-              <span>Compte Utilisé&nbsp;:&nbsp;</span>
-              <b>{accountId}</b>
-            </li>
-            <li>
-              <span>Niveau de sécurité&nbsp;:&nbsp;</span>
+              <span>Niveau de garantie eIDAS&nbsp;:&nbsp;</span>
               <a
                 className="is-g700"
                 href="/"
@@ -55,6 +63,20 @@ export const TrackCardContentComponent = React.memo(
                 <b>{EidasToLabel[spAcr]}</b>
               </a>
             </li>
+
+            {claims && (
+              /**
+               * @todo #820 display the good way the claims group
+               *
+               * Author: Arnaud PSA
+               * Date: 18/02/2022
+               */
+              <li>
+                <span>Récupération des données&nbsp;:&nbsp;</span>
+                <br />
+                <b>{claims.join(', ')}</b>
+              </li>
+            )}
           </ul>
         </dd>
       </dl>

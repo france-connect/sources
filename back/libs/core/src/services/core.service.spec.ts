@@ -20,6 +20,7 @@ import { ISessionBoundContext, SessionService } from '@fc/session';
 import { IEventContext, TrackingService } from '@fc/tracking';
 
 import {
+  CoreClaimAmrException,
   CoreFailedPersistenceException,
   CoreInvalidAcrException,
   CoreLowAcrException,
@@ -116,6 +117,15 @@ describe('CoreService', () => {
   const rnippidentityHashMock = 'rnippIdentityHashed';
   const subIdpMock = 'MockedIdpSub';
   const spNameMock = 'my SP';
+  const spAcrMock = 'eidas3';
+  const spIdMock = 'spIdValue';
+  const reqMock = {
+    headers: { 'x-forwarded-for': '123.123.123.123' },
+    sessionId: sessionIdMockValue,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    query: { acr_values: spAcrMock, client_id: spIdMock },
+  };
+  const resMock = {};
 
   const trackingMock = {
     track: jest.fn(),
@@ -688,14 +698,15 @@ describe('CoreService', () => {
       service['registerMiddlewares']();
       // Then
       expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledTimes(
-        6,
+        7,
       );
     });
 
-    it('should register 5 events', () => {
+    it('should register 6 events', () => {
       // Given
       service['overrideAuthorizePrompt'] = jest.fn();
       service['overrideAuthorizeAcrValues'] = jest.fn();
+      service['overrideClaimAmrMiddleware'] = jest.fn();
       service['authorizationMiddleware'] = jest.fn();
       service['tokenMiddleware'] = jest.fn();
       service['userinfoMiddleware'] = jest.fn();
@@ -729,14 +740,6 @@ describe('CoreService', () => {
   });
 
   describe('authorizationMiddleware()', () => {
-    const spIdMock = 'spIdValue';
-    const spAcrMock = 'eidas3';
-    const reqMock = {
-      headers: { 'x-forwarded-for': '123.123.123.123' },
-      sessionId: sessionIdMockValue,
-    };
-    const resMock = {};
-
     const getCtxMock = (hasError = false) => {
       return {
         oidc: {
@@ -842,10 +845,6 @@ describe('CoreService', () => {
         .fn()
         .mockReturnValue(eventCtxMock as IEventContext);
 
-      service['serviceProvider'].getById = jest
-        .fn()
-        .mockResolvedValue({ name: spNameMock });
-
       const authEventContextMock: IEventContext = {
         ...eventCtxMock,
         spAcr: spAcrMock,
@@ -856,14 +855,120 @@ describe('CoreService', () => {
       await service['authorizationMiddleware'](ctxMock);
 
       // Then
-      expect(service['serviceProvider'].getById).toHaveBeenCalledTimes(1);
-      expect(service['serviceProvider'].getById).toHaveBeenCalledWith(spIdMock);
+      expect(serviceProviderServiceMock.getById).toHaveBeenCalledTimes(1);
+      expect(serviceProviderServiceMock.getById).toHaveBeenCalledWith(spIdMock);
 
       expect(service['tracking'].track).toHaveBeenCalledTimes(1);
       expect(service['tracking'].track).toHaveBeenCalledWith(
         OidcProviderAuthorizationEvent,
         authEventContextMock,
       );
+    });
+  });
+
+  describe('overrideClaimAmrMiddleware()', () => {
+    it('should throw an error if service provider not authorized to request amr claim', async () => {
+      // Given
+      const ctxMock = {
+        oidc: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          params: { acr_values: spAcrMock, client_id: spIdMock },
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          claims: { id_token: { amr: { essential: true } } },
+        },
+        req: reqMock,
+        res: resMock,
+      };
+      const errorMock = new CoreClaimAmrException();
+
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        claims: [],
+      });
+
+      // When
+      await service['overrideClaimAmrMiddleware'](ctxMock);
+
+      // Then
+      expect(serviceProviderServiceMock.getById).toHaveBeenCalledTimes(1);
+      expect(serviceProviderServiceMock.getById).toHaveBeenCalledWith(spIdMock);
+
+      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenNthCalledWith(
+        1,
+        ctxMock,
+        errorMock,
+      );
+    });
+
+    it('should not throw if amr claim not requested and not authorized for sp', async () => {
+      // Given
+      const ctxMock = {
+        oidc: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          params: { acr_values: spAcrMock, client_id: spIdMock },
+          claims: {},
+        },
+        req: reqMock,
+        res: resMock,
+      };
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        claims: [],
+      });
+
+      // When
+      await service['overrideClaimAmrMiddleware'](ctxMock);
+
+      // Then
+      expect(serviceProviderServiceMock.getById).toHaveBeenCalledTimes(0);
+      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(0);
+    });
+
+    it('should not throw if amr claim not requested by service provider but authorized for sp', async () => {
+      // Given
+      const ctxMock = {
+        oidc: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          params: { acr_values: spAcrMock, client_id: spIdMock },
+          claims: {},
+        },
+        req: reqMock,
+        res: resMock,
+      };
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        claims: ['amr'],
+      });
+
+      // When
+      await service['overrideClaimAmrMiddleware'](ctxMock);
+
+      // Then
+      expect(serviceProviderServiceMock.getById).toHaveBeenCalledTimes(0);
+      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(0);
+    });
+
+    it('should not throw if amr claim is authorized to request by the service provider', async () => {
+      // Given
+      const ctxMock = {
+        oidc: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          params: { acr_values: spAcrMock, client_id: spIdMock },
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          claims: { id_token: { amr: { essential: true } } },
+        },
+        req: reqMock,
+        res: resMock,
+      };
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        claims: ['amr'],
+      });
+
+      // When
+      await service['overrideClaimAmrMiddleware'](ctxMock);
+
+      // Then
+      expect(serviceProviderServiceMock.getById).toHaveBeenCalledTimes(1);
+      expect(serviceProviderServiceMock.getById).toHaveBeenCalledWith(spIdMock);
+
+      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(0);
     });
   });
 

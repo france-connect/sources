@@ -32,3 +32,11 @@ Fonctionnalité: Connexion avec Claims
     Alors je suis redirigé vers la page fournisseur de service
     Et je suis connecté
     Et la cinématique n'a pas renvoyé d'amr
+
+  Scénario: Connexion avec claims - erreur FS non habilité pour amr
+    Etant donné que j'utilise le fournisseur de service "non habilité à demander le claim amr"
+    Et que le fournisseur de service requiert le claim "amr"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Alors je suis redirigé vers la page erreur technique
+    Et le code d'erreur est "Y030009"

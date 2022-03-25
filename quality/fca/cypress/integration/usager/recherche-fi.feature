@@ -1,9 +1,9 @@
 #language: fr
-@usager @rechercheFi
+@usager @rechercheFi @ci
 Fonctionnalité: Recherche FI
-  #En tant qu'usager d'un fournisseur de service,
-  #je veux rechercher un FI par ministère ou par son nom,
-  #afin de m'authentifier
+  # En tant qu'usager d'un fournisseur de service,
+  # je veux rechercher un FI par ministère ou par son nom,
+  # afin de m'authentifier
 
   Scénario: Recherche FI - par son nom
     Etant donné que j'utilise le fournisseur de service "par défaut"
@@ -56,13 +56,13 @@ Fonctionnalité: Recherche FI
     Alors le fournisseur d'identité est affiché dans la liste
     Et le ministère du FI est affiché dans la liste
 
-    # Ministère du FI: MOCK - Ministére de la transition écologique - ALL FIS - SORT 2
+    # Ministère du FI: MOCK - Ministère de la transition écologique - ALL FIS - SORT 2
     Exemples:
       | recherche                                    |
       | mock                                         |
       | sort 2                                       |
       | ALL FIS                                      |
-      | MOCK - Ministére de la transition écologique |
+      | MOCK - Ministère de la transition écologique |
       | ministere de la transition ecolo             |
 
   # TODO La recherche par acronyme ne fonctionne qu'en utilisant l'id

@@ -9,7 +9,9 @@ import {
   IsEmail,
   IsNumber,
   IsObject,
+  IsOptional,
   IsString,
+  MinLength,
   NotContains,
   ValidateIf,
   ValidateNested,
@@ -33,9 +35,12 @@ export class MailTo {
   @IsString()
   readonly name: string;
 }
+
 class SmtpOptions {
+  @IsOptional()
+  @MinLength(1)
   @IsString()
-  readonly proxyUrl: string;
+  readonly proxyUrl?: string;
 
   @IsString()
   readonly host: string;

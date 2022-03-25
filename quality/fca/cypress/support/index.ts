@@ -14,3 +14,14 @@
 // ***********************************************************
 
 import 'cypress-xpath';
+
+import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';
+
+addMatchImageSnapshotCommand({
+  capture: 'fullPage',
+  customDiffConfig: { threshold: 0.3 },
+  customDiffDir: './cypress/snapshots/diff',
+  customSnapshotsDir: './cypress/snapshots/base',
+  failureThreshold: 0,
+  failureThresholdType: 'percent',
+});

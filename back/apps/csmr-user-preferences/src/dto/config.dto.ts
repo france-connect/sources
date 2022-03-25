@@ -6,6 +6,7 @@ import { IsObject, ValidateNested } from 'class-validator';
 
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
 import { LoggerConfig } from '@fc/logger';
+import { MailerConfig } from '@fc/mailer';
 import { MongooseConfig } from '@fc/mongoose';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
@@ -29,4 +30,9 @@ export class CsmrUserPreferencesConfig {
   @ValidateNested()
   @Type(() => IdentityProviderAdapterMongoConfig)
   readonly IdentityProviderAdapterMongo: IdentityProviderAdapterMongoConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => MailerConfig)
+  readonly Mailer: MailerConfig;
 }

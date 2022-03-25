@@ -18,4 +18,7 @@ db.scopes.remove({});
 print('Reseting ministries collection...');
 db.ministries.remove({});
 
+print("Reseting claims collection");
+db.claims.remove({});
+
 print("All collections reseted!");

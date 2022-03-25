@@ -15,8 +15,12 @@ Given(
   },
 );
 
-Given('les traces contiennent {string}', function (tracksType) {
+Given('les traces FranceConnect+ contiennent {string}', function (tracksType) {
   cy.task('addTracks', { tracksType });
+});
+
+Given('les traces FranceConnect contiennent {string}', function (tracksType) {
+  cy.task('addTracksLegacy', { tracksType });
 });
 
 Then(
@@ -27,6 +31,54 @@ Then(
   },
 );
 
-Then('les traces de connexion sont affichées', function () {
-  udHistoryPage.traces.should('be.visible');
-});
+Then(
+  'les {int} traces de FranceConnect de moins de 6 mois sont affichées',
+  function (nbOfTraces) {
+    udHistoryPage.traces.should('be.visible');
+    /**
+     * @todo #820
+     * analyse type of tracks received (2 FC_VERIFIED + 1 CONSENT)
+     *
+     * Author: Arnaud PSA
+     * Date: 23/02/2022
+     */
+    udHistoryPage.traces
+      .filter('.track-FranceConnect')
+      .should('have.length', nbOfTraces);
+
+    udHistoryPage.checkIfBeforeNbOfMonth('.track-FranceConnect', 6);
+  },
+);
+
+Then(
+  'les {int} traces de FranceConnect+ sont affichées',
+  function (nbOfTraces) {
+    udHistoryPage.traces.should('be.visible');
+    /**
+     * @todo #820
+     * analyse type of tracks received (2 FC_VERIFIED + 1 CONSENT)
+     *
+     * Author: Arnaud PSA
+     * Date: 23/02/2022
+     */
+    udHistoryPage.traces
+      .filter('.track-FranceConnect\\+')
+      .should('have.length', nbOfTraces);
+  },
+);
+
+Then(
+  'les {int} traces sont affichées par ordre décroissant',
+  function (nbOfTraces) {
+    udHistoryPage.traces.should('be.visible');
+    /**
+     * @todo #820
+     * analyse type of tracks received (2 FC_VERIFIED + 1 CONSENT)
+     *
+     * Author: Arnaud PSA
+     * Date: 23/02/2022
+     */
+    udHistoryPage.traces.should('have.length', nbOfTraces);
+    udHistoryPage.checkIfTracksAreSorted();
+  },
+);

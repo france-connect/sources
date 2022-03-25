@@ -32,7 +32,7 @@ describe('Idp activation & visibility', () => {
     cy.visit(getAuthorizeUrl());
     cy.url().should('match', mireUrl);
 
-    cy.get('#fi-search-term').type('mock - ministére de la');
+    cy.get('#fi-search-term').type('mock - ministère de la');
 
     cy.get(
       '#identity-provider-result input[name="providerUid"][value="fia1-low"]',
@@ -76,7 +76,7 @@ describe('Idp activation & visibility', () => {
     cy.visit(getAuthorizeUrl());
     cy.url().should('match', mireUrl);
     cy.get('#fi-search-term').type(
-      'MOCK - Ministére de la transition écologique - ALL FIS - SORT 2',
+      'MOCK - Ministère de la transition écologique - ALL FIS - SORT 2',
     );
     cy.get(`#fca-search-idp-${idpId}1-low > input[name="csrfToken"]`)
       // Reset CSRF form value

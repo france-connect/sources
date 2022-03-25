@@ -19,28 +19,28 @@
         "ID": "fia1-low",
         "IDP_ROOT_URL": "https://fia1-low.docker.dev-franceconnect.fr",
         "IDP_INTERACTION_URL": "https://fia1-low.docker.dev-franceconnect.fr/interaction",
-        "MINISTRY_NAME": "MOCK - Ministére de la transition écologique - ALL FIS - SORT 2",
+        "MINISTRY_NAME": "MOCK - Ministère de la transition écologique - ALL FIS - SORT 2",
         "TITLE": "Identity Provider 1 - eIDAS faible - ES256"
       },
       {
         "ID": "fia2-low",
         "IDP_ROOT_URL": "https://fia2-low.docker.dev-franceconnect.fr",
         "IDP_INTERACTION_URL": "https://fia2-low.docker.dev-franceconnect.fr/interaction",
-        "MINISTRY_NAME": "MOCK - Ministére de la transition écologique - ALL FIS - SORT 2",
+        "MINISTRY_NAME": "MOCK - Ministère de la transition écologique - ALL FIS - SORT 2",
         "TITLE": "Identity Provider 2 - eIDAS faible - RS256"
       },
       {
         "ID": "fia4-low",
         "IDP_ROOT_URL": "https://fia4-low.docker.dev-franceconnect.fr",
         "IDP_INTERACTION_URL": "https://fia4-low.docker.dev-franceconnect.fr/interaction",
-        "MINISTRY_NAME": "MOCK - Ministére de la mer - E2E - SORT 4",
+        "MINISTRY_NAME": "MOCK - Ministère de la mer - E2E - SORT 4",
         "TITLE": "Identity Provider 4 - eIDAS faible - HS256"
       },
       {
         "ID": "fia5-low",
         "IDP_ROOT_URL": "https://fia5-low.docker.dev-franceconnect.fr",
         "IDP_INTERACTION_URL": "https://fia5-low.docker.dev-franceconnect.fr/interaction",
-        "MINISTRY_NAME": "MOCK - Ministére de la mer - E2E - SORT",
+        "MINISTRY_NAME": "MOCK - Ministère de la mer - E2E - SORT",
         "TITLE": "Identity Provider 5 - eIDAS faible - RS256"
       }
     ],

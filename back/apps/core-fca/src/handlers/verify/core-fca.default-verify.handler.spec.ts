@@ -56,6 +56,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     spAcr: 'eidas3',
     spName: 'my great SP',
     spIdentity: spIdentityMock,
+    amr: ['pwd'],
   };
 
   const cryptographyFcaServiceMock = {
@@ -151,7 +152,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith({
         accountId: accountIdMock,
-        amr: ['fca'],
+        amr: ['pwd'],
         idpIdentity: { sub: 'computedSubIdp' },
         spIdentity: {
           ...idpIdentityMock,
@@ -239,7 +240,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
           idp_acr: sessionDataMock.idpAcr,
         },
         accountId: accountIdMock,
-        amr: ['fca'],
+        amr: ['pwd'],
       };
 
       // When

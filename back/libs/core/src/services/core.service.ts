@@ -3,23 +3,24 @@ import { Injectable } from '@nestjs/common';
 import { AccountBlockedException, AccountService } from '@fc/account';
 import { ConfigService } from '@fc/config';
 import { LoggerLevelNames, LoggerService } from '@fc/logger';
-import { Acr, OidcSession } from '@fc/oidc';
+import { Acr, IOidcClaims, OidcSession } from '@fc/oidc';
 import {
   OidcCtx,
   OidcProviderAuthorizationEvent,
   OidcProviderConfig,
+  OidcProviderErrorService,
   OidcProviderMiddlewareStep,
   OidcProviderRoutes,
   OidcProviderService,
   OidcProviderTokenEvent,
   OidcProviderUserinfoEvent,
 } from '@fc/oidc-provider';
-import { OidcProviderErrorService } from '@fc/oidc-provider/services';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { ISessionBoundContext, SessionService } from '@fc/session';
 import { IEventContext, TrackingService } from '@fc/tracking';
 
 import {
+  CoreClaimAmrException,
   CoreFailedPersistenceException,
   CoreInvalidAcrException,
   CoreLowAcrException,
@@ -102,6 +103,12 @@ export class CoreService {
 
     this.oidcProvider.registerMiddleware(
       OidcProviderMiddlewareStep.AFTER,
+      OidcProviderRoutes.AUTHORIZATION,
+      this.overrideClaimAmrMiddleware.bind(this),
+    );
+
+    this.oidcProvider.registerMiddleware(
+      OidcProviderMiddlewareStep.AFTER,
       OidcProviderRoutes.TOKEN,
       this.tokenMiddleware.bind(this),
     );
@@ -158,6 +165,28 @@ export class CoreService {
     };
 
     this.tracking.track(OidcProviderAuthorizationEvent, authEventContext);
+  }
+
+  private async overrideClaimAmrMiddleware(ctx) {
+    const { claims }: { claims: IOidcClaims } = ctx.oidc;
+
+    const amrIsRequested = Object.values(claims)
+      .map((claimRequested) => Object.keys(claimRequested))
+      .flat()
+      .includes('amr');
+
+    if (!amrIsRequested) {
+      return;
+    }
+
+    const sp = await this.serviceProvider.getById(ctx.oidc.params.client_id);
+    const spClaimsAuthorized = sp.claims as Array<string>;
+    const spAmrIsAutorized = spClaimsAuthorized.includes('amr');
+
+    if (!spAmrIsAutorized) {
+      const exception = new CoreClaimAmrException();
+      this.oidcErrorService.throwError(ctx, exception);
+    }
   }
 
   private tokenMiddleware(ctx) {

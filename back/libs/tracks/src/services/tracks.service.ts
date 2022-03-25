@@ -26,7 +26,7 @@ export class TracksService {
   async getList(identity: Partial<IOidcIdentity>): Promise<TrackDto[]> {
     const { requestTimeout } = this.config.get<RabbitmqConfig>('TracksBroker');
 
-    this.logger.debug('UserTracksController.traces()');
+    this.logger.debug('UserTracksController.getList()');
 
     try {
       const order = this.broker
@@ -34,6 +34,9 @@ export class TracksService {
         .pipe(timeout(requestTimeout));
 
       const data = await lastValueFrom(order);
+
+      this.logger.trace({ data });
+
       return data;
     } catch (error) {
       this.logger.trace(error, 'Error Response from RabbitMQ');

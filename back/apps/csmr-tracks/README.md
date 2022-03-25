@@ -31,7 +31,9 @@ Accessible depuis l'[interface graphique de RabbitMQ](http://localhost:15673/#/q
 - Password: `guest`
 
 Then in the section `Publish message` in the field `Payload` we can broadcast
-this massage that will be received by all the application listening to the `topic` (or `patern` in nestJS): `TRACKS_GET`
+this message that will be received by all the application listening to the `topic` (or `pattern` in nestJS): `TRACKS_GET`
+
+for aggregate :
 
 ```json
 {
@@ -41,23 +43,24 @@ this massage that will be received by all the application listening to the `topi
     "family_name": "MARTIN",
     "birthdate": "1981-02-03",
     "gender": "male",
-    "preferred_username": "",
     "birthcountry": "99100",
-    "birthplace": "75112",
-    "email": "",
-    "phone_number": "",
-    "address": {
-      "country": "",
-      "formatted": "",
-      "locality": "",
-      "postal_code": "",
-      "street_address": ""
-    }
+    "birthplace": "75112"
   }
 }
 ```
 
-Function that get the account hash from account data (identity pivo) :
+for csmr-tracks :
+
+```json
+{
+  "pattern": "TRACKS_GET",
+  "data": {
+    "identityHash": "m+yf8zrTpLBGrSjYIL+kzpjNkTtE6LTbl9dikcHd7A0="
+  }
+}
+```
+
+Function that get the account hash from account data (identity pivot) :
 [../../libs/cryptography-fcp/src/cryptography-fcp.service.ts](<computeIdentityHash(pivotIdentity)>)
 
 ### Depuis Nest

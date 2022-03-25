@@ -123,6 +123,7 @@ export class MockIdentityProviderController {
     sessionOidc.set({
       spAcr,
       spIdentity,
+      amr: ['pwd'],
     });
 
     this.logger.trace({

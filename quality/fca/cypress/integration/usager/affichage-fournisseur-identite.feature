@@ -1,5 +1,5 @@
 #language: fr
-@usager @affichageFournisseurIdentité
+@usager @affichageFournisseurIdentité @ci
 Fonctionnalité: Affichage Fournisseur Identité
   # En tant qu'agent,
   # je veux visualiser la liste des fournisseurs d'identité disponibles

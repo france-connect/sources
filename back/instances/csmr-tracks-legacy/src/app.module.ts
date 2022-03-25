@@ -1,0 +1,30 @@
+/* istanbul ignore file */
+
+// Declarative code
+import { DynamicModule, Module } from '@nestjs/common';
+
+import { ConfigModule, ConfigService } from '@fc/config';
+import { CsmrTracksModule } from '@fc/csmr-tracks';
+import { LoggerModule } from '@fc/logger';
+import { ScopesModule } from '@fc/scopes';
+import { ServiceProviderAdapterMongoModule } from '@fc/service-provider-adapter-mongo';
+
+import { CsmrTracksLegacyDataService } from './services';
+
+const imports = [ScopesModule, ServiceProviderAdapterMongoModule];
+@Module({})
+export class AppModule {
+  static forRoot(configService: ConfigService): DynamicModule {
+    return {
+      module: AppModule,
+      imports: [
+        // 1. Load config module first
+        ConfigModule.forRoot(configService),
+        // 2. Load logger module next
+        LoggerModule,
+        // 3. Load other modules
+        CsmrTracksModule.withProxy(CsmrTracksLegacyDataService, imports),
+      ],
+    };
+  }
+}

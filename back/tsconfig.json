@@ -150,6 +150,10 @@
       "@fc/hybridge-http-proxy/*": ["libs/hybridge-http-proxy/src/*"],
       "@fc/user-preferences": ["libs/user-preferences/src"],
       "@fc/user-preferences/*": ["libs/user-preferences/src/*"],
+      "@fc/csmr-tracks-legacy": ["apps/csmr-tracks-legacy/src"],
+      "@fc/csmr-tracks-legacy/*": ["apps/csmr-tracks-legacy/src/*"],
+      "@fc/csmr-aggregate-tracks": ["apps/csmr-aggregate-tracks/src"],
+      "@fc/csmr-aggregate-tracks/*": ["apps/csmr-aggregate-tracks/src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

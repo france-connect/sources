@@ -40,6 +40,7 @@ const fsa = {
       "idp_id",
       "idp_acr",
     ],
+    claims: ["amr"],
     id_token_signed_response_alg: "HS256",
     id_token_encrypted_response_alg: "",
     id_token_encrypted_response_enc: "",
@@ -89,6 +90,7 @@ const fsa = {
       "belonging_population",
       "chorusdt",
     ],
+    claims: ["amr"],
     id_token_signed_response_alg: "ES256",
     id_token_encrypted_response_alg: "",
     id_token_encrypted_response_enc: "",
@@ -139,6 +141,7 @@ const fsa = {
       "belonging_population",
       "chorusdt",
     ],
+    claims: [],
     id_token_signed_response_alg: "ES256",
     id_token_encrypted_response_alg: "RSA-OAEP",
     id_token_encrypted_response_enc: "A256GCM",
@@ -152,7 +155,7 @@ const fsa = {
     identityConsent: false,
   },
 
-  // -- FSA - FSA4-LOW - Activated - RS256 - encrypted response
+  // -- FSA - FSA4-LOW - Activated - RS256 - encrypted response - not autorized to request amr claim
   "FSA4-LOW": {
     name: "FSA - FSA4-LOW",
     title: "FSA - FSA4-LOW Title",
@@ -190,6 +193,7 @@ const fsa = {
       // "belonging_population", <-- Removed to test "requested scope not allowed"
       "chorusdt",
     ],
+    claims: [],
     id_token_signed_response_alg: "RS256",
     id_token_encrypted_response_alg: "",
     id_token_encrypted_response_enc: "",

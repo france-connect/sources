@@ -1,6 +1,6 @@
 db = db.getSiblingDB("core-fcp-high");
 
-const collections = ['account', 'user', 'client', 'provider', 'scopes'];
+const collections = ['account', 'user', 'client', 'provider', 'scopes', 'claims'];
 
 collections.forEach((collection) =>{
     print(`Reseting ${collection} collection...`);

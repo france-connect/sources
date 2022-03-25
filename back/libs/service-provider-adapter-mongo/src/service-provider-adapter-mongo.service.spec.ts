@@ -23,6 +23,7 @@ describe('ServiceProviderAdapterMongoService', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_secret: "This is an encrypted string, don't ask !",
     scopes: ['openid', 'profile'],
+    claims: [],
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     redirect_uris: ['https://sp-site.fr/redirect_uris'],

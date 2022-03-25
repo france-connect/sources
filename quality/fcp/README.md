@@ -85,7 +85,7 @@ yarn start:low
 docker-stack prune && \
 docker-stack up all-fcp-high && \
 docker-stack dependencies-all && \
-docker-stack fixtures-v2
+docker-stack fixtures-fcp-high
 # Start all containers if the computer has more than 16GB of RAM
 docker-stack start-all
 # Start fewer containers otherwise (only tests using FIP1-high will pass)

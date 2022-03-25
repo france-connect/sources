@@ -4,6 +4,23 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.85.0 & v3.86.0
+
+### Hardening & QA
+
+- Fixed linter `tsx` rules that were applied to `ts` files
+- [AgentConnect]
+  - Implemented visual regression tests
+  - SP can now request the IdP `amr` ([Authentication Methods References](https://www.ietf.org/rfc/rfc8176.html))
+
+### Not yet in production (futures apps / features)
+
+- [User Dashboard]
+  - A notification email is now sent when the user preferences are edited
+  - Added CSRF protection when the user preferences are edited
+  - FC low legacy entries are now shown on the user connection log
+  - Fixed the "allowFutureIdp" property
+
 ## v3.83.0 & v3.84.0
 
 ### Features

@@ -24,7 +24,7 @@ export const ErrorComponent = React.memo(({ errors }: ErrorComponentProps) => {
       </h1>
       <div className="ErrorComponent margin-x-auto my32 px16 fr-text-lg">
         <p className="mb32 is-bold">Description de l’erreur :</p>
-        <p className="mb32" id="error-message">
+        <p className="mb32" data-testid="error-message">
           {errors.message}
         </p>
         <p className="mb32 is-bold">Que faire ?</p>
@@ -38,10 +38,10 @@ export const ErrorComponent = React.memo(({ errors }: ErrorComponentProps) => {
             Informations à nous transmettre dans le mail pour faciliter la prise en charge de votre
             demande :
           </p>
-          <p id="error-code">
+          <p data-testid="error-code">
             <strong>Code d’erreur :</strong> {errors.code}
           </p>
-          <p>
+          <p data-testid="error-session-id">
             <strong>ID :</strong> {errors.id}
           </p>
         </div>

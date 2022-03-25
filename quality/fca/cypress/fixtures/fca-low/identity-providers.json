@@ -7,7 +7,7 @@
       "rattaché à un ministère avec plusieurs FI",
       "rattaché à plusieurs ministères"
     ],
-    "ministry": "MOCK - Ministére de la transition écologique - ALL FIS - SORT 2",
+    "ministry": "MOCK - Ministère de la transition écologique - ALL FIS - SORT 2",
     "title": "Identity Provider 1 - eIDAS faible - ES256",
     "mocked": true,
     "usable": true,
@@ -25,7 +25,7 @@
   {
     "idpId": "fia2-low",
     "descriptions": ["FI eidas1 avec signature RS256"],
-    "ministry": "MOCK - Ministére de la transition écologique - ALL FIS - SORT 2",
+    "ministry": "MOCK - Ministère de la transition écologique - ALL FIS - SORT 2",
     "title": "Identity Provider 2 - eIDAS faible - RS256",
     "mocked": true,
     "usable": true,
@@ -43,7 +43,7 @@
   {
     "idpId": "fia3-desactive-visible",
     "descriptions": ["désactivé et visible"],
-    "ministry": "MOCK - Ministére de la transition écologique - ALL FIS - SORT 2",
+    "ministry": "MOCK - Ministère de la transition écologique - ALL FIS - SORT 2",
     "title": "Identity Provider 3 (désactivé)- eIDAS faible",
     "mocked": true,
     "usable": false,
@@ -62,7 +62,7 @@
       "non whitelisté",
       "non blacklisté"
     ],
-    "ministry": "MOCK - Ministére de la mer - E2E - SORT 4",
+    "ministry": "MOCK - Ministère de la mer - E2E - SORT 4",
     "title": "Identity Provider 4 - eIDAS faible - HS256",
     "mocked": true,
     "usable": true,
@@ -83,7 +83,7 @@
       "whitelisté",
       "blacklisté"
     ],
-    "ministry": "MOCK - Ministére de la mer - E2E - SORT 4",
+    "ministry": "MOCK - Ministère de la mer - E2E - SORT 4",
     "title": "Identity Provider 5 - eIDAS faible - RS256",
     "mocked": true,
     "usable": true,
@@ -101,7 +101,7 @@
   {
     "idpId": "fia6-active-invisible",
     "descriptions": ["actif et non visible"],
-    "ministry": "MOCK - Ministére de l'intérieur - SOME FIS DISABLED - SORT 1",
+    "ministry": "MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
     "title": "Identity Provider 6 (non visible)- eIDAS faible",
     "mocked": true,
     "usable": false,
@@ -116,7 +116,7 @@
   {
     "idpId": "fia7-desactive-invisible",
     "descriptions": ["désactivé et non visible"],
-    "ministry": "MOCK - Ministére de l'intérieur - SOME FIS DISABLED - SORT 1",
+    "ministry": "MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
     "title": "Identity Provider 7 (désactivé et non visible)- eIDAS faible",
     "mocked": true,
     "usable": false,

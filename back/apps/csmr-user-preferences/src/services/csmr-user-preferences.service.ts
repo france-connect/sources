@@ -5,24 +5,46 @@ import {
   AccountService,
   IIdpSettings,
 } from '@fc/account';
-import { PartialExcept } from '@fc/common';
+import { PartialExcept, validateDto } from '@fc/common';
+import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyFcpService, IPivotIdentity } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import {
+  IdpConfigUpdateEmailParameters,
+  MailerConfig,
+  MailerNotificationConnectException,
+  MailerService,
+  MailFrom,
+  MailTo,
+  NoEmailException,
+} from '@fc/mailer';
 import { IdentityProviderMetadata, IOidcIdentity } from '@fc/oidc';
 
+import { EmailsTemplates } from '../enums';
 import { CsmrUserPreferencesIdpNotFoundException } from '../exceptions';
-import { IFormattedIdpSettings } from '../interfaces';
+import {
+  IFormattedIdpList,
+  IFormattedIdpSettings,
+  IFormattedUserIdpSettingsLists,
+  ISetIdpSettingsService,
+} from '../interfaces';
 
 @Injectable()
 export class CsmrUserPreferencesService {
+  private configMailer;
+
+  // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
     private readonly account: AccountService,
+    private readonly config: ConfigService,
     private readonly cryptographyFcp: CryptographyFcpService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
+    private readonly mailer: MailerService,
   ) {
     this.logger.setContext(this.constructor.name);
+    this.configMailer = this.config.get<MailerConfig>('Mailer');
   }
 
   formatUserIdpSettingsList(
@@ -118,7 +140,7 @@ export class CsmrUserPreferencesService {
     identity: IPivotIdentity,
     inputIdpList: string[],
     inputIsExcludeList: boolean,
-  ): Promise<IFormattedIdpSettings> {
+  ): Promise<ISetIdpSettingsService> {
     this.logger.debug(`Identity received : ${identity}`);
 
     const idpList = await this.identityProvider.getList();
@@ -126,6 +148,7 @@ export class CsmrUserPreferencesService {
     const inputIdpAllExistsInDatabase = inputIdpList.every((idpUid) =>
       idpUids.includes(idpUid),
     );
+
     if (!inputIdpAllExistsInDatabase) {
       throw new CsmrUserPreferencesIdpNotFoundException();
     }
@@ -140,16 +163,34 @@ export class CsmrUserPreferencesService {
       idpUids,
     );
 
-    const { id, preferences } = await this.account.updatePreferences(
-      identityHash,
-      list,
-      isExcludeList,
+    const { id, preferences: IdpSettingsBeforeUpdate } =
+      await this.account.updatePreferences(identityHash, list, isExcludeList);
+
+    const idpListBeforeUpdate = IdpSettingsBeforeUpdate
+      ? IdpSettingsBeforeUpdate.idpSettings.list
+      : [];
+    const isExcludeListBeforeUpdate = IdpSettingsBeforeUpdate
+      ? IdpSettingsBeforeUpdate.idpSettings.isExcludeList
+      : false;
+    const { formattedIdpSettingsList, formattedPreviousIdpSettingsList } =
+      this.getFormattedUserIdpSettingsLists({
+        idpList,
+        newPreferences: {
+          list,
+          isExcludeList,
+        },
+        preferencesBeforeUpdate: {
+          list: idpListBeforeUpdate,
+          isExcludeList: isExcludeListBeforeUpdate,
+        },
+      });
+
+    const updatedIdpSettingsList = this.updatedIdpSettings(
+      formattedIdpSettingsList,
+      formattedPreviousIdpSettingsList,
     );
 
-    const formattedIdpSettings = this.formatUserIdpSettingsList(
-      idpList,
-      preferences.idpSettings,
-    );
+    const hasChangedIsExcludeList = isExcludeList !== isExcludeListBeforeUpdate;
 
     this.logger.trace({
       accountId: id,
@@ -157,10 +198,124 @@ export class CsmrUserPreferencesService {
       identityHash,
       inputIdpList,
       inputIsExcludeList,
-      formattedIdpSettings,
-      preferences,
+      formattedIdpSettingsList,
+      updatedIdpSettingsList,
     });
 
-    return formattedIdpSettings;
+    return {
+      formattedIdpSettingsList,
+      updatedIdpSettingsList,
+      hasChangedIsExcludeList,
+    };
+  }
+
+  async sendMail(userInfo, idpConfiguration): Promise<void> {
+    const { from } = this.configMailer;
+    let errors = await validateDto(from, MailFrom, validationOptions);
+    if (errors.length > 0) {
+      throw new NoEmailException();
+    }
+
+    const { email, givenName, familyName } = userInfo;
+
+    const mailTo: MailTo = {
+      email,
+      name: `${givenName} ${familyName}`,
+    };
+
+    const to: MailTo[] = [mailTo];
+    errors = await validateDto(mailTo, MailTo, validationOptions);
+    if (errors.length > 0) {
+      throw new NoEmailException();
+    }
+
+    // -- email bodyfamilyName
+    const body = await this.getIdpConfigUpdateEmailBodyContent(
+      userInfo,
+      idpConfiguration,
+    );
+
+    this.logger.trace({ from, to });
+
+    this.mailer.send({
+      from,
+      to,
+      subject: `Notification de mise à jour de votre configuration FI FC+`,
+      body,
+    });
+  }
+
+  private async getIdpConfigUpdateEmailBodyContent(
+    userInfo,
+    idpConfiguration,
+  ): Promise<string> {
+    const { email, givenName, familyName } = userInfo;
+    const {
+      formattedIdpSettingsList,
+      updatedIdpSettingsList,
+      hasChangedIsExcludeList,
+      allowFutureIdp,
+    } = idpConfiguration;
+
+    const futureIdpChoice = hasChangedIsExcludeList
+      ? !allowFutureIdp
+      : allowFutureIdp;
+    const idpConfigUpdateEmailParameters = {
+      email,
+      givenName,
+      familyName,
+      formattedIdpSettingsList,
+      updatedIdpSettingsList,
+      futureIdpChoice,
+      hasChangedIsExcludeList,
+    };
+
+    const dtoValidationErrors = await validateDto(
+      idpConfigUpdateEmailParameters,
+      IdpConfigUpdateEmailParameters,
+      validationOptions,
+    );
+
+    if (dtoValidationErrors.length > 0) {
+      throw new MailerNotificationConnectException();
+    }
+
+    const fileName = EmailsTemplates.IDP_CONFIG_UPDATES_EMAIL;
+    const htmlContent = this.mailer.mailToSend(
+      fileName,
+      idpConfigUpdateEmailParameters,
+    );
+
+    return htmlContent;
+  }
+
+  private getFormattedUserIdpSettingsLists({
+    idpList,
+    newPreferences,
+    preferencesBeforeUpdate,
+  }): IFormattedUserIdpSettingsLists {
+    const formattedIdpSettings = this.formatUserIdpSettingsList(
+      idpList,
+      newPreferences,
+    );
+
+    const formattedPreviousIdpSettings = this.formatUserIdpSettingsList(
+      idpList,
+      preferencesBeforeUpdate,
+    );
+
+    return {
+      formattedIdpSettingsList: formattedIdpSettings.idpList,
+      formattedPreviousIdpSettingsList: formattedPreviousIdpSettings.idpList,
+    };
+  }
+
+  private updatedIdpSettings(current, previous): IFormattedIdpList[] {
+    const previousMap = {};
+    previous.forEach((elem) => (previousMap[elem.uid] = elem.isChecked));
+    const result = current.filter(
+      ({ uid, isChecked }) => previousMap[uid] !== isChecked,
+    );
+    return result;
   }
 }

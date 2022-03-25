@@ -31,7 +31,11 @@
     "lint": "yarn lint:css && yarn lint:js",
     "prettier": "prettier --check \"{apps,libs}/**/*.(ts|tsx|scss)\"",
     "test": "jest --config=./jest.config.js",
-    "test:cov": "yarn test --coverage"
+    "test:cov": "yarn test --coverage",
+    "serve:ud": "serve --config=/var/www/app/serve.json -n -d apps/user-dashboard/build/",
+    "serve:fca": "serve --config=/var/www/app/serve.json -n -d apps/agent-connect/build/",
+    "serve:exploit-fcp-high": "serve --config=/var/www/app/serve.json -n -d apps/exploit-fcp-high/build/",
+    "serve:exploit-fca-low": "serve --config=/var/www/app/serve.json -n -d apps/exploit-fca-low/build/"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.4",
@@ -60,6 +64,7 @@
     "jest-svg-transformer": "^1.0.0",
     "redux-devtools-extension": "^2.13.9",
     "sass": "^1.45.0",
+    "serve": "^13.0.2",
     "ts-jest": "^26.5.6",
     "type-fest": "^2.5.0",
     "typescript": "^4.4.4"

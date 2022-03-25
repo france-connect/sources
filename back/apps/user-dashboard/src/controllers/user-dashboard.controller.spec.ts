@@ -3,7 +3,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
-import { SessionCsrfService } from '@fc/session';
+import {
+  SessionCsrfService,
+  SessionInvalidCsrfSelectIdpException,
+} from '@fc/session';
 import { TracksService } from '@fc/tracks';
 import {
   FormattedIdpSettingDto,
@@ -69,6 +72,7 @@ describe('UserDashboardController', () => {
 
   const updatePreferencesBodyMock = {
     idpList: [],
+    csrfToken: 'csrfTokenMockValue',
     allowFutureIdp: false,
   };
 
@@ -324,6 +328,10 @@ describe('UserDashboardController', () => {
       sessionServiceMock.get.mockResolvedValueOnce({
         idpIdentity: identityMock,
       });
+
+      const { allowFutureIdp, idpList } = updatePreferencesBodyMock;
+      const expectedServicedArguments = { allowFutureIdp, idpList };
+
       // When
       await controller.updateUserPreferences(
         updatePreferencesBodyMock,
@@ -335,7 +343,7 @@ describe('UserDashboardController', () => {
       );
       expect(userPreferencesMock.setUserPreferencesList).toHaveBeenCalledWith(
         identityMock,
-        updatePreferencesBodyMock,
+        expectedServicedArguments,
       );
     });
 
@@ -363,5 +371,20 @@ describe('UserDashboardController', () => {
         allowFutureIdp: updatePreferencesBodyMock.allowFutureIdp,
       });
     });
+  });
+
+  it('should fail if csrfToken is invalid', async () => {
+    // Given
+    sessionGenericCsrfServiceMock.validate.mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    // Then / When
+    await expect(
+      controller.updateUserPreferences(
+        updatePreferencesBodyMock,
+        sessionServiceMock,
+      ),
+    ).rejects.toThrow(SessionInvalidCsrfSelectIdpException);
   });
 });

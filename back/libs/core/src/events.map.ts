@@ -216,7 +216,7 @@ export function getEventsMap(urlPrefix: string): IEventMap {
       intercept: false,
     },
 
-    // Not supported yet
+    // Not implemented yet
     SP_REQUESTED_LOGOUT: {
       step: '8.0.0',
       category: EventsCategories.FRONT_CINEMATIC,
@@ -224,6 +224,16 @@ export function getEventsMap(urlPrefix: string): IEventMap {
       exceptions: [],
       route: `${urlPrefix}/session/end`,
       intercept: false,
+    },
+
+    // Not implemented yet
+    DP_REQUESTED_FC_CHECKTOKEN: {
+      step: '7.4.0',
+      category: EventsCategories.BACK_CINEMATIC,
+      event: 'DP_REQUESTED_FC_CHECKTOKEN',
+      exceptions: [],
+      route: `${urlPrefix}/checktoken`,
+      intercept: true,
     },
   };
 }

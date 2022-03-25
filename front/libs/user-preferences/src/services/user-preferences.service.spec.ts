@@ -10,6 +10,8 @@ describe('UserPreferencesService', () => {
       'uid-mock-4': true,
     };
 
+    const csrfToken = 'csrfTokenMockValue';
+
     beforeEach(() => {
       jest.clearAllMocks();
     });
@@ -18,6 +20,7 @@ describe('UserPreferencesService', () => {
       // when
       const result = UserPreferencesService.encodeFormData({
         allowFutureIdp: false,
+        csrfToken,
         idpList,
       });
       // then
@@ -30,6 +33,7 @@ describe('UserPreferencesService', () => {
       // when
       UserPreferencesService.encodeFormData({
         allowFutureIdp: false,
+        csrfToken,
         idpList,
       });
       // then
@@ -43,6 +47,7 @@ describe('UserPreferencesService', () => {
       // when
       UserPreferencesService.encodeFormData({
         allowFutureIdp: false,
+        csrfToken,
         idpList: {},
       });
       // then

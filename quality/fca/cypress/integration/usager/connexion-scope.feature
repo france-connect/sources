@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionScope
+@usager @connexionScope @ci
 Fonctionnalité: Connexion Usager - Scope
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter en utilisant un fournisseur d'identité

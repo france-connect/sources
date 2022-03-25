@@ -26,15 +26,20 @@ class PopulateAccountTraces {
   }
 
   async run() {
-    this.initElasticsearchClient();
+    try {
+      this.initElasticsearchClient();
 
-    const formatedDatamock = this.getFormatedMockData();
+      const formatedDatamock = this.getFormatedMockData();
 
-    await this.deleteIndex();
-    await this.setIndex();
-    await this.save(formatedDatamock);
+      await this.deleteIndex();
+      await this.setIndex();
+      await this.save(formatedDatamock);
 
-    await this.displayData();
+      await this.displayData();
+    } catch (error) {
+      console.error(error);
+      process.exit(1);
+    }
   }
 
   /**
@@ -45,11 +50,19 @@ class PopulateAccountTraces {
    * - Elasticsearch_PROTOCOL
    * - Elasticsearch_HOST
    * - Elasticsearch_PORT
+   * - Elasticsearch_USERNAME
+   * - Elasticsearch_PASSWORD
    * @returns {void}
    */
   initElasticsearchClient() {
     const host = `${ELASTIC_PROTOCOL}://${ELASTIC_HOST}:${ELASTIC_PORT}`;
-    this.esClient = new Client({ node: host, auth: { username: ELASTIC_USERNAME, password: ELASTIC_PASSWORD } });
+    if (!(ELASTIC_PROTOCOL && ELASTIC_HOST && ELASTIC_PORT)) {
+      throw new Error(`Problem with connection params: ${host}`);
+    }
+    this.esClient = new Client({
+      node: host,
+      auth: { username: ELASTIC_USERNAME, password: ELASTIC_PASSWORD },
+    });
   }
 
   /**
@@ -63,13 +76,13 @@ class PopulateAccountTraces {
       switch (el.date) {
         // -- expired date
         case placeholders.MORE_THAN_6_MONTHS:
-          el.date = DateTime.now().plus({
+          el.date = DateTime.now().minus({
             month: this.getRandomBetween(7, 11),
           });
           break;
         // -- valid date
         case placeholders.LESS_THAN_6_MONTHS:
-          el.date = DateTime.now().plus({
+          el.date = DateTime.now().minus({
             month: this.getRandomBetween(1, 5),
           });
           break;

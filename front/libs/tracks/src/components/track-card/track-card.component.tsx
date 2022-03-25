@@ -21,10 +21,16 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
     setOpened(next);
   }, [opened]);
 
-  const { accountId, datetime, event, spAcr, spName, trackId } = track;
+  const { city, claims, country, datetime, event, platform, spAcr, spName, trackId } = track;
 
-  // @TODO ajuster quand on aura récupérer l'origine/source des traces
-  const isFromFranceConnectPlus = true;
+  /**
+   * @todo #820
+   * add real management for the entity name : FranceConnect or FranceConnect+
+   *
+   * Author: Arnaud PSA
+   * Date: 10/02/2022
+   */
+  const isFromFranceConnectPlus = platform === 'FranceConnect+';
 
   const cardA11YId = `card::a11y::${trackId}`;
   return (
@@ -33,9 +39,11 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
       aria-expanded={opened}
       className={classnames(
         'card',
+        `track-${platform}`,
         'use-pointer is-full-width text-left is-block is-relative is-blue-shadow mb32 px20 py16',
       )}
       data-testid={trackId}
+      data-time={datetime}
       type="button"
       onClick={openCardHandler}>
       <TrackCardBadgeComponent fromFcPlus={isFromFranceConnectPlus} type={event} />
@@ -47,10 +55,11 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
       />
       <TrackCardContentComponent
         accessibleId={cardA11YId}
-        accountId={accountId}
+        city={city}
+        claims={claims}
+        country={country}
         datetime={datetime}
         opened={opened}
-        options={options}
         spAcr={spAcr}
       />
     </button>

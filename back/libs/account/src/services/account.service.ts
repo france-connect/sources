@@ -13,7 +13,7 @@ import { Account } from '../schemas';
 export class AccountService {
   constructor(
     private readonly logger: LoggerService,
-    @InjectModel('Account') private model: Model<any>,
+    @InjectModel('Account') private model: Model<Account>,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -102,11 +102,7 @@ export class AccountService {
     const account: Account = await this.model.findOne({ identityHash });
     this.logger.trace({ account });
 
-    if (!account) {
-      return { id: null } as Account;
-    }
-
-    return account;
+    return account || ({ id: null } as Account);
   }
 
   /**
@@ -120,11 +116,11 @@ export class AccountService {
     identityHash: string,
     identityProviderList: string[],
     isExcludeList: boolean,
-  ): Promise<Account> {
+  ): Promise<Pick<Account, 'id' | 'preferences'>> {
     this.logger.debug(
       `Update account preferences ${identityHash} with ${identityProviderList} (isExcludeList: ${isExcludeList})`,
     );
-    const updatedAccount = await this.model.findOneAndUpdate(
+    const accountBeforeUpdate = await this.model.findOneAndUpdate(
       { identityHash },
       {
         preferences: {
@@ -135,14 +131,22 @@ export class AccountService {
           },
         },
       },
-      { new: true },
     );
-    this.logger.trace({ updatedAccount });
 
-    if (!updatedAccount) {
+    if (!accountBeforeUpdate) {
       throw new AccountNotFoundException();
     }
 
-    return updatedAccount;
+    this.logger.trace({
+      id: accountBeforeUpdate.id,
+      IdpSettingsBeforeUpdate: accountBeforeUpdate.preferences?.idpSettings,
+      newPreferences: {
+        identityProviderList,
+        isExcludeList,
+      },
+    });
+
+    const { id, preferences } = accountBeforeUpdate;
+    return { id, preferences };
   }
 }

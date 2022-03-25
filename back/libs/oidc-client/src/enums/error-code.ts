@@ -8,7 +8,7 @@
  * An entry should be used by one and only one exception.
  *
  * Codes are documented here:
- * @see https://confluence.kaliop.net/display/FC/Codes+erreurs+des+applications
+ * @see ../../../../back/_doc/erreurs.md
  * @TODO #140 update the upper link to gitlab when page is migrated
  * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/140
  */

@@ -24,3 +24,14 @@ export interface IFormattedIdpSettings {
   allowFutureIdp: boolean;
   idpList: IFormattedIdpList[];
 }
+
+export interface ISetIdpSettingsService {
+  formattedIdpSettingsList: IFormattedIdpList[];
+  updatedIdpSettingsList: IFormattedIdpList[];
+  hasChangedIsExcludeList: boolean;
+}
+
+export interface IFormattedUserIdpSettingsLists {
+  formattedIdpSettingsList: IFormattedIdpList[];
+  formattedPreviousIdpSettingsList: IFormattedIdpList[];
+}

@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionUsager
+@usager @connexionUsager @ci
 Fonctionnalité: Connexion Usager
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter en utilisant un fournisseur d'identité

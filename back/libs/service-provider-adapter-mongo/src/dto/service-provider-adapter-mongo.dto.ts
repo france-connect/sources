@@ -48,6 +48,10 @@ export class ServiceProviderAdapterMongoDTO {
   @IsString({ each: true })
   readonly scopes: string[];
 
+  @IsArray()
+  @IsString({ each: true })
+  readonly claims: string[];
+
   @IsString()
   @IsIn(SUPPORTED_SIG_ALG)
   // oidc defined variable name

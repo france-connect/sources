@@ -109,6 +109,13 @@ export class OidcClientController {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
       nonce,
+      /**
+       * @todo Retrieve the true claims value requested by the service provider
+       * after FC-675 was merged
+       * @author Emmanuel Maravilha
+       * @date 2022-01-02
+       */
+      claims: '{"id_token":{"amr":{"essential":true}}}',
     });
 
     const authorizationUrlWithSpId = this.appendSpIdToAuthorizeUrl(

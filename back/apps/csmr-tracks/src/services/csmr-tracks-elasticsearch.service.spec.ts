@@ -6,8 +6,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { ElasticsearchConfig } from '@fc/elasticsearch';
 import { LoggerService } from '@fc/logger';
+import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
-import { ICsmrTracksInputTrack, ICsmrTracksOutputTrack } from '../interfaces';
+import { CSMR_TRACKS_DATA } from '../tokens';
 import { CsmrTracksElasticsearchService } from './csmr-tracks-elasticsearch.service';
 
 const trackIndexMock = 'fc_tracks';
@@ -21,44 +22,29 @@ const elasticsearchConfigMock: ElasticsearchConfig = {
   password: 'docker-stack',
 };
 
-const accountId = '42';
+const accountIdMock = 'accountIdValue';
 
 const elasticQueryMock: Search = {
   index: 'fc_tracks',
   body: {
     query: {
       match: {
-        accountId,
+        accountId: accountIdMock,
       },
     },
   },
 };
 
-const singleTrackMock = {
+const singleTrackMock: Omit<ICsmrTracksOutputTrack, 'trackId'> = {
   event: 'eventMockValue',
-  date: 'dateMockValue',
-  accountId: 'accountIdValue',
-  spId: 'spIdMockValue',
+  date: '09/08/2015',
   spName: 'spNameMockValue',
   spAcr: 'spAcrMockValue',
   country: 'countryMockValue',
   city: 'cityMockValue',
+  platform: 'platformValue',
+  claims: ['claims1', 'claims2'],
 };
-
-const sampleTracksInputMock: ICsmrTracksInputTrack[] = [
-  {
-    _index: 'fc_tracks',
-    _type: '_doc',
-    _id: 'any-unique-track-index-identifier-string-from-ES',
-    _score: 1.0,
-    extraAttribute: '!!!!!!!!!!!!',
-    _source: {
-      ...singleTrackMock,
-      extraValue: '==============',
-      otherExtraValue: '---------',
-    },
-  } as ICsmrTracksInputTrack,
-];
 
 const sampleTracksOutputMock: ICsmrTracksOutputTrack[] = [
   {
@@ -92,13 +78,26 @@ const elasticsearchServiceMock = {
   search: jest.fn(),
 };
 
+const proxyDataMock = {
+  formatQuery: jest.fn(),
+  formattedTracks: jest.fn(),
+};
+
 describe('CsmrTracksElasticsearchService', () => {
   let service: CsmrTracksElasticsearchService;
 
   beforeEach(async () => {
+    jest.restoreAllMocks();
+    jest.resetAllMocks();
+
     const app: TestingModule = await Test.createTestingModule({
       controllers: [CsmrTracksElasticsearchService],
-      providers: [ConfigService, LoggerService, ElasticsearchService],
+      providers: [
+        ConfigService,
+        LoggerService,
+        ElasticsearchService,
+        { provide: CSMR_TRACKS_DATA, useValue: proxyDataMock },
+      ],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
@@ -113,81 +112,88 @@ describe('CsmrTracksElasticsearchService', () => {
     );
   });
 
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
   describe('getTracksByAccountId()', () => {
     beforeEach(() => {
-      jest.resetAllMocks();
-      jest.restoreAllMocks();
-
       configServiceMock.get.mockReturnValueOnce(elasticsearchConfigMock);
 
       elasticsearchServiceMock.search.mockResolvedValueOnce(
         elasticResponseMock,
       );
 
-      service['getFormatedTracks'] = jest
-        .fn()
-        .mockResolvedValueOnce(sampleTracksOutputMock);
+      proxyDataMock.formatQuery.mockReturnValueOnce(elasticQueryMock);
+      proxyDataMock.formattedTracks.mockResolvedValueOnce(
+        sampleTracksOutputMock,
+      );
+    });
+
+    it('Should call the query proxy to get the query request', async () => {
+      // Given / When
+      await service.getTracksByAccountId(accountIdMock);
+      // Then
+      expect(proxyDataMock.formatQuery).toHaveBeenCalledTimes(1);
+      expect(proxyDataMock.formatQuery).toHaveBeenCalledWith(
+        elasticsearchConfigMock.tracksIndex,
+        accountIdMock,
+      );
     });
 
     it('Should call elasticsearch.search() method.', async () => {
       // Given / When
-      await service.getTracksByAccountId(accountId);
+      await service.getTracksByAccountId(accountIdMock);
       // Then
+      expect(elasticsearchServiceMock.search).toHaveBeenCalledTimes(1);
       expect(elasticsearchServiceMock.search).toHaveBeenCalledWith(
         elasticQueryMock,
       );
     });
 
-    it('Should return an empty array if an error occured in elasticsearch.search().', async () => {
+    it('Should throw an exception if an error occured in elasticsearch.search().', async () => {
       // Given
-      jest.resetAllMocks();
-      jest.restoreAllMocks();
+      const errorMock = new Error('Unknown Error');
 
-      configServiceMock.get.mockReturnValueOnce(elasticsearchConfigMock);
-
-      elasticsearchServiceMock.search.mockImplementationOnce(() => {
-        throw new Error();
+      elasticsearchServiceMock.search.mockReset().mockImplementationOnce(() => {
+        throw errorMock;
       });
       // When
-      const result = await service.getTracksByAccountId(accountId);
-      // Then
-      expect(result).toEqual([]);
+      await expect(
+        service.getTracksByAccountId(accountIdMock),
+        // Then
+      ).rejects.toThrow(errorMock);
     });
 
     it('Should format the tracks received from elasticsearch into a format `ICsmrTracksOutputTrack`', async () => {
       // Given / When
-      await service.getTracksByAccountId(accountId);
+      await service.getTracksByAccountId(accountIdMock);
       // Then
-      expect(service['getFormatedTracks']).toHaveBeenCalledWith(
+      expect(proxyDataMock.formattedTracks).toHaveBeenCalledTimes(1);
+      expect(proxyDataMock.formattedTracks).toHaveBeenCalledWith(
         elasticResponseMock.body.hits.hits,
       );
     });
 
     it('Should return an array of Tracks objects', async () => {
       // Given / When
-      const result = await service.getTracksByAccountId(accountId);
+      const result = await service.getTracksByAccountId(accountIdMock);
       // Then
-      expect(result).toEqual(sampleTracksOutputMock);
+      expect(result).toStrictEqual(sampleTracksOutputMock);
     });
 
-    it('Should return an empty array [] if no tracks have been found for this account', async () => {
+    it('Should throw an exception if formatted tracks failed', async () => {
       // Given
-      elasticsearchServiceMock.search.mockImplementationOnce(() => {
-        throw new Error();
+
+      const errorMock = new Error('Unknown Error');
+      proxyDataMock.formattedTracks.mockReset().mockImplementationOnce(() => {
+        throw errorMock;
       });
       // When
-      const result = await service.getTracksByAccountId(accountId);
-      // Then
-      expect(result).toEqual(sampleTracksOutputMock);
-    });
-  });
-
-  describe('getFormatedTracks()', () => {
-    it('Should format the data from Elasticsearch format into `ICsmrTracksOutputTrack` format', () => {
-      // When
-      const formatedData = service['getFormatedTracks'](sampleTracksInputMock);
-      // Then
-      expect(formatedData).toEqual(sampleTracksOutputMock);
+      await expect(
+        service.getTracksByAccountId(accountIdMock),
+        // Then
+      ).rejects.toThrow(errorMock);
     });
   });
 });

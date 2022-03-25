@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Notification de modification des fournisseurs d'accès à FranceConnect+</title>
+  </head>
+
+  <body>
+    <!--[if (gte mso 9)|(IE)]>
+      <table width="580" align="center" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td>
+    <![endif]-->
+      <table>
+        <tr>
+          <td class="header">
+            <table>
+              <tr>
+                <td>
+                  Changements effectués pour :<%= locals.givenName  %> <%= locals.familyName%>
+                </td>
+                <td>
+                  statut de tous les idp :<% locals.formattedIdpSettingsList.forEach((idp) => { %>
+                    <%= idp.uid %> : is checked ? <%= idp.isChecked %> 
+                    <br>
+                  <% }) %>
+                </td>
+                <td>
+                  des changements effectués sur les idp :<% locals.updatedIdpSettingsList.forEach((idp) => { %>
+                    <%= idp.uid %>
+                    <br>
+                  <% }) %>
+                </td>
+                <td>
+                  la valeur de "choix pour les futurs FI" a-t-elle changé ? :<%= locals.hasChangedIsExcludeList %>
+                </td>
+                <td>
+                  choix pour les futurs fi: <%= locals.futureIdpChoice %>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+    </table>
+    <!--[if (gte mso 9)|(IE)]>
+          </td>
+        </tr>
+    </table>
+    <![endif]-->
+  </body>
+</html>

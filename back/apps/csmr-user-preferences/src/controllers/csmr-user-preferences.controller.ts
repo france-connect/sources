@@ -79,10 +79,38 @@ export class CsmrUserPreferencesController {
     let updatedIdpSettings;
     const { identity, idpSettings } = payload;
     try {
-      updatedIdpSettings = await this.userPreferencesCsmr.setIdpSettings(
+      const {
+        formattedIdpSettingsList,
+        updatedIdpSettingsList,
+        hasChangedIsExcludeList,
+      } = await this.userPreferencesCsmr.setIdpSettings(
         identity,
         idpSettings.idpList,
         idpSettings.allowFutureIdp,
+      );
+
+      updatedIdpSettings = {
+        allowFutureIdp: idpSettings.allowFutureIdp,
+        idpList: formattedIdpSettingsList,
+      };
+      const {
+        email,
+        given_name: givenName,
+        family_name: familyName,
+      } = identity;
+
+      await this.userPreferencesCsmr.sendMail(
+        {
+          email,
+          givenName,
+          familyName,
+        },
+        {
+          formattedIdpSettingsList,
+          updatedIdpSettingsList,
+          hasChangedIsExcludeList,
+          allowFutureIdp: idpSettings.allowFutureIdp,
+        },
       );
     } catch (error) {
       this.logger.trace({ error });

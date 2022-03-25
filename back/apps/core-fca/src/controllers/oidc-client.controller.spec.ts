@@ -223,6 +223,7 @@ describe('OidcClient Controller', () => {
         // oidc parameter
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: interactionDetailsResolved.params.acr_values,
+        claims: '{"id_token":{"amr":{"essential":true}}}',
         nonce: 'nonceMock',
         idpId: 'providerIdMockValue',
         scope: OidcClientConfigMock.scope,

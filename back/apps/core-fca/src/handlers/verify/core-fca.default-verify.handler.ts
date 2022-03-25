@@ -41,7 +41,8 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
   async handle(sessionOidc: ISessionService<OidcClientSession>): Promise<void> {
     this.logger.debug('getConsent service: ##### core-fca-default-verify');
 
-    const { idpId, idpIdentity, idpAcr, spId, spAcr } = await sessionOidc.get();
+    const { idpId, idpIdentity, idpAcr, spId, spAcr, amr } =
+      await sessionOidc.get();
 
     // Acr check
     this.core.checkIfAcrIsValid(idpAcr, spAcr);
@@ -95,7 +96,7 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
       sub: idpIdentity.sub,
     };
     const session: OidcClientSession = {
-      amr: ['fca'],
+      amr,
       idpIdentity: idpIdentityCleaned,
       spIdentity: spIdentity,
       accountId,

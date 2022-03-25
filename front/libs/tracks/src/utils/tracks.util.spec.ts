@@ -11,43 +11,43 @@ import {
 
 // Fixtures
 const dateTrack1 = '2011-10-05T14:48:00.000Z';
-const track1 = {
-  accountId: 'any-unique-identifier-string-1',
+const track1: EnhancedTrack = {
   city: 'Acme City',
+  claims: ['claims1Mock', 'claims2Mock'],
   country: 'Acme Country',
   date: dateTrack1,
   datetime: DateTime.fromISO(dateTrack1, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO',
+  platform: 'FranceConnect',
   spAcr: 'eidas1' as keyof typeof EidasToLabel,
-  spId: '01',
   spName: 'Acme Service Provider',
   trackId: 'trackId-1',
 };
 
 const dateTrack2 = '2011-10-06T14:48:00.000Z';
-const track2 = {
-  accountId: 'any-unique-identifier-string-2',
+const track2: EnhancedTrack = {
   city: 'Acme City',
+  claims: null,
   country: 'Acme Country',
   date: dateTrack2,
   datetime: DateTime.fromISO(dateTrack2, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO',
+  platform: 'FranceConnect+',
   spAcr: 'eidas1' as keyof typeof EidasToLabel,
-  spId: '02',
   spName: 'Acme Service Provider',
   trackId: 'trackId-2',
 };
 
 const dateTrack3 = '2012-10-05T14:48:00.000Z';
-const track3 = {
-  accountId: 'any-unique-identifier-string-3',
+const track3: EnhancedTrack = {
   city: 'Acme City',
+  claims: ['claims1Mock', 'claims2Mock'],
   country: 'Acme Country',
   date: dateTrack3,
   datetime: DateTime.fromISO(dateTrack3, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO',
+  platform: 'FranceConnect',
   spAcr: 'eidas1' as keyof typeof EidasToLabel,
-  spId: '03',
   spName: 'Acme Service Provider',
   trackId: 'trackId-3',
 };

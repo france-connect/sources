@@ -24,7 +24,7 @@ import * as resolve from 'resolve';
 import { log, table } from './console-log-plugin';
 import { getFixturePath } from './fixture-plugin';
 import { clearBusinessLog, hasBusinessLog } from './log-plugin';
-import { addTracks } from './tracks-plugin';
+import { addTracks, addTracksLegacy } from './tracks-plugin';
 
 module.exports = (on, config) => {
   processFixtureTemplate(on, config);
@@ -37,6 +37,7 @@ module.exports = (on, config) => {
 
   on('task', {
     addTracks,
+    addTracksLegacy,
     clearBusinessLog,
     getFixturePath,
     hasBusinessLog,

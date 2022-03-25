@@ -4,7 +4,7 @@ const ministries = [
       id: "mock-ministere-de-la-transition-ecologique-all-fis-sort-2",
       acronym: "MO1",
       sort: 2,
-      name: "MOCK - Ministére de la transition écologique - ALL FIS - SORT 2",
+      name: "MOCK - Ministère de la transition écologique - ALL FIS - SORT 2",
       identityProviders: [
         "fia1-low",
         "fia2-low",
@@ -20,7 +20,7 @@ const ministries = [
       id: "mock-ministere-interieur-some-fis-disabled-sort 1",
       acronym: "MO2",
       sort: 1,
-      name: "MOCK - Ministére de l'intérieur - SOME FIS DISABLED - SORT 1",
+      name: "MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
       identityProviders: [
         "fia1-low",
         "fia3-desactive-visible",
@@ -35,7 +35,7 @@ const ministries = [
       id: "mock-ministere-economie-no-fis-sort-3",
       acronym: "MO3",
       sort: 3,
-      name: "MOCK - Ministére de l'économie des Finances et de la Relance - NO FIS - SORT 3",
+      name: "MOCK - Ministère de l'économie des Finances et de la Relance - NO FIS - SORT 3",
       identityProviders: [],
       updatedAt: new Date("2020-12-09T12:00:00.000Z"),
       createdAt: new Date("2020-12-09T12:00:00.000Z"),
@@ -44,7 +44,7 @@ const ministries = [
     {
       id: "mock-ministere-de-la-mer-e2e-sort-4",
       sort: 4,
-      name: "MOCK - Ministére de la mer - E2E - SORT 4",
+      name: "MOCK - Ministère de la mer - E2E - SORT 4",
       identityProviders: ["fia4-low", "fia5-low"],
       updatedAt: new Date("2020-12-09T12:00:00.000Z"),
       createdAt: new Date("2020-12-09T12:00:00.000Z"),

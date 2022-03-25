@@ -233,6 +233,7 @@ describe('MockIdentityProviderFcaController', () => {
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledWith({
         spIdentity: identityMock,
         spAcr: acrMock,
+        amr: ['pwd'],
       });
     });
 

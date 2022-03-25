@@ -252,9 +252,11 @@ describe('AccountService', () => {
   });
 
   describe('updatePreferences', () => {
-    it('Should update `preferences` property of account and return the updated account', async () => {
+    const identityHashMock = 'identityHashMockValue';
+
+    it('Should update `preferences` property of account and return the account before update', async () => {
       // Given
-      const identityHashMock = 'identityHashMockValue';
+
       const accountMock: Account = {
         createdAt: new Date(),
         id: '0001',
@@ -273,35 +275,30 @@ describe('AccountService', () => {
         },
       } as Account;
       const idpList = ['foo', 'bar'];
-      const updatedAccountToReturn = {
-        ...accountMock,
-        preferences: {
-          idpSettings: {
-            updatedAt: new Date(),
-            list: idpList,
-            isExcludeList: false,
-          },
-        },
-      } as Account;
-      findOneAndUpdateSpy.mockResolvedValueOnce(updatedAccountToReturn);
+      const accountBeforeUpdate = {
+        id: accountMock.id,
+        preferences: accountMock.preferences,
+      };
+      findOneAndUpdateSpy.mockResolvedValueOnce(accountMock);
+
       // When
-      const updatedAccount = await service['updatePreferences'](
+      const result = await service.updatePreferences(
         identityHashMock,
         idpList,
         true,
       );
+
       // Then
-      await expect(updatedAccount).toEqual(updatedAccountToReturn);
+      expect(result).toEqual(accountBeforeUpdate);
     });
 
     it('Should throw an AccountNotFoundException if account has not been found', async () => {
       // Given
-      const identityHashMock = 'identityHashMockValue';
       const idpListMock = ['foo', 'bar'];
       findOneAndUpdateSpy.mockResolvedValueOnce(null);
       // When/Then
       expect(
-        service['updatePreferences'](identityHashMock, idpListMock, false),
+        service.updatePreferences(identityHashMock, idpListMock, false),
       ).rejects.toThrow(AccountNotFoundException);
     });
   });

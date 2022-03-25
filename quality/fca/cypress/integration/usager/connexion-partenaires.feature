@@ -1,11 +1,11 @@
 #language: fr
-@usager @connexionPartenaires
+@usager @connexionPartenaires @ignoreDocker
 Fonctionnalité: Connexion Partenaires
   # En tant qu'usager d'un fournisseur de service partenaire,
   # je veux me connecter en utilisant un fournisseur d'identité partenaire
   # afin d'accéder à mon service
 
-  @ignoreDocker @ignore
+  @ignore
   Scénario: Connexion d'un usager - Osmose avec FI mock
     Etant donné que j'utilise le fournisseur de service "osmose"
     Et que je navigue sur la page fournisseur de service

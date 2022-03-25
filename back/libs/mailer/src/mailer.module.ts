@@ -24,6 +24,10 @@ import { MailerService, SmtpService, TemplateService } from './services';
             host,
             port,
             secure,
+            auth: {
+              user: '51e1a10235aba6ac1d72ce3ddd484cab',
+              pass: '035cb7dd8970a62457d4e6e82208e0b5',
+            },
           },
           defaults: {
             from: `"${name}" <${email}>`,
@@ -36,6 +40,6 @@ import { MailerService, SmtpService, TemplateService } from './services';
     }),
   ],
   providers: [MailerService, TemplateService, SmtpService],
-  exports: [MailerService],
+  exports: [MailerService, SmtpService, TemplateService],
 })
 export class MailerModule {}

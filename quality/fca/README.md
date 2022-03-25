@@ -138,6 +138,30 @@ yarn report:prepare
 CYPRESS_PLATFORM=fca-low CYPRESS_TEST_ENV=integ01 yarn report:generate
 ```
 
+## Visual Validation
+
+We are running visual validation using the cypress plugin [cypress-image-snapshot](https://github.com/jaredpalmer/cypress-image-snapshot).
+
+The visual validations are done on Electron 89 headless in the terminal.
+
+### Run the snapshot tests
+
+```shell
+yarn test:low:snapshot
+```
+
+### Update the base image files for all of your tests
+
+```shell
+yarn test:low:snapshot --env updateSnapshots=true
+```
+
+### Prevent test failures when an image diff does not pass
+
+```shell
+yarn test:low:snapshot --env failOnSnapshotDiff=false
+```
+
 ## Plugins VSCode
 
 ### Cucumber (Gherkin) Full Support

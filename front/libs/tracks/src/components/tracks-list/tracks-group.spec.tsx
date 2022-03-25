@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
 import { EidasToLabel } from '../../enums';
+import { EnhancedTrack } from '../../interfaces';
 import * as TrackUtils from '../../utils/tracks.util';
 import { TrackCardComponent } from '../track-card/track-card.component';
 import { TracksGroupComponent } from './tracks-group';
@@ -17,29 +18,27 @@ describe('tracksGroupComponent', () => {
     LUXON_FORMAT_MONTH_YEAR: 'LLLL yyyy',
     LUXON_FORMAT_TIMEZONE: 'z',
   };
-  const oldestTrack = {
-    accountId: 'oldest track',
+  const oldestTrack: EnhancedTrack = {
     city: 'any',
+    claims: null,
     country: 'any',
     date: '2021-10-01T00:00:00.000+01:00',
     datetime: DateTime.fromObject({ day: 1, month: 10, year: 2021 }),
-    datetimeId: 'any',
     event: 'any',
+    platform: 'FranceConnect',
     spAcr: 'any' as keyof typeof EidasToLabel,
-    spId: 'any',
     spName: 'any',
     trackId: 'oldest track',
   };
-  const newestTrack = {
-    accountId: 'newest track',
+  const newestTrack: EnhancedTrack = {
     city: 'any',
+    claims: null,
     country: 'any',
     date: '2021-11-01T00:00:00.000+01:00',
     datetime: DateTime.fromObject({ day: 1, month: 11, year: 2021 }),
-    datetimeId: 'any',
     event: 'any',
+    platform: 'FranceConnect',
     spAcr: 'any' as keyof typeof EidasToLabel,
-    spId: 'any',
     spName: 'any',
     trackId: 'newest track',
   };

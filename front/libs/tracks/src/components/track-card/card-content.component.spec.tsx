@@ -4,14 +4,7 @@ import { DateTime } from 'luxon';
 import { TrackCardContentComponent } from './card-content.component';
 
 describe('TrackCardContentComponent', () => {
-  const options = {
-    API_ROUTE_TRACKS: 'mock_API_ROUTE_TRACKS',
-    API_ROUTE_USER_INFOS: 'mock_API_ROUTE_USER_INFOS',
-    LUXON_FORMAT_DAY: 'DDD',
-    LUXON_FORMAT_HOUR_MINS: 'T',
-    LUXON_FORMAT_MONTH_YEAR: 'LLLL yyyy',
-    LUXON_FORMAT_TIMEZONE: 'z',
-  };
+  const claimsMock = ['claims1Mock', 'claims2Mock'];
   const date = DateTime.fromObject(
     { day: 1, hour: 6, minute: 32, month: 10, year: 2021 },
     { zone: 'Europe/Paris' },
@@ -22,10 +15,11 @@ describe('TrackCardContentComponent', () => {
     const { getByRole } = render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
-        accountId="mock-accountId"
+        city="cityMock"
+        claims={claimsMock}
+        country="countryMock"
         datetime={date}
         opened={false}
-        options={options}
         spAcr="eidas1"
       />,
     );
@@ -43,10 +37,11 @@ describe('TrackCardContentComponent', () => {
     const { getByRole } = render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
-        accountId="mock-accountId"
+        city="cityMock"
+        claims={claimsMock}
+        country="countryMock"
         datetime={date}
         opened={opened}
-        options={options}
         spAcr="eidas1"
       />,
     );
@@ -65,10 +60,11 @@ describe('TrackCardContentComponent', () => {
     const { getByRole } = render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
-        accountId="mock-accountId"
+        city="cityMock"
+        claims={claimsMock}
+        country="countryMock"
         datetime={date}
         opened={opened}
-        options={options}
         spAcr="eidas1"
       />,
     );
@@ -86,10 +82,11 @@ describe('TrackCardContentComponent', () => {
     const { getByText } = render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
-        accountId="mock-accessibleId"
+        city="cityMock"
+        claims={claimsMock}
+        country="countryMock"
         datetime={date}
         opened={false}
-        options={options}
         spAcr="eidas1"
       />,
     );
@@ -104,10 +101,11 @@ describe('TrackCardContentComponent', () => {
     const { container } = render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
-        accountId="mock-accessibleId"
+        city="cityMock"
+        claims={claimsMock}
+        country="countryMock"
         datetime={date}
         opened={false}
-        options={options}
         spAcr="eidas1"
       />,
     );
@@ -117,21 +115,22 @@ describe('TrackCardContentComponent', () => {
     expect(elements).toHaveLength(4);
   });
 
-  it('should render the hour information block (label and value)', () => {
+  it('should render the date information block (label and value)', () => {
     // given
     const { getByText } = render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
-        accountId="mock-accessibleId"
+        city="cityMock"
+        claims={claimsMock}
+        country="countryMock"
         datetime={date}
         opened={false}
-        options={options}
         spAcr="eidas1"
       />,
     );
     // when
-    const labelElement = getByText('Heure :');
-    const valueElement = getByText('06:32 (heure de Paris)');
+    const labelElement = getByText('Connexion à ce service a eu lieu le :');
+    const valueElement = getByText('1 oct. 2021, 06:32 (heure de Paris)');
     const lastElement = labelElement.parentNode?.lastElementChild;
     const firstElement = labelElement.parentNode?.firstElementChild;
     // then
@@ -146,40 +145,17 @@ describe('TrackCardContentComponent', () => {
     const { getByText } = render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
-        accountId="mock-accessibleId"
+        city="cityMock"
+        claims={claimsMock}
+        country="countryMock"
         datetime={date}
         opened={false}
-        options={options}
         spAcr="eidas1"
       />,
     );
     // when
     const labelElement = getByText('Localisation :');
-    const valueElement = getByText('Europe/Paris');
-    const lastElement = labelElement.parentNode?.lastElementChild;
-    const firstElement = labelElement.parentNode?.firstElementChild;
-    // then
-    expect(labelElement).toBeInTheDocument();
-    expect(valueElement).toBeInTheDocument();
-    expect(lastElement).toStrictEqual(lastElement);
-    expect(firstElement).toStrictEqual(labelElement);
-  });
-
-  it('should render the current account information block (label and value)', () => {
-    // given
-    const { getByText } = render(
-      <TrackCardContentComponent
-        accessibleId="mock-accessibleId"
-        accountId="mock-accessibleId"
-        datetime={date}
-        opened={false}
-        options={options}
-        spAcr="eidas1"
-      />,
-    );
-    // when
-    const labelElement = getByText('Compte Utilisé :');
-    const valueElement = getByText('mock-accessibleId');
+    const valueElement = getByText('cityMock (countryMock)');
     const lastElement = labelElement.parentNode?.lastElementChild;
     const firstElement = labelElement.parentNode?.firstElementChild;
     // then
@@ -194,15 +170,16 @@ describe('TrackCardContentComponent', () => {
     const { getByText, getByTitle } = render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
-        accountId="mock-accessibleId"
+        city="cityMock"
+        claims={claimsMock}
+        country="countryMock"
         datetime={date}
         opened={false}
-        options={options}
         spAcr="eidas1"
       />,
     );
     // when
-    const labelElement = getByText('Niveau de sécurité :');
+    const labelElement = getByText('Niveau de garantie eIDAS :');
     const valueElement = getByText('faible');
     const linkElement = getByTitle('En savoir plus sur le niveau de sécurité faible');
     const lastElement = labelElement.parentNode?.lastElementChild;
@@ -215,5 +192,30 @@ describe('TrackCardContentComponent', () => {
     expect(firstElement).toStrictEqual(labelElement);
     expect(lastElement).toStrictEqual(linkElement);
     expect(lastElement).toStrictEqual(valueElement.parentNode);
+  });
+
+  it('should render the claims information block (label and value)', () => {
+    // given
+    const { getByText } = render(
+      <TrackCardContentComponent
+        accessibleId="mock-accessibleId"
+        city="cityMock"
+        claims={claimsMock}
+        country="countryMock"
+        datetime={date}
+        opened={false}
+        spAcr="eidas1"
+      />,
+    );
+    // when
+    const labelElement = getByText('Récupération des données :');
+    const valueElement = getByText('claims1Mock, claims2Mock');
+    const lastElement = labelElement.parentNode?.lastElementChild;
+    const firstElement = labelElement.parentNode?.firstElementChild;
+    // then
+    expect(labelElement).toBeInTheDocument();
+    expect(valueElement).toBeInTheDocument();
+    expect(firstElement).toStrictEqual(labelElement);
+    expect(lastElement).toStrictEqual(valueElement);
   });
 });

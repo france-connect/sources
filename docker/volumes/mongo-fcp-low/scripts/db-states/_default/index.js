@@ -10,3 +10,8 @@ load("/opt/scripts/db-states/_default/idp.js");
 
 print("Initializing Scopes...");
 load("/opt/scripts/db-states/_default/scopes.js");
+
+/* ------------------------------------------------------------------------------- */
+
+print("Initializing Claims...");
+load("/opt/scripts/db-states/_default/claims.js");

@@ -87,5 +87,24 @@
     "sort-keys-fix/sort-keys-fix": 2,
     "sort-destructure-keys/sort-destructure-keys": 2,
     "sort-keys": [2, "asc", { "caseSensitive": true, "natural": false, "minKeys": 2 }]
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.ts",
+        "**/*.js"
+      ],
+      "rules": {
+        "jsx-a11y/label-has-associated-control": 0,
+        "react/react-in-jsx-scope":  0,
+        "react/jsx-closing-bracket-location": 0,
+        "react/jsx-fragments":  0,
+        "react/jsx-indent": 0,
+        "react/display-name": 0,
+        "react/jsx-props-no-spreading": 0,
+        "react/button-has-type": 0,
+        "react/jsx-sort-props": 0
+      }
+    }
+  ]
 }

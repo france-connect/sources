@@ -1,31 +1,15 @@
 import { ApiResponse } from '@elastic/elasticsearch';
-import { Search } from '@elastic/elasticsearch/api/requestParams';
-import { pick } from 'lodash';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 import { ConfigService } from '@fc/config';
 import { ElasticsearchConfig } from '@fc/elasticsearch';
 import { LoggerService } from '@fc/logger';
+import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
-import { ICsmrTracksInputTrack, ICsmrTracksOutputTrack } from '../interfaces';
-
-/**
- * Array of available track's object attributes
- *used to validate the tracks received from Elasticsearch.
- * @see ICsmrTracksOutputTrack
- */
-const TRACK_PROPERTIES = [
-  'event',
-  'date',
-  'accountId',
-  'spId',
-  'spName',
-  'spAcr',
-  'country',
-  'city',
-];
+import { IAppTracksDataService, ICsmrTracksElasticInput } from '../interfaces';
+import { CSMR_TRACKS_DATA } from '../tokens';
 
 /**
  * @see https://github.com/nestjs/elasticsearch
@@ -36,6 +20,8 @@ export class CsmrTracksElasticsearchService {
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
     private readonly elasticsearch: ElasticsearchService,
+    @Inject(CSMR_TRACKS_DATA)
+    private readonly dataProxy: IAppTracksDataService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -50,49 +36,22 @@ export class CsmrTracksElasticsearchService {
   async getTracksByAccountId(
     accountId: string,
   ): Promise<ICsmrTracksOutputTrack[]> {
-    let response: ApiResponse;
+    this.logger.trace({ accountId });
+
     const { tracksIndex } =
       this.config.get<ElasticsearchConfig>('Elasticsearch');
 
-    const query: Search = {
-      index: tracksIndex,
-      body: {
-        query: {
-          match: {
-            accountId,
-          },
-        },
-      },
-    };
+    const query = this.dataProxy.formatQuery(tracksIndex, accountId);
 
-    try {
-      response = await this.elasticsearch.search(query);
-    } catch (error) {
-      this.logger.trace({ error });
-      return [];
-    }
+    const response: ApiResponse = await this.elasticsearch.search(query);
 
-    const rawTracks = response.body.hits.hits as ICsmrTracksInputTrack[];
-    const tracks = this.getFormatedTracks(rawTracks);
+    const rawTracks = response.body.hits
+      .hits as ICsmrTracksElasticInput<unknown>[];
+
+    const tracks = await this.dataProxy.formattedTracks(rawTracks);
+
+    this.logger.trace({ tracks });
+
     return tracks;
-  }
-
-  /**
-   * Get formated tracks reduces to its strickselements.
-   * Elasticsearch add extra attributes to the stored data that are not requiered.
-   *
-   * @param {ICsmrTracksInputTrack[]} rawTracks
-   * @returns {ICsmrTracksOutputTrack[]}
-   */
-  private getFormatedTracks(
-    rawTracks: ICsmrTracksInputTrack[],
-  ): ICsmrTracksOutputTrack[] {
-    const filteredProperties = rawTracks.map((track) => {
-      const trackId = track._id;
-      const source = track._source;
-      const properties = pick(source, TRACK_PROPERTIES);
-      return { ...properties, trackId };
-    }) as ICsmrTracksOutputTrack[];
-    return filteredProperties;
   }
 }
