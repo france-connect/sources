@@ -10,7 +10,7 @@ import { UserPreferencesProtocol } from '@fc/microservices';
 import { IOidcIdentity } from '@fc/oidc';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
-import { IdpSettingsDto, UserPreferencesDto } from '../dto';
+import { FormattedIdpSettingDto, IdpSettingsDto } from '../dto';
 import {
   GetUserPreferencesConsumerErrorException,
   GetUserPreferencesResponseException,
@@ -30,7 +30,7 @@ export class UserPreferencesService {
 
   async getUserPreferencesList(
     identity: Partial<IOidcIdentity>,
-  ): Promise<UserPreferencesDto[]> {
+  ): Promise<FormattedIdpSettingDto> {
     let data;
     const { requestTimeout } = this.config.get<RabbitmqConfig>(
       'UserPreferencesBroker',
@@ -61,7 +61,7 @@ export class UserPreferencesService {
   async setUserPreferencesList(
     identity: Partial<IOidcIdentity>,
     idpSettings: IdpSettingsDto,
-  ): Promise<UserPreferencesDto[]> {
+  ): Promise<FormattedIdpSettingDto> {
     let data;
     const { requestTimeout } = this.config.get<RabbitmqConfig>(
       'UserPreferencesBroker',

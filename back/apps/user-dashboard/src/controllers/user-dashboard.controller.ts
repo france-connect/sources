@@ -14,7 +14,7 @@ import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService, Session, SessionCsrfService } from '@fc/session';
 import { TracksService } from '@fc/tracks';
 import {
-  UserPreferencesDto,
+  FormattedIdpSettingDto,
   UserPreferencesService,
 } from '@fc/user-preferences';
 
@@ -92,15 +92,16 @@ export class UserDashboardController {
   async getUserPreferences(
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
-  ): Promise<UserPreferencesDto[]> {
+  ): Promise<FormattedIdpSettingDto> {
     const session = await sessionOidc.get();
     if (!session) {
       throw new UnauthorizedException();
     }
     const { idpIdentity } = session;
 
-    const preferences =
-      this.userPreferences.getUserPreferencesList(idpIdentity);
+    const preferences = await this.userPreferences.getUserPreferencesList(
+      idpIdentity,
+    );
 
     return preferences;
   }
@@ -111,7 +112,7 @@ export class UserDashboardController {
     @Body() body: UserPreferencesBodyDto,
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
-  ): Promise<UserPreferencesDto[]> {
+  ): Promise<FormattedIdpSettingDto> {
     const session = await sessionOidc.get();
     if (!session) {
       throw new UnauthorizedException();
@@ -119,7 +120,7 @@ export class UserDashboardController {
     const { idpIdentity } = session;
     const { idpList, allowFutureIdp } = body;
 
-    const preferences = this.userPreferences.setUserPreferencesList(
+    const preferences = await this.userPreferences.setUserPreferencesList(
       idpIdentity,
       { idpList, allowFutureIdp },
     );

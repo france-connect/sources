@@ -11,4 +11,6 @@ export default {
   protocol: env.string('PROTOCOL'),
   host: env.string('HOST'),
   port: env.number('PORT'),
-} as ElasticsearchConfig;
+  username: env.string('USERNAME'),
+  password: env.string('PASSWORD'),
+} as unknown as ElasticsearchConfig;

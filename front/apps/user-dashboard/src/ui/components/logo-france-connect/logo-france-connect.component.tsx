@@ -1,8 +1,8 @@
 import LogoSVG from './logo.svg';
 
-type LogoFranceConnectPlusProps = {
+interface LogoFranceConnectPlusProps {
   className?: string;
-};
+}
 
 export const LogoFranceConnectComponent = ({ className }: LogoFranceConnectPlusProps) => (
   <div className={className}>

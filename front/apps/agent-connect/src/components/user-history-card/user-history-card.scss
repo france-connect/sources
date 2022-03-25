@@ -1,0 +1,18 @@
+@import '@fc/dsfr/styles.scss';
+@import '@fc/dsfr/core/funcs/pixel-to-rem';
+
+.user-history-card {
+  max-width: 100%;
+
+  .card-wrapper {
+    border-bottom: 4px $blue-agentconnect solid;
+    height: calc(100% - 24px);
+    height: calc(100% - 1.5rem);
+  }
+
+  @media screen and (min-width: 768px) {
+    @include rem(max-width, 343px);
+
+    width: 33.3%;
+  }
+}

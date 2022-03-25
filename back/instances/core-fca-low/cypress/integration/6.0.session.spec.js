@@ -43,12 +43,18 @@ describe('Session', () => {
       cy.clearCookie('fc_session_id');
       cy.visit(interactionUrl, { failOnStatusCode: false });
       cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
+      // @TODO le timeout est nécessaire il y a une latence d'affichage
+      // causée par les deux appels API successifs du bouton retour et du moteur de recherche
+      // A vérifier/supprimer avec l'implémentation du gestionnaire d'erreur REACT
+      cy.wait(500);
       cy.hasError('Y190001');
     });
   });
 
   it('should have two cookies stored for SP with the property `sameSite` value set to `lax`', () => {
-    const { SP_ROOT_URL } = getServiceProvider(`${Cypress.env('SP_NAME')}1-low`);
+    const { SP_ROOT_URL } = getServiceProvider(
+      `${Cypress.env('SP_NAME')}1-low`,
+    );
     cy.visit(SP_ROOT_URL);
     cy.getCookies()
       .should('have.length', 2)

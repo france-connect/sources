@@ -5,7 +5,10 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { SessionCsrfService } from '@fc/session';
 import { TracksService } from '@fc/tracks';
-import { UserPreferencesService } from '@fc/user-preferences';
+import {
+  FormattedIdpSettingDto,
+  UserPreferencesService,
+} from '@fc/user-preferences';
 
 import { UserDashboardController } from './user-dashboard.controller';
 
@@ -188,12 +191,15 @@ describe('UserDashboardController', () => {
 
     it('should return tracks.getList', async () => {
       // Given
-      const resolvedValueMock = 'resolvedValueMock';
-      tracksServiceMock.getList.mockResolvedValueOnce(resolvedValueMock);
+      const formattedIdpSettingsMock = {
+        uid: 'uid',
+        isChecked: true,
+      } as unknown as FormattedIdpSettingDto;
+      tracksServiceMock.getList.mockResolvedValueOnce(formattedIdpSettingsMock);
       // When
       const result = await controller.getUserTraces(sessionServiceMock);
       // Then
-      expect(result).toBe(resolvedValueMock);
+      expect(result).toStrictEqual(formattedIdpSettingsMock);
     });
   });
 
@@ -268,14 +274,24 @@ describe('UserDashboardController', () => {
 
     it('should return userPreferences.getUserPreferencesList', async () => {
       // Given
-      const resolvedValueMock = 'resolvedValueMock';
+      const formattedIdpSettingsMock = {
+        uid: 'uid',
+        isChecked: true,
+      } as unknown as FormattedIdpSettingDto;
+      const resolvedUserPreferencesMock = {
+        idpList: formattedIdpSettingsMock,
+        allowFutureIdp: true,
+      };
       userPreferencesMock.getUserPreferencesList.mockResolvedValueOnce(
-        resolvedValueMock,
+        resolvedUserPreferencesMock,
       );
       // When
       const result = await controller.getUserPreferences(sessionServiceMock);
       // Then
-      expect(result).toBe(resolvedValueMock);
+      expect(result).toStrictEqual({
+        idpList: formattedIdpSettingsMock,
+        allowFutureIdp: true,
+      });
     });
   });
 
@@ -325,9 +341,16 @@ describe('UserDashboardController', () => {
 
     it('should return userPreferences.setUserPreferencesList', async () => {
       // Given
-      const resolvedValueMock = 'resolvedValueMock';
+      const formattedIdpSettingsMock = {
+        uid: 'uid',
+        isChecked: false,
+      } as unknown as FormattedIdpSettingDto;
+      const resolvedUserPreferencesMock = {
+        idpList: formattedIdpSettingsMock,
+        allowFutureIdp: false,
+      };
       userPreferencesMock.setUserPreferencesList.mockResolvedValueOnce(
-        resolvedValueMock,
+        resolvedUserPreferencesMock,
       );
       // When
       const result = await controller.updateUserPreferences(
@@ -335,7 +358,10 @@ describe('UserDashboardController', () => {
         sessionServiceMock,
       );
       // Then
-      expect(result).toBe(resolvedValueMock);
+      expect(result).toStrictEqual({
+        idpList: formattedIdpSettingsMock,
+        allowFutureIdp: updatePreferencesBodyMock.allowFutureIdp,
+      });
     });
   });
 });

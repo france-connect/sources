@@ -1,0 +1,19 @@
+{
+  "name": "@fc/agent-connect-search",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "devDependencies": {
+    "@fc/tests-utils": "^0.1.0",
+    "@types/lodash.debounce": "^4.0.6",
+    "jest-mock-axios": "^4.5.0"
+  },
+  "dependencies": {
+    "@fc/common": "^0.1.0",
+    "@fc/routing": "^0.1.0",
+    "fuse.js": "^6.5.0",
+    "lodash.debounce": "^4.0.8",
+    "react": "^17.0.2",
+    "react-router-dom": "^5.2.0"
+  }
+}

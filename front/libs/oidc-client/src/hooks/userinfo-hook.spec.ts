@@ -1,3 +1,4 @@
+import { renderHook } from '@testing-library/react-hooks';
 import { useContext } from 'react';
 import { mocked } from 'ts-jest/utils';
 
@@ -45,7 +46,7 @@ describe('useUserInfosHook', () => {
   describe('useUserinfos', () => {
     it('should call useContext()', () => {
       // When
-      useUserinfos();
+      renderHook(() => useUserinfos());
       // Then
       expect(useContextMocked).toHaveBeenCalledTimes(1);
       expect(useContextMocked).toHaveBeenCalledWith(AppContext);
@@ -53,7 +54,7 @@ describe('useUserInfosHook', () => {
 
     it('should call useApiGet()', () => {
       // When
-      useUserinfos();
+      renderHook(useUserinfos);
       // Then
       expect(useApiGetMocked).toHaveBeenCalledTimes(1);
       expect(useApiGetMocked).toHaveBeenCalledWith(
@@ -66,16 +67,16 @@ describe('useUserInfosHook', () => {
 
     it('should return result of useApiGet', () => {
       // When
-      const result = useUserinfos();
+      const { result } = renderHook(() => useUserinfos());
       // Then
-      expect(result).toBe(userMock);
+      expect(result.current).toBe(userMock);
     });
   });
 
   describe('useUserinfos callback', () => {
     it('should call update', () => {
       // Given
-      useUserinfos();
+      renderHook(() => useUserinfos());
       // Using `!` syntax because we know we have 2 arguments
       // passed to `useApiGetMocked` in `useUserinfos`
       const callback = useApiGetMocked.mock.calls[0][1]!;

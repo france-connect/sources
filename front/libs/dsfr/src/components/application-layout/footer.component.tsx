@@ -105,16 +105,15 @@ export const LayoutFooterComponent = React.memo(
             </nav>
           </div>
         </div>
-        <div className={classnames(classes.bottomNav, 'px20')}>
-          <div className="content-wrapper-lg">
+        <div className={classes.bottomNav}>
+          <div className={classnames('content-wrapper-lg', 'px20')}>
             <nav className="fr-text-xs pb16 pt8">
               {bottomLinks.map((linkObj: LinkObject, index: number) => {
-                const isfirst = index === 0;
+                const isLast = index === bottomLinks.length - 1;
                 const { a11y, href, label } = linkObj;
                 const uniqkey = `${href}::${index}`;
                 return (
-                  <React.Fragment key={uniqkey}>
-                    {!isfirst && <span className="mx12 is-g400">|</span>}
+                  <span key={uniqkey}>
                     <a
                       key={uniqkey}
                       className="is-inline-block"
@@ -124,7 +123,8 @@ export const LayoutFooterComponent = React.memo(
                       title={a11y}>
                       {label}
                     </a>
-                  </React.Fragment>
+                    {!isLast && <span className="mx12 is-g400">|</span>}
+                  </span>
                 );
               })}
             </nav>

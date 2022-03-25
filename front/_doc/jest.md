@@ -23,6 +23,17 @@ const { getByText } = renderWithRedux(
 )
 ```
 
+**Faire un test d'un hook custom**
+
+```
+import { renderHook } from '@testing-library/react-hooks';
+
+const Wrapper = () => (<MonContext.Provider value={{...}} />)
+
+...
+const { result } = renderHook(() => useMonHookCustom(), { wrapper: Wrapper })
+```
+
 ## JSDom Form + Testing Library
 
 JSdom ne gère pas l'envoi de formulaire, une exception sera levée

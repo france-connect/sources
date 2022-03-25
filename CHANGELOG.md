@@ -4,11 +4,58 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.83.0 & v3.84.0
+
+### Features
+
+- [AgentConnect]
+  - Research now works with the IdP name and not only the administration name
+  - Disconnection from AgentConnect now propagated to the IdP
+
+### Fixes
+
+- [eIDASBridge] Updated the DTO rules to match the european XML schema
+- [Changelog v3.82] Added the missing changelog of the previous version
+
+### Hardening & QA
+
+- [ElasticSearch] Added authentication
+- [FranceConnect] Configured a dedicated mock user to test the connection history log and to avoid conflicts with other tests)
+
+### Not yet in production (futures apps / features)
+
+- [User Dashboard]
+  - The interface to enable / disable an IdP has been implemented
+  - Fix database architecture for IdP settings
+  - The application does not need anymore the secret to decrypt the IdPs' client secrets
+  - The application is now connected to the legacy database instead of FC+ one
+
+## v3.81.0 & v3.82.0
+
+### Features
+
+- [AgentConnect] The error page is now handled by the frontend (REACT) instead of a backend rendering rendering
+### Fixes
+
+- [eIDASBridge] Updated the DTO rules to match the european XML schema
+
+### Hardening & QA
+
+- Upgrade NodeJS to 14.19.0
+- [FranceConnect] Changed the mock user used to test the user history log (the default (test / 123) one was used and it would later conflict with other tests)
+
+### Not yet in production (futures apps / features)
+
+- [User Dashboard] The user is now able to choose a default behavior (active / inactive) new IDPs joining FC
+
+## v3.79.0 & v3.80.0
+
+🚧 As the team was busy working on legacy code there is sadly nothing to see here 😢 🚧
+
 ## v3.77.0 & v3.78.0
 
 ### Features
 
-- [User Dashboard] The backend consumer can read and edit user preferences regarding IdPs
 - [AgentConnect] Now the RIE consumer can use a GLOBAL_AGENT_HTTP_PROXY
 
 ### Fixes
@@ -23,6 +70,10 @@
 - Upgrade NodeJS to 14.18.2
 - [AgentConnect] Update integration test data
 - [FranceConnect+] Add more accessibility and E2E to test its resilience
+
+### Not yet in production (futures apps / features)
+
+- [User Dashboard] The backend consumer can read and edit user preferences regarding IdPs
 
 ## v3.76.1 (🔥 hotfix 🔥)
 

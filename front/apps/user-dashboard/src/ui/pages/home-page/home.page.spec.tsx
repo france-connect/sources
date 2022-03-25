@@ -6,16 +6,8 @@ import { RedirectToIdpFormComponent } from '@fc/oidc-client';
 
 import { HomePage } from './home.page';
 
-jest.mock('@fc/common');
-jest.mock('@fc/oidc-client');
-jest.mock('../../components');
-
 describe('HomePage', () => {
   const useApiGetMock = mocked(useApiGet);
-  useApiGetMock.mockReturnValue(null);
-
-  const RedirectToIdpFormComponentMock = mocked(RedirectToIdpFormComponent);
-  RedirectToIdpFormComponentMock.mockReturnValue(<div>FoorBar RedirectToIdpFormComponentMock</div>);
 
   it('should render the main heading', () => {
     // given
@@ -39,7 +31,6 @@ describe('HomePage', () => {
 
   it('should not have called RedirectToIdpFormComponent when csrf is falsey', () => {
     // given
-    useApiGetMock.mockReturnValue(null);
     render(<HomePage />);
     // then
     expect(RedirectToIdpFormComponent).not.toHaveBeenCalled();

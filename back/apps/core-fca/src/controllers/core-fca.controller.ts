@@ -399,7 +399,7 @@ export class CoreFcaController {
       sp_id: spId,
     };
 
-    const { accessToken, acr, amr } =
+    const { accessToken, idToken, acr, amr } =
       await this.oidcClient.getTokenFromProvider(
         idpId,
         tokenParams,
@@ -422,6 +422,7 @@ export class CoreFcaController {
     const identityExchange: OidcSession = {
       amr,
       idpAccessToken: accessToken,
+      idpIdToken: idToken,
       idpAcr: acr,
       idpIdentity: identity,
     };

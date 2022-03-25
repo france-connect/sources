@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+
+// declarative file
 import { IconType } from 'react-icons';
 
 export interface Badge {

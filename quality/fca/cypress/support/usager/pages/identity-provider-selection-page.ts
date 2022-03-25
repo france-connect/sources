@@ -5,8 +5,16 @@ export default class IdentityProviderSelectionPage {
     return cy.get('.previous-link-container');
   }
 
+  get ministries(): ChainableElement {
+    return cy.get('#identity-provider-result .ministry-result dt');
+  }
+
+  get identityProviders(): ChainableElement {
+    return cy.get('#identity-provider-result button');
+  }
+
   checkIsVisible(): void {
-    cy.url().should('include', `/api/v2/interaction`);
+    cy.url().should('include', '/api/v2/interaction');
   }
 
   searchIdentityProvider(terms: string): void {
@@ -15,5 +23,15 @@ export default class IdentityProviderSelectionPage {
 
   getIdpButton(idpId: string): ChainableElement {
     return cy.get(`#idp-${idpId}-button`);
+  }
+
+  checkIsMinistryVisible(name: string): void {
+    cy.contains(name).should('be.visible');
+  }
+
+  checkIsNoResultMessageIsVisible(): void {
+    cy.contains('Aucun fournisseur d’identité n’a été trouvé').should(
+      'be.visible',
+    );
   }
 }

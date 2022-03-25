@@ -31,9 +31,9 @@ global.matchMedia =
  *
  */
 const originalConsoleLogError = global.console.error;
-global.console.error = (...args: any[]) => {
+global.console.error = (...args: unknown[]) => {
   const errorMessage = 'Not implemented: HTMLFormElement.prototype.submit';
-  if (args && args[0].includes(errorMessage)) {
+  if (args && typeof args[0] === 'string' && args[0].includes(errorMessage)) {
     return false;
   }
   originalConsoleLogError(...args);

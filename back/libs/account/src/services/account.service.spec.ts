@@ -265,18 +265,22 @@ describe('AccountService', () => {
         idpFederation: {},
         spFederation: {},
         preferences: {
-          updatedAt: new Date(),
-          identityProviderList: [],
-          isExcludeList: false,
+          idpSettings: {
+            updatedAt: new Date(),
+            list: [],
+            isExcludeList: false,
+          },
         },
       } as Account;
       const idpList = ['foo', 'bar'];
       const updatedAccountToReturn = {
         ...accountMock,
         preferences: {
-          updatedAt: new Date(),
-          identityProviderList: idpList,
-          isExcludeList: true,
+          idpSettings: {
+            updatedAt: new Date(),
+            list: idpList,
+            isExcludeList: false,
+          },
         },
       } as Account;
       findOneAndUpdateSpy.mockResolvedValueOnce(updatedAccountToReturn);

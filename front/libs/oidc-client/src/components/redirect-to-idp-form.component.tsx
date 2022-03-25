@@ -3,12 +3,13 @@ import { ReactNode, useContext } from 'react';
 import { AppContext, AppContextInterface } from '@fc/state-management';
 
 type RedirectToIdpFormProps = {
-  id: string;
-  csrf?: string;
   children: ReactNode;
+  csrf?: string;
+  id: string;
+  uid?: string;
 };
 
-export const RedirectToIdpFormComponent = ({ children, csrf, id }: RedirectToIdpFormProps) => {
+export const RedirectToIdpFormComponent = ({ children, csrf, id, uid }: RedirectToIdpFormProps) => {
   const {
     state: {
       config: { OidcClient },
@@ -19,6 +20,7 @@ export const RedirectToIdpFormComponent = ({ children, csrf, id }: RedirectToIdp
 
   return (
     <form action={redirectToIdp} aria-label="form" data-testid="csrf-form" id={id} method="post">
+      {uid && <input data-testid="uid-input" name="providerUid" type="hidden" value={uid} />}
       {csrf && <input data-testid="csrf-input" name="csrfToken" type="hidden" value={csrf} />}
       {children}
     </form>
@@ -26,7 +28,8 @@ export const RedirectToIdpFormComponent = ({ children, csrf, id }: RedirectToIdp
 };
 
 RedirectToIdpFormComponent.defaultProps = {
-  csrf: null,
+  csrf: undefined,
+  uid: undefined,
 };
 
 RedirectToIdpFormComponent.displayName = 'RedirectToIdpFormComponent';

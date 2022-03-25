@@ -21,7 +21,7 @@ describe('Idp activation & visibility', () => {
     cy.get('#fi-search-term').type(MINISTRY_NAME);
 
     cy.get(
-      '#identity-provider-search input[name="providerUid"][value="fia1-low"]',
+      '#identity-provider-result input[name="providerUid"][value="fia1-low"]',
     ).should('exist');
 
     cy.contains(TITLE).click();
@@ -35,7 +35,7 @@ describe('Idp activation & visibility', () => {
     cy.get('#fi-search-term').type('mock - ministére de la');
 
     cy.get(
-      '#identity-provider-search input[name="providerUid"][value="fia1-low"]',
+      '#identity-provider-result input[name="providerUid"][value="fia1-low"]',
     ).should('exist');
 
     cy.contains(TITLE).click();
@@ -49,7 +49,7 @@ describe('Idp activation & visibility', () => {
     cy.get('#fi-search-term').type('mock - ministere de la');
 
     cy.get(
-      '#identity-provider-search input[name="providerUid"][value="fia1-low"]',
+      '#identity-provider-result input[name="providerUid"][value="fia1-low"]',
     ).should('exist');
 
     cy.contains(TITLE).click();
@@ -62,11 +62,11 @@ describe('Idp activation & visibility', () => {
 
     cy.get('#fi-search-term').type('I do not exist');
 
-    cy.get('#identity-provider-search input[name="providerUid"]').should(
+    cy.get('#identity-provider-result input[name="providerUid"]').should(
       'not.exist',
     );
 
-    cy.contains("Aucun fournisseur d'identité n'a été trouvé").should(
+    cy.contains('Aucun fournisseur d’identité n’a été trouvé').should(
       'be.visible',
     );
   });
@@ -101,7 +101,7 @@ describe('Idp activation & visibility', () => {
       cy.visit(SP_ROOT_URL);
       submitFSAuthorizeForm();
       cy.get('#fi-search-term').type(MINISTRY_NAME);
-      cy.get('#identity-provider-search').should(
+      cy.get('#identity-provider-result').should(
         'not.contain',
         'Idp test Updated, activated',
       );
@@ -111,9 +111,7 @@ describe('Idp activation & visibility', () => {
       cy.wait(500);
       cy.reload();
       cy.get('#fi-search-term').type('ministere');
-      cy.get('#identity-provider-search').contains(
-        'Idp test Updated, activated',
-      );
+      cy.contains('#identity-provider-result', 'Idp test Updated, activated');
     });
 
     it('should remove an identity provider without an app restart needed', () => {
@@ -121,7 +119,7 @@ describe('Idp activation & visibility', () => {
       cy.visit(SP_ROOT_URL);
       submitFSAuthorizeForm();
       cy.get('#fi-search-term').type(MINISTRY_NAME);
-      cy.get('#identity-provider-search').should(
+      cy.get('#identity-provider-result').should(
         'not.contain',
         'Idp test Inserted',
       );
@@ -135,7 +133,7 @@ describe('Idp activation & visibility', () => {
       cy.reload();
 
       cy.get('#fi-search-term').type(MINISTRY_NAME);
-      cy.get('#identity-provider-search').should(
+      cy.get('#identity-provider-result').should(
         'not.contain',
         'Idp test Inserted',
       );

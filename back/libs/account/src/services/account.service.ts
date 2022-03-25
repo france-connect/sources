@@ -128,9 +128,11 @@ export class AccountService {
       { identityHash },
       {
         preferences: {
-          updatedAt: Date.now(),
-          identityProviderList,
-          isExcludeList,
+          idpSettings: {
+            updatedAt: Date.now(),
+            list: identityProviderList,
+            isExcludeList,
+          },
         },
       },
       { new: true },

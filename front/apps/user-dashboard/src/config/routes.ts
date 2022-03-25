@@ -3,10 +3,7 @@
 // declarative file
 import { HOMEPAGE_PATH, NOTFOUND_PATH, registerRoutes } from '@fc/routing';
 
-import { ErrorPage } from '../ui/pages/error/error.page';
-import { HomePage } from '../ui/pages/home-page/home.page';
-import { NotFoundPage } from '../ui/pages/not-found/not-found.page';
-import { TracksPage } from '../ui/pages/tracks/tracks.page';
+import { ErrorPage, HomePage, NotFoundPage, TracksPage, UserPreferencesPage } from '../ui/pages';
 
 export const routes = registerRoutes([
   { component: NotFoundPage, path: NOTFOUND_PATH },
@@ -16,6 +13,12 @@ export const routes = registerRoutes([
     label: 'User Dashboard - Traces',
     order: 2,
     path: '/history',
+  },
+  {
+    component: UserPreferencesPage,
+    label: 'User Dashboard - Mes Accès',
+    order: 2,
+    path: '/preferences',
   },
   {
     component: ErrorPage,

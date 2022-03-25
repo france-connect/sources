@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 
 import { ExceptionsModule } from '@fc/exceptions';
 import { OidcProviderModule } from '@fc/oidc-provider';
@@ -16,13 +16,12 @@ import {
   OidcProviderController,
 } from './controllers';
 import { MockIdentityProviderSession } from './dto';
-import { MockIdentityProviderService } from './services';
+import {
+  MockIdentityProviderService,
+  OidcProviderConfigAppService,
+} from './services';
 
-const oidcProviderModule = OidcProviderModule.register(
-  ServiceProviderAdapterEnvService,
-  ServiceProviderAdapterEnvModule,
-);
-
+@Global()
 @Module({
   imports: [
     ExceptionsModule,
@@ -30,9 +29,14 @@ const oidcProviderModule = OidcProviderModule.register(
     SessionModule.forRoot({
       schema: MockIdentityProviderSession,
     }),
-    oidcProviderModule,
+    OidcProviderModule.register(
+      OidcProviderConfigAppService,
+      ServiceProviderAdapterEnvService,
+      ServiceProviderAdapterEnvModule,
+    ),
   ],
   controllers: [MockIdentityProviderController, OidcProviderController],
-  providers: [MockIdentityProviderService],
+  providers: [MockIdentityProviderService, OidcProviderConfigAppService],
+  exports: [OidcProviderConfigAppService],
 })
 export class MockIdentityProviderModule {}

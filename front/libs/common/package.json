@@ -2,12 +2,11 @@
   "name": "@fc/common",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {},
-  "devDependencies": {},
   "main": "src/index.ts",
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ]
+  "devDependencies": {
+    "@types/lodash.get": "^4.4.6"
+  },
+  "dependencies": {
+    "lodash.get": "^4.4.2"
+  }
 }

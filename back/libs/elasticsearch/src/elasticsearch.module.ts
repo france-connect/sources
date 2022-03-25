@@ -27,6 +27,10 @@ function useFactory(config: ConfigService) {
     config.get<ElasticsearchConfig>('Elasticsearch');
   const options: ClientOptions = {
     node: `${es.protocol}://${es.host}:${es.port}`,
+    auth: {
+      username: es.username,
+      password: es.password,
+    },
   };
   return options;
 }

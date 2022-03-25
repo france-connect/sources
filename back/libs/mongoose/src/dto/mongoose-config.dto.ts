@@ -16,10 +16,12 @@ export class MongooseConfigOptions {
   readonly authSource: string;
 
   @IsBoolean()
-  readonly tls: boolean;
+  @IsOptional()
+  readonly tls?: boolean;
 
   @IsBoolean()
-  readonly tlsInsecure: boolean;
+  @IsOptional()
+  readonly tlsInsecure?: boolean;
 
   @IsString()
   @IsOptional()

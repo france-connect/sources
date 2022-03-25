@@ -43,7 +43,7 @@ const fia = {
       "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -90,7 +90,7 @@ const fia = {
       "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fia2-low",
     ],
     post_logout_redirect_uris: [
-      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -137,7 +137,7 @@ const fia = {
       "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -184,7 +184,7 @@ const fia = {
       "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -231,7 +231,7 @@ const fia = {
       "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -278,7 +278,7 @@ const fia = {
       "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -325,7 +325,7 @@ const fia = {
       "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -374,7 +374,7 @@ const fia = {
         "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
       ],
       post_logout_redirect_uris: [
-        "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+        "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
       ],
     },
 
@@ -420,7 +420,7 @@ const fia = {
       "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fia-llng-low",
     ],
     post_logout_redirect_uris: [
-      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 };

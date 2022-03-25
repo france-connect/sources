@@ -1,9 +1,9 @@
 import './error.scss';
 
-import React from 'react';
-
 import classnames from 'classnames';
+import React from 'react';
 import { useMediaQuery } from 'react-responsive';
+
 import { IError } from '../../types/error.type';
 
 interface ErrorComponentProps {
@@ -22,12 +22,12 @@ export const ErrorComponent = React.memo(({ errors }: ErrorComponentProps) => {
         })}>
         Une erreur est survenue lors de la connexion.
       </h1>
-      <div className="content-error my32 px16 fr-text-lg">
+      <div className="ErrorComponent margin-x-auto my32 px16 fr-text-lg">
         <p className="mb32 is-bold">Description de l’erreur :</p>
         <p className="mb32" id="error-message">
           {errors.message}
         </p>
-        <p className="mb32 is-bold">Que faire ? </p>
+        <p className="mb32 is-bold">Que faire ?</p>
         <p className="mb32">
           Fermez l’onglet de votre navigateur et reconnectez-vous en cliquant sur le bouton
           AgentConnect.

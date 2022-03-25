@@ -2,6 +2,12 @@
 @import '@fc/dsfr/core/funcs/pixel-to-rem';
 
 .search-form {
+  /*
+  @TODO split into multiple CSS files
+  also should create a generic css class to handle responsive styles,
+  both button and input
+  */
+
   .search-input {
     @include rem(height, 40px);
 

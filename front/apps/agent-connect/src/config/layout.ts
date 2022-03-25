@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+
+// declarative file
 import { LayoutConfig } from '@fc/dsfr';
 
 import { LogoAgentConnectComponent } from '../components/logo-agent-connect';
@@ -45,7 +48,6 @@ export const Layout: LayoutConfig = {
   footerDescription:
     'AgentConnect est le dispositif d’identification conçu par l’État pour les ministères et les opérateurs de l’État qui vous permet d’accéder à de nombreux services en ligne en utilisant l’un de vos comptes professionnels existants.',
   footerLinkTitle: 'Agent connect',
-
   logo: LogoAgentConnectComponent,
   returnButton: ReturnButtonComponent,
 };

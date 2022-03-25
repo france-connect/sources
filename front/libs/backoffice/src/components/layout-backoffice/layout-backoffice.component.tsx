@@ -1,5 +1,3 @@
-import './index.scss';
-
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
@@ -12,7 +10,7 @@ type LayoutProps = {
 };
 
 export const LayoutBackofficeComponent = React.memo(({ routes }: LayoutProps) => (
-  <div id="application-container">
+  <div className="text-center" id="application-container">
     <NavigationComponent routes={routes} />
     <div id="application-page">
       <Switch>

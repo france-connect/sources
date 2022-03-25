@@ -1,0 +1,69 @@
+@import '@fc/dsfr/index.scss';
+
+.ServicesListComponent {
+  .with-border {
+    border-top: 1px solid #eeeeee;
+  }
+}
+
+.ServiceComponent {
+  &-image {
+    background: #e5edf5;
+    border-radius: 4px;
+    height: 70px;
+    max-height: 70px;
+    max-width: 232px;
+    min-height: 70px;
+    min-width: 232px;
+    width: 232px;
+
+    img {
+      display: block;
+      left: 50%;
+      max-height: 76%;
+      max-width: 84%;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .FieldSwitchInputComponent {
+    &-toggle-button {
+      background: $error;
+    }
+
+    &-toggle-thumb {
+      background: $white;
+    }
+
+    &-toggle-thumb,
+    &-toggle-button {
+      box-shadow: inset 0 0 0 1px $error;
+    }
+
+    &-icon,
+    &-legend {
+      color: $error;
+      font-weight: bold;
+    }
+  }
+
+  .FieldSwitchInputComponent.checked {
+    .FieldSwitchInputComponent {
+      &-toggle-button {
+        background: $success;
+      }
+
+      &-toggle-thumb,
+      &-toggle-button {
+        box-shadow: inset 0 0 0 1px $success;
+      }
+
+      &-icon,
+      &-legend {
+        color: $success;
+      }
+    }
+  }
+}

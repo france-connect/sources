@@ -9,11 +9,13 @@ import { RedisModule } from '@fc/redis';
 import { SessionModule } from '@fc/session';
 import { TrackingModule } from '@fc/tracking';
 
+import { IOidcProviderConfigAppService } from './interfaces';
 import { OidcProviderController } from './oidc-provider.controller';
 import { OidcProviderService } from './oidc-provider.service';
 import { OidcProviderConfigService } from './services/oidc-provider-config.service';
 import { OidcProviderErrorService } from './services/oidc-provider-error.service';
 import { OidcProviderGrantService } from './services/oidc-provider-grant.service';
+import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
 import { IsValidPromptConstraint } from './validators';
 
 @Module({})
@@ -27,6 +29,7 @@ export class OidcProviderModule {
   // does not need to be tested
   // istanbul ignore next
   static register(
+    OidcProviderConfigApp: Type<IOidcProviderConfigAppService>,
     serviceProviderClass: Type<IServiceProviderAdapter>,
     serviceProviderModule: Type<ModuleMetadata>,
   ): DynamicModule {
@@ -34,6 +37,12 @@ export class OidcProviderModule {
       provide: SERVICE_PROVIDER_SERVICE_TOKEN,
       useExisting: serviceProviderClass,
     };
+
+    const oidcProviderConfigApp = {
+      provide: OIDC_PROVIDER_CONFIG_APP_TOKEN,
+      useExisting: OidcProviderConfigApp,
+    };
+
     return {
       module: OidcProviderModule,
       imports: [
@@ -45,6 +54,7 @@ export class OidcProviderModule {
       ],
       providers: [
         FcExceptionFilter,
+        oidcProviderConfigApp,
         serviceProviderProvider,
         OidcProviderService,
         IsValidPromptConstraint,
@@ -55,6 +65,7 @@ export class OidcProviderModule {
       exports: [
         OidcProviderService,
         RedisModule,
+        oidcProviderConfigApp,
         serviceProviderProvider,
         FcExceptionFilter,
         OidcProviderErrorService,

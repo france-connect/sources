@@ -13,8 +13,6 @@ Fonctionnalité: Affichage Fournisseur Identité
     Quand je cherche le fournisseur d'identité par son ministère
     Alors le fournisseur d'identité n'est pas affiché dans la liste
 
-  # @todo Bug: Les FI non visibles sont quand même affichés si actifs
-  @ignore
   Scénario: Affichage des FI lors de la recherche - aucun FI actif et non visible
     Etant donné que j'utilise un fournisseur d'identité "actif et non visible"
     Et que je navigue sur la page fournisseur de service

@@ -56,7 +56,7 @@ import {
   CoreFcpEidasVerifyHandler,
   CoreFcpSendEmailHandler,
 } from './handlers';
-import { CoreFcpService } from './services';
+import { CoreFcpService, OidcProviderConfigAppService } from './services';
 
 @Global()
 @Module({
@@ -74,6 +74,7 @@ import { CoreFcpService } from './services';
     IdentityProviderAdapterMongoModule,
     HttpProxyModule,
     OidcProviderModule.register(
+      OidcProviderConfigAppService,
       ServiceProviderAdapterMongoService,
       ServiceProviderAdapterMongoModule,
     ),
@@ -105,6 +106,7 @@ import { CoreFcpService } from './services';
     RnippRequestedEventHandler,
     RnippReceivedValidEventHandler,
     OidcProviderAuthorizationEventHandler,
+    OidcProviderConfigAppService,
     OidcProviderTokenEventHandler,
     OidcProviderUserinfoEventHandler,
     TrackableEventHandler,
@@ -122,6 +124,7 @@ import { CoreFcpService } from './services';
     CoreFcpDefaultVerifyHandler,
     CoreFcpEidasVerifyHandler,
     CoreFcpSendEmailHandler,
+    OidcProviderConfigAppService,
   ],
 })
 export class CoreFcpModule {}

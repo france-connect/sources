@@ -8,5 +8,6 @@ export * from './session-base.exception';
 export * from './session-invalid-csrf-consent.exception';
 export * from './session-invalid-csrf-select-idp.exception';
 export * from './session-invalid-session.exception';
+export * from './session-no-session-id.exception';
 export * from './session-not-found.exception';
 export * from './session-storage.exception';

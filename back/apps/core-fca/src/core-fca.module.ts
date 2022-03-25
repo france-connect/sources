@@ -39,7 +39,7 @@ import {
 } from './controllers';
 import { CoreFcaSession } from './dto';
 import { CoreFcaDefaultVerifyHandler } from './handlers';
-import { CoreFcaService } from './services';
+import { CoreFcaService, OidcProviderConfigAppService } from './services';
 
 @Global()
 @Module({
@@ -53,6 +53,7 @@ import { CoreFcaService } from './services';
     MinistriesModule,
     HttpProxyModule,
     OidcProviderModule.register(
+      OidcProviderConfigAppService,
       ServiceProviderAdapterMongoService,
       ServiceProviderAdapterMongoModule,
     ),
@@ -79,6 +80,7 @@ import { CoreFcaService } from './services';
     CoreFcaService,
     CoreTrackingService,
     OidcClientTokenEventHandler,
+    OidcProviderConfigAppService,
     UserinfoEventHandler,
     OidcProviderAuthorizationEventHandler,
     OidcProviderTokenEventHandler,
@@ -86,6 +88,6 @@ import { CoreFcaService } from './services';
     CoreFcaDefaultVerifyHandler,
   ],
   // Make `CoreTrackingService` dependencies available
-  exports: [CoreFcaDefaultVerifyHandler],
+  exports: [CoreFcaDefaultVerifyHandler, OidcProviderConfigAppService],
 })
 export class CoreFcaModule {}

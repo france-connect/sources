@@ -13,4 +13,10 @@ export class ElasticsearchConfig {
 
   @IsNumber()
   readonly port: number;
+
+  @IsString()
+  readonly username: string;
+
+  @IsString()
+  readonly password: string;
 }

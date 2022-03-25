@@ -31,7 +31,10 @@ import {
   OidcProviderController,
 } from './controllers';
 import { EidasBridgeSession } from './dto';
-import { OidcMiddlewareService } from './services';
+import {
+  OidcMiddlewareService,
+  OidcProviderConfigAppService,
+} from './services';
 
 const oidcClientModule = OidcClientModule.register(
   IdentityProviderAdapterEnvService,
@@ -40,6 +43,7 @@ const oidcClientModule = OidcClientModule.register(
   ServiceProviderAdapterEnvModule,
 );
 const oidcProviderModule = OidcProviderModule.register(
+  OidcProviderConfigAppService,
   ServiceProviderAdapterEnvService,
   ServiceProviderAdapterEnvModule,
 );
@@ -69,7 +73,7 @@ const oidcProviderModule = OidcProviderModule.register(
     OidcClientController,
     OidcProviderController,
   ],
-  providers: [OidcMiddlewareService],
-  exports: [],
+  providers: [OidcMiddlewareService, OidcProviderConfigAppService],
+  exports: [OidcProviderConfigAppService],
 })
 export class EidasBridgeModule {}

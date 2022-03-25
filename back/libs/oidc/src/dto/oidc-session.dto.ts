@@ -129,4 +129,8 @@ export class OidcSession {
   @IsOptional()
   @IsObject()
   readonly spIdentity?: PartialExcept<IOidcIdentity, 'sub'>;
+
+  @IsString()
+  @IsOptional()
+  readonly oidcProviderLogoutForm?: string;
 }

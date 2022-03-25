@@ -10,7 +10,9 @@ import { OidcProviderConfig } from '@fc/oidc-provider';
 import { ISessionBoundContext, SessionService } from '@fc/session';
 
 import { OidcProviderRedisAdapter } from '../adapters';
+import { IOidcProviderConfigAppService } from '../interfaces';
 import { OidcProviderService } from '../oidc-provider.service';
+import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from '../tokens';
 import { OidcProviderErrorService } from './oidc-provider-error.service';
 
 @Injectable()
@@ -20,12 +22,10 @@ export class OidcProviderConfigService {
   constructor(
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
+    @Inject(OIDC_PROVIDER_CONFIG_APP_TOKEN)
+    private readonly oidcProviderConfigApp: IOidcProviderConfigAppService,
     private readonly sessionService: SessionService,
     private readonly errorService: OidcProviderErrorService,
-    /**
-     * @todo remove mention of ServiceProviderAdapterMongoService
-     * We do not want to be bound to an implementation
-     */
     @Inject(SERVICE_PROVIDER_SERVICE_TOKEN)
     private readonly serviceProvider: IServiceProviderAdapter,
   ) {
@@ -83,8 +83,13 @@ export class OidcProviderConfigService {
      * Bind callbacks to this class before passing them to oidc-provider
      * so we can use the NestJS dependencies injection
      */
-    const logoutSource = this.logoutSource.bind(this);
-    const postLogoutSuccessSource = this.postLogoutSuccessSource.bind(this);
+    const logoutSource = this.oidcProviderConfigApp.logoutSource.bind(
+      this.oidcProviderConfigApp,
+    );
+    const postLogoutSuccessSource =
+      this.oidcProviderConfigApp.postLogoutSuccessSource.bind(
+        this.oidcProviderConfigApp,
+      );
 
     const findAccount = this.findAccount.bind(this);
     const pairwiseIdentifier = this.pairwiseIdentifier.bind(this);
@@ -181,49 +186,6 @@ export class OidcProviderConfigService {
    */
   private pairwiseIdentifier(_ctx, accountId: string) {
     return accountId;
-  }
-
-  /**
-   * More documentation can be found in oidc-provider repo
-   * @see https://github.com/panva/node-oidc-provider/blob/v6.x/docs/README.md#featuresrpinitiatedlogout
-   * @TODO #109 Check the behaving of the page when javascript is disabled
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/issues/109
-   */
-  private async logoutSource(ctx: KoaContextWithOIDC, form: any) {
-    ctx.body = `<!DOCTYPE html>
-      <head>
-        <title>Déconnexion</title>
-      </head>
-      <body>
-        ${form}
-        <script>
-          var form = document.forms[0];
-          var input = document.createElement('input');
-          input.type = 'hidden';
-          input.name = 'logout';
-          input.value = 'yes';
-          form.appendChild(input);
-          form.submit();
-        </script>
-      </body>
-      </html>`;
-  }
-
-  /**
-   * More documentation can be found in oidc-provider repo
-   * @see https://github.com/panva/node-oidc-provider/blob/v6.x/docs/README.md#featuresrpinitiatedlogout
-   * @TODO #109 Check the behaving of the page when javascript is disabled
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/issues/109
-   */
-  private async postLogoutSuccessSource(ctx: KoaContextWithOIDC) {
-    ctx.body = `<!DOCTYPE html>
-      <head>
-        <title>Déconnexion</title>
-      </head>
-      <body>
-        <p>Vous êtes bien déconnecté, vous pouvez fermer votre navigateur.</p>
-      </body>
-      </html>`;
   }
 
   private clientBasedCORS(

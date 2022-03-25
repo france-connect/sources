@@ -1,0 +1,11 @@
+{
+  "name": "@fc/tests-utils",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "devDependencies": {},
+  "dependencies": {
+    "react": "^17.0.2",
+    "@testing-library/react": "^12.0.0"
+  }
+}

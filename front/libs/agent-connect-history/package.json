@@ -1,0 +1,12 @@
+{
+  "name": "@fc/agent-connect-history",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "devDependencies": {},
+  "dependencies": {
+    "@fc/common": "^0.1.0",
+    "react": "^17.0.2",
+    "react-router-dom": "^5.2.0"
+  }
+}

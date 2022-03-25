@@ -1,5 +1,8 @@
-export interface IPreferences {
+export interface IIdpSettings {
   updatedAt?: Date;
   isExcludeList: boolean;
-  identityProviderList: string[];
+  list: string[];
+}
+export interface IPreferences {
+  idpSettings?: IIdpSettings;
 }

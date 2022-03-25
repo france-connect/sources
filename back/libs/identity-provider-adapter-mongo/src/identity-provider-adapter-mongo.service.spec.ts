@@ -451,6 +451,9 @@ describe('IdentityProviderAdapterMongoService', () => {
     let validateDtoMock;
     beforeEach(() => {
       validateDtoMock = mocked(validateDto);
+      configMock.get.mockReturnValueOnce({
+        disableIdpValidationOnLegacy: false,
+      });
     });
 
     it('should resolve', async () => {
@@ -477,6 +480,20 @@ describe('IdentityProviderAdapterMongoService', () => {
       expect(repositoryMock.find).toHaveBeenCalledTimes(1);
     });
 
+    it('should get the configuration', async () => {
+      // setup
+      validateDtoMock.mockResolvedValueOnce([]);
+
+      // action
+      await service['findAllIdentityProvider']();
+
+      // expect
+      expect(configMock.get).toHaveBeenCalledTimes(1);
+      expect(configMock.get).toHaveBeenCalledWith(
+        'IdentityProviderAdapterMongo',
+      );
+    });
+
     it('should return result of type list', async () => {
       // setup
       validateDtoMock.mockResolvedValueOnce([]);
@@ -486,6 +503,20 @@ describe('IdentityProviderAdapterMongoService', () => {
 
       // expect
       expect(result).toEqual([legacyIdentityProviderMock]);
+    });
+
+    it('should not call validateDto if the config "disableIdpValidationOnLegacy" is set to "true"', async () => {
+      // setup
+      validateDtoMock.mockResolvedValueOnce(['there is an error']);
+      configMock.get
+        .mockReset()
+        .mockReturnValueOnce({ disableIdpValidationOnLegacy: true });
+
+      // action
+      await service['findAllIdentityProvider']();
+
+      // expect
+      expect(validateDtoMock).toHaveBeenCalledTimes(0);
     });
 
     it('should log a warning if an entry is excluded by the DTO', async () => {
@@ -779,11 +810,15 @@ describe('IdentityProviderAdapterMongoService', () => {
   });
 
   describe('decryptClientSecret', () => {
-    it('should get clientSecretEncryptKey from config', () => {
+    it('should get clientSecretEncryptKey and decryptClientSecretFeature from config', () => {
       // Given
       const clientSecretMock = 'some string';
+      const decryptClientSecretFeature = false;
       const clientSecretEncryptKey = 'Key';
-      configMock.get.mockReturnValue({ clientSecretEncryptKey });
+      configMock.get.mockReturnValueOnce({
+        clientSecretEncryptKey,
+        decryptClientSecretFeature,
+      });
 
       // When
       service['decryptClientSecret'](clientSecretMock);
@@ -791,11 +826,32 @@ describe('IdentityProviderAdapterMongoService', () => {
       expect(configMock.get).toHaveBeenCalledTimes(1);
     });
 
-    it('should call decrypt with enc key from config', () => {
+    it('should return null if decryptClientSecretFeature is false', () => {
       // Given
       const clientSecretMock = 'some string';
+      const decryptClientSecretFeature = false;
       const clientSecretEncryptKey = 'Key';
-      configMock.get.mockReturnValue({ clientSecretEncryptKey });
+      configMock.get.mockReturnValue({
+        clientSecretEncryptKey,
+        decryptClientSecretFeature,
+      });
+      cryptographyMock.decrypt.mockReturnValue('totoIsDecrypted');
+
+      // When
+      const result = service['decryptClientSecret'](clientSecretMock);
+      // Then
+      expect(result).toEqual(null);
+    });
+
+    it('should call decrypt with enc key from config if decryptClientSecretFeature is true', () => {
+      // Given
+      const clientSecretMock = 'some string';
+      const decryptClientSecretFeature = true;
+      const clientSecretEncryptKey = 'Key';
+      configMock.get.mockReturnValue({
+        clientSecretEncryptKey,
+        decryptClientSecretFeature,
+      });
       cryptographyMock.decrypt.mockReturnValue('totoIsDecrypted');
       // When
       service['decryptClientSecret'](clientSecretMock);
@@ -807,11 +863,15 @@ describe('IdentityProviderAdapterMongoService', () => {
       );
     });
 
-    it('should return clientSecretEncryptKey', () => {
+    it('should return clientSecretEncryptKey if decryptClientSecretFeature is true', () => {
       // Given
       const clientSecretMock = 'some string';
+      const decryptClientSecretFeature = true;
       const clientSecretEncryptKey = 'Key';
-      configMock.get.mockReturnValue({ clientSecretEncryptKey });
+      configMock.get.mockReturnValue({
+        clientSecretEncryptKey,
+        decryptClientSecretFeature,
+      });
       cryptographyMock.decrypt.mockReturnValue('totoIsDecrypted');
 
       // When

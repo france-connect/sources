@@ -18,6 +18,30 @@ $rem-baseline: $body-font-size !default;
 $main-font: arial, sans-serif !default;
 $secondary-font: verdana, serif !default;
 
+$opacities_map: (
+  0,
+  5,
+  10,
+  15,
+  20,
+  25,
+  30,
+  35,
+  40,
+  45,
+  50,
+  55,
+  60,
+  65,
+  70,
+  75,
+  80,
+  85,
+  90,
+  95,
+  100
+) !default;
+
 $font-sizes-map: (12) !default;
 $line-height-map: (12) !default;
 $spacings-map: (4) !default;
@@ -47,11 +71,11 @@ $dimensions_map: (
   100
 ) !default;
 
-$breakpoints-xs: 320px !default; // Mobile Small
-$breakpoints-sm: 576px !default; // Mobile
-$breakpoints-md: 768px !default; // Tablet
-$breakpoints-lg: 1024px !default; // Desktop
-$breakpoints-xl: 1248px !default; // Desktop Extra Large
+$breakpoints-xs: 320px !default; /* Mobile Small */
+$breakpoints-sm: 576px !default; /* Mobile */
+$breakpoints-md: 768px !default; /* Tablet */
+$breakpoints-lg: 1024px !default; /* Desktop */
+$breakpoints-xl: 1248px !default; /* Desktop Extra Large */
 
 $breakpoint-mobile-sm: $breakpoints-xs;
 $breakpoint-mobile: $breakpoints-sm;

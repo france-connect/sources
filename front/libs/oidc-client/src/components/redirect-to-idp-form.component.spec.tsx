@@ -66,4 +66,18 @@ describe('RedirectToIdpFormComponent', () => {
     expect(element).toBeInTheDocument();
     expect(element).toHaveAttribute('value', 'mock-csrf');
   });
+
+  it('should render a hidden input with uid value', () => {
+    // given
+    const { getByTestId } = render(
+      <RedirectToIdpFormComponent csrf="mock-csrf" id="mock-id" uid="mock-uid">
+        <div>mock-component-content</div>
+      </RedirectToIdpFormComponent>,
+    );
+    // when
+    const element = getByTestId('uid-input');
+    // then
+    expect(element).toBeInTheDocument();
+    expect(element).toHaveAttribute('value', 'mock-uid');
+  });
 });

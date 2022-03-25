@@ -27,7 +27,8 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "@fc/tests-utils": ["./tests-utils"]
+      "@fc/tests-utils": ["../../tests-utils/src"],
+      "@fc/tests-utils/*": ["../../tests-utils/src/*"]
     }
   }
 }

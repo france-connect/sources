@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
-import { AccountNotFoundException, AccountService } from '@fc/account';
-import { IPreferences } from '@fc/account/interfaces';
+import {
+  AccountNotFoundException,
+  AccountService,
+  IIdpSettings,
+} from '@fc/account';
 import { PartialExcept } from '@fc/common';
 import { CryptographyFcpService, IPivotIdentity } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
@@ -9,7 +12,7 @@ import { LoggerLevelNames, LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata, IOidcIdentity } from '@fc/oidc';
 
 import { CsmrUserPreferencesIdpNotFoundException } from '../exceptions';
-import { IIdpSettings } from '../interfaces';
+import { IFormattedIdpSettings } from '../interfaces';
 
 @Injectable()
 export class CsmrUserPreferencesService {
@@ -24,55 +27,67 @@ export class CsmrUserPreferencesService {
 
   formatUserIdpSettingsList(
     identityProvidersMetadata: IdentityProviderMetadata[],
-    preferences: IPreferences = {
-      identityProviderList: [],
+    settings: IIdpSettings = {
       isExcludeList: false,
+      list: [],
     },
-  ): IIdpSettings[] {
-    const { identityProviderList, isExcludeList } = preferences;
-    return identityProvidersMetadata
+  ): IFormattedIdpSettings {
+    const { list, isExcludeList } = settings;
+
+    const formattedList = identityProvidersMetadata
       .filter((idp) => idp.display)
       .map(({ uid, name, image, title, active }) => {
-        const isPreferencesNotInitialized = !identityProviderList.length;
-        const isIdpSelected =
-          isExcludeList !== identityProviderList.includes(uid);
+        const isPreferencesNotInitialized = !list.length;
+        const isIdpSelected = isExcludeList !== list.includes(uid);
 
         return {
           uid,
+          /**
+           * @NOTE The "name" field came from the legacy and should
+           * be used only for BDD purposes. It is a user input.
+           */
           name,
           image,
           title,
           active,
           isChecked: isPreferencesNotInitialized || isIdpSelected,
-        } as IIdpSettings;
+        };
       });
-  }
-
-  createAccountPreferencesIdpList(
-    idpList: string[],
-    allowFutureIdp: boolean,
-    identityProviderUids: string[],
-  ): { isExcludeList: boolean; identityProviderList: string[] } {
-    const identityProviderList = allowFutureIdp
-      ? identityProviderUids.filter((idp) => !idpList.includes(idp))
-      : [...idpList];
 
     return {
-      isExcludeList: allowFutureIdp,
-      identityProviderList,
+      allowFutureIdp: isExcludeList,
+      idpList: formattedList,
+    };
+  }
+
+  createAccountPreferencesIdpSettings(
+    inputIdpList: string[],
+    isExcludeList: boolean,
+    idpList: string[],
+  ): IIdpSettings {
+    let list = [...inputIdpList];
+
+    if (isExcludeList) {
+      list = idpList.filter((idp) => !list.includes(idp));
+    }
+
+    return {
+      isExcludeList,
+      list,
     };
   }
 
   async getIdpSettings(
     identity: IOidcIdentity | PartialExcept<IOidcIdentity, 'sub'>,
-  ): Promise<IIdpSettings[]> {
+  ): Promise<IFormattedIdpSettings> {
     this.logger.debug(`Identity received : ${identity}`);
+
     const identityHash = this.cryptographyFcp.computeIdentityHash(
       identity as IPivotIdentity,
     );
-    const { id, preferences } = await this.account.getAccountByIdentityHash(
-      identityHash,
-    );
+    const { id, preferences = {} } =
+      await this.account.getAccountByIdentityHash(identityHash);
+
     if (!id) {
       this.logger.trace(
         { error: 'No account found', identityHash },
@@ -81,11 +96,11 @@ export class CsmrUserPreferencesService {
       throw new AccountNotFoundException();
     }
 
-    const idpListMetadata = await this.identityProvider.getList();
+    const idpList = await this.identityProvider.getList();
 
     const formattedIdpSettings = this.formatUserIdpSettingsList(
-      idpListMetadata,
-      preferences,
+      idpList,
+      preferences.idpSettings,
     );
 
     this.logger.trace({
@@ -101,50 +116,47 @@ export class CsmrUserPreferencesService {
 
   async setIdpSettings(
     identity: IPivotIdentity,
-    idpList: string[],
-    allowFutureIdp: boolean,
-  ): Promise<IIdpSettings[]> {
+    inputIdpList: string[],
+    inputIsExcludeList: boolean,
+  ): Promise<IFormattedIdpSettings> {
     this.logger.debug(`Identity received : ${identity}`);
 
-    const idpListMetadata = await this.identityProvider.getList();
-    const identityProviderUids = idpListMetadata.map(
-      (metadata) => metadata.uid,
+    const idpList = await this.identityProvider.getList();
+    const idpUids = idpList.map((idp) => idp.uid);
+    const inputIdpAllExistsInDatabase = inputIdpList.every((idpUid) =>
+      idpUids.includes(idpUid),
     );
-    const areIdentityProvidersInMetadata = idpList.every((idpUid) =>
-      identityProviderUids.includes(idpUid),
-    );
-    if (!areIdentityProvidersInMetadata) {
+    if (!inputIdpAllExistsInDatabase) {
       throw new CsmrUserPreferencesIdpNotFoundException();
     }
 
     this.logger.debug(
-      `idpList received : ${idpList}, allowFutureIdp: ${allowFutureIdp}`,
+      `inputIdpList received : ${inputIdpList}, inputIsExcludeList: ${inputIsExcludeList}`,
     );
     const identityHash = this.cryptographyFcp.computeIdentityHash(identity);
-    const { identityProviderList, isExcludeList } =
-      this.createAccountPreferencesIdpList(
-        idpList,
-        allowFutureIdp,
-        identityProviderUids,
-      );
+    const { list, isExcludeList } = this.createAccountPreferencesIdpSettings(
+      inputIdpList,
+      inputIsExcludeList,
+      idpUids,
+    );
 
     const { id, preferences } = await this.account.updatePreferences(
       identityHash,
-      identityProviderList,
+      list,
       isExcludeList,
     );
 
     const formattedIdpSettings = this.formatUserIdpSettingsList(
-      idpListMetadata,
-      preferences,
+      idpList,
+      preferences.idpSettings,
     );
 
     this.logger.trace({
       accountId: id,
       identity,
       identityHash,
-      idpList,
-      allowFutureIdp,
+      inputIdpList,
+      inputIsExcludeList,
       formattedIdpSettings,
       preferences,
     });

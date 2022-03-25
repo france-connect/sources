@@ -8,6 +8,8 @@ const ELASTIC_TRACKS_INDEX = process.env.Elasticsearch_TRACKS_INDEX;
 const ELASTIC_PROTOCOL = process.env.Elasticsearch_PROTOCOL;
 const ELASTIC_HOST = process.env.Elasticsearch_HOST;
 const ELASTIC_PORT = process.env.Elasticsearch_PORT;
+const ELASTIC_USERNAME = process.env.Elasticsearch_USERNAME;
+const ELASTIC_PASSWORD = process.env.Elasticsearch_PASSWORD;
 
 /**
  * Start the populate script by instantiating the class:
@@ -47,7 +49,7 @@ class PopulateAccountTraces {
    */
   initElasticsearchClient() {
     const host = `${ELASTIC_PROTOCOL}://${ELASTIC_HOST}:${ELASTIC_PORT}`;
-    this.esClient = new Client({ node: host });
+    this.esClient = new Client({ node: host, auth: { username: ELASTIC_USERNAME, password: ELASTIC_PASSWORD } });
   }
 
   /**

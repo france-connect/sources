@@ -5,7 +5,7 @@ import { LoggerService } from '@fc/logger';
 import { UserPreferencesProtocol } from '@fc/microservices';
 
 import { GetIdpSettingsPayloadDto, SetIdpSettingsPayloadDto } from '../dto';
-import { IIdpSettingsResponse } from '../interfaces';
+import { IFormattedIdpSettingsResponse } from '../interfaces';
 import { CsmrUserPreferencesService } from '../services';
 
 @Controller()
@@ -20,7 +20,7 @@ export class CsmrUserPreferencesController {
   /**
    * Get the account idpSettings
    * @param {GetIdpSettingsPayloadDto} payload
-   * @returns {Promise<IIdpSettingsResponse>}
+   * @returns {Promise<IFormattedIdpSettingsResponse>}
    */
   @MessagePattern(UserPreferencesProtocol.Commands.GET_IDP_SETTINGS)
   @UsePipes(
@@ -32,7 +32,7 @@ export class CsmrUserPreferencesController {
   )
   async getIdpSettings(
     @Payload() payload: GetIdpSettingsPayloadDto,
-  ): Promise<IIdpSettingsResponse> {
+  ): Promise<IFormattedIdpSettingsResponse> {
     this.logger.debug(
       `New message pattern received ${UserPreferencesProtocol.Commands.GET_IDP_SETTINGS}`,
     );
@@ -59,7 +59,7 @@ export class CsmrUserPreferencesController {
   /**
    * Update the specific account idpSettings
    * @param {SetIdpSettingsPayloadDto} payload
-   * @returns {Promise<IIdpSettingsResponse>}
+   * @returns {Promise<IFormattedIdpSettingsResponse>}
    */
   @MessagePattern(UserPreferencesProtocol.Commands.SET_IDP_SETTINGS)
   @UsePipes(
@@ -71,7 +71,7 @@ export class CsmrUserPreferencesController {
   )
   async setIdpSettings(
     @Payload() payload: SetIdpSettingsPayloadDto,
-  ): Promise<IIdpSettingsResponse> {
+  ): Promise<IFormattedIdpSettingsResponse> {
     this.logger.debug(
       `New message pattern received ${UserPreferencesProtocol.Commands.SET_IDP_SETTINGS}`,
     );

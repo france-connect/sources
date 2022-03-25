@@ -1,8 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-import { HomePage } from './pages/homepage';
-import { ErrorPage } from './pages/error';
+import { ErrorPage, HomePage } from './pages';
 
 export const routes = [
   {

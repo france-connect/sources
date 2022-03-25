@@ -17,6 +17,8 @@ const elasticsearchConfigMock: ElasticsearchConfig = {
   protocol: 'http',
   host: 'elasticsearch',
   port: 9200,
+  username: 'docker-stack',
+  password: 'docker-stack',
 };
 
 const accountId = '42';
