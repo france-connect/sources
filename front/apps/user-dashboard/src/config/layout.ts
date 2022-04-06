@@ -37,4 +37,16 @@ export const Layout: LayoutConfig = {
     'FranceConnect est un dispositif qui permet aux internautes de s’identifier sur un service en ligne par l’intermédiaire d’un compte existant (impots.gouv.fr, ameli.fr…).',
   footerLinkTitle: 'Agent connect',
   logo: LogoFranceConnectComponent,
+  navigationItems: [
+    {
+      a11y: 'label',
+      href: '/history',
+      label: 'Mon historique de navigation',
+    },
+    {
+      a11y: 'label',
+      href: '/preferences',
+      label: 'Gérer mes accès',
+    },
+  ],
 };

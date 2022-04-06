@@ -124,6 +124,12 @@ _up() {
         # Needed for user dashboard, do not start rp-all
         services="mongo-fcp-high"
         ;;
+      partners-fca)
+        services="$services partners-fca"
+        ;;
+      partners-fcp)
+        services="$services partners-fcp"
+        ;;
       all)
         services=all
         break
@@ -144,6 +150,8 @@ _up() {
         echo "  - all-fca-low => all needed services to run fca-low stack (core-fca-low, fsa[n]-low, fia[n]-low, exploit, hsm, etc.)"
         echo "  - lemon-ldap => up needed services to run lemon-ldap and to access his manager"
         echo "  - hybridge-fca-low => up minimal needed services to run core-fca-low fca-low-front bridge-proxy-rie fsa1-low lemon-ldap"
+        echo "  - partners-fca => up minimal needed services to run partners fca front and back"
+        echo "  - partners-fcp => up minimal needed services to run partners fcp front and back"
         echo "  - all => run all services"
         echo "----"
         exit 1
@@ -448,7 +456,8 @@ case "$action" in
       exploitation-fca-low exploit-fcp-high-back exploit-fca-low-back core-fcp-low \
       fsp1-low fsp2-low fip1-low fip2-low fip3-low exploit-fcp-high-front exploit-fca-low-front bridge-proxy-rie \
       exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
-      csmr-rie fia-rie-low
+      csmr-rie fia-rie-low \
+      partners-fca-back partners-fca-front partners-fcp-back partners-fcp-front
     ;;
   exec)
     _exec $@
@@ -536,7 +545,8 @@ case "$action" in
       exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
       fsa1-low fsa2-low fsa3-low fsa4-low \
       fia1-low fia2-low fia4-low fia5-low \
-      csmr-rie fia-rie-low
+      csmr-rie fia-rie-low \
+      partners-fca-back partners-fca-front partners-fcp-back partners-fcp-front
     ;;
   # -- stop all up's containers (FCP and/or FCA)
   stop-all)

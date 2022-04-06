@@ -7,7 +7,7 @@ import { EnhancedTrack } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';
-import { TrackCardComponent } from './track-card.component';
+import { MISSING_SP_NAME_VALUE, TrackCardComponent } from './track-card.component';
 
 jest.mock('./card-badge.component');
 jest.mock('./card-content.component');
@@ -26,12 +26,13 @@ describe('TrackCardComponent', () => {
     city: 'mock-city',
     claims: ['claims1', 'claims2'],
     country: 'mock-country',
-    date: '2021-10-01T00:00:00.000+01:00',
     datetime: DateTime.fromObject({ day: 1, month: 10, year: 2021 }, { zone: 'Europe/Paris' }),
     event: 'mock-event',
+    idpName: 'mock-idpName',
     platform: 'FranceConnect',
     spAcr: 'eidas1' as keyof typeof EidasToLabel,
     spName: 'mock-spname',
+    time: 1633042800000, // '2021-10-01T00:00:00.000+01:00'
     trackId: 'mock-track-id',
   };
 
@@ -64,9 +65,9 @@ describe('TrackCardComponent', () => {
       expect(TrackCardHeaderComponent).toHaveBeenCalledWith(
         {
           datetime: track.datetime,
-          identityProviderName: track.spName,
           opened: false,
           options,
+          serviceProviderName: track.spName,
         },
         {},
       );
@@ -82,8 +83,41 @@ describe('TrackCardComponent', () => {
           claims: ['claims1', 'claims2'],
           country: 'mock-country',
           datetime: track.datetime,
+          idpName: track.idpName,
           opened: false,
           spAcr: track.spAcr,
+        },
+        {},
+      );
+    });
+  });
+
+  describe('Special component render', () => {
+    it('should render element at container top level', () => {
+      // given
+
+      const spMissingTrack: EnhancedTrack = {
+        ...track,
+        spName: undefined,
+      };
+      const { getByTestId } = render(
+        <TrackCardComponent options={options} track={spMissingTrack} />,
+      );
+      // when
+      const element = getByTestId(track.trackId);
+      // then
+      expect(element).toBeInTheDocument();
+    });
+
+    it('should have called card header component with default spName', () => {
+      // then
+      expect(TrackCardHeaderComponent).toHaveBeenCalled();
+      expect(TrackCardHeaderComponent).toHaveBeenCalledWith(
+        {
+          datetime: track.datetime,
+          opened: false,
+          options,
+          serviceProviderName: MISSING_SP_NAME_VALUE,
         },
         {},
       );

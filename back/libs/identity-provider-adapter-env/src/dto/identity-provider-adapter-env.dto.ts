@@ -130,4 +130,11 @@ export class IdentityProviderAdapterEnvDTO {
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly jwks_uri: string;
+
+  @IsUrl()
+  // @TODO https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/920
+  @IsOptional()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly end_session_endpoint: string;
 }

@@ -13,5 +13,5 @@ export default {
     key: env.file('HTTPS_SERVER_KEY', { optional: true }),
   },
   name: 'TRACKS_DATA_PROVIDER',
-  urlPrefix: '/v1',
+  urlPrefix: env.string('PREFIX'),
 } as AppConfig;

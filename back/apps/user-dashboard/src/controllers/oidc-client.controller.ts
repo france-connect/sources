@@ -34,6 +34,7 @@ import {
   SessionCsrfService,
   SessionInvalidCsrfSelectIdpException,
   SessionNotFoundException,
+  SessionService,
 } from '@fc/session';
 
 import { AccessTokenParamsDTO } from '../dto';
@@ -49,6 +50,7 @@ export class OidcClientController {
     private readonly identityProvider: IdentityProviderAdapterEnvService,
     private readonly csrfService: SessionCsrfService,
     private readonly config: ConfigService,
+    private readonly sessionService: SessionService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -142,17 +144,47 @@ export class OidcClientController {
   }
 
   @Get(UserDashboardBackRoutes.LOGOUT)
-  async logout(@Res() res) {
-    res.redirect(UserDashboardBackRoutes.LOGOUT_CALLBACK);
+  async logout(
+    @Res() res,
+    @Session('OidcClient')
+    sessionOidc: ISessionService<OidcClientSession>,
+  ) {
+    const {
+      // OIDC style variable name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      client: { post_logout_redirect_uris },
+    } = await this.identityProvider.getById('envIssuer');
+
+    const { idpIdToken, idpState, idpId } = await sessionOidc.get();
+
+    const endSessionUrl: string =
+      await this.oidcClient.getEndSessionUrlFromProvider(
+        idpId,
+        idpState,
+        idpIdToken,
+        // pop() : We only have one URL but the standard implies an array
+        post_logout_redirect_uris[0],
+      );
+
+    res.redirect(endSessionUrl);
   }
 
   @Get(UserDashboardBackRoutes.LOGOUT_CALLBACK)
-  async logoutCallback(@Res() res) {
-    /**
-     * @TODO #192 ETQ Dev, je complète la session pendant la cinématique des mocks
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/192
-     * */
-    return res.redirect('/');
+  async logoutCallback(@Req() req, @Res() res) {
+    this.logger.trace({
+      route: UserDashboardBackRoutes.LOGOUT_CALLBACK,
+      method: 'GET',
+      name: 'MockServiceProviderRoutes.LOGOUT_CALLBACK',
+      redirect: '/',
+    });
+
+    // delete oidc session
+    await this.sessionService.reset(req, res);
+
+    // BUSINESS: Redirect to business page
+    const redirect = '/';
+
+    return res.redirect(redirect);
   }
 
   @Post(UserDashboardBackRoutes.REVOCATION)
@@ -244,11 +276,8 @@ export class OidcClientController {
       nonce,
       state,
     };
-    const { accessToken, acr } = await this.oidcClient.getTokenFromProvider(
-      idpId,
-      tokenParams,
-      req,
-    );
+    const { accessToken, acr, idToken } =
+      await this.oidcClient.getTokenFromProvider(idpId, tokenParams, req);
 
     const userInfoParams = {
       accessToken,
@@ -273,6 +302,7 @@ export class OidcClientController {
       idpAccessToken: accessToken,
       idpAcr: acr,
       idpIdentity: identity,
+      idpIdToken: idToken,
     };
 
     await sessionOidc.set({ ...identityExchange });

@@ -4,7 +4,7 @@ import { EnhancedTrack, Track, TrackList, TracksConfig } from '../interfaces';
 
 export function createUniqueGroupKeyFromTrackDate(track: EnhancedTrack): number {
   // crée une clé unique pour un groupe
-  // a partir de l'année et du mois
+  // à partir de l'année et du mois
   const next = DateTime.fromObject({
     month: track.datetime.month,
     year: track.datetime.year,
@@ -39,19 +39,15 @@ export const groupTracksByMonth =
     return next;
   };
 
-export function orderGroupByKeyAsc(groupA: TrackList, groupB: TrackList) {
-  const uniqKeyA = groupA[0];
-  const uniqKeyB = groupB[0];
+export function orderGroupByKeyAsc([uniqKeyA]: TrackList, [uniqKeyB]: TrackList) {
   return uniqKeyB - uniqKeyA;
 }
 
-export function orderTracksByDateDesc(a: EnhancedTrack, b: EnhancedTrack) {
-  const key1 = new Date(a.date).getTime();
-  const key2 = new Date(b.date).getTime();
-  return key2 - key1;
+export function orderTracksByDateDesc({ time: a }: EnhancedTrack, { time: b }: EnhancedTrack) {
+  return b - a;
 }
 
 export function transformTrackToEnhanced(track: Track): EnhancedTrack {
-  const datetime = DateTime.fromISO(track.date);
+  const datetime = DateTime.fromMillis(track.time);
   return { ...track, datetime };
 }

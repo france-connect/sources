@@ -31,6 +31,7 @@ describe('OidcClient Controller', () => {
   const oidcClientServiceMock = {
     getTokenFromProvider: jest.fn(),
     getUserInfosFromProvider: jest.fn(),
+    getEndSessionUrlFromProvider: jest.fn(),
     utils: {
       buildAuthorizeParameters: jest.fn(),
       checkCsrfTokenValidity: jest.fn(),
@@ -45,6 +46,7 @@ describe('OidcClient Controller', () => {
   const idpNonceMock = 'idpNonceMock';
   const oidcErrorMock = {
     error: 'error',
+    // OIDC style variable name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     error_description: 'error_description',
   };
@@ -60,6 +62,7 @@ describe('OidcClient Controller', () => {
   const sessionServiceMock = {
     get: jest.fn(),
     set: jest.fn(),
+    reset: jest.fn(),
   };
 
   const sessionCsrfServiceMock = {
@@ -133,7 +136,13 @@ describe('OidcClient Controller', () => {
       },
     };
 
-    identityProviderServiceMock.getById.mockReturnValue({ name: 'foo' });
+    identityProviderServiceMock.getById.mockReturnValue({
+      name: 'foo',
+      client: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        post_logout_redirect_uris: ['any-post_logout_redirect_uris-mock'],
+      },
+    });
     sessionServiceMock.get.mockResolvedValue({
       idpNonce: idpNonceMock,
       idpState: idpStateMock,
@@ -314,7 +323,7 @@ describe('OidcClient Controller', () => {
   describe('logoutCallback()', () => {
     it('should redirect on the home page', async () => {
       // action
-      await controller.logoutCallback(res);
+      await controller.logoutCallback(req, res);
 
       // assert
       expect(res.redirect).toHaveBeenCalledTimes(1);
@@ -464,8 +473,12 @@ describe('OidcClient Controller', () => {
 
   describe('logout()', () => {
     it('should redirect on the logout callback controller', async () => {
+      // given
+      oidcClientServiceMock.getEndSessionUrlFromProvider.mockReturnValueOnce(
+        '/logout-callback',
+      );
       // action
-      await controller.logout(res);
+      await controller.logout(res, sessionServiceMock);
 
       // assert
       expect(res.redirect).toHaveBeenCalledTimes(1);

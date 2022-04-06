@@ -1,0 +1,52 @@
+version: "3.4"
+
+####################
+####################
+services:
+  partners-fcp-back:
+    hostname: partners-fcp-back
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - "squid"
+      - "redis-pwd"
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/partners-fcp/.env/back.env"
+    ports:
+      - "10255:3001"
+    networks:
+      - public
+    command: "pm2 logs"
+
+  partners-fcp-front:
+    hostname: partners-fcp-front
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - "partners-fcp-back"
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/front:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/partners-fcp/.env/front.env"
+    networks:
+      - fc
+    command: "pm2 logs"
+
+  partners-fcp:
+    image: alpine
+    depends_on:
+      - "partners-fcp-front"

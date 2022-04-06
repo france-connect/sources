@@ -11,20 +11,25 @@ import {
 import { Badges } from '../../interfaces';
 
 const TYPE_CONFIG = {
-  FC_REQUESTED_IDP_USERINFO: {
-    Icon: UserIcon,
-    backgroundColor: '#66a1e4',
-    label: 'Connexion',
-  },
-  NOT_RELEVANT_EVENT: {
+  DP_REQUESTED_FC_CHECKTOKEN: {
     Icon: ArrowsIcon,
     backgroundColor: '#f4a381',
     label: 'Échange de Données',
   },
-  SP_REQUESTED_FC_USERINFO: {
+  FC_DATATRANSFER_CONSENT_DATA: {
     Icon: CheckIcon,
     backgroundColor: '#40d496',
     label: 'Autorisation',
+  },
+  FC_DATATRANSFER_CONSENT_IDENTITY: {
+    Icon: CheckIcon,
+    backgroundColor: '#40d496',
+    label: 'Autorisation',
+  },
+  FC_VERIFIED: {
+    Icon: UserIcon,
+    backgroundColor: '#66a1e4',
+    label: 'Connexion',
   },
 } as Badges;
 
@@ -42,8 +47,8 @@ export const TrackCardBadgeComponent = React.memo(({ fromFcPlus, type }: TraceCa
         <div
           // @TODO ajuster quand on aura récupérer l'origine/source des traces
           className={classnames('py8 px12 mr8', {
-            'bg-blue-agentconnect': fromFcPlus,
-            'bg-blue-france': !fromFcPlus,
+            'bg-blue-agentconnect': !fromFcPlus,
+            'bg-blue-france': fromFcPlus,
           })}>
           {fromFcPlus && <b>FranceConnect+</b>}
           {!fromFcPlus && <b>FranceConnect</b>}

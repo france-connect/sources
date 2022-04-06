@@ -5,7 +5,8 @@ export interface OidcClientConfig {
   endpoints: {
     redirectToIdp: string;
     authorizeUrl: string;
-    getEndSessionUrl: string;
+    endSessionUrl?: string;
+    getEndSessionUrl?: string;
     getUserInfos: string;
   };
   csrf?: string;

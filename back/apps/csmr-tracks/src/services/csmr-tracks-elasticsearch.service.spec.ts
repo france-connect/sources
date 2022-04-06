@@ -15,9 +15,7 @@ const trackIndexMock = 'fc_tracks';
 
 const elasticsearchConfigMock: ElasticsearchConfig = {
   tracksIndex: trackIndexMock,
-  protocol: 'http',
-  host: 'elasticsearch',
-  port: 9200,
+  nodes: ['https://elasticsearch:9200'],
   username: 'docker-stack',
   password: 'docker-stack',
 };
@@ -37,9 +35,10 @@ const elasticQueryMock: Search = {
 
 const singleTrackMock: Omit<ICsmrTracksOutputTrack, 'trackId'> = {
   event: 'eventMockValue',
-  date: '09/08/2015',
+  time: 1441663200000,
   spName: 'spNameMockValue',
   spAcr: 'spAcrMockValue',
+  idpName: 'idpNameMockValue',
   country: 'countryMockValue',
   city: 'cityMockValue',
   platform: 'platformValue',

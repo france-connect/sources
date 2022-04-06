@@ -4,6 +4,33 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.87.0 & v3.88.0
+
+### Fixes
+
+- [FranceConnect+]
+  - Added missing feature to fixtures
+- Added missing fonts to build
+- Added missing logos to docker-stack
+
+### Hardening & QA
+
+- Upgraded backend dependencies
+- [AgentConnect]
+  - Implemented accessibility tests
+- Multiple ES nodes are allowed in configuration
+
+### Not yet in production (futures apps / features)
+
+- [User Dashboard]
+  - User can now disconnect from the dashboard
+  - HTTP proxy is now supported
+  - Issuer URL is now given by the environment instead of static a string
+  - Synchronized logs mapping between FC and FC+
+  - Limited events sent by the consumer to user login events only
+- [Partners Dashboard]
+  - Created the front and back applications
+
 ## v3.85.0 & v3.86.0
 
 ### Hardening & QA

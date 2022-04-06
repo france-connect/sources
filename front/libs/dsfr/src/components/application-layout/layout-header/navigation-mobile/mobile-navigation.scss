@@ -1,0 +1,25 @@
+.MobileNavigationComponent {
+  background: #ffffff;
+  inset: 0;
+  outline: none;
+
+  &-overlay {
+    background: rgba(255, 255, 255, 1);
+    inset: 0;
+  }
+
+  .UserWidgetComponent,
+  .LogoutButtonComponent,
+  .NavigationLinkComponent {
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .NavigationLinkComponent.current::before {
+    background-color: #000091;
+    content: ' ';
+    height: 24px;
+    left: -16px;
+    position: absolute;
+    width: 2px;
+  }
+}

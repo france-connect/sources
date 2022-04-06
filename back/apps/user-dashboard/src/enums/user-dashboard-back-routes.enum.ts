@@ -11,4 +11,5 @@ export enum UserDashboardBackRoutes {
   VERIFY = '/interaction/:uid/verify',
   WELL_KNOWN_KEYS = '/.well-known/keys',
   CSRF_TOKEN = '/csrf-token',
+  OIDC_CLIENT_GET_END_SESSION_URL = '/oidc-client/get-end-session-url',
 }

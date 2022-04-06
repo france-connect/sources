@@ -9,20 +9,25 @@ import { matchPath, Route, RouteProps, Switch, useLocation } from 'react-router-
 import { RouteItem } from '@fc/routing';
 
 import { LayoutFooterComponent } from './footer.component';
-import { LayoutHeaderComponent } from './header.component';
+import { LayoutHeaderComponent } from './layout-header';
 import { ApplicationLayoutProps } from './props.interface';
 
-// @TODO extraction -> utils + refacto pour simplification et lisibilité
+// @TODO https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/836
+// extraction -> utils + refacto pour simplification et lisibilité
 export const getDocumentTitle = (obj: RouteItem) => `${obj && obj.label ? `${obj.label} - ` : ''}`;
 
-// @TODO extraction -> utils + refacto pour simplification et lisibilité
+// @TODO https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/836
+// extraction -> utils + refacto pour simplification et lisibilité
 export const getCurrentRouteObjectByPath = (entries: RouteItem[], locationPathname: string) =>
   (entries && entries.filter((obj) => obj && matchPath(locationPathname, obj as RouteProps))[0]) ||
   null;
 
+// @TODO la prop `config` devrait être dans un `react context` indépendant
+// pour ne pas avoir à passer les propriété à chaques composants
 export function ApplicationLayout({ config, routes }: ApplicationLayoutProps): JSX.Element {
   const { pathname } = useLocation();
-  const { bottomLinks, footerDescription, footerLinkTitle, logo, returnButton } = config;
+  const { bottomLinks, footerDescription, footerLinkTitle, logo, navigationItems, returnButton } =
+    config;
   const currentRouteObj = getCurrentRouteObjectByPath(routes, pathname);
   const documentTitle = getDocumentTitle(currentRouteObj);
 
@@ -32,7 +37,12 @@ export function ApplicationLayout({ config, routes }: ApplicationLayoutProps): J
         <Helmet>
           <title>{documentTitle}</title>
         </Helmet>
-        <LayoutHeaderComponent logo={logo} returnButton={returnButton} title={footerLinkTitle} />
+        <LayoutHeaderComponent
+          logo={logo}
+          navigationItems={navigationItems}
+          returnButton={returnButton}
+          title={footerLinkTitle}
+        />
         <Switch>
           {routes.map((route) => {
             const { component, exact, path } = route;

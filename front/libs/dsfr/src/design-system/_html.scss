@@ -1,3 +1,11 @@
+*:focus-visible {
+  border-radius: auto;
+  outline-color: $focus;
+  outline-offset: 2px;
+  outline-style: solid;
+  outline-width: 2px;
+}
+
 html,
 body {
   height: 100%;

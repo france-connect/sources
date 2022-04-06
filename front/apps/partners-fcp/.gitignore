@@ -1,0 +1,4 @@
+# tsconfig file is copied from root folder before start/build
+# create-react-app will regenerate its own tsconfig file
+# so we discard it
+tsconfig.json

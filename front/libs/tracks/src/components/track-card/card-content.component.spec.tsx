@@ -19,6 +19,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
+        idpName="idpNameValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -41,6 +42,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
+        idpName="idpNameValue"
         opened={opened}
         spAcr="eidas1"
       />,
@@ -64,6 +66,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
+        idpName="idpNameValue"
         opened={opened}
         spAcr="eidas1"
       />,
@@ -86,6 +89,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
+        idpName="idpNameValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -105,6 +109,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
+        idpName="idpNameValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -112,7 +117,7 @@ describe('TrackCardContentComponent', () => {
     // when
     const elements = container.getElementsByTagName('li');
     // then
-    expect(elements).toHaveLength(4);
+    expect(elements).toHaveLength(5);
   });
 
   it('should render the date information block (label and value)', () => {
@@ -124,6 +129,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
+        idpName="idpNameValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -149,6 +155,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
+        idpName="idpNameValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -156,6 +163,32 @@ describe('TrackCardContentComponent', () => {
     // when
     const labelElement = getByText('Localisation :');
     const valueElement = getByText('cityMock (countryMock)');
+    const lastElement = labelElement.parentNode?.lastElementChild;
+    const firstElement = labelElement.parentNode?.firstElementChild;
+    // then
+    expect(labelElement).toBeInTheDocument();
+    expect(valueElement).toBeInTheDocument();
+    expect(lastElement).toStrictEqual(lastElement);
+    expect(firstElement).toStrictEqual(labelElement);
+  });
+
+  it('should render the idp name information block (label and value)', () => {
+    // given
+    const { getByText } = render(
+      <TrackCardContentComponent
+        accessibleId="mock-accessibleId"
+        city="cityMock"
+        claims={claimsMock}
+        country="countryMock"
+        datetime={date}
+        idpName="idpNameValue"
+        opened={false}
+        spAcr="eidas1"
+      />,
+    );
+    // when
+    const labelElement = getByText('Via le compte :');
+    const valueElement = getByText('idpNameValue');
     const lastElement = labelElement.parentNode?.lastElementChild;
     const firstElement = labelElement.parentNode?.firstElementChild;
     // then
@@ -174,6 +207,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
+        idpName="idpNameValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -203,6 +237,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
+        idpName="idpNameValue"
         opened={false}
         spAcr="eidas1"
       />,

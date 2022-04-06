@@ -152,28 +152,38 @@ export function getEventsMap(urlPrefix: string): IEventMap {
       intercept: true,
     },
 
-    'FC_DATATRANSFER:INFORMATION:ANONYMOUS': {
+    FC_DATATRANSFER_INFORMATION_ANONYMOUS: {
       step: '6.2.0',
       category: EventsCategories.FRONT_CINEMATIC,
-      event: 'FC_DATATRANSFER:INFORMATION:ANONYMOUS',
+      event: 'FC_DATATRANSFER_INFORMATION_ANONYMOUS',
       exceptions: [],
       route: `${urlPrefix}/login`,
       intercept: false,
     },
 
-    'FC_DATATRANSFER:INFORMATION:IDENTITY': {
+    FC_DATATRANSFER_INFORMATION_IDENTITY: {
       step: '6.2.1',
       category: EventsCategories.FRONT_CINEMATIC,
-      event: 'FC_DATATRANSFER:INFORMATION:IDENTITY',
+      event: 'FC_DATATRANSFER_INFORMATION_IDENTITY',
       exceptions: [],
       route: `${urlPrefix}/login`,
       intercept: false,
     },
 
-    'FC_DATATRANSFER:CONSENT:IDENTITY': {
+    FC_DATATRANSFER_CONSENT_IDENTITY: {
       step: '6.2.2',
       category: EventsCategories.FRONT_CINEMATIC,
-      event: 'FC_DATATRANSFER:CONSENT:IDENTITY',
+      event: 'FC_DATATRANSFER_CONSENT_IDENTITY',
+      exceptions: [],
+      route: `${urlPrefix}/login`,
+      intercept: false,
+    },
+
+    // Not implemented yet
+    FC_DATATRANSFER_CONSENT_DATA: {
+      step: '6.2.3',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_DATATRANSFER_CONSENT_DATA',
       exceptions: [],
       route: `${urlPrefix}/login`,
       intercept: false,

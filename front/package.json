@@ -16,6 +16,8 @@
   ],
   "scripts": {
     "start:ud": "cd apps/user-dashboard && yarn start",
+    "start:partners-fca": "cd apps/partners-fca && yarn start",
+    "start:partners-fcp": "cd apps/partners-fcp && yarn start",
     "start:fca": "cd apps/agent-connect && yarn start",
     "start:exploit-fcp-high": "cd apps/exploit-fcp-high && yarn start",
     "start:exploit-fca-low": "cd apps/exploit-fca-low && yarn start",

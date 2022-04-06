@@ -12,9 +12,7 @@ export class CsmrAggregrateTracksFactoryService {
   mergeGroups(groups: ICsmrTracksOutputTrack[][]): ICsmrTracksOutputTrack[] {
     this.logger.debug('Merge of Tracks groups');
 
-    const sorted = groups
-      .flat()
-      .sort(({ date: a }, { date: b }) => Date.parse(a) - Date.parse(b));
+    const sorted = groups.flat().sort(({ time: a }, { time: b }) => a - b);
     this.logger.trace({ sorted });
     return sorted;
   }

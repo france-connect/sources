@@ -22,10 +22,20 @@ type TraceCardContentProps = {
   city: string;
   country: string;
   claims: string[] | null;
+  idpName: string;
 };
 
 export const TrackCardContentComponent = React.memo(
-  ({ accessibleId, city, claims, country, datetime, opened, spAcr }: TraceCardContentProps) => {
+  ({
+    accessibleId,
+    city,
+    claims,
+    country,
+    datetime,
+    idpName,
+    opened,
+    spAcr,
+  }: TraceCardContentProps) => {
     const formattedTime = datetime.setLocale('fr-FR').toLocaleString(DateTime.DATETIME_MED);
 
     return (
@@ -54,6 +64,12 @@ export const TrackCardContentComponent = React.memo(
                 {city} ({country})
               </b>
             </li>
+            <li>
+              <span>Via le compte&nbsp;:&nbsp;</span>
+              <br />
+              <b>{idpName}</b>
+            </li>
+
             <li>
               <span>Niveau de garantie eIDAS&nbsp;:&nbsp;</span>
               <a

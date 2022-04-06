@@ -3,12 +3,13 @@ import { Helmet } from 'react-helmet';
 import { renderWithRouter } from '@fc/tests-utils';
 
 import { LayoutFooterComponent } from './footer.component';
-import { LayoutHeaderComponent } from './header.component';
 import { ApplicationLayout, getDocumentTitle } from './layout.component';
+import { LayoutHeaderComponent } from './layout-header';
 
+// given
 jest.mock('react-helmet');
 jest.mock('./footer.component');
-jest.mock('./header.component');
+jest.mock('./layout-header/layout-header.component');
 
 const routes = [
   {
@@ -41,6 +42,10 @@ describe('ApplicationLayout', () => {
     logo: jest.fn(() => <div>mock-logo</div>),
     returnButton: jest.fn(() => <div>mock-returnButton</div>),
   };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('should have render the page title with react helmet', () => {
     // given
@@ -104,6 +109,10 @@ describe('ApplicationLayout', () => {
 });
 
 describe('ApplicationLayout.getDocumentTitle', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should output page title from current route', () => {
     // given
     const route = routes[0];

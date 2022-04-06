@@ -62,6 +62,9 @@ describe('IdentityProviderAdapterEnvService', () => {
       // oidc param name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       jwks_uri: 'https://fsp1-high.docker.dev-franceconnect.fr/jwks_uri',
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      end_session_endpoint: 'https://end-session-endpoint.mock',
     },
   };
 
@@ -122,6 +125,9 @@ describe('IdentityProviderAdapterEnvService', () => {
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     jwks_uri: 'https://fsp1-high.docker.dev-franceconnect.fr/jwks_uri',
+    // openid defined property names
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    end_session_endpoint: 'https://end-session-endpoint.mock',
   };
 
   const toPanvaFormatMock = {
@@ -139,6 +145,9 @@ describe('IdentityProviderAdapterEnvService', () => {
       // oidc param name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       jwks_uri: 'https://fsp1-high.docker.dev-franceconnect.fr/jwks_uri',
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      end_session_endpoint: 'https://end-session-endpoint.mock',
     },
     client: {
       // oidc param name

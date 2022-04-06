@@ -7,11 +7,10 @@ import { ConfigModule, ConfigService } from '@fc/config';
 import { CsmrTracksModule } from '@fc/csmr-tracks';
 import { LoggerModule } from '@fc/logger';
 import { ScopesModule } from '@fc/scopes';
-import { ServiceProviderAdapterMongoModule } from '@fc/service-provider-adapter-mongo';
 
 import { CsmrTracksLegacyDataService } from './services';
 
-const imports = [ScopesModule, ServiceProviderAdapterMongoModule];
+const imports = [ScopesModule];
 @Module({})
 export class AppModule {
   static forRoot(configService: ConfigService): DynamicModule {

@@ -3,9 +3,9 @@
 // declarative file
 import {
   IsArray,
-  IsDateString,
   IsEnum,
   IsIn,
+  IsNumberString,
   IsOptional,
   IsString,
 } from 'class-validator';
@@ -20,11 +20,14 @@ export class TrackDto implements ICsmrTracksOutputTrack {
   @IsString()
   country: string;
 
-  @IsDateString()
-  date: string;
+  @IsNumberString()
+  time: number;
 
   @IsEnum(TrackableEvent)
   event: string;
+
+  @IsString()
+  idpName: string;
 
   @IsString()
   spAcr: string;

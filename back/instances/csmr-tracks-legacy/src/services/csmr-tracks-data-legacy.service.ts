@@ -1,30 +1,32 @@
 import { Search } from '@elastic/elasticsearch/api/requestParams';
 import { isString } from 'class-validator';
+import { DateTime } from 'luxon';
 
 import { Injectable } from '@nestjs/common';
 
-import { IAppTracksDataService } from '@fc/csmr-tracks';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
-import { ScopesService } from '@fc/scopes';
-import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { ICsmrTracksOutputTrack } from '@fc/tracks';
-
 import {
   CsmrTracksTransformTracksFailedException,
-  CsmrTracksUnknownActionException,
-  CsmrTracksUnknownSpException,
-} from '../exceptions';
-import { formatMultiMatchGroupES } from '../helpers';
+  IAppTracksDataService,
+} from '@fc/csmr-tracks';
+import { formatMultiMatchGroup } from '@fc/elasticsearch';
+import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { ScopesService } from '@fc/scopes';
+import { ICsmrTracksOutputTrack } from '@fc/tracks';
+
+import { CsmrTracksUnknownActionException } from '../exceptions';
 import { ICsmrTracksInputLegacy, ICsmrTracksLegacyTrack } from '../interfaces';
 
 export const PLATFORM = 'FranceConnect';
+
+const SIX_MONTHS_AGO = 'now-6M/d';
+const NOW = 'now';
 
 export const LEGACY_SCOPES_SEPARATOR = ', ';
 
 const EVENT_MAPPING = {
   'authentication/initial': 'FC_VERIFIED',
-  'consent/demandeIdentity': 'FC_DATATRANSFER:CONSENT:IDENTITY',
-  'consent/demandeData': 'FC_DATATRANSFER:CONSENT:DATA',
+  'consent/demandeIdentity': 'FC_DATATRANSFER_CONSENT_IDENTITY',
+  'consent/demandeData': 'FC_DATATRANSFER_CONSENT_DATA',
   'checkedToken/verification': 'DP_REQUESTED_FC_CHECKTOKEN',
 };
 
@@ -67,21 +69,20 @@ export class CsmrTracksLegacyDataService implements IAppTracksDataService {
   constructor(
     private readonly logger: LoggerService,
     private readonly scopes: ScopesService,
-    private readonly service: ServiceProviderAdapterMongoService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
 
   formatQuery(index: string, accountId: string): Search {
-    const includes = formatMultiMatchGroupES(ACTIONS_TO_INCLUDE);
+    const includes = formatMultiMatchGroup(ACTIONS_TO_INCLUDE);
 
     const criteria = [
-      { match: { accountId } },
+      { term: { accountId } },
       {
         range: {
           time: {
-            gte: 'now-6M/d',
-            lt: 'now',
+            gte: SIX_MONTHS_AGO,
+            lt: NOW,
           },
         },
       },
@@ -95,7 +96,7 @@ export class CsmrTracksLegacyDataService implements IAppTracksDataService {
         sort: [{ time: { order: 'desc' } }],
         query: {
           bool: {
-            must: criteria,
+            filter: criteria,
           },
         },
       },
@@ -116,22 +117,6 @@ export class CsmrTracksLegacyDataService implements IAppTracksDataService {
       throw new CsmrTracksUnknownActionException();
     }
     return event;
-  }
-
-  private async getFsLabelfromId({
-    fsId,
-    fs_label: fsLabel = '',
-  }: ICsmrTracksLegacyTrack): Promise<string> {
-    if (fsLabel.length) {
-      return fsLabel;
-    }
-    try {
-      const { name } = await this.service.getById(fsId);
-      return name;
-    } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
-      throw new CsmrTracksUnknownSpException(error);
-    }
   }
 
   private getClaimsGroups({ scopes }: ICsmrTracksLegacyTrack): string[] | null {
@@ -172,19 +157,20 @@ export class CsmrTracksLegacyDataService implements IAppTracksDataService {
   }
 
   async transformTrack(source: ICsmrTracksLegacyTrack) {
-    const date = source.time;
+    const time = DateTime.fromISO(source.time, { zone: 'utc' }).toMillis();
+    const { fi: idpName, fs_label: spName } = source;
 
     const spAcr = this.getAcrValue(source);
     const event = this.getEventFromAction(source);
     const claims = this.getClaimsGroups(source);
-    const spName = await this.getFsLabelfromId(source);
     const { country, city } = await this.getGeoFromIp(source);
 
     const output: OutputTrack = {
       event,
-      date,
+      time,
       spName,
       spAcr,
+      idpName,
       country,
       city,
       claims,
@@ -196,7 +182,8 @@ export class CsmrTracksLegacyDataService implements IAppTracksDataService {
 
   /**
    * Get formated tracks reduced to their strict elements.
-   * Elasticsearch adds extra attributes to stored data that are not required.
+   * Elasticsearch adds extra attributes to stored data
+   * that are not required.
    */
   async formattedTracks(
     rawTracks: ICsmrTracksInputLegacy[],
@@ -214,6 +201,8 @@ export class CsmrTracksLegacyDataService implements IAppTracksDataService {
     );
     try {
       const tracks = await Promise.all(filteredProperties);
+
+      this.logger.trace({ tracks });
 
       return tracks;
     } catch (error) {

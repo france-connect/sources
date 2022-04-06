@@ -76,6 +76,14 @@ export class CsmrAggregateTracksController {
     } catch (error) {
       this.logger.trace({ error }, LoggerLevelNames.WARN);
       throw new CsmrAggregateTracksAggregationFailedException(error);
+      /**
+       * @todo #825 return 'ERROR';
+       * throw an UnhandledPromiseRejectionWarning: Error: Asked unknown configuration: <App>
+       * should implement new CSMR error management
+       *
+       * Author: Arnaud PSA
+       * Date: 11/03/22
+       */
     }
 
     try {
@@ -89,6 +97,14 @@ export class CsmrAggregateTracksController {
     } catch (error) {
       this.logger.trace({ error }, LoggerLevelNames.WARN);
       throw new CsmrAggregateTracksFormatTracksFailedException(error);
+      /**
+       * @todo #825 return 'ERROR';
+       * throw an UnhandledPromiseRejectionWarning: Error: Asked unknown configuration: <App>
+       * should implement new CSMR error management
+       *
+       * Author: Arnaud PSA
+       * Date: 11/03/22
+       */
     }
   }
 }

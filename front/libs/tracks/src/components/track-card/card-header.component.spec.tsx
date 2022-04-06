@@ -14,14 +14,14 @@ describe('TrackCardHeaderComponent', () => {
   };
   const date = DateTime.fromObject({ day: 1, month: 10, year: 2021 });
 
-  it('should have render the identity provider name from props', () => {
+  it('should have render the service provider name from props', () => {
     // given
     const { getByText } = render(
       <TrackCardHeaderComponent
         datetime={date}
-        identityProviderName="any identity provider name"
         opened={false}
         options={options}
+        serviceProviderName="any identity provider name"
       />,
     );
     // then
@@ -35,9 +35,9 @@ describe('TrackCardHeaderComponent', () => {
     const { getByText } = render(
       <TrackCardHeaderComponent
         datetime={date}
-        identityProviderName="any"
         opened={false}
         options={options}
+        serviceProviderName="any"
       />,
     );
     // then
@@ -50,9 +50,9 @@ describe('TrackCardHeaderComponent', () => {
     const { container } = render(
       <TrackCardHeaderComponent
         datetime={date}
-        identityProviderName="any"
         opened={false}
         options={options}
+        serviceProviderName="any"
       />,
     );
     // then
@@ -67,8 +67,8 @@ describe('TrackCardHeaderComponent', () => {
       <TrackCardHeaderComponent
         opened
         datetime={date}
-        identityProviderName="any"
         options={options}
+        serviceProviderName="any"
       />,
     );
     // then

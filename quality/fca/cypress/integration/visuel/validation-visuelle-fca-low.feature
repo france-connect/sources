@@ -4,7 +4,7 @@ Fonctionnalité: Validation Visuelle
 
   Plan du Scénario: Validation Visuelle - cinématique d'un agent sur <device>
     Etant donné que j'utilise un navigateur web sur "<device>"
-    Et que le fournisseur de service requiert l'accès aux informations des scopes "tous les scopes "
+    Et que le fournisseur de service requiert l'accès aux informations des scopes "tous les scopes"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité

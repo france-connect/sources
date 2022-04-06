@@ -17,6 +17,10 @@
     "EXPLOIT_USER_PASS": "georgesmoustaki",
     "EXPLOIT_USER_TOTP": "KVKFKRCPNZQUYMLXOVYDSQKJKZDTSRLD",
     "FC_ACCESS_USER": "",
-    "FC_ACCESS_PASS": ""
+    "FC_ACCESS_PASS": "",
+    "Elasticsearch_TRACKS_INDEX": "fc_tracks",
+    "Elasticsearch_NODES": "[\"http://elasticsearch:9200\",\"https://elasticsearch:9200\"]",
+    "Elasticsearch_USERNAME": "docker-stack",
+    "Elasticsearch_PASSWORD": "docker-stack"
   }
 }

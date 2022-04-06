@@ -23,13 +23,13 @@ export class ElasticsearchModule {
 }
 
 function useFactory(config: ConfigService) {
-  const es: ElasticsearchConfig =
+  const { nodes, username, password } =
     config.get<ElasticsearchConfig>('Elasticsearch');
   const options: ClientOptions = {
-    node: `${es.protocol}://${es.host}:${es.port}`,
+    nodes,
     auth: {
-      username: es.username,
-      password: es.password,
+      username,
+      password,
     },
   };
   return options;

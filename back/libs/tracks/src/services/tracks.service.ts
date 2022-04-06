@@ -30,7 +30,7 @@ export class TracksService {
 
     try {
       const order = this.broker
-        .send(TracksProtocol.Commands.GET, { identity })
+        .send<TrackDto[]>(TracksProtocol.Commands.GET, { identity })
         .pipe(timeout(requestTimeout));
 
       const data = await lastValueFrom(order);

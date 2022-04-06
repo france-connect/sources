@@ -1,15 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { CsmrTracksTransformTracksFailedException } from '@fc/csmr-tracks';
 import { LoggerService } from '@fc/logger';
 import { ScopesService } from '@fc/scopes';
-import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
-import {
-  CsmrTracksTransformTracksFailedException,
-  CsmrTracksUnknownActionException,
-  CsmrTracksUnknownSpException,
-} from '../exceptions';
+import { CsmrTracksUnknownActionException } from '../exceptions';
+import { accountQueryMock } from '../fixtures';
 import { ICsmrTracksInputLegacy, ICsmrTracksLegacyTrack } from '../interfaces';
 import { CsmrTracksLegacyDataService } from './csmr-tracks-data-legacy.service';
 
@@ -26,28 +23,17 @@ describe('CsmrTracksLegacyDataService', () => {
     getClaimsFromScopes: jest.fn(),
   };
 
-  const serviceMongoMock = {
-    getById: jest.fn(),
-  };
-
   beforeEach(async () => {
     jest.restoreAllMocks();
     jest.resetAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        CsmrTracksLegacyDataService,
-        LoggerService,
-        ScopesService,
-        ServiceProviderAdapterMongoService,
-      ],
+      providers: [CsmrTracksLegacyDataService, LoggerService, ScopesService],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerMock)
       .overrideProvider(ScopesService)
       .useValue(scopesMock)
-      .overrideProvider(ServiceProviderAdapterMongoService)
-      .useValue(serviceMongoMock)
       .compile();
 
     service = module.get<CsmrTracksLegacyDataService>(
@@ -69,72 +55,12 @@ describe('CsmrTracksLegacyDataService', () => {
   describe('formatQuery()', () => {
     const indexMock = 'indexMockValue';
     const accountIdMock = 'accountIdMockValue';
-    const requestMock = {
-      index: 'indexMockValue',
-      body: {
-        from: 0,
-        sort: [{ time: { order: 'desc' } }],
-        query: {
-          bool: {
-            must: [
-              { match: { accountId: 'accountIdMockValue' } },
-              { range: { time: { gte: 'now-6M/d', lt: 'now' } } },
-              {
-                bool: {
-                  should: [
-                    {
-                      bool: {
-                        must: [
-                          { match: { action: 'authentication' } },
-                          // Legacy naming
-                          // eslint-disable-next-line @typescript-eslint/naming-convention
-                          { match: { type_action: 'initial' } },
-                        ],
-                      },
-                    },
-                    {
-                      bool: {
-                        must: [
-                          { match: { action: 'consent' } },
-                          // Legacy naming
-                          // eslint-disable-next-line @typescript-eslint/naming-convention
-                          { match: { type_action: 'demandeIdentity' } },
-                        ],
-                      },
-                    },
-                    {
-                      bool: {
-                        must: [
-                          { match: { action: 'consent' } },
-                          // Legacy naming
-                          // eslint-disable-next-line @typescript-eslint/naming-convention
-                          { match: { type_action: 'demandeData' } },
-                        ],
-                      },
-                    },
-                    {
-                      bool: {
-                        must: [
-                          { match: { action: 'checkedToken' } },
-                          // Legacy naming
-                          // eslint-disable-next-line @typescript-eslint/naming-convention
-                          { match: { type_action: 'verification' } },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-        },
-      },
-    };
+
     it('should format request with accountId and index', () => {
       // Given / when
       const request = service.formatQuery(indexMock, accountIdMock);
       // Then
-      expect(request).toStrictEqual(requestMock);
+      expect(request).toStrictEqual(accountQueryMock);
     });
   });
 
@@ -165,60 +91,6 @@ describe('CsmrTracksLegacyDataService', () => {
         () => service['getEventFromAction'](sourceMock),
         // Then
       ).toThrow(CsmrTracksUnknownActionException);
-    });
-  });
-
-  describe('getFsLabelfromId()', () => {
-    const spNameMock = 'spNameValue';
-    const fsLabelMock = 'fsLabelValue';
-
-    beforeEach(() => {
-      serviceMongoMock.getById.mockResolvedValueOnce({ name: spNameMock });
-    });
-    it('should return fs label if present as Service Provider name', async () => {
-      // Given
-      const sourceMock = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        fs_label: fsLabelMock,
-        fsId: '42',
-      } as unknown as ICsmrTracksLegacyTrack;
-
-      // When
-      const name = await service['getFsLabelfromId'](sourceMock);
-
-      // Then
-      expect(name).toEqual(fsLabelMock);
-      expect(serviceMongoMock.getById).toHaveBeenCalledTimes(0);
-    });
-
-    it('should return name from database if fs label is not present in source', async () => {
-      // Given
-      const sourceMock = { fsId: '42' } as unknown as ICsmrTracksLegacyTrack;
-
-      // When
-      const name = await service['getFsLabelfromId'](sourceMock);
-
-      // Then
-      expect(name).toEqual(spNameMock);
-      expect(serviceMongoMock.getById).toHaveBeenCalledTimes(1);
-      expect(serviceMongoMock.getById).toHaveBeenCalledWith(sourceMock.fsId);
-    });
-
-    it('should throw an exception if database crashed', async () => {
-      // Given
-      const sourceMock = {
-        fsLabel: 'fsLabelValue',
-        fsId: '42',
-      } as unknown as ICsmrTracksLegacyTrack;
-
-      const errorMock = new Error('Unknown Error');
-      serviceMongoMock.getById.mockReset().mockRejectedValueOnce(errorMock);
-
-      await expect(
-        // When
-        service['getFsLabelfromId'](sourceMock),
-        // Then
-      ).rejects.toThrow(CsmrTracksUnknownSpException);
     });
   });
 
@@ -353,17 +225,36 @@ describe('CsmrTracksLegacyDataService', () => {
     let getAcrValueMock: jest.SpyInstance;
     let getEventFromActionMock: jest.SpyInstance;
     let getClaimsGroupsMock: jest.SpyInstance;
-    let getFsLabelfromIdMock: jest.SpyInstance;
     let getGeoFromIpMock: jest.SpyInstance;
 
     const acrValueMock = 'eidas1';
     const eventMock = 'FC_VERIFIED';
     const claimsMock = ['sub', 'given_name', 'gender'];
-    const fsLabelMock = 'fsLabelValue';
     const geoIpDataMock = {
       country: 'PR',
       city: 'Pirate',
     };
+
+    const sourceMock = Object.freeze({
+      name: 'nameValue',
+      fiId: 'fiIdValue',
+      fiSub: 'fiSubValue',
+      fsId: 'fsId',
+      fsSub: 'fsSub',
+      accountId: '42',
+      scopes: 'gender family_name birth',
+      userIp: '172.16.3.1, 172.16.2.6',
+      action: 'authentication',
+      // legacy log field
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      type_action: 'initial',
+      fi: 'fiValue',
+      // legacy log field
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      fs_label: 'fsLabelValue',
+      eidas: 'eidas1',
+      time: '2022-10-02',
+    });
 
     beforeEach(() => {
       getAcrValueMock = jest.spyOn<CsmrTracksLegacyDataService, any>(
@@ -384,12 +275,6 @@ describe('CsmrTracksLegacyDataService', () => {
       );
       getClaimsGroupsMock.mockReturnValueOnce(claimsMock);
 
-      getFsLabelfromIdMock = jest.spyOn<CsmrTracksLegacyDataService, any>(
-        service,
-        'getFsLabelfromId',
-      );
-      getFsLabelfromIdMock.mockResolvedValueOnce(fsLabelMock);
-
       getGeoFromIpMock = jest.spyOn<CsmrTracksLegacyDataService, any>(
         service,
         'getGeoFromIp',
@@ -398,37 +283,24 @@ describe('CsmrTracksLegacyDataService', () => {
     });
     it('should transform source to track data', async () => {
       // Given
-      const sourceMock = {
-        name: 'nameValue',
-        fiId: 'fiIdValue',
-        fiSub: 'fiSubValue',
-        fsId: 'fsId',
-        fsSub: 'fsSub',
-        accountId: '42',
-        scopes: 'gender family_name birth',
-        userIp: '172.16.3.1, 172.16.2.6', // /!\ "172.16.3.1, 172.16.2.6"
-        action: 'authentication',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        type_action: 'initial',
-        fi: 'fiValue',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        fs_label: 'fsLabelValue',
-        eidas: 'eidas1',
-        time: '19/02/2022',
+
+      const mock = {
+        ...sourceMock,
       };
 
       const resultMock = {
         city: 'Pirate',
         claims: ['sub', 'given_name', 'gender'],
         country: 'PR',
-        date: '19/02/2022',
+        time: 1664668800000,
         event: 'FC_VERIFIED',
         spAcr: 'eidas1',
         spName: 'fsLabelValue',
+        idpName: 'fiValue',
       };
 
       // When
-      const tracks = await service['transformTrack'](sourceMock);
+      const tracks = await service['transformTrack'](mock);
       // Then
       expect(tracks).toStrictEqual(resultMock);
     });
@@ -459,7 +331,7 @@ describe('CsmrTracksLegacyDataService', () => {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           fs_label: 'fsLabelValue',
           eidas: 'eidas2',
-          time: '21/02/2022',
+          time: '2022-02-21',
         },
       },
       {
@@ -483,7 +355,7 @@ describe('CsmrTracksLegacyDataService', () => {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           fs_label: 'fsLabelValue',
           eidas: 'eidas2',
-          time: '21/02/2022',
+          time: '2022-02-21',
         },
       },
       {
@@ -507,7 +379,7 @@ describe('CsmrTracksLegacyDataService', () => {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           fs_label: 'fsLabelValue',
           eidas: 'eidas3',
-          time: '30/02/2022',
+          time: '2022-02-28',
         },
       },
     ];
@@ -518,31 +390,23 @@ describe('CsmrTracksLegacyDataService', () => {
 
     it('should format tracks from raw tracks', async () => {
       // Given
-      transformTrackMock.mockImplementation(({ eidas, time, name }) => {
-        return Promise.resolve({
-          spAcr: eidas,
-          date: time,
-          spName: name,
-        });
-      });
-
       const tracksOutputMock: Partial<ICsmrTracksOutputTrack>[] = [
         {
-          date: '21/02/2022',
+          time: 1645398000000,
           spName: 'nameValue',
           platform: 'FranceConnect',
           spAcr: 'eidas2',
           trackId: 'id1',
         },
         {
-          date: '21/02/2022',
+          time: 1645398000000,
           spName: 'nameValue',
           platform: 'FranceConnect',
           spAcr: 'eidas2',
           trackId: 'id2',
         },
         {
-          date: '30/02/2022',
+          time: 1646002800000,
           spName: 'nameValue',
           platform: 'FranceConnect',
           spAcr: 'eidas3',
@@ -550,10 +414,27 @@ describe('CsmrTracksLegacyDataService', () => {
         },
       ];
 
+      transformTrackMock
+        .mockResolvedValueOnce(tracksOutputMock[0])
+        .mockResolvedValueOnce(tracksOutputMock[1])
+        .mockResolvedValueOnce(tracksOutputMock[2]);
+
       // When
       const tracks = await service.formattedTracks(rawTracksMock);
       // Then
       expect(tracks).toStrictEqual(tracksOutputMock);
+      expect(transformTrackMock).toHaveBeenNthCalledWith(
+        1,
+        rawTracksMock[0]._source,
+      );
+      expect(transformTrackMock).toHaveBeenNthCalledWith(
+        2,
+        rawTracksMock[1]._source,
+      );
+      expect(transformTrackMock).toHaveBeenNthCalledWith(
+        3,
+        rawTracksMock[2]._source,
+      );
     });
 
     it('should throw an exception if tracks transforming failed', async () => {

@@ -181,3 +181,19 @@ a.no-no-underline:visited {
 .no-no-wrap {
   white-space: nowrap !important;
 }
+
+.no-flex-wrap {
+  flex-wrap: nowrap;
+}
+
+.no-no-flex-wrap {
+  flex-wrap: nowrap !important;
+}
+
+.no-white-space {
+  white-space: nowrap;
+}
+
+.no-no-white-space {
+  white-space: nowrap !important;
+}

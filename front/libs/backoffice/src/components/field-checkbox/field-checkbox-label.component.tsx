@@ -13,9 +13,9 @@ interface FieldCheckboxLabelComponentProps {
 export const FieldCheckboxLabelComponent: React.FC<FieldCheckboxLabelComponentProps> = React.memo(
   ({ checked, disabled, label, name, rtl }: FieldCheckboxLabelComponentProps) => (
     <label
-      className={classnames('flex-columns flex-start items-center', { disabled })}
+      className={classnames('flex-columns flex-start items-start', { disabled })}
       htmlFor={name}>
-      {rtl && <span className="mr12">{label}</span>}
+      {rtl && <span className="mr12 fs18 lh28">{label}</span>}
       <span
         aria-hidden
         className={classnames('FieldCheckboxComponent-checkbox', 'text-center is-inline-block', {
@@ -25,7 +25,7 @@ export const FieldCheckboxLabelComponent: React.FC<FieldCheckboxLabelComponentPr
         data-testid="check-box">
         {checked && <CheckIcon data-testid="check-icon" />}
       </span>
-      {!rtl && <span className="ml12">{label}</span>}
+      {!rtl && <span className="ml12 fs18 lh28">{label}</span>}
     </label>
   ),
 );

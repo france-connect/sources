@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomePage should match the snapshot 1`] = `
+<div
+  class="content-wrapper-lg text-center"
+  id="page-container"
+>
+  Hello Partenaires Agent Connect
+</div>
+`;

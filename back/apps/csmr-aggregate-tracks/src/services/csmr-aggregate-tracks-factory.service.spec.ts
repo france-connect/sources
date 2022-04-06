@@ -16,22 +16,22 @@ describe('CsmrTracksFactoryService', () => {
 
   const tracksHighMock = [
     {
-      date: '01/10/2020',
+      time: 1601503200000, // '01/10/2020'
       event: 'high_event2',
     },
     {
-      date: '01/10/2000',
+      time: 970351200000, // '01/10/2000'
       event: 'high_event1',
     },
   ] as unknown as ICsmrTracksOutputTrack[];
 
   const tracksLegacyMock = [
     {
-      date: '01/11/2020',
+      time: 1604185200000, // '01/11/2020'
       event: 'legacy_event2',
     },
     {
-      date: '02/10/2000',
+      time: 970437600000, // '02/10/2000'
       event: 'legacy_event1',
     },
   ] as unknown as ICsmrTracksOutputTrack[];

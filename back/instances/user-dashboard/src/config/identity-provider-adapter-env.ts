@@ -9,7 +9,7 @@ export default {
   // No discovery URL for legacy core
   discoveryUrl: undefined,
   provider: {
-    issuer: 'https://fcp.docker.dev-franceconnect.fr',
+    issuer: process.env.ISSUER,
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_id: process.env.CLIENT_ID,
@@ -54,6 +54,9 @@ export default {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     revocation_endpoint_auth_method:
       process.env.REVOCATION_ENDPOINT_AUTH_METHOD,
+    //oidc param name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    end_session_endpoint: process.env.END_SESSION_ENDPOINT,
   },
   clientSecretEncryptKey: process.env.CLIENT_SECRET_CIPHER_PASS,
 } as IdentityProviderAdapterEnvConfig;

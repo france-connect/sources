@@ -5,16 +5,16 @@ import { ButtonSimpleComponent, FieldCheckboxComponent } from '@fc/backoffice';
 import { ServicesListComponent } from './services-list.component';
 import { UserPreferencesFormComponent } from './user-preferences-form.component';
 
-// given
 jest.mock('../hooks');
 jest.mock('./services-list.component');
 
-const userPreferencesMock = {
-  allowFutureIdp: false,
-  idpList: [expect.any(Object), expect.any(Object)],
-};
-
 describe('UserPreferencesFormComponent', () => {
+  // given
+  const userPreferencesMock = {
+    allowFutureIdp: false,
+    idpList: [expect.any(Object), expect.any(Object)],
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
   });

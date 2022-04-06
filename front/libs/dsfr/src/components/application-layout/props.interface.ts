@@ -7,6 +7,7 @@ export interface LayoutConfig {
   // @todo find the proper way to declare react components in interfaces
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   returnButton?: any;
+  navigationItems?: NavigationLink[];
   bottomLinks: NavigationLink[];
   footerDescription: string;
   footerLinkTitle: string;

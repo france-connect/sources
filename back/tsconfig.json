@@ -153,7 +153,9 @@
       "@fc/csmr-tracks-legacy": ["apps/csmr-tracks-legacy/src"],
       "@fc/csmr-tracks-legacy/*": ["apps/csmr-tracks-legacy/src/*"],
       "@fc/csmr-aggregate-tracks": ["apps/csmr-aggregate-tracks/src"],
-      "@fc/csmr-aggregate-tracks/*": ["apps/csmr-aggregate-tracks/src/*"]
+      "@fc/csmr-aggregate-tracks/*": ["apps/csmr-aggregate-tracks/src/*"],
+      "@fc/partners": ["apps/partners/src"],
+      "@fc/partners/*": ["apps/partners/src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

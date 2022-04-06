@@ -10,45 +10,49 @@ import {
 } from './tracks.util';
 
 // Fixtures
-const dateTrack1 = '2011-10-05T14:48:00.000Z';
+const dateTrack1 = 1317826080000; // '2011-10-05T14:48:00.000Z'
 const track1: EnhancedTrack = {
   city: 'Acme City',
   claims: ['claims1Mock', 'claims2Mock'],
   country: 'Acme Country',
-  date: dateTrack1,
-  datetime: DateTime.fromISO(dateTrack1, { zone: 'Europe/Paris' }),
+  datetime: DateTime.fromMillis(dateTrack1, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO',
+  idpName: 'Ameli',
   platform: 'FranceConnect',
   spAcr: 'eidas1' as keyof typeof EidasToLabel,
   spName: 'Acme Service Provider',
+  time: dateTrack1,
   trackId: 'trackId-1',
 };
 
-const dateTrack2 = '2011-10-06T14:48:00.000Z';
+const dateTrack2 = 1317912480000; // '2011-10-06T14:48:00.000Z'
 const track2: EnhancedTrack = {
   city: 'Acme City',
   claims: null,
   country: 'Acme Country',
-  date: dateTrack2,
-  datetime: DateTime.fromISO(dateTrack2, { zone: 'Europe/Paris' }),
+  datetime: DateTime.fromMillis(dateTrack2, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO',
+  idpName: 'Ameli',
+
   platform: 'FranceConnect+',
   spAcr: 'eidas1' as keyof typeof EidasToLabel,
   spName: 'Acme Service Provider',
+  time: dateTrack2,
   trackId: 'trackId-2',
 };
 
-const dateTrack3 = '2012-10-05T14:48:00.000Z';
+const dateTrack3 = 1349448480000; // '2012-10-05T14:48:00.000Z'
 const track3: EnhancedTrack = {
   city: 'Acme City',
   claims: ['claims1Mock', 'claims2Mock'],
   country: 'Acme Country',
-  date: dateTrack3,
-  datetime: DateTime.fromISO(dateTrack3, { zone: 'Europe/Paris' }),
+  datetime: DateTime.fromMillis(dateTrack3, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO',
+  idpName: 'Ameli',
   platform: 'FranceConnect',
   spAcr: 'eidas1' as keyof typeof EidasToLabel,
   spName: 'Acme Service Provider',
+  time: dateTrack3,
   trackId: 'trackId-3',
 };
 
@@ -115,20 +119,23 @@ describe('orderGroupByKeyAsc', () => {
 });
 
 describe('orderTracksByDateDesc', () => {
-  it('doit retourner un tableau ordonner par la clé unique (timestamp)', () => {
+  it('doit retourner un tableau ordonné par la clé unique (timestamp)', () => {
     // given
     const sortable = [
-      { date: '2011-09-02T14:48:00.000Z' } as EnhancedTrack,
-      { date: '2011-10-06T14:48:00.000Z' } as EnhancedTrack,
-      { date: '2011-09-01T14:48:00.000Z' } as EnhancedTrack,
+      //  '2011-09-02T14:48:00.000Z'
+      { time: 1314974880000 } as EnhancedTrack,
+      // '2011-10-06T14:48:00.000Z'
+      { time: 1317912480000 } as EnhancedTrack,
+      // 2011-09-01T14:48:00.000Z
+      { time: 1314888480000 } as EnhancedTrack,
     ];
     // when
     const result = sortable.sort(orderTracksByDateDesc);
     // then
     expect(result).toStrictEqual([
-      { date: '2011-10-06T14:48:00.000Z' },
-      { date: '2011-09-02T14:48:00.000Z' },
-      { date: '2011-09-01T14:48:00.000Z' },
+      { time: 1317912480000 },
+      { time: 1314974880000 },
+      { time: 1314888480000 },
     ]);
   });
 });
@@ -140,7 +147,7 @@ describe('transformTrackToEnhanced', () => {
     // then
     expect(result).toStrictEqual({
       ...track1,
-      datetime: DateTime.fromISO(track1.date),
+      datetime: DateTime.fromMillis(track1.time),
     });
   });
 });

@@ -51,11 +51,15 @@ module.exports = {
       },
       {
         format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
-
         leadingUnderscore: 'allow',
         // Enforce that all variables are either in camelCase or UPPER_CASE
         selector: 'memberLike',
       },
+      {
+        format: null,
+        selector: 'property',
+        modifiers: ['requiresQuotes']
+      }
     ],
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': [

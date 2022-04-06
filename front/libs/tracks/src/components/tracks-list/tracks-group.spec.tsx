@@ -22,24 +22,26 @@ describe('tracksGroupComponent', () => {
     city: 'any',
     claims: null,
     country: 'any',
-    date: '2021-10-01T00:00:00.000+01:00',
     datetime: DateTime.fromObject({ day: 1, month: 10, year: 2021 }),
     event: 'any',
+    idpName: 'any',
     platform: 'FranceConnect',
     spAcr: 'any' as keyof typeof EidasToLabel,
     spName: 'any',
+    time: 1633042800000, // '2021-10-01T00:00:00.000+01:00',
     trackId: 'oldest track',
   };
   const newestTrack: EnhancedTrack = {
     city: 'any',
     claims: null,
     country: 'any',
-    date: '2021-11-01T00:00:00.000+01:00',
     datetime: DateTime.fromObject({ day: 1, month: 11, year: 2021 }),
     event: 'any',
+    idpName: 'any',
     platform: 'FranceConnect',
     spAcr: 'any' as keyof typeof EidasToLabel,
     spName: 'any',
+    time: 1635721200000, // '2021-11-01T00:00:00.000+01:00',
     trackId: 'newest track',
   };
   const allTracks = [oldestTrack, newestTrack];
@@ -81,7 +83,7 @@ describe('tracksGroupComponent', () => {
     unmount();
   });
 
-  it('trackCardComponent should have been sorted by tracks.date', () => {
+  it('trackCardComponent should have been sorted by tracks.time', () => {
     // given
     const { unmount } = render(
       <TracksGroupComponent label="Any Label" options={options} tracks={allTracks} />,

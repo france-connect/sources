@@ -30,6 +30,7 @@
           "../../../apps/eidas-bridge/**/*.css",
           "../../../apps/eidas-bridge/**/*.js",
           "../../../apps/eidas-bridge/**/*.svg",
+          "../../../apps/eidas-bridge/**/*.woff2",
           "../../../libs/eidas-country/src/public/**/*.svg"
         ]
       }
@@ -45,7 +46,8 @@
           "../../../apps/core-fcp/**/*.ejs",
           "../../../apps/core-fcp/**/*.css",
           "../../../apps/core-fcp/**/*.js",
-          "../../../apps/core-fcp/**/*.svg"
+          "../../../apps/core-fcp/**/*.svg",
+          "../../../apps/core-fcp/**/*.woff2"
         ]
       }
     },
@@ -62,6 +64,7 @@
           "../../../apps/core-fcp/**/*.js",
           "../../../apps/core-fcp/**/*.svg",
           "../../../apps/core-fcp/**/*.png",
+          "../../../apps/core-fcp/**/*.woff2",
           "**/*.ejs"
         ]
       }
@@ -284,7 +287,10 @@
       "entryFile": "main",
       "sourceRoot": "instances/csmr-user-preferences-high/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json"
+        "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
+        "assets": [
+          "../../../instances/csmr-user-preferences-high/**/*.ejs"
+        ]
       }
     },
     "tracks-data-provider-instance": {
@@ -870,6 +876,33 @@
       "sourceRoot": "instances/csmr-tracks-legacy/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-tracks-legacy/tsconfig.app.json"
+      }
+    },
+    "partners": {
+      "type": "library",
+      "root": "apps/partners",
+      "entryFile": "index",
+      "sourceRoot": "apps/partners/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/partners/tsconfig.lib.json"
+      }
+    },
+    "partners-fcp": {
+      "type": "application",
+      "root": "instances/partners-fcp",
+      "entryFile": "main",
+      "sourceRoot": "instances/partners-fcp/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/partners-fcp/tsconfig.app.json"
+      }
+    },
+    "partners-fca": {
+      "type": "application",
+      "root": "instances/partners-fca",
+      "entryFile": "main",
+      "sourceRoot": "instances/partners-fca/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/partners-fca/tsconfig.app.json"
       }
     }
   }

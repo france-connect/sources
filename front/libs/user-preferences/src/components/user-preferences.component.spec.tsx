@@ -6,30 +6,30 @@ import { useUserPreferencesApi } from '../hooks';
 import { UserPreferencesComponent } from './user-preferences.component';
 import { UserPreferencesFormComponent } from './user-preferences-form.component';
 
-// given
 jest.mock('../hooks');
 jest.mock('./services-list.component');
 jest.mock('./user-preferences-form.component');
 
-const optionsMock = {
-  API_ROUTE_CSRF_TOKEN: 'csrf-token-endpoint',
-  API_ROUTE_USER_PREFERENCES: 'any-endpoint',
-};
-const commitMock = jest.fn();
-const initialValuesMock = { allowFutureIdp: false, idpList: expect.any(Object) };
-const userPreferencesMock = {
-  allowFutureIdp: false,
-  idpList: [expect.any(Object), expect.any(Object)],
-};
-const hookResultMock = {
-  commit: commitMock,
-  formValues: initialValuesMock,
-  submitErrors: undefined,
-  submitWithSuccess: false,
-  userPreferences: userPreferencesMock,
-};
-
 describe('UserPreferencesComponent', () => {
+  // given
+  const optionsMock = {
+    API_ROUTE_CSRF_TOKEN: 'csrf-token-endpoint',
+    API_ROUTE_USER_PREFERENCES: 'any-endpoint',
+  };
+  const commitMock = jest.fn();
+  const initialValuesMock = { allowFutureIdp: false, idpList: expect.any(Object) };
+  const userPreferencesMock = {
+    allowFutureIdp: false,
+    idpList: [expect.any(Object), expect.any(Object)],
+  };
+  const hookResultMock = {
+    commit: commitMock,
+    formValues: initialValuesMock,
+    submitErrors: undefined,
+    submitWithSuccess: false,
+    userPreferences: userPreferencesMock,
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
     mocked(useUserPreferencesApi).mockReturnValue(hookResultMock);

@@ -1,0 +1,6 @@
+/* istanbul ignore file */
+
+// declarative file
+export * from './error';
+export * from './home-page';
+export * from './not-found';

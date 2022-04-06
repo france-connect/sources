@@ -6,6 +6,10 @@ import { ServicesListComponent } from './services-list.component';
 jest.mock('./service.component');
 
 describe('ServicesListComponent', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should render with classes', () => {
     // when
     const { container } = render(<ServicesListComponent identityProviders={[]} />);

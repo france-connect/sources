@@ -13,6 +13,6 @@ export class CoreFcpDatatransferConsentIdentityEventHandler
   implements IEventHandler<CoreFcpDatatransferConsentIdentityEvent>
 {
   async handle(event: CoreFcpDatatransferConsentIdentityEvent) {
-    this.log(this.EventsMap['FC_DATATRANSFER:CONSENT:IDENTITY'], event);
+    this.log(this.EventsMap['FC_DATATRANSFER_CONSENT_IDENTITY'], event);
   }
 }

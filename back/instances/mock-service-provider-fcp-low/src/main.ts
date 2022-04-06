@@ -6,7 +6,7 @@ import { join } from 'path';
 import * as CookieParser from 'cookie-parser';
 import { renderFile } from 'ejs';
 import { urlencoded } from 'express';
-import * as helmet from 'helmet';
+import helmet from 'helmet';
 
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -77,6 +77,11 @@ async function bootstrap() {
          */
         scriptSrc: ["'self'", "'unsafe-inline'", 'stackpath.bootstrapcdn.com'],
         styleSrc: ["'self'", "'unsafe-inline'", 'stackpath.bootstrapcdn.com'],
+        /**
+         * We should be able to call to any domain that we need (SPs, IdPs, rnipp), the default "self"
+         * is too restricting. We don't have a precise domain to restrain to.
+         */
+        formAction: null,
       },
     }),
   );

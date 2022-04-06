@@ -13,6 +13,6 @@ export class CoreFcpDatatransferInformationAnonymousEventHAndler
   implements IEventHandler<CoreFcpDatatransferInformationAnonymousEvent>
 {
   async handle(event: CoreFcpDatatransferInformationAnonymousEvent) {
-    this.log(this.EventsMap['FC_DATATRANSFER:INFORMATION:ANONYMOUS'], event);
+    this.log(this.EventsMap['FC_DATATRANSFER_INFORMATION_ANONYMOUS'], event);
   }
 }

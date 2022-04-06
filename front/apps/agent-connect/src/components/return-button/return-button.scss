@@ -2,6 +2,8 @@
 @import '@fc/dsfr/core/funcs/pixel-to-rem';
 
 a.return-button {
+  color: $g700;
+
   &:hover {
     color: $blue-agentconnect;
     text-decoration: underline;

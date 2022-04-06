@@ -13,9 +13,15 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+import 'cypress-axe';
 import 'cypress-xpath';
 
 import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';
+
+import { injectAxeFromQualityModules } from './common/helpers';
+
+// Overwrite injectAxe because not supporting dependencies workspace
+Cypress.Commands.overwrite('injectAxe', injectAxeFromQualityModules);
 
 addMatchImageSnapshotCommand({
   capture: 'fullPage',

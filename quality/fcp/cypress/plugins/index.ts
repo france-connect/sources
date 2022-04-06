@@ -24,11 +24,12 @@ import * as resolve from 'resolve';
 import { log, table } from './console-log-plugin';
 import { getFixturePath } from './fixture-plugin';
 import { clearBusinessLog, hasBusinessLog } from './log-plugin';
-import { addTracks, addTracksLegacy } from './tracks-plugin';
+import { tracksBuilder } from './tracks-plugin';
 
-module.exports = (on, config) => {
+module.exports = (on, config: Cypress.PluginConfigOptions) => {
   processFixtureTemplate(on, config);
   addMatchImageSnapshotPlugin(on, config);
+  tracksBuilder(on, config);
 
   const options = {
     ...browserify.defaultOptions,
@@ -36,8 +37,6 @@ module.exports = (on, config) => {
   };
 
   on('task', {
-    addTracks,
-    addTracksLegacy,
     clearBusinessLog,
     getFixturePath,
     hasBusinessLog,
@@ -62,17 +61,8 @@ module.exports = (on, config) => {
   if (baseUrls[testEnv]) {
     config.baseUrl = baseUrls[testEnv];
   }
-  if (testEnv === 'integ01') {
-    /**
-     * On integ01 environment, the FC core, FS and FI are using different domains
-     * @link: https://docs.cypress.io/guides/guides/web-security#Same-superdomain-per-test
-     * In order to run the tests,
-     * - we need to disable the chrome web security to allow redirections to different domains
-     * @link: https://docs.cypress.io/guides/guides/web-security#Disabling-Web-Security
-     * - we need to use Cookies with samesite=none (intercept in beforeEach hook)
-     */
-    config.chromeWebSecurity = false;
-  }
+
+  config.chromeWebSecurity = false;
 
   return config;
 };

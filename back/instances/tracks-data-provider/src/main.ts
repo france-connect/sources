@@ -2,7 +2,7 @@
 
 // Not to be tested
 import { urlencoded } from 'express';
-import * as helmet from 'helmet';
+import helmet from 'helmet';
 
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -64,6 +64,11 @@ async function bootstrap() {
          */
         styleSrc: ["'self'", "'unsafe-inline'"],
         scriptSrc: ["'self'", "'unsafe-inline'"],
+        /**
+         * We should be able to call to any domain that we need (SPs, IdPs, rnipp), the default "self"
+         * is too restricting. We don't have a precise domain to restrain to.
+         */
+        formAction: null,
       },
     }),
   );

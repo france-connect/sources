@@ -8,6 +8,8 @@ import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';
 
+export const MISSING_SP_NAME_VALUE = 'Nom du service non défini';
+
 export interface TrackCardProps {
   track: EnhancedTrack;
   options: TracksConfig;
@@ -21,7 +23,8 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
     setOpened(next);
   }, [opened]);
 
-  const { city, claims, country, datetime, event, platform, spAcr, spName, trackId } = track;
+  const { city, claims, country, datetime, event, idpName, platform, spAcr, spName, trackId } =
+    track;
 
   /**
    * @todo #820
@@ -49,9 +52,9 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
       <TrackCardBadgeComponent fromFcPlus={isFromFranceConnectPlus} type={event} />
       <TrackCardHeaderComponent
         datetime={datetime}
-        identityProviderName={spName}
         opened={opened}
         options={options}
+        serviceProviderName={spName || MISSING_SP_NAME_VALUE}
       />
       <TrackCardContentComponent
         accessibleId={cardA11YId}
@@ -59,6 +62,7 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
         claims={claims}
         country={country}
         datetime={datetime}
+        idpName={idpName}
         opened={opened}
         spAcr={spAcr}
       />

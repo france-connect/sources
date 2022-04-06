@@ -1,6 +1,8 @@
 import './user-preferences.scss';
 
+import classnames from 'classnames';
 import React, { FormEventHandler } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
 import { ButtonSimpleComponent, FieldCheckboxComponent } from '@fc/backoffice';
 
@@ -21,6 +23,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
     showNotification,
     userPreferences,
   }: UserPreferencesFormComponentProps) => {
+    const gtTablet = useMediaQuery({ query: 'min-width(768px)' });
     const showServicesList =
       userPreferences && userPreferences.idpList && userPreferences.idpList.length > 0;
     return (
@@ -45,7 +48,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
           label="Bloquer par défaut les nouveaux moyens de connexion dans FranceConnect"
           name="allowFutureIdp"
         />
-        <div className="mt88 text-center">
+        <div className={classnames('text-center', { mt40: !gtTablet, mt88: gtTablet })}>
           <ButtonSimpleComponent
             className="py12 px32"
             disabled={canNotSubmit}

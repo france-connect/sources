@@ -7,14 +7,15 @@ import { EidasToLabel } from '../enums';
 
 export interface Track {
   city: string;
-  country: string;
-  date: string;
-  event: string;
-  spAcr: keyof typeof EidasToLabel;
-  spName: string;
-  trackId: string;
-  platform: 'FranceConnect' | 'FranceConnect+';
   claims: string[] | null;
+  country: string;
+  event: string;
+  idpName: string;
+  platform: 'FranceConnect' | 'FranceConnect+';
+  spAcr: keyof typeof EidasToLabel;
+  spName?: string;
+  time: number;
+  trackId: string;
 }
 
 export interface EnhancedTrack extends Track {

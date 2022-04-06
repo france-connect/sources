@@ -4,6 +4,7 @@
 import { Module } from '@nestjs/common';
 
 import { AppModule } from '@fc/app';
+import { HttpProxyModule } from '@fc/http-proxy';
 import {
   IdentityProviderAdapterEnvModule,
   IdentityProviderAdapterEnvService,
@@ -31,6 +32,7 @@ const oidcClientModule = OidcClientModule.register(
   controllers: [UserDashboardController, OidcClientController],
   imports: [
     AppModule,
+    HttpProxyModule,
     IdentityProviderAdapterEnvModule,
     oidcClientModule,
     SessionModule.forRoot({ schema: UserDashboardSession }),
