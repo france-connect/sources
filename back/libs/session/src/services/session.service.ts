@@ -5,7 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { Redis, REDIS_CONNECTION_TOKEN } from '@fc/redis';
 
 import { SessionConfig } from '../dto';

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { DataProviderCoreAuthService } from '@fc/data-provider-core-auth';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { TracksService } from '@fc/tracks';
 
 import { TracksDataProviderController } from './tracks-data-provider.controller';

@@ -25,7 +25,7 @@ import {
   Interaction,
 } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { MinistriesService } from '@fc/ministries';
 import { OidcSession } from '@fc/oidc';
 import {

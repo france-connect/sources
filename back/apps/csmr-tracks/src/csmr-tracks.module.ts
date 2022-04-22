@@ -6,7 +6,7 @@ import { DynamicModule, Module, ModuleMetadata, Type } from '@nestjs/common';
 import { AccountModule } from '@fc/account';
 import { ElasticsearchModule } from '@fc/elasticsearch';
 import { ExceptionsModule } from '@fc/exceptions';
-import { LoggerModule } from '@fc/logger';
+import { LoggerModule } from '@fc/logger-legacy';
 import { MongooseModule } from '@fc/mongoose';
 
 import { CsmrTracksController } from './controllers';

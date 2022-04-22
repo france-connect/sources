@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { TracksProtocol } from '@fc/microservices';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 

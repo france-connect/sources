@@ -1,7 +1,6 @@
 import { FunctionComponent } from 'react';
 import { mocked } from 'ts-jest/utils';
 
-import { RoutePath } from '@fc/routing';
 import { renderWithRouter } from '@fc/tests-utils';
 
 import { UserWidgetComponent } from '../user-widget';
@@ -17,20 +16,20 @@ const mockRoutes = [
     id: 'homepage',
     label: 'home',
     order: 1,
-    path: '/home' as RoutePath,
+    path: '/home',
   },
   {
     component: Div,
     id: 'not-found',
     label: 'not-found',
-    path: '/404' as RoutePath,
+    path: '/404',
   },
   {
     component: Div,
     id: 'about',
     label: 'about',
     order: 2,
-    path: '/about' as RoutePath,
+    path: '/about',
   },
 ];
 

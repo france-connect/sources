@@ -7,7 +7,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { CheckTokenResponseDto } from '../dto';
 import {

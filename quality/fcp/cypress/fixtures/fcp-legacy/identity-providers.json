@@ -1,0 +1,155 @@
+[
+  {
+    "idpId": "fip1",
+    "name": "fip1",
+    "descriptions": [
+      "par défaut",
+      "actif",
+      "whitelisté",
+      "non blacklisté"
+    ],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas3",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#fi-fip1",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip2",
+    "name": "fip2",
+    "descriptions": [],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip2.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#fi-fip2",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip3",
+    "name": "fip3",
+    "descriptions": [
+      "pour le test de préférences FI"
+    ],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip3.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas2",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#fi-fip3",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip1_blacklisted_by_fsp2",
+    "name": "fip1_blacklisted_by_fsp2",
+    "descriptions": [
+      "blacklisté"
+    ],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#fi-fip1_blacklisted_by_fsp2",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip1_not_whitelisted_by_fsp3",
+    "name": "fip1_not_whitelisted_by_fsp3",
+    "descriptions": [
+      "non whitelisté"
+    ],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#fi-fip1_not_whitelisted_by_fsp3",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip1_deactivated",
+    "name": "fip1_deactivated",
+    "descriptions": [
+      "désactivé et visible"
+    ],
+    "mocked": true,
+    "usable": false,
+    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#fi-fip1_deactivated",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip1_not_displayed",
+    "name": "fip1_not_displayed",
+    "descriptions": [
+      "actif et non visible"
+    ],
+    "mocked": true,
+    "usable": false,
+    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#fi-fip1_not_displayed",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip1_not_displayed_and_deactivated",
+    "name": "fip1_not_displayed_and_deactivated",
+    "descriptions": [
+      "désactivé et non visible"
+    ],
+    "mocked": true,
+    "usable": false,
+    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#fi-fip1_not_displayed_and_deactivated",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  }
+]

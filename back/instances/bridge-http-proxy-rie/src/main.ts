@@ -11,7 +11,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppConfig } from '@fc/app';
 import { BridgeHttpProxyConfig } from '@fc/bridge-http-proxy';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { AppModule } from './app.module';
 import config from './config';

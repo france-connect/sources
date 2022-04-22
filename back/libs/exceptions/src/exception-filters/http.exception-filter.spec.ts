@@ -1,7 +1,7 @@
 import { ArgumentsHost } from '@nestjs/common';
 
 import { ApiErrorMessage, ApiErrorParams, ApiHttpResponseCode } from '@fc/app';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { HttpException } from '../exceptions';
 import { HttpExceptionFilter } from './http.exception-filter';

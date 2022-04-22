@@ -6,7 +6,7 @@ import { CsmrUserPreferencesModule } from 'apps/csmr-user-preferences/src';
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
-import { LoggerModule } from '@fc/logger';
+import { LoggerModule } from '@fc/logger-legacy';
 
 @Module({})
 export class AppModule {

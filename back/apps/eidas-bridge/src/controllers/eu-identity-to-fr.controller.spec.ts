@@ -11,7 +11,7 @@ import {
 } from '@fc/eidas';
 import { EidasCountryService, IEidasCountryElement } from '@fc/eidas-country';
 import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { SessionService } from '@fc/session';

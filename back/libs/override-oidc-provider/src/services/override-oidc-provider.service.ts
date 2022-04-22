@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { OidcProviderService } from '@fc/oidc-provider';
 
 import { OverrideOidcProviderConfig } from '../dto';

@@ -12,7 +12,7 @@ interface UserWidgetComponentProps {
 
 export const UserWidgetComponent: React.FC<UserWidgetComponentProps> = React.memo(
   ({ className, userInfos }: UserWidgetComponentProps) => {
-    const gtTablet = useMediaQuery({ query: '(min-width: 768px)' });
+    const gtTablet = useMediaQuery({ query: '(min-width: 992px)' });
     const {
       // oidc spec defined property
       // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { AccountNotFoundException } from '../exceptions';
 import { IInteraction } from '../interfaces';

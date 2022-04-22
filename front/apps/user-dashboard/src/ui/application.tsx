@@ -4,6 +4,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { ApplicationLayout as DsfrLayout } from '@fc/dsfr';
+import { UserInfosProvider } from '@fc/oidc-client';
 import { AppContextProvider } from '@fc/state-management';
 
 import { AppConfig } from '../config';
@@ -14,7 +15,9 @@ export function Application(): JSX.Element {
     <React.StrictMode>
       <BrowserRouter>
         <AppContextProvider value={{ config: AppConfig }}>
-          <DsfrLayout config={AppConfig.Layout} routes={routes} />
+          <UserInfosProvider userInfosEndpoint={AppConfig.OidcClient.endpoints.getUserInfos}>
+            <DsfrLayout config={AppConfig.Layout} routes={routes} />
+          </UserInfosProvider>
         </AppContextProvider>
       </BrowserRouter>
     </React.StrictMode>

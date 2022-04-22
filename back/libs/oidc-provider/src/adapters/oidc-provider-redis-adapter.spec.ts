@@ -1,4 +1,4 @@
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { Redis } from '@fc/redis';
 

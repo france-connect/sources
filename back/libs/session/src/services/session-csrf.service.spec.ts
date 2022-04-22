@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialExcept } from '@fc/common';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
 
 import { SessionCsrfService } from './session-csrf.service';

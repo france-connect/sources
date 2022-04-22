@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { Account, AccountService } from '@fc/account';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import { CsmrTracksElasticsearchService } from './csmr-tracks-elasticsearch.service';

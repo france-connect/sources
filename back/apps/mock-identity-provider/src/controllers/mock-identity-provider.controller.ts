@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { ISessionService, Session, SessionService } from '@fc/session';

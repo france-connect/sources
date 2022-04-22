@@ -5,7 +5,7 @@ import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
-import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig } from '@fc/logger-legacy';
 import { MailerConfig } from '@fc/mailer';
 import { MongooseConfig } from '@fc/mongoose';
 import { RabbitmqConfig } from '@fc/rabbitmq';

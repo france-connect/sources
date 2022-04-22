@@ -6,7 +6,7 @@ import { Account, AccountNotFoundException, AccountService } from '@fc/account';
 import { ConfigService } from '@fc/config';
 import { CryptographyFcpService, IPivotIdentity } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import {
   MailerNotificationConnectException,
   MailerService,

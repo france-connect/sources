@@ -1,4 +1,4 @@
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { StdoutTransport } from './stdout-transport';
 

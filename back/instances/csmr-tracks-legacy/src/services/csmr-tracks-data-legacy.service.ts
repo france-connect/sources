@@ -9,7 +9,7 @@ import {
   IAppTracksDataService,
 } from '@fc/csmr-tracks';
 import { formatMultiMatchGroup } from '@fc/elasticsearch';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { ScopesService } from '@fc/scopes';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 

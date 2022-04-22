@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { EidasIdentityDto } from '@fc/core-fcp/dto';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { CoreFcpEidasIdentityCheckHandler } from './core-fcp.eidas.identity-check';
 

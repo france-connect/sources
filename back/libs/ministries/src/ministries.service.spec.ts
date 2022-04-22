@@ -2,7 +2,7 @@ import { EventBus } from '@nestjs/cqrs';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { MinistriesService } from './ministries.service';
 

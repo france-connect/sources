@@ -1,4 +1,6 @@
 export interface ServiceProviderBase {
+  // Used with FC Legacy SP only
+  clientId?: string;
   selectors: {
     fcButton: string;
     logoutButton: string;

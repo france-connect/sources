@@ -88,4 +88,4 @@ Fonctionnalité: Connexion Usager - Acr
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique
     Et le code d'erreur est "Y020001"
-    Et le message d'erreur est "Le niveau de sécurité utilisé pour vous authentifier ne correspondant pas au niveau exigé pour votre démarche."
+    #Et le message d'erreur est "Le niveau de sécurité utilisé pour vous authentifier ne correspondant pas au niveau exigé pour votre démarche."

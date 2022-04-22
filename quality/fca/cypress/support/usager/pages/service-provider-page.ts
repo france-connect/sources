@@ -40,11 +40,8 @@ export default class ServiceProviderPage {
   }
 
   checkIsUserConnected(isConnected = true): void {
-    if (isConnected) {
-      this.logoutButton.should('be.visible');
-    } else {
-      this.logoutButton.should('not.exist');
-    }
+    const state = isConnected ? 'be.visible' : 'not.exist';
+    this.logoutButton.should(state);
   }
 
   setMockAuthorizeHttpMethod(formMethod: 'get' | 'post'): void {

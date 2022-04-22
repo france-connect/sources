@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { RequiredExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { CryptographyFcpConfig } from './dto/cryptography-fcp-config';
 import { IPivotIdentity } from './interfaces/pivot-identity.interface';

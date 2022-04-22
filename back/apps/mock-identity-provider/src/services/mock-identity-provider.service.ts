@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import {
   OidcProviderMiddlewareStep,

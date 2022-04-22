@@ -4,7 +4,7 @@ import { ModuleRef } from '@nestjs/core';
 import { CoreMissingAuthenticationEmailException } from '@fc/core';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ScopesService } from '@fc/scopes';

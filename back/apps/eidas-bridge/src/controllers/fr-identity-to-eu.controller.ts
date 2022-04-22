@@ -9,7 +9,7 @@ import { CryptographyService } from '@fc/cryptography';
 import { EidasResponse } from '@fc/eidas';
 import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
 import { EidasProviderSession } from '@fc/eidas-provider';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { AcrValues } from '@fc/oidc';
 import {
   OidcClientConfigService,

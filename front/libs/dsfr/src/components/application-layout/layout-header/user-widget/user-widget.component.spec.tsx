@@ -13,7 +13,7 @@ describe('UserWidgetComponent', () => {
 
   it('should render the family name and the given name', () => {
     // when
-    const { getByText } = render(<UserWidgetComponent userInfos={userInfosMock} />);
+    const { getByText } = render(<UserWidgetComponent userInfos={userInfosMock.userinfos} />);
     const givenNameElement = getByText(/any-given-name-mock/);
     const familyNameElement = getByText(/any-family-name-mock/);
     // then
@@ -23,7 +23,7 @@ describe('UserWidgetComponent', () => {
 
   it('should have the class defined for the expected behavior', () => {
     // when
-    const { container } = render(<UserWidgetComponent userInfos={userInfosMock} />);
+    const { container } = render(<UserWidgetComponent userInfos={userInfosMock.userinfos} />);
     const element = container.firstChild;
     // then
     expect(element).toHaveClass('flex-columns');
@@ -35,7 +35,7 @@ describe('UserWidgetComponent', () => {
 
   it('should render the user icon', () => {
     // when
-    render(<UserWidgetComponent userInfos={userInfosMock} />);
+    render(<UserWidgetComponent userInfos={userInfosMock.userinfos} />);
     // then
     expect(UserIcon).toHaveBeenCalledTimes(1);
     expect(UserIcon).toHaveBeenCalledWith({ className: 'mr8' }, {});
@@ -44,7 +44,7 @@ describe('UserWidgetComponent', () => {
   it('should have the className passed throught props', () => {
     // when
     const { container } = render(
-      <UserWidgetComponent className="any-classname" userInfos={userInfosMock} />,
+      <UserWidgetComponent className="any-classname" userInfos={userInfosMock.userinfos} />,
     );
     const element = container.firstChild;
     // then
@@ -53,17 +53,17 @@ describe('UserWidgetComponent', () => {
 
   it('should call useMediaQuery with query param', () => {
     // when
-    render(<UserWidgetComponent userInfos={userInfosMock} />);
+    render(<UserWidgetComponent userInfos={userInfosMock.userinfos} />);
     // then
     expect(useMediaQuery).toHaveBeenCalledTimes(1);
-    expect(useMediaQuery).toHaveBeenCalledWith({ query: '(min-width: 768px)' });
+    expect(useMediaQuery).toHaveBeenCalledWith({ query: '(min-width: 992px)' });
   });
 
   it('should render for a desktop viewport', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
-    const { container } = render(<UserWidgetComponent userInfos={userInfosMock} />);
+    const { container } = render(<UserWidgetComponent userInfos={userInfosMock.userinfos} />);
     const element = container.firstChild;
     // then
     expect(element).toHaveClass('flex-end');
@@ -73,7 +73,7 @@ describe('UserWidgetComponent', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(false);
     // when
-    const { container } = render(<UserWidgetComponent userInfos={userInfosMock} />);
+    const { container } = render(<UserWidgetComponent userInfos={userInfosMock.userinfos} />);
     const element = container.firstChild;
     // then
     expect(element).not.toHaveClass('flex-end');

@@ -2,8 +2,7 @@ import classnames from 'classnames';
 import React, { useCallback, useContext, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-import { UserinfosInterface } from '@fc/oidc-client';
-import { AppContext, AppContextInterface } from '@fc/state-management';
+import { UserInfosContext, UserInterface } from '@fc/oidc-client';
 
 import { NavigationLink } from '../props.interface';
 import { LayoutHeaderLogosComponent } from './layout-header-logos.component';
@@ -20,16 +19,12 @@ interface LayoutHeaderProps {
 
 export const LayoutHeaderComponent: React.FC<LayoutHeaderProps> = React.memo(
   ({ logo, navigationItems, returnButton: ReturnButton, title }: LayoutHeaderProps) => {
-    const gtTablet = useMediaQuery({ query: '(min-width: 768px)' });
-
-    const { state } = useContext<AppContextInterface>(AppContext);
-    const userInfos = state.user.userinfos as UserinfosInterface;
-    // oidc spec defined property
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const userInfosIsValid = userInfos && userInfos.family_name && userInfos.given_name;
+    const gtTablet = useMediaQuery({ query: '(min-width: 992px)' });
+    const user = useContext<UserInterface>(UserInfosContext);
 
     const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
-    // @NOTE pas tester car le test implique de réimplémenter la function
+    // @NOTE can not be tested
+    // it implies to implement react native hooks, useCallback/useState
     /* istanbul ignore next */
     const mobileMenuToggleHandler = useCallback(() => {
       /* istanbul ignore next */
@@ -53,18 +48,18 @@ export const LayoutHeaderComponent: React.FC<LayoutHeaderProps> = React.memo(
             <LayoutHeaderLogosComponent logo={logo} title={title} />
             <LayoutHeaderMenuComponent
               returnButton={ReturnButton}
-              userInfos={userInfos}
+              user={user}
               onMobileMenuOpen={mobileMenuToggleHandler}
             />
           </div>
-          {gtTablet && userInfosIsValid && navigationItems && (
+          {gtTablet && user && user.connected && navigationItems && (
             <DesktopNavigationComponent navigationLinks={navigationItems} />
           )}
-          {!gtTablet && userInfosIsValid && (
+          {!gtTablet && user && user.connected && (
             <MobileNavigationComponent
               mobileMenuIsOpen={mobileMenuIsOpen}
               navigationLinks={navigationItems}
-              userInfos={userInfos}
+              userInfos={user.userinfos}
               onClose={mobileMenuToggleHandler}
             />
           )}

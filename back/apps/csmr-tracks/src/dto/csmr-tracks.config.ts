@@ -5,7 +5,7 @@ import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
 import { ElasticsearchConfig } from '@fc/elasticsearch';
-import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig } from '@fc/logger-legacy';
 import { MongooseConfig } from '@fc/mongoose';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 

@@ -3,7 +3,7 @@ import { Client, custom, Issuer } from 'openid-client';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import {
   OidcClientProviderDisabledException,

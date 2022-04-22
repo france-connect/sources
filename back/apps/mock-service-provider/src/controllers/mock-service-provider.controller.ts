@@ -17,7 +17,7 @@ import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
 import {
   OidcClientConfig,

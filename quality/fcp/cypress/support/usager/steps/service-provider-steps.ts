@@ -42,7 +42,7 @@ Then('je suis redirigé vers la page fournisseur de service', function () {
   serviceProviderPage.checkIsVisible();
 });
 
-Then('je suis connecté', function () {
+Then(/^je suis connecté$/, function () {
   serviceProviderPage.checkIsUserConnected();
 });
 

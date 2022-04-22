@@ -39,6 +39,14 @@ then
 fi
 export NODE_VERSION
 
+
+NODEJS_CONTAINERS=`docker ps -qf ancestor=$FC_DOCKER_REGISTRY/nodejs:$NODE_VERSION-dev`
+
+if [ "${NODEJS_CONTAINERS:-xxx}" != "xxx" ]
+then
+  RUNNING_CONTAINERS=`docker inspect -f '{{index (.Config.Labels) "com.docker.compose.service" }}' $NODEJS_CONTAINERS`
+fi
+
 # Disable TTY on CI env
 [ $CI ] && NO_TTY=" -T" || NO_TTY=""
 
@@ -237,7 +245,7 @@ _run_prod() {
 }
 
 _install_dependencies() {
-  apps=${@:-fc-core}
+  apps=${@:-core-fcp-high}
   for app in $apps
   do
     echo "Installing dependencies for [$app]:"
@@ -247,7 +255,7 @@ _install_dependencies() {
 }
 
 _test() {
-  apps=${@:-fc-core}
+  apps=${@:-core-fcp-high}
   for app in $apps
   do
     cd ${WORKING_DIR} && docker-compose exec $NO_TTY $app "/opt/scripts/test.sh" || err=true
@@ -256,7 +264,7 @@ _test() {
 
 
 _e2e() {
-  app=${1:-fc-core}
+  app=${1:-core-fcp-high}
   [ $# -gt 0 ] && shift
   case "$app" in
     *)
@@ -277,7 +285,7 @@ _e2e() {
 }
 
 _start() {
-  apps=${@:-fc-core}
+  apps=${@:-core-fcp-high}
   for app in $apps
   do
     echo "Starting ${app} app..."
@@ -286,7 +294,7 @@ _start() {
 }
 
 _start_ci() {
-  apps=${@:-fc-core}
+  apps=${@:-core-fcp-high}
   for app in $apps
   do
     echo "Starting ${app} app..."
@@ -295,7 +303,7 @@ _start_ci() {
 }
 
 _stop() {
-  apps=${@:-fc-core}
+  apps=${@:-core-fcp-high}
   for app in $apps
   do
     echo "Stopping ${app} app..."
@@ -304,7 +312,7 @@ _stop() {
 }
 
 _log() {
-  app=${@:-fc-core}
+  app=${@:-core-fcp-high}
   cd ${WORKING_DIR} && docker-compose exec $NO_TTY ${app} pm2 logs
 }
 
@@ -449,15 +457,8 @@ case "$action" in
   dep|dependencies)
     _install_dependencies $@
     ;;
-  dep-all|dependencies-all)
-    _install_dependencies fsp1-high fsp2-high fsp3-high fsp5-high fsp6-high fdp1v2 fip1-high \
-      fip2-high core-fcp-high rnipp exploitation-high fsa1-low fsa2-low fsa3-low fsa4-low \
-      fia1-low fia2-low fia4-low fia5-low core-fca-low fca-low-front csmr-hsm eidas-bridge \
-      exploitation-fca-low exploit-fcp-high-back exploit-fca-low-back core-fcp-low \
-      fsp1-low fsp2-low fip1-low fip2-low fip3-low exploit-fcp-high-front exploit-fca-low-front bridge-proxy-rie \
-      exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
-      csmr-rie fia-rie-low \
-      partners-fca-back partners-fca-front partners-fcp-back partners-fcp-front
+  dep-all|dependencies-all)  
+    _install_dependencies $RUNNING_CONTAINERS
     ;;
   exec)
     _exec $@
@@ -502,13 +503,7 @@ case "$action" in
     _start $@
     ;;
   reload-all)
-    _start fsp1-high fsp2-high fsp3-high fsp5-high fsp6-high fsa4-low \
-    fdp1v2 fip1-high fip2-high fip6-high fia4-low fia5-low core-fcp-high rnipp exploitation-high \
-    fsa1-low fsa2-low fsa3-low fia1-low fia2-low core-fca-low fca-low-front csmr-hsm \
-    eidas-bridge exploitation-fca-low exploit-fcp-high-back exploit-fcp-high-front \
-    exploit-fca-low-back exploit-fca-low-front exploit-fcp-high-fi-mock bridge-proxy-rie \
-    exploit-fca-low-fi-mock core-fcp-low fsp1-low fsp2-low fip1-low fip2-low fip3-low\
-    csmr-rie fia-rie-low
+    _start $RUNNING_CONTAINERS
     ;;
   reset-db-core-fcp-high)
     _reset_db_fcp_high $@
@@ -530,51 +525,17 @@ case "$action" in
     ;;
   # -- start all up's containers (FCP and/or FCA)
   start-all)
-    _start \
-      rnipp exploitation-high csmr-hsm ud-back ud-front \
-      fdp1v2 eidas-bridge \
-      \
-      core-fcp-high exploit-fcp-high-back core-fcp-low \
-      fsp1-high fsp2-high fsp3-high fsp5-high fsp6-high \
-      fsp1-low fsp2-low \
-      fip1-high fip2-high fip6-high fip13-high fip14-high fip15-high fip16-high fip17-high fip18-high fip19-high fip20-high \
-      fip1-low fip2-low fip3-low \
-      exploit-fcp-high-front exploit-fca-low-front \
-      \
-      core-fca-low fca-low-front exploitation-fca-low exploit-fca-low-back bridge-proxy-rie \
-      exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
-      fsa1-low fsa2-low fsa3-low fsa4-low \
-      fia1-low fia2-low fia4-low fia5-low \
-      csmr-rie fia-rie-low \
-      partners-fca-back partners-fca-front partners-fcp-back partners-fcp-front
+    _start $RUNNING_CONTAINERS
     ;;
   # -- stop all up's containers (FCP and/or FCA)
   stop-all)
-    _stop \
-    rnipp exploitation-high csmr-hsm ud-back ud-front \
-    fdp1v2 eidas-bridge bridge-proxy-rie \
-    \
-    core-fcp-high exploit-fcp-high-back core-fcp-low \
-    fsp1-high fsp2-high fsp3-high fsp5-high fsp6-high \
-    fsp1-low fsp2-low \
-    fip1-high fip2-high fip6-high fip13-high fip14-high fip15-high fip16-high fip17-high fip18-high fip19-high fip20-high \
-    fip1-low fip2-low fip3-low \
-    exploit-fcp-high-front \
-    \
-    core-fca-low fca-low-front exploitation-fca-low exploit-fca-low-back exploit-fca-low-front \
-    exploit-fcp-high-fi-mock exploit-fca-low-fi-mock \
-    fsa1-low fsa2-low fsa3-low fsa4-low \
-    fia1-low fia2-low fia4-low fia5-low \
-    csmr-rie fia-rie-low
+    _stop $RUNNING_CONTAINERS
     ;;
   test)
     _test $@
     ;;
   test-all)
-    _test rnipp core-fcp-high exploitation-high core-fca-low fca-low-front eidas-bridge \
-    exploitation-fca-low exploit-fcp-high-back exploit-fca-low-back exploit-fca-low-front \
-    exploit-fcp-high-fi-mock exploit-fca-low-fi-mock core-fcp-low fsp1-low fsp2-low \
-    fip1-low fip2-low fip3-low bridge-proxy-rie csmr-rie fia-rie-low
+    _test $RUNNING_CONTAINERS
     ;;
   e2e)
     _e2e $@

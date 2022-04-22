@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { OidcIdentityDto } from '@fc/oidc';
 
 import { CheckTokenResponseDto, DataProviderCoreAuthConfig } from '../dto';

@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // Tested by DTO
-import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig } from '@fc/logger-legacy';
 
 export default {
   path: process.env.EVT_LOG_FILE,

@@ -7,7 +7,7 @@ import {
   EidasStatusCodes,
   EidasSubStatusCodes,
 } from '@fc/eidas';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { AcrValues } from '@fc/oidc';
 
 import { EidasToOidcService } from './eidas-to-oidc.service';

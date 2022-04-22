@@ -4,7 +4,7 @@ import { TokenSet } from 'openid-client';
 import { Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
 import { IEventContext, TrackingService } from '@fc/tracking';
 

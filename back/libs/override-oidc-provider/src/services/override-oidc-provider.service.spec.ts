@@ -6,7 +6,7 @@ import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { OidcProviderService } from '@fc/oidc-provider';
 
 import { OverrideOidcProviderService } from './override-oidc-provider.service';

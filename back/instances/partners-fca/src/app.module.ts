@@ -1,7 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
-import { LoggerModule } from '@fc/logger';
+import { LoggerModule } from '@fc/logger-legacy';
 import { PartnersModule } from '@fc/partners';
 
 @Module({})

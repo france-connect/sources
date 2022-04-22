@@ -6,7 +6,7 @@ import { IsObject, ValidateNested } from 'class-validator';
 
 import { AppConfig } from '@fc/app';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
-import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig } from '@fc/logger-legacy';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 import { RedisConfig } from '@fc/redis';

@@ -5,7 +5,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 import { ConfigService } from '@fc/config';
 import { ElasticsearchConfig } from '@fc/elasticsearch';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import { IAppTracksDataService, ICsmrTracksElasticInput } from '../interfaces';

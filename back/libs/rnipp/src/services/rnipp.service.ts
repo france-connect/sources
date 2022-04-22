@@ -8,7 +8,7 @@ import { Injectable } from '@nestjs/common';
 
 import { getDtoErrors, RequiredExcept, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { CitizenStatus, RnippConfig } from '../dto';
 import { Genders, RnippResponseCodes } from '../enums';

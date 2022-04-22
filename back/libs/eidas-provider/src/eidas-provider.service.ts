@@ -8,7 +8,7 @@ import {
   LightRequestService,
   LightResponseService,
 } from '@fc/eidas-light-protocol';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { EidasProviderConfig } from './dto';
 import {

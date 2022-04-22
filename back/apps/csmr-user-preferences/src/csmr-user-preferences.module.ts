@@ -7,7 +7,7 @@ import { AccountModule } from '@fc/account';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { ExceptionsModule } from '@fc/exceptions';
 import { IdentityProviderAdapterMongoModule } from '@fc/identity-provider-adapter-mongo';
-import { LoggerModule } from '@fc/logger';
+import { LoggerModule } from '@fc/logger-legacy';
 import { MailerModule } from '@fc/mailer';
 import { MongooseModule } from '@fc/mongoose';
 

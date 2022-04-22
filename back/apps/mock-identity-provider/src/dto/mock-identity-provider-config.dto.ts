@@ -4,7 +4,7 @@
 import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
-import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig } from '@fc/logger-legacy';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { RedisConfig } from '@fc/redis';
 /**

@@ -1,9 +1,20 @@
-.LayoutHeaderComponent-menu-items {
-  & > *:not(:last-child)::after {
-    background-color: #e5e5e5;
-    content: '\00a0';
-    height: 16px;
-    margin-left: 16px;
-    width: 1px;
+.LayoutHeaderComponent-menu {
+  &-items {
+    & > *:not(:last-child)::after {
+      background-color: #e5e5e5;
+      content: '\00a0';
+      height: 16px;
+      margin-left: 16px;
+      width: 1px;
+    }
+  }
+
+  &-drawer-btn {
+    height: 40px;
+    width: 40px;
+
+    & svg {
+      vertical-align: super;
+    }
   }
 }

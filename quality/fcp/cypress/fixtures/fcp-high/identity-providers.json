@@ -1,6 +1,7 @@
 [
   {
     "idpId": "fip1-high",
+    "name": "fip1-high",
     "descriptions": [
       "par défaut",
       "actif",
@@ -22,6 +23,7 @@
   },
   {
     "idpId": "fip2-high",
+    "name": "fip2-high",
     "descriptions": ["eidas 3 - nodiscov - crypted (none) - signed (RS256)"],
     "mocked": true,
     "usable": true,
@@ -38,6 +40,7 @@
   },
   {
     "idpId": "fip3-desactive-visible",
+    "name": "fip3-desactive-visible",
     "descriptions": ["désactivé et visible"],
     "mocked": true,
     "usable": false,
@@ -54,6 +57,7 @@
   },
   {
     "idpId": "fip4-desactive-invisible",
+    "name": "fip4-desactive-invisible",
     "descriptions": ["désactivé et non visible"],
     "mocked": true,
     "usable": false,
@@ -70,6 +74,7 @@
   },
   {
     "idpId": "fip5-active-invisible",
+    "name": "fip5-active-invisible",
     "descriptions": ["actif et non visible"],
     "mocked": true,
     "usable": false,
@@ -86,6 +91,7 @@
   },
   {
     "idpId": "fip8-high",
+    "name": "fip8-high",
     "descriptions": [
       "non whitelisté",
       "blacklisté"
@@ -105,6 +111,7 @@
   },
   {
     "idpId": "fip13-high",
+    "name": "fip13-high",
     "descriptions": ["eidas 3 - crypted (ECDH-ES + A256GCM) - signed (ES256)"],
     "mocked": true,
     "usable": true,
@@ -121,6 +128,7 @@
   },
   {
     "idpId": "fip14-high",
+    "name": "fip14-high",
     "descriptions": ["eidas 3 - crypted (RSA-OAEP + A256GCM) - signed (RS256)"],
     "mocked": true,
     "usable": true,
@@ -137,6 +145,7 @@
   },
   {
     "idpId": "fip15-high",
+    "name": "fip15-high",
     "descriptions": ["eidas 2 - crypted (RSA-OAEP + A256GCM) - signed (ES256)"],
     "mocked": true,
     "usable": true,
@@ -153,6 +162,7 @@
   },
   {
     "idpId": "fip16-high",
+    "name": "fip16-high",
     "descriptions": ["eidas 2 - crypted (ECDH-ES + A256GCM) - signed (RS256)"],
     "mocked": true,
     "usable": true,
@@ -169,6 +179,7 @@
   },
   {
     "idpId": "fip17-high",
+    "name": "fip17-high",
     "descriptions": ["eidas 2 - crypted (none) - signed (ES256)"],
     "mocked": true,
     "usable": true,

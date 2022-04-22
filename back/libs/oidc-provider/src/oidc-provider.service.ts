@@ -9,7 +9,7 @@ import { HttpOptions } from 'openid-client';
 import { Global, Inject, Injectable } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { Redis, REDIS_CONNECTION_TOKEN } from '@fc/redis';

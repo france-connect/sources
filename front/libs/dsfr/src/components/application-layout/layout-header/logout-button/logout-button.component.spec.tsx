@@ -74,7 +74,7 @@ describe('LogoutButtonComponent', () => {
     render(<LogoutButtonComponent />);
     // then
     expect(useMediaQuery).toHaveBeenCalledTimes(1);
-    expect(useMediaQuery).toHaveBeenCalledWith({ query: '(min-width: 768px)' });
+    expect(useMediaQuery).toHaveBeenCalledWith({ query: '(min-width: 992px)' });
   });
 
   it('should render for a desktop viewport', () => {

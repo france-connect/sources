@@ -6,7 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata } from '@fc/oidc';
 import { OidcClientService } from '@fc/oidc-client';
 import { SessionNotFoundException, SessionService } from '@fc/session';

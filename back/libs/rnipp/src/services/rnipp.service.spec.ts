@@ -7,7 +7,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { FcException } from '@fc/exceptions';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { Genders, RnippResponseCodes } from '../enums';
 import {

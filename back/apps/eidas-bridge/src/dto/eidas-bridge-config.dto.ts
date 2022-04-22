@@ -11,7 +11,7 @@ import { EidasClientConfig } from '@fc/eidas-client';
 import { EidasLightProtocolConfig } from '@fc/eidas-light-protocol';
 import { EidasProviderConfig } from '@fc/eidas-provider';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
-import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig } from '@fc/logger-legacy';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { OverrideOidcProviderConfig } from '@fc/override-oidc-provider';

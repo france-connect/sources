@@ -5,7 +5,7 @@ import { PartialExcept } from '@fc/common';
 import { CoreMissingAuthenticationEmailException } from '@fc/core';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
 import { ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';

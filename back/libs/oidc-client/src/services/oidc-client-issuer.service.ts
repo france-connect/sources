@@ -4,7 +4,7 @@ import { Client, custom, HttpOptions, Issuer } from 'openid-client';
 
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata } from '@fc/oidc';
 
 import { OidcClientClass } from '../enums';

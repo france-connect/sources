@@ -3,7 +3,7 @@ import { ArgumentsHost } from '@nestjs/common';
 import { ApiErrorMessage, ApiErrorParams, ApiHttpResponseCode } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { Loggable, Trackable } from '@fc/exceptions';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { TrackingService } from '@fc/tracking';
 
 import { TrackableEvent } from '../events';

@@ -62,7 +62,7 @@ Fonctionnalité: Validation Visuelle
     Alors je suis redirigé vers la page erreur technique
     Et la copie d'écran "erreur" sans "[data-testid='error-session-id']" correspond à la page actuelle sur "<device>"
     Et le code d'erreur est "Y020001"
-    Et le message d'erreur est "Le niveau de sécurité utilisé pour vous authentifier ne correspondant pas au niveau exigé pour votre démarche."
+    #Et le message d'erreur est "Le niveau de sécurité utilisé pour vous authentifier ne correspondant pas au niveau exigé pour votre démarche."
 
     Exemples:
       | device           |

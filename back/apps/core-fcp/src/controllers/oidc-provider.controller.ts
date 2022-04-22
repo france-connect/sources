@@ -15,7 +15,7 @@ import {
 
 import { validateDto } from '@fc/common';
 import { CoreRoutes } from '@fc/core';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import {
   OidcProviderAuthorizeParamsException,
   OidcProviderService,

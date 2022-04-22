@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { AuthorizeParamsDto } from '../dto';
 import { OidcProviderController } from './oidc-provider.controller';

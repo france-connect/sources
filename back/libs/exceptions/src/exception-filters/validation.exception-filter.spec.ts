@@ -1,5 +1,5 @@
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { FcException, ValidationException } from '../exceptions';
 import { ValidationExceptionFilter } from './validation.exception-filter';

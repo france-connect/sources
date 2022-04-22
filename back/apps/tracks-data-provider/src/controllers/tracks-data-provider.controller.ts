@@ -4,7 +4,7 @@ import {
   DataProviderCoreAuthService,
   HttpAuthToken,
 } from '@fc/data-provider-core-auth';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { TrackDto, TracksService } from '@fc/tracks';
 
 import { TracksDataProviderRoutes } from '../enums';

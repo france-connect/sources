@@ -4,9 +4,9 @@ import '../../index.scss';
 // pas necessaire, peut facilement etre remplacé par un composant custom
 // pour changer le titre de la page HTML
 import { Helmet } from 'react-helmet';
-import { matchPath, Route, RouteProps, Switch, useLocation } from 'react-router-dom';
+import { matchPath, RouteProps, useLocation } from 'react-router-dom';
 
-import { RouteItem } from '@fc/routing';
+import { RouteItem, RoutesManagerComponent } from '@fc/routing';
 
 import { LayoutFooterComponent } from './footer.component';
 import { LayoutHeaderComponent } from './layout-header';
@@ -22,8 +22,9 @@ export const getCurrentRouteObjectByPath = (entries: RouteItem[], locationPathna
   (entries && entries.filter((obj) => obj && matchPath(locationPathname, obj as RouteProps))[0]) ||
   null;
 
-// @TODO la prop `config` devrait être dans un `react context` indépendant
-// pour ne pas avoir à passer les propriété à chaques composants
+// @TODO `config` property should be into a `react context`
+// to simplify usage into children components
+// instead of passing it as a child dependency
 export function ApplicationLayout({ config, routes }: ApplicationLayoutProps): JSX.Element {
   const { pathname } = useLocation();
   const { bottomLinks, footerDescription, footerLinkTitle, logo, navigationItems, returnButton } =
@@ -43,12 +44,7 @@ export function ApplicationLayout({ config, routes }: ApplicationLayoutProps): J
           returnButton={returnButton}
           title={footerLinkTitle}
         />
-        <Switch>
-          {routes.map((route) => {
-            const { component, exact, path } = route;
-            return <Route key={route.path} component={component} exact={exact} path={path} />;
-          })}
-        </Switch>
+        <RoutesManagerComponent routes={routes} />
       </div>
       <LayoutFooterComponent
         bottomLinks={bottomLinks}

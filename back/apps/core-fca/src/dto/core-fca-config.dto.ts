@@ -7,7 +7,7 @@ import { IsObject, IsUrl, ValidateNested } from 'class-validator';
 import { AppConfig } from '@fc/app';
 import { CryptographyFcaConfig } from '@fc/cryptography-fca';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
-import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig } from '@fc/logger-legacy';
 import { MongooseConfig } from '@fc/mongoose';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';

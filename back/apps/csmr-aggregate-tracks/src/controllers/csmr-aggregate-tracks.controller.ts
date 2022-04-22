@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { TracksProtocol } from '@fc/microservices';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 

@@ -6,7 +6,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { BridgePayload, BridgeProtocol } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { HttpProxyProtocol } from '@fc/microservices';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 

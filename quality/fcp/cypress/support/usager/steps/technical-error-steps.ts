@@ -9,18 +9,18 @@ const {
   checkSessionNumberVisible,
 } = new TechnicalErrorPage();
 
-Then('je suis redirigé vers la page erreur technique', function () {
+Then(/^je suis redirigé vers la page erreur technique$/, function () {
   checkIsVisible();
 });
 
-Then("le code d'erreur est {string}", function (errorCode) {
+Then(/^le code d'erreur est "([^"]*)"$/, function (errorCode) {
   checkErrorCode(errorCode);
 });
 
-Then('le numéro de session FranceConnect est affiché', function () {
+Then(/^le numéro de session FranceConnect est affiché$/, function () {
   checkSessionNumberVisible();
 });
 
-Then("le message d'erreur FranceConnect est {string}", function (message) {
+Then(/^le message d'erreur FranceConnect est "([^"]*)"$/, function (message) {
   checkErrorMessage(message);
 });

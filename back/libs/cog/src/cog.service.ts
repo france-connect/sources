@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { RepositoryInterface } from '@fc/csv/interfaces';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { CityInterface, CountryInterface } from './interfaces';
 import { COG_CITY, COG_COUNTRY } from './tokens';

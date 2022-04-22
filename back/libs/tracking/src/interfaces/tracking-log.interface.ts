@@ -1,4 +1,4 @@
-import { ILoggerBusinessEvent } from '@fc/logger';
+import { ILoggerBusinessEvent } from '@fc/logger-legacy';
 
 /**
  * Use a class as interface, to enforce properties restriction

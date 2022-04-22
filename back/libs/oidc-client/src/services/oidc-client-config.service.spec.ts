@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 
 import { IDENTITY_PROVIDER_SERVICE } from '../tokens';
 import { OidcClientConfigService } from './oidc-client-config.service';

@@ -4,7 +4,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { FeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 /**
  * @todo #FC-858

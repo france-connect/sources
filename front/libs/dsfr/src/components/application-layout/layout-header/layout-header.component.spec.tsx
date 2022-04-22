@@ -43,7 +43,7 @@ describe('LayoutHeaderComponent', () => {
     );
     // then
     expect(useMediaQueryMock).toHaveBeenCalledTimes(1);
-    expect(useMediaQueryMock).toHaveBeenCalledWith({ query: '(min-width: 768px)' });
+    expect(useMediaQueryMock).toHaveBeenCalledWith({ query: '(min-width: 992px)' });
   });
 
   it('should call useContext with AppContext params', () => {
@@ -183,9 +183,7 @@ describe('LayoutHeaderComponent', () => {
 
   it('should render LayoutHeaderMenuComponent with params', () => {
     // given
-    jest
-      .spyOn(React, 'useContext')
-      .mockImplementation(() => ({ state: { user: { userinfos: userInfosMock } } }));
+    jest.spyOn(React, 'useContext').mockImplementation(() => userInfosMock);
     jest.spyOn(React, 'useCallback').mockReturnValue(mobileMenuToggleHandlerMock);
     // when
     renderWithRouter(
@@ -201,17 +199,16 @@ describe('LayoutHeaderComponent', () => {
       {
         onMobileMenuOpen: mobileMenuToggleHandlerMock,
         returnButton: ReturnButtonComponent,
-        userInfos: userInfosMock,
+        user: userInfosMock,
       },
       {},
     );
   });
 
-  it('should render DesktopNavigationComponent with params if displayed in a desktop viewport, userInfos and navigationItems are valid', () => {
+  it('should render DesktopNavigationComponent with params if displayed in a desktop viewport, user is connected and navigationItems are valid', () => {
     // given
-    jest
-      .spyOn(React, 'useContext')
-      .mockImplementation(() => ({ state: { user: { userinfos: userInfosMock } } }));
+    const userInfosMockImplem = { ...userInfosMock, connected: true };
+    jest.spyOn(React, 'useContext').mockImplementation(() => userInfosMockImplem);
     mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
     renderWithRouter(
@@ -232,9 +229,6 @@ describe('LayoutHeaderComponent', () => {
 
   it('should not render DesktopNavigationComponent if not displayed in a desktop viewport', () => {
     // given
-    jest
-      .spyOn(React, 'useContext')
-      .mockImplementation(() => ({ state: { user: { userinfos: userInfosMock } } }));
     mocked(useMediaQuery).mockReturnValueOnce(false);
     // when
     renderWithRouter(
@@ -249,11 +243,9 @@ describe('LayoutHeaderComponent', () => {
     expect(DesktopNavigationComponent).not.toHaveBeenCalled();
   });
 
-  it('should not render DesktopNavigationComponent if userinfos are not valid', () => {
+  it('should not render DesktopNavigationComponent if user is null', () => {
     // given
-    jest
-      .spyOn(React, 'useContext')
-      .mockImplementation(() => ({ state: { user: { userinfos: null } } }));
+    jest.spyOn(React, 'useContext').mockImplementation(() => null);
     mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
     renderWithRouter(
@@ -270,9 +262,7 @@ describe('LayoutHeaderComponent', () => {
 
   it('should not render DesktopNavigationComponent if navigationItems are not valid', () => {
     // given
-    jest
-      .spyOn(React, 'useContext')
-      .mockImplementation(() => ({ state: { user: { userinfos: userInfosMock } } }));
+    jest.spyOn(React, 'useContext').mockImplementation(() => userInfosMock);
     mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
     renderWithRouter(
@@ -286,11 +276,10 @@ describe('LayoutHeaderComponent', () => {
     expect(DesktopNavigationComponent).not.toHaveBeenCalled();
   });
 
-  it('should render MobileNavigationComponent with params if displayed in a mobile viewport and user infos are valid', () => {
+  it('should render MobileNavigationComponent with params if displayed in a mobile viewport and user is connected', () => {
     // given
-    jest
-      .spyOn(React, 'useContext')
-      .mockImplementation(() => ({ state: { user: { userinfos: userInfosMock } } }));
+    const userInfosMockImplem = { ...userInfosMock, connected: true };
+    jest.spyOn(React, 'useContext').mockImplementation(() => userInfosMockImplem);
     jest.spyOn(React, 'useState').mockReturnValueOnce([false, expect.any(Function)]);
     jest.spyOn(React, 'useCallback').mockReturnValueOnce(mobileMenuToggleHandlerMock);
     mocked(useMediaQuery).mockReturnValueOnce(false);
@@ -310,7 +299,7 @@ describe('LayoutHeaderComponent', () => {
         mobileMenuIsOpen: false,
         navigationLinks: navigationLinksMock,
         onClose: mobileMenuToggleHandlerMock,
-        userInfos: userInfosMock,
+        userInfos: userInfosMockImplem.userinfos,
       },
       {},
     );
@@ -334,9 +323,7 @@ describe('LayoutHeaderComponent', () => {
 
   it('should not render MobileNavigationComponent if userinfos are not valid', () => {
     // given
-    jest
-      .spyOn(React, 'useContext')
-      .mockImplementation(() => ({ state: { user: { userinfos: null } } }));
+    jest.spyOn(React, 'useContext').mockImplementation(() => null);
     // when
     renderWithRouter(
       <LayoutHeaderComponent
@@ -365,7 +352,7 @@ describe('LayoutHeaderComponent', () => {
     expect(ReturnButtonComponent).toHaveBeenCalledTimes(1);
   });
 
-  it('should not render ReturnButton if not displayed in a mobile viewport', () => {
+  it('should not render ReturnButton if displayed in a desktop viewport', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(true);
     // when

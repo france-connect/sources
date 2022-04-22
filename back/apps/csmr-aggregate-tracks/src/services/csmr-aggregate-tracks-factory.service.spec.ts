@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import { CsmrAggregrateTracksFactoryService } from './csmr-aggregate-tracks-factory.service';

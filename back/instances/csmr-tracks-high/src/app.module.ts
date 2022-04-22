@@ -5,7 +5,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
 import { CsmrTracksModule } from '@fc/csmr-tracks';
-import { LoggerModule } from '@fc/logger';
+import { LoggerModule } from '@fc/logger-legacy';
 
 import { CsmrTracksHighDataService } from './services';
 

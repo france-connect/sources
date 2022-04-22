@@ -6,7 +6,7 @@ import {
   EidasResponse,
   EidasResponseAttributes,
 } from '@fc/eidas';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity, OidcError } from '@fc/oidc';
 
 import {

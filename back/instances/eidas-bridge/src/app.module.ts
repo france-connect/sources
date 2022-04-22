@@ -5,7 +5,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
 import { EidasBridgeModule } from '@fc/eidas-bridge';
-import { LoggerModule } from '@fc/logger';
+import { LoggerModule } from '@fc/logger-legacy';
 
 @Module({})
 export class AppModule {

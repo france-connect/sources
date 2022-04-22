@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import {
   CsmrAggregateTracksAggregationFailedException,

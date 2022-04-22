@@ -1,13 +1,28 @@
 import { Given, Then } from 'cypress-cucumber-preprocessor/steps';
 
-import { User } from '../../common/helpers';
+import { navigateTo, User } from '../../common/helpers';
 import { Environment } from '../../common/types';
 import UdHistoryPage from '../pages/ud-history-page';
 
 let udHistoryPage: UdHistoryPage;
 
 Given(
-  'je suis redirigé vers la page historique du dashboard usager',
+  'je navigue directement vers la page historique du dashboard usager',
+  function () {
+    const { allAppsUrl }: Environment = this.env;
+    navigateTo({ appId: 'ud-history', baseUrl: allAppsUrl });
+  },
+);
+
+Given('je navigue vers la page historique du dashboard usager', function () {
+  const { allAppsUrl, udRootUrl }: Environment = this.env;
+  navigateTo({ appId: 'ud-history', baseUrl: allAppsUrl });
+  udHistoryPage = new UdHistoryPage(udRootUrl);
+  udHistoryPage.checkIsVisible();
+});
+
+Given(
+  /^je suis (redirigé vers|sur) la page historique du dashboard usager$/,
   function () {
     const { udRootUrl }: Environment = this.env;
     udHistoryPage = new UdHistoryPage(udRootUrl);

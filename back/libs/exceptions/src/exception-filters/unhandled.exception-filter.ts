@@ -11,7 +11,7 @@ import {
   AppConfig,
 } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 
 import { ExceptionsService } from '../exceptions.service';
 

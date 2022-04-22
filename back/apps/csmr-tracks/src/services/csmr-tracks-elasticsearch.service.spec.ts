@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { ElasticsearchConfig } from '@fc/elasticsearch';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import { CSMR_TRACKS_DATA } from '../tokens';

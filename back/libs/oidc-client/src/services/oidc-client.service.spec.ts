@@ -3,7 +3,7 @@ import { mocked } from 'jest-mock';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialExcept, validateDto } from '@fc/common';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
 import { IEventContext, TrackingService } from '@fc/tracking';
 

@@ -2,7 +2,7 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
-import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig } from '@fc/logger-legacy';
 
 const env = new ConfigParser(process.env, 'Logger');
 

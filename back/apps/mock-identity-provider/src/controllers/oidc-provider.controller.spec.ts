@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { ISessionService } from '@fc/session';
 
 import { AppSession, AuthorizeParamsDto } from '../dto';

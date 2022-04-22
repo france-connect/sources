@@ -5,7 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { BridgePayload, BridgeResponse } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { CsmrHttpProxyService } from './csmr-http-proxy.service';
 

@@ -41,7 +41,7 @@ class ConnectionWorkflow {
 
   /**
    * Set the scopes based on the scope context
-   * @param {ScopeContext} scopeContext scope context to be used by the Workflow
+   * @param scopeContext scope context to be used by the Workflow
    * @returns the current ConnectionWorkflow instance
    */
   withScope(scopeContext: ScopeContext): ConnectionWorkflow {
@@ -60,7 +60,7 @@ class ConnectionWorkflow {
 
   /**
    * Select the identity provider in the identity providers list
-   * @param {IdentityProvider} identityProvider the identity provider to select
+   * @param identityProvider the identity provider to select
    * @returns the current ConnectionWorkflow instance
    */
   selectIdentityProvider(
@@ -75,7 +75,7 @@ class ConnectionWorkflow {
 
   /**
    * Log the user in on the identity provider page
-   * @param {User} user user with its credentials
+   * @param user user with its credentials
    * @returns the current ConnectionWorkflow instance
    */
   login(user: User): ConnectionWorkflow {
@@ -116,7 +116,7 @@ class ConnectionWorkflow {
   }
 }
 
-When("l'usager peut se connecter à FranceConnect", function () {
+When(/^l'usager peut se connecter à FranceConnect$/, function () {
   expect(this.env).to.exist;
   expect(this.serviceProvider).to.exist;
   expect(this.identityProvider).to.exist;
@@ -131,7 +131,7 @@ When("l'usager peut se connecter à FranceConnect", function () {
     .checkConnected();
 });
 
-When('je me connecte à FranceConnect', function () {
+When(/^je me connecte à FranceConnect$/, function () {
   expect(this.env).to.exist;
   expect(this.serviceProvider).to.exist;
   expect(this.identityProvider).to.exist;
@@ -147,7 +147,7 @@ When('je me connecte à FranceConnect', function () {
     .checkConnected();
 });
 
-When("l'usager ne peut pas se connecter à FranceConnect", function () {
+When(/^l'usager ne peut pas se connecter à FranceConnect$/, function () {
   expect(this.env).to.exist;
   expect(this.serviceProvider).to.exist;
   expect(this.identityProvider).to.exist;

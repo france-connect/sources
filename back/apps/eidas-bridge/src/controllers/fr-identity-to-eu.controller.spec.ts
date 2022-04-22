@@ -7,7 +7,7 @@ import { validateDto } from '@fc/common';
 import { CryptographyService } from '@fc/cryptography';
 import { EidasAttributes } from '@fc/eidas';
 import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { AcrValues } from '@fc/oidc';
 import {
   OidcClientConfigService,

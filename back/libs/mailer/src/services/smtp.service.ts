@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
 import { Address } from '@nestjs-modules/mailer/dist/interfaces/send-mail-options.interface';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { MailOptions, Transport } from '../interfaces';
 

@@ -4,7 +4,7 @@ import { RequiredExcept } from '@fc/common';
 import { CoreService } from '@fc/core';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { FeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import {

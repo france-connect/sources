@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService } from '@fc/session';

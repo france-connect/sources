@@ -5,7 +5,7 @@ import { RequiredExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CoreService } from '@fc/core';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
 import {
   RnippReceivedValidEvent,

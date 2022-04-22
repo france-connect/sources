@@ -2,7 +2,7 @@ import { KoaContextWithOIDC } from 'oidc-provider';
 
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 @Injectable()
 export class OidcProviderConfigAppService {

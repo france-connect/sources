@@ -3,7 +3,7 @@ import * as OidcProvider from 'oidc-provider';
 import { HttpAdapterHost } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import { REDIS_CONNECTION_TOKEN } from '@fc/redis';
 

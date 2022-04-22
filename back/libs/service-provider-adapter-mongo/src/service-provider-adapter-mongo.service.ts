@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { asyncFilter, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { IServiceProviderAdapter, ServiceProviderMetadata } from '@fc/oidc';
 
 import {

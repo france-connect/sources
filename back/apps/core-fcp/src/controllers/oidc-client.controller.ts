@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import {
   OidcClientRoutes,
   OidcClientService,

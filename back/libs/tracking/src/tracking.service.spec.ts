@@ -1,7 +1,7 @@
 import { EventBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { APP_TRACKING_SERVICE } from './app-tracking-service.token';
 import { IEvent, IEventContext } from './interfaces';

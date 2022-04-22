@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CsmrTracksTransformTracksFailedException } from '@fc/csmr-tracks';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import { accountQueryMock } from '../fixtures';

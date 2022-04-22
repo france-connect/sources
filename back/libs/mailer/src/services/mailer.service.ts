@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { MailerConfig } from '../dto';
 import { TemplateNotFoundException } from '../exceptions';

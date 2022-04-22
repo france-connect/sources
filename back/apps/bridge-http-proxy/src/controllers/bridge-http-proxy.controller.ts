@@ -8,7 +8,7 @@ import {
   BridgeResponse,
   MessageType,
 } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { BridgeHttpProxyErrorDto, BridgeHttpProxyResponseDto } from '../dto';
 import { BridgeHttpProxyRoutes } from '../enums';

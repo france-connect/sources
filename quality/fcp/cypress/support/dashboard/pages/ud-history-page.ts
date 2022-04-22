@@ -14,7 +14,7 @@ export default class UdHistoryPage {
   }
 
   checkIsVisible(): void {
-    cy.url().should('includes', `${this.udRootUrl}/history`);
+    cy.url().should('equal', `${this.udRootUrl}/history`);
   }
 
   checkIfBeforeNbOfMonth(type: string, month: number): void {

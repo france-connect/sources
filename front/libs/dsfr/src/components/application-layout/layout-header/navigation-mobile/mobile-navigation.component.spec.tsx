@@ -87,7 +87,7 @@ describe('MobileNavigationComponent', () => {
     render(
       <MobileNavigationComponent
         mobileMenuIsOpen={false}
-        userInfos={userInfosMock}
+        userInfos={userInfosMock.userinfos}
         onClose={onCloseMock}
       />,
     );
@@ -101,14 +101,14 @@ describe('MobileNavigationComponent', () => {
       <MobileNavigationComponent
         mobileMenuIsOpen={false}
         navigationLinks={linksMock}
-        userInfos={userInfosMock}
+        userInfos={userInfosMock.userinfos}
         onClose={onCloseMock}
       />,
     );
     // then
     expect(UserWidgetComponent).toHaveBeenCalledTimes(1);
     expect(UserWidgetComponent).toHaveBeenCalledWith(
-      { className: 'mx16 is-blue-france py12', userInfos: userInfosMock },
+      { className: 'mx16 is-blue-france py12', userInfos: userInfosMock.userinfos },
       {},
     );
   });

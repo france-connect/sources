@@ -9,7 +9,7 @@ import { JWK } from 'jose-openid-client';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc';
 
 import {

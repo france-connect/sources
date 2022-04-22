@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { Account, AccountService } from '@fc/account';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { CsmrTracksService } from './csmr-tracks.service';
 import { CsmrTracksElasticsearchService } from './csmr-tracks-elasticsearch.service';

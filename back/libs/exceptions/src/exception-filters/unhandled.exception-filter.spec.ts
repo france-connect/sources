@@ -2,7 +2,7 @@ import { ArgumentsHost } from '@nestjs/common';
 
 import { ApiErrorMessage, ApiErrorParams } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { UnhandledExceptionFilter } from './unhandled.exception-filter';
 

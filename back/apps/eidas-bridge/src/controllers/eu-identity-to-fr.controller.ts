@@ -19,7 +19,7 @@ import { ConfigService } from '@fc/config';
 import { EidasClientSession } from '@fc/eidas-client';
 import { EidasCountryService } from '@fc/eidas-country';
 import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity, OidcError } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';

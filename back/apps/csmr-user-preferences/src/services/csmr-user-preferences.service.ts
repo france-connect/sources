@@ -9,7 +9,7 @@ import { PartialExcept, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyFcpService, IPivotIdentity } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import {
   IdpConfigUpdateEmailParameters,
   MailerConfig,

@@ -5,7 +5,7 @@ import { validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import {
   ConnectNotificationEmailParameters,
   MailerConfig,

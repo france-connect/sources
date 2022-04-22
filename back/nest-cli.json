@@ -338,6 +338,15 @@
         "tsConfigPath": "libs/service-provider-adapter-mongo/tsconfig.lib.json"
       }
     },
+    "logger-legacy": {
+      "type": "library",
+      "root": "libs/logger-legacy",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger-legacy/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger-legacy/tsconfig.lib.json"
+      }
+    },
     "logger": {
       "type": "library",
       "root": "libs/logger",

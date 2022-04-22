@@ -1,9 +1,7 @@
 import { render } from '@testing-library/react';
-import { RiMenuFill } from 'react-icons/ri';
+import { RiMenuFill as DrawerIcon } from 'react-icons/ri';
 import { useMediaQuery } from 'react-responsive';
 import { mocked } from 'ts-jest/utils';
-
-import { UserinfosInterface } from '@fc/oidc-client';
 
 import { userInfosMock } from './__fixtures__';
 import { LayoutHeaderMenuComponent } from './layout-header-menu.component';
@@ -23,33 +21,24 @@ describe('LayoutHeaderMenuComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should have the classes for the expected behavior', () => {
+  it('should match the snapshot', () => {
     // when
     const { container } = render(
-      <LayoutHeaderMenuComponent
-        userInfos={userInfosMock}
-        onMobileMenuOpen={onMobileMenuOpenMock}
-      />,
+      <LayoutHeaderMenuComponent user={userInfosMock} onMobileMenuOpen={onMobileMenuOpenMock} />,
     );
     const element = container.firstChild;
     // then
-    expect(element).toBeInTheDocument();
-    expect(element).toHaveClass('LayoutHeaderComponent-menu');
-    expect(element).toHaveClass('flex-rows');
-    expect(element).toHaveClass('items-end');
+    expect(element).toMatchSnapshot();
   });
 
   it('should call useMediaQuery with params', () => {
     // when
     render(
-      <LayoutHeaderMenuComponent
-        userInfos={userInfosMock}
-        onMobileMenuOpen={onMobileMenuOpenMock}
-      />,
+      <LayoutHeaderMenuComponent user={userInfosMock} onMobileMenuOpen={onMobileMenuOpenMock} />,
     );
     // then
     expect(useMediaQuery).toHaveBeenCalledTimes(1);
-    expect(useMediaQuery).toHaveBeenCalledWith({ query: '(min-width: 768px)' });
+    expect(useMediaQuery).toHaveBeenCalledWith({ query: '(min-width: 992px)' });
   });
 
   it('should have the classes for a desktop viewport', () => {
@@ -57,10 +46,7 @@ describe('LayoutHeaderMenuComponent', () => {
     mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
     const { container } = render(
-      <LayoutHeaderMenuComponent
-        userInfos={userInfosMock}
-        onMobileMenuOpen={onMobileMenuOpenMock}
-      />,
+      <LayoutHeaderMenuComponent user={userInfosMock} onMobileMenuOpen={onMobileMenuOpenMock} />,
     );
     const element = container.firstChild;
     // then
@@ -73,10 +59,7 @@ describe('LayoutHeaderMenuComponent', () => {
     mocked(useMediaQuery).mockReturnValueOnce(false);
     // when
     const { container } = render(
-      <LayoutHeaderMenuComponent
-        userInfos={userInfosMock}
-        onMobileMenuOpen={onMobileMenuOpenMock}
-      />,
+      <LayoutHeaderMenuComponent user={userInfosMock} onMobileMenuOpen={onMobileMenuOpenMock} />,
     );
     const element = container.firstChild;
     // then
@@ -84,14 +67,14 @@ describe('LayoutHeaderMenuComponent', () => {
     expect(element).toHaveClass('no-flex');
   });
 
-  it('should have the class if userinfos is valid, displayed in a desktop viewport and return button is defined', () => {
+  it('should have the class if user is connected, displayed in a desktop viewport and return button is defined', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
     const { getByTestId } = render(
       <LayoutHeaderMenuComponent
         returnButton={ReturnButtonMock}
-        userInfos={userInfosMock}
+        user={{ ...userInfosMock, connected: true, ready: true }}
         onMobileMenuOpen={onMobileMenuOpenMock}
       />,
     );
@@ -100,13 +83,13 @@ describe('LayoutHeaderMenuComponent', () => {
     expect(elment).toHaveClass('mt16');
   });
 
-  it('should not have the class if userinfos is valid, displayed in a desktop viewport and return button is not defined', () => {
+  it('should not have the class if user is connected, displayed in a desktop viewport and return button is not defined', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
     const { getByTestId } = render(
       <LayoutHeaderMenuComponent
-        userInfos={userInfosMock}
+        user={{ ...userInfosMock, connected: true, ready: true }}
         onMobileMenuOpen={onMobileMenuOpenMock}
       />,
     );
@@ -122,7 +105,7 @@ describe('LayoutHeaderMenuComponent', () => {
     render(
       <LayoutHeaderMenuComponent
         returnButton={ReturnButtonMock}
-        userInfos={userInfosMock}
+        user={userInfosMock}
         onMobileMenuOpen={onMobileMenuOpenMock}
       />,
     );
@@ -130,68 +113,76 @@ describe('LayoutHeaderMenuComponent', () => {
     expect(ReturnButtonMock).toHaveBeenCalledTimes(1);
   });
 
-  it('should render a buger button when displayed with an icon in a mobile viewport and user infos are valid', () => {
+  it('should render a buger button when displayed with an icon in a mobile viewport and user is connected', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(false);
     // when
-    const { getByRole } = render(
+    const { container, getByTestId } = render(
       <LayoutHeaderMenuComponent
-        userInfos={userInfosMock}
+        user={{ ...userInfosMock, connected: true, ready: true }}
         onMobileMenuOpen={onMobileMenuOpenMock}
       />,
     );
-    const element = getByRole('button');
+    const element = getByTestId('layout-header-component-menu-drawer-btn');
     // then
     expect(element).toBeInTheDocument();
     expect(element.tagName).toBe('BUTTON');
     expect(element).toHaveClass('text-right');
     expect(element).toHaveAttribute('type', 'button');
+    expect(container.firstChild).toMatchSnapshot();
   });
 
-  it('should not render the buger button when displayed in a mobile viewport and user infos are not valid', () => {
+  it('should call DrawerIcon when rendering burger button', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(false);
-    // when
-    const { getByRole } = render(
-      <LayoutHeaderMenuComponent
-        userInfos={userInfosMock}
-        onMobileMenuOpen={onMobileMenuOpenMock}
-      />,
-    );
-    const element = getByRole('button');
-    // then
-    expect(element).toBeInTheDocument();
-    expect(element.tagName).toBe('BUTTON');
-    expect(element).toHaveClass('text-right');
-    expect(element).toHaveAttribute('type', 'button');
-    expect(RiMenuFill).toHaveBeenCalledTimes(1);
-  });
-
-  it('should render the user widget and the logout button when displayed in a desktop viewport and user infos not valid', () => {
-    // given
-    mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
     render(
       <LayoutHeaderMenuComponent
-        userInfos={userInfosMock}
+        user={{ ...userInfosMock, connected: true, ready: true }}
+        onMobileMenuOpen={onMobileMenuOpenMock}
+      />,
+    );
+    // then
+    expect(DrawerIcon).toHaveBeenCalledTimes(1);
+  });
+
+  it('should not render the buger button when displayed in a mobile viewport and user is not connected', () => {
+    // given
+    mocked(useMediaQuery).mockReturnValueOnce(false);
+    // when
+    const { getByTestId } = render(
+      <LayoutHeaderMenuComponent
+        user={{ ...userInfosMock, connected: false, ready: true }}
+        onMobileMenuOpen={onMobileMenuOpenMock}
+      />,
+    );
+    // then
+    expect(() => {
+      getByTestId('layout-header-component-menu-drawer-btn');
+    }).toThrow();
+  });
+
+  it('should render the user widget and the logout button when displayed in a desktop viewport and user is connected', () => {
+    // given
+    mocked(useMediaQuery).mockReturnValueOnce(true);
+    // when
+    const { container } = render(
+      <LayoutHeaderMenuComponent
+        user={{ ...userInfosMock, connected: true, ready: true }}
         onMobileMenuOpen={onMobileMenuOpenMock}
       />,
     );
     // then
     expect(LogoutButtonComponent).toHaveBeenCalledTimes(1);
     expect(UserWidgetComponent).toHaveBeenCalledTimes(1);
-    expect(UserWidgetComponent).toHaveBeenCalledWith({ userInfos: userInfosMock }, {});
+    expect(UserWidgetComponent).toHaveBeenCalledWith({ userInfos: userInfosMock.userinfos }, {});
+    expect(container.firstChild).toMatchSnapshot();
   });
 
   it('should not render the user widget and the logout button when displayed in a desktop viewport and user infos is undefined', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(true);
-    render(
-      <LayoutHeaderMenuComponent
-        userInfos={undefined as unknown as UserinfosInterface}
-        onMobileMenuOpen={onMobileMenuOpenMock}
-      />,
-    );
+    render(<LayoutHeaderMenuComponent user={undefined} onMobileMenuOpen={onMobileMenuOpenMock} />);
     // then
     expect(LogoutButtonComponent).not.toHaveBeenCalled();
     expect(UserWidgetComponent).not.toHaveBeenCalled();
@@ -212,7 +203,7 @@ describe('LayoutHeaderMenuComponent', () => {
     // when
     render(
       <LayoutHeaderMenuComponent
-        userInfos={invalidUserInfosMock}
+        user={invalidUserInfosMock}
         onMobileMenuOpen={onMobileMenuOpenMock}
       />,
     );

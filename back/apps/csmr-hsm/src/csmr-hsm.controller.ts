@@ -4,7 +4,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ConfigService } from '@fc/config';
 import { ValidationException } from '@fc/exceptions';
 import { HsmService } from '@fc/hsm';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { CryptoProtocol } from '@fc/microservices';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 

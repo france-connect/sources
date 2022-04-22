@@ -1,0 +1,24 @@
+[
+  {
+    "name": "fsp1",
+    "clientId": "a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc",
+    "descriptions": [
+      "par défaut",
+      "public"
+    ],
+    "mocked": true,
+    "url": "https://fsp1.{{TEST_ENV}}.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "claims": [
+    ],
+    "scopes": [
+      "tous les scopes"
+    ],
+    "explicitConsent": false,
+    "selectors": {
+      "fcButton": "[alt='Soumettre']",
+      "logoutButton": "[data-fc-logout-url='/logout']"
+    },
+    "authorizeHttpMethod": "get"
+  }
+]

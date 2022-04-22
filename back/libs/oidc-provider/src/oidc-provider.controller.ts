@@ -10,7 +10,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService, Session } from '@fc/session';
 

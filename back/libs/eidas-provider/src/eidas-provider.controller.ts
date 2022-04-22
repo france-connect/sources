@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Redirect, Render } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { ISessionService, Session } from '@fc/session';
 
 import {

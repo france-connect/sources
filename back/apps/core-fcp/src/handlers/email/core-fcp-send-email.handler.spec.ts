@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PartialExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import {
   MailerNotificationConnectException,
   MailerService,

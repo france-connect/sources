@@ -33,7 +33,8 @@ export default class UdLoginPage {
   }
 
   checkIsVisible(): void {
-    cy.url().should('includes', this.udRootUrl);
+    cy.url().should('include', this.udRootUrl);
+    this.authorizeButton.should('be.visible');
   }
 
   login(user: UserCredentials): void {
@@ -43,5 +44,11 @@ export default class UdLoginPage {
     this.passwordInput.clear().type(user.password, { log: false });
     this.loginButton.click();
     this.consentButton.click();
+  }
+
+  checkIsNotConnected(): void {
+    this.authorizeButton.click();
+    // The IDP selection page is shown when initiating a connection
+    this.idpButton.should('be.visible');
   }
 }

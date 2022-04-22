@@ -3,7 +3,7 @@ import { bootstrap } from 'global-agent';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 @Injectable()
 export class HttpProxyService {

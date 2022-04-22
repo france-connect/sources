@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { IPivotIdentity } from '@fc/cryptography-fcp';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { SetIdpSettingsPayloadDto } from '../dto';
 import { CsmrUserPreferencesService } from '../services';

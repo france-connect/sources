@@ -1,5 +1,5 @@
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { RpcException } from '../exceptions';
 import { RpcExceptionFilter } from './rpc.exception-filter';

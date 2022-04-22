@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
 import { ConfigService } from '@fc/config';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { CryptoProtocol } from '@fc/microservices';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 

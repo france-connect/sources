@@ -159,16 +159,38 @@ yarn start:high
 
 5. Run the `usager` tests (user connection) or `exploitation` tests (if you have an operator user)
 
-#### Run the user-dashboard tests from Cypress UI on user-dashboard local stack
+### Run the Cypress tests on user-dashboard
 
-1. Start the [user-dashboard local stack](/front/apps/user-dashboard/README.md)
-2. Open Cypress UI to run tests on user-dashboard
+#### Start the local stack for user-dashboard
 
-  ```shell
-  yarn start:high
-  ```
-  
-3. Run the dashboard tests
+- [More information regarding the local user-dashboard stack](/front/apps/user-dashboard/README.md)
+
+```shell
+docker-stack-legacy prune && \
+docker-stack-legacy up all-v1 && \
+docker-stack up mongo-fcp-high && \
+docker-stack-legacy dep-all && \
+docker-stack-legacy fixtures fc-exploitation && \
+docker-stack-legacy start-all
+```
+
+#### Run the tests in the terminal
+
+1. [Start the local stack of user-dashboard using the docker-stack command](#start-the-local-stack-for-user-dashboard)
+1. Run Cypress tests on user-dashboard against docker environment
+
+```shell
+yarn test:ud
+```
+
+#### Run the tests from Cypress UI
+
+1. [Start the local stack of user-dashboard using the docker-stack command](#start-the-local-stack-for-user-dashboard)
+1. Open Cypress UI to run tests on user-dashboard against docker environment
+
+```shell
+yarn start:ud
+```
 
 ### Generate the Cucumber HTML report
 

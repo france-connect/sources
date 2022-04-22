@@ -4,6 +4,29 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.89.0 & v3.90.0
+
+### Fixes
+
+- [AgentConnect]
+  - Corrected a reflected XSS vulnerability
+
+### Hardening & QA
+
+- The `docker-stack start-all` command now tries to launch only available apps
+- [User Dashboard]
+  - Implemented BDD tests for the idp-settings feature
+
+### Deprecated
+
+- The `logger` library is now deprecated and will be reworked
+
+### Not yet in production (futures apps / features)
+
+- [User Dashboard]
+  - The user information are now persistent when navigating with the URL
+  - Limited to the minimum the identity scope that the dashboard has access to
+
 ## v3.87.0 & v3.88.0
 
 ### Fixes

@@ -1,5 +1,5 @@
 #language: fr
-@userDashboard @consultationTraces @ignoreLow
+@userDashboard @consultationTraces @ignoreHigh @ignoreLow
 Fonctionnalité: Consultation Traces
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter en utilisant un fournisseur d'identité

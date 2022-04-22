@@ -3,7 +3,7 @@ import { mocked } from 'jest-mock';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { filteredByDto } from '@fc/common';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 
 import { CsvParsingException } from '../exceptions';
 import { parseCsv } from '../helpers';

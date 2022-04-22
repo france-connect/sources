@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { OidcIdentityDto } from '@fc/core-fcp/dto';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { CoreFcpDefaultIdentityCheckHandler } from './core-fcp.default.identity-check';
 

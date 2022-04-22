@@ -8,7 +8,7 @@ import { ConfigService } from '@fc/config';
 import { CoreMissingIdentityException, CoreService } from '@fc/core';
 import { CryptographyService } from '@fc/cryptography';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { MinistriesService } from '@fc/ministries';
 import { IOidcIdentity } from '@fc/oidc';
 import {

@@ -5,7 +5,7 @@ import { Module } from '@nestjs/common';
 
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { ExceptionsModule } from '@fc/exceptions';
-import { LoggerModule } from '@fc/logger';
+import { LoggerModule } from '@fc/logger-legacy';
 import { RabbitmqModule } from '@fc/rabbitmq';
 
 import { CsmrAggregateTracksController } from './controllers';

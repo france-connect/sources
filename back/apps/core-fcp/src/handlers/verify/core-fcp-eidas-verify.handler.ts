@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { CoreService } from '@fc/core';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
 import { FeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 

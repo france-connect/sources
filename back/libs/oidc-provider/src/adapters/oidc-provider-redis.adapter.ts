@@ -3,7 +3,7 @@ import { Adapter, AdapterConstructor } from 'oidc-provider';
 
 import { Inject } from '@nestjs/common';
 
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { IServiceProviderAdapter } from '@fc/oidc';
 import { Redis, REDIS_CONNECTION_TOKEN } from '@fc/redis';
 

@@ -7,7 +7,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 @Injectable()
 export class AppInterceptor implements NestInterceptor {

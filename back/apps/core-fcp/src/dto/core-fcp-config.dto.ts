@@ -8,7 +8,7 @@ import { AppConfig } from '@fc/app';
 import { CryptographyEidasConfig } from '@fc/cryptography-eidas';
 import { CryptographyFcpConfig } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
-import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig } from '@fc/logger-legacy';
 import { MailerConfig } from '@fc/mailer';
 import { MongooseConfig } from '@fc/mongoose';
 import { OidcClientConfig } from '@fc/oidc-client';

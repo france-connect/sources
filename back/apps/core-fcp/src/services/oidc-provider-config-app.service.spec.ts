@@ -2,7 +2,7 @@ import { KoaContextWithOIDC } from 'oidc-provider';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { OidcProviderConfigAppService } from './oidc-provider-config-app.service';
 

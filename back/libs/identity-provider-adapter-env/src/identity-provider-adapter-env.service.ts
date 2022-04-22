@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { asyncFilter, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import {
   ClientMetadata,
   IdentityProviderMetadata,

@@ -3,7 +3,7 @@ import { mocked } from 'jest-mock';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { ConfigModule, ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { MongooseConfig, MongooseConfigOptions } from './dto';
 import * as builder from './mongoose.module.builder';

@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CoreService } from '@fc/core';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { SessionService } from '@fc/session';
 
 import { CoreFcaService } from './core-fca.service';

@@ -2,7 +2,7 @@ import { Provider } from 'oidc-provider';
 
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { OidcProviderGrantSaveException } from '../exceptions/oidc-provider-grant-save.exception';
 import { InteractionParams } from '../interfaces';

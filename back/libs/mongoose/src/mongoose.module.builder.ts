@@ -1,7 +1,7 @@
 import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 
 import { ConfigModule, ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { MongooseConfig } from './dto';
 // Import the module into itself for test purpose

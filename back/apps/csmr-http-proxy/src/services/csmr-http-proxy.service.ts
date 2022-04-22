@@ -5,7 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
 import { BridgePayload, BridgeResponse } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 @Injectable()
 export class CsmrHttpProxyService {

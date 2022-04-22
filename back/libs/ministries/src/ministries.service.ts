@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { asyncFilter, validateDto } from '@fc/common';
 import { validationOptions } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { MinistriesDTO } from './dto';
 import { MinistriesOperationTypeChangesEvent } from './events';

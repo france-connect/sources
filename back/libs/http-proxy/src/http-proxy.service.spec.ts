@@ -3,7 +3,7 @@ import * as globalAgent from 'global-agent';
 import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { HttpProxyService } from './http-proxy.service';
 

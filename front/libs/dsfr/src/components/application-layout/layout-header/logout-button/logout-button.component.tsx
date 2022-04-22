@@ -11,7 +11,7 @@ interface LogoutButtonComponentProps {
 
 export const LogoutButtonComponent: React.FC<LogoutButtonComponentProps> = React.memo(
   ({ className }: LogoutButtonComponentProps) => {
-    const gtTablet = useMediaQuery({ query: '(min-width: 768px)' });
+    const gtTablet = useMediaQuery({ query: '(min-width: 992px)' });
 
     const { state } = useContext<AppContextInterface>(AppContext);
     const { endSessionUrl } = state.config.OidcClient.endpoints;

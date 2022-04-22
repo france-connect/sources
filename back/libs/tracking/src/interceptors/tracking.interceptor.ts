@@ -8,7 +8,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { IEventContext, IEventMap } from '../interfaces';
 import { TrackingService } from '../tracking.service';

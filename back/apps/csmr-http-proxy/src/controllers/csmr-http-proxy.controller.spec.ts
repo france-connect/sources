@@ -6,7 +6,7 @@ import {
   BridgeResponse,
   MessageType,
 } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { BridgePayloadDto } from '../dto';
 import { CsmrHttpProxyService } from '../services';

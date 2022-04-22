@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CsmrTracksTransformTracksFailedException } from '@fc/csmr-tracks';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { ScopesService } from '@fc/scopes';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 

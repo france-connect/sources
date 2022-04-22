@@ -24,8 +24,10 @@
     "test:low:ci": "yarn test:low:chrome-desktop --env TAGS='@ci and not @ignoreLow and not @fcpHigh'",
     "test:low:snapshot": "yarn test:low:base --headless --env TAGS='@validationVisuelle and not @ignoreLow and not @fcpHigh'",
     "test:low": "yarn clean && yarn test:low:ci",
+    "test:ud": "cypress-tags run --config-file cypress-ud.json --browser chrome --headless --env TAGS='@userDashboard and not @ignore'",
     "start:high": "cypress open --config-file cypress-fcp-high.json",
     "start:low": "cypress open --config-file cypress-fcp-low.json",
+    "start:ud": "cypress open --config-file cypress-ud.json",
     "report:prepare": "ts-node ../scripts/prepare-cucumber-logs && rm -f cypress/reports/cucumber/empty.cucumber.json",
     "report:generate": "ts-node ../scripts/multiple-cucumber-html-reporter"
   },

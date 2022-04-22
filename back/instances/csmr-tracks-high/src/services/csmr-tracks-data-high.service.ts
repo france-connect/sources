@@ -6,7 +6,7 @@ import {
   CsmrTracksTransformTracksFailedException,
   IAppTracksDataService,
 } from '@fc/csmr-tracks';
-import { LoggerLevelNames, LoggerService } from '@fc/logger';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import { ICsmrTracksHighTrack, ICsmrTracksInputHigh } from '../interfaces';

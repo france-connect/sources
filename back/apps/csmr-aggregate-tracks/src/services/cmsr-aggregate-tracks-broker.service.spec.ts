@@ -5,7 +5,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { TracksProtocol } from '@fc/microservices';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 

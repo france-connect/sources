@@ -3,7 +3,7 @@ import { ClientMetadata, KoaContextWithOIDC } from 'oidc-provider';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { IServiceProviderAdapter, OidcSession } from '@fc/oidc';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc/tokens';
 import { OidcProviderConfig } from '@fc/oidc-provider';

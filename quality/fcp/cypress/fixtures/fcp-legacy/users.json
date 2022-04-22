@@ -1,0 +1,94 @@
+[
+  {
+    "enabled": true,
+    "criteria": [
+      "par défaut"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "bdd_default",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "Jeanne",
+      "family_name": "DURAND",
+      "preferred_username": "MARTIN",
+      "birthdate": "1962-08-24",
+      "birthplace": "75107",
+      "birthcountry": "99100",
+      "email": "x1_bdd_default@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "pour les tests de traces"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "test_TRACE_USER",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "given_name": "utilisateur traces",
+      "family_name": "TRACE_USER",
+      "preferred_username": "",
+      "birthdate": "1985-01-01",
+      "gender": "male",
+      "birthcountry": "99100",
+      "birthplace": "75107",
+      "email": "aucun@email.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "pour le test de préférences FI"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "test_CLEMENT",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "CLEMENT",
+      "family_name": "CORSE",
+      "preferred_username": "",
+      "birthdate": "1991-02-12",
+      "birthplace": "2A115",
+      "birthcountry": "99100",
+      "email": "baterollu-5399@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "sans préférence FI"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "naissance_Algérie",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Vincent Guillaume ",
+      "family_name": "MARTIN",
+      "preferred_username": "",
+      "birthdate": "1963-12-05",
+      "birthcountry": "99352",
+      "birthplace": "",
+      "email": "senossammab-2430@yopmail.com"
+    }
+  }
+]

@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AccountBlockedException, AccountService } from '@fc/account';
 import { ConfigService } from '@fc/config';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import {
   OidcCtx,

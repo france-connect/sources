@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { FeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { OidcIdentityDto } from '../../dto';
 import { IIdentityCheckFeatureHandler } from '../../interfaces';

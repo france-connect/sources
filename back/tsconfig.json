@@ -26,6 +26,8 @@
       "@fc/service-provider-adapter-mongo/*": [
         "libs/service-provider-adapter-mongo/src/*"
       ],
+      "@fc/logger-legacy": ["libs/logger-legacy/src"],
+      "@fc/logger-legacy/*": ["libs/logger-legacy/src/*"],
       "@fc/logger": ["libs/logger/src"],
       "@fc/logger/*": ["libs/logger/src/*"],
       "@fc/oidc-provider": ["libs/oidc-provider/src"],

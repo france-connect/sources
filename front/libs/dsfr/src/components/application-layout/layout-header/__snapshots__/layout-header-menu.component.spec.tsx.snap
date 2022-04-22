@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderMenuComponent should match the snapshot 1`] = `
+<div
+  class="LayoutHeaderComponent-menu flex-rows items-end flex-2"
+/>
+`;
+
+exports[`LayoutHeaderMenuComponent should render a buger button when displayed with an icon in a mobile viewport and user is connected 1`] = `
+<div
+  class="LayoutHeaderComponent-menu flex-rows items-end no-flex"
+>
+  <div
+    class="LayoutHeaderComponent-menu-items flex-columns flex-end items-center fs14 lh24 is-blue-france"
+    data-testid="layout-header-component-menu-items"
+  >
+    <button
+      class="LayoutHeaderComponent-menu-drawer-btn text-right fs24"
+      data-testid="layout-header-component-menu-drawer-btn"
+      type="button"
+    >
+      <div>
+        RiMenuFill
+      </div>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`LayoutHeaderMenuComponent should render the user widget and the logout button when displayed in a desktop viewport and user is connected 1`] = `
+<div
+  class="LayoutHeaderComponent-menu flex-rows items-end flex-2"
+>
+  <div
+    class="LayoutHeaderComponent-menu-items flex-columns flex-end items-center fs14 lh24 is-blue-france"
+    data-testid="layout-header-component-menu-items"
+  >
+    <div>
+      UserWidgetComponent
+    </div>
+    <div>
+      LogoutButtonComponent
+    </div>
+  </div>
+</div>
+`;

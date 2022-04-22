@@ -1,7 +1,7 @@
 import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { UserPreferencesProtocol } from '@fc/microservices';
 
 import { GetIdpSettingsPayloadDto, SetIdpSettingsPayloadDto } from '../dto';

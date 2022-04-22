@@ -4,7 +4,7 @@ import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { extractSessionFromRequest } from '../decorators';
 import { SessionConfig } from '../dto';

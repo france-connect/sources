@@ -398,28 +398,6 @@
   {
     "enabled": true,
     "criteria": [
-      "pour les tests de traces"
-    ],
-    "credentials": [
-      {
-        "idpId": "default",
-        "username": "test_TRACE_USER",
-        "password": "123"
-      }
-    ],
-    "claims": {
-      "given_name": "utilisateur traces",
-      "family_name": "TRACE_USER",
-      "birthdate": "1985-01-01",
-      "gender": "male",
-      "birthcountry": "99100",
-      "birthplace": "75107",
-      "email": "aucun@email.com"
-    }
-  },
-  {
-    "enabled": true,
-    "criteria": [
       "avec un COG invalide"
     ],
     "credentials": [

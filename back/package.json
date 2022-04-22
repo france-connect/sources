@@ -205,6 +205,8 @@
       "@fc/service-provider-adapter-env": "<rootDir>/libs/service-provider-adapter-env/src",
       "@fc/service-provider-adapter-mongo/(.*)": "<rootDir>/libs/service-provider-adapter-mongo/src/$1",
       "@fc/service-provider-adapter-mongo": "<rootDir>/libs/service-provider-adapter-mongo/src",
+      "@fc/logger-legacy/(.*)": "<rootDir>/libs/logger-legacy/src/$1",
+      "@fc/logger-legacy": "<rootDir>/libs/logger-legacy/src",
       "@fc/logger/(.*)": "<rootDir>/libs/logger/src/$1",
       "@fc/logger": "<rootDir>/libs/logger/src",
       "@fc/oidc-provider/(.*)": "<rootDir>/libs/oidc-provider/src/$1",

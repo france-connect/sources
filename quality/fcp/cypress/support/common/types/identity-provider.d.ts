@@ -15,5 +15,6 @@ export interface IdentityProvider extends IdentityProviderBase {
   descriptions: string[];
   usable: boolean;
   idpId: string;
+  name: string;
   mocked: boolean;
 }

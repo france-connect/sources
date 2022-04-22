@@ -1,0 +1,27 @@
+{
+  "fiLegacy": {
+    "name": "fip4_fi-legacy",
+    "title": "FI Legacy",
+    "issuer": "https://fip4.docker.dev-franceconnect.fr/",
+    "jwksUrl": "https://issuer.fr/jwks",
+    "authorizationUrl": "https://fip4.docker.dev-franceconnect.fr/user/authorize",
+    "tokenUrl": "https://fip4.docker.dev-franceconnect.fr/user/token",
+    "userInfoUrl": "https://fip4.docker.dev-franceconnect.fr/api/user",
+    "logoutUrl": "https://fip4.docker.dev-franceconnect.fr/user/session/end",
+    "statusUrl": "https://fip4.docker.dev-franceconnect.fr/",
+    "discovery": "false",
+    "clientId": "09a1a257648c1742c74d6a3d84b3194d",
+    "client_secret": "7ae4fef2aab63fb78d777fe657b7536f",
+    "messageToDisplayWhenInactive": "SUPER MESSAGE !!!",
+    "redirectionTargetWhenInactive": "",
+    "alt": "FI Legacy",
+    "image": "demonstration_faible.png",
+    "imageFocus": "demonstration_faible_hover.png",
+    "trustedIdentity": "false",
+    "eidas": 1,
+    "order": 1,
+    "emails": "fip4_fi-legacy@yopmail.com",
+    "specificText": "Veuillez fournir une capture d'écran de votre page de profil !",
+    "token_endpoint_auth_method": "client_secret_post"
+  }
+}

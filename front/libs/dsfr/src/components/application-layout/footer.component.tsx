@@ -69,14 +69,14 @@ export const LayoutFooterComponent = React.memo(
     // @TODO exporter les variables responsive : $breakpoint-tablet
     // depuis le CSS vers des constantes JS
     // quand les libs partagées CSS seront crées
-    const isTablet = useMediaQuery({ query: '(max-width: 768px)' });
+    const gtTablet = useMediaQuery({ query: '(max-width: 992px)' });
     return (
       <footer className={classnames(classes.footer, 'sticky-footer')} role="contentinfo">
         <div
           className={classnames(
             classes.wrapper,
             'content-wrapper-lg flex-wrapper wrap-2 items-center px20 pt40',
-            { 'is-tablet': isTablet },
+            { 'is-tablet': gtTablet },
           )}>
           <div className="mb24">
             <Link className="flex-columns flex-start items-center" title={linkTitle} to="/">

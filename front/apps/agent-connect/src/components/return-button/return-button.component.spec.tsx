@@ -17,7 +17,7 @@ describe('ReturnButtonComponent', () => {
     render(<ReturnButtonComponent />);
     // when
     expect(useMediaQuery).toHaveBeenCalledTimes(1);
-    expect(useMediaQuery).toHaveBeenCalledWith({ query: '(min-width: 768px)' });
+    expect(useMediaQuery).toHaveBeenCalledWith({ query: '(min-width: 992px)' });
   });
 
   it('should render the button for a tablet viewport', () => {

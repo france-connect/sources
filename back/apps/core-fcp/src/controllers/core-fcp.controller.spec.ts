@@ -6,7 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { CoreMissingIdentityException, CoreService } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { NotificationsService } from '@fc/notifications';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import { OidcClientService, TokenParams } from '@fc/oidc-client';

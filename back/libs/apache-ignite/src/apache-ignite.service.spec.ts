@@ -3,7 +3,7 @@ import { ObjectType, STATE } from 'apache-ignite-client';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { ApacheIgniteService } from './apache-ignite.service';
 import { ApacheIgniteInvalidSocketException } from './exceptions';

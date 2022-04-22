@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 
 import { CsmrTracksService } from '../services/csmr-tracks.service';
 import { CsmrTracksController } from './csmr-tracks.controller';

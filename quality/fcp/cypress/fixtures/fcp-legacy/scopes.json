@@ -1,0 +1,19 @@
+[
+  {
+    "type": "tous les scopes",
+    "scopes": [
+      "openid",
+      "profile",
+      "gender",
+      "birthdate",
+      "birthcountry",
+      "birthplace",
+      "given_name",
+      "family_name",
+      "email",
+      "preferred_username",
+      "birth",
+      "identite_pivot"
+    ]
+  }
+]

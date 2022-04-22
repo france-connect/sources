@@ -25,6 +25,6 @@ export default {
    */
   fapi: false,
   scope:
-    'openid gender birthdate birthcountry birthplace given_name family_name email preferred_username address phone',
+    'openid gender birthdate birthcountry birthplace given_name family_name email',
   acr: 'eidas1',
 } as OidcClientConfig;

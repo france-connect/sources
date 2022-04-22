@@ -15,7 +15,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { CoreFcpConfig } from '@fc/core-fcp';
-import { LoggerService } from '@fc/logger';
+import { LoggerService } from '@fc/logger-legacy';
 import { SessionConfig } from '@fc/session';
 
 import { AppModule } from './app.module';
