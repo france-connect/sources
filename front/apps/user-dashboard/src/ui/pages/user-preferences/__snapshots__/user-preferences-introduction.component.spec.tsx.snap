@@ -1,0 +1,289 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserPreferencesIntroductionComponent should match snapshot on desktop 1`] = `
+<div>
+  <h2
+    class="is-h3 mb16 is-blue-france is-bold"
+  >
+    Pourquoi gérer mes accès dans FranceConnect ?
+  </h2>
+  <p
+    class="is-normal fr-text mb20"
+  >
+    Pour mieux contrôler votre usage de FranceConnect et vous protéger en cas de vols de vos identifiants, vous pouvez bloquer l’utilisation des comptes que vous n’utilisez pas. 
+    <strong>
+      Ils seront toujours visibles sur la page de sélection de compte mais FranceConnect empêchera la connexion d’aboutir. 
+    </strong>
+    Vous pourrez les réactiver à n’importe quel moment depuis cette page.
+  </p>
+  <p
+    class="is-normal fr-text"
+  >
+    Ces comptes resteront disponibles sur leur service d’origine, par exemple : 
+    <strong>
+      si vous bloquez le compte Impôts dans FranceConnect, votre compte Impôts reste utilisable sur le site impots.gouv.fr sans passer par FranceConnect.
+    </strong>
+  </p>
+  <h3
+    class="is-h6 mt32 mb16 is-blue-france is-bold"
+  >
+    En images :
+  </h3>
+  <div
+    class="flex-wrapper flex-between"
+  >
+    <div
+      class="mb40"
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        1. Un usurpateur tente de se connecter à Service-Public.fr
+      </strong>
+      <img
+        alt="Tentative de connexion"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-01.png"
+        width="350"
+      />
+    </div>
+    <div
+      class="mb40"
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        2. L’usurpateur tente d’utiliser un compte préalablement bloqué
+      </strong>
+      <img
+        alt="Utilisation d'un compte bloqué"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-02.png"
+        width="350"
+      />
+    </div>
+    <div
+      class=""
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        3. L’usurpateur parvient à s’identifier
+      </strong>
+      <img
+        alt="Identification"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-03.png"
+        width="350"
+      />
+    </div>
+    <div
+      class=""
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        4. FranceConnect bloque la connexion
+      </strong>
+      <img
+        alt="Usurpateur bloqué"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-04.png"
+        width="350"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`UserPreferencesIntroductionComponent should match snapshot on mobile 1`] = `
+<div>
+  <h2
+    class="is-h3 mb16 is-blue-france is-bold"
+  >
+    Pourquoi gérer mes accès dans FranceConnect ?
+  </h2>
+  <p
+    class="is-normal fr-text mb20"
+  >
+    Pour mieux contrôler votre usage de FranceConnect et vous protéger en cas de vols de vos identifiants, vous pouvez bloquer l’utilisation des comptes que vous n’utilisez pas. 
+    <strong>
+      Ils seront toujours visibles sur la page de sélection de compte mais FranceConnect empêchera la connexion d’aboutir. 
+    </strong>
+    Vous pourrez les réactiver à n’importe quel moment depuis cette page.
+  </p>
+  <p
+    class="is-normal fr-text"
+  >
+    Ces comptes resteront disponibles sur leur service d’origine, par exemple : 
+    <strong>
+      si vous bloquez le compte Impôts dans FranceConnect, votre compte Impôts reste utilisable sur le site impots.gouv.fr sans passer par FranceConnect.
+    </strong>
+  </p>
+  <h3
+    class="is-h6 mt32 mb16 is-blue-france is-bold"
+  >
+    En images :
+  </h3>
+  <div
+    class="flex-wrapper flex-center"
+  >
+    <div
+      class="mb24"
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        1. Un usurpateur tente de se connecter à Service-Public.fr
+      </strong>
+      <img
+        alt="Tentative de connexion"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-01.png"
+        width="100%"
+      />
+    </div>
+    <div
+      class="mb24"
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        2. L’usurpateur tente d’utiliser un compte préalablement bloqué
+      </strong>
+      <img
+        alt="Utilisation d'un compte bloqué"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-02.png"
+        width="100%"
+      />
+    </div>
+    <div
+      class="mb24"
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        3. L’usurpateur parvient à s’identifier
+      </strong>
+      <img
+        alt="Identification"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-03.png"
+        width="100%"
+      />
+    </div>
+    <div
+      class=""
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        4. FranceConnect bloque la connexion
+      </strong>
+      <img
+        alt="Usurpateur bloqué"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-04.png"
+        width="100%"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`UserPreferencesIntroductionComponent should match snapshot on tablet 1`] = `
+<div>
+  <h2
+    class="is-h3 mb16 is-blue-france is-bold"
+  >
+    Pourquoi gérer mes accès dans FranceConnect ?
+  </h2>
+  <p
+    class="is-normal fr-text mb20"
+  >
+    Pour mieux contrôler votre usage de FranceConnect et vous protéger en cas de vols de vos identifiants, vous pouvez bloquer l’utilisation des comptes que vous n’utilisez pas. 
+    <strong>
+      Ils seront toujours visibles sur la page de sélection de compte mais FranceConnect empêchera la connexion d’aboutir. 
+    </strong>
+    Vous pourrez les réactiver à n’importe quel moment depuis cette page.
+  </p>
+  <p
+    class="is-normal fr-text"
+  >
+    Ces comptes resteront disponibles sur leur service d’origine, par exemple : 
+    <strong>
+      si vous bloquez le compte Impôts dans FranceConnect, votre compte Impôts reste utilisable sur le site impots.gouv.fr sans passer par FranceConnect.
+    </strong>
+  </p>
+  <h3
+    class="is-h6 mt32 mb16 is-blue-france is-bold"
+  >
+    En images :
+  </h3>
+  <div
+    class="flex-wrapper text-center"
+  >
+    <div
+      class="mb24"
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        1. Un usurpateur tente de se connecter à Service-Public.fr
+      </strong>
+      <img
+        alt="Tentative de connexion"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-01.png"
+        width="350"
+      />
+    </div>
+    <div
+      class="mb24"
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        2. L’usurpateur tente d’utiliser un compte préalablement bloqué
+      </strong>
+      <img
+        alt="Utilisation d'un compte bloqué"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-02.png"
+        width="350"
+      />
+    </div>
+    <div
+      class="mb24"
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        3. L’usurpateur parvient à s’identifier
+      </strong>
+      <img
+        alt="Identification"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-03.png"
+        width="350"
+      />
+    </div>
+    <div
+      class=""
+    >
+      <strong
+        class="fs16 lh24 is-block mb8"
+      >
+        4. FranceConnect bloque la connexion
+      </strong>
+      <img
+        alt="Usurpateur bloqué"
+        class="shadow-bottom"
+        src="/images/user-preferences-tutoriel-04.png"
+        width="350"
+      />
+    </div>
+  </div>
+</div>
+`;

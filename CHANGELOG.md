@@ -4,6 +4,16 @@
 
 **🔈 The odd versions are not released into production.**
 
+
+## v3.91.0 && v3.92.0
+- [AgentConnect]
+  - Added `alg` property in jwks endpoints, to ease key selection for partners.
+- [User Dashboard]
+  - Added explanations about idp management in user dashboard.
+  - Styled the layout of the notification email for idp management. 
+
+- Fixed a bug in unit tests making the CI unstable.
+
 ## v3.89.0 & v3.90.0
 
 ### Fixes

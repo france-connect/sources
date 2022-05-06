@@ -28,7 +28,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
       userPreferences && userPreferences.idpList && userPreferences.idpList.length > 0;
     return (
       <form data-testid="user-preferences-form" onSubmit={onSubmit}>
-        <h2 className="is-h6 mt40 is-blue-france">
+        <h2 className="is-h3 mt40 is-blue-france">
           <b>Vos réglages&nbsp;:</b>
         </h2>
         <p className="mt16 lh24 fs16">

@@ -2,46 +2,242 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Notification de modification des fournisseurs d'accès à FranceConnect+</title>
-  </head>
+    <title>
+      Notification de modification des fournisseurs d'acc&egrave;s à FranceConnect+
+    </title>
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+        min-width: 100%;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+      }
 
+      .content {
+        width: 100%;
+        max-width: 580px;
+      }
+
+      table.content {
+        border-radius: 4px;
+      }
+
+      .header {
+        padding: 16px 30px 26px 16px;
+      }
+
+      .innerpadding {
+        padding: 0px 16px 0px 16px;
+      }
+
+      .innerpadding12 {
+        padding: 12px 16px 12px 12px;
+      }
+
+      .h2,
+      .bodycopy {
+        color: #3A3A3A;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+      }
+
+      a {
+        color: #1B3491;
+        text-decoration: none;
+      }
+
+      strong {
+        font-weight: bold;
+      }
+
+      .h2 {
+        padding: 0 0 10px 0;
+        font-size: 16px;
+        font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: 1.31;
+        letter-spacing: normal;
+        color: #1B3491;
+      }
+
+      .bodycopy {
+        font-size: 16px;
+        line-height: 24px;
+      }
+
+      .bodycopy-small {
+        font-size: 14px;
+        line-height: 24px;
+        color: #666666;
+      }
+    </style>
+  </head>
   <body>
-    <!--[if (gte mso 9)|(IE)]>
-      <table width="580" align="center" cellpadding="0" cellspacing="0" border="0">
+    <table
+      width="100%"
+      bgcolor="#ffffff"
+      class="content"
+      align="center"
+      cellpadding="0"
+      cellspacing="0"
+      border="0"
+    >
+    <tr>
+      <td>
+        <!--[if (gte mso 9)|(IE)]>
+          <table width="580" align="center" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td>
+        <![endif]-->
+    <table
+    class="content bottompadding50"
+    align="center"
+    cellpadding="0"
+    cellspacing="0"
+    border="0"
+  >
+    <tr>
+      <td class="header">
+        <table
+          border="0"
+          cellpadding="0"
+          cellspacing="0"
+        >
+          <tr>
+            <td height="73">
+              <img
+                src="https://franceconnect.gouv.fr/images/Marianne-FranceConnect-logo.png"
+                height="98"
+                border="0"
+                alt=""
+              />
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td class="innerpadding">
+        <!--[if (gte mso 9)|(IE)]>
+        <table width="580" align="center" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td>
+      <![endif]-->
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td class="h2">
+              Bonjour <%= locals.fullName %>
+            </td>
+          </tr>
+          <tr>
+            <td class="bodycopy">
+              Une modification de vos param&egrave;tres FranceConnect a eu lieu <strong>le <%= locals.formattedUpdateDate %></strong> (heure de Paris):
+              <ul>
+                <% for (const updatedIdp of locals.updatedIdpSettingsList) {%>
+                <li>
+                  Le compte
+                  <strong>
+                    <%=`${updatedIdp.title} ${updatedIdp.isChecked ? "est désormais autorisé" : "a été bloqué"}`%>
+                  </strong>
+                </li>
+                <%} if (locals.hasAllowFutureIdpChanged) { %>
+                <li>
+                  Les futurs comptes seront
+                  <strong><%= locals.allowFutureIdp ? "autorisés" : "bloqués"%> par d&eacute;faut</strong>
+                </li>
+                <% } %>
+              </ul>
+            </td>
+          </tr>
+        </table>
+        <!--[if (gte mso 9)|(IE)]>
+            </td>
+          </tr>
+      </table>
+      <![endif]-->
+      </td>
+    </tr>
+    <tr>
+      <td
+        style="padding: 5px 16px 25px 16px;"
+      >
+        <!--[if (gte mso 9)|(IE)]>
+        <table width="580" align="center" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td>
+      <![endif]-->
+        <table
+          class="content"
+          bgcolor="#f5f5fe"
+          align="center"
+          cellpadding="0"
+          cellspacing="0"
+          border="0"
+          style="width: 100%;max-width: 580px;"
+        >
+          <tr>
+            <td valign="center" class="bodycopy-small" style="padding: 25px 0px 25px 25px;">
+              <img
+                src="https://franceconnect.gouv.fr/images/info_icon.png"
+                height="25"
+                width="25"
+                border="0"
+                alt=""
+              />
+            </td>
+            <td class="bodycopy-small innerpadding12">
+              Si vous n&rsquo;&ecirc;tes pas &agrave; l&rsquo;origine de cette modification,
+              <strong>
+                <a href="https://franceconnect.gouv.fr/faq#SECURITE">consultez notre rubrique d&rsquo;aide d&eacute;di&eacute;e</a>
+              </strong>
+              <img
+                src="https://franceconnect.gouv.fr/images/arrow_icon.png"
+                width="10"
+                border="0"
+                alt=""
+              />
+            </td>
+          </tr>
+        </table>
+
+        <!--[if (gte mso 9)|(IE)]>
+            </td>
+          </tr>
+      </table>
+      <![endif]-->
+    </td>
+  </tr>
+  <tr>
+    <td class="innerpadding">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>
-          <td>
-    <![endif]-->
-      <table>
-        <tr>
-          <td class="header">
-            <table>
-              <tr>
-                <td>
-                  Changements effectués pour :<%= locals.givenName  %> <%= locals.familyName%>
-                </td>
-                <td>
-                  statut de tous les idp :<% locals.formattedIdpSettingsList.forEach((idp) => { %>
-                    <%= idp.uid %> : is checked ? <%= idp.isChecked %> 
-                    <br>
-                  <% }) %>
-                </td>
-                <td>
-                  des changements effectués sur les idp :<% locals.updatedIdpSettingsList.forEach((idp) => { %>
-                    <%= idp.uid %>
-                    <br>
-                  <% }) %>
-                </td>
-                <td>
-                  la valeur de "choix pour les futurs FI" a-t-elle changé ? :<%= locals.hasChangedIsExcludeList %>
-                </td>
-                <td>
-                  choix pour les futurs fi: <%= locals.futureIdpChoice %>
-                </td>
-              </tr>
-            </table>
+          <td class="bodycopy-small">
+            Vous recevez ce mail automatiquement apr&egrave;s chaque modification des param&egrave;tres de FranceConnect pour vous aider &agrave; contr&ocirc;ler
+            la s&eacute;curit&eacute; de vos acc&egrave;s. Si vous &ecirc;tes &agrave; l&rsquo;origine de cette modification, aucune action n&rsquo;est requise.
           </td>
         </tr>
-    </table>
+        <tr>
+          <td class="bodycopy" style="padding-top: 15px;">
+            Pour suivre et contr&ocirc;ler votre utilisation de FranceConnect, vous pouvez &eacute;galement
+            <strong>
+              <a href="https://app.franceconnect.gouv.fr/traces">consulter votre historique de connexions FranceConnect.</a>
+            </strong>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="innerpadding" style="padding-top: 15px;">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td class="bodycopy" style="padding-top: 15px;">
+            <i>L&rsquo;&eacute;quipe FranceConnect</i>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
     <!--[if (gte mso 9)|(IE)]>
           </td>
         </tr>

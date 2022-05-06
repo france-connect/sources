@@ -95,6 +95,7 @@
     "lodash": "^4.17.15",
     "luxon": "^2.2.0",
     "moment": "^2.24.0",
+    "moment-timezone": "^0.5.34",
     "mongoose": "^6.0.8",
     "nodemailer": "^6.7.2",
     "oidc-provider": "7.10.6",

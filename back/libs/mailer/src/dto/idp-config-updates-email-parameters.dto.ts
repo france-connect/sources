@@ -37,15 +37,7 @@ export class IdpConfigUpdateEmailParameters {
   readonly email: string;
 
   @IsString()
-  readonly givenName: string;
-
-  @IsString()
-  readonly familyName: string;
-
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => IdpConfigSettings)
-  readonly formattedIdpSettingsList: IdpConfig[];
+  readonly fullName: string;
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -53,8 +45,11 @@ export class IdpConfigUpdateEmailParameters {
   readonly updatedIdpSettingsList: IdpConfig[];
 
   @IsBoolean()
-  readonly futureIdpChoice: boolean;
+  readonly allowFutureIdp: boolean;
 
   @IsBoolean()
-  readonly hasChangedIsExcludeList: boolean;
+  readonly hasAllowFutureIdpChanged: boolean;
+
+  @IsString()
+  readonly formattedUpdateDate: string;
 }

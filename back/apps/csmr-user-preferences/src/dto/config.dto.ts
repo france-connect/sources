@@ -10,6 +10,8 @@ import { MailerConfig } from '@fc/mailer';
 import { MongooseConfig } from '@fc/mongoose';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
+import { AppConfigDto } from './app.dto';
+
 export class CsmrUserPreferencesConfig {
   @IsObject()
   @ValidateNested()
@@ -35,4 +37,9 @@ export class CsmrUserPreferencesConfig {
   @ValidateNested()
   @Type(() => MailerConfig)
   readonly Mailer: MailerConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => AppConfigDto)
+  readonly App: AppConfigDto;
 }

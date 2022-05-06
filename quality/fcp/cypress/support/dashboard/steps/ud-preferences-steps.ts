@@ -29,7 +29,7 @@ Given(
       .should('equal', 200);
     // No other way to wait for the IDP settings to load
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(100);
+    cy.wait(500);
   },
 );
 
@@ -47,7 +47,7 @@ Given(
       .should('equal', 200);
     // No other way to wait for the IDP settings to load
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(100);
+    cy.wait(500);
   },
 );
 

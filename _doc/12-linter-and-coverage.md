@@ -1,6 +1,6 @@
-### Désactiver une règle de lint
+### Disabling an eslint rule
 
-La désactivation exceptionelle des règles de lint se fait élément par élément et règle par règle. Le commentaire est toujours précédé d'un commentaire de justification.
+Disabling an eslint rule MUST remains exceptional and MUST always be done one rule at a time. The "disable" comment MUST always be preceded by a justification which explains why the rule SHOULD be disabled in this particular context.
 
 ```typescript
 /**
@@ -19,7 +19,7 @@ const {
 
 ```typescript
 /**
- * 😱 Pas cool 😱
+ * 😱 Not cool 😱
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */

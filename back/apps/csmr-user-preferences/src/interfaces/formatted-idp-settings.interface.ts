@@ -28,7 +28,8 @@ export interface IFormattedIdpSettings {
 export interface ISetIdpSettingsService {
   formattedIdpSettingsList: IFormattedIdpList[];
   updatedIdpSettingsList: IFormattedIdpList[];
-  hasChangedIsExcludeList: boolean;
+  hasAllowFutureIdpChanged: boolean;
+  updatedAt: Date;
 }
 
 export interface IFormattedUserIdpSettingsLists {

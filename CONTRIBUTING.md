@@ -1,51 +1,58 @@
-# Introduction
+# Foreword
 
-_"Les programmes doivent être faits pour être lus par des gens, et occasionnellement pour être exécutés par des machines."
+_"Programs must be written for people to read, and only incidentally for machines to execute."
 ― Hal Abelson_
 
-_"Codez toujours comme si la personne qui allait maintenir votre code était un violent psychopathe qui sait où vous habitez."
+
+_"Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live."
 ― John Woods_
 
-_"La refactorisation c’est comme faire la vaisselle après la cuisine."
+_"Refactoring is like cleaning dishes after cooking."
 — Toby Parkins_
 
-## Pourquoi imposer un standard ?
+## Why to enforce a standard ?
 
-Cette documentation a pour but de décrire avec le plus de précision possible les règles à respecter lorsque l'on code sur ce repo.
+The objective of this documentation is to provide a set of commons rules to use on this project with a long term vision.
 
-Cette documentation ne prétend pas définir la seule et unique réponse à la question "Qu'est-ce qu'un code propre et bien organisé". Elle est rédigée sur la base de l'existant au moment de sa création, et est susceptible d'évoluer. Les évolutions se font sur la base d'une décision collégiale de l'équipe, motivée par un gain d'homogénéité, de lisibilité et/ou de maintenabilité. Sans consensus, les décisions sont arbitrées par les leads qui s'efforcent de prendre en compte le contexte du projet dans sa globalité.
+This documentation SHOULD not be used as a unique response to the question "What is a clean and organized code ?" but MUST be used as the only reference when developing on this repository. Evolutions are made by collegial decisions from the internal team and SHOULD be driven by a gain either in homogeneity, readability or maintainability. If no consensus can be found, the decisions are taken by the lead team with the global context in mind.
 
-Les objectifs visés sont:
+Main goals are to:
+- Keep the code homogenous, readable and maintainable. All developers SHOULD be able to read the code.
+- Give the developers an environment where there is no need to think about how the code is structured. 
 
-- Conserver un code homogène, lisible et donc maintenable. N'importe quel développeur doit être capable de lire votre code.
-- Guider les développeurs les plus juniors vers l'écriture d'un code simple et allant à l'essentiel.
+## Please remember to
 
-## Suggestions
+- Check that your code matches the standards and passes the automated tests, before asking for a review and merging.
+- Be concise when writting documentation and comments.
+- Always source your statements in your PR to ease review.
+- Be polite, always, no exceptions.
 
-- Afin de faciliter les revues de mise à jour de la doc, il est recommandé de discuter avec les leads avant de créer une MR.
-- Il est fortement recommandé de prendre en compte les standards lors du développement, cela permet d'éviter des retours en review.
-- Pour la rédaction de la documentation, adopter un ton impératif et le plus concis possible, sourcer autant que possible.
+# Code standards
 
-# Les standards du code
+[Code standards](./_doc/README.md)
 
-[Les standards du code](./_doc/README.md)
+# Standards CHANGELOG
 
-# Changelog des standards
+## V0.6
+
+- 🇬🇧 Documentation is now mostly in English (feel free to help and correct 😉)
+- 🌍 The documentation has been updated to be more open-source community oriented 
+- 💡 More coding rules have been added
 
 ## V0.4
 
-- Ajout des licences pour l'open-source
+- Add open-source licenses
 
 ## V0.3
 
-- Ajout de documentation technique
+- Add technical documentation
 
 ## V0.2
 
-- Ajout d'un fichier `CONTRIBUTING.md` pour la gestion de la vie de la doc et du projet
-- Corrections et précision de l'introduction à la contribution
-- Ajout d'un changelog permettant de suivre l'évolution des standards
+- Add `CONTRIBUTING.md` file for contributors
+- Add correction and precisions to the contributing rules
+- Add a CHANGELOG to ease standards evolution spotting
 
 ## V0.1
 
-- Première proposition de structure
+- First architecture proposition

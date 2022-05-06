@@ -256,19 +256,20 @@ describe('AccountService', () => {
 
     it('Should update `preferences` property of account and return the account before update', async () => {
       // Given
+      const now = new Date();
 
       const accountMock: Account = {
-        createdAt: new Date(),
+        createdAt: now,
         id: '0001',
-        updatedAt: new Date(),
-        lastConnection: new Date(),
+        updatedAt: now,
+        lastConnection: now,
         identityHash: identityHashMock,
         active: true,
         idpFederation: {},
         spFederation: {},
         preferences: {
           idpSettings: {
-            updatedAt: new Date(),
+            updatedAt: now,
             list: [],
             isExcludeList: false,
           },
@@ -278,6 +279,7 @@ describe('AccountService', () => {
       const accountBeforeUpdate = {
         id: accountMock.id,
         preferences: accountMock.preferences,
+        updatedAt: expect.any(Date),
       };
       findOneAndUpdateSpy.mockResolvedValueOnce(accountMock);
 

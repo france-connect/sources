@@ -75,7 +75,7 @@ describe('LayoutHeaderComponent', () => {
     // then
     expect(element).toHaveClass('LayoutHeaderComponent');
     expect(element).toHaveClass('shadow-bottom');
-    expect(element).toHaveClass('mb80');
+    expect(element).toHaveClass('mb64');
     expect(element).not.toHaveClass('mb40');
   });
 
@@ -92,7 +92,7 @@ describe('LayoutHeaderComponent', () => {
     );
     const element = getByRole('banner');
     // then
-    expect(element).not.toHaveClass('mb80');
+    expect(element).not.toHaveClass('mb64');
   });
 
   it('should have the class mb40 in a mobile viewport and return button is defined', () => {
@@ -108,7 +108,7 @@ describe('LayoutHeaderComponent', () => {
     );
     const element = getByRole('banner');
     // then
-    expect(element).not.toHaveClass('mb80');
+    expect(element).not.toHaveClass('mb64');
   });
 
   it('should not have the class mb40 in a mobile viewport and return button is not defined', () => {

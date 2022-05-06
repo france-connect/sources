@@ -36,7 +36,7 @@ export const LayoutHeaderComponent: React.FC<LayoutHeaderProps> = React.memo(
         <header
           className={classnames('LayoutHeaderComponent shadow-bottom', {
             mb40: !gtTablet && !ReturnButton,
-            mb80: gtTablet,
+            mb64: gtTablet,
           })}
           role="banner">
           <div

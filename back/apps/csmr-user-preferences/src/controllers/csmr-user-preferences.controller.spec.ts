@@ -146,11 +146,11 @@ describe('CsmrUserPreferencesController', () => {
         isChecked: false,
       },
     ];
-    const hasChangedIsExcludeListMock = true;
+    const hasAllowFutureIdpChangedMock = true;
     const expectedResultCsmrUserPreferencesServiceMockSetIdpSettings = {
       formattedIdpSettingsList: formatUserIdpSettingsListResultMock,
       updatedIdpSettingsList: updatedIdpIdpSettingsFormattedMock,
-      hasChangedIsExcludeList: hasChangedIsExcludeListMock,
+      hasAllowFutureIdpChanged: hasAllowFutureIdpChangedMock,
     };
 
     beforeEach(() => {
@@ -209,7 +209,7 @@ describe('CsmrUserPreferencesController', () => {
         {
           formattedIdpSettingsList: formatUserIdpSettingsListResultMock,
           updatedIdpSettingsList: updatedIdpIdpSettingsFormattedMock,
-          hasChangedIsExcludeList: hasChangedIsExcludeListMock,
+          hasAllowFutureIdpChanged: hasAllowFutureIdpChangedMock,
           allowFutureIdp: setIdpSettingsPayloadMock.idpSettings.allowFutureIdp,
         },
       );

@@ -1,16 +1,16 @@
-# Typage
+# Typing
 
-## Introduction
+## Foreword
 
-Typescript est utilisé afin d'ajouter du typage au projet, lui donnant ainsi de la résillience aux régressions. Le langage participe également à l'auto-documentation du code, facilitant ainsi sa prise en main et sa maintenance. Il est fortement recommandé de regarder la documentation. Voici une sélections de quelques points à regarder en priorité:
+TypeScript is used in the project as a mean to enforce structured code and prevent regressions. This language provides a first level of code documentation, which contributes to a better comprehension and maintenance. Here is a list of links to learn TypeScript and some advanced usages:
 
 - [Get started](https://www.typescriptlang.org/docs/)
 - [Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)
 - [Creating Types from Types](https://www.typescriptlang.org/docs/handbook/2/types-from-types.html)
 
-### Type `any`
+### `any`
 
-**Le type `any` n'est donc pas autorisé sur le projet.** Tout élément dont le type n'est pas connu et ne pouvant faire l'objet d'une interface ou d'un type doit être typé `unknown`. Cela doit cependant rester exceptionnel et l'on préfèrera l'utilisation de génériques et/ou compositions lorsque cela est possible.
+**The type `any` is forbidden on the project.** If you do not know which type to apply to your code, you MUST either declare an interface or use the `unknown` type which enforce that next usages will be typed ones. It MUST remains exceptional. Generics and/or composition SHOULD always be preferred when possible.
 
 ```typescript
 /**
@@ -42,18 +42,18 @@ function handleInput(input: unknown): void {
 
 ```typescript
 /**
- * 😱 Pas cool 😱
+ * 😱 Not cool 😱
  */
 
-// Si "unconsistentApiCall" renvoi du JSON ou une chaine de charactère, autant typer proprement.
-const response: unknown = await unconsistentApiCall();
+// If "inconsistentApiCall" returns either an object or a string, we should type it.
+const response: unknown = await inconsistentApiCall();
 
-// Pourquoi faire du typescript ?
+// Why use TypeScript then ?
 interface Metadata {
-  [key: any]: any;
+  [key: string]: any;
 }
 
-// "Any" ne forcera pas à typer avant de passer à une fonction acceptant un type précis, "unknown" si.
+// As stated earlier, "any" does not enforce the type in the editor when giving the argument to the handling functions. `unknown` does !
 function handleInput(input: any): void {
   switch (typeof input) {
     case "number":
@@ -71,11 +71,10 @@ function handleInput(input: any): void {
 }
 ```
 
-### Type `void`
+### `void`
 
-L'utilisation du type `void` est obligatoire pour les fonctions n'ayant pas de retour. Ce type indique que le retour de la fonction n'est pas à prendre en compte par le développeur.
-
-- 🚩 `void` est à interpréter différement de `undefined`.
+When a function does not return a value, `void` type MUST be used. The `void` type indicates that the value returned by the function MUST not be used.
+- 🚩 `void` is different from `undefined`, as the last SHOULD be taken into account when developing.
 
 ```typescript
 /**
@@ -115,7 +114,7 @@ function handleBar(bar: string | number | undefined): void {
 
 ```typescript
 /**
- * 😱 Pas cool 😱
+ * 😱 Not cool 😱
  */
 
 function logSomething(): undefined {
@@ -134,12 +133,12 @@ function getUser(name: string): User | void {
 }
 ```
 
-### Synthétiser
+### Summing up to level up
 
-Typescript est un outil puissant et souple. Il est donc possible de typer à peu près tout et de plein de façons différentes.
+TypeScript is a very powerful and versatile language. There is therefor a multitude of ways to typing.
 
-- 🚩 Tout les typages ne se valent pas.
-- 🚩 Dériver des sous types permet d'éviter à des interfaces de diverger, facilitant la maintenance du code.
+- 🚩 All typing methods are not equals.
+- 🚩 Using cherry-picking types and using generics increase code consistency and maintainability.
 
 ```typescript
 /**
@@ -169,7 +168,7 @@ function setIdentityField<IdKey extends keyof Identity>(
 
 ```typescript
 /**
- * 😱 Pas cool 😱
+ * 😱 Not cool 😱
  */
 
 interface Identity {

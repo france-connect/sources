@@ -141,6 +141,7 @@ describe('CsmrUserPreferencesService', () => {
 
   const htmlContent = 'myWonderful template content';
   const getIdpConfigUpdateEmailBodyContentMock = htmlContent;
+  const formattedDateMock = '4 avril 2022 à 13:02:56';
   const accountBeforeUpdate = {
     ...accountMock,
     preferences: {
@@ -165,8 +166,9 @@ describe('CsmrUserPreferencesService', () => {
   const idpConfiguration = {
     formattedIdpSettingsList: formattedUserIdpSettingsListMock,
     updatedIdpSettingsList: updatedIdpIdpSettingListMock,
-    hasChangedIsExcludeList: true,
+    hasAllowFutureIdpChanged: true,
     allowFutureIdp: false,
+    updatedAt: 1647772217000,
   };
 
   const configMock = {
@@ -794,7 +796,7 @@ describe('CsmrUserPreferencesService', () => {
       expect(updatedIdpSettings).toEqual({
         formattedIdpSettingsList: formattedUserIdpSettingsListMock,
         updatedIdpSettingsList: updatedIdpIdpSettingListMock,
-        hasChangedIsExcludeList: true,
+        hasAllowFutureIdpChanged: true,
       });
     });
 
@@ -814,7 +816,7 @@ describe('CsmrUserPreferencesService', () => {
       expect(updatedIdpSettings).toEqual({
         formattedIdpSettingsList: formattedUserIdpSettingsListMock,
         updatedIdpSettingsList: updatedIdpIdpSettingListMock,
-        hasChangedIsExcludeList: false,
+        hasAllowFutureIdpChanged: false,
       });
     });
   });
@@ -900,12 +902,18 @@ describe('CsmrUserPreferencesService', () => {
   });
 
   describe('getIdpConfigUpdateEmailBodyContent', () => {
+    beforeEach(() => {
+      service['formatDateForEmail'] = jest
+        .fn()
+        .mockReturnValue(formattedDateMock);
+    });
+
     it('should throw if any parameters is not valid', async () => {
       // Given
       const badUserInfo = {
         email: 'bademail',
         givenName: 'firstName',
-        FamilyName: 'lastname',
+        familyName: 'lastname',
       };
 
       // When/Then
@@ -930,11 +938,12 @@ describe('CsmrUserPreferencesService', () => {
       expect(mailerServiceMock.mailToSend).toHaveBeenCalledWith(
         EmailsTemplates.IDP_CONFIG_UPDATES_EMAIL,
         {
-          ...userInfo,
-          formattedIdpSettingsList: idpConfiguration.formattedIdpSettingsList,
+          email: userInfo.email,
+          fullName: 'firstname L.',
+          formattedUpdateDate: formattedDateMock,
           updatedIdpSettingsList: idpConfiguration.updatedIdpSettingsList,
-          hasChangedIsExcludeList: idpConfiguration.hasChangedIsExcludeList,
-          futureIdpChoice: !idpConfiguration.allowFutureIdp,
+          hasAllowFutureIdpChanged: idpConfiguration.hasAllowFutureIdpChanged,
+          allowFutureIdp: idpConfiguration.allowFutureIdp,
         },
       );
     });
@@ -944,7 +953,7 @@ describe('CsmrUserPreferencesService', () => {
       const otherIdpConfiguration = {
         formattedIdpSettingsList: formattedUserIdpSettingsListMock,
         updatedIdpSettingsList: updatedIdpIdpSettingListMock,
-        hasChangedIsExcludeList: false,
+        hasAllowFutureIdpChanged: false,
         allowFutureIdp: false,
       };
 
@@ -959,13 +968,13 @@ describe('CsmrUserPreferencesService', () => {
       expect(mailerServiceMock.mailToSend).toHaveBeenCalledWith(
         EmailsTemplates.IDP_CONFIG_UPDATES_EMAIL,
         {
-          ...userInfo,
-          formattedIdpSettingsList:
-            otherIdpConfiguration.formattedIdpSettingsList,
+          email: userInfo.email,
           updatedIdpSettingsList: otherIdpConfiguration.updatedIdpSettingsList,
-          hasChangedIsExcludeList:
-            otherIdpConfiguration.hasChangedIsExcludeList,
-          futureIdpChoice: otherIdpConfiguration.allowFutureIdp,
+          hasAllowFutureIdpChanged:
+            otherIdpConfiguration.hasAllowFutureIdpChanged,
+          allowFutureIdp: otherIdpConfiguration.allowFutureIdp,
+          fullName: 'firstname L.',
+          formattedUpdateDate: formattedDateMock,
         },
       );
     });
@@ -1023,6 +1032,18 @@ describe('CsmrUserPreferencesService', () => {
         formattedPreviousIdpSettingsList:
           formattedBeforeUpdatePreferencesIdpListMock,
       });
+    });
+  });
+
+  describe('formatDateForEmail', () => {
+    it('should return the correct formatted date for a specific unix timestamp', () => {
+      // Given
+      const unixTimestamp = 1647772217000;
+      configMock.get.mockReturnValueOnce({ tz: 'Europe/Paris' });
+      // When
+      const result = service['formatDateForEmail'](unixTimestamp);
+      // Then
+      expect(result).toBe('20 mars 2022 à 11:30:17');
     });
   });
 });

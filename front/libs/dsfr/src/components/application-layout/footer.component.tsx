@@ -75,7 +75,7 @@ export const LayoutFooterComponent = React.memo(
         <div
           className={classnames(
             classes.wrapper,
-            'content-wrapper-lg flex-wrapper wrap-2 items-center px20 pt40',
+            'content-wrapper-lg flex-wrapper flex-between wrap-2 items-center px20 pt40',
             { 'is-tablet': gtTablet },
           )}>
           <div className="mb24">

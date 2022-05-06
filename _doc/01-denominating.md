@@ -1,10 +1,14 @@
-# Dénomination
+# Denomination
 
-Vous trouverez sur [ce lien](<https://en.wikipedia.org/wiki/Naming_convention_(programming)#Examples_of_multiple-word_identifier_formats>) la liste des différents format évoqués ici.
+## Foreword
 
-### Les `types`, `classes`, `interfaces` et `enums`
+You can find on [this link](<https://en.wikipedia.org/wiki/Naming_convention_(programming)#Examples_of_multiple-word_identifier_formats>) the exhaustive list of the notations used here.
 
-Les `types`, `classes`, `interfaces` et `enums` s'écrivent en `PascalCase`.
+## Rules
+
+### `types`, `classes`, `interfaces` and `enums`
+
+The `types`, `classes`, `interfaces` and `enums` MUST respect the `PascalCase` notation.
 
 ```typescript
 /**
@@ -28,7 +32,7 @@ enum OidcRoutes {
 
 ```typescript
 /**
- * 😱 Pas cool 😱
+ * 😱 Not cool 😱
  */
 
 type _PermissionLevel = /* ... */;
@@ -46,9 +50,9 @@ enum OIDCRoutes {
 }
 ```
 
-### Les `constantes globales`, les `propritétés des enums` et `variables d'environnement`
+### `global constants`, `enum properties` and `environment variables`
 
-Les `constantes globales`, les `propritétés des enums` et `variables d'environnement` s'écrivent en `SCREAMING_SNAKE_CASE`.
+The `global constants`, `enum properties` and `environment variables` MUST respect the `SCREAMING_SNAKE_CASE` notation.
 
 ```typescript
 /**
@@ -67,7 +71,7 @@ enum DevelopersTypes {
 
 ```typescript
 /**
- * 😱 Pas cool 😱
+ * 😱 Not cool 😱
  */
 
 const routes_prefix = /* ... */;
@@ -80,9 +84,9 @@ enum DevelopersTypes {
 }
 ```
 
-### Les `variables`, `propriétés`, `noms de fonction` et `paramètres de fonction`
+### `variables`, `properties`, `functions name` and `functions parameters`
 
-Les `variables`, `propriétés`, `noms de fonction` et `paramètres de fonction` s'écrivent en `camelCase`.
+The `variables`, `properties`, `functions name` and `functions parameters` MUST respect the `camelCase` notation.
 
 ```typescript
 /**
@@ -106,7 +110,7 @@ const user = {
 
 ```typescript
 /**
- * 😱 Pas cool 😱
+ * 😱 Not cool 😱
  */
 
 const user_last_connection = /* ... */;
@@ -124,12 +128,12 @@ const user = {
 }
 ```
 
-### Les `noms de fichier` ainsi que les `noms de dossier`
+### `files name` and `directories name`
 
-Les `noms de fichier` ainsi que les `noms de dossier` s'écrivent en `lisp-case` suivit de leur `extension`.
+The `files name` and `directories name` MUST respect the `lisp-case` notation, followed by their `extension`.
 
-- 🚩 Les noms de fichier peuvent contenir un `"."` pour définir ce qu'il contient ou s'il doit être caché.
-- 🚩 Les noms de dossier peuvent exceptionellement être préfixés par `"_"` s'il est **absolument** nécessaire qu'ils apparaissent en premier.
+- 🚩 Files name CAN contain one or more `"."` to help identifying the file type aside the extension (services, components, etc... See [11 - Files and directories architecture]<./11-files-and-directories-architecture.md> for more details).
+- 🚩 Directories name CAN be prefixed by a single `"_"` if they MUST appear first.
 
 ```bash
 ##############
@@ -148,7 +152,7 @@ _doc/
 
 ```bash
 ##################
-# 😱 Pas cool 😱 #
+# 😱 Not cool 😱 #
 ##################
 
 user_update.service.ts
@@ -163,9 +167,9 @@ _Doc/
 
 ```
 
-### Les caractères ne faisant pas partie de la table standard ASCII
+### Characters set
 
-Les caractères ne faisant pas partie de la [table standard ASCII](https://fr.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange#Table_des_128_caract%C3%A8res_ASCII) sont proscrits.
+Characters used MUST be within [standard ASCII table](https://fr.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange#Table_des_128_caract%C3%A8res_ASCII) with the exception of commentaries (see [9 - Commentaries]<./9-commentaries.md> for more).
 
 ```typescript
 /**
@@ -177,11 +181,22 @@ const userLastConnection = /* ... */;
 
 ```typescript
 /**
- * 😱 Pas cool 😱
+ * 😱 Not cool 😱
  */
 
 const ウセル_ラスト_コネチウン = /* ... */;
 ```
+
+```typescript
+/**
+ * 😍 Cool 😍
+ */
+
+/**
+ * 💡 This is a perfectly 🍷 valid commentary 😉
+ */
+```
+
 
 ```bash
 ##############
@@ -193,15 +208,15 @@ const ウセル_ラスト_コネチウン = /* ... */;
 
 ```bash
 ##################
-# 😱 Pas cool 😱 #
+# 😱 Not cool 😱 #
 ##################
 
 ./ダタバイズ/ラスト-コネチウン/ウセル.db
 ```
 
-### La nomenclature
+### Nomenclature
 
-Les noms choisis doivent être `clairs`, `synthétiques` et `refléter le sens` au premier coup d'oeil. Ils sont rédigés en anglais.
+Names MUST remain `intelligible`, `explicit`, `mnemonic` and `reflect their usage` at first glance. They MUST be written in English.
 
 ```typescript
 /**
@@ -223,10 +238,12 @@ let i = 0;
 
 ```typescript
 /**
- * 😱 Pas cool 😱
+ * 😱 Not cool 😱
  */
 
 const u = /* ... */;
+
+const username = 42;
 
 class Service {
   // ...
@@ -239,9 +256,9 @@ interface UserButWithoutThatProperty {
 let omeletteDuFromage = /* ... */;
 ```
 
-### Les `abréviations`
+### `Abreviations`
 
-Les `abréviations` sont tolérées lorsqu'elles valident le point précédent.
+`Abreviations` are tolerated and MUST respect the nomenclature rules described in the previous section.
 
 ```typescript
 /**
@@ -255,7 +272,7 @@ const TLS_PRIV_KEY = /* ... */;
 
 ```typescript
 /**
- * 😱 Pas cool 😱
+ * 😱 Not cool 😱
  */
 
 let odf = /* ... */; // =### omeletteDuFromage 🙈

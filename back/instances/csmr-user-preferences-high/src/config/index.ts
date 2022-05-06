@@ -3,6 +3,7 @@
 // Tested by DTO
 import { CsmrUserPreferencesConfig } from 'apps/csmr-user-preferences/src';
 
+import App from './app';
 import Broker from './broker';
 import IdentityProviderAdapterMongo from './identity-provider-adapter-mongo';
 import Logger from './logger';
@@ -15,4 +16,5 @@ export default {
   Mongoose,
   IdentityProviderAdapterMongo,
   Mailer,
+  App,
 } as CsmrUserPreferencesConfig;

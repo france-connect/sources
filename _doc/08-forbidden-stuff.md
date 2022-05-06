@@ -1,6 +1,6 @@
-### Imbrication de ternaires
+### Ternaries nesting
 
-L'imbrication de ternaires n'est pas autorisée.
+Nesting ternaries operations is forbidden
 
 ```typescript
 /**
@@ -18,7 +18,7 @@ const message = isErrorCodeValid(errorCode)
 
 ```typescript
 /**
- * 😱 Pas cool 😱
+ * 😱 Not cool 😱
  */
 
 const isAdmin =

@@ -82,7 +82,8 @@ export class CsmrUserPreferencesController {
       const {
         formattedIdpSettingsList,
         updatedIdpSettingsList,
-        hasChangedIsExcludeList,
+        hasAllowFutureIdpChanged,
+        updatedAt,
       } = await this.userPreferencesCsmr.setIdpSettings(
         identity,
         idpSettings.idpList,
@@ -108,8 +109,9 @@ export class CsmrUserPreferencesController {
         {
           formattedIdpSettingsList,
           updatedIdpSettingsList,
-          hasChangedIsExcludeList,
-          allowFutureIdp: idpSettings.allowFutureIdp,
+          hasAllowFutureIdpChanged,
+          allowFutureIdp: updatedIdpSettings.allowFutureIdp,
+          updatedAt,
         },
       );
     } catch (error) {

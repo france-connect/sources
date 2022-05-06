@@ -1,3 +1,5 @@
+import * as moment from 'moment-timezone';
+
 import { Injectable } from '@nestjs/common';
 
 import {
@@ -21,6 +23,7 @@ import {
 } from '@fc/mailer';
 import { IdentityProviderMetadata, IOidcIdentity } from '@fc/oidc';
 
+import { AppConfigDto } from '../dto';
 import { EmailsTemplates } from '../enums';
 import { CsmrUserPreferencesIdpNotFoundException } from '../exceptions';
 import {
@@ -163,15 +166,15 @@ export class CsmrUserPreferencesService {
       idpUids,
     );
 
-    const { id, preferences: IdpSettingsBeforeUpdate } =
-      await this.account.updatePreferences(identityHash, list, isExcludeList);
+    const {
+      id,
+      updatedAt,
+      preferences: idpSettingsBeforeUpdate,
+    } = await this.account.updatePreferences(identityHash, list, isExcludeList);
 
-    const idpListBeforeUpdate = IdpSettingsBeforeUpdate
-      ? IdpSettingsBeforeUpdate.idpSettings.list
-      : [];
-    const isExcludeListBeforeUpdate = IdpSettingsBeforeUpdate
-      ? IdpSettingsBeforeUpdate.idpSettings.isExcludeList
-      : false;
+    const idpListBeforeUpdate = idpSettingsBeforeUpdate?.idpSettings.list ?? [];
+    const isExcludeListBeforeUpdate =
+      !!idpSettingsBeforeUpdate?.idpSettings.isExcludeList;
     const { formattedIdpSettingsList, formattedPreviousIdpSettingsList } =
       this.getFormattedUserIdpSettingsLists({
         idpList,
@@ -190,7 +193,8 @@ export class CsmrUserPreferencesService {
       formattedPreviousIdpSettingsList,
     );
 
-    const hasChangedIsExcludeList = isExcludeList !== isExcludeListBeforeUpdate;
+    const hasAllowFutureIdpChanged =
+      isExcludeList !== isExcludeListBeforeUpdate;
 
     this.logger.trace({
       accountId: id,
@@ -205,7 +209,8 @@ export class CsmrUserPreferencesService {
     return {
       formattedIdpSettingsList,
       updatedIdpSettingsList,
-      hasChangedIsExcludeList,
+      hasAllowFutureIdpChanged,
+      updatedAt,
     };
   }
 
@@ -245,30 +250,39 @@ export class CsmrUserPreferencesService {
     });
   }
 
+  private formatDateForEmail(unixDate: number): string {
+    const { tz } = this.config.get<AppConfigDto>('App');
+
+    return moment
+      .unix(unixDate / 1000)
+      .tz(tz)
+      .locale('fr')
+      .format('Do MMMM YYYY à HH:mm:ss');
+  }
+
   private async getIdpConfigUpdateEmailBodyContent(
     userInfo,
     idpConfiguration,
   ): Promise<string> {
     const { email, givenName, familyName } = userInfo;
     const {
-      formattedIdpSettingsList,
       updatedIdpSettingsList,
-      hasChangedIsExcludeList,
+      hasAllowFutureIdpChanged,
       allowFutureIdp,
+      updatedAt,
     } = idpConfiguration;
 
-    const futureIdpChoice = hasChangedIsExcludeList
-      ? !allowFutureIdp
-      : allowFutureIdp;
+    const fullName = `${givenName} ${familyName[0].toUpperCase()}.`;
+    const formattedUpdateDate = this.formatDateForEmail(updatedAt);
     const idpConfigUpdateEmailParameters = {
       email,
-      givenName,
-      familyName,
-      formattedIdpSettingsList,
+      fullName,
       updatedIdpSettingsList,
-      futureIdpChoice,
-      hasChangedIsExcludeList,
+      allowFutureIdp,
+      hasAllowFutureIdpChanged,
+      formattedUpdateDate,
     };
+    this.logger.trace({ idpConfigUpdateEmailParameters });
 
     const dtoValidationErrors = await validateDto(
       idpConfigUpdateEmailParameters,
