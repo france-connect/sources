@@ -48,9 +48,9 @@ describe('useUserPreferencesApi', () => {
   };
 
   const idpList = {
-    'uid-mock-1': false,
-    'uid-mock-2': true,
-    'uid-mock-3': false,
+    uidMock1: false,
+    uidMock2: true,
+    uidMock3: false,
   };
 
   const csrfToken = 'csrfTokenMockValue';

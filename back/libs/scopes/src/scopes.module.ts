@@ -3,10 +3,10 @@
 // Declarative code
 import { Module } from '@nestjs/common';
 
-import { ScopesService } from './scopes.service';
+import { ScopesIndexService, ScopesService } from './services';
 
 @Module({
-  providers: [ScopesService],
+  providers: [ScopesService, ScopesIndexService],
   exports: [ScopesService],
 })
 export class ScopesModule {}

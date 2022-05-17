@@ -97,3 +97,13 @@ Then(
     udHistoryPage.checkIfTracksAreSorted();
   },
 );
+
+Then(
+  "le fournisseur d'identité de la première trace FC+ est {string}",
+  function (idpName) {
+    udHistoryPage.traces
+      .filter('.track-FranceConnect\\+')
+      .first()
+      .contains(idpName);
+  },
+);

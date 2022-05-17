@@ -7,7 +7,7 @@ import { EnhancedTrack } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';
-import { MISSING_SP_NAME_VALUE, TrackCardComponent } from './track-card.component';
+import { MISSING_SP_LABEL_VALUE, TrackCardComponent } from './track-card.component';
 
 jest.mock('./card-badge.component');
 jest.mock('./card-content.component');
@@ -28,10 +28,10 @@ describe('TrackCardComponent', () => {
     country: 'mock-country',
     datetime: DateTime.fromObject({ day: 1, month: 10, year: 2021 }, { zone: 'Europe/Paris' }),
     event: 'mock-event',
-    idpName: 'mock-idpName',
+    idpLabel: 'mock-idpLabel',
     platform: 'FranceConnect',
     spAcr: 'eidas1' as keyof typeof EidasToLabel,
-    spName: 'mock-spname',
+    spLabel: 'mock-spLabel',
     time: 1633042800000, // '2021-10-01T00:00:00.000+01:00'
     trackId: 'mock-track-id',
   };
@@ -67,7 +67,7 @@ describe('TrackCardComponent', () => {
           datetime: track.datetime,
           opened: false,
           options,
-          serviceProviderName: track.spName,
+          serviceProviderLabel: track.spLabel,
         },
         {},
       );
@@ -83,7 +83,7 @@ describe('TrackCardComponent', () => {
           claims: ['claims1', 'claims2'],
           country: 'mock-country',
           datetime: track.datetime,
-          idpName: track.idpName,
+          idpLabel: track.idpLabel,
           opened: false,
           spAcr: track.spAcr,
         },
@@ -98,7 +98,7 @@ describe('TrackCardComponent', () => {
 
       const spMissingTrack: EnhancedTrack = {
         ...track,
-        spName: undefined,
+        spLabel: undefined,
       };
       const { getByTestId } = render(
         <TrackCardComponent options={options} track={spMissingTrack} />,
@@ -109,7 +109,7 @@ describe('TrackCardComponent', () => {
       expect(element).toBeInTheDocument();
     });
 
-    it('should have called card header component with default spName', () => {
+    it('should have called card header component with default spLabel', () => {
       // then
       expect(TrackCardHeaderComponent).toHaveBeenCalled();
       expect(TrackCardHeaderComponent).toHaveBeenCalledWith(
@@ -117,7 +117,7 @@ describe('TrackCardComponent', () => {
           datetime: track.datetime,
           opened: false,
           options,
-          serviceProviderName: MISSING_SP_NAME_VALUE,
+          serviceProviderLabel: MISSING_SP_LABEL_VALUE,
         },
         {},
       );

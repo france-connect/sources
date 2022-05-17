@@ -143,6 +143,7 @@ export class CoreTrackingService implements IAppTrackingService {
       idpId = null,
       idpAcr = null,
       idpName = null,
+      idpLabel = null,
       idpIdentity = null,
     } = sessionData;
 
@@ -161,6 +162,7 @@ export class CoreTrackingService implements IAppTrackingService {
       idpId,
       idpAcr,
       idpName,
+      idpLabel,
       idpSub: idpIdentity?.sub || null,
     };
   }
@@ -187,6 +189,7 @@ export class CoreTrackingService implements IAppTrackingService {
       idpAcr: null,
       idpName: null,
       idpSub: null,
+      idpLabel: null,
     };
   }
 }

@@ -15,6 +15,7 @@ import OidcProvider from './oidc-provider';
 import OverrideOidcProvider from './override-oidc-provider';
 import Redis from './redis';
 import Rnipp from './rnipp';
+import Scopes from './scopes';
 import ServiceProviderAdapterMongo from './service-provider-adapter-mongo';
 import Session from './session';
 
@@ -40,4 +41,5 @@ export default {
   Mailer,
   ServiceProviderAdapterMongo,
   IdentityProviderAdapterMongo,
+  Scopes,
 } as CoreFcpConfig;

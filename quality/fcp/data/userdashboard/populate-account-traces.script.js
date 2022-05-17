@@ -243,6 +243,7 @@ class PopulateAccountTraces {
     const body = mocks.flatMap((doc) => [header, doc]);
 
     const { body: data } = await this.esClient.bulk({
+      pipeline: 'geo',
       body,
       refresh: true,
     });

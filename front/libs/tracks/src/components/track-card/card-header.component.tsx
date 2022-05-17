@@ -6,20 +6,20 @@ import { TracksConfig } from '../../interfaces';
 
 type TraceCardHeaderProps = {
   datetime: DateTime;
-  serviceProviderName: string;
+  serviceProviderLabel: string;
   opened: boolean;
   options: TracksConfig;
 };
 
 export const TrackCardHeaderComponent = React.memo(
-  ({ datetime, opened, options, serviceProviderName }: TraceCardHeaderProps) => {
+  ({ datetime, opened, options, serviceProviderLabel }: TraceCardHeaderProps) => {
     const formattedDay = datetime.toFormat(options.LUXON_FORMAT_DAY);
     return (
       <div className="pt12 flex-columns flex-between items-center">
         <div>
           <div className="is-dark-grey fr-text-xs mb4">{formattedDay}</div>
           <div className="is-blue-france fr-text-lg">
-            <b>{serviceProviderName}</b>
+            <b>{serviceProviderLabel}</b>
           </div>
         </div>
         <div>

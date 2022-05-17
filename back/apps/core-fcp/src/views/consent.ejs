@@ -76,12 +76,7 @@
               </p>
             <% } %>
         
-            <ul>
-              <% claims
-                  .forEach(label => { %>
-                  <li><%= label %></li>
-                <% }); %>
-            </ul>
+           <%- include('partials/claims.ejs', { claims }) %>
 
             <p>
               <a href="https://franceconnect.gouv.fr/cgu" class="more-informations">

@@ -6,3 +6,4 @@ This section contains the End-to-End tests using the [BDD approach](https://en.w
 
 - [AgentConnect](../fca/README.md)
 - [FranceConnect & FranceConnect+](../fcp/README.md)
+- [Partenaires FranceConnect et AgentConnect](../partners/README.md)

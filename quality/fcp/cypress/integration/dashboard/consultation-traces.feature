@@ -18,3 +18,4 @@ Fonctionnalité: Consultation Traces
     Et les 3 traces de FranceConnect+ sont affichées
     Et les 3 traces de FranceConnect de moins de 6 mois sont affichées
     Et les 6 traces sont affichées par ordre décroissant
+    Et le fournisseur d'identité de la première trace FC+ est "IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt"

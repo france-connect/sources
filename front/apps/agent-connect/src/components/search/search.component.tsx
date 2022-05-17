@@ -10,6 +10,8 @@ export const SearchComponent = React.memo(() => {
 
   return (
     <div
+      // Class CSS
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       className={classNames('content-wrapper-md', { 'text-center': gtTablet })}
       data-testid="wrapper">
       <SearchFormComponent />

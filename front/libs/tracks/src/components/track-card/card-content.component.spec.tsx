@@ -19,7 +19,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
-        idpName="idpNameValue"
+        idpLabel="idpLabelValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -42,7 +42,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
-        idpName="idpNameValue"
+        idpLabel="idpLabelValue"
         opened={opened}
         spAcr="eidas1"
       />,
@@ -66,7 +66,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
-        idpName="idpNameValue"
+        idpLabel="idpLabelValue"
         opened={opened}
         spAcr="eidas1"
       />,
@@ -89,7 +89,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
-        idpName="idpNameValue"
+        idpLabel="idpLabelValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -100,7 +100,7 @@ describe('TrackCardContentComponent', () => {
     expect(element).toBeInTheDocument();
   });
 
-  it('should render a list of 4 informations', () => {
+  it('should render a list of 5 informations', () => {
     // given
     const { container } = render(
       <TrackCardContentComponent
@@ -109,7 +109,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
-        idpName="idpNameValue"
+        idpLabel="idpLabelValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -118,6 +118,28 @@ describe('TrackCardContentComponent', () => {
     const elements = container.getElementsByTagName('li');
     // then
     expect(elements).toHaveLength(5);
+  });
+
+  it('should render a list of 4 informations if city and country are undefined', () => {
+    // given
+    const { container, queryByText } = render(
+      <TrackCardContentComponent
+        accessibleId="mock-accessibleId"
+        city={undefined}
+        claims={claimsMock}
+        country={undefined}
+        datetime={date}
+        idpLabel="idpName"
+        opened={false}
+        spAcr="eidas1"
+      />,
+    );
+    // when
+    const elements = container.getElementsByTagName('li');
+    // then
+    expect(elements).toHaveLength(4);
+    expect(queryByText('Localisation :')).not.toBeInTheDocument();
+    expect(queryByText('cityMock (countryMock)')).not.toBeInTheDocument();
   });
 
   it('should render the date information block (label and value)', () => {
@@ -129,7 +151,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
-        idpName="idpNameValue"
+        idpLabel="idpLabelValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -142,7 +164,7 @@ describe('TrackCardContentComponent', () => {
     // then
     expect(labelElement).toBeInTheDocument();
     expect(valueElement).toBeInTheDocument();
-    expect(lastElement).toStrictEqual(lastElement);
+    expect(lastElement).toStrictEqual(valueElement);
     expect(firstElement).toStrictEqual(labelElement);
   });
 
@@ -155,7 +177,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
-        idpName="idpNameValue"
+        idpLabel="idpLabelValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -168,8 +190,60 @@ describe('TrackCardContentComponent', () => {
     // then
     expect(labelElement).toBeInTheDocument();
     expect(valueElement).toBeInTheDocument();
-    expect(lastElement).toStrictEqual(lastElement);
     expect(firstElement).toStrictEqual(labelElement);
+    expect(lastElement).toStrictEqual(valueElement);
+  });
+
+  it('should render the only city localisation information block (label and value)', () => {
+    // given
+    const { getByText } = render(
+      <TrackCardContentComponent
+        accessibleId="mock-accessibleId"
+        city="cityMock"
+        claims={claimsMock}
+        country={undefined}
+        datetime={date}
+        idpLabel="idpNameValue"
+        opened={false}
+        spAcr="eidas1"
+      />,
+    );
+    // when
+    const labelElement = getByText('Localisation :');
+    const valueElement = getByText('cityMock');
+    const lastElement = labelElement.parentNode?.lastElementChild;
+    const firstElement = labelElement.parentNode?.firstElementChild;
+    // then
+    expect(labelElement).toBeInTheDocument();
+    expect(valueElement).toBeInTheDocument();
+    expect(firstElement).toStrictEqual(labelElement);
+    expect(lastElement).toStrictEqual(valueElement);
+  });
+
+  it('should render the only country localisation information block (label and value)', () => {
+    // given
+    const { getByText } = render(
+      <TrackCardContentComponent
+        accessibleId="mock-accessibleId"
+        city={undefined}
+        claims={claimsMock}
+        country="countryMock"
+        datetime={date}
+        idpLabel="idpNameValue"
+        opened={false}
+        spAcr="eidas1"
+      />,
+    );
+    // when
+    const labelElement = getByText('Localisation :');
+    const valueElement = getByText('(countryMock)');
+    const lastElement = labelElement.parentNode?.lastElementChild;
+    const firstElement = labelElement.parentNode?.firstElementChild;
+    // then
+    expect(labelElement).toBeInTheDocument();
+    expect(valueElement).toBeInTheDocument();
+    expect(firstElement).toStrictEqual(labelElement);
+    expect(lastElement).toStrictEqual(valueElement);
   });
 
   it('should render the idp name information block (label and value)', () => {
@@ -181,20 +255,20 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
-        idpName="idpNameValue"
+        idpLabel="idpLabelValue"
         opened={false}
         spAcr="eidas1"
       />,
     );
     // when
     const labelElement = getByText('Via le compte :');
-    const valueElement = getByText('idpNameValue');
+    const valueElement = getByText('idpLabelValue');
     const lastElement = labelElement.parentNode?.lastElementChild;
     const firstElement = labelElement.parentNode?.firstElementChild;
     // then
     expect(labelElement).toBeInTheDocument();
     expect(valueElement).toBeInTheDocument();
-    expect(lastElement).toStrictEqual(lastElement);
+    expect(lastElement).toStrictEqual(valueElement);
     expect(firstElement).toStrictEqual(labelElement);
   });
 
@@ -207,7 +281,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
-        idpName="idpNameValue"
+        idpLabel="idpLabelValue"
         opened={false}
         spAcr="eidas1"
       />,
@@ -237,7 +311,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
-        idpName="idpNameValue"
+        idpLabel="idpLabelValue"
         opened={false}
         spAcr="eidas1"
       />,

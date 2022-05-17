@@ -25,6 +25,8 @@ export const ServicesListComponent: React.FC<ServicesListComponentProps> = React
                 className={classnames({
                   mb16: !last,
                   pt16: !first,
+                  // Classe CSS
+                  // eslint-disable-next-line @typescript-eslint/naming-convention
                   'with-border': !first,
                 })}
                 service={idp}

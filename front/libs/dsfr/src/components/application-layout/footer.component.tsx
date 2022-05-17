@@ -16,6 +16,8 @@ const useStyles = createUseStyles({
     borderTopWidth: 1,
   },
   footer: {
+    // Class CSS
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     '& .logo-agentconnect': {
       width: 140,
     },
@@ -26,6 +28,8 @@ const useStyles = createUseStyles({
     borderTopWidth: 2,
   },
   licence: {
+    // Class CSS
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     '& svg': {
       color: '#6a6a6a',
       fontSize: '1rem',
@@ -34,6 +38,8 @@ const useStyles = createUseStyles({
     },
   },
   wrapper: {
+    // Class CSS
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     '&.is-tablet > div': {
       width: '100%',
     },
@@ -76,6 +82,8 @@ export const LayoutFooterComponent = React.memo(
           className={classnames(
             classes.wrapper,
             'content-wrapper-lg flex-wrapper flex-between wrap-2 items-center px20 pt40',
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             { 'is-tablet': gtTablet },
           )}>
           <div className="mb24">

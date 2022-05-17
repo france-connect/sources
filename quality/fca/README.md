@@ -142,7 +142,7 @@ CYPRESS_PLATFORM=fca-low CYPRESS_TEST_ENV=integ01 yarn report:generate
 
 We are running visual validation using the cypress plugin [cypress-image-snapshot](https://github.com/jaredpalmer/cypress-image-snapshot).
 
-The visual validations are done on Electron 89 headless in the terminal.
+The visual validations are done on Electron 94 headless in the terminal.
 
 ### Run the snapshot tests
 

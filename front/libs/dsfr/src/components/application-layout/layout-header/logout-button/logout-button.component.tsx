@@ -20,6 +20,8 @@ export const LogoutButtonComponent: React.FC<LogoutButtonComponentProps> = React
       <a
         className={classnames(
           'LogoutButtonComponent flex-columns items-center no-flex-grow no-white-space',
+          // Classe CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           { 'flex-end': gtTablet },
           className,
         )}

@@ -104,10 +104,12 @@ export class OidcClientController {
       state,
     });
 
-    const { name: idpName } = await this.identityProvider.getById(PROVIDER_UID);
+    const { name: idpName, title: idpLabel } =
+      await this.identityProvider.getById(PROVIDER_UID);
     const session: OidcClientSession = {
       idpId: PROVIDER_UID,
       idpName,
+      idpLabel,
       idpNonce: nonce,
       idpState: state,
     };

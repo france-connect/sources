@@ -30,10 +30,13 @@ export class TrackDto implements ICsmrTracksOutputTrack {
   idpName: string;
 
   @IsString()
+  idpLabel: string;
+
+  @IsString()
   spAcr: string;
 
   @IsString()
-  spName: string;
+  spLabel: string;
 
   @IsString()
   trackId: string;

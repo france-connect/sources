@@ -34,8 +34,14 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
       <h3 className="is-h6 mt32 mb16 is-blue-france is-bold">En images&nbsp;:</h3>
       <div
         className={classnames('flex-wrapper', {
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'flex-between': gtDesktop,
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'flex-center': !gtMobile,
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'text-center': !gtDesktop && gtMobile,
         })}>
         <div

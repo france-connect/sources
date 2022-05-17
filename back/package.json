@@ -67,6 +67,7 @@
   "dependencies": {
     "@elastic/elasticsearch": "^7.13.0",
     "@nestjs-modules/mailer": "^1.6.0",
+    "@maxmind/geoip2-node": "^3.4.0",
     "@nestjs/axios": "^0.0.7",
     "@nestjs/common": "^8.0.8",
     "@nestjs/core": "^8.0.8",
@@ -303,7 +304,9 @@
       "@fc/user-preferences/(.*)": "<rootDir>/libs/user-preferences/src/$1",
       "@fc/user-preferences": "<rootDir>/libs/user-preferences/src",
       "^@fc/csmr-aggregate-tracks(|/.*)$": "<rootDir>/apps/csmr-aggregate-tracks/src/$1",
-      "^@fc/partners(|/.*)$": "<rootDir>/apps/partners/src/$1"
+      "^@fc/partners(|/.*)$": "<rootDir>/apps/partners/src/$1",
+      "@fc/geoip-maxmind/(.*)": "<rootDir>/libs/geoip-maxmind/src/$1",
+      "@fc/geoip-maxmind": "<rootDir>/libs/geoip-maxmind/src"
     },
     "preset": "ts-jest"
   }

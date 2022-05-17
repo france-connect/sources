@@ -1,0 +1,10 @@
+{
+  "pluginsFile": "./cypress/plugins/index.ts",
+  "testFiles": "**/*.{feature,features}",
+  "baseUrl": "https://docker.dev-franceconnect.fr",
+  "env": {
+    "PLATFORM": "partners-fca",
+    "TEST_ENV": "docker",
+    "TAGS": "not @fcp and not @ignoreFca"
+  }
+}

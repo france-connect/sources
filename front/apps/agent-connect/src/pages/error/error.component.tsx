@@ -17,7 +17,11 @@ export const ErrorComponent = React.memo(({ errors }: ErrorComponentProps) => {
     <div>
       <h1
         className={classnames('is-blue-agentconnect is-bold px16', {
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'text-center': gtTablet,
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'text-left': !gtTablet,
         })}>
         Une erreur est survenue lors de la connexion.

@@ -15,6 +15,7 @@ export class ICoreTrackingLog extends ITrackingLog {
   readonly idpId?: string;
   readonly idpAcr?: string;
   readonly idpName?: string;
+  readonly idpLabel?: string;
 
   readonly claims?: string;
 }

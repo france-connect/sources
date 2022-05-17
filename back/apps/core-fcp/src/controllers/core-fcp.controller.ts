@@ -245,12 +245,12 @@ export class CoreFcpController {
 
     const interaction = await this.oidcProvider.getInteraction(req, res);
 
-    const scopes = await this.core.getScopesForInteraction(interaction);
-    const claims = await this.core.getClaimsLabelsForInteraction(interaction);
+    const scopes = this.core.getScopesForInteraction(interaction);
+    const claims = this.core.getClaimsLabelsForInteraction(interaction);
     const consentRequired = await this.core.isConsentRequired(spId);
 
     // -- generate and store in session the CSRF token
-    const csrfToken = await this.csrfService.get();
+    const csrfToken = this.csrfService.get();
     await this.csrfService.save(sessionOidc, csrfToken);
 
     const response = {
@@ -300,9 +300,9 @@ export class CoreFcpController {
     interaction: any,
     spId: string,
   ): Promise<void> {
-    const scopes = await this.core.getScopesForInteraction(interaction);
+    const scopes = this.core.getScopesForInteraction(interaction);
     const consentRequired = await this.core.isConsentRequired(spId);
-    const claims = await this.core.getClaimsForInteraction(interaction);
+    const claims = this.core.getClaimsForInteraction(interaction);
 
     const eventClass = this.getEventClass(scopes, consentRequired);
     const context = {

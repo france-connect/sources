@@ -12,7 +12,7 @@ const CLAIM_LABELS = {
   gender: 'Sexe',
   given_name: 'Prénom(s)',
   phone_number: 'Téléphone',
-  preferred_username: "Nom d'usage",
+  preferred_username: 'Nom d’usage',
 };
 /* eslint-enable @typescript-eslint/naming-convention */
 

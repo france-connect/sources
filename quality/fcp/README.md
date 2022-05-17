@@ -221,24 +221,42 @@ yarn start:high --env skipFailures=true
 
 We are running visual validation using the cypress plugin [cypress-image-snapshot](https://github.com/jaredpalmer/cypress-image-snapshot).
 
-The visual validations are done on Electron 89 headless in the terminal.
+The visual validations are done on Electron 94 headless in the terminal.
 
 ### Run the snapshot tests
 
+- FCP-HIGH
 ```shell
 yarn test:high:snapshot
 ```
 
+- USER-DASHBOARD
+```shell
+yarn test:ud:snapshot
+```
+
 ### Update the base image files for all of your tests
 
+- FCP-HIGH
 ```shell
 yarn test:high:snapshot --env updateSnapshots=true
 ```
 
+- USER-DASHBOARD
+```shell
+yarn test:ud:snapshot --env updateSnapshots=true
+```
+
 ### Prevent test failures when an image diff does not pass
 
+- FCP-HIGH
 ```shell
 yarn test:high:snapshot --env failOnSnapshotDiff=false
+```
+
+- USER-DASHBOARD
+```shell
+yarn test:ud:snapshot --env failOnSnapshotDiff=false
 ```
 
 ## Plugins VSCode

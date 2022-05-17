@@ -36,9 +36,9 @@ const elasticQueryMock: Search = {
 const singleTrackMock: Omit<ICsmrTracksOutputTrack, 'trackId'> = {
   event: 'eventMockValue',
   time: 1441663200000,
-  spName: 'spNameMockValue',
+  spLabel: 'spLabelMockValue',
   spAcr: 'spAcrMockValue',
-  idpName: 'idpNameMockValue',
+  idpLabel: 'idpLabelMockValue',
   country: 'countryMockValue',
   city: 'cityMockValue',
   platform: 'platformValue',

@@ -33,6 +33,7 @@ Fonctionnalité: Connexion avec Claims
     Et je suis connecté
     Et la cinématique n'a pas renvoyé d'amr
 
+  @ignoreInteg01
   Scénario: Connexion avec claims - erreur FS non habilité pour amr
     Etant donné que j'utilise le fournisseur de service "non habilité à demander le claim amr"
     Et que le fournisseur de service requiert le claim "amr"

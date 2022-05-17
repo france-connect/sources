@@ -4,15 +4,40 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.93.0 && v3.94.0
+
+### Hardening & QA
+
+- [AgentConnect] The `amr` claim is now tested with BDDs in the sandbox environment
+- [User Dashboard] Visual regression testing has been implemented
+
+### Not yet in production (futures apps / features
+
+- [User Dashboard]
+  - The user-preferences consumer can be used to fetch current user's preferences (for support application)
+  - Human readable IdP name is now displayed instead of technical name on user connection history
+  - IP location is now resolved at display time if not already present in user history
+  - Scopes are now grouped by family on the backend in user's connection history page
+- [Partners Dashboard]
+  - Implemented first BDDs
+  - Added CI configuration
 
 ## v3.91.0 && v3.92.0
+
+### Features
+
 - [AgentConnect]
   - Added `alg` property in jwks endpoints, to ease key selection for partners.
-- [User Dashboard]
-  - Added explanations about idp management in user dashboard.
-  - Styled the layout of the notification email for idp management. 
+
+### Fixes
 
 - Fixed a bug in unit tests making the CI unstable.
+
+### Not yet in production (futures apps / features
+
+- [User Dashboard]
+  - Added explanations about idp management in user dashboard.
+  - Styled the layout of the notification email for idp management.
 
 ## v3.89.0 & v3.90.0
 
@@ -112,6 +137,7 @@
 ### Features
 
 - [AgentConnect] The error page is now handled by the frontend (REACT) instead of a backend rendering rendering
+
 ### Fixes
 
 - [eIDASBridge] Updated the DTO rules to match the european XML schema

@@ -22,7 +22,11 @@ export const LayoutHeaderMenuComponent: React.FC<LayoutHeaderMenuComponentProps>
     return (
       <div
         className={classnames('LayoutHeaderComponent-menu flex-rows items-end', {
+          // Classe CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'flex-2': gtTablet,
+          // Classe CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'no-flex': !gtTablet,
         })}>
         {gtTablet && ReturnButton && <ReturnButton />}

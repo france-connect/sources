@@ -2,6 +2,7 @@
   "pluginsFile": "./cypress/plugins/index.ts",
   "testFiles": "**/dashboard/*.{feature,features}",
   "baseUrl": "https://docker.dev-franceconnect.fr",
+  "video": false,
   "env": {
     "BASE_URLS": {
       "recette": "https://recette.dev-franceconnect.fr"

@@ -4,10 +4,10 @@ describe('UserPreferencesService', () => {
   describe('encodeFormData', () => {
     // given
     const idpList = {
-      'uid-mock-1': false,
-      'uid-mock-2': true,
-      'uid-mock-3': false,
-      'uid-mock-4': true,
+      uidMock1: false,
+      uidMock2: true,
+      uidMock3: false,
+      uidMock4: true,
     };
 
     const csrfToken = 'csrfTokenMockValue';
@@ -37,8 +37,8 @@ describe('UserPreferencesService', () => {
         idpList,
       });
       // then
-      expect(appendSpy).toHaveBeenNthCalledWith(1, 'idpList', 'uid-mock-2');
-      expect(appendSpy).toHaveBeenNthCalledWith(2, 'idpList', 'uid-mock-4');
+      expect(appendSpy).toHaveBeenNthCalledWith(1, 'idpList', 'uidMock2');
+      expect(appendSpy).toHaveBeenNthCalledWith(2, 'idpList', 'uidMock4');
     });
 
     it('should call URLSearchParams.append 1 times with allowFutureIdp param', () => {
@@ -66,7 +66,7 @@ describe('UserPreferencesService', () => {
           isChecked: false,
           name: 'name-mock-1',
           title: 'title-mock',
-          uid: 'uid-mock-1',
+          uid: 'uidMock1',
         },
         {
           active: false,
@@ -74,7 +74,7 @@ describe('UserPreferencesService', () => {
           isChecked: true,
           name: 'name-mock-2',
           title: 'title-mock',
-          uid: 'uid-mock-2',
+          uid: 'uidMock2',
         },
         {
           active: false,
@@ -82,7 +82,7 @@ describe('UserPreferencesService', () => {
           isChecked: false,
           name: 'name-mock-3',
           title: 'title-mock',
-          uid: 'uid-mock-3',
+          uid: 'uidMock3',
         },
         {
           active: false,
@@ -90,7 +90,7 @@ describe('UserPreferencesService', () => {
           isChecked: true,
           name: 'name-mock-4',
           title: 'title-mock',
-          uid: 'uid-mock-4',
+          uid: 'uidMock4',
         },
       ],
     };
@@ -122,10 +122,10 @@ describe('UserPreferencesService', () => {
       expect(result).toStrictEqual(
         expect.objectContaining({
           idpList: {
-            'uid-mock-1': false,
-            'uid-mock-2': true,
-            'uid-mock-3': false,
-            'uid-mock-4': true,
+            uidMock1: false,
+            uidMock2: true,
+            uidMock3: false,
+            uidMock4: true,
           },
         }),
       );

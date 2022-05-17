@@ -70,8 +70,8 @@ describe('CoreFcpService', () => {
   };
 
   const scopesServiceMock = {
-    mapScopesToLabel: jest.fn(),
-    getClaimsFromScopes: jest.fn(),
+    getRichClaimsFromScopes: jest.fn(),
+    getRawClaimsFromScopes: jest.fn(),
   };
 
   const serviceProviderMock = {
@@ -357,18 +357,18 @@ describe('CoreFcpService', () => {
   describe('getClaimsLabelsForInteraction', () => {
     const interactionMock = {};
     const scopesMock = ['openid', 'profile'];
-    const mapScopesToLabelResolvedValue = ['foo'];
+    const getRichClaimsFromScopesReturnedValue = ['foo'];
 
     beforeEach(() => {
       service.getScopesForInteraction = jest.fn().mockReturnValue(scopesMock);
-      scopesServiceMock.mapScopesToLabel.mockResolvedValue(
-        mapScopesToLabelResolvedValue,
+      scopesServiceMock.getRichClaimsFromScopes.mockReturnValue(
+        getRichClaimsFromScopesReturnedValue,
       );
     });
 
-    it('should get scopes from interaction', async () => {
+    it('should get scopes from interaction', () => {
       // When
-      await service.getClaimsLabelsForInteraction(interactionMock);
+      service.getClaimsLabelsForInteraction(interactionMock);
       // Then
       expect(service.getScopesForInteraction).toHaveBeenCalledTimes(1);
       expect(service.getScopesForInteraction).toHaveBeenCalledWith(
@@ -376,41 +376,41 @@ describe('CoreFcpService', () => {
       );
     });
 
-    it('should convert scope to claim labels', async () => {
+    it('should convert scope to claim labels', () => {
       // When
-      await service.getClaimsLabelsForInteraction(interactionMock);
+      service.getClaimsLabelsForInteraction(interactionMock);
       // Then
-      expect(scopesServiceMock.mapScopesToLabel).toHaveBeenCalledTimes(1);
-      expect(scopesServiceMock.mapScopesToLabel).toHaveBeenCalledWith(
+      expect(scopesServiceMock.getRichClaimsFromScopes).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(scopesServiceMock.getRichClaimsFromScopes).toHaveBeenCalledWith(
         scopesMock,
       );
     });
 
-    it('should return claim labels', async () => {
+    it('should return claim labels', () => {
       // When
-      const result = await service.getClaimsLabelsForInteraction(
-        interactionMock,
-      );
+      const result = service.getClaimsLabelsForInteraction(interactionMock);
       // Then
-      expect(result).toBe(mapScopesToLabelResolvedValue);
+      expect(result).toBe(getRichClaimsFromScopesReturnedValue);
     });
   });
 
   describe('getClaimsForInteraction', () => {
     const interactionMock = {};
     const scopesMock = ['openid', 'profile'];
-    const getClaimsFromScopesResolvedValue = ['foo'];
+    const getRawClaimsFromScopesReturnedValue = ['foo'];
 
     beforeEach(() => {
       service.getScopesForInteraction = jest.fn().mockReturnValue(scopesMock);
-      scopesServiceMock.getClaimsFromScopes.mockResolvedValue(
-        getClaimsFromScopesResolvedValue,
+      scopesServiceMock.getRawClaimsFromScopes.mockReturnValue(
+        getRawClaimsFromScopesReturnedValue,
       );
     });
 
-    it('should get scopes from interaction', async () => {
+    it('should get scopes from interaction', () => {
       // When
-      await service.getClaimsForInteraction(interactionMock);
+      service.getClaimsForInteraction(interactionMock);
       // Then
       expect(service.getScopesForInteraction).toHaveBeenCalledTimes(1);
       expect(service.getScopesForInteraction).toHaveBeenCalledWith(
@@ -418,21 +418,21 @@ describe('CoreFcpService', () => {
       );
     });
 
-    it('should convert scope to claims', async () => {
+    it('should convert scope to claims', () => {
       // When
-      await service.getClaimsForInteraction(interactionMock);
+      service.getClaimsForInteraction(interactionMock);
       // Then
-      expect(scopesServiceMock.getClaimsFromScopes).toHaveBeenCalledTimes(1);
-      expect(scopesServiceMock.getClaimsFromScopes).toHaveBeenCalledWith(
+      expect(scopesServiceMock.getRawClaimsFromScopes).toHaveBeenCalledTimes(1);
+      expect(scopesServiceMock.getRawClaimsFromScopes).toHaveBeenCalledWith(
         scopesMock,
       );
     });
 
-    it('should return claims', async () => {
+    it('should return claims', () => {
       // When
-      const result = await service.getClaimsForInteraction(interactionMock);
+      const result = service.getClaimsForInteraction(interactionMock);
       // Then
-      expect(result).toBe(getClaimsFromScopesResolvedValue);
+      expect(result).toBe(getRawClaimsFromScopesReturnedValue);
     });
   });
 

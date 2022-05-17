@@ -27,6 +27,29 @@
  */
 
 import { ICsmrTracksElasticInput } from '@fc/csmr-tracks';
+import { ICsmrTracksOutputTrack } from '@fc/tracks';
+
+interface ISource {
+  geo: {
+    // GeoIp Process naming
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    region_name?: string;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    region_iso_code?: string;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    city_name?: string;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    country_iso_code?: string;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    country_name?: string;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    continent_name?: string;
+    location: {
+      lon: number;
+      lat: number;
+    };
+  };
+}
 
 export interface ICsmrTracksLegacyTrack {
   name: string;
@@ -47,7 +70,13 @@ export interface ICsmrTracksLegacyTrack {
   fs_label: string;
   eidas: number | string;
   time: string;
+  source?: ISource;
 }
 
 export type ICsmrTracksInputLegacy =
   ICsmrTracksElasticInput<ICsmrTracksLegacyTrack>;
+
+export type ICsmrTracksExtractedData = Omit<
+  ICsmrTracksOutputTrack,
+  'platform' | 'trackId'
+>;

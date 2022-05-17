@@ -13,7 +13,7 @@
  *     event: "FC_REQUESTED_IDP_USERINFO",
  *     date: "2021-11-05T12:09:08.207+01:00",
  *     spId: "001",
- *     spName: "EDF",
+ *     spLabel: "EDF",
  *     spAcr: "eidas1",
  *     country: "FR",
  *     city: "Paris"

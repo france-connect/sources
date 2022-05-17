@@ -47,7 +47,11 @@ export const TrackCardBadgeComponent = React.memo(({ fromFcPlus, type }: TraceCa
         <div
           // @TODO ajuster quand on aura récupérer l'origine/source des traces
           className={classnames('py8 px12 mr8', {
+            // class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             'bg-blue-agentconnect': !fromFcPlus,
+            // class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             'bg-blue-france': fromFcPlus,
           })}>
           {fromFcPlus && <b>FranceConnect+</b>}

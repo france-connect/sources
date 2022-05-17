@@ -3,9 +3,11 @@ import { encode } from 'querystring';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { PartialDeep } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { LoggerService } from '@fc/logger-legacy';
+import { IdentityProviderMetadata } from '@fc/oidc';
 import { OidcClientService } from '@fc/oidc-client';
 import {
   SessionCsrfService,
@@ -136,13 +138,17 @@ describe('OidcClient Controller', () => {
       },
     };
 
-    identityProviderServiceMock.getById.mockReturnValue({
-      name: 'foo',
+    const idpMock: PartialDeep<IdentityProviderMetadata> = {
+      name: 'nameValue',
+      title: 'titleValue',
       client: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         post_logout_redirect_uris: ['any-post_logout_redirect_uris-mock'],
       },
-    });
+    };
+
+    identityProviderServiceMock.getById.mockReturnValue(idpMock);
+
     sessionServiceMock.get.mockResolvedValue({
       idpNonce: idpNonceMock,
       idpState: idpStateMock,
@@ -255,7 +261,8 @@ describe('OidcClient Controller', () => {
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith({
         idpId: 'envIssuer',
-        idpName: 'foo',
+        idpName: 'nameValue',
+        idpLabel: 'titleValue',
         idpNonce: idpNonceMock,
         idpState: idpStateMock,
       });

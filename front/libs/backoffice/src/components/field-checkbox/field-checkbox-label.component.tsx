@@ -19,7 +19,11 @@ export const FieldCheckboxLabelComponent: React.FC<FieldCheckboxLabelComponentPr
       <span
         aria-hidden
         className={classnames('FieldCheckboxComponent-checkbox', 'text-center is-inline-block', {
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'bg-blue-france': checked,
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'is-white': checked,
         })}
         data-testid="check-box">

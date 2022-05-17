@@ -119,6 +119,8 @@ describe('SearchFormComponent', () => {
     mocked(SearchSubmitButtonComponent).mockReturnValue(<button type="submit" />);
     // when
     const { getByRole } = render(
+      // Label HTML name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       <SearchFormComponent formData={{ 'fi-search-term': 'text-input-value' }} />,
     );
     const button = getByRole('button') as HTMLButtonElement;

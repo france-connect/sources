@@ -17,6 +17,8 @@ export const UserHistoryComponent = React.memo(() => {
       {shouldShowLabel && (
         <div className="mx16">
           <p
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             className={classNames('my4 fs20 is-bold', { 'text-center': gtTablet })}
             data-testid="title">
             J&rsquo;utilise à nouveau
@@ -25,8 +27,14 @@ export const UserHistoryComponent = React.memo(() => {
       )}
       <div
         className={classNames('mb40', {
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'flex-center': gtTablet,
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'flex-columns': gtTablet,
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'flex-rows': !gtTablet,
         })}
         data-testid="list">

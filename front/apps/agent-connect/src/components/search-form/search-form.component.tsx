@@ -12,6 +12,8 @@ import { SearchSubmitButtonComponent } from './search-submit-button.component';
 
 type SearchFormComponentProps = {
   formData?: {
+    // label HTML name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     'fi-search-term': string | undefined;
   };
 };
@@ -63,6 +65,8 @@ export const SearchFormComponent: React.FC<SearchFormComponentProps> = React.mem
 );
 
 SearchFormComponent.defaultProps = {
+  // label HTML name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   formData: { 'fi-search-term': undefined },
 };
 

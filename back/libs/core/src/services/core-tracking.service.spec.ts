@@ -70,6 +70,7 @@ describe('CoreTrackingService', () => {
 
     idpId: 'some idpId',
     idpName: 'some idpName',
+    idpLabel: 'some idpLabel',
     idpAcr: 'some idpAcr',
     idpIdentity: { sub: 'some idpSub' },
   };
@@ -481,6 +482,7 @@ describe('CoreTrackingService', () => {
         idpName: 'some idpName',
         idpAcr: 'some idpAcr',
         idpSub: 'some idpSub',
+        idpLabel: 'some idpLabel',
       };
       // When
       const result = await service['getDataFromSession'](sessionIdMock);
@@ -502,6 +504,7 @@ describe('CoreTrackingService', () => {
         idpName: null,
         idpAcr: null,
         idpSub: null,
+        idpLabel: null,
       };
       const sessionMock: OidcSession = {
         spId: 'spIdMock',
@@ -530,6 +533,7 @@ describe('CoreTrackingService', () => {
         idpName: null,
         idpAcr: null,
         idpSub: null,
+        idpLabel: null,
       };
       const sessionMock: OidcSession = {
         spId: 'spIdMock',
@@ -561,6 +565,7 @@ describe('CoreTrackingService', () => {
         idpName: null,
         idpAcr: null,
         idpSub: null,
+        idpLabel: null,
       };
       const sessionMock: OidcSession = {
         spIdentity: { sub: 'spSubMock' },
@@ -591,6 +596,7 @@ describe('CoreTrackingService', () => {
         idpName: null,
         idpAcr: null,
         idpSub: null,
+        idpLabel: null,
       };
 
       const myContextMock = {

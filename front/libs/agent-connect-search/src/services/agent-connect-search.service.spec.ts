@@ -41,31 +41,31 @@ describe('SearchService', () => {
 
   const ministriesMock: Ministry[] = [
     {
-      id: 'ministry-A',
+      id: 'ministryA',
       identityProviders: ['fia1', 'fia2'],
       name: "MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
       sort: 1,
     },
     {
-      id: 'ministry-B',
+      id: 'ministryB',
       identityProviders: ['fia2', 'fia3'],
       name: 'MOCK - Ministère de la transition écologique - ALL FIS - SORT 2',
       sort: 2,
     },
     {
-      id: 'ministry-C',
+      id: 'ministryC',
       identityProviders: [],
       name: "MOCK - Ministère de l'économie des Finances et de la Relance - NO FIS - SORT 3",
       sort: 3,
     },
     {
-      id: 'ministry-D',
+      id: 'ministryD',
       identityProviders: ['fia3', 'fia1', 'undefined-fi'],
       name: 'MOCK - Ministère de la mer - E2E - SORT 4',
       sort: 4,
     },
     {
-      id: 'ministry-E',
+      id: 'ministryE',
       identityProviders: ['undefined-fi'],
       name: 'MOCK - Ministère sans FI valide - SORT 5',
       sort: 5,
@@ -75,55 +75,55 @@ describe('SearchService', () => {
   const baseExpected: Searchable[] = [
     // Ministry A
     {
-      data: "Identity Provider 1 ministry-A MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
+      data: "Identity Provider 1 ministryA MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
       idpId: 'fia1',
-      ministryId: 'ministry-A',
+      ministryId: 'ministryA',
       sort: 1,
     },
     {
-      data: "Identity Provider 2 ministry-A MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
+      data: "Identity Provider 2 ministryA MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
       idpId: 'fia2',
-      ministryId: 'ministry-A',
+      ministryId: 'ministryA',
       sort: 1,
     },
     // Ministry B
     {
-      data: 'Identity Provider 2 ministry-B MOCK - Ministère de la transition écologique - ALL FIS - SORT 2',
+      data: 'Identity Provider 2 ministryB MOCK - Ministère de la transition écologique - ALL FIS - SORT 2',
       idpId: 'fia2',
-      ministryId: 'ministry-B',
+      ministryId: 'ministryB',
       sort: 2,
     },
     {
-      data: 'Identity Provider 3 ministry-B MOCK - Ministère de la transition écologique - ALL FIS - SORT 2',
+      data: 'Identity Provider 3 ministryB MOCK - Ministère de la transition écologique - ALL FIS - SORT 2',
       idpId: 'fia3',
-      ministryId: 'ministry-B',
+      ministryId: 'ministryB',
       sort: 2,
     },
     // Ministry C
     {
-      data: "ministry-C MOCK - Ministère de l'économie des Finances et de la Relance - NO FIS - SORT 3",
+      data: "ministryC MOCK - Ministère de l'économie des Finances et de la Relance - NO FIS - SORT 3",
       idpId: undefined,
-      ministryId: 'ministry-C',
+      ministryId: 'ministryC',
       sort: 3,
     },
     // Ministry D
     {
-      data: 'Identity Provider 3 ministry-D MOCK - Ministère de la mer - E2E - SORT 4',
+      data: 'Identity Provider 3 ministryD MOCK - Ministère de la mer - E2E - SORT 4',
       idpId: 'fia3',
-      ministryId: 'ministry-D',
+      ministryId: 'ministryD',
       sort: 4,
     },
     {
-      data: 'Identity Provider 1 ministry-D MOCK - Ministère de la mer - E2E - SORT 4',
+      data: 'Identity Provider 1 ministryD MOCK - Ministère de la mer - E2E - SORT 4',
       idpId: 'fia1',
-      ministryId: 'ministry-D',
+      ministryId: 'ministryD',
       sort: 4,
     },
     // Ministry E
     {
-      data: 'ministry-E MOCK - Ministère sans FI valide - SORT 5',
+      data: 'ministryE MOCK - Ministère sans FI valide - SORT 5',
       idpId: undefined,
-      ministryId: 'ministry-E',
+      ministryId: 'ministryE',
       sort: 5,
     },
   ];
@@ -150,11 +150,11 @@ describe('SearchService', () => {
       fia3: identityProvidersMock[2],
     },
     ministries: {
-      'ministry-A': ministriesMock[0],
-      'ministry-B': ministriesMock[1],
-      'ministry-C': ministriesMock[2],
-      'ministry-D': ministriesMock[3],
-      'ministry-E': ministriesMock[4],
+      ministryA: ministriesMock[0],
+      ministryB: ministriesMock[1],
+      ministryC: ministriesMock[2],
+      ministryD: ministriesMock[3],
+      ministryE: ministriesMock[4],
     },
   };
 

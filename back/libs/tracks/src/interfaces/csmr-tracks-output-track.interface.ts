@@ -12,7 +12,7 @@
  *   idpName: 'Ameli';
  *   platform:'FranceConnect',
  *   spAcr: 'eidas1',
- *   spName: 'ANTS',
+ *   spLabel: 'ANTS',
  *   time: '1647358722235', (millis)
  *   trackId: 'any-unique-track-index-identifier-string-from-ES',
  * }
@@ -22,10 +22,10 @@ export interface ICsmrTracksOutputTrack {
   claims: string[] | null;
   country: string;
   event: string;
-  idpName: string;
+  idpLabel: string;
   platform: string;
   spAcr: string;
-  spName: string;
+  spLabel: string;
   time: number;
   trackId: string;
 }

@@ -46,6 +46,8 @@ describe('NavigationLinksComponent', () => {
       1,
       expect.objectContaining({
         activeClassName: 'current is-blue-france',
+        // Classe CSS
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'aria-current': 'page',
         className:
           'NavigationLinkComponent is-g700 no-underline is-relative is-inline-block fs14 lh24',
@@ -59,6 +61,8 @@ describe('NavigationLinksComponent', () => {
       2,
       expect.objectContaining({
         activeClassName: 'current is-blue-france',
+        // Classe CSS
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'aria-current': 'page',
         className:
           'NavigationLinkComponent is-g700 no-underline is-relative is-inline-block fs14 lh24',

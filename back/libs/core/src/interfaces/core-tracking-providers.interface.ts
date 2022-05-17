@@ -13,4 +13,5 @@ export interface ICoreTrackingProviders {
   readonly idpAcr: string;
   readonly idpName: string;
   readonly idpSub: string;
+  readonly idpLabel: string;
 }

@@ -98,6 +98,7 @@
 | [Y190006](../libs/session/src/exceptions/session-invalid-csrf-consent.exception.ts "SessionInvalidCsrfConsentException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. | La page de consentement a été appelée sans avoir effectué les étapes de la cinématique. L&#39;utilisateur doit redémarrer sa cinématique en respectant les étapes de cette dernière. Il s&#39;agit d&#39;une protection contre des attaques qui seraient destinées à sauter des étapes. Il se peut que l&#39;utilisateur ait lancé des cinématiques en parallèle dans plusieurs onglets, dans ce cas il faut fermer tous les onglets du navigateur et relancer la cinématique. | 
 | [Y190007](../libs/session/src/exceptions/session-invalid-csrf-select-idp.exception.ts "SessionInvalidCsrfSelectIdpException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. | La page de consentement a été appelée sans avoir effectué les étapes de la cinématique. L&#39;utilisateur doit redémarrer sa cinématique en respectant les étapes de cette dernière. Il s&#39;agit d&#39;une protection contre des attaques qui seraient destinées à sauter des étapes. Il se peut que l&#39;utilisateur ait lancé des cinématiques en parallèle dans plusieurs onglets, dans ce cas il faut fermer tous les onglets du navigateur et relancer la cinématique. | 
 | [Y190008](../libs/session/src/exceptions/session-bad-stringify.exception.ts "SessionBadStringifyException") | Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous. | Les données pour la session se sont mal formatées avant d&#39;être chiffrées. Si le problème persiste, contacter le support N3 | 
+| [Y190009](../libs/session/src/exceptions/session-no-session-id.exception.ts "SessionNoSessionIdException") | Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous. | Cette erreur technique est émise lorsque le session id est introuvable dans l&#39;objet &#34;req&#34;. L&#39;interceptor de la session a-t-il pu récupérer le cookie de session ? | 
 
 | Code | Message utilisateur | Description |
 |---|---|---|
@@ -142,4 +143,8 @@
 | Code | Message utilisateur | Description |
 |---|---|---|
 | [Y320001](../apps/csmr-user-preferences/src/exceptions/csmr-user-preferences-idp-not-found.exception.ts "CsmrUserPreferencesIdpNotFoundException") | Le fournisseur d&#39;identité en entrée est inconnu | Le fournisseur d&#39;identité en entrée n&#39;existe pas dans la liste des idp | 
+
+| Code | Message utilisateur | Description |
+|---|---|---|
+| [Y400001](../libs/geoip-maxmind/src/exceptions/geoip-maxmind-not-found.exception.ts "GeoipMaxmindNotFoundException") | Une erreur technique est survenue, veuillez contacter le support. | La base de donnée local GeoIP Maxmind n&#39;a pa pu être chargée | 
 

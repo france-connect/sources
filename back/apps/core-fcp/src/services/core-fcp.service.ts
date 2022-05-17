@@ -7,7 +7,7 @@ import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapt
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
-import { ScopesService } from '@fc/scopes';
+import { IClaim, IRichClaim, ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { ISessionService } from '@fc/session';
 
@@ -112,10 +112,10 @@ export class CoreFcpService {
   /**
    * @todo type input, needs typing on the return of OidcProviderService.getInteraction()
    */
-  async getClaimsLabelsForInteraction(interaction: any): Promise<string[]> {
+  getClaimsLabelsForInteraction(interaction: any): IRichClaim[] {
     const scopes = this.getScopesForInteraction(interaction);
 
-    const claims = await this.scopes.mapScopesToLabel(scopes);
+    const claims = this.scopes.getRichClaimsFromScopes(scopes);
 
     this.logger.trace({ interaction, claims });
 
@@ -125,10 +125,10 @@ export class CoreFcpService {
   /**
    * @todo type input, needs typing on the return of OidcProviderService.getInteraction()
    */
-  async getClaimsForInteraction(interaction: any): Promise<string[]> {
+  getClaimsForInteraction(interaction: any): IClaim[] {
     const scopes = this.getScopesForInteraction(interaction);
 
-    const claims = await this.scopes.getClaimsFromScopes(scopes);
+    const claims = this.scopes.getRawClaimsFromScopes(scopes);
 
     this.logger.trace({ interaction, claims });
 

@@ -103,6 +103,7 @@ describe('CoreService', () => {
     idpId: '42',
     idpIdentity: idpIdentityMock,
     idpName: 'my favorite Idp',
+    idpLabel: 'my favorite Idp Title',
     spAcr: 'eidas3',
     spId: 'sp_id',
     spIdentity: spIdentityMock,

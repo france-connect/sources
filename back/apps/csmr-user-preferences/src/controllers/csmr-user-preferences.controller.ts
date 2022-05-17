@@ -36,7 +36,6 @@ export class CsmrUserPreferencesController {
     this.logger.debug(
       `New message pattern received ${UserPreferencesProtocol.Commands.GET_IDP_SETTINGS}`,
     );
-
     let idpSettings;
     const { identity } = payload;
     try {
@@ -78,6 +77,7 @@ export class CsmrUserPreferencesController {
 
     let updatedIdpSettings;
     const { identity, idpSettings } = payload;
+
     try {
       const {
         formattedIdpSettingsList,
@@ -100,20 +100,22 @@ export class CsmrUserPreferencesController {
         family_name: familyName,
       } = identity;
 
-      await this.userPreferencesCsmr.sendMail(
-        {
-          email,
-          givenName,
-          familyName,
-        },
-        {
-          formattedIdpSettingsList,
-          updatedIdpSettingsList,
-          hasAllowFutureIdpChanged,
-          allowFutureIdp: updatedIdpSettings.allowFutureIdp,
-          updatedAt,
-        },
-      );
+      if (email) {
+        await this.userPreferencesCsmr.sendMail(
+          {
+            email,
+            givenName,
+            familyName,
+          },
+          {
+            formattedIdpSettingsList,
+            updatedIdpSettingsList,
+            hasAllowFutureIdpChanged,
+            allowFutureIdp: updatedIdpSettings.allowFutureIdp,
+            updatedAt,
+          },
+        );
+      }
     } catch (error) {
       this.logger.trace({ error });
       return 'ERROR';

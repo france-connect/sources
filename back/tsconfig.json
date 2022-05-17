@@ -157,7 +157,9 @@
       "@fc/csmr-aggregate-tracks": ["apps/csmr-aggregate-tracks/src"],
       "@fc/csmr-aggregate-tracks/*": ["apps/csmr-aggregate-tracks/src/*"],
       "@fc/partners": ["apps/partners/src"],
-      "@fc/partners/*": ["apps/partners/src/*"]
+      "@fc/partners/*": ["apps/partners/src/*"],
+      "@fc/geoip-maxmind": ["libs/geoip-maxmind/src"],
+      "@fc/geoip-maxmind/*": ["libs/geoip-maxmind/src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

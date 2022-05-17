@@ -57,7 +57,11 @@ describe('CoreFcpController', () => {
     sub: '1',
   } as IOidcIdentity;
 
-  let res;
+  const res = {
+    redirect: jest.fn(),
+    render: jest.fn(),
+  };
+
   const req = {
     fc: {
       interactionId: interactionIdMock,
@@ -255,10 +259,10 @@ describe('CoreFcpController', () => {
     sessionServiceMock.set.mockResolvedValueOnce(undefined);
 
     coreServiceMock.verify.mockResolvedValue(interactionDetailsResolved);
-    coreServiceMock.getClaimsForInteraction.mockResolvedValue(claimsMock);
-    coreServiceMock.getScopesForInteraction.mockResolvedValue(scopesMock);
+    coreServiceMock.getClaimsForInteraction.mockReturnValue(claimsMock);
+    coreServiceMock.getScopesForInteraction.mockReturnValue(scopesMock);
     coreServiceMock.isConsentRequired.mockResolvedValue(true);
-    coreServiceMock.getClaimsLabelsForInteraction.mockResolvedValue(
+    coreServiceMock.getClaimsLabelsForInteraction.mockReturnValue(
       claimsLabelMock,
     );
     libCoreServiceMock.rejectInvalidAcr.mockResolvedValue(false);
@@ -297,9 +301,7 @@ describe('CoreFcpController', () => {
       const req = {
         fc: { interactionId: interactionIdMock },
       };
-      const res = {
-        render: jest.fn(),
-      };
+
       oidcProviderServiceMock.getInteraction.mockResolvedValue({
         params: 'params',
         prompt: 'prompt',
@@ -325,10 +327,6 @@ describe('CoreFcpController', () => {
       // Given
       const req = {
         fc: { interactionId: interactionIdMock },
-      };
-
-      const res = {
-        render: jest.fn(),
       };
 
       const idpFilterExclude = true;
@@ -448,9 +446,6 @@ describe('CoreFcpController', () => {
 
   describe('getVerify()', () => {
     it('should call coreService', async () => {
-      const res = {
-        redirect: jest.fn(),
-      };
       // When
       await coreController.getVerify(req, res, params, sessionServiceMock);
       // Then
@@ -613,74 +608,34 @@ describe('CoreFcpController', () => {
 
   describe('getConsent()', () => {
     it('should get data from session', async () => {
-      // Given
-      const reqMock = {};
-      const resMock = {};
       // When
-      await coreController.getConsent(
-        reqMock,
-        resMock,
-        params,
-        sessionServiceMock,
-      );
+      await coreController.getConsent(req, res, params, sessionServiceMock);
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
     });
 
     it('should check if consent is required', async () => {
-      // Given
-      const reqMock = {
-        fc: { interactionId: interactionIdMock },
-      };
-      const resMock = {};
       // When
-      await coreController.getConsent(
-        reqMock,
-        resMock,
-        params,
-        sessionServiceMock,
-      );
+      await coreController.getConsent(req, res, params, sessionServiceMock);
       // Then
       expect(coreServiceMock.isConsentRequired).toHaveBeenCalledTimes(1);
       expect(coreServiceMock.isConsentRequired).toHaveBeenCalledWith(spIdMock);
     });
 
     it('should get data from interaction with oidc provider', async () => {
-      // Given
-      const reqMock = {
-        fc: { interactionId: interactionIdMock },
-      };
-      const resMock = {};
-
       // When
-      await coreController.getConsent(
-        reqMock,
-        resMock,
-        params,
-        sessionServiceMock,
-      );
+      await coreController.getConsent(req, res, params, sessionServiceMock);
       // Then
       expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledTimes(1);
       expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledWith(
-        reqMock,
-        resMock,
+        req,
+        res,
       );
     });
 
     it('should generate a csrf token', async () => {
-      // Given
-      const reqMock = {
-        fc: { interactionId: interactionIdMock },
-      };
-      const resMock = {};
-
       // When
-      await coreController.getConsent(
-        reqMock,
-        resMock,
-        params,
-        sessionServiceMock,
-      );
+      await coreController.getConsent(req, res, params, sessionServiceMock);
       // Then
       expect(sessionCsrfServiceMock.get).toHaveBeenCalledTimes(1);
       expect(sessionCsrfServiceMock.get).toHaveBeenCalledWith();
@@ -693,16 +648,12 @@ describe('CoreFcpController', () => {
 
     it('should return data from session for interactionId', async () => {
       // Given
-      const reqMock = {
-        fc: { interactionId: interactionIdMock },
-      };
-      const resMock = {};
       serviceProviderServiceMock.consentRequired.mockReturnValue(false);
 
       // When
       const result = await coreController.getConsent(
-        reqMock,
-        resMock,
+        req,
+        res,
         params,
         sessionServiceMock,
       );
@@ -855,10 +806,6 @@ describe('CoreFcpController', () => {
 
     let validateIdentityMock;
     beforeEach(() => {
-      res = {
-        redirect: jest.fn(),
-      };
-
       oidcClientServiceMock.getTokenFromProvider.mockReturnValueOnce({
         accessToken: accessTokenMock,
         acr: acrMock,

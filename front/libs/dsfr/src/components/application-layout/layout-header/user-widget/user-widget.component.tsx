@@ -26,6 +26,8 @@ export const UserWidgetComponent: React.FC<UserWidgetComponentProps> = React.mem
       <div
         className={classnames(
           'UserWidgetComponent flex-columns items-center is-blue-france no-flex-grow no-white-space',
+          // Classe CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           { 'flex-end': gtTablet },
           className,
         )}>

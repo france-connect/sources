@@ -38,6 +38,8 @@ export const ServiceComponent: React.FC<ServiceComponentProps> = React.memo(
       <li
         className={classnames(
           'ServiceComponent flex-start items-start',
+          // class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           { disabled: isDisabled, 'flex-columns': gtMobile, 'flex-rows': !gtMobile },
           className,
         )}

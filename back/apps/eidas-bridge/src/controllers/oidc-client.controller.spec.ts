@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { LoggerService } from '@fc/logger-legacy';
+import { IdentityProviderMetadata } from '@fc/oidc';
 import { OidcClientService } from '@fc/oidc-client';
 import {
   SessionCsrfService,
@@ -105,7 +106,13 @@ describe('OidcClient Controller', () => {
       redirect: jest.fn(),
     };
 
-    identityProviderServiceMock.getById.mockReturnValue({ name: 'foo' });
+    const idpMock: Partial<IdentityProviderMetadata> = {
+      name: 'nameValue',
+      title: 'titleValue',
+    };
+
+    identityProviderServiceMock.getById.mockReturnValue(idpMock);
+
     sessionServiceMock.get.mockResolvedValue({
       idpState: stateMock,
       idpNonce: nonceMock,
@@ -223,7 +230,8 @@ describe('OidcClient Controller', () => {
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith({
         idpId: body.providerUid,
-        idpName: 'foo',
+        idpName: 'nameValue',
+        idpLabel: 'titleValue',
         idpState: stateMock,
         idpNonce: nonceMock,
       });

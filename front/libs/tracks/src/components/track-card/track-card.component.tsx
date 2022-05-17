@@ -8,7 +8,7 @@ import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';
 
-export const MISSING_SP_NAME_VALUE = 'Nom du service non défini';
+export const MISSING_SP_LABEL_VALUE = 'Nom du service non défini';
 
 export interface TrackCardProps {
   track: EnhancedTrack;
@@ -23,7 +23,7 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
     setOpened(next);
   }, [opened]);
 
-  const { city, claims, country, datetime, event, idpName, platform, spAcr, spName, trackId } =
+  const { city, claims, country, datetime, event, idpLabel, platform, spAcr, spLabel, trackId } =
     track;
 
   /**
@@ -43,7 +43,7 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
       className={classnames(
         'card',
         `track-${platform}`,
-        'use-pointer is-full-width text-left is-block is-relative is-blue-shadow mb32 px20 py16',
+        'use-pointer is-full-width text-left is-block is-relative mb32 px20 py16',
       )}
       data-testid={trackId}
       data-time={datetime}
@@ -54,7 +54,7 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
         datetime={datetime}
         opened={opened}
         options={options}
-        serviceProviderName={spName || MISSING_SP_NAME_VALUE}
+        serviceProviderLabel={spLabel || MISSING_SP_LABEL_VALUE}
       />
       <TrackCardContentComponent
         accessibleId={cardA11YId}
@@ -62,7 +62,7 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
         claims={claims}
         country={country}
         datetime={datetime}
-        idpName={idpName}
+        idpLabel={idpLabel}
         opened={opened}
         spAcr={spAcr}
       />

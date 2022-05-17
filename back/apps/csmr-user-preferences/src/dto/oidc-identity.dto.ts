@@ -1,56 +1,30 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Expose, Type } from 'class-transformer';
+import { Expose } from 'class-transformer';
 import {
+  IsAscii,
   IsEmail,
   IsEnum,
-  IsObject,
   IsOptional,
   Length,
+  MinLength,
   ValidateIf,
-  ValidateNested,
 } from 'class-validator';
 
 import { IsCog } from '@fc/cog';
 import { IsSafeString } from '@fc/common';
-import { MinIdentityDto } from '@fc/oidc-client';
 import { Genders } from '@fc/rnipp';
 
 const COG_FRANCE = '99100';
 
-class IdentityAddress {
-  @IsSafeString()
+export class OidcIdentityDto {
+  @MinLength(1)
+  @IsAscii()
   @IsOptional()
   @Expose()
-  country?: string;
+  readonly sub?: string;
 
-  @IsSafeString()
-  @IsOptional()
-  @Expose()
-  formatted?: string;
-
-  @IsSafeString()
-  @IsOptional()
-  @Expose()
-  locality?: string;
-
-  @IsOptional()
-  @IsCog()
-  @Expose()
-  // oidc naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  postal_code?: string;
-
-  @IsSafeString()
-  @IsOptional()
-  @Expose()
-  // oidc naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  street_address?: string;
-}
-
-export class OidcIdentityDto extends MinIdentityDto {
   @IsSafeString()
   @Length(1, 256)
   @Expose()
@@ -91,29 +65,9 @@ export class OidcIdentityDto extends MinIdentityDto {
   readonly preferred_username?: string;
 
   @IsEmail()
-  @Expose()
-  readonly email: string;
-
-  /**
-   * @todo Remove phone_number as it is no longer a supported scope on FCP
-   * Use IsSafeString for now to allow empty phone_number returned by the FI mocks
-   * @author Nicolas Legeay
-   * @date 2021-08-03
-   * @ticket FC-548
-   */
-  @IsSafeString()
   @IsOptional()
   @Expose()
-  // oidc naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly phone_number?: string;
-
-  @IsObject()
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => IdentityAddress)
-  @Expose()
-  readonly address?: IdentityAddress;
+  readonly email?: string;
 
   static shouldValidateBirthplace(instance: OidcIdentityDto) {
     return instance.birthcountry === COG_FRANCE;

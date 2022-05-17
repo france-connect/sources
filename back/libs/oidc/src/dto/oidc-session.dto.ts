@@ -57,6 +57,11 @@ export class OidcSession {
   @IsOptional()
   @IsString()
   @MinLength(1)
+  readonly idpLabel?: string;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   readonly idpState?: string;
 
   @IsOptional()

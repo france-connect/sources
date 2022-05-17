@@ -21,7 +21,7 @@ describe('TrackCardHeaderComponent', () => {
         datetime={date}
         opened={false}
         options={options}
-        serviceProviderName="any identity provider name"
+        serviceProviderLabel="any identity provider name"
       />,
     );
     // then
@@ -37,7 +37,7 @@ describe('TrackCardHeaderComponent', () => {
         datetime={date}
         opened={false}
         options={options}
-        serviceProviderName="any"
+        serviceProviderLabel="any"
       />,
     );
     // then
@@ -52,7 +52,7 @@ describe('TrackCardHeaderComponent', () => {
         datetime={date}
         opened={false}
         options={options}
-        serviceProviderName="any"
+        serviceProviderLabel="any"
       />,
     );
     // then
@@ -68,7 +68,7 @@ describe('TrackCardHeaderComponent', () => {
         opened
         datetime={date}
         options={options}
-        serviceProviderName="any"
+        serviceProviderLabel="any"
       />,
     );
     // then

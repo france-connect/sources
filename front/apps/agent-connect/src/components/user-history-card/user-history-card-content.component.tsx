@@ -23,6 +23,8 @@ export const UserHistoryCardContentComponent = React.memo(
       <div
         className={classNames('flex-center rounded card-wrapper bg-blue-france-100', {
           p24: !gtTablet,
+          // Class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'px24 pt24': gtTablet,
         })}
         data-testid="container">

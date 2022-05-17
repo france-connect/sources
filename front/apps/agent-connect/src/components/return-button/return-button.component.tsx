@@ -17,8 +17,14 @@ export const ReturnButtonComponent = () => {
   return (
     <a
       className={classNames('return-button flex-columns items-center no-underline fs14 px12', {
+        // Class CSS
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'bg-g200': !gtTablet,
+        // Class CSS
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'flex-end': gtTablet,
+        // Class CSS
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         'is-mobile': !gtTablet,
         m16: !gtTablet,
       })}

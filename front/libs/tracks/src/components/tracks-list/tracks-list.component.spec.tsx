@@ -22,7 +22,7 @@ const tracks = [
     event: 'mock-event-1',
     spAcr: 'mock-spacr-1',
     spId: 'mock-spid-1',
-    spName: 'mock-spname-1',
+    spLabel: 'mock-splabel-1',
     trackId: 'mock-trackid-1',
   },
   {
@@ -34,7 +34,7 @@ const tracks = [
     event: 'mock-event-2',
     spAcr: 'mock-spacr-2',
     spId: 'mock-spid-2',
-    spName: 'mock-spname-2',
+    spLabel: 'mock-splabel-2',
     trackId: 'mock-trackid-2',
   },
 ];

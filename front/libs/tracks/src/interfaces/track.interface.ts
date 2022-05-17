@@ -10,10 +10,10 @@ export interface Track {
   claims: string[] | null;
   country: string;
   event: string;
-  idpName: string;
+  idpLabel: string;
   platform: 'FranceConnect' | 'FranceConnect+';
   spAcr: keyof typeof EidasToLabel;
-  spName?: string;
+  spLabel?: string;
   time: number;
   trackId: string;
 }

@@ -6,6 +6,7 @@ import { DynamicModule, Module, ModuleMetadata, Type } from '@nestjs/common';
 import { AccountModule } from '@fc/account';
 import { ElasticsearchModule } from '@fc/elasticsearch';
 import { ExceptionsModule } from '@fc/exceptions';
+import { GeoipMaxmindModule } from '@fc/geoip-maxmind';
 import { LoggerModule } from '@fc/logger-legacy';
 import { MongooseModule } from '@fc/mongoose';
 
@@ -35,6 +36,7 @@ export class CsmrTracksModule {
         LoggerModule,
         ElasticsearchModule.register(),
         AccountModule,
+        GeoipMaxmindModule,
         ...imports,
       ],
       controllers: [CsmrTracksController],

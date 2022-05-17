@@ -41,7 +41,11 @@ export const LayoutHeaderComponent: React.FC<LayoutHeaderProps> = React.memo(
           role="banner">
           <div
             className={classnames('flex-columns flex-between content-wrapper-lg px16 py12', {
+              // Classe CSS
+              // eslint-disable-next-line @typescript-eslint/naming-convention
               'items-center': gtTablet,
+              // Classe CSS
+              // eslint-disable-next-line @typescript-eslint/naming-convention
               'items-start': !gtTablet,
             })}
             data-testid="banner-content">
