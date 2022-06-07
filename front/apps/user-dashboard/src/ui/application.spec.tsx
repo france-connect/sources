@@ -2,8 +2,8 @@ import { render } from '@testing-library/react';
 import { ReactElement } from 'react';
 import { mocked } from 'ts-jest/utils';
 
+import { AccountProvider, AccountProviderProps } from '@fc/account';
 import { ApplicationLayout } from '@fc/dsfr';
-import { UserInfosProvider, UserInfosProviderProps } from '@fc/oidc-client';
 import { AppContextProvider, AppContextProviderProps } from '@fc/state-management';
 
 import { AppConfig } from '../config';
@@ -15,7 +15,7 @@ jest.mock('@fc/state-management');
 describe('Application', () => {
   const AppContextProviderMock = mocked(AppContextProvider);
   const ApplicationLayoutMock = mocked(ApplicationLayout);
-  const UserInfosProviderMock = mocked(UserInfosProvider);
+  const AccountProviderMock = mocked(AccountProvider);
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -25,8 +25,8 @@ describe('Application', () => {
     AppContextProviderMock.mockImplementation(
       ({ children }: AppContextProviderProps) => children as ReactElement,
     );
-    UserInfosProviderMock.mockImplementation(
-      ({ children }: UserInfosProviderProps) => children as ReactElement,
+    AccountProviderMock.mockImplementation(
+      ({ children }: AccountProviderProps) => children as ReactElement,
     );
     ApplicationLayoutMock.mockReturnValue(<div>ApplicationLayoutMock mockReturnValue</div>);
   });
@@ -40,13 +40,13 @@ describe('Application', () => {
     expect(testValue).toBeInTheDocument();
   });
 
-  it('should call UserInfosProviderMock with config', () => {
+  it('should call AccountProviderMock with config', () => {
     // Given
     render(<Application />);
     // Then
-    expect(UserInfosProviderMock).toHaveBeenCalledWith(
+    expect(AccountProviderMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        userInfosEndpoint: AppConfig.OidcClient.endpoints.getUserInfos,
+        config: AppConfig.Account,
       }),
       {},
     );

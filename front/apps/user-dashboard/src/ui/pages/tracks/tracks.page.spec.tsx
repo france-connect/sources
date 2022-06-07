@@ -5,34 +5,36 @@ import { TracksListComponent } from '@fc/tracks';
 
 import { IntroductionComponent } from './introduction';
 import { TracksPage } from './tracks.page';
-import { UserWelcomeComponent } from './user-welcome';
 
 jest.mock('@fc/tracks');
 jest.mock('./introduction');
-jest.mock('./user-welcome');
 
 describe('TracksPage', () => {
   const TracksListComponentMock = mocked(TracksListComponent);
   TracksListComponentMock.mockReturnValue(<div>FooBar TracksListComponent</div>);
 
-  it('IntroductionComponent should have been called', () => {
-    // setup
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should match the snapshot', () => {
+    // when
+    const { container } = render(<TracksPage />);
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
+  it('should call IntroductionComponent', () => {
+    // when
     render(<TracksPage />);
-    // expect
+    // then
     expect(IntroductionComponent).toHaveBeenCalled();
   });
 
-  it('UserWelcomeComponent should have been called', () => {
-    // setup
+  it('should called TracksListComponent', () => {
+    // when
     render(<TracksPage />);
-    // expect
-    expect(UserWelcomeComponent).toHaveBeenCalled();
-  });
-
-  it('TracksListComponent should have been called', () => {
-    // setup
-    render(<TracksPage />);
-    // expect
+    // then
     expect(TracksListComponent).toHaveBeenCalled();
   });
 });

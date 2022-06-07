@@ -42,28 +42,30 @@ export const TrackCardBadgeComponent = React.memo(({ fromFcPlus, type }: TraceCa
   const badge = !type ? null : TYPE_CONFIG[type.toUpperCase()];
 
   return (
-    <div className="badge is-absolute fr-text-xs is-white">
+    <div className="badge is-absolute fr-text--xs is-white">
       <div className="is-relative flex-columns flex-start items-center is-uppercase">
         <div
           // @TODO ajuster quand on aura récupérer l'origine/source des traces
-          className={classnames('py8 px12 mr8', {
+          // class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          className={classnames('fr-py-1w fr-px-3v fr-mr-1w', {
             // class CSS
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            'bg-blue-agentconnect': !fromFcPlus,
+            'fr-badge--blue-france-connect': !fromFcPlus,
             // class CSS
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            'bg-blue-france': fromFcPlus,
+            'fr-badge--blue-france-connect-plus': fromFcPlus,
           })}>
           {fromFcPlus && <b>FranceConnect+</b>}
           {!fromFcPlus && <b>FranceConnect</b>}
         </div>
         {badge && (
           <div
-            className="flex-columns items-center py8 px12"
+            className="flex-columns items-center fr-py-1w fr-px-3v"
             data-testid="badge"
             style={{ backgroundColor: badge.backgroundColor }}>
             <badge.Icon size={18} />
-            <b className="ml8">{badge.label}</b>
+            <b className="fr-ml-1w">{badge.label}</b>
           </div>
         )}
       </div>

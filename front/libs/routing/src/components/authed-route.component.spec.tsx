@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
-import { UserInfosContext } from '@fc/oidc-client';
+import { AccountContext } from '@fc/account';
 import { renderWithRouter } from '@fc/tests-utils';
 
 import { AuthedRouteComponent } from './authed-route.component';
@@ -16,7 +16,7 @@ describe('AuthedRouteComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should call React.useContext with UserInfosContext as parameter', () => {
+  it('should call React.useContext with AccountContext as parameter', () => {
     // when
     renderWithRouter(
       <AuthedRouteComponent authRedirect="any-redirect-path" component={ChildrenComponentMock} />,
@@ -24,7 +24,7 @@ describe('AuthedRouteComponent', () => {
     );
     // then
     expect(useContextMock).toHaveBeenCalledTimes(1);
-    expect(useContextMock).toHaveBeenCalledWith(UserInfosContext);
+    expect(useContextMock).toHaveBeenCalledWith(AccountContext);
   });
 
   it('should call a ReactRouter Route', () => {

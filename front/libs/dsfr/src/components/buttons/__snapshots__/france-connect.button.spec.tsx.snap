@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FranceConnectButton should match the snapshot, when showHelp is false 1`] = `
+<div>
+  <div
+    class="fr-connect-group"
+  >
+    <button
+      class="fr-connect"
+      type="button"
+    >
+      <span
+        class="fr-connect__login"
+      >
+        S’identifier avec
+      </span>
+      <span
+        class="fr-connect__brand"
+      >
+        FranceConnect
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`FranceConnectButton should match the snapshot, when showHelp is true 1`] = `
+<div>
+  <div
+    class="fr-connect-group"
+  >
+    <button
+      class="fr-connect"
+      type="button"
+    >
+      <span
+        class="fr-connect__login"
+      >
+        S’identifier avec
+      </span>
+      <span
+        class="fr-connect__brand"
+      >
+        FranceConnect
+      </span>
+    </button>
+    <p>
+      <a
+        href="https://franceconnect.gouv.fr/"
+        title="Qu’est ce que FranceConnect ? - nouvelle fenêtre"
+      >
+        Qu’est ce que FranceConnect ?
+      </a>
+    </p>
+  </div>
+</div>
+`;

@@ -1,16 +1,15 @@
-import './user-preferences.scss';
-
 import classnames from 'classnames';
 import React, { FormEventHandler } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-import { ButtonSimpleComponent, FieldCheckboxComponent } from '@fc/backoffice';
+import { CheckboxInput, SimpleButton, Sizes } from '@fc/dsfr';
 
 import { UserPreferencesData } from '../interfaces';
 import { ServicesListComponent } from './services-list.component';
+import styles from './user-preferences-form.module.scss';
 
 interface UserPreferencesFormComponentProps {
-  canNotSubmit: boolean;
+  isDisabled: boolean;
   onSubmit: FormEventHandler<HTMLFormElement>;
   userPreferences: UserPreferencesData | undefined;
   showNotification: boolean;
@@ -18,7 +17,7 @@ interface UserPreferencesFormComponentProps {
 
 export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponentProps> = React.memo(
   ({
-    canNotSubmit,
+    isDisabled,
     onSubmit,
     showNotification,
     userPreferences,
@@ -27,36 +26,46 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
     const showServicesList =
       userPreferences && userPreferences.idpList && userPreferences.idpList.length > 0;
     return (
-      <form data-testid="user-preferences-form" onSubmit={onSubmit}>
-        <h2 className="is-h3 mt40 is-blue-france">
+      <form
+        data-testid="user-preferences-form"
+        id="UserPreferencesFormComponent"
+        onSubmit={onSubmit}>
+        <h2 className={classnames(styles.title, 'fr-h3 fr-mt-5w')}>
           <b>Vos réglages&nbsp;:</b>
         </h2>
-        <p className="mt16 lh24 fs16">
+        <p className="fr-mt-2w">
           Attention&nbsp;:&nbsp;<u>Vous devez avoir au moins un compte autorisé</u> pour continuer à
           utiliser FranceConnect. Nous vous conseillons de ne bloquer que les comptes que vous
           n’utilisez pas.
         </p>
         {showServicesList && <ServicesListComponent identityProviders={userPreferences.idpList} />}
-        <p className="mt40 lh24 fs16">
+        <p className="fr-mt-5w">
           Pour vous offrir toujours plus de choix, il est possible que FranceConnect mette à votre
           disposition de nouveaux moyens d’identification dans le futur. En cochant cette case, ils
           ne pourront pas être utilisés pour accéder aux services proposant FranceConnect.
         </p>
-        <p className="mt16 lh24 fs16">Vous pourrez les autoriser depuis cette page.</p>
-        <FieldCheckboxComponent
-          className="is-bold mt20"
+        <p className="fr-mt-2w">Vous pourrez les autoriser depuis cette page.</p>
+        <CheckboxInput
           label="Bloquer par défaut les nouveaux moyens de connexion dans FranceConnect"
           name="allowFutureIdp"
         />
-        <div className={classnames('text-center', { mt40: !gtTablet, mt88: gtTablet })}>
-          <ButtonSimpleComponent
-            className="py12 px32"
-            disabled={canNotSubmit}
+        <div
+          className={classnames('text-center', {
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'fr-mt-11w': gtTablet,
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'fr-mt-5w': !gtTablet,
+          })}>
+          <SimpleButton
+            disabled={isDisabled}
             label="Enregistrer mes réglages"
+            size={Sizes.MEDIUM}
             type="submit"
           />
           {showNotification && (
-            <p className="mt12">
+            <p className="fr-mt-3v">
               Une notification récapitulant les modifications va vous être envoyée
             </p>
           )}

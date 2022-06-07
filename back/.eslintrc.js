@@ -92,6 +92,7 @@ module.exports = {
           ['^@?\\w'],
           //
           ['^@nestjs'],
+          ['^@entities/'],
           ['^@fc/'],
           // Anything not matched in another group.
           ['^'],

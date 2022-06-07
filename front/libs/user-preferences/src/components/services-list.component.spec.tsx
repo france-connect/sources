@@ -10,14 +10,11 @@ describe('ServicesListComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should render with classes', () => {
+  it('should match the snapshot', () => {
     // when
     const { container } = render(<ServicesListComponent identityProviders={[]} />);
-    const element = container.firstChild;
     // then
-    expect(element).toHaveClass('ServicesListComponent');
-    expect(element).toHaveClass('mt24');
-    expect(element).toHaveClass('unstyled-list');
+    expect(container).toMatchSnapshot();
   });
 
   it('should call ServiceComponent with a service', () => {
@@ -44,15 +41,7 @@ describe('ServicesListComponent', () => {
     render(<ServicesListComponent identityProviders={identityProviders} />);
     // then
     expect(ServiceComponent).toHaveBeenCalledTimes(2);
-    expect(ServiceComponent).toHaveBeenNthCalledWith(
-      1,
-      { className: 'mb16', service: identityProviders[0] },
-      {},
-    );
-    expect(ServiceComponent).toHaveBeenNthCalledWith(
-      2,
-      { className: 'pt16 with-border', service: identityProviders[1] },
-      {},
-    );
+    expect(ServiceComponent).toHaveBeenNthCalledWith(1, { service: identityProviders[0] }, {});
+    expect(ServiceComponent).toHaveBeenNthCalledWith(2, { service: identityProviders[1] }, {});
   });
 });

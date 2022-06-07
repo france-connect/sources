@@ -19,7 +19,7 @@ Fonctionnalité: Préférences FI
     Et que je suis sur la page gestion des accès du dashboard usager
     Et que j'utilise le fournisseur d'identité "pour le test de préférences FI"
     Et que je décide de bloquer le fournisseur d'identité
-    Et que je décide d'autoriser les nouveaux fournisseurs d'identité par défaut
+    Et que je décide d'autoriser les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du dashboard usager
     Quand je me connecte au fournisseur d'identité via FranceConnect Legacy
@@ -36,7 +36,7 @@ Fonctionnalité: Préférences FI
     Et que je suis sur la page gestion des accès du dashboard usager
     Et que j'utilise le fournisseur d'identité "pour le test de préférences FI"
     Et que je décide de bloquer le fournisseur d'identité
-    Et que je décide de bloquer les nouveaux fournisseurs d'identité par défaut
+    Et que je décide de bloquer les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du dashboard usager
     Quand je me connecte au fournisseur d'identité via FranceConnect Legacy
@@ -53,7 +53,7 @@ Fonctionnalité: Préférences FI
     Et que je suis sur la page gestion des accès du dashboard usager
     Et que j'utilise le fournisseur d'identité "pour le test de préférences FI"
     Et que je décide d'autoriser le fournisseur d'identité
-    Et que je décide d'autoriser les nouveaux fournisseurs d'identité par défaut
+    Et que je décide d'autoriser les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du dashboard usager
     Quand je me connecte à FranceConnect Legacy
@@ -68,7 +68,7 @@ Fonctionnalité: Préférences FI
     Et que je suis sur la page gestion des accès du dashboard usager
     Et que j'utilise le fournisseur d'identité "pour le test de préférences FI"
     Et que je décide d'autoriser le fournisseur d'identité
-    Et que je décide de bloquer les nouveaux fournisseurs d'identité par défaut
+    Et que je décide de bloquer les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du dashboard usager
     Quand je me connecte à FranceConnect Legacy
@@ -81,7 +81,7 @@ Fonctionnalité: Préférences FI
     Et que je suis redirigé vers la page historique du dashboard usager
     Et que je clique sur le lien vers la page gestion des accès du dashboard usager
     Et que je suis sur la page gestion des accès du dashboard usager
-    Et que je décide d'autoriser les nouveaux fournisseurs d'identité par défaut
+    Et que je décide d'autoriser les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du dashboard usager
     Et que je crée le fournisseur d'identité "fip4_idp-settings" avec la configuration "fiLegacy" sur le site d'exploitation
@@ -97,7 +97,7 @@ Fonctionnalité: Préférences FI
     Et que je suis redirigé vers la page historique du dashboard usager
     Et que je clique sur le lien vers la page gestion des accès du dashboard usager
     Et que je suis sur la page gestion des accès du dashboard usager
-    Et que je décide de bloquer les nouveaux fournisseurs d'identité par défaut
+    Et que je décide de bloquer les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du dashboard usager
     Et que je crée le fournisseur d'identité "fip4_idp-settings" avec la configuration "fiLegacy" sur le site d'exploitation

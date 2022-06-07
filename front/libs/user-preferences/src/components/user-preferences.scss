@@ -1,69 +1,47 @@
-@import '@fc/dsfr/index.scss';
-
-.ServicesListComponent {
-  .with-border {
-    border-top: 1px solid #eeeeee;
-  }
-}
-
-.ServiceComponent {
-  &-image {
-    background: #e5edf5;
-    border-radius: 4px;
-    height: 70px;
-    max-height: 70px;
-    max-width: 232px;
-    min-height: 70px;
-    min-width: 232px;
-    width: 232px;
-
-    img {
-      display: block;
-      left: 50%;
-      max-height: 76%;
-      max-width: 84%;
-      position: absolute;
-      top: 50%;
-      transform: translate(-50%, -50%);
-    }
+#UserPreferencesFormComponent {
+  .fr-toggle input[type='checkbox'] {
+    background-color: #ce0500;
+    background-color: var(--background-action-high-error);
+    box-shadow: inset #ce0500;
+    box-shadow: inset 0 0 0 1px var(--border-action-high-error);
   }
 
-  .FieldSwitchInputComponent {
-    &-toggle-button {
-      background: $error;
-    }
-
-    &-toggle-thumb {
-      background: $white;
-    }
-
-    &-toggle-thumb,
-    &-toggle-button {
-      box-shadow: inset 0 0 0 1px $error;
-    }
-
-    &-icon,
-    &-legend {
-      color: $error;
-      font-weight: bold;
-    }
+  .fr-toggle input[type='checkbox'] ~ label::after {
+    background-color: #ffffff;
+    background-color: var(--background-default-grey);
+    box-shadow: inset #ce0500;
+    box-shadow: inset 0 0 0 1px var(--border-action-high-error);
+    color: #ce0500;
+    color: var(--text-default-error);
+    text-indent: 0;
+    z-index: 999999;
   }
 
-  .FieldSwitchInputComponent.checked {
-    .FieldSwitchInputComponent {
-      &-toggle-button {
-        background: $success;
-      }
+  .fr-toggle input[type='checkbox'] ~ label::before {
+    color: #ce0500;
+    color: var(--text-default-error);
+  }
 
-      &-toggle-thumb,
-      &-toggle-button {
-        box-shadow: inset 0 0 0 1px $success;
-      }
+  .fr-toggle input[type='checkbox']:checked {
+    background-color: #18753c;
+    background-color: var(--background-action-high-success);
+    box-shadow: inset #18753c;
+    box-shadow: inset 0 0 0 1px var(--border-action-high-success);
+  }
 
-      &-icon,
-      &-legend {
-        color: $success;
-      }
-    }
+  .fr-toggle input[type='checkbox']:checked ~ label::after {
+    background-color: #ffffff;
+    background-color: var(--background-default-grey);
+    box-shadow: inset #18753c;
+    box-shadow: inset 0 0 0 1px var(--border-action-high-success);
+    color: #18753c;
+    color: var(--text-default-success);
+    text-indent: 0;
+    z-index: 999999;
+  }
+
+  .fr-toggle input[type='checkbox']:checked ~ label::before {
+    color: #18753c;
+    color: var(--text-default-success);
   }
 }

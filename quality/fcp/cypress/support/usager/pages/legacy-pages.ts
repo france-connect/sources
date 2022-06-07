@@ -4,7 +4,7 @@
  * Those pages are used for the user-dashboard tests.
  */
 
-import { ChainableElement } from '../../common/types';
+import { ChainableElement, IdentityProvider } from '../../common/types';
 
 export class TechnicalErrorPage {
   checkIsVisible(): void {
@@ -21,8 +21,16 @@ export class TechnicalErrorPage {
 }
 
 export class IdentityProviderSelectionPage {
-  getIdpButton(name: string): ChainableElement {
-    return cy.get(`button[id="fi-${name}"]`);
+  getIdpGrid(): ChainableElement {
+    return cy.get('.main-providers');
+  }
+
+  getIdpButton(idp: IdentityProvider): ChainableElement {
+    return cy.get(idp.selectors.idpButton);
+  }
+
+  checkIsVisible(): void {
+    this.getIdpGrid().should('be.visible');
   }
 }
 

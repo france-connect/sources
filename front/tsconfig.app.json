@@ -41,7 +41,9 @@
       "@fc/agent-connect-search": ["../../libs/agent-connect-search/src"],
       "@fc/agent-connect-search/*": ["../../libs/agent-connect-search/src/*"],
       "@fc/user-preferences": ["../../libs/user-preferences/src"],
-      "@fc/user-preferences/*": ["../../libs/user-preferences/src/*"]
+      "@fc/user-preferences/*": ["../../libs/user-preferences/src/*"],
+      "@fc/account": ["../../libs/account/src"],
+      "@fc/account/*": ["../../libs/account/src/*"]
     }
   }
 }

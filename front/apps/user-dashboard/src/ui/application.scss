@@ -1,0 +1,14 @@
+@import '@gouvfr/dsfr/dist/dsfr/dsfr.css';
+@import '@fc/dsfr/styles/index.scss';
+
+#page-container {
+  max-width: 992px;
+
+  &:not(.homepage) {
+    max-width: 768px;
+  }
+}
+
+.is-blue-shadow {
+  box-shadow: 0 0 7px -2px #66a1e4;
+}

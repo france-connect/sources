@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SimpleButton should match the snapshot 1`] = `
+<div>
+  <button
+    class="fr-btn fr-btn--md"
+  >
+    any-label-mock
+  </button>
+</div>
+`;
+
+exports[`SimpleButton should match the snapshot, when size is defined to Sizes.LARGE 1`] = `
+<div>
+  <button
+    class="fr-btn fr-btn--lg"
+  >
+    any-label-mock
+  </button>
+</div>
+`;
+
+exports[`SimpleButton should match the snapshot, when size is defined to Sizes.MEDIUM 1`] = `
+<div>
+  <button
+    class="fr-btn fr-btn--md"
+  >
+    any-label-mock
+  </button>
+</div>
+`;
+
+exports[`SimpleButton should match the snapshot, when size is defined to Sizes.SMALL 1`] = `
+<div>
+  <button
+    class="fr-btn fr-btn--sm"
+  >
+    any-label-mock
+  </button>
+</div>
+`;

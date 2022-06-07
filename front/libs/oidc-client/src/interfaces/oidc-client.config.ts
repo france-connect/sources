@@ -8,6 +8,8 @@ export interface OidcClientConfig {
     endSessionUrl?: string;
     getEndSessionUrl?: string;
     getUserInfos: string;
+    // @TODO refacto OidcClient
+    returnButtonUrl?: string;
   };
   csrf?: string;
 }

@@ -14,7 +14,7 @@ export const TracksListComponent = ({ options }: TracksListComponentProps) => {
   });
 
   return (
-    <div className="mt40" id="tracks-list">
+    <div className="fr-mt-5w" id="tracks-list">
       {tracks &&
         tracks
           .map(transformTrackToEnhanced)

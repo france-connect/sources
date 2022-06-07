@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomePage should math the snapshot, in a desktop viewport 1`] = `
+<div>
+  <div
+    class="fr-mt-8w"
+  >
+    <div>
+      ServiceProviderNameComponent
+    </div>
+    <div>
+      UserHistoryComponent
+    </div>
+    <div>
+      SearchComponent
+    </div>
+    <div
+      class="text-center fr-mt-6w"
+    >
+      <div>
+        LinkComponent
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`HomePage should math the snapshot, in a mobile viewport 1`] = `
+<div>
+  <div
+    class="fr-mt-4w"
+  >
+    <div>
+      ServiceProviderNameComponent
+    </div>
+    <div>
+      UserHistoryComponent
+    </div>
+    <div>
+      SearchComponent
+    </div>
+    <div
+      class="text-center fr-mt-6w"
+    >
+      <div>
+        LinkComponent
+      </div>
+    </div>
+  </div>
+</div>
+`;

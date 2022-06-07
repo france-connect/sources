@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReturnButtonComponent should match the snapshot, when isMobileViewport is false 1`] = `
+<div>
+  <li>
+    <a
+      class="fr-btn  fr-fi-arrow-left-line"
+      data-testid="service-provider-back-button"
+      href="any-historyBackURL-mock"
+      title="retourner à l’écran précédent"
+    >
+      <span>
+        Revenir sur 
+        any-serviceProviderName-mock
+      </span>
+    </a>
+  </li>
+</div>
+`;
+
+exports[`ReturnButtonComponent should match the snapshot, when isMobileViewport is true 1`] = `
+<div>
+  <div
+    class="fr-mb-n8v fr-p-2w"
+  >
+    <a
+      class="fr-btn  fr-fi-arrow-left-line fr-btn--icon-left fr-btn--md is-mobile-viewport text-center w100"
+      data-testid="service-provider-back-button"
+      href="any-historyBackURL-mock"
+      title="retourner à l’écran précédent"
+    >
+      <span>
+        Revenir sur 
+        any-serviceProviderName-mock
+      </span>
+    </a>
+  </div>
+</div>
+`;
+
+exports[`ReturnButtonComponent should match the snapshot, when showButton is false 1`] = `
+<div>
+  <li>
+    <span />
+  </li>
+</div>
+`;

@@ -1,0 +1,9 @@
+.button {
+  background: var(--background-alt-grey);
+  border-radius: 4px;
+  color: var(--text-default-grey);
+
+  &:hover {
+    background: var(--background-contrast-grey);
+  }
+}

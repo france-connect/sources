@@ -1,0 +1,23 @@
+.content {
+  /* @extend .use-pointer; */
+
+  background-color: var(--background-alt-grey);
+  border-bottom: 4px var(--blue-agent-connect) solid;
+  border-left: 1px var(--border-default-grey) solid;
+  border-right: 1px var(--border-default-grey) solid;
+  border-top: 1px var(--border-default-grey) solid;
+  height: calc(100% - 24px);
+  height: calc(100% - 1.5rem);
+
+  &:hover {
+    background-color: var(--background-contrast-grey);
+  }
+}
+
+.title {
+  color: var(--blue-agent-connect);
+}
+
+.title:hover {
+  background: transparent !important;
+}

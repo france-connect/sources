@@ -13,7 +13,6 @@ export const getServiceProviderByDescription = (
     serviceProvider,
     `No service provider matches the description '${description}'`,
   ).to.exist;
-  cy.wrap(serviceProvider).as('serviceProvider');
   return serviceProvider;
 };
 

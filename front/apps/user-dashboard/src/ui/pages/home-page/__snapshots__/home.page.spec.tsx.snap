@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomePage should match the snapshot, when csrf token is defined 1`] = `
+<div>
+  <div
+    class="homepage fr-m-auto fr-px-2w fr-mt-8w text-center"
+    id="page-container"
+  >
+    <h1
+      class="fr-mb-5w"
+    >
+      Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter
+    </h1>
+    <div>
+      FoorBar RedirectToIdpFormComponentMock
+    </div>
+    <div>
+      FranceConnectButton
+    </div>
+    <p
+      class="fr-m-auto fr-mt-7v"
+      data-testid="paragraph"
+    >
+      Une fois connecté, vous pourrez accéder à l’ensemble des connexions et échanges de données liés à votre compte sur les 6 derniers mois.
+    </p>
+  </div>
+</div>
+`;
+
+exports[`HomePage should match the snapshot, when csrf token is not defined 1`] = `
+<div>
+  <div
+    class="homepage fr-m-auto fr-px-2w fr-mt-8w text-center"
+    id="page-container"
+  >
+    <h1
+      class="fr-mb-5w"
+    >
+      Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter
+    </h1>
+    <p
+      class="fr-m-auto fr-mt-7v"
+      data-testid="paragraph"
+    >
+      Une fois connecté, vous pourrez accéder à l’ensemble des connexions et échanges de données liés à votre compte sur les 6 derniers mois.
+    </p>
+  </div>
+</div>
+`;

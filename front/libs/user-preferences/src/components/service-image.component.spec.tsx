@@ -17,18 +17,21 @@ describe('ServiceImageComponent', () => {
     jest.clearAllMocks();
   });
 
+  it('should match the snapshot', () => {
+    // when
+    const { container } = render(<ServiceImageComponent service={serviceMock} />);
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
   it('should show a placeholder instead of an image', () => {
     // when
     const { container, getByText } = render(<ServiceImageComponent service={serviceMock} />);
-    const wrapper = container.firstChild;
     const element = getByText('title-mock');
     // then
-    expect(wrapper).toHaveClass('ServiceComponent-image');
-    expect(wrapper).toHaveClass('is-table');
+    expect(container).toMatchSnapshot();
+    expect(element).toBeInTheDocument();
     expect(element.tagName).toStrictEqual('B');
-    expect(element).toHaveClass('is-table-cell');
-    expect(element).toHaveClass('v-align-middle');
-    expect(element).toHaveClass('text-center');
   });
 
   it('should show an image', () => {
@@ -38,14 +41,11 @@ describe('ServiceImageComponent', () => {
     const { container, getByAltText } = render(
       <ServiceImageComponent service={servicesMockWithImage} />,
     );
-    const wrapper = container.firstChild;
     const element = getByAltText(`fournisseur d'identité title-mock`);
     // then
-    expect(wrapper).not.toHaveClass('is-table');
+    expect(container).toMatchSnapshot();
+    expect(element).toBeInTheDocument();
     expect(element.tagName).toStrictEqual('IMG');
-    expect(element).toHaveAttribute('src', '/images/image.mock');
-    expect(element).toHaveAttribute('height', 'auto');
-    expect(element).toHaveAttribute('width', 'auto');
   });
 
   it('should be in a disabled state', () => {
@@ -57,7 +57,7 @@ describe('ServiceImageComponent', () => {
     );
     const wrapper = container.firstChild;
     // then
-    expect(wrapper).toHaveClass('ServiceComponent-image');
+    expect(container).toMatchSnapshot();
     expect(wrapper).toHaveClass('disabled');
     expect(wrapper).toHaveClass('opacity-45');
   });

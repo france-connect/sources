@@ -1,8 +1,9 @@
-import './styles/index.scss';
+import './application.scss';
 
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
+import { AccountProvider } from '@fc/account';
 import { ApplicationLayout as DsfrLayout } from '@fc/dsfr';
 import { AppContextProvider } from '@fc/state-management';
 
@@ -14,7 +15,9 @@ export function Application(): JSX.Element {
     <React.StrictMode>
       <BrowserRouter>
         <AppContextProvider value={{ config: AppConfig }}>
-          <DsfrLayout config={AppConfig.Layout} routes={routes} />
+          <AccountProvider config={AppConfig.Account}>
+            <DsfrLayout config={AppConfig.Layout} routes={routes} />
+          </AccountProvider>
         </AppContextProvider>
       </BrowserRouter>
     </React.StrictMode>

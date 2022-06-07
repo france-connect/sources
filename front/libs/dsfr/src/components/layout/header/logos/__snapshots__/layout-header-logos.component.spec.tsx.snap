@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderLogosComponent should match snapshot when application logo is defined 1`] = `
+<div>
+  <div
+    class="fr-header__logo"
+  >
+    <div>
+      <div>
+        LogoRepubliqueFrancaiseComponent
+      </div>
+    </div>
+  </div>
+  <div
+    class="fr-header__operator"
+  >
+    <img
+      class="fr-responsive-img"
+      src="Any"
+      style="height: 54px; max-height: 54px;"
+    />
+  </div>
+</div>
+`;
+
+exports[`LayoutHeaderLogosComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-header__logo"
+  >
+    <div>
+      <div>
+        LogoRepubliqueFrancaiseComponent
+      </div>
+    </div>
+  </div>
+</div>
+`;

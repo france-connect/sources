@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorPage should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-m-auto fr-px-2w text-center fr-mt-5w"
+    id="page-container"
+  >
+    <h1
+      class="text-center"
+    >
+      Une erreur est survenue
+    </h1>
+    <h2
+      class="text-center"
+    >
+      <span>
+        Erreur
+      </span>
+    </h2>
+    <p
+      class="text-center"
+    >
+      Ceci est une erreur
+    </p>
+  </div>
+</div>
+`;

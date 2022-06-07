@@ -1,0 +1,17 @@
+/**
+ Generate helpers classes for colors
+ From auto generated file `_colors.scss`
+ .is-<color> { setup font-color }
+ .bg-<color> { setup background-color }
+*/
+@each $name, $value in $PALETTE {
+  /* generate font colors */
+  .is-#{$name} {
+    color: $value;
+  }
+
+  /* generate background colors */
+  .bg-#{$name} {
+    background-color: $value;
+  }
+}

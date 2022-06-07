@@ -131,6 +131,15 @@ describe('ConfigParser', () => {
       // Then
       expect(result).toBe(parseJsonPropertyMockReturnValue);
     });
+
+    it('should return undefined', () => {
+      // Given
+      const path = 'barbar';
+      // When
+      const result = reader.json(path);
+      // Then
+      expect(result).toBe(undefined);
+    });
   });
 
   describe('string', () => {
@@ -153,6 +162,28 @@ describe('ConfigParser', () => {
       // Then
       expect(typeof result).toBe('number');
       expect(result).toBe(42);
+    });
+  });
+
+  describe('exist', () => {
+    it('should return true', () => {
+      // Given
+      const path = 'woo';
+      // When
+      const result = reader['exist'](path);
+      // Then
+      expect(typeof result).toBe('boolean');
+      expect(result).toBe(true);
+    });
+
+    it('should return false', () => {
+      // Given
+      const path = 'woowoo';
+      // When
+      const result = reader['exist'](path);
+      // Then
+      expect(typeof result).toBe('boolean');
+      expect(result).toBe(false);
     });
   });
 

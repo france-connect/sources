@@ -10,18 +10,24 @@ export default class ServiceProviderPage {
   clientId: string;
   fcButtonSelector: string;
   logoutButtonSelector: string;
+  mocked: boolean;
   originUrl: string;
+  redirectUri: string;
 
   constructor(args: ServiceProviderBase) {
     const {
       clientId,
+      mocked,
+      redirectUri,
       selectors: { fcButton, logoutButton },
       url,
     } = args;
     this.clientId = clientId;
     this.fcButtonSelector = fcButton;
     this.logoutButtonSelector = logoutButton;
+    this.mocked = mocked;
     this.originUrl = url;
+    this.redirectUri = redirectUri;
   }
 
   get fcButton(): ChainableElement {
@@ -52,7 +58,7 @@ export default class ServiceProviderPage {
       acr_values: acrValues,
       client_id: this.clientId,
       nonce: 'noncefortestsBDD',
-      redirect_uri: `${this.originUrl}/login-callback`,
+      redirect_uri: this.redirectUri,
       response_type: 'code',
       scope: Array.isArray(scopes) ? scopes.join(' ') : scopes,
       state: 'testsBDD',
@@ -62,6 +68,18 @@ export default class ServiceProviderPage {
       failOnStatusCode: false,
       qs,
     });
+  }
+
+  startLogin(
+    fcRootUrl: string,
+    scopeContext: ScopeContext,
+    acrValues: string,
+  ): void {
+    if (this.mocked) {
+      this.callAuthorize(fcRootUrl, scopeContext, acrValues);
+    } else {
+      this.fcButton.click();
+    }
   }
 
   logout(): void {

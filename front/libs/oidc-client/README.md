@@ -2,7 +2,6 @@
 
 Provide method and components to achieve oidc connection.
 
-
 ## Component
 
 ```html

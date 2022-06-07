@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserHistoryCardContentComponent should match the snapshot for a desktop viewport 1`] = `
+<div>
+  <div
+    class="flex-center use-pointer fr-px-3w fr-pt-3w"
+    data-testid="container"
+  >
+    <div
+      class="fr-mb-1w is-g700"
+    >
+      Mon compte
+    </div>
+    <div>
+      FoorBar RedirectToIdpFormComponentMock
+    </div>
+    <button
+      class="fr-text--bold fr-text--xl fr-mb-0"
+      disabled=""
+      type="submit"
+    />
+  </div>
+</div>
+`;
+
+exports[`UserHistoryCardContentComponent should match the snapshot for a tablet viewport 1`] = `
+<div>
+  <div
+    class="flex-center use-pointer fr-p-3w"
+    data-testid="container"
+  >
+    <div
+      class="fr-mb-1w is-g700"
+    >
+      Mon compte
+    </div>
+    <div>
+      FoorBar RedirectToIdpFormComponentMock
+    </div>
+    <button
+      class="fr-text--bold fr-text--xl fr-mb-0"
+      disabled=""
+      type="submit"
+    />
+  </div>
+</div>
+`;

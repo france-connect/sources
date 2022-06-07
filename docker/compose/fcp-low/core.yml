@@ -1,4 +1,4 @@
-version: '3.4'
+version: '2.4'
 
 services:
   ####################
@@ -13,7 +13,7 @@ services:
     depends_on:
       - 'rnipp'
       - 'mongo-fcp-low'
-      - 'redis-pwd'
+      - 'redis-sentinel'
       - 'squid'
       - 'haproxy'
     volumes:

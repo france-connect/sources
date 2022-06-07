@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchBarComponent should match snapshot, whith all props defined 1`] = `
+<div>
+  <div
+    class="fr-search-bar"
+    id="searchbar-form-input-name-mock"
+    role="search"
+  >
+    <label
+      class="fr-label"
+      for="form-input-name-mock"
+    >
+      any-input-label-mock
+    </label>
+    <input
+      class="fr-input"
+      id="form-input-name-mock"
+      name="form-input-name-mock"
+      placeholder="Rechercher"
+      type="search"
+      value="form-input-value-mock"
+    />
+    <button
+      class="fr-btn"
+    >
+      any-button-label-mock
+    </button>
+  </div>
+</div>
+`;
+
+exports[`SearchBarComponent should match snapshot, with default props 1`] = `
+<div>
+  <div
+    class="fr-search-bar"
+    id="searchbar-form-input-name-mock"
+    role="search"
+  >
+    <label
+      class="fr-label"
+      for="form-input-name-mock"
+    />
+    <input
+      class="fr-input"
+      id="form-input-name-mock"
+      name="form-input-name-mock"
+      placeholder="Rechercher"
+      type="search"
+      value="form-input-value-mock"
+    />
+    <button
+      class="fr-btn"
+    />
+  </div>
+</div>
+`;

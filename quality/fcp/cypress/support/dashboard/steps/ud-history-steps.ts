@@ -1,6 +1,6 @@
 import { Given, Then } from 'cypress-cucumber-preprocessor/steps';
 
-import { navigateTo, User } from '../../common/helpers';
+import { navigateTo } from '../../common/helpers';
 import { Environment } from '../../common/types';
 import UdHistoryPage from '../pages/ud-history-page';
 
@@ -37,14 +37,6 @@ Given('les traces FranceConnect+ contiennent {string}', function (tracksType) {
 Given('les traces FranceConnect contiennent {string}', function (tracksType) {
   cy.task('addTracksLegacy', { tracksType });
 });
-
-Then(
-  "le nom de l'usager est affiché sur la page historique du dashboard usager",
-  function () {
-    const { fullName }: User = this.user;
-    udHistoryPage.userName.contains(fullName);
-  },
-);
 
 Then(
   'les {int} traces de FranceConnect de moins de 6 mois sont affichées',

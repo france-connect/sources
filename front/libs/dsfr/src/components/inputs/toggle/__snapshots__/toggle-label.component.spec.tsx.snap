@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ToggleLabelComponent should match the snapshot 1`] = `
+<label
+  class="fr-toggle__label"
+  data-fr-checked-label="foo"
+  data-fr-unchecked-label="bar"
+  for="any-field-name-mock"
+>
+  foobar
+</label>
+`;

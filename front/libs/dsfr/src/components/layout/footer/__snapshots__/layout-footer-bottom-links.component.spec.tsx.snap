@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutFooterBottomLinksComponent should match the snapshot 1`] = `
+<div>
+  <ul
+    class="fr-footer__bottom-list"
+  >
+    <li
+      class="fr-footer__bottom-item"
+    >
+      <div>
+        any-label-mock-1
+      </div>
+    </li>
+    <li
+      class="fr-footer__bottom-item"
+    >
+      <div>
+        any-label-mock-2
+      </div>
+    </li>
+    <li
+      class="fr-footer__bottom-item"
+    >
+      <div>
+        any-label-mock-3
+      </div>
+    </li>
+  </ul>
+</div>
+`;

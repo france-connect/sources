@@ -21,7 +21,7 @@ export const NavigationComponent = React.memo(({ routes }: NavigationProps) => (
       .filter(filterRouteHasOrderProperty)
       .sort(sortNavigationRouteByOrder)
       .map((item) => (
-        <NavLink key={item.id} className="button p12" to={item.path}>
+        <NavLink key={item.id} className="button fr-p-3v" to={item.path}>
           {item.label}
         </NavLink>
       ))}

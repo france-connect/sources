@@ -113,7 +113,6 @@ This is the main script you will use to manipulate the local environment. If you
 
 ```bash
 docker-stack up min-fcp-low
-docker-stack dep-all
 docker-stack start-all
 ```
 
@@ -121,7 +120,6 @@ docker-stack start-all
 
 ```bash
 docker-stack up min-fcp-high
-docker-stack dep-all
 docker-stack start-all
 ```
 
@@ -129,7 +127,20 @@ docker-stack start-all
 
 ```bash
 docker-stack up min-eidas-high
-docker-stack dep-all
+docker-stack start-all
+```
+
+### Running Partners-fcp
+
+```bash
+docker-stack up partners-fcp
+docker-stack start-all
+```
+
+### Running Partners-fca
+
+```bash
+docker-stack up partners-fca
 docker-stack start-all
 ```
 
@@ -137,7 +148,6 @@ docker-stack start-all
 
 ```bash
 docker-stack up min-fca-low
-docker-stack dep-all
 docker-stack fca-low-front
 docker-stack start-all
 ```

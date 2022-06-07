@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderMenuComponent should match the snapshot 1`] = `
+<div>
+  <div
+    aria-labelledby="burger-button-mobile-menu"
+    class="fr-header__menu fr-modal"
+    id="layout-header-menu-modal"
+  >
+    <div
+      class="fr-container"
+    >
+      <button
+        aria-controls="layout-header-menu-modal"
+        class="fr-btn--close fr-btn"
+      >
+        Fermer
+      </button>
+      <div>
+        LayoutHeaderToolsComponent
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LayoutHeaderMenuComponent should match the snapshot, when navigationItems is defined 1`] = `
+<div>
+  <div
+    aria-labelledby="burger-button-mobile-menu"
+    class="fr-header__menu fr-modal fr-modal--opened"
+    id="layout-header-menu-modal"
+  >
+    <div
+      class="fr-container"
+    >
+      <button
+        aria-controls="layout-header-menu-modal"
+        class="fr-btn--close fr-btn"
+      >
+        Fermer
+      </button>
+      <div>
+        LayoutHeaderToolsComponent
+      </div>
+      <div>
+        LayoutHeaderNavigationComponent
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LayoutHeaderMenuComponent should match the snapshot, when opened is true 1`] = `
+<div>
+  <div
+    aria-labelledby="burger-button-mobile-menu"
+    class="fr-header__menu fr-modal fr-modal--opened"
+    id="layout-header-menu-modal"
+  >
+    <div
+      class="fr-container"
+    >
+      <button
+        aria-controls="layout-header-menu-modal"
+        class="fr-btn--close fr-btn"
+      >
+        Fermer
+      </button>
+      <div>
+        LayoutHeaderToolsComponent
+      </div>
+    </div>
+  </div>
+</div>
+`;

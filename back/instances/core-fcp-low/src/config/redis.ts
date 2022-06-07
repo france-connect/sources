@@ -11,4 +11,7 @@ export default {
   port: env.number('PORT'),
   password: env.string('PASSWORD'),
   db: env.number('DB'),
+  sentinels: env.json('SENTINELS'),
+  sentinelPassword: env.string('SENTINEL_PASSWORD'),
+  name: env.string('NAME'),
 } as RedisConfig;

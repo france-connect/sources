@@ -3,8 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@fc/account": "^0.1.0",
     "@fc/common": "^0.1.0",
     "@fc/oidc-client": "^0.1.0",
+    "@fc/state-management": "^0.1.0",
+    "@gouvfr/dsfr": "1.4.1",
     "@types/react-modal": "^3.13.1",
     "classnames": "^2.3.1",
     "query-string": "^7.0.1",
@@ -23,8 +26,7 @@
   },
   "main": "src/index.ts",
   "files": [
-    "src/index.scss",
-    "variables.module.scss"
+    "src/styles/index.scss"
   ],
   "browserslist": [
     ">0.2%",

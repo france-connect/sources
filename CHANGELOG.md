@@ -4,6 +4,23 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.95 && v3.96.0
+### Features
+- [FranceConnect+] [AgentConnect] 
+  - Enhanced handling of business logs rotation
+
+### Not yet in production (future apps / features)
+- [Partners]
+  - Simple login page
+
+- [User Dashboard]
+  - Enabled BDD tests execution on integration environment 
+  - Added BDD tests for user preferences management from administration applications
+
+- [User Dashboard] [AgentConnect] [Partners]
+  - Refactored react applications to use [official France Design System](https://www.systeme-de-design.gouv.fr/)
+
+
 ## v3.93.0 && v3.94.0
 
 ### Hardening & QA

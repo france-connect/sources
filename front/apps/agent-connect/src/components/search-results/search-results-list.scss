@@ -1,8 +1,0 @@
-@import '@fc/dsfr/styles.scss';
-@import '@fc/dsfr/core/funcs/pixel-to-rem';
-
-.ministry-result {
-  border-bottom-style: solid;
-  border-color: $blue-france-100;
-  @include rem(border-width, 1px);
-}

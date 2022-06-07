@@ -49,6 +49,9 @@
     "lint": "eslint \"{apps,instances,libs}/**/*.ts\"",
     "prettier": "prettier -c \"{apps,instances,libs}/**/*.ts\" --config .prettierrc",
     "test": "jest",
+    "typeorm:migrations-run": "ts-node ./node_modules/typeorm/cli.js --config ./typeorm.config.ts migration:run",
+    "typeorm:migrations-generate": "ts-node ./node_modules/typeorm/cli.js --config ./typeorm.config.ts migration:generate",
+    "typeorm:fixtures:load": "./scripts/fixtures-load.sh",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
@@ -66,8 +69,8 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.13.0",
-    "@nestjs-modules/mailer": "^1.6.0",
     "@maxmind/geoip2-node": "^3.4.0",
+    "@nestjs-modules/mailer": "^1.6.0",
     "@nestjs/axios": "^0.0.7",
     "@nestjs/common": "^8.0.8",
     "@nestjs/core": "^8.0.8",
@@ -76,6 +79,7 @@
     "@nestjs/microservices": "^8.0.8",
     "@nestjs/mongoose": "^9.0.0",
     "@nestjs/platform-express": "^8.0.8",
+    "@nestjs/typeorm": "^8.0.3",
     "@types/ejs": "^3.0.4",
     "@types/glob": "^7.1.3",
     "amqp-connection-manager": "^4.1.0",
@@ -102,11 +106,13 @@
     "oidc-provider": "7.10.6",
     "openid-client": "5.1.4",
     "otplib": "^12.0.1",
+    "pg": "^8.7.3",
     "pino": "^6.3.2",
     "pkcs11js": "^1.0.19",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.0",
     "rxjs": "^7.0.0",
+    "typeorm": "0.2",
     "uuid": "^8.1.0",
     "xml-js": "^1.6.11",
     "xml2js": "^0.4.23"
@@ -142,6 +148,7 @@
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^3.9.0",
     "typedoc": "^0.22.13",
+    "typeorm-fixtures-cli": "^1.11.1",
     "typescript": "^4.0.0"
   },
   "husky": {
@@ -156,6 +163,7 @@
     "collectCoverageFrom": [
       "libs/**/*.ts",
       "apps/**/*.ts",
+      "entities/**/*.ts",
       "instances/**/*.(service|helper|controller).ts"
     ],
     "moduleFileExtensions": [
@@ -172,11 +180,13 @@
     "testEnvironment": "node",
     "roots": [
       "<rootDir>/apps/",
+      "<rootDir>/entities/",
       "<rootDir>/libs/",
       "<rootDir>/instances/"
     ],
     "moduleNameMapper": {
       "^jose/(.*)$": "<rootDir>/node_modules/jose/dist/node/cjs/$1",
+      "@entities/(.*)": "<rootDir>/entities/$1",
       "@fc/core-fca/(.*)": "<rootDir>/apps/core-fca/src/$1",
       "@fc/core-fca": "<rootDir>/apps/core-fca/src",
       "@fc/user-dashboard/(.*)": "<rootDir>/apps/user-dashboard/src/$1",
@@ -304,9 +314,13 @@
       "@fc/user-preferences/(.*)": "<rootDir>/libs/user-preferences/src/$1",
       "@fc/user-preferences": "<rootDir>/libs/user-preferences/src",
       "^@fc/csmr-aggregate-tracks(|/.*)$": "<rootDir>/apps/csmr-aggregate-tracks/src/$1",
+      "^@fc/partner-account(|/.*)$": "<rootDir>/libs/partner-account/src/$1",
+      "@fc/partner-account": "<rootDir>/libs/partner-account/src",
       "^@fc/partners(|/.*)$": "<rootDir>/apps/partners/src/$1",
       "@fc/geoip-maxmind/(.*)": "<rootDir>/libs/geoip-maxmind/src/$1",
-      "@fc/geoip-maxmind": "<rootDir>/libs/geoip-maxmind/src"
+      "@fc/geoip-maxmind": "<rootDir>/libs/geoip-maxmind/src",
+      "@fc/postgres(|/.*)$": "<rootDir>/libs/postgres/src/$1",
+      "@fc/postgres": "<rootDir>/libs/postgres/src"
     },
     "preset": "ts-jest"
   }

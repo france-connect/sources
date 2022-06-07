@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceImageComponent should be in a disabled state 1`] = `
+<div>
+  <div
+    class="is-relative no-overflow fr-mr-3w disabled opacity-45"
+  >
+    <img
+      alt="fournisseur d'identité title-mock"
+      class="is-block is-absolute"
+      height="auto"
+      src="/images/image.mock"
+      width="auto"
+    />
+  </div>
+</div>
+`;
+
+exports[`ServiceImageComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="is-relative no-overflow fr-mr-3w is-table"
+  >
+    <b
+      class="is-table-cell v-align-middle text-center w100 fr-text--sm"
+    >
+      title-mock
+    </b>
+  </div>
+</div>
+`;
+
+exports[`ServiceImageComponent should show a placeholder instead of an image 1`] = `
+<div>
+  <div
+    class="is-relative no-overflow fr-mr-3w is-table"
+  >
+    <b
+      class="is-table-cell v-align-middle text-center w100 fr-text--sm"
+    >
+      title-mock
+    </b>
+  </div>
+</div>
+`;
+
+exports[`ServiceImageComponent should show an image 1`] = `
+<div>
+  <div
+    class="is-relative no-overflow fr-mr-3w"
+  >
+    <img
+      alt="fournisseur d'identité title-mock"
+      class="is-block is-absolute"
+      height="auto"
+      src="/images/image.mock"
+      width="auto"
+    />
+  </div>
+</div>
+`;

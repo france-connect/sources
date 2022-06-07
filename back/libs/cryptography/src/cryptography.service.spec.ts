@@ -2,11 +2,13 @@ import * as crypto from 'crypto';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { ConfigService } from '@fc/config';
+
 import {
   CryptographyService,
   RANDOM_MIN_ENTROPY,
 } from './cryptography.service';
-import { LowEntropyArgumentException } from './exceptions';
+import { LowEntropyArgumentException, PasswordHashFailure } from './exceptions';
 
 describe('CryptographyService', () => {
   let service: CryptographyService;
@@ -44,6 +46,7 @@ describe('CryptographyService', () => {
     createHmac: jest.fn(),
     createCipheriv: jest.fn(),
     createDecipheriv: jest.fn(),
+    pbkdf2: jest.fn(),
   };
 
   const mockCipherGcm = {
@@ -63,13 +66,20 @@ describe('CryptographyService', () => {
     digest: jest.fn(),
   };
 
+  const mockConfigService = {
+    get: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CryptographyService],
-    }).compile();
+      providers: [CryptographyService, ConfigService],
+    })
+      .overrideProvider(ConfigService)
+      .useValue(mockConfigService)
+      .compile();
 
     service = module.get<CryptographyService>(CryptographyService);
   });
@@ -465,6 +475,86 @@ describe('CryptographyService', () => {
 
       // expect
       expect.hasAssertions();
+    });
+  });
+
+  describe('passwordHash', () => {
+    const password = 'securedPassword';
+    const passwordSalt = '!&2Q?MT=BlM*XYr';
+    const hashedPassword = '6d6f636b4465726976617465644b6579';
+    const mockDerivatedKey = Buffer.from('mockDerivatedKey');
+
+    beforeEach(() => {
+      mockConfigService.get.mockReturnValueOnce({ passwordSalt });
+    });
+
+    it('should retrieve passwordSalt from config', async () => {
+      // setup
+      jest
+        // eslint-disable-next-line max-params
+        .spyOn(crypto, 'pbkdf2')
+        .mockImplementationOnce(
+          // mocking a native function
+          // eslint-disable-next-line max-params
+          (_password, _salt, _iterations, _keylen, _digest, callback) => {
+            callback(undefined, mockDerivatedKey);
+          },
+        );
+
+      // action
+      await service.passwordHash(password);
+
+      // expect
+      expect(mockConfigService.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('should resolve with a hashed password', async () => {
+      // setup
+      const mockPbkdf2 = jest
+        .spyOn(crypto, 'pbkdf2')
+        // eslint-disable-next-line max-params
+        .mockImplementationOnce(
+          // mocking a native function
+          // eslint-disable-next-line max-params
+          (_password, _salt, _iterations, _keylen, _digest, callback) => {
+            callback(undefined, mockDerivatedKey);
+          },
+        );
+
+      // action
+      const result = await service.passwordHash(password);
+
+      // expect
+      expect(mockPbkdf2).toHaveBeenCalledTimes(1);
+      expect(mockPbkdf2).toHaveBeenCalledWith(
+        password,
+        passwordSalt,
+        100000,
+        64,
+        'sha512',
+        expect.any(Function),
+      );
+      expect(result).toEqual(hashedPassword);
+    });
+
+    it('should reject with error PasswordHashFailure if the password is not generated', async () => {
+      // setup
+      const failure = new Error('password hash failed');
+      jest
+        .spyOn(crypto, 'pbkdf2')
+        // eslint-disable-next-line max-params
+        .mockImplementationOnce(
+          // mocking a native function
+          // eslint-disable-next-line max-params
+          (_password, _salt, _iterations, _keylen, _digest, callback) => {
+            callback(failure, undefined);
+          },
+        );
+
+      // action / expect
+      await expect(service.passwordHash(password)).rejects.toThrowError(
+        PasswordHashFailure,
+      );
     });
   });
 });

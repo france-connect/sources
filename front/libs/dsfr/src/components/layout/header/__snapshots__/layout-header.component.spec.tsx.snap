@@ -1,0 +1,87 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderComponent should match the snapshot 1`] = `
+<div>
+  <header
+    class="fr-header"
+    role="banner"
+  >
+    <div
+      class="fr-header__body"
+    >
+      <div
+        class="fr-container"
+      >
+        <div
+          class="fr-header__body-row"
+        >
+          <div
+            class="fr-header__brand fr-enlarge-link"
+          >
+            <div
+              class="fr-header__brand-top"
+            >
+              <div>
+                LayoutHeaderLogosComponent
+              </div>
+            </div>
+          </div>
+          <div
+            class="fr-header__tools"
+          >
+            <div>
+              LayoutHeaderToolsComponent
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+`;
+
+exports[`LayoutHeaderComponent should match the snapshot, when user is connected 1`] = `
+<div>
+  <header
+    class="fr-header"
+    role="banner"
+  >
+    <div
+      class="fr-header__body"
+    >
+      <div
+        class="fr-container"
+      >
+        <div
+          class="fr-header__body-row"
+        >
+          <div
+            class="fr-header__brand fr-enlarge-link"
+          >
+            <div
+              class="fr-header__brand-top"
+            >
+              <div>
+                LayoutHeaderLogosComponent
+              </div>
+              <div>
+                LayoutHeaderMobileBurgerButton
+              </div>
+            </div>
+          </div>
+          <div
+            class="fr-header__tools"
+          >
+            <div>
+              LayoutHeaderToolsComponent
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      LayoutHeaderMenuComponent
+    </div>
+  </header>
+</div>
+`;

@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceComponent should match the snapshot, in a desktop viewport 1`] = `
+<form
+  data-testid="form-wrapper"
+>
+  <li
+    class="flex-start items-start fr-pt-2w fr-toggle--border-bottom disabled flex-columns"
+    data-testid="service-component-any-name"
+  >
+    <div>
+      ServiceImageComponent
+    </div>
+    <div>
+      ToggleInput
+    </div>
+    <div>
+      OnChange
+    </div>
+  </li>
+</form>
+`;
+
+exports[`ServiceComponent should match the snapshot, in a mobile viewport 1`] = `
+<form
+  data-testid="form-wrapper"
+>
+  <li
+    class="flex-start items-start fr-pt-2w fr-toggle--border-bottom disabled flex-rows"
+    data-testid="service-component-any-name"
+  >
+    <div>
+      ServiceImageComponent
+    </div>
+    <div>
+      ToggleInput
+    </div>
+    <div>
+      OnChange
+    </div>
+  </li>
+</form>
+`;

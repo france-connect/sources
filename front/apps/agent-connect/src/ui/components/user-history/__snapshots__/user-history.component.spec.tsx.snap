@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserHistoryComponent should match the snapshot for a desktop viewport 1`] = `
+<div>
+  <div>
+    <div
+      class="fr-mx-2w"
+    >
+      <p
+        class="fr-my-1v fr-text--xl fr-text--bold text-center"
+        data-testid="title"
+      >
+        J’utilise à nouveau
+      </p>
+    </div>
+    <div
+      class="fr-mb-5w flex-center flex-columns"
+      data-testid="list"
+    >
+      <div>
+        UserHistoryCardComponent Mock
+      </div>
+      <div>
+        UserHistoryCardComponent Mock
+      </div>
+      <div>
+        UserHistoryCardComponent Mock
+      </div>
+      <div>
+        UserHistoryCardComponent Mock
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`UserHistoryComponent should match the snapshot for a tablet viewport 1`] = `
+<div>
+  <div>
+    <div
+      class="fr-mx-2w"
+    >
+      <p
+        class="fr-my-1v fr-text--xl fr-text--bold"
+        data-testid="title"
+      >
+        J’utilise à nouveau
+      </p>
+    </div>
+    <div
+      class="fr-mb-5w flex-rows"
+      data-testid="list"
+    >
+      <div>
+        UserHistoryCardComponent Mock
+      </div>
+      <div>
+        UserHistoryCardComponent Mock
+      </div>
+      <div>
+        UserHistoryCardComponent Mock
+      </div>
+      <div>
+        UserHistoryCardComponent Mock
+      </div>
+    </div>
+  </div>
+</div>
+`;

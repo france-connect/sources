@@ -1,7 +1,12 @@
 import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
 
-import { navigateTo, User } from '../../common/helpers';
+import {
+  getDefaultIdentityProvider,
+  getServiceProviderByDescription,
+  navigateTo,
+} from '../../common/helpers';
 import { Environment } from '../../common/types';
+import { ConnectionWorkflow } from '../../usager/steps/workflow-legacy-steps';
 import UdLoginPage from '../pages/ud-login-page';
 
 let udLoginPage: UdLoginPage;
@@ -23,14 +28,28 @@ Then(
 );
 
 When('je me connecte au dashboard usager', function () {
-  const user: User = this.user;
-  const credentials = user.getCredentials('fip1');
-  udLoginPage.login(credentials);
+  const serviceProvider = getServiceProviderByDescription(
+    this.serviceProviders,
+    'user-dashboard',
+  );
+  const identityProvider = getDefaultIdentityProvider(this.identityProviders);
+  new ConnectionWorkflow(this.env, serviceProvider)
+    .init()
+    .start()
+    .selectIdentityProvider(identityProvider)
+    .login(this.user)
+    .consent();
 });
 
 Then(
   'je ne suis plus connecté au dashboard usager avec FranceConnect',
   function () {
-    udLoginPage.checkIsNotConnected();
+    const serviceProvider = getServiceProviderByDescription(
+      this.serviceProviders,
+      'user-dashboard',
+    );
+    new ConnectionWorkflow(this.env, serviceProvider)
+      .start()
+      .checkIdpSelectionPageDisplayed();
   },
 );

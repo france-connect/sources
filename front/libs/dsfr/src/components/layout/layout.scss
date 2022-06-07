@@ -1,0 +1,13 @@
+/**
+///
+/// @NOTE these values are JS managed by official DSFR
+/// this file purpose is about overriding these values
+/// without implementing potiental conflictual React/VanillaJS
+///
+*/
+
+.fr-toggle {
+  label::before {
+    --toggle-status-width: 50px;
+  }
+}

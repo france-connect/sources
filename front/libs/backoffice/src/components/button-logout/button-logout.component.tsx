@@ -14,7 +14,10 @@ export const ButtonLogoutComponent = () => {
   const endSessionUrl = useApiGet<string>({ endpoint });
 
   return (
-    <a className="ButtonLogoutComponent fs18 p12" href={endSessionUrl} title="Se déconnecter">
+    <a
+      className="ButtonLogoutComponent fr-text--lg fr-p-3v"
+      href={endSessionUrl}
+      title="Se déconnecter">
       <span>Se déconnecter</span>
     </a>
   );

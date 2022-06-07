@@ -9,12 +9,10 @@ describe('IntroductionComponent', () => {
     jest.clearAllMocks();
   });
 
-  it('should render something', () => {
-    // setup
-    const { getByText } = render(<IntroductionComponent />);
-    // action
-    const title = getByText('Votre historique de connexion');
-    // expect
-    expect(title).toBeInTheDocument();
+  it('should match the snapshot', () => {
+    // when
+    const { container } = render(<IntroductionComponent />);
+    // then
+    expect(container).toMatchSnapshot();
   });
 });

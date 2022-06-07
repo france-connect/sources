@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutFooterContentLinksComponent should match the snapshot 1`] = `
+<div>
+  <ul
+    class="fr-footer__content-list"
+  >
+    <li
+      class="fr-footer__content-item"
+    >
+      <a
+        class="fr-footer__content-link"
+        href="any-href-mock-1"
+        title="any-a11y-mock-1"
+      >
+        any-label-mock-1
+      </a>
+    </li>
+    <li
+      class="fr-footer__content-item"
+    >
+      <a
+        class="fr-footer__content-link"
+        href="any-href-mock-2"
+        title="any-a11y-mock-2"
+      >
+        any-label-mock-2
+      </a>
+    </li>
+    <li
+      class="fr-footer__content-item"
+    >
+      <a
+        class="fr-footer__content-link"
+        href="any-href-mock-3"
+        title="any-a11y-mock-3"
+      >
+        any-label-mock-3
+      </a>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`LayoutFooterContentLinksComponent should match the snapshot, when showIcon is defined 1`] = `
+<div>
+  <ul
+    class="fr-footer__content-list"
+  >
+    <li
+      class="fr-footer__content-item"
+    >
+      <a
+        class="fr-footer__content-link"
+        href="any-href-mock-1"
+        rel="noreferrer"
+        target="_blank"
+        title="any-a11y-mock-1"
+      >
+        any-label-mock-1
+      </a>
+    </li>
+    <li
+      class="fr-footer__content-item"
+    >
+      <a
+        class="fr-footer__content-link"
+        href="any-href-mock-2"
+        rel="noreferrer"
+        target="_blank"
+        title="any-a11y-mock-2"
+      >
+        any-label-mock-2
+      </a>
+    </li>
+    <li
+      class="fr-footer__content-item"
+    >
+      <a
+        class="fr-footer__content-link"
+        href="any-href-mock-3"
+        rel="noreferrer"
+        target="_blank"
+        title="any-a11y-mock-3"
+      >
+        any-label-mock-3
+      </a>
+    </li>
+  </ul>
+</div>
+`;

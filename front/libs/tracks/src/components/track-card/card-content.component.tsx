@@ -6,7 +6,6 @@ import { EidasToLabel } from '../../enums';
 
 type TraceCardContentProps = {
   accessibleId: string;
-
   datetime: DateTime;
   opened: boolean;
   spAcr: keyof typeof EidasToLabel;
@@ -41,28 +40,29 @@ export const TrackCardContentComponent = React.memo(
     return (
       <dl
         aria-hidden={!opened}
-        className={classnames('details', 'fr-text', {
-          mt16: opened,
-          // oidc spec defined property
+        className={classnames('details', 'fr-text--md', {
+          // class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'fr-mt-2w': opened,
+          // class CSS
           // eslint-disable-next-line @typescript-eslint/naming-convention
           'no-display': !opened,
         })}
         id={accessibleId}
         role="region"
         tabIndex={-1}>
-        <dt className="mb12">
+        <dt className="fr-mb-3v">
           <span>Le service a récupéré les données suivantes</span>
         </dt>
-        <dd className="ml32">
+        <dd className="fr-ml-3w">
           <ul>
             <li>
-              <span>Connexion à ce service a eu lieu le &nbsp;:&nbsp;</span>
-              <br />
+              <span>Connexion à ce service a eu lieu le&nbsp;:&nbsp;</span>
               <b>{formattedTime} (heure de Paris)</b>
             </li>
             {(city || country) && (
               <li>
-                <span>Localisation &nbsp;:&nbsp;</span>
+                <span>Localisation&nbsp;:&nbsp;</span>
                 <b>
                   {city} {country && `(${country})`}
                 </b>
@@ -70,10 +70,8 @@ export const TrackCardContentComponent = React.memo(
             )}
             <li>
               <span>Via le compte&nbsp;:&nbsp;</span>
-              <br />
               <b>{idpLabel}</b>
             </li>
-
             <li>
               <span>Niveau de garantie eIDAS&nbsp;:&nbsp;</span>
               <a
@@ -83,7 +81,6 @@ export const TrackCardContentComponent = React.memo(
                 <b>{EidasToLabel[spAcr]}</b>
               </a>
             </li>
-
             {claims && (
               /**
                * @todo #820 display the good way the claims group
@@ -93,7 +90,6 @@ export const TrackCardContentComponent = React.memo(
                */
               <li>
                 <span>Récupération des données&nbsp;:&nbsp;</span>
-                <br />
                 <b>{claims.join(', ')}</b>
               </li>
             )}

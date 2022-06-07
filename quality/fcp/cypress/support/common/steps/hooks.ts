@@ -43,18 +43,19 @@ beforeEach(function () {
   setFixtureContext('environment.json', pathArray, 'env');
   setFixtureContext('service-providers.json', pathArray, 'serviceProviders');
   setFixtureContext('identity-providers.json', pathArray, 'identityProviders');
+  setFixtureContext('identity-provider-configs.json', pathArray, 'idpConfigs');
   setFixtureContext('scopes.json', pathArray, 'scopes');
   setFixtureContext('users.json', pathArray, 'users');
 
   // Define default data
   cy.get<ServiceProvider[]>('@serviceProviders').then((serviceProviders) => {
-    getDefaultServiceProvider(serviceProviders);
+    this.serviceProvider = getDefaultServiceProvider(serviceProviders);
   });
   cy.get<IdentityProvider[]>('@identityProviders').then((identityProviders) => {
-    getDefaultIdentityProvider(identityProviders);
+    this.identityProvider = getDefaultIdentityProvider(identityProviders);
   });
   cy.get<UserData[]>('@users').then((users) => {
-    getDefaultUser(users);
+    this.user = getDefaultUser(users);
   });
 
   // Setup interceptions to add basic authorization header on FC requests

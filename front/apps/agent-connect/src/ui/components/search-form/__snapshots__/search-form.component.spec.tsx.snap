@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchFormComponent should match the snapshot for a desktop viewport 1`] = `
+<div>
+  <h3
+    class="fr-text--xl fr-text--bold fr-mx-2w fr-mb-1v"
+    data-testid="form-title"
+  >
+    Je recherche mon administration
+  </h3>
+  <form
+    data-testid="search-form"
+  >
+    <label
+      class="fr-mx-2w is-block"
+      data-testid="input-label"
+      for="fi-search-term"
+    >
+      Veuillez taper le nom complet de votre administration
+    </label>
+    <div>
+      SearchBarComponent
+    </div>
+    <div>
+      OnChange
+    </div>
+  </form>
+</div>
+`;
+
+exports[`SearchFormComponent should match the snapshot for a tablet viewport 1`] = `
+<div>
+  <h3
+    class="fr-text--xl fr-text--bold fr-mx-2w fr-mb-1w"
+    data-testid="form-title"
+  >
+    Je recherche mon administration
+  </h3>
+  <form
+    data-testid="search-form"
+  >
+    <label
+      class="fr-mx-2w is-block"
+      data-testid="input-label"
+      for="fi-search-term"
+    >
+      Veuillez taper le nom complet de votre administration
+    </label>
+    <div>
+      SearchBarComponent
+    </div>
+    <div>
+      OnChange
+    </div>
+  </form>
+</div>
+`;

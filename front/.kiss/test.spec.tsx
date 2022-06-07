@@ -8,6 +8,13 @@ describe('MyModule', () => {
     jest.clearAllMocks();
   });
 
+  it('should match the snapshot', () => {
+    // when
+    const { container } = render(<MyModule />);
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
   it('should render something', () => {
     // given
     // when

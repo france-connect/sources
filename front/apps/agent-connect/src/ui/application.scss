@@ -1,0 +1,24 @@
+@import '@gouvfr/dsfr/dist/dsfr/dsfr.css';
+@import '@fc/dsfr/styles/index.scss';
+
+:root {
+  --blue-agent-connect: #1d7beb;
+  --blue-agent-connect-hover: #51a8ff;
+  --blue-agent-connect-active: #469df5;
+
+  /* overrides */
+  --blue-france-sun-113-625: var(--blue-agent-connect);
+  --blue-france-sun-113-625-hover: var(--blue-agent-connect-hover);
+  --blue-france-sun-113-625-active: var(--blue-agent-connect-active);
+}
+
+:root[data-fr-theme='dark'] {
+  --blue-agent-connect: #1d7beb;
+  --blue-agent-connect-hover: #51a8ff;
+  --blue-agent-connect-active: #469df5;
+
+  /* overrides */
+  --blue-france-sun-113-625: var(--blue-agent-connect);
+  --blue-france-sun-113-625-hover: var(--blue-agent-connect-hover);
+  --blue-france-sun-113-625-active: var(--blue-agent-connect-active);
+}

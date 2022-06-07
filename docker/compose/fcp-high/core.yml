@@ -1,4 +1,4 @@
-version: '3.4'
+version: '2.4'
 
 ####################
 ####################
@@ -15,7 +15,7 @@ services:
     depends_on:
       - 'csmr-hsm'
       - 'mongo-fcp-high'
-      - 'redis-pwd'
+      - 'redis-sentinel'
       - 'broker'
       - 'squid'
       - 'haproxy'

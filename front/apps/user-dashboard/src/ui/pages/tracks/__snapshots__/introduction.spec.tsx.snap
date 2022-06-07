@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IntroductionComponent should match the snapshot 1`] = `
+<div>
+  <div>
+    <h1
+      class="fr-h3 is-blue-france fr-mb-1w"
+    >
+      <b>
+        Votre historique de connexion
+      </b>
+    </h1>
+    <p>
+      Retrouver toutes les connexions et échanges de données effectués via FranceConnect ces six derniers mois. Cliquez sur une connexion pour en afficher les détails.
+    </p>
+  </div>
+</div>
+`;

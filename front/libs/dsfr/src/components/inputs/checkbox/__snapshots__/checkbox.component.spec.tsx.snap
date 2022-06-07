@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckboxComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-checkbox-group"
+  >
+    <input
+      data-testid="field-checkbox-input"
+      id="any-field-name-mock"
+      name="any-field-name-mock"
+      type="checkbox"
+      value="any-field-value-mock"
+    />
+    <label
+      class="fr-label"
+      data-testid="field-checkbox-label"
+      for="any-field-name-mock"
+    >
+      any-label-mock
+    </label>
+  </div>
+</div>
+`;

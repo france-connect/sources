@@ -24,15 +24,8 @@ ssl_dhparam /etc/nginx/dhparam/dhparam.pem;
 {{ $upstream := trim (print $container.Name ".docker.dev-franceconnect.fr") }}
 
 upstream {{ $upstream }} {
-{{ range $knownNetwork := $CurrentContainer.Networks }}
-  {{ range $containerNetwork := $container.Networks }}
-    {{ if (and (ne $containerNetwork.Name "ingress") (or (eq $knownNetwork.Name $containerNetwork.Name) (eq $knownNetwork.Name "host"))) }}
-      {{ $port := coalesce $container.Env.VIRTUAL_PORT "80" }}
-      {{ $address := where $container.Addresses "Port" $port | first }}
-      {{ template "upstream" (dict "Container" $container "Address" $containerNetwork.IP "Port" $port) }}
-    {{ end }}
-  {{ end }}
-{{ end }}
+  {{ $port := coalesce $container.Env.VIRTUAL_PORT "80" }}
+  {{ template "upstream" (dict "Container" $container "Address" $container.Name "Port" $port) }}
 }
 {{ end }}
 {{ end }}

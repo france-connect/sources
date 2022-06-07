@@ -1,10 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`HomePage should match the snapshot 1`] = `
-<div
-  class="content-wrapper-lg text-center"
-  id="page-container"
->
-  Hello Partenaires France Connect
+<div>
+  <div
+    class="content-wrapper-lg text-center fr-mt-8w"
+    id="page-container"
+  >
+    <h1
+      class="is-blue-france"
+    >
+      Bienvenue sur l’espace partenaire FranceConnect
+    </h1>
+    <p>
+      Vous pourrez gérez vos fournisseurs de services et plein d’autres choses
+    </p>
+    <a
+      data-testid="login-button"
+      href="/login"
+    >
+      Je me connecte
+    </a>
+  </div>
 </div>
 `;

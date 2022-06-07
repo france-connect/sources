@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LinkComponent should match the snapshot, with className props 1`] = `
+<div>
+  <a
+    class="fr-link fr-link--md any-className-mock"
+    href="any-url-mock"
+  />
+</div>
+`;
+
+exports[`LinkComponent should match the snapshot, with default props 1`] = `
+<div>
+  <a
+    class="fr-link fr-link--md"
+    href="any-url-mock"
+  />
+</div>
+`;
+
+exports[`LinkComponent should match the snapshot, with icon props 1`] = `
+<div>
+  <a
+    class="fr-link fr-link--md fr-fi-any-icon-mock fr-link--icon-left"
+    href="any-url-mock"
+  />
+</div>
+`;
+
+exports[`LinkComponent should match the snapshot, with iconPlacement props 1`] = `
+<div>
+  <a
+    class="fr-link fr-link--md fr-fi-any-icon-mock fr-link--icon-right"
+    href="any-url-mock"
+  />
+</div>
+`;
+
+exports[`LinkComponent should match the snapshot, with label props 1`] = `
+<div>
+  <a
+    class="fr-link fr-link--md"
+    href="any-url-mock"
+  >
+    any-label-mock
+  </a>
+</div>
+`;
+
+exports[`LinkComponent should match the snapshot, with size lg props 1`] = `
+<div>
+  <a
+    class="fr-link fr-link--lg"
+    href="any-url-mock"
+  />
+</div>
+`;
+
+exports[`LinkComponent should match the snapshot, with size sm props 1`] = `
+<div>
+  <a
+    class="fr-link fr-link--sm"
+    href="any-url-mock"
+  />
+</div>
+`;

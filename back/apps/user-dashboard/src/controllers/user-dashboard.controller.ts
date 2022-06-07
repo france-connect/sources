@@ -72,14 +72,8 @@ export class UserDashboardController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<{
-    userinfos: {
-      // OIDC defined variable
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      given_name: string;
-      // OIDC defined variable
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      family_name: string;
-    };
+    firstname: string;
+    lastname: string;
   }> {
     this.logger.debug('getUserInfos()');
     const session = await sessionOidc.get();
@@ -87,16 +81,12 @@ export class UserDashboardController {
       throw new UnauthorizedException();
     }
     const { idpIdentity } = session;
-    const userinfos = {
-      // OIDC defined variable
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      family_name: idpIdentity?.family_name,
-      // OIDC defined variable
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      given_name: idpIdentity?.given_name,
-    };
-    this.logger.trace({ userinfos });
-    return { userinfos };
+
+    const firstname = idpIdentity?.given_name;
+    const lastname = idpIdentity?.family_name;
+
+    this.logger.trace({ firstname, lastname });
+    return { firstname, lastname };
   }
 
   @Get(UserDashboardBackRoutes.USER_PREFERENCES)

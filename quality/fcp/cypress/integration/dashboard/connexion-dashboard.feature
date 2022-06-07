@@ -94,7 +94,7 @@ Fonctionnalité: Connexion User Dashboard
     Et que je suis sur la page gestion des accès du dashboard usager
     Et que j'utilise le fournisseur d'identité "pour le test de préférences FI"
     Et que je décide de bloquer le fournisseur d'identité
-    Et que je décide de bloquer les nouveaux fournisseurs d'identité par défaut
+    Et que je décide de bloquer les futurs fournisseurs d'identité par défaut
     Et que je supprime tous les cookies
     Quand j'enregistre mes réglages d'accès
     Alors je suis redirigé vers la page d'accueil du dashboard usager

@@ -21,11 +21,11 @@ export const UserPreferencesComponent: React.FC<UserPreferencesComponentProps> =
         {({ dirty, handleSubmit, pristine: isSameAsInitialValues, submitting }) => {
           // @NOTE declarative function
           /* istanbul ignore next */
-          const canNotSubmit = isSameAsInitialValues || submitting;
+          const isDisabled = !!(isSameAsInitialValues || submitting);
           const showNotification = !dirty && submitWithSuccess;
           return (
             <UserPreferencesFormComponent
-              canNotSubmit={canNotSubmit}
+              isDisabled={isDisabled}
               showNotification={showNotification}
               userPreferences={userPreferences}
               onSubmit={handleSubmit}

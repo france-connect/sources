@@ -10,8 +10,9 @@ describe('ErrorPage', () => {
   });
 
   it('should match the snapshot', () => {
+    // when
     const { container } = render(<ErrorPage />);
-
-    expect(container.firstChild).toMatchSnapshot();
+    // then
+    expect(container).toMatchSnapshot();
   });
 });

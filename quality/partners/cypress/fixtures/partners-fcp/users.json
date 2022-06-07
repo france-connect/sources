@@ -1,0 +1,11 @@
+[
+  {
+    "criteria": ["standard"],
+    "credentials": {
+      "email": "isabelle@jones.com",
+      "password": "123"
+    },
+    "firstname": "Isabelle",
+    "lastname": "Jones"
+  }
+]

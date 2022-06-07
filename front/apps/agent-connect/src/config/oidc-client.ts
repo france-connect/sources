@@ -9,5 +9,7 @@ export const OidcClient: OidcClientConfig = {
     getEndSessionUrl: '/api/oidc-client/get-end-session-url',
     getUserInfos: '/api/oidc-client/load-user-infos',
     redirectToIdp: '/api/v2/redirect-to-idp',
+    // @TODO refacto OidcClient
+    returnButtonUrl: '/api/v2/history-back-url',
   },
 };

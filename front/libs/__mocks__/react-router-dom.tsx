@@ -1,7 +1,6 @@
 const actualModule = jest.requireActual('react-router-dom');
 
 module.exports = {
-  _esModule: true,
   ...actualModule,
   Link: jest.fn(({ children }) => <div>{children}</div>),
   NavLink: jest.fn(({ children }) => <div>{children}</div>),
@@ -13,6 +12,10 @@ module.exports = {
     return <div>{children}</div>;
   }),
   Switch: jest.fn(({ children }) => children),
+  matchPath: jest.fn(),
+  useLocation: jest.fn(() => ({
+    pathname: '',
+  })),
 };
 
 export {};

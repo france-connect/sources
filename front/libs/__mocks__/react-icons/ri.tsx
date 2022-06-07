@@ -1,7 +1,6 @@
 const actualModule = jest.requireActual('react-icons/ri');
 
 module.exports = {
-  _esModule: true,
   ...actualModule,
   // too many or unknown props to mock
   // eslint-disable-next-line react/jsx-props-no-spreading

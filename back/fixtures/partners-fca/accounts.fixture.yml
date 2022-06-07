@@ -1,0 +1,10 @@
+entity: Account
+processor: "../processors/partners-accounts.processor.ts"
+items:
+  user1:
+    firstname: "Jean"
+    lastname: "Sparrow"
+    email: "jean.sparrow@modernisation.gouv.fr"
+    createdAt: "2022-02-22"
+    updatedAt: "2022-05-02"
+    password: "123"

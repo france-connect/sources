@@ -4,9 +4,10 @@ import { LogoFranceConnectComponent } from './logo-france-connect.component';
 
 describe('LogoFranceConnectComponent', () => {
   it('should match the snapshot', () => {
+    // when
     const { container } = render(<LogoFranceConnectComponent />);
-
-    expect(container.firstChild).toMatchSnapshot();
+    // then
+    expect(container).toMatchSnapshot();
   });
 
   it('should render an element with a given classname', () => {

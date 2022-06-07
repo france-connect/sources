@@ -17,4 +17,5 @@ beforeEach(function () {
   const testEnv: string = Cypress.env('TEST_ENV');
   const pathArray = [platform, testEnv];
   setFixtureContext('environment.json', pathArray, 'env');
+  setFixtureContext('users.json', pathArray, 'users');
 });

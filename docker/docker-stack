@@ -39,16 +39,25 @@ then
 fi
 export NODE_VERSION
 
-
-NODEJS_CONTAINERS=`docker ps -qf ancestor=$FC_DOCKER_REGISTRY/nodejs:$NODE_VERSION-dev`
-
-if [ "${NODEJS_CONTAINERS:-xxx}" != "xxx" ]
-then
-  RUNNING_CONTAINERS=`docker inspect -f '{{index (.Config.Labels) "com.docker.compose.service" }}' $NODEJS_CONTAINERS`
-fi
-
 # Disable TTY on CI env
 [ $CI ] && NO_TTY=" -T" || NO_TTY=""
+
+# Find which nodejs containers are running and store it into $RUNNING_CONTAINERS
+_get_running_containers() {
+  NODEJS_CONTAINERS=`docker ps -qf ancestor=$FC_DOCKER_REGISTRY/nodejs:$NODE_VERSION-dev`
+
+  if [ "${NODEJS_CONTAINERS:-xxx}" != "xxx" ]
+  then
+    RUNNING_CONTAINERS=`docker inspect -f '{{index (.Config.Labels) "com.docker.compose.service" }}' $NODEJS_CONTAINERS`
+
+    # Quick dirty trick to not match any legacy container in CI
+    # This will get all running containers ($RUNNING_CONTAINERS) and match them against the container list from docker-compose (which is for sure not containing legacy containers)
+    # Objective is to use the $COMPOSE_PROJECT_NAME later.
+    _ONLY_NODEJS_NON_LEGACY_RUNNING_CONTAINERS=`comm -12 <(docker-compose ps | tail -n +3 | awk '{print $1}' | sed 's/^fc_//' | sed 's/_.$//' | tr ' ' '\n' | sort) <(echo $RUNNING_CONTAINERS | tr ' ' '\n' | sort)`
+  fi
+}
+
+_get_running_containers
 
 _up() {
   apps=${@:-none}
@@ -171,6 +180,10 @@ _up() {
     docker pull registry.gitlab.dev-franceconnect.fr/france-connect/fc-docker/nodejs:${DEFAULT_NODE_VERSION}-dev
     cd ${WORKING_DIR} && docker-compose up --build -d $services
 
+    echo "Installing node modules..."
+    _get_running_containers
+    _install_dependencies $_ONLY_NODEJS_NON_LEGACY_RUNNING_CONTAINERS
+
     case $services in
       *"lemon-ldap"*)
         # Sleep to wait for configuration initialization
@@ -219,6 +232,18 @@ _up() {
         docker-compose exec -T mongo-fcp-high /opt/scripts/manage.sh --reset-db
         echo "Loaded !"
         ;;
+      *"partners-fca"*)
+        echo "Running migrations on database..."
+        _migrations-partners "partners-fca-back"
+        echo "Inserting fixtures in database..."
+        _fixtures-partners "partners-fca-back"
+        ;;
+      *"partners-fcp"*)
+        echo "Running migrations on database..."
+        _migrations-partners "partners-fcp-back"
+        echo "Inserting fixtures in database..."
+        _fixtures-partners "partners-fcp-back"
+        ;;
     esac
 }
 
@@ -251,7 +276,12 @@ _install_dependencies() {
   do
     echo "Installing dependencies for [$app]:"
     err=false
-    (cd ${WORKING_DIR} && docker-compose exec $NO_TTY $app "/opt/scripts/install.sh") || err=true
+    if [ "$PROXY_EXPLOITATION" ];
+    then
+      echo "Setting up yarn proxy for [$app]..."
+      cd ${WORKING_DIR} && docker-compose exec $NO_TTY $app bash -c "yarn config set proxy $PROXY_EXPLOITATION && yarn config set https-proxy $PROXY_EXPLOITATION"
+    fi
+    cd ${WORKING_DIR} && docker-compose exec $NO_TTY $app "/opt/scripts/install.sh" || err=true
   done
 }
 
@@ -315,15 +345,6 @@ _stop() {
 _log() {
   app=${@:-core-fcp-high}
   cd ${WORKING_DIR} && docker-compose exec $NO_TTY ${app} pm2 logs
-}
-
-_styleguide() {
-  echo "**************************************"
-  echo " Starting Styleguide..."
-  echo "**************************************"
-  cd ${WORKING_DIR} && docker-compose up --build -d styleguide
-  cd ${WORKING_DIR} && docker-compose exec $NO_TTY styleguide "/opt/scripts/install.sh" || err=true
-  cd ${WORKING_DIR} && docker-compose exec $NO_TTY styleguide "/opt/scripts/start.sh" || err=true
 }
 
 _fixtures_fcp_high() {
@@ -448,6 +469,18 @@ _fca_low_front() {
   echo ""
 }
 
+_migrations-partners() {
+  cd ${WORKING_DIR} && docker-compose exec $NO_TTY $1 yarn typeorm:migrations-run
+}
+
+_migrations-generate-partners() {
+  cd ${WORKING_DIR} && docker-compose exec $NO_TTY $1 yarn typeorm:migrations-generate -n $2
+}
+
+_fixtures-partners() {
+  cd ${WORKING_DIR} && docker-compose exec $NO_TTY $1 yarn typeorm:fixtures:load
+}
+
 script=$0
 action=${1:-help}
 [ $# -gt 0 ] && shift
@@ -458,8 +491,8 @@ case "$action" in
   dep|dependencies)
     _install_dependencies $@
     ;;
-  dep-all|dependencies-all)  
-    _install_dependencies $RUNNING_CONTAINERS
+  dep-all|dependencies-all)
+    _install_dependencies $_ONLY_NODEJS_NON_LEGACY_RUNNING_CONTAINERS
     ;;
   exec)
     _exec $@
@@ -476,8 +509,10 @@ case "$action" in
   compose)
     cd ${WORKING_DIR} && docker-compose $@
     ;;
-  styleguide)
-    _styleguide
+  log-rotate)
+    echo "Send SIGUSR2 to core-fcp-high app..."
+    cd ${WORKING_DIR} && docker-compose exec core-fcp-high pkill -SIGUSR2 -f '/usr/bin/node -r source-map-support/register --inspect=0.0.0.0:9235 /var/www/app/dist/instances/core-fcp-high/main'
+    echo "... Signal done"
     ;;
   fixtures-fcp-high)
     _fixtures_fcp_high
@@ -504,7 +539,7 @@ case "$action" in
     _start $@
     ;;
   reload-all)
-    _start $RUNNING_CONTAINERS
+    _start $_ONLY_NODEJS_NON_LEGACY_RUNNING_CONTAINERS
     ;;
   reset-db-core-fcp-high)
     _reset_db_fcp_high $@
@@ -526,20 +561,38 @@ case "$action" in
     ;;
   # -- start all up's containers (FCP and/or FCA)
   start-all)
-    _start $RUNNING_CONTAINERS
+    _start $_ONLY_NODEJS_NON_LEGACY_RUNNING_CONTAINERS
     ;;
   # -- stop all up's containers (FCP and/or FCA)
   stop-all)
-    _stop $RUNNING_CONTAINERS
+    _stop $_ONLY_NODEJS_NON_LEGACY_RUNNING_CONTAINERS
     ;;
   test)
     _test $@
     ;;
   test-all)
-    _test $RUNNING_CONTAINERS
+    _test $_ONLY_NODEJS_NON_LEGACY_RUNNING_CONTAINERS
     ;;
   e2e)
     _e2e $@
+    ;;
+  migrations-partners-fcp)
+    _migrations-partners "partners-fcp-back"
+    ;;
+  migrations-partners-fca)
+    _migrations-partners "partners-fca-back"
+    ;;
+  migrations-generate-partners-fcp)
+    _migrations-generate-partners "partners-fcp-back" $@
+    ;;
+  migrations-generate-partners-fca)
+    _migrations-generate-partners "partners-fca-back" $@
+    ;;
+  fixtures-partners-fcp)
+    _fixtures-partners "partners-fcp-back"
+    ;;
+  fixtures-partners-fca)
+    _fixtures-partners "partners-fca-back"
     ;;
   prune)
     _halt
@@ -614,6 +667,14 @@ case "$action" in
     echo "* test-all => exec tests on all nodejs applications"
     echo "* e2e => exec e2e tests on given nodejs application (Ex. core-fcp-high)"
     echo "* up => Select the apps you want to up (run without argument to show the lsit of apps)"
+    echo "* log-rotate => Send SIGUSR2 signal to node process (core-fcp-high only)"
+    # will be replaced in next technical task by a typeorm-fixtures to run migrations and load fixtures for a given app
+    echo "migrations-partners-fcp => runs migrations on the container partners-fcp-back"
+    echo "migrations-partners-fca => runs migrations on the container partners-fca-back"
+    echo "migrations-generate-partners-fcp \"$1\" => generates a new migration on the container partners-fcp-back having the name timestamp-first parameter"
+    echo "migrations-generate-partners-fca \"$1\" => generates a new migration on the container partners-fca-back having the name timestamp-first parameter"
+    echo "fixtures-partners-fcp => runs fixtures on the container partners-fcp-back"
+    echo "fixtures-partners-fca => runs fixtures on the container partners-fca-back"
     echo "----"
     echo "Other commands mapped to docker-compose: see https://docs.docker.com/compose/reference/overview/"
     echo " (example: $script ps)"

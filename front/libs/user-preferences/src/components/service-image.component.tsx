@@ -2,6 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 
 import { Service } from '../interfaces';
+import styles from './service-image.module.scss';
 
 interface ServiceImageComponentProps {
   disabled?: boolean;
@@ -15,21 +16,26 @@ export const ServiceImageComponent: React.FC<ServiceImageComponentProps> = React
     return (
       <div
         className={classnames(
-          'ServiceComponent-image is-relative no-overflow mr24',
+          styles.image,
+          // class CSS
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'is-relative no-overflow fr-mr-3w',
           // class CSS
           // eslint-disable-next-line @typescript-eslint/naming-convention
           { disabled, 'is-table': !image, 'opacity-45': disabled },
           className,
         )}>
-        {image && (
+        {(!image && (
+          <b className="is-table-cell v-align-middle text-center w100 fr-text--sm">{title}</b>
+        )) || (
           <img
             alt={`fournisseur d'identité ${title}`}
+            className="is-block is-absolute"
             height="auto"
             src={`/images/${image}`}
             width="auto"
           />
         )}
-        {!image && <b className="is-table-cell v-align-middle text-center w100 fs14">{title}</b>}
       </div>
     );
   },

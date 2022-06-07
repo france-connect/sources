@@ -14,8 +14,6 @@ const redisProvider = RedisFactoryModule.forRootAsync({
       config: {
         ...config,
         maxRetriesPerRequest: 1,
-        // Only reconnect when the error contains "READONLY"
-        reconnectOnError: ({ message }) => message.includes('READONLY'),
       },
     };
   },

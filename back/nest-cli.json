@@ -288,9 +288,7 @@
       "sourceRoot": "instances/csmr-user-preferences-high/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
-        "assets": [
-          "../../../instances/csmr-user-preferences-high/**/*.ejs"
-        ]
+        "assets": ["../../../instances/csmr-user-preferences-high/**/*.ejs"]
       }
     },
     "tracks-data-provider-instance": {
@@ -921,6 +919,24 @@
       "sourceRoot": "libs/geoip-maxmind/src",
       "compilerOptions": {
         "tsConfigPath": "libs/geoip-maxmind/tsconfig.lib.json"
+      }
+    },
+    "postgres": {
+      "type": "library",
+      "root": "libs/postgres",
+      "entryFile": "index",
+      "sourceRoot": "libs/postgres/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/postgres/tsconfig.lib.json"
+      }
+    },
+    "partner-account": {
+      "type": "library",
+      "root": "libs/partner-account",
+      "entryFile": "index",
+      "sourceRoot": "libs/partner-account/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/partner-account/tsconfig.lib.json"
       }
     }
   }

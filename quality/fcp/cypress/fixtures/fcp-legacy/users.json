@@ -17,8 +17,8 @@
       "family_name": "DURAND",
       "preferred_username": "MARTIN",
       "birthdate": "1962-08-24",
-      "birthplace": "75107",
       "birthcountry": "99100",
+      "birthplace": "75107",
       "email": "x1_bdd_default@yopmail.com"
     }
   },
@@ -53,19 +53,19 @@
     "credentials": [
       {
         "idpId": "default",
-        "username": "test_CLEMENT",
+        "username": "bdd_idp_settings",
         "password": "123"
       }
     ],
     "claims": {
       "gender": "male",
-      "given_name": "CLEMENT",
-      "family_name": "CORSE",
+      "given_name": "Jean",
+      "family_name": "BON",
       "preferred_username": "",
-      "birthdate": "1991-02-12",
-      "birthplace": "2A115",
+      "birthdate": "1992-09-25",
       "birthcountry": "99100",
-      "email": "baterollu-5399@yopmail.com"
+      "birthplace": "94073",
+      "email": "x1_bdd_idp_settings@yopmail.com"
     }
   },
   {
@@ -76,19 +76,34 @@
     "credentials": [
       {
         "idpId": "default",
-        "username": "naissance_Algérie",
+        "username": "bdd_no_idp_settings",
         "password": "123"
       }
     ],
     "claims": {
       "gender": "male",
-      "given_name": "Vincent Guillaume ",
-      "family_name": "MARTIN",
+      "given_name": "Jack",
+      "family_name": "ADDI",
       "preferred_username": "",
-      "birthdate": "1963-12-05",
-      "birthcountry": "99352",
-      "birthplace": "",
-      "email": "senossammab-2430@yopmail.com"
+      "birthdate": "2000-10-01",
+      "birthcountry": "99100",
+      "birthplace": "75113",
+      "email": "x1_bdd_no_idp_settings@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "n'ayant jamais utilisé FranceConnect"
+    ],
+    "credentials": [],
+    "claims": {
+      "gender": "male",
+      "given_name": "Nicolas",
+      "family_name": "Inconnu",
+      "birthdate": "1987-07-29",
+      "birthcountry": "99100",
+      "birthplace": "93051"
     }
   }
 ]

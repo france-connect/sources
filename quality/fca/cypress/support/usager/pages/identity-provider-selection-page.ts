@@ -6,7 +6,9 @@ export default class IdentityProviderSelectionPage {
   }
 
   get ministries(): ChainableElement {
-    return cy.get('#identity-provider-result .ministry-result dt');
+    return cy.get(
+      '#identity-provider-result dl[data-testid^="ministry-search-list__"] dt',
+    );
   }
 
   get identityProviders(): ChainableElement {

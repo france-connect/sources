@@ -12,7 +12,7 @@ describe('createRedisConnection', () => {
     password: 'PassPart0ut',
   };
 
-  it('sould have been called Redis once', () => {
+  it('should have been called Redis once', () => {
     // action
     createRedisConnection(config);
 

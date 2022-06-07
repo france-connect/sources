@@ -1,6 +1,9 @@
 export interface ServiceProviderBase {
   // Used with FC Legacy SP only
   clientId?: string;
+  mocked: boolean;
+  // Used with FC Legacy SP only
+  redirectUri?: string;
   selectors: {
     fcButton: string;
     logoutButton: string;
@@ -12,7 +15,6 @@ export interface ServiceProvider extends ServiceProviderBase {
   acrValue: string;
   authorizeHttpMethod: 'post' | 'get';
   claims: string[];
-  mocked: boolean;
   name: string;
   scopes: string[];
   descriptions: string[];

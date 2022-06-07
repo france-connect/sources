@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ApplicationLayout should match snapshot 1`] = `
+<div>
+  <div
+    class="sticky-body"
+  >
+    <div
+      class="sticky-content"
+    >
+      <div>
+        LayoutHeaderComponent
+      </div>
+      <div>
+        RoutesManagerComponent
+      </div>
+    </div>
+    <div>
+      LayoutFooterComponent
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,16 @@
+@use '~sass-rem' as rem with (
+  $fallback: true,
+  $baseline: 16px
+);
+
+$breakpoints-xs: 320px !default; /* Mobile Small */
+$breakpoints-sm: 576px !default; /* Mobile */
+$breakpoints-md: 768px !default; /* Tablet */
+$breakpoints-lg: 1024px !default; /* Desktop */
+$breakpoints-xl: 1248px !default; /* Desktop Extra Large */
+
+$breakpoint-mobile-sm: $breakpoints-xs;
+$breakpoint-mobile: $breakpoints-sm;
+$breakpoint-tablet: $breakpoints-md;
+$breakpoint-desktop: $breakpoints-lg;
+$breakpoint-desktop-xl: $breakpoints-xl;

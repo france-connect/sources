@@ -1,0 +1,169 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutFooterComponent should match the snapshot, with default props 1`] = `
+<div>
+  <footer
+    class="sticky-footer fr-footer"
+    id="footer"
+    role="contentinfo"
+  >
+    <div
+      class="fr-container"
+    >
+      <div
+        class="fr-footer__body"
+      >
+        <div
+          class="fr-footer__brand fr-enlarge-link"
+        >
+          <p
+            class="fr-logo"
+          >
+            République
+            <br />
+            Française
+          </p>
+        </div>
+        <div
+          class="fr-footer__content"
+        >
+          <div>
+            LayoutFooterContentLinksComponent
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+`;
+
+exports[`LayoutFooterComponent should render a defined application logo 1`] = `
+<div>
+  <footer
+    class="sticky-footer fr-footer"
+    id="footer"
+    role="contentinfo"
+  >
+    <div
+      class="fr-container"
+    >
+      <div
+        class="fr-footer__body"
+      >
+        <div
+          class="fr-footer__brand fr-enlarge-link"
+        >
+          <p
+            class="fr-logo"
+          >
+            République
+            <br />
+            Française
+          </p>
+          <div>
+            <img
+              class="fr-footer__logo fr-responsive-img"
+              src="Any"
+              style="height: 90px; max-height: 90px;"
+            />
+          </div>
+        </div>
+        <div
+          class="fr-footer__content"
+        >
+          <div>
+            LayoutFooterContentLinksComponent
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+`;
+
+exports[`LayoutFooterComponent should render a defined description 1`] = `
+<div>
+  <footer
+    class="sticky-footer fr-footer"
+    id="footer"
+    role="contentinfo"
+  >
+    <div
+      class="fr-container"
+    >
+      <div
+        class="fr-footer__body"
+      >
+        <div
+          class="fr-footer__brand fr-enlarge-link"
+        >
+          <p
+            class="fr-logo"
+          >
+            République
+            <br />
+            Française
+          </p>
+        </div>
+        <div
+          class="fr-footer__content"
+        >
+          <p
+            class="fr-footer__content-desc"
+          >
+            any-description-mock
+          </p>
+          <div>
+            LayoutFooterContentLinksComponent
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+`;
+
+exports[`LayoutFooterComponent should render defined bottom links 1`] = `
+<div>
+  <footer
+    class="sticky-footer fr-footer"
+    id="footer"
+    role="contentinfo"
+  >
+    <div
+      class="fr-container"
+    >
+      <div
+        class="fr-footer__body"
+      >
+        <div
+          class="fr-footer__brand fr-enlarge-link"
+        >
+          <p
+            class="fr-logo"
+          >
+            République
+            <br />
+            Française
+          </p>
+        </div>
+        <div
+          class="fr-footer__content"
+        >
+          <div>
+            LayoutFooterContentLinksComponent
+          </div>
+        </div>
+      </div>
+      <div
+        class="fr-footer__bottom"
+        data-testid="sticky-footer-fr-footer__bottom"
+      >
+        <div>
+          LayoutFooterBottomLinksComponent
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+`;

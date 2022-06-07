@@ -1,3 +1,4 @@
+// @TODO check if should be completed
 import { render } from '@testing-library/react';
 
 import { ErrorPage } from './error.page';
@@ -9,12 +10,10 @@ describe('ErrorPage', () => {
     jest.clearAllMocks();
   });
 
-  it('should render something', () => {
-    // setup
-    const { getByText } = render(<ErrorPage />);
-    // action
-    const title = getByText('Une erreur est survenue');
+  it('should match the snapshot', () => {
+    // when
+    const { container } = render(<ErrorPage />);
     // expect
-    expect(title).toBeInTheDocument();
+    expect(container).toMatchSnapshot();
   });
 });

@@ -8,6 +8,7 @@
     ],
     "mocked": true,
     "url": "https://fsp1.{{TEST_ENV}}.dev-franceconnect.fr",
+    "redirectUri": "https://fsp1.{{TEST_ENV}}.dev-franceconnect.fr/login-callback",
     "acrValue": "eidas1",
     "claims": [
     ],
@@ -18,6 +19,27 @@
     "selectors": {
       "fcButton": "[alt='Soumettre']",
       "logoutButton": "[data-fc-logout-url='/logout']"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "ud-home",
+    "clientId": "myclientidforud-back-with-so-many-characters",
+    "descriptions": [
+      "user-dashboard"
+    ],
+    "mocked": false,
+    "url": "https://ud.{{TEST_ENV}}.dev-franceconnect.fr",
+    "redirectUri": "https://ud.{{TEST_ENV}}.dev-franceconnect.fr/api/oidc-callback/envIssuer",
+    "acrValue": "eidas1",
+    "claims": [
+    ],
+    "scopes": [
+    ],
+    "explicitConsent": false,
+    "selectors": {
+      "fcButton": "#login-form button",
+      "logoutButton": "[data-testid='logout-button-component']"
     },
     "authorizeHttpMethod": "get"
   }

@@ -55,15 +55,13 @@ export function getInvertColor(hex: string): string {
     : colors.loggerLuminosityColorsConstant.WHITE;
 }
 
-export const getColorsFromText: Function = (
-  context: string,
-): ILoggerColorParams => {
+export function getColorsFromText(context: string): ILoggerColorParams {
   const colorName: string = stringToColor(context);
   return {
     BACKGROUND_COLOR: colorName,
     TEXT_COLOR: getInvertColor(colorName),
   };
-};
+}
 
 /**
  * Helper function to set common Chrome debug style.

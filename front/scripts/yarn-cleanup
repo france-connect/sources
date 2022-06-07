@@ -19,4 +19,4 @@ echo "Removing node_modules"
 find . -maxdepth 3 -type d -name node_modules | xargs -i rm -rf {}
 
 echo "Removing package manager generated files"
-find . -maxdepth 3 -type f -regextype posix-extended -iregex '.*(yarn-error.log|yarn.lock|package-lock.json)' | xargs -i rm {}
+find . -maxdepth 3 -type f -regextype posix-extended -iregex '.*(yarn-error.log|package-lock.json)' | xargs -i rm {}

@@ -23,12 +23,29 @@ export default class UdPreferencesPage {
     return new IdentityProviderSetting(`service-component-${idpName}`);
   }
 
-  get blockFutureIdpCheckbox(): ChainableElement {
-    return this.userPreferencesForm.get('#allowFutureIdp');
+  getBlockFutureIdpCheckbox(): ChainableElement {
+    return this.userPreferencesForm.find(
+      '[data-testid="field-checkbox-input"]',
+    );
+  }
+
+  getBlockFutureIdpLabel(): ChainableElement {
+    return this.userPreferencesForm.find(
+      '[data-testid="field-checkbox-label"]',
+    );
+  }
+
+  setFutureIdpAuthorization(isBlocked: boolean): void {
+    this.getBlockFutureIdpCheckbox().then(($checkbox) => {
+      const isChecked = $checkbox.is(':checked');
+      if (isChecked !== isBlocked) {
+        this.getBlockFutureIdpLabel().click();
+      }
+    });
   }
 
   get saveButton(): ChainableElement {
-    return this.userPreferencesForm.get('button[type="submit"]');
+    return this.userPreferencesForm.find('button[type="submit"]');
   }
 
   checkIsUpdateNotificationDisplayed(): void {

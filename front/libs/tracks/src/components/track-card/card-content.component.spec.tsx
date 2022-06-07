@@ -10,6 +10,28 @@ describe('TrackCardContentComponent', () => {
     { zone: 'Europe/Paris' },
   );
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should match snapshot, with default props', () => {
+    // when
+    const { container } = render(
+      <TrackCardContentComponent
+        accessibleId="mock-accessibleId"
+        city="cityMock"
+        claims={claimsMock}
+        country="countryMock"
+        datetime={date}
+        idpLabel="idpLabelValue"
+        opened={false}
+        spAcr="eidas1"
+      />,
+    );
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
   it('should render a collapsible region element with negative tabindex and accessible id', () => {
     // given
     const { getByRole } = render(
@@ -51,7 +73,7 @@ describe('TrackCardContentComponent', () => {
     const element = getByRole('region', { hidden: true });
     // then
     expect(element).toBeInTheDocument();
-    expect(element).not.toHaveClass('mt16');
+    expect(element).not.toHaveClass('fr-mt-2w');
     expect(element).toHaveClass('no-display');
     expect(element).toHaveAttribute('aria-hidden', 'true');
   });
@@ -75,7 +97,7 @@ describe('TrackCardContentComponent', () => {
     const element = getByRole('region', { hidden: true });
     // then
     expect(element).toBeInTheDocument();
-    expect(element).toHaveClass('mt16');
+    expect(element).toHaveClass('fr-mt-2w');
     expect(element).not.toHaveClass('no-display');
     expect(element).toHaveAttribute('aria-hidden', 'false');
   });

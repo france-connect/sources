@@ -4,12 +4,16 @@ import {
   createDecipheriv,
   createHash,
   Encoding,
+  pbkdf2,
   randomBytes,
 } from 'crypto';
 
 import { Injectable } from '@nestjs/common';
 
-import { LowEntropyArgumentException } from './exceptions';
+import { ConfigService } from '@fc/config';
+
+import { CryptographyConfig } from './dto';
+import { LowEntropyArgumentException, PasswordHashFailure } from './exceptions';
 
 const NONCE_LENGTH = 12;
 const AUTHTAG_LENGTH = 16;
@@ -26,6 +30,8 @@ export class CryptographyService {
    * @param data the data to encrypt
    * @returns the cipher as a base64 encoded string
    */
+  constructor(private readonly config: ConfigService) {}
+
   encryptSymetric(key: string, data: string): string {
     const buffer = this.encrypt(key, data);
 
@@ -135,5 +141,27 @@ export class CryptographyService {
     }
 
     return receivedPlaintext;
+  }
+
+  async passwordHash(password: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const { passwordSalt } =
+        this.config.get<CryptographyConfig>('Cryptography');
+
+      pbkdf2(
+        password,
+        passwordSalt,
+        100000,
+        64,
+        'sha512',
+        (err, derivedKey) => {
+          if (err) {
+            return reject(new PasswordHashFailure(err));
+          }
+
+          return resolve(derivedKey.toString('hex'));
+        },
+      );
+    });
   }
 }

@@ -24,6 +24,7 @@ const [
 const platformName = {
   'fca-low': 'AgentConnect',
   'fcp-high': 'FranceConnect+',
+  'fcp-legacy': 'User-Dashboard FC Legacy',
   'fcp-low': 'FranceConnect',
   'partners-fca': 'Partenaires AgentConnect',
   'partners-fcp': 'Partenaires FranceConnect'

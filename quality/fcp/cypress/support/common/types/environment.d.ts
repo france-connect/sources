@@ -6,4 +6,6 @@ export interface Environment {
   name: string;
   udAppId?: string;
   udRootUrl?: string;
+  supportAppId?: string;
+  supportRootUrl?: string;
 }

@@ -1,0 +1,21 @@
+.image {
+  --service-image-width: 232px;
+  --service-image-height: 70px;
+
+  background: #e5edf5;
+  border-radius: 4px;
+  height: var(--service-image-height);
+  max-height: var(--service-image-height);
+  max-width: var(--service-image-width);
+  min-height: var(--service-image-height);
+  min-width: var(--service-image-width);
+  width: var(--service-image-width);
+
+  img {
+    left: 50%;
+    max-height: 76%;
+    max-width: 84%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}

@@ -66,6 +66,7 @@
     ],
     "jsx-a11y/label-has-associated-control": [1, { "assert": "htmlFor" }],
     "react/react-in-jsx-scope": 0,
+    "react/jsx-key": 2,
     "react/jsx-closing-bracket-location": [2, { "nonEmpty": "after-props", "selfClosing": false }],
     "react/jsx-fragments": [2, "element"],
     "react/jsx-key": 2,

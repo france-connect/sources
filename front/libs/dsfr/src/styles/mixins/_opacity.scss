@@ -1,0 +1,39 @@
+@use 'sass:math';
+
+/**
+* USAGE:
+* ---------------------
+*
+* .opacity-35 -> opacity: 0.35;
+*/
+$opacities_map: (
+  0,
+  5,
+  10,
+  15,
+  20,
+  25,
+  30,
+  35,
+  40,
+  45,
+  50,
+  55,
+  60,
+  65,
+  70,
+  75,
+  80,
+  85,
+  90,
+  95,
+  100
+) !default;
+
+/* Generate helpers classes for opacity */
+@each $value in $opacities_map {
+  /* generate font colors */
+  .opacity-#{$value} {
+    opacity: math.div($value, 100);
+  }
+}

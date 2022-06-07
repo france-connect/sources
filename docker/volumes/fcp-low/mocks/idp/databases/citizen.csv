@@ -14,6 +14,8 @@ naissance_Algérie,MARTIN,,Vincent Guillaume,male,senossammab-2430@yopmail.com,1
 bdd_default,DURAND,MARTIN,Jeanne,female,x1_bdd_default@yopmail.com,,1962-08-24,75107,99100,,,,
 bdd_last_connection,DULAC,,Angela Claire Louise,female,x1_bdd_last_connection@yopmail.com,,1962-08-24,75107,99100,,,,
 bdd_enable_disable,DUPOND,,François,male,x1_bdd_enable_disable@yopmail.com,,1962-08-24,75107,99100,,,,
+bdd_idp_settings,BON,,Jean,male,x1_bdd_idp_settings@yopmail.com,,1992-09-25,94073,99100,,,,
+bdd_no_idp_settings,ADDI,,Jack,male,x1_bdd_no_idp_settings@yopmail.com,,2000-10-01,75113,99100,,,,
 test_CLEMENT,CORSE,,CLEMENT,male,baterollu-5399@yopmail.com,123456789,1991-02-12,2A115,99100,France,75107,Paris,20 avenue de Ségur
 étranger_présumé_né_jour,FLEURET,,Jean,male,jean-fleuret@yopmail.com,123456789,1992-11-00,,99217,,,,
 étranger_présumé_né_jour_et_mois,TARGE,,Jean,male,jean-targe@yopmail.com,123456789,1992-00-00,,99217,,,,

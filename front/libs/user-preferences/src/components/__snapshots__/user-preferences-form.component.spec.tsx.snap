@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserPreferencesFormComponent should match the snapshot, display into a desktop viewport 1`] = `
+<div>
+  <form
+    data-testid="user-preferences-form"
+    id="UserPreferencesFormComponent"
+  >
+    <h2
+      class="fr-h3 fr-mt-5w"
+    >
+      <b>
+        Vos réglages :
+      </b>
+    </h2>
+    <p
+      class="fr-mt-2w"
+    >
+      Attention : 
+      <u>
+        Vous devez avoir au moins un compte autorisé
+      </u>
+       pour continuer à utiliser FranceConnect. Nous vous conseillons de ne bloquer que les comptes que vous n’utilisez pas.
+    </p>
+    <div>
+      ServicesListComponent
+    </div>
+    <p
+      class="fr-mt-5w"
+    >
+      Pour vous offrir toujours plus de choix, il est possible que FranceConnect mette à votre disposition de nouveaux moyens d’identification dans le futur. En cochant cette case, ils ne pourront pas être utilisés pour accéder aux services proposant FranceConnect.
+    </p>
+    <p
+      class="fr-mt-2w"
+    >
+      Vous pourrez les autoriser depuis cette page.
+    </p>
+    <div>
+      CheckboxInput
+    </div>
+    <div
+      class="text-center fr-mt-11w"
+    >
+      <div>
+        SimpleButton
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`UserPreferencesFormComponent should match the snapshot, display into a mobile viewport 1`] = `
+<div>
+  <form
+    data-testid="user-preferences-form"
+    id="UserPreferencesFormComponent"
+  >
+    <h2
+      class="fr-h3 fr-mt-5w"
+    >
+      <b>
+        Vos réglages :
+      </b>
+    </h2>
+    <p
+      class="fr-mt-2w"
+    >
+      Attention : 
+      <u>
+        Vous devez avoir au moins un compte autorisé
+      </u>
+       pour continuer à utiliser FranceConnect. Nous vous conseillons de ne bloquer que les comptes que vous n’utilisez pas.
+    </p>
+    <div>
+      ServicesListComponent
+    </div>
+    <p
+      class="fr-mt-5w"
+    >
+      Pour vous offrir toujours plus de choix, il est possible que FranceConnect mette à votre disposition de nouveaux moyens d’identification dans le futur. En cochant cette case, ils ne pourront pas être utilisés pour accéder aux services proposant FranceConnect.
+    </p>
+    <p
+      class="fr-mt-2w"
+    >
+      Vous pourrez les autoriser depuis cette page.
+    </p>
+    <div>
+      CheckboxInput
+    </div>
+    <div
+      class="text-center fr-mt-5w"
+    >
+      <div>
+        SimpleButton
+      </div>
+    </div>
+  </form>
+</div>
+`;

@@ -1,0 +1,11 @@
+@use '~sass-rem' as rem;
+
+.pretitle {
+  color: var(--blue-agent-connect);
+}
+
+.results {
+  border-bottom-style: solid;
+  border-color: var(--border-default-grey);
+  border-width: rem.convert(1px);
+}

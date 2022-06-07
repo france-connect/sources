@@ -11,6 +11,7 @@
   "scripts": {
     "clean": "rm -rf cypress/fixtures.out && rm -rf cypress/reports && rm -rf cypress/screenshots && rm -rf cypress/videos",
     "prettier": "prettier -c \"{cypress,scripts}/**/*.ts\" --config ../.prettierrc",
+    "lint": "eslint \"{cypress,scripts}/**/*.ts\"",
     "test:fcp:base": "cypress-tags run --config-file cypress-partners-fcp.json",
     "test:fcp:chrome-desktop": "yarn test:fcp:base --browser chrome --headless",
     "test:fcp:ci": "yarn test:fcp:chrome-desktop --env TAGS='@ci and not @fca and not @ignoreFcp'",

@@ -1,0 +1,193 @@
+import axios from 'axios';
+import { mocked } from 'ts-jest/utils';
+
+import { AccountException } from './account.exception';
+import { AccountService } from './account.service';
+
+jest.mock('axios');
+
+describe('AccountService', () => {
+  // given
+  const axiosGetMock = mocked(axios.get);
+  const consoleWarnMock = jest.spyOn(global.console, 'warn').mockImplementation();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('fetchData', () => {
+    it('should call axios.get with the url', async () => {
+      // given
+      axiosGetMock.mockResolvedValueOnce({ data: 'any-data-response' });
+      // when
+      await AccountService.fetchData('any-endpoint-mock', jest.fn());
+      // then
+      expect(axiosGetMock).toHaveBeenCalledTimes(1);
+      expect(axiosGetMock).toHaveBeenCalledWith('any-endpoint-mock');
+    });
+
+    describe('connection cases', () => {
+      it('should call callback function as connected when userinfos is defined and valid', async () => {
+        // given
+        const userinfosMock = {
+          firstname: 'any-firstname-mock',
+          lastname: 'any-lastname-mock',
+        };
+        const callbackMock = jest.fn();
+        axiosGetMock.mockResolvedValueOnce({
+          data: userinfosMock,
+        });
+        // when
+        await AccountService.fetchData('any-endpoint-mock', callbackMock);
+        // then
+        expect(callbackMock).toHaveBeenCalledTimes(2);
+        expect(callbackMock).toHaveBeenNthCalledWith(1, { ready: false });
+        expect(callbackMock).toHaveBeenNthCalledWith(2, {
+          connected: true,
+          ready: true,
+          userinfos: userinfosMock,
+        });
+      });
+
+      it('should call callback function as not connected when userinfos is undefined', async () => {
+        // given
+        const callbackMock = jest.fn();
+        axiosGetMock.mockResolvedValueOnce({
+          data: undefined,
+        });
+        // when
+        await AccountService.fetchData('any-endpoint-mock', callbackMock);
+        // then
+        expect(callbackMock).toHaveBeenCalledTimes(2);
+        expect(callbackMock).toHaveBeenNthCalledWith(1, {
+          ready: false,
+        });
+        expect(callbackMock).toHaveBeenNthCalledWith(2, {
+          connected: false,
+          ready: true,
+          userinfos: undefined,
+        });
+      });
+
+      it('should call callback function as not connected when data has no userinfos', async () => {
+        // given
+        const callbackMock = jest.fn();
+        axiosGetMock.mockResolvedValueOnce({
+          data: {},
+        });
+        // when
+        await AccountService.fetchData('any-endpoint-mock', callbackMock);
+        // then
+        expect(callbackMock).toHaveBeenCalledTimes(2);
+        expect(callbackMock).toHaveBeenNthCalledWith(1, {
+          ready: false,
+        });
+        expect(callbackMock).toHaveBeenNthCalledWith(2, {
+          connected: false,
+          ready: true,
+          userinfos: undefined,
+        });
+      });
+    });
+
+    it('should call callback when api is errored with a 401 status', async () => {
+      // given
+      const callbackMock = jest.fn();
+      axiosGetMock.mockRejectedValueOnce({ response: { status: 401 } });
+      // when
+      await AccountService.fetchData('any-endpoint-mock', callbackMock);
+      // then
+      expect(callbackMock).toHaveBeenCalledTimes(2);
+      expect(callbackMock).toHaveBeenNthCalledWith(1, {
+        ready: false,
+      });
+      expect(callbackMock).toHaveBeenNthCalledWith(2, {
+        connected: false,
+        ready: true,
+      });
+    });
+
+    describe('call console.warn calls', () => {
+      // @TODO to be removed when Account Exception has been implemented
+      it('should call console.warn if an error occur on data fetching', async () => {
+        // given
+        axiosGetMock.mockRejectedValueOnce(new Error('mock error'));
+        // when
+        await AccountService.fetchData('any-endpoint-mock', jest.fn());
+        // then
+        expect(consoleWarnMock).toHaveBeenCalled();
+      });
+
+      it("should call console.warn if an error occur on data fetching if error status doesn't equal to 401", async () => {
+        // given
+        axiosGetMock.mockRejectedValueOnce({ response: { status: 402 } });
+        // when
+        await AccountService.fetchData('any-endpoint-mock', jest.fn());
+        // then
+        expect(consoleWarnMock).toHaveBeenCalled();
+      });
+
+      it('should call console.warn if an error occur on data fetching if response is empty', async () => {
+        // given
+        axiosGetMock.mockRejectedValueOnce({ response: {} });
+        // when
+        await AccountService.fetchData('any-endpoint-mock', jest.fn());
+        // then
+        expect(consoleWarnMock).toHaveBeenCalled();
+      });
+
+      it('should call console.warn if an error occur on data fetching if response is undefined', async () => {
+        // given
+        axiosGetMock.mockRejectedValueOnce({});
+        // when
+        await AccountService.fetchData('any-endpoint-mock', jest.fn());
+        // then
+        expect(consoleWarnMock).toHaveBeenCalled();
+      });
+    });
+
+    describe.skip('should throw an AcccountException when api', () => {
+      // @TODO Skipped should implement a custom exception
+      // meanwhile a simple and stupid console.warn has been implemented
+      it('is errored', async () => {
+        // given
+        axiosGetMock.mockRejectedValueOnce(new Error('mock error'));
+        // then
+        await expect(() =>
+          // when
+          AccountService.fetchData('any-endpoint-mock', jest.fn()),
+        ).rejects.toThrow(expect.any(AccountException));
+      });
+
+      it('is errored with a status not equal to 401', async () => {
+        // given
+        axiosGetMock.mockRejectedValueOnce({ response: { status: 402 } });
+        // then
+        await expect(() =>
+          // when
+          AccountService.fetchData('any-endpoint-mock', jest.fn()),
+        ).rejects.toThrow(expect.any(AccountException));
+      });
+
+      it('is errored with an empty response', async () => {
+        // given
+        axiosGetMock.mockRejectedValueOnce({ response: {} });
+        // then
+        await expect(() =>
+          // when
+          AccountService.fetchData('any-endpoint-mock', jest.fn()),
+        ).rejects.toThrow(expect.any(AccountException));
+      });
+
+      it('is errored when response is undefined', async () => {
+        // given
+        axiosGetMock.mockRejectedValueOnce({});
+        // then
+        await expect(() =>
+          // when
+          AccountService.fetchData('any-endpoint-mock', jest.fn()),
+        ).rejects.toThrow(expect.any(AccountException));
+      });
+    });
+  });
+});

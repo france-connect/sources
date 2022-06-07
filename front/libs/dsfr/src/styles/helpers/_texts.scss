@@ -1,0 +1,66 @@
+/* ----------------------------
+
+Alignments
+
+---------------------------- */
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-justify {
+  text-align: justify;
+}
+
+.text-overflow,
+.text-ellipsis {
+  @extend .no-wrap;
+
+  text-overflow: ellipsis;
+}
+
+/* ----------------------------
+
+Font Style
+
+---------------------------- */
+
+.is-italic {
+  font-style: italic;
+}
+
+.is-lowercase {
+  text-transform: lowercase;
+}
+
+.is-uppercase {
+  text-transform: uppercase;
+}
+
+.is-capitalize {
+  text-transform: capitalize;
+}
+
+.is-underline {
+  text-decoration: underline;
+}
+
+.is-stroked {
+  text-decoration: line-through;
+}
+
+.is-small-caps {
+  font-variant: small-caps;
+}
+
+.force-line-break {
+  white-space: normal;
+}

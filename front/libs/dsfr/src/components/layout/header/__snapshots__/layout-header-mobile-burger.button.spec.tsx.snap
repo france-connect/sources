@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderMobileBurgerButton should match the snapshot, when not opened 1`] = `
+<div>
+  <div
+    class="fr-header__navbar"
+  >
+    <button
+      aria-controls="layout-header-menu-modal"
+      aria-haspopup="menu"
+      class="fr-btn--menu fr-btn"
+      data-fr-opened="false"
+      id="burger-button-mobile-menu"
+      title="Menu"
+    >
+      Menu
+    </button>
+  </div>
+</div>
+`;
+
+exports[`LayoutHeaderMobileBurgerButton should match the snapshot, when opened 1`] = `
+<div>
+  <div
+    class="fr-header__navbar"
+  >
+    <button
+      aria-controls="layout-header-menu-modal"
+      aria-haspopup="menu"
+      class="fr-btn--menu fr-btn"
+      data-fr-opened="true"
+      id="burger-button-mobile-menu"
+      title="Menu"
+    >
+      Menu
+    </button>
+  </div>
+</div>
+`;

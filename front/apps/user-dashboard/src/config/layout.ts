@@ -1,9 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-import { LayoutConfig } from '@fc/dsfr';
-
-import { LogoFranceConnectComponent } from '../ui/components/logo-france-connect';
+import { LayoutConfig, LogoFranceConnect } from '@fc/dsfr';
 
 export const Layout: LayoutConfig = {
   bottomLinks: [
@@ -36,15 +34,15 @@ export const Layout: LayoutConfig = {
   footerDescription:
     'FranceConnect est un dispositif qui permet aux internautes de s’identifier sur un service en ligne par l’intermédiaire d’un compte existant (impots.gouv.fr, ameli.fr…).',
   footerLinkTitle: 'Agent connect',
-  logo: LogoFranceConnectComponent,
+  logo: LogoFranceConnect,
   navigationItems: [
     {
-      a11y: 'label',
+      a11y: 'Mon historique de connexion',
       href: '/history',
-      label: 'Mon historique de navigation',
+      label: 'Mon historique de connexion',
     },
     {
-      a11y: 'label',
+      a11y: 'Gérer mes accès',
       href: '/preferences',
       label: 'Gérer mes accès',
     },

@@ -1,13 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`NotFoundPage should match the snapshot 1`] = `
-<div
-  class="flex-columns flex-center items-center"
->
-  <h1
-    class="text-center"
+<div>
+  <div
+    class="content-wrapper-lg text-center fr-mt-8w"
+    id="page-container"
   >
-    404 - Not Found
-  </h1>
+    <h1
+      class="text-center"
+    >
+      404 - Not Found
+    </h1>
+  </div>
 </div>
 `;

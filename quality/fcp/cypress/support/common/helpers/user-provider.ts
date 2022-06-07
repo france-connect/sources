@@ -10,7 +10,6 @@ export const getUserByCriteria = (
   const user: User = User.extractUserFromDataByCriteria(users, criteria);
   expect(user, `No user matches the criteria ${JSON.stringify(criteria)}`).to
     .exist;
-  cy.wrap(user).as('user');
   return user;
 };
 
@@ -23,7 +22,6 @@ export const getEnabledUserByIdpId = (
     user,
     `No active user has credentials for the identity provider '${idpId}'`,
   ).to.exist;
-  cy.wrap(user).as('user');
   return user;
 };
 

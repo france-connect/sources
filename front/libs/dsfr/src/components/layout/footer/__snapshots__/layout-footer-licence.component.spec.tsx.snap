@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutFooterLicenceComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-footer__bottom-copy"
+  >
+    <p>
+      Sauf mention contraire, tous les contenus de ce site sont sous
+       
+      <a
+        href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
+        rel="noreferrer"
+        target="_blank"
+      >
+        licence etalab-2.0
+      </a>
+    </p>
+  </div>
+</div>
+`;

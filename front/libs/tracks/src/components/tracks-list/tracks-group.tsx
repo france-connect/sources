@@ -11,10 +11,10 @@ export type TracksMonthGroupProps = {
 };
 
 export const TracksGroupComponent = ({ label, options, tracks }: TracksMonthGroupProps) => (
-  <section className="mb40">
-    <h6 className="pb12 mb16">
+  <section className="fr-mb-5w">
+    <h2 className="fr-h6 fr-pb-3v fr-mb-2w">
       <b>{ucfirst(label)}</b>
-    </h6>
+    </h2>
     {tracks.sort(orderTracksByDateDesc).map((track: EnhancedTrack) => (
       <TrackCardComponent key={track.trackId} options={options} track={track} />
     ))}

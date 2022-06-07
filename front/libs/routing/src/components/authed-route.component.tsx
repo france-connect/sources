@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { Redirect, Route } from 'react-router-dom';
 
-import { UserInfosContext, UserInterface } from '@fc/oidc-client';
+import { AccountContext, AccountInterface } from '@fc/account';
 
 import { AuthRouteProps } from '../interfaces';
 
 export const AuthedRouteComponent = React.memo(
   ({ authRedirect, component: Component, loader: Loader, ...rest }: AuthRouteProps) => {
-    const { connected, ready } = useContext<UserInterface>(UserInfosContext);
+    const { connected, ready } = useContext<AccountInterface>(AccountContext);
 
     return (
       <Route

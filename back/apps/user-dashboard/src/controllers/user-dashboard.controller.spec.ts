@@ -235,10 +235,12 @@ describe('UserDashboardController', () => {
         },
       });
       // When
-      const { userinfos } = await controller.getUserInfos(sessionServiceMock);
+      const { firstname, lastname } = await controller.getUserInfos(
+        sessionServiceMock,
+      );
       // Then
-      expect(userinfos.given_name).toStrictEqual('angela');
-      expect(userinfos.family_name).toStrictEqual('dubois');
+      expect(firstname).toStrictEqual('angela');
+      expect(lastname).toStrictEqual('dubois');
     });
   });
 

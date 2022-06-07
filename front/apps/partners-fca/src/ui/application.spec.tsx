@@ -2,6 +2,7 @@ import { render } from '@testing-library/react';
 import { ReactElement } from 'react';
 import { mocked } from 'ts-jest/utils';
 
+import { AccountProvider, AccountProviderProps } from '@fc/account';
 import { ApplicationLayout } from '@fc/dsfr';
 import { AppContextProvider, AppContextProviderProps } from '@fc/state-management';
 
@@ -9,11 +10,13 @@ import { AppConfig } from '../config';
 import { Application } from './application';
 
 jest.mock('@fc/dsfr');
+jest.mock('@fc/account');
 jest.mock('@fc/state-management');
 
 describe('HomePage', () => {
   const AppContextProviderMock = mocked(AppContextProvider);
   const ApplicationLayoutMock = mocked(ApplicationLayout);
+  const AccountProviderMock = mocked(AccountProvider);
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -22,6 +25,9 @@ describe('HomePage', () => {
 
     AppContextProviderMock.mockImplementation(
       ({ children }: AppContextProviderProps) => children as ReactElement,
+    );
+    AccountProviderMock.mockImplementation(
+      ({ children }: AccountProviderProps) => children as ReactElement,
     );
     ApplicationLayoutMock.mockReturnValue(<div>ApplicationLayoutMock mockReturnValue</div>);
   });

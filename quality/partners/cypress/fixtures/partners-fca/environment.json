@@ -1,5 +1,4 @@
 {
   "name": "{{TEST_ENV}}",
-  "partnersUrl": "https://partners-fca.{{TEST_ENV}}.dev-franceconnect.fr",
-  "welcomeMessage": "Hello Partners FC!"
+  "partnersUrl": "https://partners-fca.{{TEST_ENV}}.dev-franceconnect.fr"
 }

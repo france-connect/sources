@@ -15,12 +15,20 @@ export class ConfigParser {
     return `${this.namespace}${this.separator}${path}`;
   }
 
+  private exist(path: string): boolean {
+    const fullPath = this.getFullPath(path);
+    return this.source.hasOwnProperty(fullPath);
+  }
+
   boolean(path: string): boolean {
     const fullPath = this.getFullPath(path);
     return parseBoolean(this.source[fullPath]);
   }
 
   json(path: string): any {
+    if (!this.exist(path)) {
+      return undefined;
+    }
     const fullPath = this.getFullPath(path);
     return parseJsonProperty(this.source, fullPath);
   }

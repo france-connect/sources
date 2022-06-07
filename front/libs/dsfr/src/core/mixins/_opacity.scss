@@ -1,7 +1,0 @@
-/* Generate helpers classes for opacity */
-@each $value in $opacities_map {
-  /* generate font colors */
-  .opacity-#{$value} {
-    opacity: $value / 100;
-  }
-}

@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ToggleComponent should match snapshot with default props 1`] = `
+<div
+  class="fr-toggle"
+>
+  <div>
+    ToggleInputComponent
+  </div>
+  <div>
+    ToggleLabelComponent
+  </div>
+</div>
+`;
+
+exports[`ToggleComponent should match snapshot with hint provided 1`] = `
+<div
+  class="fr-toggle"
+>
+  <div>
+    ToggleInputComponent
+  </div>
+  <div>
+    ToggleLabelComponent
+  </div>
+  <p
+    class="fr-hint-text"
+    id="any-field-name-mock-hint-text"
+  >
+    hint-mock
+  </p>
+</div>
+`;

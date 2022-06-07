@@ -10,8 +10,9 @@ describe('NotFoundPage', () => {
   });
 
   it('should match the snapshot', () => {
+    // when
     const { container } = render(<NotFoundPage />);
-
-    expect(container.firstChild).toMatchSnapshot();
+    // then
+    expect(container).toMatchSnapshot();
   });
 });

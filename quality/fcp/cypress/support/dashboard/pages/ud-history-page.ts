@@ -9,10 +9,6 @@ export default class UdHistoryPage {
     this.udRootUrl = udRootUrl;
   }
 
-  get userName(): ChainableElement {
-    return cy.get('#page-container h2');
-  }
-
   checkIsVisible(): void {
     cy.url().should('equal', `${this.udRootUrl}/history`);
   }

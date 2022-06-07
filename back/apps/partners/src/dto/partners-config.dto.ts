@@ -6,6 +6,7 @@ import { IsObject, ValidateNested } from 'class-validator';
 
 import { AppConfig } from '@fc/app';
 import { LoggerConfig } from '@fc/logger-legacy';
+import { PostgresConfig } from '@fc/postgres';
 import { RedisConfig } from '@fc/redis';
 import { SessionConfig } from '@fc/session';
 
@@ -29,4 +30,9 @@ export class PartnersConfig {
   @ValidateNested()
   @Type(() => SessionConfig)
   readonly Session: SessionConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => PostgresConfig)
+  readonly Postgres: PostgresConfig;
 }

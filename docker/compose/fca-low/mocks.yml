@@ -1,4 +1,4 @@
-version: '3.4'
+version: '2.4'
 
 ####################
 ####################
@@ -217,6 +217,8 @@ services:
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
     user: ${CURRENT_UID}
     working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
     volumes:
       - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
       # The next line is not an error

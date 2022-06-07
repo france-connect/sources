@@ -14,7 +14,6 @@ Fonctionnalité: Consultation Traces
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
-    Et le nom de l'usager est affiché sur la page historique du dashboard usager
     Et les 3 traces de FranceConnect+ sont affichées
     Et les 3 traces de FranceConnect de moins de 6 mois sont affichées
     Et les 6 traces sont affichées par ordre décroissant

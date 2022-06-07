@@ -24,7 +24,6 @@ export const getIdentityProviderByAttributes = (
     identityProvider,
     `No active identity provider has ${JSON.stringify(search, null, 2)}`,
   ).to.exist;
-  cy.wrap(identityProvider).as('identityProvider');
   return identityProvider;
 };
 
@@ -39,7 +38,6 @@ export const getIdentityProviderByDescription = (
     identityProvider,
     `No identity provider matches the description '${description}'`,
   ).to.exist;
-  cy.wrap(identityProvider).as('identityProvider');
   return identityProvider;
 };
 

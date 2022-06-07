@@ -15,10 +15,10 @@ export const TrackCardHeaderComponent = React.memo(
   ({ datetime, opened, options, serviceProviderLabel }: TraceCardHeaderProps) => {
     const formattedDay = datetime.toFormat(options.LUXON_FORMAT_DAY);
     return (
-      <div className="pt12 flex-columns flex-between items-center">
+      <div className="fr-pt-3v flex-columns flex-between items-center">
         <div>
-          <div className="is-dark-grey fr-text-xs mb4">{formattedDay}</div>
-          <div className="is-blue-france fr-text-lg">
+          <div className="is-dark-grey fr-text--xs fr-mb-1v">{formattedDay}</div>
+          <div className="is-blue-france fr-text--lg fr-mb-0">
             <b>{serviceProviderLabel}</b>
           </div>
         </div>

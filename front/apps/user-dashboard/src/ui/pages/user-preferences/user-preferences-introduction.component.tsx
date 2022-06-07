@@ -11,10 +11,10 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
 
   return (
     <React.Fragment>
-      <h2 className="is-h3 mb16 is-blue-france is-bold">
+      <h1 className={classnames(styles.title, 'fr-h3 fr-mb-2w fr-text--bold')}>
         Pourquoi gérer mes accès dans FranceConnect&nbsp;?
-      </h2>
-      <p className="is-normal fr-text mb20">
+      </h1>
+      <p className="is-normal fr-mb-5v">
         Pour mieux contr&ocirc;ler votre usage de FranceConnect et vous prot&eacute;ger en cas de
         vols de vos identifiants, vous pouvez bloquer l&rsquo;utilisation des comptes que vous
         n&rsquo;utilisez pas.&nbsp;
@@ -24,14 +24,16 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
         </strong>
         Vous pourrez les r&eacute;activer &agrave; n&rsquo;importe quel moment depuis cette page.
       </p>
-      <p className="is-normal fr-text">
+      <p className="is-normal">
         Ces comptes resteront disponibles sur leur service d&rsquo;origine, par exemple&nbsp;:&nbsp;
         <strong>
           si vous bloquez le compte Imp&ocirc;ts dans FranceConnect, votre compte Imp&ocirc;ts reste
           utilisable sur le site impots.gouv.fr sans passer par FranceConnect.
         </strong>
       </p>
-      <h3 className="is-h6 mt32 mb16 is-blue-france is-bold">En images&nbsp;:</h3>
+      <p className={classnames(styles.title, 'fr-h6 fr-mt-4w fr-mb-2w fr-text--bold')}>
+        En images&nbsp;:
+      </p>
       <div
         className={classnames('flex-wrapper', {
           // Class CSS
@@ -46,10 +48,14 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
         })}>
         <div
           className={classnames(styles.tutoriel, {
-            mb24: !gtDesktop,
-            mb40: gtDesktop,
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'fr-mb-3w': !gtDesktop,
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'fr-mb-5w': gtDesktop,
           })}>
-          <strong className="fs16 lh24 is-block mb8">
+          <strong className="fr-text--md is-block fr-mb-1w">
             1. Un usurpateur tente de se connecter à Service-Public.fr
           </strong>
           <img
@@ -61,10 +67,14 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
         </div>
         <div
           className={classnames(styles.tutoriel, {
-            mb24: !gtDesktop,
-            mb40: gtDesktop,
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'fr-mb-3w': !gtDesktop,
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'fr-mb-5w': gtDesktop,
           })}>
-          <strong className="fs16 lh24 is-block mb8">
+          <strong className="fr-text--md is-block fr-mb-1w">
             2. L&rsquo;usurpateur tente d&rsquo;utiliser un compte préalablement bloqué
           </strong>
           <img
@@ -76,9 +86,11 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
         </div>
         <div
           className={classnames(styles.tutoriel, {
-            mb24: !gtDesktop,
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'fr-mb-3w': !gtDesktop,
           })}>
-          <strong className="fs16 lh24 is-block mb8">
+          <strong className="fr-text--md is-block fr-mb-1w">
             3. L&rsquo;usurpateur parvient à s&rsquo;identifier
           </strong>
           <img
@@ -89,7 +101,9 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
           />
         </div>
         <div className={classnames(styles.tutoriel)}>
-          <strong className="fs16 lh24 is-block mb8">4. FranceConnect bloque la connexion</strong>
+          <strong className="fr-text--md is-block fr-mb-1w">
+            4. FranceConnect bloque la connexion
+          </strong>
           <img
             alt="Usurpateur bloqué"
             className="shadow-bottom"

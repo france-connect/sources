@@ -10,8 +10,8 @@ describe('TrackCardBadgeComponent', () => {
     const element = getByText('FranceConnect');
     // then
     expect(element).toBeInTheDocument();
-    expect(element.parentElement).toHaveClass('bg-blue-agentconnect');
-    expect(element.parentElement).not.toHaveClass('bg-blue-france');
+    expect(element.parentElement).toHaveClass('fr-badge--blue-france-connect');
+    expect(element.parentElement).not.toHaveClass('fr-badge--blue-france-connect-plus');
   });
 
   it('render a FranceConnectPlus badge', () => {
@@ -21,8 +21,8 @@ describe('TrackCardBadgeComponent', () => {
     const element = getByText('FranceConnect+');
     // then
     expect(element).toBeInTheDocument();
-    expect(element.parentElement).toHaveClass('bg-blue-france');
-    expect(element.parentElement).not.toHaveClass('bg-blue-agentconnect');
+    expect(element.parentElement).toHaveClass('fr-badge--blue-france-connect-plus');
+    expect(element.parentElement).not.toHaveClass('fr-badge--blue-france-connect');
   });
 
   it('should always render the FC_VERIFIED badge', () => {
