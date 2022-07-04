@@ -1,7 +1,7 @@
 import React from 'react';
 import { FieldInputProps } from 'react-final-form';
 
-interface ToggleInputComponentProps {
+export interface ToggleInputComponentProps {
   disabled?: boolean;
   // @NOTE la regle est desactivée car le type provient de la librairie react-final-form
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

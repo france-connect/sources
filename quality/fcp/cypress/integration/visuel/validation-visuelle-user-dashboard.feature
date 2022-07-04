@@ -12,8 +12,10 @@ Fonctionnalité: Validation Visuelle - User Dashboard
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
     Et les 3 traces de FranceConnect+ sont affichées
-    Et les 3 traces de FranceConnect de moins de 6 mois sont affichées
+    Et les 7 traces de FranceConnect de moins de 6 mois sont affichées
     Et la copie d'écran "udHistory" correspond à la page actuelle sur "<device>"
+    Et j'affiche le détail de tous les évènements
+    Et la copie d'écran "udHistoryDetail" correspond à la page actuelle sur "<device>"
 
     Exemples:
       | device           |

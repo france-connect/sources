@@ -49,12 +49,9 @@ export class FrIdentityToEuController {
   @Redirect()
   async initSession(
     /**
-     * @todo Adaptation for now, correspond to the oidc-client side.
-     * Named "OidcClient" because we need a future shared session between our libs oidc-provider and oidc-client
-     * without a direct dependance like now.
-     * @author Hugues
-     * @date 2021-04-16
-     * @ticket FC-xxx
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
@@ -90,12 +87,9 @@ export class FrIdentityToEuController {
   @Redirect()
   async redirectToFcAuthorize(
     /**
-     * @todo Adaptation for now, correspond to the oidc-client side.
-     * Named "OidcClient" because we need a future shared session between our libs oidc-provider and oidc-client
-     * without a direct dependance like now.
-     * @author Hugues
-     * @date 2021-04-16
-     * @ticket FC-xxx
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
@@ -145,12 +139,9 @@ export class FrIdentityToEuController {
     @Session('EidasProvider')
     sessionEidasProvider: ISessionService<EidasProviderSession>,
     /**
-     * @todo Adaptation for now, correspond to the oidc-client side.
-     * Named "OidcClient" because we need a future shared session between our libs oidc-provider and oidc-client
-     * without a direct dependance like now.
-     * @author Hugues
-     * @date 2021-04-16
-     * @ticket FC-xxx
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,

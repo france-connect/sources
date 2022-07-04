@@ -87,14 +87,6 @@ export class CoreFcpSendEmailHandler
   }
 
   /**
-   * The arguments sent to all FeatureHandler's handle() methods must be
-   * typed by a interface exteded from `IFeatureHandler`
-   * @see IVerifyFeatureHandlerHandleArgument as an exemple.
-   * @todo #FC-487
-   * @author Hugues
-   * @date 2021-16-04
-   */
-  /**
    * Send an email to the authenticated end-user after consent.
    * If a user haven't provided a valid email, an error is thrown.
    * This validation is done here because only FCP is concerned by the validation.

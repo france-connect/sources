@@ -9,6 +9,7 @@ import {
 } from '@fc/csmr-tracks';
 import { GeoipMaxmindService } from '@fc/geoip-maxmind';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { IRichClaim, ScopesService } from '@fc/scopes';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import { EVENTS_TO_INCLUDE, NOW, PLATFORM, SIX_MONTHS_AGO } from '../constants';
@@ -26,6 +27,7 @@ export class CsmrTracksHighDataService implements IAppTracksDataService {
     protected readonly config: ConfigService,
     private readonly logger: LoggerService,
     private readonly geoip: GeoipMaxmindService,
+    private readonly scopes: ScopesService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -72,14 +74,16 @@ export class CsmrTracksHighDataService implements IAppTracksDataService {
     return query;
   }
 
-  private getClaimsGroups({ claims }: ICsmrTracksHighTrack): string[] | null {
-    /**
-     * @todo #820
-     * add scope and label management here
-     *
-     * Arnaud PSA: 07/02/2022
-     */
-    return claims ? claims.split(' ') : null;
+  private getClaimsGroups({ claims }: ICsmrTracksHighTrack): IRichClaim[] {
+    if (!claims) {
+      return [];
+    }
+
+    const richClaims = this.scopes.getRichClaimsFromClaims(claims.split(' '));
+
+    this.logger.trace({ claims, richClaims });
+
+    return richClaims;
   }
 
   private getGeoFromIp({ ip, source }: ICsmrTracksHighTrack): IGeo {

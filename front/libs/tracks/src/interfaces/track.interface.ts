@@ -3,13 +3,26 @@
 // declarative file
 import { DateTime } from 'luxon';
 
-import { EidasToLabel } from '../enums';
+import { CinematicEvents, EidasToLabel } from '../enums';
+
+export interface IProvider {
+  key: string;
+  label: string;
+}
+
+export type IClaim = string;
+
+export interface IRichClaim {
+  identifier: IClaim;
+  label: string;
+  provider: IProvider;
+}
 
 export interface Track {
   city: string;
-  claims: string[] | null;
+  claims: IRichClaim[];
   country: string;
-  event: string;
+  event: CinematicEvents;
   idpLabel: string;
   platform: 'FranceConnect' | 'FranceConnect+';
   spAcr: keyof typeof EidasToLabel;
@@ -29,3 +42,5 @@ export type TrackList = [
     tracks: EnhancedTrack[];
   },
 ];
+
+export type IGroupedClaims = Record<string, { label: string; claims: string[] }>;

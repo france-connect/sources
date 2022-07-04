@@ -46,6 +46,7 @@ describe('TracksListComponent', () => {
   const options = {
     API_ROUTE_TRACKS: 'mock_API_ROUTE_TRACKS',
     API_ROUTE_USER_INFOS: 'mock_API_ROUTE_USER_INFOS',
+    LUXON_FORMAT_DATETIME_SHORT_FR: "D 'à' T",
     LUXON_FORMAT_DAY: 'DDD',
     LUXON_FORMAT_HOUR_MINS: 'T',
     LUXON_FORMAT_MONTH_YEAR: 'LLLL yyyy',

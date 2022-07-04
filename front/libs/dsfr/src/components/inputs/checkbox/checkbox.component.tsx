@@ -1,7 +1,7 @@
 import React from 'react';
 import { FieldInputProps } from 'react-final-form';
 
-interface CheckboxComponentProps {
+export interface CheckboxComponentProps {
   // @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/217251933/Case+cocher+-+Checkbox
   disabled?: boolean;
   hint?: string;

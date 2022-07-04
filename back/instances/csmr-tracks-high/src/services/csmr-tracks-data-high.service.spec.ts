@@ -4,6 +4,7 @@ import { ConfigService } from '@fc/config';
 import { CsmrTracksTransformTracksFailedException } from '@fc/csmr-tracks';
 import { GeoipMaxmindService } from '@fc/geoip-maxmind';
 import { LoggerService } from '@fc/logger-legacy';
+import { ScopesService } from '@fc/scopes';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import { IdpMappings } from '../dto';
@@ -35,6 +36,10 @@ describe('CsmrTracksHighDataService', () => {
     },
   };
 
+  const scopesMock = {
+    getRichClaimsFromClaims: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -45,12 +50,15 @@ describe('CsmrTracksHighDataService', () => {
         GeoipMaxmindService,
         LoggerService,
         ConfigService,
+        ScopesService,
       ],
     })
       .overrideProvider(GeoipMaxmindService)
       .useValue(geoipMaxmindServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerMock)
+      .overrideProvider(ScopesService)
+      .useValue(scopesMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
       .compile();
@@ -79,7 +87,7 @@ describe('CsmrTracksHighDataService', () => {
   });
 
   describe('getClaimsGroups()', () => {
-    it('should return null if no scope is present in source tracks', () => {
+    it('should return an empty array if no scope are present in source tracks', () => {
       // Given
       const sourceMock = {} as unknown as ICsmrTracksHighTrack;
 
@@ -87,28 +95,27 @@ describe('CsmrTracksHighDataService', () => {
       const claims = service['getClaimsGroups'](sourceMock);
 
       // Then
-      expect(claims).toBeNull();
+      expect(claims).toEqual([]);
     });
 
-    it('should get the claims as array', () => {
+    it('should return the return of scopesService.getRichClaimsFromClaims()', () => {
       // Given
       const sourceMock = {
         claims: 'sub gender family_name birthdate birthplace',
       } as unknown as ICsmrTracksHighTrack;
 
-      const resultMock = [
-        'sub',
-        'gender',
-        'family_name',
-        'birthdate',
-        'birthplace',
-      ];
+      const getRichClaimsFromClaimsMockReturnedValue = Symbol(
+        'getRichClaimsFromClaimsMockReturnedValue',
+      );
+      scopesMock.getRichClaimsFromClaims.mockReturnValueOnce(
+        getRichClaimsFromClaimsMockReturnedValue,
+      );
 
       // When
       const claims = service['getClaimsGroups'](sourceMock);
 
       // Then
-      expect(claims).toStrictEqual(resultMock);
+      expect(claims).toBe(getRichClaimsFromClaimsMockReturnedValue);
     });
   });
 

@@ -1,0 +1,27 @@
+version: "2.4"
+
+services:
+  ####################
+  # Storybook
+  ####################
+
+  storybook:
+    hostname: storybook
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - "rp-all"
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/front:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/storybook/.env/storybook.env"
+    networks:
+      - public
+    tty: true
+    command: "pm2 logs"

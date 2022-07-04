@@ -31,4 +31,14 @@ export class FormattedIdpSettingDto {
   @ValidateNested()
   @Type(() => FormattedIdpDto)
   idpList: FormattedIdpDto;
+
+  @ValidateNested()
+  @Type(() => FormattedIdpDto)
+  updatedIdpSettingsList: FormattedIdpDto[];
+
+  @IsBoolean()
+  hasAllowFutureIdpChanged: boolean;
+
+  @IsString()
+  updatedAt: string;
 }

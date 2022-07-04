@@ -93,6 +93,12 @@ afterEach(function () {
   delete this.operatorUser;
 });
 
+Before({ tags: '@ignoreDocker' }, function () {
+  if (['docker', 'recette'].includes(Cypress.env('TEST_ENV'))) {
+    skipTest();
+  }
+});
+
 Before({ tags: '@ignoreInteg01' }, function () {
   if (Cypress.env('TEST_ENV') === 'integ01') {
     skipTest();

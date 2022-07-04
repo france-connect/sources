@@ -1,76 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TrackCardContentComponent should match snapshot, with default props 1`] = `
+exports[`TrackCardContentComponent should match snapshot, for claims 1`] = `
 <div>
-  <dl
+  <div
     aria-hidden="true"
-    class="details fr-text--md no-display"
+    class="no-display"
     id="mock-accessibleId"
     role="region"
     tabindex="-1"
   >
-    <dt
-      class="fr-mb-3v"
-    >
-      <span>
-        Le service a récupéré les données suivantes
-      </span>
-    </dt>
-    <dd
-      class="fr-ml-3w"
-    >
-      <ul>
-        <li>
-          <span>
-            Connexion à ce service a eu lieu le : 
-          </span>
-          <b>
-            1 oct. 2021, 06:32
-             (heure de Paris)
-          </b>
-        </li>
-        <li>
-          <span>
-            Localisation : 
-          </span>
-          <b>
-            cityMock
-             
-            (countryMock)
-          </b>
-        </li>
-        <li>
-          <span>
-            Via le compte : 
-          </span>
-          <b>
-            idpLabelValue
-          </b>
-        </li>
-        <li>
-          <span>
-            Niveau de garantie eIDAS : 
-          </span>
-          <a
-            class="is-g700"
-            href="/"
-            title="En savoir plus sur le niveau de sécurité faible"
-          >
-            <b>
-              faible
-            </b>
-          </a>
-        </li>
-        <li>
-          <span>
-            Récupération des données : 
-          </span>
-          <b>
-            claims1Mock, claims2Mock
-          </b>
-        </li>
-      </ul>
-    </dd>
-  </dl>
+    <div>
+      FooBar ClaimsComponent
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TrackCardContentComponent should match snapshot, for connection 1`] = `
+<div>
+  <div
+    aria-hidden="true"
+    class="no-display"
+    id="mock-accessibleId"
+    role="region"
+    tabindex="-1"
+  >
+    <div>
+      FooBar ConnectionComponent
+    </div>
+  </div>
 </div>
 `;

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useApiGet } from '@fc/common';
+import { AlertTypes, Sizes } from '@fc/dsfr';
 
 import {
   FormValues,
@@ -11,6 +12,25 @@ import {
 } from '../interfaces';
 import { UserPreferencesService } from '../services';
 
+export const validateHandlerCallback = ({ idpList }: Pick<FormValues, 'idpList'>) => {
+  const isDefinedPreferences = idpList && Object.values(idpList);
+  const hasError = isDefinedPreferences && !isDefinedPreferences.includes(true);
+
+  if (!hasError) {
+    return undefined;
+  }
+
+  return {
+    closable: false,
+    description:
+      'Veuillez choisir au moins un compte autorisé pour pouvoir enregistrer vos réglages.',
+    size: Sizes.MEDIUM,
+    title:
+      'Attention, vous devez avoir au moins un compte autorisé pour continuer a utiliser FranceConnect.',
+    type: AlertTypes.ERROR,
+  };
+};
+
 export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
   const userPreferences: UserPreferencesData = useApiGet({
     endpoint: options.API_ROUTE_USER_PREFERENCES,
@@ -19,6 +39,8 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
   const [submitErrors, setSubmitErrors] = useState(undefined);
   const [submitWithSuccess, setSubmitWithSuccess] = useState(false);
   const [formValues, setFormValues] = useState<FormValues | undefined>(undefined);
+
+  const validateHandler = useCallback(validateHandlerCallback, []);
 
   const commitErrorHandler = useCallback((err) => {
     setSubmitErrors(err);
@@ -75,5 +97,6 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
     submitErrors,
     submitWithSuccess,
     userPreferences,
+    validateHandler,
   };
 };

@@ -399,6 +399,7 @@ export class SessionService {
    * @todo #485 Fix validation process
    *   author: Hugues
    *   date: 2021/04/15
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/485
    */
   private async validate(session: object): Promise<void> {
     /**

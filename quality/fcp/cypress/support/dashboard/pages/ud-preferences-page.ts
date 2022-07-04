@@ -11,11 +11,11 @@ export default class UdPreferencesPage {
     cy.url().should('equal', `${this.udRootUrl}/preferences`);
   }
 
-  get userPreferencesForm(): ChainableElement {
+  getUserPreferencesForm(): ChainableElement {
     return cy.get('[data-testid="user-preferences-form"]');
   }
 
-  get allIdentityProviderSettings(): ChainableElement {
+  getAllIdentityProviderSettings(): ChainableElement {
     return cy.get('li[data-testid^="service-component-"]');
   }
 
@@ -23,14 +23,42 @@ export default class UdPreferencesPage {
     return new IdentityProviderSetting(`service-component-${idpName}`);
   }
 
+  setAllIdpAuthorization(isAuthorized: boolean): void {
+    this.getAllIdentityProviderSettings().each(($li) => {
+      const dataTestId = $li.attr('data-testid');
+      const idpSetting = new IdentityProviderSetting(dataTestId);
+      idpSetting.setIdpAuthorization(isAuthorized);
+    });
+  }
+
+  getErrorAlert(): ChainableElement {
+    return cy.get('.fr-alert--error');
+  }
+
+  checkIsAlertErrorDisplayed(displayed: boolean): void {
+    const errorAlert = this.getErrorAlert();
+    const errorTitle =
+      'Attention, vous devez avoir au moins un compte autorisé pour continuer a utiliser FranceConnect.';
+    const errorMessage =
+      'Veuillez choisir au moins un compte autorisé pour pouvoir enregistrer vos réglages.';
+    if (displayed) {
+      errorAlert
+        .invoke('text')
+        .should('contain', errorTitle)
+        .should('contain', errorMessage);
+    } else {
+      errorAlert.should('not.exist');
+    }
+  }
+
   getBlockFutureIdpCheckbox(): ChainableElement {
-    return this.userPreferencesForm.find(
+    return this.getUserPreferencesForm().find(
       '[data-testid="field-checkbox-input"]',
     );
   }
 
   getBlockFutureIdpLabel(): ChainableElement {
-    return this.userPreferencesForm.find(
+    return this.getUserPreferencesForm().find(
       '[data-testid="field-checkbox-label"]',
     );
   }
@@ -44,8 +72,8 @@ export default class UdPreferencesPage {
     });
   }
 
-  get saveButton(): ChainableElement {
-    return this.userPreferencesForm.find('button[type="submit"]');
+  getSaveButton(): ChainableElement {
+    return this.getUserPreferencesForm().find('button[type="submit"]');
   }
 
   checkIsUpdateNotificationDisplayed(): void {
@@ -64,35 +92,35 @@ class IdentityProviderSetting {
     this.name = dataTestId.replace('service-component-', '');
   }
 
-  get idpSettingSelector() {
+  getIdpSettingSelector() {
     return `li[data-testid="service-component-${this.name}"]`;
   }
 
-  get image() {
+  getImage() {
     return cy.get(
-      `${this.idpSettingSelector} [class*="ServiceComponent-image"]`,
+      `${this.getIdpSettingSelector()} [class*="ServiceComponent-image"]`,
     );
   }
 
-  get checkbox() {
-    return cy.get(`${this.idpSettingSelector} input[type="checkbox"]`);
+  getCheckbox() {
+    return cy.get(`${this.getIdpSettingSelector()} input[type="checkbox"]`);
   }
 
-  get status() {
+  getStatus() {
     return cy.get(
-      `${this.idpSettingSelector} span[class*="FieldSwitchInputComponent-legend"]`,
+      `${this.getIdpSettingSelector()} span[class*="FieldSwitchInputComponent-legend"]`,
     );
   }
 
-  get description() {
-    return cy.get(`${this.idpSettingSelector} label`);
+  getDescription() {
+    return cy.get(`${this.getIdpSettingSelector()} label`);
   }
 
   setIdpAuthorization(isAuthorized: boolean): void {
-    this.checkbox.then(($checkbox) => {
+    this.getCheckbox().then(($checkbox) => {
       const isChecked = $checkbox.is(':checked');
       if (isChecked !== isAuthorized) {
-        this.description.click();
+        this.getDescription().click();
       }
     });
   }

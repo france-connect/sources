@@ -23,12 +23,17 @@ export class ScopesService {
     return uniqueClaims;
   }
 
-  getRichClaimsFromScopes(scopes: IScope[]): IRichClaim[] {
-    const claims = this.getRawClaimsFromScopes(scopes);
-
+  getRichClaimsFromClaims(claims: IClaim[]): IRichClaim[] {
     const richClaims = claims.map((claimName) =>
       this.index.claims.get(claimName),
     );
+
+    return richClaims;
+  }
+
+  getRichClaimsFromScopes(scopes: IScope[]): IRichClaim[] {
+    const claims = this.getRawClaimsFromScopes(scopes);
+    const richClaims = this.getRichClaimsFromClaims(claims);
 
     return richClaims;
   }

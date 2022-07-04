@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TrackCardComponent Initial component render should match snapshot, with default props 1`] = `
+<div>
+  <button
+    aria-controls="card::a11y::mock-track-id"
+    aria-expanded="false"
+    class="is-full-width text-left is-block is-relative is-blue-shadow fr-mb-4w fr-px-5v fr-py-2w"
+    data-testid="FranceConnect-mock-track-id"
+    data-time="1633039200000"
+    type="button"
+  >
+    <div>
+      FooBar TrackCardBadgeComponent
+    </div>
+    <div>
+      FooBar TrackCardHeaderComponent
+    </div>
+    <div>
+      FooBar TrackCardContentComponent
+    </div>
+  </button>
+</div>
+`;

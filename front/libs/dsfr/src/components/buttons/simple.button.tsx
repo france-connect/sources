@@ -3,7 +3,7 @@ import React, { ButtonHTMLAttributes } from 'react';
 
 import { IconPlacement, Priorities, Sizes } from '../../enums';
 
-interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   // @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/217284660/Boutons+-+Buttons
   label: string;
   size?: Sizes;

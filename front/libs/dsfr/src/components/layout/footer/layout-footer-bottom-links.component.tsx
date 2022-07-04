@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { NavigationLink } from '../../../interfaces';
 
-interface LayoutFooterBottomLinksComponentProps {
+export interface LayoutFooterBottomLinksComponentProps {
   items: NavigationLink[];
 }
 

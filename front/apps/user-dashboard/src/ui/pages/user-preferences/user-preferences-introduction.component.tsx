@@ -16,7 +16,7 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
       </h1>
       <p className="is-normal fr-mb-5v">
         Pour mieux contr&ocirc;ler votre usage de FranceConnect et vous prot&eacute;ger en cas de
-        vols de vos identifiants, vous pouvez bloquer l&rsquo;utilisation des comptes que vous
+        vol de vos identifiants, vous pouvez bloquer l&rsquo;utilisation des comptes que vous
         n&rsquo;utilisez pas.&nbsp;
         <strong>
           Ils seront toujours visibles sur la page de s&eacute;lection de compte mais FranceConnect

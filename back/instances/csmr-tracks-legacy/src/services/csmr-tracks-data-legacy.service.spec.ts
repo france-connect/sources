@@ -26,7 +26,7 @@ describe('CsmrTracksLegacyDataService', () => {
   };
 
   const scopesMock = {
-    getRawClaimsFromScopes: jest.fn(),
+    getRichClaimsFromScopes: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -108,7 +108,7 @@ describe('CsmrTracksLegacyDataService', () => {
   });
 
   describe('getClaimsGroups()', () => {
-    it('should return null if no scope is present in source tracks', () => {
+    it('should return an empty array if no scope are present in source tracks', () => {
       // Given
       const sourceMock = {} as unknown as ICsmrTracksLegacyTrack;
 
@@ -116,30 +116,7 @@ describe('CsmrTracksLegacyDataService', () => {
       const claims = service['getClaimsGroups'](sourceMock);
 
       // Then
-      expect(claims).toBeNull();
-    });
-
-    it('should get the claims from scopes with missing sub', () => {
-      // Given
-      const sourceMock = {
-        scopes: 'gender, family_name, birth',
-      } as unknown as ICsmrTracksLegacyTrack;
-
-      const resultMock = ['gender', 'family_name', 'birthdate', 'birthplace'];
-
-      scopesMock.getRawClaimsFromScopes.mockReturnValueOnce(resultMock);
-
-      // When
-      const claims = service['getClaimsGroups'](sourceMock);
-
-      // Then
-      expect(claims).toStrictEqual([...resultMock, 'sub']);
-      expect(scopesMock.getRawClaimsFromScopes).toHaveBeenCalledTimes(1);
-      expect(scopesMock.getRawClaimsFromScopes).toHaveBeenCalledWith([
-        'gender',
-        'family_name',
-        'birth',
-      ]);
+      expect(claims).toEqual([]);
     });
 
     it('should get the claims from scopes', () => {
@@ -156,15 +133,15 @@ describe('CsmrTracksLegacyDataService', () => {
         'birthplace',
       ];
 
-      scopesMock.getRawClaimsFromScopes.mockReturnValueOnce(resultMock);
+      scopesMock.getRichClaimsFromScopes.mockReturnValueOnce(resultMock);
 
       // When
       const claims = service['getClaimsGroups'](sourceMock);
 
       // Then
       expect(claims).toStrictEqual(resultMock);
-      expect(scopesMock.getRawClaimsFromScopes).toHaveBeenCalledTimes(1);
-      expect(scopesMock.getRawClaimsFromScopes).toHaveBeenCalledWith([
+      expect(scopesMock.getRichClaimsFromScopes).toHaveBeenCalledTimes(1);
+      expect(scopesMock.getRichClaimsFromScopes).toHaveBeenCalledWith([
         'gender',
         'family_name',
         'birth',

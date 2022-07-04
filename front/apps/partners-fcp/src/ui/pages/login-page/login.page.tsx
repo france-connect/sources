@@ -39,6 +39,7 @@ export const LoginPage = React.memo(() => {
   );
 
   const onApiError = useCallback(() => {
+    // eslint-disable-next-line no-console
     console.log('error');
   }, []);
 

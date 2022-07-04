@@ -9,7 +9,7 @@ import { LayoutFooterBottomLinksComponent } from './layout-footer-bottom-links.c
 import { LayoutFooterContentLinksComponent } from './layout-footer-content-links.component';
 import { LayoutFooterLicenceComponent } from './layout-footer-licence.component';
 
-interface LayoutFooterComponentProps {
+export interface LayoutFooterComponentProps {
   showLicence?: boolean;
   topLinks?: NavigationLink[];
 }

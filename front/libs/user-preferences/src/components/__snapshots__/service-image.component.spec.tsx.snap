@@ -3,7 +3,7 @@
 exports[`ServiceImageComponent should be in a disabled state 1`] = `
 <div>
   <div
-    class="is-relative no-overflow fr-mr-3w disabled opacity-45"
+    class="image is-relative no-overflow fr-mr-3w disabled opacity-45"
   >
     <img
       alt="fournisseur d'identité title-mock"
@@ -19,7 +19,7 @@ exports[`ServiceImageComponent should be in a disabled state 1`] = `
 exports[`ServiceImageComponent should match the snapshot 1`] = `
 <div>
   <div
-    class="is-relative no-overflow fr-mr-3w is-table"
+    class="image is-relative no-overflow fr-mr-3w is-table"
   >
     <b
       class="is-table-cell v-align-middle text-center w100 fr-text--sm"
@@ -33,7 +33,7 @@ exports[`ServiceImageComponent should match the snapshot 1`] = `
 exports[`ServiceImageComponent should show a placeholder instead of an image 1`] = `
 <div>
   <div
-    class="is-relative no-overflow fr-mr-3w is-table"
+    class="image is-relative no-overflow fr-mr-3w is-table"
   >
     <b
       class="is-table-cell v-align-middle text-center w100 fr-text--sm"
@@ -47,7 +47,7 @@ exports[`ServiceImageComponent should show a placeholder instead of an image 1`]
 exports[`ServiceImageComponent should show an image 1`] = `
 <div>
   <div
-    class="is-relative no-overflow fr-mr-3w"
+    class="image is-relative no-overflow fr-mr-3w"
   >
     <img
       alt="fournisseur d'identité title-mock"

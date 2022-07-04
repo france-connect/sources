@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-import { LinkComponent } from '@fc/dsfr';
+import { LinkComponent, Sizes } from '@fc/dsfr';
 
 import {
   SearchComponent,
@@ -11,7 +11,11 @@ import {
 } from '../../components';
 import styles from './homepage.module.scss';
 
-export const HomePage = React.memo(() => {
+export interface HomePageProps {
+  size?: Sizes;
+}
+
+export const HomePage: React.FC<HomePageProps> = React.memo(({ size }: HomePageProps) => {
   const gtTablet = useMediaQuery({ query: '(min-width: 768px)' });
   return (
     <div
@@ -32,11 +36,15 @@ export const HomePage = React.memo(() => {
           href="https://agentconnect.gouv.fr/aide"
           icon="question-fill"
           label="J’ai besoin d’aide"
-          size="lg"
+          size={size}
         />
       </div>
     </div>
   );
 });
+
+HomePage.defaultProps = {
+  size: Sizes.LARGE,
+};
 
 HomePage.displayName = 'HomePage';

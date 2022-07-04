@@ -7,13 +7,13 @@ exports[`ServiceProviderNameComponent should match the snapshot for a desktop vi
     data-testid="wrapper"
   >
     <h1
-      class="fr-h4 fr-mb-2w"
+      class="fr-h4 fr-mb-2w pretitle"
       data-testid="title"
     >
       Je choisis un compte pour me connecter sur
     </h1>
     <h2
-      class="fr-h1 fr-mb-8w"
+      class="fr-h1 title fr-mb-8w"
       data-testid="subtitle"
     >
       <span />
@@ -29,13 +29,13 @@ exports[`ServiceProviderNameComponent should match the snapshot for a tablet vie
     data-testid="wrapper"
   >
     <h1
-      class="fr-h4 fr-mb-2w"
+      class="fr-h4 fr-mb-2w pretitle"
       data-testid="title"
     >
       Je choisis un compte pour me connecter sur
     </h1>
     <h2
-      class="fr-h1 fr-mb-5w"
+      class="fr-h1 title fr-mb-5w"
       data-testid="subtitle"
     >
       <span />

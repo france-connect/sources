@@ -1,22 +1,27 @@
 import classnames from 'classnames';
+import { ValidationErrors } from 'final-form';
 import React, { FormEventHandler } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-import { CheckboxInput, SimpleButton, Sizes } from '@fc/dsfr';
+import { AlertMessageComponent, CheckboxInput, SimpleButton, Sizes } from '@fc/dsfr';
 
 import { UserPreferencesData } from '../interfaces';
 import { ServicesListComponent } from './services-list.component';
 import styles from './user-preferences-form.module.scss';
 
 interface UserPreferencesFormComponentProps {
+  errors: ValidationErrors;
   isDisabled: boolean;
   onSubmit: FormEventHandler<HTMLFormElement>;
   userPreferences: UserPreferencesData | undefined;
   showNotification: boolean;
+  hasValidationErrors: boolean;
 }
 
 export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponentProps> = React.memo(
   ({
+    errors,
+    hasValidationErrors,
     isDisabled,
     onSubmit,
     showNotification,
@@ -31,14 +36,25 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
         id="UserPreferencesFormComponent"
         onSubmit={onSubmit}>
         <h2 className={classnames(styles.title, 'fr-h3 fr-mt-5w')}>
-          <b>Vos réglages&nbsp;:</b>
+          <b>Mes réglages&nbsp;:</b>
         </h2>
         <p className="fr-mt-2w">
-          Attention&nbsp;:&nbsp;<u>Vous devez avoir au moins un compte autorisé</u> pour continuer à
-          utiliser FranceConnect. Nous vous conseillons de ne bloquer que les comptes que vous
-          n’utilisez pas.
+          Attention&nbsp;:&nbsp;<strong>Vous devez avoir au moins un compte autorisé</strong> pour
+          continuer à utiliser FranceConnect. Nous vous conseillons de ne bloquer que les comptes
+          que vous n’utilisez pas.
         </p>
         {showServicesList && <ServicesListComponent identityProviders={userPreferences.idpList} />}
+
+        {hasValidationErrors && (
+          <AlertMessageComponent
+            closable={errors?.closable}
+            description={errors?.description}
+            size={errors?.size}
+            title={errors?.title}
+            type={errors?.type}
+          />
+        )}
+
         <p className="fr-mt-5w">
           Pour vous offrir toujours plus de choix, il est possible que FranceConnect mette à votre
           disposition de nouveaux moyens d’identification dans le futur. En cochant cette case, ils

@@ -7,6 +7,7 @@ import { IsObject, ValidateNested } from 'class-validator';
 import { AppConfig } from '@fc/app';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
 import { LoggerConfig } from '@fc/logger-legacy';
+import { MailerConfig } from '@fc/mailer';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 import { RedisConfig } from '@fc/redis';
@@ -52,4 +53,9 @@ export class UserDashboardConfig {
   @ValidateNested()
   @Type(() => RabbitmqConfig)
   readonly UserPreferencesBroker: RabbitmqConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => MailerConfig)
+  readonly Mailer: MailerConfig;
 }

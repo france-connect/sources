@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 
+import { Sizes } from '../../enums';
 import { LinkComponent } from './link.component';
 
 describe('LinkComponent', () => {
@@ -16,7 +17,7 @@ describe('LinkComponent', () => {
 
   it('should match the snapshot, with size sm props', () => {
     // when
-    const { container } = render(<LinkComponent href="any-url-mock" size="sm" />);
+    const { container } = render(<LinkComponent href="any-url-mock" size={Sizes.SMALL} />);
     // then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('fr-link fr-link--sm');
@@ -24,7 +25,7 @@ describe('LinkComponent', () => {
 
   it('should match the snapshot, with size lg props', () => {
     // when
-    const { container } = render(<LinkComponent href="any-url-mock" size="lg" />);
+    const { container } = render(<LinkComponent href="any-url-mock" size={Sizes.LARGE} />);
     // then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('fr-link fr-link--lg');

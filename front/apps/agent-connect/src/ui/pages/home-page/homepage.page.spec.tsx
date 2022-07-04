@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { useMediaQuery } from 'react-responsive';
 import { mocked } from 'ts-jest/utils';
 
-import { LinkComponent } from '@fc/dsfr';
+import { LinkComponent, Sizes } from '@fc/dsfr';
 
 import {
   SearchComponent,
@@ -25,7 +25,7 @@ describe('HomePage', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
-    const { container } = render(<HomePage />);
+    const { container } = render(<HomePage size={Sizes.LARGE} />);
     // then
     expect(container).toMatchSnapshot();
   });
@@ -34,14 +34,14 @@ describe('HomePage', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(false);
     // when
-    const { container } = render(<HomePage />);
+    const { container } = render(<HomePage size={Sizes.LARGE} />);
     // then
     expect(container).toMatchSnapshot();
   });
 
   it('should call a LinkComponent with params', () => {
     // when
-    render(<HomePage />);
+    render(<HomePage size={Sizes.LARGE} />);
     // then
     expect(LinkComponent).toHaveBeenCalledTimes(1);
     expect(LinkComponent).toHaveBeenCalledWith(
@@ -49,7 +49,7 @@ describe('HomePage', () => {
         href: 'https://agentconnect.gouv.fr/aide',
         icon: 'question-fill',
         label: 'J’ai besoin d’aide',
-        size: 'lg',
+        size: Sizes.LARGE,
       }),
       {},
     );
@@ -57,21 +57,21 @@ describe('HomePage', () => {
 
   it('should call ServiceProviderNameComponent', () => {
     // when
-    render(<HomePage />);
+    render(<HomePage size={Sizes.LARGE} />);
     // then
     expect(ServiceProviderNameComponent).toHaveBeenCalled();
   });
 
   it('should call UserHistoryComponent', () => {
     // when
-    render(<HomePage />);
+    render(<HomePage size={Sizes.LARGE} />);
     // then
     expect(UserHistoryComponent).toHaveBeenCalled();
   });
 
   it('should call SearchComponent', () => {
     // when
-    render(<HomePage />);
+    render(<HomePage size={Sizes.LARGE} />);
     // then
     expect(SearchComponent).toHaveBeenCalled();
   });

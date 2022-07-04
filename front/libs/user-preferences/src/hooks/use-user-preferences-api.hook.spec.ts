@@ -4,10 +4,11 @@ import axios, { AxiosResponse } from 'axios';
 import { mocked } from 'ts-jest/utils';
 
 import { useApiGet } from '@fc/common';
+import { AlertTypes, Sizes } from '@fc/dsfr';
 
 import { FormValues, IGetCsrfTokenResponse } from '../interfaces';
 import { UserPreferencesService } from '../services/user-preferences.service';
-import { useUserPreferencesApi } from './use-user-preferences-api.hook';
+import { useUserPreferencesApi, validateHandlerCallback } from './use-user-preferences-api.hook';
 
 // given
 jest.mock('axios');
@@ -83,6 +84,7 @@ describe('useUserPreferencesApi', () => {
         submitErrors: undefined,
         submitWithSuccess: false,
         userPreferences: undefined,
+        validateHandler: expect.any(Function),
       });
     });
   });
@@ -118,6 +120,7 @@ describe('useUserPreferencesApi', () => {
         submitErrors: undefined,
         submitWithSuccess: false,
         userPreferences,
+        validateHandler: expect.any(Function),
       });
     });
 
@@ -210,6 +213,7 @@ describe('useUserPreferencesApi', () => {
         submitErrors: undefined,
         submitWithSuccess: true,
         userPreferences: { allowFutureIdp: false, idpList: expect.any(Object) },
+        validateHandler: expect.any(Function),
       });
       // reset
       parseFormDataMock.mockReset();
@@ -240,7 +244,39 @@ describe('useUserPreferencesApi', () => {
         submitErrors: errorMock,
         submitWithSuccess: false,
         userPreferences: { allowFutureIdp: false, idpList: expect.any(Object) },
+        validateHandler: expect.any(Function),
       });
+    });
+
+    it('should return errors if idpList is defined but every idp is unchecked', () => {
+      // given
+      const idpListAllUnchecked = {
+        idpList: {
+          uidMock1: false,
+          uidMock2: false,
+          uidMock3: false,
+        },
+      };
+      const returnValueIfFormHasErrors = {
+        closable: false,
+        description:
+          'Veuillez choisir au moins un compte autorisé pour pouvoir enregistrer vos réglages.',
+        size: Sizes.MEDIUM,
+        title:
+          'Attention, vous devez avoir au moins un compte autorisé pour continuer a utiliser FranceConnect.',
+        type: AlertTypes.ERROR,
+      };
+      // when
+      const result = validateHandlerCallback(idpListAllUnchecked);
+      // then
+      expect(result).toEqual(returnValueIfFormHasErrors);
+    });
+
+    it('should no errors if idpList has checked idps', () => {
+      // when
+      const result = validateHandlerCallback({ idpList: { ...idpList } });
+      // then
+      expect(result).toBeUndefined();
     });
   });
 });

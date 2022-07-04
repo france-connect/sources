@@ -14,10 +14,9 @@ import {
   ValidateNested,
 } from 'class-validator';
 /**
- * @TODO update Jose version to 3.X
- * For now openid-client panva's library does not support jose 3.X but
- * it will be available in a neer future. So once it's done we just
- * need to remove this hack in the package.json
+ * @TODO #1024 MAJ Jose version 3.X
+ * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1024
+ * @ticket #FC-1024
  */
 import { JSONWebKeySet } from 'jose-openid-client';
 

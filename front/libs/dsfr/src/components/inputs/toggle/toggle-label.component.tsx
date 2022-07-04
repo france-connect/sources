@@ -3,7 +3,7 @@ import { FieldInputProps } from 'react-final-form';
 
 import { CheckableLegend } from '../../../interfaces';
 
-interface ToggleLabelComponentProps {
+export interface ToggleLabelComponentProps {
   // @NOTE la regle est desactivée car le type provient de la librairie react-final-form
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   input: FieldInputProps<any, HTMLElement>;

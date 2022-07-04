@@ -98,11 +98,9 @@ export class OidcIdentityDto extends MinIdentityDto {
   readonly email: string;
 
   /**
-   * @todo Remove phone_number as it is no longer a supported scope on FCP
-   * Use IsSafeString for now to allow empty phone_number returned by the FI mocks
-   * @author Nicolas Legeay
-   * @date 2021-08-03
-   * @ticket FC-548
+   * @todo #1022 Supprimer les claim `phone_number` obsolète
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1022
+   * @ticket FC-1022
    */
   @IsSafeString()
   @IsOptional()

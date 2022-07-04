@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 import { FieldInputProps } from 'react-final-form';
 
-interface SearchBarComponentProps {
+export interface SearchBarComponentProps {
   size?: 'md' | 'lg';
   buttonLabel?: string;
   // @NOTE la regle est desactivée car le type provient de la librairie react-final-form

@@ -221,7 +221,8 @@
           "../../../apps/user-dashboard/**/*.ejs",
           "../../../apps/user-dashboard/**/*.css",
           "../../../apps/user-dashboard/**/*.svg",
-          "../../../apps/user-dashboard/**/*.png"
+          "../../../apps/user-dashboard/**/*.png",
+          "../../../instances/user-dashboard/**/*.ejs"
         ]
       }
     },

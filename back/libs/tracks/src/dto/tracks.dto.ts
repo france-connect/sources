@@ -10,6 +10,8 @@ import {
   IsString,
 } from 'class-validator';
 
+import { IRichClaim } from '@fc/scopes';
+
 import { TrackableEvent } from '../enums';
 import { ICsmrTracksOutputTrack } from '../interfaces';
 
@@ -47,5 +49,5 @@ export class TrackDto implements ICsmrTracksOutputTrack {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  claims: string[] | null;
+  claims: IRichClaim[];
 }

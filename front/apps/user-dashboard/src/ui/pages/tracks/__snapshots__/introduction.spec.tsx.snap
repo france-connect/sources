@@ -11,7 +11,9 @@ exports[`IntroductionComponent should match the snapshot 1`] = `
       </b>
     </h1>
     <p>
-      Retrouver toutes les connexions et échanges de données effectués via FranceConnect ces six derniers mois. Cliquez sur une connexion pour en afficher les détails.
+      Retrouver toutes les connexions et échanges de données effectués via FranceConnect ces six derniers mois.
+      <br />
+      Cliquez sur une connexion pour en afficher les détails.
     </p>
   </div>
 </div>

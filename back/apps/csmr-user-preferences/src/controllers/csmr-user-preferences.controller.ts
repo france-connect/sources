@@ -93,29 +93,10 @@ export class CsmrUserPreferencesController {
       updatedIdpSettings = {
         allowFutureIdp: idpSettings.allowFutureIdp,
         idpList: formattedIdpSettingsList,
+        updatedIdpSettingsList,
+        hasAllowFutureIdpChanged,
+        updatedAt,
       };
-      const {
-        email,
-        given_name: givenName,
-        family_name: familyName,
-      } = identity;
-
-      if (email) {
-        await this.userPreferencesCsmr.sendMail(
-          {
-            email,
-            givenName,
-            familyName,
-          },
-          {
-            formattedIdpSettingsList,
-            updatedIdpSettingsList,
-            hasAllowFutureIdpChanged,
-            allowFutureIdp: updatedIdpSettings.allowFutureIdp,
-            updatedAt,
-          },
-        );
-      }
     } catch (error) {
       this.logger.trace({ error });
       return 'ERROR';

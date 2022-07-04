@@ -6,6 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { ElasticsearchConfig } from '@fc/elasticsearch';
 import { LoggerService } from '@fc/logger-legacy';
+import { IRichClaim } from '@fc/scopes';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import { CSMR_TRACKS_DATA } from '../tokens';
@@ -33,6 +34,24 @@ const elasticQueryMock: Search = {
   },
 };
 
+const claims1: IRichClaim = {
+  identifier: 'claims1',
+  label: 'Claim1 Label',
+  provider: {
+    label: 'Data Provider 1',
+    key: 'data_provider_1',
+  },
+};
+
+const claims2: IRichClaim = {
+  identifier: 'claims2',
+  label: 'Claim2 Label',
+  provider: {
+    label: 'Data Provider 2',
+    key: 'data_provider_2',
+  },
+};
+
 const singleTrackMock: Omit<ICsmrTracksOutputTrack, 'trackId'> = {
   event: 'eventMockValue',
   time: 1441663200000,
@@ -42,7 +61,7 @@ const singleTrackMock: Omit<ICsmrTracksOutputTrack, 'trackId'> = {
   country: 'countryMockValue',
   city: 'cityMockValue',
   platform: 'platformValue',
-  claims: ['claims1', 'claims2'],
+  claims: [claims1, claims2],
 };
 
 const sampleTracksOutputMock: ICsmrTracksOutputTrack[] = [

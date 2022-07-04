@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AlertMessageComponent should match the snapshot with a small size 1`] = `
+<div>
+  <div
+    class="fr-alert fr-alert--error fr-alert--sm"
+    data-testid="AlertComponent"
+  >
+    <p
+      data-testid="AlertMessageComponent-title-label"
+    >
+      error title
+    </p>
+    <button
+      class="fr-btn--close fr-btn"
+      data-testid="AlertMessageComponent-close-button"
+    >
+      Masquer le message
+    </button>
+  </div>
+</div>
+`;

@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { Account, AccountNotFoundException, AccountService } from '@fc/account';
@@ -7,15 +5,8 @@ import { ConfigService } from '@fc/config';
 import { CryptographyFcpService, IPivotIdentity } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
-import {
-  MailerNotificationConnectException,
-  MailerService,
-  MailFrom,
-  NoEmailException,
-} from '@fc/mailer';
 import { IdentityProviderMetadata } from '@fc/oidc';
 
-import { EmailsTemplates } from '../enums';
 import { CsmrUserPreferencesIdpNotFoundException } from '../exceptions';
 import { CsmrUserPreferencesService } from './csmr-user-preferences.service';
 import {
@@ -139,9 +130,6 @@ describe('CsmrUserPreferencesService', () => {
       formattedBeforeUpdatePreferencesIdpListMock,
   };
 
-  const htmlContent = 'myWonderful template content';
-  const getIdpConfigUpdateEmailBodyContentMock = htmlContent;
-  const formattedDateMock = '4 avril 2022 à 13:02:56';
   const accountBeforeUpdate = {
     ...accountMock,
     preferences: {
@@ -158,19 +146,6 @@ describe('CsmrUserPreferencesService', () => {
     isExcludeList: true,
   };
 
-  const userInfo = {
-    email: 'user@test.com',
-    givenName: 'firstname',
-    familyName: 'lastname',
-  };
-  const idpConfiguration = {
-    formattedIdpSettingsList: formattedUserIdpSettingsListMock,
-    updatedIdpSettingsList: updatedIdpIdpSettingListMock,
-    hasAllowFutureIdpChanged: true,
-    allowFutureIdp: false,
-    updatedAt: 1647772217000,
-  };
-
   const configMock = {
     get: jest.fn(),
   };
@@ -180,11 +155,6 @@ describe('CsmrUserPreferencesService', () => {
     debug: jest.fn(),
     trace: jest.fn(),
   } as unknown as LoggerService;
-
-  const mailerServiceMock = {
-    send: jest.fn(),
-    mailToSend: jest.fn(),
-  } as unknown as MailerService;
 
   const accountServiceMock = {
     getAccountByIdentityHash: jest.fn(),
@@ -202,7 +172,6 @@ describe('CsmrUserPreferencesService', () => {
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
-    jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CsmrUserPreferencesService],
@@ -212,7 +181,6 @@ describe('CsmrUserPreferencesService', () => {
         ConfigService,
         CryptographyFcpService,
         IdentityProviderAdapterMongoService,
-        MailerService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -225,8 +193,6 @@ describe('CsmrUserPreferencesService', () => {
       .useValue(cryptographyFcpServiceMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
       .useValue(identityProviderServiceMock)
-      .overrideProvider(MailerService)
-      .useValue(mailerServiceMock)
       .compile();
 
     service = module.get<CsmrUserPreferencesService>(
@@ -663,10 +629,6 @@ describe('CsmrUserPreferencesService', () => {
       service['updatedIdpSettings'] = jest
         .fn()
         .mockReturnValueOnce(updatedIdpIdpSettingListMock);
-
-      service['getIdpConfigUpdateEmailBodyContent'] = jest
-        .fn()
-        .mockResolvedValueOnce(getIdpConfigUpdateEmailBodyContentMock);
     });
 
     it('Should get the metadata idp list', async () => {
@@ -821,181 +783,6 @@ describe('CsmrUserPreferencesService', () => {
     });
   });
 
-  describe('sendMail', () => {
-    const fromMock: MailFrom = { email: 'address@fqdn.ext', name: 'Address' };
-    const configMailerMock = {
-      template: getIdpConfigUpdateEmailBodyContentMock,
-      from: fromMock,
-    };
-
-    beforeEach(() => {
-      jest.resetAllMocks();
-      jest.restoreAllMocks();
-
-      service['configMailer'] = configMailerMock;
-      service['getIdpConfigUpdateEmailBodyContent'] = jest
-        .fn()
-        .mockResolvedValueOnce(getIdpConfigUpdateEmailBodyContentMock);
-    });
-
-    it('should throw an `Error` if the FROM email is not valid', async () => {
-      // Given
-      const configMailerWithoutEmail: MailFrom = {
-        email: 'fake_email',
-        name: '',
-      };
-      service['configMailer'] = { from: configMailerWithoutEmail };
-      const errorMock = new NoEmailException();
-
-      // When/Then
-      await expect(
-        service.sendMail(userInfo, idpConfiguration),
-      ).rejects.toThrow(errorMock);
-    });
-
-    it('should throw an Error if the TO email is not valid', async () => {
-      // Given
-      const badUserInfoData = {
-        email: 'not_an_email',
-        givenName: 'firstname',
-        familyName: 'lastname',
-      };
-
-      // When/Then
-      const errorMock = new NoEmailException();
-      await expect(
-        service.sendMail(badUserInfoData, idpConfiguration),
-      ).rejects.toThrow(errorMock);
-    });
-
-    it('should call getIdpConfigUpdateEmailBodyContent', async () => {
-      // WHEN
-      await service.sendMail(userInfo, idpConfiguration);
-
-      // THEN
-      expect(
-        service['getIdpConfigUpdateEmailBodyContent'],
-      ).toHaveBeenCalledTimes(1);
-      expect(
-        service['getIdpConfigUpdateEmailBodyContent'],
-      ).toHaveBeenCalledWith(userInfo, idpConfiguration);
-    });
-
-    it('should call getIdpConfigUpdateEmailBodyContent', async () => {
-      // WHEN
-      await service.sendMail(userInfo, idpConfiguration);
-
-      // THEN
-      expect(mailerServiceMock.send).toHaveBeenCalledTimes(1);
-      expect(mailerServiceMock.send).toHaveBeenCalledWith({
-        from: fromMock,
-        to: [
-          {
-            email: userInfo.email,
-            name: `${userInfo.givenName} ${userInfo.familyName}`,
-          },
-        ],
-        subject: `Notification de mise à jour de votre configuration FI FC+`,
-        body: getIdpConfigUpdateEmailBodyContentMock,
-      });
-    });
-  });
-
-  describe('getIdpConfigUpdateEmailBodyContent', () => {
-    beforeEach(() => {
-      service['formatDateForEmail'] = jest
-        .fn()
-        .mockReturnValue(formattedDateMock);
-    });
-
-    it('should throw if any parameters is not valid', async () => {
-      // Given
-      const badUserInfo = {
-        email: 'bademail',
-        givenName: 'firstName',
-        familyName: 'lastname',
-      };
-
-      // When/Then
-      const errorMock = new MailerNotificationConnectException();
-      await expect(
-        service['getIdpConfigUpdateEmailBodyContent'](
-          badUserInfo,
-          idpConfiguration,
-        ),
-      ).rejects.toThrow(errorMock);
-    });
-
-    it('should call mailToSend with futureIdpChoice =!idpConfiguration.allowFutureIdp', async () => {
-      // WHEN
-      await service['getIdpConfigUpdateEmailBodyContent'](
-        userInfo,
-        idpConfiguration,
-      );
-
-      // THEN
-      expect(mailerServiceMock.mailToSend).toHaveBeenCalledTimes(1);
-      expect(mailerServiceMock.mailToSend).toHaveBeenCalledWith(
-        EmailsTemplates.IDP_CONFIG_UPDATES_EMAIL,
-        {
-          email: userInfo.email,
-          fullName: 'firstname L.',
-          formattedUpdateDate: formattedDateMock,
-          updatedIdpSettingsList: idpConfiguration.updatedIdpSettingsList,
-          hasAllowFutureIdpChanged: idpConfiguration.hasAllowFutureIdpChanged,
-          allowFutureIdp: idpConfiguration.allowFutureIdp,
-        },
-      );
-    });
-
-    it('should call mailToSend with futureIdpChoice =idpConfiguration.allowFutureIdp', async () => {
-      // GIVEN
-      const otherIdpConfiguration = {
-        formattedIdpSettingsList: formattedUserIdpSettingsListMock,
-        updatedIdpSettingsList: updatedIdpIdpSettingListMock,
-        hasAllowFutureIdpChanged: false,
-        allowFutureIdp: false,
-      };
-
-      // WHEN
-      await service['getIdpConfigUpdateEmailBodyContent'](
-        userInfo,
-        otherIdpConfiguration,
-      );
-
-      // THEN
-      expect(mailerServiceMock.mailToSend).toHaveBeenCalledTimes(1);
-      expect(mailerServiceMock.mailToSend).toHaveBeenCalledWith(
-        EmailsTemplates.IDP_CONFIG_UPDATES_EMAIL,
-        {
-          email: userInfo.email,
-          updatedIdpSettingsList: otherIdpConfiguration.updatedIdpSettingsList,
-          hasAllowFutureIdpChanged:
-            otherIdpConfiguration.hasAllowFutureIdpChanged,
-          allowFutureIdp: otherIdpConfiguration.allowFutureIdp,
-          fullName: 'firstname L.',
-          formattedUpdateDate: formattedDateMock,
-        },
-      );
-    });
-
-    it('should return html content', async () => {
-      // GIVEN
-      mocked(mailerServiceMock.mailToSend).mockResolvedValueOnce(
-        getIdpConfigUpdateEmailBodyContentMock,
-      );
-
-      // WHEN
-      const result = await service['getIdpConfigUpdateEmailBodyContent'](
-        userInfo,
-        idpConfiguration,
-      );
-
-      // THEN
-      expect(result).toEqual(getIdpConfigUpdateEmailBodyContentMock);
-    });
-  });
-
   describe('getFormattedUserIdpSettingsLists', () => {
     beforeEach(() => {
       service.formatUserIdpSettingsList = jest
@@ -1032,18 +819,6 @@ describe('CsmrUserPreferencesService', () => {
         formattedPreviousIdpSettingsList:
           formattedBeforeUpdatePreferencesIdpListMock,
       });
-    });
-  });
-
-  describe('formatDateForEmail', () => {
-    it('should return the correct formatted date for a specific unix timestamp', () => {
-      // Given
-      const unixTimestamp = 1647772217000;
-      configMock.get.mockReturnValueOnce({ tz: 'Europe/Paris' });
-      // When
-      const result = service['formatDateForEmail'](unixTimestamp);
-      // Then
-      expect(result).toBe('20 mars 2022 à 11:30:17');
     });
   });
 });

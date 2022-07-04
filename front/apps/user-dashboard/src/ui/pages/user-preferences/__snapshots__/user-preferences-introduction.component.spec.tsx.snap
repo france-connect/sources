@@ -3,14 +3,14 @@
 exports[`UserPreferencesIntroductionComponent should match snapshot on desktop 1`] = `
 <div>
   <h1
-    class="fr-h3 fr-mb-2w fr-text--bold"
+    class="title fr-h3 fr-mb-2w fr-text--bold"
   >
     Pourquoi gérer mes accès dans FranceConnect ?
   </h1>
   <p
     class="is-normal fr-mb-5v"
   >
-    Pour mieux contrôler votre usage de FranceConnect et vous protéger en cas de vols de vos identifiants, vous pouvez bloquer l’utilisation des comptes que vous n’utilisez pas. 
+    Pour mieux contrôler votre usage de FranceConnect et vous protéger en cas de vol de vos identifiants, vous pouvez bloquer l’utilisation des comptes que vous n’utilisez pas. 
     <strong>
       Ils seront toujours visibles sur la page de sélection de compte mais FranceConnect empêchera la connexion d’aboutir. 
     </strong>
@@ -25,7 +25,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on desktop 1
     </strong>
   </p>
   <p
-    class="fr-h6 fr-mt-4w fr-mb-2w fr-text--bold"
+    class="title fr-h6 fr-mt-4w fr-mb-2w fr-text--bold"
   >
     En images :
   </p>
@@ -33,7 +33,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on desktop 1
     class="flex-wrapper flex-between"
   >
     <div
-      class="fr-mb-5w"
+      class="tutoriel fr-mb-5w"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"
@@ -48,7 +48,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on desktop 1
       />
     </div>
     <div
-      class="fr-mb-5w"
+      class="tutoriel fr-mb-5w"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"
@@ -63,7 +63,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on desktop 1
       />
     </div>
     <div
-      class=""
+      class="tutoriel"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"
@@ -78,7 +78,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on desktop 1
       />
     </div>
     <div
-      class=""
+      class="tutoriel"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"
@@ -99,14 +99,14 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on desktop 1
 exports[`UserPreferencesIntroductionComponent should match snapshot on mobile 1`] = `
 <div>
   <h1
-    class="fr-h3 fr-mb-2w fr-text--bold"
+    class="title fr-h3 fr-mb-2w fr-text--bold"
   >
     Pourquoi gérer mes accès dans FranceConnect ?
   </h1>
   <p
     class="is-normal fr-mb-5v"
   >
-    Pour mieux contrôler votre usage de FranceConnect et vous protéger en cas de vols de vos identifiants, vous pouvez bloquer l’utilisation des comptes que vous n’utilisez pas. 
+    Pour mieux contrôler votre usage de FranceConnect et vous protéger en cas de vol de vos identifiants, vous pouvez bloquer l’utilisation des comptes que vous n’utilisez pas. 
     <strong>
       Ils seront toujours visibles sur la page de sélection de compte mais FranceConnect empêchera la connexion d’aboutir. 
     </strong>
@@ -121,7 +121,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on mobile 1`
     </strong>
   </p>
   <p
-    class="fr-h6 fr-mt-4w fr-mb-2w fr-text--bold"
+    class="title fr-h6 fr-mt-4w fr-mb-2w fr-text--bold"
   >
     En images :
   </p>
@@ -129,7 +129,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on mobile 1`
     class="flex-wrapper flex-center"
   >
     <div
-      class="fr-mb-3w"
+      class="tutoriel fr-mb-3w"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"
@@ -144,7 +144,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on mobile 1`
       />
     </div>
     <div
-      class="fr-mb-3w"
+      class="tutoriel fr-mb-3w"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"
@@ -159,7 +159,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on mobile 1`
       />
     </div>
     <div
-      class="fr-mb-3w"
+      class="tutoriel fr-mb-3w"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"
@@ -174,7 +174,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on mobile 1`
       />
     </div>
     <div
-      class=""
+      class="tutoriel"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"
@@ -195,14 +195,14 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on mobile 1`
 exports[`UserPreferencesIntroductionComponent should match snapshot on tablet 1`] = `
 <div>
   <h1
-    class="fr-h3 fr-mb-2w fr-text--bold"
+    class="title fr-h3 fr-mb-2w fr-text--bold"
   >
     Pourquoi gérer mes accès dans FranceConnect ?
   </h1>
   <p
     class="is-normal fr-mb-5v"
   >
-    Pour mieux contrôler votre usage de FranceConnect et vous protéger en cas de vols de vos identifiants, vous pouvez bloquer l’utilisation des comptes que vous n’utilisez pas. 
+    Pour mieux contrôler votre usage de FranceConnect et vous protéger en cas de vol de vos identifiants, vous pouvez bloquer l’utilisation des comptes que vous n’utilisez pas. 
     <strong>
       Ils seront toujours visibles sur la page de sélection de compte mais FranceConnect empêchera la connexion d’aboutir. 
     </strong>
@@ -217,7 +217,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on tablet 1`
     </strong>
   </p>
   <p
-    class="fr-h6 fr-mt-4w fr-mb-2w fr-text--bold"
+    class="title fr-h6 fr-mt-4w fr-mb-2w fr-text--bold"
   >
     En images :
   </p>
@@ -225,7 +225,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on tablet 1`
     class="flex-wrapper text-center"
   >
     <div
-      class="fr-mb-3w"
+      class="tutoriel fr-mb-3w"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"
@@ -240,7 +240,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on tablet 1`
       />
     </div>
     <div
-      class="fr-mb-3w"
+      class="tutoriel fr-mb-3w"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"
@@ -255,7 +255,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on tablet 1`
       />
     </div>
     <div
-      class="fr-mb-3w"
+      class="tutoriel fr-mb-3w"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"
@@ -270,7 +270,7 @@ exports[`UserPreferencesIntroductionComponent should match snapshot on tablet 1`
       />
     </div>
     <div
-      class=""
+      class="tutoriel"
     >
       <strong
         class="fr-text--md is-block fr-mb-1w"

@@ -138,14 +138,11 @@ function initElasticsearchClient() {
 class PopulateAccountTraces {
   esClient;
 
-  async run(accountId, sequences) {
+  async generate(accountId, sequences) {
     try {
       debug('Mock requested for', accountId, ' at ', sequences);
 
       this.esClient = initElasticsearchClient();
-
-      debug('Deleting old mock data in ES');
-      await this.removeOldMockData();
 
       debug('Extract dates from request');
       const dates = extractDates(sequences);
@@ -168,6 +165,21 @@ class PopulateAccountTraces {
 
       debug('All tracks generation done');
       process.exit(done ? 0 : 1);
+    } catch (error) {
+      warn(error);
+      process.exit(1);
+    }
+  }
+
+  async remove() {
+    try {
+      debug('Deleting old mock data in ES');
+
+      this.esClient = initElasticsearchClient();
+      await this.removeOldMockData();
+
+      debug('Mock data removed');
+      process.exit(0);
     } catch (error) {
       warn(error);
       process.exit(1);
@@ -252,7 +264,16 @@ class PopulateAccountTraces {
   }
 }
 
-const accountId = 'test_TRACE_USER';
+const [, , task, accountId = 'test_TRACE_USER'] = process.argv;
 const sequences = JSON.stringify(datesFromLimit(6));
+const populateAccountTraces = new PopulateAccountTraces();
 
-new PopulateAccountTraces().run(accountId, sequences);
+switch (task) {
+  case 'remove':
+    populateAccountTraces.remove();
+    break;
+  case 'generate':
+  default:
+    populateAccountTraces.generate(accountId, sequences);
+    break;
+}

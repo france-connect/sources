@@ -132,7 +132,11 @@ export class IdentityProviderAdapterEnvDTO {
   readonly jwks_uri: string;
 
   @IsUrl()
-  // @TODO https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/920
+  /**
+   * @todo #920 je ne veux pas de valeur optionnelle dans les DTO
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/920
+   * @ticket #FC-920
+   */
   @IsOptional()
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention

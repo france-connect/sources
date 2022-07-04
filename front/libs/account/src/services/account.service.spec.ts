@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { mocked } from 'ts-jest/utils';
 
-import { AccountException } from './account.exception';
 import { AccountService } from './account.service';
 
 jest.mock('axios');
@@ -143,50 +142,6 @@ describe('AccountService', () => {
         await AccountService.fetchData('any-endpoint-mock', jest.fn());
         // then
         expect(consoleWarnMock).toHaveBeenCalled();
-      });
-    });
-
-    describe.skip('should throw an AcccountException when api', () => {
-      // @TODO Skipped should implement a custom exception
-      // meanwhile a simple and stupid console.warn has been implemented
-      it('is errored', async () => {
-        // given
-        axiosGetMock.mockRejectedValueOnce(new Error('mock error'));
-        // then
-        await expect(() =>
-          // when
-          AccountService.fetchData('any-endpoint-mock', jest.fn()),
-        ).rejects.toThrow(expect.any(AccountException));
-      });
-
-      it('is errored with a status not equal to 401', async () => {
-        // given
-        axiosGetMock.mockRejectedValueOnce({ response: { status: 402 } });
-        // then
-        await expect(() =>
-          // when
-          AccountService.fetchData('any-endpoint-mock', jest.fn()),
-        ).rejects.toThrow(expect.any(AccountException));
-      });
-
-      it('is errored with an empty response', async () => {
-        // given
-        axiosGetMock.mockRejectedValueOnce({ response: {} });
-        // then
-        await expect(() =>
-          // when
-          AccountService.fetchData('any-endpoint-mock', jest.fn()),
-        ).rejects.toThrow(expect.any(AccountException));
-      });
-
-      it('is errored when response is undefined', async () => {
-        // given
-        axiosGetMock.mockRejectedValueOnce({});
-        // then
-        await expect(() =>
-          // when
-          AccountService.fetchData('any-endpoint-mock', jest.fn()),
-        ).rejects.toThrow(expect.any(AccountException));
       });
     });
   });

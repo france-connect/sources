@@ -1,5 +1,3 @@
-import * as moment from 'moment-timezone';
-
 import { Injectable } from '@nestjs/common';
 
 import {
@@ -7,30 +5,18 @@ import {
   AccountService,
   IIdpSettings,
 } from '@fc/account';
-import { PartialExcept, validateDto } from '@fc/common';
-import { ConfigService, validationOptions } from '@fc/config';
+import { PartialExcept } from '@fc/common';
 import { CryptographyFcpService, IPivotIdentity } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
-import {
-  IdpConfigUpdateEmailParameters,
-  MailerConfig,
-  MailerNotificationConnectException,
-  MailerService,
-  MailFrom,
-  MailTo,
-  NoEmailException,
-} from '@fc/mailer';
 import { IdentityProviderMetadata, IOidcIdentity } from '@fc/oidc';
 
-import { AppConfigDto } from '../dto';
-import { EmailsTemplates } from '../enums';
 import { CsmrUserPreferencesIdpNotFoundException } from '../exceptions';
 import {
   IFormattedIdpList,
   IFormattedIdpSettings,
   IFormattedUserIdpSettingsLists,
-  ISetIdpSettingsService,
+  ISetIdpSettingsPayload,
 } from '../interfaces';
 
 @Injectable()
@@ -41,13 +27,10 @@ export class CsmrUserPreferencesService {
   constructor(
     private readonly logger: LoggerService,
     private readonly account: AccountService,
-    private readonly config: ConfigService,
     private readonly cryptographyFcp: CryptographyFcpService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
-    private readonly mailer: MailerService,
   ) {
     this.logger.setContext(this.constructor.name);
-    this.configMailer = this.config.get<MailerConfig>('Mailer');
   }
 
   formatUserIdpSettingsList(
@@ -143,7 +126,7 @@ export class CsmrUserPreferencesService {
     identity: IPivotIdentity,
     inputIdpList: string[],
     inputIsExcludeList: boolean,
-  ): Promise<ISetIdpSettingsService> {
+  ): Promise<ISetIdpSettingsPayload> {
     this.logger.debug(`Identity received : ${identity}`);
 
     const idpList = await this.identityProvider.getList();
@@ -212,95 +195,6 @@ export class CsmrUserPreferencesService {
       hasAllowFutureIdpChanged,
       updatedAt,
     };
-  }
-
-  async sendMail(userInfo, idpConfiguration): Promise<void> {
-    const { from } = this.configMailer;
-    let errors = await validateDto(from, MailFrom, validationOptions);
-    if (errors.length > 0) {
-      throw new NoEmailException();
-    }
-
-    const { email, givenName, familyName } = userInfo;
-
-    const mailTo: MailTo = {
-      email,
-      name: `${givenName} ${familyName}`,
-    };
-
-    const to: MailTo[] = [mailTo];
-    errors = await validateDto(mailTo, MailTo, validationOptions);
-    if (errors.length > 0) {
-      throw new NoEmailException();
-    }
-
-    // -- email bodyfamilyName
-    const body = await this.getIdpConfigUpdateEmailBodyContent(
-      userInfo,
-      idpConfiguration,
-    );
-
-    this.logger.trace({ from, to });
-
-    this.mailer.send({
-      from,
-      to,
-      subject: `Notification de mise à jour de votre configuration FI FC+`,
-      body,
-    });
-  }
-
-  private formatDateForEmail(unixDate: number): string {
-    const { tz } = this.config.get<AppConfigDto>('App');
-
-    return moment
-      .unix(unixDate / 1000)
-      .tz(tz)
-      .locale('fr')
-      .format('Do MMMM YYYY à HH:mm:ss');
-  }
-
-  private async getIdpConfigUpdateEmailBodyContent(
-    userInfo,
-    idpConfiguration,
-  ): Promise<string> {
-    const { email, givenName, familyName } = userInfo;
-    const {
-      updatedIdpSettingsList,
-      hasAllowFutureIdpChanged,
-      allowFutureIdp,
-      updatedAt,
-    } = idpConfiguration;
-
-    const fullName = `${givenName} ${familyName[0].toUpperCase()}.`;
-    const formattedUpdateDate = this.formatDateForEmail(updatedAt);
-    const idpConfigUpdateEmailParameters = {
-      email,
-      fullName,
-      updatedIdpSettingsList,
-      allowFutureIdp,
-      hasAllowFutureIdpChanged,
-      formattedUpdateDate,
-    };
-    this.logger.trace({ idpConfigUpdateEmailParameters });
-
-    const dtoValidationErrors = await validateDto(
-      idpConfigUpdateEmailParameters,
-      IdpConfigUpdateEmailParameters,
-      validationOptions,
-    );
-
-    if (dtoValidationErrors.length > 0) {
-      throw new MailerNotificationConnectException();
-    }
-
-    const fileName = EmailsTemplates.IDP_CONFIG_UPDATES_EMAIL;
-    const htmlContent = this.mailer.mailToSend(
-      fileName,
-      idpConfigUpdateEmailParameters,
-    );
-
-    return htmlContent;
   }
 
   private getFormattedUserIdpSettingsLists({

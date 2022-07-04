@@ -110,7 +110,9 @@ export class CoreFcpService {
   }
 
   /**
-   * @todo type input, needs typing on the return of OidcProviderService.getInteraction()
+   * @todo #1023 je type les entrées et sortie correctement et non pas avec any
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1023
+   * @ticket #FC-1023
    */
   getClaimsLabelsForInteraction(interaction: any): IRichClaim[] {
     const scopes = this.getScopesForInteraction(interaction);
@@ -123,7 +125,9 @@ export class CoreFcpService {
   }
 
   /**
-   * @todo type input, needs typing on the return of OidcProviderService.getInteraction()
+   * @todo #1023 je type les entrées et sortie correctement et non pas avec any
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1023
+   * @ticket #FC-1023
    */
   getClaimsForInteraction(interaction: any): IClaim[] {
     const scopes = this.getScopesForInteraction(interaction);
@@ -136,7 +140,9 @@ export class CoreFcpService {
   }
 
   /**
-   * @todo type input, needs typing on the return of OidcProviderService.getInteraction()
+   * @todo #1023 je type les entrées et sortie correctement et non pas avec any
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1023
+   * @ticket #FC-1023
    */
   getScopesForInteraction(interaction: any): string[] {
     const {

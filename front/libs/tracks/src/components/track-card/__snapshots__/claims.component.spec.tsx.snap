@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConnexionComponent should match snapshot, with default props 1`] = `
+<div>
+  <p>
+    <strong>
+      Vous avez autorisé la transmission de données personnelles à ce service le :
+    </strong>
+    <br />
+    <span
+      data-testid="ClaimsComponent-date-label"
+    >
+      01/10/2021 à 06:32
+       (heure de Paris)
+    </span>
+  </p>
+  <div
+    data-testid="ClaimsComponent-claims-provider1"
+  >
+    <h4
+      class="fr-text--md fr-mb-0"
+      data-testid="ClaimsComponent-claims-title-provider1"
+    >
+      Vous avez autorisé le service à récupérer les données suivantes depuis
+       
+      Provider 1 label
+       :
+    </h4>
+    <ul
+      data-testid="ClaimsComponent-claims-list-provider1"
+    >
+      <li>
+        Claims 1 Label
+      </li>
+      <li>
+        Claims 2 Label
+      </li>
+    </ul>
+  </div>
+</div>
+`;

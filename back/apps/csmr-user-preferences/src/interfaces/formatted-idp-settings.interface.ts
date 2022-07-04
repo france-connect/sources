@@ -25,7 +25,7 @@ export interface IFormattedIdpSettings {
   idpList: IFormattedIdpList[];
 }
 
-export interface ISetIdpSettingsService {
+export interface ISetIdpSettingsPayload {
   formattedIdpSettingsList: IFormattedIdpList[];
   updatedIdpSettingsList: IFormattedIdpList[];
   hasAllowFutureIdpChanged: boolean;
@@ -35,4 +35,12 @@ export interface ISetIdpSettingsService {
 export interface IFormattedUserIdpSettingsLists {
   formattedIdpSettingsList: IFormattedIdpList[];
   formattedPreviousIdpSettingsList: IFormattedIdpList[];
+}
+
+export interface IFormattedIdpSettingsPayload {
+  idpList: IFormattedIdpList[];
+  updatedIdpSettingsList: IFormattedIdpList[];
+  hasAllowFutureIdpChanged: boolean;
+  allowFutureIdp: boolean;
+  updatedAt: Date;
 }

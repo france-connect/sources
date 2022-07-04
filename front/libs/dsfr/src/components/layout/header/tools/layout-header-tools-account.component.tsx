@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface LayoutHeaderToolsAccountComponentProps {
+export interface LayoutHeaderToolsAccountComponentProps {
   lastname: string;
   isMobile: boolean;
   firstname: string;

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { NavigationLink } from '../../../interfaces';
 
-interface LayoutFooterContentLinksComponentProps {
+export interface LayoutFooterContentLinksComponentProps {
   items: NavigationLink[];
   showIcon?: boolean;
 }

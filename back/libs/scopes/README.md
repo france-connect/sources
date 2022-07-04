@@ -19,7 +19,7 @@ The service exposes two methods :
   ScopesService.getRawClaimsFromScopes(scopes: IScope[]): IClaim[]
   ```
 
-  To retrieve "raw" claims, a list of claim identifier strings.  
+  To retrieve "raw" claims, a list of claim identifier strings, from scopes  
   _exemple: `openid`, `birthplace`, etc._
 
 - **getRichClaimsFromScopes**
@@ -28,7 +28,16 @@ The service exposes two methods :
   ScopesService.getRichClaimsFromScopes(scopes: IScope[]): IClaim[]
   ```
 
-  To retrieve "rich" claims, a list of object containing more information about a claim.  
+  To retrieve "rich" claims, a list of object containing more information about a claim, from scopes.
+  _exemple:_
+
+- **getRichClaimsFromClaims**
+
+  ```ts
+  ScopesService.getRichClaimsFromClaims(claims: IClaim[]): IRichClaim[]
+  ```
+
+  To retrieve "rich" claims, a list of object containing more information about a claim, from raw claims.
   _exemple:_
 
   ```ts

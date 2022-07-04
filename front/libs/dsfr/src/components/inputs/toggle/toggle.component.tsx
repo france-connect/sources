@@ -6,7 +6,7 @@ import { CheckableLegend } from '../../../interfaces';
 import { ToggleInputComponent } from './toggle-input.component';
 import { ToggleLabelComponent } from './toggle-label.component';
 
-interface ToggleComponentProps {
+export interface ToggleComponentProps {
   // @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/217251933/Case+cocher+-+Checkbox
   disabled?: boolean;
   hint?: string;

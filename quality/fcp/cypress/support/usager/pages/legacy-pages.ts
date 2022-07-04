@@ -35,7 +35,11 @@ export class IdentityProviderSelectionPage {
 }
 
 export class InfoConsentPage {
-  get consentButton(): ChainableElement {
+  getConsentButton(): ChainableElement {
     return cy.get('button.content__continue');
+  }
+
+  getConsentCheckbox(): ChainableElement {
+    return cy.get('#consent');
   }
 }

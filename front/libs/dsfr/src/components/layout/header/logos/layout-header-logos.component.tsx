@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { LogoRepubliqueFrancaiseComponent } from '../../../logos';
 
-interface LayoutHeaderLogosComponentProps {
+export interface LayoutHeaderLogosComponentProps {
   logo?: string;
   title?: string;
 }

@@ -24,11 +24,7 @@ import { injectAxeFromQualityModules } from './common/helpers';
 Cypress.Commands.overwrite('injectAxe', injectAxeFromQualityModules);
 
 addMatchImageSnapshotCommand({
-  blackout: [
-    '#error-id', // ignore FranceConnect Session Id on error page
-    '#tracks-list h6', // ignore month title on user-dashboard history
-    '#tracks-list button div.is-dark-grey', // ignore date on user-dashboard history
-  ],
+  blackout: [], // We use a custom blackout in image-snapshot-steps.ts
   capture: 'fullPage',
   customDiffConfig: { threshold: 0.3 },
   customDiffDir: './cypress/snapshots/diff',

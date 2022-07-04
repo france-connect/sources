@@ -67,12 +67,9 @@ export class EuIdentityToFrController {
     @Session('EidasClient')
     sessionEidas: ISessionService<EidasClientSession>,
     /**
-     * @todo Adaptation for now, correspond to the oidc-provider side.
-     * Named "OidcClient" because we need a future shared session between our libs oidc-provider and oidc-client
-     * without a direct dependance like now.
-     * @author Hugues
-     * @date 2021-04-16
-     * @ticket FC-xxx
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
@@ -137,12 +134,9 @@ export class EuIdentityToFrController {
     @Req() req,
     @Res() res,
     /**
-     * @todo Adaptation for now, correspond to the oidc-provider side.
-     * Named "OidcClient" because we need a future shared session between our libs oidc-provider and oidc-client
-     * without a direct dependance like now.
-     * @author Hugues
-     * @date 2021-04-16
-     * @ticket FC-xxx
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,

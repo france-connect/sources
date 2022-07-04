@@ -9,6 +9,7 @@ import {
   IdentityProviderAdapterEnvModule,
   IdentityProviderAdapterEnvService,
 } from '@fc/identity-provider-adapter-env';
+import { MailerModule } from '@fc/mailer';
 import { OidcClientModule } from '@fc/oidc-client';
 import {
   ServiceProviderAdapterEnvModule,
@@ -20,6 +21,7 @@ import { UserPreferencesModule } from '@fc/user-preferences';
 
 import { OidcClientController, UserDashboardController } from './controllers';
 import { UserDashboardSession } from './dto';
+import { UserDashboardService } from './services';
 
 const oidcClientModule = OidcClientModule.register(
   IdentityProviderAdapterEnvService,
@@ -38,6 +40,8 @@ const oidcClientModule = OidcClientModule.register(
     SessionModule.forRoot({ schema: UserDashboardSession }),
     TracksModule,
     UserPreferencesModule,
+    MailerModule,
   ],
+  providers: [UserDashboardService],
 })
 export class UserDashboardModule {}

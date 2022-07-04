@@ -109,6 +109,35 @@ describe('ScopesService', () => {
     });
   });
 
+  describe('getRichClaimsFromClaims', () => {
+    it('should return claims mapped to claims objects stored claimIndex', () => {
+      // Given
+      const richClaimsMock = {
+        fooClaim1: Symbol('fooClaim1'),
+        fooClaim2: Symbol('fooClaim2'),
+        barClaim1: Symbol('barClaim1'),
+      };
+      const indexServiceClaimsGetterReturnValue = new Map(
+        Object.entries(richClaimsMock),
+      );
+      const claimsMock = ['fooClaim1', 'fooClaim2', 'barClaim1'];
+
+      // Mocking a getter is a bit trickier than a regular method...
+      Object.defineProperty(service['index'], 'claims', {
+        get: jest.fn().mockReturnValue(indexServiceClaimsGetterReturnValue),
+      });
+
+      // When
+      const result = service.getRichClaimsFromClaims(claimsMock);
+      // Then
+      expect(result).toStrictEqual([
+        richClaimsMock.fooClaim1,
+        richClaimsMock.fooClaim2,
+        richClaimsMock.barClaim1,
+      ]);
+    });
+  });
+
   describe('getRichClaimsFromScopes', () => {
     const scopesMock = ['foo', 'bar'];
     const getRawClaimsFromScopesMockReturnValue = [
@@ -117,15 +146,18 @@ describe('ScopesService', () => {
       'barClaim1',
     ];
 
+    const getRichClaimsFromClaimsMockReturnValue = {};
+
     beforeEach(() => {
       service.getRawClaimsFromScopes = jest
         .fn()
         .mockReturnValue(getRawClaimsFromScopesMockReturnValue);
+      service.getRichClaimsFromClaims = jest
+        .fn()
+        .mockReturnValue(getRichClaimsFromClaimsMockReturnValue);
     });
 
     it('should call getRawClaimsFromScopes', () => {
-      // Given
-
       // When
       service.getRichClaimsFromScopes(scopesMock);
       // Then
@@ -133,29 +165,21 @@ describe('ScopesService', () => {
       expect(service.getRawClaimsFromScopes).toHaveBeenCalledWith(scopesMock);
     });
 
-    it('should return claims resolved from scopes, mapped to claims objects stored claimIndex', () => {
-      // Given
-      const claimsMock = {
-        fooClaim1: Symbol('fooClaim1'),
-        fooClaim2: Symbol('fooClaim2'),
-        barClaim1: Symbol('barClaim1'),
-      };
-      const indexServiceClaimsGetterReturnValue = new Map(
-        Object.entries(claimsMock),
+    it('should call getRichClaimsFromClaims', () => {
+      // When
+      service.getRichClaimsFromScopes(scopesMock);
+      // Then
+      expect(service.getRichClaimsFromClaims).toHaveBeenCalledTimes(1);
+      expect(service.getRichClaimsFromClaims).toHaveBeenCalledWith(
+        getRawClaimsFromScopesMockReturnValue,
       );
-      // Mocking a getter is a bit trickier than a regular method...
-      Object.defineProperty(service['index'], 'claims', {
-        get: jest.fn().mockReturnValue(indexServiceClaimsGetterReturnValue),
-      });
+    });
 
+    it('should return the result of call to getRichClaimsFromClaims', () => {
       // When
       const result = service.getRichClaimsFromScopes(scopesMock);
       // Then
-      expect(result).toStrictEqual([
-        claimsMock.fooClaim1,
-        claimsMock.fooClaim2,
-        claimsMock.barClaim1,
-      ]);
+      expect(result).toBe(getRichClaimsFromClaimsMockReturnValue);
     });
   });
 });

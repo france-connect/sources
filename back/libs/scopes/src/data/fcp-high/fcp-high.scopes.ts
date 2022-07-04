@@ -22,5 +22,6 @@ export const scopes: IScopes = {
     claims.birthplace,
     claims.birthcountry,
   ],
+  openid: [claims.sub],
   ...oneToOneScopeFromClaims(claims),
 };

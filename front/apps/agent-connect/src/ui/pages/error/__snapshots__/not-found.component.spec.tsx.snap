@@ -3,7 +3,7 @@
 exports[`NotFoundComponent should match the snapshot, in a desktop viewport 1`] = `
 <div>
   <div
-    class="fr-m-auto fr-mt-8w"
+    class="page fr-m-auto fr-mt-8w"
   >
     <h1
       class="text-center"
@@ -17,7 +17,7 @@ exports[`NotFoundComponent should match the snapshot, in a desktop viewport 1`] 
 exports[`NotFoundComponent should match the snapshot, in a mobile viewport 1`] = `
 <div>
   <div
-    class="fr-m-auto fr-mt-4w"
+    class="page fr-m-auto fr-mt-4w"
   >
     <h1
       class="text-center"

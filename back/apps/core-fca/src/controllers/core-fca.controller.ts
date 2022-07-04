@@ -89,9 +89,11 @@ export class CoreFcaController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    // @TODO a refacto
-    // avec une methode private et en éclatant le controller `getFrontData`
-    // afin de réduire la taille de ce fichier > 400 lignes
+    /**
+     * @TODO #1018 Refactoriser la partie API du controller core-fca
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1018
+     * @ticket FC-1018
+     */
     const { spName } = (await sessionOidc.get()) || {};
     if (!spName) {
       throw new SessionBadFormatException();
@@ -120,9 +122,9 @@ export class CoreFcaController {
     @Req() req,
     @Res() res,
     /**
-     * @todo Adaptation for now, correspond to the oidc-provider side.
-     * Named "OidcClient" because we need a future shared session between our libs oidc-provider and oidc-client
-     * without a direct dependance like now
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
@@ -256,12 +258,9 @@ export class CoreFcaController {
     @Res() res,
     @Param() _params: Interaction,
     /**
-     * @todo Adaptation for now, correspond to the oidc-provider side.
-     * Named "OidcClient" because we need a future shared session between our libs oidc-provider and oidc-client
-     * without a direct dependance like now.
-     * @author Hugues
-     * @date 2021-04-16
-     * @ticket FC-xxx
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
@@ -290,12 +289,9 @@ export class CoreFcaController {
     @Req() req,
     @Res() res,
     /**
-     * @todo Adaptation for now, correspond to the oidc-provider side.
-     * Named "OidcClient" because we need a future shared session between our libs oidc-provider and oidc-client
-     * without a direct dependance like now.
-     * @author Hugues
-     * @date 2021-04-16
-     * @ticket FC-xxx
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
@@ -359,12 +355,9 @@ export class CoreFcaController {
     @Req() req,
     @Res() res,
     /**
-     * @todo Adaptation for now, correspond to the oidc-provider side.
-     * Named "OidcClient" because we need a future shared session between our libs oidc-provider and oidc-client
-     * without a direct dependance like now.
-     * @author Hugues
-     * @date 2021-04-16
-     * @ticket FC-xxx
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
@@ -379,15 +372,6 @@ export class CoreFcaController {
 
     await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
 
-    /**
-     *  @todo
-     *  problem: reduce the complexity of the oidc-callback functions
-     *  action: take token and userinfo and add them together in oidc.
-     *
-     *  @author Arnaud & Hugues
-     *  @date 23/03/2020
-     *  @ticket FC-244 (identity, DTO, Factorisation)
-     */
     const tokenParams = {
       state: idpState,
       nonce: idpNonce,

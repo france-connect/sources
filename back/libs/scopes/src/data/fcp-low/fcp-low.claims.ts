@@ -1,7 +1,7 @@
 import { IClaims } from '../../interfaces';
 
 export const claims: IClaims = {
-  openid: 'openid',
+  sub: 'sub',
   gender: 'gender',
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention

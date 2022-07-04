@@ -4,7 +4,7 @@ import React from 'react';
 import styles from './return-button.module.scss';
 import { useReturnButton } from './use-return-button.hook';
 
-interface ReturnButtonComponentProps {
+export interface ReturnButtonComponentProps {
   url: string;
   isMobileViewport?: boolean;
 }

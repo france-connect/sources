@@ -15,5 +15,46 @@
       "birth",
       "identite_pivot"
     ]
+  },
+  {
+    "type": "profile sans preferred_username",
+    "scopes": [
+      "openid",
+      "gender",
+      "birthdate",
+      "given_name",
+      "family_name"
+    ]
+  },
+  {
+    "type": "dgfip et cnam",
+    "scopes": [
+      "openid",
+      "dgfip_rfr",
+      "dgfip_nbpart",
+      "dgfip_sitfam",
+      "dgfip_pac",
+      "dgfip_aft",
+      "cnam_paiements_ij"
+    ]
+  },
+  {
+    "type": "scopes de tous les FD",
+    "scopes": [
+      "openid",
+      "given_name",
+      "dgfip_rfr",
+      "cnam_paiements_ij",
+      "mi_siv_carte_grise",
+      "mesri_identifiant",
+      "cnous_statut_boursier",
+      "api_fc-liste-paiementsv1"
+    ]
+  },
+  {
+    "type": "anonyme",
+    "scopes": [
+      "openid"
+    ]
   }
 ]

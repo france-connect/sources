@@ -1,6 +1,9 @@
-import { Given, When } from 'cypress-cucumber-preprocessor/steps';
+import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
 
-import { navigateTo } from '../../common/helpers';
+import {
+  getIdentityProviderByDescription,
+  navigateTo,
+} from '../../common/helpers';
 import { Environment } from '../../common/types';
 import UdPreferencesPage from '../pages/ud-preferences-page';
 
@@ -62,6 +65,45 @@ When(
 );
 
 When(
+  /^je décide (d'autoriser|de bloquer) le fournisseur d'identité "([^"]+)"$/,
+  function (text, idpDescription) {
+    const isAuthorized = text === "d'autoriser";
+    const { name } = getIdentityProviderByDescription(
+      this.identityProviders,
+      idpDescription,
+    );
+    const idpSetting = udPreferencesPage.getIdentityProviderSetting(name);
+    idpSetting.setIdpAuthorization(isAuthorized);
+  },
+);
+
+When(
+  /^je décide (d'autoriser|de bloquer) tous les fournisseurs d'identité$/,
+  function (text) {
+    const isAuthorized = text === "d'autoriser";
+    udPreferencesPage.setAllIdpAuthorization(isAuthorized);
+  },
+);
+
+Then(
+  /^le message d'erreur "au moins un FI doit être autorisé" (est|n'est pas) affiché$/,
+  function (text) {
+    const isDisplayed = text === 'est';
+    udPreferencesPage.checkIsAlertErrorDisplayed(isDisplayed);
+  },
+);
+
+Then(
+  /^le bouton "enregistrer mes réglages" est (actif|désactivé)$/,
+  function (state) {
+    const isEnabled = state === 'actif';
+    udPreferencesPage
+      .getSaveButton()
+      .should(isEnabled ? 'be.enabled' : 'be.disabled');
+  },
+);
+
+When(
   /^je décide (d'autoriser|de bloquer) les futurs fournisseurs d'identité par défaut$/,
   function (text) {
     const isBlocked = text === 'de bloquer';
@@ -70,6 +112,6 @@ When(
 );
 
 When("j'enregistre mes réglages d'accès", function () {
-  udPreferencesPage.saveButton.click();
+  udPreferencesPage.getSaveButton().click();
   udPreferencesPage.checkIsUpdateNotificationDisplayed();
 });

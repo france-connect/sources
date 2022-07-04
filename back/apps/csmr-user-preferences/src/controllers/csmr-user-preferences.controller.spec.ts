@@ -29,7 +29,6 @@ describe('CsmrUserPreferencesController', () => {
   const csmrUserPreferencesServiceMock = {
     getIdpSettings: jest.fn(),
     setIdpSettings: jest.fn(),
-    sendMail: jest.fn(),
   };
 
   const identityMock: IPivotIdentity = {
@@ -80,7 +79,6 @@ describe('CsmrUserPreferencesController', () => {
       isChecked: true,
     },
   ];
-  const htmlContentMock = 'my wonderful email body';
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -147,10 +145,12 @@ describe('CsmrUserPreferencesController', () => {
       },
     ];
     const hasAllowFutureIdpChangedMock = true;
+    const updatedAtMock = expect.any(Date);
     const expectedResultCsmrUserPreferencesServiceMockSetIdpSettings = {
       formattedIdpSettingsList: formatUserIdpSettingsListResultMock,
       updatedIdpSettingsList: updatedIdpIdpSettingsFormattedMock,
       hasAllowFutureIdpChanged: hasAllowFutureIdpChangedMock,
+      updatedAt: updatedAtMock,
     };
 
     beforeEach(() => {
@@ -161,9 +161,6 @@ describe('CsmrUserPreferencesController', () => {
       // GIVEN
       csmrUserPreferencesServiceMock.setIdpSettings.mockResolvedValueOnce(
         expectedResultCsmrUserPreferencesServiceMockSetIdpSettings,
-      );
-      csmrUserPreferencesServiceMock.sendMail.mockResolvedValueOnce(
-        htmlContentMock,
       );
 
       // WHEN
@@ -184,49 +181,18 @@ describe('CsmrUserPreferencesController', () => {
       );
     });
 
-    it('should call sendEmail from userPreferencesCsmr service', async () => {
-      // GIVEN
-      csmrUserPreferencesServiceMock.setIdpSettings.mockResolvedValueOnce(
-        expectedResultCsmrUserPreferencesServiceMockSetIdpSettings,
-      );
-      csmrUserPreferencesServiceMock.sendMail.mockResolvedValueOnce(
-        htmlContentMock,
-      );
-
-      // WHEN
-      await csmrUserPreferencesController.setIdpSettings(
-        setIdpSettingsPayloadMock,
-      );
-
-      // THEN
-      expect(csmrUserPreferencesServiceMock.sendMail).toHaveBeenCalledTimes(1);
-      expect(csmrUserPreferencesServiceMock.sendMail).toHaveBeenCalledWith(
-        {
-          email: identityMock.email,
-          givenName: identityMock.given_name,
-          familyName: identityMock.family_name,
-        },
-        {
-          formattedIdpSettingsList: formatUserIdpSettingsListResultMock,
-          updatedIdpSettingsList: updatedIdpIdpSettingsFormattedMock,
-          hasAllowFutureIdpChanged: hasAllowFutureIdpChangedMock,
-          allowFutureIdp: setIdpSettingsPayloadMock.idpSettings.allowFutureIdp,
-        },
-      );
-    });
-
     it('should return a list of idp with their settings and choice concerning future idps', async () => {
       // GIVEN
       csmrUserPreferencesServiceMock.setIdpSettings.mockResolvedValueOnce(
         expectedResultCsmrUserPreferencesServiceMockSetIdpSettings,
       );
-      csmrUserPreferencesServiceMock.sendMail.mockResolvedValueOnce(
-        htmlContentMock,
-      );
       const expectedResult = {
         allowFutureIdp: setIdpSettingsPayloadMock.idpSettings.allowFutureIdp,
         idpList:
           expectedResultCsmrUserPreferencesServiceMockSetIdpSettings.formattedIdpSettingsList,
+        updatedIdpSettingsList: updatedIdpIdpSettingsFormattedMock,
+        hasAllowFutureIdpChanged: true,
+        updatedAt: expect.any(Date),
       };
 
       // When
@@ -240,22 +206,6 @@ describe('CsmrUserPreferencesController', () => {
     it('should return `ERROR` if an error on csmrUserPreferencesService.setIdpSettings() occurs', async () => {
       // Given
       csmrUserPreferencesServiceMock.setIdpSettings.mockRejectedValueOnce(
-        new Error('unknown error'),
-      );
-      // When
-      const result = await csmrUserPreferencesController.setIdpSettings(
-        setIdpSettingsPayloadMock,
-      );
-      // Then
-      expect(result).toBe('ERROR');
-    });
-
-    it('should return `ERROR` if an error on csmrUserPreferencesService.sendEmail() occurs', async () => {
-      // Given
-      csmrUserPreferencesServiceMock.setIdpSettings.mockResolvedValueOnce(
-        expectedResultCsmrUserPreferencesServiceMockSetIdpSettings,
-      );
-      csmrUserPreferencesServiceMock.sendMail.mockRejectedValueOnce(
         new Error('unknown error'),
       );
       // When

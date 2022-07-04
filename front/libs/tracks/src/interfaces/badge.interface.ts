@@ -4,7 +4,7 @@
 import { IconType } from 'react-icons';
 
 export interface Badge {
-  backgroundColor: string;
+  colorName: string;
   Icon: IconType;
   label: string;
 }

@@ -1,5 +1,3 @@
-import './card-badge.scss';
-
 import classnames from 'classnames';
 import React from 'react';
 import {
@@ -7,28 +5,31 @@ import {
   RiArrowLeftRightFill as ArrowsIcon,
   RiCheckboxCircleFill as CheckIcon,
 } from 'react-icons/ri';
+import { useMediaQuery } from 'react-responsive';
 
+import { CinematicEvents } from '../../enums';
 import { Badges } from '../../interfaces';
+import styles from './card-badge.module.scss';
 
 const TYPE_CONFIG = {
-  DP_REQUESTED_FC_CHECKTOKEN: {
+  [CinematicEvents.DP_REQUESTED_FC_CHECKTOKEN]: {
     Icon: ArrowsIcon,
-    backgroundColor: '#f4a381',
+    colorName: 'pink-macaron',
     label: 'Échange de Données',
   },
-  FC_DATATRANSFER_CONSENT_DATA: {
+  [CinematicEvents.FC_DATATRANSFER_CONSENT_DATA]: {
     Icon: CheckIcon,
-    backgroundColor: '#40d496',
+    colorName: 'green-emeraude',
     label: 'Autorisation',
   },
-  FC_DATATRANSFER_CONSENT_IDENTITY: {
+  [CinematicEvents.FC_DATATRANSFER_CONSENT_IDENTITY]: {
     Icon: CheckIcon,
-    backgroundColor: '#40d496',
+    colorName: 'green-emeraude',
     label: 'Autorisation',
   },
-  FC_VERIFIED: {
+  [CinematicEvents.FC_VERIFIED]: {
     Icon: UserIcon,
-    backgroundColor: '#66a1e4',
+    colorName: 'green-archipel',
     label: 'Connexion',
   },
 } as Badges;
@@ -39,31 +40,36 @@ type TraceCardBadgeProps = {
 };
 
 export const TrackCardBadgeComponent = React.memo(({ fromFcPlus, type }: TraceCardBadgeProps) => {
+  const gtMobile = useMediaQuery({ minWidth: 576 });
   const badge = !type ? null : TYPE_CONFIG[type.toUpperCase()];
-
   return (
-    <div className="badge is-absolute fr-text--xs is-white">
-      <div className="is-relative flex-columns flex-start items-center is-uppercase">
+    <div className={classnames('is-absolute', styles.container)}>
+      <div className="fr-badge-group">
         <div
-          // @TODO ajuster quand on aura récupérer l'origine/source des traces
-          // class CSS
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          className={classnames('fr-py-1w fr-px-3v fr-mr-1w', {
+          className={classnames('fr-badge is-white', {
+            [styles.badgeFranceConnect]: !fromFcPlus,
+            [styles.badgeFranceConnectPlus]: fromFcPlus,
             // class CSS
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            'fr-badge--blue-france-connect': !fromFcPlus,
+            'fr-badge--md': gtMobile,
             // class CSS
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            'fr-badge--blue-france-connect-plus': fromFcPlus,
-          })}>
-          {fromFcPlus && <b>FranceConnect+</b>}
-          {!fromFcPlus && <b>FranceConnect</b>}
+            'fr-badge--sm': !gtMobile,
+          })}
+          data-testid="TrackCardBadgeComponent-platform-badge">
+          {fromFcPlus ? 'FranceConnect+' : 'FranceConnect'}
         </div>
         {badge && (
           <div
-            className="flex-columns items-center fr-py-1w fr-px-3v"
-            data-testid="badge"
-            style={{ backgroundColor: badge.backgroundColor }}>
+            className={classnames(`fr-badge fr-badge--${badge.colorName}`, {
+              // class CSS
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              'fr-badge--md': gtMobile,
+              // class CSS
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              'fr-badge--sm': !gtMobile,
+            })}
+            data-testid="TrackCardBadgeComponent-action-badge">
             <badge.Icon size={18} />
             <b className="fr-ml-1w">{badge.label}</b>
           </div>

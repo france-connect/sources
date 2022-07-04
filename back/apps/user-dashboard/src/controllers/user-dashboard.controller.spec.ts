@@ -8,11 +8,9 @@ import {
   SessionInvalidCsrfSelectIdpException,
 } from '@fc/session';
 import { TracksService } from '@fc/tracks';
-import {
-  FormattedIdpSettingDto,
-  UserPreferencesService,
-} from '@fc/user-preferences';
+import { FormattedIdpDto, UserPreferencesService } from '@fc/user-preferences';
 
+import { UserDashboardService } from '../services';
 import { UserDashboardController } from './user-dashboard.controller';
 
 describe('UserDashboardController', () => {
@@ -46,6 +44,13 @@ describe('UserDashboardController', () => {
   const randomStringMock = 'randomStringMockValue';
   const idpStateMock = 'idpStateMockValue';
   const idpNonceMock = 'idpNonceMock';
+  const identityMock = {
+    email: 'email@email.fr',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    given_name: 'givenName',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    family_name: 'familyName',
+  };
 
   const sessionGenericCsrfServiceMock = {
     get: jest.fn(),
@@ -76,6 +81,10 @@ describe('UserDashboardController', () => {
     allowFutureIdp: false,
   };
 
+  const userDashboardServiceMock = {
+    sendMail: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -88,6 +97,7 @@ describe('UserDashboardController', () => {
         SessionCsrfService,
         TracksService,
         UserPreferencesService,
+        UserDashboardService,
       ],
     })
       .overrideProvider(ConfigService)
@@ -100,6 +110,8 @@ describe('UserDashboardController', () => {
       .useValue(tracksServiceMock)
       .overrideProvider(UserPreferencesService)
       .useValue(userPreferencesMock)
+      .overrideProvider(UserDashboardService)
+      .useValue(userDashboardServiceMock)
       .compile();
 
     controller = module.get<UserDashboardController>(UserDashboardController);
@@ -116,6 +128,7 @@ describe('UserDashboardController', () => {
       idpNonce: idpNonceMock,
       idpState: idpStateMock,
       interactionId: interactionIdMock,
+      idpIdentity: identityMock,
     });
 
     configMock.get.mockReturnValueOnce({
@@ -181,11 +194,6 @@ describe('UserDashboardController', () => {
     });
 
     it('should call tracks.getList', async () => {
-      // Given
-      const identityMock = { foo: 'bar' };
-      sessionServiceMock.get.mockResolvedValueOnce({
-        idpIdentity: identityMock,
-      });
       // When
       await controller.getUserTraces(sessionServiceMock);
       // Then
@@ -195,10 +203,10 @@ describe('UserDashboardController', () => {
 
     it('should return tracks.getList', async () => {
       // Given
-      const formattedIdpSettingsMock = {
+      const formattedIdpSettingsMock: Partial<FormattedIdpDto> = {
         uid: 'uid',
         isChecked: true,
-      } as unknown as FormattedIdpSettingDto;
+      };
       tracksServiceMock.getList.mockResolvedValueOnce(formattedIdpSettingsMock);
       // When
       const result = await controller.getUserTraces(sessionServiceMock);
@@ -262,11 +270,6 @@ describe('UserDashboardController', () => {
     });
 
     it('should call userPreferences.getUserPreferencesList', async () => {
-      // Given
-      const identityMock = { foo: 'bar' };
-      sessionServiceMock.get.mockResolvedValueOnce({
-        idpIdentity: identityMock,
-      });
       // When
       await controller.getUserPreferences(sessionServiceMock);
       // Then
@@ -280,10 +283,10 @@ describe('UserDashboardController', () => {
 
     it('should return userPreferences.getUserPreferencesList', async () => {
       // Given
-      const formattedIdpSettingsMock = {
+      const formattedIdpSettingsMock: Partial<FormattedIdpDto> = {
         uid: 'uid',
         isChecked: true,
-      } as unknown as FormattedIdpSettingDto;
+      };
       const resolvedUserPreferencesMock = {
         idpList: formattedIdpSettingsMock,
         allowFutureIdp: true,
@@ -302,7 +305,25 @@ describe('UserDashboardController', () => {
   });
 
   describe('updateUserPreferences', () => {
+    const formattedIdpSettingsMock: Partial<FormattedIdpDto> = {
+      uid: 'uid',
+      isChecked: false,
+    };
+
+    const resolvedUserPreferencesMock = {
+      idpList: formattedIdpSettingsMock,
+      allowFutureIdp: false,
+      updatedIdpSettingsList: formattedIdpSettingsMock,
+      hasAllowFutureIdpChanged: true,
+      updatedAt: 'updatedAt',
+    };
+
     it('should fetch session', async () => {
+      // Given
+      userPreferencesMock.setUserPreferencesList.mockResolvedValueOnce(
+        resolvedUserPreferencesMock,
+      );
+
       // When
       await controller.updateUserPreferences(
         updatePreferencesBodyMock,
@@ -326,13 +347,12 @@ describe('UserDashboardController', () => {
 
     it('should call userPreferences.setUserPreferencesList', async () => {
       // Given
-      const identityMock = { foo: 'bar' };
-      sessionServiceMock.get.mockResolvedValueOnce({
-        idpIdentity: identityMock,
-      });
-
       const { allowFutureIdp, idpList } = updatePreferencesBodyMock;
       const expectedServicedArguments = { allowFutureIdp, idpList };
+
+      userPreferencesMock.setUserPreferencesList.mockResolvedValueOnce(
+        resolvedUserPreferencesMock,
+      );
 
       // When
       await controller.updateUserPreferences(
@@ -351,14 +371,6 @@ describe('UserDashboardController', () => {
 
     it('should return userPreferences.setUserPreferencesList', async () => {
       // Given
-      const formattedIdpSettingsMock = {
-        uid: 'uid',
-        isChecked: false,
-      } as unknown as FormattedIdpSettingDto;
-      const resolvedUserPreferencesMock = {
-        idpList: formattedIdpSettingsMock,
-        allowFutureIdp: false,
-      };
       userPreferencesMock.setUserPreferencesList.mockResolvedValueOnce(
         resolvedUserPreferencesMock,
       );
@@ -371,6 +383,9 @@ describe('UserDashboardController', () => {
       expect(result).toStrictEqual({
         idpList: formattedIdpSettingsMock,
         allowFutureIdp: updatePreferencesBodyMock.allowFutureIdp,
+        updatedIdpSettingsList: formattedIdpSettingsMock,
+        hasAllowFutureIdpChanged: true,
+        updatedAt: 'updatedAt',
       });
     });
   });

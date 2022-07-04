@@ -4,7 +4,34 @@
 
 **🔈 The odd versions are not released into production.**
 
+
+## v3.99.0 && v3.100.0
+
+### Cleaning & Tooling
+
+ - Referenced issues in severals `@todo` comments
+ - Added a [storyBook](https://storybook.js.org/) instance on dev stack, to ease React component development
+
+### Features
+
+ - [UserDashboard]
+   - Fixed multiple typos
+   - Prevent users from disabling access to all Identity Providers
+   - Enhanced users traces display
+   - Moved email shipment from preferences consumer to UserDashboard backend
+
+### Not yet in production (futures apps / features)
+ - Update Redux wrapper for all front app
+ - React Pagination component
+
+## v3.97 && v3.98.0
+
+### Fixes
+
+- Fixed the way the docker-stack script retrieves NodeJS containers.
+
 ## v3.95 && v3.96.0
+
 ### Features
 - [FranceConnect+] [AgentConnect] 
   - Enhanced handling of business logs rotation

@@ -110,7 +110,7 @@ export class OidcClientService {
     } catch (error) {
       this.logger.error(error, 'getUserInfo');
       /**
-       * @todo Add the error to the exception, then add "@Loggable()" decorator
+       * @todo #587 Add the error to the exception, then add "@Loggable()" decorator
        * to the exception.
        *
        * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/merge_requests/494#note_102947

@@ -3,7 +3,7 @@
 exports[`UserHistoryCardContentComponent should match the snapshot for a desktop viewport 1`] = `
 <div>
   <div
-    class="flex-center use-pointer fr-px-3w fr-pt-3w"
+    class="content flex-center use-pointer fr-px-3w fr-pt-3w"
     data-testid="container"
   >
     <div
@@ -15,7 +15,7 @@ exports[`UserHistoryCardContentComponent should match the snapshot for a desktop
       FoorBar RedirectToIdpFormComponentMock
     </div>
     <button
-      class="fr-text--bold fr-text--xl fr-mb-0"
+      class="title fr-text--bold fr-text--xl fr-mb-0"
       disabled=""
       type="submit"
     />
@@ -26,7 +26,7 @@ exports[`UserHistoryCardContentComponent should match the snapshot for a desktop
 exports[`UserHistoryCardContentComponent should match the snapshot for a tablet viewport 1`] = `
 <div>
   <div
-    class="flex-center use-pointer fr-p-3w"
+    class="content flex-center use-pointer fr-p-3w"
     data-testid="container"
   >
     <div
@@ -38,7 +38,7 @@ exports[`UserHistoryCardContentComponent should match the snapshot for a tablet 
       FoorBar RedirectToIdpFormComponentMock
     </div>
     <button
-      class="fr-text--bold fr-text--xl fr-mb-0"
+      class="title fr-text--bold fr-text--xl fr-mb-0"
       disabled=""
       type="submit"
     />

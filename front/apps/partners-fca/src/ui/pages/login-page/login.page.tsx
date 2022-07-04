@@ -37,7 +37,9 @@ export const LoginPage = React.memo(() => {
     },
     [updateAccount, history],
   );
+
   const onApiError = useCallback(() => {
+    // eslint-disable-next-line no-console
     console.log('error');
   }, []);
 

@@ -13,18 +13,31 @@ interface UserPreferencesComponentProps {
 
 export const UserPreferencesComponent: React.FC<UserPreferencesComponentProps> = React.memo(
   ({ options }: UserPreferencesComponentProps) => {
-    const { commit, formValues, submitWithSuccess, userPreferences } =
+    const { commit, formValues, submitWithSuccess, userPreferences, validateHandler } =
       useUserPreferencesApi(options);
-
     return (
-      <Form initialValues={formValues} onSubmit={commit}>
-        {({ dirty, handleSubmit, pristine: isSameAsInitialValues, submitting }) => {
-          // @NOTE declarative function
+      <Form
+        initialValues={formValues}
+        validate={
+          // @TODO test form
           /* istanbul ignore next */
-          const isDisabled = !!(isSameAsInitialValues || submitting);
+          (values) => validateHandler(values)
+        }
+        onSubmit={commit}>
+        {({
+          dirty,
+          errors,
+          handleSubmit,
+          hasValidationErrors,
+          pristine: isSameAsInitialValues,
+          submitting,
+        }) => {
+          const isDisabled = !!(isSameAsInitialValues || submitting || hasValidationErrors);
           const showNotification = !dirty && submitWithSuccess;
           return (
             <UserPreferencesFormComponent
+              errors={errors}
+              hasValidationErrors={hasValidationErrors}
               isDisabled={isDisabled}
               showNotification={showNotification}
               userPreferences={userPreferences}

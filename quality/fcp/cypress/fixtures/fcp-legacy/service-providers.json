@@ -17,7 +17,95 @@
     ],
     "explicitConsent": false,
     "selectors": {
-      "fcButton": "[alt='Soumettre']",
+      "fcButton": "[data-role='login-authorize'] input",
+      "logoutButton": "[data-fc-logout-url='/logout']"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsp1",
+    "clientId": "a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc",
+    "descriptions": [
+      "pour les scopes data"
+    ],
+    "mocked": true,
+    "url": "https://fsp1.{{TEST_ENV}}.dev-franceconnect.fr",
+    "redirectUri": "https://fsp1.{{TEST_ENV}}.dev-franceconnect.fr/data-callback",
+    "acrValue": "eidas1",
+    "claims": [
+    ],
+    "scopes": [
+      "tous les scopes"
+    ],
+    "explicitConsent": false,
+    "selectors": {
+      "fcButton": "[data-role='login-authorize'] input",
+      "logoutButton": "[data-fc-logout-url='/logout']"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsp2",
+    "clientId": "7a79e45107f9ccc6a3a5971d501220dc4fd9e87bb5e3fc62ce4104c756e22775",
+    "descriptions": [
+      "privé sans consentement obligatoire"
+    ],
+    "mocked": true,
+    "url": "https://fsp2.{{TEST_ENV}}.dev-franceconnect.fr",
+    "redirectUri": "https://fsp2.{{TEST_ENV}}.dev-franceconnect.fr/login-callback",
+    "acrValue": "eidas1",
+    "claims": [
+    ],
+    "scopes": [
+      "identite_pivot"
+    ],
+    "explicitConsent": false,
+    "selectors": {
+      "fcButton": "[data-role='login-authorize'] input",
+      "logoutButton": "[data-fc-logout-url='/logout']"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsp3",
+    "clientId": "6495f347513b860e6b931fae4a1ba70c8489a558a0fc74ecdc094d48a4035e77",
+    "descriptions": [
+      "privé avec consentement obligatoire"
+    ],
+    "mocked": true,
+    "url": "https://fsp3.{{TEST_ENV}}.dev-franceconnect.fr",
+    "redirectUri": "https://fsp3.{{TEST_ENV}}.dev-franceconnect.fr/login-callback",
+    "acrValue": "eidas1",
+    "claims": [
+    ],
+    "scopes": [
+      "tous les scopes"
+    ],
+    "explicitConsent": true,
+    "selectors": {
+      "fcButton": "[data-role='login-authorize'] input",
+      "logoutButton": "[data-fc-logout-url='/logout']"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsp3",
+    "clientId": "6495f347513b860e6b931fae4a1ba70c8489a558a0fc74ecdc094d48a4035e77",
+    "descriptions": [
+      "privé pour les scopes data"
+    ],
+    "mocked": true,
+    "url": "https://fsp3.{{TEST_ENV}}.dev-franceconnect.fr",
+    "redirectUri": "https://fsp3.{{TEST_ENV}}.dev-franceconnect.fr/data-callback",
+    "acrValue": "eidas1",
+    "claims": [
+    ],
+    "scopes": [
+      "tous les scopes"
+    ],
+    "explicitConsent": true,
+    "selectors": {
+      "fcButton": "[data-role='login-authorize'] input",
       "logoutButton": "[data-fc-logout-url='/logout']"
     },
     "authorizeHttpMethod": "get"

@@ -1,0 +1,11 @@
+version: "2.4"
+
+services:
+  ####################
+  # MINIMUM STORYBOOK
+  ####################
+
+  min-storybook:
+    image: alpine
+    depends_on:
+      - storybook

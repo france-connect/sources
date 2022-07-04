@@ -5,7 +5,7 @@ import { NavigationLink } from '../../../../interfaces';
 import { LayoutHeaderToolsComponent } from '../tools';
 import { LayoutHeaderNavigationComponent } from './layout-header-navigation.component';
 
-interface LayoutHeaderMenuComponentProps {
+export interface LayoutHeaderMenuComponentProps {
   opened: boolean;
   onClose: MouseEventHandler<HTMLButtonElement>;
   navigationItems?: NavigationLink[];

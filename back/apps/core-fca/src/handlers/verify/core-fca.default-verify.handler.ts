@@ -21,14 +21,6 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
   }
 
   /**
-   * The arguments sent to all FeatureHandler's handle() methods must be
-   * typed by a interface exteded from `IFeatureHandler`
-   * @see IVerifyFeatureHandlerHandleArgument as an exemple.
-   * @todo #FC-487
-   * @author Hugues
-   * @date 2021-16-04
-   */
-  /**
    * Main business manipulations occurs in this method
    *
    * 1. Get infos on current interaction and identity fetched from IdP
@@ -47,14 +39,6 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
     // Acr check
     this.core.checkIfAcrIsValid(idpAcr, spAcr);
 
-    /**
-     *  @todo
-     *    author: Arnaud
-     *    date: 09/04/2020
-     *    ticket: FC-179
-     *
-     *    context: upgrade with session generic
-     */
     const agentIdentity = idpIdentity as unknown as IAgentIdentity;
 
     const agentHash = this.cryptographyFca.computeIdentityHash(

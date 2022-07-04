@@ -3,7 +3,7 @@ import { Link, matchPath, useLocation } from 'react-router-dom';
 
 import { NavigationLink } from '../../../../interfaces';
 
-interface LayoutHeaderNavigationComponentProps {
+export interface LayoutHeaderNavigationComponentProps {
   navigationItems?: NavigationLink[];
   onItemClick?: MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>;
 }

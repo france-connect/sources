@@ -7,7 +7,9 @@ export const IntroductionComponent = React.memo(() => (
     </h1>
     <p>
       Retrouver toutes les connexions et échanges de données effectués via FranceConnect ces six
-      derniers mois. Cliquez sur une connexion pour en afficher les détails.
+      derniers mois.
+      <br />
+      Cliquez sur une connexion pour en afficher les détails.
     </p>
   </div>
 ));

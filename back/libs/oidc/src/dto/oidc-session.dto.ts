@@ -70,7 +70,7 @@ export class OidcSession {
   readonly idpNonce?: string;
 
   /**
-   * @todo This section require a deep type validation
+   * @todo #485 This section require a deep type validation
    * It should be done in a session integrity validation ticket
    * that handle errors in case one of the session's member
    * is not valid.
@@ -81,6 +81,7 @@ export class OidcSession {
    *   @ValidateNested()
    *   @Type (() => IOidcIdentity)
    *   readonly idpIdentity?: IOidcIdentity;
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/485
    */
   @IsOptional()
   @IsObject()
@@ -119,7 +120,7 @@ export class OidcSession {
   readonly spAcr?: string;
 
   /**
-   * @todo This section require a deep type validation
+   * @todo #485 This section require a deep type validation
    * It should be done in a session integrity validation ticket
    * that handle errors in case one of the session's member
    * is not valid.
@@ -130,6 +131,7 @@ export class OidcSession {
    *   @ValidateNested()
    *   @Type (() => IOidcIdentity)
    *   readonly spIdentity?: IOidcIdentity;
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/485
    */
   @IsOptional()
   @IsObject()

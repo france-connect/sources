@@ -86,6 +86,8 @@ services:
           # TODO: Move those aliases to exploitation network once runner workaround found
           - exploitation-fca-low.docker.dev-franceconnect.fr
           - exploitation-high.docker.dev-franceconnect.fr
+          # Storybook
+          - storybook.docker.dev-franceconnect.fr
           # Generic
           - docker.dev-franceconnect.fr
       fc:

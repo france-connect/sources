@@ -11,7 +11,7 @@ import {
 import { formatMultiMatchGroup } from '@fc/elasticsearch';
 import { GeoipMaxmindService } from '@fc/geoip-maxmind';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
-import { ScopesService } from '@fc/scopes';
+import { IRichClaim, ScopesService } from '@fc/scopes';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import {
@@ -60,6 +60,7 @@ export class CsmrTracksLegacyDataService implements IAppTracksDataService {
       index,
       body: {
         from: 0,
+        size: 100,
         sort: [{ time: { order: 'desc' } }],
         query: {
           bool: {
@@ -86,23 +87,17 @@ export class CsmrTracksLegacyDataService implements IAppTracksDataService {
     return event;
   }
 
-  private getClaimsGroups({ scopes }: ICsmrTracksLegacyTrack): string[] | null {
-    /**
-     * @todo #820
-     * add scope and label management here
-     *
-     * Arnaud PSA: 07/02/2022
-     */
+  private getClaimsGroups({ scopes }: ICsmrTracksLegacyTrack): IRichClaim[] {
     if (!scopes) {
-      return null;
+      return [];
     }
 
-    const list = scopes.split(LEGACY_SCOPES_SEPARATOR);
-    const claims = this.scopes.getRawClaimsFromScopes(list);
+    const richClaims = this.scopes.getRichClaimsFromScopes(
+      scopes.split(LEGACY_SCOPES_SEPARATOR),
+    );
 
-    // the core-legacy logs intentionally remove sub in traces
-    // we need it back.
-    return claims.includes('sub') ? claims : [...claims, 'sub'];
+    this.logger.trace({ scopes, richClaims });
+    return richClaims;
   }
 
   private getGeoFromIp({ userIp, source }: ICsmrTracksLegacyTrack): IGeo {

@@ -1,43 +1,66 @@
 import { render } from '@testing-library/react';
 
+import { CinematicEvents } from '../../enums';
 import { TrackCardBadgeComponent } from './card-badge.component';
 
 describe('TrackCardBadgeComponent', () => {
-  it('should always render a FranceConnect badge', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should match the snapshot', () => {
+    // when
+    const { container } = render(
+      <TrackCardBadgeComponent fromFcPlus={false} type={CinematicEvents.FC_VERIFIED} />,
+    );
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
+  it('should render the FranceConnect badge', () => {
     // given
-    const { getByText } = render(<TrackCardBadgeComponent fromFcPlus={false} type="FC_VERIFIED" />);
+    const { getByText } = render(
+      <TrackCardBadgeComponent fromFcPlus={false} type={CinematicEvents.FC_VERIFIED} />,
+    );
     // when
     const element = getByText('FranceConnect');
     // then
     expect(element).toBeInTheDocument();
-    expect(element.parentElement).toHaveClass('fr-badge--blue-france-connect');
-    expect(element.parentElement).not.toHaveClass('fr-badge--blue-france-connect-plus');
+    expect(element).toHaveClass('badgeFranceConnect');
+    expect(element).not.toHaveClass('badgeFranceConnectPlus');
   });
 
-  it('render a FranceConnectPlus badge', () => {
+  it('should render the FranceConnectPlus badge', () => {
     // given
-    const { getByText } = render(<TrackCardBadgeComponent fromFcPlus type="FC_VERIFIED" />);
+    const { getByText } = render(
+      <TrackCardBadgeComponent fromFcPlus type={CinematicEvents.FC_VERIFIED} />,
+    );
     // when
     const element = getByText('FranceConnect+');
     // then
     expect(element).toBeInTheDocument();
-    expect(element.parentElement).toHaveClass('fr-badge--blue-france-connect-plus');
-    expect(element.parentElement).not.toHaveClass('fr-badge--blue-france-connect');
+    expect(element).toHaveClass('badgeFranceConnectPlus');
+    expect(element).not.toHaveClass('badgeFranceConnect');
   });
 
-  it('should always render the FC_VERIFIED badge', () => {
+  it('should render the FC_VERIFIED badge', () => {
     // given
-    const { getByText } = render(<TrackCardBadgeComponent fromFcPlus type="FC_VERIFIED" />);
+    const { getByText } = render(
+      <TrackCardBadgeComponent fromFcPlus type={CinematicEvents.FC_VERIFIED} />,
+    );
     // when
     const element = getByText('Connexion');
     // then
     expect(element).toBeInTheDocument();
   });
 
-  it('should always render the FC_DATATRANSFER_CONSENT_IDENTITY badge', () => {
+  it('should render the FC_DATATRANSFER_CONSENT_IDENTITY badge', () => {
     // given
     const { getByText } = render(
-      <TrackCardBadgeComponent fromFcPlus type="FC_DATATRANSFER_CONSENT_IDENTITY" />,
+      <TrackCardBadgeComponent
+        fromFcPlus
+        type={CinematicEvents.FC_DATATRANSFER_CONSENT_IDENTITY}
+      />,
     );
     // when
     const element = getByText('Autorisation');
@@ -45,10 +68,10 @@ describe('TrackCardBadgeComponent', () => {
     expect(element).toBeInTheDocument();
   });
 
-  it('should always render the FC_DATATRANSFER_CONSENT_DATA badge', () => {
+  it('should render the FC_DATATRANSFER_CONSENT_DATA badge', () => {
     // given
     const { getByText } = render(
-      <TrackCardBadgeComponent fromFcPlus type="FC_DATATRANSFER_CONSENT_DATA" />,
+      <TrackCardBadgeComponent fromFcPlus type={CinematicEvents.FC_DATATRANSFER_CONSENT_DATA} />,
     );
     // when
     const element = getByText('Autorisation');
@@ -56,10 +79,10 @@ describe('TrackCardBadgeComponent', () => {
     expect(element).toBeInTheDocument();
   });
 
-  it('should always render the DP_REQUESTED_FC_CHECKTOKEN badge', () => {
+  it('should render the DP_REQUESTED_FC_CHECKTOKEN badge', () => {
     // given
     const { getByText } = render(
-      <TrackCardBadgeComponent fromFcPlus type="DP_REQUESTED_FC_CHECKTOKEN" />,
+      <TrackCardBadgeComponent fromFcPlus type={CinematicEvents.DP_REQUESTED_FC_CHECKTOKEN} />,
     );
     // when
     const element = getByText('Échange de Données');

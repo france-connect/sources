@@ -6,6 +6,7 @@ import { UserDashboardConfig } from '@fc/user-dashboard';
 import App from './app';
 import IdentityProviderAdapterEnv from './identity-provider-adapter-env';
 import Logger from './logger';
+import Mailer from './mailer';
 import OidcClient from './oidc-client';
 import Redis from './redis';
 import Session from './session';
@@ -21,4 +22,5 @@ export default {
   Session,
   TracksBroker,
   UserPreferencesBroker,
+  Mailer,
 } as UserDashboardConfig;

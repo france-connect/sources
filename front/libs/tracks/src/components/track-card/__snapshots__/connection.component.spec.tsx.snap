@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConnectionComponent should match snapshot, with default props 1`] = `
+<div>
+  <ul
+    class="fr-text--md fr-p-0 fr-mb-0 unstyled-list"
+  >
+    <li>
+      <span>
+        Une connexion à ce service a eu lieu le : 
+      </span>
+      <strong
+        data-testid="ConnectionComponent-connection-datetime-label"
+      >
+        01/10/2021 à 06:32
+         (heure de Paris)
+      </strong>
+    </li>
+    <li>
+      <span>
+        Localisation : 
+      </span>
+      <strong
+        data-testid="ConnectionComponent-location-label"
+      >
+        cityMock
+         
+        (countryMock)
+      </strong>
+    </li>
+    <li>
+      <span>
+        Via le compte : 
+      </span>
+      <strong
+        data-testid="ConnectionComponent-idp-label"
+      >
+        idpLabelValue
+      </strong>
+    </li>
+    <li>
+      <span>
+        Niveau de garantie eIDAS : 
+      </span>
+      <strong
+        data-testid="ConnectionComponent-eidas-label"
+      >
+        Faible
+      </strong>
+    </li>
+  </ul>
+</div>
+`;

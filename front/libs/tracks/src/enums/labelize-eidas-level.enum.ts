@@ -2,7 +2,7 @@
 
 // declarative file
 export enum EidasToLabel {
-  eidas1 = 'faible',
-  eidas2 = 'substantiel',
-  eidas3 = 'élevé',
+  eidas1 = 'Faible',
+  eidas2 = 'Substantiel',
+  eidas3 = 'Élevé',
 }

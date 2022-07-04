@@ -57,4 +57,9 @@ export class AppConfig {
 
   @IsIn([ApiContentType.HTML, ApiContentType.JSON])
   readonly apiOutputContentType: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['Europe/Paris'])
+  readonly timezone?: string;
 }

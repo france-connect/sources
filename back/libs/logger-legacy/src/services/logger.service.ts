@@ -77,7 +77,7 @@ export class LoggerService extends ConsoleLogger {
     // -- Proxy `super`, cause we can't mock a parent class
     super[level](log, context);
     /**
-     * @todo FC-539
+     * @todo #539
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/539
      * @author brice
      * @date 2021-06-02

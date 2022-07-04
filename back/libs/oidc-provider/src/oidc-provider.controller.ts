@@ -33,12 +33,9 @@ export class OidcProviderController {
     @Req() req,
     @Res() res,
     /**
-     * @todo Adaptation for now, correspond to the oidc-provider side.
-     * Named "OidcClient" because we need a future shared session between our libs oidc-provider and oidc-client
-     * without a direct dependance like now.
-     * @author Hugues
-     * @date 2021-04-16
-     * @ticket FC-xxx
+     * @TODO #1018 Refactoriser la partie API du controller core-fca
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1018
+     * @ticket FC-1018
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,

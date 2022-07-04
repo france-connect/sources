@@ -3,7 +3,7 @@ import React from 'react';
 
 import { ButtonTypes } from '../../enums';
 
-interface FranceConnectButtonProps {
+export interface FranceConnectButtonProps {
   showIcon?: boolean;
   className?: string;
   showHelp?: boolean;

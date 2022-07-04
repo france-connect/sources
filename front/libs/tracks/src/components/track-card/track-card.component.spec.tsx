@@ -2,8 +2,8 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { DateTime } from 'luxon';
 
-import { EidasToLabel } from '../../enums';
-import { EnhancedTrack } from '../../interfaces';
+import { CinematicEvents, EidasToLabel } from '../../enums';
+import { EnhancedTrack, IRichClaim } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';
@@ -17,17 +17,37 @@ describe('TrackCardComponent', () => {
   const options = {
     API_ROUTE_TRACKS: 'mock_API_ROUTE_TRACKS',
     API_ROUTE_USER_INFOS: 'mock_API_ROUTE_USER_INFOS',
+    LUXON_FORMAT_DATETIME_SHORT_FR: "D 'à' T",
     LUXON_FORMAT_DAY: 'DDD',
     LUXON_FORMAT_HOUR_MINS: 'T',
     LUXON_FORMAT_MONTH_YEAR: 'LLLL yyyy',
     LUXON_FORMAT_TIMEZONE: 'z',
   };
+
+  const claims1: IRichClaim = {
+    identifier: 'claims1',
+    label: 'Claims 1 Label',
+    provider: {
+      key: 'provider1',
+      label: 'Provider 1 label',
+    },
+  };
+
+  const claims2: IRichClaim = {
+    identifier: 'claims2',
+    label: 'Claims 2 Label',
+    provider: {
+      key: 'provider1',
+      label: 'Provider 1 label',
+    },
+  };
+
   const track: EnhancedTrack = {
     city: 'mock-city',
-    claims: ['claims1', 'claims2'],
+    claims: [claims1, claims2],
     country: 'mock-country',
     datetime: DateTime.fromObject({ day: 1, month: 10, year: 2021 }, { zone: 'Europe/Paris' }),
-    event: 'mock-event',
+    event: 'MOCK_EVENT' as CinematicEvents,
     idpLabel: 'mock-idpLabel',
     platform: 'FranceConnect',
     spAcr: 'eidas1' as keyof typeof EidasToLabel,
@@ -37,11 +57,22 @@ describe('TrackCardComponent', () => {
   };
 
   describe('Initial component render', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should match snapshot, with default props', () => {
+      // when
+      const { container } = render(<TrackCardComponent options={options} track={track} />);
+      // then
+      expect(container).toMatchSnapshot();
+    });
+
     it('should render an accessible button element at container top level', () => {
       // given
       const { getByTestId } = render(<TrackCardComponent options={options} track={track} />);
       // when
-      const element = getByTestId(track.trackId);
+      const element = getByTestId(`${track.platform}-${track.trackId}`);
       // then
       expect(element).toBeInTheDocument();
       expect(element.tagName).toStrictEqual('BUTTON');
@@ -51,6 +82,8 @@ describe('TrackCardComponent', () => {
     });
 
     it('should have called card badge component', () => {
+      // given
+      render(<TrackCardComponent options={options} track={track} />);
       // then
       expect(TrackCardBadgeComponent).toHaveBeenCalled();
       expect(TrackCardBadgeComponent).toHaveBeenCalledWith(
@@ -60,6 +93,8 @@ describe('TrackCardComponent', () => {
     });
 
     it('should have called card header component', () => {
+      // given
+      render(<TrackCardComponent options={options} track={track} />);
       // then
       expect(TrackCardHeaderComponent).toHaveBeenCalled();
       expect(TrackCardHeaderComponent).toHaveBeenCalledWith(
@@ -74,17 +109,21 @@ describe('TrackCardComponent', () => {
     });
 
     it('should have called card content component', () => {
+      // given
+      render(<TrackCardComponent options={options} track={track} />);
       // then
       expect(TrackCardContentComponent).toHaveBeenCalled();
       expect(TrackCardContentComponent).toHaveBeenCalledWith(
         {
           accessibleId: `card::a11y::${track.trackId}`,
           city: 'mock-city',
-          claims: ['claims1', 'claims2'],
+          claims: [claims1, claims2],
           country: 'mock-country',
           datetime: track.datetime,
+          eventType: 'MOCK_EVENT',
           idpLabel: track.idpLabel,
           opened: false,
+          options,
           spAcr: track.spAcr,
         },
         {},
@@ -95,7 +134,6 @@ describe('TrackCardComponent', () => {
   describe('Special component render', () => {
     it('should render element at container top level', () => {
       // given
-
       const spMissingTrack: EnhancedTrack = {
         ...track,
         spLabel: undefined,
@@ -104,7 +142,7 @@ describe('TrackCardComponent', () => {
         <TrackCardComponent options={options} track={spMissingTrack} />,
       );
       // when
-      const element = getByTestId(track.trackId);
+      const element = getByTestId(`${track.platform}-${track.trackId}`);
       // then
       expect(element).toBeInTheDocument();
     });
@@ -124,11 +162,11 @@ describe('TrackCardComponent', () => {
     });
   });
 
-  it('When user click the button, should toggle the card content (expand)', () => {
+  it('When user clicks the button, should toggle the card content (expand)', () => {
     // given
     const { getByTestId } = render(<TrackCardComponent options={options} track={track} />);
     // when
-    const element = getByTestId(track.trackId);
+    const element = getByTestId(`${track.platform}-${track.trackId}`);
     // then
     userEvent.click(element);
     expect(element.getAttribute('aria-expanded')).toStrictEqual('true');

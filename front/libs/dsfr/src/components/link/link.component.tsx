@@ -1,13 +1,15 @@
 import classnames from 'classnames';
 import React from 'react';
 
-interface LinkComponentProps {
+import { Sizes } from '../../enums';
+
+export interface LinkComponentProps {
   className?: string;
   href: string;
   icon?: string;
   iconPlacement?: 'right' | 'left';
   label?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: Sizes;
 }
 
 export const LinkComponent: React.FC<LinkComponentProps> = React.memo(
@@ -34,7 +36,7 @@ LinkComponent.defaultProps = {
   icon: undefined,
   iconPlacement: 'left',
   label: undefined,
-  size: 'md',
+  size: Sizes.MEDIUM,
 };
 
 LinkComponent.displayName = 'LinkComponent';

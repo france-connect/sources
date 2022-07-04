@@ -88,7 +88,6 @@ describe('Idp activation & visibility', () => {
     cy.hasError('Y190007');
   });
 
-  // TODO -> find how to update ministry
   describe('No app restart needed', () => {
     const spId = `${Cypress.env('SP_NAME')}1-low`;
 

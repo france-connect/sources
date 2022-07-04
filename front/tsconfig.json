@@ -28,7 +28,9 @@
     "jsx": "react-jsx",
     "paths": {
       "@fc/tests-utils": ["../../tests-utils/src"],
-      "@fc/tests-utils/*": ["../../tests-utils/src/*"]
+      "@fc/tests-utils/*": ["../../tests-utils/src/*"],
+      "@fc/storybook-config": ["./.storybook"],
+      "@fc/storybook-config/*": ["./.storybook/*"]
     }
   }
 }

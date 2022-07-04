@@ -7,7 +7,7 @@ import { ReturnButtonComponent } from '../return-button';
 import { LayoutHeaderToolsAccountComponent } from './layout-header-tools-account.component';
 import { LayoutHeaderToolsLogoutButton } from './layout-header-tools-logout.button';
 
-interface LayoutHeaderToolsComponentProps {
+export interface LayoutHeaderToolsComponentProps {
   lastname?: string;
   isModalMenu?: boolean;
   isDesktopViewport?: boolean;

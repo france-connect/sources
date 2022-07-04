@@ -197,6 +197,11 @@ export class OidcProviderConfigService {
   }
 
   /**
+   * @todo #1023 je type les entrées et sortie correctement et non pas avec any
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1023
+   * @ticket #FC-1023
+   */
+  /**
    * More documentation can be found in oidc-provider repo
    * @see https://github.com/panva/node-oidc-provider/blob/master/docs/README.md#interactionsurl
    */

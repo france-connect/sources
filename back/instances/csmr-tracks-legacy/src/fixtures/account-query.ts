@@ -2,6 +2,7 @@ export const accountQueryMock = {
   index: 'indexMockValue',
   body: {
     from: 0,
+    size: 100,
     sort: [{ time: { order: 'desc' } }],
     query: {
       bool: {

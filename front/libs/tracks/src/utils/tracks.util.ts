@@ -1,13 +1,22 @@
 import { DateTime } from 'luxon';
 
-import { EnhancedTrack, Track, TrackList, TracksConfig } from '../interfaces';
+import {
+  EnhancedTrack,
+  IGroupedClaims,
+  IRichClaim,
+  Track,
+  TrackList,
+  TracksConfig,
+} from '../interfaces';
 
 export function createUniqueGroupKeyFromTrackDate(track: EnhancedTrack): number {
   // crée une clé unique pour un groupe
   // à partir de l'année et du mois
+
+  const localeDate = track.datetime.setZone('Europe/Paris').setLocale('fr-FR');
   const next = DateTime.fromObject({
-    month: track.datetime.month,
-    year: track.datetime.year,
+    month: localeDate.month,
+    year: localeDate.year,
   }).toMillis();
   return next;
 }
@@ -29,7 +38,10 @@ export const groupTracksByMonth =
 
     nextTrackList[1].label = !shouldCreateNewTrackList
       ? nextTrackList[1].label
-      : track.datetime.toFormat(options.LUXON_FORMAT_MONTH_YEAR);
+      : track.datetime
+          .setZone('Europe/Paris')
+          .setLocale('fr-FR')
+          .toFormat(options.LUXON_FORMAT_MONTH_YEAR);
 
     nextTrackList[1].tracks = !shouldCreateNewTrackList
       ? [...(previousGroup && previousGroup[1].tracks), track]
@@ -50,4 +62,25 @@ export function orderTracksByDateDesc({ time: a }: EnhancedTrack, { time: b }: E
 export function transformTrackToEnhanced(track: Track): EnhancedTrack {
   const datetime = DateTime.fromMillis(track.time);
   return { ...track, datetime };
+}
+
+export function groupByDataProviderReducer(acc: IGroupedClaims, claim: IRichClaim): IGroupedClaims {
+  const { key: name, label } = claim.provider;
+
+  if (!acc[name]) {
+    acc[name] = {
+      claims: [],
+      label,
+    };
+  }
+
+  acc[name].claims.push(claim.label);
+
+  return acc;
+}
+
+export function groupByDataProvider(claims: IRichClaim[]): IGroupedClaims {
+  const grouped = claims.reduce(groupByDataProviderReducer, {} as IGroupedClaims);
+
+  return grouped;
 }

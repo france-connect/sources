@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
-import { EidasToLabel } from '../../enums';
+import { CinematicEvents, EidasToLabel } from '../../enums';
 import { EnhancedTrack } from '../../interfaces';
 import * as TrackUtils from '../../utils/tracks.util';
 import { TrackCardComponent } from '../track-card/track-card.component';
@@ -13,17 +13,18 @@ describe('tracksGroupComponent', () => {
   const options = {
     API_ROUTE_TRACKS: 'mock_API_ROUTE_TRACKS',
     API_ROUTE_USER_INFOS: 'mock_API_ROUTE_USER_INFOS',
-    LUXON_FORMAT_DAY: 'DDD',
-    LUXON_FORMAT_HOUR_MINS: 'T',
-    LUXON_FORMAT_MONTH_YEAR: 'LLLL yyyy',
-    LUXON_FORMAT_TIMEZONE: 'z',
+    LUXON_FORMAT_DATETIME_SHORT_FR: 'mock_LUXON_FORMAT_DATETIME_SHORT_FR',
+    LUXON_FORMAT_DAY: 'mock_LUXON_FORMAT_DAY',
+    LUXON_FORMAT_HOUR_MINS: 'mock_LUXON_FORMAT_HOUR_MINS',
+    LUXON_FORMAT_MONTH_YEAR: 'mock_LUXON_FORMAT_MONTH_YEAR',
+    LUXON_FORMAT_TIMEZONE: 'mock_LUXON_FORMAT_TIMEZONE',
   };
   const oldestTrack: EnhancedTrack = {
     city: 'any',
-    claims: null,
+    claims: [],
     country: 'any',
     datetime: DateTime.fromObject({ day: 1, month: 10, year: 2021 }),
-    event: 'any',
+    event: 'any' as CinematicEvents,
     idpLabel: 'any',
     platform: 'FranceConnect',
     spAcr: 'any' as keyof typeof EidasToLabel,
@@ -33,10 +34,10 @@ describe('tracksGroupComponent', () => {
   };
   const newestTrack: EnhancedTrack = {
     city: 'any',
-    claims: null,
+    claims: [],
     country: 'any',
     datetime: DateTime.fromObject({ day: 1, month: 11, year: 2021 }),
-    event: 'any',
+    event: 'any' as CinematicEvents,
     idpLabel: 'any',
     platform: 'FranceConnect',
     spAcr: 'any' as keyof typeof EidasToLabel,

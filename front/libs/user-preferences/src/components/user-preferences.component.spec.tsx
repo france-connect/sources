@@ -3,7 +3,6 @@ import { mocked } from 'ts-jest/utils';
 
 import { useUserPreferencesApi } from '../hooks';
 import { UserPreferencesComponent } from './user-preferences.component';
-import { UserPreferencesFormComponent } from './user-preferences-form.component';
 
 jest.mock('react-final-form');
 jest.mock('../hooks');
@@ -22,47 +21,36 @@ describe('UserPreferencesComponent', () => {
     allowFutureIdp: false,
     idpList: [expect.any(Object), expect.any(Object)],
   };
+  const validateHandlerMock = jest.fn();
   const hookResultMock = {
     commit: commitMock,
     formValues: initialValuesMock,
     submitErrors: undefined,
     submitWithSuccess: false,
     userPreferences: userPreferencesMock,
+    validateHandler: validateHandlerMock,
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mocked(useUserPreferencesApi).mockReturnValue(hookResultMock);
   });
 
   it('should match the snapshot', () => {
+    // given
+    mocked(useUserPreferencesApi).mockReturnValue(hookResultMock);
     // when
     const { container } = render(<UserPreferencesComponent options={optionsMock} />);
     // then
     expect(container).toMatchSnapshot();
   });
 
-  it('should useUserPreferencesApi have been called', () => {
+  it('should have called useUserPreferencesApi', () => {
+    // given
+    mocked(useUserPreferencesApi).mockReturnValue(hookResultMock);
     // when
     render(<UserPreferencesComponent options={optionsMock} />);
     // then
     expect(useUserPreferencesApi).toHaveBeenCalledTimes(1);
     expect(useUserPreferencesApi).toHaveBeenCalledWith(optionsMock);
-  });
-
-  it.skip('should call UserPreferencesFormComponent with default params', () => {
-    // when
-    render(<UserPreferencesComponent options={optionsMock} />);
-    // then
-    expect(UserPreferencesFormComponent).toHaveBeenCalledTimes(1);
-    expect(UserPreferencesFormComponent).toHaveBeenCalledWith(
-      {
-        canNotSubmit: expect.any(Boolean),
-        onSubmit: expect.any(Function),
-        showNotification: false,
-        userPreferences: userPreferencesMock,
-      },
-      {},
-    );
   });
 });

@@ -131,6 +131,11 @@ export class OidcProviderService {
   }
 
   /**
+   * @todo #1023 je type les entrées et sortie correctement et non pas avec any
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1023
+   * @ticket #FC-1023
+   */
+  /**
    * Wrap `oidc-provider` method to
    *  - lower coupling in other modules
    *  - handle exceptions
@@ -138,11 +143,7 @@ export class OidcProviderService {
    * @param req
    * @param res
    */
-  /**
-   *
-   * @todo type return (if not already done in #461)
-   * For now, the `Interaction` type from oidc-provider seems unreachable
-   */
+  // `oidc-provider` does not provide a type for interaction
   async getInteraction(req, res): Promise<any> {
     try {
       const interactionDetail = await this.provider.interactionDetails(
@@ -188,6 +189,11 @@ export class OidcProviderService {
     }
   }
 
+  /**
+   * @todo #1023 je type les entrées et sortie correctement et non pas avec any
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1023
+   * @ticket #FC-1023
+   */
   /**
    * Wrap `oidc-provider` method to
    *  - lower coupling in other modules

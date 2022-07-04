@@ -1,22 +1,42 @@
 import { DateTime } from 'luxon';
 
-import { EidasToLabel } from '../enums';
-import { EnhancedTrack, TrackList, TracksConfig } from '../interfaces';
+import { CinematicEvents, EidasToLabel } from '../enums';
+import { EnhancedTrack, IRichClaim, TrackList, TracksConfig } from '../interfaces';
 import {
+  groupByDataProvider,
+  groupByDataProviderReducer,
   groupTracksByMonth,
   orderGroupByKeyAsc,
   orderTracksByDateDesc,
   transformTrackToEnhanced,
 } from './tracks.util';
 
+const claims1: IRichClaim = {
+  identifier: 'claims1',
+  label: 'Claims 1 Label',
+  provider: {
+    key: 'provider1',
+    label: 'Provider 1',
+  },
+};
+
+const claims2: IRichClaim = {
+  identifier: 'claims2',
+  label: 'Claims 2 Label',
+  provider: {
+    key: 'provider1',
+    label: 'Provider 1',
+  },
+};
+
 // Fixtures
 const dateTrack1 = 1317826080000; // '2011-10-05T14:48:00.000Z'
 const track1: EnhancedTrack = {
   city: 'Acme City',
-  claims: ['claims1Mock', 'claims2Mock'],
+  claims: [claims1, claims2],
   country: 'Acme Country',
   datetime: DateTime.fromMillis(dateTrack1, { zone: 'Europe/Paris' }),
-  event: 'FC_REQUESTED_IDP_USERINFO',
+  event: 'FC_REQUESTED_IDP_USERINFO' as CinematicEvents,
   idpLabel: 'Ameli',
   platform: 'FranceConnect',
   spAcr: 'eidas1' as keyof typeof EidasToLabel,
@@ -28,10 +48,10 @@ const track1: EnhancedTrack = {
 const dateTrack2 = 1317912480000; // '2011-10-06T14:48:00.000Z'
 const track2: EnhancedTrack = {
   city: 'Acme City',
-  claims: null,
+  claims: [],
   country: 'Acme Country',
   datetime: DateTime.fromMillis(dateTrack2, { zone: 'Europe/Paris' }),
-  event: 'FC_REQUESTED_IDP_USERINFO',
+  event: 'FC_REQUESTED_IDP_USERINFO' as CinematicEvents,
   idpLabel: 'Ameli',
 
   platform: 'FranceConnect+',
@@ -44,10 +64,10 @@ const track2: EnhancedTrack = {
 const dateTrack3 = 1349448480000; // '2012-10-05T14:48:00.000Z'
 const track3: EnhancedTrack = {
   city: 'Acme City',
-  claims: ['claims1Mock', 'claims2Mock'],
+  claims: [claims1, claims2],
   country: 'Acme Country',
   datetime: DateTime.fromMillis(dateTrack3, { zone: 'Europe/Paris' }),
-  event: 'FC_REQUESTED_IDP_USERINFO',
+  event: 'FC_REQUESTED_IDP_USERINFO' as CinematicEvents,
   idpLabel: 'Ameli',
   platform: 'FranceConnect',
   spAcr: 'eidas1' as keyof typeof EidasToLabel,
@@ -68,7 +88,7 @@ describe('groupTracksByMonth', () => {
     expect(results).toHaveLength(1);
     expect(results[0][1].tracks).toHaveLength(1);
     expect(results[0][1].tracks[0]).toStrictEqual(track1);
-    expect(results[0][1].label).toStrictEqual('October 2011');
+    expect(results[0][1].label).toStrictEqual('octobre 2011');
   });
 
   it('doit retourner deux tracks dans un seul groupe', () => {
@@ -81,7 +101,7 @@ describe('groupTracksByMonth', () => {
     expect(results[0][1].tracks).toHaveLength(2);
     expect(results[0][1].tracks[0]).toStrictEqual(track1);
     expect(results[0][1].tracks[1]).toStrictEqual(track2);
-    expect(results[0][1].label).toStrictEqual('October 2011');
+    expect(results[0][1].label).toStrictEqual('octobre 2011');
   });
 
   it('doit retourner trois tracks dans deux groupes (2|1)', () => {
@@ -95,11 +115,11 @@ describe('groupTracksByMonth', () => {
     expect(results[0][1].tracks).toHaveLength(2);
     expect(results[0][1].tracks[0]).toStrictEqual(track1);
     expect(results[0][1].tracks[1]).toStrictEqual(track2);
-    expect(results[0][1].label).toStrictEqual('October 2011');
+    expect(results[0][1].label).toStrictEqual('octobre 2011');
     // seconds group
     expect(results[1][1].tracks).toHaveLength(1);
     expect(results[1][1].tracks[0]).toStrictEqual(track3);
-    expect(results[1][1].label).toStrictEqual('October 2012');
+    expect(results[1][1].label).toStrictEqual('octobre 2012');
   });
 });
 
@@ -149,5 +169,53 @@ describe('transformTrackToEnhanced', () => {
       ...track1,
       datetime: DateTime.fromMillis(track1.time),
     });
+  });
+});
+
+describe('groupByDataProviderReducer', () => {
+  it('should return an object with expected format', () => {
+    // Given
+    const accMock = {};
+    const claimMock: IRichClaim = {
+      identifier: 'foo',
+      label: 'Claim Mock Label',
+      provider: {
+        key: 'providerKey',
+        label: 'Provider Label',
+      },
+    };
+    // When
+    const result = groupByDataProviderReducer(accMock, claimMock);
+    // Then
+    expect(result).toEqual({
+      providerKey: {
+        claims: ['Claim Mock Label'],
+        label: 'Provider Label',
+      },
+    });
+  });
+});
+
+describe('groupByDataProvider', () => {
+  it('should call reduce with groupByDataProviderReducer', () => {
+    // Given
+    const claimsMock = [] as IRichClaim[];
+    claimsMock.reduce = jest.fn();
+    // When
+    groupByDataProvider(claimsMock);
+    // Then
+    expect(claimsMock.reduce).toHaveBeenCalledTimes(1);
+    expect(claimsMock.reduce).toHaveBeenCalledWith(groupByDataProviderReducer, expect.any(Object));
+  });
+
+  it('should return result from call to reduce', () => {
+    // Given
+    const claimsMock = [] as IRichClaim[];
+    const claimsReduceMockedReturn = Symbol('claimsReduceMockedReturnValue');
+    claimsMock.reduce = jest.fn().mockReturnValue(claimsReduceMockedReturn);
+    // When
+    const result = groupByDataProvider(claimsMock);
+    // Then
+    expect(result).toBe(claimsReduceMockedReturn);
   });
 });

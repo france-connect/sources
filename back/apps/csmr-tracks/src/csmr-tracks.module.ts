@@ -9,6 +9,7 @@ import { ExceptionsModule } from '@fc/exceptions';
 import { GeoipMaxmindModule } from '@fc/geoip-maxmind';
 import { LoggerModule } from '@fc/logger-legacy';
 import { MongooseModule } from '@fc/mongoose';
+import { ScopesModule } from '@fc/scopes';
 
 import { CsmrTracksController } from './controllers';
 import { IAppTracksDataService } from './interfaces';
@@ -37,6 +38,7 @@ export class CsmrTracksModule {
         ElasticsearchModule.register(),
         AccountModule,
         GeoipMaxmindModule,
+        ScopesModule,
         ...imports,
       ],
       controllers: [CsmrTracksController],

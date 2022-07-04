@@ -169,8 +169,9 @@ export class IdentityProviderAdapterMongoService
       rawResult,
       async (doc: IdentityProviderMetadata) => {
         /**
-         * @todo see issue #902
+         * @todo #902 see issue
          * A DTO should validate the IdPs even with legacy format
+         * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/902
          */
         if (disableIdpValidationOnLegacy) {
           this.logger.warn(

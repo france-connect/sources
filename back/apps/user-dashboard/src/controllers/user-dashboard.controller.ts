@@ -25,15 +25,18 @@ import {
 
 import { UserPreferencesBodyDto } from '../dto/user-preferences-body.dto';
 import { UserDashboardBackRoutes } from '../enums';
+import { UserDashboardService } from '../services/user-dashboard.service';
 
 @Injectable()
 @Controller()
 export class UserDashboardController {
+  // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
     private readonly csrfService: SessionCsrfService,
     private readonly tracks: TracksService,
     private readonly userPreferences: UserPreferencesService,
+    private readonly userDashboard: UserDashboardService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -135,6 +138,37 @@ export class UserDashboardController {
       idpIdentity,
       { idpList, allowFutureIdp },
     );
+
+    const {
+      email,
+      given_name: givenName,
+      family_name: familyName,
+    } = idpIdentity;
+
+    const {
+      idpList: formattedIdpSettingsList,
+      allowFutureIdp: updatedAllowFutureIdp,
+      updatedIdpSettingsList,
+      hasAllowFutureIdpChanged,
+      updatedAt,
+    } = preferences;
+
+    if (email) {
+      await this.userDashboard.sendMail(
+        {
+          email,
+          givenName,
+          familyName,
+        },
+        {
+          formattedIdpSettingsList,
+          updatedIdpSettingsList,
+          hasAllowFutureIdpChanged,
+          allowFutureIdp: updatedAllowFutureIdp,
+          updatedAt,
+        },
+      );
+    }
 
     return preferences;
   }
