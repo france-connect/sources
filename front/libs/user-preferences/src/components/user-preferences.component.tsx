@@ -15,6 +15,12 @@ export const UserPreferencesComponent: React.FC<UserPreferencesComponentProps> =
   ({ options }: UserPreferencesComponentProps) => {
     const { commit, formValues, submitWithSuccess, userPreferences, validateHandler } =
       useUserPreferencesApi(options);
+    const showServicesList = !!userPreferences?.idpList?.length;
+
+    if (!showServicesList) {
+      return null;
+    }
+
     return (
       <Form
         initialValues={formValues}
@@ -26,17 +32,20 @@ export const UserPreferencesComponent: React.FC<UserPreferencesComponentProps> =
         onSubmit={commit}>
         {({
           dirty,
-          errors,
+          dirtyFields,
           handleSubmit,
           hasValidationErrors,
           pristine: isSameAsInitialValues,
           submitting,
         }) => {
-          const isDisabled = !!(isSameAsInitialValues || submitting || hasValidationErrors);
+          const isDisabled = isSameAsInitialValues || submitting || hasValidationErrors;
           const showNotification = !dirty && submitWithSuccess;
           return (
             <UserPreferencesFormComponent
-              errors={errors}
+              // @TODO instead of passing through all props use the hook
+              // useFormState (https://final-form.org/docs/react-final-form/api/useFormState)
+              // to replace dirtyFields/hasValidationErrors/onSubmit/isDisabled/showNotification
+              dirtyFields={dirtyFields}
               hasValidationErrors={hasValidationErrors}
               isDisabled={isDisabled}
               showNotification={showNotification}

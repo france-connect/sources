@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
+// Declarative code
 import { IRichClaim } from '@fc/scopes';
 
-// Declarative code
 /**
  * This format is the one used by the FC apps.
  *
@@ -20,11 +20,11 @@ import { IRichClaim } from '@fc/scopes';
  * }
  */
 export interface ICsmrTracksOutputTrack {
-  city: string;
+  city?: string;
   claims: IRichClaim[];
-  country: string;
+  country?: string;
   event: string;
-  idpLabel: string;
+  idpLabel?: string;
   platform: string;
   spAcr: string;
   spLabel: string;

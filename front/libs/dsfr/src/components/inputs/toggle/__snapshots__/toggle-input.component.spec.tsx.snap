@@ -4,7 +4,7 @@ exports[`ToggleInputComponent should match the snapshot 1`] = `
 <input
   aria-describedby="any-field-name-mock-hint-text"
   class="fr-toggle__input"
-  data-testid="field-toggle-input"
+  data-testid="field-toggle-input-any-field-name-mock"
   id="any-field-name-mock"
   name="any-field-name-mock"
   type="checkbox"

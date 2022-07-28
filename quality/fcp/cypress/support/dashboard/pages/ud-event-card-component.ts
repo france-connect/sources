@@ -49,7 +49,11 @@ export default class UdEventCard {
   }
 
   getCardButton(): ChainableElement {
-    return cy.get(`#tracks-list button`).eq(this.index);
+    return cy.get(`#tracks-list button[data-time]`).eq(this.index);
+  }
+
+  getEventTimestamp(): Cypress.Chainable<number> {
+    return this.getCardButton().then(($card) => +$card.attr('data-time'));
   }
 
   getPlatformBadge(): ChainableElement {

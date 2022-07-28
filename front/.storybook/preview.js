@@ -10,4 +10,29 @@ export const parameters = {
       date: /Date$/,
     },
   },
+  viewport: {
+    viewports: {
+      desktop: {
+        name: 'Desktop',
+        styles: {
+          height: '900px',
+          width: '1440px',
+        },
+      },
+      tablet: {
+        name: 'Tablet',
+        styles: {
+          height: '768px',
+          width: '1024px',
+        },
+      },
+      mobile: {
+        name: 'Mobile',
+        styles: {
+          height: '667px',
+          width: '375px',
+        },
+      },
+    },
+  },
 };

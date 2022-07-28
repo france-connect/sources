@@ -85,11 +85,81 @@ When(
   },
 );
 
+When(
+  /^je décide (d'autoriser|de bloquer) les futurs fournisseurs d'identité$/,
+  function (text) {
+    const isAuthorized = text === "d'autoriser";
+    udPreferencesPage.setFutureIdpAuthorization(isAuthorized);
+  },
+);
+
+When(
+  /^je réinitialise les préférences de la configuration par défaut$/,
+  function () {
+    udPreferencesPage.setAllIdpAuthorization(true);
+    udPreferencesPage.setFutureIdpAuthorization(true);
+    udPreferencesPage.getSaveButton().then(($btn) => {
+      if ($btn.is(':disabled')) {
+        return;
+      } else {
+        cy.wrap($btn).click();
+        cy.reload();
+      }
+    });
+  },
+);
+
+Then(
+  /^les fournisseurs d'identité existants sont (autorisés|bloqués)$/,
+  function (text) {
+    const authorization = text === 'autorisés';
+    udPreferencesPage.checkAllIdpAuthorization(authorization);
+  },
+);
+
+Then(
+  /^le fournisseur d'identité "([^"]+)" est (autorisé|bloqué)$/,
+  function (idpDescription, text) {
+    const isAuthorized = text === 'autorisé';
+    const { name } = getIdentityProviderByDescription(
+      this.identityProviders,
+      idpDescription,
+    );
+    const idpSetting = udPreferencesPage.getIdentityProviderSetting(name);
+    idpSetting
+      .getCheckbox()
+      .should(isAuthorized ? 'be.checked' : 'not.to.be.checked');
+  },
+);
+
+Then(
+  /^les futurs fournisseurs d'identité sont (autorisés|bloqués)$/,
+  function (text) {
+    const status = text === 'autorisés';
+    udPreferencesPage.checkFutureIdpAuthorization(status);
+  },
+);
+
 Then(
   /^le message d'erreur "au moins un FI doit être autorisé" (est|n'est pas) affiché$/,
   function (text) {
     const isDisplayed = text === 'est';
     udPreferencesPage.checkIsAlertErrorDisplayed(isDisplayed);
+  },
+);
+
+Then(
+  /^le message d'information "autorisation des futurs fournisseurs d'identité" (est|n'est pas) affiché$/,
+  function (text) {
+    const isDisplayed = text === 'est';
+    udPreferencesPage.checkIsFutureIdpAlertDisplayed(isDisplayed);
+  },
+);
+
+Then(
+  /^je confirme le message "autorisation des futurs fournisseurs d'identité"$/,
+  function () {
+    udPreferencesPage.confirmFutureIdpAlert();
   },
 );
 
@@ -106,8 +176,8 @@ Then(
 When(
   /^je décide (d'autoriser|de bloquer) les futurs fournisseurs d'identité par défaut$/,
   function (text) {
-    const isBlocked = text === 'de bloquer';
-    udPreferencesPage.setFutureIdpAuthorization(isBlocked);
+    const isAuthorized = text === "d'autoriser";
+    udPreferencesPage.setFutureIdpAuthorization(isAuthorized);
   },
 );
 
@@ -115,3 +185,19 @@ When("j'enregistre mes réglages d'accès", function () {
   udPreferencesPage.getSaveButton().click();
   udPreferencesPage.checkIsUpdateNotificationDisplayed();
 });
+
+Then(
+  /^le fournisseur d'identité "([^"]+)" (est|n'est pas) présent dans la liste$/,
+  function (description, state) {
+    const exist = state === 'est';
+    const { name } = getIdentityProviderByDescription(
+      this.identityProviders,
+      description,
+    );
+
+    udPreferencesPage
+      .getIdentityProviderSetting(name)
+      .getComponent()
+      .should(exist ? 'be.visible' : 'not.exist');
+  },
+);

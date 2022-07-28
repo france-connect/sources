@@ -45,7 +45,7 @@ import { CoreFcaService, OidcProviderConfigAppService } from './services';
 @Module({
   imports: [
     ExceptionsModule,
-    MongooseModule,
+    MongooseModule.forRoot(),
     CryptographyFcaModule,
     AccountModule,
     ServiceProviderAdapterMongoModule,

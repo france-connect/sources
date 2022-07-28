@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { MongooseModule } from '@nestjs/mongoose';
 
 import { CryptographyModule } from '@fc/cryptography';
+import { MongooseModule } from '@fc/mongoose';
 
 import { IdentityProviderUpdateHandler } from './handlers';
 import { IdentityProviderAdapterMongoService } from './identity-provider-adapter-mongo.service';
@@ -20,6 +20,6 @@ import { IdentityProviderSchema } from './schemas';
     IdentityProviderAdapterMongoService,
     IdentityProviderUpdateHandler,
   ],
-  exports: [IdentityProviderAdapterMongoService, MongooseModule],
+  exports: [IdentityProviderAdapterMongoService],
 })
 export class IdentityProviderAdapterMongoModule {}

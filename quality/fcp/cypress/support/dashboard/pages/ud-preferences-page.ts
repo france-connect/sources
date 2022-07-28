@@ -35,6 +35,10 @@ export default class UdPreferencesPage {
     return cy.get('.fr-alert--error');
   }
 
+  getInfoAlert(): ChainableElement {
+    return cy.get('.fr-alert--info');
+  }
+
   checkIsAlertErrorDisplayed(displayed: boolean): void {
     const errorAlert = this.getErrorAlert();
     const errorTitle =
@@ -51,25 +55,43 @@ export default class UdPreferencesPage {
     }
   }
 
-  getBlockFutureIdpCheckbox(): ChainableElement {
+  checkIsFutureIdpAlertDisplayed(displayed: boolean): void {
+    const infoAlert = this.getInfoAlert();
+    const infoTitle =
+      'Êtes-vous sûr de vouloir autoriser par défaut les futurs moyens de connexion';
+    if (displayed) {
+      infoAlert
+        .should('be.visible')
+        .invoke('text')
+        .should('contain', infoTitle);
+    } else {
+      infoAlert.should('not.exist');
+    }
+  }
+
+  getAllowFutureIdpCheckbox(): ChainableElement {
     return this.getUserPreferencesForm().find(
-      '[data-testid="field-checkbox-input"]',
+      '[data-testid="field-toggle-input-allowFutureIdp"]',
     );
   }
 
-  getBlockFutureIdpLabel(): ChainableElement {
+  getAllowFutureIdpLabel(): ChainableElement {
     return this.getUserPreferencesForm().find(
-      '[data-testid="field-checkbox-label"]',
+      '[data-testid="field-toggle-label-allowFutureIdp"]',
     );
   }
 
-  setFutureIdpAuthorization(isBlocked: boolean): void {
-    this.getBlockFutureIdpCheckbox().then(($checkbox) => {
+  setFutureIdpAuthorization(isAuthorized: boolean): void {
+    this.getAllowFutureIdpCheckbox().then(($checkbox) => {
       const isChecked = $checkbox.is(':checked');
-      if (isChecked !== isBlocked) {
-        this.getBlockFutureIdpLabel().click();
+      if (isChecked !== isAuthorized) {
+        this.getAllowFutureIdpLabel().click();
       }
     });
+  }
+
+  confirmFutureIdpAlert(): void {
+    cy.get('[data-testid="UserPreferenceFormComponent-button-info"]').click();
   }
 
   getSaveButton(): ChainableElement {
@@ -79,6 +101,22 @@ export default class UdPreferencesPage {
   checkIsUpdateNotificationDisplayed(): void {
     cy.contains(
       'Une notification récapitulant les modifications va vous être envoyée',
+    );
+  }
+
+  checkAllIdpAuthorization(isAuthorized: boolean): void {
+    this.getAllIdentityProviderSettings().each(($li) => {
+      const dataTestId = $li.attr('data-testid');
+      const idpSetting = new IdentityProviderSetting(dataTestId);
+      idpSetting
+        .getCheckbox()
+        .should(isAuthorized ? 'be.checked' : 'not.be.checked');
+    });
+  }
+
+  checkFutureIdpAuthorization(isAuthorized: boolean): void {
+    this.getAllowFutureIdpCheckbox().should(
+      isAuthorized ? 'be.checked' : 'not.be.checked',
     );
   }
 }
@@ -94,6 +132,10 @@ class IdentityProviderSetting {
 
   getIdpSettingSelector() {
     return `li[data-testid="service-component-${this.name}"]`;
+  }
+
+  getComponent() {
+    return cy.get(this.getIdpSettingSelector());
   }
 
   getImage() {

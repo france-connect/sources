@@ -1,15 +1,17 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { IPaginationResult } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
 import {
   SessionCsrfService,
   SessionInvalidCsrfSelectIdpException,
 } from '@fc/session';
-import { TracksService } from '@fc/tracks';
+import { TrackDto, TracksService } from '@fc/tracks';
 import { FormattedIdpDto, UserPreferencesService } from '@fc/user-preferences';
 
+import { GetUserTracesQueryDto } from '../dto';
 import { UserDashboardService } from '../services';
 import { UserDashboardController } from './user-dashboard.controller';
 
@@ -40,10 +42,8 @@ describe('UserDashboardController', () => {
     set: jest.fn(),
   };
 
-  const interactionIdMock = 'interactionIdMockValue';
   const randomStringMock = 'randomStringMockValue';
   const idpStateMock = 'idpStateMockValue';
-  const idpNonceMock = 'idpNonceMock';
   const identityMock = {
     email: 'email@email.fr',
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -124,12 +124,7 @@ describe('UserDashboardController', () => {
       state: idpStateMock,
     });
 
-    sessionServiceMock.get.mockResolvedValue({
-      idpNonce: idpNonceMock,
-      idpState: idpStateMock,
-      interactionId: interactionIdMock,
-      idpIdentity: identityMock,
-    });
+    sessionServiceMock.get.mockResolvedValue(identityMock);
 
     configMock.get.mockReturnValueOnce({
       payloadEncoding: 'base64',
@@ -177,11 +172,47 @@ describe('UserDashboardController', () => {
   });
 
   describe('getUserTraces', () => {
+    const queryMock: GetUserTracesQueryDto = {
+      offset: 0,
+      size: 42,
+    };
+
+    const claimMock = {
+      identifier: 'identifierValue',
+      label: 'labelValue',
+      provider: { key: 'keyValue', label: 'labelValue' },
+    };
+
+    const listTracks: { meta: IPaginationResult; payload: TrackDto[] } = {
+      meta: {
+        total: 2,
+        offset: 0,
+        size: 10,
+      },
+      payload: [
+        {
+          event: 'eventValue',
+          idpLabel: 'idpLabelValue',
+          platform: 'platformValue',
+          spAcr: 'eidas1',
+          spLabel: 'spLabelValue',
+          time: 11233335550000,
+          trackId: 'trackIdValue',
+          claims: [claimMock],
+        },
+      ],
+    };
+
+    beforeEach(() => {
+      tracksServiceMock.getList.mockResolvedValueOnce(listTracks);
+    });
+
     it('should fetch session', async () => {
       // When
-      await controller.getUserTraces(sessionServiceMock);
+      await controller.getUserTraces(sessionServiceMock, queryMock);
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
     });
 
     it('should throw UnauthorizedException if no session', async () => {
@@ -189,29 +220,32 @@ describe('UserDashboardController', () => {
       sessionServiceMock.get.mockResolvedValueOnce(undefined);
       // When / Then
       await expect(
-        controller.getUserTraces(sessionServiceMock),
+        controller.getUserTraces(sessionServiceMock, queryMock),
       ).rejects.toThrow(UnauthorizedException);
     });
 
     it('should call tracks.getList', async () => {
       // When
-      await controller.getUserTraces(sessionServiceMock);
+      await controller.getUserTraces(sessionServiceMock, queryMock);
       // Then
       expect(tracksServiceMock.getList).toHaveBeenCalledTimes(1);
-      expect(tracksServiceMock.getList).toHaveBeenCalledWith(identityMock);
+      expect(tracksServiceMock.getList).toHaveBeenCalledWith(
+        identityMock,
+        queryMock,
+      );
     });
 
     it('should return tracks.getList', async () => {
-      // Given
-      const formattedIdpSettingsMock: Partial<FormattedIdpDto> = {
-        uid: 'uid',
-        isChecked: true,
-      };
-      tracksServiceMock.getList.mockResolvedValueOnce(formattedIdpSettingsMock);
       // When
-      const result = await controller.getUserTraces(sessionServiceMock);
+      const result = await controller.getUserTraces(
+        sessionServiceMock,
+        queryMock,
+      );
       // Then
-      expect(result).toStrictEqual(formattedIdpSettingsMock);
+      expect(result).toStrictEqual({
+        ...listTracks,
+        type: 'TRACKS_DATA',
+      });
     });
   });
 
@@ -221,6 +255,7 @@ describe('UserDashboardController', () => {
       await controller.getUserInfos(sessionServiceMock);
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
     });
 
     it('should throw UnauthorizedException if no session', async () => {
@@ -234,21 +269,14 @@ describe('UserDashboardController', () => {
 
     it('should return an object with familyName givenName props', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce({
-        idpIdentity: {
-          // eslint-disable-next-line
-          family_name: 'dubois',
-          // eslint-disable-next-line
-          given_name: 'angela',
-        },
-      });
+      sessionServiceMock.get.mockResolvedValueOnce(identityMock);
       // When
       const { firstname, lastname } = await controller.getUserInfos(
         sessionServiceMock,
       );
       // Then
-      expect(firstname).toStrictEqual('angela');
-      expect(lastname).toStrictEqual('dubois');
+      expect(firstname).toStrictEqual(identityMock.given_name);
+      expect(lastname).toStrictEqual(identityMock.family_name);
     });
   });
 
@@ -258,6 +286,7 @@ describe('UserDashboardController', () => {
       await controller.getUserPreferences(sessionServiceMock);
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
     });
 
     it('should throw UnauthorizedException if no session', async () => {
@@ -331,6 +360,7 @@ describe('UserDashboardController', () => {
       );
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
     });
 
     it('should throw UnauthorizedException if no session', async () => {

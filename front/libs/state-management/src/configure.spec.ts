@@ -4,13 +4,15 @@ import * as reduxPersist from 'redux-persist';
 import { bindMiddlewares } from './bind-middlewares';
 import { configure } from './configure';
 import { getInitialState } from './get-initial-state';
-import { getPersistLists } from './get-persist-lists';
+import { mapReducers } from './map-reducers';
+import { getPersistLists } from './middlewares';
 
 jest.mock('redux');
 jest.mock('redux-persist');
 jest.mock('redux-persist/lib/storage');
 jest.mock('./bind-middlewares');
-jest.mock('./get-persist-lists');
+jest.mock('./map-reducers');
+jest.mock('./middlewares/get-persist-lists.middleware');
 jest.mock('./get-initial-state');
 
 const mockPersistKey = expect.any(String);
@@ -57,12 +59,12 @@ describe('configure', () => {
     expect(getPersistLists).toHaveBeenCalledWith(mockStates);
   });
 
-  it('should have called redux.combineReducers method', () => {
+  it('should have called mapReducers method', () => {
     // when
     configure(mockPersistKey, mockStates, mockReducers);
     // then
-    expect(redux.combineReducers).toHaveBeenCalledTimes(1);
-    expect(redux.combineReducers).toHaveBeenCalledWith(mockReducers);
+    expect(mapReducers).toHaveBeenCalledTimes(1);
+    expect(mapReducers).toHaveBeenCalledWith(mockReducers);
   });
 
   it('should have called bindMiddlewares method', () => {

@@ -1,7 +1,9 @@
 import { render } from '@testing-library/react';
+import { Form } from 'react-final-form';
 import { mocked } from 'ts-jest/utils';
 
 import { useUserPreferencesApi } from '../hooks';
+import { UserPreferencesData } from '../interfaces';
 import { UserPreferencesComponent } from './user-preferences.component';
 
 jest.mock('react-final-form');
@@ -42,6 +44,54 @@ describe('UserPreferencesComponent', () => {
     const { container } = render(<UserPreferencesComponent options={optionsMock} />);
     // then
     expect(container).toMatchSnapshot();
+  });
+
+  it('should match the snapshot if showServicesList is false because userpreferences is null', () => {
+    // given
+    mocked(useUserPreferencesApi).mockReturnValue({
+      ...hookResultMock,
+      userPreferences: null as unknown as UserPreferencesData,
+    });
+    // when
+    render(<UserPreferencesComponent options={optionsMock} />);
+    // then
+    expect(Form).toHaveBeenCalledTimes(0);
+  });
+
+  it('should match the snapshot if showServicesList is false because userpreferences is empty', () => {
+    // given
+    mocked(useUserPreferencesApi).mockReturnValue({
+      ...hookResultMock,
+      userPreferences: {} as unknown as UserPreferencesData,
+    });
+    // when
+    render(<UserPreferencesComponent options={optionsMock} />);
+    // then
+    expect(Form).toHaveBeenCalledTimes(0);
+  });
+
+  it('should match the snapshot if showServicesList is false because idpList is missing', () => {
+    // given
+    mocked(useUserPreferencesApi).mockReturnValue({
+      ...hookResultMock,
+      userPreferences: { allowFutureIdp: false, idpList: undefined },
+    });
+    // when
+    render(<UserPreferencesComponent options={optionsMock} />);
+    // then
+    expect(Form).toHaveBeenCalledTimes(0);
+  });
+
+  it('should match the snapshot if showServicesList is false because idpList length is null', () => {
+    // given
+    mocked(useUserPreferencesApi).mockReturnValue({
+      ...hookResultMock,
+      userPreferences: { ...userPreferencesMock, idpList: [] },
+    });
+    // when
+    render(<UserPreferencesComponent options={optionsMock} />);
+    // then
+    expect(Form).toHaveBeenCalledTimes(0);
   });
 
   it('should have called useUserPreferencesApi', () => {

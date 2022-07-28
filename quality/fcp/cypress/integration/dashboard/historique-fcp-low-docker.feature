@@ -14,7 +14,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
-    Et 1 évènement de traces est affiché
+    Et 1 évènement "FranceConnect" est affiché
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Service Provider Example"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Connexion"
@@ -22,7 +22,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Service Provider Example"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "fip1"
+    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
     Et le niveau de sécurité de l'évènement est "Faible"
 
   Scénario: Historique Connexion - FC Legacy - FS public avec scope data
@@ -34,7 +34,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
-    Et 2 évènements de traces sont affichés
+    Et 2 évènements "FranceConnect" sont affichés
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Service Provider Example"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Connexion"
@@ -42,7 +42,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Service Provider Example"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "fip1"
+    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Service Provider Example"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -69,7 +69,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
-    Et 2 évènements de traces sont affichés
+    Et 2 évènements "FranceConnect" sont affichés
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Connexion"
@@ -77,7 +77,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "fip1"
+    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -102,7 +102,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
-    Et 3 évènements de traces sont affichés
+    Et 3 évènements "FranceConnect" sont affichés
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Connexion"
@@ -110,7 +110,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "fip1"
+    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -152,7 +152,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
-    Et 4 évènements de traces sont affichés
+    Et 4 évènements "FranceConnect" sont affichés
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Connexion"
@@ -160,7 +160,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "fip1"
+    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du 1er évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -223,7 +223,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
-    Et 1 évènement de traces est affiché
+    Et 1 évènement "FranceConnect" est affiché
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Connexion"
@@ -231,5 +231,5 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "fip1"
+    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
     Et le niveau de sécurité de l'évènement est "Faible"

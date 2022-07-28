@@ -54,7 +54,7 @@ The service exposes two methods :
 
 The service needs to be configured, to know wich `scopes` and `claims` are available in the application.
 
-A complex example can be seen in [`csmr-tracks-legacy` configuration](../../instances/csmr-tracks-legacy/src/config/scopes.ts).
+A complex example can be seen in [`csmr-tracks` configuration](../../instances/csmr-tracks/src/config/scopes.ts).
 
 ## Internals
 
@@ -70,7 +70,7 @@ The solution of this implementation is to take a human oriented data structure, 
 
 There are actually two genreated indexes, the first to get the `claims` for a given `scope`, the second to get more information for a given `claim`.
 
-## Generated index example (extract from `csmr-tracks-legacy`')
+## Generated index example (extract from `csmr-tracks`')
 
 ### `claimIndex`
 

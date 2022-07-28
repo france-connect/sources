@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+
+import { MongooseModule } from '@fc/mongoose';
 
 import { AccountSchema } from './schemas';
 import { AccountService } from './services';
@@ -9,6 +10,6 @@ import { AccountService } from './services';
     MongooseModule.forFeature([{ name: 'Account', schema: AccountSchema }]),
   ],
   providers: [AccountService],
-  exports: [AccountService, MongooseModule],
+  exports: [AccountService],
 })
 export class AccountModule {}

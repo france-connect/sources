@@ -1,0 +1,993 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PaginationComponent navigation button first ellipsis should call callback if first navigation number is showed in the page whith ellipsis 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent navigation button last ellipsis should call callback if last navigation number is showed in the page whith ellipsis 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent navigation button next page should not be display if every conditions is set to false 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent navigation button next page should not be visible if screen size is small 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent navigation button previous page should display : "Page précédente" 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--first"
+          data-testid="PaginationComponent-first-page-button"
+        >
+          Première page
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--last"
+          data-testid="PaginationComponent-last-page-button"
+        >
+          Dernière page
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent navigation ellipsis should be visible if screen size is small 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent navigation ellipsis should not be visible if ellipsis params are set to default "false" values 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent navigation ellipsis should not be visible if screen size is not small 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent navigation ellipsis should not be visible if showLastEllipsis is set to false 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent navigation ellipsis should not be visible if useEllipsis is set to false 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent should match the snapshot 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--first"
+          data-testid="PaginationComponent-first-page-button"
+        >
+          Première page
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--last"
+          data-testid="PaginationComponent-last-page-button"
+        >
+          Dernière page
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent should match the snapshot in mobile viewport 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--first"
+          data-testid="PaginationComponent-first-page-button"
+        >
+          Première page
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--last"
+          data-testid="PaginationComponent-last-page-button"
+        >
+          Dernière page
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent should match the snapshot with custom props values 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`PaginationComponent should match the snapshot with ellipsis 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          Page précédente
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          Page suivante
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;

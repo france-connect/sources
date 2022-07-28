@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { MongooseModule } from '@nestjs/mongoose';
 
 import { CryptographyModule } from '@fc/cryptography';
+import { MongooseModule } from '@fc/mongoose';
 
 import { ServiceProviderUpdateHandler } from './handlers/service-provider-update.handlers';
 import { ServiceProviderSchema } from './schemas';
@@ -17,6 +17,6 @@ import { ServiceProviderAdapterMongoService } from './service-provider-adapter-m
     CqrsModule,
   ],
   providers: [ServiceProviderAdapterMongoService, ServiceProviderUpdateHandler],
-  exports: [ServiceProviderAdapterMongoService, MongooseModule],
+  exports: [ServiceProviderAdapterMongoService],
 })
 export class ServiceProviderAdapterMongoModule {}

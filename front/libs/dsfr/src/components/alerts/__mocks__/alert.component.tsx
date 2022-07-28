@@ -1,1 +1,1 @@
-export const Alert = jest.fn(() => <div>Alert</div>);
+export const AlertComponent = jest.fn(() => <div>Alert</div>);

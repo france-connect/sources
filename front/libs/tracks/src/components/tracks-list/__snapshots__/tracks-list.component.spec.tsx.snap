@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TracksListComponent should match snapshot 1`] = `
+<div>
+  <div
+    class="fr-mt-5w"
+    id="tracks-list"
+  >
+    <div>
+      FooBar TracksGroupComponent
+    </div>
+    <div>
+      FooBar TracksGroupComponent
+    </div>
+    <div
+      class="flex-columns flex-center"
+      id="tracks-pagination"
+    >
+      <div>
+        PaginationComponent
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TracksListComponent should match snapshot when tracks data are not defined 1`] = `
+<div>
+  <div
+    class="fr-mt-5w"
+    id="tracks-list"
+  >
+    <div
+      class="flex-columns flex-center"
+      id="tracks-pagination"
+    />
+  </div>
+</div>
+`;

@@ -1,17 +1,38 @@
-import { ComponentMeta } from '@storybook/react';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
+import React from 'react';
 
 import { AlertTypes, Sizes } from '../../enums';
-import { Alert, AlertProps } from './alert.component';
+import { AlertComponent, AlertComponentProps } from './alert.component';
 
 export default {
-  component: Alert,
+  argTypes: {
+    noRole: {
+      control: false,
+    },
+    size: {
+      control: false,
+    },
+  },
+  component: AlertComponent,
   title: 'DSFR/components/alerts/Alert',
-} as ComponentMeta<typeof Alert>;
+} as ComponentMeta<typeof AlertComponent>;
 
-export const Default = (args: AlertProps) => <Alert {...args} />;
+const Template: ComponentStory<typeof AlertComponent> = (args: AlertComponentProps) => (
+  <React.Fragment>
+    <AlertComponent {...args} size={Sizes.SMALL}>
+      <p>Information : titre de l&#39;information</p>
+    </AlertComponent>
+    <AlertComponent {...args} size={Sizes.MEDIUM}>
+      <p className="fr-alert__title">Erreur : description détaillée du message....</p>
+      <p>
+        Description détaillée du message Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+        sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+    </AlertComponent>
+  </React.Fragment>
+);
 
+export const Default = Template.bind({});
 Default.args = {
-  children: <p>box Error, success, info or warning</p>,
-  size: Sizes.SMALL,
-  type: AlertTypes.ERROR,
-} as AlertProps;
+  type: AlertTypes.INFO,
+} as AlertComponentProps;

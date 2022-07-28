@@ -1,5 +1,3 @@
-const path = require('path');
-
 const { Client } = require('@elastic/elasticsearch');
 const ejs = require('ejs');
 const { DateTime } = require('luxon');
@@ -41,6 +39,19 @@ function hasNoError({ errors, items }, nbOfOrders) {
   return isOk;
 }
 
+function extractArrayFromJsonString(jsonString) {
+  let resultArray;
+  try {
+    resultArray = JSON.parse(jsonString);
+  } catch (err) {
+    throw new Error(`param must be a JSON string : ${jsonString}`);
+  }
+  if (!Array.isArray(resultArray)) {
+    throw new Error(`param must be a JSON array : ${jsonString}`);
+  }
+  return resultArray;
+}
+
 // eslint-disable-next-line complexity
 function extractDates(sequences) {
   let dates;
@@ -51,7 +62,7 @@ function extractDates(sequences) {
       : sequences.split(',');
 
     dates = values.map((value) =>
-      DateTime.fromISO(value, { zone: 'utc' }).startOf('day'),
+      DateTime.fromISO(value, { zone: 'Europe/Paris' }),
     );
 
     const areDates = dates.every((date) => date.isValid);
@@ -66,7 +77,7 @@ function extractDates(sequences) {
 
   // Default value
   if (!dates.length) {
-    dates = [DateTime.now().toUTC().startOf('day')];
+    dates = [DateTime.now().setZone('Europe/Paris').startOf('day')];
   }
   return dates;
 }
@@ -82,21 +93,30 @@ function parseLogs(raw) {
 function buildEventsFromLogs(logs) {
   const events = logs.map((event) => ({
     ...event,
+    service: 'fc_core_v2_app',
     '@version': TRACE_MARK, // traceur
   }));
   return events;
 }
 
 function datesFromLimit(month = 6) {
-  const now = DateTime.now().toUTC();
+  const now = DateTime.now().setZone('Europe/Paris');
   const justBeforeNow = now.minus({ day: 1 });
   const justBefore = now.minus({ month }).plus({ day: 1 });
   const justAfter = now.minus({ month }).minus({ day: 1 });
   const dates = [justBeforeNow, justBefore, justAfter].map((date) =>
-    date.toISODate(),
+    date.startOf('day'),
   );
-
   return dates;
+}
+
+function getDefaultMockDataPaths() {
+  const paths = [
+    '/tracks/fsp1-high/public_fip1-high.mock.ejs',
+    '/tracks/fsp5-high/private_fip1-high.mock.ejs',
+    '/tracks/missing/missing_fip1-high.mock.ejs',
+  ];
+  return paths;
 }
 
 /**
@@ -138,17 +158,25 @@ function initElasticsearchClient() {
 class PopulateAccountTraces {
   esClient;
 
-  async generate(accountId, sequences) {
+  async generate(accountId, mockDataPaths, dates) {
     try {
-      debug('Mock requested for', accountId, ' at ', sequences);
+      debug(
+        'Mock requested for',
+        accountId,
+        ' with ',
+        JSON.stringify(mockDataPaths),
+        ' at ',
+        JSON.stringify(dates),
+      );
 
       this.esClient = initElasticsearchClient();
 
-      debug('Extract dates from request');
-      const dates = extractDates(sequences);
-
       debug(`Generate all cinematic with ${accountId}`);
-      const generatedDataMock = await this.generateMockData(accountId, dates);
+      const generatedDataMock = await this.generateMockData(
+        accountId,
+        mockDataPaths,
+        dates,
+      );
 
       debug(`Save all mocks for ${accountId}`);
       const done = await this.save(generatedDataMock);
@@ -190,7 +218,7 @@ class PopulateAccountTraces {
     const query = {
       index: ELASTIC_TRACKS_INDEX,
       body: {},
-      size: 1000, // over large value to delete all
+      size: 2000, // over large value to delete all
       body: {
         query: {
           match: { '@version': TRACE_MARK },
@@ -210,10 +238,19 @@ class PopulateAccountTraces {
     }
   }
 
-  async generateMockData(accountId, dates) {
-    const directory = path.join(__dirname, `/tracks`);
-    debug(`Grab standard cinematic to mock in directory: ${directory}`);
-    const paths = filesInDir(directory, /.*mock.ejs$/);
+  async generateMockData(accountId, mockDataPaths, dates) {
+    if (!accountId) {
+      throw new Error('Error Generate: accountId not provided');
+    }
+    if (!mockDataPaths || mockDataPaths.length === 0) {
+      throw new Error('Error Generate: mock data paths not provided');
+    }
+    if (!dates || dates.length === 0) {
+      throw new Error('Error Generate: mock dates not provided');
+    }
+
+    debug('Get mockData fullpaths');
+    const paths = mockDataPaths.map((file) => `${__dirname}/${file}`);
 
     debug(`Prepare mock order for ${dates.join(',')}`);
     const orders = dates.map((date, index) => [
@@ -264,8 +301,18 @@ class PopulateAccountTraces {
   }
 }
 
-const [, , task, accountId = 'test_TRACE_USER'] = process.argv;
-const sequences = JSON.stringify(datesFromLimit(6));
+const DEFAULT_ACCOUNT_ID = 'test_TRACE_USER';
+const DEFAULT_MOCKDATA_PATHS = getDefaultMockDataPaths();
+const DEFAULT_DATES = datesFromLimit(6);
+
+const [
+  ,
+  ,
+  task,
+  accountId = DEFAULT_ACCOUNT_ID,
+  argMockDataPaths = '',
+  argDates = '',
+] = process.argv;
 const populateAccountTraces = new PopulateAccountTraces();
 
 switch (task) {
@@ -274,6 +321,10 @@ switch (task) {
     break;
   case 'generate':
   default:
-    populateAccountTraces.generate(accountId, sequences);
+    const mockDataPaths = argMockDataPaths
+      ? extractArrayFromJsonString(argMockDataPaths)
+      : DEFAULT_MOCKDATA_PATHS;
+    const dates = argDates ? extractDates(argDates) : DEFAULT_DATES;
+    populateAccountTraces.generate(accountId, mockDataPaths, dates);
     break;
 }

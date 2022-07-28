@@ -4,7 +4,6 @@ import axios, { AxiosResponse } from 'axios';
 import { mocked } from 'ts-jest/utils';
 
 import { useApiGet } from '@fc/common';
-import { AlertTypes, Sizes } from '@fc/dsfr';
 
 import { FormValues, IGetCsrfTokenResponse } from '../interfaces';
 import { UserPreferencesService } from '../services/user-preferences.service';
@@ -114,7 +113,7 @@ describe('useUserPreferencesApi', () => {
       expect(result.current).toStrictEqual({
         commit: expect.any(Function),
         formValues: {
-          allowFutureIdp: false,
+          allowFutureIdp: true,
           idpList,
         },
         submitErrors: undefined,
@@ -127,7 +126,7 @@ describe('useUserPreferencesApi', () => {
     it('should call UserPreferencesService.encodeFormData when commit is called with params', async () => {
       // given
       mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
-        allowFutureIdp: true,
+        allowFutureIdp: false,
         idpList,
       });
       // when
@@ -139,7 +138,7 @@ describe('useUserPreferencesApi', () => {
       await waitForNextUpdate();
       expect(UserPreferencesService.encodeFormData).toHaveBeenCalledTimes(1);
       expect(UserPreferencesService.encodeFormData).toHaveBeenCalledWith({
-        allowFutureIdp: true,
+        allowFutureIdp: false,
         csrfToken,
         idpList,
       });
@@ -201,7 +200,7 @@ describe('useUserPreferencesApi', () => {
       expect(axios.post).toHaveBeenCalledTimes(1);
       expect(UserPreferencesService.encodeFormData).toHaveBeenCalledTimes(1);
       expect(UserPreferencesService.encodeFormData).toHaveBeenCalledWith({
-        allowFutureIdp: true,
+        allowFutureIdp: false,
         csrfToken: 'csrfTokenMockValue',
         idpList: expect.any(Object),
       });
@@ -209,7 +208,7 @@ describe('useUserPreferencesApi', () => {
       expect(UserPreferencesService.parseFormData).toHaveBeenNthCalledWith(2, dataValueMock);
       expect(result.current).toStrictEqual({
         commit: expect.any(Function),
-        formValues: { ...dataValueMock, allowFutureIdp: !dataValueMock.allowFutureIdp },
+        formValues: { ...dataValueMock },
         submitErrors: undefined,
         submitWithSuccess: true,
         userPreferences: { allowFutureIdp: false, idpList: expect.any(Object) },
@@ -238,7 +237,7 @@ describe('useUserPreferencesApi', () => {
       expect(result.current).toStrictEqual({
         commit: expect.any(Function),
         formValues: {
-          allowFutureIdp: false,
+          allowFutureIdp: true,
           idpList,
         },
         submitErrors: errorMock,
@@ -258,13 +257,7 @@ describe('useUserPreferencesApi', () => {
         },
       };
       const returnValueIfFormHasErrors = {
-        closable: false,
-        description:
-          'Veuillez choisir au moins un compte autorisé pour pouvoir enregistrer vos réglages.',
-        size: Sizes.MEDIUM,
-        title:
-          'Attention, vous devez avoir au moins un compte autorisé pour continuer a utiliser FranceConnect.',
-        type: AlertTypes.ERROR,
+        idpList: 'error',
       };
       // when
       const result = validateHandlerCallback(idpListAllUnchecked);

@@ -107,6 +107,17 @@ describe('ScopesService', () => {
       // Then
       expect(result).toEqual(['sub', 'phone_number', 'foo']);
     });
+
+    it('should prevent return of falsy claims', () => {
+      // Given
+      const scopesMock = ['openid', null, false, undefined, 'foo'];
+      uniqueMock.mockImplementationOnce((input) => input);
+
+      // When
+      const result = service.getRawClaimsFromScopes(scopesMock as string[]);
+      // Then
+      expect(result).toEqual(['sub', 'foo']);
+    });
   });
 
   describe('getRichClaimsFromClaims', () => {

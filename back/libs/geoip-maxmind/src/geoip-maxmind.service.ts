@@ -38,8 +38,8 @@ export class GeoipMaxmindService {
     try {
       const dataGeoip = this.db.city(ip);
       return dataGeoip.city.names.fr || dataGeoip.city.names.en;
-    } catch (e) {
-      this.logger.trace(e);
+    } catch (error) {
+      this.logger.trace({ error });
       return void 0;
     }
   }

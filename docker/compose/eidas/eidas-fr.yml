@@ -8,11 +8,8 @@ services:
   ####################
   eidas-fr:
     hostname: eidas-fr
-    build:
-      context: '${WORKING_DIR}'
-      dockerfile: '${WORKING_DIR}/builds/eidas/Dockerfile'
-      args:
-        FC_DOCKER_REGISTRY: ${FC_DOCKER_REGISTRY}
+    image: ${FC_DOCKER_REGISTRY}/eidas:2.4
+    user: ${CURRENT_UID}
     ports:
       - '10900:10900'
     volumes:
@@ -22,7 +19,8 @@ services:
       - '${VOLUMES_DIR}/log/eidas/eidas-fr:/data/log/eidas'
     environment:
       - 'VIRTUAL_HOST=eidas-fr.docker.dev-franceconnect.fr'
-      - 'VIRTUAL_PORT=8080'
+      - 'VIRTUAL_PORT=443'
+      - 'App_PROTOCOL=https'
       - 'TZ=Europe/Paris'
       - 'JAVA_OPTS=-Xms1G -Xmx1G'
       - 'LOG_LEVEL=INFO'

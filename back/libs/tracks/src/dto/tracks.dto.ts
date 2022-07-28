@@ -1,38 +1,59 @@
 /* istanbul ignore file */
 
 // declarative file
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsEnum,
   IsIn,
-  IsNumberString,
+  IsNumber,
   IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
 
-import { IRichClaim } from '@fc/scopes';
+import { IProvider, IRichClaim } from '@fc/scopes';
 
 import { TrackableEvent } from '../enums';
 import { ICsmrTracksOutputTrack } from '../interfaces';
 
+export class Provider implements IProvider {
+  @IsString()
+  key: string;
+
+  @IsString()
+  label: string;
+}
+export class RichClaim implements IRichClaim {
+  @IsString()
+  identifier: string;
+
+  @IsString()
+  label: string;
+
+  @ValidateNested()
+  @Type(() => Provider)
+  provider: Provider;
+}
+
 export class TrackDto implements ICsmrTracksOutputTrack {
   @IsString()
-  city: string;
+  @IsOptional()
+  city?: string;
 
   @IsString()
-  country: string;
+  @IsOptional()
+  country?: string;
 
-  @IsNumberString()
+  @IsNumber()
   time: number;
 
   @IsEnum(TrackableEvent)
   event: string;
 
   @IsString()
-  idpName: string;
-
-  @IsString()
-  idpLabel: string;
+  @IsOptional()
+  idpLabel?: string;
 
   @IsString()
   spAcr: string;
@@ -41,13 +62,14 @@ export class TrackDto implements ICsmrTracksOutputTrack {
   spLabel: string;
 
   @IsString()
+  @Type(() => String)
   trackId: string;
 
   @IsIn(['FranceConnect', 'FranceConnect+'])
   platform: string;
 
-  @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  claims: IRichClaim[];
+  @ValidateNested({ each: true })
+  @Type(() => RichClaim)
+  claims: RichClaim[];
 }

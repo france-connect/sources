@@ -5,9 +5,11 @@ import UdEventCard from './ud-event-card-component';
 
 export default class UdHistoryPage {
   udRootUrl: string;
+  lastEventTimestamp: number;
 
   constructor(udRootUrl: string) {
     this.udRootUrl = udRootUrl;
+    this.lastEventTimestamp = 0;
   }
 
   checkIsVisible(): void {
@@ -18,13 +20,14 @@ export default class UdHistoryPage {
     this.getAllEventCardsForPlatform(platform).each(($item) => {
       const time = $item.data('time');
       const date = DateTime.fromMillis(time);
-      const now = DateTime.now();
+      // Use start of day to match ElasticSearch request
+      const now = DateTime.now().setZone('Europe/Paris').startOf('day');
       const diff = Interval.fromDateTimes(date, now);
       expect(diff.length('month')).to.lt(month);
     });
   }
 
-  checkIfTracksAreSorted(): void {
+  checkIfEventsAreSortedOnCurrentPage(): void {
     const currentTime = DateTime.now().toMillis();
     this.getAllEventCards()
       .then(($tracks) => $tracks.map((_, track) => +track.dataset.time))
@@ -33,6 +36,32 @@ export default class UdHistoryPage {
         const refTime = index ? list[index - 1] : currentTime;
         expect(time).to.lte(refTime);
       });
+  }
+
+  getFirstEventTimestamp(): Cypress.Chainable<number> {
+    return this.getEventCard(1).getEventTimestamp();
+  }
+
+  getLastEventTimestamp(): Cypress.Chainable<number> {
+    return this.getAllEventCards().then(($elems) => {
+      expect($elems.length).to.be.gt(0);
+      const lastCardIndex = $elems.length - 1;
+      const udEventCard = this.getEventCard(lastCardIndex);
+      return udEventCard.getEventTimestamp();
+    });
+  }
+
+  /**
+   * Check that the events in current page are older than the one checked previously
+   */
+  checkIfEventsAreSortedSinceLastCall(): void {
+    if (this.lastEventTimestamp) {
+      this.getFirstEventTimestamp().should('be.lte', this.lastEventTimestamp);
+    }
+    this.getLastEventTimestamp().then((timestamp) => {
+      cy.log('lastEventTimestamp', timestamp);
+      this.lastEventTimestamp = timestamp;
+    });
   }
 
   /**
@@ -88,10 +117,12 @@ export default class UdHistoryPage {
   }
 
   getAllEventCards(): ChainableElement {
-    return cy.get('#tracks-list button');
+    return cy.get('#tracks-list button[data-time]');
   }
 
   getAllEventCardsForPlatform(platform: string): ChainableElement {
-    return this.getAllEventCards().filter(`[data-testid^="${platform}-"]`);
+    return this.getAllEventCards().filter(
+      `#tracks-list button[data-testid^="${platform}-"]`,
+    );
   }
 }

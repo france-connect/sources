@@ -1,30 +1,27 @@
-version: '2.4'
+version: "2.4"
 
 ####################
 ####################
 services:
   ####################
-  # Eidas BE
+  # Eidas MOCK
   ####################
   eidas-mock:
     hostname: eidas-mock
-    build:
-      context: '${WORKING_DIR}'
-      dockerfile: '${WORKING_DIR}/builds/eidas/Dockerfile'
-      args:
-        FC_DOCKER_REGISTRY: ${FC_DOCKER_REGISTRY}
+    image: ${FC_DOCKER_REGISTRY}/eidas-mock:2.4
+    user: ${CURRENT_UID}
     volumes:
-      - '${VOLUMES_DIR}/eidas/conf-eidas-mock:/data/conf-eidas:ro'
-      - '${VOLUMES_DIR}/eidas/keystore-mock:/data/keystore:ro'
-      - '${VOLUMES_DIR}/log/eidas/eidas-mock:/data/log/tomcat'
-      - '${VOLUMES_DIR}/log/eidas/eidas-mock:/data/log/eidas'
+      - "${VOLUMES_DIR}/eidas/conf-eidas-mock:/data/conf-eidas:ro"
+      - "${VOLUMES_DIR}/eidas/keystore-mock:/data/keystore:ro"
+      - "${VOLUMES_DIR}/log/eidas/eidas-mock:/data/log/tomcat"
+      - "${VOLUMES_DIR}/log/eidas/eidas-mock:/data/log/eidas"
     environment:
-      - 'VIRTUAL_HOST=eidas-mock.docker.dev-franceconnect.fr'
-      - 'VIRTUAL_PORT=8080'
-      - 'TZ=Europe/Paris'
-      - 'JAVA_OPTS=-Xms1G -Xmx1G'
-      - 'LOG_LEVEL=INFO'
+      - "VIRTUAL_HOST=eidas-mock.docker.dev-franceconnect.fr"
+      - "VIRTUAL_PORT=443"
+      - "App_PROTOCOL=https"
+      - "TZ=Europe/Paris"
+      - "JAVA_OPTS=-Xms1G -Xmx1G"
+      - "LOG_LEVEL=INFO"
     networks:
       - eidas
       - public
-    command: 'tail -f /dev/null'

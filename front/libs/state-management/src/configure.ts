@@ -1,28 +1,29 @@
-import { combineReducers, createStore, Middleware, ReducersMapObject } from 'redux';
+import { createStore, Middleware, Reducer, ReducersMapObject, Store } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import { bindMiddlewares } from './bind-middlewares';
 import { getInitialState } from './get-initial-state';
-import { getPersistLists } from './get-persist-lists';
-import { ConfigStatesType, ConfigureReturnType } from './types';
+import { ConfigureReturn, FSA, GlobalState } from './interfaces';
+import { mapReducers } from './map-reducers';
+import { getPersistLists } from './middlewares';
 
-export const configure = (
+export const configure = <S extends GlobalState>(
   key: string,
-  states: ConfigStatesType,
+  states: S,
   reducers: ReducersMapObject,
   middlewares: Function[] = [],
   shouldUseStoreDebug: boolean = false,
-): ConfigureReturnType => {
-  const initialState = getInitialState(states);
-  const createRootReducers = combineReducers(reducers);
+): ConfigureReturn => {
+  const initialState = getInitialState<S>(states);
+  const createRootReducers: Reducer = mapReducers<S>(reducers);
 
-  const persistLists = getPersistLists(states);
+  const persistLists = getPersistLists<S>(states);
   const persistConfig = { key, storage, ...persistLists };
-  const persistedReducers = persistReducer(persistConfig, createRootReducers);
+  const persistedReducers: Reducer = persistReducer<S>(persistConfig, createRootReducers);
 
   const bindedMiddlewares = bindMiddlewares(middlewares as Middleware[], shouldUseStoreDebug);
-  const store = createStore(persistedReducers, initialState, bindedMiddlewares);
+  const store: Store<S, FSA> = createStore(persistedReducers, initialState, bindedMiddlewares);
   const persistor = persistStore(store);
   return { persistor, store };
 };

@@ -1,18 +1,26 @@
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
+import * as H from 'history';
 import { DateTime } from 'luxon';
+import React from 'react';
+import * as ReactRouterDom from 'react-router-dom';
 import { mocked } from 'ts-jest/utils';
 
-import { useApiGet } from '@fc/common';
+import { PaginationComponent } from '@fc/dsfr';
+import { renderWithRouter } from '@fc/tests-utils';
 
+import { Track } from '../../interfaces';
 import { orderGroupByKeyAsc, transformTrackToEnhanced } from '../../utils';
 import { TracksGroupComponent } from './tracks-group';
 import { TracksListComponent } from './tracks-list.component';
+import { usePaginatedTracks } from './use-paginated-tracks.hook';
 
 jest.mock('@fc/common');
+jest.mock('@fc/dsfr');
 jest.mock('./tracks-group');
+jest.mock('./use-paginated-tracks.hook');
 jest.mock('./../../utils/tracks.util');
-
-const tracks = [
+jest.mock('react-router-dom');
+const payloadMock = [
   {
     accountId: 'mock-accountId-1',
     city: 'mock-city-1',
@@ -37,11 +45,25 @@ const tracks = [
     spLabel: 'mock-splabel-2',
     trackId: 'mock-trackid-2',
   },
-];
+] as unknown as Track[];
+
+const tracksMock = {
+  meta: {
+    offset: 0,
+    size: 10,
+    total: 100,
+  },
+  payload: payloadMock,
+  type: 'application',
+};
 
 describe('TracksListComponent', () => {
-  const useApiGetMock = mocked(useApiGet);
-  useApiGetMock.mockReturnValue(tracks);
+  const usePaginatedTracksMock = mocked(usePaginatedTracks);
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    usePaginatedTracksMock.mockReturnValue({ submitErrors: undefined, tracks: tracksMock });
+  });
 
   const options = {
     API_ROUTE_TRACKS: 'mock_API_ROUTE_TRACKS',
@@ -53,11 +75,32 @@ describe('TracksListComponent', () => {
     LUXON_FORMAT_TIMEZONE: 'z',
   };
 
-  it('should have called useApiGet hook', () => {
+  it('should match snapshot', () => {
+    // when
+    const { container } = render(<TracksListComponent options={options} />);
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
+  it('should match snapshot when tracks data are not defined', () => {
+    // given
+    usePaginatedTracksMock.mockReturnValue({
+      submitErrors: undefined,
+      tracks: {
+        type: 'application',
+      },
+    });
+    // when
+    const { container } = render(<TracksListComponent options={options} />);
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
+  it('should have called usePaginatedTracks hook', () => {
     // given
     render(<TracksListComponent options={options} />);
     // then
-    expect(useApiGetMock).toHaveBeenCalled();
+    expect(usePaginatedTracksMock).toHaveBeenCalled();
   });
 
   it('should have called transformTrackToEnhanced', () => {
@@ -65,8 +108,8 @@ describe('TracksListComponent', () => {
     render(<TracksListComponent options={options} />);
     // then
     expect(transformTrackToEnhanced).toHaveBeenCalled();
-    expect(transformTrackToEnhanced).toHaveBeenNthCalledWith(1, tracks[0], 0, tracks);
-    expect(transformTrackToEnhanced).toHaveBeenNthCalledWith(2, tracks[1], 1, tracks);
+    expect(transformTrackToEnhanced).toHaveBeenNthCalledWith(1, payloadMock[0], 0, payloadMock);
+    expect(transformTrackToEnhanced).toHaveBeenNthCalledWith(2, payloadMock[1], 1, payloadMock);
   });
 
   it('should have called orderGroupByKeyAsc', () => {
@@ -83,21 +126,59 @@ describe('TracksListComponent', () => {
     expect(TracksGroupComponent).toHaveBeenCalled();
     expect(TracksGroupComponent).toHaveBeenNthCalledWith(
       1,
-      expect.objectContaining({
+      {
         label: 'Octobre 2021',
         options,
-        tracks: [tracks[0]],
-      }),
+        tracks: [payloadMock[0]],
+      },
       {},
     );
     expect(TracksGroupComponent).toHaveBeenNthCalledWith(
       2,
-      expect.objectContaining({
+      {
         label: 'Novembre 2021',
         options,
-        tracks: [tracks[1]],
-      }),
+        tracks: [payloadMock[1]],
+      },
       {},
     );
+  });
+
+  it('should not display TracksGroupComponent if tracks does not exist', () => {
+    // given
+    usePaginatedTracksMock.mockReturnValue({
+      submitErrors: undefined,
+      tracks: { ...tracksMock, payload: undefined },
+    });
+    // when
+    render(<TracksListComponent options={options} />);
+    // then
+    expect(transformTrackToEnhanced).not.toHaveBeenCalled();
+    expect(orderGroupByKeyAsc).not.toHaveBeenCalled();
+    expect(TracksGroupComponent).not.toHaveBeenCalled();
+  });
+
+  it('should redirect to new location', () => {
+    // given
+    const indexMock = 20;
+    const historyMock = { push: jest.fn() } as unknown as H.History;
+    const useCallbackMock = jest.spyOn(React, 'useCallback').mockImplementation(() => jest.fn());
+    jest.spyOn(ReactRouterDom, 'useHistory').mockImplementationOnce(() => historyMock);
+
+    mocked(PaginationComponent).mockImplementation(() => (
+      <button type="button" onClick={() => useCallbackMock}>
+        foo
+      </button>
+    ));
+    renderWithRouter(<TracksListComponent options={options} />);
+
+    const callback = useCallbackMock.mock.calls[0][0];
+    // when
+    act(() => {
+      callback(indexMock);
+    });
+
+    // then
+    expect(historyMock.push).toHaveBeenCalled();
   });
 });

@@ -107,3 +107,5 @@ For example, assume identityProviderList is represented by [1, 2, 3, 4]. If we w
 isExcludeList = true. It means it will return all elements of the array except 3 and 4 (so [1, 2]). If the array becomes [1, 2, 3, 4, 5], it will returns [1, 2, 5] (5 represents an idp we would have in the future when comparing to the initial situation).
 
 Assume now we don't want to allow future idp in our preferences, we should use an inclusive list. The result will be identityProviderList = [1, 2] and isExcludeList = false. It means you will return all elements in the array that matches the elements of identityProviderList, so [1, 2]. If the array becomes [1, 2, 3, 4, 5], it will still return [1, 2] (5 represents an idp we would have in the future when comparing to the initial situation).
+
+On first login, there is no saved preference for the user. By default, all new idp are therefore authorized to perform a FranceConnect kinematics. The result will be identityProviderList = [] and isExcludeList = true.

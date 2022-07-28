@@ -22,6 +22,7 @@ export const ToggleLabelComponent: React.FC<ToggleLabelComponentProps> = React.m
         className="fr-toggle__label"
         data-fr-checked-label={legend.checked}
         data-fr-unchecked-label={legend.unchecked}
+        data-testid={`field-toggle-label-${input.name}`}
         htmlFor={input.name}>
         {isLabelString && label}
         {isLabelFunction && label(input.checked)}

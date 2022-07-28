@@ -2,7 +2,8 @@
 
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { MongooseModule } from '@nestjs/mongoose';
+
+import { MongooseModule } from '@fc/mongoose';
 
 import { MinistriesOperationTypeChangesHandler } from './handler';
 import { MinistriesService } from './ministries.service';
@@ -19,6 +20,6 @@ import { MinistriesSchema } from './schemas';
     ]),
   ],
   providers: [MinistriesService, MinistriesOperationTypeChangesHandler],
-  exports: [MinistriesService, MongooseModule],
+  exports: [MinistriesService],
 })
 export class MinistriesModule {}

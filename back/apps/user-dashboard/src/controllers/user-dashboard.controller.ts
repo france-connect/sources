@@ -4,11 +4,13 @@ import {
   Get,
   Injectable,
   Post,
+  Query,
   UnauthorizedException,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 
+import { FSA } from '@fc/common';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import {
@@ -23,9 +25,9 @@ import {
   UserPreferencesService,
 } from '@fc/user-preferences';
 
-import { UserPreferencesBodyDto } from '../dto/user-preferences-body.dto';
+import { GetUserTracesQueryDto, UserPreferencesBodyDto } from '../dto';
 import { UserDashboardBackRoutes } from '../enums';
-import { UserDashboardService } from '../services/user-dashboard.service';
+import { UserDashboardService } from '../services';
 
 @Injectable()
 @Controller()
@@ -54,20 +56,26 @@ export class UserDashboardController {
   }
 
   @Get(UserDashboardBackRoutes.TRACKS)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
   async getUserTraces(
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
-  ): Promise<unknown> {
-    this.logger.debug('getUserTraces()');
-    const session = await sessionOidc.get();
-    if (!session) {
+    @Query() query: GetUserTracesQueryDto,
+  ): Promise<FSA> {
+    this.logger.debug(`getUserTraces() with ${query}`);
+    const idpIdentity = await sessionOidc.get('idpIdentity');
+    if (!idpIdentity) {
       throw new UnauthorizedException();
     }
-    const { idpIdentity } = session;
+
     this.logger.trace({ idpIdentity });
-    const tracks = await this.tracks.getList(idpIdentity);
+    const tracks = await this.tracks.getList(idpIdentity, query);
     this.logger.trace({ tracks });
-    return tracks;
+
+    return {
+      type: 'TRACKS_DATA',
+      ...tracks,
+    };
   }
 
   @Get(UserDashboardBackRoutes.USER_INFOS)
@@ -79,11 +87,10 @@ export class UserDashboardController {
     lastname: string;
   }> {
     this.logger.debug('getUserInfos()');
-    const session = await sessionOidc.get();
-    if (!session) {
+    const idpIdentity = await sessionOidc.get('idpIdentity');
+    if (!idpIdentity) {
       throw new UnauthorizedException();
     }
-    const { idpIdentity } = session;
 
     const firstname = idpIdentity?.given_name;
     const lastname = idpIdentity?.family_name;
@@ -97,11 +104,10 @@ export class UserDashboardController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<FormattedIdpSettingDto> {
-    const session = await sessionOidc.get();
-    if (!session) {
+    const idpIdentity = await sessionOidc.get('idpIdentity');
+    if (!idpIdentity) {
       throw new UnauthorizedException();
     }
-    const { idpIdentity } = session;
 
     const preferences = await this.userPreferences.getUserPreferencesList(
       idpIdentity,
@@ -117,10 +123,11 @@ export class UserDashboardController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<FormattedIdpSettingDto> {
-    const session = await sessionOidc.get();
-    if (!session) {
+    const idpIdentity = await sessionOidc.get('idpIdentity');
+    if (!idpIdentity) {
       throw new UnauthorizedException();
     }
+
     const { csrfToken, idpList, allowFutureIdp } = body;
 
     // -- control if the CSRF provided is the same as the one previously saved in session.
@@ -131,8 +138,6 @@ export class UserDashboardController {
 
       throw new SessionInvalidCsrfSelectIdpException(error);
     }
-
-    const { idpIdentity } = session;
 
     const preferences = await this.userPreferences.setUserPreferencesList(
       idpIdentity,

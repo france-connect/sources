@@ -2,12 +2,7 @@
   {
     "idpId": "fip1",
     "name": "fip1",
-    "descriptions": [
-      "par défaut",
-      "actif",
-      "whitelisté",
-      "non blacklisté"
-    ],
+    "descriptions": ["par défaut", "actif", "whitelisté", "non blacklisté"],
     "mocked": true,
     "usable": true,
     "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -41,9 +36,7 @@
   {
     "idpId": "fip3",
     "name": "fip3",
-    "descriptions": [
-      "pour le test de préférences FI"
-    ],
+    "descriptions": ["pour le test de préférences FI"],
     "mocked": true,
     "usable": true,
     "url": "https://fip3.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -60,9 +53,7 @@
   {
     "idpId": "fip1_blacklisted_by_fsp2",
     "name": "fip1_blacklisted_by_fsp2",
-    "descriptions": [
-      "blacklisté"
-    ],
+    "descriptions": ["blacklisté"],
     "mocked": true,
     "usable": true,
     "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -79,9 +70,7 @@
   {
     "idpId": "fip1_not_whitelisted_by_fsp3",
     "name": "fip1_not_whitelisted_by_fsp3",
-    "descriptions": [
-      "non whitelisté"
-    ],
+    "descriptions": ["non whitelisté"],
     "mocked": true,
     "usable": true,
     "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -98,9 +87,7 @@
   {
     "idpId": "fip1_deactivated",
     "name": "fip1_deactivated",
-    "descriptions": [
-      "désactivé et visible"
-    ],
+    "descriptions": ["désactivé et visible"],
     "mocked": true,
     "usable": false,
     "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -117,9 +104,7 @@
   {
     "idpId": "fip1_not_displayed",
     "name": "fip1_not_displayed",
-    "descriptions": [
-      "actif et non visible"
-    ],
+    "descriptions": ["actif et non visible"],
     "mocked": true,
     "usable": false,
     "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -136,9 +121,7 @@
   {
     "idpId": "fip1_not_displayed_and_deactivated",
     "name": "fip1_not_displayed_and_deactivated",
-    "descriptions": [
-      "désactivé et non visible"
-    ],
+    "descriptions": ["désactivé et non visible"],
     "mocked": true,
     "usable": false,
     "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -147,6 +130,23 @@
     "signature": "HS256",
     "selectors": {
       "idpButton": "#fi-fip1_not_displayed_and_deactivated",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
+    "idpId": "aidants-connect-mock",
+    "name": "aidants-connect-mock",
+    "descriptions": ["Aidants Connect"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://aidants-connect-mock.{{TEST_ENV}}.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": ".footer-container li:nth-child(4) a",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "[type='submit']"

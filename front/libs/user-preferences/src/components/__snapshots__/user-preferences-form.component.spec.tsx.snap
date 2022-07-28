@@ -28,15 +28,18 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     <p
       class="fr-mt-5w"
     >
-      Pour vous offrir toujours plus de choix, il est possible que FranceConnect mette à votre disposition de nouveaux moyens d’identification dans le futur. En cochant cette case, ils ne pourront pas être utilisés pour accéder aux services proposant FranceConnect.
-    </p>
-    <p
-      class="fr-mt-2w"
-    >
-      Vous pourrez les autoriser depuis cette page.
+      Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
+      <strong>
+         Par défaut leur utilisation sera autorisée.
+      </strong>
+      <br />
+      Pour plus de sécurité, vous pouvez les bloquer dès maintenant et pourrez les autoriser à tout moment depuis cette page.
     </p>
     <div>
-      CheckboxInput
+      ToggleInput
+    </div>
+    <div>
+      OnChange
     </div>
     <div
       class="text-center fr-mt-11w"
@@ -77,15 +80,18 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     <p
       class="fr-mt-5w"
     >
-      Pour vous offrir toujours plus de choix, il est possible que FranceConnect mette à votre disposition de nouveaux moyens d’identification dans le futur. En cochant cette case, ils ne pourront pas être utilisés pour accéder aux services proposant FranceConnect.
-    </p>
-    <p
-      class="fr-mt-2w"
-    >
-      Vous pourrez les autoriser depuis cette page.
+      Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
+      <strong>
+         Par défaut leur utilisation sera autorisée.
+      </strong>
+      <br />
+      Pour plus de sécurité, vous pouvez les bloquer dès maintenant et pourrez les autoriser à tout moment depuis cette page.
     </p>
     <div>
-      CheckboxInput
+      ToggleInput
+    </div>
+    <div>
+      OnChange
     </div>
     <div
       class="text-center fr-mt-11w"
@@ -124,20 +130,23 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
       ServicesListComponent
     </div>
     <div>
-      AlertMessageComponent
+      Alert
     </div>
     <p
       class="fr-mt-5w"
     >
-      Pour vous offrir toujours plus de choix, il est possible que FranceConnect mette à votre disposition de nouveaux moyens d’identification dans le futur. En cochant cette case, ils ne pourront pas être utilisés pour accéder aux services proposant FranceConnect.
-    </p>
-    <p
-      class="fr-mt-2w"
-    >
-      Vous pourrez les autoriser depuis cette page.
+      Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
+      <strong>
+         Par défaut leur utilisation sera autorisée.
+      </strong>
+      <br />
+      Pour plus de sécurité, vous pouvez les bloquer dès maintenant et pourrez les autoriser à tout moment depuis cette page.
     </p>
     <div>
-      CheckboxInput
+      ToggleInput
+    </div>
+    <div>
+      OnChange
     </div>
     <div
       class="text-center fr-mt-11w"
@@ -178,15 +187,18 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     <p
       class="fr-mt-5w"
     >
-      Pour vous offrir toujours plus de choix, il est possible que FranceConnect mette à votre disposition de nouveaux moyens d’identification dans le futur. En cochant cette case, ils ne pourront pas être utilisés pour accéder aux services proposant FranceConnect.
-    </p>
-    <p
-      class="fr-mt-2w"
-    >
-      Vous pourrez les autoriser depuis cette page.
+      Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
+      <strong>
+         Par défaut leur utilisation sera autorisée.
+      </strong>
+      <br />
+      Pour plus de sécurité, vous pouvez les bloquer dès maintenant et pourrez les autoriser à tout moment depuis cette page.
     </p>
     <div>
-      CheckboxInput
+      ToggleInput
+    </div>
+    <div>
+      OnChange
     </div>
     <div
       class="text-center fr-mt-5w"
@@ -227,15 +239,18 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     <p
       class="fr-mt-5w"
     >
-      Pour vous offrir toujours plus de choix, il est possible que FranceConnect mette à votre disposition de nouveaux moyens d’identification dans le futur. En cochant cette case, ils ne pourront pas être utilisés pour accéder aux services proposant FranceConnect.
-    </p>
-    <p
-      class="fr-mt-2w"
-    >
-      Vous pourrez les autoriser depuis cette page.
+      Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
+      <strong>
+         Par défaut leur utilisation sera autorisée.
+      </strong>
+      <br />
+      Pour plus de sécurité, vous pouvez les bloquer dès maintenant et pourrez les autoriser à tout moment depuis cette page.
     </p>
     <div>
-      CheckboxInput
+      ToggleInput
+    </div>
+    <div>
+      OnChange
     </div>
     <div
       class="text-center fr-mt-5w"
@@ -274,20 +289,23 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
       ServicesListComponent
     </div>
     <div>
-      AlertMessageComponent
+      Alert
     </div>
     <p
       class="fr-mt-5w"
     >
-      Pour vous offrir toujours plus de choix, il est possible que FranceConnect mette à votre disposition de nouveaux moyens d’identification dans le futur. En cochant cette case, ils ne pourront pas être utilisés pour accéder aux services proposant FranceConnect.
-    </p>
-    <p
-      class="fr-mt-2w"
-    >
-      Vous pourrez les autoriser depuis cette page.
+      Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
+      <strong>
+         Par défaut leur utilisation sera autorisée.
+      </strong>
+      <br />
+      Pour plus de sécurité, vous pouvez les bloquer dès maintenant et pourrez les autoriser à tout moment depuis cette page.
     </p>
     <div>
-      CheckboxInput
+      ToggleInput
+    </div>
+    <div>
+      OnChange
     </div>
     <div
       class="text-center fr-mt-5w"

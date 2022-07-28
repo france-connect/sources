@@ -7,7 +7,7 @@ Fonctionnalité: Historique Connexion FC+ (docker)
 
   Scénario: Historique Connexion - FC+ - FS public avec scope identité
     Etant donné que j'utilise un compte usager "pour les tests de traces"
-    Et que les traces FranceConnect+ contiennent "différents types de traces"
+    Et que les traces "FranceConnect+" contiennent "des connexions récentes et anciennes de plus de 6 mois"
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
@@ -23,7 +23,7 @@ Fonctionnalité: Historique Connexion FC+ (docker)
 
   Scénario: Historique Connexion - FC+ - FS privé avec scope identité
     Etant donné que j'utilise un compte usager "pour les tests de traces"
-    Et que les traces FranceConnect+ contiennent "différents types de traces"
+    Et que les traces "FranceConnect+" contiennent "des connexions récentes et anciennes de plus de 6 mois"
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager

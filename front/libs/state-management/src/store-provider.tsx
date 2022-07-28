@@ -6,17 +6,17 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { configure } from './configure';
-import { StoreProviderContextProps } from './types';
+import { GlobalState, StoreProviderProps } from './interfaces';
 
-function getStoreProvider({
+function getStoreProvider<S extends GlobalState = GlobalState<unknown>>({
   children,
   debugMode,
   middlewares,
   persistKey,
   reducers,
   states,
-}: StoreProviderContextProps): JSX.Element {
-  const { persistor, store } = configure(persistKey, states, reducers, middlewares, debugMode);
+}: StoreProviderProps<S>): JSX.Element {
+  const { persistor, store } = configure<S>(persistKey, states, reducers, middlewares, debugMode);
 
   return (
     <Provider store={store}>
@@ -27,8 +27,4 @@ function getStoreProvider({
   );
 }
 
-const StoreProviderContext = React.memo(getStoreProvider);
-
-StoreProviderContext.displayName = 'StoreProviderContext';
-
-export const StoreProvider = StoreProviderContext;
+export const StoreProvider = getStoreProvider;

@@ -185,10 +185,10 @@ describe('CsmrUserPreferencesService', () => {
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(AccountService)
-      .useValue(accountServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
+      .overrideProvider(AccountService)
+      .useValue(accountServiceMock)
       .overrideProvider(CryptographyFcpService)
       .useValue(cryptographyFcpServiceMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
@@ -340,7 +340,7 @@ describe('CsmrUserPreferencesService', () => {
             isChecked: true,
           },
         ],
-        allowFutureIdp: false,
+        allowFutureIdp: true,
       };
 
       // When
@@ -530,9 +530,9 @@ describe('CsmrUserPreferencesService', () => {
       accountServiceMock.getAccountByIdentityHash.mockResolvedValueOnce(
         accountMock,
       );
-      identityProviderServiceMock.getList.mockResolvedValueOnce(
-        identityProviderMetadataMock,
-      );
+      service['getIdentityProviderList'] = jest
+        .fn()
+        .mockResolvedValueOnce(identityProviderMetadataMock);
       service.formatUserIdpSettingsList = jest
         .fn()
         .mockReturnValueOnce(formattedUserIdpSettingsListMock);
@@ -590,7 +590,8 @@ describe('CsmrUserPreferencesService', () => {
       await service.getIdpSettings(identityMock);
 
       // Then
-      expect(identityProviderServiceMock.getList).toHaveBeenCalledTimes(1);
+      expect(service['getIdentityProviderList']).toHaveBeenCalledTimes(1);
+      expect(service['getIdentityProviderList']).toHaveBeenCalledWith();
     });
 
     it('should format metadata in order to clean data and add a "isCheck" property', async () => {
@@ -615,9 +616,9 @@ describe('CsmrUserPreferencesService', () => {
       accountServiceMock.updatePreferences.mockResolvedValueOnce(
         accountBeforeUpdate,
       );
-      identityProviderServiceMock.getList.mockResolvedValueOnce(
-        identityProviderMetadataMock,
-      );
+      service['getIdentityProviderList'] = jest
+        .fn()
+        .mockResolvedValueOnce(identityProviderMetadataMock);
       service['getFormattedUserIdpSettingsLists'] = jest
         .fn()
         .mockReturnValueOnce(getFormattedUserIdpSettingsListsMock);
@@ -636,8 +637,8 @@ describe('CsmrUserPreferencesService', () => {
       await service.setIdpSettings(identityMock, idpListMock, allowFutureIdp);
 
       // Then
-      expect(identityProviderServiceMock.getList).toHaveBeenCalledTimes(1);
-      expect(identityProviderServiceMock.getList).toHaveBeenCalledWith();
+      expect(service['getIdentityProviderList']).toHaveBeenCalledTimes(1);
+      expect(service['getIdentityProviderList']).toHaveBeenCalledWith();
     });
 
     it('should compute the identityHash from the identity', async () => {
@@ -819,6 +820,74 @@ describe('CsmrUserPreferencesService', () => {
         formattedPreviousIdpSettingsList:
           formattedBeforeUpdatePreferencesIdpListMock,
       });
+    });
+  });
+
+  describe('getIdentityProviderList', () => {
+    const aidantsConnectUid = 'aidants-connect';
+
+    const appConfigMock = {
+      aidantsConnectUid,
+    };
+
+    const identityProviderMetadataWithAidantConnectMock = [
+      {
+        uid: 'foo',
+        title: 'foo Title',
+      },
+      {
+        uid: 'bar',
+        title: 'bar Title',
+      },
+      {
+        uid: aidantsConnectUid,
+        title: 'Aidants Connect Title',
+      },
+    ] as IdentityProviderMetadata[];
+
+    beforeEach(() => {
+      configMock.get.mockReturnValueOnce(appConfigMock);
+      identityProviderServiceMock.getList.mockResolvedValueOnce(
+        identityProviderMetadataWithAidantConnectMock,
+      );
+    });
+
+    it('should retrieve the aidants connect uid from the app config', async () => {
+      // WHEN
+      await service['getIdentityProviderList']();
+
+      // THEN
+      expect(configMock.get).toHaveBeenCalledTimes(1);
+      expect(configMock.get).toHaveBeenCalledWith('App');
+    });
+
+    it('should call identityProvider.getList', async () => {
+      // WHEN
+      await service['getIdentityProviderList']();
+
+      // THEN
+      expect(identityProviderServiceMock.getList).toHaveBeenCalledTimes(1);
+      expect(identityProviderServiceMock.getList).toHaveBeenCalledWith();
+    });
+
+    it('should return a list without aidants connect IdP', async () => {
+      // GIVEN
+      const expectedList = [
+        {
+          uid: 'foo',
+          title: 'foo Title',
+        },
+        {
+          uid: 'bar',
+          title: 'bar Title',
+        },
+      ];
+
+      // WHEN
+      const result = await service['getIdentityProviderList']();
+
+      // THEN
+      expect(result).toStrictEqual(expectedList);
     });
   });
 });

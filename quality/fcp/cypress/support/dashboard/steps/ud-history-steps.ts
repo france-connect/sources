@@ -4,9 +4,11 @@ import { navigateTo } from '../../common/helpers';
 import { Environment } from '../../common/types';
 import UdEventCard from '../pages/ud-event-card-component';
 import UdHistoryPage from '../pages/ud-history-page';
+import UdPagination from '../pages/ud-pagination-component';
 
 let udHistoryPage: UdHistoryPage;
 let currentEventCard: UdEventCard;
+const udPagination = new UdPagination();
 
 Given(
   'je navigue directement vers la page historique du dashboard usager',
@@ -38,52 +40,93 @@ Given('les traces sont récupérées dans elasticsearch', function () {
   cy.task('injectTracksLegacy');
 });
 
-Given('les traces FranceConnect+ contiennent {string}', function (tracksType) {
-  cy.task('removeTracks');
-  cy.task('addTracks', { tracksType });
-});
+Given(
+  /^les traces "(FranceConnect|FranceConnect\+|FranceConnect et FranceConnect\+)" contiennent "([^"]+)"$/,
+  function (platform, description) {
+    let tracksType = description;
 
-Given('les traces FranceConnect contiennent {string}', function (tracksType) {
-  cy.task('removeTracksLegacy');
-  cy.task('addTracksLegacy', { tracksType });
-});
+    // Divide the connections between the 2 platforms
+    if (platform === 'FranceConnect et FranceConnect+') {
+      const result = tracksType.match(/^(\d+) connexions$/);
+      if (result) {
+        const connectionCount = result[1];
+        tracksType = `${connectionCount / 2} connexions`;
+      }
+    }
+
+    // Remove all tracks
+    cy.task('removeTracksLegacy');
+    cy.task('removeTracks');
+
+    switch (platform) {
+      case 'FranceConnect':
+        cy.task('addTracksLegacy', { tracksType });
+        break;
+      case 'FranceConnect+':
+        cy.task('addTracks', { tracksType });
+        break;
+      default:
+        cy.task('addTracksLegacy', { tracksType });
+        cy.task('addTracks', { tracksType });
+        break;
+    }
+  },
+);
 
 Then(
-  /^les (\d+) traces de (FranceConnect) de moins de (\d+) mois sont affichées$/,
-  function (count, platform, month) {
-    udHistoryPage.getAllEventCards().should('be.visible');
-    udHistoryPage
-      .getAllEventCardsForPlatform(platform)
-      .should('have.length', count);
+  /^les évènements "(FranceConnect|FranceConnect\+)" ont moins de (\d+) mois$/,
+  function (platform, month) {
     udHistoryPage.checkIfBeforeNbOfMonth(platform, month);
   },
 );
 
 Then(
-  /^les (\d+) traces de (FranceConnect|FranceConnect\+) sont affichées$/,
+  /^(\d+) évènements? "([^"]+)" (?:est|sont) affichés?$/,
   function (count, platform) {
     udHistoryPage.getAllEventCards().should('be.visible');
-    udHistoryPage
-      .getAllEventCardsForPlatform(platform)
-      .should('have.length', count);
+    if (['FranceConnect', 'FranceConnect+'].includes(platform)) {
+      udHistoryPage
+        .getAllEventCardsForPlatform(platform)
+        .should('have.length', count);
+    } else {
+      udHistoryPage.getAllEventCards().should('have.length', count);
+    }
+  },
+);
+
+// Event order
+
+Then('les évènements sont affichés par ordre décroissant', function () {
+  udHistoryPage.checkIfEventsAreSortedOnCurrentPage();
+
+  udHistoryPage.checkIfEventsAreSortedSinceLastCall();
+});
+
+// Pagination
+
+When(
+  /^je navigue vers la (première page|page précédente|page suivante|dernière page|page \d+) de l'historique$/,
+  function (pageDescription) {
+    udPagination.getPaginationButton(pageDescription).click();
   },
 );
 
 Then(
-  'les {int} traces sont affichées par ordre décroissant',
-  function (nbOfTraces) {
-    udHistoryPage.getAllEventCards().should('be.visible');
-    udHistoryPage.getAllEventCards().should('have.length', nbOfTraces);
-    udHistoryPage.checkIfTracksAreSorted();
+  "la page {int} est sélectionnée dans la pagination de l'historique",
+  function (pageNumber) {
+    udPagination.checkCurrentPageNumber(pageNumber);
   },
 );
 
 Then(
-  /^(\d+) évènements? de traces (?:est|sont) affichés?$/,
-  function (cardCount) {
-    udHistoryPage.getAllEventCards().should('have.length', cardCount);
+  /^les navigations (autorisées|désactivées) dans la pagination de l'historique sont "([^"]+)"$/,
+  function (status, buttonsDescription) {
+    const areEnabled = status === 'autorisées';
+    udPagination.checkPaginationButtonsStatus(buttonsDescription, areEnabled);
   },
 );
+
+// Event Cards detail
 
 When(/^j'affiche le détail de tous les évènements$/, function () {
   udHistoryPage.getAllEventCards().each(($el) => $el.trigger('click'));

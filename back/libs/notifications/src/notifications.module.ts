@@ -3,7 +3,8 @@
 // Declarative code
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { MongooseModule } from '@nestjs/mongoose';
+
+import { MongooseModule } from '@fc/mongoose';
 
 import { NotificationsService } from './notifications.service';
 import { NotificationsSchema } from './schemas';
@@ -19,6 +20,6 @@ import { NotificationsSchema } from './schemas';
     ]),
   ],
   providers: [NotificationsService],
-  exports: [NotificationsService, MongooseModule],
+  exports: [NotificationsService],
 })
 export class NotificationsModule {}

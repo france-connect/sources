@@ -17,7 +17,7 @@ import { CsmrUserPreferencesService } from './services';
 @Module({
   imports: [
     ExceptionsModule,
-    MongooseModule,
+    MongooseModule.forRoot(),
     LoggerModule,
     AccountModule,
     CryptographyFcpModule,

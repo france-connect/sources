@@ -2,7 +2,6 @@ import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
 import { useApiGet } from '@fc/common';
-import { AlertTypes, Sizes } from '@fc/dsfr';
 
 import {
   FormValues,
@@ -21,13 +20,7 @@ export const validateHandlerCallback = ({ idpList }: Pick<FormValues, 'idpList'>
   }
 
   return {
-    closable: false,
-    description:
-      'Veuillez choisir au moins un compte autorisé pour pouvoir enregistrer vos réglages.',
-    size: Sizes.MEDIUM,
-    title:
-      'Attention, vous devez avoir au moins un compte autorisé pour continuer a utiliser FranceConnect.',
-    type: AlertTypes.ERROR,
+    idpList: 'error',
   };
 };
 
@@ -49,7 +42,7 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
 
   const commitSuccessHandler = useCallback(({ data }) => {
     const { allowFutureIdp, idpList } = UserPreferencesService.parseFormData(data);
-    setFormValues({ allowFutureIdp: !allowFutureIdp, idpList });
+    setFormValues({ allowFutureIdp, idpList });
     setSubmitErrors(undefined);
     setSubmitWithSuccess(true);
   }, []);
@@ -61,7 +54,7 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
       } = await axios.get<IGetCsrfTokenResponse>(options.API_ROUTE_CSRF_TOKEN);
 
       const data = UserPreferencesService.encodeFormData({
-        allowFutureIdp: !allowFutureIdp,
+        allowFutureIdp,
         csrfToken,
         idpList,
       });
@@ -87,7 +80,7 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
       // if initial userPreferences has already been loaded
       // and if form values has not yet been set
       const { allowFutureIdp, idpList } = UserPreferencesService.parseFormData(userPreferences);
-      setFormValues({ allowFutureIdp: !allowFutureIdp, idpList });
+      setFormValues({ allowFutureIdp, idpList });
     }
   }, [userPreferences, formValues]);
 

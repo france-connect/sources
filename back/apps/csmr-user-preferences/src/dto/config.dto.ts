@@ -9,7 +9,14 @@ import { LoggerConfig } from '@fc/logger-legacy';
 import { MongooseConfig } from '@fc/mongoose';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
+import { AppConfig } from './app-config.dto';
+
 export class CsmrUserPreferencesConfig {
+  @IsObject()
+  @ValidateNested()
+  @Type(() => AppConfig)
+  readonly App: AppConfig;
+
   @IsObject()
   @ValidateNested()
   @Type(() => LoggerConfig)

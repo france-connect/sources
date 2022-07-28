@@ -5,6 +5,7 @@ exports[`ToggleLabelComponent should match the snapshot 1`] = `
   class="fr-toggle__label"
   data-fr-checked-label="foo"
   data-fr-unchecked-label="bar"
+  data-testid="field-toggle-label-any-field-name-mock"
   for="any-field-name-mock"
 >
   foobar

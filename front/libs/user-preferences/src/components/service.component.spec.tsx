@@ -114,6 +114,7 @@ describe('ServiceComponent', () => {
     expect(ToggleInput).toHaveBeenCalledTimes(1);
     expect(ToggleInput).toHaveBeenCalledWith(
       expect.objectContaining({
+        initialValue: serviceMock.isChecked,
         label: expect.any(Function),
         legend: { checked: 'Autorisé', unchecked: 'Bloqué' },
         name: 'idpList.any-uid',

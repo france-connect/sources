@@ -4,25 +4,34 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.101.0 && v3.102.0
 
+### Not yet in production (futures apps / features)
+
+- [UserDashboard]
+  - Implemented more BDD tests on the user login history page
+  - Fixed an error regarding null claims on the user login history page
+  - Added the future Yris IdP logo
+  - Integrated the pagination component to the user login history page
+  - Splitted a MongoDb consumer per platform (FranceConnect low and FranceConnect high level of assurance) to provide a better network isolation
+  - Added a warning message when a user disables all his idp to ensure he has at least one idp to connect to
+  - Added an information message in order for the user to explicitly decide whether or not the future IdPs should be authorized when starting to block IdPs in the user preferences.
 ## v3.99.0 && v3.100.0
 
 ### Cleaning & Tooling
 
- - Referenced issues in severals `@todo` comments
- - Added a [storyBook](https://storybook.js.org/) instance on dev stack, to ease React component development
-
-### Features
-
- - [UserDashboard]
-   - Fixed multiple typos
-   - Prevent users from disabling access to all Identity Providers
-   - Enhanced users traces display
-   - Moved email shipment from preferences consumer to UserDashboard backend
+- Referenced issues in severals `@todo` comments
+- Added a [storyBook](https://storybook.js.org/) instance on dev stack, to ease React component development
 
 ### Not yet in production (futures apps / features)
- - Update Redux wrapper for all front app
- - React Pagination component
+
+- [UserDashboard]
+  - Fixed multiple typos
+  - Prevent users from disabling access to all Identity Providers
+  - Enhanced users traces display
+  - Moved email shipment from preferences consumer to UserDashboard backend
+- Update Redux wrapper for all front app
+- React Pagination component
 
 ## v3.97 && v3.98.0
 
@@ -33,20 +42,23 @@
 ## v3.95 && v3.96.0
 
 ### Features
-- [FranceConnect+] [AgentConnect] 
+
+- [FranceConnect+] [AgentConnect]
   - Enhanced handling of business logs rotation
 
 ### Not yet in production (future apps / features)
+
 - [Partners]
+
   - Simple login page
 
 - [User Dashboard]
-  - Enabled BDD tests execution on integration environment 
+
+  - Enabled BDD tests execution on integration environment
   - Added BDD tests for user preferences management from administration applications
 
 - [User Dashboard] [AgentConnect] [Partners]
   - Refactored react applications to use [official France Design System](https://www.systeme-de-design.gouv.fr/)
-
 
 ## v3.93.0 && v3.94.0
 

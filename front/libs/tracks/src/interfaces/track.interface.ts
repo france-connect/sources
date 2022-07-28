@@ -3,6 +3,8 @@
 // declarative file
 import { DateTime } from 'luxon';
 
+import { FSA } from '@fc/common';
+
 import { CinematicEvents, EidasToLabel } from '../enums';
 
 export interface IProvider {
@@ -17,6 +19,14 @@ export interface IRichClaim {
   label: string;
   provider: IProvider;
 }
+
+export type IPaginationResult = {
+  total: number;
+  size: number;
+  offset: number;
+};
+
+export type UserDashboardTracks = FSA<IPaginationResult, Track[]>;
 
 export interface Track {
   city: string;

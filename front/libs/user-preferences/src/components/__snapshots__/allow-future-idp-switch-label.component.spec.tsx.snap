@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AllowFutureIdpSwitchLabelComponent should render the label when switch is active 1`] = `
+<div>
+  <span>
+    Les futurs moyens de connexion dans FranceConnect
+    <strong>
+       seront 
+      autorisés
+    </strong>
+  </span>
+</div>
+`;
+
+exports[`AllowFutureIdpSwitchLabelComponent should render the label when switch is inactive 1`] = `
+<div>
+  <span>
+    Les futurs moyens de connexion dans FranceConnect
+    <strong>
+       seront 
+      bloqués
+    </strong>
+  </span>
+</div>
+`;

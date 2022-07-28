@@ -44,6 +44,7 @@ export const ServiceComponent: React.FC<ServiceComponentProps> = React.memo(
         data-testid={`service-component-${service.name}`}>
         <ServiceImageComponent disabled={isDisabled} service={service} />
         <ToggleInput
+          initialValue={service.isChecked}
           // Class CSS
           // eslint-disable-next-line @typescript-eslint/naming-convention
           label={labelCallback}

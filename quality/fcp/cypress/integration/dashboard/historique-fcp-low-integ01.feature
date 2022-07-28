@@ -5,6 +5,8 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
   # je veux me connecter au user-dashboard sur integ01
   # afin de consulter mon historique de connexion FC Legacy
 
+  # La localisation n'est pas affichée lorsque les tests sont exécutés depuis les runners de la CI
+
   Scénario: Historique Connexion - FC Legacy - FS public avec scope identité
     Etant donné que j'utilise un compte usager "pour les tests de traces"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
@@ -19,8 +21,8 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et la date de l'évènement correspond à aujourd'hui
     Et le fournisseur de service de l'évènement est "Service Provider Example - Authentication"
     Et la date et heure de connexion correspondent à maintenant
-    Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "identity-provider-example-faible"
+    # Et la localisation de l'évènement est affichée
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
 
   @ignore
@@ -38,8 +40,8 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et la date de l'évènement correspond à aujourd'hui
     Et le fournisseur de service de l'évènement est "Service Provider Example - Data"
     Et la date et heure de connexion correspondent à maintenant
-    Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "identity-provider-example-faible"
+    # Et la localisation de l'évènement est affichée
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Service Provider Example - Data"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -72,8 +74,8 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et la date de l'évènement correspond à aujourd'hui
     Et le fournisseur de service de l'évènement est "Service Provider Example - Authentication"
     Et la date et heure de connexion correspondent à maintenant
-    Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "identity-provider-example-faible"
+    # Et la localisation de l'évènement est affichée
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Service Provider Example - Authentication"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -103,8 +105,8 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et la date de l'évènement correspond à aujourd'hui
     Et le fournisseur de service de l'évènement est "Service Provider Example - Data"
     Et la date et heure de connexion correspondent à maintenant
-    Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "identity-provider-example-faible"
+    # Et la localisation de l'évènement est affichée
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Service Provider Example - Data"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -152,6 +154,6 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et la date de l'évènement correspond à aujourd'hui
     Et le fournisseur de service de l'évènement est "Service Provider Example - Authentication"
     Et la date et heure de connexion correspondent à maintenant
-    Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "fip1"
+    # Et la localisation de l'évènement est affichée
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"

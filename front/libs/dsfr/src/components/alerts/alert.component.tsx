@@ -1,36 +1,32 @@
-import classnames from 'classnames';
 import React from 'react';
 
 import { AlertTypes, Sizes } from '../../enums';
 
-export interface AlertProps {
+export interface AlertComponentProps {
   children: React.ReactNode;
-  type: AlertTypes;
-  size: Sizes;
+  // @NOTE [DSFR] attribute role="alert"
+  // - should be defined if the Component is injected dynamicly into the page
+  // - should NOT be defined if the Component is not injected dynamicly into the page
+  noRole?: boolean;
+  size?: Omit<Sizes, 'Large'>;
+  type?: AlertTypes;
 }
 
-export const Alert: React.FC<AlertProps> = React.memo(({ children, size, type }: AlertProps) => (
-  <div
-    className={classnames(`fr-alert`, {
-      // DSFR classname
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      'fr-alert--error': type === AlertTypes.ERROR,
-      // DSFR classname
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      'fr-alert--info': type === AlertTypes.INFO,
-      // DSFR classname
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      'fr-alert--sm': size === Sizes.SMALL,
-      // DSFR classname
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      'fr-alert--success': type === AlertTypes.SUCCESS,
-      // DSFR classname
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      'fr-alert--warning': type === AlertTypes.WARNING,
-    })}
-    data-testid="AlertComponent">
-    {children}
-  </div>
-));
+export const AlertComponent: React.FC<AlertComponentProps> = React.memo(
+  ({ children, noRole, size, type }: AlertComponentProps) => (
+    <div
+      className={`fr-alert fr-alert--${type} fr-alert--${size}`}
+      data-testid="AlertComponent"
+      role={noRole ? undefined : 'alert'}>
+      {children}
+    </div>
+  ),
+);
 
-Alert.displayName = 'Alert';
+AlertComponent.defaultProps = {
+  noRole: false,
+  size: Sizes.MEDIUM,
+  type: AlertTypes.INFO,
+};
+
+AlertComponent.displayName = 'AlertComponent';

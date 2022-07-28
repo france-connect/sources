@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
@@ -10,6 +10,7 @@ import {
   IRichClaims,
   IScopeIndex,
 } from '../interfaces';
+import { CONFIG_NAME } from '../tokens';
 
 /**
  * This service exposes two optimized indexes to retrieves claims informations
@@ -24,6 +25,7 @@ export class ScopesIndexService {
   private scopeIndex: IScopeIndex;
 
   constructor(
+    @Inject(CONFIG_NAME) private readonly configName,
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
   ) {
@@ -34,7 +36,7 @@ export class ScopesIndexService {
    * Initialize an in memory index to have a fast querying system on requests
    */
   onModuleInit() {
-    const { mapping } = this.config.get<ScopesConfig>('Scopes');
+    const { mapping } = this.config.get<ScopesConfig>(this.configName);
 
     this.claimIndex = this.prepareClaimIndex(mapping);
     this.scopeIndex = this.prepareScopeIndex(mapping);

@@ -153,10 +153,6 @@
       "@fc/hybridge-http-proxy/*": ["libs/hybridge-http-proxy/src/*"],
       "@fc/user-preferences": ["libs/user-preferences/src"],
       "@fc/user-preferences/*": ["libs/user-preferences/src/*"],
-      "@fc/csmr-tracks-legacy": ["apps/csmr-tracks-legacy/src"],
-      "@fc/csmr-tracks-legacy/*": ["apps/csmr-tracks-legacy/src/*"],
-      "@fc/csmr-aggregate-tracks": ["apps/csmr-aggregate-tracks/src"],
-      "@fc/csmr-aggregate-tracks/*": ["apps/csmr-aggregate-tracks/src/*"],
       "@fc/partners": ["apps/partners/src"],
       "@fc/partners/*": ["apps/partners/src/*"],
       "@fc/geoip-maxmind": ["libs/geoip-maxmind/src"],
@@ -164,11 +160,10 @@
       "@fc/postgres": ["libs/postgres/src"],
       "@fc/postgres/*": ["libs/postgres/src/*"],
       "@fc/partner-account": ["libs/partner-account/src"],
-      "@fc/partner-account/*": ["libs/partner-account/src/*"]
+      "@fc/partner-account/*": ["libs/partner-account/src/*"],
+      "@fc/csmr-account": ["apps/csmr-account/src"],
+      "@fc/csmr-account/*": ["apps/csmr-account/src/*"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "exclude": ["node_modules", "dist"]
 }

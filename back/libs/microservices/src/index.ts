@@ -23,3 +23,9 @@ export const UserPreferencesProtocol = {
     SET_IDP_SETTINGS: 'SET_IDP_SETTINGS',
   },
 };
+
+export const AccountProtocol = {
+  Commands: {
+    GET_ACCOUNT_ID: 'GET_ACCOUNT_ID',
+  },
+};

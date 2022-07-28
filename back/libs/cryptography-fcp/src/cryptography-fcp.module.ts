@@ -5,7 +5,7 @@ import { CryptographyService } from '@fc/cryptography';
 import { CryptographyFcpService } from './cryptography-fcp.service';
 
 @Module({
-  imports: [CryptographyService],
+  imports: [],
   providers: [CryptographyFcpService, CryptographyService],
   exports: [CryptographyFcpService],
 })

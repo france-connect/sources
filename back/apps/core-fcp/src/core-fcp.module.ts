@@ -62,7 +62,7 @@ import { CoreFcpService, OidcProviderConfigAppService } from './services';
 @Module({
   imports: [
     ExceptionsModule,
-    MongooseModule,
+    MongooseModule.forRoot(),
     SessionModule.forRoot({
       schema: CoreFcpSession,
     }),

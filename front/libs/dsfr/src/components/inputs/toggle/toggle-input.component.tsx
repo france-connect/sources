@@ -17,10 +17,11 @@ export const ToggleInputComponent: React.FC<ToggleInputComponentProps> = React.m
       {...input}
       aria-describedby={`${input.name}-hint-text`}
       className="fr-toggle__input"
-      data-testid="field-toggle-input"
+      data-testid={`field-toggle-input-${input.name}`}
       disabled={disabled}
       id={input.name}
       type="checkbox"
+      onChange={input.onChange}
     />
   ),
 );

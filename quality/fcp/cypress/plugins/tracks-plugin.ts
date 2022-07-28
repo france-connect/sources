@@ -1,9 +1,47 @@
-import { DateTime } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 
 import { getCallerFrom } from './helpers';
 
-interface addTracksArgs {
+interface IAddTracksArgs {
   tracksType: string;
+}
+
+interface IAddTracksParams {
+  datesParam: string;
+  filesParam: string;
+}
+
+// end date will not be included
+function getDaysAsIso(start: DateTime, end: DateTime): string[] {
+  const interval = Interval.fromDateTimes(start, end);
+  const steps = interval.splitBy({ days: 1 });
+  const dates = steps.map(({ start: s }) => s.toISO());
+  return dates;
+}
+
+function getParamsByTracksType(
+  tracksType: string,
+  defaultMockDataFiles: string[],
+): IAddTracksParams {
+  let mockDataFiles = defaultMockDataFiles;
+  let dates = [];
+  const result = tracksType.match(/^(\d+) connexions?$/);
+  if (result) {
+    mockDataFiles = [defaultMockDataFiles[0]];
+    const [, strCount] = result;
+    const count = Number.parseInt(strCount, 10);
+
+    const now = DateTime.now().setZone('Europe/Paris');
+    const old = now.minus({ days: count });
+    dates = getDaysAsIso(old, now);
+  }
+  const datesParam = dates.length ? `'${JSON.stringify(dates)}'` : '';
+  const filesParam = `'${JSON.stringify(mockDataFiles)}'`;
+  const params: IAddTracksParams = {
+    datesParam,
+    filesParam,
+  };
+  return params;
 }
 
 export function tracksBuilder(
@@ -26,13 +64,22 @@ export function tracksBuilder(
     `$FC_ROOT/fc-docker/docker-stack exec fc-core node --trace-warnings ./projects/fc/core/cli.js traces`,
   );
 
-  async function addTracks(args: addTracksArgs): Promise<void> {
+  async function addTracks(args: IAddTracksArgs): Promise<void> {
     const { tracksType } = args;
     const accountId = 'test_TRACE_USER';
+    const DEFAULT_MOCKDATA_FILES = [
+      '/tracks/fsp1-high/public_fip1-high.mock.ejs',
+      '/tracks/fsp5-high/private_fip1-high.mock.ejs',
+      '/tracks/missing/missing_fip1-high.mock.ejs',
+    ];
 
     // eslint-disable-next-line no-console
     console.log(`Add tracks 'FranceConnect+' for '${tracksType}'`);
-    await tracksScript(`generate ${accountId}`);
+    const { datesParam, filesParam } = getParamsByTracksType(
+      tracksType,
+      DEFAULT_MOCKDATA_FILES,
+    );
+    await tracksScript(`generate ${accountId} ${filesParam} ${datesParam}`);
 
     // eslint-disable-next-line no-console
     console.log(`Tracks injection done`);
@@ -49,26 +96,21 @@ export function tracksBuilder(
     return null;
   }
 
-  async function addTracksLegacy(args: addTracksArgs): Promise<void> {
+  async function addTracksLegacy(args: IAddTracksArgs): Promise<void> {
     const { tracksType } = args;
     const accountId = 'test_TRACE_USER';
-
-    // Setup dates
-    const now = DateTime.now().toUTC();
-    const justBeforeNow = now.minus({ day: 1 });
-    const justBefore = now.minus({ month: 6 }).plus({ day: 1 });
-    const justAfter = now.minus({ month: 6 }).minus({ day: 1 });
-    const dates = [justBeforeNow, justBefore, justAfter].map((date) =>
-      date.toISODate(),
-    );
-
-    // eslint-disable-next-line no-console
-    console.log(`Clean tracks from database`);
-    await legacyScript('remove');
+    const DEFAULT_MOCKDATA_FILES = [
+      'fixtures/fsp1-fip1.mock.ejs',
+      'fixtures/fsp3-fip1.mock.ejs',
+    ];
 
     // eslint-disable-next-line no-console
     console.log(`Add tracks 'FranceConnect' for '${tracksType}'`);
-    await legacyScript(`generate ${accountId} '${JSON.stringify(dates)}'`);
+    const { datesParam, filesParam } = getParamsByTracksType(
+      tracksType,
+      DEFAULT_MOCKDATA_FILES,
+    );
+    await legacyScript(`generate ${accountId} ${filesParam} ${datesParam}`);
 
     // eslint-disable-next-line no-console
     console.log(`Tracks injection done`);

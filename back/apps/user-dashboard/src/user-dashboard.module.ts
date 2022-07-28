@@ -4,6 +4,7 @@
 import { Module } from '@nestjs/common';
 
 import { AppModule } from '@fc/app';
+import { ExceptionsModule } from '@fc/exceptions';
 import { HttpProxyModule } from '@fc/http-proxy';
 import {
   IdentityProviderAdapterEnvModule,
@@ -33,6 +34,7 @@ const oidcClientModule = OidcClientModule.register(
 @Module({
   controllers: [UserDashboardController, OidcClientController],
   imports: [
+    ExceptionsModule,
     AppModule,
     HttpProxyModule,
     IdentityProviderAdapterEnvModule,

@@ -10,6 +10,7 @@ import {
   IRichClaim,
   IScopeIndex,
 } from '../interfaces';
+import { CONFIG_NAME } from '../tokens';
 import { ScopesIndexService } from './scopes-index.service';
 
 describe('ScopesIndexService', () => {
@@ -67,7 +68,15 @@ describe('ScopesIndexService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ScopesIndexService, ConfigService, LoggerService],
+      providers: [
+        ScopesIndexService,
+        ConfigService,
+        LoggerService,
+        {
+          provide: CONFIG_NAME,
+          useValue: configMock,
+        },
+      ],
     })
       .overrideProvider(ConfigService)
       .useValue(configMock)

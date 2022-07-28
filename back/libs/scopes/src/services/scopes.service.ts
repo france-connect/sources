@@ -18,7 +18,7 @@ export class ScopesService {
     /**
      * Same claim may be present in several scopes
      */
-    const uniqueClaims = unique(claims);
+    const uniqueClaims = unique(claims.filter(Boolean));
 
     return uniqueClaims;
   }

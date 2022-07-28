@@ -264,15 +264,6 @@
         ]
       }
     },
-    "csmr-tracks-high": {
-      "type": "application",
-      "root": "instances/csmr-tracks-high",
-      "entryFile": "main",
-      "sourceRoot": "instances/csmr-tracks-high/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/csmr-tracks-high/tsconfig.app.json"
-      }
-    },
     "bridge-http-proxy-rie-instance": {
       "type": "application",
       "root": "instances/bridge-http-proxy-rie",
@@ -299,6 +290,15 @@
       "sourceRoot": "instances/tracks-data-provider/src",
       "compilerOptions": {
         "tsConfigPath": "instances/tracks-data-provider/tsconfig.app.json"
+      }
+    },
+    "csmr-account-instance": {
+      "type": "application",
+      "root": "instances/csmr-account",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-account/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-account/tsconfig.app.json"
       }
     },
     "rnipp": {
@@ -859,31 +859,13 @@
         "tsConfigPath": "libs/hybridge-http-proxy/tsconfig.lib.json"
       }
     },
-    "csmr-aggregate-tracks": {
-      "type": "library",
-      "root": "apps/csmr-aggregate-tracks",
-      "entryFile": "index",
-      "sourceRoot": "apps/csmr-aggregate-tracks/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/csmr-aggregate-tracks/tsconfig.app.json"
-      }
-    },
-    "csmr-aggregate-tracks-instance": {
+    "csmr-tracks-instance": {
       "type": "application",
-      "root": "instances/csmr-aggregate-tracks",
+      "root": "instances/csmr-tracks",
       "entryFile": "main",
-      "sourceRoot": "instances/csmr-aggregate-tracks/src",
+      "sourceRoot": "instances/csmr-tracks/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/csmr-aggregate-tracks/tsconfig.app.json"
-      }
-    },
-    "csmr-tracks-legacy": {
-      "type": "application",
-      "root": "instances/csmr-tracks-legacy",
-      "entryFile": "main",
-      "sourceRoot": "instances/csmr-tracks-legacy/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/csmr-tracks-legacy/tsconfig.app.json"
+        "tsConfigPath": "instances/csmr-tracks/tsconfig.app.json"
       }
     },
     "partners": {
@@ -938,6 +920,15 @@
       "sourceRoot": "libs/partner-account/src",
       "compilerOptions": {
         "tsConfigPath": "libs/partner-account/tsconfig.lib.json"
+      }
+    },
+    "csmr-account": {
+      "type": "library",
+      "root": "apps/csmr-account",
+      "entryFile": "index",
+      "sourceRoot": "apps/csmr-account/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/csmr-account/tsconfig.lib.json"
       }
     }
   }

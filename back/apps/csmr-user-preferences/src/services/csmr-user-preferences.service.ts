@@ -6,11 +6,13 @@ import {
   IIdpSettings,
 } from '@fc/account';
 import { PartialExcept } from '@fc/common';
+import { ConfigService } from '@fc/config';
 import { CryptographyFcpService, IPivotIdentity } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata, IOidcIdentity } from '@fc/oidc';
 
+import { AppConfig } from '../dto';
 import { CsmrUserPreferencesIdpNotFoundException } from '../exceptions';
 import {
   IFormattedIdpList,
@@ -21,11 +23,11 @@ import {
 
 @Injectable()
 export class CsmrUserPreferencesService {
-  private configMailer;
-
+  // Dependency injection can require more than 4 parameters
   // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
+    private readonly config: ConfigService,
     private readonly account: AccountService,
     private readonly cryptographyFcp: CryptographyFcpService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
@@ -36,7 +38,13 @@ export class CsmrUserPreferencesService {
   formatUserIdpSettingsList(
     identityProvidersMetadata: IdentityProviderMetadata[],
     settings: IIdpSettings = {
-      isExcludeList: false,
+      /**
+       * By default we want to authorize all future idp,
+       * therefore exclude all those who would be present in the list (equivalent to a blacklist)
+       * For more examples
+       * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/blob/staging/back/apps/csmr-user-preferences/README.md
+       **/
+      isExcludeList: true,
       list: [],
     },
   ): IFormattedIdpSettings {
@@ -104,7 +112,7 @@ export class CsmrUserPreferencesService {
       throw new AccountNotFoundException();
     }
 
-    const idpList = await this.identityProvider.getList();
+    const idpList = await this.getIdentityProviderList();
 
     const formattedIdpSettings = this.formatUserIdpSettingsList(
       idpList,
@@ -129,7 +137,7 @@ export class CsmrUserPreferencesService {
   ): Promise<ISetIdpSettingsPayload> {
     this.logger.debug(`Identity received : ${identity}`);
 
-    const idpList = await this.identityProvider.getList();
+    const idpList = await this.getIdentityProviderList();
     const idpUids = idpList.map((idp) => idp.uid);
     const inputIdpAllExistsInDatabase = inputIdpList.every((idpUid) =>
       idpUids.includes(idpUid),
@@ -225,5 +233,16 @@ export class CsmrUserPreferencesService {
       ({ uid, isChecked }) => previousMap[uid] !== isChecked,
     );
     return result;
+  }
+
+  private async getIdentityProviderList(): Promise<IdentityProviderMetadata[]> {
+    const { aidantsConnectUid } = this.config.get<AppConfig>('App');
+
+    const idpList = await this.identityProvider.getList();
+    const filteredIdpList = idpList.filter(
+      ({ uid }) => uid !== aidantsConnectUid,
+    );
+
+    return filteredIdpList;
   }
 }

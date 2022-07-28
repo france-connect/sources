@@ -7,4 +7,5 @@ export * from './inputs';
 export * from './layout';
 export * from './link';
 export * from './logos';
+export * from './pagination';
 export * from './searchbar';

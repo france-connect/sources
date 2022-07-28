@@ -13,6 +13,9 @@ module.exports = {
   }),
   Switch: jest.fn(({ children }) => children),
   matchPath: jest.fn(),
+  useHistory: jest.fn(() => ({
+    push: jest.fn(),
+  })),
   useLocation: jest.fn(() => ({
     pathname: '',
   })),

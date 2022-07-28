@@ -1,53 +1,47 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { DynamicModule, Module, ModuleMetadata, Type } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 
-import { AccountModule } from '@fc/account';
+import { CryptographyService } from '@fc/cryptography';
+import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { ElasticsearchModule } from '@fc/elasticsearch';
 import { ExceptionsModule } from '@fc/exceptions';
 import { GeoipMaxmindModule } from '@fc/geoip-maxmind';
 import { LoggerModule } from '@fc/logger-legacy';
-import { MongooseModule } from '@fc/mongoose';
+import { RabbitmqModule } from '@fc/rabbitmq';
 import { ScopesModule } from '@fc/scopes';
 
 import { CsmrTracksController } from './controllers';
-import { IAppTracksDataService } from './interfaces';
-import { CsmrTracksElasticsearchService, CsmrTracksService } from './services';
-import { CSMR_TRACKS_DATA } from './tokens';
+import {
+  CsmrTracksAccountService,
+  CsmrTracksElasticService,
+  CsmrTracksFormatterService,
+  CsmrTracksHighDataService,
+  CsmrTracksLegacyDataService,
+} from './services';
 
-type InstanceImports = ModuleMetadata['imports'];
-
-@Module({})
-export class CsmrTracksModule {
-  /**
-   * Static constructor to create dynamic module of csmr-tracks
-   * @param proxy service used to format logs
-   * @param imports list of specific imports required by instance of csmr-tracks
-   */
-  static withProxy(
-    proxy: Type<IAppTracksDataService>,
-    imports: InstanceImports = [],
-  ): DynamicModule {
-    return {
-      module: CsmrTracksModule,
-      imports: [
-        ExceptionsModule,
-        MongooseModule,
-        LoggerModule,
-        ElasticsearchModule.register(),
-        AccountModule,
-        GeoipMaxmindModule,
-        ScopesModule,
-        ...imports,
-      ],
-      controllers: [CsmrTracksController],
-      providers: [
-        CsmrTracksService,
-        CsmrTracksElasticsearchService,
-        { provide: CSMR_TRACKS_DATA, useClass: proxy },
-      ],
-      exports: [CsmrTracksService],
-    };
-  }
-}
+@Module({
+  imports: [
+    ExceptionsModule,
+    LoggerModule,
+    CryptographyFcpModule,
+    ScopesModule.forConfig('FcpHigh'),
+    ScopesModule.forConfig('FcLegacy'),
+    GeoipMaxmindModule,
+    ElasticsearchModule.register(),
+    RabbitmqModule.registerFor('Tracks'),
+    RabbitmqModule.registerFor('AccountHigh'),
+    RabbitmqModule.registerFor('AccountLegacy'),
+  ],
+  controllers: [CsmrTracksController],
+  providers: [
+    CsmrTracksHighDataService,
+    CsmrTracksLegacyDataService,
+    CsmrTracksAccountService,
+    CsmrTracksElasticService,
+    CsmrTracksFormatterService,
+    CryptographyService,
+  ],
+})
+export class CsmrTracksModule {}

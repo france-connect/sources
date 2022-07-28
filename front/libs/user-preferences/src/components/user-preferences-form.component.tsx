@@ -1,35 +1,46 @@
 import classnames from 'classnames';
-import { ValidationErrors } from 'final-form';
-import React, { FormEventHandler } from 'react';
+import React, { FormEventHandler, useCallback } from 'react';
+import { OnChange } from 'react-final-form-listeners';
 import { useMediaQuery } from 'react-responsive';
 
-import { AlertMessageComponent, CheckboxInput, SimpleButton, Sizes } from '@fc/dsfr';
+import { AlertComponent, AlertTypes, SimpleButton, Sizes, ToggleInput } from '@fc/dsfr';
 
+import { useUserPreferencesForm } from '../hooks';
 import { UserPreferencesData } from '../interfaces';
+import { AllowFutureIdpSwitchLabelComponent } from './allow-future-idp-switch-label.component';
 import { ServicesListComponent } from './services-list.component';
 import styles from './user-preferences-form.module.scss';
 
 interface UserPreferencesFormComponentProps {
-  errors: ValidationErrors;
+  dirtyFields: Record<string, boolean>;
   isDisabled: boolean;
   onSubmit: FormEventHandler<HTMLFormElement>;
-  userPreferences: UserPreferencesData | undefined;
+  userPreferences: UserPreferencesData;
   showNotification: boolean;
   hasValidationErrors: boolean;
 }
 
 export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponentProps> = React.memo(
   ({
-    errors,
+    dirtyFields,
     hasValidationErrors,
     isDisabled,
     onSubmit,
     showNotification,
     userPreferences,
   }: UserPreferencesFormComponentProps) => {
-    const gtTablet = useMediaQuery({ query: 'min-width(768px)' });
-    const showServicesList =
-      userPreferences && userPreferences.idpList && userPreferences.idpList.length > 0;
+    const gtTablet = useMediaQuery({ minWidth: 768 });
+
+    const { alertInfoState, allowingIdPConfirmation } = useUserPreferencesForm({
+      dirtyFields,
+      userPreferences,
+    });
+
+    const labelCallback = useCallback(
+      (checked: boolean) => <AllowFutureIdpSwitchLabelComponent checked={checked} />,
+      [],
+    );
+
     return (
       <form
         data-testid="user-preferences-form"
@@ -43,28 +54,57 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
           continuer à utiliser FranceConnect. Nous vous conseillons de ne bloquer que les comptes
           que vous n’utilisez pas.
         </p>
-        {showServicesList && <ServicesListComponent identityProviders={userPreferences.idpList} />}
+        <ServicesListComponent identityProviders={userPreferences.idpList} />
 
         {hasValidationErrors && (
-          <AlertMessageComponent
-            closable={errors?.closable}
-            description={errors?.description}
-            size={errors?.size}
-            title={errors?.title}
-            type={errors?.type}
-          />
+          <AlertComponent type={AlertTypes.ERROR}>
+            <p className="fr-alert__title">
+              Attention, vous devez avoir au moins un compte autorisé pour continuer a utiliser
+              FranceConnect.
+            </p>
+            <p>
+              Veuillez choisir au moins un compte autorisé pour pouvoir enregistrer vos réglages.
+            </p>
+          </AlertComponent>
         )}
 
         <p className="fr-mt-5w">
-          Pour vous offrir toujours plus de choix, il est possible que FranceConnect mette à votre
-          disposition de nouveaux moyens d’identification dans le futur. En cochant cette case, ils
-          ne pourront pas être utilisés pour accéder aux services proposant FranceConnect.
+          Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux
+          comptes pour vous connecter à vos services.
+          <strong> Par défaut leur utilisation sera autorisée.</strong>
+          <br />
+          Pour plus de sécurité, vous pouvez les bloquer dès maintenant et pourrez les autoriser à
+          tout moment depuis cette page.
         </p>
-        <p className="fr-mt-2w">Vous pourrez les autoriser depuis cette page.</p>
-        <CheckboxInput
-          label="Bloquer par défaut les nouveaux moyens de connexion dans FranceConnect"
+
+        <ToggleInput
+          initialValue={userPreferences.allowFutureIdp}
+          label={labelCallback}
+          legend={{ checked: 'Autorisé', unchecked: 'Bloqué' }}
           name="allowFutureIdp"
         />
+        <OnChange name="allowFutureIdp">{allowingIdPConfirmation}</OnChange>
+
+        {alertInfoState.isDisplayedAlertInfo && (
+          <AlertComponent size={Sizes.SMALL}>
+            <p data-testid="UserPreferenceFormComponent-title-info">
+              Êtes-vous sûr de vouloir autoriser par défaut les futurs moyens de connexion ?
+            </p>
+            {/*
+            @TODO [DARKMODE][DSFR]
+            should be replaced by a managing darkmode DSFR component
+            or by a DSFR color css  class
+            */}
+            <button
+              className="is-underline no-padding"
+              data-testid="UserPreferenceFormComponent-button-info"
+              type="button"
+              onClick={allowingIdPConfirmation}>
+              Oui, je confirme.
+            </button>
+          </AlertComponent>
+        )}
+
         <div
           className={classnames('text-center', {
             // Class CSS
@@ -75,7 +115,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
             'fr-mt-5w': !gtTablet,
           })}>
           <SimpleButton
-            disabled={isDisabled}
+            disabled={isDisabled || alertInfoState.isDisplayedAlertInfo}
             label="Enregistrer mes réglages"
             size={Sizes.MEDIUM}
             type="submit"

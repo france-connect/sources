@@ -1,10 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Alert should match the snapshot with size medium and type error 1`] = `
+exports[`Alert should match the snapshot with default values 1`] = `
 <div>
   <div
-    class="fr-alert fr-alert--error"
+    class="fr-alert fr-alert--info fr-alert--md"
     data-testid="AlertComponent"
+    role="alert"
   >
     Children
   </div>
