@@ -2,6 +2,7 @@ import { Description } from '@fc/exceptions';
 
 import { CsmrHsmBaseException } from './csmr-hsm-base.exception';
 
+// Stryker disable all
 /* istanbul ignore file */
 
 // Declarative code

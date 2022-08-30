@@ -1,3 +1,4 @@
+// Stryker disable all
 /* istanbul ignore file */
 
 import { Module } from '@nestjs/common';

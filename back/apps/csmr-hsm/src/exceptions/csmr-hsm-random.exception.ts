@@ -11,6 +11,7 @@ import { CsmrHsmBaseException } from './csmr-hsm-base.exception';
  * mais passée en paramètre au logger
  */
 
+// Stryker disable all
 /* istanbul ignore file */
 
 // Declarative code
