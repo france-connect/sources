@@ -1,3 +1,4 @@
+// Stryker disable all
 /* istanbul ignore file */
 import { IsArray, IsString, IsUrl } from 'class-validator';
 
