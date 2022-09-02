@@ -1,4 +1,4 @@
-import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
+import { Id, SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
 import { Injectable } from '@nestjs/common';
 
@@ -48,11 +48,22 @@ export class CsmrTracksFormatterService {
   private extractDataFromFields(
     docs: SearchHit<ICsmrTracksFieldsRawData>[],
   ): ICsmrTracksData[] {
-    const extractFn = (fields: ICsmrTracksFieldsRawData): ICsmrTracksData =>
-      Object.fromEntries(Object.entries(fields).map((field) => field.flat()));
+    const extractFn = (
+      _id: Id,
+      fields: ICsmrTracksFieldsRawData,
+    ): ICsmrTracksData => {
+      const flattenedTrack = Object.fromEntries(
+        Object.entries(fields).map((field) => field.flat()),
+      );
 
-    const data = docs.map(({ fields }) =>
-      extractFn(fields as ICsmrTracksFieldsRawData),
+      return {
+        ...flattenedTrack,
+        trackId: _id,
+      };
+    };
+
+    const data = docs.map(({ _id, fields }) =>
+      extractFn(_id, fields as ICsmrTracksFieldsRawData),
     );
     this.logger.trace({ fields: data });
     return data;

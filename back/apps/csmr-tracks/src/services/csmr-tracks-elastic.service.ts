@@ -74,7 +74,7 @@ export class CsmrTracksElasticService {
      * 
      * Author: Arnaud PSA
      * Date: 13/06/22
-     *    
+     *
       this.elasticsearch.on('request', (...events) => {
         console.log(util.inspect(events, true, 50, true));
       });
@@ -157,17 +157,19 @@ export class CsmrTracksElasticService {
   private getScriptsFields(): Record<string, ScriptField> {
     // set aside to help with formatting
     const platformScript = `
-    def legacy = '${Platform.FC_LEGACY}';
-    def coreHigh = '${Platform.FCP_HIGH}';
     if(doc.containsKey('service')) {
-      return doc['service'].contains('fc_core_v2_app') ? coreHigh : legacy; 
+      return doc['service'].contains('fc_core_v2_app') ? params['FCP_HIGH'] : params['FC_LEGACY']; 
     }
-    return legacy;
+    return params['FC_LEGACY'];
     `;
 
     const scripts = {
       platform: {
         script: {
+          params: {
+            FC_LEGACY: Platform.FC_LEGACY,
+            FCP_HIGH: Platform.FCP_HIGH,
+          },
           lang: 'painless',
           source: platformScript,
         },
@@ -181,13 +183,6 @@ export class CsmrTracksElasticService {
         script: {
           lang: 'painless',
           source: `return doc.containsKey('fs_label') ? doc.fs_label : doc.spName;`,
-        },
-      },
-
-      trackId: {
-        script: {
-          lang: 'painless',
-          source: `return doc['_id'].value`,
         },
       },
     };
@@ -225,7 +220,6 @@ export class CsmrTracksElasticService {
       index: tracksIndex,
       from: offset,
       size,
-
       fields: this.fields,
       sort: [
         {
@@ -239,7 +233,7 @@ export class CsmrTracksElasticService {
       script_fields: this.scripts,
       query: {
         bool: {
-          must: [dateQuery, this.eventsQuery, idsQuery],
+          filter: [idsQuery, dateQuery, this.eventsQuery],
         },
       },
     };

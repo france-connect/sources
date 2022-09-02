@@ -24,15 +24,7 @@ Given(
     navigateTo({ appId: 'ud-preferences', baseUrl: allAppsUrl });
     udPreferencesPage = new UdPreferencesPage(udRootUrl);
     udPreferencesPage.checkIsVisible();
-
-    // TODO: Add a "loaded" classname on the IDP list in the user-dashboard
-    // Wait for the response from ud-back API
-    cy.wait('@UD:UserPreferences')
-      .its('response.statusCode')
-      .should('equal', 200);
-    // No other way to wait for the IDP settings to load
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(500);
+    cy.waitForNetworkIdle('/api', 500);
   },
 );
 
@@ -42,15 +34,7 @@ Given(
     const { udRootUrl }: Environment = this.env;
     udPreferencesPage = new UdPreferencesPage(udRootUrl);
     udPreferencesPage.checkIsVisible();
-
-    // TODO: Add a "loaded" classname on the IDP list in the user-dashboard
-    // Wait for the response from ud-back API
-    cy.wait('@UD:UserPreferences')
-      .its('response.statusCode')
-      .should('equal', 200);
-    // No other way to wait for the IDP settings to load
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(500);
+    cy.waitForNetworkIdle('/api', 500);
   },
 );
 
@@ -104,9 +88,7 @@ When(
       } else {
         cy.wrap($btn).click();
         cy.reload();
-        // Need to wait for the page after refresh
-        // eslint-disable-next-line cypress/no-unnecessary-waiting
-        cy.wait(500);
+        cy.waitForNetworkIdle('/api', 500);
       }
     });
   },
@@ -184,10 +166,21 @@ When(
   },
 );
 
+When('je clique sur le bouton "enregistrer mes réglages"', function () {
+  udPreferencesPage.getSaveButton().click();
+});
+
 When("j'enregistre mes réglages d'accès", function () {
   udPreferencesPage.getSaveButton().click();
   udPreferencesPage.checkIsUpdateNotificationDisplayed();
 });
+
+Then(
+  'le message "notification de modifications envoyée" est affiché',
+  function () {
+    udPreferencesPage.checkIsUpdateNotificationDisplayed();
+  },
+);
 
 Then(
   /^le fournisseur d'identité "([^"]+)" (est|n'est pas) présent dans la liste$/,

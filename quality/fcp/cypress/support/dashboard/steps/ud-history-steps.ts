@@ -15,6 +15,7 @@ Given(
   function () {
     const { allAppsUrl }: Environment = this.env;
     navigateTo({ appId: 'ud-history', baseUrl: allAppsUrl });
+    cy.waitForNetworkIdle('/api', 500);
   },
 );
 
@@ -23,6 +24,7 @@ Given('je navigue vers la page historique du dashboard usager', function () {
   navigateTo({ appId: 'ud-history', baseUrl: allAppsUrl });
   udHistoryPage = new UdHistoryPage(udRootUrl);
   udHistoryPage.checkIsVisible();
+  cy.waitForNetworkIdle('/api', 500);
 });
 
 Given(
@@ -31,6 +33,7 @@ Given(
     const { udRootUrl }: Environment = this.env;
     udHistoryPage = new UdHistoryPage(udRootUrl);
     udHistoryPage.checkIsVisible();
+    cy.waitForNetworkIdle('/api', 500);
   },
 );
 

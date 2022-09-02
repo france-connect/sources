@@ -19,6 +19,8 @@ module.exports = {
     '@fc/agent-connect-search': '<rootDir>/libs/agent-connect-search/src',
     '@fc/account/(.*)': '<rootDir>/libs/account/src/$1',
     '@fc/agent-connect-search/(.*)': '<rootDir>/libs/agent-connect-search/src/$1',
+    '@fc/axios-error-catcher': '<rootDir>/libs/axios-error-catcher/src',
+    '@fc/axios-error-catcher/(.*)': '<rootDir>/libs/axios-error-catcher/src/$1',
     '@fc/backoffice': '<rootDir>/libs/backoffice/src',
     '@fc/backoffice/(.*)': '<rootDir>/libs/backoffice/src/$1',
     '@fc/common': '<rootDir>/libs/common/src',

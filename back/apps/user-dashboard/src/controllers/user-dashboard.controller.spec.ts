@@ -1,4 +1,3 @@
-import { UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { IPaginationResult } from '@fc/common';
@@ -73,6 +72,12 @@ describe('UserDashboardController', () => {
   const userPreferencesMock = {
     getUserPreferencesList: jest.fn(),
     setUserPreferencesList: jest.fn(),
+  };
+
+  const sendMock = { send: jest.fn() };
+
+  const resMock = {
+    status: jest.fn(),
   };
 
   const updatePreferencesBodyMock = {
@@ -209,24 +214,28 @@ describe('UserDashboardController', () => {
 
     it('should fetch session', async () => {
       // When
-      await controller.getUserTraces(sessionServiceMock, queryMock);
+      await controller.getUserTraces(resMock, sessionServiceMock, queryMock);
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
     });
 
-    it('should throw UnauthorizedException if no session', async () => {
+    it('should return a 401 if no session', async () => {
       // Given
+      resMock.status.mockReturnValue(sendMock);
       sessionServiceMock.get.mockResolvedValueOnce(undefined);
-      // When / Then
-      await expect(
-        controller.getUserTraces(sessionServiceMock, queryMock),
-      ).rejects.toThrow(UnauthorizedException);
+      // When
+      await controller.getUserTraces(resMock, sessionServiceMock, queryMock);
+      // Then
+      expect(resMock.status).toHaveBeenCalledTimes(1);
+      expect(resMock.status).toHaveBeenCalledWith(401);
+      expect(sendMock.send).toHaveBeenCalledTimes(1);
+      expect(sendMock.send).toHaveBeenCalledWith({ code: 'INVALID_SESSION' });
     });
 
     it('should call tracks.getList', async () => {
       // When
-      await controller.getUserTraces(sessionServiceMock, queryMock);
+      await controller.getUserTraces(resMock, sessionServiceMock, queryMock);
       // Then
       expect(tracksServiceMock.getList).toHaveBeenCalledTimes(1);
       expect(tracksServiceMock.getList).toHaveBeenCalledWith(
@@ -238,6 +247,7 @@ describe('UserDashboardController', () => {
     it('should return tracks.getList', async () => {
       // When
       const result = await controller.getUserTraces(
+        resMock,
         sessionServiceMock,
         queryMock,
       );
@@ -252,28 +262,33 @@ describe('UserDashboardController', () => {
   describe('getUserInfos', () => {
     it('should fetch session', async () => {
       // When
-      await controller.getUserInfos(sessionServiceMock);
+      await controller.getUserInfos(resMock, sessionServiceMock);
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
     });
 
-    it('should throw UnauthorizedException if no session', async () => {
+    it('should return a 401 if no session', async () => {
       // Given
+      resMock.status.mockReturnValue(sendMock);
       sessionServiceMock.get.mockResolvedValueOnce(undefined);
-      // When / Then
-      await expect(controller.getUserInfos(sessionServiceMock)).rejects.toThrow(
-        UnauthorizedException,
-      );
+      // When
+      await controller.getUserInfos(resMock, sessionServiceMock);
+      // Then
+      expect(resMock.status).toHaveBeenCalledTimes(1);
+      expect(resMock.status).toHaveBeenCalledWith(401);
+      expect(sendMock.send).toHaveBeenCalledTimes(1);
+      expect(sendMock.send).toHaveBeenCalledWith({ code: 'INVALID_SESSION' });
     });
 
     it('should return an object with familyName givenName props', async () => {
       // Given
       sessionServiceMock.get.mockResolvedValueOnce(identityMock);
       // When
-      const { firstname, lastname } = await controller.getUserInfos(
+      const { firstname, lastname } = (await controller.getUserInfos(
+        resMock,
         sessionServiceMock,
-      );
+      )) as { firstname: string; lastname: string };
       // Then
       expect(firstname).toStrictEqual(identityMock.given_name);
       expect(lastname).toStrictEqual(identityMock.family_name);
@@ -283,24 +298,28 @@ describe('UserDashboardController', () => {
   describe('getUserPreferences', () => {
     it('should fetch session', async () => {
       // When
-      await controller.getUserPreferences(sessionServiceMock);
+      await controller.getUserPreferences(resMock, sessionServiceMock);
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
     });
 
-    it('should throw UnauthorizedException if no session', async () => {
+    it('should return a 401 if no session', async () => {
       // Given
+      resMock.status.mockReturnValue(sendMock);
       sessionServiceMock.get.mockResolvedValueOnce(undefined);
-      // When / Then
-      await expect(
-        controller.getUserPreferences(sessionServiceMock),
-      ).rejects.toThrow(UnauthorizedException);
+      // When
+      await controller.getUserPreferences(resMock, sessionServiceMock);
+      // Then
+      expect(resMock.status).toHaveBeenCalledTimes(1);
+      expect(resMock.status).toHaveBeenCalledWith(401);
+      expect(sendMock.send).toHaveBeenCalledTimes(1);
+      expect(sendMock.send).toHaveBeenCalledWith({ code: 'INVALID_SESSION' });
     });
 
     it('should call userPreferences.getUserPreferencesList', async () => {
       // When
-      await controller.getUserPreferences(sessionServiceMock);
+      await controller.getUserPreferences(resMock, sessionServiceMock);
       // Then
       expect(userPreferencesMock.getUserPreferencesList).toHaveBeenCalledTimes(
         1,
@@ -324,7 +343,10 @@ describe('UserDashboardController', () => {
         resolvedUserPreferencesMock,
       );
       // When
-      const result = await controller.getUserPreferences(sessionServiceMock);
+      const result = await controller.getUserPreferences(
+        resMock,
+        sessionServiceMock,
+      );
       // Then
       expect(result).toStrictEqual({
         idpList: formattedIdpSettingsMock,
@@ -355,6 +377,7 @@ describe('UserDashboardController', () => {
 
       // When
       await controller.updateUserPreferences(
+        resMock,
         updatePreferencesBodyMock,
         sessionServiceMock,
       );
@@ -363,16 +386,21 @@ describe('UserDashboardController', () => {
       expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
     });
 
-    it('should throw UnauthorizedException if no session', async () => {
+    it('should return a 401 if no session', async () => {
       // Given
+      resMock.status.mockReturnValue(sendMock);
       sessionServiceMock.get.mockResolvedValueOnce(undefined);
-      // When / Then
-      await expect(
-        controller.updateUserPreferences(
-          updatePreferencesBodyMock,
-          sessionServiceMock,
-        ),
-      ).rejects.toThrow(UnauthorizedException);
+      // When
+      await controller.updateUserPreferences(
+        resMock,
+        updatePreferencesBodyMock,
+        sessionServiceMock,
+      );
+      // Then
+      expect(resMock.status).toHaveBeenCalledTimes(1);
+      expect(resMock.status).toHaveBeenCalledWith(401);
+      expect(sendMock.send).toHaveBeenCalledTimes(1);
+      expect(sendMock.send).toHaveBeenCalledWith({ code: 'INVALID_SESSION' });
     });
 
     it('should call userPreferences.setUserPreferencesList', async () => {
@@ -386,6 +414,7 @@ describe('UserDashboardController', () => {
 
       // When
       await controller.updateUserPreferences(
+        resMock,
         updatePreferencesBodyMock,
         sessionServiceMock,
       );
@@ -406,6 +435,7 @@ describe('UserDashboardController', () => {
       );
       // When
       const result = await controller.updateUserPreferences(
+        resMock,
         updatePreferencesBodyMock,
         sessionServiceMock,
       );
@@ -429,6 +459,7 @@ describe('UserDashboardController', () => {
     // Then / When
     await expect(
       controller.updateUserPreferences(
+        resMock,
         updatePreferencesBodyMock,
         sessionServiceMock,
       ),

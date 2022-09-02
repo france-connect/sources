@@ -27,6 +27,18 @@ Then(
   },
 );
 
+Then(
+  /^le message d'alerte "session expirée" (est|n'est pas) affiché$/,
+  function (text) {
+    const isDisplayed = text === 'est';
+    udLoginPage.checkIsExpiredSessionAlertDisplayed(isDisplayed);
+  },
+);
+
+When('je clique sur le bouton FranceConnect du dashboard usager', function () {
+  udLoginPage.getAuthorizeButton().click();
+});
+
 When('je me connecte au dashboard usager', function () {
   const serviceProvider = getServiceProviderByDescription(
     this.serviceProviders,

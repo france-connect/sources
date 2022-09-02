@@ -7,7 +7,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     id="UserPreferencesFormComponent"
   >
     <h2
-      class="title fr-h3 fr-mt-5w"
+      class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
       <b>
         Mes réglages :
@@ -59,7 +59,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     id="UserPreferencesFormComponent"
   >
     <h2
-      class="title fr-h3 fr-mt-5w"
+      class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
       <b>
         Mes réglages :
@@ -111,7 +111,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     id="UserPreferencesFormComponent"
   >
     <h2
-      class="title fr-h3 fr-mt-5w"
+      class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
       <b>
         Mes réglages :
@@ -166,7 +166,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     id="UserPreferencesFormComponent"
   >
     <h2
-      class="title fr-h3 fr-mt-5w"
+      class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
       <b>
         Mes réglages :
@@ -218,7 +218,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     id="UserPreferencesFormComponent"
   >
     <h2
-      class="title fr-h3 fr-mt-5w"
+      class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
       <b>
         Mes réglages :
@@ -270,7 +270,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     id="UserPreferencesFormComponent"
   >
     <h2
-      class="title fr-h3 fr-mt-5w"
+      class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
       <b>
         Mes réglages :

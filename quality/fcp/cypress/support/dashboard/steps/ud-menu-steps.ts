@@ -24,12 +24,6 @@ When(
 When(
   'je clique sur le lien vers la page gestion des accès du dashboard usager',
   function () {
-    // Intercept used when waiting for the load of the /preferences
-    cy.intercept({
-      method: 'GET',
-      url: '/api/user-preferences',
-    }).as('UD:UserPreferences');
-
     udMenuComponent.getPreferencesLink().click();
   },
 );
@@ -37,3 +31,20 @@ When(
 When('je me déconnecte du dashboard usager', function () {
   udMenuComponent.getLogoutLink().click();
 });
+
+When("j'ouvre le menu de navigation mobile du user dashboard", function () {
+  udMenuComponent.getOpenMobileMenuButton().click();
+});
+
+When(
+  'je clique sur le lien gérer mes accés dans le menu de navigation mobile',
+  function () {
+    // Intercept used when waiting for the load of the /preferences
+    cy.intercept({
+      method: 'GET',
+      url: '/api/user-preferences',
+    }).as('UD:UserPreferences');
+
+    udMenuComponent.getPreferencesMobileLink().click();
+  },
+);

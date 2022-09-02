@@ -5,7 +5,7 @@ exports[`ServiceComponent should match the snapshot, in a desktop viewport 1`] =
   data-testid="form-wrapper"
 >
   <li
-    class="flex-start items-start fr-pt-2w fr-toggle--border-bottom disabled flex-columns"
+    class="flex-start items-start fr-pt-2w fr-toggle--border-bottom disabled flex-columns fr-pb-1w"
     data-testid="service-component-any-name"
   >
     <div>

@@ -86,4 +86,12 @@ describe('Alert', () => {
     // then
     expect(element).toHaveClass('fr-alert--warning');
   });
+
+  it('should have class injected by className props', () => {
+    // when
+    const { getByTestId } = render(<AlertComponent className="foo bar">Children</AlertComponent>);
+    const element = getByTestId('AlertComponent');
+    // then
+    expect(element).toHaveClass('foo bar');
+  });
 });

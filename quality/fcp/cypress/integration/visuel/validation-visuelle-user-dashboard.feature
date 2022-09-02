@@ -36,7 +36,18 @@ Fonctionnalité: Validation Visuelle - User Dashboard
 
     Exemples:
       | device           |
-      | mobile           |
       | tablet portrait  |
       | tablet landscape |
       | desktop          |
+
+  Scénario: Validation Visuelle - Préférences FI sur mobile
+    Etant donné que j'utilise un compte usager "pour le test de préférences FI"
+    Et que j'utilise un navigateur web sur "mobile"
+    Et que je navigue sur la page d'accueil du dashboard usager
+    Et que je me connecte au dashboard usager
+    Et que je suis redirigé vers la page historique du dashboard usager
+    Quand j'ouvre le menu de navigation mobile du user dashboard
+    Et la copie d'écran "udNavMobile" correspond à la page actuelle sur "mobile"
+    Et je clique sur le lien gérer mes accés dans le menu de navigation mobile
+    Alors je suis redirigé vers la page gestion des accès du dashboard usager
+    Et la copie d'écran "udPreferences" correspond à la page actuelle sur "mobile"

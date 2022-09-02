@@ -49,15 +49,15 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et la date de l'évènement correspond à aujourd'hui
     Et le fournisseur de service de l'évènement est "Service Provider Example - Data"
     Et la date et heure de l'évènement sont affichées
-    Et l'évènement concerne 7 données "FCP_LOW"
-    Et les données "FCP_LOW" de l'évènement contiennent "Revenu fiscal de référence (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Nombre de parts du foyer fiscal (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf divorcé) (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Détail des personnes à charge et rattachées (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Adresse déclarée au 1er Janvier (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Paiements d'indemnités journalières versés par l'Assurance Maladie (Caisse nationale de l'assurance maladie)"
-    Et l'évènement concerne aucune donnée "DGFIP"
-    Et l'évènement concerne aucune donnée "CNAM"
+    Et l'évènement concerne aucune donnée "FCP_LOW"
+    Et l'évènement concerne 5 données "DGFIP"
+    Et les données "DGFIP" de l'évènement contiennent "Revenu fiscal de référence"
+    Et les données "DGFIP" de l'évènement contiennent "Nombre de parts du foyer fiscal"
+    Et les données "DGFIP" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf divorcé)"
+    Et les données "DGFIP" de l'évènement contiennent "Détail des personnes à charge et rattachées"
+    Et les données "DGFIP" de l'évènement contiennent "Adresse déclarée au 1er Janvier"
+    Et l'évènement concerne 1 donnée "CNAM"
+    Et les données "CNAM" de l'évènement contiennent "Paiements d'indemnités journalières versés par l’Assurance Maladie"
 
   @ignore
   Scénario: Historique Connexion - FC Legacy - FS privé avec scope identité
@@ -114,30 +114,30 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et la date de l'évènement correspond à aujourd'hui
     Et le fournisseur de service de l'évènement est "Service Provider Example - Data"
     Et la date et heure de l'évènement sont affichées
-    Et l'évènement concerne 6 données "FCP_LOW"
-    Et les données "FCP_LOW" de l'évènement contiennent "Revenu fiscal de référence (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Nombre de parts du foyer fiscal (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf divorcé) (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Détail des personnes à charge et rattachées (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Adresse déclarée au 1er Janvier (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Paiements d'indemnités journalières versés par l'Assurance Maladie (Caisse nationale de l'assurance maladie)"
-    Et l'évènement concerne aucune donnée "DGFIP"
-    Et l'évènement concerne aucune donnée "CNAM"
+    Et l'évènement concerne aucune donnée "FCP_LOW"
+    Et l'évènement concerne 5 données "DGFIP"
+    Et les données "DGFIP" de l'évènement contiennent "Revenu fiscal de référence"
+    Et les données "DGFIP" de l'évènement contiennent "Nombre de parts du foyer fiscal"
+    Et les données "DGFIP" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf divorcé)"
+    Et les données "DGFIP" de l'évènement contiennent "Détail des personnes à charge et rattachées"
+    Et les données "DGFIP" de l'évènement contiennent "Adresse déclarée au 1er Janvier"
+    Et l'évènement concerne 1 donnée "CNAM"
+    Et les données "CNAM" de l'évènement contiennent "Paiements d'indemnités journalières versés par l’Assurance Maladie"
     Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Service Provider Example - Data"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Échange de Données"
     Et la date de l'évènement correspond à aujourd'hui
     Et le fournisseur de service de l'évènement est "Service Provider Example - Data"
     Et la date et heure de l'évènement sont affichées
-    Et l'évènement concerne 7 données "FCP_LOW"
-    Et les données "FCP_LOW" de l'évènement contiennent "Revenu fiscal de référence (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Nombre de parts du foyer fiscal (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf divorcé) (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Détail des personnes à charge et rattachées (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Adresse déclarée au 1er Janvier (Direction générale des Finances publiques)"
-    Et les données "FCP_LOW" de l'évènement contiennent "Paiements d'indemnités journalières versés par l'Assurance Maladie (Caisse nationale de l'assurance maladie)"
-    Et l'évènement concerne aucune donnée "DGFIP"
-    Et l'évènement concerne aucune donnée "CNAM"
+    Et l'évènement concerne aucune donnée "FCP_LOW"
+    Et l'évènement concerne 5 données "DGFIP"
+    Et les données "DGFIP" de l'évènement contiennent "Revenu fiscal de référence"
+    Et les données "DGFIP" de l'évènement contiennent "Nombre de parts du foyer fiscal"
+    Et les données "DGFIP" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf divorcé)"
+    Et les données "DGFIP" de l'évènement contiennent "Détail des personnes à charge et rattachées"
+    Et les données "DGFIP" de l'évènement contiennent "Adresse déclarée au 1er Janvier"
+    Et l'évènement concerne 1 donnée "CNAM"
+    Et les données "CNAM" de l'évènement contiennent "Paiements d'indemnités journalières versés par l’Assurance Maladie"
 
   @ignore
   Scénario: Historique Connexion - FC Legacy - FS privé avec scope anonyme

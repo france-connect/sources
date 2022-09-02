@@ -4,6 +4,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { AccountProvider } from '@fc/account';
+import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
 import { ApplicationLayout as DsfrLayout } from '@fc/dsfr';
 import { AppContextProvider } from '@fc/state-management';
 
@@ -16,7 +17,9 @@ export function Application(): JSX.Element {
       <BrowserRouter>
         <AppContextProvider value={{ config: AppConfig }}>
           <AccountProvider config={AppConfig.Account}>
-            <DsfrLayout config={AppConfig.Layout} routes={routes} />
+            <AxiosErrorCatcherProvider>
+              <DsfrLayout config={AppConfig.Layout} routes={routes} />
+            </AxiosErrorCatcherProvider>
           </AccountProvider>
         </AppContextProvider>
       </BrowserRouter>

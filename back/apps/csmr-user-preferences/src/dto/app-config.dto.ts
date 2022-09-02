@@ -1,13 +1,10 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { IsString, MinLength } from 'class-validator';
+import { IsUUID, MinLength } from 'class-validator';
 
 export class AppConfig {
-  @IsString()
-  /**
-   * @todo Change to UUID('4') after verifying that the value is a valid UUID in fixtures
-   */
+  @IsUUID(4)
   @MinLength(1)
   readonly aidantsConnectUid: string;
 }

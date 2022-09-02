@@ -9,6 +9,7 @@ export default class UdPreferencesPage {
 
   checkIsVisible(): void {
     cy.url().should('equal', `${this.udRootUrl}/preferences`);
+    cy.contains('h1', 'Pourquoi gérer mes accès dans FranceConnect ?');
   }
 
   getUserPreferencesForm(): ChainableElement {

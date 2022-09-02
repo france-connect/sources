@@ -48,7 +48,7 @@ export const TracksListComponent = React.memo(({ options }: TracksListComponentP
           />
         ))}
       <div className="flex-columns flex-center" id="tracks-pagination">
-        {tracks.meta?.total && (
+        {!!tracks.meta?.total && (
           <PaginationComponent
             useEdgeArrows
             useEllipsis

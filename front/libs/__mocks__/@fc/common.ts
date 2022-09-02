@@ -9,3 +9,7 @@ export const useLocalStorage = jest.fn(() => ({
   get: jest.fn(),
   set: jest.fn(),
 }));
+
+export enum HttpStatusCode {
+  UNAUTHORIZED = 401,
+}

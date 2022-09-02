@@ -46,7 +46,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
         data-testid="user-preferences-form"
         id="UserPreferencesFormComponent"
         onSubmit={onSubmit}>
-        <h2 className={classnames(styles.title, 'fr-h3 fr-mt-5w')}>
+        <h2 className={classnames(styles.title, 'fr-h3 fr-mt-5w fr-mb-2w')}>
           <b>Mes réglages&nbsp;:</b>
         </h2>
         <p className="fr-mt-2w">
@@ -117,7 +117,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
           <SimpleButton
             disabled={isDisabled || alertInfoState.isDisplayedAlertInfo}
             label="Enregistrer mes réglages"
-            size={Sizes.MEDIUM}
+            size={Sizes.LARGE}
             type="submit"
           />
           {showNotification && (

@@ -1,5 +1,56 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`HomePage should match snapshot when session is expired 1`] = `
+<div>
+  <div
+    class="homepage fr-m-auto fr-px-2w fr-mt-3w text-center"
+    id="page-container"
+  >
+    <div>
+      Alert
+    </div>
+    <h1
+      class="title fr-mb-5w"
+    >
+      Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter
+    </h1>
+    <p
+      class="paragraph fr-m-auto fr-mt-7v"
+      data-testid="paragraph"
+    >
+      Une fois connecté, vous pourrez accéder à l’ensemble des connexions et échanges de données liés à votre compte sur les 6 derniers mois.
+    </p>
+  </div>
+</div>
+`;
+
+exports[`HomePage should match the snapshot on mobile layout 1`] = `
+<div>
+  <div
+    class="homepage fr-m-auto fr-px-2w fr-mt-5w text-left"
+    id="page-container"
+  >
+    <h1
+      class="title fr-mb-5w"
+    >
+      Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter
+    </h1>
+    <div>
+      FoorBar RedirectToIdpFormComponentMock
+    </div>
+    <div>
+      FranceConnectButton
+    </div>
+    <p
+      class="paragraph fr-m-auto fr-mt-7v"
+      data-testid="paragraph"
+    >
+      Une fois connecté, vous pourrez accéder à l’ensemble des connexions et échanges de données liés à votre compte sur les 6 derniers mois.
+    </p>
+  </div>
+</div>
+`;
+
 exports[`HomePage should match the snapshot, when csrf token is defined 1`] = `
 <div>
   <div

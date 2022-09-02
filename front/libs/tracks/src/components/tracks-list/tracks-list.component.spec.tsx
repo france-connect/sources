@@ -82,6 +82,25 @@ describe('TracksListComponent', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('should match snapshot when data contains no tracks', () => {
+    // given
+    const emptyTracksMock = {
+      meta: {
+        offset: 0,
+        size: 10,
+        total: 0,
+      },
+
+      payload: [],
+      type: 'application',
+    };
+    usePaginatedTracksMock.mockReturnValue({ submitErrors: undefined, tracks: emptyTracksMock });
+    // when
+    const { container } = render(<TracksListComponent options={options} />);
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
   it('should match snapshot when tracks data are not defined', () => {
     // given
     usePaginatedTracksMock.mockReturnValue({

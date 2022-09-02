@@ -121,6 +121,7 @@ describe('LayoutHeaderMenuComponent', () => {
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledWith(
       {
         navigationItems: navigationItemsMock,
+        onItemClick: onCloseMock,
       },
       {},
     );

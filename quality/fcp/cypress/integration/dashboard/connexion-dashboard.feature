@@ -21,6 +21,7 @@ Fonctionnalité: Connexion User Dashboard
     Et que je suis redirigé vers la page historique du dashboard usager
     Quand je me déconnecte du dashboard usager
     Alors je suis redirigé vers la page d'accueil du dashboard usager
+    Et le message d'alerte "session expirée" n'est pas affiché
     Et je ne suis plus connecté au dashboard usager avec FranceConnect
 
   Scénario: User Dashboard - Déconnexion depuis la page gestion des accès
@@ -31,6 +32,7 @@ Fonctionnalité: Connexion User Dashboard
     Et que je suis sur la page gestion des accès du dashboard usager
     Quand je me déconnecte du dashboard usager
     Alors je suis redirigé vers la page d'accueil du dashboard usager
+    Et le message d'alerte "session expirée" n'est pas affiché
     Et je ne suis plus connecté au dashboard usager avec FranceConnect
 
   Scénario: User Dashboard - Chargement de la page historique après déconnexion
@@ -42,6 +44,7 @@ Fonctionnalité: Connexion User Dashboard
     Et que je suis redirigé vers la page d'accueil du dashboard usager
     Quand je navigue directement vers la page historique du dashboard usager
     Alors je suis redirigé vers la page d'accueil du dashboard usager
+    Et le message d'alerte "session expirée" n'est pas affiché
     Et je ne suis plus connecté au dashboard usager avec FranceConnect
 
   Scénario: User Dashboard - Chargement de la page gestion des accès après déconnexion
@@ -53,12 +56,10 @@ Fonctionnalité: Connexion User Dashboard
     Et que je suis redirigé vers la page d'accueil du dashboard usager
     Quand je navigue directement vers la page gestion des accès du dashboard usager
     Alors je suis redirigé vers la page d'accueil du dashboard usager
+    Et le message d'alerte "session expirée" n'est pas affiché
     Et je ne suis plus connecté au dashboard usager avec FranceConnect
 
-  # Ce scénario sera débloqué par le ticket FC-923
-  # https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/923
-  @ignore
-  Scénario: User Dashboard - Clic sur le lien vers la page historique après déconnexion
+  Scénario: User Dashboard - Clic sur le lien vers la page historique après expiration de session
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du dashboard usager
     Et que je me connecte au dashboard usager
@@ -67,12 +68,10 @@ Fonctionnalité: Connexion User Dashboard
     Et que je supprime tous les cookies
     Quand je clique sur le lien vers la page historique du dashboard usager
     Alors je suis redirigé vers la page d'accueil du dashboard usager
+    Et le message d'alerte "session expirée" est affiché
     Et je ne suis plus connecté au dashboard usager avec FranceConnect
 
-  # Ce scénario sera débloqué par le ticket FC-923
-  # https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/923
-  @ignore
-  Scénario: User Dashboard - Clic sur le lien vers la page gestion des accès après déconnexion
+  Scénario: User Dashboard - Clic sur le lien vers la page gestion des accès après expiration de session
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du dashboard usager
     Et que je me connecte au dashboard usager
@@ -80,12 +79,10 @@ Fonctionnalité: Connexion User Dashboard
     Et que je supprime tous les cookies
     Quand je clique sur le lien vers la page gestion des accès du dashboard usager
     Alors je suis redirigé vers la page d'accueil du dashboard usager
+    Et le message d'alerte "session expirée" est affiché
     Et je ne suis plus connecté au dashboard usager avec FranceConnect
 
-  # Ce scénario sera débloqué par le ticket FC-923
-  # https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/923
-  @ignore
-  Scénario: User Dashboard - Enregistre mes préférences FI après déconnexion
+  Scénario: User Dashboard - Enregistre mes préférences FI après expiration de session
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du dashboard usager
     Et que je me connecte au dashboard usager
@@ -96,6 +93,30 @@ Fonctionnalité: Connexion User Dashboard
     Et que je décide de bloquer le fournisseur d'identité
     Et que je décide de bloquer les futurs fournisseurs d'identité par défaut
     Et que je supprime tous les cookies
-    Quand j'enregistre mes réglages d'accès
+    Quand je clique sur le bouton "enregistrer mes réglages"
     Alors je suis redirigé vers la page d'accueil du dashboard usager
+    Et le message d'alerte "session expirée" est affiché
     Et je ne suis plus connecté au dashboard usager avec FranceConnect
+
+  # Scénario à implémenter dans FC-1073
+  @ignore 
+  Scénario: User Dashboard - Déconnexion après expiration de session
+    Etant donné que j'utilise un compte usager "pour le test de préférences FI"
+    Et que je navigue sur la page d'accueil du dashboard usager
+    Et que je me connecte au dashboard usager
+    Et que je suis redirigé vers la page historique du dashboard usager
+    Et que je supprime tous les cookies
+    Quand je me déconnecte du dashboard usager
+    Alors je suis redirigé vers la page d'accueil du dashboard usager
+    Et le message d'alerte "session expirée" n'est pas affiché
+    Et je ne suis plus connecté au dashboard usager avec FranceConnect
+
+  # Scénario à implémenter dans FC-1072
+  @ignore 
+  Scénario: User Dashboard - Connexion après expiration de session
+    Etant donné que j'utilise un compte usager "pour le test de préférences FI"
+    Et que je navigue sur la page d'accueil du dashboard usager
+    Et que je supprime tous les cookies
+    Quand je clique sur le bouton FranceConnect du dashboard usager
+    Alors je suis redirigé vers la page d'accueil du dashboard usager
+    Et le message d'alerte "session expirée" n'est pas affiché

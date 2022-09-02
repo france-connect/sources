@@ -1,14 +1,21 @@
 import { render } from '@testing-library/react';
 import { mocked } from 'jest-mock';
+import React from 'react';
+import { useMediaQuery } from 'react-responsive';
 
+import { AxiosErrorCatcherContext } from '@fc/axios-error-catcher';
 import { useApiGet } from '@fc/common';
-import { FranceConnectButton } from '@fc/dsfr';
+import { AlertComponent, FranceConnectButton } from '@fc/dsfr';
 import { RedirectToIdpFormComponent } from '@fc/oidc-client';
 
 import { HomePage } from './home.page';
 
 describe('HomePage', () => {
   const useApiGetMock = mocked(useApiGet);
+  const axiosErrorCatcherMock = {
+    codeError: undefined,
+    hasError: false,
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -16,7 +23,11 @@ describe('HomePage', () => {
 
   it('should match the snapshot, when csrf token is not defined', () => {
     // when
-    const { container } = render(<HomePage />);
+    const { container } = render(
+      <AxiosErrorCatcherContext.Provider value={axiosErrorCatcherMock}>
+        <HomePage />
+      </AxiosErrorCatcherContext.Provider>,
+    );
     // then
     expect(container).toMatchSnapshot();
   });
@@ -25,14 +36,48 @@ describe('HomePage', () => {
     // given
     useApiGetMock.mockReturnValueOnce({ csrfToken: 'any-string' });
     // when
-    const { container } = render(<HomePage />);
+    const { container } = render(
+      <AxiosErrorCatcherContext.Provider value={axiosErrorCatcherMock}>
+        <HomePage />
+      </AxiosErrorCatcherContext.Provider>,
+    );
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
+  it('should match snapshot when session is expired', () => {
+    // when
+    const { container } = render(
+      <AxiosErrorCatcherContext.Provider
+        value={{ ...axiosErrorCatcherMock, codeError: 401, hasError: true }}>
+        <HomePage />
+      </AxiosErrorCatcherContext.Provider>,
+    );
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
+  it('should match the snapshot on mobile layout', () => {
+    // given
+    mocked(useMediaQuery).mockReturnValue(false);
+    useApiGetMock.mockReturnValueOnce({ csrfToken: 'any-string' });
+    // when
+    const { container } = render(
+      <AxiosErrorCatcherContext.Provider value={axiosErrorCatcherMock}>
+        <HomePage />
+      </AxiosErrorCatcherContext.Provider>,
+    );
     // then
     expect(container).toMatchSnapshot();
   });
 
   it('should render the main heading', () => {
     // given
-    const { getByRole } = render(<HomePage />);
+    const { getByRole } = render(
+      <AxiosErrorCatcherContext.Provider value={axiosErrorCatcherMock}>
+        <HomePage />
+      </AxiosErrorCatcherContext.Provider>,
+    );
     // when
     const element = getByRole('heading');
     // then
@@ -44,14 +89,22 @@ describe('HomePage', () => {
 
   it('should have called useApiGet hook', () => {
     // when
-    render(<HomePage />);
+    render(
+      <AxiosErrorCatcherContext.Provider value={axiosErrorCatcherMock}>
+        <HomePage />
+      </AxiosErrorCatcherContext.Provider>,
+    );
     // then
     expect(useApiGetMock).toHaveBeenCalled();
   });
 
   it('should not have called RedirectToIdpFormComponent when csrf is falsey', () => {
     // when
-    render(<HomePage />);
+    render(
+      <AxiosErrorCatcherContext.Provider value={axiosErrorCatcherMock}>
+        <HomePage />
+      </AxiosErrorCatcherContext.Provider>,
+    );
     // then
     expect(RedirectToIdpFormComponent).not.toHaveBeenCalled();
   });
@@ -60,7 +113,11 @@ describe('HomePage', () => {
     // given
     useApiGetMock.mockReturnValueOnce({ csrfToken: 'any-string' });
     // when
-    render(<HomePage />);
+    render(
+      <AxiosErrorCatcherContext.Provider value={axiosErrorCatcherMock}>
+        <HomePage />
+      </AxiosErrorCatcherContext.Provider>,
+    );
     // then
     expect(RedirectToIdpFormComponent).toHaveBeenCalled();
   });
@@ -69,20 +126,48 @@ describe('HomePage', () => {
     // given
     useApiGetMock.mockReturnValueOnce({ csrfToken: 'any-string' });
     // when
-    render(<HomePage />);
+    render(
+      <AxiosErrorCatcherContext.Provider value={axiosErrorCatcherMock}>
+        <HomePage />
+      </AxiosErrorCatcherContext.Provider>,
+    );
     // then
     expect(FranceConnectButton).toHaveBeenCalled();
   });
 
   it('should render the paragraph', () => {
     // given
-    const { getByTestId } = render(<HomePage />);
+    const { getByTestId } = render(
+      <AxiosErrorCatcherContext.Provider value={axiosErrorCatcherMock}>
+        <HomePage />
+      </AxiosErrorCatcherContext.Provider>,
+    );
     // when
     const element = getByTestId('paragraph');
     // then
     expect(element).toBeInTheDocument();
     expect(element).toHaveTextContent(
       'Une fois connecté, vous pourrez accéder à l’ensemble des connexions et échanges de données liés à votre compte sur les 6 derniers mois.',
+    );
+  });
+
+  it('should call AlertComponent with specific props if session has expired', () => {
+    // when
+    render(
+      <AxiosErrorCatcherContext.Provider value={{ ...axiosErrorCatcherMock, hasError: true }}>
+        <HomePage />
+      </AxiosErrorCatcherContext.Provider>,
+    );
+    // then
+    expect(AlertComponent).toHaveBeenCalledTimes(1);
+    expect(AlertComponent).toHaveBeenCalledWith(
+      {
+        children: expect.anything(),
+        className: 'text-left fr-mb-3w',
+        size: 'sm',
+        type: 'warning',
+      },
+      {},
     );
   });
 });

@@ -2393,6 +2393,11 @@ cypress-image-snapshot@^4.0.1:
     pkg-dir "^3.0.0"
     term-img "^4.0.0"
 
+cypress-network-idle@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/cypress-network-idle/-/cypress-network-idle-1.10.0.tgz#c7f6345c278692e96b729b7eb1e7318a55142919"
+  integrity sha512-TNtf9zquBCPMI79wMUCuVdA5jZEWJ1VN4VQ4nHngYOIKUtPKF+0LbcIxWxalyzGbPY6sTLyq4hprOxx+7mnAqA==
+
 cypress-template-fixtures@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/cypress-template-fixtures/-/cypress-template-fixtures-1.0.3.tgz#a99fe1a75fbc5dc9b451e5dd86c40e9c5065d326"

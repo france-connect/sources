@@ -2,10 +2,11 @@ import {
   Body,
   Controller,
   Get,
+  HttpStatus,
   Injectable,
   Post,
   Query,
-  UnauthorizedException,
+  Res,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -27,6 +28,7 @@ import {
 
 import { GetUserTracesQueryDto, UserPreferencesBodyDto } from '../dto';
 import { UserDashboardBackRoutes } from '../enums';
+import { HttpErrorResponse } from '../interfaces';
 import { UserDashboardService } from '../services';
 
 @Injectable()
@@ -58,14 +60,17 @@ export class UserDashboardController {
   @Get(UserDashboardBackRoutes.TRACKS)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async getUserTraces(
+    @Res({ passthrough: true }) res,
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
     @Query() query: GetUserTracesQueryDto,
-  ): Promise<FSA> {
+  ): Promise<FSA | HttpErrorResponse> {
     this.logger.debug(`getUserTraces() with ${query}`);
     const idpIdentity = await sessionOidc.get('idpIdentity');
     if (!idpIdentity) {
-      throw new UnauthorizedException();
+      return res.status(HttpStatus.UNAUTHORIZED).send({
+        code: 'INVALID_SESSION',
+      });
     }
 
     this.logger.trace({ idpIdentity });
@@ -80,16 +85,16 @@ export class UserDashboardController {
 
   @Get(UserDashboardBackRoutes.USER_INFOS)
   async getUserInfos(
+    @Res({ passthrough: true }) res,
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
-  ): Promise<{
-    firstname: string;
-    lastname: string;
-  }> {
+  ): Promise<{ firstname: string; lastname: string } | HttpErrorResponse> {
     this.logger.debug('getUserInfos()');
     const idpIdentity = await sessionOidc.get('idpIdentity');
     if (!idpIdentity) {
-      throw new UnauthorizedException();
+      return res.status(HttpStatus.UNAUTHORIZED).send({
+        code: 'INVALID_SESSION',
+      });
     }
 
     const firstname = idpIdentity?.given_name;
@@ -101,12 +106,15 @@ export class UserDashboardController {
 
   @Get(UserDashboardBackRoutes.USER_PREFERENCES)
   async getUserPreferences(
+    @Res({ passthrough: true }) res,
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
-  ): Promise<FormattedIdpSettingDto> {
+  ): Promise<FormattedIdpSettingDto | HttpErrorResponse> {
     const idpIdentity = await sessionOidc.get('idpIdentity');
     if (!idpIdentity) {
-      throw new UnauthorizedException();
+      return res.status(HttpStatus.UNAUTHORIZED).send({
+        code: 'INVALID_SESSION',
+      });
     }
 
     const preferences = await this.userPreferences.getUserPreferencesList(
@@ -119,13 +127,16 @@ export class UserDashboardController {
   @Post(UserDashboardBackRoutes.USER_PREFERENCES)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async updateUserPreferences(
+    @Res({ passthrough: true }) res,
     @Body() body: UserPreferencesBodyDto,
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
-  ): Promise<FormattedIdpSettingDto> {
+  ): Promise<FormattedIdpSettingDto | HttpErrorResponse> {
     const idpIdentity = await sessionOidc.get('idpIdentity');
     if (!idpIdentity) {
-      throw new UnauthorizedException();
+      return res.status(HttpStatus.UNAUTHORIZED).send({
+        code: 'INVALID_SESSION',
+      });
     }
 
     const { csrfToken, idpList, allowFutureIdp } = body;

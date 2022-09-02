@@ -16,6 +16,8 @@ interface ServiceComponentProps {
 export const ServiceComponent: React.FC<ServiceComponentProps> = React.memo(
   ({ service }: ServiceComponentProps) => {
     const gtMobile = useMediaQuery({ query: '(min-width: 576px)' });
+    const gtDesktop = useMediaQuery({ query: '(min-width: 992px)' });
+
     const [isDisabled, setIsDisabled] = useState(!service.isChecked);
 
     // @NOTE declarative function
@@ -35,12 +37,15 @@ export const ServiceComponent: React.FC<ServiceComponentProps> = React.memo(
 
     return (
       <li
-        className={classnames(
-          'flex-start items-start fr-pt-2w fr-toggle--border-bottom',
-          // class CSS
+        className={classnames('flex-start items-start fr-pt-2w fr-toggle--border-bottom', {
+          disabled: isDisabled,
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          { disabled: isDisabled, 'flex-columns': gtMobile, 'flex-rows': !gtMobile },
-        )}
+          'flex-columns': gtMobile,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'flex-rows': !gtMobile,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          'fr-pb-1w': gtDesktop,
+        })}
         data-testid={`service-component-${service.name}`}>
         <ServiceImageComponent disabled={isDisabled} service={service} />
         <ToggleInput

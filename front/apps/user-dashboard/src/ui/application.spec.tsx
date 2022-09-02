@@ -3,6 +3,7 @@ import { mocked } from 'jest-mock';
 import { ReactElement } from 'react';
 
 import { AccountProvider, AccountProviderProps } from '@fc/account';
+import { AxiosErrorCatcherProvider, AxiosErrorCatcherProviderProps } from '@fc/axios-error-catcher';
 import { ApplicationLayout } from '@fc/dsfr';
 import { AppContextProvider, AppContextProviderProps } from '@fc/state-management';
 
@@ -16,6 +17,7 @@ describe('Application', () => {
   const AppContextProviderMock = mocked(AppContextProvider);
   const ApplicationLayoutMock = mocked(ApplicationLayout);
   const AccountProviderMock = mocked(AccountProvider);
+  const AxiosErrorCatcherProviderMock = mocked(AxiosErrorCatcherProvider);
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -27,6 +29,9 @@ describe('Application', () => {
     );
     AccountProviderMock.mockImplementation(
       ({ children }: AccountProviderProps) => children as ReactElement,
+    );
+    AxiosErrorCatcherProviderMock.mockImplementation(
+      ({ children }: AxiosErrorCatcherProviderProps) => children as ReactElement,
     );
     ApplicationLayoutMock.mockReturnValue(<div>ApplicationLayoutMock mockReturnValue</div>);
   });
@@ -62,5 +67,12 @@ describe('Application', () => {
       }),
       {},
     );
+  });
+
+  it('should call AxiosErrorCatcherProvider', () => {
+    // When
+    render(<Application />);
+    // Then
+    expect(AxiosErrorCatcherProviderMock).toHaveBeenCalled();
   });
 });

@@ -34,7 +34,8 @@ Fonctionnalité: Préférences FI
     Et que je décide de bloquer le fournisseur d'identité
     Et que je décide d'autoriser les futurs fournisseurs d'identité par défaut
     Et que je confirme le message "autorisation des futurs fournisseurs d'identité"
-    Et que j'enregistre mes réglages d'accès
+    Et que je clique sur le bouton "enregistrer mes réglages"
+    Et que le message "notification de modifications envoyée" est affiché
     Et que je me déconnecte du dashboard usager
     Quand je me connecte au fournisseur d'identité via FranceConnect Legacy
     Alors je suis redirigé vers la page erreur technique FranceConnect Legacy

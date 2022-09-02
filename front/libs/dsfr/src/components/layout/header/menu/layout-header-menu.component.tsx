@@ -32,7 +32,10 @@ export const LayoutHeaderMenuComponent: React.FC<LayoutHeaderMenuComponentProps>
         </button>
         <LayoutHeaderToolsComponent isModalMenu firstname={firstname} lastname={lastname} />
         {navigationItems?.length && (
-          <LayoutHeaderNavigationComponent navigationItems={navigationItems} />
+          <LayoutHeaderNavigationComponent
+            navigationItems={navigationItems}
+            onItemClick={onClose}
+          />
         )}
       </div>
     </div>

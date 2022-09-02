@@ -14,6 +14,7 @@
 // ***********************************************************
 
 import 'cypress-axe';
+import 'cypress-network-idle';
 import 'cypress-xpath';
 
 import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';

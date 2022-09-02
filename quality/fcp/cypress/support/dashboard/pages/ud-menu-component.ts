@@ -14,7 +14,7 @@ export default class UdMenuComponent {
   getHistoryLink(): ChainableElement {
     return cy.contains(
       'header[role="banner"] nav[role="navigation"] a',
-      'Mon historique de navigation',
+      'Mon historique de connexion',
     );
   }
 
@@ -23,5 +23,13 @@ export default class UdMenuComponent {
       'header[role="banner"] nav[role="navigation"] a',
       'Gérer mes accès',
     );
+  }
+
+  getOpenMobileMenuButton(): ChainableElement {
+    return cy.get('#burger-button-mobile-menu');
+  }
+
+  getPreferencesMobileLink(): ChainableElement {
+    return cy.get('#layout-header-menu-modal a[title="Gérer mes accès"]');
   }
 }

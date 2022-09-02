@@ -24,6 +24,20 @@ exports[`TracksListComponent should match snapshot 1`] = `
 </div>
 `;
 
+exports[`TracksListComponent should match snapshot when data contains no tracks 1`] = `
+<div>
+  <div
+    class="fr-mt-5w"
+    id="tracks-list"
+  >
+    <div
+      class="flex-columns flex-center"
+      id="tracks-pagination"
+    />
+  </div>
+</div>
+`;
+
 exports[`TracksListComponent should match snapshot when tracks data are not defined 1`] = `
 <div>
   <div

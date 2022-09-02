@@ -45,7 +45,9 @@
       "@fc/account": ["../../libs/account/src"],
       "@fc/account/*": ["../../libs/account/src/*"],
       "@fc/storybook-config": ["../../.storybook"],
-      "@fc/storybook-config/*": ["../../.storybook/*"]
+      "@fc/storybook-config/*": ["../../.storybook/*"],
+      "@fc/axios-error-catcher": ["../../libs/axios-error-catcher/src"],
+      "@fc/axios-error-catcher/*": ["../../libs/axios-error-catcher/src/*"]
     }
   }
 }

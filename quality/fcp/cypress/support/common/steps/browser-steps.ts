@@ -8,7 +8,5 @@ Given('je supprime tous les cookies', function () {
 
 When(/^je rafraîchis la page$/, function () {
   cy.reload();
-  // Need to wait for the page after refresh
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(500);
+  cy.waitForNetworkIdle('/api', 500);
 });

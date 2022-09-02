@@ -278,17 +278,19 @@ describe('CsmrTracksElasticService', () => {
   describe('getScriptsFields()', () => {
     it('should get script parts query', () => {
       const platformScript = `
-    def legacy = 'FranceConnect';
-    def coreHigh = 'FranceConnect+';
     if(doc.containsKey('service')) {
-      return doc['service'].contains('fc_core_v2_app') ? coreHigh : legacy; 
+      return doc['service'].contains('fc_core_v2_app') ? params['FCP_HIGH'] : params['FC_LEGACY']; 
     }
-    return legacy;
+    return params['FC_LEGACY'];
     `;
 
       const resultMock = {
         platform: {
           script: {
+            params: {
+              FC_LEGACY: 'FranceConnect',
+              FCP_HIGH: 'FranceConnect+',
+            },
             lang: 'painless',
             source: platformScript,
           },
@@ -297,12 +299,6 @@ describe('CsmrTracksElasticService', () => {
           script: {
             lang: 'painless',
             source: `return doc.containsKey('fs_label') ? doc.fs_label : doc.spName;`,
-          },
-        },
-        trackId: {
-          script: {
-            lang: 'painless',
-            source: `return doc['_id'].value`,
           },
         },
       };
@@ -374,12 +370,12 @@ describe('CsmrTracksElasticService', () => {
       fields: ['field1', 'field2'],
       query: {
         bool: {
-          must: [
+          filter: [
+            { terms: { accountId: ['idValue1', 'idValue2'] } },
             {
               range: { time: { gte: 'sixMonthAgoValue', lte: 'nowValue' } },
             },
             eventsQueryMock,
-            { terms: { accountId: ['idValue1', 'idValue2'] } },
           ],
         },
       },

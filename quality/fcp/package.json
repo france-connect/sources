@@ -32,6 +32,5 @@
     "start:ud": "cypress open --config-file cypress-ud.json",
     "report:prepare": "ts-node ../scripts/prepare-cucumber-logs && rm -f cypress/reports/cucumber/empty.cucumber.json",
     "report:generate": "ts-node ../scripts/multiple-cucumber-html-reporter"
-  },
-  "dependencies": {}
+  }
 }

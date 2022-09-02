@@ -42,6 +42,7 @@ describe('ServiceComponent', () => {
   it('should match the snapshot, in a desktop viewport', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(true);
+    mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
     const { container } = render(<ServiceComponent service={serviceMock} />, {
       wrapper: Wrapper,
@@ -52,6 +53,7 @@ describe('ServiceComponent', () => {
 
   it('should match the snapshot, in a mobile viewport', () => {
     // given
+    mocked(useMediaQuery).mockReturnValueOnce(false);
     mocked(useMediaQuery).mockReturnValueOnce(false);
     // when
     const { container } = render(<ServiceComponent service={serviceMock} />, {

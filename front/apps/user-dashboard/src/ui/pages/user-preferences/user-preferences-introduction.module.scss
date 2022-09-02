@@ -1,3 +1,5 @@
+@import '@fc/dsfr/styles/index.scss';
+
 .title {
   color: var(--text-active-blue-france);
 }
@@ -7,5 +9,10 @@
 
   @media screen and (min-width: 992px) {
     width: 350px;
+  }
+
+  > img {
+    border: 2px solid $blue-france-500;
+    border-radius: 8px;
   }
 }
