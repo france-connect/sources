@@ -1,3 +1,3 @@
 #!/bin/bash
 
-yarn fixtures "./fixtures/$APP_NAME" --config ./typeorm.config.ts --require=ts-node/register --require=tsconfig-paths/register
+yarn fixtures load "./fixtures/$APP_NAME" -d ./typeorm.config.ts --require=ts-node/register --require=tsconfig-paths/register

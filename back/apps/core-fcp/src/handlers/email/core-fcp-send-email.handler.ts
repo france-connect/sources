@@ -56,12 +56,10 @@ export class CoreFcpSendEmailHandler
     session: OidcSession,
   ): Promise<string> {
     const { fqdn } = this.config.get<AppConfig>('App');
-    const { idpId, spIdentity, spName } = session;
+    const { idpId, spName } = session;
     const { title: idpTitle } = await this.identityProvider.getById(idpId);
     const today = this.getTodayFormattedDate(new Date());
     const connectNotificationEmailParameters = {
-      familyName: spIdentity.family_name,
-      givenName: spIdentity.given_name,
       idpTitle,
       spName,
       today,

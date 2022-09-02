@@ -1,7 +1,7 @@
 import { ChainableElement } from '../../common/types';
 
 export default class IdentityProviderSelectionPage {
-  get backToServiceProviderLink(): ChainableElement {
+  getBackToServiceProviderLink(): ChainableElement {
     return cy.get('.previous-link-container');
   }
 

@@ -29,7 +29,7 @@ export const ServiceComponent: React.FC<ServiceComponentProps> = React.memo(
 
     // @NOTE declarative function
     /* istanbul ignore next */
-    const onChangeHandler = useCallback((value) => {
+    const onChangeHandler = useCallback((value: boolean) => {
       setIsDisabled(!value);
     }, []);
 

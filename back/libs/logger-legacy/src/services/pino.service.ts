@@ -1,4 +1,4 @@
-import * as pino from 'pino';
+import pino, { DestinationStream, Logger } from 'pino';
 
 import { Injectable, ShutdownSignal } from '@nestjs/common';
 
@@ -6,7 +6,6 @@ import { ConfigService } from '@fc/config';
 
 import { LoggerConfig } from '../dto';
 import { LoggerLevelCodes } from '../enum';
-import { LoggerTransport } from '../interfaces';
 import { pinoLevelsMap } from '../log-maps.map';
 
 /**
@@ -19,7 +18,7 @@ export function formatLevel(label: string, _number: number): { level: string } {
 
 @Injectable()
 export class PinoService {
-  public readonly transport: LoggerTransport;
+  public readonly transport: Logger;
   public readonly level: LoggerLevelCodes;
 
   constructor(private readonly config: ConfigService) {
@@ -33,13 +32,13 @@ export class PinoService {
         formatters: {
           level: formatLevel,
         },
-        level: this.level,
+        level,
       },
       stream,
     );
   }
 
-  private getDestinationForLog(path: string): unknown {
+  private getDestinationForLog(path: string): DestinationStream {
     const stream = pino.destination(path);
     process.on(ShutdownSignal.SIGUSR2, () => {
       // keep warnnings here, this log must not be in business logs

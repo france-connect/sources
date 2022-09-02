@@ -37,7 +37,7 @@ describe('Error scenarios (EU Citizen / FR Service Provider)', () => {
       'includes',
       `${Cypress.env(
         'CORE_ROOT_URL',
-      )}/api/v2/oidc-callback?error=eidas_node_error&error_description=StatusCode%3A%20Responder%0ASubStatusCode%3A%20%23%23%0AStatusMessage%3A%20202019%20-%20Incorrect%20Level%20of%20Assurance%20in%20IdP%20response&state=`,
+      )}/api/v2/oidc-callback?error=eidas_node_error&error_description=StatusCode%3A%20Responder%0AStatusMessage%3A%20202019%20-%20Incorrect%20Level%20of%20Assurance%20in%20IdP%20response&state=`,
     );
   });
 });

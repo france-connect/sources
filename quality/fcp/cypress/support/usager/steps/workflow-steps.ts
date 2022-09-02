@@ -54,7 +54,7 @@ class ConnectionWorkflow {
    * @returns the current ConnectionWorkflow instance
    */
   start(): ConnectionWorkflow {
-    this.serviceProviderPage.fcButton.click();
+    this.serviceProviderPage.getFcButton().click();
     return this;
   }
 
@@ -104,7 +104,7 @@ class ConnectionWorkflow {
    */
   consent(): ConnectionWorkflow {
     const infoConsent = new InfoConsentPage();
-    infoConsent.consentButton.click();
+    infoConsent.getConsentButton().click();
     return this;
   }
 

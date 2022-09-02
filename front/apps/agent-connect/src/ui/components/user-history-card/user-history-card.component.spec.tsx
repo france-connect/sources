@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 
 import { UserHistoryCardComponent } from './user-history-card.component';
 import { UserHistoryCardContentComponent } from './user-history-card-content.component';

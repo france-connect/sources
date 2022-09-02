@@ -54,7 +54,16 @@ export class EidasToOidcService {
   }
 
   mapPartialResponseFailure({ status }: EidasResponse): OidcError {
-    const errorDescription = `StatusCode: ${status.statusCode}\nSubStatusCode: ${status.subStatusCode}\nStatusMessage: ${status.statusMessage}`;
+    const { statusCode, subStatusCode, statusMessage } = status;
+
+    let errorDescription = '';
+    errorDescription = statusCode ? `StatusCode: ${status.statusCode}\n` : '';
+    errorDescription = subStatusCode
+      ? errorDescription + `SubStatusCode: ${status.subStatusCode}\n`
+      : errorDescription;
+    errorDescription = statusMessage
+      ? errorDescription + `StatusMessage: ${status.statusMessage}`
+      : errorDescription;
 
     return {
       error: 'eidas_node_error',

@@ -38,26 +38,25 @@ Then('le ministère du FI est affiché dans la liste', function () {
 });
 
 Then('plusieurs ministères sont affichés dans la liste', function () {
-  identityProviderSelectionPage.ministries.should('have.length.above', 1);
+  identityProviderSelectionPage.getMinistries().should('have.length.above', 1);
 });
 
 Then('le nombre de ministère affiché est {int}', function (count) {
-  identityProviderSelectionPage.ministries.should('have.length', count);
+  identityProviderSelectionPage.getMinistries().should('have.length', count);
 });
 
 Then(
   "plusieurs fournisseurs d'identité sont affichés dans la liste",
   function () {
-    identityProviderSelectionPage.identityProviders.should(
-      'have.length.above',
-      1,
-    );
+    identityProviderSelectionPage
+      .getIdentityProviders()
+      .should('have.length.above', 1);
   },
 );
 
 Then("aucun fournisseur d'identité n'est trouvé", function () {
   identityProviderSelectionPage.checkIsNoResultMessageIsVisible();
-  identityProviderSelectionPage.identityProviders.should('not.exist');
+  identityProviderSelectionPage.getIdentityProviders().should('not.exist');
 });
 
 Then(

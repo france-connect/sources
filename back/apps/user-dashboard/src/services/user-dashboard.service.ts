@@ -42,7 +42,7 @@ export class UserDashboardService {
     userInfo,
     idpConfiguration,
   ): Promise<string> {
-    const { email, givenName, familyName } = userInfo;
+    const { email } = userInfo;
     const {
       updatedIdpSettingsList,
       hasAllowFutureIdpChanged,
@@ -50,11 +50,9 @@ export class UserDashboardService {
       updatedAt,
     } = idpConfiguration;
 
-    const fullName = `${givenName} ${familyName[0].toUpperCase()}.`;
     const formattedUpdateDate = this.formatDateForEmail(updatedAt);
     const idpConfigUpdateEmail = {
       email,
-      fullName,
       updatedIdpSettingsList,
       allowFutureIdp,
       hasAllowFutureIdpChanged,

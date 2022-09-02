@@ -2,10 +2,10 @@
  * @jest-environment jsdom
  */
 import { render } from '@testing-library/react';
+import { mocked } from 'jest-mock';
 import { combineReducers, createStore } from 'redux';
 import { persistStore } from 'redux-persist';
 import { PersistGateProps } from 'redux-persist/integration/react';
-import { mocked } from 'ts-jest/utils';
 
 import { configure } from './configure';
 import { StoreProvider } from './store-provider';

@@ -1,17 +1,17 @@
 import { ChainableElement } from '../../common/types';
 
 export default class IdentityProviderSelectionPage {
-  get backToServiceProviderLink(): ChainableElement {
+  getBackToServiceProviderLink(): ChainableElement {
     return cy.get('.previous-link-container');
   }
 
-  get ministries(): ChainableElement {
+  getMinistries(): ChainableElement {
     return cy.get(
       '#identity-provider-result dl[data-testid^="ministry-search-list__"] dt',
     );
   }
 
-  get identityProviders(): ChainableElement {
+  getIdentityProviders(): ChainableElement {
     return cy.get('#identity-provider-result button');
   }
 

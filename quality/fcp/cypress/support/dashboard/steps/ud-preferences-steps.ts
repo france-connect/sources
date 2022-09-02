@@ -104,6 +104,9 @@ When(
       } else {
         cy.wrap($btn).click();
         cy.reload();
+        // Need to wait for the page after refresh
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(500);
       }
     });
   },

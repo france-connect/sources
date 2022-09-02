@@ -1,7 +1,6 @@
-import { act } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import axios, { AxiosResponse } from 'axios';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 
 import { useApiGet } from '@fc/common';
 
@@ -94,8 +93,15 @@ describe('useUserPreferencesApi', () => {
     });
 
     it('should call UserPreferencesService.parseFormData when userPreferences are defined but none formValues', () => {
+      // given
+      mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
+        allowFutureIdp: userPreferences.allowFutureIdp,
+        idpList,
+      });
+
       // when
       renderHook(() => useUserPreferencesApi(options));
+
       // then
       expect(UserPreferencesService.parseFormData).toHaveBeenCalledTimes(1);
       expect(UserPreferencesService.parseFormData).toHaveBeenCalledWith(userPreferences);
@@ -130,17 +136,18 @@ describe('useUserPreferencesApi', () => {
         idpList,
       });
       // when
-      const { result, waitForNextUpdate } = renderHook(() => useUserPreferencesApi(options));
+      const { result } = renderHook(() => useUserPreferencesApi(options));
       act(() => {
         result.current.commit({ allowFutureIdp: false, idpList });
       });
       // then
-      await waitForNextUpdate();
-      expect(UserPreferencesService.encodeFormData).toHaveBeenCalledTimes(1);
-      expect(UserPreferencesService.encodeFormData).toHaveBeenCalledWith({
-        allowFutureIdp: false,
-        csrfToken,
-        idpList,
+      await waitFor(() => {
+        expect(UserPreferencesService.encodeFormData).toHaveBeenCalledTimes(1);
+        expect(UserPreferencesService.encodeFormData).toHaveBeenCalledWith({
+          allowFutureIdp: false,
+          csrfToken,
+          idpList,
+        });
       });
     });
 
@@ -155,14 +162,15 @@ describe('useUserPreferencesApi', () => {
       dataMock.append('idpList', 'idplistmock');
       mocked(UserPreferencesService.encodeFormData).mockReturnValueOnce(dataMock);
       // when
-      const { result, waitForNextUpdate } = renderHook(() => useUserPreferencesApi(options));
+      const { result } = renderHook(() => useUserPreferencesApi(options));
       act(() => {
         result.current.commit({ allowFutureIdp: false, idpList });
       });
       // then
-      await waitForNextUpdate();
-      expect(axios.post).toHaveBeenCalledTimes(1);
-      expect(axios.post).toHaveBeenCalledWith(options.API_ROUTE_USER_PREFERENCES, dataMock);
+      await waitFor(() => {
+        expect(axios.post).toHaveBeenCalledTimes(1);
+        expect(axios.post).toHaveBeenCalledWith(options.API_ROUTE_USER_PREFERENCES, dataMock);
+      });
     });
 
     it('should resolve axios.post and return formValues', async () => {
@@ -190,29 +198,30 @@ describe('useUserPreferencesApi', () => {
        * (multiple // when, expects in when)
        */
       // when
-      const { result, waitForNextUpdate } = renderHook(() => useUserPreferencesApi(options));
+      const { result } = renderHook(() => useUserPreferencesApi(options));
       // when
       act(() => {
         result.current.commit({ allowFutureIdp: false, idpList: expect.any(Object) });
       });
       // then
-      await waitForNextUpdate();
-      expect(axios.post).toHaveBeenCalledTimes(1);
-      expect(UserPreferencesService.encodeFormData).toHaveBeenCalledTimes(1);
-      expect(UserPreferencesService.encodeFormData).toHaveBeenCalledWith({
-        allowFutureIdp: false,
-        csrfToken: 'csrfTokenMockValue',
-        idpList: expect.any(Object),
-      });
-      expect(UserPreferencesService.parseFormData).toHaveBeenCalledTimes(2);
-      expect(UserPreferencesService.parseFormData).toHaveBeenNthCalledWith(2, dataValueMock);
-      expect(result.current).toStrictEqual({
-        commit: expect.any(Function),
-        formValues: { ...dataValueMock },
-        submitErrors: undefined,
-        submitWithSuccess: true,
-        userPreferences: { allowFutureIdp: false, idpList: expect.any(Object) },
-        validateHandler: expect.any(Function),
+      await waitFor(() => {
+        expect(axios.post).toHaveBeenCalledTimes(1);
+        expect(UserPreferencesService.encodeFormData).toHaveBeenCalledTimes(1);
+        expect(UserPreferencesService.encodeFormData).toHaveBeenCalledWith({
+          allowFutureIdp: false,
+          csrfToken: 'csrfTokenMockValue',
+          idpList: expect.any(Object),
+        });
+        expect(UserPreferencesService.parseFormData).toHaveBeenCalledTimes(2);
+        expect(UserPreferencesService.parseFormData).toHaveBeenNthCalledWith(2, dataValueMock);
+        expect(result.current).toStrictEqual({
+          commit: expect.any(Function),
+          formValues: { ...dataValueMock },
+          submitErrors: undefined,
+          submitWithSuccess: true,
+          userPreferences: { allowFutureIdp: false, idpList: expect.any(Object) },
+          validateHandler: expect.any(Function),
+        });
       });
       // reset
       parseFormDataMock.mockReset();
@@ -227,23 +236,24 @@ describe('useUserPreferencesApi', () => {
       const errorMock = new Error('any-error');
       mocked(axios.post).mockRejectedValueOnce(errorMock);
       // when
-      const { result, waitForNextUpdate } = renderHook(() => useUserPreferencesApi(options));
+      const { result } = renderHook(() => useUserPreferencesApi(options));
       // when
       act(() => {
         result.current.commit({ allowFutureIdp: false, idpList: expect.any(Object) });
       });
       // then
-      await waitForNextUpdate();
-      expect(result.current).toStrictEqual({
-        commit: expect.any(Function),
-        formValues: {
-          allowFutureIdp: true,
-          idpList,
-        },
-        submitErrors: errorMock,
-        submitWithSuccess: false,
-        userPreferences: { allowFutureIdp: false, idpList: expect.any(Object) },
-        validateHandler: expect.any(Function),
+      await waitFor(() => {
+        expect(result.current).toStrictEqual({
+          commit: expect.any(Function),
+          formValues: {
+            allowFutureIdp: true,
+            idpList,
+          },
+          submitErrors: errorMock,
+          submitWithSuccess: false,
+          userPreferences: { allowFutureIdp: false, idpList: expect.any(Object) },
+          validateHandler: expect.any(Function),
+        });
       });
     });
 

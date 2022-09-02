@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
-import { mocked } from 'ts-jest/utils';
 
 import { DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION, DEFAULT_USE_ELLIPSIS } from '../../enums';
 import { PaginationComponent } from './pagination.component';

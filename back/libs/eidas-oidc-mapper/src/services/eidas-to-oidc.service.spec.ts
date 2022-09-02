@@ -161,26 +161,96 @@ describe('EidasToOidcService', () => {
   });
 
   describe('mapPartialResponseFailure', () => {
-    const eidasResponse = {
-      status: {
-        statusCode: EidasStatusCodes.SUCCESS,
-        statusMessage: 'This is a message',
-        subStatusCode: EidasSubStatusCodes.AUTHN_FAILED,
-      },
-    } as EidasResponse;
-
-    const expectedError = {
-      error: 'eidas_node_error',
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      error_description: `StatusCode: ${eidasResponse.status.statusCode}\nSubStatusCode: ${eidasResponse.status.subStatusCode}\nStatusMessage: ${eidasResponse.status.statusMessage}`,
-    };
-
     it('should return an oidc error from an eidas error', () => {
+      // Given
+      const eidasResponse = {
+        status: {
+          statusCode: EidasStatusCodes.SUCCESS,
+          statusMessage: 'This is a message',
+          subStatusCode: EidasSubStatusCodes.AUTHN_FAILED,
+        },
+      } as EidasResponse;
+
+      const expectedError = {
+        error: 'eidas_node_error',
+        // oidc parameter
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: `StatusCode: ${eidasResponse.status.statusCode}\nSubStatusCode: ${eidasResponse.status.subStatusCode}\nStatusMessage: ${eidasResponse.status.statusMessage}`,
+      };
+
+      // When
+      const result = service.mapPartialResponseFailure(eidasResponse);
+
+      // Then
+      expect(result).toStrictEqual(expectedError);
+    });
+
+    it('should return an oidc error from an eidas error without subStatusCode', () => {
+      // Given
+      const eidasResponse = {
+        status: {
+          statusCode: EidasStatusCodes.SUCCESS,
+          statusMessage: 'This is a message',
+        },
+      } as EidasResponse;
+
+      const expectedError = {
+        error: 'eidas_node_error',
+        // oidc parameter
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: `StatusCode: ${eidasResponse.status.statusCode}\nStatusMessage: ${eidasResponse.status.statusMessage}`,
+      };
+
+      // When
+      const result = service.mapPartialResponseFailure(eidasResponse);
+
+      // Then
+      expect(result).toStrictEqual(expectedError);
+    });
+
+    it('should return an oidc error from an eidas error without statusMessage', () => {
+      // Given
+      const eidasResponse = {
+        status: {
+          statusCode: EidasStatusCodes.SUCCESS,
+          subStatusCode: EidasSubStatusCodes.AUTHN_FAILED,
+        },
+      } as EidasResponse;
+
+      const expectedError = {
+        error: 'eidas_node_error',
+        // oidc parameter
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: `StatusCode: ${eidasResponse.status.statusCode}\nSubStatusCode: ${eidasResponse.status.subStatusCode}\n`,
+      };
+
       // action
       const result = service.mapPartialResponseFailure(eidasResponse);
 
       // expect
+      expect(result).toStrictEqual(expectedError);
+    });
+
+    it('should return an oidc error from an eidas error without statusCode', () => {
+      // Given
+      const eidasResponse = {
+        status: {
+          statusMessage: 'This is a message',
+          subStatusCode: EidasSubStatusCodes.AUTHN_FAILED,
+        },
+      } as EidasResponse;
+
+      const expectedError = {
+        error: 'eidas_node_error',
+        // oidc parameter
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: `SubStatusCode: ${eidasResponse.status.subStatusCode}\nStatusMessage: ${eidasResponse.status.statusMessage}`,
+      };
+
+      // When
+      const result = service.mapPartialResponseFailure(eidasResponse);
+
+      // Then
       expect(result).toStrictEqual(expectedError);
     });
   });

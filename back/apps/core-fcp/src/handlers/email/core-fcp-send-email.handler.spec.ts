@@ -175,7 +175,7 @@ const template = `
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td class="h2">
-                      Bonjour, <%= locals.givenName %> <%= locals.familyName %>.
+                      Bonjour,
                     </td>
                   </tr>
                   <tr>
@@ -412,10 +412,6 @@ describe('CoreFcpSendEmailHandler', () => {
   const connectNotificationEmailParametersMock = {
     idpTitle: idpMock.title,
     spName: sessionDataMock.spName,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    givenName: spIdentityWithEmailMock.given_name,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    familyName: spIdentityWithEmailMock.family_name,
     today: 'Le 01/01/2021 à 14:14',
     fqdn: 'my-instance-domain',
   };
@@ -534,8 +530,6 @@ describe('CoreFcpSendEmailHandler', () => {
       expect(mailerServiceMock.mailToSend).toHaveBeenCalledWith(
         EmailsTemplates.NOTIFICATION_EMAIL,
         {
-          familyName: spIdentityWithEmailMock.family_name,
-          givenName: spIdentityWithEmailMock.given_name,
           idpTitle: idpMock.title,
           spName: sessionDataMock.spName,
           today: connectNotificationEmailParametersMock.today,

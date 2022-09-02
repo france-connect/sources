@@ -37,7 +37,7 @@ export const AgentConnectSearchProvider = ({
   });
 
   const setSearchTerm = useCallback(
-    (searchTerm) => {
+    (searchTerm: string) => {
       if (!payload.isLoaded) {
         return;
       }

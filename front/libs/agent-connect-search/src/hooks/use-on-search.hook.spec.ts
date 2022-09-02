@@ -1,3 +1,5 @@
+import { waitFor } from '@testing-library/react';
+
 import { renderWithContext } from '@fc/tests-utils';
 
 import { AgentConnectSearchContext } from '../agent-connect-search.context';
@@ -19,7 +21,7 @@ describe('useOnSearch', () => {
     // given
     const setSearchTermMock = jest.fn((value) => value);
     // when
-    const { result, waitFor } = renderWithContext(useOnSearch, AgentConnectSearchContext, {
+    const { result } = renderWithContext(useOnSearch, AgentConnectSearchContext, {
       setSearchTerm: setSearchTermMock,
     });
     // label HTML name
@@ -48,7 +50,7 @@ describe('useOnSearch', () => {
     // given
     const setSearchTermMock = jest.fn((value) => value);
     // when
-    const { result, waitFor } = renderWithContext(useOnSearch, AgentConnectSearchContext, {
+    const { result } = renderWithContext(useOnSearch, AgentConnectSearchContext, {
       setSearchTerm: setSearchTermMock,
     });
     // label HTML name
@@ -65,7 +67,7 @@ describe('useOnSearch', () => {
     // given
     const setSearchTermMock = jest.fn((value) => value);
     // when
-    const { result, waitFor } = renderWithContext(useOnSearch, AgentConnectSearchContext, {
+    const { result } = renderWithContext(useOnSearch, AgentConnectSearchContext, {
       setSearchTerm: setSearchTermMock,
     });
     // label HTML name

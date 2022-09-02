@@ -22,7 +22,7 @@ export const usePagination = ({
   const { offset, size, total } = pagination;
 
   const paginationChangeHandler = useCallback(
-    (nextPage) => {
+    (nextPage: number) => {
       const nextOffset = nextPage * pagination.size;
       onPageClick(nextOffset);
     },

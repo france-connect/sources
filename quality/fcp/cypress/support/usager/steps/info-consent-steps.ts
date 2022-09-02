@@ -11,17 +11,20 @@ Then('je suis redirigé vers la page confirmation de connexion', function () {
 
 Then("je suis redirigé vers la page d'information", function () {
   infoConsentPage.checkIsVisible();
-  infoConsentPage.consentCheckbox.should('not.exist');
-  infoConsentPage.consentButton.should('be.enabled');
+  infoConsentPage.getConsentCheckbox().should('not.exist');
+  infoConsentPage.getConsentButton().should('be.enabled');
 });
 
 Then('je suis redirigé vers la page de consentement', function () {
   infoConsentPage.checkIsVisible();
-  infoConsentPage.consentCheckbox.should('be.visible').and('not.be.checked');
+  infoConsentPage
+    .getConsentCheckbox()
+    .should('be.visible')
+    .and('not.be.checked');
 });
 
 When('je clique pour afficher les claims', function () {
-  infoConsentPage.showClaimsToggle.click();
+  infoConsentPage.getShowClaimsToggle().click();
 });
 
 Then(
@@ -43,15 +46,15 @@ Then(
 When(
   'je consens à transmettre mes informations au fournisseur de service',
   function () {
-    infoConsentPage.consentCheckbox.check();
+    infoConsentPage.getConsentCheckbox().check();
   },
 );
 
 Then(/^le bouton continuer sur le FS est (actif|désactivé)$/, function (text) {
   const beEnabledOrNot = text === 'actif' ? 'be.enabled' : 'be.disabled';
-  infoConsentPage.consentButton.should(beEnabledOrNot);
+  infoConsentPage.getConsentButton().should(beEnabledOrNot);
 });
 
 When('je continue sur le fournisseur de service', function () {
-  infoConsentPage.consentButton.click();
+  infoConsentPage.getConsentButton().click();
 });

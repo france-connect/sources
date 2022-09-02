@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
+import { mocked } from 'jest-mock';
 import { Form } from 'react-final-form';
-import { mocked } from 'ts-jest/utils';
 
 import { useUserPreferencesApi } from '../hooks';
 import { UserPreferencesData } from '../interfaces';

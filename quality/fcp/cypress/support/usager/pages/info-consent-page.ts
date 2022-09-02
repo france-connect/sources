@@ -17,19 +17,19 @@ const CLAIM_LABELS = {
 /* eslint-enable @typescript-eslint/naming-convention */
 
 export default class InfoConsentPage {
-  get consentCheckbox(): ChainableElement {
+  getConsentCheckbox(): ChainableElement {
     return cy.get('#fc-ask-consent-checkbox');
   }
 
-  get consentButton(): ChainableElement {
+  getConsentButton(): ChainableElement {
     return cy.get('#consent');
   }
 
-  get showClaimsToggle(): ChainableElement {
+  getShowClaimsToggle(): ChainableElement {
     return cy.get('#toggleOpenCloseMenu');
   }
 
-  get claimDetails(): ChainableElement {
+  getClaimDetails(): ChainableElement {
     return cy.get('.content-details__content ul');
   }
 
@@ -56,26 +56,28 @@ export default class InfoConsentPage {
 
     if (!explicitConsent) {
       // Information page: Use the toggle to display the claims
-      this.showClaimsToggle.should('be.visible');
-      this.claimDetails.should('not.be.visible');
-      this.showClaimsToggle.click();
+      this.getShowClaimsToggle().should('be.visible');
+      this.getClaimDetails().should('not.be.visible');
+      this.getShowClaimsToggle().click();
     } else {
       // Consent page: Claims displayed without toggle
-      this.showClaimsToggle.should('not.exist');
+      this.getShowClaimsToggle().should('not.exist');
     }
 
-    this.claimDetails.should('be.visible');
-    this.claimDetails.invoke('text').then((text) => {
-      const arrClaims = text.trim().split(/\s\s+/);
-      // Check all expected claims
-      expectedClaims.forEach((claimName) =>
-        expect(arrClaims).include(CLAIM_LABELS[claimName]),
-      );
-      // Check no other claims
-      expect(arrClaims.length).to.equal(
-        expectedClaims.length,
-        `The claims count should be ${expectedClaims.length}`,
-      );
-    });
+    this.getClaimDetails().should('be.visible');
+    this.getClaimDetails()
+      .invoke('text')
+      .then((text) => {
+        const arrClaims = text.trim().split(/\s\s+/);
+        // Check all expected claims
+        expectedClaims.forEach((claimName) =>
+          expect(arrClaims).include(CLAIM_LABELS[claimName]),
+        );
+        // Check no other claims
+        expect(arrClaims.length).to.equal(
+          expectedClaims.length,
+          `The claims count should be ${expectedClaims.length}`,
+        );
+      });
   }
 }

@@ -1,6 +1,6 @@
+import { mocked } from 'jest-mock';
 import { applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { mocked } from 'ts-jest/utils';
 
 import { bindMiddlewares } from './bind-middlewares';
 

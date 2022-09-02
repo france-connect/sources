@@ -35,7 +35,8 @@ export const TracksListComponent = React.memo(({ options }: TracksListComponentP
   return (
     <div className="fr-mt-5w" id="tracks-list">
       {tracks.payload
-        ?.map(transformTrackToEnhanced)
+        ?.filter(Boolean)
+        .map(transformTrackToEnhanced)
         .reduce(groupTracksByMonth(options), [])
         .sort(orderGroupByKeyAsc)
         .map(([tracksGroupKey, { label, tracks: items }]: TrackList) => (

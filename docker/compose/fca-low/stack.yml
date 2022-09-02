@@ -11,6 +11,22 @@ services:
       - 'fsa1-low'
       - 'fia1-low'
 
+  bdd-fca-low:
+    image: alpine
+    depends_on:
+      - 'core-fca-low'
+      - 'fca-low-front'
+      - 'exploitation-fca-low'
+      # -- SP
+      - 'fsa1-low'
+      - 'fsa2-low'
+      - 'fsa4-low'
+      # -- IdP
+      - 'fia1-low'
+      - 'fia2-low'
+      - 'fia4-low'
+      - 'fia5-low'
+
   exploit-fca-low:
     image: alpine
     depends_on:

@@ -41,7 +41,7 @@ function connectToFcIdp(fcRequest) {
 export function configureEidasSpMockRequest(eidasRequest = {}) {
   const request = {
     nameId: 'unspecified',
-    loa: 'E',
+    loa: 'D',
     loaCompareType: 'minimum',
     spType: 'public',
     naturalPersonAttributes: [
@@ -119,7 +119,7 @@ export function checkInformationsEuSpFrIdp(params = {}) {
         'openid family_name preferred_username given_name birthdate gender birthplace birthcountry',
       // oidc parameter
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      acr_values: 'eidas3',
+      acr_values: 'eidas2',
     },
     expectedIdentity = [
       { name: 'BirthName', value: '[DUBOIS]' },
@@ -130,7 +130,7 @@ export function checkInformationsEuSpFrIdp(params = {}) {
       {
         name: 'PersonIdentifier',
         value:
-          '[FR/UK/082aef8c0d31e99d83d910879a4fcdd8610d571f07ce5610440b3a0161f6e393v1]',
+          '[FR/CB/082aef8c0d31e99d83d910879a4fcdd8610d571f07ce5610440b3a0161f6e393v1]',
       },
       {
         name: 'PlaceOfBirth',
@@ -148,6 +148,7 @@ export function checkInformationsEuSpFrIdp(params = {}) {
     cy.get('table.table-striped')
       .contains(name)
       .parent('tr')
+      // eslint-disable-next-line max-nested-callbacks
       .within(() => {
         cy.get('td').eq(0).contains(name);
         cy.get('td').eq(1).contains(value);
@@ -232,7 +233,7 @@ export function configureOidcSpMockRequest(params = {}) {
 export function basicSuccessScenarioFrSpEuIdp(params = {}) {
   configureOidcSpMockRequest(params);
 
-  const { username = 'xavi', password = 'creus', loa = 'E' } = params;
+  const { username = 'xavi', password = 'creus', loa = 'D' } = params;
 
   cy.get('#buttonNextSlide1').click();
 
@@ -268,7 +269,7 @@ export function authenticateToEUIdp(params = {}) {
   const {
     username = 'xavi',
     password = 'creus',
-    loa = 'E',
+    loa = 'D',
     cancel,
     optionalAttributes = true,
   } = params;

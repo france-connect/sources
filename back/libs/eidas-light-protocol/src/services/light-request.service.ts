@@ -77,6 +77,13 @@ export class LightRequestService {
       'lightRequest.$1._text',
     );
 
+    // Add XML metadata
+    pathsObject = this.lightXml.upsertNodeToPathObject(
+      pathsObject,
+      'lightRequest._attributes.xmlns',
+      'http://cef.eidas.eu/LightRequest',
+    );
+
     // Convert the paths object back to an inflated JSON
     const inflatedJson = this.lightXml.pathsObjectToJson(pathsObject);
 

@@ -1,4 +1,4 @@
 export function hasError(errorCode) {
-  cy.get('h1').contains('Une erreur est survenue lors de la connexion.');
-  cy.get('[data-testid="error-code"]').contains(`Code d’erreur : ${errorCode}`);
+  cy.contains('h1', 'Une erreur est survenue lors de la connexion.');
+  cy.contains('[data-testid="error-code"]', `Code d’erreur : ${errorCode}`);
 }

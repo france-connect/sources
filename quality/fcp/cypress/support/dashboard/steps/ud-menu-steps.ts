@@ -7,17 +7,17 @@ const udMenuComponent = new UdMenuComponent();
 
 Then("le nom de l'usager du user dashboard est affiché", function () {
   const { fullName } = this.user as User;
-  udMenuComponent.userLabel.should('have.text', fullName);
+  udMenuComponent.getUserLabel().should('have.text', fullName);
 });
 
 Then('le lien de déconnexion du user dashboard est affiché', function () {
-  udMenuComponent.logoutLink.should('be.visible');
+  udMenuComponent.getLogoutLink().should('be.visible');
 });
 
 When(
   'je clique sur le lien vers la page historique du dashboard usager',
   function () {
-    udMenuComponent.historyLink.click();
+    udMenuComponent.getHistoryLink().click();
   },
 );
 
@@ -30,10 +30,10 @@ When(
       url: '/api/user-preferences',
     }).as('UD:UserPreferences');
 
-    udMenuComponent.preferencesLink.click();
+    udMenuComponent.getPreferencesLink().click();
   },
 );
 
 When('je me déconnecte du dashboard usager', function () {
-  udMenuComponent.logoutLink.click();
+  udMenuComponent.getLogoutLink().click();
 });

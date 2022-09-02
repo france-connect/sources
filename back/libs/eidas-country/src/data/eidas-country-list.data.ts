@@ -66,7 +66,7 @@ export default [
   },
   {
     name: 'Greece',
-    iso: 'GR',
+    iso: 'EL',
     icon: '/img/flags/greece.svg',
   },
   {

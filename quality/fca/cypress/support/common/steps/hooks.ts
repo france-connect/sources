@@ -53,13 +53,13 @@ beforeEach(function () {
 
   // Define default data
   cy.get<ServiceProvider[]>('@serviceProviders').then((serviceProviders) => {
-    getDefaultServiceProvider(serviceProviders);
+    this.serviceProvider = getDefaultServiceProvider(serviceProviders);
   });
   cy.get<IdentityProvider[]>('@identityProviders').then((identityProviders) => {
-    getDefaultIdentityProvider(identityProviders);
+    this.identityProvider = getDefaultIdentityProvider(identityProviders);
   });
   cy.get<UserData[]>('@users').then((users) => {
-    getDefaultUser(users);
+    this.user = getDefaultUser(users);
   });
 
   // Setup interceptions to add basic authorization header on FC requests

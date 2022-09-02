@@ -7,6 +7,9 @@ export const lightRequestJsonMock = {
     },
   },
   lightRequest: {
+    _attributes: {
+      xmlns: 'http://cef.eidas.eu/LightRequest',
+    },
     citizenCountryCode: {
       _text: 'BE',
     },

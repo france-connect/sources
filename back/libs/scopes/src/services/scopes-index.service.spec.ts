@@ -4,12 +4,7 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
 
 import { Providers } from '../enum';
-import {
-  IClaimIndex,
-  IProviderMappings,
-  IRichClaim,
-  IScopeIndex,
-} from '../interfaces';
+import { IClaimIndex, IProviderMappings, IRichClaim } from '../interfaces';
 import { CONFIG_NAME } from '../tokens';
 import { ScopesIndexService } from './scopes-index.service';
 
@@ -19,6 +14,7 @@ describe('ScopesIndexService', () => {
   const loggerMock = {
     setContext: jest.fn(),
     trace: jest.fn(),
+    warn: jest.fn(),
   };
 
   const mappingMock: IProviderMappings[] = [
@@ -67,6 +63,9 @@ describe('ScopesIndexService', () => {
   };
 
   beforeEach(async () => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ScopesIndexService,
@@ -139,25 +138,115 @@ describe('ScopesIndexService', () => {
     });
   });
 
-  describe('get claims', () => {
-    it('should return claimIndex property', () => {
+  describe('getClaim', () => {
+    it('should call indexGetter', () => {
       // Given
-      service['claimIndex'] = {} as IClaimIndex;
+      const keyMock = 'keyMockValue';
+      service['indexGetter'] = jest.fn();
       // When
-      const result = service.claims;
+      service.getClaim(keyMock);
       // Then
-      expect(result).toBe(service['claimIndex']);
+      expect(service['indexGetter']).toHaveBeenCalledTimes(1);
+      expect(service['indexGetter']).toHaveBeenCalledWith(
+        service['claimIndex'],
+        'claim',
+        keyMock,
+      );
+    });
+
+    it('should return result from call to getClaim()', () => {
+      // Given
+      const keyMock = 'keyMockValue';
+      const indexGetterMockReturnValue = Symbol('indexGetterMockReturnValue');
+      service['indexGetter'] = jest
+        .fn()
+        .mockReturnValue(indexGetterMockReturnValue);
+      // When
+      const result = service.getClaim(keyMock);
+      // Then
+      expect(result).toBe(indexGetterMockReturnValue);
     });
   });
 
-  describe('get scopes', () => {
-    it('should return claimIndex property', () => {
+  describe('getScope', () => {
+    it('should call indexGetter', () => {
       // Given
-      service['scopeIndex'] = {} as IScopeIndex;
+      const keyMock = 'keyMockValue';
+      service['indexGetter'] = jest.fn();
       // When
-      const result = service.scopes;
+      service.getScope(keyMock);
       // Then
-      expect(result).toBe(service['scopeIndex']);
+      expect(service['indexGetter']).toHaveBeenCalledTimes(1);
+      expect(service['indexGetter']).toHaveBeenCalledWith(
+        service['scopeIndex'],
+        'scope',
+        keyMock,
+      );
+    });
+
+    it('should return result from call to getClaim()', () => {
+      // Given
+      const keyMock = 'keyMockValue';
+      const indexGetterMockReturnValue = Symbol('indexGetterMockReturnValue');
+      service['indexGetter'] = jest
+        .fn()
+        .mockReturnValue(indexGetterMockReturnValue);
+      // When
+      const result = service.getScope(keyMock);
+      // Then
+      expect(result).toBe(indexGetterMockReturnValue);
+    });
+  });
+
+  describe('indexGetter', () => {
+    const entryMock = Symbol('entryMock');
+    const indexMock = new Map(
+      Object.entries({
+        foo: entryMock,
+      }),
+    ) as unknown as IClaimIndex;
+    const indexNameMock = 'indexNameMockValue';
+
+    const existingKey = 'foo';
+    const nonExistingKey = 'wizz';
+
+    it('should call logger.warn if key does not exists', () => {
+      // When
+      service['indexGetter'](indexMock, indexNameMock, nonExistingKey);
+      // Then
+      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warn).toHaveBeenCalledWith(
+        `Entry not found in ${indexNameMock} index for key ${nonExistingKey}`,
+      );
+    });
+
+    it('should not call logger.warn if key does exists', () => {
+      // When
+      service['indexGetter'](indexMock, indexNameMock, existingKey);
+      // Then
+      expect(loggerMock.warn).not.toHaveBeenCalled();
+    });
+
+    it('should return undefined if key does not exists', () => {
+      // When
+      const result = service['indexGetter'](
+        indexMock,
+        indexNameMock,
+        nonExistingKey,
+      );
+      // Then
+      expect(result).toBe(undefined);
+    });
+
+    it('should return value if key does exists', () => {
+      // When
+      const result = service['indexGetter'](
+        indexMock,
+        indexNameMock,
+        existingKey,
+      );
+      // Then
+      expect(result).toBe(entryMock);
     });
   });
 

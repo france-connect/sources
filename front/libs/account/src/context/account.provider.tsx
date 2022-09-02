@@ -24,7 +24,7 @@ export const AccountProvider = ({ children, config }: AccountProviderProps) => {
   });
 
   const updateAccount = useCallback(
-    (update) => {
+    (update: Partial<AccountInterface>) => {
       const merge = { ...state, ...update };
       setState(merge);
     },
@@ -44,5 +44,3 @@ export const AccountProvider = ({ children, config }: AccountProviderProps) => {
     </AccountContext.Provider>
   );
 };
-
-AccountProvider.displayName = 'AccountProvider';

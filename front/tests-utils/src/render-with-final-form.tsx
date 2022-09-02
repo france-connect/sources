@@ -4,7 +4,7 @@
 import { render } from '@testing-library/react';
 import { Form } from 'react-final-form';
 
-export * from '@testing-library/react-hooks';
+export * from '@testing-library/react';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const renderWithFinalForm = (Component: any, props: any) => {

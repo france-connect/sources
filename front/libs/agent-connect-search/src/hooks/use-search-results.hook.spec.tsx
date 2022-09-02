@@ -19,8 +19,9 @@ describe('useSearchResults', () => {
     };
     // when
     const { result } = renderWithContext(useSearchResults, AgentConnectSearchContext, props);
+
     // then
-    expect(result.all[0]).toStrictEqual({
+    expect(result.current).toStrictEqual({
       searchResults: [],
       showNoResults: false,
       showResults: false,

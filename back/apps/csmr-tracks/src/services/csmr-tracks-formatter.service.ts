@@ -1,4 +1,4 @@
-import { SearchHit } from '@elastic/elasticsearch/api/types';
+import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
 import { Injectable } from '@nestjs/common';
 

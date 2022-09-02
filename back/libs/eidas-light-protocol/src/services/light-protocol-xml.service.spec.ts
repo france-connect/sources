@@ -439,6 +439,37 @@ describe('LightProtocolXmlService', () => {
     });
   });
 
+  describe('upsertNodeToPathObject', () => {
+    const pathsObject = {
+      pouet: 'pouet',
+    };
+
+    it('should add the given node and value in the path object', () => {
+      // action
+      const result = service.upsertNodeToPathObject(pathsObject, 'foo', 'bar');
+
+      // expect
+      expect(result).toStrictEqual({
+        foo: 'bar',
+        pouet: 'pouet',
+      });
+    });
+
+    it('should override the paths object', () => {
+      // action
+      const result = service.upsertNodeToPathObject(
+        pathsObject,
+        'pouet',
+        'pas pouet',
+      );
+
+      // expect
+      expect(result).toStrictEqual({
+        pouet: 'pas pouet',
+      });
+    });
+  });
+
   describe('stripUrlAndUrnForProps', () => {
     const pathsObject = {
       'Ceci.est.un.test.pouet.0.a': 'https://toto.fr/titi/tutu',
@@ -918,6 +949,57 @@ describe('LightProtocolXmlService', () => {
       expect(cb).toHaveBeenCalledTimes(1);
       expect(cb).toHaveBeenCalledWith('okToIter', 42);
       expect(cb).not.toHaveBeenCalledWith('notOkToIter', 21);
+    });
+  });
+
+  describe('addFailureStatus', () => {
+    it('should add the node failure with false value if statusCode is Success', () => {
+      // Given
+      const pathsObject = {
+        'lightResponse.status.statusCode': 'Success',
+      };
+
+      // When
+      const result = service.addFailureStatus(pathsObject);
+
+      // Then
+      expect(result).toStrictEqual({
+        'lightResponse.status.failure': 'false',
+        'lightResponse.status.statusCode': 'Success',
+      });
+    });
+
+    it('should add the node failure with true value if statusCode is Error', () => {
+      // Given
+      const pathsObject = {
+        'lightResponse.status.statusCode': 'Error',
+      };
+
+      // When
+      const result = service.addFailureStatus(pathsObject);
+
+      // Then
+      expect(result).toStrictEqual({
+        'lightResponse.status.failure': 'true',
+        'lightResponse.status.statusCode': 'Error',
+      });
+    });
+
+    it('should overirde the node failure with true value if statusCode is Error and failure at false', () => {
+      // Given
+      const pathsObject = {
+        'lightResponse.status.statusCode': 'Error',
+        'lightResponse.status.failure': 'false',
+      };
+
+      // When
+      const result = service.addFailureStatus(pathsObject);
+
+      // Then
+      expect(result).toStrictEqual({
+        'lightResponse.status.failure': 'true',
+        'lightResponse.status.statusCode': 'Error',
+      });
     });
   });
 });

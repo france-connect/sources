@@ -1,9 +1,9 @@
 import { act, render } from '@testing-library/react';
 import * as H from 'history';
+import { mocked } from 'jest-mock';
 import { DateTime } from 'luxon';
 import React from 'react';
 import * as ReactRouterDom from 'react-router-dom';
-import { mocked } from 'ts-jest/utils';
 
 import { PaginationComponent } from '@fc/dsfr';
 import { renderWithRouter } from '@fc/tests-utils';
@@ -101,6 +101,34 @@ describe('TracksListComponent', () => {
     render(<TracksListComponent options={options} />);
     // then
     expect(usePaginatedTracksMock).toHaveBeenCalled();
+  });
+
+  it('should filter out nullish entries', () => {
+    // Given
+    const nonNullish1 = Symbol('nonNullish1') as unknown as Track;
+    const nonNullish2 = Symbol('nonNullish2') as unknown as Track;
+
+    const tracksWithNullishEntries = {
+      ...tracksMock,
+      payload: [
+        nonNullish1,
+        false as unknown as Track,
+        null as unknown as Track,
+        nonNullish2,
+        undefined as unknown as Track,
+      ],
+    };
+    const filteredPayload = [nonNullish1, nonNullish2];
+
+    usePaginatedTracksMock.mockReturnValue({
+      submitErrors: undefined,
+      tracks: tracksWithNullishEntries,
+    });
+    // When
+    render(<TracksListComponent options={options} />);
+    // Then
+    expect(transformTrackToEnhanced).toHaveBeenNthCalledWith(1, nonNullish1, 0, filteredPayload);
+    expect(transformTrackToEnhanced).toHaveBeenNthCalledWith(2, nonNullish2, 1, filteredPayload);
   });
 
   it('should have called transformTrackToEnhanced', () => {

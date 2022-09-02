@@ -12,6 +12,30 @@ services:
       # --
       - "rnipp"
       - "csmr-hsm"
+  
+  bdd-fcp-high:
+    image: alpine
+    depends_on:
+      - "core-fcp-high"
+      - "csmr-hsm"
+      - "rnipp"
+      - "exploitation-high"
+      # -- SP
+      - "fsp1-high"
+      - "fsp2-high"
+      - "fsp5-high"
+      - "fsp6-high"
+      # -- IdP
+      - "fip1-high"
+      - "fip2-high"
+      - "fip13-high"
+      - "fip14-high"
+      - "fip15-high"
+      - "fip16-high"
+      - "fip17-high"
+      - "fip18-high"
+      - "fip19-high"
+      - "fip20-high"
 
   exploit-fcp-high:
     image: alpine
@@ -47,3 +71,5 @@ services:
       - "csmr-hsm"
       - "exploit-fcp-high-back"
       - "exploit-fcp-high-front"
+      # --
+      - "maildev"

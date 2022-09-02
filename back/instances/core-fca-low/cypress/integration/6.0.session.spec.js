@@ -37,21 +37,15 @@ describe('Session', () => {
   it('should trigger error Y190001 if FC session cookie not set', () => {
     const authorizeUrl = getAuthorizeUrl();
     cy.visit(authorizeUrl);
+
+    cy.get('#fi-search-term').should('be.visible');
     cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
 
     cy.url().then((interactionUrl) => {
       cy.clearCookie('fc_session_id');
       cy.visit(interactionUrl, { failOnStatusCode: false });
-      cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
-      /**
-       * @todo #999 Gestion des exceptions dans le front
-       * le timeout est nécessaire il y a une latence d'affichage
-       * causée par les deux appels API successifs du bouton retour et du moteur de recherche
-       * A vérifier/supprimer avec l'implémentation du gestionnaire d'erreur REACT
-       * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/999
-       */
-      cy.wait(500);
       cy.hasError('Y190001');
+      cy.url().should('match', new RegExp(`\/api\/v2\/error$`));
     });
   });
 

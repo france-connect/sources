@@ -59,7 +59,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
         {hasValidationErrors && (
           <AlertComponent type={AlertTypes.ERROR}>
             <p className="fr-alert__title">
-              Attention, vous devez avoir au moins un compte autorisé pour continuer a utiliser
+              Attention, vous devez avoir au moins un compte autorisé pour continuer à utiliser
               FranceConnect.
             </p>
             <p>

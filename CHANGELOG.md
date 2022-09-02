@@ -4,6 +4,14 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.105.0 && v3.106.0
+
+- [UserDashboard] Fixed claim / label mapping that would cause the application to crash 🐛
+
+## v3.103.0 && v3.104.0
+
+🌴🌴🌴🌴🌴🌴 Nothing here because of holidays 🌴🌴🌴🌴🌴🌴
+
 ## v3.101.0 && v3.102.0
 
 ### Not yet in production (futures apps / features)

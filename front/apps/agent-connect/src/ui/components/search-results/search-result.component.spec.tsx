@@ -1,5 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 
 import { useAddToUserHistory } from '@fc/agent-connect-history';
 import { RedirectToIdpFormComponent } from '@fc/oidc-client';
@@ -17,27 +17,6 @@ describe('SearchResultComponent', () => {
     // when
     expect(useAddToUserHistory).toHaveBeenCalledTimes(1);
     expect(useAddToUserHistory).toHaveBeenCalledWith('uid-mock');
-  });
-
-  it('should have called RedirectToIdpFormComponent with props', () => {
-    // given
-    const uidMock = 'uid-mock';
-    const nameMock = 'name-mock';
-    const csrfTokenMock = 'csrf-token-mock';
-    mocked(RedirectToIdpFormComponent).mockImplementationOnce(() => <div />);
-    // then
-    render(<SearchResultComponent csrfToken={csrfTokenMock} name={nameMock} uid={uidMock} />);
-    // when
-    expect(RedirectToIdpFormComponent).toHaveBeenCalledTimes(1);
-    expect(RedirectToIdpFormComponent).toHaveBeenCalledWith(
-      {
-        children: expect.any(Object),
-        csrf: csrfTokenMock,
-        id: `fca-search-idp-${uidMock}`,
-        uid: uidMock,
-      },
-      {},
-    );
   });
 
   it('should have a submit button', () => {
@@ -63,5 +42,26 @@ describe('SearchResultComponent', () => {
     // when
     expect(button).toBeInTheDocument();
     expect(addToUserHistoryMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('should have called RedirectToIdpFormComponent with props', () => {
+    // given
+    const uidMock = 'uid-mock';
+    const nameMock = 'name-mock';
+    const csrfTokenMock = 'csrf-token-mock';
+    mocked(RedirectToIdpFormComponent).mockReturnValueOnce(<div />);
+    // then
+    render(<SearchResultComponent csrfToken={csrfTokenMock} name={nameMock} uid={uidMock} />);
+    // when
+    expect(RedirectToIdpFormComponent).toHaveBeenCalledTimes(1);
+    expect(RedirectToIdpFormComponent).toHaveBeenCalledWith(
+      {
+        children: expect.any(Object),
+        csrf: csrfTokenMock,
+        id: `fca-search-idp-${uidMock}`,
+        uid: uidMock,
+      },
+      {},
+    );
   });
 });

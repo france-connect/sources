@@ -11,9 +11,9 @@ export const useOnSearch = () => {
   const { setSearchTerm } = useContext(AgentConnectSearchContext);
 
   const searchHandler = useCallback(
-    (value) => {
+    (value: string | { [key: string]: string }) => {
       const isString = typeof value === 'string';
-      const term = (isString && value) || value['fi-search-term'];
+      const term = isString ? value : value['fi-search-term'];
       setSearchTerm(term);
     },
     [setSearchTerm],

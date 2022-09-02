@@ -20,7 +20,7 @@ services:
       - "VIRTUAL_PORT=443"
       - "App_PROTOCOL=https"
       - "TZ=Europe/Paris"
-      - "JAVA_OPTS=-Xms1G -Xmx1G"
+      - "JAVA_OPTS=-Xms512m  -Xmx512m"
       - "LOG_LEVEL=INFO"
     networks:
       - eidas

@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
+import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
-import { mocked } from 'ts-jest/utils';
 
 import { LinkComponent, Sizes } from '@fc/dsfr';
 

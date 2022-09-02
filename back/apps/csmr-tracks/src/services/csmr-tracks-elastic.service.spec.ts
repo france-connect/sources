@@ -1,9 +1,4 @@
-import { RequestParams } from '@elastic/elasticsearch';
-import {
-  ScriptField,
-  SearchHit,
-  SearchRequest,
-} from '@elastic/elasticsearch/api/types';
+import { ScriptField, SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -16,6 +11,7 @@ import { LoggerService } from '@fc/logger-legacy';
 import {
   ICsmrTracksElasticResults,
   ICsmrTracksFieldsRawData,
+  Search,
 } from '../interfaces';
 import { CsmrTracksElasticService } from './csmr-tracks-elastic.service';
 import * as helper from './csmr-tracks-elastic.service';
@@ -185,11 +181,9 @@ describe('CsmrTracksElasticService', () => {
     const dataMock = Symbol('data');
     const totalMock = 42;
     const elasticMock = {
-      body: {
-        hits: {
-          total: totalMock,
-          hits: dataMock,
-        },
+      hits: {
+        total: totalMock,
+        hits: dataMock,
       },
     };
 
@@ -360,45 +354,41 @@ describe('CsmrTracksElasticService', () => {
     };
 
     const searchMock: Partial<helper.SearchResponseTracks> = {
-      body: {
-        hits: {
-          hits: [
-            {
-              _index: 'indexValue',
-              _id: 'idValue',
-              fields: fieldsMock,
-            },
-          ],
-        },
-        took: 42,
-        // ES standard object
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        timed_out: false,
-        _shards: null,
+      hits: {
+        hits: [
+          {
+            _index: 'indexValue',
+            _id: 'idValue',
+            fields: fieldsMock,
+          },
+        ],
       },
+      took: 42,
+      // ES standard object
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      timed_out: false,
+      _shards: null,
     };
 
-    const queryMock: RequestParams.Search & SearchRequest = {
-      body: {
-        fields: ['field1', 'field2'],
-        query: {
-          bool: {
-            must: [
-              {
-                range: { time: { gte: 'sixMonthAgoValue', lte: 'nowValue' } },
-              },
-              eventsQueryMock,
-              { terms: { accountId: ['idValue1', 'idValue2'] } },
-            ],
-          },
+    const queryMock: Search = {
+      fields: ['field1', 'field2'],
+      query: {
+        bool: {
+          must: [
+            {
+              range: { time: { gte: 'sixMonthAgoValue', lte: 'nowValue' } },
+            },
+            eventsQueryMock,
+            { terms: { accountId: ['idValue1', 'idValue2'] } },
+          ],
         },
-        // Standard ES params
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        script_fields: {
-          scriptMock: { script: { lang: 'painless', source: 'sourceValue' } },
-        },
-        sort: [{ time: { order: 'desc' } }],
       },
+      // Standard ES params
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      script_fields: {
+        scriptMock: { script: { lang: 'painless', source: 'sourceValue' } },
+      },
+      sort: [{ time: { order: 'desc' } }],
 
       index: 'indexValue',
       // Elastic Search params

@@ -99,13 +99,8 @@ Fonctionnalité: Connexion ACR
     Et le message d'erreur FranceConnect est "Le niveau de sécurité utilisé pour vous authentifier ne correspondant pas au niveau exigé pour votre démarche."
 
     Exemples:
-      | spAcr  | idpAcr |
-      | eidas2 | eidas1 |
-      | eidas3 | eidas1 |
-      | eidas3 | eidas2 |
-
-    # Valeur non présente dans la liste idpAcr sur l´ancien FI mock
-    @ignoreInteg01
-    Exemples:
       | spAcr  | idpAcr  |
-      | eidas2 | inconnu |
+      | eidas2 | eidas1  |
+      | eidas3 | eidas1  |
+      | eidas3 | eidas2  |
+      | eidas2 | inconnu |     

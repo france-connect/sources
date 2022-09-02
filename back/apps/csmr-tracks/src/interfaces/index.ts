@@ -9,3 +9,4 @@ export * from './csmr-tracks-generated-data.interface';
 export * from './csmr-tracks-geo.interface';
 export * from './csmr-tracks-high-fields-data.interface';
 export * from './csmr-tracks-legacy-fields-data.interface';
+export * from './csmr-tracks-search.interface';

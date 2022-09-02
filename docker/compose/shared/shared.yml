@@ -347,6 +347,16 @@ services:
     networks:
       - rie
 
+  maildev:
+    hostname: maildev
+    image: maildev/maildev:2.0.5
+    environment:
+      - "VIRTUAL_HOST=maildev.docker.dev-franceconnect.fr"
+      - "VIRTUAL_PORT=1080"
+    networks:
+      - data
+      - public
+
 ####################
 
 networks:

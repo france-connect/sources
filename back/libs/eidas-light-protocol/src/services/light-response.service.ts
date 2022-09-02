@@ -65,6 +65,9 @@ export class LightResponseService {
       'urn:oasis:names:tc:SAML:2.0:nameid-format:',
     );
 
+    // récupérer le statut de statusCode
+    pathsObject = this.lightXml.addFailureStatus(pathsObject);
+
     // Add the namespace for statusCode, subStatusCode attribute
     pathsObject = this.lightXml.prefixProps(
       pathsObject,
@@ -84,6 +87,13 @@ export class LightResponseService {
       pathsObject,
       /^lightResponse\.(.*)$/,
       'lightResponse.$1._text',
+    );
+
+    // Add XML metadata response fields
+    pathsObject = this.lightXml.upsertNodeToPathObject(
+      pathsObject,
+      'lightResponse._attributes.xmlns',
+      'http://cef.eidas.eu/LightResponse',
     );
 
     // Convert the paths object back to an inflated JSON

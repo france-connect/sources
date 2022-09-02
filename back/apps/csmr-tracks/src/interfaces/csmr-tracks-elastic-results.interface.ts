@@ -2,7 +2,7 @@
 
 // Declarative code
 
-import { SearchHit } from '@elastic/elasticsearch/api/types';
+import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
 import { IPaginationResult } from '@fc/common';
 

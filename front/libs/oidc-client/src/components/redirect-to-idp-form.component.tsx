@@ -2,7 +2,7 @@ import { ReactNode, useContext } from 'react';
 
 import { AppContext, AppContextInterface } from '@fc/state-management';
 
-type RedirectToIdpFormProps = {
+export type RedirectToIdpFormProps = {
   children: ReactNode;
   csrf?: string;
   id: string;

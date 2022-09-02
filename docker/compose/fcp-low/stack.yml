@@ -13,6 +13,24 @@ services:
       - 'fip1-low'
 
   ####################
+  # BDD FCP LOW
+  ####################
+
+  bdd-fcp-low:
+    image: alpine
+    depends_on:
+      - 'core-fcp-low'
+      # -- SP
+      - 'fsp1-low'
+      - 'fsp2-low'
+      # -- IdP
+      - 'fip1-low'
+      - 'fip2-low'
+      - 'fip3-low'
+      # --
+      - "rnipp"
+
+  ####################
   # ALL FCP LOW
   ####################
 
@@ -25,3 +43,5 @@ services:
       - 'fip1-low'
       - 'fip2-low'
       - 'fip3-low'
+      # --
+      - "maildev"

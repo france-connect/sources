@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -10,9 +10,9 @@ export const DEFAULT_OFFSET = '0';
 export const usePaginatedTracks = (options: TracksConfig) => {
   const { search } = useLocation();
   const [tracks, setTracks] = useState<UserDashboardTracks>({} as UserDashboardTracks);
-  const [submitErrors, setSubmitErrors] = useState(undefined);
+  const [submitErrors, setSubmitErrors] = useState<AxiosError | Error | undefined>(undefined);
 
-  const getTacksSuccessHandler = useCallback(({ data }) => {
+  const getTacksSuccessHandler = useCallback(({ data }: Pick<AxiosResponse, 'data'>) => {
     setTracks(data);
     setSubmitErrors(undefined);
   }, []);
@@ -20,7 +20,7 @@ export const usePaginatedTracks = (options: TracksConfig) => {
   /**
    * @TODO Add retry and logout process here
    */
-  const getTacksErrorHandler = useCallback((error) => {
+  const getTacksErrorHandler = useCallback((error: AxiosError | Error) => {
     setSubmitErrors(error);
   }, []);
 

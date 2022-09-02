@@ -1,4 +1,5 @@
-import * as pino from 'pino';
+import { mocked } from 'jest-mock';
+import pino, { Logger } from 'pino';
 
 import { ShutdownSignal } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -7,7 +8,6 @@ import { ConfigService } from '@fc/config';
 
 import { LoggerConfig } from '../dto';
 import { LoggerLevelCodes, LoggerLevelNames } from '../enum';
-import { LoggerTransport } from '../interfaces';
 import { formatLevel, PinoService } from './pino.service';
 
 jest.mock('pino');
@@ -41,7 +41,7 @@ describe('PinoAdapterService', () => {
   const streamMock = {
     reopen: jest.fn(),
   };
-  const pinoMock: Partial<LoggerTransport> = {
+  const pinoMock = {
     log: jest.fn(),
   };
 
@@ -69,7 +69,7 @@ describe('PinoAdapterService', () => {
     );
     getDestinationMock.mockReturnValueOnce(streamMock);
 
-    pino.mockReturnValueOnce(pinoMock);
+    mocked(pino).mockReturnValueOnce(pinoMock as unknown as Logger);
   });
 
   it('should be defined', async () => {
@@ -106,7 +106,7 @@ describe('PinoAdapterService', () => {
         formatters: {
           level: formatLevel,
         },
-        level: LoggerLevelCodes.ERROR,
+        level: LoggerLevelNames.ERROR,
       },
       streamMock,
     );

@@ -42,7 +42,7 @@ export default class UdPreferencesPage {
   checkIsAlertErrorDisplayed(displayed: boolean): void {
     const errorAlert = this.getErrorAlert();
     const errorTitle =
-      'Attention, vous devez avoir au moins un compte autorisé pour continuer a utiliser FranceConnect.';
+      'Attention, vous devez avoir au moins un compte autorisé pour continuer à utiliser FranceConnect.';
     const errorMessage =
       'Veuillez choisir au moins un compte autorisé pour pouvoir enregistrer vos réglages.';
     if (displayed) {

@@ -1,5 +1,5 @@
 export const lightRequestXmlMock = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<lightRequest>
+<lightRequest xmlns="http://cef.eidas.eu/LightRequest">
   <citizenCountryCode>BE</citizenCountryCode>
   <id>Auduye7263</id>
   <issuer>EIDASBridge</issuer>

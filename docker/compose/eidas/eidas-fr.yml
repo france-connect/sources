@@ -1,4 +1,4 @@
-version: '2.4'
+version: "2.4"
 
 ####################
 ####################
@@ -8,23 +8,24 @@ services:
   ####################
   eidas-fr:
     hostname: eidas-fr
-    image: ${FC_DOCKER_REGISTRY}/eidas:2.4
+    image: ${FC_DOCKER_REGISTRY}/eidas:2.6
     user: ${CURRENT_UID}
     ports:
-      - '10900:10900'
+      - "10900:10900"
     volumes:
-      - '${VOLUMES_DIR}/eidas/conf-eidas-fr:/data/conf-eidas:ro'
-      - '${VOLUMES_DIR}/eidas/keystore-fr:/data/keystore:ro'
-      - '${VOLUMES_DIR}/log/eidas/eidas-fr:/data/log/tomcat'
-      - '${VOLUMES_DIR}/log/eidas/eidas-fr:/data/log/eidas'
+      - "${VOLUMES_DIR}/eidas/conf-eidas-fr:/data/conf-eidas:ro"
+      - "${VOLUMES_DIR}/eidas/keystore-fr:/data/keystore:ro"
+      - "${VOLUMES_DIR}/log/eidas/eidas-fr:/data/log/tomcat"
+      - "${VOLUMES_DIR}/log/eidas/eidas-fr:/data/log/eidas"
     environment:
-      - 'VIRTUAL_HOST=eidas-fr.docker.dev-franceconnect.fr'
-      - 'VIRTUAL_PORT=443'
-      - 'App_PROTOCOL=https'
-      - 'TZ=Europe/Paris'
-      - 'JAVA_OPTS=-Xms1G -Xmx1G'
-      - 'LOG_LEVEL=INFO'
+      - "VIRTUAL_HOST=eidas-fr.docker.dev-franceconnect.fr"
+      - "VIRTUAL_PORT=443"
+      - "App_PROTOCOL=https"
+      - "TZ=Europe/Paris"
+      - "JAVA_OPTS=-Xms1G -Xmx1G"
+      - "LOG_LEVEL=INFO"
+      - "IGNITE_WORK_DIR=/data"
     networks:
       - eidas
       - public
-    command: 'tail -f /dev/null'
+    command: "tail -f /dev/null"

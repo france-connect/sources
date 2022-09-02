@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 
 import { ReturnButtonComponent } from './return-button.component';
 import { useReturnButton } from './use-return-button.hook';

@@ -1,7 +1,7 @@
 import { Location } from 'history';
+import { mocked } from 'jest-mock';
 import { Helmet } from 'react-helmet';
 import { useLocation } from 'react-router-dom';
-import { mocked } from 'ts-jest/utils';
 
 import { RoutesManagerComponent } from '@fc/routing';
 import { renderWithRouter } from '@fc/tests-utils';

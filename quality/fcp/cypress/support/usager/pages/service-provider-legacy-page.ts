@@ -30,11 +30,11 @@ export default class ServiceProviderPage {
     this.redirectUri = redirectUri;
   }
 
-  get fcButton(): ChainableElement {
+  getFcButton(): ChainableElement {
     return cy.get(this.fcButtonSelector);
   }
 
-  get logoutButton(): ChainableElement {
+  getLogoutButton(): ChainableElement {
     return cy.get(this.logoutButtonSelector);
   }
 
@@ -44,7 +44,7 @@ export default class ServiceProviderPage {
 
   checkIsUserConnected(isConnected = true): void {
     const state = isConnected ? 'be.visible' : 'not.exist';
-    this.logoutButton.should(state);
+    this.getLogoutButton().should(state);
   }
 
   callAuthorize(
@@ -78,12 +78,12 @@ export default class ServiceProviderPage {
     if (this.mocked) {
       this.callAuthorize(fcRootUrl, scopeContext, acrValues);
     } else {
-      this.fcButton.click();
+      this.getFcButton().click();
     }
   }
 
   logout(): void {
-    this.logoutButton.click();
+    this.getLogoutButton().click();
     cy.get('#fconnect-access .logout a').click();
   }
 

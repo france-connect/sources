@@ -1,4 +1,7 @@
+import { Repository } from 'typeorm';
+
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
 import { Account } from '@entities/typeorm';
 
@@ -6,7 +9,6 @@ import { LoggerService } from '@fc/logger-legacy';
 
 import { AccountNotFound } from './exceptions';
 import { PartnerAccountService } from './partner-account.service';
-import { PartnerAccountRepository } from './repositories';
 
 describe('PartnerAccountService', () => {
   let service: PartnerAccountService;
@@ -16,7 +18,7 @@ describe('PartnerAccountService', () => {
   };
 
   const PartnerAccountRepositoryMock = {
-    findByEmail: jest.fn(),
+    findOne: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -24,15 +26,12 @@ describe('PartnerAccountService', () => {
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        PartnerAccountService,
-        LoggerService,
-        PartnerAccountRepository,
-      ],
+      imports: [TypeOrmModule.forFeature([Account])],
+      providers: [PartnerAccountService, LoggerService, Repository<Account>],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(PartnerAccountRepository)
+      .overrideProvider(getRepositoryToken(Account))
       .useValue(PartnerAccountRepositoryMock)
       .compile();
 
@@ -61,21 +60,21 @@ describe('PartnerAccountService', () => {
 
     it('should call findByUsername function from partners account repository', async () => {
       // Given
-      PartnerAccountRepositoryMock.findByEmail.mockResolvedValueOnce(userMock);
+      PartnerAccountRepositoryMock.findOne.mockResolvedValueOnce(userMock);
 
       // When
       await service.findByEmail(emailMock);
 
       // Then
-      expect(PartnerAccountRepositoryMock.findByEmail).toHaveBeenCalledTimes(1);
-      expect(PartnerAccountRepositoryMock.findByEmail).toHaveBeenCalledWith(
-        emailMock,
-      );
+      expect(PartnerAccountRepositoryMock.findOne).toHaveBeenCalledTimes(1);
+      expect(PartnerAccountRepositoryMock.findOne).toHaveBeenCalledWith({
+        where: { email: emailMock },
+      });
     });
 
     it('should throw AccountNotFound error if no account is found in database', async () => {
       // Given
-      PartnerAccountRepositoryMock.findByEmail.mockResolvedValueOnce(undefined);
+      PartnerAccountRepositoryMock.findOne.mockResolvedValueOnce(undefined);
 
       // action / expect
       await expect(service.findByEmail(emailMock)).rejects.toThrowError(
@@ -85,7 +84,7 @@ describe('PartnerAccountService', () => {
 
     it('should return user account if found in database', async () => {
       // Given
-      PartnerAccountRepositoryMock.findByEmail.mockResolvedValueOnce(userMock);
+      PartnerAccountRepositoryMock.findOne.mockResolvedValueOnce(userMock);
 
       // When
       const result = await service.findByEmail(emailMock);

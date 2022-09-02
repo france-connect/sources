@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 
 import { AccountService } from './account.service';
 

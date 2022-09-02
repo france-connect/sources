@@ -4,11 +4,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { Account } from '@entities/typeorm';
+
 import { PartnerAccountService } from './partner-account.service';
-import { PartnerAccountRepository } from './repositories';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PartnerAccountRepository])],
+  imports: [TypeOrmModule.forFeature([Account])],
   providers: [PartnerAccountService],
   exports: [PartnerAccountService],
 })

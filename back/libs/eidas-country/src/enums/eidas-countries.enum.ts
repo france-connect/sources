@@ -14,7 +14,7 @@ export enum EidasCountries {
   ESTONIA = 'EE',
   FINLAND = 'FI',
   GERMANY = 'DE',
-  GREECE = 'GR',
+  GREECE = 'EL',
   HUNGARY = 'HU',
   ICELAND = 'IS',
   IRELAND = 'IE',

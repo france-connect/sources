@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js';
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 
 import {
   IdentityProvider,

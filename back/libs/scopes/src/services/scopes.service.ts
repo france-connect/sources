@@ -11,7 +11,7 @@ export class ScopesService {
 
   getRawClaimsFromScopes(scopes: IScope[]): IClaim[] {
     const claims = scopes.reduce(
-      (acc, scopeName) => acc.concat(this.index.scopes.get(scopeName)),
+      (acc, scopeName) => acc.concat(this.index.getScope(scopeName)),
       [] as IClaim[],
     );
 
@@ -24,9 +24,9 @@ export class ScopesService {
   }
 
   getRichClaimsFromClaims(claims: IClaim[]): IRichClaim[] {
-    const richClaims = claims.map((claimName) =>
-      this.index.claims.get(claimName),
-    );
+    const richClaims = claims
+      .map((claimName) => this.index.getClaim(claimName))
+      .filter(Boolean);
 
     return richClaims;
   }

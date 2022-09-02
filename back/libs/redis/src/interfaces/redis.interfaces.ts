@@ -1,11 +1,11 @@
-import * as Redis from 'ioredis';
+import RedisLib, { RedisOptions } from 'ioredis';
 
 import { ModuleMetadata } from '@nestjs/common/interfaces';
 
-export type Redis = Redis.Redis;
+export type Redis = RedisLib;
 
 export interface RedisModuleOptions {
-  config: Redis.RedisOptions;
+  config: RedisOptions;
 }
 
 export interface RedisModuleAsyncOptions

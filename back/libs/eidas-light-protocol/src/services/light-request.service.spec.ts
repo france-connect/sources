@@ -33,6 +33,7 @@ describe('LightRequestService', () => {
     removeDeclarationFields: jest.fn(),
     stripUrlAndUrnForProps: jest.fn(),
     lowerCaseFirstCharForProps: jest.fn(),
+    upsertNodeToPathObject: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -115,7 +116,7 @@ describe('LightRequestService', () => {
       );
     });
 
-    it('should call replaceInPaths with the path object returned by addDeclarationFields to add the "attribute" key', () => {
+    it('should call replaceInPaths with the path object returned by addDeclarationFields to add the "lightRequest" key)', () => {
       // setup
       lightXmlServiceMock.addDeclarationFields.mockReturnValueOnce(pathsObject);
 
@@ -225,12 +226,32 @@ describe('LightRequestService', () => {
       );
     });
 
-    it('should call pathsObjectToJson with the path object returned by the third replaceInPaths call to convert the paths object back to an inflated JSON', () => {
+    it('should call upsertNodeToPathObject with the path object returned by the replaceInPaths call to convert the paths object back to an inflated JSON', () => {
       // setup
       lightXmlServiceMock.replaceInPaths
         .mockReturnValueOnce({})
         .mockReturnValueOnce({})
         .mockReturnValueOnce(pathsObject);
+
+      // action
+      service.formatRequest(requestJsonMock);
+
+      // assertion
+      expect(lightXmlServiceMock.upsertNodeToPathObject).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(lightXmlServiceMock.upsertNodeToPathObject).toHaveBeenCalledWith(
+        pathsObject,
+        'lightRequest._attributes.xmlns',
+        'http://cef.eidas.eu/LightRequest',
+      );
+    });
+
+    it('should call pathsObjectToJson with the path object returned by upsertNodeToPathObject call to convert the paths object back to an inflated JSON', () => {
+      // setup
+      lightXmlServiceMock.upsertNodeToPathObject.mockReturnValueOnce(
+        pathsObject,
+      );
 
       // action
       service.formatRequest(requestJsonMock);

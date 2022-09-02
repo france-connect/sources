@@ -46,9 +46,16 @@ export const successFullJsonMock: EidasResponse = {
 
 export const lightResponseSuccessFullJsonMock: IJsonifiedLightResponseXml = {
   _declaration: {
-    _attributes: { version: '1.0', encoding: 'UTF-8', standalone: 'yes' },
+    _attributes: {
+      version: '1.0',
+      encoding: 'UTF-8',
+      standalone: 'yes',
+    },
   },
   lightResponse: {
+    _attributes: {
+      xmlns: 'http://cef.eidas.eu/LightResponse',
+    },
     id: {
       _text: '_BmPONbKyIB64fyNTQoyzZr_r5pXeyDGwUTS-bfo_zzhb_.Us9f.XZE2.mcqyM1u',
     },
@@ -169,7 +176,7 @@ export const lightResponseSuccessFullJsonMock: IJsonifiedLightResponseXml = {
 };
 
 export const lightResponseSuccessFullXmlMock = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<lightResponse>
+<lightResponse xmlns="http://cef.eidas.eu/LightResponse">
   <id>_BmPONbKyIB64fyNTQoyzZr_r5pXeyDGwUTS-bfo_zzhb_.Us9f.XZE2.mcqyM1u</id>
   <inResponseToId>1602861970744</inResponseToId>
   <issuer>https://eidas-fr.docker.dev-franceconnect.fr/EidasNode/ConnectorMetadata</issuer>

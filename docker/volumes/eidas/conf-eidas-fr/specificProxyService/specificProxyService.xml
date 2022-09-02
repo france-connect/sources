@@ -18,8 +18,6 @@
 <properties>
 	<!-- issuer name -->
 	<entry key="issuer.name">specificProxyServiceFR</entry>
-	<!--hazelcast distributed maps activation-->
-	<entry key="distributedMapsSpecificProxyService">false</entry>
 	<!-- the IdP's url to where the simple protocol request is send -->
 	<entry key="idp.url">https://eidas-fr.docker.dev-franceconnect.fr/IdP/AuthenticateCitizen</entry>
 	<!--specific service URL for processing IdP simple protocol responses-->
@@ -43,6 +41,6 @@
 	<entry key="consent.Response.LightToken.Secret">mySecretResponse</entry>
 	<entry key="consent.Response.LightToken.Algorithm">SHA-256</entry>
 	
-	<entry key="relaystate.randomize.null">false</entry>
+	<entry key="relaystate.randomize.null">true</entry>
 	
 </properties>

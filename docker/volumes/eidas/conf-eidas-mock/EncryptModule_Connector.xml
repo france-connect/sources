@@ -42,7 +42,7 @@
     <entry key="encryptionActivation">encryptionConf.xml</entry>
 
     <!--  If not present then no decryption will be applied on response -->
-    <entry key="responseDecryptionIssuer">CN=eidas-connector-mock, OU=MOCK, O=MOCK, L=MOCK, ST=MOCK, C=UK</entry>
-    <entry key="serialNumber">65f73a5997e7993f58ddbc8c01dda0bcbac948d3</entry>
+    <entry key="responseDecryptionIssuer">CN=eIDAS-encryption, O=CB-DINUM-eIDAS-mock-node, C=CB</entry>
+    <entry key="serialNumber">3</entry>
 
 </properties>

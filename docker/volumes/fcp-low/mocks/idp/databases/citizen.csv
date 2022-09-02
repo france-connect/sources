@@ -20,3 +20,4 @@ test_CLEMENT,CORSE,,CLEMENT,male,baterollu-5399@yopmail.com,123456789,1991-02-12
 étranger_présumé_né_jour,FLEURET,,Jean,male,jean-fleuret@yopmail.com,123456789,1992-11-00,,99217,,,,
 étranger_présumé_né_jour_et_mois,TARGE,,Jean,male,jean-targe@yopmail.com,123456789,1992-00-00,,99217,,,,
 test_INVALID_COG,Sofa,Canapé,Canapé,male,canape.sofa@france.fr,0123456789,1981-02-03,AAAAA,99100,France,AAAAA,Ikea,1 Place Salengro
+TestInteg,NUM,FC,Lady Di,female,franceconnect.recette@gmail.com,123456789,1962-08-24,29200,99100,France,75107,Paris,20 avenue de Ségur

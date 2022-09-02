@@ -31,7 +31,7 @@ When('je clique sur le bouton FranceConnect', function () {
     serviceProviderPage.setMockRequestedScope(this.requestedScope);
     serviceProviderPage.setMockRequestedAcr(this.serviceProvider.acrValue);
   }
-  serviceProviderPage.fcButton.click();
+  serviceProviderPage.getFcButton().click();
 
   if (isUsingFCBasicAuthorization()) {
     checkFCBasicAuthorization();

@@ -5,8 +5,10 @@ import { LoggerService } from '@fc/logger-legacy';
 
 import { ScopesConfig } from '../dto';
 import {
+  IClaim,
   IClaimIndex,
   IProviderMappings,
+  IRichClaim,
   IRichClaims,
   IScopeIndex,
 } from '../interfaces';
@@ -47,12 +49,32 @@ export class ScopesIndexService {
     });
   }
 
-  get claims(): IClaimIndex {
-    return this.claimIndex;
+  getClaim(key: string): IRichClaim {
+    return this.indexGetter<IClaimIndex, IRichClaim>(
+      this.claimIndex,
+      'claim',
+      key,
+    );
   }
 
-  get scopes(): IScopeIndex {
-    return this.scopeIndex;
+  getScope(key: string): IClaim[] {
+    return this.indexGetter<IScopeIndex, IClaim[]>(
+      this.scopeIndex,
+      'scope',
+      key,
+    );
+  }
+
+  private indexGetter<Index extends Map<string, Value>, Value>(
+    index: Index,
+    indexName: string,
+    key: string,
+  ): Value {
+    if (!index.has(key)) {
+      this.logger.warn(`Entry not found in ${indexName} index for key ${key}`);
+    }
+
+    return index.get(key);
   }
 
   private prepareClaimIndex(globalMapping: IProviderMappings[]): IClaimIndex {

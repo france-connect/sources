@@ -78,20 +78,26 @@ _up() {
       hybridge-fca-low)
         services="$services hybridge-fca-low"
         ;;
+      all-fca-low)
+        services="$services all-fca-low"
+        ;;
+      bdd-fca-low)
+        services="$services bdd-fca-low"
+        ;;
       min-fca-low)
         services="$services min-fca-low"
         ;;
       exploit-fca-low)
         services="$services exploit-fca-low"
         ;;
-      all-fca-low)
-        services="$services all-fca-low"
-        ;;
       rnipp)
         services="$services rnipp"
         ;;
       all-fcp-high)
         services="$services all-fcp-high"
+        ;;
+      bdd-fcp-high)
+        services="$services bdd-fcp-high"
         ;;
       min-fcp-high)
         services="$services min-fcp-high"
@@ -129,11 +135,14 @@ _up() {
       exploit-fca-low-back)
         services="$services exploit-fca-low-back"
         ;;
-      min-fcp-low)
-        services="$services min-fcp-low"
-        ;;
       all-fcp-low)
         services="$services all-fcp-low"
+        ;;
+      bdd-fcp-low)
+        services="$services bdd-fcp-low"
+        ;;
+      min-fcp-low)
+        services="$services min-fcp-low"
         ;;
       mongo-fcp-high)
         # Needed for user dashboard, do not start rp-all
@@ -159,13 +168,16 @@ _up() {
         echo "  - min-eidas-high => up minimal needed services to run eidas (min-fcp-high + eidas)"
         echo "  - all-eidas-high => all needed services to run eidas (all-fcp-high + eidas)"
         echo "  - min-fcp-high => up minimal needed services to run fcp-high (core-fcp-high, fsp1-high, fip1-high, etc.)"
+        echo "  - bdd-fcp-high => up needed services to run the bdd tests on fcp-high"
         echo "  - all-fcp-high => all needed services to run fcp-high (core-fcp-high, fsp1-high, fsp2-high, fsp3-high, fsp5-high, fsp6-high, fip1-high, fip2-high, fip6-high, rnipp, haproxy, hsm, etc.)"
         echo "  - exploit-fcp-high => up minimal needed services to run the FranceConnect High fc-apps"
         echo "  - min-fcp-low => up minimal needed services to run core-fcp-low fsp1-low fip1-low"
+        echo "  - bdd-fcp-low => up needed services to run the bdd tests on fcp-low"
         echo "  - all-fcp-low => up all needed services to run core-fcp-low and all other future services"
         echo "  - min-fca-low => up minimal needed services to run core-fca-low fsa1-low fia1-low"
-        echo "  - exploit-fca-low => up minimal needed services to run the Agentconnect Low fc-apps"
+        echo "  - bdd-fca-low => up needed services to run the bdd tests on fca-low"
         echo "  - all-fca-low => all needed services to run fca-low stack (core-fca-low, fsa[n]-low, fia[n]-low, exploit, hsm, etc.)"
+        echo "  - exploit-fca-low => up minimal needed services to run the Agentconnect Low fc-apps"
         echo "  - lemon-ldap => up needed services to run lemon-ldap and to access his manager"
         echo "  - hybridge-fca-low => up minimal needed services to run core-fca-low fca-low-front bridge-proxy-rie fsa1-low lemon-ldap"
         echo "  - partners-fca => up minimal needed services to run partners fca front and back"
@@ -491,7 +503,7 @@ _migrations-partners() {
 }
 
 _migrations-generate-partners() {
-  cd ${WORKING_DIR} && docker-compose exec $NO_TTY $1 yarn typeorm:migrations-generate -n $2
+  cd ${WORKING_DIR} && docker-compose exec $NO_TTY $1 yarn typeorm:migrations-generate $2
 }
 
 _fixtures-partners() {

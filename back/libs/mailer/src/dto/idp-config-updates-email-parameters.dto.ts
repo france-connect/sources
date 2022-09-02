@@ -36,9 +36,6 @@ export class IdpConfigUpdateEmailParameters {
   @IsEmail()
   readonly email: string;
 
-  @IsString()
-  readonly fullName: string;
-
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => IdpConfigSettings)

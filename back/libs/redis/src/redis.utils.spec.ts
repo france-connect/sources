@@ -1,8 +1,10 @@
-import * as Redis from 'ioredis';
+import Redis from 'ioredis';
 
 import { createRedisConnection } from './redis.utils';
 
-jest.mock('ioredis');
+jest.mock('ioredis', () => ({
+  default: jest.fn(),
+}));
 
 describe('createRedisConnection', () => {
   const config: any = {

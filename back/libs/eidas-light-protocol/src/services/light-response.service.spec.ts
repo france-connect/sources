@@ -39,6 +39,8 @@ describe('LightResponseService', () => {
     stripUrlAndUrnForProps: jest.fn(),
     lowerCaseFirstCharForProps: jest.fn(),
     forEachPath: jest.fn(),
+    addFailureStatus: jest.fn(),
+    upsertNodeToPathObject: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -210,11 +212,25 @@ describe('LightResponseService', () => {
       );
     });
 
-    it('should call prefixProps with the path object returned by the second call of prefixProps to add the namespace for statusCode, subStatusCode attribute', () => {
+    it('should call addFailureStatus with the path object returned by the first call of prefixProps to inflate the attributes element', () => {
       // setup
       lightXmlServiceMock.prefixProps
         .mockReturnValueOnce({})
         .mockReturnValueOnce(pathsObject);
+
+      // action
+      service.formatResponse(successFullJsonMock);
+
+      // assertion
+      expect(lightXmlServiceMock.addFailureStatus).toHaveBeenCalledTimes(1);
+      expect(lightXmlServiceMock.addFailureStatus).toHaveBeenCalledWith(
+        pathsObject,
+      );
+    });
+
+    it('should call prefixProps with the path object returned by the second call of addFailureStatus to add the namespace for statusCode, subStatusCode attribute', () => {
+      // setup
+      lightXmlServiceMock.addFailureStatus.mockReturnValueOnce(pathsObject);
 
       // action
       service.formatResponse(successFullJsonMock);
@@ -270,12 +286,32 @@ describe('LightResponseService', () => {
       );
     });
 
-    it('should call pathsObjectToJson with the path object returned by the third replaceInPaths call to convert the paths object back to an inflated JSON', () => {
+    it('should call upsertNodeToPathObject with the path object returned by the third replaceInPaths call to convert the paths object back to an inflated JSON', () => {
       // setup
       lightXmlServiceMock.replaceInPaths
         .mockReturnValueOnce({})
         .mockReturnValueOnce({})
         .mockReturnValueOnce(pathsObject);
+
+      // action
+      service.formatResponse(successFullJsonMock);
+
+      // assertion
+      expect(lightXmlServiceMock.upsertNodeToPathObject).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(lightXmlServiceMock.upsertNodeToPathObject).toHaveBeenCalledWith(
+        pathsObject,
+        'lightResponse._attributes.xmlns',
+        'http://cef.eidas.eu/LightResponse',
+      );
+    });
+
+    it('should call pathsObjectToJson with the path object returned by upsertNodeToPathObject call to convert the paths object back to an inflated JSON', () => {
+      // setup
+      lightXmlServiceMock.upsertNodeToPathObject.mockReturnValueOnce(
+        pathsObject,
+      );
 
       // action
       service.formatResponse(successFullJsonMock);

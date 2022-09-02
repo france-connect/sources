@@ -8,6 +8,10 @@ export interface IJsonifiedXmlDeclaration {
   _attributes: IJsonifiedXmlDeclarationAttributes;
 }
 
+export interface IJsonifiedLightResponseDeclarationXML {
+  xmlns: string;
+}
+
 export interface IJsonifiedXmlContent {
   _text: string;
 }
@@ -17,7 +21,8 @@ export interface IJsonifiedXml {
     | IJsonifiedXml
     | IJsonifiedXml[]
     | IJsonifiedXmlContent
-    | IJsonifiedXmlContent[];
+    | IJsonifiedXmlContent[]
+    | IJsonifiedLightResponseDeclarationXML;
 }
 
 export interface IJsonifiedLightResponseXml {

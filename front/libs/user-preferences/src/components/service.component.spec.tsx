@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
+import { mocked } from 'jest-mock';
 import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
 import { useMediaQuery } from 'react-responsive';
-import { mocked } from 'ts-jest/utils';
 
 import { ToggleInput } from '@fc/dsfr';
 

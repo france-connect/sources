@@ -43,15 +43,15 @@
 	<entry key="keyStorePath">../keystore/keystore-eidas-service-mock.jks</entry>
 	<entry key="keyStorePassword">local-demo</entry>
 	<entry key="keyPassword">local-demo</entry>
-	<entry key="issuer">CN=eidas-service-mock, OU=MOCK, O=MOCK, L=MOCK, ST=MOCK, C=UK</entry>
-	<entry key="serialNumber">65f73a5997e7993f58ddbc8c01dda0bcbac948d2</entry>
+    <entry key="issuer">CN=eIDAS-signature, O=CB-DINUM-eIDAS-mock-node, C=CB</entry>
+	<entry key="serialNumber">2</entry>
 	<entry key="keyStoreType">JKS</entry>
 
 	<entry key="metadata.keyStorePath">../keystore/keystore-eidas-metadata-mock.jks</entry>
 	<entry key="metadata.keyStorePassword">local-demo</entry>
 	<entry key="metadata.keyPassword">local-demo</entry>
-	<entry key="metadata.issuer">CN=eidas-metadata-mock, OU=MOCK, O=MOCK, L=MOCK, ST=MOCK, C=UK</entry>
-	<entry key="metadata.serialNumber">65f73a5997e7993f58ddbc8c01dda0bcbac948d1</entry>
+    <entry key="metadata.issuer">CN=eIDAS-metadata, O=CB-DINUM-eIDAS-mock-node, C=CB</entry>
+	<entry key="metadata.serialNumber">1</entry>
 	<entry key="metadata.keyStoreType">JKS</entry>
 
 </properties>

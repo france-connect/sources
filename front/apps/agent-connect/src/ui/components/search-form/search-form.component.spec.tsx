@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
+import { mocked } from 'jest-mock';
 import { DebouncedFunc } from 'lodash';
 import { Field, Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
 import { useMediaQuery } from 'react-responsive';
-import { mocked } from 'ts-jest/utils';
 
 import { useOnSearch } from '@fc/agent-connect-search';
 import { SearchBarComponent } from '@fc/dsfr';

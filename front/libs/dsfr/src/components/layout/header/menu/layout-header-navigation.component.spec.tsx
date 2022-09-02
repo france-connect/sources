@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
+import { mocked } from 'jest-mock';
 import { Link, matchPath } from 'react-router-dom';
-import { mocked } from 'ts-jest/utils';
 
 import { LayoutHeaderNavigationComponent } from './layout-header-navigation.component';
 

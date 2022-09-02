@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2019 by European Commission
+  ~ Copyright (c) 2020 by European Commission
   ~
   ~
   ~ Licensed under the EUPL, Version 1.2 or - as soon they will be
@@ -18,7 +18,6 @@
   ~ See the Licence for the specific language governing permissions and
   ~ limitations under the Licence.
   -->
-
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
     <comment>eIDAS attributes</comment>
@@ -358,24 +357,5 @@
     <entry key="36.XmlType.LocalPart">SICType</entry>
     <entry key="36.XmlType.NamespacePrefix">eidas-legal-representative</entry>
     <entry key="36.AttributeValueMarshaller">eu.eidas.auth.commons.attribute.impl.LiteralStringAttributeValueMarshaller</entry>
-
-    <entry key="39.NameUri">http://eidas.europa.eu/attributes/legalperson/representative/LegalPersonAddress</entry>
-    <entry key="39.FriendlyName">RepresentativeLegalAddress</entry>
-    <entry key="39.PersonType">RepresentativeLegalPerson</entry>
-    <entry key="39.Required">false</entry>
-    <entry key="39.XmlType.NamespaceUri">http://eidas.europa.eu/attributes/legalperson/representative</entry>
-    <entry key="39.XmlType.LocalPart">LegalPersonAddressType</entry>
-    <entry key="39.XmlType.NamespacePrefix">eidas-legal-representative</entry>
-    <entry key="39.AttributeValueMarshaller">eu.eidas.auth.commons.protocol.eidas.impl.RepvLegalAddressAttributeValueMarshaller</entry>
-
-    <entry key="40.NameUri">http://eidas.europa.eu/attributes/legalperson/representative/VATRegistrationNumber</entry>
-    <entry key="40.FriendlyName">RepresentativeVATRegistration</entry>
-    <entry key="40.PersonType">RepresentativeLegalPerson</entry>
-    <entry key="40.Required">false</entry>
-    <entry key="40.XmlType.NamespaceUri">http://eidas.europa.eu/attributes/legalperson/representative</entry>
-    <entry key="40.XmlType.LocalPart">VATRegistrationNumberType</entry>
-    <entry key="40.XmlType.NamespacePrefix">eidas-legal-representative</entry>
-    <entry key="40.AttributeValueMarshaller">eu.eidas.auth.commons.attribute.impl.LiteralStringAttributeValueMarshaller</entry>
-
 
 </properties>

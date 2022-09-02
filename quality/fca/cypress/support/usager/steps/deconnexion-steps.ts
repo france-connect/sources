@@ -17,7 +17,7 @@ When('je me déconnecte du fournisseur de service', function () {
   );
   cy.intercept(`${spUrl}/logout-callback*`).as('sp:logoutCallback');
 
-  serviceProviderPage.logoutButton.click();
+  serviceProviderPage.getLogoutButton().click();
 });
 
 Then("je suis déconnecté du fournisseur d'identité", function () {

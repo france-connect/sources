@@ -1,4 +1,3 @@
-import { ApiResponse, RequestParams } from '@elastic/elasticsearch';
 import {
   Field,
   QueryDslFieldAndFormat,
@@ -6,7 +5,7 @@ import {
   ScriptField,
   SearchRequest,
   SearchResponse,
-} from '@elastic/elasticsearch/api/types';
+} from '@elastic/elasticsearch/lib/api/types';
 
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
@@ -27,11 +26,10 @@ import { Platform } from '../enums';
 import {
   ICsmrTracksElasticResults,
   ICsmrTracksFieldsRawData,
+  Search,
 } from '../interfaces';
 
-export type SearchResponseTracks = ApiResponse<
-  SearchResponse<ICsmrTracksFieldsRawData>
->;
+export type SearchResponseTracks = SearchResponse<ICsmrTracksFieldsRawData>;
 
 // Constants
 const DEFAULT_OFFSET = 0;
@@ -101,7 +99,7 @@ export class CsmrTracksElasticService {
 
     const rawTracks = await this.getElasticLogs(groupIds, options);
 
-    const { total, hits: payload } = rawTracks.body.hits;
+    const { total, hits: payload } = rawTracks.hits;
 
     this.logger.trace({ payload });
 
@@ -220,29 +218,28 @@ export class CsmrTracksElasticService {
       },
     };
 
-    const query: RequestParams.Search & SearchRequest = {
+    const query: Search = {
       // Elastic Search params
       // eslint-disable-next-line @typescript-eslint/naming-convention
       rest_total_hits_as_int: true,
       index: tracksIndex,
       from: offset,
       size,
-      body: {
-        fields: this.fields,
-        sort: [
-          {
-            time: {
-              order: 'desc',
-            },
+
+      fields: this.fields,
+      sort: [
+        {
+          time: {
+            order: 'desc',
           },
-        ],
-        // Standard ES Search Request Params
-        //eslint-disable-next-line @typescript-eslint/naming-convention
-        script_fields: this.scripts,
-        query: {
-          bool: {
-            must: [dateQuery, this.eventsQuery, idsQuery],
-          },
+        },
+      ],
+      // Standard ES Search Request Params
+      //eslint-disable-next-line @typescript-eslint/naming-convention
+      script_fields: this.scripts,
+      query: {
+        bool: {
+          must: [dateQuery, this.eventsQuery, idsQuery],
         },
       },
     };
@@ -250,7 +247,7 @@ export class CsmrTracksElasticService {
     this.logger.trace({ query });
 
     const response: SearchResponseTracks = await this.elasticsearch.search(
-      query,
+      query as unknown as SearchRequest,
     );
 
     this.logger.trace({ response });

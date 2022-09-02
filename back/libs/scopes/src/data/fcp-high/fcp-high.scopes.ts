@@ -1,4 +1,3 @@
-import { oneToOneScopeFromClaims } from '../../helpers';
 import { IScopes } from '../../interfaces';
 import { claims } from './fcp-high.claims';
 
@@ -23,5 +22,19 @@ export const scopes: IScopes = {
     claims.birthcountry,
   ],
   openid: [claims.sub],
-  ...oneToOneScopeFromClaims(claims),
+  gender: [claims.gender],
+  birthdate: [claims.birthdate],
+  birthcountry: [claims.birthcountry],
+  birthplace: [claims.birthplace],
+  // OIDC fashion naming
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  given_name: [claims.given_name],
+  // OIDC fashion naming
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  family_name: [claims.family_name],
+  email: [claims.email],
+  // OIDC fashion naming
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  preferred_username: [claims.preferred_username],
+  address: [claims.address],
 };

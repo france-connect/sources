@@ -31,7 +31,7 @@ When('je clique sur le bouton AgentConnect', function () {
     serviceProviderPage.setMockRequestedScope(this.requestedScope);
     serviceProviderPage.setMockRequestedAcr(this.serviceProvider.acrValue);
   }
-  serviceProviderPage.fcaButton.click();
+  serviceProviderPage.getFcaButton().click();
 
   if (isUsingFCBasicAuthorization()) {
     checkFCBasicAuthorization();

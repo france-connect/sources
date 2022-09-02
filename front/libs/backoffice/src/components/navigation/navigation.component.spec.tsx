@@ -1,5 +1,5 @@
+import { mocked } from 'jest-mock';
 import { FunctionComponent } from 'react';
-import { mocked } from 'ts-jest/utils';
 
 import { renderWithRouter } from '@fc/tests-utils';
 

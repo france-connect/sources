@@ -3,7 +3,7 @@ import { Given } from 'cypress-cucumber-preprocessor/steps';
 import { getEnabledUserByIdpId, getUserByCriteria } from '../../common/helpers';
 
 Given("j'utilise un compte usager {string}", function (description) {
-  getUserByCriteria(this.users, [description]);
+  this.user = getUserByCriteria(this.users, [description]);
 });
 
 Given(
@@ -11,6 +11,6 @@ Given(
   function () {
     expect(this.identityProvider).to.exist;
     const { idpId } = this.identityProvider;
-    getEnabledUserByIdpId(this.users, idpId);
+    this.user = getEnabledUserByIdpId(this.users, idpId);
   },
 );

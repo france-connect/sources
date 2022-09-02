@@ -1,7 +1,6 @@
-import { act } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
+import { mocked } from 'jest-mock';
 import React from 'react';
-import { mocked } from 'ts-jest/utils';
 
 import { UserPreferencesData } from '../interfaces';
 import { checkHasDefaultConfiguration, checkSomeIdpHasBeenChangedSinceLoading } from '../utils';

@@ -1,4 +1,4 @@
-import { SearchHit } from '@elastic/elasticsearch/api/types';
+import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
 import { Test, TestingModule } from '@nestjs/testing';
 

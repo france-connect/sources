@@ -1,6 +1,6 @@
 import { FormValues, UserPreferencesData } from '../interfaces';
 
-interface UserPreferencesServiceInterface {
+export interface UserPreferencesServiceInterface {
   allowFutureIdp: boolean;
   csrfToken: string;
   idpList: { [key: string]: boolean };

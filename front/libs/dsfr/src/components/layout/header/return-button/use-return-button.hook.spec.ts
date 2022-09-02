@@ -1,6 +1,6 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
+import { mocked } from 'jest-mock';
 import { useState } from 'react';
-import { mocked } from 'ts-jest/utils';
 
 import { useApiGet } from '@fc/common';
 

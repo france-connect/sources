@@ -21,11 +21,11 @@ export default class ServiceProviderPage {
     this.originUrl = url;
   }
 
-  get fcButton(): ChainableElement {
+  getFcButton(): ChainableElement {
     return cy.get(this.fcButtonSelector);
   }
 
-  get logoutButton(): ChainableElement {
+  getLogoutButton(): ChainableElement {
     return cy.get(this.logoutButtonSelector);
   }
 
@@ -35,7 +35,7 @@ export default class ServiceProviderPage {
 
   checkIsUserConnected(isConnected = true): void {
     const state = isConnected ? 'be.visible' : 'not.exist';
-    this.logoutButton.should(state);
+    this.getLogoutButton().should(state);
   }
 
   setMockAuthorizeHttpMethod(formMethod: 'get' | 'post'): void {

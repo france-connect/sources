@@ -11,6 +11,5 @@
   "proseWrap": "preserve",
   "htmlWhitespaceSensitivity": "css",
   "endOfLine": "lf",
-  "bracketSameLine": true,
-  "jsxBracketSameLine": true
+  "bracketSameLine": true
 }

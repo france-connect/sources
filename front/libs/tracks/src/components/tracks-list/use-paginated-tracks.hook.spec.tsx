@@ -1,9 +1,8 @@
-import { act } from '@testing-library/react';
-import { renderHook } from '@testing-library/react-hooks';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import axios from 'axios';
 import { Location } from 'history';
+import { mocked } from 'jest-mock';
 import { useLocation } from 'react-router-dom';
-import { mocked } from 'ts-jest/utils';
 
 import { TracksConfig } from '../../interfaces';
 import { DEFAULT_OFFSET, DEFAULT_SIZE, usePaginatedTracks } from './use-paginated-tracks.hook';
@@ -24,17 +23,18 @@ describe('usePaginatedTracks', () => {
     // given
     mocked(axios.get).mockResolvedValue(getTracksResponse);
     // when
-    const { result, waitForNextUpdate } = renderHook(() => usePaginatedTracks(options));
+    const { result } = renderHook(() => usePaginatedTracks(options));
     // then
-    await waitForNextUpdate();
-    expect(result.current).toStrictEqual({
-      submitErrors: undefined,
-      tracks: tracksMock,
+    await waitFor(() => {
+      expect(result.current).toStrictEqual({
+        submitErrors: undefined,
+        tracks: tracksMock,
+      });
+      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get).toHaveBeenCalledWith(
+        `${options.API_ROUTE_TRACKS}?offset=${DEFAULT_OFFSET}&size=${DEFAULT_SIZE}`,
+      );
     });
-    expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(axios.get).toHaveBeenCalledWith(
-      `${options.API_ROUTE_TRACKS}?offset=${DEFAULT_OFFSET}&size=${DEFAULT_SIZE}`,
-    );
   });
 
   describe('should get tracks depends on query params', () => {
@@ -42,19 +42,20 @@ describe('usePaginatedTracks', () => {
       // given
       mocked(axios.get).mockResolvedValue(getTracksResponse);
       // when
-      const { waitForNextUpdate } = renderHook(() => usePaginatedTracks(options));
+      renderHook(() => usePaginatedTracks(options));
       act(() => {
         mocked(useLocation).mockReturnValueOnce({
           search: '?size=2&offset=30',
         } as Location);
       });
       // then
-      await waitForNextUpdate();
-      expect(axios.get).toHaveBeenCalledTimes(2);
-      expect((axios.get as jest.Mock).mock.calls).toEqual([
-        [`${options.API_ROUTE_TRACKS}?offset=${DEFAULT_OFFSET}&size=${DEFAULT_SIZE}`],
-        [`${options.API_ROUTE_TRACKS}?offset=30&size=2`],
-      ]);
+      await waitFor(() => {
+        expect(axios.get).toHaveBeenCalledTimes(2);
+        expect((axios.get as jest.Mock).mock.calls).toEqual([
+          [`${options.API_ROUTE_TRACKS}?offset=${DEFAULT_OFFSET}&size=${DEFAULT_SIZE}`],
+          [`${options.API_ROUTE_TRACKS}?offset=30&size=2`],
+        ]);
+      });
     });
 
     it('should resolve axios.get and return tracks', async () => {
@@ -64,18 +65,17 @@ describe('usePaginatedTracks', () => {
       mocked(axios.get)
         .mockResolvedValueOnce(getTracksResponse)
         .mockResolvedValueOnce(mockTracksNextPageResponseMock);
+      mocked(useLocation).mockReturnValueOnce({
+        search: '?size=2&offset=30',
+      } as Location);
       // when
-      const { result, waitForNextUpdate } = renderHook(() => usePaginatedTracks(options));
-      act(() => {
-        mocked(useLocation).mockReturnValueOnce({
-          search: '?size=2&offset=30',
-        } as Location);
-      });
+      const { result } = renderHook(() => usePaginatedTracks(options));
       // then
-      await waitForNextUpdate();
-      expect(result.current).toStrictEqual({
-        submitErrors: undefined,
-        tracks: mockTracksNextPageMock,
+      await waitFor(() => {
+        expect(result.current).toStrictEqual({
+          submitErrors: undefined,
+          tracks: mockTracksNextPageMock,
+        });
       });
     });
 
@@ -84,12 +84,13 @@ describe('usePaginatedTracks', () => {
       const errorMock = new Error('error');
       mocked(axios.get).mockRejectedValueOnce(errorMock);
       // when
-      const { result, waitForNextUpdate } = renderHook(() => usePaginatedTracks(options));
+      const { result } = renderHook(() => usePaginatedTracks(options));
       // then
-      await waitForNextUpdate();
-      expect(result.current).toStrictEqual({
-        submitErrors: errorMock,
-        tracks: {},
+      await waitFor(() => {
+        expect(result.current).toStrictEqual({
+          submitErrors: errorMock,
+          tracks: {},
+        });
       });
     });
   });

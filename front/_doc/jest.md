@@ -3,7 +3,7 @@
 **Boucher une function exportée d'un fichier**
 
 ```
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 import { removeIdentityProvider } from '../../../redux/actions';
 ...
 jest.mock('../../../redux/actions');
@@ -26,7 +26,7 @@ const { getByText } = renderWithRedux(
 **Faire un test d'un hook custom**
 
 ```
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 const Wrapper = () => (<MonContext.Provider value={{...}} />)
 

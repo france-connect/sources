@@ -14,23 +14,8 @@ describe('ScopesService', () => {
   const uniqueMock = mocked(unique);
 
   const scopesIndexServiceMock = {
-    claims: new Map(
-      Object.entries({
-        sub: {
-          label: 'openId',
-          dataProvider: {
-            name: 'MY_DATA_PROVIDER',
-          },
-        },
-      }),
-    ),
-    scopes: new Map(
-      Object.entries({
-        openid: ['sub'],
-        phone: ['phone_number'],
-        foo: ['foo'],
-      }),
-    ),
+    getClaim: jest.fn(),
+    getScope: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -60,14 +45,6 @@ describe('ScopesService', () => {
     const scopesMock = ['foo', 'bar'];
     uniqueMockReturnValue.sort = jest.fn();
 
-    beforeEach(() => {
-      service['scopeIndex'] = {
-        openid: ['sub'],
-        phone: ['phone_number'],
-        foo: ['foo'],
-      };
-    });
-
     it('should call reduce() on input scope array', () => {
       // Given
       scopesMock.reduce = jest.fn().mockReturnValue(mockedReduceReturnValue);
@@ -91,6 +68,9 @@ describe('ScopesService', () => {
     it('should return mapped claims for scope', () => {
       // Given
       const scopesMock = ['openid', 'phone'];
+      scopesIndexServiceMock.getScope
+        .mockReturnValueOnce('sub')
+        .mockReturnValueOnce('phone_number');
       uniqueMock.mockImplementationOnce((input) => input);
       // When
       const result = service.getRawClaimsFromScopes(scopesMock);
@@ -98,25 +78,18 @@ describe('ScopesService', () => {
       expect(result).toEqual(['sub', 'phone_number']);
     });
 
-    it('should return given input if key is not in map', () => {
+    it('should ignore entry if key is not in map', () => {
       // Given
       const scopesMock = ['openid', 'phone', 'foo'];
+      scopesIndexServiceMock.getScope
+        .mockReturnValueOnce('sub')
+        .mockReturnValueOnce('phone_number')
+        .mockReturnValueOnce(undefined);
       uniqueMock.mockImplementationOnce((input) => input);
       // When
       const result = service.getRawClaimsFromScopes(scopesMock);
       // Then
-      expect(result).toEqual(['sub', 'phone_number', 'foo']);
-    });
-
-    it('should prevent return of falsy claims', () => {
-      // Given
-      const scopesMock = ['openid', null, false, undefined, 'foo'];
-      uniqueMock.mockImplementationOnce((input) => input);
-
-      // When
-      const result = service.getRawClaimsFromScopes(scopesMock as string[]);
-      // Then
-      expect(result).toEqual(['sub', 'foo']);
+      expect(result).toEqual(['sub', 'phone_number']);
     });
   });
 
@@ -128,15 +101,13 @@ describe('ScopesService', () => {
         fooClaim2: Symbol('fooClaim2'),
         barClaim1: Symbol('barClaim1'),
       };
-      const indexServiceClaimsGetterReturnValue = new Map(
-        Object.entries(richClaimsMock),
-      );
+
       const claimsMock = ['fooClaim1', 'fooClaim2', 'barClaim1'];
 
-      // Mocking a getter is a bit trickier than a regular method...
-      Object.defineProperty(service['index'], 'claims', {
-        get: jest.fn().mockReturnValue(indexServiceClaimsGetterReturnValue),
-      });
+      scopesIndexServiceMock.getClaim
+        .mockReturnValueOnce(richClaimsMock.fooClaim1)
+        .mockReturnValueOnce(richClaimsMock.fooClaim2)
+        .mockReturnValueOnce(richClaimsMock.barClaim1);
 
       // When
       const result = service.getRichClaimsFromClaims(claimsMock);

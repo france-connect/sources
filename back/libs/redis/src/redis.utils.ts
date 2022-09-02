@@ -1,9 +1,6 @@
-/* istanbul ignore file */
-
-import * as Redis from 'ioredis';
+import Redis from 'ioredis';
 
 import { RedisModuleOptions } from './interfaces/redis.interfaces';
 
-export const createRedisConnection = ({
-  config,
-}: RedisModuleOptions): Redis.Redis => new Redis(config);
+export const createRedisConnection = ({ config }: RedisModuleOptions): Redis =>
+  new Redis(config);

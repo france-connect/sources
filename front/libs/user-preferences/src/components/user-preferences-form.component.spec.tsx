@@ -1,8 +1,7 @@
-import { act, fireEvent, render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
+import { mocked } from 'jest-mock';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { useMediaQuery } from 'react-responsive';
-import { mocked } from 'ts-jest/utils';
 
 import { AlertComponent, SimpleButton, ToggleInput } from '@fc/dsfr';
 
@@ -216,10 +215,12 @@ describe('UserPreferencesFormComponent', () => {
   it('should render AllowFutureIdpSwitchLabelComponent with params, when labelCallback is called', () => {
     // given
     mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    const useCallbackMock = jest.spyOn(React, 'useCallback');
-
+    const toggleInputValue = false;
+    mocked(ToggleInput).mockImplementationOnce(({ label }) => (
+      <div>{(label as Function)(toggleInputValue)}</div>
+    ));
     // when
-    const { container } = render(
+    render(
       <UserPreferencesFormComponent
         isDisabled
         dirtyFields={{}}
@@ -230,14 +231,12 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    act(() => {
-      const callback = useCallbackMock.mock.calls[0][0];
-      ReactDOM.render(<div>{callback(false)}</div>, container);
-    });
-
     // then
     expect(AllowFutureIdpSwitchLabelComponent).toHaveBeenCalledTimes(1);
-    expect(AllowFutureIdpSwitchLabelComponent).toHaveBeenCalledWith({ checked: false }, {});
+    expect(AllowFutureIdpSwitchLabelComponent).toHaveBeenCalledWith(
+      { checked: toggleInputValue },
+      {},
+    );
   });
 
   it('should call AlertComponent with params when the form has errors', () => {

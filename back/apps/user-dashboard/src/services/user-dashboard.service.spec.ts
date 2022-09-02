@@ -159,7 +159,6 @@ describe('UserDashboardService', () => {
         EmailsTemplates.IDP_CONFIG_UPDATES_EMAIL,
         {
           email: userInfo.email,
-          fullName: 'firstname L.',
           formattedUpdateDate: formattedDateMock,
           updatedIdpSettingsList: idpConfiguration.updatedIdpSettingsList,
           hasAllowFutureIdpChanged: idpConfiguration.hasAllowFutureIdpChanged,
@@ -193,7 +192,6 @@ describe('UserDashboardService', () => {
           hasAllowFutureIdpChanged:
             otherIdpConfiguration.hasAllowFutureIdpChanged,
           allowFutureIdp: otherIdpConfiguration.allowFutureIdp,
-          fullName: 'firstname L.',
           formattedUpdateDate: formattedDateMock,
         },
       );

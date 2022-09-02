@@ -1,9 +1,8 @@
 /* istanbul ignore file */
 
 // declarative file
-import { Context } from 'react';
-
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
+import { Context, ReactElement } from 'react';
 
 export const renderWithContext = (
   hook: Function,
@@ -12,17 +11,16 @@ export const renderWithContext = (
   ContextElement: Context<any>,
   contextValues = {},
 ) => {
-  const Wrapper = ({ children, value }: { children: React.FunctionComponent; value: unknown }) => (
-    <ContextElement.Provider value={value}>{children}</ContextElement.Provider>
+  const Wrapper = ({ children }: { children: ReactElement | ReactElement[] }) => (
+    <ContextElement.Provider value={contextValues}>{children}</ContextElement.Provider>
   );
 
   return renderHook(() => hook(), {
     initialProps: {
       children: () => <div />,
-      value: contextValues,
     },
     wrapper: Wrapper,
   });
 };
 
-export * from '@testing-library/react-hooks';
+export * from '@testing-library/react';

@@ -86,6 +86,17 @@ export class LightProtocolXmlService {
     };
   }
 
+  upsertNodeToPathObject(
+    pathsObject: IPathsObject,
+    node: string,
+    value: string,
+  ): IPathsObject {
+    return {
+      ...pathsObject,
+      [node]: value,
+    };
+  }
+
   /**
    * Retrieves the last part of an URL or URN (can be an Enum)
    * Ex. "toto" in "titi:tutu:tata:toto"
@@ -160,6 +171,20 @@ export class LightProtocolXmlService {
     });
 
     return final;
+  }
+
+  addFailureStatus(pathsObject: IPathsObject): IPathsObject {
+    if (pathsObject['lightResponse.status.statusCode'] === 'Success') {
+      return {
+        ...pathsObject,
+        'lightResponse.status.failure': 'false',
+      };
+    } else {
+      return {
+        ...pathsObject,
+        'lightResponse.status.failure': 'true',
+      };
+    }
   }
 
   replaceInPaths(pathsObject: IPathsObject, from: string | RegExp, to: string) {
