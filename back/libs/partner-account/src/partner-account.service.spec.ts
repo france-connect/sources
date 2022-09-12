@@ -56,6 +56,7 @@ describe('PartnerAccountService', () => {
       email: 'email@value.fr',
       createdAt: expect.any(Date),
       updatedAt: expect.any(Date),
+      accountServiceProviders: expect.any(Array),
     };
 
     it('should call findByUsername function from partners account repository', async () => {

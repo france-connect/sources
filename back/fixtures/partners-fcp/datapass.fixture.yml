@@ -1,0 +1,46 @@
+entity: Datapass
+items:
+  datapass-1:
+    remoteId: 42
+    serviceProvider: '@sp-sandbox'
+    createdAt: '2022-02-22'
+  datapass-2:
+    remoteId: 12345
+    serviceProvider: '@sp-review-requested'
+    createdAt: '2022-02-22'
+  datapass-3:
+    remoteId: 4354
+    serviceProvider: '@sp-review-in-progress'
+    createdAt: '2022-02-22'
+  datapass-4:
+    remoteId: 120
+    serviceProvider: '@sp-review-validated'
+    createdAt: '2022-02-22'
+  datapass-5:
+    remoteId: 63
+    serviceProvider: '@sp-review-waiting-client-feedback'
+    createdAt: '2022-02-22'
+  datapass-6:
+    remoteId: 73
+    serviceProvider: '@sp-review-refused'
+    createdAt: '2022-02-22'
+  datapass-7:
+    remoteId: 789
+    serviceProvider: '@sp-production-access-pending'
+    createdAt: '2022-02-22'
+  datapass-8:
+    remoteId: 36354
+    serviceProvider: '@sp-production-ready'
+    createdAt: '2022-02-22'
+  datapass-9:
+    remoteId: 5016
+    serviceProvider: '@sp-production-live'
+    createdAt: '2022-02-22'
+  datapass-10:
+    remoteId: 5023
+    serviceProvider: '@sp-production-live'
+    createdAt: '2022-02-22'
+  datapass-11:
+    remoteId: 6023
+    serviceProvider: '@sp-archived'
+    createdAt: '2022-02-22'

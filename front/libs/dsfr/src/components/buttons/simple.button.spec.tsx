@@ -11,6 +11,7 @@ describe('SimpleButton', () => {
   it('should match the snapshot', () => {
     // when
     const { container } = render(<SimpleButton label="any-label-mock" />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -18,6 +19,7 @@ describe('SimpleButton', () => {
   it('should match the snapshot, when size is defined to Sizes.LARGE', () => {
     // when
     const { container } = render(<SimpleButton label="any-label-mock" size={Sizes.LARGE} />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -25,6 +27,7 @@ describe('SimpleButton', () => {
   it('should match the snapshot, when size is defined to Sizes.MEDIUM', () => {
     // when
     const { container } = render(<SimpleButton label="any-label-mock" size={Sizes.MEDIUM} />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -32,6 +35,7 @@ describe('SimpleButton', () => {
   it('should match the snapshot, when size is defined to Sizes.SMALL', () => {
     // when
     const { container } = render(<SimpleButton label="any-label-mock" size={Sizes.SMALL} />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -40,6 +44,7 @@ describe('SimpleButton', () => {
     // when
     const { container, getByRole } = render(<SimpleButton label="any-label-mock" />);
     const element = getByRole('button');
+
     // then
     expect(element).toStrictEqual(container.firstChild);
   });
@@ -48,6 +53,7 @@ describe('SimpleButton', () => {
     // when
     const { getByText } = render(<SimpleButton label="any-label-mock" />);
     const linkElement = getByText('any-label-mock');
+
     // then
     expect(linkElement).toBeInTheDocument();
   });
@@ -56,6 +62,7 @@ describe('SimpleButton', () => {
     // when
     const { getByRole } = render(<SimpleButton disabled label="any-label-mock" />);
     const element = getByRole('button');
+
     // then
     expect(element).toHaveAttribute('disabled');
   });
@@ -64,6 +71,7 @@ describe('SimpleButton', () => {
     // when
     const { getByRole } = render(<SimpleButton label="any-label-mock" title="any-title-mock" />);
     const element = getByRole('button');
+
     // then
     expect(element).toHaveAttribute('title', 'any-title-mock');
   });
@@ -72,6 +80,7 @@ describe('SimpleButton', () => {
     // when
     const { getByRole } = render(<SimpleButton label="any-label-mock" type="reset" />);
     const element = getByRole('button');
+
     // then
     expect(element).toHaveAttribute('type', 'reset');
   });
@@ -83,6 +92,7 @@ describe('SimpleButton', () => {
     const { getByRole } = render(<SimpleButton label="any-label-mock" onClick={onClickMock} />);
     const element = getByRole('button');
     fireEvent.click(element);
+
     // then
     expect(onClickMock).toHaveBeenCalledTimes(1);
   });
@@ -93,6 +103,7 @@ describe('SimpleButton', () => {
       <SimpleButton label="any-label-mock" priority={Priorities.SECONDARY} />,
     );
     const element = getByRole('button');
+
     // then
     expect(element).toHaveClass('fr-btn--secondary');
   });
@@ -103,6 +114,7 @@ describe('SimpleButton', () => {
       <SimpleButton label="any-label-mock" priority={Priorities.TERTIARY} />,
     );
     const element = getByRole('button');
+
     // then
     expect(element).toHaveClass('fr-btn--tertiary');
   });
@@ -113,6 +125,7 @@ describe('SimpleButton', () => {
       <SimpleButton noOutline label="any-label-mock" priority={Priorities.TERTIARY} />,
     );
     const element = getByRole('button');
+
     // then
     expect(element).toHaveClass('fr-btn--tertiary-no-outline');
   });
@@ -121,6 +134,7 @@ describe('SimpleButton', () => {
     // when
     const { getByRole } = render(<SimpleButton icon="any-icon-mock" label="any-label-mock" />);
     const element = getByRole('button');
+
     // then
     expect(element).toHaveClass('fr-fi-any-icon-mock');
     expect(element).toHaveClass('fr-btn--icon-right');
@@ -136,6 +150,7 @@ describe('SimpleButton', () => {
       />,
     );
     const element = getByRole('button');
+
     // then
     expect(element).toHaveClass('fr-fi-any-icon-mock');
     expect(element).toHaveClass('fr-btn--icon-left');

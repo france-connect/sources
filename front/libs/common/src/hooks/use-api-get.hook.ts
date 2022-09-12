@@ -14,6 +14,7 @@ interface UseApiGetOptionsInterface {
 
 export class ApiException extends Error {}
 
+// @TODO remove this and replace in apps by http-client
 export const useApiGet = <T>(
   { endpoint, errorPath }: UseApiGetOptionsInterface,
   callback?: Function,

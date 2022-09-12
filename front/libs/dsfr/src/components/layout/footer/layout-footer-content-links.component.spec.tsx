@@ -30,14 +30,15 @@ describe('LayoutFooterContentLinksComponent', () => {
   it('should match the snapshot', () => {
     // when
     const { container } = render(<LayoutFooterContentLinksComponent items={itemsMock} />);
+
     // then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot, when showIcon is defined', () => {
-    // given
     // when
     const { container } = render(<LayoutFooterContentLinksComponent showIcon items={itemsMock} />);
+
     // then
     expect(container).toMatchSnapshot();
   });

@@ -2,6 +2,7 @@
 
 // declarative file
 export * from './alerts';
+export * from './badge';
 export * from './buttons';
 export * from './inputs';
 export * from './layout';

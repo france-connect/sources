@@ -9,7 +9,7 @@ export const bindMiddlewares = (
   if (!useReduxDevToolsExtension) {
     return appliedMiddlewares;
   }
-  const composeEnhancers = composeWithDevTools({});
+  const composeEnhancers = composeWithDevTools({ trace: true });
   const composed = composeEnhancers(appliedMiddlewares);
   return composed;
 };

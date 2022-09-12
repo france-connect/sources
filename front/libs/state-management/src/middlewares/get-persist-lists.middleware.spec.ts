@@ -21,6 +21,7 @@ describe('getPersistLists', () => {
   it('should return a redux-persist configuration object, using default persist storage', () => {
     // when
     const result = getPersistLists(mockStates);
+
     // then
     expect(result).toStrictEqual({
       blacklist: ['mockState1', 'mockState2'],
@@ -31,6 +32,7 @@ describe('getPersistLists', () => {
   it('should return a redux-persist configuration object, using custom persist storage', () => {
     // when
     const result = getPersistLists(mockStates);
+
     // then
     expect(result).toStrictEqual({
       blacklist: ['mockState1', 'mockState2'],

@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomePage should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-container text-center fr-mt-8w"
+  >
+    <h1
+      class="is-blue-france"
+    >
+      HomePage.welcome
+    </h1>
+    <p>
+      HomePage.baseline
+    </p>
+    <div>
+      HomePage.loginButton
+    </div>
+  </div>
+</div>
+`;

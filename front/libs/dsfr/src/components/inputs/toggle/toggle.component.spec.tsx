@@ -26,6 +26,7 @@ describe('ToggleComponent', () => {
     const { container } = render(
       <ToggleComponent input={fieldInputPropsMock} label="foobar" legend={legendMock} />,
     );
+
     // Then
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -33,6 +34,7 @@ describe('ToggleComponent', () => {
   it('should match snapshot with hint provided', () => {
     // Given
     const hintMock = 'hint-mock';
+
     // When
     const { container } = render(
       <ToggleComponent
@@ -42,6 +44,7 @@ describe('ToggleComponent', () => {
         legend={legendMock}
       />,
     );
+
     // Then
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -49,6 +52,7 @@ describe('ToggleComponent', () => {
   it('should apply className if provided', () => {
     // Given
     const classNameMock = 'class-name-mock';
+
     // When
     const { container } = render(
       <ToggleComponent
@@ -58,6 +62,7 @@ describe('ToggleComponent', () => {
         legend={legendMock}
       />,
     );
+
     // Then
     expect(container.firstChild).toHaveClass(classNameMock);
   });

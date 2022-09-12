@@ -1,0 +1,50 @@
+entity: AccountServiceProvider
+items:
+  user-with-1-sp-sp-sandbox:
+    serviceProviderId: '@sp-sandbox'
+    accountId: '@user-with-1-sp'
+  user-with-2-sp-sp-sandbox:
+    serviceProviderId: '@sp-sandbox'
+    accountId: '@user-with-2-sp'
+  user-with-2-sp-sp-review-requested:
+    serviceProviderId: '@sp-review-requested'
+    accountId: '@user-with-2-sp'
+  user-with-all-sp-statuses-sp-sandbox:
+    serviceProviderId: '@sp-sandbox'
+    accountId: '@user-with-all-sp-statuses'
+  user-with-all-sp-statuses-sp-review-requested:
+    serviceProviderId: '@sp-review-requested'
+    accountId: '@user-with-all-sp-statuses'
+  user-with-all-sp-statuses-sp-review-in-progress:
+    serviceProviderId: '@sp-review-in-progress'
+    accountId: '@user-with-all-sp-statuses'
+  user-with-all-sp-statuses-sp-review-validated:
+    serviceProviderId: '@sp-review-validated'
+    accountId: '@user-with-all-sp-statuses'
+  user-with-all-sp-statuses-sp-review-waiting-client-feedback:
+    serviceProviderId: '@sp-review-waiting-client-feedback'
+    accountId: '@user-with-all-sp-statuses'
+  user-with-all-sp-statuses-sp-review-refused:
+    serviceProviderId: '@sp-review-refused'
+    accountId: '@user-with-all-sp-statuses'
+  user-with-all-sp-statuses-sp-production-access-pending:
+    serviceProviderId: '@sp-production-access-pending'
+    accountId: '@user-with-all-sp-statuses'
+  user-with-all-sp-statuses-sp-production-ready:
+    serviceProviderId: '@sp-production-ready'
+    accountId: '@user-with-all-sp-statuses'
+  user-with-all-sp-statuses-sp-production-live:
+    serviceProviderId: '@sp-production-live'
+    accountId: '@user-with-all-sp-statuses'
+  user-with-all-sp-statuses-sp-archived:
+    serviceProviderId: '@sp-archived'
+    accountId: '@user-with-all-sp-statuses'
+  user-sp-owner-sp-sandbox:
+    serviceProviderId: '@sp-sandbox'
+    accountId: '@user-sp-owner'
+  user-sp-admin-sp-sandbox:
+    serviceProviderId: '@sp-sandbox'
+    accountId: '@user-sp-admin'
+  user-sp-observer-sp-sandbox:
+    serviceProviderId: '@sp-sandbox'
+    accountId: '@user-sp-observer'

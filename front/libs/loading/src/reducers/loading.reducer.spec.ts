@@ -6,8 +6,10 @@ describe('Loading', () => {
     // Given
     const stateMock = Symbol('state') as unknown as boolean;
     const actionMock = { type: Events.LOADING_STARTED };
+
     // When
     const result = Loading(stateMock, actionMock);
+
     // Then
     expect(result).toBe(true);
   });
@@ -16,8 +18,10 @@ describe('Loading', () => {
     // Given
     const stateMock = Symbol('state') as unknown as boolean;
     const actionMock = { type: Events.LOADING_COMPLETED };
+
     // When
     const result = Loading(stateMock, actionMock);
+
     // Then
     expect(result).toBe(false);
   });
@@ -26,8 +30,10 @@ describe('Loading', () => {
     // Given
     const stateMock = Symbol('state') as unknown as boolean;
     const actionMock = { type: 'random value' };
+
     // When
     const result = Loading(stateMock, actionMock);
+
     // Then
     expect(result).toBe(stateMock);
   });
@@ -36,8 +42,10 @@ describe('Loading', () => {
     // Given
     const stateMock = undefined;
     const actionMock = { type: Events.LOADING_STARTED };
+
     // When
     const result = Loading(stateMock, actionMock);
+
     // Then
     expect(result).toBe(true);
   });
@@ -46,8 +54,10 @@ describe('Loading', () => {
     // Given
     const stateMock = undefined;
     const actionMock = { type: Events.LOADING_COMPLETED };
+
     // When
     const result = Loading(stateMock, actionMock);
+
     // Then
     expect(result).toBe(false);
   });
@@ -56,8 +66,10 @@ describe('Loading', () => {
     // Given
     const stateMock = undefined;
     const actionMock = { type: 'random value' };
+
     // When
     const result = Loading(stateMock, actionMock);
+
     // Then
     expect(result).toBe(false);
   });

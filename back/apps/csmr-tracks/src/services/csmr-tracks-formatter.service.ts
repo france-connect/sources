@@ -1,10 +1,11 @@
-import { Id, SearchHit } from '@elastic/elasticsearch/lib/api/types';
+import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
 import { Injectable } from '@nestjs/common';
 
 import { LoggerService } from '@fc/logger-legacy';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
+import { PLATFORM_V2_IDENTIFIER_TOKEN } from '../constants';
 import { Platform } from '../enums';
 import {
   IAppTracksDataService,
@@ -45,26 +46,34 @@ export class CsmrTracksFormatterService {
     return output;
   }
 
+  private homogenizeDataFields(
+    fields: ICsmrTracksFieldsRawData,
+  ): ICsmrTracksData {
+    const entries = Object.entries(fields);
+    const flattened = entries.map((field) => field.flat());
+    const flattenedTrack = Object.fromEntries(flattened);
+
+    const spLabel = flattenedTrack.fs_label || flattenedTrack.spName;
+    const platform =
+      flattenedTrack?.service === PLATFORM_V2_IDENTIFIER_TOKEN
+        ? Platform.FCP_HIGH
+        : Platform.FC_LEGACY;
+
+    // @TODO cleanup useless props (spName, fs_label, service...)
+    const result = { ...flattenedTrack, spLabel, platform };
+    return result;
+  }
+
   private extractDataFromFields(
     docs: SearchHit<ICsmrTracksFieldsRawData>[],
   ): ICsmrTracksData[] {
-    const extractFn = (
-      _id: Id,
-      fields: ICsmrTracksFieldsRawData,
-    ): ICsmrTracksData => {
-      const flattenedTrack = Object.fromEntries(
-        Object.entries(fields).map((field) => field.flat()),
-      );
+    const data = docs.map(({ _id, fields }) => {
+      const entries = fields as ICsmrTracksFieldsRawData;
+      const transformed = this.homogenizeDataFields(entries);
+      const result = { trackId: _id, ...transformed };
+      return result;
+    });
 
-      return {
-        ...flattenedTrack,
-        trackId: _id,
-      };
-    };
-
-    const data = docs.map(({ _id, fields }) =>
-      extractFn(_id, fields as ICsmrTracksFieldsRawData),
-    );
     this.logger.trace({ fields: data });
     return data;
   }

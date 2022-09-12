@@ -21,8 +21,10 @@ describe('ReturnButtonComponent', () => {
   it('should match the snapshot, when isMobileViewport is false', () => {
     // given
     mocked(useReturnButton).mockReturnValueOnce(useReturnButtonMock);
+
     // when
     const { container } = render(<ReturnButtonComponent url="any-url-mock" />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -30,8 +32,10 @@ describe('ReturnButtonComponent', () => {
   it('should match the snapshot, when isMobileViewport is true', () => {
     // given
     mocked(useReturnButton).mockReturnValueOnce(useReturnButtonMock);
+
     // when
     const { container } = render(<ReturnButtonComponent isMobileViewport url="any-url-mock" />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -39,8 +43,10 @@ describe('ReturnButtonComponent', () => {
   it('should match the snapshot, when showButton is false', () => {
     // given
     mocked(useReturnButton).mockReturnValueOnce({ ...useReturnButtonMock, showButton: false });
+
     // when
     const { container } = render(<ReturnButtonComponent url="any-url-mock" />);
+
     // then
     expect(container).toMatchSnapshot();
   });

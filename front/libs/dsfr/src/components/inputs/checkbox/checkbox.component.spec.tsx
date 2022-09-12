@@ -21,6 +21,7 @@ describe('CheckboxComponent', () => {
     const { container } = render(
       <CheckboxComponent input={fieldInputPropsMock} label="any-label-mock" />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -31,6 +32,7 @@ describe('CheckboxComponent', () => {
       <CheckboxComponent input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByText('any-label-mock');
+
     // then
     expect(element).toBeInTheDocument();
   });
@@ -41,6 +43,7 @@ describe('CheckboxComponent', () => {
       <CheckboxComponent hint="any-hint-mock" input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByText('any-hint-mock');
+
     // then
     expect(element).toBeInTheDocument();
   });
@@ -51,6 +54,7 @@ describe('CheckboxComponent', () => {
       <CheckboxComponent input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByTestId('field-checkbox-input');
+
     // then
     expect(element).toHaveAttribute('id', fieldInputPropsMock.name);
   });
@@ -61,6 +65,7 @@ describe('CheckboxComponent', () => {
       <CheckboxComponent input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByTestId('field-checkbox-label');
+
     // then
     expect(element).toHaveAttribute('for', fieldInputPropsMock.name);
   });
@@ -71,6 +76,7 @@ describe('CheckboxComponent', () => {
       <CheckboxComponent disabled input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByTestId('field-checkbox-input');
+
     // then
     expect(element).toHaveAttribute('disabled');
   });
@@ -81,6 +87,7 @@ describe('CheckboxComponent', () => {
       <CheckboxComponent disabled={false} input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByTestId('field-checkbox-input');
+
     // then
     expect(element).not.toHaveAttribute('disabled');
   });

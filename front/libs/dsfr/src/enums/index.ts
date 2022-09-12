@@ -2,6 +2,7 @@
 
 // declarative file
 export * from './alert-types.enum';
+export * from './breakpoints.enum';
 export * from './button-types.enum';
 export * from './icon-placement.enum';
 export * from './pagination.enum';

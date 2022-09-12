@@ -1,5 +1,7 @@
 #! /bin/bash
 
+# @TODO is APP used ?
+# from all applications npm.start command
 APP=$1
 
 cp ../../tsconfig.app.json tsconfig.json

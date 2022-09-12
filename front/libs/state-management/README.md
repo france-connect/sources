@@ -4,25 +4,25 @@
 
 ### Step by step library implementation example
 
-💡 We will cover a fictive "Counter" library.
-
 1. The first step is to create the state interface for your library. It should be exported from the library to be used by the application when necessary.
 
-`./interfaces/counter-state.interface.ts`
+`custom-lib/src/interfaces/example-state.interface.ts`
 
 ```typescript
 /* istanbul ignore file */
 
 // declarative file
-export interface CounterState {
-  name: string;
-  value: number;
+export interface CustomLibState {
+  foo: string;
+  bar: boolean;
+  fizz: number;
+  ...
 }
 ```
 
-2. In the library src root, you will need to create a `store` directory as:
+2. Create a `store` folder into your library `src` folder, this folder will contain a barrel file :
 
-`./store/index.ts`
+`custom-lib/src/store/index.ts`
 
 ```typescript
 /* istanbul ignore file */
@@ -34,9 +34,9 @@ export * from './side-effects';
 export * from './state';
 ```
 
-3. Then, you need to configure your state.
+3. Then, create the `state` configuration file.
 
-`./store/state`
+`custom-lib/src/store/state.ts`
 
 ```typescript
 /* istanbul ignore file */
@@ -44,131 +44,150 @@ export * from './state';
 // declarative file
 import { GlobalState } from '@fc/state-management';
 
-import { CounterState } from './interfaces';
+import { CustomLibState } from './interfaces';
 
 // Your state configuration MUST use the GlobalState interface
-export const state: GlobalState<CounterState> = {
+export const state: GlobalState<CustomLibState> = {
   /**
-   * To be composed later (see application implementation) you need to scope
-   * your state with the library name.
+   * To be composed later (see application implementation)
+   * you need to scope your state with the library name.
    */
-  Counter: {
+  CustomLib: {
     blacklist: true,
     /**
-     * Be sure to define each last level key / array so that your library is ready
-     * at start without unwanted crash.
+     * You must initialize every state's keys/values of the state
      */
     defaultValue: {
-      name: 'Final Countdown 🎵',
-      value: 10,
+      foo: 'foo';
+      bar: false;
+      fizz: 0,
+      ...
     },
   },
 };
 ```
 
-4. Actions types will be defined in an enum and exposed by the library so that the application can "react" to it (you got it 🤣 ?).
+4. Create an `action type` with enums, it will expose your library actions to the application.
 
-`./enums/action-types.enum.ts`
+`my-lib/src/enums/action-types.enum.ts`
 
 ```typescript
 /* istanbul ignore file */
 
 // declarative file
-export enum ActionTypes {
-  COUNTER_DECREMENTED = 'COUNTER_DECREMENTED',
-  COUNTER_INCREMENTED = 'COUNTER_INCREMENTED',
+export enum CustomLibActionTypes {
+  CUSTOM_LIB_REQUESTED = 'CUSTOM_LIB_REQUESTED',
+  CUSTOM_LIB_FAILED = 'CUSTOM_LIB_FAILED',
+  ...
 }
 ```
 
-5. Here comes the reducers.
+5.  Export `action types`
 
-`./store/reducers.ts`
+`custom-lib/src/enums/index.ts`
 
 ```typescript
-import { FSA } from '@fc/state-management';
+/* istanbul ignore file */
 
-import { ActionTypes } from '../enums';
-import { CounterState } from './interfaces';
+// declarative file
+export * from './action-types.enum';
+```
+
+6. Here comes the reducers.
+
+`custom-lib/src/store/reducers.ts`
+
+```typescript
+import { FSA } from '@fc/common';
+
+import { CustomLibActionTypes } from '../enums';
+import { CustomLibState } from './interfaces';
 
 /**
  * Here we limit the modifications to the library state only, but be wary
  * that the global state is sent as first parameter ⚠️ ⚠️ ⚠️.
  */
 
-const decrement = ({ Counter }: { Counter: CounterState }, action: FSA) => {
-  // ⚠️ This is an example, the state parameter should not be muted !
-  state.value -= 1;
+export const CustomLibFailed = (state, action: FSA) => ({
+  ...state,
+  CustomLib: {
+    ...state.CustomLib,
+    bar: true,
+  },
+});
 
-  // return here the new state
-  return state;
-};
+export const CustomLibRequested = (state, action: FSA) => (
+  const { fizz } =  action.payload;
+  return {
+  ...state,
+  CustomLib: {
+    ...state.CustomLib,
+    fizz,
+  },
+});
 
-// Another one reducer [bite the dust]
-const increment = ({ Counter }: { Counter: CounterState }, action: FSA) => {
-  state.value += 1;
-
-  return state;
-};
 
 // Reducers MUST be exported mapped by corresponding action type to be called later
 export const reducers = {
-  [ActionTypes.COUNTER_DECREMENTED]: decrement,
-  [ActionTypes.COUNTER_INCREMENTED]: increment,
+  [CustomLibActionTypes.CUSTOM_LIB_FAILED]: CustomLibFailed,
+  [CustomLibActionTypes.CUSTOM_LIB_REQUESTED]: CustomLibRequested,
 };
 ```
 
-6. You have everything to create your actions.
+7. You have everything to create your actions.
 
-`./store/actions.enum.ts`
+`custom-lib/src/store/actions.ts`
 
 ```typescript
-import { FSA } from '@fc/state-management';
+import { FSA } from '@fc/common';
 
-import { ActionTypes } from './types';
+import { CustomLibActionTypes } from '../enums';
+import { CustomLibState } from '../interfaces';
 
-export function counterDecremented(payload: number): FSA {
+export function customLibFailed(): FSA {
   return {
-    type: ActionTypes.COUNTER_DECREMENTED,
-    payload,
+    type: CustomLibActionTypes.CUSTOM_LIB_FAILED,
   };
 }
 
-export function counterIncremented(payload: number): FSA {
+export function CustomLibRequested(): FSA {
   return {
-    type: ActionTypes.COUNTER_INCREMENTED,
-    payload,
+    type: CustomLibActionTypes.CUSTOM_LIB_REQUESTED,
   };
 }
 ```
 
-7. Finally, you link action types with actions to dispatch using side effects
+8. Finally, you link action types with actions to dispatch using side effects
+
+`custom-lib/src/store/side-effects.ts`
 
 ```typescript
-import { FSA, SideEffectMap } from '@fc/state-management';
+import { ConfigService } from '@fc/config';
+import { FSA } from '@fc/common'
+import * as httpClient from '@fc/http-client';
+import { SideEffectMap } from '@fc/state-management';
 
-import { ActionTypes } from '../enums';
-import { increment } from './actions';
+import { CustomLibActionTypes} from '../enums';
+import { CustomLibFailed, CustomLibRequested } from './actions';
 
-const decrementSideEffect = (action: FSA, dispatch, state: GlobalState, next) => {
-  const { decrementLevel } = await axios.get('/counter-decrement-level');
+export const requestCustomLib = async (action: FSA, dispatch: Function) => {
+  try {
 
-  dispatch(counterDecremented({ decrementLevel }));
+    /**
+     * 
+     * Some treatments for example
+     * 
+     */
 
-  return next(action);
-};
-
-const incrementSideEffect = (action: FSA, dispatch, state: GlobalState, next) => {
-  const { incrementLevel } = await axios.get('/counter-increment-level');
-
-  dispatch(counterIncremented({ decrementLevel }));
-
-  return next(action);
+    dispatch(CustomLibRequested(data));
+  } catch (err) {
+    dispatch(CustomLibFailed());
+  }
 };
 
 // sideEffects MUST be exported mapped by corresponding action type to be called later
 export const sideEffects: SideEffectMap = {
-  [ActionTypes.COUNTER_DECREMENTED]: decrementSideEffect,
-  [ActionTypes.COUNTER_INCREMENTED]: incrementSideEffect,
+  [CustomLibActionTypes.CUSTOM_LIB_REQUESTED]: requestCustomLib,
 };
 ```
 
@@ -180,7 +199,7 @@ export const sideEffects: SideEffectMap = {
 
 1. In the application src root, you will need to create a `store` directory as:
 
-`./store/index.ts`
+`<app>/src/store/index.ts`
 
 ```typescript
 /* istanbul ignore file */
@@ -191,41 +210,47 @@ export * from './reducers';
 export * from './states';
 ```
 
-`./store/middlewares.ts`
+`<app>/src/store/middlewares.ts`
 
 ```typescript
 /* istanbul ignore file */
 
 // declarative file
+import { customLibSideEffects } from '@fc/custom-lib';
 import { initSideEffectsMiddleware, SideEffectMap } from '@fc/state-management';
 
 const sideEffectsMap: SideEffectMap = {
   // This is where you will spread used side-effects from libraries
+  ...customLibSideEffects,
 };
 
 // This will return you a unique middleware injectable in your store provider (see application.tsx)
 export const sideEffectsMiddleware = initSideEffectsMiddleware(sideEffectsMap);
 ```
 
-`./store/reducers.ts`
+`<app>/src/store/reducers.ts`
 
 ```typescript
 /* istanbul ignore file */
 
 // declarative file
-import { ReducersMap } from '@fc/state-management';
+import { ReducersMapObject } from 'redux';
 
-export const reducersMap: ReducersMap = {
+import { customLibReducers } from '@fc/custom-lib';
+
+export const reducersMap: ReducersMapObject = {
   // This is where you will spread used reducers from libraries
+  ...customLibReducers,
 };
 ```
 
-`./store/states.ts`
+`<app>/src/store/states.ts`
 
 ```typescript
 /* istanbul ignore file */
 
 // declarative file
+import { CustomLibState } from '@fc/custom-lib';
 
 /**
  * This one should not be typed as his type will be inferred (see application.tsx) from the composition
@@ -233,12 +258,13 @@ export const reducersMap: ReducersMap = {
  */
 export const statesMap = {
   // This is where you will spread used states from libraries
+  ...CustomLibState,
 };
 ```
 
 2. You are now ready to implement your store provider in the application.
 
-`./application.tsx`
+`<app>/src/ui/application.tsx`
 
 ```tsx
 import './application.scss';
@@ -263,11 +289,11 @@ export function Application(): JSX.Element {
             store provider nonetheless.
         -->
         <StoreProvider<typeof states>
-          debugMode
+          debugMode={process.env.NODE_ENV !== 'production'}
           middlewares={[sideEffectsMiddleware]}
           persistKey={AppConfig.persistKey}
-          reducers={reducers}
-          states={states}>
+          reducers={reducersMap}
+          states={statesMap}>
         </StoreProvider>
       </AppContextProvider>
     </React.StrictMode>

@@ -4,7 +4,7 @@ exports[`LayoutHeaderMenuComponent should match the snapshot 1`] = `
 <div>
   <div
     aria-labelledby="burger-button-mobile-menu"
-    class="fr-header__menu fr-modal"
+    class="fr-header__menu fr-modal menu"
     id="layout-header-menu-modal"
   >
     <div
@@ -28,7 +28,7 @@ exports[`LayoutHeaderMenuComponent should match the snapshot, when navigationIte
 <div>
   <div
     aria-labelledby="burger-button-mobile-menu"
-    class="fr-header__menu fr-modal fr-modal--opened"
+    class="fr-header__menu fr-modal menu fr-modal--opened"
     id="layout-header-menu-modal"
   >
     <div
@@ -55,7 +55,7 @@ exports[`LayoutHeaderMenuComponent should match the snapshot, when opened is tru
 <div>
   <div
     aria-labelledby="burger-button-mobile-menu"
-    class="fr-header__menu fr-modal fr-modal--opened"
+    class="fr-header__menu fr-modal menu fr-modal--opened"
     id="layout-header-menu-modal"
   >
     <div

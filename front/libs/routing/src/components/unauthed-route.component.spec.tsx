@@ -22,6 +22,7 @@ describe('UnauthedRouteComponent', () => {
       <UnauthedRouteComponent authRedirect="any-redirect-path" component={ChildrenComponentMock} />,
       { route: '/any-unauthed-route' },
     );
+
     // then
     expect(useContextMock).toHaveBeenCalledTimes(1);
     expect(useContextMock).toHaveBeenCalledWith(AccountContext);
@@ -33,6 +34,7 @@ describe('UnauthedRouteComponent', () => {
       <UnauthedRouteComponent authRedirect="any-redirect-path" component={ChildrenComponentMock} />,
       { route: '/any-unauthed-route' },
     );
+
     // then
     expect(Route).toHaveBeenCalledTimes(1);
     expect(Route).toHaveBeenCalledWith({ render: expect.any(Function) }, {});
@@ -41,12 +43,14 @@ describe('UnauthedRouteComponent', () => {
   it('should render emtpy element if not ready and loader is not defined', () => {
     // given
     useContextMock.mockReturnValueOnce({ connected: false, ready: false });
+
     // when
     const { getByTestId } = renderWithRouter(
       <UnauthedRouteComponent authRedirect="any-redirect-path" component={ChildrenComponentMock} />,
       { route: '/any-unauthed-route' },
     );
     const element = getByTestId('route-unauthed-component-loader-div');
+
     // then
     expect(ChildrenComponentMock).not.toHaveBeenCalled();
     expect(element).toBeInTheDocument();
@@ -55,6 +59,7 @@ describe('UnauthedRouteComponent', () => {
   it('should render the loader if defined and not ready', () => {
     // given
     useContextMock.mockReturnValueOnce({ connected: false, ready: false });
+
     // when
     const { getByText } = renderWithRouter(
       <UnauthedRouteComponent
@@ -65,6 +70,7 @@ describe('UnauthedRouteComponent', () => {
       { route: '/any-unauthed-route' },
     );
     const element = getByText('mock-loader');
+
     // then
     expect(ChildrenComponentMock).not.toHaveBeenCalled();
     expect(LoaderMock).toHaveBeenCalledTimes(1);
@@ -74,12 +80,14 @@ describe('UnauthedRouteComponent', () => {
   it('should render the component when not connected and ready', () => {
     // given
     useContextMock.mockReturnValueOnce({ connected: false, ready: true });
+
     // when
     const { getByText } = renderWithRouter(
       <UnauthedRouteComponent authRedirect="any-redirect-path" component={ChildrenComponentMock} />,
       { route: '/any-unauthed-route' },
     );
     const element = getByText('children-component-mock');
+
     // then
     expect(ChildrenComponentMock).toHaveBeenCalledTimes(1);
     expect(element).toBeInTheDocument();
@@ -88,11 +96,13 @@ describe('UnauthedRouteComponent', () => {
   it('should redirect if ready and connected', () => {
     // given
     useContextMock.mockReturnValueOnce({ connected: true, ready: true });
+
     // when
     renderWithRouter(
       <UnauthedRouteComponent authRedirect="any-redirect-path" component={ChildrenComponentMock} />,
       { route: '/any-unauthed-route' },
     );
+
     // then
     expect(Redirect).toHaveBeenCalledTimes(1);
     expect(Redirect).toHaveBeenCalledWith(

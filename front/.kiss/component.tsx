@@ -4,8 +4,10 @@ interface DumbComponentProps {
   className: string;
 }
 
-export const DumbComponent = React.memo(({ className }: DumbComponentProps) => {
-  return <div />;
-});
+export const DumbComponent: React.FC<DumbComponentProps> = React.memo(
+  ({ className }: DumbComponentProps) => {
+    return <div />;
+  },
+);
 
 DumbComponent.displayName = 'DumbComponent';

@@ -14,8 +14,10 @@ export type ICsmrTracksHighData = {
   event: string;
   ip: string;
   idpSub: string;
+  service: string;
   spSub: string;
   spId: string;
+  spName: string;
   idpAcr: string;
   idpLabel: string;
   spAcr: string;

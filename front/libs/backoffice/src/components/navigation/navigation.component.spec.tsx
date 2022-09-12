@@ -43,9 +43,11 @@ describe('NavigationComponent', () => {
   it('should render a list of items filtered on the order property', () => {
     // given
     const { getByText } = renderWithRouter(<NavigationComponent routes={mockRoutes} />);
+
     // when
     const homeElement = getByText('home');
     const aboutElement = getByText('about');
+
     // then
     expect(homeElement).toBeInTheDocument();
     expect(aboutElement).toBeInTheDocument();
@@ -54,6 +56,7 @@ describe('NavigationComponent', () => {
   it('should not render an item which has not the order property', () => {
     // given
     const { getByText } = renderWithRouter(<NavigationComponent routes={mockRoutes} />);
+
     // then
     expect(() => getByText('not-found')).toThrow();
   });

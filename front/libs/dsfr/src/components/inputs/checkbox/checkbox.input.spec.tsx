@@ -15,6 +15,7 @@ describe('CheckboxInput', () => {
       label: 'any-label-mock',
       name: 'any-name-mock',
     });
+
     // then
     expect(container).toMatchSnapshot();
   });

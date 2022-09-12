@@ -25,9 +25,11 @@ describe('useReturnButton', () => {
   it('should have return default values at first render', () => {
     // given
     const url = expect.any(String);
+
     // when
     const { result } = renderHook(() => useReturnButton(url));
     const { historyBackURL, serviceProviderName, showButton } = result.current;
+
     // then
     expect(historyBackURL).toEqual('/');
     expect(serviceProviderName).toEqual('');
@@ -37,8 +39,10 @@ describe('useReturnButton', () => {
   it('should have called useApiGet with enpoint param', () => {
     // given
     const url = expect.any(String);
+
     // when
     renderHook(() => useReturnButton(url));
+
     // then
     expect(useApiGet).toHaveBeenCalledTimes(1);
     expect(useApiGet).toHaveBeenCalledWith({ endpoint: url });
@@ -47,8 +51,10 @@ describe('useReturnButton', () => {
   it('should have returned default values at first render', () => {
     // given
     const url = expect.any(String);
+
     // when
     const { result } = renderHook(() => useReturnButton(url));
+
     // then
     expect(result.current).toStrictEqual({
       historyBackURL: '/',
@@ -61,8 +67,10 @@ describe('useReturnButton', () => {
     // given
     const url = expect.any(String);
     mocked(useApiGet).mockReturnValueOnce(null);
+
     // when
     const { result } = renderHook(() => useReturnButton(url));
+
     // then
     expect(result.current).toStrictEqual({
       historyBackURL: '/',
@@ -79,8 +87,10 @@ describe('useReturnButton', () => {
       redirectURIQuery: { mock: 'mock' },
       spName: 'service-provider-name-mock',
     });
+
     // when
     const { result } = renderHook(() => useReturnButton(url));
+
     // then
     expect(result.current).toStrictEqual({
       historyBackURL: 'redirect-uri-mock?mock=mock',
@@ -99,12 +109,14 @@ describe('useReturnButton', () => {
       redirectURIQuery: { mock: 'mock' },
       spName: 'service-provider-name-mock',
     });
+
     // when
     const { rerender } = renderHook(() => useReturnButton(url));
     rerender();
     rerender();
     rerender();
     rerender();
+
     // then
     expect(useApiGet).toHaveBeenCalledTimes(5);
     expect(setStateMock).toHaveBeenCalledTimes(1);

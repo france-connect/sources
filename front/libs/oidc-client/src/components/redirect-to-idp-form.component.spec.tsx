@@ -19,8 +19,10 @@ describe('RedirectToIdpFormComponent', () => {
         <div>mock-component-content</div>
       </RedirectToIdpFormComponent>,
     );
+
     // when
     const element = getByText('mock-component-content');
+
     // then
     expect(element).toBeInTheDocument();
   });
@@ -32,8 +34,10 @@ describe('RedirectToIdpFormComponent', () => {
         <div>mock-component-content</div>
       </RedirectToIdpFormComponent>,
     );
+
     // when
     const element = getByTestId('csrf-form');
+
     // then
     expect(element).toBeInTheDocument();
     expect(element).toHaveAttribute('id', 'mock-id');
@@ -46,8 +50,10 @@ describe('RedirectToIdpFormComponent', () => {
         <div>mock-component-content</div>
       </RedirectToIdpFormComponent>,
     );
+
     // when
     const element = getByTestId('csrf-form');
+
     // then
     expect(element).toBeInTheDocument();
     expect(element).toHaveAttribute('action', 'mock-redirectToIdp');
@@ -60,8 +66,10 @@ describe('RedirectToIdpFormComponent', () => {
         <div>mock-component-content</div>
       </RedirectToIdpFormComponent>,
     );
+
     // when
     const element = getByTestId('csrf-input');
+
     // then
     expect(element).toBeInTheDocument();
     expect(element).toHaveAttribute('value', 'mock-csrf');
@@ -74,8 +82,10 @@ describe('RedirectToIdpFormComponent', () => {
         <div>mock-component-content</div>
       </RedirectToIdpFormComponent>,
     );
+
     // when
     const element = getByTestId('uid-input');
+
     // then
     expect(element).toBeInTheDocument();
     expect(element).toHaveAttribute('value', 'mock-uid');

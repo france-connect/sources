@@ -22,6 +22,12 @@ import { PartnersService } from '../services';
 export class AccountController {
   constructor(private readonly partnersService: PartnersService) {}
 
+  @Get(PartnersRoutes.CSRF)
+  async getCSRF(@Res() res: Response): Promise<Record<string, any>> {
+    // @TODO remove or implement true CSRF
+    return res.json({ csrfToken: 'any_valid_csrf_token' });
+  }
+
   @Get(PartnersRoutes.ME)
   async getUserInfos(
     @Res() res: Response,
@@ -49,7 +55,6 @@ export class AccountController {
     const user = await this.partnersService.login(body.email);
 
     await sessionPartnerAccount.set(user);
-
     return user;
   }
 }

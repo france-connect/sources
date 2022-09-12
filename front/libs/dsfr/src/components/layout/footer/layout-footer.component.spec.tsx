@@ -20,12 +20,14 @@ describe('LayoutFooterComponent', () => {
   it('should match the snapshot, with default props', () => {
     // given
     const AppConfigMock = { Layout: expect.any(Object) };
+
     // when
     const { container } = render(
       <AppContextProvider value={{ config: AppConfigMock }}>
         <LayoutFooterComponent />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -33,12 +35,14 @@ describe('LayoutFooterComponent', () => {
   it('should render a defined application logo', () => {
     // given
     const AppConfigMock = { Layout: { logo: expect.any(String) } };
+
     // when
     const { container } = render(
       <AppContextProvider value={{ config: AppConfigMock }}>
         <LayoutFooterComponent />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
     expect(Link).toHaveBeenCalledTimes(1);
@@ -54,6 +58,7 @@ describe('LayoutFooterComponent', () => {
   it('should render a defined description', () => {
     // given
     const AppConfigMock = { Layout: { footerDescription: 'any-description-mock' } };
+
     // when
     const { container, getByText } = render(
       <AppContextProvider value={{ config: AppConfigMock }}>
@@ -61,6 +66,7 @@ describe('LayoutFooterComponent', () => {
       </AppContextProvider>,
     );
     const element = getByText('any-description-mock');
+
     // then
     expect(container).toMatchSnapshot();
     expect(element).toBeInTheDocument();
@@ -69,12 +75,14 @@ describe('LayoutFooterComponent', () => {
   it('should call LayoutFooterContentLinksComponent', () => {
     // given
     const AppConfigMock = { Layout: expect.any(Object) };
+
     // when
     render(
       <AppContextProvider value={{ config: AppConfigMock }}>
         <LayoutFooterComponent />
       </AppContextProvider>,
     );
+
     // then
     expect(LayoutFooterContentLinksComponent).toHaveBeenCalledTimes(1);
   });
@@ -87,6 +95,7 @@ describe('LayoutFooterComponent', () => {
         logo: 'anylogo-mock',
       },
     };
+
     // when
     const { getByAltText } = render(
       <AppContextProvider value={{ config: AppConfigMock }}>
@@ -94,6 +103,7 @@ describe('LayoutFooterComponent', () => {
       </AppContextProvider>,
     );
     const element = getByAltText('any-footerLinkTitle-mock');
+
     // then
     expect(element).toBeInTheDocument();
   });
@@ -117,12 +127,14 @@ describe('LayoutFooterComponent', () => {
         bottomLinks: bottomLinksMock,
       },
     };
+
     // when
     const { container } = render(
       <AppContextProvider value={{ config: AppConfigMock }}>
         <LayoutFooterComponent />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
     expect(LayoutFooterBottomLinksComponent).toHaveBeenCalledTimes(1);
@@ -132,12 +144,14 @@ describe('LayoutFooterComponent', () => {
   it('should call LayoutFooterLicenceComponent', () => {
     // given
     const AppConfigMock = { Layout: expect.any(Object) };
+
     // when
     render(
       <AppContextProvider value={{ config: AppConfigMock }}>
         <LayoutFooterComponent showLicence />
       </AppContextProvider>,
     );
+
     // then
     expect(LayoutFooterLicenceComponent).toHaveBeenCalledTimes(1);
   });
@@ -149,12 +163,14 @@ describe('LayoutFooterComponent', () => {
         bottomLinks: undefined,
       },
     };
+
     // when
     const { getByTestId } = render(
       <AppContextProvider value={{ config: AppConfigMock }}>
         <LayoutFooterComponent showLicence={false} />
       </AppContextProvider>,
     );
+
     // then
     expect(() => {
       getByTestId('sticky-footer-fr-footer__bottom');

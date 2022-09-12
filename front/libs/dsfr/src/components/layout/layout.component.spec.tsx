@@ -52,10 +52,11 @@ describe('ApplicationLayout', () => {
   });
 
   it('should match snapshot', () => {
-    // given
+    // when
     const { container } = renderWithRouter(
       <LayoutComponent.ApplicationLayout config={config} routes={routes} />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -63,6 +64,7 @@ describe('ApplicationLayout', () => {
   it('should call useLocation', () => {
     // when
     renderWithRouter(<LayoutComponent.ApplicationLayout config={config} routes={routes} />);
+
     // then
     expect(useLocation).toHaveBeenCalledTimes(1);
   });
@@ -75,8 +77,10 @@ describe('ApplicationLayout', () => {
       LayoutComponent,
       'getCurrentRouteObjectByPath',
     );
+
     // when
     renderWithRouter(<LayoutComponent.ApplicationLayout config={config} routes={routes} />);
+
     // then
     expect(getCurrentRouteObjectByPathMock).toHaveBeenCalledTimes(1);
     expect(getCurrentRouteObjectByPathMock).toHaveBeenCalledWith(routes, pathnameMock);
@@ -87,8 +91,10 @@ describe('ApplicationLayout', () => {
     const routeObjMock = expect.any(Object);
     jest.spyOn(LayoutComponent, 'getCurrentRouteObjectByPath').mockReturnValueOnce(routeObjMock);
     const getDocumentTitleMock = jest.spyOn(LayoutComponent, 'getDocumentTitle');
+
     // when
     renderWithRouter(<LayoutComponent.ApplicationLayout config={config} routes={routes} />);
+
     // then
     expect(getDocumentTitleMock).toHaveBeenCalledTimes(1);
     expect(getDocumentTitleMock).toHaveBeenCalledWith(routeObjMock);
@@ -100,8 +106,10 @@ describe('ApplicationLayout', () => {
     // given
     const getDocumentTitleMock = jest.spyOn(LayoutComponent, 'getDocumentTitle');
     getDocumentTitleMock.mockReturnValueOnce('mock-title-value');
+
     // when
     renderWithRouter(<LayoutComponent.ApplicationLayout config={config} routes={routes} />);
+
     // then
     expect(Helmet).toHaveBeenCalledTimes(1);
     expect(Helmet).toHaveBeenCalledWith(
@@ -116,24 +124,27 @@ describe('ApplicationLayout', () => {
   });
 
   it('should render LayoutHeaderComponent without props', () => {
-    // given
+    // when
     renderWithRouter(<LayoutComponent.ApplicationLayout config={config} routes={routes} />);
+
     // then
     expect(LayoutHeaderComponent).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderComponent).toHaveBeenCalledWith({}, {});
   });
 
   it('should render RoutesManagerComponent with routes props', () => {
-    // given
+    // when
     renderWithRouter(<LayoutComponent.ApplicationLayout config={config} routes={routes} />);
+
     // then
     expect(RoutesManagerComponent).toHaveBeenCalledTimes(1);
     expect(RoutesManagerComponent).toHaveBeenCalledWith({ routes }, {});
   });
 
   it('should render LayoutFooterComponent without props', () => {
-    // given
+    // when
     renderWithRouter(<LayoutComponent.ApplicationLayout config={config} routes={routes} />);
+
     // then
     expect(LayoutFooterComponent).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderComponent).toHaveBeenCalledWith({}, {});
@@ -149,6 +160,7 @@ describe('ApplicationLayout.getDocumentTitle', () => {
     // given
     const route = routes[0];
     const result = LayoutComponent.getDocumentTitle(route);
+
     // then
     expect(result).toStrictEqual(`${route.label} - `);
   });
@@ -157,6 +169,7 @@ describe('ApplicationLayout.getDocumentTitle', () => {
     // given
     const route = { component: () => <div />, id: 'any', label: undefined, path: 'any' };
     const result = LayoutComponent.getDocumentTitle(route);
+
     // then
     expect(result).toStrictEqual('');
   });

@@ -484,8 +484,10 @@ _fca_low_front() {
   fi
 
   mkdir public
-  cd ${FC_ROOT}/fc/front/apps/agent-connect/
-  cp -r ${FC_ROOT}/fc/front/apps/agent-connect/build/** ${FC_ROOT}/fc/back/apps/core-fca/src/public
+  # @TODO agent-connect application path
+  # should be moved into a bashrc global variables ?
+  cd ${FC_ROOT}/fc/front/instances/agent-connect/
+  cp -r ${FC_ROOT}/fc/front/instances/agent-connect/build/** ${FC_ROOT}/fc/back/apps/core-fca/src/public
 
   if [ -e 'interaction.ejs' ]
   then

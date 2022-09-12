@@ -1,4 +1,13 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+import { AccountServiceProvider } from './partners-account-service-provider.entity';
 
 @Entity()
 export class Account {
@@ -6,26 +15,26 @@ export class Account {
   id: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 128,
-    unique: true
+    unique: true,
   })
   email: string;
 
   @Column({
-    type: "char",
+    type: 'char',
     length: 128,
   })
   password: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 64,
   })
   firstname: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 64,
   })
   lastname: string;
@@ -35,4 +44,10 @@ export class Account {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(
+    () => AccountServiceProvider,
+    (accountServiceProvider) => accountServiceProvider.account,
+  )
+  accountServiceProviders: AccountServiceProvider[];
 }

@@ -13,6 +13,7 @@ describe('LayoutHeaderLogosComponent', () => {
   it('should match the snapshot', () => {
     // when
     const { container } = render(<LayoutHeaderLogosComponent />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -20,6 +21,7 @@ describe('LayoutHeaderLogosComponent', () => {
   it('should call react router Link with props', () => {
     // when
     render(<LayoutHeaderLogosComponent title="any-title-mock" />);
+
     // then
     expect(Link).toHaveBeenCalledTimes(1);
     expect(Link).toHaveBeenCalledWith(
@@ -37,6 +39,7 @@ describe('LayoutHeaderLogosComponent', () => {
       <LayoutHeaderLogosComponent logo={expect.any(String)} title="any-title-mock" />,
     );
     const element = getByAltText('any-title-mock');
+
     // then
     expect(element).toBeInTheDocument();
   });
@@ -44,6 +47,7 @@ describe('LayoutHeaderLogosComponent', () => {
   it('should match snapshot when application logo is defined', () => {
     // when
     const { container } = render(<LayoutHeaderLogosComponent logo={expect.any(String)} />);
+
     // then
     expect(container).toMatchSnapshot();
   });

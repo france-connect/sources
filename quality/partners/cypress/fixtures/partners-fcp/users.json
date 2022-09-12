@@ -1,11 +1,72 @@
 [
   {
-    "criteria": ["standard"],
+    "userId": "user-with-1-sp",
+    "criteria": ["par défaut", "avec 1 fournisseur de service"],
     "credentials": {
-      "email": "isabelle@jones.com",
+      "email": "user-with-1-sp@partner.fr",
       "password": "123"
     },
-    "firstname": "Isabelle",
-    "lastname": "Jones"
+    "firstname": "Judith",
+    "lastname": "Rivera"
+  },
+  {
+    "userId": "user-with-2-sp",
+    "criteria": ["avec 2 fournisseurs de service"],
+    "credentials": {
+      "email": "user-with-2-sp@partner.fr",
+      "password": "123"
+    },
+    "firstname": "Octave",
+    "lastname": "Fouquet"
+  },
+  {
+    "userId": "user-with-no-sp",
+    "criteria": ["sans fournisseur de service"],
+    "credentials": {
+      "email": "user-with-no-sp@partner.fr",
+      "password": "123"
+    },
+    "firstname": "Carita",
+    "lastname": "Ketterer"
+  },
+  {
+    "userId": "user-with-all-sp-statuses",
+    "criteria": ["avec tous les statuts de fournisseurs de service"],
+    "credentials": {
+      "email": "user-with-all-sp-statuses@not-a-hacker.com",
+      "password": "123"
+    },
+    "firstname": "Hilda",
+    "lastname": "Took-Brandybuck"
+  },
+  {
+    "userId": "user-sp-owner",
+    "criteria": ["propriétaire d'un fournisseur de service"],
+    "credentials": {
+      "email": "user-sp-owner@partner.fr",
+      "password": "123"
+    },
+    "firstname": "Katie",
+    "lastname": "Higgins"
+  },
+  {
+    "userId": "user-sp-observer",
+    "criteria": ["observateur d'un fournisseur de service"],
+    "credentials": {
+      "email": "user-sp-observer@partner.fr",
+      "password": "123"
+    },
+    "firstname": "Manchu Li",
+    "lastname": "Hsueh"
+  },
+  {
+    "userId": "user-sp-admin",
+    "criteria": ["administrateur d'un fournisseur de service"],
+    "credentials": {
+      "email": "user-sp-admin@partner.fr",
+      "password": "123"
+    },
+    "firstname": "Edward",
+    "lastname": "Petrussen"
   }
 ]

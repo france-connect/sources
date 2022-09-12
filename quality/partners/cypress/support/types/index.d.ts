@@ -1,6 +1,9 @@
 /// <reference types="cypress" />
 
 export * from './environment';
+export * from './role';
+export * from './service-provider';
+export * from './service-provider-role';
 export * from './user';
 
 // Cypress Alias

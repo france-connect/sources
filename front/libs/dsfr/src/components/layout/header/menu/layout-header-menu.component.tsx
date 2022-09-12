@@ -3,6 +3,7 @@ import React, { MouseEventHandler } from 'react';
 
 import { NavigationLink } from '../../../../interfaces';
 import { LayoutHeaderToolsComponent } from '../tools';
+import styles from './layout-header-menu.module.scss';
 import { LayoutHeaderNavigationComponent } from './layout-header-navigation.component';
 
 export interface LayoutHeaderMenuComponentProps {
@@ -17,7 +18,7 @@ export const LayoutHeaderMenuComponent: React.FC<LayoutHeaderMenuComponentProps>
   ({ firstname, lastname, navigationItems, onClose, opened }: LayoutHeaderMenuComponentProps) => (
     <div
       aria-labelledby="burger-button-mobile-menu"
-      className={classnames('fr-header__menu fr-modal', {
+      className={classnames('fr-header__menu fr-modal', styles.menu, {
         // @NOTE unable to create a eslint rule to match this case
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'fr-modal--opened': opened,

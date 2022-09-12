@@ -16,6 +16,7 @@ describe('ToggleInput', () => {
       label: 'any-label-mock',
       name: 'any-name-mock',
     });
+
     // Then
     expect(container).toMatchSnapshot();
   });

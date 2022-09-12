@@ -46,8 +46,10 @@ describe('useLocalStorage', () => {
   it('should wrap all methods with useCallback', () => {
     // Given
     const key = 'keyMock';
+
     // When
     const result = useLocalStorage(key);
+
     // Then
     expect(useCallback).toHaveBeenCalledTimes(3);
 
@@ -75,8 +77,10 @@ describe('useLocalStorage', () => {
       // Given
       const key = 'keyMock';
       const result = useLocalStorage(key);
+
       // When
       result.get();
+
       // Then
       expect(getItemMock).toHaveBeenCalledTimes(1);
       expect(getItemMock).toHaveBeenCalledWith(key);
@@ -86,8 +90,10 @@ describe('useLocalStorage', () => {
       // Given
       const key = 'keyMock';
       const result = useLocalStorage(key);
+
       // When
       result.get();
+
       // Then
       expect(jsonParseMock).toHaveBeenCalledTimes(1);
       expect(jsonParseMock).toHaveBeenCalledWith(localStorageItemMock);
@@ -98,8 +104,10 @@ describe('useLocalStorage', () => {
       getItemMock.mockReturnValueOnce(undefined);
       const key = 'keyMock';
       const result = useLocalStorage(key);
+
       // When
       result.get();
+
       // Then
       expect(jsonParseMock).toHaveBeenCalledTimes(1);
       expect(jsonParseMock).toHaveBeenCalledWith('null');
@@ -109,8 +117,10 @@ describe('useLocalStorage', () => {
       // Given
       const key = 'keyMock';
       const result = useLocalStorage(key);
+
       // When
       result.get('any-path');
+
       // Then
       expect(lget).toHaveBeenCalledTimes(1);
       expect(lget).toHaveBeenCalledWith(jsonParseMockReturnValue, 'any-path');
@@ -123,8 +133,10 @@ describe('useLocalStorage', () => {
       jsonParseMock.mockImplementationOnce(() => {
         throw new Error();
       });
+
       // When
       const result = hook.get();
+
       // Then
       expect(result).toEqual({});
     });
@@ -145,8 +157,10 @@ describe('useLocalStorage', () => {
       const key = 'keyMock';
       const value = { foo: 'bar' };
       const hook = useLocalStorage(key);
+
       // When
       hook.set(value);
+
       // Then
       expect(jsonStringifyMock).toHaveBeenCalledTimes(1);
       expect(jsonStringifyMock).toHaveBeenCalledWith(value);
@@ -157,8 +171,10 @@ describe('useLocalStorage', () => {
       const key = 'keyMock';
       const value = { foo: 'bar' };
       const hook = useLocalStorage(key);
+
       // When
       hook.set(value);
+
       // Then
       expect(setItemMock).toHaveBeenCalledTimes(1);
       expect(setItemMock).toHaveBeenCalledWith(key, jsonStringifyMockReturnValue);
@@ -172,6 +188,7 @@ describe('useLocalStorage', () => {
       const key = 'keyMock';
       const value = { foo: 'bar' };
       const hook = useLocalStorage(key);
+
       // Then / When
       expect(() => hook.set(value)).toThrow('Unable to write local storage value');
     });
@@ -184,6 +201,7 @@ describe('useLocalStorage', () => {
       const key = 'keyMock';
       const value = { foo: 'bar' };
       const hook = useLocalStorage(key);
+
       // Then / When
       expect(() => hook.set(value)).toThrow('Unable to write local storage value');
     });
@@ -203,8 +221,10 @@ describe('useLocalStorage', () => {
       // Given
       const key = 'keyMock';
       const hook = useLocalStorage(key);
+
       // When
       hook.flush();
+
       // Then
       expect(removeItemMock).toHaveBeenCalledTimes(1);
       expect(removeItemMock).toHaveBeenCalledWith(key);

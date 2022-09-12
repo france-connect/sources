@@ -37,6 +37,7 @@ describe('StoreProvider', () => {
       persistor: mockPersistor,
       store: mockStore,
     });
+
     // when
     render(
       <StoreProvider
@@ -48,6 +49,7 @@ describe('StoreProvider', () => {
         <MockChildren />
       </StoreProvider>,
     );
+
     // then
     expect(mockConfigure).toHaveBeenCalled();
     expect(mockConfigure).toHaveBeenCalledTimes(1);
@@ -67,6 +69,7 @@ describe('StoreProvider', () => {
       persistor: mockPersistor,
       store: mockStore,
     });
+
     // when
     const { getByText } = render(
       <StoreProvider
@@ -79,6 +82,7 @@ describe('StoreProvider', () => {
       </StoreProvider>,
     );
     const textElement = getByText('Hello World !');
+
     // then
     expect(textElement).toBeInTheDocument();
   });

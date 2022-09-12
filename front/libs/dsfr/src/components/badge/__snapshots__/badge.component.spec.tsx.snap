@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BadgeComponent should match the snapshot with default value 1`] = `
+<div>
+  <div
+    class="badge fr-badge fr-badge--grey fr-badge--md"
+  >
+    <b>
+      label
+    </b>
+  </div>
+</div>
+`;
+
+exports[`BadgeComponent should match the snapshot with default value and custom icon 1`] = `
+<div>
+  <div
+    class="badge fr-badge fr-badge--grey fr-badge--md fr-badge--no-icon"
+  >
+    <div
+      class="fr-mr-1w"
+      size="18"
+    >
+      RiAccountCircleFill
+    </div>
+    <b>
+      label
+    </b>
+  </div>
+</div>
+`;

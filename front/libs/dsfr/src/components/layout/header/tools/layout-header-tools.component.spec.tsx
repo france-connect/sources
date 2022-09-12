@@ -24,12 +24,14 @@ describe('LayoutHeaderToolsComponent', () => {
         OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
       },
     };
+
     // when
     const { container } = render(
       <AppContextProvider value={appContextConfigMock}>
         <LayoutHeaderToolsComponent />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -39,12 +41,14 @@ describe('LayoutHeaderToolsComponent', () => {
     const appContextConfigMock = {
       config: {},
     };
+
     // when
     const { container } = render(
       <AppContextProvider value={appContextConfigMock}>
         <LayoutHeaderToolsComponent isModalMenu />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -57,12 +61,14 @@ describe('LayoutHeaderToolsComponent', () => {
         OidcClient: {},
       },
     };
+
     // when
     const { container } = render(
       <AppContextProvider value={appContextConfigMock}>
         <LayoutHeaderToolsComponent isModalMenu />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -75,12 +81,14 @@ describe('LayoutHeaderToolsComponent', () => {
         OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
       },
     };
+
     // when
     const { container } = render(
       <AppContextProvider value={appContextConfigMock}>
         <LayoutHeaderToolsComponent isModalMenu />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -95,12 +103,14 @@ describe('LayoutHeaderToolsComponent', () => {
         },
       },
     };
+
     // when
     const { container } = render(
       <AppContextProvider value={appContextConfigMock}>
         <LayoutHeaderToolsComponent isDesktopViewport />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -115,12 +125,14 @@ describe('LayoutHeaderToolsComponent', () => {
         },
       },
     };
+
     // when
     const { container } = render(
       <AppContextProvider value={appContextConfigMock}>
         <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -135,12 +147,14 @@ describe('LayoutHeaderToolsComponent', () => {
         },
       },
     };
+
     // when
     const { container } = render(
       <AppContextProvider value={appContextConfigMock}>
         <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -158,12 +172,14 @@ describe('LayoutHeaderToolsComponent', () => {
         },
       },
     };
+
     // when
     render(
       <AppContextProvider value={appContextConfigMock}>
         <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />
       </AppContextProvider>,
     );
+
     // then
     expect(LayoutHeaderToolsLogoutButton).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderToolsLogoutButton).toHaveBeenCalledWith(
@@ -188,6 +204,7 @@ describe('LayoutHeaderToolsComponent', () => {
         },
       },
     };
+
     // when
     render(
       <AppContextProvider value={appContextConfigMock}>
@@ -198,6 +215,7 @@ describe('LayoutHeaderToolsComponent', () => {
         />
       </AppContextProvider>,
     );
+
     // then
     expect(LayoutHeaderToolsLogoutButton).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderToolsLogoutButton).toHaveBeenCalledWith(
@@ -219,6 +237,7 @@ describe('LayoutHeaderToolsComponent', () => {
         },
       },
     };
+
     // when
     const { container } = render(
       <AppContextProvider value={appContextConfigMock}>
@@ -230,6 +249,7 @@ describe('LayoutHeaderToolsComponent', () => {
         />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -242,12 +262,14 @@ describe('LayoutHeaderToolsComponent', () => {
         OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
       },
     };
+
     // when
     render(
       <AppContextProvider value={appContextConfigMock}>
         <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />
       </AppContextProvider>,
     );
+
     // then
     expect(LayoutHeaderToolsAccountComponent).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderToolsAccountComponent).toHaveBeenCalledWith(
@@ -268,6 +290,7 @@ describe('LayoutHeaderToolsComponent', () => {
         OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
       },
     };
+
     // when
     render(
       <AppContextProvider value={appContextConfigMock}>
@@ -278,6 +301,7 @@ describe('LayoutHeaderToolsComponent', () => {
         />
       </AppContextProvider>,
     );
+
     // then
     expect(LayoutHeaderToolsAccountComponent).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderToolsAccountComponent).toHaveBeenCalledWith(
@@ -300,12 +324,14 @@ describe('LayoutHeaderToolsComponent', () => {
         },
       },
     };
+
     // when
     render(
       <AppContextProvider value={appContextConfigMock}>
         <LayoutHeaderToolsComponent isDesktopViewport />
       </AppContextProvider>,
     );
+
     // then
     expect(ReturnButtonComponent).toHaveBeenCalledTimes(1);
     expect(ReturnButtonComponent).toHaveBeenCalledWith({ url: 'any-returnButtonUrl-mock' }, {});
@@ -316,12 +342,14 @@ describe('LayoutHeaderToolsComponent', () => {
     const appContextConfigMock = {
       config: {},
     };
+
     // when
     render(
       <AppContextProvider value={appContextConfigMock}>
         <LayoutHeaderToolsComponent isDesktopViewport />
       </AppContextProvider>,
     );
+
     // then
     expect(ReturnButtonComponent).not.toHaveBeenCalled();
   });

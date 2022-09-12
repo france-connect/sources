@@ -1,0 +1,13 @@
+{
+  "name": "@fc/partners",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "devDependencies": {},
+  "dependencies": {
+    "luxon": "^2.2.0",
+    "react": "^18.2.0",
+    "react-redux": "^7.2.5",
+    "redux": "^4.1.1"
+  }
+}

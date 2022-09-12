@@ -1,0 +1,12 @@
+{
+  "name": "@fc/config",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "devDependencies": {},
+  "dependencies": {
+    "@types/deep-freeze": "^0.1.2",
+    "deep-freeze": "^0.0.1",
+    "lodash": "^4.17.21"
+  }
+}

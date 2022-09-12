@@ -54,8 +54,10 @@ describe('concatApplicationRoutes', () => {
   it('should return homepage and notfound entries as last entries', () => {
     // Given
     const input = [notfound, ...generics, homepage];
+
     // when
     const results = registerRoutes(input);
+
     // then
     const len = results.length;
     expect(results[len - 2].path).toStrictEqual(homepage.path);
@@ -67,6 +69,7 @@ describe('sortRouteByPathDesc', () => {
   it('should return an array of sorted routes by path DESC, simpliest route paths always last', () => {
     // when
     const results = (generics as RouteItem[]).sort(sortRouteByPathDesc);
+
     // then
     const len = generics.length;
     expect(results).toHaveLength(len);
@@ -91,8 +94,10 @@ describe('sortRouteByPathDesc', () => {
       { path: '/-foo' },
       { path: '/_bar' },
     ] as RouteItem[];
+
     // When
     const result = routes.sort(sortRouteByPathDesc);
+
     // Then
     expect(result).toEqual([
       { path: '/def' },

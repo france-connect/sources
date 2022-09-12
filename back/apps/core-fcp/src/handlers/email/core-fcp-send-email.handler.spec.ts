@@ -32,10 +32,7 @@ const template = `
         margin: 0;
         padding: 0;
         min-width: 100%;
-      }
-
-      img {
-        height: auto;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
       }
 
       .content {
@@ -48,15 +45,15 @@ const template = `
       }
 
       .header {
-        padding: 16px 30px 26px 30px;
+        padding: 16px 30px 26px 16px;
       }
 
       .innerpadding {
         padding: 0px 16px 0px 16px;
       }
 
-      .innerpadding25 {
-        padding: 0px 25px 0px 25px;
+      .innerpadding12 {
+        padding: 12px 16px 12px 12px;
       }
 
       .borderbottom {
@@ -66,13 +63,13 @@ const template = `
       .h1,
       .h2,
       .bodycopy {
-        color: #494f58;
+        color: #3a3a3a;
         font-family: 'Helvetica Neue', Arial, sans-serif;
       }
 
       a {
-        color: #034ea2;
-        font-family: 'Helvetica Neue', Arial, sans-serif;
+        color: #000091;
+        text-decoration: none;
       }
 
       strong {
@@ -93,12 +90,18 @@ const template = `
         font-style: normal;
         line-height: 1.31;
         letter-spacing: normal;
-        color: #034ea2;
+        color: #000091;
       }
 
       .bodycopy {
         font-size: 16px;
-        line-height: 22px;
+        line-height: 24px;
+      }
+
+      .bodycopy-small {
+        font-size: 14px;
+        line-height: 24px;
+        color: #666666;
       }
 
       .bold {
@@ -144,16 +147,17 @@ const template = `
           >
             <tr>
               <td class="header">
-                <table
-                  align="center"
-                  border="0"
-                  cellpadding="0"
-                  cellspacing="0"
-                >
+                <table border="0" cellpadding="0" cellspacing="0">
                   <tr>
                     <td height="73">
                       <img
-                        class="fix"
+                        src="https://auth.franceconnect.gouv.fr/img/logo-marianne.png"
+                        height="73"
+                        border="0"
+                        alt=""
+                      />
+                      <img
+                        style="margin-left: 16px;"
                         src="https://auth.franceconnect.gouv.fr/img/logo-fc-plus.png"
                         width="150"
                         height="73"
@@ -174,13 +178,14 @@ const template = `
               <![endif]-->
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td class="h2">
-                      Bonjour,
-                    </td>
+                    <td class="h2">Bonjour,</td>
                   </tr>
                   <tr>
                     <td class="bodycopy">
-                      Une connexion a eu lieu gr&acirc;ce &agrave; FranceConnect+&nbsp;:
+                      Une connexion avec FranceConnect+ a eu lieu
+                      <strong><%= locals.today %></strong> (heure de Paris) sur le site
+                      <strong><%= locals.spName %></strong> avec votre compte
+                      <strong><%= locals.idpTitle %>.</strong>
                     </td>
                   </tr>
                 </table>
@@ -213,106 +218,94 @@ const template = `
                 >
                   <tr>
                     <td
-                      class="bodycopy innerpadding25"
-                      style="padding-top: 25px; padding-left: 25px;"
+                      valign="center"
+                      class="bodycopy-small"
+                      style="padding: 25px 0px 25px 25px;"
                     >
-                      Date :
+                      <img
+                          src="https://franceconnect.gouv.fr/images/info_icon.png"
+                          height="25"
+                          width="25"
+                          border="0"
+                          alt=""
+                        />
+                      </td>
+                      <td class="bodycopy-small innerpadding12">
+                        Si vous n&rsquo;&ecirc;tes pas &agrave; l&rsquo;origine de
+                        cette connexion,
+                        <strong>
+                          <a href="https://franceconnect.gouv.fr/faq#SECURITE"
+                            >consultez notre rubrique d&rsquo;aide
+                            d&eacute;di&eacute;e</a
+                          >
+                        </strong>
+                        <img
+                          src="https://franceconnect.gouv.fr/images/arrow_icon.png"
+                          width="10"
+                          border="0"
+                          alt=""
+                        />
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!--[if (gte mso 9)|(IE)]>
+                      </td>
+                    </tr>
+                </table>
+                
+              <![endif]-->
+              </td>
+            </tr>
+            <tr>
+              <td class="innerpadding">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td class="bodycopy-small">
+                      Vous recevez ce mail automatiquement apr&egrave;s chaque
+                      utilisation de FranceConnect+ pour vous aider &agrave;
+                      contr&ocirc;ler la s&eacute;curit&eacute; de vos
+                      acc&egrave;s. Si vous &ecirc;tes &agrave; l&rsquo;origine
+                      de cette connexion, aucune action n&rsquo;est requise.
                     </td>
                   </tr>
                   <tr>
-                    <td
-                      class="bodycopy bold innerpadding25"
-                      style="padding-left: 25px;"
-                    >
-                      <strong><%= locals.today %> (heure de Paris)</strong>
+                    <td class="bodycopy" style="padding-top: 15px;">
+                      Pour suivre et contr&ocirc;ler votre utilisation de
+                      FranceConnect+, vous pouvez &eacute;galement
+                      <strong>
+                        <a href="https://app.franceconnect.gouv.fr/traces"
+                          >consulter votre historique de connexions
+                          FranceConnect+.</a
+                        >
+                      </strong>
                     </td>
                   </tr>
                   <tr>
-                    <td
-                      class="bodycopy innerpadding25"
-                      style="padding-top: 15px; padding-left: 25px;"
-                    >
-                      Service :
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="bodycopy bold innerpadding25"
-                      style="padding-left: 25px;"
-                    >
-                      <strong><%= locals.spName %></strong>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="bodycopy innerpadding25"
-                      style="padding-top: 15px; padding-left: 25px;"
-                    >
-                      Compte utilis&eacute;&nbsp;:
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="bodycopy bold innerpadding25"
-                      style="padding-bottom: 25px; padding-left: 25px;"
-                    >
-                      <strong><%= locals.idpTitle %></strong>
+                    <td class="bodycopy" style="padding-top: 15px;">
+                      Pour toute autre question en lien avec votre
+                      d&eacute;marche, merci de contacter le support du site
+                      <%= locals.spName %>.
                     </td>
                   </tr>
                 </table>
-
-                <!--[if (gte mso 9)|(IE)]>
+              </td>
+            </tr>
+            <tr>
+              <td class="innerpadding" style="padding-top: 15px;">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td
+                      class="bodycopy"
+                      style="padding-top: 15px; padding-bottom: 24px;"
+                    >
+                      <i>L&rsquo;&eacute;quipe FranceConnect+</i>
                     </td>
                   </tr>
-              </table>
-              <![endif]-->
-            </td>
-          </tr>
-          <tr>
-            <td class="innerpadding">
-              <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td class="bodycopy">
-                    Merci d&rsquo;avoir utilis&eacute; notre service.
-                  </td>
-                </tr>
-                <tr>
-                  <td class="bodycopy bold" style="padding-top: 15px;">
-                    <strong>Si ce n&rsquo;&eacute;tait pas vous,
-                    <a href="https://franceconnect.gouv.fr/faq#SECURITE" style="color: #034ea2;">cliquez ici</a></strong>.
-                  </td>
-                </tr>
-                <tr>
-                  <td class="bodycopy" style="padding-top: 15px;">
-                    Pour plus d&rsquo;informations, consultez notre FAQ Usagers &agrave; l&rsquo;adresse suivante:  https://franceconnect.gouv.fr/faq .
-                  </td>
-                </tr>
-                <tr>
-                  <td class="bodycopy" style="padding-top: 15px;">
-                    Pour toute autre question en lien avec votre d&eacute;marche, merci
-                    de contacter le support du site <%= locals.spName %>.
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td class="innerpadding" style="padding-top: 15px;">
-              <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td class="bodycopy">
-                    Cordialement,
-                  </td>
-                </tr>
-                <tr>
-                  <td class="bodycopy" style="padding-top: 15px;">
-                    L&#8217;&eacute;quipe FranceConnect+
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
+                </table>
+              </td>
+            </tr>
+          </table>
         <!--[if (gte mso 9)|(IE)]>
           </td>
         </tr>
@@ -336,6 +329,7 @@ describe('CoreFcpSendEmailHandler', () => {
 
   const configAppMock = {
     fqdn: 'my-instance-domain',
+    udFqdn: 'my-ud-instance-domain',
   };
 
   const loggerServiceMock = {
@@ -412,8 +406,9 @@ describe('CoreFcpSendEmailHandler', () => {
   const connectNotificationEmailParametersMock = {
     idpTitle: idpMock.title,
     spName: sessionDataMock.spName,
-    today: 'Le 01/01/2021 à 14:14',
+    today: 'le 01 janvier 2021 à 14:14',
     fqdn: 'my-instance-domain',
+    udFqdn: 'my-ud-instance-domain',
   };
 
   beforeEach(async () => {
@@ -489,6 +484,35 @@ describe('CoreFcpSendEmailHandler', () => {
       expect(configServiceMock.get).toHaveBeenCalledWith('Mailer');
       expect(configServiceMock.get).toHaveBeenCalledWith('App');
     });
+
+    it('should throw error dto if fqdn is not defined', async () => {
+      // Given
+      const errorMock = new MailerNotificationConnectException();
+      const configAppMockWithoutUdFqdn = {
+        udFqdn: 'my-ud-instance-domain',
+      };
+      configServiceMock.get.mockReturnValue(configAppMockWithoutUdFqdn);
+
+      // When / Then
+      await expect(
+        service['getConnectNotificationEmailBodyContent'](sessionDataMock),
+      ).rejects.toThrow(errorMock);
+    });
+
+    it('should throw error dto if udFqdn is not defined', async () => {
+      // Given
+      const errorMock = new MailerNotificationConnectException();
+      const configAppMockWithoutUdFqdn = {
+        fqdn: 'my-instance-domain',
+      };
+      configServiceMock.get.mockReturnValue(configAppMockWithoutUdFqdn);
+
+      // When / Then
+      await expect(
+        service['getConnectNotificationEmailBodyContent'](sessionDataMock),
+      ).rejects.toThrow(errorMock);
+    });
+
     it('should call identity provider getById', async () => {
       // When
       await service['getConnectNotificationEmailBodyContent'](sessionDataMock);
@@ -534,6 +558,7 @@ describe('CoreFcpSendEmailHandler', () => {
           spName: sessionDataMock.spName,
           today: connectNotificationEmailParametersMock.today,
           fqdn: connectNotificationEmailParametersMock.fqdn,
+          udFqdn: connectNotificationEmailParametersMock.udFqdn,
         },
       );
     });

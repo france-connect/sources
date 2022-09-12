@@ -30,6 +30,7 @@ describe('LayoutFooterBottomLinksComponent', () => {
   it('should match the snapshot', () => {
     // when
     const { container } = render(<LayoutFooterBottomLinksComponent items={itemsMock} />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -37,6 +38,7 @@ describe('LayoutFooterBottomLinksComponent', () => {
   it('should call react router Link component 3 times', () => {
     // when
     render(<LayoutFooterBottomLinksComponent items={itemsMock} />);
+
     // then
     expect(Link).toHaveBeenCalledTimes(3);
     expect(Link).toHaveBeenNthCalledWith(

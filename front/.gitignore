@@ -228,10 +228,11 @@ $RECYCLE.BIN/
 
 ## FranceConnect specific
 
+storybook-static
 cypress/snapshots
 cypress/screenshots
-apps/**/build
-apps/**/public/*.mock.json
+instances/**/build
+instances/**/public/*.mock.json
 
-# ignore all apps/yarn.lock
-apps/**/*.yarn.lock
+# ignore all (apps|instances)/yarn.lock
+instances/**/*.yarn.lock

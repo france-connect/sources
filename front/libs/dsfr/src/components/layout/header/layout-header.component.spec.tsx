@@ -10,6 +10,7 @@ import { LayoutHeaderMobileBurgerButton } from './layout-header-mobile-burger.bu
 import { LayoutHeaderLogosComponent } from './logos';
 import { LayoutHeaderMenuComponent } from './menu';
 import { ReturnButtonComponent } from './return-button';
+import { LayoutHeaderServiceComponent } from './service';
 import { LayoutHeaderToolsComponent } from './tools';
 
 jest.mock('./tools/layout-header-tools.component');
@@ -17,6 +18,7 @@ jest.mock('./logos/layout-header-logos.component');
 jest.mock('./menu/layout-header-menu.component');
 jest.mock('./layout-header-mobile-burger.button');
 jest.mock('./return-button/return-button.component');
+jest.mock('./service/layout-header-service.component');
 
 describe('LayoutHeaderComponent', () => {
   // given
@@ -55,6 +57,7 @@ describe('LayoutHeaderComponent', () => {
         <LayoutHeaderComponent />
       </AppContextProvider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -62,6 +65,7 @@ describe('LayoutHeaderComponent', () => {
   it('should match the snapshot, when user is connected', () => {
     // given
     const accountMock = { ...accountContextMock, connected: true, ready: true };
+
     // when
     const { container } = render(
       <AccountContext.Provider value={accountMock}>
@@ -70,6 +74,7 @@ describe('LayoutHeaderComponent', () => {
         </AppContextProvider>
       </AccountContext.Provider>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -81,6 +86,7 @@ describe('LayoutHeaderComponent', () => {
         <LayoutHeaderComponent />
       </AppContextProvider>,
     );
+
     // then
     expect(LayoutHeaderLogosComponent).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderLogosComponent).toHaveBeenCalledWith({ logo: 'any-logo-mock' }, {});
@@ -89,6 +95,7 @@ describe('LayoutHeaderComponent', () => {
   it('should call LayoutHeaderMobileBurgerButton with params when user is connected', () => {
     // given
     const accountMock = { ...accountContextMock, connected: true, ready: true };
+
     // when
     render(
       <AccountContext.Provider value={accountMock}>
@@ -97,6 +104,7 @@ describe('LayoutHeaderComponent', () => {
         </AppContextProvider>
       </AccountContext.Provider>,
     );
+
     // then
     expect(LayoutHeaderMobileBurgerButton).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderMobileBurgerButton).toHaveBeenCalledWith(
@@ -108,6 +116,7 @@ describe('LayoutHeaderComponent', () => {
   it('should call LayoutHeaderToolsComponent with params when user is connected', () => {
     // given
     const accountMock = { ...accountContextMock, connected: true, ready: true };
+
     // when
     render(
       <AccountContext.Provider value={accountMock}>
@@ -116,6 +125,7 @@ describe('LayoutHeaderComponent', () => {
         </AppContextProvider>
       </AccountContext.Provider>,
     );
+
     // then
     expect(LayoutHeaderToolsComponent).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith(
@@ -132,6 +142,7 @@ describe('LayoutHeaderComponent', () => {
   it('should call LayoutHeaderMenuComponent with params when user is connected', () => {
     // given
     const accountMock = { ...accountContextMock, connected: true, ready: true };
+
     // when
     render(
       <AccountContext.Provider value={accountMock}>
@@ -140,6 +151,7 @@ describe('LayoutHeaderComponent', () => {
         </AppContextProvider>
       </AccountContext.Provider>,
     );
+
     // then
     expect(LayoutHeaderMenuComponent).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderMenuComponent).toHaveBeenCalledWith(
@@ -158,6 +170,7 @@ describe('LayoutHeaderComponent', () => {
     // given
     mocked(useMediaQuery).mockReturnValueOnce(true);
     const accountMock = { ...accountContextMock, connected: true, ready: true };
+
     // when
     render(
       <AccountContext.Provider value={accountMock}>
@@ -166,6 +179,7 @@ describe('LayoutHeaderComponent', () => {
         </AppContextProvider>
       </AccountContext.Provider>,
     );
+
     // then
     expect(ReturnButtonComponent).not.toHaveBeenCalled();
   });
@@ -175,6 +189,7 @@ describe('LayoutHeaderComponent', () => {
     const returnButtonUrlMock = 'any-returnButtonUrlMock-mock';
     mocked(useMediaQuery).mockReturnValueOnce(true);
     const accountMock = { ...accountContextMock, connected: true, ready: true };
+
     // when
     render(
       <AccountContext.Provider value={accountMock}>
@@ -192,12 +207,45 @@ describe('LayoutHeaderComponent', () => {
         </AppContextProvider>
       </AccountContext.Provider>,
     );
+
     // then
     expect(ReturnButtonComponent).toHaveBeenCalledTimes(1);
     expect(ReturnButtonComponent).toHaveBeenCalledWith(
       {
         isMobileViewport: true,
         url: returnButtonUrlMock,
+      },
+      {},
+    );
+  });
+
+  it('should call LayoutHeaderServiceComponent with params when serice is defined in layout config', () => {
+    // given
+    const serviceConfigMock = {
+      name: 'any-service-name-mock',
+    };
+
+    // when
+    render(
+      <AppContextProvider
+        value={{
+          config: {
+            Layout: {
+              logo: 'any-logo-mock',
+              navigationItems: navigationItemsMock,
+              service: serviceConfigMock,
+            },
+          },
+        }}>
+        <LayoutHeaderComponent />
+      </AppContextProvider>,
+    );
+
+    // then
+    expect(LayoutHeaderServiceComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHeaderServiceComponent).toHaveBeenCalledWith(
+      {
+        service: serviceConfigMock,
       },
       {},
     );

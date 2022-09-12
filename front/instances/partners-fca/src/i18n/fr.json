@@ -1,0 +1,27 @@
+{
+  "HomePage.welcome": "Bienvenue sur l’espace partenaire AgentConnect",
+  "HomePage.baseline": "Vous pourrez gérer vos fournisseurs de services et plein d’autres choses",
+  "HomePage.loginButton": "Je me connecte",
+  "ServiceProvidersPage.ServiceProvider.status.SANDBOX": "en intégration",
+  "ServiceProvidersPage.ServiceProvider.status.REVIEW_REQUESTED": "en attente de recette",
+  "ServiceProvidersPage.ServiceProvider.status.REVIEW_IN_PROGRESS": "recette en cours",
+  "ServiceProvidersPage.ServiceProvider.status.REVIEW_VALIDATED": "recette validée",
+  "ServiceProvidersPage.ServiceProvider.status.REVIEW_WAITING_CLIENT_FEEDBACK": "en attente de retour",
+  "ServiceProvidersPage.ServiceProvider.status.REVIEW_REFUSED": "recette refusée",
+  "ServiceProvidersPage.ServiceProvider.status.PRODUCTION_ACCESS_PENDING": "en attente d’accès à la production",
+  "ServiceProvidersPage.ServiceProvider.status.PRODUCTION_READY": "prêt à mettre en production",
+  "ServiceProvidersPage.ServiceProvider.status.PRODUCTION_LIVE": "en production",
+  "ServiceProvidersPage.ServiceProvider.status.ARCHIVED": "archivé",
+  "ServiceProvidersPage.ServiceProvider.datapassId": "Datapass N°⚠️{datapassId}⚠️",
+  "ServiceProvidersPage.ServiceProvider.creationDate": "Créé le : {creationDate}",
+  "ServiceProvidersPage.ServiceProvider.platformName.AGENT_CONNECT_LOW_INTERNET": "AgentConnect",
+  "ServiceProvidersPage.ServiceProvider.platformName.AGENT_CONNECT_LOW_RIE": "AgentConnect RIE",
+  "ServiceProvidersPage.title": {
+    "term": "count",
+    "definition": {
+      "zero": "Aucun fournisseur de service",
+      "one": "Mon fournisseur de service",
+      "other": "Mes fournisseurs de service ({count})"
+    }
+  }
+}

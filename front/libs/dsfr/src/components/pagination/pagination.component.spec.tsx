@@ -28,6 +28,7 @@ describe('PaginationComponent', () => {
   });
 
   it('should match the snapshot', () => {
+    // given
     mocked(useMediaQuery).mockReturnValueOnce(false);
     mocked(usePagination).mockReturnValue({
       ...usePaginationMock,
@@ -36,6 +37,7 @@ describe('PaginationComponent', () => {
       showLastEllipsis: true,
       showLastPage: true,
     });
+
     // when
     const { container } = render(
       <PaginationComponent
@@ -47,11 +49,13 @@ describe('PaginationComponent', () => {
         onPageClick={expect.any(Function)}
       />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot in mobile viewport', () => {
+    // given
     mocked(usePagination).mockReturnValue({
       ...usePaginationMock,
       showFirstEllipsis: true,
@@ -60,6 +64,7 @@ describe('PaginationComponent', () => {
       showLastPage: true,
     });
     mocked(useMediaQuery).mockReturnValueOnce(true);
+
     // when
     const { container } = render(
       <PaginationComponent
@@ -71,15 +76,18 @@ describe('PaginationComponent', () => {
         onPageClick={expect.any(Function)}
       />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot with custom props values', () => {
-    // when
+    // given
     mocked(usePagination).mockReturnValue({
       ...usePaginationMock,
     });
+
+    // when
     const { container } = render(
       <PaginationComponent
         useEllipsis
@@ -88,6 +96,7 @@ describe('PaginationComponent', () => {
         onPageClick={expect.any(Function)}
       />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -97,6 +106,7 @@ describe('PaginationComponent', () => {
     mocked(usePagination).mockReturnValue({
       ...usePaginationMock,
     });
+
     // when
     const { container } = render(
       <PaginationComponent
@@ -105,6 +115,7 @@ describe('PaginationComponent', () => {
         onPageClick={expect.any(Function)}
       />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -125,6 +136,7 @@ describe('PaginationComponent', () => {
         onPageClick={expect.any(Function)}
       />,
     );
+
     // then
     expect(usePagination).toHaveBeenCalledTimes(1);
     expect(usePagination).toHaveBeenCalledWith({
@@ -138,6 +150,7 @@ describe('PaginationComponent', () => {
     it('should call callback when a navigation button is clicked', () => {
       // given
       const callbackMock = jest.fn();
+
       // when
       const { getByText } = render(
         <PaginationComponent
@@ -148,6 +161,7 @@ describe('PaginationComponent', () => {
       );
       const button = getByText(/2/);
       fireEvent.click(button);
+
       // then
       expect(callbackMock).toHaveBeenCalledTimes(1);
       expect(callbackMock).toHaveBeenCalledWith(3);
@@ -157,6 +171,7 @@ describe('PaginationComponent', () => {
       it('should call callback with the first page', () => {
         // given
         const callbackMock = jest.fn();
+
         // when
         const { getByText } = render(
           <PaginationComponent
@@ -169,6 +184,7 @@ describe('PaginationComponent', () => {
 
         const button = getByText(/Première page/);
         fireEvent.click(button);
+
         // then
         expect(callbackMock).toHaveBeenCalledTimes(1);
         expect(callbackMock).toHaveBeenCalledWith(0);
@@ -179,6 +195,7 @@ describe('PaginationComponent', () => {
       it('should call callback when the previous button is clicked', () => {
         // given
         const callbackMock = jest.fn();
+
         // when
         const { getByText } = render(
           <PaginationComponent
@@ -191,6 +208,7 @@ describe('PaginationComponent', () => {
 
         const button = getByText(/Page précédente/);
         fireEvent.click(button);
+
         // then
         expect(callbackMock).toHaveBeenCalledTimes(1);
         expect(callbackMock).toHaveBeenCalledWith(1);
@@ -200,6 +218,7 @@ describe('PaginationComponent', () => {
         // given
         const callbackMock = jest.fn();
         mocked(useMediaQuery).mockReturnValueOnce(false);
+
         // when
         const { container } = render(
           <PaginationComponent
@@ -209,6 +228,7 @@ describe('PaginationComponent', () => {
             onPageClick={callbackMock(0)}
           />,
         );
+
         // then
         const button = screen.getByRole('button', {
           name: /Page précédente/i,
@@ -222,6 +242,7 @@ describe('PaginationComponent', () => {
       it('should call callback when the next button is clicked', () => {
         // given
         const callbackMock = jest.fn();
+
         // when
         const { getByText } = render(
           <PaginationComponent
@@ -233,6 +254,7 @@ describe('PaginationComponent', () => {
         );
         const button = getByText(/Page suivante/);
         fireEvent.click(button);
+
         // then
         expect(callbackMock).toHaveBeenCalledTimes(1);
         expect(callbackMock).toHaveBeenCalledWith(3);
@@ -241,6 +263,7 @@ describe('PaginationComponent', () => {
       it('should not be display if every conditions is set to false', () => {
         // given
         const callbackMock = jest.fn();
+
         // when
         const { container } = render(
           <PaginationComponent
@@ -250,6 +273,7 @@ describe('PaginationComponent', () => {
             onPageClick={callbackMock(3)}
           />,
         );
+
         // then
         expect(container).toMatchSnapshot();
       });
@@ -268,6 +292,7 @@ describe('PaginationComponent', () => {
         });
         mocked(useMediaQuery).mockReturnValueOnce(true);
         const callbackMock = jest.fn();
+
         // when
         render(
           <PaginationComponent
@@ -277,6 +302,7 @@ describe('PaginationComponent', () => {
             onPageClick={callbackMock(0)}
           />,
         );
+
         // then
         expect(container).toMatchSnapshot();
       });
@@ -286,6 +312,7 @@ describe('PaginationComponent', () => {
       it('should call callback with the last page', () => {
         // given
         const callbackMock = jest.fn();
+
         // when
         const { getByText } = render(
           <PaginationComponent
@@ -297,6 +324,7 @@ describe('PaginationComponent', () => {
         );
         const button = getByText(/Dernière page/);
         fireEvent.click(button);
+
         // then
         expect(callbackMock).toHaveBeenCalledTimes(1);
         expect(callbackMock).toHaveBeenCalledWith(3);
@@ -319,6 +347,7 @@ describe('PaginationComponent', () => {
           showFirstPage: true,
         });
         const callbackMock = jest.fn();
+
         // when
         const { getByText } = render(
           <PaginationComponent
@@ -332,6 +361,7 @@ describe('PaginationComponent', () => {
         const button = getByText(/1/);
         fireEvent.click(button);
         const firstEllipsis = screen.getByTestId('PaginationComponent-first-ellipsis');
+
         // then
         expect(container).toMatchSnapshot();
         expect(firstEllipsis).toBeInTheDocument();
@@ -357,6 +387,7 @@ describe('PaginationComponent', () => {
         });
 
         const callbackMock = jest.fn();
+
         // when
         const { getByText } = render(
           <PaginationComponent
@@ -371,6 +402,7 @@ describe('PaginationComponent', () => {
         const button = getByText(/10/);
         fireEvent.click(button);
         const lastEllipsis = screen.getByTestId('PaginationComponent-last-ellipsis');
+
         // then
         expect(container).toMatchSnapshot();
         expect(lastEllipsis).toBeInTheDocument();
@@ -396,6 +428,7 @@ describe('PaginationComponent', () => {
         });
         mocked(useMediaQuery).mockReturnValueOnce(true);
         const callbackMock = jest.fn();
+
         // when
         render(
           <PaginationComponent
@@ -406,6 +439,7 @@ describe('PaginationComponent', () => {
           />,
         );
         const lastEllipsis = screen.getByTestId('PaginationComponent-last-ellipsis');
+
         // then
         expect(container).toMatchSnapshot();
         expect(lastEllipsis).toBeInTheDocument();
@@ -428,6 +462,7 @@ describe('PaginationComponent', () => {
         });
         mocked(useMediaQuery).mockReturnValueOnce(false);
         const callbackMock = jest.fn();
+
         // when
         render(
           <PaginationComponent
@@ -437,6 +472,7 @@ describe('PaginationComponent', () => {
             onPageClick={callbackMock(0)}
           />,
         );
+
         // then
         expect(container).toMatchSnapshot();
       });
@@ -457,6 +493,7 @@ describe('PaginationComponent', () => {
         });
         mocked(useMediaQuery).mockReturnValueOnce(true);
         const callbackMock = jest.fn();
+
         // when
         render(
           <PaginationComponent
@@ -466,6 +503,7 @@ describe('PaginationComponent', () => {
             onPageClick={callbackMock(0)}
           />,
         );
+
         // then
         expect(container).toMatchSnapshot();
       });
@@ -486,6 +524,7 @@ describe('PaginationComponent', () => {
         });
         mocked(useMediaQuery).mockReturnValueOnce(true);
         const callbackMock = jest.fn();
+
         // when
         render(
           <PaginationComponent
@@ -495,6 +534,7 @@ describe('PaginationComponent', () => {
             onPageClick={callbackMock(0)}
           />,
         );
+
         // then
         expect(container).toMatchSnapshot();
       });
@@ -514,6 +554,7 @@ describe('PaginationComponent', () => {
           ...usePaginationMock,
         });
         const callbackMock = jest.fn();
+
         // when
         render(
           <PaginationComponent
@@ -523,6 +564,7 @@ describe('PaginationComponent', () => {
             onPageClick={callbackMock(0)}
           />,
         );
+
         // then
         expect(container).toMatchSnapshot();
       });

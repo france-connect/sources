@@ -3,7 +3,7 @@
 exports[`LayoutHeaderComponent should match the snapshot 1`] = `
 <div>
   <header
-    class="fr-header"
+    class="banner fr-header"
     role="banner"
   >
     <div
@@ -43,7 +43,7 @@ exports[`LayoutHeaderComponent should match the snapshot 1`] = `
 exports[`LayoutHeaderComponent should match the snapshot, when user is connected 1`] = `
 <div>
   <header
-    class="fr-header"
+    class="banner fr-header"
     role="banner"
   >
     <div

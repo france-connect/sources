@@ -7,6 +7,7 @@
   "workspaces": [
     "apps/*",
     "libs/*",
+    "instances/*",
     "tests-utils"
   ],
   "browserslist": [
@@ -15,29 +16,29 @@
     "not op_mini all"
   ],
   "scripts": {
-    "start:ud": "cd apps/user-dashboard && yarn start",
-    "start:partners-fca": "cd apps/partners-fca && yarn start",
-    "start:partners-fcp": "cd apps/partners-fcp && yarn start",
-    "start:fca": "cd apps/agent-connect && yarn start",
-    "start:exploit-fcp-high": "cd apps/exploit-fcp-high && yarn start",
-    "start:exploit-fca-low": "cd apps/exploit-fca-low && yarn start",
+    "start:ud": "cd instances/user-dashboard && yarn start",
+    "start:partners-fca": "cd instances/partners-fca && yarn start",
+    "start:partners-fcp": "cd instances/partners-fcp && yarn start",
+    "start:fca": "cd instances/agent-connect && yarn start",
+    "start:exploit-fcp-high": "cd instances/exploit-fcp-high && yarn start",
+    "start:exploit-fca-low": "cd instances/exploit-fca-low && yarn start",
     "start:storybook": "start-storybook -p 3000",
-    "build:fca-low-front": "cd apps/agent-connect && ../../scripts/yarn-build agent-connect",
+    "build:fca-low-front": "cd instances/agent-connect && ../../scripts/yarn-build agent-connect",
     "build:storybook": "build-storybook",
     "cleanup": "./scripts/yarn-cleanup",
-    "format:js": "prettier --write \"{apps,libs}/**/*.(ts|tsx)\"",
-    "format:css": "stylelint \"{apps,libs}/**/*.(scss|css|sass)\" --fix",
+    "format:js": "prettier --write \"{apps,instances,libs}/**/*.(ts|tsx)\"",
+    "format:css": "stylelint \"{apps,instances,libs}/**/*.(scss|css|sass)\" --fix",
     "format": "yarn format:css && yarn format:js",
-    "lint:css": "stylelint \"{apps,libs}/**/*.(scss|css|sass)\"",
-    "lint:js": "eslint ./apps ./libs",
+    "lint:css": "stylelint \"{apps,instances,libs}/**/*.(scss|css|sass)\"",
+    "lint:js": "eslint ./apps ./instances ./libs",
     "lint": "yarn lint:css && yarn lint:js",
-    "prettier": "prettier --check \"{apps,libs}/**/*.(ts|tsx|scss)\"",
+    "prettier": "prettier --check \"{apps,instances,libs}/**/*.(ts|tsx|scss)\"",
     "test": "NODE_ENV=test jest --config=./jest.config.js",
     "test:cov": "yarn test --coverage",
-    "serve:ud": "serve --config=/var/www/app/serve.json -n -d apps/user-dashboard/build/",
-    "serve:fca": "serve --config=/var/www/app/serve.json -n -d apps/agent-connect/build/",
-    "serve:exploit-fcp-high": "serve --config=/var/www/app/serve.json -n -d apps/exploit-fcp-high/build/",
-    "serve:exploit-fca-low": "serve --config=/var/www/app/serve.json -n -d apps/exploit-fca-low/build/"
+    "serve:ud": "serve --config=/var/www/app/serve.json -n -d instances/user-dashboard/build/",
+    "serve:fca": "serve --config=/var/www/app/serve.json -n -d instances/agent-connect/build/",
+    "serve:exploit-fcp-high": "serve --config=/var/www/app/serve.json -n -d instances/exploit-fcp-high/build/",
+    "serve:exploit-fca-low": "serve --config=/var/www/app/serve.json -n -d instances/exploit-fca-low/build/"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.16.4",
@@ -91,6 +92,6 @@
     "eslint-plugin-react": "7.28.0",
     "react-error-overlay": "6.0.9",
     "babel-loader": "8.1.0",
-    "@types/react": "18.0.14" 
+    "@types/react": "18.0.14"
   }
 }

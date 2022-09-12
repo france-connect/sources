@@ -1,0 +1,11 @@
+@use '~sass-rem' as rem;
+
+.item {
+  border-bottom-style: solid;
+  border-color: var(--border-default-grey);
+  border-width: rem.convert(1px);
+}
+
+.details {
+  color: var(--text-mention-grey);
+}

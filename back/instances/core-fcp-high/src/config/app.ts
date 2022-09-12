@@ -17,4 +17,5 @@ export default {
     cert: env.file('HTTPS_SERVER_CERT', { optional: true }),
   },
   fqdn: process.env.FQDN,
+  udFqdn: process.env.UD_FQDN,
 } as AppConfig;

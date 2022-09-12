@@ -11,6 +11,7 @@ describe('Alert', () => {
   it('should match the snapshot with default values', () => {
     // when
     const { container } = render(<AlertComponent>Children</AlertComponent>);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -19,6 +20,7 @@ describe('Alert', () => {
     // when
     const { getByTestId } = render(<AlertComponent noRole>Children</AlertComponent>);
     const element = getByTestId('AlertComponent');
+
     // then
     expect(element).not.toHaveAttribute('role');
   });
@@ -27,6 +29,7 @@ describe('Alert', () => {
     // when
     const { getByTestId } = render(<AlertComponent>Children</AlertComponent>);
     const element = getByTestId('AlertComponent');
+
     // then
     expect(element).toHaveClass('fr-alert--md');
   });
@@ -35,6 +38,7 @@ describe('Alert', () => {
     // when
     const { getByTestId } = render(<AlertComponent>Children</AlertComponent>);
     const element = getByTestId('AlertComponent');
+
     // then
     expect(element).toHaveClass('fr-alert--info');
   });
@@ -43,6 +47,7 @@ describe('Alert', () => {
     // when
     const { getByTestId } = render(<AlertComponent size={Sizes.SMALL}>Children</AlertComponent>);
     const element = getByTestId('AlertComponent');
+
     // then
     expect(element).toHaveClass('fr-alert--sm');
   });
@@ -53,6 +58,7 @@ describe('Alert', () => {
       <AlertComponent type={AlertTypes.ERROR}>Children</AlertComponent>,
     );
     const element = getByTestId('AlertComponent');
+
     // then
     expect(element).toHaveClass('fr-alert--error');
   });
@@ -63,6 +69,7 @@ describe('Alert', () => {
       <AlertComponent type={AlertTypes.INFO}>Children</AlertComponent>,
     );
     const element = getByTestId('AlertComponent');
+
     // then
     expect(element).toHaveClass('fr-alert--info');
   });
@@ -73,6 +80,7 @@ describe('Alert', () => {
       <AlertComponent type={AlertTypes.SUCCESS}>Children</AlertComponent>,
     );
     const element = getByTestId('AlertComponent');
+
     // then
     expect(element).toHaveClass('fr-alert--success');
   });
@@ -83,6 +91,7 @@ describe('Alert', () => {
       <AlertComponent type={AlertTypes.WARNING}>Children</AlertComponent>,
     );
     const element = getByTestId('AlertComponent');
+
     // then
     expect(element).toHaveClass('fr-alert--warning');
   });
@@ -93,5 +102,18 @@ describe('Alert', () => {
     const element = getByTestId('AlertComponent');
     // then
     expect(element).toHaveClass('foo bar');
+  });
+
+  it('should have a custom testid', () => {
+    // when
+    const { getByTestId } = render(
+      <AlertComponent dataTestId="alert-component-custom-testid" type={AlertTypes.WARNING}>
+        Children
+      </AlertComponent>,
+    );
+    const element = getByTestId('alert-component-custom-testid');
+
+    // then
+    expect(element).toBeInTheDocument();
   });
 });

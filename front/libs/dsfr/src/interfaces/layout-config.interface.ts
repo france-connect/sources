@@ -1,3 +1,4 @@
+import { HeaderService } from './header-service.interface';
 import { NavigationLink } from './navigation-link.interface';
 
 export interface LayoutConfig {
@@ -9,4 +10,5 @@ export interface LayoutConfig {
   bottomLinks: NavigationLink[];
   footerDescription: string;
   footerLinkTitle: string;
+  service?: HeaderService;
 }

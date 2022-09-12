@@ -46,3 +46,6 @@ lerna-debug.log*
 #### Specific to Agent Connect
 /apps/core-fca/src/public
 /apps/core-fca/src/views/interaction.ejs
+
+#### Local History files, extension vscode
+.history/**/* 

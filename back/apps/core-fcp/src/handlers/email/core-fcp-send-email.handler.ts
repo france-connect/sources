@@ -43,19 +43,19 @@ export class CoreFcpSendEmailHandler
     const date = new Date(locateDate);
 
     const day = `${date.getDate()}`.padStart(2, '0');
-    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const month = date.toLocaleString('fr-FR', { month: 'long' });
     const year = date.getFullYear();
     const hours = `${date.getHours()}`.padStart(2, '0');
     const minutes = `${date.getMinutes()}`.padStart(2, '0');
 
-    const formattedDate = `Le ${day}/${month}/${year} à ${hours}:${minutes}`;
+    const formattedDate = `le ${day} ${month} ${year} à ${hours}:${minutes}`;
     return formattedDate;
   }
 
   private async getConnectNotificationEmailBodyContent(
     session: OidcSession,
   ): Promise<string> {
-    const { fqdn } = this.config.get<AppConfig>('App');
+    const { fqdn, udFqdn } = this.config.get<AppConfig>('App');
     const { idpId, spName } = session;
     const { title: idpTitle } = await this.identityProvider.getById(idpId);
     const today = this.getTodayFormattedDate(new Date());
@@ -64,6 +64,7 @@ export class CoreFcpSendEmailHandler
       spName,
       today,
       fqdn,
+      udFqdn,
     };
 
     const dtoValidationErrors = await validateDto(

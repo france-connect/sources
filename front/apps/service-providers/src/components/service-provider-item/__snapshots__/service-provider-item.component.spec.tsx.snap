@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceProviderItemDetailComponent should match the snapshot with default values for desktop viewport 1`] = `
+<div>
+  <div
+    class="item fr-mb-3w"
+    data-testid="ServiceProviderItemComponent"
+  >
+    <div
+      class="is-flex flex-between fr-mb-3v"
+    >
+      <div
+        class="fr-text--bold fr-m-0 fr-text--xl"
+        data-testid="ServiceProviderItemComponent-spName"
+      >
+        Portail des demandes de badges Ségur-Fontenoy
+      </div>
+      <div>
+        BadgeComponent
+      </div>
+    </div>
+    <div
+      class="details fr-text--md fr-mb-3w"
+    >
+      <div>
+        service provider item description
+      </div>
+      <div>
+        service provider item description
+      </div>
+      <div>
+        service provider item description
+      </div>
+      <div>
+        service provider item description
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ServiceProviderItemDetailComponent should match the snapshot with default values for mobile viewport 1`] = `
+<div>
+  <div
+    class="item fr-mb-2w"
+    data-testid="ServiceProviderItemComponent"
+  >
+    <div
+      class="flex-rows flex-column-reverse fr-my-1w"
+    >
+      <div
+        class="fr-text--bold fr-m-0 fr-text--lg fr-mt-1w"
+        data-testid="ServiceProviderItemComponent-spName"
+      >
+        Portail des demandes de badges Ségur-Fontenoy
+      </div>
+      <div>
+        BadgeComponent
+      </div>
+    </div>
+    <div
+      class="details fr-text--sm fr-mb-2w"
+    >
+      <div>
+        service provider item description
+      </div>
+      <div>
+        service provider item description
+      </div>
+      <div>
+        service provider item description
+      </div>
+      <div>
+        service provider item description
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -12,6 +12,15 @@ export const LinkComponent = jest.fn(() => <div>LinkComponent</div>);
 
 export const SearchBarComponent = jest.fn(() => <div>SearchBarComponent</div>);
 
+export const BadgeComponent = jest.fn(() => <div>BadgeComponent</div>);
+
+export const Breakpoints = {
+  LG: 1248,
+  MD: 992,
+  SM: 768,
+  XS: 576,
+};
+
 export const Sizes = {
   LARGE: 'lg',
   MEDIUM: 'md',
@@ -25,7 +34,12 @@ export const AlertTypes = {
   WARNING: 'warning',
 };
 
-export const AlertComponent = jest.fn(() => <div>Alert</div>);
+export const AlertComponent = jest.fn(({ children }) => (
+  <div>
+    <div>AlertComponent</div>
+    <div>{children}</div>
+  </div>
+));
 
 export const PaginationComponent = jest.fn(() => <div>PaginationComponent</div>);
 

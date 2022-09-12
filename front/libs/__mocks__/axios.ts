@@ -14,6 +14,7 @@ module.exports = {
     },
   },
   post: jest.fn(() => Promise.resolve(null)),
+  request: jest.fn(() => Promise.resolve(null)),
 };
 
 export {};

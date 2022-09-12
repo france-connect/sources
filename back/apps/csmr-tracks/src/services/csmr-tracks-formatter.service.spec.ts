@@ -1,4 +1,5 @@
 import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
+import { mocked } from 'jest-mock';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -143,10 +144,106 @@ describe('CsmrTracksFormatterService', () => {
     });
   });
 
+  describe('homogenizeDataFields', () => {
+    it('should return the result of homogenizeDataFields, with spLabel equal fs_label', () => {
+      // Given
+      const fieldsMock = {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        fs_label: 'fs_label mock',
+        anyProp: 'any other prop mock',
+      };
+      // fieldsMock
+      const result = service['homogenizeDataFields'](
+        fieldsMock as unknown as ICsmrTracksFieldsRawData,
+      );
+      // Then
+      expect(result).toStrictEqual({
+        ...fieldsMock,
+        spLabel: 'fs_label mock',
+        platform: expect.any(String),
+      });
+    });
+
+    it('should return the result of homogenizeDataFields, with spLabel equal spName', () => {
+      // Given
+      const fieldsMock = {
+        spName: 'spName mock',
+        anyProp: 'any other prop mock',
+      };
+      // fieldsMock
+      const result = service['homogenizeDataFields'](
+        fieldsMock as unknown as ICsmrTracksFieldsRawData,
+      );
+      // Then
+      expect(result).toStrictEqual({
+        ...fieldsMock,
+        spLabel: 'spName mock',
+        platform: expect.any(String),
+      });
+    });
+
+    it('should return the result of homogenizeDataFields, with platform equal Platform.FCP_HIGH when service equal fc_core_v2_app', () => {
+      // Given
+      const fieldsMock = {
+        spName: 'spName mock',
+        anyProp: 'any other prop mock',
+        service: 'fc_core_v2_app',
+      };
+      // fieldsMock
+      const result = service['homogenizeDataFields'](
+        fieldsMock as unknown as ICsmrTracksFieldsRawData,
+      );
+      // Then
+      expect(result).toStrictEqual({
+        ...fieldsMock,
+        spLabel: expect.any(String),
+        platform: Platform.FCP_HIGH,
+      });
+    });
+
+    it('should return the result of homogenizeDataFields, with platform equal Platform.FC_LEGACY when service do not contain fc_core_v2_app', () => {
+      // Given
+      const fieldsMock = {
+        spName: 'spName mock',
+        anyProp: 'any other prop mock',
+        service: 'not fc_core_v2_app',
+      };
+      // fieldsMock
+      const result = service['homogenizeDataFields'](
+        fieldsMock as unknown as ICsmrTracksFieldsRawData,
+      );
+      // Then
+      expect(result).toStrictEqual({
+        ...fieldsMock,
+        spLabel: expect.any(String),
+        platform: Platform.FC_LEGACY,
+      });
+    });
+
+    it('should return the result of homogenizeDataFields, with platform equal Platform.FC_LEGACY when service is undefined', () => {
+      // Given
+      const fieldsMock = {
+        spName: 'spName mock',
+        anyProp: 'any other prop mock',
+      };
+      // fieldsMock
+      const result = service['homogenizeDataFields'](
+        fieldsMock as unknown as ICsmrTracksFieldsRawData,
+      );
+      // Then
+      expect(result).toStrictEqual({
+        ...fieldsMock,
+        spLabel: 'spName mock',
+        platform: Platform.FC_LEGACY,
+      });
+    });
+  });
+
   describe('extractDataFromFields', () => {
     const docsMock = [...tracksMock];
     const docsMockMapReturnValue = [];
     beforeEach(() => {
+      service['homogenizeDataFields'] = jest.fn();
       docsMock.map = jest.fn().mockReturnValueOnce(docsMockMapReturnValue);
     });
 
@@ -163,13 +260,41 @@ describe('CsmrTracksFormatterService', () => {
       expect(result).toBe(docsMockMapReturnValue);
     });
 
-    it('should return the proper output', () => {
+    it('should call homogenizeDataFields 2 times with a doc as params', () => {
       // Given
       const inputMock = [
         { fields: { foo: 'bar' } },
         { fields: { fizz: 'buzz' } },
       ] as unknown as SearchHit<ICsmrTracksFieldsRawData>[];
-      const expectedResult = [{ foo: 'bar' }, { fizz: 'buzz' }];
+
+      // When
+      service['extractDataFromFields'](inputMock);
+      // Then
+      expect(service['homogenizeDataFields']).toHaveBeenCalledTimes(2);
+      expect(service['homogenizeDataFields']).toHaveBeenNthCalledWith(1, {
+        foo: 'bar',
+      });
+      expect(service['homogenizeDataFields']).toHaveBeenNthCalledWith(2, {
+        fizz: 'buzz',
+      });
+    });
+
+    it('should return the proper output', () => {
+      // Given
+      const inputMock = [
+        { _id: 1234, fields: { foo: 'bar' } },
+        { _id: 4567, fields: { fizz: 'buzz' } },
+      ] as unknown as SearchHit<ICsmrTracksFieldsRawData>[];
+
+      mocked(service['homogenizeDataFields'])
+        .mockReturnValueOnce({ foo: 'bar' } as unknown as ICsmrTracksData)
+        .mockReturnValueOnce({ fizz: 'buzz' } as unknown as ICsmrTracksData);
+
+      const expectedResult = [
+        { trackId: 1234, foo: 'bar' },
+        { trackId: 4567, fizz: 'buzz' },
+      ];
+
       // When
       const result = service['extractDataFromFields'](inputMock);
       // Then

@@ -30,7 +30,8 @@
   },
   "main": "src/index.ts",
   "files": [
-    "src/styles/index.scss"
+    "src/styles/index.scss",
+    "src/modules/index.scss"
   ],
   "browserslist": [
     ">0.2%",

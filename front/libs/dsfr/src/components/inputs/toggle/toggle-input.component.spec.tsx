@@ -19,6 +19,7 @@ describe('ToggleInputComponent', () => {
   it('should match the snapshot', () => {
     // When
     const { container } = render(<ToggleInputComponent input={fieldInputPropsMock} />);
+
     // Then
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -26,10 +27,12 @@ describe('ToggleInputComponent', () => {
   it('should match snapshot with disabled props to true', () => {
     // given
     const disabled = true;
+
     // When
     const { container } = render(
       <ToggleInputComponent disabled={disabled} input={fieldInputPropsMock} />,
     );
+
     // Then
     expect(container.firstChild).toHaveProperty('disabled', true);
   });

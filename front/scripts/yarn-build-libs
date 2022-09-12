@@ -4,27 +4,27 @@
 #
 # Description
 # ---
-# Build des sous projets
-# Par défaut, sans arguments, build les Projets présents
-# dans le champs workspaces du package.json
+# Build instances
+# Calling without argument with build all INSTANCES
+# Defined in package.json workspaces
 #
 # ------------------------
 
 if [ -z $1 ]; then
-  # recupere les sous projets definis dans le main ./package.json
-  APPS=$(
+  # get the INSTANCES from package.json workspaces
+  INSTANCES=$(
     PKG=$(cat package.json)
     node -pe 'JSON.parse(process.argv[1]).workspaces.packages.join(" ")' "$PKG"
   )
 else
-  APPS="apps/$1"
+  INSTANCES="instances/$1"
 fi
 
-# ---- Boucle sur APPS ----
+# ---- Loop INSTANCES ----
 CURRENT_DIRECTORY=$PWD
-for FOLDER in $APPS
+for FOLDER in $INSTANCES
 do
-  if [[ "$FOLDER" =~ ^apps/.* ]]; then
+  if [[ "$FOLDER" =~ ^instances/.* ]]; then
     cd $FOLDER
     yarn build
     cd $CURRENT_DIRECTORY

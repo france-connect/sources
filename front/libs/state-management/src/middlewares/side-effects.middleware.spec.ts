@@ -1,3 +1,5 @@
+import { FSA } from '@fc/common';
+
 import { initSideEffectsMiddleware } from './side-effects.middleware';
 
 describe('SideEffectsMiddleware', () => {
@@ -38,39 +40,18 @@ describe('SideEffectsMiddleware', () => {
     expect(result).toBeInstanceOf(Function);
   });
 
-  it('should call getState if fsa type has an existing handler', () => {
-    // given
-    const fsaMock = {
-      meta: 'meta',
-      payload: 'payload',
-      type: ExistingHandlerType,
-    };
-    const sideEffectMapMock = {
-      [ExistingHandlerType]: jest.fn(),
-    };
-    const actionHandler = initSideEffectsMiddleware(sideEffectMapMock)(storeApiMock)(nextMock);
-
-    // when
-    actionHandler(fsaMock);
-
-    // then
-    expect(storeApiMock.getState).toHaveBeenCalledTimes(1);
-    expect(storeApiMock.getState).toHaveBeenCalledWith();
-  });
-
   it('should call the action handler corresponding to the fsa type if defined', () => {
     // given
     const fsaMock = {
       meta: 'meta',
       payload: 'payload',
       type: ExistingHandlerType,
-    };
+    } as unknown as FSA;
+
     const sideEffectMapMock = {
       [ExistingHandlerType]: jest.fn(),
     };
     const actionHandler = initSideEffectsMiddleware(sideEffectMapMock)(storeApiMock)(nextMock);
-    const stateMock = Symbol('STATE');
-    storeApiMock.getState.mockReturnValueOnce(stateMock);
 
     // when
     actionHandler(fsaMock);
@@ -80,8 +61,7 @@ describe('SideEffectsMiddleware', () => {
     expect(sideEffectMapMock[ExistingHandlerType]).toHaveBeenCalledWith(
       fsaMock,
       storeApiMock.dispatch,
-      stateMock,
-      nextMock,
+      storeApiMock.getState,
     );
   });
 
@@ -91,7 +71,8 @@ describe('SideEffectsMiddleware', () => {
       meta: 'meta',
       payload: 'payload',
       type: NonExistingHandlerType,
-    };
+    } as unknown as FSA;
+
     const sideEffectMapMock = {
       [ExistingHandlerType]: jest.fn(),
     };
@@ -110,7 +91,8 @@ describe('SideEffectsMiddleware', () => {
       meta: 'meta',
       payload: 'payload',
       type: NonExistingHandlerType,
-    };
+    } as unknown as FSA;
+
     const sideEffectMapMock = {
       [ExistingHandlerType]: jest.fn(),
     };
@@ -123,32 +105,14 @@ describe('SideEffectsMiddleware', () => {
     expect(sideEffectMapMock[ExistingHandlerType]).toHaveBeenCalledTimes(0);
   });
 
-  it('should not call next if fsa type has an existing handler', () => {
-    // given
-    const fsaMock = {
-      meta: 'meta',
-      payload: 'payload',
-      type: ExistingHandlerType,
-    };
-    const sideEffectMapMock = {
-      [ExistingHandlerType]: jest.fn(),
-    };
-    const actionHandler = initSideEffectsMiddleware(sideEffectMapMock)(storeApiMock)(nextMock);
-
-    // when
-    actionHandler(fsaMock);
-
-    // then
-    expect(nextMock).toHaveBeenCalledTimes(0);
-  });
-
   it('should call next with the fsa if fsa type has not an existing handler', () => {
     // given
     const fsaMock = {
       meta: 'meta',
       payload: 'payload',
       type: NonExistingHandlerType,
-    };
+    } as unknown as FSA;
+
     const sideEffectMapMock = {
       [ExistingHandlerType]: jest.fn(),
     };

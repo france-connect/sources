@@ -18,8 +18,10 @@ describe('AccountService', () => {
     it('should call axios.get with the url', async () => {
       // given
       axiosGetMock.mockResolvedValueOnce({ data: 'any-data-response' });
+
       // when
       await AccountService.fetchData('any-endpoint-mock', jest.fn());
+
       // then
       expect(axiosGetMock).toHaveBeenCalledTimes(1);
       expect(axiosGetMock).toHaveBeenCalledWith('any-endpoint-mock');
@@ -36,8 +38,10 @@ describe('AccountService', () => {
         axiosGetMock.mockResolvedValueOnce({
           data: userinfosMock,
         });
+
         // when
         await AccountService.fetchData('any-endpoint-mock', callbackMock);
+
         // then
         expect(callbackMock).toHaveBeenCalledTimes(2);
         expect(callbackMock).toHaveBeenNthCalledWith(1, { ready: false });
@@ -54,8 +58,10 @@ describe('AccountService', () => {
         axiosGetMock.mockResolvedValueOnce({
           data: undefined,
         });
+
         // when
         await AccountService.fetchData('any-endpoint-mock', callbackMock);
+
         // then
         expect(callbackMock).toHaveBeenCalledTimes(2);
         expect(callbackMock).toHaveBeenNthCalledWith(1, {
@@ -74,8 +80,10 @@ describe('AccountService', () => {
         axiosGetMock.mockResolvedValueOnce({
           data: {},
         });
+
         // when
         await AccountService.fetchData('any-endpoint-mock', callbackMock);
+
         // then
         expect(callbackMock).toHaveBeenCalledTimes(2);
         expect(callbackMock).toHaveBeenNthCalledWith(1, {
@@ -93,8 +101,10 @@ describe('AccountService', () => {
       // given
       const callbackMock = jest.fn();
       axiosGetMock.mockRejectedValueOnce({ response: { status: 401 } });
+
       // when
       await AccountService.fetchData('any-endpoint-mock', callbackMock);
+
       // then
       expect(callbackMock).toHaveBeenCalledTimes(2);
       expect(callbackMock).toHaveBeenNthCalledWith(1, {
@@ -111,8 +121,10 @@ describe('AccountService', () => {
       it('should call console.warn if an error occur on data fetching', async () => {
         // given
         axiosGetMock.mockRejectedValueOnce(new Error('mock error'));
+
         // when
         await AccountService.fetchData('any-endpoint-mock', jest.fn());
+
         // then
         expect(consoleWarnMock).toHaveBeenCalled();
       });
@@ -120,8 +132,10 @@ describe('AccountService', () => {
       it("should call console.warn if an error occur on data fetching if error status doesn't equal to 401", async () => {
         // given
         axiosGetMock.mockRejectedValueOnce({ response: { status: 402 } });
+
         // when
         await AccountService.fetchData('any-endpoint-mock', jest.fn());
+
         // then
         expect(consoleWarnMock).toHaveBeenCalled();
       });
@@ -129,8 +143,10 @@ describe('AccountService', () => {
       it('should call console.warn if an error occur on data fetching if response is empty', async () => {
         // given
         axiosGetMock.mockRejectedValueOnce({ response: {} });
+
         // when
         await AccountService.fetchData('any-endpoint-mock', jest.fn());
+
         // then
         expect(consoleWarnMock).toHaveBeenCalled();
       });
@@ -138,8 +154,10 @@ describe('AccountService', () => {
       it('should call console.warn if an error occur on data fetching if response is undefined', async () => {
         // given
         axiosGetMock.mockRejectedValueOnce({});
+
         // when
         await AccountService.fetchData('any-endpoint-mock', jest.fn());
+
         // then
         expect(consoleWarnMock).toHaveBeenCalled();
       });

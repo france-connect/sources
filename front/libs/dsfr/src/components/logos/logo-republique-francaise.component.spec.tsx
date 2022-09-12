@@ -10,6 +10,7 @@ describe('LogoRepubliqueFrancaiseComponent', () => {
   it('should match the snapshot', () => {
     // when
     const { container } = render(<LogoRepubliqueFrancaiseComponent />);
+
     // then
     expect(container).toMatchSnapshot();
   });

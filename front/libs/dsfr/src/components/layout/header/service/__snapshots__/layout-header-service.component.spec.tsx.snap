@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderServiceComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-header__service"
+    data-testid="layout-header-service-component"
+  >
+    <a
+      href="/"
+      title="title service mock"
+    >
+      <p
+        class="fr-header__service-title"
+        data-testid="layout-header-service-component-name"
+      >
+        any service name mock
+      </p>
+    </a>
+  </div>
+</div>
+`;
+
+exports[`LayoutHeaderServiceComponent should match the snapshot when baseline and href are defined 1`] = `
+<div>
+  <div
+    class="fr-header__service"
+    data-testid="layout-header-service-component"
+  >
+    <a
+      href="/any-href-mock"
+      title="title service mock"
+    >
+      <p
+        class="fr-header__service-title"
+        data-testid="layout-header-service-component-name"
+      >
+        any service name mock
+      </p>
+    </a>
+    <p
+      class="fr-header__service-tagline"
+      data-testid="layout-header-service-component-baseline"
+    >
+      any baseline mock
+    </p>
+  </div>
+</div>
+`;
+
+exports[`LayoutHeaderServiceComponent should match the snapshot when baseline is defined 1`] = `
+<div>
+  <div
+    class="fr-header__service"
+    data-testid="layout-header-service-component"
+  >
+    <a
+      href="/"
+      title="title service mock"
+    >
+      <p
+        class="fr-header__service-title"
+        data-testid="layout-header-service-component-name"
+      >
+        any service name mock
+      </p>
+    </a>
+    <p
+      class="fr-header__service-tagline"
+      data-testid="layout-header-service-component-baseline"
+    >
+      any baseline mock
+    </p>
+  </div>
+</div>
+`;
+
+exports[`LayoutHeaderServiceComponent should match the snapshot when href is defined 1`] = `
+<div>
+  <div
+    class="fr-header__service"
+    data-testid="layout-header-service-component"
+  >
+    <a
+      href="/any-href-mock"
+      title="title service mock"
+    >
+      <p
+        class="fr-header__service-title"
+        data-testid="layout-header-service-component-name"
+      >
+        any service name mock
+      </p>
+    </a>
+  </div>
+</div>
+`;

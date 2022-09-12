@@ -16,6 +16,7 @@ describe('getPagesCount', () => {
       itemsPerPage: 10,
       totalItems: 1,
     });
+
     // then
     expect(result).toEqual(1);
   });
@@ -26,6 +27,7 @@ describe('getPagesCount', () => {
       itemsPerPage: 1,
       totalItems: 1,
     });
+
     // then
     expect(result).toEqual(1);
   });
@@ -36,6 +38,7 @@ describe('getPagesCount', () => {
       itemsPerPage: 3,
       totalItems: 9,
     });
+
     // then
     expect(result).toEqual(3);
   });
@@ -46,6 +49,7 @@ describe('getPagesCount', () => {
       itemsPerPage: 3,
       totalItems: 10,
     });
+
     // then
     expect(result).toEqual(4);
   });
@@ -62,6 +66,7 @@ describe('getCurrentPage', () => {
       currentElementIndexIntoTheList: 0,
       itemsPerPage: 3,
     });
+
     // then
     expect(result).toEqual(0);
   });
@@ -72,6 +77,7 @@ describe('getCurrentPage', () => {
       currentElementIndexIntoTheList: 0,
       itemsPerPage: 10,
     });
+
     // then
     expect(result).toEqual(0);
   });
@@ -82,6 +88,7 @@ describe('getCurrentPage', () => {
       currentElementIndexIntoTheList: 3,
       itemsPerPage: 3,
     });
+
     // then
     expect(result).toEqual(1);
   });
@@ -92,6 +99,7 @@ describe('getCurrentPage', () => {
       currentElementIndexIntoTheList: 100,
       itemsPerPage: 10,
     });
+
     // then
     expect(result).toEqual(10);
   });
@@ -110,6 +118,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: expect.any(Number),
         pagesCount: undefined as unknown as number,
       });
+
       // then
       expect(result).toHaveLength(0);
     });
@@ -121,6 +130,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: expect.any(Number),
         pagesCount: 0,
       });
+
       // then
       expect(result).toHaveLength(0);
     });
@@ -132,6 +142,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: expect.any(Number),
         pagesCount: expect.any(Number),
       });
+
       // then
       expect(result).toHaveLength(0);
     });
@@ -143,6 +154,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: undefined as unknown as number,
         pagesCount: expect.any(Number),
       });
+
       // then
       expect(result).toHaveLength(0);
     });
@@ -154,6 +166,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 0,
         pagesCount: expect.any(Number),
       });
+
       // then
       expect(result).toHaveLength(0);
     });
@@ -167,6 +180,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 100,
       });
+
       // then
       expect(result).toHaveLength(7);
     });
@@ -178,6 +192,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 3,
       });
+
       // then
       expect(result).toHaveLength(3);
     });
@@ -189,6 +204,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 1,
       });
+
       // then
       expect(result).toStrictEqual([0]);
     });
@@ -200,6 +216,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 2,
       });
+
       // then
       expect(result).toStrictEqual([0, 1]);
     });
@@ -213,6 +230,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 3,
         pagesCount: 200,
       });
+
       // then
       expect(result).toStrictEqual([0, 1, 2]);
     });
@@ -224,6 +242,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 200,
       });
+
       // then
       expect(result).toStrictEqual([0, 1, 2, 3, 4, 5, 6]);
     });
@@ -237,6 +256,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 200,
       });
+
       // then
       // @NOTE [0,\1,2,3,**4**,5,6,7\]
       expect(result).toStrictEqual([1, 2, 3, 4, 5, 6, 7]);
@@ -249,6 +269,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 6,
         pagesCount: 200,
       });
+
       // then
       expect(result).toStrictEqual([0, 1, 2, 3, 4, 5]);
     });
@@ -260,6 +281,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 10,
         pagesCount: 200,
       });
+
       // then
       // @NOTE [0,1,2,3,4,5,6,7,8,9,\10,11,12,13,14,**15**,16,17,16,19\]
       expect(result).toStrictEqual([10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
@@ -274,6 +296,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 3,
         pagesCount: 7,
       });
+
       // then
       // @NOTE [0, 1, 2, 3,\**4**, 5, 6\]
       expect(result).toStrictEqual([4, 5, 6]);
@@ -286,6 +309,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 3,
         pagesCount: 7,
       });
+
       // then
       // @NOTE [0, 1, 2, 3,\4, 5, **6**\]
       expect(result).toStrictEqual([4, 5, 6]);
@@ -298,6 +322,7 @@ describe('getNavigationNumbers', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 199,
       });
+
       // then
       expect(result).toStrictEqual([192, 193, 194, 195, 196, 197, 198]);
     });
@@ -313,6 +338,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: undefined as unknown as number,
         pagesCount: 10,
       });
+
       // then
       expect(result.showFirstPage).toBe(false);
     });
@@ -324,6 +350,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 0,
         pagesCount: 10,
       });
+
       // then
       expect(result.showFirstPage).toBe(false);
     });
@@ -335,6 +362,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 10,
         pagesCount: 10,
       });
+
       // then
       expect(result.showFirstPage).toBe(false);
     });
@@ -346,6 +374,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 3,
         pagesCount: 10,
       });
+
       // then
       expect(result.showFirstPage).toBe(false);
     });
@@ -357,6 +386,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
+
       // then
       expect(result.showFirstPage).toBe(false);
     });
@@ -368,6 +398,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
+
       // then
       expect(result.showFirstPage).toBe(true);
     });
@@ -379,6 +410,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 6,
         pagesCount: 10,
       });
+
       // then
       expect(result.showFirstPage).toBe(false);
     });
@@ -392,6 +424,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
+
       // then
       expect(result.showFirstEllipsis).toBe(false);
     });
@@ -403,6 +436,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
+
       // then
       expect(result.showFirstEllipsis).toBe(false);
     });
@@ -414,6 +448,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
+
       // then
       expect(result.showFirstEllipsis).toBe(true);
     });
@@ -427,6 +462,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: undefined as unknown as number,
         pagesCount: 10,
       });
+
       // then
       expect(result.showLastPage).toBe(false);
     });
@@ -438,6 +474,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 0,
         pagesCount: 10,
       });
+
       // then
       expect(result.showLastPage).toBe(false);
     });
@@ -449,6 +486,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
+
       // then
       expect(result.showLastPage).toBe(false);
     });
@@ -460,6 +498,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 20,
       });
+
       // then
       expect(result.showLastPage).toBe(false);
     });
@@ -471,6 +510,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 20,
       });
+
       // then
       expect(result.showLastPage).toBe(false);
     });
@@ -484,6 +524,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 20,
       });
+
       // then
       expect(result.showLastEllipsis).toBe(false);
     });
@@ -495,6 +536,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 20,
       });
+
       // then
       expect(result.showLastEllipsis).toBe(false);
     });
@@ -506,6 +548,7 @@ describe('getEllipsis', () => {
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 20,
       });
+
       // then
       expect(result.showLastEllipsis).toBe(true);
     });

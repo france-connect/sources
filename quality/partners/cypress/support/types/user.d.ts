@@ -8,4 +8,5 @@ export interface User {
   credentials: UserCredentials;
   firstname: string;
   lastname: string;
+  userId: string;
 }

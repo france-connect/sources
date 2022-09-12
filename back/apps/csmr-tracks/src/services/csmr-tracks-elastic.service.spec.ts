@@ -1,4 +1,4 @@
-import { ScriptField, SearchHit } from '@elastic/elasticsearch/lib/api/types';
+import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -13,8 +13,8 @@ import {
   ICsmrTracksFieldsRawData,
   Search,
 } from '../interfaces';
-import { CsmrTracksElasticService } from './csmr-tracks-elastic.service';
 import * as helper from './csmr-tracks-elastic.service';
+import { CsmrTracksElasticService } from './csmr-tracks-elastic.service';
 
 jest.mock('../constants', () => ({
   FIELDS_FCP_HIGH: ['fieldHighValue1', 'fieldHighValue2'],
@@ -91,15 +91,6 @@ describe('CsmrTracksElasticService', () => {
     search: jest.fn(),
   };
 
-  const scriptFieldsMock: Record<string, ScriptField> = {
-    scriptMock: {
-      script: {
-        lang: 'painless',
-        source: 'sourceValue',
-      },
-    },
-  };
-
   const optionsMock: IPaginationOptions = {
     size: 42,
     offset: 12,
@@ -143,9 +134,6 @@ describe('CsmrTracksElasticService', () => {
     beforeEach(() => {
       service['getFields'] = jest.fn().mockReturnValueOnce(fieldsMock);
       service['createEventsQuery'] = jest.fn().mockReturnValueOnce(queryMock);
-      service['getScriptsFields'] = jest
-        .fn()
-        .mockReturnValueOnce(scriptFieldsMock);
     });
 
     it('should get the filter fields for the ES query', () => {
@@ -164,15 +152,6 @@ describe('CsmrTracksElasticService', () => {
       expect(service['createEventsQuery']).toHaveBeenCalledTimes(1);
       expect(service['createEventsQuery']).toHaveBeenCalledWith();
       expect(service.eventsQuery).toStrictEqual(queryMock);
-    });
-
-    it('should get scripts for ES query', () => {
-      // When
-      service.onModuleInit();
-      // Then
-      expect(service['getScriptsFields']).toHaveBeenCalledTimes(1);
-      expect(service['getScriptsFields']).toHaveBeenCalledWith();
-      expect(service.scripts).toStrictEqual(scriptFieldsMock);
     });
   });
 
@@ -275,40 +254,6 @@ describe('CsmrTracksElasticService', () => {
     });
   });
 
-  describe('getScriptsFields()', () => {
-    it('should get script parts query', () => {
-      const platformScript = `
-    if(doc.containsKey('service')) {
-      return doc['service'].contains('fc_core_v2_app') ? params['FCP_HIGH'] : params['FC_LEGACY']; 
-    }
-    return params['FC_LEGACY'];
-    `;
-
-      const resultMock = {
-        platform: {
-          script: {
-            params: {
-              FC_LEGACY: 'FranceConnect',
-              FCP_HIGH: 'FranceConnect+',
-            },
-            lang: 'painless',
-            source: platformScript,
-          },
-        },
-        spLabel: {
-          script: {
-            lang: 'painless',
-            source: `return doc.containsKey('fs_label') ? doc.fs_label : doc.spName;`,
-          },
-        },
-      };
-      // When
-      const query = service['getScriptsFields']();
-      // Then
-      expect(query).toStrictEqual(resultMock);
-    });
-  });
-
   describe('getElasticLogs()', () => {
     const accountIdMock = ['idValue1', 'idValue2'];
     const configDataMock: Partial<ElasticsearchConfig> = {
@@ -379,11 +324,6 @@ describe('CsmrTracksElasticService', () => {
           ],
         },
       },
-      // Standard ES params
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      script_fields: {
-        scriptMock: { script: { lang: 'painless', source: 'sourceValue' } },
-      },
       sort: [{ time: { order: 'desc' } }],
 
       index: 'indexValue',
@@ -398,7 +338,6 @@ describe('CsmrTracksElasticService', () => {
       elasticMock.search.mockResolvedValueOnce(searchMock);
 
       service.fields = ['field1', 'field2'];
-      service.scripts = scriptFieldsMock;
       service.eventsQuery = eventsQueryMock;
     });
 

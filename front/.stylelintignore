@@ -6,8 +6,6 @@ node_modules/
 **/*.js
 **/*.jsx
 **/build/**/*.css
-**/build/**/*.css
+**/build/**/*.scss
 
-libs/styleguide/**/*.css
-libs/styleguide/**/*.scss
 libs/dsfr/src/fonts/**

@@ -17,8 +17,6 @@ const configMock = {
 };
 
 describe('AccountProvider', () => {
-  // given
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -30,9 +28,11 @@ describe('AccountProvider', () => {
         <div>the children</div>
       </AccountProvider>
     );
+
     // when
     const { getByText } = render(theProvider);
     const element = getByText('the children');
+
     // then
     expect(element).toBeInTheDocument();
   });
@@ -50,6 +50,7 @@ describe('AccountProvider', () => {
     rerender(theProvider);
     rerender(theProvider);
     rerender(theProvider);
+
     // then
     expect(AccountService.fetchData).toHaveBeenCalledTimes(1);
     expect(AccountService.fetchData).toHaveBeenCalledWith('/me/endpoint', expect.any(Function));
@@ -67,6 +68,7 @@ describe('AccountProvider', () => {
         <div>the children</div>
       </AccountProvider>,
     );
+
     // then
     expect(AccountService.fetchData).toHaveBeenCalledTimes(1);
     expect(AccountService.fetchData).toHaveBeenCalledWith('/me/endpoint', expect.any(Function));
@@ -91,6 +93,7 @@ describe('AccountProvider', () => {
     rerender(theProvider);
     rerender(theProvider);
     rerender(theProvider);
+
     // then
     expect(AccountService.fetchData).toHaveBeenCalledTimes(1);
     expect(AccountService.fetchData).toHaveBeenCalledWith('/me/endpoint', useCallbackMock);
@@ -120,6 +123,7 @@ describe('AccountProvider', () => {
     );
     const theButton = getByRole('button');
     fireEvent.click(theButton);
+
     // then
     expect(useCallbackMock).toHaveBeenCalledTimes(1);
     expect(useCallbackMock).toHaveBeenCalledWith(theUpdateMock);
@@ -150,6 +154,7 @@ describe('AccountProvider', () => {
     );
     const theButton = getByRole('button');
     fireEvent.click(theButton);
+
     // then
     expect(setStateMock).toHaveBeenCalledTimes(1);
     expect(setStateMock).toHaveBeenCalledWith({ ...stateMock, ...theUpdateMock });

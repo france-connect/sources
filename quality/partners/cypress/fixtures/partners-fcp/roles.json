@@ -1,0 +1,80 @@
+[
+  {
+    "userId": "user-with-1-sp",
+    "entity": "ServiceProvider",
+    "entityId": "sp-sandbox",
+    "roleType": "SP_OWNER"
+  },
+  {
+    "userId": "user-with-2-sp",
+    "entity": "ServiceProvider",
+    "entityId": "sp-sandbox",
+    "roleType": "SP_OBSERVER"
+  },
+  {
+    "userId": "user-with-2-sp",
+    "entity": "ServiceProvider",
+    "entityId": "sp-review-requested",
+    "roleType": "SP_OWNER"
+  },
+  {
+    "userId": "user-with-all-sp-statuses",
+    "entity": "ServiceProvider",
+    "entityId": "sp-sandbox",
+    "roleType": "SP_OBSERVER"
+  },
+  {
+    "userId": "user-with-all-sp-statuses",
+    "entity": "ServiceProvider",
+    "entityId": "sp-review-requested",
+    "roleType": "SP_OBSERVER"
+  },
+  {
+    "userId": "user-with-all-sp-statuses",
+    "entity": "ServiceProvider",
+    "entityId": "sp-review-in-progress",
+    "roleType": "SP_OBSERVER"
+  },
+  {
+    "userId": "user-with-all-sp-statuses",
+    "entity": "ServiceProvider",
+    "entityId": "sp-review-validated",
+    "roleType": "SP_OBSERVER"
+  },
+  {
+    "userId": "user-with-all-sp-statuses",
+    "entity": "ServiceProvider",
+    "entityId": "sp-review-waiting-client-feedback",
+    "roleType": "SP_OBSERVER"
+  },
+  {
+    "userId": "user-with-all-sp-statuses",
+    "entity": "ServiceProvider",
+    "entityId": "sp-review-refused",
+    "roleType": "SP_OBSERVER"
+  },
+  {
+    "userId": "user-with-all-sp-statuses",
+    "entity": "ServiceProvider",
+    "entityId": "sp-production-access-pending",
+    "roleType": "SP_OBSERVER"
+  },
+  {
+    "userId": "user-with-all-sp-statuses",
+    "entity": "ServiceProvider",
+    "entityId": "sp-production-ready",
+    "roleType": "SP_OBSERVER"
+  },
+  {
+    "userId": "user-with-all-sp-statuses",
+    "entity": "ServiceProvider",
+    "entityId": "sp-production-live",
+    "roleType": "SP_OBSERVER"
+  },
+  {
+    "userId": "user-with-all-sp-statuses",
+    "entity": "ServiceProvider",
+    "entityId": "sp-archived",
+    "roleType": "SP_OBSERVER"
+  }
+]

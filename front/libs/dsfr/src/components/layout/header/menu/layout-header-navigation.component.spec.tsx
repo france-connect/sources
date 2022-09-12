@@ -26,6 +26,7 @@ describe('LayoutHeaderNavigationComponent', () => {
   it('should match the snapshot, with default props', () => {
     // when
     const { container } = render(<LayoutHeaderNavigationComponent />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -35,6 +36,7 @@ describe('LayoutHeaderNavigationComponent', () => {
     const { container } = render(
       <LayoutHeaderNavigationComponent navigationItems={navigationItemsMock} />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -42,6 +44,7 @@ describe('LayoutHeaderNavigationComponent', () => {
   it('should call react router Link 2 times', () => {
     // when
     render(<LayoutHeaderNavigationComponent navigationItems={navigationItemsMock} />);
+
     // then
     expect(Link).toHaveBeenCalledTimes(2);
     expect(Link).toHaveBeenNthCalledWith(
@@ -78,8 +81,10 @@ describe('LayoutHeaderNavigationComponent', () => {
       path: '',
       url: '',
     });
+
     // when
     render(<LayoutHeaderNavigationComponent navigationItems={navigationItemsMock} />);
+
     // then
     expect(Link).toHaveBeenNthCalledWith(
       2,

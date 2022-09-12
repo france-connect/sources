@@ -11,6 +11,7 @@ describe('LinkComponent', () => {
   it('should match the snapshot, with default props', () => {
     // when
     const { container } = render(<LinkComponent href="any-url-mock" />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -18,6 +19,7 @@ describe('LinkComponent', () => {
   it('should match the snapshot, with size sm props', () => {
     // when
     const { container } = render(<LinkComponent href="any-url-mock" size={Sizes.SMALL} />);
+
     // then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('fr-link fr-link--sm');
@@ -26,6 +28,7 @@ describe('LinkComponent', () => {
   it('should match the snapshot, with size lg props', () => {
     // when
     const { container } = render(<LinkComponent href="any-url-mock" size={Sizes.LARGE} />);
+
     // then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('fr-link fr-link--lg');
@@ -34,6 +37,7 @@ describe('LinkComponent', () => {
   it('should match the snapshot, with icon props', () => {
     // when
     const { container } = render(<LinkComponent href="any-url-mock" icon="any-icon-mock" />);
+
     // then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('fr-fi-any-icon-mock');
@@ -44,6 +48,7 @@ describe('LinkComponent', () => {
     const { container } = render(
       <LinkComponent href="any-url-mock" icon="any-icon-mock" iconPlacement="right" />,
     );
+
     // then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('fr-link--icon-right');
@@ -55,6 +60,7 @@ describe('LinkComponent', () => {
       <LinkComponent href="any-url-mock" label="any-label-mock" />,
     );
     const element = getByText('any-label-mock');
+
     // then
     expect(container).toMatchSnapshot();
     expect(element).toBeInTheDocument();
@@ -65,6 +71,7 @@ describe('LinkComponent', () => {
     const { container } = render(
       <LinkComponent className="any-className-mock" href="any-url-mock" />,
     );
+
     // then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('any-className-mock');

@@ -1,0 +1,5 @@
+@use './../../../styles/modules' as modules;
+
+.banner {
+  z-index: modules.$zindex-banner;
+}

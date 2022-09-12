@@ -16,8 +16,10 @@ describe('bindMiddlewares', () => {
       const mockIsDevelopment = false;
       const mockMiddlewares = [jest.fn(), jest.fn()];
       const mockApplyMiddleWares = mocked(applyMiddleware);
+
       // when
       bindMiddlewares(mockMiddlewares, mockIsDevelopment);
+
       // then
       expect(mockApplyMiddleWares).toHaveBeenCalledTimes(1);
       expect(mockApplyMiddleWares).toHaveBeenCalledWith(...mockMiddlewares);
@@ -28,8 +30,10 @@ describe('bindMiddlewares', () => {
       const mockIsDevelopment = false;
       const mockMiddlewares = [jest.fn(), jest.fn()];
       const mockComposeWithDevTools = mocked(composeWithDevTools);
+
       // when
       bindMiddlewares(mockMiddlewares, mockIsDevelopment);
+
       // then
       expect(mockComposeWithDevTools).not.toHaveBeenCalled();
     });
@@ -42,11 +46,13 @@ describe('bindMiddlewares', () => {
       const mockMiddlewares = [jest.fn(), jest.fn()];
       const mockComposeWithDevTools = mocked(composeWithDevTools);
       mockComposeWithDevTools.mockReturnValueOnce(jest.fn());
+
       // when
       bindMiddlewares(mockMiddlewares, mockIsDevelopment);
+
       // then
-      expect(mockComposeWithDevTools).toHaveBeenCalledWith({});
       expect(mockComposeWithDevTools).toHaveBeenCalledTimes(1);
+      expect(mockComposeWithDevTools).toHaveBeenCalledWith({ trace: true });
     });
   });
 });

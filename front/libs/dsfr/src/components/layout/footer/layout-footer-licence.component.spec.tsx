@@ -10,6 +10,7 @@ describe('LayoutFooterLicenceComponent', () => {
   it('should match the snapshot', () => {
     // when
     const { container } = render(<LayoutFooterLicenceComponent />);
+
     // then
     expect(container).toMatchSnapshot();
   });

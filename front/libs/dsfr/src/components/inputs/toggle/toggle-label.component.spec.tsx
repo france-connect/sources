@@ -25,6 +25,7 @@ describe('ToggleLabelComponent', () => {
     const { container } = render(
       <ToggleLabelComponent input={fieldInputPropsMock} label="foobar" legend={legendMock} />,
     );
+
     // Then
     expect(container.firstChild).toMatchSnapshot();
   });
@@ -34,6 +35,7 @@ describe('ToggleLabelComponent', () => {
     const { container } = render(
       <ToggleLabelComponent input={fieldInputPropsMock} label="foobar" />,
     );
+
     // Then
     const element = container.firstChild;
     expect(element).toHaveAttribute('data-fr-checked-label', 'Activé');
@@ -43,10 +45,12 @@ describe('ToggleLabelComponent', () => {
   it('should use call label if label provided is a function', () => {
     // Given
     const labelMock = jest.fn();
+
     // When
     render(
       <ToggleLabelComponent input={fieldInputPropsMock} label={labelMock} legend={legendMock} />,
     );
+
     // Then
     expect(labelMock).toHaveBeenCalledTimes(1);
     expect(labelMock).toHaveBeenCalledWith(fieldInputPropsMock.checked);

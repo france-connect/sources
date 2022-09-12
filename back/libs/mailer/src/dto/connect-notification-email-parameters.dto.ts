@@ -15,4 +15,7 @@ export class ConnectNotificationEmailParameters {
 
   @IsString()
   readonly fqdn: string;
+
+  @IsString()
+  readonly udFqdn: string;
 }

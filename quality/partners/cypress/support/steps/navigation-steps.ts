@@ -14,8 +14,11 @@ When("je navigue sur la page d'accueil du site partenaire", function () {
 Then('je suis connecté au site partenaire', function () {
   navigationPage.checkIsConnected();
 });
-  
+
 Then("le nom complet de l'utilisateur est affiché dans le header", function () {
   navigationPage.checkIsUsernameDisplayed(this.user);
 });
-  
+
+Then('le nom de la plateforme est affiché dans le header', function () {
+  navigationPage.checkHeaderPlatfromName(this.env);
+});

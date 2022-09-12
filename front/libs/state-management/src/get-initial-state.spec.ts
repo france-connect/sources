@@ -21,6 +21,7 @@ describe('getInitialState', () => {
   it('should return an initial state object', () => {
     // when
     const result = getInitialState(mockStates);
+
     // then
     expect(result).toStrictEqual({
       mockState1: ['default', 'value', '1'],

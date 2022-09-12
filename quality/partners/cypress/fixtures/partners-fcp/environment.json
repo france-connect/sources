@@ -1,4 +1,5 @@
 {
   "name": "{{TEST_ENV}}",
-  "partnersUrl": "https://partners-fcp.{{TEST_ENV}}.dev-franceconnect.fr"
+  "partnersUrl": "https://partners-fcp.{{TEST_ENV}}.dev-franceconnect.fr",
+  "platformName": "Espace partenaire"
 }

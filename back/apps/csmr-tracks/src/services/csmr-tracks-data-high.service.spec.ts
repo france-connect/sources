@@ -320,6 +320,7 @@ describe('CsmrTracksHighDataService', () => {
       spId: 'spIdValue',
       spAcr: 'eidas1',
       time: '1664661600000',
+      service: 'serviceValue',
     });
 
     beforeEach(() => {
@@ -397,6 +398,7 @@ describe('CsmrTracksHighDataService', () => {
       spId: 'shouldBeChanged',
       spAcr: 'shouldBeChanged',
       time: '0',
+      service: 'serviceValue',
     };
 
     const dataMock: ICsmrTracksHighTransformData[] = [

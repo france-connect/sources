@@ -4,9 +4,29 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.109 && v3.110.0 
+
+- [UserDashboard] 
+  - Fixed a display glitch in mobile menu
+
+- [FranceConnect+]
+  - Updated link to tracks application in notification email
+
+- Refactored folders hierarchy to improve code sharing through react applications
+
+## v3.107 && v3.108.0 
+
+- [UserDashboard]
+ - Improved control on user inputs
+ - Improved development stack defaults fixtures
+ - Improved UI, especially on mobile
+ - Improved UX on expired session
+
 ## v3.105.0 && v3.106.0
 
-- [UserDashboard] Fixed claim / label mapping that would cause the application to crash 🐛
+- Upgraded NPM dependencies
+- [UserDashboard] 
+  - Fixed claim / label mapping that would cause the application to crash 🐛
 
 ## v3.103.0 && v3.104.0
 

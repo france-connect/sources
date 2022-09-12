@@ -17,6 +17,7 @@ describe('LayoutHeaderToolsAccountComponent', () => {
         lastname="any-lastname-mock"
       />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -30,6 +31,7 @@ describe('LayoutHeaderToolsAccountComponent', () => {
         lastname="any-lastname-mock"
       />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -44,6 +46,7 @@ describe('LayoutHeaderToolsAccountComponent', () => {
       />,
     );
     const element = getByText(/any-lastname-mock/);
+
     // then
     expect(element).toBeInTheDocument();
   });
@@ -58,6 +61,7 @@ describe('LayoutHeaderToolsAccountComponent', () => {
       />,
     );
     const element = getByText(/any-firstname-mock/);
+
     // then
     expect(element).toBeInTheDocument();
   });

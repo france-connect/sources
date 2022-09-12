@@ -2,7 +2,6 @@ import {
   Field,
   QueryDslFieldAndFormat,
   QueryDslQueryContainer,
-  ScriptField,
   SearchRequest,
   SearchResponse,
 } from '@elastic/elasticsearch/lib/api/types';
@@ -22,7 +21,6 @@ import {
   NOW,
   SIX_MONTHS_AGO,
 } from '../constants';
-import { Platform } from '../enums';
 import {
   ICsmrTracksElasticResults,
   ICsmrTracksFieldsRawData,
@@ -56,7 +54,6 @@ export const buildQuery = ([legacy, event]: [
 export class CsmrTracksElasticService {
   fields: (QueryDslFieldAndFormat | Field)[];
   eventsQuery: QueryDslQueryContainer;
-  scripts: Record<string, ScriptField>;
 
   // eslint-disable-next-line max-params
   constructor(
@@ -71,7 +68,7 @@ export class CsmrTracksElasticService {
     /**
      * @todo add ES logs during development
      * We need "isDevelopment" from app Config
-     * 
+     *
      * Author: Arnaud PSA
      * Date: 13/06/22
      *
@@ -88,7 +85,6 @@ export class CsmrTracksElasticService {
 
     this.fields = this.getFields();
     this.eventsQuery = this.createEventsQuery();
-    this.scripts = this.getScriptsFields();
   }
 
   public async getTracks(
@@ -154,41 +150,6 @@ export class CsmrTracksElasticService {
     return eventsQuery;
   }
 
-  private getScriptsFields(): Record<string, ScriptField> {
-    // set aside to help with formatting
-    const platformScript = `
-    if(doc.containsKey('service')) {
-      return doc['service'].contains('fc_core_v2_app') ? params['FCP_HIGH'] : params['FC_LEGACY']; 
-    }
-    return params['FC_LEGACY'];
-    `;
-
-    const scripts = {
-      platform: {
-        script: {
-          params: {
-            FC_LEGACY: Platform.FC_LEGACY,
-            FCP_HIGH: Platform.FCP_HIGH,
-          },
-          lang: 'painless',
-          source: platformScript,
-        },
-      },
-      /**
-       * @todo Add `spLabel` to v2 logs and use this value here instead of `spName`
-       * Author: Arnaud PSA
-       * Date: 08/06/22
-       */
-      spLabel: {
-        script: {
-          lang: 'painless',
-          source: `return doc.containsKey('fs_label') ? doc.fs_label : doc.spName;`,
-        },
-      },
-    };
-    return scripts;
-  }
-
   private async getElasticLogs(
     accountIds: string[],
     options = {} as IPaginationOptions,
@@ -228,9 +189,6 @@ export class CsmrTracksElasticService {
           },
         },
       ],
-      // Standard ES Search Request Params
-      //eslint-disable-next-line @typescript-eslint/naming-convention
-      script_fields: this.scripts,
       query: {
         bool: {
           filter: [idsQuery, dateQuery, this.eventsQuery],

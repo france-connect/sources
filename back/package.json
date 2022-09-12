@@ -163,7 +163,8 @@
       "libs/**/*.ts",
       "apps/**/*.ts",
       "entities/**/*.ts",
-      "instances/**/*.(service|helper|controller).ts"
+      "instances/**/*.(service|helper|controller).ts",
+      "!entities/typeorm/*.ts"
     ],
     "moduleFileExtensions": [
       "js",
@@ -311,14 +312,17 @@
       "@fc/user-preferences/(.*)": "<rootDir>/libs/user-preferences/src/$1",
       "@fc/user-preferences": "<rootDir>/libs/user-preferences/src",
       "^@fc/csmr-tracks(|/.*)$": "<rootDir>/apps/csmr-tracks/src/$1",
-      "^@fc/partner-account(|/.*)$": "<rootDir>/libs/partner-account/src/$1",
-      "@fc/partner-account": "<rootDir>/libs/partner-account/src",
       "^@fc/partners(|/.*)$": "<rootDir>/apps/partners/src/$1",
       "@fc/geoip-maxmind/(.*)": "<rootDir>/libs/geoip-maxmind/src/$1",
       "@fc/geoip-maxmind": "<rootDir>/libs/geoip-maxmind/src",
       "@fc/postgres(|/.*)$": "<rootDir>/libs/postgres/src/$1",
       "@fc/postgres": "<rootDir>/libs/postgres/src",
-      "^@fc/csmr-account(|/.*)$": "<rootDir>/apps/csmr-account/src/$1"
+      "^@fc/csmr-account(|/.*)$": "<rootDir>/apps/csmr-account/src/$1",
+      "^@fc/partner-account(|/.*)$": "<rootDir>/libs/partner-account/src/$1",
+      "@fc/partner-account": "<rootDir>/libs/partner-account/src",
+      "^@fc/partner-datapass(|/.*)$": "<rootDir>/libs/partner-datapass/src/$1",
+      "^@fc/partner-organisation(|/.*)$": "<rootDir>/libs/partner-organisation/src/$1",
+      "^@fc/partner-service-provider(|/.*)$": "<rootDir>/libs/partner-service-provider/src/$1"
     },
     "preset": "ts-jest"
   }

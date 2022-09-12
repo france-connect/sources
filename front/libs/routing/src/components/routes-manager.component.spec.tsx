@@ -21,6 +21,7 @@ describe('RoutesManagerComponent', () => {
   it('should call react-router switch', () => {
     // when
     render(<RoutesManagerComponent routes={routesMock} />);
+
     // then
     expect(Switch).toHaveBeenCalledTimes(1);
   });
@@ -28,6 +29,7 @@ describe('RoutesManagerComponent', () => {
   it('should render a react-router route', () => {
     // when
     render(<RoutesManagerComponent routes={routesMock} />);
+
     // then
     expect(Route).toHaveBeenCalledTimes(1);
     expect(Route).toHaveBeenCalledWith(
@@ -52,6 +54,7 @@ describe('RoutesManagerComponent', () => {
         ]}
       />,
     );
+
     // then
     expect(AuthRouteComponentMock).toHaveBeenCalledTimes(1);
     expect(AuthRouteComponentMock).toHaveBeenCalledWith(

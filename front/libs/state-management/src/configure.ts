@@ -2,9 +2,11 @@ import { createStore, Middleware, Reducer, ReducersMapObject, Store } from 'redu
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
+import { FSA } from '@fc/common';
+
 import { bindMiddlewares } from './bind-middlewares';
 import { getInitialState } from './get-initial-state';
-import { ConfigureReturn, FSA, GlobalState } from './interfaces';
+import { ConfigureReturn, GlobalState } from './interfaces';
 import { mapReducers } from './map-reducers';
 import { getPersistLists } from './middlewares';
 

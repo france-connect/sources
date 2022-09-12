@@ -46,6 +46,7 @@ describe('configure', () => {
   it('should have called getInitialState method', () => {
     // when
     configure(mockPersistKey, mockStates, mockReducers);
+
     // then
     expect(getInitialState).toHaveBeenCalledTimes(1);
     expect(getInitialState).toHaveBeenCalledWith(mockStates);
@@ -54,6 +55,7 @@ describe('configure', () => {
   it('should have called getPersistLists method', () => {
     // when
     configure(mockPersistKey, mockStates, mockReducers);
+
     // then
     expect(getPersistLists).toHaveBeenCalledTimes(1);
     expect(getPersistLists).toHaveBeenCalledWith(mockStates);
@@ -62,6 +64,7 @@ describe('configure', () => {
   it('should have called mapReducers method', () => {
     // when
     configure(mockPersistKey, mockStates, mockReducers);
+
     // then
     expect(mapReducers).toHaveBeenCalledTimes(1);
     expect(mapReducers).toHaveBeenCalledWith(mockReducers);
@@ -70,6 +73,7 @@ describe('configure', () => {
   it('should have called bindMiddlewares method', () => {
     // when
     configure(mockPersistKey, mockStates, mockReducers, [expect.any(Function)], true);
+
     // then
     expect(bindMiddlewares).toHaveBeenCalledTimes(1);
     expect(bindMiddlewares).toHaveBeenCalledWith([expect.any(Function)], true);
@@ -78,6 +82,7 @@ describe('configure', () => {
   it('should have called redux.createStore method', () => {
     // when
     configure(mockPersistKey, mockStates, mockReducers, [expect.any(Function)], true);
+
     // then
     expect(redux.createStore).toHaveBeenCalledTimes(1);
   });
@@ -85,6 +90,7 @@ describe('configure', () => {
   it('should have called reduxPersist.persistStore method', () => {
     // when
     configure(mockPersistKey, mockStates, mockReducers);
+
     // then
     expect(reduxPersist.persistStore).toHaveBeenCalledTimes(1);
   });

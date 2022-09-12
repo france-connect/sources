@@ -12,6 +12,7 @@ describe('LayoutHeaderToolsLogoutButton', () => {
     const { container } = render(
       <LayoutHeaderToolsLogoutButton isMobile endSessionUrl={expect.any(String)} />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -21,6 +22,7 @@ describe('LayoutHeaderToolsLogoutButton', () => {
     const { container } = render(
       <LayoutHeaderToolsLogoutButton endSessionUrl={expect.any(String)} isMobile={false} />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -31,6 +33,7 @@ describe('LayoutHeaderToolsLogoutButton', () => {
       <LayoutHeaderToolsLogoutButton endSessionUrl="any-endSessionUrl-mock" isMobile={false} />,
     );
     const element = getByTitle('bouton permettant la déconnexion de votre compte');
+
     // then
     expect(element).toBeInTheDocument();
     expect(element).toHaveAttribute('href', 'any-endSessionUrl-mock');

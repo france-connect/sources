@@ -1,0 +1,6 @@
+entity: Platform
+items:
+  agent-connect-low-internet:
+    name: 'AGENT_CONNECT_LOW_INTERNET'
+  agent-connect-low-rie:
+    name: 'AGENT_CONNECT_LOW_RIE'

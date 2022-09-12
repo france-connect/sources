@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceProvidersListComponent should match the snapshot, when service providers state has items 1`] = `
+<div>
+  <div>
+    ServiceProviderItemComponent 
+    Datapass N°1234
+  </div>
+  <div>
+    ServiceProviderItemComponent 
+    Datapass N°5678
+  </div>
+  <div>
+    ServiceProviderItemComponent 
+    Datapass N°9101112
+  </div>
+</div>
+`;
+
+exports[`ServiceProvidersListComponent should match the snapshot, when service providers state has no items 1`] = `
+<div>
+  <div>
+    <div>
+      AlertComponent
+    </div>
+    <div>
+      <p
+        class="fr-alert__title"
+      >
+        Vous n’avez pas de fournisseur de service
+      </p>
+      <p>
+        Si vous aviez accès à un fournisseur de service, vos droits ont probablement été révoqués.
+        <br />
+        Rapprochez vous de l’administrateur du service afin de les rétablir.
+      </p>
+    </div>
+  </div>
+</div>
+`;

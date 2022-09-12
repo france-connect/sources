@@ -15,7 +15,9 @@
       "sourceRoot": "instances/core-fca-low/src",
       "compilerOptions": {
         "tsConfigPath": "instances/core-fca-low/tsconfig.app.json",
-        "assets": ["../../../apps/core-fca/**/*.ejs"]
+        "assets": [
+          "../../../apps/core-fca/**/*.ejs"
+        ]
       }
     },
     "eidas-bridge-instance": {
@@ -280,7 +282,9 @@
       "sourceRoot": "instances/csmr-user-preferences-high/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
-        "assets": ["../../../instances/csmr-user-preferences-high/**/*.ejs"]
+        "assets": [
+          "../../../instances/csmr-user-preferences-high/**/*.ejs"
+        ]
       }
     },
     "tracks-data-provider-instance": {
@@ -913,6 +917,15 @@
         "tsConfigPath": "libs/postgres/tsconfig.lib.json"
       }
     },
+    "csmr-account": {
+      "type": "library",
+      "root": "apps/csmr-account",
+      "entryFile": "index",
+      "sourceRoot": "apps/csmr-account/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/csmr-account/tsconfig.lib.json"
+      }
+    },
     "partner-account": {
       "type": "library",
       "root": "libs/partner-account",
@@ -922,13 +935,31 @@
         "tsConfigPath": "libs/partner-account/tsconfig.lib.json"
       }
     },
-    "csmr-account": {
+    "partner-organisation": {
       "type": "library",
-      "root": "apps/csmr-account",
+      "root": "libs/partner-organisation",
       "entryFile": "index",
-      "sourceRoot": "apps/csmr-account/src",
+      "sourceRoot": "libs/partner-organisation/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/csmr-account/tsconfig.lib.json"
+        "tsConfigPath": "libs/partner-organisation/tsconfig.lib.json"
+      }
+    },
+    "partner-datapass": {
+      "type": "library",
+      "root": "libs/partner-datapass",
+      "entryFile": "index",
+      "sourceRoot": "libs/partner-datapass/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/partner-datapass/tsconfig.lib.json"
+      }
+    },
+    "partner-service-provider": {
+      "type": "library",
+      "root": "libs/partner-service-provider",
+      "entryFile": "index",
+      "sourceRoot": "libs/partner-service-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/partner-service-provider/tsconfig.lib.json"
       }
     }
   }

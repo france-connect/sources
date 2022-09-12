@@ -159,10 +159,16 @@
       "@fc/geoip-maxmind/*": ["libs/geoip-maxmind/src/*"],
       "@fc/postgres": ["libs/postgres/src"],
       "@fc/postgres/*": ["libs/postgres/src/*"],
+      "@fc/csmr-account": ["apps/csmr-account/src"],
+      "@fc/csmr-account/*": ["apps/csmr-account/src/*"],
       "@fc/partner-account": ["libs/partner-account/src"],
       "@fc/partner-account/*": ["libs/partner-account/src/*"],
-      "@fc/csmr-account": ["apps/csmr-account/src"],
-      "@fc/csmr-account/*": ["apps/csmr-account/src/*"]
+      "@fc/partner-datapass": ["libs/partner-datapass/src"],
+      "@fc/partner-datapass/*": ["libs/partner-datapass/src/*"],
+      "@fc/partner-organisation": ["libs/partner-organisation/src"],
+      "@fc/partner-organisation/*": ["libs/partner-organisation/src/*"],
+      "@fc/partner-service-provider": ["libs/partner-service-provider/src"],
+      "@fc/partner-service-provider/*": ["libs/partner-service-provider/src/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

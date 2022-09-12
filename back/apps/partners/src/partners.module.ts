@@ -6,10 +6,11 @@ import { Module } from '@nestjs/common';
 import { AppModule } from '@fc/app';
 import { ExceptionsModule } from '@fc/exceptions';
 import { PartnerAccountModule } from '@fc/partner-account';
+import { PartnerServiceProviderModule } from '@fc/partner-service-provider';
 import { PostgresModule } from '@fc/postgres';
 import { SessionModule } from '@fc/session';
 
-import { AccountController } from './controllers';
+import { AccountController, ServiceProviderController } from './controllers';
 import { PartnersSession } from './dto';
 import { PartnersService } from './services';
 
@@ -19,9 +20,10 @@ import { PartnersService } from './services';
     AppModule,
     PostgresModule,
     PartnerAccountModule,
+    PartnerServiceProviderModule,
     SessionModule.forRoot({ schema: PartnersSession }),
   ],
   providers: [PartnersService],
-  controllers: [AccountController],
+  controllers: [AccountController, ServiceProviderController],
 })
 export class PartnersModule {}

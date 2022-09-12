@@ -33,6 +33,7 @@ describe('LayoutHeaderMenuComponent', () => {
   it('should match the snapshot', () => {
     // given
     const onCloseMock = jest.fn();
+
     // when
     const { container } = render(
       <LayoutHeaderMenuComponent
@@ -42,6 +43,7 @@ describe('LayoutHeaderMenuComponent', () => {
         onClose={onCloseMock}
       />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -49,6 +51,7 @@ describe('LayoutHeaderMenuComponent', () => {
   it('should match the snapshot, when opened is true', () => {
     // given
     const onCloseMock = jest.fn();
+
     // when
     const { container } = render(
       <LayoutHeaderMenuComponent
@@ -58,6 +61,7 @@ describe('LayoutHeaderMenuComponent', () => {
         onClose={onCloseMock}
       />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -65,6 +69,7 @@ describe('LayoutHeaderMenuComponent', () => {
   it('should call LayoutHeaderToolsComponent', () => {
     // given
     const onCloseMock = jest.fn();
+
     // when
     render(
       <LayoutHeaderMenuComponent
@@ -74,6 +79,7 @@ describe('LayoutHeaderMenuComponent', () => {
         onClose={onCloseMock}
       />,
     );
+
     // then
     expect(LayoutHeaderToolsComponent).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith(
@@ -89,6 +95,7 @@ describe('LayoutHeaderMenuComponent', () => {
   it('should match the snapshot, when navigationItems is defined', () => {
     // given
     const onCloseMock = jest.fn();
+
     // when
     const { container } = render(
       <LayoutHeaderMenuComponent
@@ -99,6 +106,7 @@ describe('LayoutHeaderMenuComponent', () => {
         onClose={onCloseMock}
       />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -106,6 +114,7 @@ describe('LayoutHeaderMenuComponent', () => {
   it('should call LayoutHeaderNavigationComponent when navigationItems is defined', () => {
     // given
     const onCloseMock = jest.fn();
+
     // when
     render(
       <LayoutHeaderMenuComponent
@@ -116,6 +125,7 @@ describe('LayoutHeaderMenuComponent', () => {
         onClose={onCloseMock}
       />,
     );
+
     // then
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledWith(

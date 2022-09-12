@@ -1,0 +1,102 @@
+[
+  {
+    "spId": "sp-sandbox",
+    "id": "d7d36b81-0b68-4c26-a399-854848164f29",
+    "name": "Service Provider - Sandbox",
+    "platform": "FranceConnect",
+    "status": "SANDBOX",
+    "organisation": "Direction Interministerielle du Numérique",
+    "creationDate": "22/02/2022",
+    "datapassId": 42
+  },
+  {
+    "spId": "sp-review-requested",
+    "id": "d913c85f-c38b-4715-8734-de6d06b4c673",
+    "name": "Service Provider - Review requested",
+    "platform": "FranceConnect+",
+    "status": "REVIEW_REQUESTED",
+    "organisation": "Direction Interministerielle du Numérique",
+    "creationDate": "22/02/2022",
+    "datapassId": 12345
+  },
+  {
+    "spId": "sp-review-in-progress",
+    "id": "72260d9b-88b0-4bf7-933b-9f6084cb7436",
+    "name": "Service Provider - Review in progress",
+    "platform": "FranceConnect",
+    "status": "REVIEW_IN_PROGRESS",
+    "organisation": "OINSLDRAAC - Organisation Interministérielle des Noms Super Longs - Durs à Retenir - Avec des Accronymes Compliqués",
+    "creationDate": "22/02/2022",
+    "datapassId": 4354
+  },
+  {
+    "spId": "sp-review-validated",
+    "id": "5683ffff-b003-4c29-ac99-3c3af45ce619",
+    "name": "Service Provider - Review validated",
+    "platform": "FranceConnect+",
+    "status": "REVIEW_VALIDATED",
+    "organisation": "Direction Interministerielle du Numérique",
+    "creationDate": "22/02/2022",
+    "datapassId": 120
+  },
+  {
+    "spId": "sp-review-waiting-client-feedback",
+    "id": "885408c1-f75d-40b0-b334-9457649bf5ef",
+    "name": "Service Provider - Review waiting client feedback",
+    "platform": "FranceConnect",
+    "status": "REVIEW_WAITING_CLIENT_FEEDBACK",
+    "organisation": "Direction Interministerielle du Numérique",
+    "creationDate": "22/02/2022",
+    "datapassId": 63
+  },
+  {
+    "spId": "sp-review-refused",
+    "id": "855408c1-f75d-40b0-b334-9457649bf5ef",
+    "name": "Service Provider - Review refused",
+    "platform": "FranceConnect",
+    "status": "REVIEW_REFUSED",
+    "organisation": "Direction Interministerielle du Numérique",
+    "creationDate": "22/02/2022",
+    "datapassId": 73
+  },
+  {
+    "spId": "sp-production-access-pending",
+    "id": "12070da1-3b4a-41e8-8080-fadafabfbf88",
+    "name": "Service Provider - Access pending",
+    "platform": "FranceConnect+",
+    "status": "PRODUCTION_ACCESS_PENDING",
+    "organisation": "OINSLDRAAC - Organisation Interministérielle des Noms Super Longs - Durs à Retenir - Avec des Accronymes Compliqués",
+    "creationDate": "22/02/2022",
+    "datapassId": 789
+  },
+  {
+    "spId": "sp-production-ready",
+    "id": "c877e349-174f-4b05-ad30-523f3294f6a6",
+    "name": "Service Provider - Production ready",
+    "platform": "FranceConnect",
+    "status": "PRODUCTION_READY",
+    "organisation": "OINSLDRAAC - Organisation Interministérielle des Noms Super Longs - Durs à Retenir - Avec des Accronymes Compliqués",
+    "creationDate": "22/02/2022",
+    "datapassId": 36354
+  },
+  {
+    "spId": "sp-production-live",
+    "id": "ebfdd805-92a7-4465-a7df-e9354890fa95",
+    "name": "Service Provider - Production live",
+    "platform": "FranceConnect+",
+    "status": "PRODUCTION_LIVE",
+    "organisation": "Direction Interministerielle du Numérique",
+    "creationDate": "22/02/2022",
+    "datapassId": 5023
+  },
+  {
+    "spId": "sp-archived",
+    "id": "dbfdd805-92a7-4465-a7df-e9354890fa95",
+    "name": "Service Provider - Archived",
+    "platform": "FranceConnect+",
+    "status": "ARCHIVED",
+    "organisation": "Direction Interministerielle du Numérique",
+    "creationDate": "22/02/2022",
+    "datapassId": 6023
+  }
+]

@@ -19,6 +19,7 @@ describe('SearchBarComponent', () => {
   it('should match snapshot, with default props', () => {
     // when
     const { container } = render(<SearchBarComponent input={formInputMock} />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -33,6 +34,7 @@ describe('SearchBarComponent', () => {
         size="md"
       />,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -40,6 +42,7 @@ describe('SearchBarComponent', () => {
   it('should have the class when size lg is defined', () => {
     // when
     const { container } = render(<SearchBarComponent input={formInputMock} size="lg" />);
+
     // then
     expect(container.firstChild).toHaveClass('fr-search-bar--lg');
   });
@@ -50,6 +53,7 @@ describe('SearchBarComponent', () => {
       <SearchBarComponent input={formInputMock} inputLabel="any-input-label-mock" />,
     );
     const element = getByText('any-input-label-mock');
+
     // then
     expect(element).toBeInTheDocument();
   });
@@ -60,6 +64,7 @@ describe('SearchBarComponent', () => {
       <SearchBarComponent buttonLabel="any-button-label-mock" input={formInputMock} />,
     );
     const element = getByText('any-button-label-mock');
+
     // then
     expect(element).toBeInTheDocument();
   });

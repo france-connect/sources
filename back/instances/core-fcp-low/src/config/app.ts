@@ -17,4 +17,6 @@ export default {
     cert: env.file('HTTPS_SERVER_CERT', { optional: true }),
   },
   fqdn: process.env.FQDN,
+  // @NOTE a-t-on besoin de cette variable pour fcp low ?
+  udFqdn: process.env.UD_FQDN,
 } as AppConfig;

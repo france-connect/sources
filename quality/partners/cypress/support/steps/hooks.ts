@@ -18,4 +18,6 @@ beforeEach(function () {
   const pathArray = [platform, testEnv];
   setFixtureContext('environment.json', pathArray, 'env');
   setFixtureContext('users.json', pathArray, 'users');
+  setFixtureContext('service-providers.json', pathArray, 'serviceProviders');
+  setFixtureContext('roles.json', pathArray, 'roles');
 });

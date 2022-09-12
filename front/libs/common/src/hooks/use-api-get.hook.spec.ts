@@ -33,6 +33,7 @@ describe('useApiGet', () => {
     rerender();
     rerender();
     rerender();
+
     // then
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalledTimes(1);
@@ -44,8 +45,10 @@ describe('useApiGet', () => {
   it('should have called optionnal callback with api response', async () => {
     // given
     const callbackMock = jest.fn();
+
     // when
     renderHook(() => useApiGet({ endpoint: 'any-url' }, callbackMock));
+
     // then
     await waitFor(() => {
       expect(callbackMock).toHaveBeenCalledTimes(1);

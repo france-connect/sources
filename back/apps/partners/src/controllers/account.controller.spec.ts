@@ -45,6 +45,29 @@ describe('PartnersController', () => {
     expect(controller).toBeDefined();
   });
 
+  describe('getCSRF', () => {
+    const resMock = {
+      status: jest.fn(),
+      json: jest.fn(),
+      end: jest.fn(),
+    } as unknown as Response;
+
+    beforeEach(() => {
+      mocked(resMock.status).mockReturnValue(resMock);
+    });
+
+    const csrfMock = { csrfToken: 'any_valid_csrf_token' };
+
+    it('should call res.json', async () => {
+      // When
+      await controller.getCSRF(resMock);
+
+      // Then
+      expect(resMock.json).toHaveBeenCalledTimes(1);
+      expect(resMock.json).toHaveBeenCalledWith(csrfMock);
+    });
+  });
+
   describe('getUserInfos', () => {
     const firstname = 'firstnameValue';
     const lastname = 'lastnameValue';

@@ -46,6 +46,10 @@ export class AppConfig {
   readonly fqdn?: string;
 
   @IsOptional()
+  @IsString()
+  readonly udFqdn?: string;
+
+  @IsOptional()
   @IsString({ each: true })
   @IsArray()
   readonly assetsPaths?: string[];
