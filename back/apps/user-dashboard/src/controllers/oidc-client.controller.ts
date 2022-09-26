@@ -147,13 +147,22 @@ export class OidcClientController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
+    const session: OidcSession = await sessionOidc.get();
+
+    if (!session?.idpIdToken) {
+      // BUSINESS: Redirect to business page
+      const redirect = '/';
+
+      return res.redirect(redirect);
+    }
+
+    const { idpIdToken, idpState, idpId } = session;
+
     const {
       // OIDC style variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       client: { post_logout_redirect_uris },
     } = await this.identityProvider.getById('envIssuer');
-
-    const { idpIdToken, idpState, idpId } = await sessionOidc.get();
 
     const endSessionUrl: string =
       await this.oidcClient.getEndSessionUrlFromProvider(

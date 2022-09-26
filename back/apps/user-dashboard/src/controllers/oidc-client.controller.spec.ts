@@ -46,6 +46,7 @@ describe('OidcClient Controller', () => {
   const interactionIdMock = 'interactionIdMockValue';
   const idpStateMock = 'idpStateMockValue';
   const idpNonceMock = 'idpNonceMock';
+  const idpIdTokenMock = 'idpIdToken';
   const oidcErrorMock = {
     error: 'error',
     // OIDC style variable name
@@ -153,6 +154,7 @@ describe('OidcClient Controller', () => {
       idpNonce: idpNonceMock,
       idpState: idpStateMock,
       idpId: idpIdMock,
+      idpIdToken: idpIdTokenMock,
     });
 
     oidcClientServiceMock.utils.buildAuthorizeParameters.mockReturnValue({
@@ -490,6 +492,43 @@ describe('OidcClient Controller', () => {
       // assert
       expect(res.redirect).toHaveBeenCalledTimes(1);
       expect(res.redirect).toHaveBeenCalledWith('/logout-callback');
+    });
+
+    it('should call res.redirect with "/" if session is undefined', async () => {
+      // given
+      const resMock = {
+        redirect: jest.fn(),
+      };
+      const redirectUrl = '/';
+
+      sessionServiceMock.get.mockResolvedValue(undefined);
+
+      // action
+      await controller.logout(resMock, sessionServiceMock);
+
+      // assert
+      expect(resMock.redirect).toHaveBeenCalledTimes(1);
+      expect(resMock.redirect).toHaveBeenCalledWith(redirectUrl);
+    });
+
+    it('should call res.redirect with "/" if idpIdToken is not defined', async () => {
+      // given
+      const resMock = {
+        redirect: jest.fn(),
+      };
+      const redirectUrl = '/';
+
+      sessionServiceMock.get.mockResolvedValue({
+        idpState: 'idpState',
+        idpId: 'idpId',
+      });
+
+      // action
+      await controller.logout(resMock, sessionServiceMock);
+
+      // assert
+      expect(resMock.redirect).toHaveBeenCalledTimes(1);
+      expect(resMock.redirect).toHaveBeenCalledWith(redirectUrl);
     });
   });
 

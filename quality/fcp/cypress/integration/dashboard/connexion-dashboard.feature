@@ -98,8 +98,6 @@ Fonctionnalité: Connexion User Dashboard
     Et le message d'alerte "session expirée" est affiché
     Et je ne suis plus connecté au dashboard usager avec FranceConnect
 
-  # Scénario à implémenter dans FC-1073
-  @ignore 
   Scénario: User Dashboard - Déconnexion après expiration de session
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du dashboard usager

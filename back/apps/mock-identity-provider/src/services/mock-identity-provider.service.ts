@@ -1,6 +1,5 @@
 import * as crypto from 'crypto';
 
-import { parseFile, ParserOptionsArgs } from '@fast-csv/parse';
 import * as _ from 'lodash';
 
 import { Injectable } from '@nestjs/common';
@@ -17,8 +16,8 @@ import { ServiceProviderAdapterEnvService } from '@fc/service-provider-adapter-e
 import { ISessionBoundContext, SessionService } from '@fc/session';
 
 import { AppConfig } from '../dto';
-import { Csv } from '../interfaces';
-import { OidcClaims } from '../interfaces/oidc-claims.interface';
+import { getFilesPathsFromDir, parseCsv } from '../helpers';
+import { Csv, OidcClaims } from '../interfaces';
 
 @Injectable()
 export class MockIdentityProviderService {
@@ -37,7 +36,8 @@ export class MockIdentityProviderService {
   }
 
   async onModuleInit() {
-    this.loadDatabase();
+    this.loadDatabases();
+
     this.oidcProvider.registerMiddleware(
       OidcProviderMiddlewareStep.AFTER,
       OidcProviderRoutes.AUTHORIZATION,
@@ -82,17 +82,31 @@ export class MockIdentityProviderService {
     await saveWithContext(sessionProperties);
   }
 
-  private async loadDatabase(): Promise<void> {
+  private async loadDatabases(): Promise<void> {
     /**
      * @todo #307 Config this path
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/307
      */
     const { citizenDatabasePath } = this.config.get<AppConfig>('App');
 
+    const paths = getFilesPathsFromDir(citizenDatabasePath);
+
+    const allFiles = await Promise.all(
+      paths.map((path) => this.loadDatabase(path)),
+    );
+
+    this.database = allFiles.flat();
+
+    this.logger.debug(
+      `Database loaded (${this.database.length} entries found)`,
+    );
+  }
+
+  private async loadDatabase(path: string): Promise<Csv[]> {
     try {
       this.logger.debug('Loading database...');
 
-      const database = await this.parseCsv(citizenDatabasePath, {
+      const database = await parseCsv(path, {
         trim: true,
         ignoreEmpty: true,
         headers: true,
@@ -104,17 +118,11 @@ export class MockIdentityProviderService {
         Object.keys(entry).forEach(cleaner);
       });
 
-      this.database = database;
+      return database;
     } catch (error) {
-      this.logger.fatal(
-        `Failed to load CSV database, path was: ${citizenDatabasePath}`,
-      );
+      this.logger.fatal(`Failed to load CSV database, path was: ${path}`);
       throw error;
     }
-
-    this.logger.debug(
-      `Database loaded (${this.database.length} entries found)`,
-    );
   }
 
   getIdentity(inputLogin: string) {
@@ -182,19 +190,5 @@ export class MockIdentityProviderService {
         identity.locality ||
         identity.street_address,
     );
-  }
-
-  private async parseCsv(
-    file: string,
-    opts: ParserOptionsArgs,
-  ): Promise<Csv[]> {
-    const rows: Csv[] = [];
-
-    return new Promise((resolve, reject) => {
-      parseFile(file, opts)
-        .on('error', reject)
-        .on('data', (data) => rows.push(data))
-        .on('end', () => resolve(rows));
-    });
   }
 }

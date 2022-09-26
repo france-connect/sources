@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@types/lodash.isplainobject": "^4.0.7",
-    "axios": "^0.26.1",
+    "axios": "^0.27.2",
     "lodash.get": "^4.4.2",
     "lodash.isplainobject": "^4.0.6"
   }
