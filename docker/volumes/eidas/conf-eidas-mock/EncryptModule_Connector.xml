@@ -18,8 +18,8 @@
 
 <properties>
     <comment>SWModule encrypt with JKS.</comment>
-    <entry key="check_certificate_validity_period">true</entry>
-    <entry key="disallow_self_signed_certificate">true</entry>
+    <entry key="check.certificate.validity.period">true</entry>
+	<entry key="disallow.self.signed.certificate">true</entry>
 
 
     <entry key="response.encryption.mandatory">true</entry>

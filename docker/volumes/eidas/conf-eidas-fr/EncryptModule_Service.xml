@@ -45,7 +45,7 @@
 	-->
 
 	<!-- Key store configuration -->
-	<entry key="keyStorePath">../keystore/keystore-eidas-service-fr.jks</entry>
+	<entry key="keyStorePath">../keystore/service-fr.jks</entry>
 	<entry key="keyStorePassword">local-demo</entry>
 	<entry key="keyPassword">local-demo</entry>
 	<entry key="keyStoreType">JKS</entry>
@@ -53,8 +53,8 @@
 	<!-- Management of the encryption activation -->
 	<entry key="encryptionActivation">encryptionConf.xml</entry>
 
-	<!-- If not present then no decryption will be applied on response -->
-	<entry key="responseDecryptionIssuer">CN=eidas-service-fr, OU=FC, O=DINUM, L=Paris, ST=France, C=FR</entry>
-	<entry key="serialNumber">2917c52e79a629fcc647a230f8b428797d177b59</entry>
+    <!--  If not present then no decryption will be applied on response -->
+    <entry key="responseDecryptionIssuer">CN=eIDAS-encryption, O=FR-DINUM-eIDAS-node-preprod, C=FR</entry>
+    <entry key="serialNumber">3</entry>
 
 </properties>

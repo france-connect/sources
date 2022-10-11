@@ -51,8 +51,15 @@ Chaque application doit définir sa propre interface (ou classe abstraite) éten
 L'interface de base contient déjà les propriétés suivantes, requises :
 
 - ip: string
+- source: ISource
 - category: string
 - event: string
+
+ISource:
+
+- address: string
+- port: string
+- original_addresses: string
 
 **Exemple d'interface spécifique à l'application**
 

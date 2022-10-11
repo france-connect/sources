@@ -18,6 +18,8 @@
     "build:bridge-http-proxy-rie": "nest build bridge-http-proxy-rie-instance",
     "build:tracks-data-provider": "nest build tracks-data-provider-instance",
     "build:user-dashboard": "nest build user-dashboard-instance",
+    "build:partners-fcp": "nest build partners-fcp",
+    "build:partners-fca": "nest build partners-fca",
     "build:exploit-fcp": "nest build exploit-fcp-instance",
     "build:exploit-fca-low": "nest build exploit-fca-low-instance",
     "build:mock-service-provider-fcp-low": "nest build mock-service-provider-fcp-low",

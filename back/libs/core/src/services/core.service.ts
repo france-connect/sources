@@ -25,6 +25,7 @@ import {
   CoreInvalidAcrException,
   CoreLowAcrException,
 } from '../exceptions';
+import { IUserNetworkInfo } from '../interfaces';
 import { AcrValues, pickAcr } from '../transforms';
 import { ComputeIdp, ComputeSp } from '../types';
 
@@ -55,11 +56,16 @@ export class CoreService {
   private getEventContext(ctx): IEventContext {
     const interactionId: string =
       this.oidcProvider.getInteractionIdFromCtx(ctx);
-    const ip: string = this.getIpFromCtx(ctx);
+    // extract info from panva context to populate business event context
+    const { ip, originalAddresses, port } = this.getNetworkInfoFromHeaders(ctx);
 
     const eventContext: IEventContext = {
       fc: { interactionId },
-      headers: { 'x-forwarded-for': ip },
+      headers: {
+        'x-forwarded-for': ip,
+        'x-forwarded-source-port': port,
+        'x-forwarded-for-original': originalAddresses,
+      },
     };
 
     this.logger.trace(eventContext);
@@ -254,8 +260,13 @@ export class CoreService {
   }
 
   // Revers ingineering of PANVA library
-  getIpFromCtx(ctx): string {
-    return ctx.req.headers['x-forwarded-for'];
+  private getNetworkInfoFromHeaders(ctx): IUserNetworkInfo {
+    const ip: string = ctx.req.headers['x-forwarded-for'];
+    const port: string = ctx.req.headers['x-forwarded-source-port'];
+    const originalAddresses: string =
+      ctx.req.headers['x-forwarded-for-original'];
+
+    return { ip, originalAddresses, port };
   }
 
   private overrideAuthorizeAcrValues(

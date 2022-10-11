@@ -92,8 +92,8 @@
 	<entry key="validate.binding">true</entry>
 
 	<!-- Certificates -->
-	<entry key="check_certificate_validity_period">true</entry>
-	<entry key="disallow_self_signed_certificate">true</entry>
+    <entry key="check.certificate.validity.period">true</entry>
+	<entry key="disallow.self.signed.certificate">true</entry>
 
 	<!-- signing Algorithm SHA_512(default),SHA_384,SHA_256 -->
 	<!-- http://www.w3.org/2001/04/xmldsig-more#rsa-sha256 -->

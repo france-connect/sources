@@ -41,12 +41,18 @@ describe('CoreTrackingService', () => {
   };
 
   const ipMock = '123.123.123.123';
+  const sourcePortMock = '443';
+  const xForwardedForOriginalMock = '123.123.123.123, 124.124.124.124';
   const interactionIdMock = 'interactionIdValue';
   const sessionIdMock = 'sessionIdValue';
 
   const contextMock = {
     req: {
-      headers: { 'x-forwarded-for': ipMock },
+      headers: {
+        'x-forwarded-for': ipMock,
+        'x-forwarded-source-port': sourcePortMock,
+        'x-forwarded-for-original': xForwardedForOriginalMock,
+      },
       fc: {
         interactionId: interactionIdMock,
       },
@@ -55,6 +61,8 @@ describe('CoreTrackingService', () => {
 
   const extractedValueMock: ICoreTrackingContext = {
     ip: ipMock,
+    port: sourcePortMock,
+    originalAddresses: xForwardedForOriginalMock,
     sessionId: sessionIdMock,
     interactionId: interactionIdMock,
     claims: ['foo', 'bar'],
@@ -167,6 +175,13 @@ describe('CoreTrackingService', () => {
         category: eventMock.category,
         event: eventMock.event,
         ip: ipMock,
+        source: {
+          address: ipMock,
+          port: sourcePortMock,
+          // logs filter and analyses need this format
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          original_addresses: xForwardedForOriginalMock,
+        },
         claims: 'foo bar',
       };
       // When
@@ -206,21 +221,24 @@ describe('CoreTrackingService', () => {
   });
 
   describe('extractContext()', () => {
-    let extractIpFromContextMock;
+    let extractNetworkInfoFromHeadersMock;
     let getInteractionIdFromContextMock;
 
     beforeEach(() => {
-      extractIpFromContextMock = jest.spyOn<CoreTrackingService, any>(
+      extractNetworkInfoFromHeadersMock = jest.spyOn<CoreTrackingService, any>(
         service,
-        'extractIpFromContext',
+        'extractNetworkInfoFromHeaders',
       );
-      extractIpFromContextMock.mockReturnValueOnce(ipMock);
+      extractNetworkInfoFromHeadersMock.mockReturnValueOnce({
+        ip: ipMock,
+        port: sourcePortMock,
+        originalAddresses: xForwardedForOriginalMock,
+      });
 
       getInteractionIdFromContextMock = jest.spyOn<CoreTrackingService, any>(
         service,
         'getInteractionIdFromContext',
       );
-
       getInteractionIdFromContextMock.mockReturnValueOnce(interactionIdMock);
     });
 
@@ -256,7 +274,11 @@ describe('CoreTrackingService', () => {
       sessionServiceMock.getAlias.mockResolvedValueOnce(sessionIdMock);
       const contextMock = {
         req: {
-          headers: { 'x-forwarded-for': '123.123.123.123' },
+          headers: {
+            'x-forwarded-for': ipMock,
+            'x-forwarded-source-port': sourcePortMock,
+            'x-forwarded-for-original': xForwardedForOriginalMock,
+          },
           cookies: {
             _interaction: interactionIdMock,
           },
@@ -275,7 +297,7 @@ describe('CoreTrackingService', () => {
     it('should throw if interactionId is missing', async () => {
       // Given
       const errorMock = new Error('Unknown Error');
-      extractIpFromContextMock.mockReset().mockImplementationOnce(() => {
+      getInteractionIdFromContextMock.mockReset().mockImplementationOnce(() => {
         throw errorMock;
       });
 
@@ -308,41 +330,96 @@ describe('CoreTrackingService', () => {
     });
   });
 
-  describe('extractIpFromContext()', () => {
-    it('should retreive an IP from the provided context.', () => {
-      // Given
-      const contextMock = {
-        req: {
-          headers: {
-            'x-forwarded-for': ipMock,
-          },
-          fc: { interactionId: 'foo' },
-        },
-      };
-      // When
-      const result = service['extractIpFromContext'](contextMock);
-      // Then
-      expect(result).toEqual(ipMock);
+  describe('extractNetworkInfoFromHeaders', () => {
+    let checkForMissingHeadersMock;
+
+    beforeEach(() => {
+      checkForMissingHeadersMock = jest.spyOn<CoreTrackingService, any>(
+        service,
+        'checkForMissingHeaders',
+      );
     });
 
     it('should throw if header is missing', () => {
       // Given
       const contextMock = { req: { fc: { interactionId: 'foo' } } };
       // Then
-      expect(() => service['extractIpFromContext'](contextMock)).toThrow(
-        CoreMissingContextException,
+      expect(() =>
+        service['extractNetworkInfoFromHeaders'](contextMock),
+      ).toThrow(CoreMissingContextException);
+    });
+
+    it('should call checkForMissingHeaders', () => {
+      // Given
+      const contextMock = {
+        req: {
+          headers: {
+            'x-forwarded-for': ipMock,
+            'x-forwarded-source-port': sourcePortMock,
+            'x-forwarded-for-original': xForwardedForOriginalMock,
+          },
+          fc: { interactionId: 'foo' },
+        },
+      };
+      // When
+      service['extractNetworkInfoFromHeaders'](contextMock);
+      // Then
+      expect(checkForMissingHeadersMock).toHaveBeenCalledTimes(1);
+      expect(checkForMissingHeadersMock).toHaveBeenCalledWith(
+        ipMock,
+        sourcePortMock,
+        xForwardedForOriginalMock,
       );
     });
 
-    it('should throw if ip is missing', () => {
+    it('should retrieve network information from the provided context.', () => {
       // Given
       const contextMock = {
-        req: { headers: {}, fc: { interactionId: 'foo' } },
+        req: {
+          headers: {
+            'x-forwarded-for': ipMock,
+            'x-forwarded-source-port': sourcePortMock,
+            'x-forwarded-for-original': xForwardedForOriginalMock,
+          },
+          fc: { interactionId: 'foo' },
+        },
       };
+      // When
+      const result = service['extractNetworkInfoFromHeaders'](contextMock);
       // Then
-      expect(() => service['extractIpFromContext'](contextMock)).toThrow(
-        CoreMissingContextException,
-      );
+      expect(result).toEqual({
+        ip: ipMock,
+        port: sourcePortMock,
+        originalAddresses: xForwardedForOriginalMock,
+      });
+    });
+  });
+
+  describe('checkForMissingHeaders', () => {
+    it('should throw if ip is missing', () => {
+      expect(() =>
+        service['checkForMissingHeaders'](
+          undefined,
+          sourcePortMock,
+          xForwardedForOriginalMock,
+        ),
+      ).toThrow(CoreMissingContextException);
+    });
+
+    it('should throw if source port is missing', () => {
+      expect(() =>
+        service['checkForMissingHeaders'](
+          ipMock,
+          undefined,
+          xForwardedForOriginalMock,
+        ),
+      ).toThrow(CoreMissingContextException);
+    });
+
+    it('should throw if xForwardedForOriginal is missing', () => {
+      expect(() =>
+        service['checkForMissingHeaders'](ipMock, sourcePortMock, undefined),
+      ).toThrow(CoreMissingContextException);
     });
   });
 

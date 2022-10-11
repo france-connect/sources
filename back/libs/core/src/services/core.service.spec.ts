@@ -120,8 +120,15 @@ describe('CoreService', () => {
   const spNameMock = 'my SP';
   const spAcrMock = 'eidas3';
   const spIdMock = 'spIdValue';
+  const ipMock = '123.123.123.123';
+  const sourcePortMock = '443';
+  const xForwardedForOriginalMock = '123.123.123.123,124.124.124.124';
   const reqMock = {
-    headers: { 'x-forwarded-for': '123.123.123.123' },
+    headers: {
+      'x-forwarded-for': ipMock,
+      'x-forwarded-source-port': sourcePortMock,
+      'x-forwarded-for-original': xForwardedForOriginalMock,
+    },
     sessionId: sessionIdMockValue,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     query: { acr_values: spAcrMock, client_id: spIdMock },
@@ -758,7 +765,9 @@ describe('CoreService', () => {
         interactionId: interactionIdValueMock,
       },
       headers: {
-        'x-forwarded-for': '123.123.123.123',
+        'x-forwarded-for': ipMock,
+        'x-forwarded-source-port': sourcePortMock,
+        'x-forwarded-for-original': xForwardedForOriginalMock,
       },
     };
 
@@ -978,11 +987,19 @@ describe('CoreService', () => {
       // Given
       const eventCtxMock: IEventContext = {
         fc: { interactionId: interactionIdValueMock },
-        headers: { 'x-forwarded-for': '123.123.123.123' },
+        headers: {
+          'x-forwarded-for': '123.123.123.123',
+          'x-forwarded-source-port': '443',
+          'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
+        },
       };
       const ctxMock = {
         req: {
-          headers: { 'x-forwarded-for': '123.123.123.123' },
+          headers: {
+            'x-forwarded-for': '123.123.123.123',
+            'x-forwarded-source-port': '443',
+            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
+          },
           // oidc
           // eslint-disable-next-line @typescript-eslint/naming-convention
           query: { acr_values: 'eidas3', client_id: 'foo' },
@@ -1013,7 +1030,13 @@ describe('CoreService', () => {
       // Given
       const ctxMock: any = {
         not: 'altered',
-        req: { headers: { 'x-forwarded-for': '123.123.123.123' } },
+        req: {
+          headers: {
+            'x-forwarded-for': '123.123.123.123',
+            'x-forwarded-source-port': '443',
+            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
+          },
+        },
       };
 
       const errorMock = new Error('unknowError');
@@ -1037,7 +1060,13 @@ describe('CoreService', () => {
       // Given
       const ctxMock: any = {
         not: 'altered',
-        req: { headers: { 'x-forwarded-for': '123.123.123.123' } },
+        req: {
+          headers: {
+            'x-forwarded-for': '123.123.123.123',
+            'x-forwarded-source-port': '443',
+            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
+          },
+        },
       };
 
       trackingMock.track.mockImplementationOnce(() => {
@@ -1075,6 +1104,8 @@ describe('CoreService', () => {
         },
         headers: {
           'x-forwarded-for': '123.123.123.123',
+          'x-forwarded-source-port': '443',
+          'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
         },
       });
       // When
@@ -1091,7 +1122,13 @@ describe('CoreService', () => {
       // Given
       const ctxMock: any = {
         not: 'altered',
-        req: { headers: { 'x-forwarded-for': '123.123.123.123' } },
+        req: {
+          headers: {
+            'x-forwarded-for': '123.123.123.123',
+            'x-forwarded-source-port': '443',
+            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
+          },
+        },
       };
 
       const errorMock = new Error('unknowError');
@@ -1114,7 +1151,13 @@ describe('CoreService', () => {
       // Given
       const ctxMock: any = {
         not: 'altered',
-        req: { headers: { 'x-forwarded-for': '123.123.123.123' } },
+        req: {
+          headers: {
+            'x-forwarded-for': '123.123.123.123',
+            'x-forwarded-source-port': '443',
+            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
+          },
+        },
       };
 
       service['getEventContext'] = jest.fn();

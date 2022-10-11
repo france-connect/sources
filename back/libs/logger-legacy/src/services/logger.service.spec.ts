@@ -68,6 +68,9 @@ describe('LoggerService', () => {
 
   let service: LoggerService;
   let setContainerColorsMock: jest.SpyInstance;
+  const ipMock = '123.123.123.123';
+  const sourcePortMock = '443';
+  const xForwardedForOriginalMock = '123.123.123.123, 124.124.124.124';
 
   beforeEach(async () => {
     jest.restoreAllMocks();
@@ -722,7 +725,14 @@ describe('LoggerService', () => {
     const message: ILoggerBusinessEvent = {
       category: 'categorValue',
       event: 'eventValue',
-      ip: 'ipValue',
+      ip: ipMock,
+      source: {
+        address: ipMock,
+        port: sourcePortMock,
+        // logs filter and analyses need this format
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        original_addresses: xForwardedForOriginalMock,
+      },
     };
 
     beforeEach(() => {

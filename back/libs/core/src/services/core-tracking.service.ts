@@ -16,6 +16,7 @@ import {
   ICoreTrackingContext,
   ICoreTrackingLog,
   ICoreTrackingProviders,
+  IUserNetworkInfo,
 } from '../interfaces';
 
 @Injectable()
@@ -33,8 +34,16 @@ export class CoreTrackingService implements IAppTrackingService {
     event: IEvent,
     context: IEventContext,
   ): Promise<ICoreTrackingLog> {
-    const { ip, sessionId, interactionId, claims }: ICoreTrackingContext =
-      await this.extractContext(context);
+    const {
+      ip,
+      port,
+      // logs filter and analyses need this format
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      originalAddresses,
+      sessionId,
+      interactionId,
+      claims,
+    }: ICoreTrackingContext = await this.extractContext(context);
 
     const { step, category, event: eventName } = event;
     let data: ICoreTrackingProviders;
@@ -53,22 +62,49 @@ export class CoreTrackingService implements IAppTrackingService {
       event: eventName,
       ip,
       claims: claims?.join(' '),
+      source: {
+        address: ip,
+        port,
+        // logs filter and analyses need this format
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        original_addresses: originalAddresses,
+      },
       ...data,
     };
   }
 
-  private extractIpFromContext(context: IEventContext): string {
+  private extractNetworkInfoFromHeaders(
+    context: IEventContext,
+  ): IUserNetworkInfo {
     if (!context.req.headers) {
       throw new CoreMissingContextException('req.headers');
     }
 
     const ip = context.req.headers['x-forwarded-for'];
+    const port = context.req.headers['x-forwarded-source-port'];
+    const originalAddresses = context.req.headers['x-forwarded-for-original'];
 
+    this.checkForMissingHeaders(ip, port, originalAddresses);
+
+    return { ip, port, originalAddresses };
+  }
+
+  private checkForMissingHeaders(ip, port, originalAddresses): void {
     if (!ip) {
       throw new CoreMissingContextException("req.headers['x-forwarded-for']");
     }
 
-    return ip;
+    if (!port) {
+      throw new CoreMissingContextException(
+        "req.headers['x-forwarded-source-port']",
+      );
+    }
+
+    if (!originalAddresses) {
+      throw new CoreMissingContextException(
+        "req.headers['x-forwarded-for-original']",
+      );
+    }
   }
 
   private async extractContext(
@@ -86,13 +122,21 @@ export class CoreTrackingService implements IAppTrackingService {
 
     const { claims } = req;
 
-    const ip: string = this.extractIpFromContext(ctx);
+    const { ip, port, originalAddresses } =
+      this.extractNetworkInfoFromHeaders(ctx);
     const interactionId: string = this.getInteractionIdFromContext(ctx);
 
     const sessionId: string =
       req.sessionId || (await this.sessionService.getAlias(interactionId));
 
-    return { ip, sessionId, interactionId, claims };
+    return {
+      ip,
+      port,
+      originalAddresses,
+      sessionId,
+      interactionId,
+      claims,
+    };
   }
 
   private extractInteractionId(req) {

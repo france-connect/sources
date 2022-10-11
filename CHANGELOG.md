@@ -4,6 +4,12 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.113 && v3.114.0 
+
+- [FranceConnect+]  
+  - Added port and client provided source IP to business logs
+
+
 ## v3.109 && v3.110.0 
 
 - [UserDashboard] 

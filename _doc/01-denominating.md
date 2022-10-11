@@ -128,6 +128,29 @@ const user = {
 }
 ```
 
+#### `observables`
+
+`Observable` variables must use the conventional suffix `$`.
+
+```typescript
+/**
+ * 😍 Cool 😍
+ */
+
+let message$ = /* ... */;
+
+```
+
+```typescript
+/**
+ * 😱 Not cool 😱
+ */
+
+let me$$age = /* ... */;
+
+let observable = /* ... */;
+```
+
 ### `files name` and `directories name`
 
 The `files name` and `directories name` MUST respect the `lisp-case` notation, followed by their `extension`.
@@ -196,7 +219,6 @@ const ウセル_ラスト_コネチウン = /* ... */;
  * 💡 This is a perfectly 🍷 valid commentary 😉
  */
 ```
-
 
 ```bash
 ##############

@@ -61,7 +61,7 @@ export function tracksBuilder(
   );
 
   const legacyScript = getCallerFrom(
-    `$FC_ROOT/fc-docker/docker-stack exec fc-core node --trace-warnings ./projects/fc/core/cli.js traces`,
+    `$FC_ROOT/fc-docker/docker-stack exec fc-core node --trace-warnings ./cypress/support/script/traces.js`,
   );
 
   async function addTracks(args: IAddTracksArgs): Promise<void> {
