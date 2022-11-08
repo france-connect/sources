@@ -14,6 +14,7 @@
 // ***********************************************************
 
 import 'cypress-axe';
+import 'cypress-maildev';
 import 'cypress-network-idle';
 import 'cypress-xpath';
 

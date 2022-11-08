@@ -3,7 +3,7 @@
 // declarative file
 import { ReducersMapObject } from 'redux';
 
-import { servicesProvidersReducers } from '@fc/service-providers';
+import { servicesProvidersReducers } from '@fc/partners';
 
 export const reducersMap: ReducersMapObject = {
   ...servicesProvidersReducers,

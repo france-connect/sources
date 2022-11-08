@@ -15,6 +15,7 @@ services:
     volumes:
       - "${VOLUMES_DIR}/eidas/conf-eidas-fr:/data/conf-eidas:ro"
       - "${VOLUMES_DIR}/eidas/keystore-fr:/data/keystore:ro"
+      - "${VOLUMES_DIR}/eidas/keystore-fr/cacerts:/etc/ssl/certs/java/cacerts:ro"
       - "${VOLUMES_DIR}/log/eidas/eidas-fr:/data/log/tomcat"
       - "${VOLUMES_DIR}/log/eidas/eidas-fr:/data/log/eidas"
     environment:
@@ -22,7 +23,7 @@ services:
       - "VIRTUAL_PORT=443"
       - "App_PROTOCOL=https"
       - "TZ=Europe/Paris"
-      - "JAVA_OPTS=-Xms1G -Xmx1G"
+      - "JAVA_OPTS=-Xms512m  -Xmx512m"
       - "LOG_LEVEL=INFO"
       - "IGNITE_WORK_DIR=/data"
     networks:

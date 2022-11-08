@@ -5,7 +5,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { CryptographyService } from '@fc/cryptography';
-import { EidasAttributes } from '@fc/eidas';
+import { CryptographyEidasService } from '@fc/cryptography-eidas';
+import { EidasAttributes, EidasRequest } from '@fc/eidas';
+import { EidasCountries } from '@fc/eidas-country';
 import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
 import { LoggerService } from '@fc/logger-legacy';
 import { AcrValues } from '@fc/oidc';
@@ -47,6 +49,7 @@ describe('FrIdentityToEuController', () => {
 
   const loggerServiceMock = {
     setContext: jest.fn(),
+    debug: jest.fn(),
     trace: jest.fn(),
   } as unknown as LoggerService;
 
@@ -87,6 +90,10 @@ describe('FrIdentityToEuController', () => {
     genRandomString: jest.fn(),
   };
 
+  const cryptographyEidasMock = {
+    computeSubV1: jest.fn(),
+  };
+
   const sessionMockValue = {
     idpId: providerUidMock,
     idpNonce: idpNonceMock,
@@ -106,6 +113,9 @@ describe('FrIdentityToEuController', () => {
   } as unknown as Request;
 
   beforeEach(async () => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+
     const app: TestingModule = await Test.createTestingModule({
       controllers: [FrIdentityToEuController],
       providers: [
@@ -114,6 +124,7 @@ describe('FrIdentityToEuController', () => {
         LoggerService,
         SessionService,
         CryptographyService,
+        CryptographyEidasService,
         EidasToOidcService,
         OidcToEidasService,
       ],
@@ -128,6 +139,8 @@ describe('FrIdentityToEuController', () => {
       .useValue(sessionServiceOidcMock)
       .overrideProvider(CryptographyService)
       .useValue(cryptographyMock)
+      .overrideProvider(CryptographyEidasService)
+      .useValue(cryptographyEidasMock)
       .overrideProvider(EidasToOidcService)
       .useValue(eidasToOidcServiceMock)
       .overrideProvider(OidcToEidasService)
@@ -137,9 +150,6 @@ describe('FrIdentityToEuController', () => {
     frIdentityToEuController = await app.get<FrIdentityToEuController>(
       FrIdentityToEuController,
     );
-
-    jest.resetAllMocks();
-    jest.restoreAllMocks();
 
     oidcClientServiceMock.utils.buildAuthorizeParameters.mockReturnValue({
       nonce: idpNonceMock,
@@ -521,18 +531,27 @@ describe('FrIdentityToEuController', () => {
 
   describe('handleOidcCallbackAuthCode', () => {
     const requestedAttributesMock = [EidasAttributes.PERSON_IDENTIFIER];
-
+    const countryCodeMock = EidasCountries.FRANCE;
     const tokenParamsMock: TokenParams = {
       nonce: idpNonceMock,
       state: idpStateMock,
     };
 
+    const userInfosMock = Object.freeze({
+      sub: 'sub',
+    });
+    const subPairwisedMock = 'subPairwiseValue';
+
     let accessTokenMock;
     let validateIdentityMock;
+    let computePairwisedSubMock;
+
+    const requestMock: Partial<EidasRequest> = {
+      requestedAttributes: requestedAttributesMock,
+      spCountryCode: countryCodeMock,
+    };
     beforeEach(() => {
-      sessionServiceEidasMock.get.mockResolvedValueOnce({
-        requestedAttributes: requestedAttributesMock,
-      });
+      sessionServiceEidasMock.get.mockResolvedValueOnce(requestMock);
 
       accessTokenMock = Symbol('accessTokenMock');
 
@@ -546,6 +565,17 @@ describe('FrIdentityToEuController', () => {
         'validateIdentity',
       );
       validateIdentityMock.mockResolvedValueOnce();
+
+      computePairwisedSubMock = jest.spyOn<FrIdentityToEuController, any>(
+        frIdentityToEuController,
+        'computePairwisedSub',
+      );
+
+      computePairwisedSubMock.mockReturnValueOnce(subPairwisedMock);
+
+      oidcClientServiceMock.getUserInfosFromProvider.mockResolvedValueOnce({
+        ...userInfosMock,
+      });
     });
 
     it('should throw an exception if the oidc session is not defined', async () => {
@@ -632,15 +662,23 @@ describe('FrIdentityToEuController', () => {
       expect(sessionServiceEidasMock.get).toHaveBeenCalledWith('eidasRequest');
     });
 
-    it('should call mapPartialResponseSuccess with the idp identity, the idp acr and the requested eidas attributes', async () => {
-      // setup
-      const userInfosMock = {
-        sub: 'sub',
-      };
-      oidcClientServiceMock.getUserInfosFromProvider.mockResolvedValueOnce(
-        userInfosMock,
+    it('should modify identity sub based on country code', async () => {
+      // action
+      await frIdentityToEuController['handleOidcCallbackAuthCode'](
+        req,
+        sessionServiceOidcMock,
+        sessionServiceEidasMock,
       );
 
+      // expect
+      expect(computePairwisedSubMock).toHaveBeenCalledTimes(1);
+      expect(computePairwisedSubMock).toHaveBeenCalledWith(
+        userInfosMock.sub,
+        countryCodeMock,
+      );
+    });
+
+    it('should call mapPartialResponseSuccess with the idp identity, the idp acr and the requested eidas attributes', async () => {
       // action
       await frIdentityToEuController['handleOidcCallbackAuthCode'](
         req,
@@ -654,7 +692,11 @@ describe('FrIdentityToEuController', () => {
       ).toHaveBeenCalledTimes(1);
       expect(
         oidcToEidasServiceMock.mapPartialResponseSuccess,
-      ).toHaveBeenCalledWith(userInfosMock, acrMock, requestedAttributesMock);
+      ).toHaveBeenCalledWith(
+        { sub: subPairwisedMock },
+        acrMock,
+        requestedAttributesMock,
+      );
     });
   });
 
@@ -703,6 +745,39 @@ describe('FrIdentityToEuController', () => {
         frIdentityToEuController['validateIdentity'](identityMock),
         // assert
       ).rejects.toThrow(EidasBridgeInvalidIdentityException);
+    });
+  });
+
+  describe('computePairwisedSub()', () => {
+    const countryMock = 'FR';
+    const idpSubMock = 'subMockValue';
+    const subComputedMock = Symbol('subv1');
+
+    beforeEach(() => {
+      cryptographyEidasMock.computeSubV1.mockReturnValueOnce(subComputedMock);
+    });
+
+    it('should compute Sub with Identityhash and country', () => {
+      // When
+      frIdentityToEuController['computePairwisedSub'](idpSubMock, countryMock);
+
+      // Then
+      expect(cryptographyEidasMock.computeSubV1).toHaveBeenCalledTimes(1);
+      expect(cryptographyEidasMock.computeSubV1).toHaveBeenCalledWith(
+        countryMock,
+        idpSubMock,
+      );
+    });
+
+    it('should return a pairwised sub based on original idp sub and country code', () => {
+      // When
+      const result = frIdentityToEuController['computePairwisedSub'](
+        idpSubMock,
+        countryMock,
+      );
+
+      // Then
+      expect(result).toBe(subComputedMock);
     });
   });
 });

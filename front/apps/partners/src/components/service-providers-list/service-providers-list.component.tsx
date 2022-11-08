@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { AlertComponent, AlertTypes } from '@fc/dsfr';
-import { ServiceProvider, ServiceProviderItemComponent } from '@fc/service-providers';
 
-import { ServiceProviderItem } from '../../interfaces';
-import { transformServiceProvider } from '../../services';
+import { ServiceProviders, ServiceProvidersListItem } from '../../interfaces';
+import { transformServiceProvidersList } from '../../services';
+import { ServiceProvidersListItemComponent } from '../service-providers-list-item';
 
 export interface ServiceProvidersListComponentProps {
-  items: ServiceProvider[];
+  items: ServiceProviders[];
   totalItems: number;
 }
 
@@ -33,9 +33,9 @@ export const ServiceProvidersListComponent = React.memo(
         {!showMessageBox &&
           items &&
           items
-            .map(transformServiceProvider)
-            .map((item: ServiceProviderItem) => (
-              <ServiceProviderItemComponent
+            .map(transformServiceProvidersList)
+            .map((item: ServiceProvidersListItem) => (
+              <ServiceProvidersListItemComponent
                 key={item.id}
                 color={item.color}
                 createdAt={item.createdAt}

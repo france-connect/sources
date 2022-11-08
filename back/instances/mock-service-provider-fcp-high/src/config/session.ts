@@ -2,6 +2,7 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
+import { OidcClientRoutes } from '@fc/oidc-client';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
 
 const env = new ConfigParser(process.env, 'Session');
@@ -23,5 +24,5 @@ export default {
   sessionCookieName: 'sp_session_id',
   lifetime: 600, // 10 minutes
   sessionIdLength: 64,
-  excludedRoutes: [],
+  excludedRoutes: [OidcClientRoutes.WELL_KNOWN_KEYS],
 } as SessionConfig;

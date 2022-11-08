@@ -1,49 +1,29 @@
-import { DateTime } from 'luxon';
-
 import { t } from '@fc/i18n';
-import { ServiceProvider, ServiceProvidersPermissionTypes } from '@fc/service-providers';
 
 import { ServiceProviderStatusColors } from '../enums';
+import { ServiceProvider } from '../interfaces';
 
 export const transformServiceProvider = (item: ServiceProvider) => {
   try {
     const {
-      createdAt,
-      datapasses,
-      id,
       name,
-      organisation: { name: organisationName },
       platform: { name: platformName },
       status,
-    } = item.payload;
-    const { permissions, urls } = item.meta;
+    } = item;
 
-    const [lastDatapass] = datapasses;
-    const datapassId = lastDatapass?.remoteId
-      ? t('ServiceProvidersPage.ServiceProvider.datapassId', { datapassId: lastDatapass.remoteId })
-      : '';
-
-    const createdDatetime = DateTime.fromISO(createdAt).setLocale('fr-FR').setZone('Europe/Paris');
-    if (createdDatetime.invalidReason) {
-      throw new Error(`spId ${id}: createdAt is not a valid ISO DateTime: '${createdAt}'`);
+    if (!status || !platformName || !name) {
+      throw new Error('status, platformName or name is undefined');
     }
-    const creationDate = createdDatetime.toLocaleString();
-
-    const permission = ServiceProvidersPermissionTypes.SERVICE_PROVIDER_EDIT;
-    const detailsUrl = permissions.includes(permission) ? urls.edit : urls.view;
-
     return {
       color: ServiceProviderStatusColors[status as keyof typeof ServiceProviderStatusColors],
-      createdAt: t('ServiceProvidersPage.ServiceProvider.creationDate', { creationDate }),
-      datapassId,
-      id,
-      organisationName,
       platformName: t(`ServiceProvidersPage.ServiceProvider.platformName.${platformName}`),
       spName: name,
       status: t(`ServiceProvidersPage.ServiceProvider.status.${status}`),
-      url: detailsUrl,
     };
   } catch (err) {
-    throw new Error('Unable to parse service provider payload item');
+    const isInstanceofError = err instanceof Error;
+    const message = isInstanceofError ? `: ${err.message}` : '';
+
+    throw new Error(`Unable to parse service provider payload item ${message}`);
   }
 };

@@ -2,6 +2,7 @@
   {
     "idpId": "fip1-low",
     "name": "fip1-low",
+    "title": "IDP1 - LOW",
     "descriptions": [
       "par défaut",
       "actif"
@@ -22,6 +23,7 @@
   {
     "idpId": "fip2-low",
     "name": "fip2-low",
+    "title": "IDP2 - LOW",
     "descriptions": [],
     "mocked": true,
     "usable": true,
@@ -39,6 +41,7 @@
   {
     "idpId": "fip3-low",
     "name": "fip3-low",
+    "title": "IDP3 - LOW",
     "descriptions": [],
     "mocked": true,
     "usable": true,

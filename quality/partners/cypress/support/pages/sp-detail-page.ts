@@ -7,25 +7,25 @@ export default class SPDetailPage {
 
   getReturnToSpListButton(): ChainableElement {
     return cy.get(
-      '[data-testid="ServiceProvidersDetailsHeaderComponent-return-sp-list-button"]',
+      '[data-testid="ServiceProviderHeaderComponent-return-sp-list-button"]',
     );
   }
 
   getSpBadge(): ChainableElement {
     return cy.get(
-      '[data-testid="ServiceProvidersDetailsHeaderComponent-badge"]',
+      '[data-testid="ServiceProviderHeaderComponent-badge"]',
     );
   }
 
   getSpName(): ChainableElement {
     return cy.get(
-      '[data-testid="ServiceProvidersDetailsHeaderComponent-spName"]',
+      '[data-testid="ServiceProviderHeaderComponent-spName"]',
     );
   }
 
   getPlatformName(): ChainableElement {
     return cy.get(
-      '[data-testid="ServiceProvidersDetailsHeaderComponent-platform"]',
+      '[data-testid="ServiceProviderHeaderComponent-platform"]',
     );
   }
 }

@@ -30,7 +30,6 @@ module.exports = {
     '^@fc/partners(|/.*)$': '<rootDir>/apps/partners/src/$1',
     '^@fc/oidc-client(|/.*)$': '<rootDir>/libs/oidc-client/src/$1',
     '^@fc/routing(|/.*)$': '<rootDir>/libs/routing/src/$1',
-    '^@fc/service-providers(|/.*)$': '<rootDir>/apps/service-providers/src/$1',
     '^@fc/state-management(|/.*)$': '<rootDir>/libs/state-management/src/$1',
     '^@fc/tracks(|/.*)$': '<rootDir>/apps/tracks/src/$1',
     '^@fc/user-dashboard(|/.*)$': '<rootDir>/apps/user-dashboard/src/$1',

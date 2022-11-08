@@ -57,10 +57,11 @@ export function configureEidasSpMockRequest(eidasRequest = {}) {
     ...eidasRequest,
   };
 
-  cy.visit(Cypress.env('MOCK_EIDAS_SP_URL'));
+  const url = eidasRequest.fsURL || 'MOCK_EIDAS_SP_URL';
+  cy.visit(Cypress.env(url));
 
   cy.get('#eidasconnector_msdd').click();
-  cy.get('#eidasconnector_msdd .enabled._msddli_').contains('CB').click();
+  cy.get('#eidasconnector_msdd .enabled._msddli_').siblings().last().click();
 
   cy.get('#citizeneidas_msdd').click();
   cy.get('#citizeneidas_msdd .enabled._msddli_').contains('FR').click();
@@ -130,7 +131,7 @@ export function checkInformationsEuSpFrIdp(params = {}) {
       {
         name: 'PersonIdentifier',
         value:
-          '[FR/CB/082aef8c0d31e99d83d910879a4fcdd8610d571f07ce5610440b3a0161f6e393v1]',
+          '[FR/CB/133ac783e6e7d20514937072436a0500178f1cf254924905b6d24a95655b8317v1]',
       },
       {
         name: 'PlaceOfBirth',
@@ -186,7 +187,7 @@ export function configureOidcSpMockRequest(params = {}) {
   cy.visit(serviceProvider.url);
 
   setFSAuthorizeMethod(method);
-  submitFSAuthorizeForm()
+  submitFSAuthorizeForm();
 
   // FC: choose FI
 

@@ -53,10 +53,16 @@ export class User implements UserData {
   }
 
   get fullName(): string {
-    const { claims = {} } = this;
+    const { claims } = this;
     const { family_name, given_name, preferred_username } = claims;
 
     const lastName = preferred_username || family_name;
     return [given_name, lastName].join(' ').trim();
+  }
+
+  get email(): string {
+    const { claims } = this;
+    const { email } = claims;
+    return email;
   }
 }

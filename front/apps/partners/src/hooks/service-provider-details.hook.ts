@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AccountContext, AccountInterface } from '@fc/account';
 import { InitialState } from '@fc/state-management';
 
-import { transformServiceProviderItem } from '../services';
+import { transformServiceProvider } from '../services';
 
 interface useServiceProviderDetailsProps {
   type: string;
@@ -21,8 +21,7 @@ export const useServiceProviderDetails = ({ id, type }: useServiceProviderDetail
   /* istanbul ignore next */
   const { item } = useSelector((state: InitialState) => state.ServiceProviderItem);
 
-  const itemTransformed =
-    ready && connected && item ? transformServiceProviderItem(item) : undefined;
+  const itemTransformed = ready && connected && item ? transformServiceProvider(item) : undefined;
 
   useEffect(() => {
     const shouldFetchData = !initialized.current && ready && connected;

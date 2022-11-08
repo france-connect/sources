@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+#   Copyright (c) 2017 European Commission  
+#   Licensed under the EUPL, Version 1.2 or – as soon they will be 
+#   approved by the European Commission - subsequent versions of the 
+#    EUPL (the "Licence"); 
+#    You may not use this work except in compliance with the Licence. 
+#    You may obtain a copy of the Licence at: 
+#    * https://joinup.ec.europa.eu/page/eupl-text-11-12  
+#    *
+#    Unless required by applicable law or agreed to in writing, software 
+#    distributed under the Licence is distributed on an "AS IS" basis, 
+#    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+#    See the Licence for the specific language governing permissions and limitations under the Licence.
+ -->
+
+<instances>
+
+	<!-- ******************** Connector-Service ******************** -->
+
+	<instance name="Connector">
+		<configuration name="SamlEngineConf">
+			<parameter name="fileConfiguration" value="SamlEngine_Connector.xml" />
+		</configuration>
+
+		<configuration name="SignatureConf">
+			<parameter name="class"
+				value="eu.eidas.auth.engine.core.impl.SignSW" />
+			<parameter name="fileConfiguration" value="SignModule_Connector.xml" />
+		</configuration>
+
+        <configuration name="EncryptionConf">
+            <!-- Specific signature module -->
+            <parameter name="class"
+                       value="eu.eidas.auth.engine.core.impl.EncryptionSW" />
+            <!-- Settings specific module
+                 responseTo/FromPointAlias & requestTo/FromPointAlias parameters will be added -->
+            <parameter name="fileConfiguration" value="EncryptModule_Connector.xml" />
+        </configuration>
+
+        <!-- Settings for the ExtensionProcessor module -->
+        <configuration name="ProtocolProcessorConf">
+            <!-- Specific ExtensionProcessor module -->
+            <parameter name="class"
+                       value="eu.eidas.auth.engine.core.eidas.EidasProtocolProcessor" />
+            <!--
+            <parameter name="coreAttributeRegistryFile"
+                       value="saml-engine-eidas-attributes-TEMPLATE.xml" />
+                        -->
+            <parameter name="additionalAttributeRegistryFile"
+                       value="saml-engine-additional-attributes.xml" />
+
+            <parameter name="metadataFetcherClass"
+                       value="eu.eidas.node.auth.metadata.SpringManagedMetadataFetcher"/>
+        </configuration>
+
+        <!-- Settings for the Clock module -->
+        <configuration name="ClockConf">
+            <!-- Specific Clock module -->
+            <parameter name="class"
+                       value="eu.eidas.auth.engine.SamlEngineSystemClock" />
+        </configuration>
+	</instance>
+
+		<!-- ******************** Service-Connector ******************** -->
+
+	<instance name="Service">
+		<configuration name="SamlEngineConf">
+			<parameter name="fileConfiguration" value="SamlEngine_Service.xml" />
+		</configuration>
+
+		<configuration name="SignatureConf">
+			<parameter name="class"
+				value="eu.eidas.auth.engine.core.impl.SignSW" />
+			<parameter name="fileConfiguration" value="SignModule_Service.xml" />
+		</configuration>
+
+        <configuration name="EncryptionConf">
+            <!-- Specific signature module -->
+            <parameter name="class"
+                       value="eu.eidas.auth.engine.core.impl.EncryptionSW" />
+            <!-- Settings specific module
+                 responseTo/FromPointAlias & requestTo/FromPointAlias parameters will be added -->
+            <parameter name="fileConfiguration" value="EncryptModule_Service.xml" />
+        </configuration>
+
+        <!-- Settings for the ExtensionProcessor module -->
+        <configuration name="ProtocolProcessorConf">
+            <!-- Specific ExtensionProcessor module -->
+            <parameter name="class"
+                       value="eu.eidas.auth.engine.core.eidas.EidasProtocolProcessor" />
+            <!--
+            <parameter name="coreAttributeRegistryFile"
+                       value="saml-engine-eidas-attributes-TEMPLATE.xml" />
+                        -->
+            <parameter name="additionalAttributeRegistryFile"
+                       value="saml-engine-additional-attributes.xml" />
+
+            <parameter name="metadataFetcherClass"
+                       value="eu.eidas.node.auth.metadata.SpringManagedMetadataFetcher"/>
+        </configuration>
+
+        <!-- Settings for the Clock module -->
+        <configuration name="ClockConf">
+            <!-- Specific Clock module -->
+            <parameter name="class"
+                       value="eu.eidas.auth.engine.SamlEngineSystemClock" />
+        </configuration>
+	</instance>
+
+	
+</instances>

@@ -162,12 +162,6 @@ export class EuIdentityToFrController {
 
     const spIdentity: IOidcIdentity = idpIdentity;
 
-    /**
-     * We need to set an alias with the sub since later (findAccount) we do not have access
-     * to the sessionId, nor the interactionId.
-     */
-    await this.sessionService.setAlias(spIdentity.sub, req.sessionId);
-
     // Delete idp identity from volatile memory but keep the sub for the business logs.
     const idpIdentityReset: PartialExcept<IOidcIdentity, 'sub'> = {
       sub: idpIdentity.sub,

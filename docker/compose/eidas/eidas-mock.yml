@@ -13,6 +13,7 @@ services:
     volumes:
       - "${VOLUMES_DIR}/eidas/conf-eidas-mock:/data/conf-eidas:ro"
       - "${VOLUMES_DIR}/eidas/keystore-mock:/data/keystore:ro"
+      - "${VOLUMES_DIR}/eidas/keystore-mock/cacerts:/etc/ssl/certs/java/cacerts:ro"
       - "${VOLUMES_DIR}/log/eidas/eidas-mock:/data/log/tomcat"
       - "${VOLUMES_DIR}/log/eidas/eidas-mock:/data/log/eidas"
     environment:

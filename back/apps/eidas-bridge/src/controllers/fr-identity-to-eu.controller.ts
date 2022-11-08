@@ -6,6 +6,7 @@ import { Controller, Get, Query, Redirect, Req } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { CryptographyService } from '@fc/cryptography';
+import { CryptographyEidasService } from '@fc/cryptography-eidas';
 import { EidasResponse } from '@fc/eidas';
 import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
 import { EidasProviderSession } from '@fc/eidas-provider';
@@ -36,6 +37,7 @@ export class FrIdentityToEuController {
   /* eslint-disable-next-line max-params */
   constructor(
     private readonly crypto: CryptographyService,
+    private readonly cryptoEidas: CryptographyEidasService,
     private readonly logger: LoggerService,
     private readonly oidcClientConfig: OidcClientConfigService,
     private readonly oidcClient: OidcClientService,
@@ -221,6 +223,9 @@ export class FrIdentityToEuController {
       idpId,
     };
 
+    const { requestedAttributes, spCountryCode } =
+      await sessionEidasProvider.get('eidasRequest');
+
     const identity = await this.oidcClient.getUserInfosFromProvider(
       userInfoParams,
       req,
@@ -228,9 +233,7 @@ export class FrIdentityToEuController {
 
     await this.validateIdentity(identity);
 
-    const { requestedAttributes } = await sessionEidasProvider.get(
-      'eidasRequest',
-    );
+    identity.sub = this.computePairwisedSub(identity.sub, spCountryCode);
 
     const partialEidasResponse =
       await this.oidcToEidas.mapPartialResponseSuccess(
@@ -265,5 +268,20 @@ export class FrIdentityToEuController {
     if (errors.length) {
       throw new EidasBridgeInvalidIdentityException();
     }
+  }
+
+  /**
+   * Adapt sub with CountryCode to make it unique by country
+   * @param {string} idpSub the original sub given by Idp
+   * @param {string} spCountryCode the country code (FR, BE, DE...)
+   * @returns {string} the new Sub
+   */
+  private computePairwisedSub(idpSub: string, spCountryCode: string): string {
+    this.logger.debug(
+      `Format new Sub based on country ${spCountryCode} and sub ${idpSub}`,
+    );
+    const pairwisedSub = this.cryptoEidas.computeSubV1(spCountryCode, idpSub);
+    this.logger.trace({ spCountryCode, pairwisedSub });
+    return pairwisedSub;
   }
 }

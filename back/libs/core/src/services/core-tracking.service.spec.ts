@@ -269,31 +269,6 @@ describe('CoreTrackingService', () => {
       ).rejects.toThrow(CoreMissingContextException);
     });
 
-    it('should return informations from session', async () => {
-      // Given
-      sessionServiceMock.getAlias.mockResolvedValueOnce(sessionIdMock);
-      const contextMock = {
-        req: {
-          headers: {
-            'x-forwarded-for': ipMock,
-            'x-forwarded-source-port': sourcePortMock,
-            'x-forwarded-for-original': xForwardedForOriginalMock,
-          },
-          cookies: {
-            _interaction: interactionIdMock,
-          },
-          claims: ['foo', 'bar'],
-        },
-        // sessionId is voluntary missing
-      };
-      // When
-      const result = await service['extractContext'](contextMock);
-      // Then
-      expect(result).toEqual(extractedValueMock);
-      expect(getInteractionIdFromContextMock).toHaveBeenCalledTimes(1);
-      expect(getInteractionIdFromContextMock).toHaveBeenCalledWith(contextMock);
-    });
-
     it('should throw if interactionId is missing', async () => {
       // Given
       const errorMock = new Error('Unknown Error');

@@ -81,6 +81,7 @@ export class EidasClientService {
       spType: EidasSpTypes.PUBLIC,
       relayState: this.crypto.genRandomString(32),
       requestedAttributes,
+      spCountryCode: EidasCountries.FRANCE,
     };
 
     return eidasRequest;

@@ -241,6 +241,7 @@ describe('EidasClientService', () => {
       providerName: 'FranceConnect',
       spType: 'public',
       relayState: 'myState',
+      spCountryCode: EidasCountries.FRANCE,
     };
     const countryMock = EidasCountries.BELGIUM;
 

@@ -108,11 +108,6 @@ export class MockIdentityProviderController {
     }
 
     const spAcr = acr;
-    /**
-     * We need to set an alias with the sub since later (findAccount) we do not have access
-     * to the sessionId, nor the interactionId.
-     */
-    await this.sessionService.setAlias(spIdentity.sub, req.sessionId);
 
     await sessionOidc.set({
       spAcr,

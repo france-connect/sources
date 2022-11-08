@@ -4,157 +4,98 @@ import { t } from '@fc/i18n';
 
 import { transformServiceProvider } from './transform-service-provider.service';
 
-jest.mock('@fc/i18n');
-
 describe('transformServiceProvider', () => {
   // given
-  const serviceProviderMock = {
-    meta: {
-      permissions: ['SERVICE_PROVIDER_EDIT'],
-      urls: {
-        edit: '/edit',
-        view: '/view',
-      },
-    },
-    payload: {
-      createdAt: '2022-02-21T23:00:00.000Z',
-      datapasses: [{ remoteId: 123456 }],
-      id: '987654',
-      name: 'name',
-      organisation: { name: 'organisationName' },
-      platform: { name: 'platform' },
-      status: 'status',
-      updatedAt: '2022-05-01T22:00:00.000Z',
-    },
-    type: 'SERVICE_PROVIDER',
+  const serviceProviderItemMock = {
+    createdAt: '2022-02-21T23:00:00.000Z',
+    datapasses: [{ remoteId: 42 }],
+    id: 'd7d36b8',
+    name: 'name',
+    organisation: { name: 'organisationName' },
+    platform: { name: 'platform' },
+    status: 'status',
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should throw an Error if createdAt is not a valid datetime', () => {
-    // given
-    const createdAt = null as unknown as string;
-
-    // when
-    expect(() => {
-      transformServiceProvider({
-        ...serviceProviderMock,
-        payload: {
-          ...serviceProviderMock.payload,
-          createdAt,
-        },
-      });
-
-      // then
-    }).toThrow('Unable to parse service provider payload item');
-  });
-
-  it('should not throw an Error if createdAt is a valid datetime', () => {
-    // given
-    const createdAt = '2022-07-29T14:41:26.437Z';
-
-    // when
-    expect(() => {
-      transformServiceProvider({
-        ...serviceProviderMock,
-        payload: {
-          ...serviceProviderMock.payload,
-          createdAt,
-        },
-      });
-
-      // then
-    }).not.toThrow('Unable to parse service provider payload item');
-  });
-
   it('should return a ServiceProviderItem object', () => {
     // given
-    const expected = {
+    const expectedResult = {
       color: undefined,
-      createdAt: 'chaine traduite',
-      datapassId: 'chaine traduite',
-      id: '987654',
-      organisationName: 'organisationName',
       platformName: 'chaine traduite',
       spName: 'name',
       status: 'chaine traduite',
-      url: '/edit',
     };
 
-    // when
     mocked(t).mockReturnValue('chaine traduite');
-    const result = transformServiceProvider({
-      ...serviceProviderMock,
-    });
+
+    // when
+    const result = transformServiceProvider(serviceProviderItemMock);
 
     // then
-    expect(result).toStrictEqual(expected);
+    expect(result).toStrictEqual(expectedResult);
   });
 
-  it('should return a ServiceProviderItem object with empty datapass if no datapasses was provided', () => {
+  it('should throw an error if status is undefined', () => {
     // given
-    const expected = {
-      color: undefined,
-      createdAt: 'chaine traduite',
-      datapassId: '',
-      id: '987654',
-      organisationName: 'organisationName',
-      platformName: 'chaine traduite',
-      spName: 'name',
-      status: 'chaine traduite',
-      url: '/edit',
+    const item = { ...serviceProviderItemMock, status: undefined as unknown as string };
+
+    // when
+    expect(() => {
+      transformServiceProvider(item);
+
+      // then
+    }).toThrow(
+      'Unable to parse service provider payload item : status, platformName or name is undefined',
+    );
+  });
+
+  it('should throw an error if name is undefined', () => {
+    // given
+    const item = { ...serviceProviderItemMock, name: undefined as unknown as string };
+
+    // when
+    expect(() => {
+      transformServiceProvider(item);
+
+      // then
+    }).toThrow(
+      'Unable to parse service provider payload item : status, platformName or name is undefined',
+    );
+  });
+
+  it('should throw an error if platformName is undefined', () => {
+    // given
+    const item = {
+      ...serviceProviderItemMock,
+      platform: {
+        name: undefined as unknown as string,
+      },
     };
 
-    mocked(t).mockReturnValue('chaine traduite');
-
     // when
-    const result = transformServiceProvider({
-      ...serviceProviderMock,
-      payload: {
-        ...serviceProviderMock.payload,
-        datapasses: [],
-      },
-    });
+    expect(() => {
+      transformServiceProvider(item);
 
-    // then
-    expect(result).toStrictEqual(expected);
+      // then
+    }).toThrow(
+      'Unable to parse service provider payload item : status, platformName or name is undefined',
+    );
   });
 
-  it('should return an objetct with url = /edit when permissions includes SERVICE_PROVIDER_EDIT', () => {
-    // when
-
-    const result = transformServiceProvider(serviceProviderMock);
-
-    expect(result).toEqual(expect.objectContaining({ url: '/edit' }));
-  });
-
-  it('should return an objetct with url = /view when permissions includes SERVICE_PROVIDER_VIEW', () => {
-    // when
-
-    const result = transformServiceProvider({
-      ...serviceProviderMock,
-      meta: {
-        ...serviceProviderMock.meta,
-        permissions: ['SERVICE_PROVIDER_VIEW'],
-      },
+  it('should throw an error if t throw string', () => {
+    // given
+    mocked(t).mockImplementationOnce(() => {
+      throw undefined as unknown as Error;
     });
 
-    // then
-    expect(result).toEqual(expect.objectContaining({ url: '/view' }));
-  });
+    // when
+    expect(() => {
+      transformServiceProvider(serviceProviderItemMock);
 
-  it('should return an objetct with url = /edit when permissions includes SERVICE_PROVIDER_VIEW and SERVICE_PROVIDER_EDIT', () => {
-    const result = transformServiceProvider({
-      ...serviceProviderMock,
-      meta: {
-        ...serviceProviderMock.meta,
-        permissions: ['SERVICE_PROVIDER_VIEW', 'SERVICE_PROVIDER_EDIT'],
-      },
-    });
-
-    // then
-    expect(result).toEqual(expect.objectContaining({ url: '/edit' }));
+      // then
+    }).toThrow('Unable to parse service provider payload item ');
   });
 });

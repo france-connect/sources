@@ -20,4 +20,5 @@
 
 	<entry key="EncryptTo.CB">true</entry>
 
+	<entry key="EncryptTo.BE">true</entry>
 </properties>

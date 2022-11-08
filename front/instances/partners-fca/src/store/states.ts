@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 
 // declarative file
-import { serviceProviderItemState, serviceProvidersState } from '@fc/service-providers';
+import { serviceProvidersState, serviceProviderState } from '@fc/partners';
 
 export const statesMap = {
   ...serviceProvidersState,
-  ...serviceProviderItemState,
+  ...serviceProviderState,
 };

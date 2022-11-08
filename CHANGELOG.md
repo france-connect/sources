@@ -4,34 +4,75 @@
 
 **🔈 The odd versions are not released into production.**
 
-## v3.113 && v3.114.0 
+## v3.117 && v3.118.0
 
-- [FranceConnect+]  
+### Features
+
+- [FranceConnect+]
+  - Added link to support form when an error occurs
+- [eIDASBridge]
+  - Sub is now pairwised with the service provider country code
+
+### Hardening & QA
+
+- [UserDashboard]
+  - Added BDD tests to validate the notification sent when the IdPs preferences are changed
+- [SupportForm]
+  - Added platform name to the contact form to differentiate FC from FC+
+- Added cache control on metadata routes
+- Updated local stack app certificates
+
+### Not yet in production (futures apps / features)
+
+- [PartnerDashboard]
+  - Moved "service providers" components into the partners directory
+
+## v3.115 && v3.116.0
+
+### Hardening & QA
+
+- Updated react-router-dom to v6
+- [FranceConnect+]
+  - Removed unused "phone_number" and "address" claims
+- [UserDashboard]
+  - Added business logs
+  - Prevented users from blocking the currently used IdP
+
+### Not yet in production (futures apps / features)
+
+- [PartnerDashboard]
+  - Added pagination on mobile viewport
+  - Added service providers details page
+
+## v3.113 && v3.114.0
+
+- [FranceConnect+]
   - Added port and client provided source IP to business logs
 
+## v3.109 && v3.110.0
 
-## v3.109 && v3.110.0 
+- [UserDashboard]
 
-- [UserDashboard] 
   - Fixed a display glitch in mobile menu
 
 - [FranceConnect+]
+
   - Updated link to tracks application in notification email
 
 - Refactored folders hierarchy to improve code sharing through react applications
 
-## v3.107 && v3.108.0 
+## v3.107 && v3.108.0
 
 - [UserDashboard]
- - Improved control on user inputs
- - Improved development stack defaults fixtures
- - Improved UI, especially on mobile
- - Improved UX on expired session
+  - Improved control on user inputs
+  - Improved development stack defaults fixtures
+  - Improved UI, especially on mobile
+  - Improved UX on expired session
 
 ## v3.105.0 && v3.106.0
 
 - Upgraded NPM dependencies
-- [UserDashboard] 
+- [UserDashboard]
   - Fixed claim / label mapping that would cause the application to crash 🐛
 
 ## v3.103.0 && v3.104.0
@@ -50,6 +91,7 @@
   - Splitted a MongoDb consumer per platform (FranceConnect low and FranceConnect high level of assurance) to provide a better network isolation
   - Added a warning message when a user disables all his idp to ensure he has at least one idp to connect to
   - Added an information message in order for the user to explicitly decide whether or not the future IdPs should be authorized when starting to block IdPs in the user preferences.
+
 ## v3.99.0 && v3.100.0
 
 ### Cleaning & Tooling

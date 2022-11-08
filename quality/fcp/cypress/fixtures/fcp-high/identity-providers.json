@@ -2,6 +2,7 @@
   {
     "idpId": "fip1-high",
     "name": "fip1-high",
+    "title": "IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt",
     "descriptions": [
       "par défaut",
       "actif",
@@ -24,6 +25,7 @@
   {
     "idpId": "fip2-high",
     "name": "fip2-high",
+    "title": "IDP2 - Identity Provider - eIDAS élevé - nodiscov - nocrypt",
     "descriptions": ["eidas 3 - nodiscov - crypted (none) - signed (RS256)"],
     "mocked": true,
     "usable": true,
@@ -41,6 +43,7 @@
   {
     "idpId": "fip3-desactive-visible",
     "name": "fip3-desactive-visible",
+    "title": "FIP3 - FI désactivé mais visible",
     "descriptions": ["désactivé et visible"],
     "mocked": true,
     "usable": false,
@@ -58,6 +61,7 @@
   {
     "idpId": "fip4-desactive-invisible",
     "name": "fip4-desactive-invisible",
+    "title": "FIP4 - FI désactivé et invisible",
     "descriptions": ["désactivé et non visible"],
     "mocked": true,
     "usable": false,
@@ -75,6 +79,7 @@
   {
     "idpId": "fip5-active-invisible",
     "name": "fip5-active-invisible",
+    "title": "FIP5 - FI activé et invisible",
     "descriptions": ["actif et non visible"],
     "mocked": true,
     "usable": false,
@@ -92,6 +97,8 @@
   {
     "idpId": "fip8-high",
     "name": "fip8-high",
+    "title":
+      "IDP8 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
     "descriptions": [
       "non whitelisté",
       "blacklisté"
@@ -111,7 +118,9 @@
   },
   {
     "idpId": "fip13-high",
-    "name": "fip13-high",
+    "name": "fip13-high", 
+    "title":
+      "IDP13 - Identity Provider - eIDAS élevé - crypted (ECDH-ES + A256GCM) - signed (ES256)",
     "descriptions": ["eidas 3 - crypted (ECDH-ES + A256GCM) - signed (ES256)"],
     "mocked": true,
     "usable": true,
@@ -129,6 +138,8 @@
   {
     "idpId": "fip14-high",
     "name": "fip14-high",
+    "title":
+      "IDP14 - Identity Provider - eIDAS élevé - crypted (RSA-OAEP + A256GCM) - signed (RS256)",
     "descriptions": ["eidas 3 - crypted (RSA-OAEP + A256GCM) - signed (RS256)"],
     "mocked": true,
     "usable": true,
@@ -146,6 +157,8 @@
   {
     "idpId": "fip15-high",
     "name": "fip15-high",
+    "title":
+      "IDP15 - Identity Provider - eIDAS substantiel - crypted (RSA-OAEP + A256GCM) - signed (ES256)",
     "descriptions": ["eidas 2 - crypted (RSA-OAEP + A256GCM) - signed (ES256)"],
     "mocked": true,
     "usable": true,
@@ -163,6 +176,8 @@
   {
     "idpId": "fip16-high",
     "name": "fip16-high",
+    "title":
+      "IDP16 - Identity Provider - eIDAS substantiel - crypted (ECDH-ES + A256GCM) - signed (RS256)",
     "descriptions": ["eidas 2 - crypted (ECDH-ES + A256GCM) - signed (RS256)"],
     "mocked": true,
     "usable": true,
@@ -180,6 +195,8 @@
   {
     "idpId": "fip17-high",
     "name": "fip17-high",
+    "title":
+      "IDP17 - Identity Provider - eIDAS substantiel - crypted (none) - signed (ES256)",
     "descriptions": ["eidas 2 - crypted (none) - signed (ES256)"],
     "mocked": true,
     "usable": true,

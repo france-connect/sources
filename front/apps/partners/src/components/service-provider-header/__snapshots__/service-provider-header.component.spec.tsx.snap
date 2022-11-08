@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceProvidersDetailsHeaderComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-mb-2w"
+  >
+    <span>
+      ServiceProvidersDetailsPage.returnButton
+    </span>
+  </div>
+  <div>
+    BadgeComponent
+  </div>
+  <span
+    class="fr-ml-2w"
+    data-testid="ServiceProviderHeaderComponent-platform"
+  >
+    FranceConnect
+  </span>
+  <h1
+    class="fr-mt-1w text-left"
+    data-testid="ServiceProviderHeaderComponent-spName"
+  >
+    Service Provider - Sandbox
+  </h1>
+</div>
+`;

@@ -4,6 +4,7 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   Param,
   Post,
   Query,
@@ -132,6 +133,7 @@ export class OidcClientController {
    *  - pub keys orverrided by keys from HSM
    */
   @Get(OidcClientRoutes.WELL_KNOWN_KEYS)
+  @Header('cache-control', 'public, max-age=600')
   async getWellKnownKeys() {
     this.logger.trace({
       method: 'GET',

@@ -59,6 +59,10 @@ export class CoreService {
     // extract info from panva context to populate business event context
     const { ip, originalAddresses, port } = this.getNetworkInfoFromHeaders(ctx);
 
+    // Retrieve the sessionId from the oidc context (stored in accountId) or from the request
+    const sessionId =
+      ctx.oidc?.entities?.Account?.accountId || ctx.req.sessionId;
+
     const eventContext: IEventContext = {
       fc: { interactionId },
       headers: {
@@ -66,6 +70,7 @@ export class CoreService {
         'x-forwarded-source-port': port,
         'x-forwarded-for-original': originalAddresses,
       },
+      sessionId,
     };
 
     this.logger.trace(eventContext);

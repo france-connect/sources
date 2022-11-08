@@ -5,6 +5,7 @@ import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { CryptographyModule } from '@fc/cryptography';
+import { CryptographyEidasModule } from '@fc/cryptography-eidas';
 import { EidasClientController, EidasClientModule } from '@fc/eidas-client';
 import { EidasCountryModule } from '@fc/eidas-country';
 import { EidasOidcMapperModule } from '@fc/eidas-oidc-mapper';
@@ -68,6 +69,7 @@ const oidcProviderModule = OidcProviderModule.register(
     oidcClientModule,
     oidcProviderModule,
     CryptographyModule,
+    CryptographyEidasModule,
     EidasOidcMapperModule,
     EidasCountryModule,
   ],

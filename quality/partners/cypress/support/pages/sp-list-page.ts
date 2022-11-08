@@ -15,7 +15,7 @@ export default class SPListPage {
   }
 
   getAllServiceProviders(): ChainableElement {
-    return cy.get('[data-testid="ServiceProviderItemComponent"]');
+    return cy.get('[data-testid="ServiceProvidersListItemComponent"]');
   }
 
   // Index starting with 0
@@ -33,43 +33,43 @@ class ServiceProviderComponent {
 
   getSpContainer(): ChainableElement {
     return cy
-      .get(`[data-testid="ServiceProviderItemComponent"]`)
+      .get(`[data-testid="ServiceProvidersListItemComponent"]`)
       .eq(this.index);
   }
 
   getSpBadge(): ChainableElement {
     return this.getSpContainer().find(
-      '[data-testid="ServiceProviderItemComponent-badge"]',
+      '[data-testid="ServiceProvidersListItemComponent-badge"]',
     );
   }
 
   getSpName(): ChainableElement {
     return this.getSpContainer().find(
-      '[data-testid="ServiceProviderItemComponent-spName"]',
+      '[data-testid="ServiceProvidersListItemComponent-spName"]',
     );
   }
 
   getOrganisationName(): ChainableElement {
     return this.getSpContainer().find(
-      '[data-testid="ServiceProviderItemComponent-organisationName"]',
+      '[data-testid="ServiceProvidersListItemComponent-organisationName"]',
     );
   }
 
   getPlatformName(): ChainableElement {
     return this.getSpContainer().find(
-      '[data-testid="ServiceProviderItemComponent-platform"]',
+      '[data-testid="ServiceProvidersListItemComponent-platform"]',
     );
   }
 
   getDatapassId(): ChainableElement {
     return this.getSpContainer().find(
-      '[data-testid="ServiceProviderItemComponent-datapassId"]',
+      '[data-testid="ServiceProvidersListItemComponent-datapassId"]',
     );
   }
 
   getCreationDate(): ChainableElement {
     return this.getSpContainer().find(
-      '[data-testid="ServiceProviderItemComponent-createdAt"]',
+      '[data-testid="ServiceProvidersListItemComponent-createdAt"]',
     );
   }
 

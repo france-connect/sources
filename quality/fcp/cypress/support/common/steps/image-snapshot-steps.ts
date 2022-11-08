@@ -20,6 +20,10 @@ const blackout = [
     selector: '#tracks-list button [data-testid="ClaimsComponent-date-label"]',
     width: 275,
   },
+  {
+    selector: '[data-testid="updateidpsettings-date"]',
+    width: 275,
+  },
 ];
 const blackoutDiv = (width) => {
   const style = width ? ` style="width: ${width}px"` : '';

@@ -25,6 +25,10 @@
     "Elasticsearch_TRACKS_INDEX": "fc_tracks",
     "Elasticsearch_NODES": "[\"http://elasticsearch:9200\",\"https://elasticsearch:9200\"]",
     "Elasticsearch_USERNAME": "docker-stack",
-    "Elasticsearch_PASSWORD": "docker-stack"
+    "Elasticsearch_PASSWORD": "docker-stack",
+    "MAILDEV_PROTOCOL": "https",
+    "MAILDEV_HOST": "maildev.docker.dev-franceconnect.fr",
+    "MAILDEV_SMTP_PORT": "1025",
+    "MAILDEV_API_PORT": "443"
   }
 }

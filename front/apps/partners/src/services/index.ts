@@ -2,4 +2,4 @@
 
 // declarative file
 export * from './transform-service-provider.service';
-export * from './transform-service-provider-item.service';
+export * from './transform-service-providers-list.service';

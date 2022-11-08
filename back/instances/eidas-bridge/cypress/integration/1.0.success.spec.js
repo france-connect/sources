@@ -32,7 +32,7 @@ describe('Successful scenarios (FR Citizen / EU Service Provider)', () => {
         {
           name: 'PersonIdentifier',
           value:
-            '[FR/CB/8b6b83e889da9cdfd7fcf2b6711eb76d19ec0f5efff59519b87c133aa3696761v1]',
+            '[FR/CB/9b0faf78b68fbc6aa46367d520d1aa5f1138a72e1cdb4737b183ce962be62362v1]',
         },
         {
           name: 'PlaceOfBirth',
@@ -59,7 +59,7 @@ describe('Successful scenarios (FR Citizen / EU Service Provider)', () => {
         {
           name: 'PersonIdentifier',
           value:
-            '[FR/CB/78b6eaf25004bd40b8105be6281d633552fd59b8c941ae23bbdcd0e2fbcb6bdev1]',
+            '[FR/CB/4c48ec450b43404aa190ceae188831c2a5bb277c7a57debe07646b0d1c857d11v1]',
         },
         {
           name: 'PlaceOfBirth',
@@ -86,7 +86,7 @@ describe('Successful scenarios (FR Citizen / EU Service Provider)', () => {
         {
           name: 'PersonIdentifier',
           value:
-            '[FR/CB/064dad4319eaedf9ac46ded64c06c8b66beea51d7f52e6ecd9e5d89800c1bdbfv1]',
+            '[FR/CB/8f63b4639d8b1a72c35d99e7fe4d888c262d58dcf5c2a1ace568303560290ad8v1]',
         },
         { name: 'PlaceOfBirth', value: '[Toulouse - 31555, FRANCE (FR)]' },
       ],
@@ -116,7 +116,7 @@ describe('Successful scenarios (FR Citizen / EU Service Provider)', () => {
         {
           name: 'PersonIdentifier',
           value:
-            '[FR/CB/7426f67d93243ce4ef90c65a0584cb76e72778cb5086b29f998df4b7d0d37c78v1]',
+            '[FR/CB/281ca116a31836f14ca477289cad82c6e02e6815a50cf7a8a932dcd1ce69fb6dv1]',
         },
         {
           name: 'PlaceOfBirth',
@@ -149,7 +149,7 @@ describe('Successful scenarios (FR Citizen / EU Service Provider)', () => {
         {
           name: 'PersonIdentifier',
           value:
-            '[FR/CB/943a6546c0b61652bf5bd4151e40065414e06a942b32dcf858c5835433a22085v1]',
+            '[FR/CB/cbf12654369156563d7ab8aae18295501693804c81ec78191ca324e19bca626ev1]',
         },
         { name: 'PlaceOfBirth', value: '[JAPON (JP)]' },
       ],
@@ -179,7 +179,7 @@ describe('Successful scenarios (FR Citizen / EU Service Provider)', () => {
         {
           name: 'PersonIdentifier',
           value:
-            '[FR/CB/ea20614e1c76ec0b65b53e92e51a243a257d4246a5ba0820e8452fd472f7e31bv1]',
+            '[FR/CB/16b7591901ff97c176159512f070366a6da0ea1d719e135738661a0ab59b4d73v1]',
         },
         { name: 'PlaceOfBirth', value: '[JAPON (JP)]' },
       ],

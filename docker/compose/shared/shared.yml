@@ -79,6 +79,7 @@ services:
           - eidas-bridge.docker.dev-franceconnect.fr
           - eidas-fr.docker.dev-franceconnect.fr
           - eidas-mock.docker.dev-franceconnect.fr
+          - eidas-be.docker.dev-franceconnect.fr
           # Partners
           - partners-fcp.docker.dev-franceconnect.fr
           - partners-fca.docker.dev-franceconnect.fr

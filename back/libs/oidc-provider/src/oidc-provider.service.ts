@@ -204,7 +204,7 @@ export class OidcProviderService {
    * @param {OidcSession} session Object that contains the session info
    */
   async finishInteraction(req: any, res: any, session: OidcSession) {
-    const { spAcr: acr, amr, spIdentity }: OidcClientSession = session;
+    const { spAcr: acr, amr }: OidcClientSession = session;
     /**
      * Build Interaction results
      * For all available options, refer to `oidc-provider` documentation:
@@ -215,16 +215,20 @@ export class OidcProviderService {
       this.provider,
       req,
       res,
-      spIdentity.sub,
+      req.sessionId,
     );
 
     const grantId = await this.grantService.saveGrant(grant);
 
+    /**
+     * We use `sessionId` as `accountId` in order to to easily retrieve the session for back channel requests
+     * @see OidcProviderConfigService.findAccount()
+     */
     const result = {
       login: {
         amr,
         acr,
-        accountId: spIdentity.sub,
+        accountId: req.sessionId,
         ts: Math.floor(Date.now() / 1000),
         remember: false,
       },

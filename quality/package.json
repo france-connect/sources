@@ -31,6 +31,7 @@
     "cypress-axe": "^0.13.0",
     "cypress-cucumber-preprocessor": "^4.3.0",
     "cypress-image-snapshot": "^4.0.1",
+    "cypress-maildev": "^1.2.0",
     "cypress-network-idle": "^1.10.0",
     "cypress-template-fixtures": "^1.0.3",
     "cypress-xpath": "^1.6.2",

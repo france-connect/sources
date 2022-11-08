@@ -81,7 +81,7 @@
 
 
     <!-- Number of known Proxy-Service -->
-	<entry key="service.number">2</entry>
+	<entry key="service.number">3</entry>
 
 	<entry key="service1.id">FR</entry>
 	<entry key="service1.name">EIDAS-FR</entry>
@@ -96,6 +96,14 @@
 	<entry key="service2.skew.notbefore">0</entry>
 	<entry key="service2.skew.notonorafter">0</entry>
 	<entry key="service2.metadata.url">https://eidas-mock.docker.dev-franceconnect.fr/EidasNode/ServiceMetadata</entry>
+
+	<entry key="service3.id">BE</entry>
+	<!-- Name of the second Service -->
+	<entry key="service3.name">EIDAS-BE</entry>
+	<!-- URL of the first Service -->
+	<entry key="service3.skew.notbefore">0</entry>
+	<entry key="service3.skew.notonorafter">0</entry>
+	<entry key="service3.metadata.url">https://eidas-be.docker.dev-franceconnect.fr/EidasNode/ServiceMetadata</entry>
 
 	<!-- SECURITY POLICY -->
     <!-- uri used for the CSP reporting feature-->

@@ -73,7 +73,7 @@ describe('Identity Check', () => {
         {
           name: 'PersonIdentifier',
           value:
-            '[FR/CB/df407c66a82320d66cadd2b8e4c475e48c7f8bd04c71a8355280975e8d0a4839v1]',
+            '[FR/CB/142e30ea4d2cb05200b65e8f47a816e38a7945e219b3250062dc76bc714a2625v1]',
         },
         {
           name: 'PlaceOfBirth',
@@ -85,6 +85,51 @@ describe('Identity Check', () => {
       cy.get('.table-responsive > table.table.table-striped')
         .contains('unknown_prop_for_test')
         .should('not.exist');
+    });
+
+    it('should obtain 2 differents subs for a single user who connects from 2 differents countries with idp FR', () => {
+      basicSuccessScenarioEuSpFrIdp({
+        logWith: {
+          idpId: `${Cypress.env('IDP_NAME')}1-high`,
+          login: 'test',
+        },
+        eidasRequest: {
+          fsURL: 'MOCK_EIDAS_SP_URL',
+        },
+      });
+
+      const CBMock = {
+        expectedIdentity: [
+          {
+            name: 'PersonIdentifier',
+            value:
+              '[FR/CB/133ac783e6e7d20514937072436a0500178f1cf254924905b6d24a95655b8317v1]',
+          },
+        ],
+      };
+      checkInformationsEuSpFrIdp(CBMock);
+
+      basicSuccessScenarioEuSpFrIdp({
+        logWith: {
+          idpId: `${Cypress.env('IDP_NAME')}1-high`,
+          login: 'test',
+        },
+        eidasRequest: {
+          fsURL: 'MOCK_EIDAS_SP2_URL',
+        },
+      });
+
+      const BEMock = {
+        expectedIdentity: [
+          {
+            name: 'PersonIdentifier',
+            value:
+              '[FR/BE/229dc9482a6fcbf16ff5255e2d0a8498d125bab1a416e4d157ae77675902b9d0v1]',
+          },
+        ],
+      };
+
+      checkInformationsEuSpFrIdp(BEMock);
     });
   });
 

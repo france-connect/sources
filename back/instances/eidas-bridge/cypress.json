@@ -10,6 +10,7 @@
     "CORE_ROOT_URL": "https://core-fcp-high.docker.dev-franceconnect.fr",
 
     "MOCK_EIDAS_SP_URL": "https://eidas-mock.docker.dev-franceconnect.fr/SP/populateIndexPage",
+    "MOCK_EIDAS_SP2_URL": "https://eidas-be.docker.dev-franceconnect.fr/SP/populateIndexPage",
 
     "BRIDGE_ROOT_URL": "https://eidas-bridge.docker.dev-franceconnect.fr",
 

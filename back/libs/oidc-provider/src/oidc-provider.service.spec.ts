@@ -256,6 +256,7 @@ describe('OidcProviderService', () => {
     // Given
     const reqMock = {
       fc: { interactionId: 'interactiondMockValue' },
+      sessionId: 'sessionIdMockedValue',
     };
     const resMock = {};
 
@@ -310,7 +311,7 @@ describe('OidcProviderService', () => {
           grantId: grantIdMock,
         },
         login: {
-          accountId: spIdentityMock.sub,
+          accountId: reqMock.sessionId,
           acr: spAcrMock,
           amr: amrValueMock,
           ts: expect.any(Number),
@@ -329,7 +330,7 @@ describe('OidcProviderService', () => {
         service.getProvider(),
         reqMock,
         resMock,
-        spIdentityMock.sub,
+        reqMock.sessionId,
       );
       expect(oidcProviderGrantServiceMock.saveGrant).toHaveBeenCalledTimes(1);
       expect(oidcProviderGrantServiceMock.saveGrant).toHaveBeenCalledWith(

@@ -5,6 +5,7 @@ import { Type } from 'class-transformer';
 import {
   IsArray,
   IsIn,
+  IsNumber,
   IsOptional,
   IsString,
   MinLength,
@@ -53,6 +54,10 @@ export class AppConfig {
   @IsString({ each: true })
   @IsArray()
   readonly assetsPaths?: string[];
+
+  @IsOptional()
+  @IsNumber()
+  readonly assetsCacheTtl?: number;
 
   @IsOptional()
   @IsString({ each: true })

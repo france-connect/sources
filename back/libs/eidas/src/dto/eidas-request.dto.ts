@@ -55,4 +55,8 @@ export class EidasRequest {
   @IsArray()
   @IsEnum(EidasAttributes, { each: true })
   requestedAttributes: EidasAttributes[];
+
+  @IsString()
+  @IsEnum(EidasCountries)
+  spCountryCode: EidasCountries;
 }

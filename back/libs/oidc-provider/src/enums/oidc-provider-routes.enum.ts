@@ -12,4 +12,5 @@ export enum OidcProviderRoutes {
   REVOCATION = '/token/revocation',
   TOKEN = '/token',
   USERINFO = '/userinfo',
+  OPENID_CONFIGURATION = '/.well-known/openid-configuration',
 }

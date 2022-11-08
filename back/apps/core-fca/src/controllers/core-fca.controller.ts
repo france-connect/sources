@@ -305,12 +305,6 @@ export class CoreFcaController {
       throw new CoreMissingIdentityException();
     }
 
-    /**
-     * We need to set an alias with the sub since later (findAccount) we do not have access
-     * to the sessionId, nor the interactionId.
-     */
-    await this.sessionService.setAlias(spIdentity.sub, req.sessionId);
-
     this.logger.trace({
       method: 'GET',
       name: 'CoreRoutes.INTERACTION_LOGIN',

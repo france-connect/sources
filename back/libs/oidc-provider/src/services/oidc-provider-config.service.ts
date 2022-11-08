@@ -140,14 +140,10 @@ export class OidcProviderConfigService {
    * More documentation can be found in oidc-provider repo.
    * @see https://github.com/panva/node-oidc-provider/blob/master/docs/README.md#accounts
    */
-  private async findAccount(ctx: any, interactionId: string) {
+  private async findAccount(ctx: any, sessionId: string) {
     this.logger.debug('OidcProviderConfigService.findAccount');
 
     try {
-      const sessionId: string = await this.sessionService.getAlias(
-        interactionId,
-      );
-
       const boundSessionContext: ISessionBoundContext = {
         sessionId,
         moduleName: 'OidcClient',
@@ -158,7 +154,11 @@ export class OidcProviderConfigService {
       );
 
       const account = {
-        accountId: interactionId,
+        /**
+         * We used the `sessionId` as `accountId` identifier when building the grant
+         * @see OidcProviderService.finishInteraction()
+         */
+        accountId: sessionId,
         async claims() {
           return spIdentity;
         },

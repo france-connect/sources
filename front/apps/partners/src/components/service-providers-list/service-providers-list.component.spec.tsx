@@ -2,14 +2,14 @@ import { render } from '@testing-library/react';
 import { mocked } from 'jest-mock';
 
 import { AlertComponent, AlertTypes } from '@fc/dsfr';
-import { ServiceProviderItemComponent } from '@fc/service-providers';
 
-import { transformServiceProvider } from '../../services';
+import { transformServiceProvidersList } from '../../services';
+import { ServiceProvidersListItemComponent } from '../service-providers-list-item';
 import { ServiceProvidersListComponent } from './service-providers-list.component';
 
-jest.mock('../../services');
 jest.mock('@fc/dsfr');
-jest.mock('@fc/service-providers');
+jest.mock('../../services');
+jest.mock('../service-providers-list-item/service-providers-list-item.component');
 
 describe('ServiceProvidersListComponent', () => {
   // given
@@ -85,7 +85,7 @@ describe('ServiceProvidersListComponent', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    mocked(transformServiceProvider)
+    mocked(transformServiceProvidersList)
       .mockReturnValueOnce({
         ...serviceProviderMock,
         datapassId: 'Datapass N°1234',
@@ -139,13 +139,13 @@ describe('ServiceProvidersListComponent', () => {
     );
   });
 
-  it('should call transformServiceProvider 3 times with datapasses parameters', () => {
+  it('should call transformServiceProvidersList 3 times with datapasses parameters', () => {
     // when
     render(<ServiceProvidersListComponent items={storeProvidersFixtures} totalItems={3} />);
 
     // then
-    expect(transformServiceProvider).toHaveBeenCalledTimes(3);
-    expect(transformServiceProvider).toHaveBeenNthCalledWith(
+    expect(transformServiceProvidersList).toHaveBeenCalledTimes(3);
+    expect(transformServiceProvidersList).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({
         payload: expect.objectContaining({ datapasses: [{ remoteId: 1234 }] }),
@@ -153,7 +153,7 @@ describe('ServiceProvidersListComponent', () => {
       0,
       storeProvidersFixtures,
     );
-    expect(transformServiceProvider).toHaveBeenNthCalledWith(
+    expect(transformServiceProvidersList).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({
         payload: expect.objectContaining({ datapasses: [{ remoteId: 5678 }] }),
@@ -161,7 +161,7 @@ describe('ServiceProvidersListComponent', () => {
       1,
       storeProvidersFixtures,
     );
-    expect(transformServiceProvider).toHaveBeenNthCalledWith(
+    expect(transformServiceProvidersList).toHaveBeenNthCalledWith(
       3,
       expect.objectContaining({
         payload: expect.objectContaining({ datapasses: [{ remoteId: 9101112 }] }),
@@ -171,36 +171,36 @@ describe('ServiceProvidersListComponent', () => {
     );
   });
 
-  it('should call ServiceProviderItemComponent 3 times with datapass parameters', () => {
+  it('should call ServiceProvidersListItemComponent 3 times with datapass parameters', () => {
     // when
     render(<ServiceProvidersListComponent items={storeProvidersFixtures} totalItems={3} />);
 
     // then
-    expect(ServiceProviderItemComponent).toHaveBeenCalledTimes(3);
-    expect(ServiceProviderItemComponent).toHaveBeenNthCalledWith(
+    expect(ServiceProvidersListItemComponent).toHaveBeenCalledTimes(3);
+    expect(ServiceProvidersListItemComponent).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({ datapassId: 'Datapass N°1234' }),
       {},
     );
-    expect(ServiceProviderItemComponent).toHaveBeenNthCalledWith(
+    expect(ServiceProvidersListItemComponent).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({ datapassId: 'Datapass N°5678' }),
       {},
     );
-    expect(ServiceProviderItemComponent).toHaveBeenNthCalledWith(
+    expect(ServiceProvidersListItemComponent).toHaveBeenNthCalledWith(
       3,
       expect.objectContaining({ datapassId: 'Datapass N°9101112' }),
       {},
     );
   });
 
-  it('should call transformServiceProvider 3 times with permissions and url parameters', () => {
+  it('should call transformServiceProvidersList 3 times with permissions and url parameters', () => {
     // when
     render(<ServiceProvidersListComponent items={storeProvidersFixtures} totalItems={3} />);
 
     // then
-    expect(transformServiceProvider).toHaveBeenCalledTimes(3);
-    expect(transformServiceProvider).toHaveBeenNthCalledWith(
+    expect(transformServiceProvidersList).toHaveBeenCalledTimes(3);
+    expect(transformServiceProvidersList).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({
         meta: expect.objectContaining({
@@ -214,7 +214,7 @@ describe('ServiceProvidersListComponent', () => {
       0,
       storeProvidersFixtures,
     );
-    expect(transformServiceProvider).toHaveBeenNthCalledWith(
+    expect(transformServiceProvidersList).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({
         meta: expect.objectContaining({
@@ -228,7 +228,7 @@ describe('ServiceProvidersListComponent', () => {
       1,
       storeProvidersFixtures,
     );
-    expect(transformServiceProvider).toHaveBeenNthCalledWith(
+    expect(transformServiceProvidersList).toHaveBeenNthCalledWith(
       3,
       expect.objectContaining({
         meta: expect.objectContaining({
@@ -244,23 +244,23 @@ describe('ServiceProvidersListComponent', () => {
     );
   });
 
-  it('should call ServiceProviderItemComponent 3 times with url parameters', () => {
+  it('should call ServiceProvidersListItemComponent 3 times with url parameters', () => {
     // when
     render(<ServiceProvidersListComponent items={storeProvidersFixtures} totalItems={3} />);
 
     // then
-    expect(ServiceProviderItemComponent).toHaveBeenCalledTimes(3);
-    expect(ServiceProviderItemComponent).toHaveBeenNthCalledWith(
+    expect(ServiceProvidersListItemComponent).toHaveBeenCalledTimes(3);
+    expect(ServiceProvidersListItemComponent).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({ url: '/edit' }),
       {},
     );
-    expect(ServiceProviderItemComponent).toHaveBeenNthCalledWith(
+    expect(ServiceProvidersListItemComponent).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({ url: '/view' }),
       {},
     );
-    expect(ServiceProviderItemComponent).toHaveBeenNthCalledWith(
+    expect(ServiceProvidersListItemComponent).toHaveBeenNthCalledWith(
       3,
       expect.objectContaining({ url: '/edit' }),
       {},

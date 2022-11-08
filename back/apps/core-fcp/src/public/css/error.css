@@ -50,6 +50,22 @@ main {
   margin-top: 16px;
 }
 
+#form-link-button {
+  background-color: #034ea2;
+  border-radius: 4px;
+  width: 288px;
+  height: 64px;
+  margin: 24px auto 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+  cursor: pointer;
+}
+
 @media screen and (min-width: 576px) {
  .list-container {
   margin: 40px auto 0;
@@ -60,4 +76,15 @@ main {
   margin: 24px auto 0;
   max-width: 600px;
  }
+
+ #form-link-button {
+  width: auto;
+ }
+}
+
+@media screen and (min-width: 768px) {
+  #form-link-button {
+    width: 318px;
+    margin: 24px auto 96px;
+  }
 }

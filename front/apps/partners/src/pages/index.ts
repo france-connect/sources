@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
 // declarative file
-export * from './service-providers-details-edit';
-export * from './service-providers-details-view';
-export * from './service-providers-page';
+export * from './service-provider/service-provider-edit';
+export * from './service-provider/service-provider-view';
+export * from './service-providers';

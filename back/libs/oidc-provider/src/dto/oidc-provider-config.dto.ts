@@ -29,7 +29,6 @@ import {
   SigningAlgorithmWithNone,
   SubjectTypes,
   SymmetricSigningAlgorithm,
-  TTLFunction,
 } from 'oidc-provider';
 
 import { OidcProviderPrompt, OidcProviderRoutes } from '../enums';
@@ -217,19 +216,22 @@ class Features {
 
 class Ttl {
   @IsNumber()
-  readonly AccessToken: TTLFunction<unknown> | number;
+  readonly AccessToken: number;
 
   @IsNumber()
-  readonly AuthorizationCode: TTLFunction<unknown> | number;
+  readonly AuthorizationCode: number;
 
   @IsNumber()
-  readonly IdToken: TTLFunction<unknown> | number;
+  readonly IdToken: number;
 
   @IsNumber()
-  readonly Interaction: TTLFunction<unknown> | number;
+  readonly Interaction: number;
 
   @IsNumber()
-  readonly Session: TTLFunction<unknown> | number;
+  readonly Session: number;
+
+  @IsNumber()
+  readonly Grant: number;
 
   [key: string]: unknown;
 }

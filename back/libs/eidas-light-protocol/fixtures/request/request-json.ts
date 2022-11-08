@@ -8,6 +8,7 @@ import {
 import { EidasCountries } from '@fc/eidas-country';
 
 export const requestJsonMock: EidasRequest = {
+  spCountryCode: EidasCountries.FRANCE,
   citizenCountryCode: EidasCountries.BELGIUM,
   id: 'Auduye7263',
   issuer: 'EIDASBridge',

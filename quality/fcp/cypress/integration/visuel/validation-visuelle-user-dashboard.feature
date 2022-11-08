@@ -51,3 +51,29 @@ Fonctionnalité: Validation Visuelle - User Dashboard
     Et je clique sur le lien gérer mes accés dans le menu de navigation mobile
     Alors je suis redirigé vers la page gestion des accès du dashboard usager
     Et la copie d'écran "udPreferences" correspond à la page actuelle sur "mobile"
+  
+  Plan du Scénario: Validation Visuelle - Mail de modification des Préférences FI sur <device>
+    Etant donné que j'utilise un compte usager "pour le test de préférences FI"
+    Et que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page d'accueil du dashboard usager
+    Et que je me connecte au dashboard usager
+    Et que je suis redirigé vers la page historique du dashboard usager
+    Et que je navigue directement vers la page gestion des accès du dashboard usager
+    Et que je suis sur la page gestion des accès du dashboard usager
+    Et que je réinitialise les préférences de la configuration par défaut
+    Et que je supprime les mails envoyés à l'usager
+    Et que j'utilise le fournisseur d'identité "pour le test de préférences FI"
+    Et que je décide de bloquer le fournisseur d'identité
+    Et que je décide d'autoriser les futurs fournisseurs d'identité par défaut
+    Et que je confirme le message "autorisation des futurs fournisseurs d'identité"
+    Quand je clique sur le bouton "enregistrer mes réglages"
+    Alors le message "notification de modifications envoyée" est affiché
+    Et le mail "modification de préférences FI" est envoyé
+    Et la copie d'écran "udPreferencesMail" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |

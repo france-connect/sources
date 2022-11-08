@@ -44,7 +44,7 @@ export function getEventsMap(urlPrefix: string): IEventMap {
       category: EventsCategories.DISCOVERY,
       event: 'IDP_REQUESTED_FC_JWKS',
       exceptions: [],
-      route: `${urlPrefix}/client/.well-known/jwks`,
+      route: `${urlPrefix}/client/.well-known/keys`,
       intercept: true,
     },
 

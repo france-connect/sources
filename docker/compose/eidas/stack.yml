@@ -1,4 +1,4 @@
-version: '2.4'
+version: "2.4"
 
 ####################
 ####################
@@ -10,6 +10,7 @@ services:
       - "eidas-bridge"
       - "eidas-fr"
       - "eidas-mock"
+      - "eidas-be"
   min-eidas-high:
     image: alpine
     depends_on:
@@ -17,3 +18,4 @@ services:
       - "eidas-bridge"
       - "eidas-fr"
       - "eidas-mock"
+      - "eidas-be"

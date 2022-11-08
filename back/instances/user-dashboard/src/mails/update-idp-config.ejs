@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>
-      Notification de modification des fournisseurs d'acc&egrave;s à FranceConnect+
+      Notification de modification des fournisseurs d'acc&egrave;s à FranceConnect
     </title>
     <style type="text/css">
       body {
@@ -136,8 +136,8 @@
           </tr>
           <tr>
             <td class="bodycopy">
-              Une modification de vos param&egrave;tres FranceConnect a eu lieu <strong>le <%= locals.formattedUpdateDate %></strong> (heure de Paris):
-              <ul>
+              Une modification de vos param&egrave;tres FranceConnect a eu lieu <strong data-testid="updateidpsettings-date">le <%= locals.formattedUpdateDate %></strong> (heure de Paris):
+              <ul data-testid="updateidpsettings-list">
                 <% for (const updatedIdp of locals.updatedIdpSettingsList) {%>
                 <li>
                   Le compte

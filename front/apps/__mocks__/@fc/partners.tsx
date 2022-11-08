@@ -1,11 +1,3 @@
-export const ServiceProvidersPageTitleComponent = jest.fn(() => (
-  <div>ServiceProvidersPageTitleComponent</div>
-));
-
-export const ServiceProvidersListComponent = jest.fn(() => (
-  <div>ServiceProvidersListComponent</div>
-));
-
 export const ServiceProviderStatusColors = {
   // @TODO removed and export as it
   // once jest supports enums modules
@@ -20,5 +12,3 @@ export const ServiceProviderStatusColors = {
   REVIEW_WAITING_CLIENT_FEEDBACK: 'orange-terre-battue',
   SANDBOX: 'yellow-tournesol',
 };
-
-export const ServiceProvidersPage = jest.fn(() => <div>ServiceProvidersPage</div>);

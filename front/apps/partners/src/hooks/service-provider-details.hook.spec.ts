@@ -4,7 +4,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ServiceProviderStatusColors } from '../enums';
-import { transformServiceProviderItem } from '../services';
+import { transformServiceProvider } from '../services';
 import { useServiceProviderDetails } from './service-provider-details.hook';
 
 const serviceProviderItemMock = {
@@ -22,7 +22,7 @@ const params = {
 };
 
 jest.mock('react-redux');
-jest.mock('../services/transform-service-provider-item.service');
+jest.mock('../services/transform-service-provider.service');
 
 describe('useServiceProviderDetails', () => {
   let useContextMock: jest.SpyInstance;
@@ -79,7 +79,7 @@ describe('useServiceProviderDetails', () => {
     });
   });
 
-  it('should call function transformServiceProviderItem', () => {
+  it('should call function transformServiceProvider', () => {
     // given
     useContextMock.mockReturnValue({ connected: true, ready: true });
     mocked(useSelector).mockReturnValueOnce({ item: serviceProviderItemMock });
@@ -88,7 +88,7 @@ describe('useServiceProviderDetails', () => {
     renderHook(() => useServiceProviderDetails(params));
 
     // then
-    expect(transformServiceProviderItem).toHaveBeenCalledTimes(1);
+    expect(transformServiceProvider).toHaveBeenCalledTimes(1);
   });
 
   it('should return item transformed when user is logged in and item exist', () => {
@@ -102,7 +102,7 @@ describe('useServiceProviderDetails', () => {
 
     mocked(useSelector).mockReturnValue({ item: serviceProviderItemMock });
     useContextMock.mockReturnValueOnce({ connected: true, ready: true });
-    mocked(transformServiceProviderItem).mockReturnValueOnce(itemTransformed);
+    mocked(transformServiceProvider).mockReturnValueOnce(itemTransformed);
 
     // when
     const { result } = renderHook(() => useServiceProviderDetails(params));

@@ -1,7 +1,10 @@
 /* istanbul ignore file */
 
 // Tested by DTO
+import { OidcClientRoutes } from '@fc/oidc-client';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
+
+import app from './app';
 
 const cookieOptions: ISessionCookieOptions = {
   signed: true,
@@ -20,5 +23,5 @@ export default {
   sessionCookieName: 'sp_session_id',
   lifetime: 600, // 10 minutes
   sessionIdLength: 64,
-  excludedRoutes: [],
+  excludedRoutes: [`${app.urlPrefix}${OidcClientRoutes.WELL_KNOWN_KEYS}`],
 } as SessionConfig;

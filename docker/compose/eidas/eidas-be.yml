@@ -1,0 +1,28 @@
+version: "2.4"
+
+####################
+####################
+services:
+  ####################
+  # Eidas MOCK
+  ####################
+  eidas-be:
+    hostname: eidas-be
+    image: ${FC_DOCKER_REGISTRY}/eidas-mock:2.4
+    user: ${CURRENT_UID}
+    volumes:
+      - "${VOLUMES_DIR}/eidas/conf-eidas-be:/data/conf-eidas:ro"
+      - "${VOLUMES_DIR}/eidas/keystore-be:/data/keystore:ro"
+      - "${VOLUMES_DIR}/eidas/keystore-be/cacerts:/etc/ssl/certs/java/cacerts:ro"
+      - "${VOLUMES_DIR}/log/eidas/eidas-be:/data/log/tomcat"
+      - "${VOLUMES_DIR}/log/eidas/eidas-be:/data/log/eidas"
+    environment:
+      - "VIRTUAL_HOST=eidas-be.docker.dev-franceconnect.fr"
+      - "VIRTUAL_PORT=443"
+      - "App_PROTOCOL=https"
+      - "TZ=Europe/Paris"
+      - "JAVA_OPTS=-Xms512m  -Xmx512m"
+      - "LOG_LEVEL=INFO"
+    networks:
+      - eidas
+      - public

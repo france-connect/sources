@@ -39,7 +39,6 @@ describe('OidcProviderConfigService', () => {
   const sessionServiceMock = {
     set: jest.fn(),
     get: jest.fn(),
-    getAlias: jest.fn(),
   };
 
   const errorServiceMock = {
@@ -215,9 +214,6 @@ describe('OidcProviderConfigService', () => {
       sessionServiceMock.get.mockResolvedValueOnce({
         spIdentity: identityMock,
       });
-      sessionServiceMock.getAlias.mockResolvedValueOnce({
-        identityMock,
-      });
       // When
       const result = await service['findAccount'](
         contextMock,
@@ -229,11 +225,6 @@ describe('OidcProviderConfigService', () => {
     });
 
     it('Should not alter the context', async () => {
-      // Given
-      const identityMock = { foo: 'bar' };
-      sessionServiceMock.getAlias.mockResolvedValueOnce({
-        identityMock,
-      });
       // When
       await service['findAccount'](contextMock, interactionIdMock);
       // Then
@@ -245,9 +236,6 @@ describe('OidcProviderConfigService', () => {
       const identityMock = { spIdentity: { foo: 'bar' } };
       sessionServiceMock.get.mockResolvedValueOnce({
         spIdentity: identityMock,
-      });
-      sessionServiceMock.getAlias.mockResolvedValueOnce({
-        identityMock,
       });
       const result = await service['findAccount'](
         contextMock,
@@ -262,13 +250,9 @@ describe('OidcProviderConfigService', () => {
 
     it('Should call throwError if an exception is catched', async () => {
       // Given
-      const identityMock = { foo: 'bar' };
       const exception = new Error('foo');
       sessionServiceMock.get.mockRejectedValueOnce(exception);
       service['throwError'] = jest.fn();
-      sessionServiceMock.getAlias.mockResolvedValueOnce({
-        identityMock,
-      });
       // When
       await service['findAccount'](contextMock, interactionIdMock);
       // Then

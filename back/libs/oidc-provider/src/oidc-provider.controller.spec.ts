@@ -148,4 +148,26 @@ describe('OidcProviderController', () => {
       expect(next).toBeCalledTimes(1);
     });
   });
+
+  describe('getJwks()', () => {
+    it('should call next()', () => {
+      // Given
+      const next = jest.fn();
+      // When
+      oidcProviderController.getJwks(next);
+      // Then
+      expect(next).toBeCalledTimes(1);
+    });
+  });
+
+  describe('getOpenidConfiguration()', () => {
+    it('should call next()', () => {
+      // Given
+      const next = jest.fn();
+      // When
+      oidcProviderController.getOpenidConfiguration(next);
+      // Then
+      expect(next).toBeCalledTimes(1);
+    });
+  });
 });

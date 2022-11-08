@@ -2,6 +2,7 @@
   {
     "idpId": "fip1",
     "name": "fip1",
+    "title": "Identity Provider - eIDAS élevé",
     "descriptions": ["par défaut", "actif", "whitelisté", "non blacklisté"],
     "mocked": true,
     "usable": true,
@@ -19,6 +20,7 @@
   {
     "idpId": "fip2",
     "name": "fip2",
+    "title": "Identity Provider - eIDAS faible",
     "descriptions": ["distinct"],
     "mocked": true,
     "usable": true,
@@ -36,6 +38,7 @@
   {
     "idpId": "fip3",
     "name": "fip3",
+    "title": "Identity Provider - eIDAS substantiel",
     "descriptions": ["pour le test de préférences FI"],
     "mocked": true,
     "usable": true,
@@ -53,6 +56,7 @@
   {
     "idpId": "fip1_blacklisted_by_fsp2",
     "name": "fip1_blacklisted_by_fsp2",
+    "title": "Identity Provider - Blacklisté par FSP2",
     "descriptions": ["blacklisté"],
     "mocked": true,
     "usable": true,
@@ -70,6 +74,7 @@
   {
     "idpId": "fip1_not_whitelisted_by_fsp3",
     "name": "fip1_not_whitelisted_by_fsp3",
+    "title": "Identity Provider - Non Whitelisté par FSP3",
     "descriptions": ["non whitelisté"],
     "mocked": true,
     "usable": true,
@@ -87,6 +92,7 @@
   {
     "idpId": "fip1_deactivated",
     "name": "fip1_deactivated",
+    "title": "Identity Provider - Désactivé",
     "descriptions": ["désactivé et visible"],
     "mocked": true,
     "usable": false,
@@ -104,6 +110,7 @@
   {
     "idpId": "fip1_not_displayed",
     "name": "fip1_not_displayed",
+    "title": "Identity Provider - Non Affiché",
     "descriptions": ["actif et non visible"],
     "mocked": true,
     "usable": false,
@@ -121,6 +128,7 @@
   {
     "idpId": "fip1_not_displayed_and_deactivated",
     "name": "fip1_not_displayed_and_deactivated",
+    "title": "Identity Provider - Non Affiché et Désactivé",
     "descriptions": ["désactivé et non visible"],
     "mocked": true,
     "usable": false,
@@ -138,6 +146,7 @@
   {
     "idpId": "aidants-connect-mock",
     "name": "aidants-connect-mock",
+    "title": "Aidants Connect mock",
     "descriptions": ["Aidants Connect"],
     "mocked": true,
     "usable": true,

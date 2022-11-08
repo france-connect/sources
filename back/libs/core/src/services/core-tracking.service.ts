@@ -126,8 +126,7 @@ export class CoreTrackingService implements IAppTrackingService {
       this.extractNetworkInfoFromHeaders(ctx);
     const interactionId: string = this.getInteractionIdFromContext(ctx);
 
-    const sessionId: string =
-      req.sessionId || (await this.sessionService.getAlias(interactionId));
+    const { sessionId } = req;
 
     return {
       ip,

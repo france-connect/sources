@@ -3,16 +3,13 @@
 exports[`ServiceProvidersListComponent should match the snapshot, when service providers state has items 1`] = `
 <div>
   <div>
-    ServiceProviderItemComponent 
-    Datapass N°1234
+    ServiceProvidersListItemComponent
   </div>
   <div>
-    ServiceProviderItemComponent 
-    Datapass N°5678
+    ServiceProvidersListItemComponent
   </div>
   <div>
-    ServiceProviderItemComponent 
-    Datapass N°9101112
+    ServiceProvidersListItemComponent
   </div>
 </div>
 `;

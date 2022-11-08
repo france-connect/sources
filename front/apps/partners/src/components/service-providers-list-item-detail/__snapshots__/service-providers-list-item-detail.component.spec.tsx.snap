@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceProvidersListItemDetailComponent should match the snapshot with default values 1`] = `
+<div>
+  <span
+    class="is-inline-block"
+  >
+    <span
+      data-testid="ServiceProvidersListItemDetailComponent-label"
+    >
+      Nom du service provider
+    </span>
+    <span
+      class="fr-mx-2w"
+    >
+      •
+    </span>
+  </span>
+</div>
+`;
+
+exports[`ServiceProvidersListItemDetailComponent should match the snapshot with lastItem set to true 1`] = `
+<div>
+  <span
+    class="is-inline-block"
+  >
+    <span
+      data-testid="ServiceProvidersListItemDetailComponent-label"
+    >
+      Nom du service provider
+    </span>
+  </span>
+</div>
+`;

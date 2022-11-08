@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   Next,
   Post,
   Req,
@@ -104,6 +105,20 @@ export class OidcProviderController {
       name: 'OidcProviderRoutes.END_SESSION',
     });
 
+    // Pass the query to oidc-provider
+    return next();
+  }
+
+  @Get(OidcProviderRoutes.JWKS)
+  @Header('cache-control', 'public, max-age=600')
+  getJwks(@Next() next) {
+    // Pass the query to oidc-provider
+    return next();
+  }
+
+  @Get(OidcProviderRoutes.OPENID_CONFIGURATION)
+  @Header('cache-control', 'public, max-age=600')
+  getOpenidConfiguration(@Next() next) {
     // Pass the query to oidc-provider
     return next();
   }

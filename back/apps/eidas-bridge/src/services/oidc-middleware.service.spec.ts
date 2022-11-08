@@ -21,7 +21,6 @@ describe('MockIdentityProviderFcaService', () => {
     set: {
       bind: jest.fn(),
     },
-    setAlias: jest.fn(),
   };
 
   const serviceProviderEnvServiceMock = {
@@ -108,31 +107,6 @@ describe('MockIdentityProviderFcaService', () => {
       expect(service['getInteractionIdFromCtx']).toHaveBeenCalledTimes(0);
       expect(serviceProviderEnvServiceMock.getById).toHaveBeenCalledTimes(0);
       expect(sessionServiceMock.set.bind).toHaveBeenCalledTimes(0);
-    });
-
-    it('should call session.setAlias()', async () => {
-      // Given
-      const ctxMock = getCtxMock();
-      oidcProviderServiceMock.getInteractionIdFromCtx = jest
-        .fn()
-        .mockReturnValue(interactionIdValueMock);
-
-      serviceProviderEnvServiceMock.getById.mockReturnValueOnce({
-        name: spNameMock,
-      });
-
-      const bindedSessionService = jest.fn().mockResolvedValueOnce(undefined);
-      sessionServiceMock.set.bind.mockReturnValueOnce(bindedSessionService);
-
-      // When
-      await service['authorizationMiddleware'](ctxMock);
-
-      // Then
-      expect(sessionServiceMock.setAlias).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.setAlias).toHaveBeenCalledWith(
-        sessionIdValueMock,
-        interactionIdValueMock,
-      );
     });
 
     it('should call session.set()', async () => {

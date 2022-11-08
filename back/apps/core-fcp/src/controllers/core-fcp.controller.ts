@@ -348,12 +348,6 @@ export class CoreFcpController {
     // send the notification mail to the final user
     await this.core.sendAuthenticationMail(session);
 
-    /**
-     * We need to set an alias with the sub since later (findAccount) we do not have access
-     * to the sessionId, nor the interactionId.
-     */
-    await this.sessionService.setAlias(spIdentity.sub, req.sessionId);
-
     this.logger.trace({
       data: { req, res, session },
       method: 'POST',
@@ -440,7 +434,7 @@ export class CoreFcpController {
       idpAcr: acr,
       idpIdentity: identity,
     };
-    sessionOidc.set({ ...identityExchange });
+    await sessionOidc.set({ ...identityExchange });
 
     // BUSINESS: Redirect to business page
     const { urlPrefix } = this.config.get<AppConfig>('App');

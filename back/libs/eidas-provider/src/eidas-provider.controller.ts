@@ -43,6 +43,14 @@ export class EidasProviderController {
 
     const request = this.eidasProvider.parseLightRequest(lightRequest);
 
+    /**
+     * @todo #1129 vérifier les données de la requête.
+     * Si la lightrequest ajoute de nouvelles données,
+     * on ne le voit pas.
+     * Author: Arnaud PSA
+     * Date: 12/10/2022
+     */
+
     await sessionEidasProvider.set('eidasRequest', request);
 
     const { redirectAfterRequestHandlingUrl } =

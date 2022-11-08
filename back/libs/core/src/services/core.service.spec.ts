@@ -747,6 +747,102 @@ describe('CoreService', () => {
     });
   });
 
+  describe('getEventContext', () => {
+    const interactionIdMock = 'interactionIdMockValue';
+    const netWorkInfoMock = {
+      ip: 'ip',
+      originalAddresses: 'originalAddresses',
+      port: 'port',
+    };
+    beforeEach(() => {
+      oidcProviderServiceMock.getInteractionIdFromCtx.mockReturnValueOnce(
+        interactionIdMock,
+      );
+      service['getNetworkInfoFromHeaders'] = jest
+        .fn()
+        .mockReturnValueOnce(netWorkInfoMock);
+    });
+
+    it('should return context object with sessionId from `req` if no oidc accountId', () => {
+      // Given
+      const ctxMock = {
+        req: {
+          sessionId: 'sessionIdValue',
+        },
+      };
+      // When
+      const result = service['getEventContext'](ctxMock);
+      // Then
+      expect(result).toEqual({
+        fc: {
+          interactionId: interactionIdMock,
+        },
+        headers: {
+          'x-forwarded-for': netWorkInfoMock.ip,
+          'x-forwarded-source-port': netWorkInfoMock.port,
+          'x-forwarded-for-original': netWorkInfoMock.originalAddresses,
+        },
+        sessionId: ctxMock.req.sessionId,
+      });
+    });
+
+    it('should return context object with sessionId from `oidc` object', () => {
+      // Given
+      const ctxMock = {
+        req: {
+          sessionId: 'sessionIdValue',
+        },
+        oidc: {
+          entities: {
+            Account: {
+              accountId: 'accountIdMock',
+            },
+          },
+        },
+      };
+      // When
+      const result = service['getEventContext'](ctxMock);
+      // Then
+      expect(result).toEqual({
+        fc: {
+          interactionId: interactionIdMock,
+        },
+        headers: {
+          'x-forwarded-for': netWorkInfoMock.ip,
+          'x-forwarded-source-port': netWorkInfoMock.port,
+          'x-forwarded-for-original': netWorkInfoMock.originalAddresses,
+        },
+        sessionId: ctxMock.oidc.entities.Account.accountId,
+      });
+    });
+
+    it('should return context object with sessionId from ̀`req` if `oidc` object is incomplete', () => {
+      // Given
+      const ctxMock = {
+        req: {
+          sessionId: 'sessionIdValue',
+        },
+        oidc: {
+          entities: {},
+        },
+      };
+      // When
+      const result = service['getEventContext'](ctxMock);
+      // Then
+      expect(result).toEqual({
+        fc: {
+          interactionId: interactionIdMock,
+        },
+        headers: {
+          'x-forwarded-for': netWorkInfoMock.ip,
+          'x-forwarded-source-port': netWorkInfoMock.port,
+          'x-forwarded-for-original': netWorkInfoMock.originalAddresses,
+        },
+        sessionId: ctxMock.req.sessionId,
+      });
+    });
+  });
+
   describe('authorizationMiddleware()', () => {
     const getCtxMock = (hasError = false) => {
       return {

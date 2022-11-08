@@ -37,4 +37,5 @@ export enum EidasCountries {
   // Special Countries for tests and UE validations
   EUROPE = 'EU',
   MOCK = 'CB',
+  FRANCE = 'FR',
 }
