@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Error409Component should match the snapshot 1`] = `
+<div>
+  <h2>
+    Une erreur est survenue
+  </h2>
+  <h6>
+    Erreur 409
+  </h6>
+  <p>
+    Vous n’avez pas les droits d’effectuer cette action
+  </p>
+</div>
+`;

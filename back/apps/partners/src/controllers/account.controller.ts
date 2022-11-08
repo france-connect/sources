@@ -10,17 +10,25 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { PartnerAccountSession } from '@fc/partner-account';
+import { LoggerService } from '@fc/logger-legacy';
+import {
+  PartnerAccountService,
+  PartnerAccountSession,
+} from '@fc/partner-account';
 import { ISessionService, Session } from '@fc/session';
 
 import { LoginCredentials } from '../dto';
 import { PartnersRoutes } from '../enums';
 import { ILoggedUser } from '../interfaces';
-import { PartnersService } from '../services';
 
 @Controller()
 export class AccountController {
-  constructor(private readonly partnersService: PartnersService) {}
+  constructor(
+    private readonly logger: LoggerService,
+    private readonly accountService: PartnerAccountService,
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   @Get(PartnersRoutes.CSRF)
   async getCSRF(@Res() res: Response): Promise<Record<string, any>> {
@@ -52,9 +60,22 @@ export class AccountController {
     @Session('PartnerAccount')
     sessionPartnerAccount: ISessionService<PartnerAccountSession>,
   ): Promise<ILoggedUser> {
-    const user = await this.partnersService.login(body.email);
+    const row = await this.accountService.findByEmail(body.email);
 
-    await sessionPartnerAccount.set(user);
-    return user;
+    const { id, email, firstname, lastname, createdAt, updatedAt } = row;
+
+    const account = {
+      id,
+      email,
+      firstname,
+      lastname,
+      createdAt,
+      updatedAt,
+    };
+
+    this.logger.trace({ account });
+
+    await sessionPartnerAccount.set(account);
+    return account;
   }
 }

@@ -17,7 +17,7 @@ export const HomePage = React.memo(() => {
 
   return (
     <div
-      className={classnames('homepage fr-m-auto fr-px-2w', {
+      className={classnames('large-container fr-m-auto fr-px-2w', {
         // Class CSS
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'fr-mt-3w': hasError,

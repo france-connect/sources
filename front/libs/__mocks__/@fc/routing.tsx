@@ -1,9 +1,3 @@
-const actualModule = jest.requireActual('@fc/routing');
+export const AuthedRoute = jest.fn(() => <div>AuthedRoute</div>);
 
-module.exports = {
-  _esModule: true,
-  ...actualModule,
-  RoutesManagerComponent: jest.fn(() => <div>RoutesManagerComponent</div>),
-};
-
-export {};
+export const UnauthedRoute = jest.fn(() => <div>UnauthedRoute</div>);

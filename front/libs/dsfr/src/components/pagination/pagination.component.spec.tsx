@@ -13,6 +13,7 @@ describe('PaginationComponent', () => {
   // given
   const usePaginationMock = {
     currentPage: 2,
+    isTabletOrDesktop: true,
     navigationNumbers: [1, 2, 3, 4, 5],
     pagesCount: 10,
     paginationChangeHandler: jest.fn(),
@@ -21,6 +22,7 @@ describe('PaginationComponent', () => {
     showLastEllipsis: false,
     showLastPage: false,
   };
+  const onPageClickCallbackMock = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -148,29 +150,25 @@ describe('PaginationComponent', () => {
 
   describe('navigation', () => {
     it('should call callback when a navigation button is clicked', () => {
-      // given
-      const callbackMock = jest.fn();
-
       // when
       const { getByText } = render(
         <PaginationComponent
           numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
           pagination={expect.any(Object)}
-          onPageClick={callbackMock(3)}
+          onPageClick={onPageClickCallbackMock(3)}
         />,
       );
       const button = getByText(/2/);
       fireEvent.click(button);
 
       // then
-      expect(callbackMock).toHaveBeenCalledTimes(1);
-      expect(callbackMock).toHaveBeenCalledWith(3);
+      expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+      expect(onPageClickCallbackMock).toHaveBeenCalledWith(3);
     });
 
     describe('button first page', () => {
       it('should call callback with the first page', () => {
         // given
-        const callbackMock = jest.fn();
 
         // when
         const { getByText } = render(
@@ -178,7 +176,7 @@ describe('PaginationComponent', () => {
             useEdgeArrows
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(0)}
+            onPageClick={onPageClickCallbackMock(0)}
           />,
         );
 
@@ -186,37 +184,36 @@ describe('PaginationComponent', () => {
         fireEvent.click(button);
 
         // then
-        expect(callbackMock).toHaveBeenCalledTimes(1);
-        expect(callbackMock).toHaveBeenCalledWith(0);
+        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledWith(0);
       });
     });
 
     describe('button previous page', () => {
       it('should call callback when the previous button is clicked', () => {
         // given
-        const callbackMock = jest.fn();
 
         // when
-        const { getByText } = render(
+        const { getByTestId } = render(
           <PaginationComponent
             useNavArrows
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(1)}
+            onPageClick={onPageClickCallbackMock(1)}
           />,
         );
 
-        const button = getByText(/Page précédente/);
+        const button = getByTestId('PaginationComponent-previous-page-button');
         fireEvent.click(button);
 
         // then
-        expect(callbackMock).toHaveBeenCalledTimes(1);
-        expect(callbackMock).toHaveBeenCalledWith(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledWith(1);
       });
 
       it('should display : "Page précédente"', () => {
         // given
-        const callbackMock = jest.fn();
+
         mocked(useMediaQuery).mockReturnValueOnce(false);
 
         // when
@@ -225,14 +222,12 @@ describe('PaginationComponent', () => {
             useNavArrows
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(0)}
+            onPageClick={onPageClickCallbackMock(0)}
           />,
         );
 
         // then
-        const button = screen.getByRole('button', {
-          name: /Page précédente/i,
-        });
+        const button = screen.getByTestId('PaginationComponent-previous-page-button');
         expect(container).toMatchSnapshot();
         expect(button).toBeDefined();
       });
@@ -241,28 +236,26 @@ describe('PaginationComponent', () => {
     describe('button next page', () => {
       it('should call callback when the next button is clicked', () => {
         // given
-        const callbackMock = jest.fn();
 
         // when
-        const { getByText } = render(
+        const { getByTestId } = render(
           <PaginationComponent
             useNavArrows
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(3)}
+            onPageClick={onPageClickCallbackMock(3)}
           />,
         );
-        const button = getByText(/Page suivante/);
+        const button = getByTestId('PaginationComponent-next-page-button');
         fireEvent.click(button);
 
         // then
-        expect(callbackMock).toHaveBeenCalledTimes(1);
-        expect(callbackMock).toHaveBeenCalledWith(3);
+        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledWith(3);
       });
 
       it('should not be display if every conditions is set to false', () => {
         // given
-        const callbackMock = jest.fn();
 
         // when
         const { container } = render(
@@ -270,7 +263,7 @@ describe('PaginationComponent', () => {
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
             useNavArrows={false}
-            onPageClick={callbackMock(3)}
+            onPageClick={onPageClickCallbackMock(3)}
           />,
         );
 
@@ -291,7 +284,6 @@ describe('PaginationComponent', () => {
           ...usePaginationMock,
         });
         mocked(useMediaQuery).mockReturnValueOnce(true);
-        const callbackMock = jest.fn();
 
         // when
         render(
@@ -299,7 +291,7 @@ describe('PaginationComponent', () => {
             useNavArrows
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(0)}
+            onPageClick={onPageClickCallbackMock(0)}
           />,
         );
 
@@ -311,7 +303,6 @@ describe('PaginationComponent', () => {
     describe('button last page', () => {
       it('should call callback with the last page', () => {
         // given
-        const callbackMock = jest.fn();
 
         // when
         const { getByText } = render(
@@ -319,15 +310,15 @@ describe('PaginationComponent', () => {
             useEdgeArrows
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(3)}
+            onPageClick={onPageClickCallbackMock(3)}
           />,
         );
         const button = getByText(/Dernière page/);
         fireEvent.click(button);
 
         // then
-        expect(callbackMock).toHaveBeenCalledTimes(1);
-        expect(callbackMock).toHaveBeenCalledWith(3);
+        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledWith(3);
       });
     });
 
@@ -346,7 +337,6 @@ describe('PaginationComponent', () => {
           showFirstEllipsis: true,
           showFirstPage: true,
         });
-        const callbackMock = jest.fn();
 
         // when
         const { getByText } = render(
@@ -355,7 +345,7 @@ describe('PaginationComponent', () => {
             useEllipsis
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(1)}
+            onPageClick={onPageClickCallbackMock(1)}
           />,
         );
         const button = getByText(/1/);
@@ -365,8 +355,8 @@ describe('PaginationComponent', () => {
         // then
         expect(container).toMatchSnapshot();
         expect(firstEllipsis).toBeInTheDocument();
-        expect(callbackMock).toHaveBeenCalledTimes(1);
-        expect(callbackMock).toHaveBeenCalledWith(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledWith(1);
       });
     });
 
@@ -386,8 +376,6 @@ describe('PaginationComponent', () => {
           showLastPage: true,
         });
 
-        const callbackMock = jest.fn();
-
         // when
         const { getByText } = render(
           <PaginationComponent
@@ -396,7 +384,7 @@ describe('PaginationComponent', () => {
             useNavArrows
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(0)}
+            onPageClick={onPageClickCallbackMock(0)}
           />,
         );
         const button = getByText(/10/);
@@ -406,8 +394,8 @@ describe('PaginationComponent', () => {
         // then
         expect(container).toMatchSnapshot();
         expect(lastEllipsis).toBeInTheDocument();
-        expect(callbackMock).toHaveBeenCalledTimes(1);
-        expect(callbackMock).toHaveBeenCalledWith(0);
+        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledWith(0);
       });
     });
 
@@ -427,7 +415,6 @@ describe('PaginationComponent', () => {
           showLastPage: true,
         });
         mocked(useMediaQuery).mockReturnValueOnce(true);
-        const callbackMock = jest.fn();
 
         // when
         render(
@@ -435,7 +422,7 @@ describe('PaginationComponent', () => {
             useEllipsis
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(0)}
+            onPageClick={onPageClickCallbackMock(0)}
           />,
         );
         const lastEllipsis = screen.getByTestId('PaginationComponent-last-ellipsis');
@@ -461,7 +448,6 @@ describe('PaginationComponent', () => {
           showLastPage: true,
         });
         mocked(useMediaQuery).mockReturnValueOnce(false);
-        const callbackMock = jest.fn();
 
         // when
         render(
@@ -469,7 +455,7 @@ describe('PaginationComponent', () => {
             useEllipsis
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(0)}
+            onPageClick={onPageClickCallbackMock(0)}
           />,
         );
 
@@ -492,7 +478,6 @@ describe('PaginationComponent', () => {
           showLastPage: true,
         });
         mocked(useMediaQuery).mockReturnValueOnce(true);
-        const callbackMock = jest.fn();
 
         // when
         render(
@@ -500,7 +485,7 @@ describe('PaginationComponent', () => {
             useEllipsis
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(0)}
+            onPageClick={onPageClickCallbackMock(0)}
           />,
         );
 
@@ -523,7 +508,6 @@ describe('PaginationComponent', () => {
           showLastPage: true,
         });
         mocked(useMediaQuery).mockReturnValueOnce(true);
-        const callbackMock = jest.fn();
 
         // when
         render(
@@ -531,7 +515,7 @@ describe('PaginationComponent', () => {
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
             useEllipsis={DEFAULT_USE_ELLIPSIS}
-            onPageClick={callbackMock(0)}
+            onPageClick={onPageClickCallbackMock(0)}
           />,
         );
 
@@ -553,7 +537,6 @@ describe('PaginationComponent', () => {
         mocked(usePagination).mockReturnValue({
           ...usePaginationMock,
         });
-        const callbackMock = jest.fn();
 
         // when
         render(
@@ -561,7 +544,7 @@ describe('PaginationComponent', () => {
             useEllipsis
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
             pagination={expect.any(Object)}
-            onPageClick={callbackMock(0)}
+            onPageClick={onPageClickCallbackMock(0)}
           />,
         );
 

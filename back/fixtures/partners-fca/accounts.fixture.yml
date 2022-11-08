@@ -29,6 +29,13 @@ items:
     lastname: 'Took-Brandybuck'
     createdAt: '2022-02-22'
     updatedAt: '2022-05-02'
+  user-with-no-permission:
+    email: 'user-with-no-permission@partner.fr'
+    password: '123'
+    firstname: 'Jean'
+    lastname: 'Bon'
+    createdAt: '2022-02-22'
+    updatedAt: '2022-05-02'
   user-sp-owner:
     email: 'user-sp-owner@partner.fr'
     password: '123'

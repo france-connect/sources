@@ -76,5 +76,23 @@
     "entity": "ServiceProvider",
     "entityId": "sp-archived",
     "roleType": "SP_OBSERVER"
+  },
+  {
+    "userId": "user-sp-owner",
+    "entity": "ServiceProvider",
+    "entityId": "sp-sandbox",
+    "roleType": "SP_OWNER"
+  },
+  {
+    "userId": "user-sp-admin",
+    "entity": "ServiceProvider",
+    "entityId": "sp-sandbox",
+    "roleType": "SP_ADMIN"
+  },
+  {
+    "userId": "user-sp-observer",
+    "entity": "ServiceProvider",
+    "entityId": "sp-sandbox",
+    "roleType": "SP_OBSERVER"
   }
 ]

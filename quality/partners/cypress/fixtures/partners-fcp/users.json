@@ -1,15 +1,5 @@
 [
   {
-    "userId": "user-with-1-sp",
-    "criteria": ["par défaut", "avec 1 fournisseur de service"],
-    "credentials": {
-      "email": "user-with-1-sp@partner.fr",
-      "password": "123"
-    },
-    "firstname": "Judith",
-    "lastname": "Rivera"
-  },
-  {
     "userId": "user-with-2-sp",
     "criteria": ["avec 2 fournisseurs de service"],
     "credentials": {
@@ -41,7 +31,11 @@
   },
   {
     "userId": "user-sp-owner",
-    "criteria": ["propriétaire d'un fournisseur de service"],
+    "criteria": [
+      "par défaut",
+      "avec 1 fournisseur de service",
+      "propriétaire d'un fournisseur de service"
+    ],
     "credentials": {
       "email": "user-sp-owner@partner.fr",
       "password": "123"

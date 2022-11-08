@@ -11,14 +11,5 @@
     "react-final-form": "^6.5.7",
     "react-final-form-listeners": "^1.0.3"
   },
-  "devDependencies": {
-    "@fc/tests-utils": "^0.1.0",
-    "@types/react-final-form-listeners": "^1.0.0"
-  },
-  "main": "src/index.ts",
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ]
+  "main": "src/index.ts"
 }

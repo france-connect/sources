@@ -75,12 +75,7 @@ describe('LayoutHeaderNavigationComponent', () => {
 
   it('should call the second Link with aria-current equal page', () => {
     // given
-    mocked(matchPath).mockReturnValueOnce(null).mockReturnValueOnce({
-      isExact: true,
-      params: {},
-      path: '',
-      url: '',
-    });
+    mocked(matchPath).mockReturnValueOnce(null).mockReturnValueOnce(expect.any(Object));
 
     // when
     render(<LayoutHeaderNavigationComponent navigationItems={navigationItemsMock} />);

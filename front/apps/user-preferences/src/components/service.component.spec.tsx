@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { mocked } from 'jest-mock';
+import React from 'react';
 import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
 import { useMediaQuery } from 'react-responsive';
@@ -13,6 +14,7 @@ jest.mock('@fc/dsfr');
 jest.mock('react-responsive');
 jest.mock('react-final-form-listeners');
 jest.mock('./service-image.component');
+jest.mock('./service-switch-label.component');
 
 const Wrapper = ({ children }: { children: React.ReactElement }) => (
   <Form onSubmit={jest.fn()}>
@@ -122,6 +124,7 @@ describe('ServiceComponent', () => {
     expect(ToggleInput).toHaveBeenCalledTimes(1);
     expect(ToggleInput).toHaveBeenCalledWith(
       expect.objectContaining({
+        disabled: false,
         initialValue: serviceMock.isChecked,
         label: expect.any(Function),
         legend: { checked: 'Autorisé', unchecked: 'Bloqué' },
@@ -143,5 +146,61 @@ describe('ServiceComponent', () => {
       { children: expect.any(Function), name: 'idpList.any-uid' },
       {},
     );
+  });
+
+  describe('when is not allowed to be updated', () => {
+    it('should set the disabled class on the service component', () => {
+      // when
+      const { getByTestId } = render(
+        <ServiceComponent allowToBeUpdated={false} service={serviceMock} />,
+        {
+          wrapper: Wrapper,
+        },
+      );
+      const element = getByTestId(`service-component-${serviceMock.name}`);
+
+      // then
+      expect(element).toHaveClass('disabled');
+    });
+
+    it('should call ServiceImageComponent with disabled as true', () => {
+      // when
+      render(<ServiceComponent allowToBeUpdated={false} service={serviceMock} />, {
+        wrapper: Wrapper,
+      });
+
+      // then
+      expect(ServiceImageComponent).toHaveBeenCalledTimes(1);
+      expect(ServiceImageComponent).toHaveBeenCalledWith(
+        expect.objectContaining({ disabled: true }),
+        {},
+      );
+    });
+
+    it('should call ToggleInput with disabled as true', () => {
+      // when
+      render(<ServiceComponent allowToBeUpdated={false} service={serviceMock} />, {
+        wrapper: Wrapper,
+      });
+
+      // then
+      expect(ToggleInput).toHaveBeenCalledTimes(1);
+      expect(ToggleInput).toHaveBeenCalledWith(
+        expect.objectContaining({
+          disabled: true,
+        }),
+        {},
+      );
+    });
+
+    it('should not call OnChange from react-final-form-listener', () => {
+      // when
+      render(<ServiceComponent allowToBeUpdated={false} service={serviceMock} />, {
+        wrapper: Wrapper,
+      });
+
+      // then
+      expect(OnChange).not.toHaveBeenCalled();
+    });
   });
 });

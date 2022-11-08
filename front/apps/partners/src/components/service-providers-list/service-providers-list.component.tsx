@@ -44,6 +44,7 @@ export const ServiceProvidersListComponent = React.memo(
                 platformName={item.platformName}
                 spName={item.spName}
                 status={item.status}
+                url={item.url}
               />
             ))}
       </React.Fragment>

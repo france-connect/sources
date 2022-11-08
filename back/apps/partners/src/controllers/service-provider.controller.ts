@@ -1,15 +1,23 @@
 import {
   Controller,
-  DefaultValuePipe,
   Get,
-  ParseIntPipe,
+  Param,
   Query,
-  Res,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 
+import {
+  AccessControlGuard,
+  AccountPermissions,
+  IPermission,
+  PermissionsType,
+  RequirePermission,
+} from '@fc/access-control';
+import { FSA, FSAMeta, IdParamDto, PaginationOptionDto } from '@fc/common';
 import { LoggerService } from '@fc/logger-legacy';
-import { PartnerAccountSession } from '@fc/partner-account';
-import { ISessionService, Session } from '@fc/session';
+import { IServiceProviderItem } from '@fc/partner-service-provider';
 
 import { PartnersRoutes } from '../enums';
 import { IServiceProviderList } from '../interfaces';
@@ -24,34 +32,78 @@ export class ServiceProviderController {
     this.logger.setContext(this.constructor.name);
   }
 
-  @Get(PartnersRoutes.SERVICE_PROVIDER)
-  async getServiceProvidersByAccount(
-    @Query('offset', new DefaultValuePipe(0), ParseIntPipe) offset: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-    @Res() res,
-    @Session('PartnerAccount')
-    sessionPartnerAccount: ISessionService<PartnerAccountSession>,
+  @Get(PartnersRoutes.SERVICE_PROVIDER_LIST)
+  @RequirePermission(PermissionsType.SERVICE_PROVIDER_LIST)
+  @UseGuards(AccessControlGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
+  async getServiceProviderList(
+    @AccountPermissions() permissions: IPermission[],
+    @Query() query: PaginationOptionDto,
   ): Promise<IServiceProviderList> {
-    let accountId: string;
+    const { offset, size } = query;
 
-    try {
-      const { id } = await sessionPartnerAccount.get();
-      accountId = id;
-    } catch (error) {
-      this.logger.error(error);
-    }
-
-    if (!accountId) {
-      return res.status(401).end();
-    }
     const serviceProviderList =
-      await this.partnersService.getServiceProvidersByAccount(
-        accountId,
+      await this.partnersService.getServiceProvidersFromPermissions(
+        permissions,
         offset,
-        limit,
+        size,
       );
 
-    this.logger.trace({ ...serviceProviderList });
-    return res.json(serviceProviderList);
+    return serviceProviderList;
+  }
+
+  @Get(PartnersRoutes.SERVICE_PROVIDER_VIEW)
+  @RequirePermission(PermissionsType.SERVICE_PROVIDER_VIEW)
+  @UseGuards(AccessControlGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
+  async getServiceProviderView(
+    @Param() params: IdParamDto,
+  ): Promise<FSA<FSAMeta, Partial<IServiceProviderItem>>> {
+    const { id: serviceProviderId } = params;
+    const { id, name, organisation, platform, status } =
+      await this.partnersService.getServiceProviderById(serviceProviderId);
+
+    const payload = {
+      id,
+      name,
+      organisation,
+      platform,
+      status,
+    };
+
+    const data = {
+      type: 'SERVICE_PROVIDER_VIEW',
+      payload,
+    };
+
+    return data;
+  }
+
+  @Get(PartnersRoutes.SERVICE_PROVIDER_EDIT)
+  @RequirePermission(PermissionsType.SERVICE_PROVIDER_EDIT)
+  @UseGuards(AccessControlGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
+  async getServiceProviderEdit(
+    @Param() params: IdParamDto,
+  ): Promise<FSA<FSAMeta, Partial<IServiceProviderItem>>> {
+    const { id: serviceProviderId } = params;
+
+    const { id, name, organisation, platform, status } =
+      await this.partnersService.getServiceProviderById(serviceProviderId);
+
+    const payload = {
+      id,
+      name,
+      organisation,
+      platform,
+      status,
+    };
+
+    const data = {
+      type: 'SERVICE_PROVIDER_EDIT',
+      payload,
+    };
+
+    return data;
   }
 }

@@ -114,7 +114,7 @@ export class MockIdentityProviderController {
      */
     await this.sessionService.setAlias(spIdentity.sub, req.sessionId);
 
-    sessionOidc.set({
+    await sessionOidc.set({
       spAcr,
       spIdentity,
       amr: ['pwd'],

@@ -3,7 +3,7 @@
 // declarative file
 import { GlobalState } from '@fc/state-management';
 
-import { ServiceProvidersState } from '../interfaces';
+import { ServiceProviderItemState, ServiceProvidersState } from '../interfaces';
 
 export const serviceProvidersState: GlobalState<ServiceProvidersState> = {
   ServiceProviders: {
@@ -12,6 +12,16 @@ export const serviceProvidersState: GlobalState<ServiceProvidersState> = {
       items: [],
       loading: false,
       totalItems: 0,
+    },
+  },
+};
+
+export const serviceProviderItemState: GlobalState<ServiceProviderItemState> = {
+  ServiceProviderItem: {
+    blacklist: true,
+    defaultValue: {
+      item: undefined,
+      loading: false,
     },
   },
 };

@@ -236,3 +236,6 @@ instances/**/public/*.mock.json
 
 # ignore all (apps|instances)/yarn.lock
 instances/**/*.yarn.lock
+
+# history local files extension vscode
+.history/**/*

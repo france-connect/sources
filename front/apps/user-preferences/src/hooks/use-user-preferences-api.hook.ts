@@ -1,7 +1,8 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { useApiGet } from '@fc/common';
+import { HttpStatusCode, useApiGet } from '@fc/common';
 import { GetCsrfTokenResponse } from '@fc/http-client';
 
 import { FormValues, UserPreferencesConfig, UserPreferencesData } from '../interfaces';
@@ -21,6 +22,8 @@ export const validateHandlerCallback = ({ idpList }: Pick<FormValues, 'idpList'>
 };
 
 export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
+  const navigate = useNavigate();
+
   const userPreferences: UserPreferencesData = useApiGet({
     endpoint: options.API_ROUTE_USER_PREFERENCES,
   });
@@ -31,10 +34,18 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
 
   const validateHandler = useCallback(validateHandlerCallback, []);
 
-  const commitErrorHandler = useCallback((err: AxiosError | Error) => {
-    setSubmitErrors(err);
-    setSubmitWithSuccess(false);
-  }, []);
+  const commitErrorHandler = useCallback(
+    (err: AxiosError | Error) => {
+      const { response } = err as AxiosError;
+      if (response?.status === HttpStatusCode.CONFLICT) {
+        navigate('/error/409', { replace: true });
+      } else {
+        setSubmitErrors(err);
+        setSubmitWithSuccess(false);
+      }
+    },
+    [navigate],
+  );
 
   const commitSuccessHandler = useCallback(({ data }: AxiosResponse<UserPreferencesData>) => {
     const { allowFutureIdp, idpList } = UserPreferencesService.parseFormData(data);

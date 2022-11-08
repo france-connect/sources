@@ -1,9 +1,13 @@
 import { useCallback } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
-import { Pagination } from '../../interfaces';
+import { useScrollTo } from '@fc/common';
+
+import { IUsePaginationHook, Pagination } from '../../interfaces';
 import {
   getCurrentPage,
-  getEllipsis,
+  getDisplayParameters,
+  getMobileNavigationNumbers,
   getNavigationNumbers,
   getPagesCount,
 } from './pagination.utils';
@@ -18,15 +22,19 @@ export const usePagination = ({
   numberOfPagesShownIntoNavigation,
   onPageClick,
   pagination,
-}: usePaginationProps) => {
+}: usePaginationProps): IUsePaginationHook => {
+  const isTabletOrDesktop = useMediaQuery({ minWidth: 768 });
+  const { scrollToTop } = useScrollTo();
+
   const { offset, size, total } = pagination;
 
   const paginationChangeHandler = useCallback(
     (nextPage: number) => {
-      const nextOffset = nextPage * pagination.size;
+      const nextOffset = nextPage * size;
       onPageClick(nextOffset);
+      scrollToTop();
     },
-    [pagination.size, onPageClick],
+    [size, onPageClick, scrollToTop],
   );
 
   const pagesCount = getPagesCount({
@@ -39,26 +47,30 @@ export const usePagination = ({
     itemsPerPage: size,
   });
 
-  const navigationNumbers = getNavigationNumbers({
+  const navNumbersParams = {
     currentPage,
-    numberOfPagesShownIntoNavigation,
     pagesCount,
-  });
+  };
+  const navigationNumbers = !isTabletOrDesktop
+    ? getMobileNavigationNumbers(navNumbersParams)
+    : getNavigationNumbers({
+        ...navNumbersParams,
+        numberOfPagesShownIntoNavigation,
+      });
 
-  const { showFirstEllipsis, showFirstPage, showLastEllipsis, showLastPage } = getEllipsis({
+  const desktopDisplayParams = getDisplayParameters({
     currentPage,
+    isMobile: !isTabletOrDesktop,
     numberOfPagesShownIntoNavigation,
     pagesCount,
   });
 
   return {
     currentPage,
+    isTabletOrDesktop,
     navigationNumbers,
     pagesCount,
     paginationChangeHandler,
-    showFirstEllipsis,
-    showFirstPage,
-    showLastEllipsis,
-    showLastPage,
+    ...desktopDisplayParams,
   };
 };

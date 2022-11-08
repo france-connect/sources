@@ -3,8 +3,12 @@
 // declarative file
 import { FSA } from '@fc/common';
 
-import { ServiceProvidersActionTypes } from '../enums';
-import { ServiceProvidersState } from '../interfaces';
+import {
+  ServiceProviderEditActionTypes,
+  ServiceProvidersActionTypes,
+  ServiceProviderViewActionTypes,
+} from '../enums';
+import { ServiceProviderItemState, ServiceProvidersState } from '../interfaces';
 
 export function serviceProvidersFailed(): FSA {
   return {
@@ -22,5 +26,47 @@ export function serviceProvidersSuccessed(payload: Omit<ServiceProvidersState, '
   return {
     payload,
     type: ServiceProvidersActionTypes.SERVICE_PROVIDERS_SUCCESSED,
+  };
+}
+
+export function serviceProviderEditFailed(): FSA {
+  return {
+    type: ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_FAILED,
+  };
+}
+
+export function serviceProviderEditRequested(): FSA {
+  return {
+    type: ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_REQUESTED,
+  };
+}
+
+export function serviceProviderEditSuccessed(
+  payload: Omit<ServiceProviderItemState, 'loading'>,
+): FSA {
+  return {
+    payload,
+    type: ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_SUCCESSED,
+  };
+}
+
+export function serviceProviderViewFailed(): FSA {
+  return {
+    type: ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_FAILED,
+  };
+}
+
+export function serviceProviderViewRequested(): FSA {
+  return {
+    type: ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_REQUESTED,
+  };
+}
+
+export function serviceProviderViewSuccessed(
+  payload: Omit<ServiceProviderItemState, 'loading'>,
+): FSA {
+  return {
+    payload,
+    type: ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_SUCCESSED,
   };
 }

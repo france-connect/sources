@@ -2,6 +2,11 @@
 
 exports[`UserPreferencesPage should match the snapshot, display into a desktop viewport 1`] = `
 <div>
+  <div>
+    <div>
+      React Helmet
+    </div>
+  </div>
   <div
     class="fr-m-auto fr-px-2w fr-mt-8w"
     id="page-container"
@@ -106,6 +111,11 @@ exports[`UserPreferencesPage should match the snapshot, display into a desktop v
 
 exports[`UserPreferencesPage should match the snapshot, display into a mobile viewport 1`] = `
 <div>
+  <div>
+    <div>
+      React Helmet
+    </div>
+  </div>
   <div
     class="fr-m-auto fr-px-2w fr-mt-5w"
     id="page-container"

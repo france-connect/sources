@@ -32,7 +32,7 @@ import { MySpecificDependencyService } from '@fc/my-dependency';
   imports: [
     // Import dynamique en passant en paramètre la class
     // contenant la logique spécifique
-    TrackingModule.register(MyAppTrackingService),
+    TrackingModule.forRoot(MyAppTrackingService),
   ],
   exports: [
     // Il faut exporter les dépendances de MyAppTrackingService

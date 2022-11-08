@@ -27,7 +27,7 @@ export class CryptographyFcpService {
   computeIdentityHash(
     pivotIdentity: RequiredExcept<
       IPivotIdentity,
-      'sub' | 'email' | 'phone_number' | 'preferred_username'
+      'sub' | 'email' | 'preferred_username'
     >,
   ): string {
     const serial =

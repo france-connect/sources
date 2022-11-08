@@ -4,12 +4,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AccountServiceProvider } from '@entities/typeorm';
+import { ServiceProvider } from '@entities/typeorm';
 
 import { PartnerServiceProviderService } from './partner-service-provider.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([AccountServiceProvider])],
+  imports: [TypeOrmModule.forFeature([ServiceProvider])],
   providers: [PartnerServiceProviderService],
   exports: [PartnerServiceProviderService],
 })

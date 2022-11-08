@@ -5,11 +5,11 @@ exports[`LayoutHeaderLogosComponent should match snapshot when application logo 
   <div
     class="fr-header__logo"
   >
-    <div>
+    <span>
       <div>
         LogoRepubliqueFrancaiseComponent
       </div>
-    </div>
+    </span>
   </div>
   <div
     class="fr-header__operator"
@@ -28,11 +28,11 @@ exports[`LayoutHeaderLogosComponent should match the snapshot 1`] = `
   <div
     class="fr-header__logo"
   >
-    <div>
+    <span>
       <div>
         LogoRepubliqueFrancaiseComponent
       </div>
-    </div>
+    </span>
   </div>
 </div>
 `;

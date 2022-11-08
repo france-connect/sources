@@ -5,7 +5,7 @@
 // the axios wrapper might not be a hook but a function
 import axios from 'axios';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface UseApiGetOptionsInterface {
   endpoint: string;
@@ -19,7 +19,7 @@ export const useApiGet = <T>(
   { endpoint, errorPath }: UseApiGetOptionsInterface,
   callback?: Function,
 ) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const isMounted = useRef(false);
   const [data, setData] = useState<T>(undefined as unknown as T);
 
@@ -34,10 +34,10 @@ export const useApiGet = <T>(
         // @SEE issues
         // https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/715
         // https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/781
-        history.replace(errorPath);
+        navigate(errorPath, { replace: true });
       }
     }
-  }, [endpoint, errorPath, history, callback]);
+  }, [endpoint, errorPath, navigate, callback]);
 
   useEffect(() => {
     if (!isMounted.current) {

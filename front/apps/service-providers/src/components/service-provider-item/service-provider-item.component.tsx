@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 import React from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { Link } from 'react-router-dom';
 
 import { BadgeComponent, Breakpoints, Sizes } from '@fc/dsfr';
 
@@ -15,6 +16,7 @@ export interface ServiceProviderItemComponentProps {
   createdAt: string;
   status: string;
   organisationName: string;
+  url: string;
 }
 
 export const ServiceProviderItemComponent: React.FC<ServiceProviderItemComponentProps> = React.memo(
@@ -26,6 +28,7 @@ export const ServiceProviderItemComponent: React.FC<ServiceProviderItemComponent
     platformName,
     spName,
     status,
+    url,
   }: ServiceProviderItemComponentProps) => {
     const gtMobile = useMediaQuery({ minWidth: Breakpoints.XS });
 
@@ -49,7 +52,7 @@ export const ServiceProviderItemComponent: React.FC<ServiceProviderItemComponent
             // eslint-disable-next-line @typescript-eslint/naming-convention
             'is-flex flex-between fr-mb-3v': gtMobile,
           })}>
-          <div
+          <Link
             className={classnames('fr-text--bold fr-m-0', {
               // DSFR naming
               // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -58,9 +61,11 @@ export const ServiceProviderItemComponent: React.FC<ServiceProviderItemComponent
               // eslint-disable-next-line @typescript-eslint/naming-convention
               'fr-text--xl': gtMobile,
             })}
-            data-testid="ServiceProviderItemComponent-spName">
+            data-testid="ServiceProviderItemComponent-spName"
+            title="service-provider-details-pages"
+            to={url}>
             {spName}
-          </div>
+          </Link>
           <BadgeComponent
             noIcon
             colorName={color}

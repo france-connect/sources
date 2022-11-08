@@ -2,6 +2,11 @@
 
 exports[`HomePage should math the snapshot, in a desktop viewport 1`] = `
 <div>
+  <div>
+    <div>
+      React Helmet
+    </div>
+  </div>
   <div
     class="fr-mt-8w"
   >
@@ -27,6 +32,11 @@ exports[`HomePage should math the snapshot, in a desktop viewport 1`] = `
 
 exports[`HomePage should math the snapshot, in a mobile viewport 1`] = `
 <div>
+  <div>
+    <div>
+      React Helmet
+    </div>
+  </div>
   <div
     class="fr-mt-4w"
   >

@@ -31,7 +31,7 @@ describe('CryptographyFcpService', () => {
 
   const pivotIdentityMock: RequiredExcept<
     IPivotIdentity,
-    'sub' | 'email' | 'phone_number' | 'preferred_username'
+    'sub' | 'email' | 'preferred_username'
   > = {
     // scope openid @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
     // eslint-disable-next-line @typescript-eslint/naming-convention

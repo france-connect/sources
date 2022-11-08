@@ -1,8 +1,9 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 
+import { ConfigService } from '@fc/config';
 import { CryptographyModule } from '@fc/cryptography';
 import { ExceptionsModule } from '@fc/exceptions';
 import {
@@ -14,7 +15,12 @@ import {
   ServiceProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
 } from '@fc/service-provider-adapter-env';
-import { SessionModule } from '@fc/session';
+import {
+  SessionConfig,
+  SessionMiddleware,
+  SessionModule,
+  SessionTemplateMiddleware,
+} from '@fc/session';
 
 import {
   MockServiceProviderController,
@@ -41,4 +47,15 @@ const oidcClientModule = OidcClientModule.register(
   ],
   controllers: [OidcClientController, MockServiceProviderController],
 })
-export class MockServiceProviderModule {}
+export class MockServiceProviderModule {
+  constructor(private readonly config: ConfigService) {}
+
+  configure(consumer: MiddlewareConsumer) {
+    const { excludedRoutes } = this.config.get<SessionConfig>('Session');
+
+    consumer
+      .apply(SessionMiddleware, SessionTemplateMiddleware)
+      .exclude(...excludedRoutes)
+      .forRoutes('*');
+  }
+}

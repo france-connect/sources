@@ -1,12 +1,12 @@
 #UserPreferencesFormComponent {
-  .fr-toggle input[type='checkbox'] {
+  .fr-toggle input[type='checkbox']:not(:disabled) {
     background-color: #ce0500;
     background-color: var(--background-action-high-error);
     box-shadow: inset #ce0500;
     box-shadow: inset 0 0 0 1px var(--border-action-high-error);
   }
 
-  .fr-toggle input[type='checkbox'] ~ label::after {
+  .fr-toggle input[type='checkbox']:not(:disabled) ~ label::after {
     background-color: #ffffff;
     background-color: var(--background-default-grey);
     box-shadow: inset #ce0500;
@@ -17,19 +17,19 @@
     z-index: 999999;
   }
 
-  .fr-toggle input[type='checkbox'] ~ label::before {
+  .fr-toggle input[type='checkbox']:not(:disabled) ~ label::before {
     color: #ce0500;
     color: var(--text-default-error);
   }
 
-  .fr-toggle input[type='checkbox']:checked {
+  .fr-toggle input[type='checkbox']:checked:not(:disabled) {
     background-color: #18753c;
     background-color: var(--background-action-high-success);
     box-shadow: inset #18753c;
     box-shadow: inset 0 0 0 1px var(--border-action-high-success);
   }
 
-  .fr-toggle input[type='checkbox']:checked ~ label::after {
+  .fr-toggle input[type='checkbox']:checked:not(:disabled) ~ label::after {
     background-color: #ffffff;
     background-color: var(--background-default-grey);
     box-shadow: inset #18753c;
@@ -40,7 +40,7 @@
     z-index: 999999;
   }
 
-  .fr-toggle input[type='checkbox']:checked ~ label::before {
+  .fr-toggle input[type='checkbox']:checked:not(:disabled) ~ label::before {
     color: #18753c;
     color: var(--text-default-success);
   }

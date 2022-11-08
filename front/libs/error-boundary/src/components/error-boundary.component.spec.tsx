@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import React from 'react';
 
 import { ErrorBoundaryComponent } from './error-boundary.component';
 
@@ -43,7 +42,7 @@ describe('ErrorBoundaryComponent', () => {
         <TheErroredChildren />
       </ErrorBoundaryComponent>,
     );
-    const element = getByText('Something went wrong.');
+    const element = getByText('ErrorBoundaryComponent: Something went wrong.');
 
     // then
     expect(element).toBeInTheDocument();

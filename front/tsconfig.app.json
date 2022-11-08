@@ -39,6 +39,7 @@
       "^@fc/storybook-config(|/.*)$": ["../../.storybook/*"],
       "^@fc/tests-utils(|/.*)$": ["../../tests-utils/src/*"],
       "^@fc/tracks(|/.*)$": ["../../apps/tracks/src/*"],
+      "^@fc/user-dashboard(|/.*)$": ["../../apps/user-dashboard/src/*"],
       "^@fc/user-preferences(|/.*)$": ["../../apps/user-preferences/src/*"]
     }
   }

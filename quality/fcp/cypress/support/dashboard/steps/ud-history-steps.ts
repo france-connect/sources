@@ -122,6 +122,13 @@ Then(
 );
 
 Then(
+  /^le bouton (première page|page précédente|page suivante|dernière page|page \d+) de l'historique est affiché$/,
+  function (pageDescription) {
+    udPagination.getPaginationButton(pageDescription).should('be.visible');
+  },
+);
+
+Then(
   /^les navigations (autorisées|désactivées) dans la pagination de l'historique sont "([^"]+)"$/,
   function (status, buttonsDescription) {
     const areEnabled = status === 'autorisées';

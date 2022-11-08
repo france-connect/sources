@@ -6,9 +6,9 @@ import { AccountContext, AccountInterface } from '@fc/account';
 import { AppContext, AppContextInterface } from '@fc/state-management';
 
 import styles from './layout-header.module.scss';
-import { LayoutHeaderMobileBurgerButton } from './layout-header-mobile-burger.button';
 import { LayoutHeaderLogosComponent } from './logos';
 import { LayoutHeaderMenuComponent } from './menu';
+import { LayoutHeaderMobileBurgerButton } from './mobile-burger-button';
 import { ReturnButtonComponent } from './return-button';
 import { LayoutHeaderServiceComponent } from './service/layout-header-service.component';
 import { LayoutHeaderToolsComponent } from './tools';

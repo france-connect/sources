@@ -18,6 +18,7 @@ Fonctionnalité: Préférences FI
     Quand je clique sur le lien vers la page gestion des accès du dashboard usager
     Alors je suis sur la page gestion des accès du dashboard usager
     Et les fournisseurs d'identité existants sont autorisés
+    Et le fournisseur d'identité "par défaut" n'est pas blocable
     Et les futurs fournisseurs d'identité sont autorisés
     Et le bouton "enregistrer mes réglages" est désactivé
     Et le message d'information "autorisation des futurs fournisseurs d'identité" n'est pas affiché
@@ -123,20 +124,29 @@ Fonctionnalité: Préférences FI
     Et le message d'erreur FranceConnect Legacy est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
     Et je supprime le fournisseur d'identité "fip4_idp-settings" sur le site d'exploitation
 
-  Scénario: Préférences FI - erreur au moins un FI doit être autorisé
+  Scénario: Préférences FI - FI utilisé pour la connexion au user-dashboard ne peut être bloqué
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
+    Et que j'utilise le fournisseur d'identité "par défaut"
+    Et que je navigue sur la page d'accueil du dashboard usager
+    Et que je me connecte au dashboard usager
+    Et que je suis redirigé vers la page historique du dashboard usager
+    Quand je clique sur le lien vers la page gestion des accès du dashboard usager
+    Alors je suis sur la page gestion des accès du dashboard usager
+    Et le fournisseur d'identité "par défaut" n'est pas blocable
+
+  Scénario: Préférences FI - Impossible de bloquer le FI utilisé en forçant l'UI
+    Etant donné que j'utilise un compte usager "pour le test de préférences FI"
+    Et que j'utilise le fournisseur d'identité "par défaut"
     Et que je navigue sur la page d'accueil du dashboard usager
     Et que je me connecte au dashboard usager
     Et que je suis redirigé vers la page historique du dashboard usager
     Et que je clique sur le lien vers la page gestion des accès du dashboard usager
     Et que je suis sur la page gestion des accès du dashboard usager
-    Et que je décide de bloquer tous les fournisseurs d'identité
-    Et que le message d'erreur "au moins un FI doit être autorisé" est affiché
-    Et que le bouton "enregistrer mes réglages" est désactivé
-    Quand je décide d'autoriser le fournisseur d'identité "pour le test de préférences FI"
-    Alors le message d'erreur "au moins un FI doit être autorisé" n'est pas affiché
-    Et le bouton "enregistrer mes réglages" est actif
-    Et je me déconnecte du dashboard usager
+    Et que le fournisseur d'identité "par défaut" n'est pas blocable
+    Quand je force le statut du fournisseur d'identité "par défaut" à l'état bloqué
+    Et je clique sur le bouton "enregistrer mes réglages"
+    Alors je suis redirigé vers la page d'erreur du dashboard usager
+    Et l'erreur "accès interdit" est affichée
 
   Scénario: Préférences FI - Aidants Connect ne doit pas être configurable
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"

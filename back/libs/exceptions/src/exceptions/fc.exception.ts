@@ -25,6 +25,7 @@ export class FcException extends Error {
    * - 18: Account
    * - 19: Session
    * - 20: Feature Handler
+   * - 21: Roles
    * - 27: Mailer
    * - 28: csmr-tracks
    * - 30: Rie Proxy Broker

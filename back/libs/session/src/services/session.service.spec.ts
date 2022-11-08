@@ -1293,42 +1293,4 @@ describe('SessionService', () => {
       );
     });
   });
-
-  describe('shouldHandleSession()', () => {
-    it('should return true for a route that does not match any exluded route', () => {
-      // setup
-      const route = '/cause/I/was/on/the/road/all/the/livelong/day';
-      const excludedRoutes = ['/route/66'];
-
-      // action
-      const result = service['shouldHandleSession'](route, excludedRoutes);
-
-      // expect
-      expect(result).toStrictEqual(true);
-    });
-
-    it('should return false for a route that match a RegExp in the excluded routes', () => {
-      // setup
-      const route = '/route/excluded/69';
-      const excludedRoutes = [/excluded\/.*/];
-
-      // action
-      const result = service['shouldHandleSession'](route, excludedRoutes);
-
-      // expect
-      expect(result).toStrictEqual(false);
-    });
-
-    it('should return false for a route that match exactly a string in the excluded routes', () => {
-      // setup
-      const route = '/route/66';
-      const excludedRoutes = ['/route/66'];
-
-      // action
-      const result = service['shouldHandleSession'](route, excludedRoutes);
-
-      // expect
-      expect(result).toStrictEqual(false);
-    });
-  });
 });

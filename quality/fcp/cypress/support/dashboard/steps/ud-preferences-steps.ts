@@ -49,7 +49,7 @@ When(
 );
 
 When(
-  /^je décide (d'autoriser|de bloquer) le fournisseur d'identité "([^"]+)"$/,
+  /^je décide (d'autoriser|de bloquer) (?:le|un) fournisseur d'identité "([^"]+)"$/,
   function (text, idpDescription) {
     const isAuthorized = text === "d'autoriser";
     const { name } = getIdentityProviderByDescription(
@@ -58,6 +58,19 @@ When(
     );
     const idpSetting = udPreferencesPage.getIdentityProviderSetting(name);
     idpSetting.setIdpAuthorization(isAuthorized);
+  },
+);
+
+When(
+  /^je force le statut du fournisseur d'identité "([^"]+)" à l'état (autorisé|bloqué)$/,
+  function (idpDescription, text) {
+    const isAuthorized = text === 'autorisé';
+    const { name } = getIdentityProviderByDescription(
+      this.identityProviders,
+      idpDescription,
+    );
+    const idpSetting = udPreferencesPage.getIdentityProviderSetting(name);
+    idpSetting.setForceIdpAuthorization(isAuthorized);
   },
 );
 
@@ -87,6 +100,7 @@ When(
         return;
       } else {
         cy.wrap($btn).click();
+        cy.waitForNetworkIdle('/api', 500);
         cy.reload();
         cy.waitForNetworkIdle('/api', 500);
       }
@@ -99,6 +113,22 @@ Then(
   function (text) {
     const authorization = text === 'autorisés';
     udPreferencesPage.checkAllIdpAuthorization(authorization);
+  },
+);
+
+Then(
+  /^le fournisseur d'identité "([^"]+)" (est|n'est pas) blocable$/,
+  function (idpDescription, text) {
+    const isCheckboxEnabled = text === 'est';
+    const { name } = getIdentityProviderByDescription(
+      this.identityProviders,
+      idpDescription,
+    );
+    const idpSetting = udPreferencesPage.getIdentityProviderSetting(name);
+    idpSetting
+      .getCheckbox()
+      .should('be.checked')
+      .should(isCheckboxEnabled ? 'be.enabled' : 'be.disabled');
   },
 );
 

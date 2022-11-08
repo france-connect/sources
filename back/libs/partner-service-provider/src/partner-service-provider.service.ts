@@ -3,76 +3,73 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { AccountServiceProvider, Datapass } from '@entities/typeorm';
+import { Datapass, ServiceProvider } from '@entities/typeorm';
 
+import { uuid } from '@fc/common';
 import { LoggerService } from '@fc/logger-legacy';
 
 import { PostgresConnectionFailure } from './exceptions';
-import { IServiceProviderItem, partnerServiceProviderList } from './interfaces';
+import { IServiceProviderItem } from './interfaces';
 
 @Injectable()
 export class PartnerServiceProviderService {
   constructor(
     private readonly logger: LoggerService,
-    @InjectRepository(AccountServiceProvider)
-    private readonly accountServiceProviderRepository: Repository<AccountServiceProvider>,
+    @InjectRepository(ServiceProvider)
+    private readonly serviceProviderRepository: Repository<ServiceProvider>,
   ) {
     this.logger.setContext(this.constructor.name);
   }
 
-  async getServiceProvidersListByAccount(
-    accountId: string,
+  async getById(id: uuid): Promise<IServiceProviderItem> {
+    const { items } = await this.getByIds([id], 0, 1);
+
+    return items.pop();
+  }
+
+  async getByIds(
+    ids: uuid[],
     offset: number,
     limit: number,
-  ): Promise<partnerServiceProviderList> {
-    let dataFromDb, items: IServiceProviderItem[], totalItems: number;
+  ): Promise<{ total: number; items: IServiceProviderItem[] }> {
+    const query = this.serviceProviderRepository
+      .createQueryBuilder('serviceProvider')
+      .where('serviceProvider.id IN(:...ids)', {
+        ids,
+      })
+      .andWhere(this.getLastRemoteId)
+      .leftJoinAndSelect('serviceProvider.organisation', 'organisation')
+      .leftJoinAndSelect('serviceProvider.platform', 'platform')
+      .leftJoinAndSelect('serviceProvider.datapasses', 'datapass')
+      .select([
+        'serviceProvider',
+        'organisation.name',
+        'platform.name',
+        'datapass.remoteId',
+      ])
+      .orderBy('serviceProvider.createdAt', 'ASC')
+      .offset(offset)
+      .limit(limit);
 
-    // get partner service providers data
-    /**
-     * @todo  : optimize this query
-     * @todo  : refacto how we get the last datapass remoteId or createdAt
-     */
+    let items;
+    let total;
+
     try {
-      dataFromDb = await this.accountServiceProviderRepository
-        .createQueryBuilder('accountServiceProvider')
-        .where('accountServiceProvider.accountId = :accountId', {
-          accountId,
-        })
-        .leftJoinAndSelect(
-          'accountServiceProvider.serviceProvider',
-          'serviceProvider',
-        )
-        .leftJoinAndSelect('serviceProvider.organisation', 'organisation')
-        .leftJoinAndSelect('serviceProvider.platform', 'platform')
-        .leftJoinAndSelect('serviceProvider.datapasses', 'datapass')
-        .select([
-          'accountServiceProvider',
-          'serviceProvider',
-          'organisation.name',
-          'platform.name',
-          'datapass.remoteId',
-        ])
-        .andWhere(this.getLastRemoteId)
-        .offset(offset)
-        .limit(limit)
-        .getMany();
-
-      items = dataFromDb.map(({ serviceProvider }) => serviceProvider);
-      totalItems = dataFromDb.length;
+      items = await query.getMany();
+      total = await query.getCount();
     } catch (error) {
-      this.logger.error(error);
-      throw new PostgresConnectionFailure();
+      throw new PostgresConnectionFailure(error);
     }
 
+    this.logger.trace({ items, total });
+
     return {
-      totalItems,
       items,
+      total,
     };
   }
 
-  private getLastRemoteId(
-    qb: SelectQueryBuilder<AccountServiceProvider>,
-  ): string {
+  private getLastRemoteId(qb: SelectQueryBuilder<ServiceProvider>): string {
     const subQuery = qb
       .subQuery()
       .select('MAX(datapass.remoteId)')

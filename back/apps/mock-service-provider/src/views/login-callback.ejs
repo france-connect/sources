@@ -80,13 +80,6 @@
 
               <% }); %>
 
-
-              <% if (locals.idpIdentity.address) { %>
-              <p>Addresse : <strong><%=locals.idpIdentity.address.street_address;%>,
-                  <%=locals.idpIdentity.address.postal_code;%>
-                  <%=locals.idpIdentity.address.locality%> (<%=locals.idpIdentity.address.country;%>)</strong></p>
-              <% } %>
-
               <p>Nom d'usage : <strong><%=(locals.idpIdentity.preferred_username) ? locals.idpIdentity.preferred_username : '/';%></strong></p>
 
 

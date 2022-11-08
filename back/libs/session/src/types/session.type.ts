@@ -1,4 +1,6 @@
 /* istanbul ignore file */
 
 // declarative code
-export type ExcludedRoutes = (string | RegExp)[];
+import { RouteInfo } from '@nestjs/common/interfaces';
+
+export type ExcludedRoutes = (string | RouteInfo)[];

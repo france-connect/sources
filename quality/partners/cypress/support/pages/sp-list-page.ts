@@ -3,7 +3,7 @@ import { ChainableElement, ServiceProvider } from '../types';
 
 export default class SPListPage {
   checkIsVisible(): void {
-    cy.url().should('include', '/service-providers');
+    this.getPageTitle().should('be.visible');
   }
 
   getPageTitle(): ChainableElement {

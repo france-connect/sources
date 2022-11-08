@@ -9,11 +9,5 @@
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0"
   },
-  "devDependencies": {},
-  "main": "src/index.ts",
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ]
+  "main": "src/index.ts"
 }

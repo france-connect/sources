@@ -33,6 +33,7 @@ module.exports = {
     '^@fc/service-providers(|/.*)$': '<rootDir>/apps/service-providers/src/$1',
     '^@fc/state-management(|/.*)$': '<rootDir>/libs/state-management/src/$1',
     '^@fc/tracks(|/.*)$': '<rootDir>/apps/tracks/src/$1',
+    '^@fc/user-dashboard(|/.*)$': '<rootDir>/apps/user-dashboard/src/$1',
     '^@fc/user-preferences(|/.*)$': '<rootDir>/apps/user-preferences/src/$1',
     /**
      * Custom test wrappers

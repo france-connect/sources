@@ -3,7 +3,7 @@
 exports[`HomePage should match snapshot when session is expired 1`] = `
 <div>
   <div
-    class="homepage fr-m-auto fr-px-2w fr-mt-3w text-center"
+    class="large-container fr-m-auto fr-px-2w fr-mt-3w text-center"
     id="page-container"
   >
     <div>
@@ -34,7 +34,7 @@ exports[`HomePage should match snapshot when session is expired 1`] = `
 exports[`HomePage should match the snapshot on mobile layout 1`] = `
 <div>
   <div
-    class="homepage fr-m-auto fr-px-2w fr-mt-5w text-left"
+    class="large-container fr-m-auto fr-px-2w fr-mt-5w text-left"
     id="page-container"
   >
     <h1
@@ -61,7 +61,7 @@ exports[`HomePage should match the snapshot on mobile layout 1`] = `
 exports[`HomePage should match the snapshot, when csrf token is defined 1`] = `
 <div>
   <div
-    class="homepage fr-m-auto fr-px-2w fr-mt-8w text-center"
+    class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
     id="page-container"
   >
     <h1
@@ -88,7 +88,7 @@ exports[`HomePage should match the snapshot, when csrf token is defined 1`] = `
 exports[`HomePage should match the snapshot, when csrf token is not defined 1`] = `
 <div>
   <div
-    class="homepage fr-m-auto fr-px-2w fr-mt-8w text-center"
+    class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
     id="page-container"
   >
     <h1

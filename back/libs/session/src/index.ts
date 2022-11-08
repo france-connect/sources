@@ -14,5 +14,6 @@ export {
   ISessionCookieOptions,
   ISessionService,
 } from './interfaces';
+export * from './middlewares';
 export * from './services';
 export * from './session.module';

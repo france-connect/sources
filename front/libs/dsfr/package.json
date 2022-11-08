@@ -5,37 +5,19 @@
   "dependencies": {
     "@fc/account": "^0.1.0",
     "@fc/common": "^0.1.0",
-    "@fc/oidc-client": "^0.1.0",
     "@fc/state-management": "^0.1.0",
     "@gouvfr/dsfr": "1.4.1",
-    "@types/lodash.range": "^3.2.7",
-    "@types/react-modal": "^3.13.1",
     "classnames": "^2.3.1",
-    "global": "^4.4.0",
     "lodash.range": "^3.2.0",
-    "query-string": "^7.0.1",
     "react": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-icons": "^4.2.0",
-    "react-jss": "^10.9.0",
-    "react-modal": "^3.14.4",
     "react-responsive": "^9.0.0-beta.10",
-    "react-router-dom": "^5.2.0"
-  },
-  "devDependencies": {
-    "@fc/tests-utils": "^0.1.0",
-    "@types/react-helmet": "^6.1.0",
-    "@types/react-responsive": "^8.0.4",
-    "jest": "^28.1.1"
+    "react-router-dom": "^6.3.0"
   },
   "main": "src/index.ts",
   "files": [
     "src/styles/index.scss",
     "src/modules/index.scss"
-  ],
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
   ]
 }

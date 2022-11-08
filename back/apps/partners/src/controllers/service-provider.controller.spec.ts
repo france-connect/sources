@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { AccessControlGuard, IPermission } from '@fc/access-control';
+import { PaginationOptionDto } from '@fc/common';
 import { LoggerService } from '@fc/logger-legacy';
 
 import { PartnersService } from '../services/partners.service';
@@ -15,24 +17,24 @@ describe('ServiceProviderController', () => {
   } as unknown as LoggerService;
 
   const partnersServiceMock = {
-    login: jest.fn(),
-    getServiceProvidersByAccount: jest.fn(),
+    getServiceProvidersFromPermissions: jest.fn(),
+    getServiceProviderById: jest.fn(),
   };
 
-  const sessionPartnerAccountMock = {
-    set: jest.fn(),
-    get: jest.fn(),
+  const rolesGuardMock = {
+    canActivate: () => true,
   };
 
-  const resMock = {
-    status: jest.fn(),
-    json: jest.fn(),
+  const partnersDataMock = {
+    id: 'idValue',
+    name: 'nameValue',
+    organisation: 'organisationValue',
+    platform: 'platformValue',
+    status: 'statusValue',
+    updatedAt: 'updatedAtValue',
+    createdAt: 'createdAtValue',
+    secretDataThatShouldNotBeReturned: 'secretDataThatShouldNotBeReturned',
   };
-
-  const createdAt = new Date();
-  const updatedAt = new Date();
-
-  const statusMock = { end: jest.fn() };
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -42,6 +44,8 @@ describe('ServiceProviderController', () => {
       controllers: [ServiceProviderController],
       providers: [PartnersService, LoggerService],
     })
+      .overrideGuard(AccessControlGuard)
+      .useValue(rolesGuardMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
       .overrideProvider(PartnersService)
@@ -49,88 +53,120 @@ describe('ServiceProviderController', () => {
       .compile();
 
     controller = app.get<ServiceProviderController>(ServiceProviderController);
+    partnersServiceMock.getServiceProviderById.mockResolvedValueOnce(
+      partnersDataMock,
+    );
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('getServiceProvidersByaccount', () => {
-    const expected = {
-      meta: { totalItems: 1 },
-      payload: [
-        {
-          id: 'd7d36b81-0b68-4c26-a399-854848164f29',
-          name: 'Service Provider - Sandbox',
-          status: 'SANDBOX',
-          createdAt,
-          updatedAt,
-          organisation: {
-            name: 'Direction Interministerielle du Numérique',
-          },
-          platform: {
-            name: 'FRANCE_CONNECT_LOW',
-          },
-        },
-      ],
+  describe('getServiceProviderList', () => {
+    const queryMock: PaginationOptionDto = {
+      offset: 0,
+      size: 10,
     };
 
-    it('should call res.json', async () => {
+    const permissionsMock = [] as unknown as IPermission[];
+
+    it('should call partnerService.getServiceProvidersFromPermissions()', async () => {
+      // When
+      await controller.getServiceProviderList(permissionsMock, queryMock);
+      // Then
+      expect(
+        partnersServiceMock.getServiceProvidersFromPermissions,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        partnersServiceMock.getServiceProvidersFromPermissions,
+      ).toHaveBeenCalledWith(permissionsMock, queryMock.offset, queryMock.size);
+    });
+
+    it('should return result from getServiceProvidersFromPermissions', async () => {
       // Given
-      sessionPartnerAccountMock.get.mockResolvedValueOnce({
-        id: '123',
+      const getServiceResponseMock = Symbol('getServiceResponseMock');
+      partnersServiceMock.getServiceProvidersFromPermissions.mockResolvedValueOnce(
+        getServiceResponseMock,
+      );
+      // When
+      const result = await controller.getServiceProviderList(
+        permissionsMock,
+        queryMock,
+      );
+      // Then
+      expect(result).toBe(getServiceResponseMock);
+    });
+  });
+
+  describe('getServiceProviderView', () => {
+    // Given
+    const paramsMock = {
+      id: 'id-mock-value',
+    };
+
+    it('should retrieve service provider informations', async () => {
+      // When
+      await controller.getServiceProviderView(paramsMock);
+      // Then
+      expect(partnersServiceMock.getServiceProviderById).toHaveBeenCalledTimes(
+        1,
+      );
+
+      expect(partnersServiceMock.getServiceProviderById).toHaveBeenCalledWith(
+        paramsMock.id,
+      );
+    });
+
+    it('should return only chosen data with structure', async () => {
+      // When
+      const result = await controller.getServiceProviderView(paramsMock);
+      // Then
+      expect(result).toEqual({
+        type: 'SERVICE_PROVIDER_VIEW',
+        payload: {
+          id: 'idValue',
+          name: 'nameValue',
+          organisation: 'organisationValue',
+          platform: 'platformValue',
+          status: 'statusValue',
+        },
       });
-      partnersServiceMock.getServiceProvidersByAccount.mockResolvedValueOnce(
-        expected,
-      );
+    });
+  });
 
+  describe('getServiceProviderEdit', () => {
+    // Given
+    const paramsMock = {
+      id: 'id-mock-value',
+    };
+
+    it('should retrieve service provider informations', async () => {
       // When
-      await controller.getServiceProvidersByAccount(
-        0,
-        10,
-        resMock,
-        sessionPartnerAccountMock,
+      await controller.getServiceProviderEdit(paramsMock);
+      // Then
+      expect(partnersServiceMock.getServiceProviderById).toHaveBeenCalledTimes(
+        1,
       );
 
-      // Then
-      expect(resMock.json).toHaveBeenCalledTimes(1);
-      expect(resMock.json).toHaveBeenCalledWith(expected);
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
+      expect(partnersServiceMock.getServiceProviderById).toHaveBeenCalledWith(
+        paramsMock.id,
+      );
     });
 
-    it('should call res.status', async () => {
-      // Given
-      sessionPartnerAccountMock.get.mockResolvedValueOnce({});
-      resMock.status.mockReturnValueOnce(statusMock);
-
+    it('should return only chosen properties from service provider data, with FSA structure', async () => {
       // When
-      await controller.getServiceProvidersByAccount(
-        1,
-        10,
-        resMock,
-        sessionPartnerAccountMock,
-      );
+      const result = await controller.getServiceProviderEdit(paramsMock);
       // Then
-      expect(resMock.status).toHaveBeenCalledTimes(1);
-      expect(resMock.status).toHaveBeenCalledWith(401);
-      expect(statusMock.end).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(0);
-    });
-
-    it('should call looger.error, if user session is not found', async () => {
-      // Given
-      sessionPartnerAccountMock.get.mockRejectedValueOnce(undefined);
-      resMock.status.mockReturnValueOnce(statusMock);
-
-      // When
-      await controller.getServiceProvidersByAccount(
-        1,
-        10,
-        resMock,
-        sessionPartnerAccountMock,
-      );
-      // Then
-      expect(loggerServiceMock.error).toHaveBeenCalledTimes(1);
+      expect(result).toEqual({
+        type: 'SERVICE_PROVIDER_EDIT',
+        payload: {
+          id: 'idValue',
+          name: 'nameValue',
+          organisation: 'organisationValue',
+          platform: 'platformValue',
+          status: 'statusValue',
+        },
+      });
     });
   });
 });

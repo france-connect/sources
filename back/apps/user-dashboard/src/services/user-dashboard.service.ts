@@ -14,10 +14,12 @@ import {
   MailTo,
   NoEmailException,
 } from '@fc/mailer';
+import { FormattedIdpDto, FormattedIdpSettingDto } from '@fc/user-preferences';
 
 import { AppConfig } from '../dto';
 import { EmailsTemplates } from '../enums';
 import { FormatDate } from '../enums/format-date.enum';
+import { IdpSettingsChangesInterface } from '../interfaces';
 
 @Injectable()
 export class UserDashboardService {
@@ -27,6 +29,68 @@ export class UserDashboardService {
     private readonly mailer: MailerService,
   ) {
     this.logger.setContext(this.constructor.name);
+  }
+
+  async sendMail(userInfo, idpConfiguration): Promise<void> {
+    const { from } = this.config.get<MailerConfig>('Mailer');
+    let errors = await validateDto(from, MailFrom, validationOptions);
+    if (errors.length > 0) {
+      this.logger.error(errors);
+      throw new NoEmailException();
+    }
+
+    const { email, givenName, familyName } = userInfo;
+
+    const mailTo: MailTo = {
+      email,
+      name: `${givenName} ${familyName}`,
+    };
+
+    const to: MailTo[] = [mailTo];
+    errors = await validateDto(mailTo, MailTo, validationOptions);
+    if (errors.length > 0) {
+      this.logger.error(errors);
+      throw new NoEmailException();
+    }
+
+    // -- email bodyfamilyName
+    const body = await this.getIdpConfigUpdateEmailBodyContent(
+      userInfo,
+      idpConfiguration,
+    );
+
+    this.logger.trace({ from, to });
+
+    this.mailer.send({
+      from,
+      to,
+      subject: `Modification de vos accès dans FranceConnect`,
+      body,
+    });
+  }
+
+  formatUserPreferenceChangeTrackLog(
+    formattedIdpSetting: FormattedIdpSettingDto,
+  ): IdpSettingsChangesInterface {
+    const changeListToLog: IdpSettingsChangesInterface = { list: [] };
+
+    if (formattedIdpSetting.hasAllowFutureIdpChanged) {
+      changeListToLog.futureAllowedNewValue =
+        formattedIdpSetting.allowFutureIdp;
+    }
+
+    changeListToLog.list = formattedIdpSetting.updatedIdpSettingsList.map(
+      ({ uid, name, title, isChecked }: FormattedIdpDto) => {
+        return {
+          uid,
+          name,
+          title,
+          allowed: isChecked,
+        };
+      },
+    );
+
+    return changeListToLog as IdpSettingsChangesInterface;
   }
 
   private formatDateForEmail(isoDate: string): string {
@@ -75,43 +139,5 @@ export class UserDashboardService {
     const htmlContent = this.mailer.mailToSend(fileName, idpConfigUpdateEmail);
 
     return htmlContent;
-  }
-
-  async sendMail(userInfo, idpConfiguration): Promise<void> {
-    const { from } = this.config.get<MailerConfig>('Mailer');
-    let errors = await validateDto(from, MailFrom, validationOptions);
-    if (errors.length > 0) {
-      this.logger.error(errors);
-      throw new NoEmailException();
-    }
-
-    const { email, givenName, familyName } = userInfo;
-
-    const mailTo: MailTo = {
-      email,
-      name: `${givenName} ${familyName}`,
-    };
-
-    const to: MailTo[] = [mailTo];
-    errors = await validateDto(mailTo, MailTo, validationOptions);
-    if (errors.length > 0) {
-      this.logger.error(errors);
-      throw new NoEmailException();
-    }
-
-    // -- email bodyfamilyName
-    const body = await this.getIdpConfigUpdateEmailBodyContent(
-      userInfo,
-      idpConfiguration,
-    );
-
-    this.logger.trace({ from, to });
-
-    this.mailer.send({
-      from,
-      to,
-      subject: `Modification de vos accès dans FranceConnect`,
-      body,
-    });
   }
 }

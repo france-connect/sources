@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+
+// declarative file
 export interface ServiceProviderItem {
   id: string;
   color: string;
@@ -7,4 +10,5 @@ export interface ServiceProviderItem {
   platformName: string;
   spName: string;
   status: string;
+  url: string;
 }

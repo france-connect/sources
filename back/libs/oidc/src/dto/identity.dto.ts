@@ -37,10 +37,4 @@ export class OidcIdentityDto {
 
   @IsEmail()
   email: string;
-
-  @IsString()
-  @IsOptional()
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  phone_number?: string;
 }

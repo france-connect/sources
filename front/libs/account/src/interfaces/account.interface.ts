@@ -3,9 +3,9 @@
 // declarative file
 import { AccountData } from './account-data.interface';
 
-export interface AccountInterface {
+export interface AccountInterface<U = AccountData> {
   connected: boolean;
   ready: boolean;
-  userinfos: AccountData | undefined;
+  userinfos: U | undefined;
   updateAccount: Function;
 }

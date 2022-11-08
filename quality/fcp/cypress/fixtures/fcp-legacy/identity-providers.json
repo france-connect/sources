@@ -19,7 +19,7 @@
   {
     "idpId": "fip2",
     "name": "fip2",
-    "descriptions": [],
+    "descriptions": ["distinct"],
     "mocked": true,
     "usable": true,
     "url": "https://fip2.{{TEST_ENV}}.dev-franceconnect.fr/interaction",

@@ -11,7 +11,6 @@ const CLAIM_LABELS = {
   family_name: 'Nom de naissance',
   gender: 'Sexe',
   given_name: 'Prénom(s)',
-  phone_number: 'Téléphone',
   preferred_username: 'Nom d’usage',
 };
 /* eslint-enable @typescript-eslint/naming-convention */

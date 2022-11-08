@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { PaginationComponent } from '@fc/dsfr';
 
@@ -12,10 +12,10 @@ export type TracksListComponentProps = {
   options: TracksConfig;
 };
 
-const NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION = 5;
+const NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION = 3;
 
 export const TracksListComponent = React.memo(({ options }: TracksListComponentProps) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { tracks } = usePaginatedTracks(options);
 
@@ -27,9 +27,9 @@ export const TracksListComponent = React.memo(({ options }: TracksListComponentP
         size: String(size),
       });
       /* @TODO create an util in lib/common in order to transforme the URLSearchParams */
-      history.push(`/history?${location.toString()}`);
+      navigate(`/history?${location.toString()}`);
     },
-    [tracks, history],
+    [tracks, navigate],
   );
 
   return (

@@ -3,7 +3,6 @@ import { render } from '@testing-library/react';
 import { HomePage } from './home.page';
 
 jest.mock('@fc/i18n');
-jest.mock('react-router-dom');
 
 describe('HomePage', () => {
   beforeEach(() => {

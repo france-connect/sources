@@ -1,8 +1,9 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Global, Module } from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
 
+import { ConfigService } from '@fc/config';
 import { CryptographyModule } from '@fc/cryptography';
 import { EidasClientController, EidasClientModule } from '@fc/eidas-client';
 import { EidasCountryModule } from '@fc/eidas-country';
@@ -22,7 +23,12 @@ import {
   ServiceProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
 } from '@fc/service-provider-adapter-env';
-import { SessionModule } from '@fc/session';
+import {
+  SessionConfig,
+  SessionMiddleware,
+  SessionModule,
+  SessionTemplateMiddleware,
+} from '@fc/session';
 
 import {
   EuIdentityToFrController,
@@ -76,4 +82,15 @@ const oidcProviderModule = OidcProviderModule.register(
   providers: [OidcMiddlewareService, OidcProviderConfigAppService],
   exports: [OidcProviderConfigAppService],
 })
-export class EidasBridgeModule {}
+export class EidasBridgeModule {
+  constructor(private readonly config: ConfigService) {}
+
+  configure(consumer: MiddlewareConsumer) {
+    const { excludedRoutes } = this.config.get<SessionConfig>('Session');
+
+    consumer
+      .apply(SessionMiddleware, SessionTemplateMiddleware)
+      .exclude(...excludedRoutes)
+      .forRoutes('*');
+  }
+}

@@ -4,5 +4,5 @@
 import { PartnersConfig } from '@fc/partners';
 
 export const Application: PartnersConfig = {
-  persistKey: 'fc::partners-fca',
+  persistKey: 'fc::partners-fca::v1',
 };

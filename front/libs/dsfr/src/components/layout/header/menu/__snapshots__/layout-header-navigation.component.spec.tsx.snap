@@ -29,16 +29,16 @@ exports[`LayoutHeaderNavigationComponent should match the snapshot, with navigat
       <li
         class="fr-nav__item"
       >
-        <div>
+        <span>
           any-label-mock-1
-        </div>
+        </span>
       </li>
       <li
         class="fr-nav__item"
       >
-        <div>
+        <span>
           any-label-mock-2
-        </div>
+        </span>
       </li>
     </ul>
   </nav>

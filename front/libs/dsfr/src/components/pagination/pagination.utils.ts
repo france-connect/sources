@@ -5,8 +5,9 @@
 import lodashRange from 'lodash.range';
 
 import {
+  IDesktopDisplayParams,
   IGetCurrentPage,
-  IGetEllipsis,
+  IGetDisplayParameters,
   IGetNavigationNumbers,
   IGetPagesCount,
 } from '../../interfaces';
@@ -24,6 +25,7 @@ export const getCurrentPage = ({
   return zeroIndexCurrentPage;
 };
 
+// récupération du tableau d'indices des pages à afficher en desktop
 export const getNavigationNumbers = ({
   currentPage: zeroIndexCurrentPage,
   numberOfPagesShownIntoNavigation,
@@ -59,11 +61,46 @@ export const getNavigationNumbers = ({
   return navigationNumbers;
 };
 
-export const getEllipsis = ({
+// récupération du tableau d'indices des pages à afficher en mobile
+export const getMobileNavigationNumbers = ({
+  currentPage: zeroIndexCurrentPage,
+  pagesCount,
+}: IGetNavigationNumbers): number[] => {
+  const maxNumberOfPagesShownIntoNavigation = 3;
+
+  if (pagesCount <= maxNumberOfPagesShownIntoNavigation) {
+    return [...Array(pagesCount).keys()];
+  }
+
+  const lastPage = pagesCount - 1;
+  let middlePage = zeroIndexCurrentPage;
+
+  if (zeroIndexCurrentPage === 0) {
+    middlePage = 1;
+  }
+
+  if (zeroIndexCurrentPage === lastPage) {
+    middlePage = lastPage - 1;
+  }
+
+  return [middlePage - 1, middlePage, lastPage];
+};
+
+export const getDisplayParameters = ({
   currentPage,
+  isMobile,
   numberOfPagesShownIntoNavigation,
   pagesCount,
-}: IGetEllipsis) => {
+}: IGetDisplayParameters): IDesktopDisplayParams => {
+  if (isMobile) {
+    return {
+      showFirstEllipsis: false,
+      showFirstPage: false,
+      showLastEllipsis: false,
+      showLastPage: false,
+    };
+  }
+
   const hasMorePagesThanTheDefinedRange = pagesCount > numberOfPagesShownIntoNavigation;
   const visible = !!numberOfPagesShownIntoNavigation && hasMorePagesThanTheDefinedRange;
   const midLimit = Math.floor(numberOfPagesShownIntoNavigation / 2);

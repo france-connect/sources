@@ -1,10 +1,9 @@
-import { mocked } from 'jest-mock';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
-import { AccountServiceProvider } from '@entities/typeorm';
+import { ServiceProvider } from '@entities/typeorm';
 
 import { LoggerService } from '@fc/logger-legacy';
 
@@ -17,83 +16,95 @@ describe('PartnerServiceProviderService', () => {
   const loggerServiceMock = {
     setContext: jest.fn(),
     error: jest.fn(),
+    trace: jest.fn(),
   };
 
-  const accountServiceProviderRepositoryMock = {
+  const serviceProviderRepositoryMock = {
     createQueryBuilder: jest.fn(),
     leftJoinAndSelect: jest.fn(),
     where: jest.fn(),
-    subQuery: jest.fn(),
+    andWhere: jest.fn(),
     select: jest.fn(),
     from: jest.fn(),
-    getQuery: jest.fn(),
-    andWhere: jest.fn(),
     limit: jest.fn(),
     offset: jest.fn(),
     getMany: jest.fn(),
+    groupBy: jest.fn(),
+    orderBy: jest.fn(),
+    getQuery: jest.fn(),
+    subQuery: jest.fn(),
+    getCount: jest.fn(),
   };
 
-  const qbMock = {
-    subQuery: jest.fn(),
-    select: jest.fn(),
-    from: jest.fn(),
-    where: jest.fn(),
-    getQuery: jest.fn(),
-  } as unknown as SelectQueryBuilder<AccountServiceProvider>;
+  const getQueryReturnedMock = 'getQueryReturnyMockValue';
 
-  const createdAt = new Date();
-  const updatedAt = new Date();
-
-  const dbQueryMock = [
-    {
-      id: '1db73ecc-93b6-4c3b-9dff-582062154684',
-      accountId: '547adf82-fe52-4659-92b3-dd2399c871e1',
-      serviceProviderId: 'd7d36b81-0b68-4c26-a399-854848164f29',
-      serviceProvider: {
-        id: 'd7d36b81-0b68-4c26-a399-854848164f29',
-        name: 'Service Provider - Sandbox',
-        status: 'SANDBOX',
-        createdAt,
-        updatedAt,
-        organisation: {
-          name: 'Direction Interministerielle du Numérique',
-        },
-        platform: {
-          name: 'FRANCE_CONNECT_LOW',
-        },
-        datapass: [
-          {
-            remoteId: '765',
-          },
-        ],
-      },
-    },
-  ];
-
-  const accountId = '123';
+  const getCountResolvedMock = Symbol('getCountResolvedMock');
+  const getManyResolvedMock = [Symbol('getManyResolvedMock')];
   const offset = 0;
-  const limit = 10;
+  const size = 10;
 
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forFeature([AccountServiceProvider])],
+      imports: [TypeOrmModule.forFeature([ServiceProvider])],
       providers: [
         LoggerService,
         PartnerServiceProviderService,
-        Repository<AccountServiceProvider>,
+        Repository<ServiceProvider>,
       ],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(getRepositoryToken(AccountServiceProvider))
-      .useValue(accountServiceProviderRepositoryMock)
+      .overrideProvider(getRepositoryToken(ServiceProvider))
+      .useValue(serviceProviderRepositoryMock)
       .compile();
 
     service = module.get<PartnerServiceProviderService>(
       PartnerServiceProviderService,
+    );
+
+    serviceProviderRepositoryMock.createQueryBuilder.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.leftJoinAndSelect.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.where.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.andWhere.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.select.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.from.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.limit.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.offset.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.groupBy.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.orderBy.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.subQuery.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.getMany.mockReturnValue(getManyResolvedMock);
+
+    serviceProviderRepositoryMock.getQuery.mockReturnValue(
+      getQueryReturnedMock,
+    );
+    serviceProviderRepositoryMock.getCount.mockResolvedValue(
+      getCountResolvedMock,
     );
   });
 
@@ -107,156 +118,114 @@ describe('PartnerServiceProviderService', () => {
     );
   });
 
-  describe('getServiceProvidersListByAccount', () => {
+  describe('getById', () => {
+    // Given
+    const dataMock = {};
+    const idMock = 'some-uuid-v4-value';
+
+    beforeEach(() => {
+      service['getByIds'] = jest
+        .fn()
+        .mockResolvedValueOnce({ items: [dataMock] });
+    });
+
+    it('should call service.getByIds() with an array containing only given id and select only first result', async () => {
+      // When
+      await service.getById(idMock);
+      // Then
+      expect(service.getByIds).toBeCalledTimes(1);
+      expect(service.getByIds).toBeCalledWith([idMock], 0, 1);
+    });
+
+    it('should return the unique item of the array returned by call to service.getByIds()', async () => {
+      // When
+      const result = await service.getById(idMock);
+      // Then
+      expect(result).toBe(dataMock);
+    });
+  });
+
+  describe('getByIds', () => {
+    beforeEach(() => {
+      service['getLastRemoteId'] = jest
+        .fn()
+        .mockResolvedValueOnce('sub query string');
+    });
+
+    it('should call queryBuilder with where clause containing concatenated id list', async () => {
+      // given
+      const ids = ['foo', 'bar'];
+      // when
+      await service.getByIds(ids, offset, size);
+      // then
+      expect(serviceProviderRepositoryMock.where).toHaveBeenCalledWith(
+        'serviceProvider.id IN(:...ids)',
+        { ids },
+      );
+    });
+
+    it('should call queryBuilder with pagination parameters', async () => {
+      // given
+      const ids = ['foo', 'bar'];
+      // when
+      await service.getByIds(ids, offset, size);
+      // then
+      expect(serviceProviderRepositoryMock.offset).toHaveBeenCalledWith(offset);
+      expect(serviceProviderRepositoryMock.limit).toHaveBeenCalledWith(size);
+    });
+
     it('should return a payload with items total inside', async () => {
       // given
       const expected = {
-        totalItems: 1,
-        items: [
-          {
-            id: 'd7d36b81-0b68-4c26-a399-854848164f29',
-            name: 'Service Provider - Sandbox',
-            status: 'SANDBOX',
-            createdAt,
-            updatedAt,
-            organisation: {
-              name: 'Direction Interministerielle du Numérique',
-            },
-            platform: {
-              name: 'FRANCE_CONNECT_LOW',
-            },
-            datapass: [
-              {
-                remoteId: '765',
-              },
-            ],
-          },
-        ],
+        total: getCountResolvedMock,
+        items: getManyResolvedMock,
       };
-      mocked(
-        accountServiceProviderRepositoryMock.createQueryBuilder,
-      ).mockReturnValue(accountServiceProviderRepositoryMock);
-      mocked(
-        accountServiceProviderRepositoryMock.leftJoinAndSelect,
-      ).mockReturnValue(accountServiceProviderRepositoryMock);
-      mocked(accountServiceProviderRepositoryMock.where).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.andWhere).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.select).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.offset).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.limit).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.getMany).mockReturnValue(
-        dbQueryMock,
-      );
 
+      const ids = ['foo', 'bar'];
       // when
-      const result = await service.getServiceProvidersListByAccount(
-        accountId,
-        offset,
-        limit,
-      );
-      // then
-      expect(result).toEqual(expected);
-      expect(
-        accountServiceProviderRepositoryMock.andWhere,
-      ).toHaveBeenCalledWith(service['getLastRemoteId']);
-    });
-
-    it('should return a empty payload with items total equal 0 inside', async () => {
-      // given
-      const expected = {
-        totalItems: 0,
-        items: [],
-      };
-      mocked(
-        accountServiceProviderRepositoryMock.createQueryBuilder,
-      ).mockReturnValue(accountServiceProviderRepositoryMock);
-      mocked(
-        accountServiceProviderRepositoryMock.leftJoinAndSelect,
-      ).mockReturnValue(accountServiceProviderRepositoryMock);
-      mocked(accountServiceProviderRepositoryMock.where).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.andWhere).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.select).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.offset).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.limit).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.getMany).mockReturnValue([]);
-
-      // when
-      const result = await service.getServiceProvidersListByAccount(
-        accountId,
-        offset,
-        limit,
-      );
+      const result = await service.getByIds(ids, offset, size);
       // then
       expect(result).toEqual(expected);
     });
 
-    it('should throw PostgresConnectionFailure exception if db connection is down', async () => {
+    it('should throw PostgresConnectionFailure call to getMany throws', async () => {
       // given
-      mocked(
-        accountServiceProviderRepositoryMock.createQueryBuilder,
-      ).mockReturnValue(accountServiceProviderRepositoryMock);
-      mocked(
-        accountServiceProviderRepositoryMock.leftJoinAndSelect,
-      ).mockReturnValue(accountServiceProviderRepositoryMock);
-      mocked(accountServiceProviderRepositoryMock.where).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.andWhere).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.select).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.offset).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.limit).mockReturnValue(
-        accountServiceProviderRepositoryMock,
-      );
-      mocked(accountServiceProviderRepositoryMock.getMany).mockReturnValue(
-        null,
-      );
+      const errorMock = new Error('some error');
+      const ids = ['foo', 'bar'];
+      serviceProviderRepositoryMock.getMany.mockImplementationOnce(() => {
+        throw errorMock;
+      });
 
       // when / then
-      await expect(
-        service.getServiceProvidersListByAccount(accountId, offset, limit),
-      ).rejects.toThrow(PostgresConnectionFailure);
+      await expect(service.getByIds(ids, offset, size)).rejects.toThrow(
+        PostgresConnectionFailure,
+      );
+    });
+
+    it('should throw PostgresConnectionFailure call to getCount throws', async () => {
+      // given
+      const errorMock = new Error('some error');
+      const ids = ['foo', 'bar'];
+      serviceProviderRepositoryMock.getCount.mockImplementationOnce(() => {
+        throw errorMock;
+      });
+
+      // when / then
+      await expect(service.getByIds(ids, offset, size)).rejects.toThrow(
+        PostgresConnectionFailure,
+      );
     });
   });
 
   describe('getLastRemoteId', () => {
     it('should return a remoteId', async () => {
       // given
-      const getQueryExpected = `(SELECT MAX("datapass"."remoteId") FROM "datapass" "datapass" WHERE "datapass"."serviceProviderId" = serviceProvider.id)`;
-      const subQueryResponse = `datapass.remoteId = ${getQueryExpected}`;
+      const subQueryResponse = `datapass.remoteId = ${getQueryReturnedMock}`;
 
-      mocked(qbMock.subQuery).mockReturnValue(qbMock);
-      mocked(qbMock.select).mockReturnValue(qbMock);
-      mocked(qbMock.from).mockReturnValue(qbMock);
-      mocked(qbMock.where).mockReturnValue(qbMock);
-      mocked(qbMock.getQuery).mockReturnValue(getQueryExpected);
       // when
-      const result = await service['getLastRemoteId'](qbMock);
+      const result = await service['getLastRemoteId'](
+        serviceProviderRepositoryMock as unknown as SelectQueryBuilder<ServiceProvider>,
+      );
       // then
       expect(result).toEqual(subQueryResponse);
     });

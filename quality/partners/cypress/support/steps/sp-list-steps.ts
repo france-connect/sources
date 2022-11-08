@@ -1,4 +1,4 @@
-import { Then } from 'cypress-cucumber-preprocessor/steps';
+import { Then, When } from 'cypress-cucumber-preprocessor/steps';
 
 import { getServiceProviderRolesByUserId } from '../helpers/service-provider-helper';
 import SPListPage from '../pages/sp-list-page';
@@ -108,3 +108,17 @@ Then(
     });
   },
 );
+
+When('je clique sur le 1er fournisseur de service', function () {
+  // Set current service provider
+  spListPage
+    .getServiceProvider(0)
+    .getSpName()
+    .invoke('text')
+    .then((spName) => {
+      this.serviceProvider = this.serviceProviders.find(
+        ({ name }) => name === spName,
+      );
+    });
+  spListPage.getServiceProvider(0).getSpName().click();
+});

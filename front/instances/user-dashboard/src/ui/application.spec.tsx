@@ -1,23 +1,28 @@
 import { render } from '@testing-library/react';
 import { mocked } from 'jest-mock';
-import { ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 
 import { AccountProvider, AccountProviderProps } from '@fc/account';
 import { AxiosErrorCatcherProvider, AxiosErrorCatcherProviderProps } from '@fc/axios-error-catcher';
-import { ApplicationLayout } from '@fc/dsfr';
 import { AppContextProvider, AppContextProviderProps } from '@fc/state-management';
 
 import { AppConfig } from '../config';
 import { Application } from './application';
+import { ApplicationRoutes } from './application.routes';
 
 jest.mock('@fc/dsfr');
 jest.mock('@fc/state-management');
 
+// given
+jest.mock('./application.routes', () => ({
+  ApplicationRoutes: jest.fn(() => <div>ApplicationRoutes</div>),
+}));
+
 describe('Application', () => {
   const AppContextProviderMock = mocked(AppContextProvider);
-  const ApplicationLayoutMock = mocked(ApplicationLayout);
   const AccountProviderMock = mocked(AccountProvider);
   const AxiosErrorCatcherProviderMock = mocked(AxiosErrorCatcherProvider);
+  const ApplicationRoutesMock = mocked(ApplicationRoutes);
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -33,18 +38,6 @@ describe('Application', () => {
     AxiosErrorCatcherProviderMock.mockImplementation(
       ({ children }: AxiosErrorCatcherProviderProps) => children as ReactElement,
     );
-    ApplicationLayoutMock.mockReturnValue(<div>ApplicationLayoutMock mockReturnValue</div>);
-  });
-
-  it('should render child component', () => {
-    // Given
-    const { getByText } = render(<Application />);
-
-    // when
-    const testValue = getByText('ApplicationLayoutMock mockReturnValue');
-
-    // then
-    expect(testValue).toBeInTheDocument();
   });
 
   it('should call AccountProviderMock with config', () => {
@@ -78,5 +71,13 @@ describe('Application', () => {
     render(<Application />);
     // Then
     expect(AxiosErrorCatcherProviderMock).toHaveBeenCalled();
+  });
+
+  it('should call ApplicationRoutes', () => {
+    // when
+    render(<Application />);
+
+    // then
+    expect(ApplicationRoutesMock).toHaveBeenCalledTimes(1);
   });
 });

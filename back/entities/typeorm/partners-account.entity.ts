@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { AccountServiceProvider } from './partners-account-service-provider.entity';
+import { AccountPermission } from './partners-account-permission.entity';
 
 @Entity()
 export class Account {
@@ -46,8 +46,11 @@ export class Account {
   updatedAt: Date;
 
   @OneToMany(
-    () => AccountServiceProvider,
-    (accountServiceProvider) => accountServiceProvider.account,
+    () => AccountPermission,
+    (accountPermission) => accountPermission.account,
+    {
+      onDelete: 'CASCADE',
+    },
   )
-  accountServiceProviders: AccountServiceProvider[];
+  accountPermissions: AccountPermission[];
 }

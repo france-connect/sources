@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+
+// declarative file
 import { HeaderService } from './header-service.interface';
 import { NavigationLink } from './navigation-link.interface';
 

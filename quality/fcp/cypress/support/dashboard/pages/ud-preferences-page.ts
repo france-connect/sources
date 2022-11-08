@@ -167,4 +167,12 @@ class IdentityProviderSetting {
       }
     });
   }
+
+  setForceIdpAuthorization(isAuthorized: boolean): void {
+    if (isAuthorized) {
+      this.getCheckbox().check({ force: true });
+    } else {
+      this.getCheckbox().uncheck({ force: true });
+    }
+  }
 }

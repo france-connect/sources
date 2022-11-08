@@ -8,23 +8,23 @@ exports[`LayoutFooterBottomLinksComponent should match the snapshot 1`] = `
     <li
       class="fr-footer__bottom-item"
     >
-      <div>
+      <span>
         any-label-mock-1
-      </div>
+      </span>
     </li>
     <li
       class="fr-footer__bottom-item"
     >
-      <div>
+      <span>
         any-label-mock-2
-      </div>
+      </span>
     </li>
     <li
       class="fr-footer__bottom-item"
     >
-      <div>
+      <span>
         any-label-mock-3
-      </div>
+      </span>
     </li>
   </ul>
 </div>

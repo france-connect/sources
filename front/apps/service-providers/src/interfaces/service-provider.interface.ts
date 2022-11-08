@@ -1,14 +1,15 @@
 /* istanbul ignore file */
 
 // declarative file
+import { ServiceProviderItem } from './service-provider-item.interface';
+
 export interface ServiceProvider {
-  id: string;
-  name: string;
-  platform: {
-    name: string;
+  meta: {
+    permissions: string[];
+    urls: {
+      edit: string;
+      view: string;
+    };
   };
-  datapasses: { remoteId: number }[];
-  createdAt: string;
-  status: string;
-  organisation: { name: string };
+  payload: ServiceProviderItem;
 }

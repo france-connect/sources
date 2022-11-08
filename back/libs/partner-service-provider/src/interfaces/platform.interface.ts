@@ -1,4 +1,9 @@
+/* istanbul ignore file */
+
+// Declarative file
+import { uuid } from '@fc/common';
+
 export interface Platform {
-  id: string;
+  id: uuid;
   name: string;
 }

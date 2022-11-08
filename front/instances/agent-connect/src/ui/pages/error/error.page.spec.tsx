@@ -1,4 +1,7 @@
 import { render } from '@testing-library/react';
+import { mocked } from 'jest-mock';
+import React from 'react';
+import { useMediaQuery } from 'react-responsive';
 
 import { ErrorComponent } from './error.component';
 import { ErrorPage } from './error.page';
@@ -10,6 +13,28 @@ jest.mock('./not-found.component');
 describe('ErrorPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  it('should math the snapshot, in a desktop viewport', () => {
+    // given
+    mocked(useMediaQuery).mockReturnValueOnce(true);
+
+    // when
+    const { container } = render(<ErrorPage />);
+
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
+  it('should math the snapshot, in a mobile viewport', () => {
+    // given
+    mocked(useMediaQuery).mockReturnValueOnce(true);
+
+    // when
+    const { container } = render(<ErrorPage />);
+
+    // then
+    expect(container).toMatchSnapshot();
   });
 
   it('should render the NotFoundComponent when window.appError is undefined', () => {

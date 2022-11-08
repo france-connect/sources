@@ -17,6 +17,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 
+import { RouteInfo } from '@nestjs/common/interfaces';
+
 import { IsStringOrRegExp } from '@fc/common';
 
 import { ITemplateExposed } from '../interfaces';
@@ -77,7 +79,7 @@ export class SessionConfig {
 
   @IsArray()
   @IsStringOrRegExp({ each: true })
-  readonly excludedRoutes: (string | RegExp)[];
+  readonly excludedRoutes: (string | RouteInfo)[];
 
   @IsObject()
   @IsOptional()

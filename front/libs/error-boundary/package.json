@@ -3,14 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^17.0.2",
-    "react-router-dom": "^5.2.0"
+    "react": "^18.2.0"
   },
-  "devDependencies": {},
-  "main": "src/index.ts",
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ]
+  "main": "src/index.ts"
 }

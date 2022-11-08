@@ -28,6 +28,7 @@ describe('ServiceProviderItemDetailComponent', () => {
         platformName="FranceConnect"
         spName="Portail des demandes de badges Ségur-Fontenoy"
         status="EN INTEGRATION"
+        url="/edit"
       />,
     );
 
@@ -49,6 +50,7 @@ describe('ServiceProviderItemDetailComponent', () => {
         platformName="FranceConnect"
         spName="Portail des demandes de badges Ségur-Fontenoy"
         status="EN INTEGRATION"
+        url="/edit"
       />,
     );
 
@@ -67,6 +69,7 @@ describe('ServiceProviderItemDetailComponent', () => {
         platformName="platformName"
         spName="spName"
         status="status"
+        url="/edit"
       />,
     );
 
@@ -86,6 +89,7 @@ describe('ServiceProviderItemDetailComponent', () => {
         platformName="platformName"
         spName="spName"
         status="status"
+        url="/edit"
       />,
     );
 
@@ -104,6 +108,7 @@ describe('ServiceProviderItemDetailComponent', () => {
         platformName="platformName"
         spName="spName"
         status="status"
+        url="/edit"
       />,
     );
 

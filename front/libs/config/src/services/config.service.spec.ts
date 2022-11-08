@@ -1,8 +1,4 @@
-import {
-  HasAlreadyBeenInitialized,
-  NotYetInitialized,
-  UnknownConfigurationNameError,
-} from '../errors';
+import { NotYetInitialized, UnknownConfigurationNameError } from '../errors';
 import { ConfigService } from './config.service';
 
 describe('ConfigService', () => {
@@ -11,26 +7,35 @@ describe('ConfigService', () => {
   });
 
   describe('initialize', () => {
-    describe('already been initialized', () => {
-      beforeEach(() => {
-        ConfigService.initialize({});
-      });
-
-      afterEach(() => {
+    describe('initialize appConfig', () => {
+      beforeAll(() => {
         // @NOTE Disabled for testing purpose
         // eslint-disable-next-line @typescript-eslint/dot-notation
         ConfigService['appConfig'] = undefined;
       });
 
-      it('should throw a HasAlreadyBeenInitialized exception', () => {
+      it('should setup appConfig', () => {
+        // when
+        ConfigService.initialize({ key: 'current config' });
         // then
-        expect(() => {
-          ConfigService.initialize({});
-        }).toThrow(HasAlreadyBeenInitialized);
+        expect(ConfigService.get('key')).toStrictEqual('current config');
+      });
+
+      it('should not override appConfig', () => {
+        // when
+        ConfigService.initialize({ key: 'will not override current config' });
+        // then
+        expect(ConfigService.get('key')).toStrictEqual('current config');
       });
     });
 
     describe('not been initialized', () => {
+      beforeEach(() => {
+        // @NOTE Disabled for testing purpose
+        // eslint-disable-next-line @typescript-eslint/dot-notation
+        ConfigService['appConfig'] = undefined;
+      });
+
       it('should throw, if appConfig is not yet initialized', () => {
         // then
         expect(() => {
@@ -43,9 +48,6 @@ describe('ConfigService', () => {
   describe('get', () => {
     describe('throwing', () => {
       beforeEach(() => {
-        // @NOTE Disabled for testing purpose
-        // eslint-disable-next-line @typescript-eslint/dot-notation
-        ConfigService['appConfig'] = undefined;
         ConfigService.initialize({});
       });
 

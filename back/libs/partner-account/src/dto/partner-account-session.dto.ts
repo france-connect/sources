@@ -1,10 +1,10 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { IsDate, IsString } from 'class-validator';
+import { IsDate, IsString, IsUUID } from 'class-validator';
 
 export class PartnerAccountSession {
-  @IsString()
+  @IsUUID('4')
   readonly id: string;
 
   @IsString()

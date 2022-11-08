@@ -2,23 +2,23 @@ const actualModule = jest.requireActual('react-router-dom');
 
 module.exports = {
   ...actualModule,
-  Link: jest.fn(({ children }) => <div>{children}</div>),
+  Link: jest.fn(({ children }) => <span>{children}</span>),
   NavLink: jest.fn(({ children }) => <div>{children}</div>),
-  Redirect: jest.fn(() => <div>Redirect</div>),
-  Route: jest.fn(({ children, render, ...rest }) => {
-    if (render) {
-      return render({ ...rest });
+  Navigate: jest.fn(() => <div>ReactRouterDom Navigate Component</div>),
+  Outlet: jest.fn(() => <div>ReactRouterDom Outlet Component</div>),
+  Route: jest.fn(({ children, element }) => {
+    if (element) {
+      return element;
     }
     return <div>{children}</div>;
   }),
-  Switch: jest.fn(({ children }) => children),
+  Routes: jest.fn(({ children }) => children),
   matchPath: jest.fn(),
-  useHistory: jest.fn(() => ({
-    push: jest.fn(),
-  })),
   useLocation: jest.fn(() => ({
     pathname: '',
   })),
+  useNavigate: jest.fn(() => jest.fn()),
+  useParams: jest.fn(),
 };
 
 export {};

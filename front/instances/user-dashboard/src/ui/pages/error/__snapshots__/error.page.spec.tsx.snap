@@ -2,26 +2,45 @@
 
 exports[`ErrorPage should match the snapshot 1`] = `
 <div>
+  <div>
+    <div>
+      React Helmet
+    </div>
+  </div>
   <div
-    class="fr-m-auto fr-px-2w text-center fr-mt-5w"
+    class="large-container fr-m-auto fr-px-2w fr-mt-8w"
     id="page-container"
   >
-    <h1
-      class="text-center"
-    >
-      Une erreur est survenue
-    </h1>
-    <h2
-      class="text-center"
-    >
+    <div>
+      ReactRouterDom Outlet Component
+    </div>
+    <p>
       <span>
-        Erreur
+        Revenir à l’accueil
       </span>
-    </h2>
-    <p
-      class="text-center"
-    >
-      Ceci est une erreur
+    </p>
+  </div>
+</div>
+`;
+
+exports[`ErrorPage should match the snapshot, in a mobile viewport 1`] = `
+<div>
+  <div>
+    <div>
+      React Helmet
+    </div>
+  </div>
+  <div
+    class="large-container fr-m-auto fr-px-2w fr-mt-5w"
+    id="page-container"
+  >
+    <div>
+      ReactRouterDom Outlet Component
+    </div>
+    <p>
+      <span>
+        Revenir à l’accueil
+      </span>
     </p>
   </div>
 </div>

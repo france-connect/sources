@@ -1,16 +1,52 @@
-import { renderHook } from '@testing-library/react';
+import { act, renderHook } from '@testing-library/react';
+import { mocked } from 'jest-mock';
+import { useMediaQuery } from 'react-responsive';
 
+import { useScrollTo } from '@fc/common';
+
+import {
+  getCurrentPage,
+  getDisplayParameters,
+  getMobileNavigationNumbers,
+  getNavigationNumbers,
+  getPagesCount,
+} from './pagination.utils';
 import { usePagination } from './use-pagination.hook';
 
+jest.mock('./pagination.utils.ts');
+
 describe('usePagination', () => {
+  // given
+  const scrollToTopMock = jest.fn();
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    // given
+    mocked(useMediaQuery).mockReturnValueOnce(true);
+    mocked(getDisplayParameters).mockReturnValueOnce({
+      showFirstEllipsis: true,
+      showFirstPage: true,
+      showLastEllipsis: true,
+      showLastPage: true,
+    });
+    mocked(getPagesCount).mockReturnValueOnce(10);
+    mocked(getCurrentPage).mockReturnValueOnce(1);
+    mocked(getNavigationNumbers).mockReturnValueOnce([1, 2, 3, 4, 5]);
+    mocked(getMobileNavigationNumbers).mockReturnValueOnce([0, 1, 9]);
+    mocked(useScrollTo).mockReturnValueOnce({
+      scrollToTop: scrollToTopMock,
+    });
+  });
   it('should return a function', () => {
     const { result } = renderHook(() => usePagination);
     expect(result.current).toBeInstanceOf(Function);
   });
 
   describe('paginationChangeHandler', () => {
+    const onPageClickMock = jest.fn();
     it('should return offset 10 if next page equal to 1', () => {
-      const onPageClickMock = jest.fn();
+      // when
       const { result } = renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
@@ -21,12 +57,13 @@ describe('usePagination', () => {
 
       result.current.paginationChangeHandler(1);
 
+      // then
       expect(onPageClickMock).toHaveBeenCalledTimes(1);
       expect(onPageClickMock).toHaveBeenCalledWith(10);
     });
 
     it('should return offset 50 if next page equal to 5', () => {
-      const onPageClickMock = jest.fn();
+      // when
       const { result } = renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
@@ -37,265 +74,124 @@ describe('usePagination', () => {
 
       result.current.paginationChangeHandler(5);
 
+      // then
       expect(onPageClickMock).toHaveBeenCalledTimes(1);
       expect(onPageClickMock).toHaveBeenCalledWith(50);
+    });
+
+    it('should call scrollToTopMock', () => {
+      // when
+      const { result } = renderHook(() =>
+        usePagination({
+          numberOfPagesShownIntoNavigation: 5,
+          onPageClick: onPageClickMock,
+          pagination: { offset: 0, size: 10, total: 100 },
+        }),
+      );
+      act(() => {
+        result.current.paginationChangeHandler(3);
+      });
+
+      // then
+      expect(scrollToTopMock).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('pagesCount', () => {
-    it('should return 10 when size: 10 and total: 100', () => {
-      const { result } = renderHook(() =>
+    it('should call getPagesCount', () => {
+      // when
+      renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
           onPageClick: jest.fn(),
           pagination: { offset: 0, size: 10, total: 100 },
         }),
       );
-      expect(result.current.pagesCount).toStrictEqual(10);
-    });
 
-    it('should return 60 when size: 5 and total: 300', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 5,
-          onPageClick: jest.fn(),
-          pagination: { offset: 0, size: 5, total: 300 },
-        }),
-      );
-      expect(result.current.pagesCount).toStrictEqual(60);
+      // then
+      expect(getPagesCount).toHaveBeenCalledTimes(1);
+      expect(getPagesCount).toHaveBeenCalledWith({ itemsPerPage: 10, totalItems: 100 });
     });
   });
 
   describe('currentPage', () => {
-    it('should return 0 when offset is equal to 0', () => {
-      const { result } = renderHook(() =>
+    it('should call getCurrentPage', () => {
+      // when
+      renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
           onPageClick: jest.fn(),
           pagination: { offset: 0, size: 10, total: 100 },
         }),
       );
-      expect(result.current.currentPage).toStrictEqual(0);
-    });
 
-    it('should return 6 when offset is equal to 60', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 5,
-          onPageClick: jest.fn(),
-          pagination: { offset: 60, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.currentPage).toStrictEqual(6);
-    });
-
-    it('should return 9 when offset is equal to 90', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 5,
-          onPageClick: jest.fn(),
-          pagination: { offset: 90, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.currentPage).toStrictEqual(9);
+      // then
+      expect(getCurrentPage).toHaveBeenCalledTimes(1);
+      expect(getCurrentPage).toHaveBeenCalledWith({
+        currentElementIndexIntoTheList: 0,
+        itemsPerPage: 10,
+      });
     });
   });
 
   describe('navigationNumbers', () => {
-    it('should equal to [0,1,2,3,4] if offset equals 0', () => {
-      const { result } = renderHook(() =>
+    it('should call getNavigationNumbers', () => {
+      // when
+      renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
           onPageClick: jest.fn(),
           pagination: { offset: 0, size: 10, total: 100 },
         }),
       );
-      expect(result.current.navigationNumbers).toStrictEqual([0, 1, 2, 3, 4]);
+
+      // then
+      expect(getNavigationNumbers).toHaveBeenCalledTimes(1);
+      expect(getNavigationNumbers).toHaveBeenCalledWith({
+        currentPage: 1,
+        numberOfPagesShownIntoNavigation: 5,
+        pagesCount: 10,
+      });
     });
 
-    it('should equal to [5, 6, 7, 8, 9] if offset equals 190', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 5,
-          onPageClick: jest.fn(),
-          pagination: { offset: 190, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.navigationNumbers).toStrictEqual([5, 6, 7, 8, 9]);
-    });
+    it('should call getMobileNavigationNumbers', () => {
+      // given
+      mocked(useMediaQuery).mockReset().mockReturnValueOnce(false);
 
-    it('should equal to [7, 8, 9] if offset equals 170', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 3,
-          onPageClick: jest.fn(),
-          pagination: { offset: 170, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.navigationNumbers).toStrictEqual([7, 8, 9]);
-    });
-
-    it('should equal to [7] if offset equals 70 && number of pages displayed is 1', () => {
-      const { result } = renderHook(() =>
+      // when
+      renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 1,
           onPageClick: jest.fn(),
           pagination: { offset: 70, size: 10, total: 100 },
         }),
       );
-      expect(result.current.navigationNumbers).toStrictEqual([7]);
+
+      // then
+      expect(getMobileNavigationNumbers).toHaveBeenCalledTimes(1);
+      expect(getMobileNavigationNumbers).toHaveBeenCalledWith({ currentPage: 1, pagesCount: 10 });
     });
   });
 
-  describe('showFirstEllipsis', () => {
-    it('should return false if the offset is equal to 0', () => {
-      const { result } = renderHook(() =>
+  describe('getDisplayParameters', () => {
+    it('should call getDisplayParameters', () => {
+      // when
+      renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
           onPageClick: jest.fn(),
           pagination: { offset: 0, size: 10, total: 100 },
         }),
       );
-      expect(result.current.showFirstEllipsis).toBe(false);
-    });
-    describe('if the offset is equal to 50', () => {
-      it('should return true with page number equal to 5', () => {
-        const { result } = renderHook(() =>
-          usePagination({
-            numberOfPagesShownIntoNavigation: 5,
-            onPageClick: jest.fn(),
-            pagination: { offset: 50, size: 10, total: 100 },
-          }),
-        );
-        expect(result.current.showFirstEllipsis).toBe(true);
+
+      // then
+      expect(getDisplayParameters).toHaveBeenCalledTimes(1);
+      expect(getDisplayParameters).toHaveBeenCalledWith({
+        currentPage: 1,
+        isMobile: false,
+        numberOfPagesShownIntoNavigation: 5,
+        pagesCount: 10,
       });
-
-      it('should return true with page number equal to 3', () => {
-        const { result } = renderHook(() =>
-          usePagination({
-            numberOfPagesShownIntoNavigation: 3,
-            onPageClick: jest.fn(),
-            pagination: { offset: 50, size: 10, total: 100 },
-          }),
-        );
-        expect(result.current.showFirstEllipsis).toBe(true);
-      });
-
-      it('should return true with page number equal to 1', () => {
-        const { result } = renderHook(() =>
-          usePagination({
-            numberOfPagesShownIntoNavigation: 1,
-            onPageClick: jest.fn(),
-            pagination: { offset: 50, size: 10, total: 100 },
-          }),
-        );
-        expect(result.current.showFirstEllipsis).toBe(true);
-      });
-    });
-  });
-
-  describe('showFirstPage', () => {
-    it('should return false if the offset is equal to 0', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 5,
-          onPageClick: jest.fn(),
-          pagination: { offset: 0, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.showFirstPage).toBe(false);
-    });
-
-    it('should return true if the offset is equal to 60', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 5,
-          onPageClick: jest.fn(),
-          pagination: { offset: 60, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.showFirstPage).toBe(true);
-    });
-  });
-
-  describe('showLastEllipsis', () => {
-    it('should return true if the offset is equal to 0', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 5,
-          onPageClick: jest.fn(),
-          pagination: { offset: 0, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.showLastEllipsis).toBe(true);
-    });
-
-    it('should return false if the offset is equal to 90', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 5,
-          onPageClick: jest.fn(),
-          pagination: { offset: 90, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.showLastEllipsis).toBe(false);
-    });
-
-    it('should return true with an offset equal to 50', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 3,
-          onPageClick: jest.fn(),
-          pagination: { offset: 50, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.showLastEllipsis).toBe(true);
-    });
-
-    it('should return false if the offset is equal to 90 and page to dispaly is equal to 1', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 1,
-          onPageClick: jest.fn(),
-          pagination: { offset: 90, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.showLastEllipsis).toBe(false);
-    });
-  });
-
-  describe('showLastPage', () => {
-    it('should return false if the offset is equal to 0', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 5,
-          onPageClick: jest.fn(),
-          pagination: { offset: 0, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.showLastPage).toBe(true);
-    });
-
-    it('should return false if the offset is equal to 90', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 5,
-          onPageClick: jest.fn(),
-          pagination: { offset: 90, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.showLastPage).toBe(false);
-    });
-
-    it('should return true if the offset is equal to 70', () => {
-      const { result } = renderHook(() =>
-        usePagination({
-          numberOfPagesShownIntoNavigation: 1,
-          onPageClick: jest.fn(),
-          pagination: { offset: 70, size: 10, total: 100 },
-        }),
-      );
-      expect(result.current.showLastPage).toBe(true);
     });
   });
 });

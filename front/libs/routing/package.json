@@ -5,13 +5,7 @@
   "dependencies": {
     "@fc/oidc-client": "^0.1.0",
     "react": "^18.2.0",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^6.3.0"
   },
-  "main": "src/index.ts",
-  "devDependencies": {},
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ]
+  "main": "src/index.ts"
 }

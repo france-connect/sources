@@ -46,7 +46,7 @@ Fonctionnalité: Préférences FI - Message d'information autorisation futurs FI
     Et que le fournisseur d'identité "pour le test de préférences FI" est bloqué
     Et que les futurs fournisseurs d'identité sont autorisés
     Et que le bouton "enregistrer mes réglages" est désactivé
-    Quand je décide de bloquer le fournisseur d'identité "par défaut"
+    Quand je décide de bloquer un fournisseur d'identité "distinct"
     Alors le message d'information "autorisation des futurs fournisseurs d'identité" n'est pas affiché
     Et le bouton "enregistrer mes réglages" est actif
 
@@ -143,7 +143,7 @@ Fonctionnalité: Préférences FI - Message d'information autorisation futurs FI
     Et que je décide de bloquer le fournisseur d'identité "pour le test de préférences FI"
     Et que je confirme le message "autorisation des futurs fournisseurs d'identité"
     Et que j'enregistre mes réglages d'accès
-    Quand je décide de bloquer le fournisseur d'identité "par défaut"
+    Quand je décide de bloquer un fournisseur d'identité "distinct"
     Alors le message d'information "autorisation des futurs fournisseurs d'identité" n'est pas affiché
     Et le bouton "enregistrer mes réglages" est actif
 

@@ -2,7 +2,7 @@
 
 // @TODO should be reimplemented while login feature
 import React, { useCallback, useContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { AccountContext, AccountInterface } from '@fc/account';
 import { SimpleButton } from '@fc/dsfr';
@@ -18,17 +18,18 @@ interface DataInterface {
 }
 
 export const LoginPage = React.memo(() => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const history = useHistory();
   const { updateAccount } = useContext<AccountInterface>(AccountContext);
 
   const onApiSuccess = useCallback(
     ({ data }: DataInterface) => {
-      history.push('/service-providers');
       updateAccount({ connected: true, ready: true, userinfos: data });
+      navigate('/service-providers');
     },
-    [updateAccount, history],
+    [updateAccount, navigate],
   );
 
   const onApiError = useCallback((err: Error) => {

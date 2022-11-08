@@ -2,6 +2,11 @@
 
 exports[`ErrorPage should match the snapshot 1`] = `
 <div>
+  <div>
+    <div>
+      React Helmet
+    </div>
+  </div>
   <div
     class="fr-container text-center fr-mt-8w"
   >

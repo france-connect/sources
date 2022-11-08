@@ -95,10 +95,6 @@ export default {
       // node-oidc-provider defined key
       // eslint-disable-next-line @typescript-eslint/naming-convention
       preferred_username: ['preferred_username'],
-      address: ['address'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      phone: ['phone_number'],
       profile: [
         'given_name',
         'family_name',

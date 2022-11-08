@@ -4,8 +4,6 @@ import { NotFoundPage } from './not-found.page';
 
 describe('NotFoundPage', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
-    jest.restoreAllMocks();
     jest.clearAllMocks();
   });
 

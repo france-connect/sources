@@ -1,6 +1,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import { mocked } from 'jest-mock';
+import * as ReactRouter from 'react-router-dom';
 
 import { useApiGet } from '@fc/common';
 import { GetCsrfTokenResponse } from '@fc/http-client';
@@ -11,6 +12,7 @@ import { useUserPreferencesApi, validateHandlerCallback } from './use-user-prefe
 
 // given
 jest.mock('axios');
+jest.mock('react-router-dom');
 jest.mock('../services/user-preferences.service');
 
 describe('useUserPreferencesApi', () => {
@@ -54,6 +56,7 @@ describe('useUserPreferencesApi', () => {
   };
 
   const csrfToken = 'csrfTokenMockValue';
+  const formValuesMock = { allowFutureIdp: false, idpList };
 
   const getCsrfTokenResponse = {
     data: {
@@ -63,6 +66,8 @@ describe('useUserPreferencesApi', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // given
     mocked(useApiGet).mockReturnValue(userPreferences);
   });
 
@@ -266,6 +271,31 @@ describe('useUserPreferencesApi', () => {
           userPreferences: { allowFutureIdp: false, idpList: expect.any(Object) },
           validateHandler: expect.any(Function),
         });
+      });
+    });
+
+    it('should call react-router-dom navigate when axios.post returns 409', async () => {
+      // given
+      mocked(UserPreferencesService.parseFormData).mockReturnValueOnce(formValuesMock);
+
+      const axioErrorMock = { response: { status: 409 } } as AxiosError;
+      mocked(axios.post).mockRejectedValueOnce(axioErrorMock);
+
+      const navigateMock = jest.fn();
+      mocked(ReactRouter.useNavigate)
+        .mockReturnValueOnce(navigateMock)
+        .mockReturnValueOnce(navigateMock);
+
+      // // when
+      const { result } = renderHook(() => useUserPreferencesApi(options));
+      act(() => {
+        result.current.commit(formValuesMock);
+      });
+
+      // then
+      await waitFor(() => {
+        expect(navigateMock).toHaveBeenCalledTimes(1);
+        expect(navigateMock).toHaveBeenCalledWith('/error/409', { replace: true });
       });
     });
 

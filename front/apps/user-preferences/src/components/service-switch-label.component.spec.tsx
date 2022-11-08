@@ -7,6 +7,21 @@ describe('ServiceSwitchLabelComponent', () => {
     jest.clearAllMocks();
   });
 
+  it('should render the label when switch is disabled', () => {
+    // when
+    const { getByText } = render(
+      <ServiceSwitchLabelComponent disabled checked={false} serviceTitle="any-service" />,
+    );
+    const titleElement = getByText(/Vous êtes connecté depuis ce compte./);
+    const descriptionElement = getByText(
+      /Si vous souhaitez le désactiver, vous devez vous connecter depuis un autre compte./,
+    );
+
+    // then
+    expect(titleElement).toBeInTheDocument();
+    expect(descriptionElement).toBeInTheDocument();
+  });
+
   it('should render the label when switch is inactive', () => {
     // when
     const { getByText } = render(

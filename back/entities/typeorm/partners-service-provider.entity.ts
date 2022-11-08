@@ -8,7 +8,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { AccountServiceProvider } from './partners-account-service-provider.entity';
 import { Datapass } from './partners-datapass.entity';
 import { Organisation } from './partners-organisation.entity';
 import { Platform } from './partners-platform.entity';
@@ -59,12 +58,6 @@ export class ServiceProvider {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @OneToMany(
-    () => AccountServiceProvider,
-    (accountServiceProvider) => accountServiceProvider.serviceProvider,
-  )
-  accountServiceProviders: AccountServiceProvider[];
 
   @OneToMany(() => Datapass, (datapass) => datapass.serviceProvider, {
     onDelete: 'CASCADE',

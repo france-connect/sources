@@ -4,4 +4,3 @@
 export * from './auth-route.props';
 export * from './navigation-item.interface';
 export * from './navigation-options.interface';
-export * from './route-item.interface';

@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "main": "src/index.ts",
-  "devDependencies": {},
   "dependencies": {
     "react": "^18.2.0",
     "@testing-library/react": "^13.3.0"

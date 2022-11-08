@@ -1,5 +1,4 @@
 import { act, render } from '@testing-library/react';
-import * as H from 'history';
 import { mocked } from 'jest-mock';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -20,6 +19,7 @@ jest.mock('./tracks-group');
 jest.mock('./use-paginated-tracks.hook');
 jest.mock('./../../utils/tracks.util');
 jest.mock('react-router-dom');
+
 const payloadMock = [
   {
     accountId: 'mock-accountId-1',
@@ -219,25 +219,23 @@ describe('TracksListComponent', () => {
   it('should redirect to new location', () => {
     // given
     const indexMock = 20;
-    const historyMock = { push: jest.fn() } as unknown as H.History;
+    const navigateFuncMock = jest.fn();
     const useCallbackMock = jest.spyOn(React, 'useCallback').mockImplementation(() => jest.fn());
-    jest.spyOn(ReactRouterDom, 'useHistory').mockImplementationOnce(() => historyMock);
-
+    jest.spyOn(ReactRouterDom, 'useNavigate').mockImplementationOnce(() => navigateFuncMock);
     mocked(PaginationComponent).mockImplementation(() => (
       <button type="button" onClick={() => useCallbackMock}>
         foo
       </button>
     ));
-    renderWithRouter(<TracksListComponent options={options} />);
-
-    const callback = useCallbackMock.mock.calls[0][0];
 
     // when
+    renderWithRouter(<TracksListComponent options={options} />);
+    const callback = useCallbackMock.mock.calls[0][0];
     act(() => {
       callback(indexMock);
     });
 
     // then
-    expect(historyMock.push).toHaveBeenCalled();
+    expect(navigateFuncMock).toHaveBeenCalled();
   });
 });

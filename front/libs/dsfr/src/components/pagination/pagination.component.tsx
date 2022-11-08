@@ -1,5 +1,6 @@
 import React from 'react';
-import { useMediaQuery } from 'react-responsive';
+
+import { t } from '@fc/i18n';
 
 import { DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION, DEFAULT_USE_ELLIPSIS } from '../../enums';
 import { Pagination } from '../../interfaces';
@@ -23,10 +24,9 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
     useEllipsis,
     useNavArrows,
   }: PaginationComponentProps) => {
-    const gtMedium = useMediaQuery({ minWidth: 768 });
-
     const {
       currentPage,
+      isTabletOrDesktop,
       navigationNumbers,
       pagesCount,
       paginationChangeHandler,
@@ -46,7 +46,7 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
     return (
       <nav aria-label="Pagination" className="fr-pagination" role="navigation">
         <ul className="fr-pagination__list">
-          {(useEdgeArrows || !gtMedium) && (
+          {(useEdgeArrows || !isTabletOrDesktop) && (
             <li>
               <button
                 className="fr-pagination__link fr-pagination__link--first"
@@ -57,57 +57,46 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
               </button>
             </li>
           )}
-          {(useNavArrows || !gtMedium) && (
+          {(useNavArrows || !isTabletOrDesktop) && (
             <li>
               <button
                 className="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
                 data-testid="PaginationComponent-previous-page-button"
                 disabled={isFirstPage}
                 onClick={() => paginationChangeHandler(currentPage - 1)}>
-                Page précédente
+                {t('TracksPage.previousPage')}
               </button>
             </li>
           )}
-          {gtMedium && useEllipsis && showFirstPage && (
+          {useEllipsis && showFirstPage && (
             <li>
               <button className="fr-pagination__link" onClick={() => paginationChangeHandler(0)}>
                 1
               </button>
             </li>
           )}
-          {gtMedium && useEllipsis && showFirstEllipsis && (
+          {useEllipsis && showFirstEllipsis && (
             <li>
               <span data-testid="PaginationComponent-first-ellipsis">...</span>
             </li>
           )}
-          {navigationNumbers
-            .filter((zeroIndexPageNumber) => {
-              // @TODO
-              // A déplacer pour être testable plus facilement ?
-              // peut être tout simplement dans le hook
-              const isCurrentPage = zeroIndexPageNumber === currentPage;
-              const isNextPage = zeroIndexPageNumber === currentPage + 1;
-              // @NOTE si on est sur plus grand que medium (DSFR) => Tout afficher
-              // Sinon sur mobile => juste les pages précédente/suivante
-              return gtMedium || isCurrentPage || isNextPage;
-            })
-            .map((zeroIndexPageNumber) => {
-              const isCurrentPage = zeroIndexPageNumber === currentPage;
-              const uniqKey = `PaginationComponent-page-${zeroIndexPageNumber}`;
-              const pageNumberLabel = zeroIndexPageNumber + 1;
-              return (
-                <li key={uniqKey}>
-                  <button
-                    aria-current={isCurrentPage ? 'page' : undefined}
-                    className="fr-pagination__link"
-                    data-testid={`PaginationComponent-page-${pageNumberLabel}-button`}
-                    onClick={() => paginationChangeHandler(zeroIndexPageNumber)}>
-                    {pageNumberLabel}
-                  </button>
-                </li>
-              );
-            })}
-          {gtMedium && useEllipsis && showLastEllipsis && (
+          {navigationNumbers.map((zeroIndexPageNumber: number) => {
+            const isCurrentPage = zeroIndexPageNumber === currentPage;
+            const uniqKey = `PaginationComponent-page-${zeroIndexPageNumber}`;
+            const pageNumberLabel = zeroIndexPageNumber + 1;
+            return (
+              <li key={uniqKey}>
+                <button
+                  aria-current={isCurrentPage ? 'page' : undefined}
+                  className="fr-pagination__link"
+                  data-testid={`PaginationComponent-page-${pageNumberLabel}-button`}
+                  onClick={() => paginationChangeHandler(zeroIndexPageNumber)}>
+                  {pageNumberLabel}
+                </button>
+              </li>
+            );
+          })}
+          {useEllipsis && showLastEllipsis && (
             <li>
               <span data-testid="PaginationComponent-last-ellipsis">...</span>
             </li>
@@ -122,18 +111,18 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
               </button>
             </li>
           )}
-          {(useNavArrows || !gtMedium) && (
+          {(useNavArrows || !isTabletOrDesktop) && (
             <li>
               <button
                 className="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
                 data-testid="PaginationComponent-next-page-button"
                 disabled={isLastPage}
                 onClick={() => paginationChangeHandler(currentPage + 1)}>
-                Page suivante
+                {t('TracksPage.nextPage')}
               </button>
             </li>
           )}
-          {(useEdgeArrows || !gtMedium) && (
+          {(useEdgeArrows || !isTabletOrDesktop) && (
             <li>
               <button
                 className="fr-pagination__link fr-pagination__link--last"

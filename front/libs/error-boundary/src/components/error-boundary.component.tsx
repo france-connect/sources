@@ -40,6 +40,6 @@ export class ErrorBoundaryComponent extends React.Component<
       return children;
     }
 
-    return <h1>Something went wrong.</h1>;
+    return <h1>ErrorBoundaryComponent: Something went wrong.</h1>;
   }
 }

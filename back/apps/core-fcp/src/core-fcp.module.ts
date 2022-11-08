@@ -1,10 +1,11 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Global, Module } from '@nestjs/common';
+import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { AccountModule } from '@fc/account';
 import { AppModule } from '@fc/app';
+import { ConfigService } from '@fc/config';
 import {
   CoreService,
   CoreTrackingService,
@@ -37,7 +38,12 @@ import {
   ServiceProviderAdapterMongoModule,
   ServiceProviderAdapterMongoService,
 } from '@fc/service-provider-adapter-mongo';
-import { SessionModule } from '@fc/session';
+import {
+  SessionConfig,
+  SessionMiddleware,
+  SessionModule,
+  SessionTemplateMiddleware,
+} from '@fc/session';
 import { TrackingModule } from '@fc/tracking';
 
 import {
@@ -127,4 +133,15 @@ import { CoreFcpService, OidcProviderConfigAppService } from './services';
     OidcProviderConfigAppService,
   ],
 })
-export class CoreFcpModule {}
+export class CoreFcpModule {
+  constructor(private readonly config: ConfigService) {}
+
+  configure(consumer: MiddlewareConsumer) {
+    const { excludedRoutes } = this.config.get<SessionConfig>('Session');
+
+    consumer
+      .apply(SessionMiddleware, SessionTemplateMiddleware)
+      .exclude(...excludedRoutes)
+      .forRoutes('*');
+  }
+}

@@ -11,10 +11,11 @@ import { ServiceSwitchLabelComponent } from './service-switch-label.component';
 
 interface ServiceComponentProps {
   service: Service;
+  allowToBeUpdated?: boolean;
 }
 
 export const ServiceComponent: React.FC<ServiceComponentProps> = React.memo(
-  ({ service }: ServiceComponentProps) => {
+  ({ allowToBeUpdated, service }: ServiceComponentProps) => {
     const gtMobile = useMediaQuery({ query: '(min-width: 576px)' });
     const gtDesktop = useMediaQuery({ query: '(min-width: 992px)' });
 
@@ -24,9 +25,13 @@ export const ServiceComponent: React.FC<ServiceComponentProps> = React.memo(
     /* istanbul ignore next */
     const labelCallback = useCallback(
       (checked: boolean) => (
-        <ServiceSwitchLabelComponent checked={checked} serviceTitle={service.title} />
+        <ServiceSwitchLabelComponent
+          checked={checked}
+          disabled={!allowToBeUpdated}
+          serviceTitle={service.title}
+        />
       ),
-      [service.title],
+      [allowToBeUpdated, service.title],
     );
 
     // @NOTE declarative function
@@ -49,17 +54,25 @@ export const ServiceComponent: React.FC<ServiceComponentProps> = React.memo(
         data-testid={`service-component-${service.name}`}>
         <ServiceImageComponent disabled={isDisabled} service={service} />
         <ToggleInput
+          disabled={!allowToBeUpdated}
           initialValue={service.isChecked}
-          // Class CSS
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           label={labelCallback}
           legend={{ checked: 'Autorisé', unchecked: 'Bloqué' }}
           name={`idpList.${service.uid}`}
         />
-        <OnChange name={`idpList.${service.uid}`}>{onChangeHandler}</OnChange>
+        {/*
+          @TODO find a way to remove OnChange
+          Author: Matthieu
+          Date: 06/10/2022
+        */}
+        {allowToBeUpdated && <OnChange name={`idpList.${service.uid}`}>{onChangeHandler}</OnChange>}
       </li>
     );
   },
 );
+
+ServiceComponent.defaultProps = {
+  allowToBeUpdated: true,
+};
 
 ServiceComponent.displayName = 'ServiceComponent';

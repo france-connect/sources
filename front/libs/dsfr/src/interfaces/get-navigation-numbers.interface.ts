@@ -1,5 +1,8 @@
+/* istanbul ignore file */
+
+// declarative file
 export interface IGetNavigationNumbers {
-  numberOfPagesShownIntoNavigation: number;
+  numberOfPagesShownIntoNavigation?: number;
   currentPage: number;
   pagesCount: number;
 }

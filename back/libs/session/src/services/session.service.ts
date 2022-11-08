@@ -24,7 +24,6 @@ import {
   ISessionService,
 } from '../interfaces';
 import { SESSION_TOKEN_OPTIONS } from '../tokens';
-import { ExcludedRoutes } from '../types';
 
 export type RedisQueryResult = [Error | null, any];
 
@@ -458,17 +457,5 @@ export class SessionService {
     const results: RedisQueryResult[] = await multi.exec();
     const value: string = results[0][1];
     return value;
-  }
-
-  shouldHandleSession(route: string, excludedRoutes: ExcludedRoutes): boolean {
-    const shouldExclude = excludedRoutes.find((excludedRoute: any) => {
-      if (excludedRoute instanceof RegExp) {
-        return excludedRoute.test(route);
-      }
-
-      return excludedRoute === route;
-    });
-
-    return !shouldExclude;
   }
 }

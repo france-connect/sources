@@ -11,14 +11,15 @@ export interface LayoutHeaderNavigationComponentProps {
 export const LayoutHeaderNavigationComponent: React.FC<LayoutHeaderNavigationComponentProps> =
   React.memo(({ navigationItems, onItemClick }: LayoutHeaderNavigationComponentProps) => {
     const { pathname } = useLocation();
+
     return (
       <nav aria-label="Menu principal" className="fr-nav" id="navigation-869" role="navigation">
         <ul className="fr-nav__list">
           {navigationItems &&
             navigationItems.map(({ a11y, href: path, label }, index) => {
-              const matchOptions = { exact: true, path, strict: false };
-              const isCurrentPage = matchPath(pathname, matchOptions);
+              const isCurrentPage = matchPath(path, pathname);
               const uniqkey = `layout-header-nav-item::${index}`;
+
               return (
                 <li key={uniqkey} className="fr-nav__item">
                   <Link

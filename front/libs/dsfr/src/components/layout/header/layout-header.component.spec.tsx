@@ -6,9 +6,9 @@ import { AccountContext, AccountInterface } from '@fc/account';
 import { AppContextProvider } from '@fc/state-management';
 
 import { LayoutHeaderComponent } from './layout-header.component';
-import { LayoutHeaderMobileBurgerButton } from './layout-header-mobile-burger.button';
 import { LayoutHeaderLogosComponent } from './logos';
 import { LayoutHeaderMenuComponent } from './menu';
+import { LayoutHeaderMobileBurgerButton } from './mobile-burger-button';
 import { ReturnButtonComponent } from './return-button';
 import { LayoutHeaderServiceComponent } from './service';
 import { LayoutHeaderToolsComponent } from './tools';
@@ -16,7 +16,7 @@ import { LayoutHeaderToolsComponent } from './tools';
 jest.mock('./tools/layout-header-tools.component');
 jest.mock('./logos/layout-header-logos.component');
 jest.mock('./menu/layout-header-menu.component');
-jest.mock('./layout-header-mobile-burger.button');
+jest.mock('./mobile-burger-button/layout-header-mobile-burger.button');
 jest.mock('./return-button/return-button.component');
 jest.mock('./service/layout-header-service.component');
 

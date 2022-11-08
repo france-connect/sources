@@ -49,6 +49,7 @@
     "lint": "eslint \"{apps,instances,libs}/**/*.ts\"",
     "prettier": "prettier -c \"{apps,instances,libs}/**/*.ts\" --config .prettierrc",
     "test": "jest",
+    "typeorm": "typeorm-ts-node-esm",
     "typeorm:migrations-run": "ts-node ./node_modules/typeorm/cli.js -d ./typeorm.config.ts migration:run",
     "typeorm:migrations-generate": "ts-node ./node_modules/typeorm/cli.js -d ./typeorm.config.ts migration:generate",
     "typeorm:fixtures:load": "./scripts/fixtures-load.sh",
@@ -324,7 +325,8 @@
       "@fc/partner-account": "<rootDir>/libs/partner-account/src",
       "^@fc/partner-datapass(|/.*)$": "<rootDir>/libs/partner-datapass/src/$1",
       "^@fc/partner-organisation(|/.*)$": "<rootDir>/libs/partner-organisation/src/$1",
-      "^@fc/partner-service-provider(|/.*)$": "<rootDir>/libs/partner-service-provider/src/$1"
+      "^@fc/partner-service-provider(|/.*)$": "<rootDir>/libs/partner-service-provider/src/$1",
+      "^@fc/access-control(|/.*)$": "<rootDir>/libs/access-control/src/$1"
     },
     "preset": "ts-jest"
   }

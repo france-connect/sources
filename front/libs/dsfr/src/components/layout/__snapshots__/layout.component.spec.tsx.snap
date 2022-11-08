@@ -9,10 +9,15 @@ exports[`ApplicationLayout should match snapshot 1`] = `
       class="sticky-content"
     >
       <div>
+        <div>
+          React Helmet
+        </div>
+      </div>
+      <div>
         LayoutHeaderComponent
       </div>
       <div>
-        RoutesManagerComponent
+        ReactRouterDom Outlet Component
       </div>
     </div>
     <div>

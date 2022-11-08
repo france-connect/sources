@@ -1,0 +1,149 @@
+entity: AccountPermission
+items:
+  # user-with-1-sp:
+  permissions-sp-list-user-with-1-sp:
+    permissionType: 'SERVICE_PROVIDER_LIST'
+    entity: null
+    entityId: null
+    account: '@user-with-1-sp'
+
+  permissions-sp-edit-user-with-1-sp:
+    permissionType: 'SERVICE_PROVIDER_EDIT'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-with-1-sp'
+
+  # user-with-2-sp:
+  permissions-sp-list-user-with-2-sp:
+    permissionType: 'SERVICE_PROVIDER_LIST'
+    entity: null
+    entityId: null
+    account: '@user-with-2-sp'
+
+  permissions-sp-edit-user-with-2-sp:
+    permissionType: 'SERVICE_PROVIDER_EDIT'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-with-2-sp'
+
+  permissions-sp-view-user-with-2-sp:
+    permissionType: 'SERVICE_PROVIDER_VIEW'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd913c85f-c38b-4715-8734-de6d06b4c673'
+    account: '@user-with-2-sp'
+
+  # user-with-no-sp:
+  permissions-sp-list-user-with-no-sp:
+    permissionType: 'SERVICE_PROVIDER_LIST'
+    entity: null
+    entityId: null
+    account: '@user-with-no-sp'
+
+  # user-with-no-permissions:
+  # Nothing to register...
+
+  # user-with-all-sp-statuses:
+  permissions-sp-list-user-with-all-sp-statuses:
+    permissionType: 'SERVICE_PROVIDER_LIST'
+    entity: null
+    entityId: null
+    account: '@user-with-all-sp-statuses'
+
+  permissions-sp-sandbox:
+    permissionType: 'SERVICE_PROVIDER_VIEW'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-with-all-sp-statuses'
+
+  permissions-sp-review-requested:
+    permissionType: 'SERVICE_PROVIDER_EDIT'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd913c85f-c38b-4715-8734-de6d06b4c673'
+    account: '@user-with-all-sp-statuses'
+
+  permissions-sp-review-in-progress:
+    permissionType: 'SERVICE_PROVIDER_EDIT'
+    entity: 'SERVICE_PROVIDER'
+    entityId: '72260d9b-88b0-4bf7-933b-9f6084cb7436'
+    account: '@user-with-all-sp-statuses'
+
+  permissions-sp-review-validated:
+    permissionType: 'SERVICE_PROVIDER_EDIT'
+    entity: 'SERVICE_PROVIDER'
+    entityId: '5683ffff-b003-4c29-ac99-3c3af45ce619'
+    account: '@user-with-all-sp-statuses'
+
+  permissions-sp-review-waiting-client-feedback:
+    permissionType: 'SERVICE_PROVIDER_VIEW'
+    entity: 'SERVICE_PROVIDER'
+    entityId: '885408c1-f75d-40b0-b334-9457649bf5ef'
+    account: '@user-with-all-sp-statuses'
+
+  permissions-sp-review-refused:
+    permissionType: 'SERVICE_PROVIDER_VIEW'
+    entity: 'SERVICE_PROVIDER'
+    entityId: '855408c1-f75d-40b0-b334-9457649bf5ef'
+    account: '@user-with-all-sp-statuses'
+
+  permissions-sp-production-access-pending:
+    permissionType: 'SERVICE_PROVIDER_VIEW'
+    entity: 'SERVICE_PROVIDER'
+    entityId: '12070da1-3b4a-41e8-8080-fadafabfbf88'
+    account: '@user-with-all-sp-statuses'
+
+  permissions-sp-production-ready:
+    permissionType: 'SERVICE_PROVIDER_VIEW'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'c877e349-174f-4b05-ad30-523f3294f6a6'
+    account: '@user-with-all-sp-statuses'
+
+  permissions-sp-production-live:
+    permissionType: 'SERVICE_PROVIDER_VIEW'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'ebfdd805-92a7-4465-a7df-e9354890fa95'
+    account: '@user-with-all-sp-statuses'
+
+  permissions-sp-archived:
+    permissionType: 'SERVICE_PROVIDER_VIEW'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'dbfdd805-92a7-4465-a7df-e9354890fa95'
+    account: '@user-with-all-sp-statuses'
+
+  # user-sp-owner:
+  permissions-sp-list-user-sp-owner:
+    permissionType: 'SERVICE_PROVIDER_LIST'
+    entity: null
+    entityId: null
+    account: '@user-sp-owner'
+
+  permissions-sp-edit-user-sp-owner:
+    permissionType: 'SERVICE_PROVIDER_EDIT'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-sp-owner'
+
+  # user-sp-observer:
+  permissions-sp-list-user-sp-observer:
+    permissionType: 'SERVICE_PROVIDER_LIST'
+    entity: null
+    entityId: null
+    account: '@user-sp-observer'
+
+  permissions-sp-view-user-sp-observer:
+    permissionType: 'SERVICE_PROVIDER_VIEW'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-sp-observer'
+
+  # user-sp-admin:
+  permissions-sp-list-user-sp-admin:
+    permissionType: 'SERVICE_PROVIDER_LIST'
+    entity: null
+    entityId: null
+    account: '@user-sp-admin'
+
+  permissions-sp-edit-user-sp-admin:
+    permissionType: 'SERVICE_PROVIDER_EDIT'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-sp-admin'

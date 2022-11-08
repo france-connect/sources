@@ -10,6 +10,7 @@ import {
   MailFrom,
   NoEmailException,
 } from '@fc/mailer';
+import { FormattedIdpSettingDto } from '@fc/user-preferences';
 
 import { EmailsTemplates } from '../enums';
 import { UserDashboardService } from './user-dashboard.service';
@@ -293,6 +294,77 @@ describe('UserDashboardService', () => {
         ],
         subject: `Modification de vos accès dans FranceConnect`,
         body: getIdpConfigUpdateEmailBodyContentMock,
+      });
+    });
+  });
+
+  describe('formatUserPreferenceChangeTrackLog', () => {
+    // Given
+    const baseFormattedIdpSettings = {
+      allowFutureIdp: true,
+      idpList: [],
+      updatedIdpSettingsList: [],
+      hasAllowFutureIdpChanged: false,
+      updatedAt: 'updatedAtValue',
+    } as unknown as FormattedIdpSettingDto;
+    it('should return changeset with allowFutureIdp setting', () => {
+      // Given
+      const input = {
+        ...baseFormattedIdpSettings,
+        hasAllowFutureIdpChanged: true,
+      };
+      // When
+      const result = service.formatUserPreferenceChangeTrackLog(input);
+      // Then
+      expect(result).toEqual(
+        expect.objectContaining({
+          futureAllowedNewValue: true,
+        }),
+      );
+    });
+
+    it('should return changeset without allowFutureIdp setting', () => {
+      // Given
+      const input = baseFormattedIdpSettings;
+      // When
+      const result = service.formatUserPreferenceChangeTrackLog(input);
+      // Then
+      expect(result).toEqual(
+        expect.not.objectContaining({
+          futureAllowedNewValue: true,
+        }),
+      );
+    });
+
+    it('should return changeset with formatted content', () => {
+      // Given
+      const input = {
+        ...baseFormattedIdpSettings,
+        updatedIdpSettingsList: [
+          {
+            uid: 'uid',
+            name: 'name',
+            title: 'title',
+            allowed: true,
+            image: 'image',
+            active: true,
+            isChecked: true,
+          },
+        ],
+      };
+
+      // When
+      const result = service.formatUserPreferenceChangeTrackLog(input);
+      // Then
+      expect(result).toEqual({
+        list: [
+          {
+            uid: 'uid',
+            name: 'name',
+            title: 'title',
+            allowed: true,
+          },
+        ],
       });
     });
   });

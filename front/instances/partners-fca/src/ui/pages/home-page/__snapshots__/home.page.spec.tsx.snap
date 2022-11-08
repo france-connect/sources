@@ -14,9 +14,9 @@ exports[`HomePage should match the snapshot 1`] = `
     <p>
       HomePage.baseline
     </p>
-    <div>
+    <span>
       HomePage.loginButton
-    </div>
+    </span>
   </div>
 </div>
 `;

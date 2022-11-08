@@ -4,15 +4,14 @@ import React, { ReactElement } from 'react';
 
 import { AccountProvider } from '@fc/account';
 import { ConfigService } from '@fc/config';
-import { ApplicationLayout } from '@fc/dsfr';
 import { ErrorBoundaryComponent } from '@fc/error-boundary';
 import { I18nService } from '@fc/i18n';
 import { AppContextProvider, AppContextProviderProps, StoreProvider } from '@fc/state-management';
 
 import { AppConfig } from '../config';
-import { routes } from '../config/routes';
 import translations from '../i18n/fr.json';
 import { Application, onErrorHandler } from './application';
+import { ApplicationRoutes } from './application.routes';
 
 jest.mock('@fc/dsfr');
 jest.mock('@fc/i18n');
@@ -22,8 +21,14 @@ jest.mock('@fc/routing');
 jest.mock('@fc/error-boundary');
 jest.mock('@fc/state-management');
 
-describe('HomePage', () => {
+// given
+jest.mock('./application.routes', () => ({
+  ApplicationRoutes: jest.fn(() => <div>ApplicationRoutes</div>),
+}));
+
+describe('Application', () => {
   const StoreProviderMock = mocked(StoreProvider);
+  const ApplicationRoutesMock = mocked(ApplicationRoutes);
   const AppContextProviderMock = mocked(AppContextProvider);
 
   beforeEach(() => {
@@ -42,8 +47,13 @@ describe('HomePage', () => {
 
   it('@TODO only for development purpose test if console mock has been called', () => {
     // @TODO to be removed when FCA/FCP implementation is done
+    // given
     const consoleMock = jest.spyOn(console, 'warn').mockImplementation();
+
+    // when
     onErrorHandler(new Error('Randow Banana Error'));
+
+    // then
     expect(consoleMock).toHaveBeenCalled();
   });
 
@@ -79,7 +89,7 @@ describe('HomePage', () => {
     render(<Application />);
 
     // then
-    expect(ErrorBoundaryComponent).toHaveBeenCalledTimes(2);
+    expect(ErrorBoundaryComponent).toHaveBeenCalledTimes(1);
     expect(ErrorBoundaryComponent).toHaveBeenCalledWith(
       expect.objectContaining({ onError: expect.any(Function) }),
       {},
@@ -91,7 +101,7 @@ describe('HomePage', () => {
     render(<Application />);
 
     // Then
-    expect(AppContextProviderMock).toHaveBeenCalledTimes(2);
+    expect(AppContextProviderMock).toHaveBeenCalledTimes(1);
     expect(AppContextProviderMock).toHaveBeenCalledWith(
       expect.objectContaining({
         value: { config: AppConfig },
@@ -105,21 +115,9 @@ describe('HomePage', () => {
     render(<Application />);
 
     // then
-    expect(AccountProvider).toHaveBeenCalledTimes(2);
+    expect(AccountProvider).toHaveBeenCalledTimes(1);
     expect(AccountProvider).toHaveBeenCalledWith(
       expect.objectContaining({ config: AppConfig.Account }),
-      {},
-    );
-  });
-
-  it('should call ApplicationLayout with props', () => {
-    // when
-    render(<Application />);
-
-    // then
-    expect(ApplicationLayout).toHaveBeenCalledTimes(2);
-    expect(ApplicationLayout).toHaveBeenCalledWith(
-      expect.objectContaining({ config: AppConfig.Layout, routes }),
       {},
     );
   });
@@ -129,7 +127,7 @@ describe('HomePage', () => {
     render(<Application />);
 
     // then
-    expect(StoreProviderMock).toHaveBeenCalledTimes(2);
+    expect(StoreProviderMock).toHaveBeenCalledTimes(1);
     expect(StoreProviderMock).toHaveBeenCalledWith(
       expect.objectContaining({
         children: expect.anything(),
@@ -141,5 +139,13 @@ describe('HomePage', () => {
       }),
       {},
     );
+  });
+
+  it('should call ApplicationRoutes', () => {
+    // when
+    render(<Application />);
+
+    // then
+    expect(ApplicationRoutesMock).toHaveBeenCalledTimes(1);
   });
 });

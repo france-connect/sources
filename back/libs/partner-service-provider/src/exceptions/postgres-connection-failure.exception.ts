@@ -11,8 +11,6 @@ import { PartnerServiceProviderBaseException } from './partner-service-provider-
 )
 export class PostgresConnectionFailure extends PartnerServiceProviderBaseException {
   public readonly code = ErrorCode.POSTGRES_CONNECTION_FAILURE;
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support.');
-  }
+  public readonly message =
+    'Une erreur technique est survenue, veuillez contacter le support.';
 }

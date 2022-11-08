@@ -10,7 +10,7 @@ Provides a complete session management with a redis store.
 
 The session module is scoped by library. This way, the properties in the libraries should not overlap.
 
-The session works paired with an interceptor who populate the current request (as long as the route is not blacklisted through the `exludedRoutes` configuration parameter, see below) using the session cookie and the `Session` decorator who expose the `get` and `set` functions from the session service scoped to the library provided in the descriptor.
+The session works paired with a middleware which populate the current request (as long as the route is not blacklisted through the `exludedRoutes` configuration parameter, see below) using the session cookie and the `Session` decorator who expose the `get` and `set` functions from the session service scoped to the library provided in the descriptor.
 
 The session is validated each time data are requested from it. To achieve that, you need to declare a DTO in your library that validate the structure of your session.
 
@@ -59,11 +59,35 @@ export class MockServiceProviderSession {
 
 ### Import Session module in your module file
 
+1. Import module
+
 ```typescript
     SessionModule.forRoot({
      schema: MockServiceProviderSession,
    }),
 ```
+
+2. Register middleware
+
+```typescript
+@Module({
+  /* ... */
+})
+export class MyModule {
+  constructor(private readonly config: ConfigService) {}
+
+  configure(consumer: MiddlewareConsumer) {
+    const { excludedRoutes } = this.config.get<SessionConfig>('Session');
+
+    consumer
+      .apply(SessionMiddleware, SessionTemplateMiddleware)
+      .exclude(...excludedRoutes)
+      .forRoutes('*');
+  }
+}
+```
+
+> NOTE: This should be factorized in a class decorator in issue #1083
 
 ### Migration Session to Session: Create config file for Session instead of Session in app
 
@@ -95,13 +119,13 @@ This is used to configure `cookieParser`
 
 ## Usage when decorator is not relevant/usable
 
-This librairy is mainly used by Controllers for which the Interceptor require a context to analyse
+This librairy is mainly used by Controllers for which the middleware requires a context to analyse.  
 The `interactionId` is extracted from the request and target behind the hoods for whom the session have to be stored for.
 Some program files such as services don't have a request to intercept, we need to reconstruct the context and inject this library to use it.
 
 - Include this library in the module where it's required.
 - Instantiate the SessionService in the library constructor.
-- Create the bounded information instead of the Interceptor.
+- Create the bounded information instead of the middleware.
 - Call the decorator method (either `set()` ot `get()`) directly from the service:
 
 Example:

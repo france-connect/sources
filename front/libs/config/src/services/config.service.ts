@@ -1,22 +1,17 @@
 import deepFreeze from 'deep-freeze';
 import { get, has, isString } from 'lodash';
 
-import {
-  HasAlreadyBeenInitialized,
-  NotYetInitialized,
-  UnknownConfigurationNameError,
-} from '../errors';
+import { NotYetInitialized, UnknownConfigurationNameError } from '../errors';
 import { Config } from '../interfaces';
 
 export class ConfigService {
   private static appConfig: Config | undefined;
 
   static initialize(appConfig: Config): void {
-    if (ConfigService.appConfig) {
-      throw new HasAlreadyBeenInitialized();
+    if (!ConfigService.appConfig) {
+      // No one should be able to override configuration after startup
+      ConfigService.appConfig = deepFreeze(appConfig);
     }
-    // No one should be able to override configuration after startup
-    ConfigService.appConfig = deepFreeze(appConfig);
   }
 
   /**

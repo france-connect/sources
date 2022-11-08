@@ -4,19 +4,21 @@ import { mocked } from 'jest-mock';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { LoggerService } from '@fc/logger-legacy';
+import { PartnerAccountService } from '@fc/partner-account';
 
-import { PartnersService } from '../services/partners.service';
 import { AccountController } from './account.controller';
 
-describe('PartnersController', () => {
+describe('AccountController', () => {
   let controller: AccountController;
 
   const loggerServiceMock = {
     setContext: jest.fn(),
+    debug: jest.fn(),
+    trace: jest.fn(),
   };
 
-  const partnersServiceMock = {
-    login: jest.fn(),
+  const accountServiceMock = {
+    findByEmail: jest.fn(),
   };
 
   const sessionPartnerAccountMock = {
@@ -30,12 +32,12 @@ describe('PartnersController', () => {
 
     const app: TestingModule = await Test.createTestingModule({
       controllers: [AccountController],
-      providers: [PartnersService],
+      providers: [PartnerAccountService, LoggerService],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(PartnersService)
-      .useValue(partnersServiceMock)
+      .overrideProvider(PartnerAccountService)
+      .useValue(accountServiceMock)
       .compile();
 
     controller = app.get<AccountController>(AccountController);
@@ -131,18 +133,25 @@ describe('PartnersController', () => {
     const userMock = {
       firstname: 'firstnameValue',
       lastname: 'lastnameValue',
+      email: 'emailValue',
+      createdAt: 'createdAtValue',
+      updatedAt: 'updatedAt',
+      id: 'idValue',
     };
+
     beforeEach(() => {
-      partnersServiceMock.login.mockResolvedValueOnce(userMock);
+      accountServiceMock.findByEmail.mockResolvedValueOnce(userMock);
     });
 
-    it('should call partners service login', async () => {
+    it('should call accountService.findByEmail()', async () => {
       // When
       await controller.login(bodyMock, sessionPartnerAccountMock);
 
       // Then
-      expect(partnersServiceMock.login).toHaveBeenCalledTimes(1);
-      expect(partnersServiceMock.login).toHaveBeenCalledWith(bodyMock.email);
+      expect(accountServiceMock.findByEmail).toHaveBeenCalledTimes(1);
+      expect(accountServiceMock.findByEmail).toHaveBeenCalledWith(
+        bodyMock.email,
+      );
     });
 
     it('should call sessionPartnerAccount', async () => {

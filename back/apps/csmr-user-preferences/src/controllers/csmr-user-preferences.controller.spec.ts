@@ -44,8 +44,6 @@ describe('CsmrUserPreferencesController', () => {
     birthcountry: '99100',
     birthplace: '75107',
     email: 'wossewodda-3728@yopmail.com',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    phone_number: '123456789',
   };
 
   const getIdpSettingsPayloadMock = {

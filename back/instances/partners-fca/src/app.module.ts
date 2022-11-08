@@ -2,7 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
 import { LoggerModule } from '@fc/logger-legacy';
-import { PartnersModule } from '@fc/partners';
+import { AppPermissionsHandler, PartnersModule } from '@fc/partners';
 
 @Module({})
 export class AppModule {
@@ -15,7 +15,7 @@ export class AppModule {
         // 2. Load logger module next
         LoggerModule,
         // 3. Load other modules
-        PartnersModule,
+        PartnersModule.withAccessControlHandler(AppPermissionsHandler),
       ],
     };
   }

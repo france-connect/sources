@@ -1,6 +1,7 @@
 import {
   getCurrentPage,
-  getEllipsis,
+  getDisplayParameters,
+  getMobileNavigationNumbers,
   getNavigationNumbers,
   getPagesCount,
 } from './pagination.utils';
@@ -172,6 +173,78 @@ describe('getNavigationNumbers', () => {
     });
   });
 
+  describe('getMobileNavigationNumbers', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should return a result of [0] if the number of pages is one', () => {
+      // when
+      const result = getMobileNavigationNumbers({
+        currentPage: 1,
+        pagesCount: 1,
+      });
+
+      // then
+      expect(result).toEqual([0]);
+    });
+
+    it('should return a result of [0, 1] if the number of pages is two', () => {
+      // when
+      const result = getMobileNavigationNumbers({
+        currentPage: expect.any(Number),
+        pagesCount: 2,
+      });
+
+      // then
+      expect(result).toEqual([0, 1]);
+    });
+
+    it('should return a result of [0, 1, 2] if the number of pages is three', () => {
+      // when
+      const result = getMobileNavigationNumbers({
+        currentPage: expect.any(Number),
+        pagesCount: 3,
+      });
+
+      // then
+      expect(result).toEqual([0, 1, 2]);
+    });
+
+    it('should return an array of the indexes shown into mobile navigation if the number of pages is > 3 and current page index is 0', () => {
+      // when
+      const result = getMobileNavigationNumbers({
+        currentPage: 0,
+        pagesCount: 10,
+      });
+
+      // then
+      expect(result).toEqual([0, 1, 9]);
+    });
+
+    it('should return an array of the indexes shown into mobile navigation if the number of pages is > 3 and current page index is equal to the last page index', () => {
+      // when
+      const result = getMobileNavigationNumbers({
+        currentPage: 9,
+        pagesCount: 10,
+      });
+
+      // then
+      expect(result).toEqual([7, 8, 9]);
+    });
+
+    it('should return an array of the indexes shown into mobile navigation if the number of pages is > 3 and current page index is different from 0 and the last page index', () => {
+      // when
+      const result = getMobileNavigationNumbers({
+        currentPage: 5,
+        pagesCount: 10,
+      });
+
+      // then
+      expect(result).toEqual([4, 5, 9]);
+    });
+  });
+
   describe('count returned elements', () => {
     it('should return 7 elements, when the param numberOfPagesShownIntoNavigation is 7', () => {
       // when
@@ -329,12 +402,33 @@ describe('getNavigationNumbers', () => {
   });
 });
 
-describe('getEllipsis', () => {
+describe('getDisplayParameters', () => {
+  describe('isMobile', () => {
+    it('should return all display parameters set to false on mobile', () => {
+      // when
+      const result = getDisplayParameters({
+        currentPage: 0,
+        isMobile: true,
+        numberOfPagesShownIntoNavigation: undefined as unknown as number,
+        pagesCount: 10,
+      });
+
+      // then
+      expect(result).toEqual({
+        showFirstEllipsis: false,
+        showFirstPage: false,
+        showLastEllipsis: false,
+        showLastPage: false,
+      });
+    });
+  });
+
   describe('showFirstPage', () => {
     it('should return showFirstPage as false, when umber of items is undefined', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 0,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: undefined as unknown as number,
         pagesCount: 10,
       });
@@ -345,8 +439,9 @@ describe('getEllipsis', () => {
 
     it('should return showFirstPage as false, when number of items == 0', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 0,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 0,
         pagesCount: 10,
       });
@@ -357,8 +452,9 @@ describe('getEllipsis', () => {
 
     it('should return showFirstPage as false, when currentPage === 0', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 0,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 10,
         pagesCount: 10,
       });
@@ -369,8 +465,9 @@ describe('getEllipsis', () => {
 
     it('should return showFirstPage as true, when pagesCount > numberOfPagesShownIntoNavigation', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 0,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 3,
         pagesCount: 10,
       });
@@ -381,8 +478,9 @@ describe('getEllipsis', () => {
 
     it('should return showFirstPage as false, when currentPage <= numberOfPagesShownIntoNavigation / 2, numberOfPagesShownIntoNavigation as odd number', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 3,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
@@ -393,8 +491,9 @@ describe('getEllipsis', () => {
 
     it('should return showFirstPage as true, when currentPage > numberOfPagesShownIntoNavigation / 2, numberOfPagesShownIntoNavigation as odd number', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 4,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
@@ -405,8 +504,9 @@ describe('getEllipsis', () => {
 
     it('should return showFirstPage as false, when currentPage === numberOfPagesShownIntoNavigation / 2, numberOfPagesShownIntoNavigation as even number', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 3,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 6,
         pagesCount: 10,
       });
@@ -419,8 +519,9 @@ describe('getEllipsis', () => {
   describe('showFirstEllipsis', () => {
     it('should return showFirstEllipsis as false, when showFirstPage is false', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 2,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
@@ -431,8 +532,9 @@ describe('getEllipsis', () => {
 
     it('should return showFirstEllipsis as false, when showFirstPage is true and currentPage < numberOfPagesShownIntoNavigation / 2 + 1', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 3,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
@@ -443,8 +545,9 @@ describe('getEllipsis', () => {
 
     it('should return showFirstEllipsis as true, when showFirstPage is true and currentPage  > numberOfPagesShownIntoNavigation / 2 + 1', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 5,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
@@ -457,8 +560,9 @@ describe('getEllipsis', () => {
   describe('showLastPage', () => {
     it('should return showLastPage as false, when number of items is undefined', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 0,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: undefined as unknown as number,
         pagesCount: 10,
       });
@@ -469,8 +573,9 @@ describe('getEllipsis', () => {
 
     it('should return showLastPage as false, when number of items === 0', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 0,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 0,
         pagesCount: 10,
       });
@@ -481,8 +586,9 @@ describe('getEllipsis', () => {
 
     it('should return showLastPage as false, when number of currentPage === pagesCount', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 10,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 10,
       });
@@ -493,8 +599,9 @@ describe('getEllipsis', () => {
 
     it('should return showLastPage as false, when number of currentPage + numberOfPagesShownIntoNavigation / 2 > zeroIndexPagesCount', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 17,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 20,
       });
@@ -505,8 +612,9 @@ describe('getEllipsis', () => {
 
     it('should return showLastPage as true, when number of currentPage + numberOfPagesShownIntoNavigation / 2 < zeroIndexPagesCount', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 16,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 20,
       });
@@ -519,8 +627,9 @@ describe('getEllipsis', () => {
   describe('showLastEllipsis', () => {
     it('should return showLastEllipsis as false, when showLastPage is false', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 17,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 20,
       });
@@ -531,8 +640,9 @@ describe('getEllipsis', () => {
 
     it('should return showLastEllipsis as false, when showLastPage is true and currentPage + numberOfPagesShownIntoNavigation /  2 + 1 > zeroIndexPagesCount', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 15,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 20,
       });
@@ -543,8 +653,9 @@ describe('getEllipsis', () => {
 
     it('should return showLastEllipsis as true, when showLastPage is true and currentPage + numberOfPagesShownIntoNavigation / 2 + 1 < zeroIndexPagesCount', () => {
       // when
-      const result = getEllipsis({
+      const result = getDisplayParameters({
         currentPage: 14,
+        isMobile: false,
         numberOfPagesShownIntoNavigation: 7,
         pagesCount: 20,
       });

@@ -1,3 +1,3 @@
 export interface Imeta {
-  totalItems: number;
+  total: number;
 }

@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { mocked } from 'jest-mock';
+import React from 'react';
 import { useMediaQuery } from 'react-responsive';
 
 import { LinkComponent, Sizes } from '@fc/dsfr';
@@ -26,7 +27,7 @@ describe('HomePage', () => {
     mocked(useMediaQuery).mockReturnValueOnce(true);
 
     // when
-    const { container } = render(<HomePage size={Sizes.LARGE} />);
+    const { container } = render(<HomePage />);
 
     // then
     expect(container).toMatchSnapshot();
@@ -37,7 +38,7 @@ describe('HomePage', () => {
     mocked(useMediaQuery).mockReturnValueOnce(false);
 
     // when
-    const { container } = render(<HomePage size={Sizes.LARGE} />);
+    const { container } = render(<HomePage />);
 
     // then
     expect(container).toMatchSnapshot();
@@ -45,7 +46,7 @@ describe('HomePage', () => {
 
   it('should call a LinkComponent with params', () => {
     // when
-    render(<HomePage size={Sizes.LARGE} />);
+    render(<HomePage />);
 
     // then
     expect(LinkComponent).toHaveBeenCalledTimes(1);
@@ -62,7 +63,7 @@ describe('HomePage', () => {
 
   it('should call ServiceProviderNameComponent', () => {
     // when
-    render(<HomePage size={Sizes.LARGE} />);
+    render(<HomePage />);
 
     // then
     expect(ServiceProviderNameComponent).toHaveBeenCalled();
@@ -70,7 +71,7 @@ describe('HomePage', () => {
 
   it('should call UserHistoryComponent', () => {
     // when
-    render(<HomePage size={Sizes.LARGE} />);
+    render(<HomePage />);
 
     // then
     expect(UserHistoryComponent).toHaveBeenCalled();
@@ -78,7 +79,7 @@ describe('HomePage', () => {
 
   it('should call SearchComponent', () => {
     // when
-    render(<HomePage size={Sizes.LARGE} />);
+    render(<HomePage />);
 
     // then
     expect(SearchComponent).toHaveBeenCalled();
