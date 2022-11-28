@@ -32,5 +32,6 @@
       "^@fc/tests-utils(|/.*)$": ["../../tests-utils/src/*"],
       "^@fc/storybook-config(|/.*)$": ["./.storybook/*"]
     }
-  }
+  },
+  "files": ["global.d.ts"]
 }

@@ -30,12 +30,7 @@ import {
   ServiceProviderAdapterMongoModule,
   ServiceProviderAdapterMongoService,
 } from '@fc/service-provider-adapter-mongo';
-import {
-  SessionConfig,
-  SessionMiddleware,
-  SessionModule,
-  SessionTemplateMiddleware,
-} from '@fc/session';
+import { SessionConfig, SessionMiddleware, SessionModule } from '@fc/session';
 import { TrackingModule } from '@fc/tracking';
 
 import {
@@ -103,7 +98,7 @@ export class CoreFcaModule {
     const { excludedRoutes } = this.config.get<SessionConfig>('Session');
 
     consumer
-      .apply(SessionMiddleware, SessionTemplateMiddleware)
+      .apply(SessionMiddleware)
       .exclude(...excludedRoutes)
       .forRoutes('*');
   }

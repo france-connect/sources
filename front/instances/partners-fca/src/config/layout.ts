@@ -18,6 +18,7 @@ export const Layout: LayoutConfig = {
   footerDescription:
     'Partenaires Agent Connect est un dispositif qui permet aux administrateurs FC de gérer les partenaires Agent Connnect',
   footerLinkTitle: 'Partenaires AC',
+  homepage: '/',
   logo: LogoAgentConnect,
   navigationItems,
   service: {

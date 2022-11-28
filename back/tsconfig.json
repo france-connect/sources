@@ -173,5 +173,6 @@
       "@fc/access-control/*": ["libs/access-control/src/*"]
     }
   },
+  "files": ["global.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

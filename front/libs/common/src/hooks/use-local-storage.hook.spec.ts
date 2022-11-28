@@ -190,7 +190,10 @@ describe('useLocalStorage', () => {
       const hook = useLocalStorage(key);
 
       // Then / When
-      expect(() => hook.set(value)).toThrow('Unable to write local storage value');
+      expect(() => hook.set(value)).toThrowWithMessage(
+        Error,
+        'Unable to write local storage value',
+      );
     });
 
     it('should throw if localStorage.setItem throws', () => {
@@ -203,7 +206,10 @@ describe('useLocalStorage', () => {
       const hook = useLocalStorage(key);
 
       // Then / When
-      expect(() => hook.set(value)).toThrow('Unable to write local storage value');
+      expect(() => hook.set(value)).toThrowWithMessage(
+        Error,
+        'Unable to write local storage value',
+      );
     });
   });
 

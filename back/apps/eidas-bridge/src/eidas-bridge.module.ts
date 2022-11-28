@@ -24,12 +24,7 @@ import {
   ServiceProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
 } from '@fc/service-provider-adapter-env';
-import {
-  SessionConfig,
-  SessionMiddleware,
-  SessionModule,
-  SessionTemplateMiddleware,
-} from '@fc/session';
+import { SessionConfig, SessionMiddleware, SessionModule } from '@fc/session';
 
 import {
   EuIdentityToFrController,
@@ -91,7 +86,7 @@ export class EidasBridgeModule {
     const { excludedRoutes } = this.config.get<SessionConfig>('Session');
 
     consumer
-      .apply(SessionMiddleware, SessionTemplateMiddleware)
+      .apply(SessionMiddleware)
       .exclude(...excludedRoutes)
       .forRoutes('*');
   }

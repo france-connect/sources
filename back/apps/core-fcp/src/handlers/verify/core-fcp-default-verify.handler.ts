@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { AccountBlockedException, AccountService } from '@fc/account';
 import { RequiredExcept } from '@fc/common';
 import { CoreService } from '@fc/core';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
@@ -33,6 +34,7 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     private readonly rnipp: RnippService,
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
     private readonly cryptographyFcp: CryptographyFcpService,
+    private readonly account: AccountService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -87,9 +89,22 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
 
     const hashSp = this.cryptographyFcp.computeIdentityHash(rnippIdentity);
 
-    await this.core.checkIfAccountIsBlocked(hashSp);
+    const account = await this.account.getAccountByIdentityHash(hashSp);
 
-    const subSp = this.cryptographyFcp.computeSubV1(entityId, hashSp);
+    if (account.active === false) {
+      throw new AccountBlockedException();
+    }
+
+    let subSp: string;
+
+    if (account.spFederation?.hasOwnProperty(entityId)) {
+      this.logger.trace('using existing sub from spFederation');
+      subSp = account.spFederation[entityId].sub;
+    } else {
+      this.logger.trace('creating new sub');
+      subSp = this.cryptographyFcp.computeSubV1(entityId, hashSp);
+    }
+
     const idpIdentityHash = this.cryptographyFcp.computeIdentityHash(
       idpIdentity as IOidcIdentity,
     );

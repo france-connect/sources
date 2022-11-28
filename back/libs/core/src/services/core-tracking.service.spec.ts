@@ -475,7 +475,10 @@ describe('CoreTrackingService', () => {
       expect(
         () => service['getInteractionIdFromContext'](eventContextMock),
         // Then
-      ).toThrow(CoreMissingContextException);
+      ).toThrowWithMessage(
+        CoreMissingContextException,
+        'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
+      );
     });
 
     it('should return interactionId provided by extractInteractionId if the context is ok', () => {

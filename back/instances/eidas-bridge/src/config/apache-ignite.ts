@@ -9,4 +9,14 @@ export default {
     enable: env.boolean('SOCKET_KEEP_ALIVE_ENABLE'),
     initialDelay: env.number('SOCKET_KEEP_ALIVE_INITIAL_DELAY'),
   },
+  tls: {
+    key: env.file('TLS_KEY'),
+    cert: env.file('TLS_CERT'),
+    ca: env.file('TLS_CA', { optional: true }),
+    useTls: env.boolean('USE_TLS'),
+  },
+  auth: {
+    username: env.string('USERNAME'),
+    password: env.string('PASSWORD'),
+  },
 } as ApacheIgniteConfig;

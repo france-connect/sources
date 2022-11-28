@@ -39,6 +39,11 @@ describe('ApacheIgniteService', () => {
     foo: 'bar',
   };
 
+  const setConnectionOptionsMock = jest.fn();
+  const setPasswordMock = jest.fn();
+  const setUserNameMock = jest.fn();
+  const connected = 'connected to apache ignite service';
+
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
@@ -51,7 +56,18 @@ describe('ApacheIgniteService', () => {
     ApacheIgniteService['IgniteClientProxy'] = jest
       .fn()
       .mockReturnValueOnce(igniteClientMock);
-    ApacheIgniteService['IgniteClientConfigurationProxy'] = jest.fn();
+    setConnectionOptionsMock.mockReturnValue(connected);
+    setPasswordMock.mockReturnValue({
+      setConnectionOptions: setConnectionOptionsMock,
+    });
+    setUserNameMock.mockReturnValue({
+      setPassword: setPasswordMock,
+    });
+    ApacheIgniteService['IgniteClientConfigurationProxy'] = jest
+      .fn()
+      .mockReturnValue({
+        setUserName: setUserNameMock,
+      });
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [ApacheIgniteService, ConfigService, LoggerService],
@@ -82,6 +98,16 @@ describe('ApacheIgniteService', () => {
       socketKeepAlive: {
         enable: true,
         initialDelay: 150000,
+      },
+      tls: {
+        key: 'key_file_content',
+        cert: 'cert_file_content',
+        ca: 'ca_file_content',
+        useTls: true,
+      },
+      auth: {
+        username: 'username',
+        password: 'secret',
       },
     };
 
@@ -122,26 +148,55 @@ describe('ApacheIgniteService', () => {
       ).toHaveBeenCalledWith(configMock.endpoint);
     });
 
-    it('should connect to ignite with the configuration built', async () => {
-      // setup
-      ApacheIgniteService['IgniteClientConfigurationProxy'].mockReturnValueOnce(
-        configMock,
-      );
+    it('should set the username to connect to apache-ignite', async () => {
+      // action
+      await service['onModuleInit']();
 
+      // expect
+      expect(setUserNameMock).toHaveBeenCalledTimes(1);
+      expect(setUserNameMock).toHaveBeenCalledWith(configMock.auth.username);
+    });
+
+    it('should set the password to connect to apache-ignite', async () => {
+      // action
+      await service['onModuleInit']();
+
+      // expect
+      expect(setPasswordMock).toHaveBeenCalledTimes(1);
+      expect(setPasswordMock).toHaveBeenCalledWith(configMock.auth.password);
+    });
+
+    it('should set connection options to connect to apache-ignite', async () => {
+      // action
+      await service['onModuleInit']();
+
+      // expect
+      expect(setConnectionOptionsMock).toHaveBeenCalledTimes(1);
+      expect(setConnectionOptionsMock).toHaveBeenCalledWith(
+        configMock.tls.useTls,
+        {
+          ca: configMock.tls.ca,
+          cert: configMock.tls.cert,
+          key: configMock.tls.key,
+        },
+        true,
+      );
+    });
+
+    it('should connect to ignite with the configuration built', async () => {
       // action
       await service['onModuleInit']();
 
       // expect
       expect(igniteClientMock.connect).toHaveBeenCalledTimes(1);
-      expect(igniteClientMock.connect).toHaveBeenCalledWith(configMock);
+      expect(igniteClientMock.connect).toHaveBeenCalledWith(
+        'connected to apache ignite service',
+      );
     });
 
     it('should set the keep alive of the socket', async () => {
       // setup
       service['setSocketKeepAlive'] = jest.fn();
-      ApacheIgniteService['IgniteClientConfigurationProxy'].mockReturnValueOnce(
-        configMock,
-      );
 
       // action
       await service['onModuleInit']();

@@ -7,7 +7,7 @@ import {
 import { AcrValues, IOidcIdentity } from '@fc/oidc';
 
 export const LevelOfAssurancesToAcrValueMap = {
-  [EidasLevelOfAssurances.LOW]: AcrValues.EIDAS1,
+  [EidasLevelOfAssurances.LOW]: AcrValues.EIDAS2,
   [EidasLevelOfAssurances.SUBSTANTIAL]: AcrValues.EIDAS2,
   [EidasLevelOfAssurances.HIGH]: AcrValues.EIDAS3,
 };

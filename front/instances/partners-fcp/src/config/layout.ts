@@ -18,6 +18,7 @@ export const Layout: LayoutConfig = {
   footerDescription:
     'Partenaires France Connect est un dispositif qui permet aux administrateurs FC de gérer les partenaires France Connnect',
   footerLinkTitle: 'Partenaires FC',
+  homepage: '/',
   logo: LogoFranceConnect,
   navigationItems,
   service: {

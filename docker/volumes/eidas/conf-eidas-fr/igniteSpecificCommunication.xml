@@ -44,13 +44,42 @@
 
       <!-- Thin client connection configuration. -->
         <property name="clientConnectorConfiguration">
-         <bean class="org.apache.ignite.configuration.ClientConnectorConfiguration">
-             <property name="host" value="0.0.0.0"/>
-             <property name="port" value="10900"/>
-             <property name="portRange" value="1"/>
-         </bean>
+            <bean class="org.apache.ignite.configuration.ClientConnectorConfiguration">
+                <property name="host" value="0.0.0.0"/>
+                <property name="port" value="10900"/>
+                <property name="portRange" value="1"/>
+                <property name="sslEnabled" value="true"/>
+                <property name="sslClientAuth" value="true" />
+            </bean>
         </property>
 
+        <!-- Ssl/Tls context. -->
+        <!-- protocol value limit TLSv1.2. Above version not supported by apache-ignite library -->
+        <property name="sslContextFactory">
+            <bean class="org.apache.ignite.ssl.SslContextFactory">
+                <property name="keyStoreFilePath" value="/data/keystore/keystore-eidas-ignite.jks"/>
+                <property name="keyStorePassword" value="local-demo"/>
+                <property name="trustStoreFilePath" value="/data/keystore/truststore-eidas-ignite.jks"/>
+                <property name="trustStorePassword" value="local-demo"/>
+                <property name="protocol" value="TLSv1.2"/>
+            </bean>
+       </property>
+
+        
+        <property name="discoverySpi">
+            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+                 <property name="ipFinder">
+                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
+                        <property name="addresses">
+                            <list>
+                                <value>127.0.0.1</value>
+                            </list>
+                        </property>
+                    </bean>
+                 </property>
+            </bean>
+        </property>
+        
         <property name="igniteInstanceName" value="igniteSpecificCommunicationTOM"/>
 
         <property name="cacheConfiguration">
@@ -89,33 +118,8 @@
             </list>
         </property>
 
-        <!-- Explicitly configure TCP discovery SPI to provide list of initial nodes. -->
-        <property name="discoverySpi">
-            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
-                <property name="ipFinder">
-                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder">
-                        <property name="multicastGroup" value="228.10.10.164"/>
-                    </bean>
-                </property>
-            </bean>
-        </property>
-
-        <!-- Ssl/Tls context. -->
-        <!--IMPORTANT: THIS IS A DEMO CONFIGURATION AND DEMO KEYSTORES, IT NEEDS TO BE CHANGED FOR PRODUCTION ALSO THE KEYS IN THE KEYSTORES NEED TO BE CREATED AS WELL-->
-        <property name="sslContextFactory">
-            <bean class="org.apache.ignite.ssl.SslContextFactory">
-                <!--uncomment the below keyAlgorithm when IBM JRE is used e.g. websphere 8.5.5-->
-                <!--<property name="keyAlgorithm" value="IBMX509" />-->
-                <property name="keyStoreFilePath" value="${EIDAS_CONFIG_REPOSITORY}/ignite/KeyStore/server.jks"/>
-                <property name="keyStorePassword" value="123456"/>
-                <property name="trustStoreFilePath" value="${EIDAS_CONFIG_REPOSITORY}/ignite/KeyStore/trust.jks"/>
-                <property name="trustStorePassword" value="123456"/>
-                <property name="protocol" value="TLSv1.2"/>
-            </bean>
-       </property>
-
-        <!-- how frequently Ignite will output basic node metrics into the log-->
-        <property name="metricsLogFrequency" value="#{60 * 10 * 1000}"/>
+        <!-- how frequently Ignite will output basic node metrics into the log (daily)-->
+        <property name="metricsLogFrequency" value="#{24 * 60 * 60 * 1000}"/>
 
     </bean>
 

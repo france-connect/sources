@@ -2,10 +2,12 @@
 
 // Declarative code
 import { DynamicModule, Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { CryptographyModule } from '@fc/cryptography';
 import { RedisModule } from '@fc/redis';
 
+import { SessionTemplateInterceptor } from './interceptors';
 import { ISessionOptions } from './interfaces';
 import { SessionCsrfService, SessionService } from './services';
 import { SESSION_TOKEN_OPTIONS } from './tokens';
@@ -21,6 +23,10 @@ export class SessionModule {
         {
           provide: SESSION_TOKEN_OPTIONS,
           useValue: options,
+        },
+        {
+          provide: APP_INTERCEPTOR,
+          useClass: SessionTemplateInterceptor,
         },
         SessionService,
         SessionCsrfService,

@@ -60,13 +60,16 @@ exports[`LayoutFooterComponent should render a defined application logo 1`] = `
             <br />
             Française
           </p>
-          <span>
+          <div>
+            <div>
+              LayoutHomepageLinkComponent
+            </div>
             <img
               class="fr-footer__logo fr-responsive-img"
               src="Any"
               style="height: 90px; max-height: 90px;"
             />
-          </span>
+          </div>
         </div>
         <div
           class="fr-footer__content"

@@ -10,12 +10,7 @@ import {
   ServiceProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
 } from '@fc/service-provider-adapter-env';
-import {
-  SessionConfig,
-  SessionMiddleware,
-  SessionModule,
-  SessionTemplateMiddleware,
-} from '@fc/session';
+import { SessionConfig, SessionMiddleware, SessionModule } from '@fc/session';
 
 import {
   MockIdentityProviderController,
@@ -52,7 +47,7 @@ export class MockIdentityProviderModule {
     const { excludedRoutes } = this.config.get<SessionConfig>('Session');
 
     consumer
-      .apply(SessionMiddleware, SessionTemplateMiddleware)
+      .apply(SessionMiddleware)
       .exclude(...excludedRoutes)
       .forRoutes('*');
   }

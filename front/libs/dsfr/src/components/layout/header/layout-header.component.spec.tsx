@@ -39,6 +39,7 @@ describe('LayoutHeaderComponent', () => {
   const appContextConfigMock = {
     config: {
       Layout: {
+        footerLinkTitle: 'any-title',
         logo: 'any-logo-mock',
         navigationItems: navigationItemsMock,
       },
@@ -89,7 +90,10 @@ describe('LayoutHeaderComponent', () => {
 
     // then
     expect(LayoutHeaderLogosComponent).toHaveBeenCalledTimes(1);
-    expect(LayoutHeaderLogosComponent).toHaveBeenCalledWith({ logo: 'any-logo-mock' }, {});
+    expect(LayoutHeaderLogosComponent).toHaveBeenCalledWith(
+      { logo: 'any-logo-mock', title: 'any-title' },
+      {},
+    );
   });
 
   it('should call LayoutHeaderMobileBurgerButton with params when user is connected', () => {

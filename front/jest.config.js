@@ -45,12 +45,12 @@ module.exports = {
      * @see https://create-react-app.dev/docs/adding-a-stylesheet/
      * @see https://jestjs.io/docs/webpack#mocking-css-modules
      */
-     '\\.(css|scss)$': 'identity-obj-proxy',
-     '\\.svg$': '<rootDir>/__mocks__/svgrMock.js',
+    '\\.(css|scss)$': 'identity-obj-proxy',
+    '\\.svg$': '<rootDir>/__mocks__/svgrMock.js',
   },
   preset: 'ts-jest',
   roots: ['<rootDir>/apps/', '<rootDir>/instances/', '<rootDir>/libs/'],
-  setupFilesAfterEnv: ['<rootDir>/setupTests.ts'],
+  setupFilesAfterEnv: ['<rootDir>/setupTests.ts', 'jest-extended/all'],
   testEnvironment: 'jest-environment-jsdom',
   testPathIgnorePatterns: ['/node_modules/', '/cypress/'],
   transform: {

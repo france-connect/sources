@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { AccountBlockedException } from '@fc/account';
+import { AccountBlockedException, AccountService } from '@fc/account';
 import { RequiredExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CoreService } from '@fc/core';
@@ -106,6 +106,14 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     computeIdentityHash: jest.fn(),
   };
 
+  const accountDataMock = {
+    active: true,
+  };
+
+  const accountServiceMock = {
+    getAccountByIdentityHash: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -118,6 +126,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         TrackingService,
         ServiceProviderAdapterMongoService,
         CryptographyFcpService,
+        AccountService,
       ],
     })
       .overrideProvider(ConfigService)
@@ -136,6 +145,9 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       .useValue(serviceProviderMock)
       .overrideProvider(CryptographyFcpService)
       .useValue(cryptographyFcpServiceMock)
+      .overrideProvider(AccountService)
+      .useValue(accountServiceMock)
+
       .compile();
 
     service = module.get<CoreFcpDefaultVerifyHandler>(
@@ -155,6 +167,10 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       .mockReturnValueOnce('computedSubIdp');
 
     coreServiceMock.computeInteraction.mockResolvedValue(accountIdMock);
+
+    accountServiceMock.getAccountByIdentityHash.mockResolvedValueOnce(
+      accountDataMock,
+    );
   });
 
   it('should be defined', () => {
@@ -185,12 +201,61 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     it('Should throw if account is blocked', async () => {
       // Given
       const errorMock = new AccountBlockedException();
-      coreServiceMock.checkIfAccountIsBlocked.mockRejectedValueOnce(errorMock);
+      accountServiceMock.getAccountByIdentityHash
+        .mockReset()
+        .mockResolvedValueOnce({ active: false });
 
       // Then
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
+    it('should use existing sub', async () => {
+      // Given
+      const subFromAccount = 'subMockValue';
+      const accountMock = {
+        active: true,
+        spFederation: {
+          [spMock.entityId]: {
+            sub: subFromAccount,
+          },
+        },
+      };
+      accountServiceMock.getAccountByIdentityHash
+        .mockReset()
+        .mockResolvedValueOnce(accountMock);
+
+      // When
+      await service.handle(handleArgument);
+
+      // Then
+      expect(coreServiceMock.computeInteraction).toBeCalledWith(
+        expect.objectContaining({
+          subSp: subFromAccount,
+        }),
+        expect.any(Object),
+      );
+    });
+
+    it('should use newly generated sub', async () => {
+      // Given
+      const accountMock = {
+        active: true,
+      };
+      accountServiceMock.getAccountByIdentityHash
+        .mockReset()
+        .mockResolvedValueOnce(accountMock);
+
+      // When
+      await service.handle(handleArgument);
+
+      // Then
+      expect(coreServiceMock.computeInteraction).toBeCalledWith(
+        expect.objectContaining({
+          subSp: 'computedSubSp',
+        }),
+        expect.any(Object),
+      );
+    });
     // Dependencies sevices errors
     it('Should throw if acr is not validated', async () => {
       // Given

@@ -21,6 +21,7 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { OidcProviderRoutes } from '@fc/oidc-provider/enums';
+import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
 
 import { AuthorizeParamsDto, ErrorParamsDto } from '../dto';
@@ -38,6 +39,7 @@ export class OidcProviderController {
     private readonly logger: LoggerService,
     private readonly oidcProvider: OidcProviderService,
     private readonly sessionService: SessionService,
+    private readonly serviceProvider: ServiceProviderAdapterMongoService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -63,7 +65,6 @@ export class OidcProviderController {
       query,
       route: OidcProviderRoutes.AUTHORIZATION,
     });
-
     // Initializes a new session local
     this.sessionService.reset(req, res);
 
@@ -77,6 +78,17 @@ export class OidcProviderController {
       this.logger.trace({ errors }, LoggerLevelNames.WARN);
       throw new OidcProviderAuthorizeParamsException();
     }
+
+    // Make spName available in templates in case of error
+    const { client_id: spId } = query;
+    const serviceProvider = await this.serviceProvider.getById(spId);
+
+    if (serviceProvider) {
+      const { name: spName } = serviceProvider;
+      res.locals.spName = spName;
+    }
+    // We do not need an `else` case to handle unknown service provider here,
+    // it will be handled by oidc-provider in `next()`.
 
     // Pass the query to oidc-provider
     return next();
@@ -117,6 +129,11 @@ export class OidcProviderController {
       this.logger.trace({ errors }, LoggerLevelNames.WARN);
       throw new OidcProviderAuthorizeParamsException();
     }
+
+    // Make spName available in templates in case of error
+    const { client_id: spId } = body;
+    const { name: spName } = await this.serviceProvider.getById(spId);
+    res.locals.spName = spName;
 
     // Pass the query to oidc-provider
     return next();

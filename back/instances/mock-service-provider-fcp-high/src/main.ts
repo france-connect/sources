@@ -82,6 +82,7 @@ async function bootstrap() {
          */
         formAction: null,
         scriptSrc: ["'self'", "'unsafe-inline'", 'stackpath.bootstrapcdn.com'],
+        scriptSrcAttr: ["'unsafe-inline'"],
       },
     }),
   );

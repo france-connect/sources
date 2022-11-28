@@ -5,16 +5,20 @@ exports[`LayoutHeaderLogosComponent should match snapshot when application logo 
   <div
     class="fr-header__logo"
   >
-    <span>
+    <div>
+      <div>
+        LayoutHomepageLinkComponent
+      </div>
       <div>
         LogoRepubliqueFrancaiseComponent
       </div>
-    </span>
+    </div>
   </div>
   <div
     class="fr-header__operator"
   >
     <img
+      alt="any-title-mock"
       class="fr-responsive-img"
       src="Any"
       style="height: 54px; max-height: 54px;"
@@ -28,11 +32,14 @@ exports[`LayoutHeaderLogosComponent should match the snapshot 1`] = `
   <div
     class="fr-header__logo"
   >
-    <span>
+    <div>
+      <div>
+        LayoutHomepageLinkComponent
+      </div>
       <div>
         LogoRepubliqueFrancaiseComponent
       </div>
-    </span>
+    </div>
   </div>
 </div>
 `;

@@ -1,43 +1,47 @@
-import { Request, Response } from 'express';
+import { IncomingMessage } from 'http';
+import { Observable } from 'rxjs';
 
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor,
+} from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
+import { SessionConfig } from '@fc/session';
 
-import { SessionConfig } from '../dto';
 import { extractSessionFromRequest } from '../helper';
-import { ITemplateExposed } from '../interfaces';
-import { SessionService } from '../services';
+import { TemplateExposedType } from '../types';
 
 @Injectable()
-export class SessionTemplateMiddleware implements NestMiddleware {
-  private templateExposed: ITemplateExposed;
-
+export class SessionTemplateInterceptor implements NestInterceptor {
   constructor(
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
-    private readonly sessionService: SessionService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
 
-  onModuleInit() {
-    const { templateExposed } = this.config.get<SessionConfig>('Session');
-    this.templateExposed = templateExposed;
-  }
-
-  async use(req: Request, res: Response, next: () => void) {
+  async intercept(
+    context: ExecutionContext,
+    next: CallHandler,
+  ): Promise<Observable<any>> {
     this.logger.trace('SessionTemplateInterceptor');
 
-    if (this.templateExposed) {
-      const sessionParts = await this.getSessionParts(
-        this.templateExposed,
-        req,
-      );
+    const { templateExposed } = this.config.get<SessionConfig>('Session');
+    const res = context.switchToHttp().getResponse();
+    const req = context.switchToHttp().getRequest();
+
+    const isHandleSession = req.sessionId !== undefined;
+
+    if (templateExposed && isHandleSession) {
+      const sessionParts = await this.getSessionParts(templateExposed, req);
       res.locals.session = sessionParts;
     }
-    next();
+
+    return next.handle();
   }
 
   private fillObject(filters, source) {
@@ -56,17 +60,23 @@ export class SessionTemplateMiddleware implements NestMiddleware {
     return exportData;
   }
 
-  private async exposedDataForModules(moduleNames: string[], ctx) {
+  private async exposedDataForModules(
+    moduleNames: string[],
+    req: IncomingMessage,
+  ) {
     const extractSession = moduleNames
-      .map((moduleName) => extractSessionFromRequest(moduleName, ctx))
-      .map((sessionService) => sessionService.get());
+      .map((moduleName) => extractSessionFromRequest(moduleName, req))
+      .map(async (sessionService) => await sessionService.get());
 
     const data = await Promise.all(extractSession);
 
     return data;
   }
 
-  private async getSessionParts(parts, req) {
+  private async getSessionParts(
+    parts: TemplateExposedType,
+    req: IncomingMessage,
+  ) {
     const moduleNames = Object.keys(parts);
     const data = await this.exposedDataForModules(moduleNames, req);
 

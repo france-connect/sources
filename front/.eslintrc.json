@@ -21,7 +21,8 @@
     "import",
     "sort-destructure-keys",
     "sort-keys-fix",
-    "jest"
+    "jest",
+    "jest-extended"
   ],
   "extends": [
     "react-app",

@@ -36,13 +36,28 @@ export class ApacheIgniteService {
    * client initialized by the constructor
    */
   async onModuleInit(): Promise<void> {
-    const { endpoint, socketKeepAlive } =
+    const { endpoint, socketKeepAlive, tls, auth } =
       this.config.get<ApacheIgniteConfig>('ApacheIgnite');
-
+    const { key, cert, ca, useTls } = tls;
     this.logger.debug('Connecting to apache-ignite cache...');
 
+    /* 
+    Partition awareness allows the thin client to send query 
+    requests directly to the node that owns the queried data.
+    Without partition awareness, an application that is connected to the cluster via
+    a thin client executes all queries and operations via a single server node that acts 
+    as a proxy for the incoming requests. 
+    These operations are then re-routed to the node that stores the data that is being requested.
+    This results in a bottleneck that could prevent the application from scaling linearly.
+    @see https://ignite.apache.org/docs/latest/thin-clients/java-thin-client#partition-awareness
+    */
+    const partitionAwareness = true;
+    const connectionOptions = { key, cert, ca };
     await this.igniteClient.connect(
-      new ApacheIgniteService.IgniteClientConfigurationProxy(endpoint),
+      new ApacheIgniteService.IgniteClientConfigurationProxy(endpoint)
+        .setUserName(auth.username)
+        .setPassword(auth.password)
+        .setConnectionOptions(useTls, connectionOptions, partitionAwareness),
     );
 
     this.logger.debug(

@@ -12,21 +12,24 @@ export const UserHistoryComponent = React.memo(() => {
   const { payload } = useContext(AgentConnectSearchContext);
   const items = useUserHistory(payload.identityProviders);
   const shouldShowLabel = items && items.length > 0;
+
+  if (!shouldShowLabel) {
+    return null;
+  }
+
   return (
     <div>
-      {shouldShowLabel && (
-        <div className="fr-mx-2w">
-          <p
-            className={classnames('fr-my-1v fr-text--xl fr-text--bold', {
-              // Class CSS
-              // eslint-disable-next-line @typescript-eslint/naming-convention
-              'text-center': gtTablet,
-            })}
-            data-testid="title">
-            J&rsquo;utilise à nouveau
-          </p>
-        </div>
-      )}
+      <div className="fr-mx-2w">
+        <p
+          className={classnames('fr-my-1v fr-text--xl fr-text--bold', {
+            // Class CSS
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            'text-center': gtTablet,
+          })}
+          data-testid="title">
+          J&rsquo;utilise à nouveau
+        </p>
+      </div>
       <div
         className={classnames('fr-mb-5w', {
           // Class CSS

@@ -19,12 +19,7 @@ import { ExceptionsModule } from '@fc/exceptions';
 import { PartnerAccountModule } from '@fc/partner-account';
 import { PartnerServiceProviderModule } from '@fc/partner-service-provider';
 import { PostgresModule } from '@fc/postgres';
-import {
-  SessionConfig,
-  SessionMiddleware,
-  SessionModule,
-  SessionTemplateMiddleware,
-} from '@fc/session';
+import { SessionConfig, SessionMiddleware, SessionModule } from '@fc/session';
 
 import { AccountController, ServiceProviderController } from './controllers';
 import { PartnersSession } from './dto';
@@ -38,7 +33,7 @@ export class PartnersModule {
     const { excludedRoutes } = this.config.get<SessionConfig>('Session');
 
     consumer
-      .apply(SessionMiddleware, SessionTemplateMiddleware)
+      .apply(SessionMiddleware)
       .exclude(...excludedRoutes)
       .forRoutes('*');
     consumer

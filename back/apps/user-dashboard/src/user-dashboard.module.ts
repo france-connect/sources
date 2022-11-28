@@ -17,12 +17,7 @@ import {
   ServiceProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
 } from '@fc/service-provider-adapter-env';
-import {
-  SessionConfig,
-  SessionMiddleware,
-  SessionModule,
-  SessionTemplateMiddleware,
-} from '@fc/session';
+import { SessionConfig, SessionMiddleware, SessionModule } from '@fc/session';
 import { TrackingModule } from '@fc/tracking';
 import { TracksModule } from '@fc/tracks';
 import { UserPreferencesModule } from '@fc/user-preferences';
@@ -77,7 +72,7 @@ export class UserDashboardModule {
     const { excludedRoutes } = this.config.get<SessionConfig>('Session');
 
     consumer
-      .apply(SessionMiddleware, SessionTemplateMiddleware)
+      .apply(SessionMiddleware)
       .exclude(...excludedRoutes)
       .forRoutes('*');
   }

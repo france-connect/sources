@@ -1,6 +1,8 @@
 import { basicErrorScenario, basicScenario } from './mire.utils';
 
 describe('4.0 - RNIPP', () => {
+  const headingErrorMessage = 'Une erreur est survenue lors de la vérification de votre identité';
+
   beforeEach(() => {
     cy.clearBusinessLog();
   });
@@ -13,7 +15,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'fip1-high',
     });
 
-    cy.hasError('Y010004');
+    cy.hasError('Y010004', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
       idpId: 'fip1-high',
@@ -28,7 +30,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'fip1-high',
     });
 
-    cy.hasError('Y010006');
+    cy.hasError('Y010006', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
       idpId: 'fip1-high',
@@ -58,7 +60,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'fip1-high',
     });
 
-    cy.hasError('Y010008');
+    cy.hasError('Y010008', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
       idpId: 'fip1-high',
@@ -73,7 +75,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'fip1-high',
     });
 
-    cy.hasError('Y010009');
+    cy.hasError('Y010009', headingErrorMessage);
   });
 
   it('should trigger error Y010011', () => {
@@ -131,7 +133,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'fip1-high',
     });
 
-    cy.hasError('Y010015');
+    cy.hasError('Y010015', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_DECEASED_RNIPP',
       idpId: 'fip1-high',

@@ -26,7 +26,12 @@ module.exports = {
     project: './*/tsconfig.json',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin', 'simple-import-sort', 'import'],
+  plugins: [
+    '@typescript-eslint/eslint-plugin',
+    'simple-import-sort',
+    'import',
+    'jest-extended',
+  ],
   root: true,
   rules: {
     '@typescript-eslint/ban-types': [
@@ -58,8 +63,8 @@ module.exports = {
       {
         format: null,
         selector: 'property',
-        modifiers: ['requiresQuotes']
-      }
+        modifiers: ['requiresQuotes'],
+      },
     ],
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': [

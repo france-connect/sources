@@ -1,0 +1,31 @@
+<% if (locals.config?.Core?.supportFormCodes?.includes(locals.code)) { %>
+
+  <%
+  const sp_name = locals.session.OidcClient?.spName || locals.spName;
+
+  const params = {
+    platform: locals.config.App?.name,
+    error_code: locals.code,
+    sp_name,
+    idp_name: locals.session.OidcClient?.idpName,
+    error_id: locals.id,
+  };
+
+  const queryString = Object.entries(params).reduce((acc, [key, value]) => {
+    const separator = acc === '' ? '?' : '&'; 
+    return value ? `${acc}${separator}${key}=${encodeURIComponent(value)}` : acc;
+  }, '');
+
+  const href = `${locals.config.Core.supportFormUrl}${queryString}`;
+  %>
+  <a 
+    href="<%= href %>"
+    rel="noreferrer noopener"
+    id="form-link-button"
+    title="Naviguer vers le formulaire d'aide"
+  >
+    Formulaire d'aide
+  </a>
+
+
+<% } %>

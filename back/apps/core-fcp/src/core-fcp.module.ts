@@ -2,10 +2,11 @@
 
 // Declarative code
 import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AccountModule } from '@fc/account';
 import { AppModule } from '@fc/app';
-import { ConfigService } from '@fc/config';
+import { ConfigService, ConfigTemplateInterceptor } from '@fc/config';
 import {
   CoreService,
   CoreTrackingService,
@@ -38,12 +39,7 @@ import {
   ServiceProviderAdapterMongoModule,
   ServiceProviderAdapterMongoService,
 } from '@fc/service-provider-adapter-mongo';
-import {
-  SessionConfig,
-  SessionMiddleware,
-  SessionModule,
-  SessionTemplateMiddleware,
-} from '@fc/session';
+import { SessionConfig, SessionMiddleware, SessionModule } from '@fc/session';
 import { TrackingModule } from '@fc/tracking';
 
 import {
@@ -124,6 +120,10 @@ import { CoreFcpService, OidcProviderConfigAppService } from './services';
     CoreFcpDatatransferInformationIdentityEventHandler,
     CoreFcpDatatransferInformationAnonymousEventHAndler,
     CoreFcpDatatransferConsentIdentityEventHandler,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ConfigTemplateInterceptor,
+    },
   ],
   // Make `CoreTrackingService` dependencies available
   exports: [
@@ -140,7 +140,7 @@ export class CoreFcpModule {
     const { excludedRoutes } = this.config.get<SessionConfig>('Session');
 
     consumer
-      .apply(SessionMiddleware, SessionTemplateMiddleware)
+      .apply(SessionMiddleware)
       .exclude(...excludedRoutes)
       .forRoutes('*');
   }

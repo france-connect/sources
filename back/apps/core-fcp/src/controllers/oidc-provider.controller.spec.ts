@@ -8,6 +8,7 @@ import {
   OidcProviderAuthorizeParamsException,
   OidcProviderService,
 } from '@fc/oidc-provider';
+import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
 
 import { AuthorizeParamsDto } from '../dto';
@@ -31,7 +32,10 @@ const loggerServiceMock = {
 } as unknown as LoggerService;
 
 const reqMock = Symbol('req');
-const resMock = Symbol('res');
+const resMock = {
+  locals: {},
+};
+
 const queryErrorMock = {
   error: 'error',
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -45,6 +49,14 @@ const validatorOptions = {
 const queryMock = {} as AuthorizeParamsDto;
 const bodyMock = {} as AuthorizeParamsDto;
 
+const serviceProviderMock = {
+  name: 'spName mocked value',
+};
+
+const serviceProviderServiceMock = {
+  getById: jest.fn(),
+};
+
 describe('OidcProviderController', () => {
   let oidcProviderController: OidcProviderController;
   let validateDtoMock;
@@ -56,7 +68,12 @@ describe('OidcProviderController', () => {
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [OidcProviderController],
-      providers: [LoggerService, OidcProviderService, SessionService],
+      providers: [
+        LoggerService,
+        OidcProviderService,
+        SessionService,
+        ServiceProviderAdapterMongoService,
+      ],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
@@ -64,6 +81,8 @@ describe('OidcProviderController', () => {
       .useValue(oidcProviderServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
+      .overrideProvider(ServiceProviderAdapterMongoService)
+      .useValue(serviceProviderServiceMock)
       .compile();
 
     oidcProviderController = await app.get<OidcProviderController>(
@@ -74,6 +93,12 @@ describe('OidcProviderController', () => {
 
     jest.resetAllMocks();
     jest.restoreAllMocks();
+
+    serviceProviderServiceMock.getById.mockResolvedValueOnce(
+      serviceProviderMock,
+    );
+
+    resMock.locals = {};
   });
 
   describe('getAuthorize()', () => {
@@ -98,6 +123,23 @@ describe('OidcProviderController', () => {
         validatorOptions,
       );
       expect(nextMock).toHaveReturnedTimes(1);
+    });
+
+    it('should expose spName to templates', async () => {
+      // Given
+      validateDtoMock.mockResolvedValueOnce([]);
+
+      // When
+      await oidcProviderController.getAuthorize(
+        reqMock,
+        resMock,
+        nextMock,
+        queryMock,
+      );
+
+      // Then
+      expect(resMock.locals).toHaveProperty('spName');
+      expect(resMock.locals['spName']).toEqual(serviceProviderMock.name);
     });
 
     it('should throw an Error if DTO not validated', async () => {
@@ -147,6 +189,23 @@ describe('OidcProviderController', () => {
         validatorOptions,
       );
       expect(nextMock).toHaveReturnedTimes(1);
+    });
+
+    it('should expose spName to templates', async () => {
+      // Given
+      validateDtoMock.mockResolvedValueOnce([]);
+
+      // When
+      await oidcProviderController.getAuthorize(
+        reqMock,
+        resMock,
+        nextMock,
+        queryMock,
+      );
+
+      // Then
+      expect(resMock.locals).toHaveProperty('spName');
+      expect(resMock.locals['spName']).toEqual(serviceProviderMock.name);
     });
 
     it('should throw an Error if DTO not validated', async () => {

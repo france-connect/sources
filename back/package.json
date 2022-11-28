@@ -140,8 +140,10 @@
     "eslint": "^8.1.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-jest-extended": "^2.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "jest": "27.5.1",
+    "jest-extended": "^3.1.0",
     "jest-mock": "^27.5.1",
     "prettier": "^2.3.0",
     "supertest": "^6.0.0",
@@ -161,6 +163,9 @@
   "jest": {
     "setupFiles": [
       "./jest-setup-file.ts"
+    ],
+    "setupFilesAfterEnv": [
+      "jest-extended/all"
     ],
     "collectCoverageFrom": [
       "libs/**/*.ts",

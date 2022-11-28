@@ -4,6 +4,7 @@
 import { Type } from 'class-transformer';
 import {
   IsBoolean,
+  IsNotEmpty,
   IsObject,
   IsOptional,
   IsPositive,
@@ -21,13 +22,52 @@ export class SocketKeepAliveConfig {
   initialDelay: number;
 }
 
+export class TlsConfig {
+  @IsString()
+  @IsNotEmpty()
+  key: string;
+
+  @IsString()
+  @IsNotEmpty()
+  cert: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  ca?: string;
+
+  @IsBoolean()
+  useTls: boolean;
+}
+
+export class AuthConfig {
+  @IsString()
+  @IsNotEmpty()
+  username: string;
+
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+}
+
 export class ApacheIgniteConfig {
   @IsString()
   @MinLength(1)
   endpoint: string;
 
+  @IsOptional()
   @IsObject()
   @ValidateNested()
   @Type(() => SocketKeepAliveConfig)
   socketKeepAlive?: SocketKeepAliveConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => TlsConfig)
+  tls: TlsConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => AuthConfig)
+  auth: AuthConfig;
 }

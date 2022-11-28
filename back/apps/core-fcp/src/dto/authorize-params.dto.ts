@@ -1,5 +1,4 @@
 import {
-  IsAlphanumeric,
   IsArray,
   IsOptional,
   IsString,
@@ -37,7 +36,6 @@ export class AuthorizeParamsDto {
   readonly response_type: string;
 
   @IsString()
-  @IsAlphanumeric()
   @MinLength(32)
   readonly nonce: string;
 

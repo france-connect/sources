@@ -63,6 +63,7 @@
         "assets": [
           "../../../apps/core-fcp/**/*.ejs",
           "../../../apps/core-fcp/**/*.css",
+          "../../../apps/core-fcp/**/*.ico",
           "../../../apps/core-fcp/**/*.js",
           "../../../apps/core-fcp/**/*.svg",
           "../../../apps/core-fcp/**/*.png",

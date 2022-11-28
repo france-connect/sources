@@ -48,7 +48,7 @@ import {
 } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
-import { Core, OidcIdentityDto } from '../dto';
+import { CoreConfig, OidcIdentityDto } from '../dto';
 import { ProcessCore } from '../enums';
 import {
   CoreFcpDatatransferConsentIdentityEvent,
@@ -90,7 +90,7 @@ export class CoreFcpController {
 
   @Get(CoreRoutes.DEFAULT)
   getDefault(@Res() res) {
-    const { defaultRedirectUri } = this.config.get<Core>('Core');
+    const { defaultRedirectUri } = this.config.get<CoreConfig>('Core');
 
     this.logger.trace({
       method: 'GET',

@@ -2,9 +2,10 @@
 
 // Declarative code
 import { Type } from 'class-transformer';
-import { IsObject, IsUrl, ValidateNested } from 'class-validator';
+import { IsObject, IsString, IsUrl, ValidateNested } from 'class-validator';
 
 import { AppConfig } from '@fc/app';
+import { ConfigConfig } from '@fc/config';
 import { CryptographyEidasConfig } from '@fc/cryptography-eidas';
 import { CryptographyFcpConfig } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
@@ -20,21 +21,32 @@ import { ScopesConfig } from '@fc/scopes';
 import { ServiceProviderAdapterMongoConfig } from '@fc/service-provider-adapter-mongo';
 import { SessionConfig } from '@fc/session';
 
-export class Core {
+export class CoreConfig {
   @IsUrl()
   readonly defaultRedirectUri: string;
+
+  @IsUrl()
+  readonly supportFormUrl: string;
+
+  @IsString({ each: true })
+  readonly supportFormCodes: string[];
 }
 
 export class CoreFcpConfig {
   @IsObject()
   @ValidateNested()
-  @Type(() => Core)
-  readonly Core: Core;
+  @Type(() => CoreConfig)
+  readonly Core: CoreConfig;
 
   @IsObject()
   @ValidateNested()
   @Type(() => AppConfig)
   readonly App: AppConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ConfigConfig)
+  readonly Config: ConfigConfig;
 
   @IsObject()
   @ValidateNested()

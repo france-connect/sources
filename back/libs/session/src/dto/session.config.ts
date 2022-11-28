@@ -21,7 +21,7 @@ import { RouteInfo } from '@nestjs/common/interfaces';
 
 import { IsStringOrRegExp } from '@fc/common';
 
-import { ITemplateExposed } from '../interfaces';
+import { TemplateExposedType } from '../types';
 
 export class CookieOptions {
   @IsBoolean()
@@ -83,5 +83,5 @@ export class SessionConfig {
 
   @IsObject()
   @IsOptional()
-  readonly templateExposed?: ITemplateExposed;
+  readonly templateExposed?: TemplateExposedType;
 }

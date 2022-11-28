@@ -1,4 +1,15 @@
-# AGENT CONNECT
+# AGENT CONNECT (FCA)
+
+## Docker
+
+L'application React `FCA` n'a pas la fonctionnalité `hot-reload`  
+Pour mettre à jour l'application il faut exécuter la commande ci-dessous
+
+**Commande de build**
+
+````bash
+dsk fca-low-front
+```
 
 ## Développement Local
 

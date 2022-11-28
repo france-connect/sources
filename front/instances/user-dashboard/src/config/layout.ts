@@ -33,7 +33,8 @@ export const Layout: LayoutConfig = {
   ],
   footerDescription:
     'FranceConnect est le dispositif d’identification conçu par l’État pour vous faciliter l’accès à vos services en ligne. En utilisant un de vos comptes déjà existants, vous pourrez vous connecter de façon sécurisée à plus de 1000 services sans créer de nouveau mot de passe.',
-  footerLinkTitle: 'Agent connect',
+  footerLinkTitle: 'Mon tableau de bord',
+  homepage: '/',
   logo: LogoFranceConnect,
   navigationItems: [
     {

@@ -1,20 +1,20 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import { LogoRepubliqueFrancaiseComponent } from '../../../logos';
+import { LayoutHomepageLinkComponent } from '../../homepage-link';
 
 export interface LayoutHeaderLogosComponentProps {
   logo?: string;
-  title?: string;
+  title: string;
 }
 
 export const LayoutHeaderLogosComponent: React.FC<LayoutHeaderLogosComponentProps> = React.memo(
   ({ logo: ApplicationLogo, title }: LayoutHeaderLogosComponentProps): JSX.Element => (
     <React.Fragment>
       <div className="fr-header__logo">
-        <Link title={`Accueil - ${title || ''}`} to="/">
+        <LayoutHomepageLinkComponent>
           <LogoRepubliqueFrancaiseComponent />
-        </Link>
+        </LayoutHomepageLinkComponent>
       </div>
       {ApplicationLogo && (
         <div className="fr-header__operator">

@@ -8,7 +8,7 @@ const env = new ConfigParser(process.env, 'App');
 
 export default {
   apiOutputContentType: env.string('API_OUTPUT_CONTENT_TYPE'),
-  name: 'FC_CORE_HIGH',
+  name: 'fcplus',
   urlPrefix: '/api/v2',
   assetsPaths: env.json('ASSETS_PATHS'),
   assetsCacheTtl: env.number('ASSETS_CACHE_TTL'),

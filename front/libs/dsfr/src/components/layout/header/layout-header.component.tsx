@@ -24,7 +24,7 @@ export const LayoutHeaderComponent = React.memo(() => {
   const lastname = userinfos?.lastname;
 
   const { state } = useContext<AppContextInterface>(AppContext);
-  const { logo, navigationItems, service } = state.config.Layout;
+  const { footerLinkTitle, logo, navigationItems, service } = state.config.Layout;
   // @TODO testing implies splitting the function into a private
   // it seems to be useless till should be refactored with the global config for front apps
   // @SEE https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/984
@@ -47,7 +47,7 @@ export const LayoutHeaderComponent = React.memo(() => {
             <div className="fr-header__body-row">
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
-                  <LayoutHeaderLogosComponent logo={logo} />
+                  <LayoutHeaderLogosComponent logo={logo} title={footerLinkTitle} />
                   {isUserConnected && (
                     // @NOTE Mobile buger button
                     // used to show/hide Mobile modal menu

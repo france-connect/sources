@@ -51,7 +51,7 @@ main {
 }
 
 #form-link-button {
-  background-color: #034ea2;
+  background-color: #000091;
   border-radius: 4px;
   width: 288px;
   height: 64px;
@@ -66,6 +66,11 @@ main {
   cursor: pointer;
 }
 
+#form-link-button:hover {
+  background-color: #1212FF;
+  text-decoration: none;
+}
+
 @media screen and (min-width: 576px) {
  .list-container {
   margin: 40px auto 0;
@@ -75,10 +80,6 @@ main {
  .detail-error-container {
   margin: 24px auto 0;
   max-width: 600px;
- }
-
- #form-link-button {
-  width: auto;
  }
 }
 

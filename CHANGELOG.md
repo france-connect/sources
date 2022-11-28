@@ -4,6 +4,20 @@
 
 **🔈 The odd versions are not released into production.**
 
+## v3.119 && v3.120.0
+
+### Hardening & QA
+ - [FranceConnect+]
+   - Lowered CSP in service provider mock, allowing javascript execution 
+ - [eIDASBridge]
+   - TLS encryption between bridge and Apache Cache-ignite
+
+### Features
+ - [FranceConnect+]
+   - Dynamic link to the support form, on error pages, to carry relevant information
+ - [eIDASBridge] 
+   - Allow connection to service provider having low security requirements
+
 ## v3.117 && v3.118.0
 
 ### Features

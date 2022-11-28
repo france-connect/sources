@@ -33,4 +33,7 @@ export default {
     `${app.urlPrefix}${OidcProviderRoutes.OPENID_CONFIGURATION}`,
     `${app.urlPrefix}${OidcClientRoutes.WELL_KNOWN_KEYS}`,
   ],
+  templateExposed: {
+    OidcClient: { spId: true, spName: true, idpName: true },
+  },
 } as SessionConfig;

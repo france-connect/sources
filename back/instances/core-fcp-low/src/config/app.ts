@@ -8,7 +8,7 @@ const env = new ConfigParser(process.env, 'App');
 
 export default {
   apiOutputContentType: env.string('API_OUTPUT_CONTENT_TYPE'),
-  name: 'FC_CORE_LOW',
+  name: 'fclow',
   urlPrefix: '/api/v2',
   assetsPaths: env.json('ASSETS_PATHS'),
   viewsPaths: env.json('VIEWS_PATHS'),

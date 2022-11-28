@@ -76,6 +76,7 @@ async function bootstrap() {
          * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/168
          */
         scriptSrc: ["'self'", "'unsafe-inline'", 'stackpath.bootstrapcdn.com'],
+        scriptSrcAttr: ["'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'", 'stackpath.bootstrapcdn.com'],
         /**
          * We should be able to call to any domain that we need (SPs, IdPs, rnipp), the default "self"

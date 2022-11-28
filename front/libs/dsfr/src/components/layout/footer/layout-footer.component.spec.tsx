@@ -1,13 +1,14 @@
 import { render } from '@testing-library/react';
-import { Link } from 'react-router-dom';
 
 import { AppContextProvider } from '@fc/state-management';
 
+import { LayoutHomepageLinkComponent } from '../homepage-link';
 import { LayoutFooterComponent } from './layout-footer.component';
 import { LayoutFooterBottomLinksComponent } from './layout-footer-bottom-links.component';
 import { LayoutFooterContentLinksComponent } from './layout-footer-content-links.component';
 import { LayoutFooterLicenceComponent } from './layout-footer-licence.component';
 
+jest.mock('./../homepage-link/layout-homepage-link.component');
 jest.mock('./layout-footer-bottom-links.component');
 jest.mock('./layout-footer-content-links.component');
 jest.mock('./layout-footer-licence.component');
@@ -45,11 +46,10 @@ describe('LayoutFooterComponent', () => {
 
     // then
     expect(container).toMatchSnapshot();
-    expect(Link).toHaveBeenCalledTimes(1);
-    expect(Link).toHaveBeenCalledWith(
+    expect(LayoutHomepageLinkComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHomepageLinkComponent).toHaveBeenCalledWith(
       expect.objectContaining({
-        title: 'Retour à l’accueil',
-        to: '/',
+        isFooter: true,
       }),
       {},
     );

@@ -15,14 +15,6 @@ describe('8.0.3 - nonce', () => {
     cy.hasError('Y030007');
   });
 
-  it('should return an error if the nonce is not only alphanumeric (FC as IDP)', () => {
-    const url = getAuthorizeUrl({
-      nonce: '@azerty123!@azerty123!@azerty123!@azerty123!',
-    });
-    cy.visit(url, { failOnStatusCode: false });
-    cy.hasError('Y030007');
-  });
-
   it('should send the nonce through the authorize url (FC as FS) - a nonce being at least 32 characters long', () => {
     const idpId = 'fip1-high';
     const idpInfo = getIdentityProvider(idpId);
@@ -41,12 +33,12 @@ describe('8.0.3 - nonce', () => {
     });
   });
 
-  it('should succeed to pass through the nonce if it has a length of 64 characters', () => {
+  it('should succeed to pass through the nonce if it has a length of 64 characters (and special characters)', () => {
     const idpId = 'fip1-high';
     const idpInfo = getIdentityProvider(idpId);
 
     const url = getAuthorizeUrl({
-        nonce: 'nonceatleastsixtyfourcharacterssnonceatleastsixtyfourcharacterss',
+        nonce: 'nonceatleastsixtyfourcharacterss@#&nonceatleastsixtyfourcharacterss',
       });
     cy.visit(url);
 

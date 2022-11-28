@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
 
 import { AppContext } from '@fc/state-management';
 
 import { NavigationLink } from '../../../interfaces';
 import { LogoRepubliqueFrancaiseComponent } from '../../logos';
+import { LayoutHomepageLinkComponent } from '../homepage-link';
 import { LayoutFooterBottomLinksComponent } from './layout-footer-bottom-links.component';
 import { LayoutFooterContentLinksComponent } from './layout-footer-content-links.component';
 import { LayoutFooterLicenceComponent } from './layout-footer-licence.component';
@@ -34,14 +34,14 @@ export const LayoutFooterComponent: React.FC<LayoutFooterComponentProps> = React
             <div className="fr-footer__brand fr-enlarge-link">
               <LogoRepubliqueFrancaiseComponent />
               {ApplicationLogo && (
-                <Link className="fr-footer__brand-link" title="Retour à l’accueil" to="/">
+                <LayoutHomepageLinkComponent isFooter>
                   <img
                     alt={footerLinkTitle}
                     className="fr-footer__logo fr-responsive-img"
                     src={ApplicationLogo}
                     style={{ height: 90, maxHeight: 90 }}
                   />
-                </Link>
+                </LayoutHomepageLinkComponent>
               )}
             </div>
             <div className="fr-footer__content">

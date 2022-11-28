@@ -9,6 +9,7 @@ export interface LayoutConfig {
   // then will replace `any` type by `string`
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   logo: any;
+  homepage?: string;
   navigationItems?: NavigationLink[];
   bottomLinks: NavigationLink[];
   footerDescription: string;

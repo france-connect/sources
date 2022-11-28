@@ -41,9 +41,8 @@ export const Layout: LayoutConfig = {
       label: 'Aide',
     },
   ],
-
   footerDescription:
     'AgentConnect est le dispositif d’identification conçu par l’État pour les ministères et les opérateurs de l’État qui vous permet d’accéder à de nombreux services en ligne en utilisant l’un de vos comptes professionnels existants.',
-  footerLinkTitle: 'Agent connect',
+  footerLinkTitle: 'AgentConnect',
   logo: LogoAgentConnect,
 };

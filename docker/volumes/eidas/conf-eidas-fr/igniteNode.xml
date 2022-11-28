@@ -103,28 +103,17 @@
             </list>
         </property>
 
-        <!--Multicast discover of other nodes in the grid configuration-->
         <property name="discoverySpi">
             <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
-                <property name="ipFinder">
-                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.multicast.TcpDiscoveryMulticastIpFinder">
-                        <property name="multicastGroup" value="228.10.10.165"/>
+                 <property name="ipFinder">
+                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
+                        <property name="addresses">
+                            <list>
+                                <value>127.0.0.1</value>
+                            </list>
+                        </property>
                     </bean>
-                </property>
-            </bean>
-        </property>
-
-        <!-- Ssl/Tls context. -->
-        <!--IMPORTANT: THIS IS A DEMO CONFIGURATION AND DEMO KEYSTORES, IT NEEDS TO BE CHANGED FOR PRODUCTION ALSO THE KEYS IN THE KEYSTORES NEED TO BE CREATED AS WELL-->
-        <property name="sslContextFactory">
-            <bean class="org.apache.ignite.ssl.SslContextFactory">
-                <!--uncomment the below keyAlgorithm when IBM JRE is used e.g. websphere 8.5.5-->
-                <!--<property name="keyAlgorithm" value="IBMX509" />-->
-                <property name="keyStoreFilePath" value="${EIDAS_CONFIG_REPOSITORY}/ignite/KeyStore/server.jks"/>
-                <property name="keyStorePassword" value="123456"/>
-                <property name="trustStoreFilePath" value="${EIDAS_CONFIG_REPOSITORY}/ignite/KeyStore/trust.jks"/>
-                <property name="trustStorePassword" value="123456"/>
-                <property name="protocol" value="TLSv1.2"/>
+                 </property>
             </bean>
         </property>
 
