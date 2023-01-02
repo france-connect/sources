@@ -1,7 +1,7 @@
 import {
-  beforeSuccessScenario,
-  basicSuccessScenario,
   afterSuccessScenario,
+  basicSuccessScenario,
+  beforeSuccessScenario,
   checkInformations,
   checkInStringifiedJson,
   getServiceProvider,

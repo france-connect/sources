@@ -163,6 +163,7 @@ describe('OidcClient Controller', () => {
         idpId: 'providerIdMockValue',
         scope: 'openid',
         state: 'stateMock',
+        prompt: 'login',
       };
 
       // action

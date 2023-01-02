@@ -11,10 +11,6 @@ import { AccountBaseException } from './account-base.exception';
 )
 export class AccountNotFoundException extends AccountBaseException {
   public readonly code = ErrorCode.ACCOUNT_NOT_FOUND;
-
-  constructor(error?: Error) {
-    super(error);
-    this.message =
-      'Une erreur technique est survenue, veuillez contacter le support.';
-  }
+  public readonly message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

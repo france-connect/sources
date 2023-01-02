@@ -12,10 +12,6 @@ import { CoreBaseException } from './core-base.exception';
 export class CoreLowAcrException extends CoreBaseException {
   scope = 2; // identity provider scope
   code = ErrorCode.LOW_ACR;
-
-  constructor() {
-    super(
-      'Le niveau de sécurité utilisé pour vous authentifier ne correspondant pas au niveau exigé pour votre démarche.',
-    );
-  }
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

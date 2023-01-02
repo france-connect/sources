@@ -11,8 +11,6 @@ import { EidasProviderBaseException } from './eidas-provider-base.exception';
 )
 export class WriteLightResponseInCacheException extends EidasProviderBaseException {
   public readonly code = ErrorCode.WRITE_LIGHT_RESPONSE_IN_CACHE;
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support.');
-  }
+  public readonly message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

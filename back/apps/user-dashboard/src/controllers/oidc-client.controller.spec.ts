@@ -200,6 +200,7 @@ describe('OidcClient Controller', () => {
         idpId: 'envIssuer',
         scope: 'openid',
         state: idpStateMock,
+        prompt: 'login',
       };
 
       // action

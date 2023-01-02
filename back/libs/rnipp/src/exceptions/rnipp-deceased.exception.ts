@@ -13,10 +13,6 @@ import { RnippBaseException } from './';
 )
 export class RnippDeceasedException extends RnippBaseException {
   public readonly code = ErrorCode.DECEASED;
-
-  constructor() {
-    super(
-      'Les identifiants utilisés correspondent à une identité qui ne permet plus la connexion.',
-    );
-  }
+  public readonly message =
+    'Les identifiants utilisés correspondent à une identité qui ne permet plus la connexion.';
 }

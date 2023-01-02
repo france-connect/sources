@@ -11,10 +11,6 @@ import { AccountBaseException } from './account-base.exception';
 )
 export class AccountBlockedException extends AccountBaseException {
   code = ErrorCode.ACCOUNT_BLOCKED;
-
-  constructor() {
-    super(
-      'Votre accès a été désactivé. Pour le réactiver merci de contacter notre service support.',
-    );
-  }
+  message =
+    'Votre accès a été désactivé. Pour le réactiver merci de nous contacter.';
 }

@@ -51,6 +51,7 @@ export class OidcClientController {
    */
   @Post(OidcClientRoutes.REDIRECT_TO_IDP)
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  // eslint-disable-next-line complexity
   async redirectToIdp(
     @Req() req,
     @Res() res,
@@ -81,7 +82,7 @@ export class OidcClientController {
       // oidc parameter
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
-    } = params;
+    } = params as Record<string, string>;
 
     // -- control if the CSRF provided is the same as the one previously saved in session.
     try {
@@ -98,7 +99,7 @@ export class OidcClientController {
     const { state, nonce } =
       await this.oidcClient.utils.buildAuthorizeParameters();
 
-    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl({
+    const authorizeParams = {
       state,
       scope,
       idpId,
@@ -112,12 +113,20 @@ export class OidcClientController {
        * @ticket FC-1021
        */
       claims: '{"id_token":{"amr":{"essential":true}}}',
-    });
+      // No prompt is sent to the identity provider voluntary
+    };
 
-    const authorizationUrlWithSpId = this.appendSpIdToAuthorizeUrl(
-      serviceProviderId,
-      authorizationUrl,
+    const authorizationUrlRaw = await this.oidcClient.utils.getAuthorizeUrl(
+      authorizeParams,
     );
+
+    let authorizationUrl = authorizationUrlRaw;
+    if (serviceProviderId) {
+      authorizationUrl = this.appendSpIdToAuthorizeUrl(
+        serviceProviderId,
+        authorizationUrlRaw,
+      );
+    }
 
     const { name: idpName, title: idpLabel } =
       await this.identityProvider.getById(idpId);
@@ -138,10 +147,10 @@ export class OidcClientController {
       body,
       res,
       session,
-      redirect: authorizationUrlWithSpId,
+      redirect: authorizationUrl,
     });
 
-    res.redirect(authorizationUrlWithSpId);
+    res.redirect(authorizationUrl);
   }
 
   /**

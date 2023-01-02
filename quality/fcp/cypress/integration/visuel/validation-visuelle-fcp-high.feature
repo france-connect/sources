@@ -97,7 +97,6 @@ Fonctionnalité: Validation Visuelle
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique
     Et le code d'erreur est "Y180001"
-    Et le numéro de session FranceConnect est affiché
     Et la copie d'écran "erreurUsagerDesactive" correspond à la page actuelle sur "<device>"
 
     Exemples:

@@ -11,10 +11,6 @@ import { EidasBridgeBaseException } from './eidas-bridge-base.exception';
 )
 export class EidasBridgeInvalidIdentityException extends EidasBridgeBaseException {
   code = ErrorCode.INVALID_IDENTITY;
-
-  constructor() {
-    super(
-      'Une erreur technique est survenue lors de la récupération de votre identité. Contactez le support',
-    );
-  }
+  message =
+    "Un problème lié à vos données d'identité empêche la connexion d'aboutir. Nous vous invitons à nous contacter pour corriger le problème.";
 }

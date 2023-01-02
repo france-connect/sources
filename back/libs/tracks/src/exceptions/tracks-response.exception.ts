@@ -11,4 +11,6 @@ import { TracksBaseException } from './tracks-base.exception';
 )
 export class TracksResponseException extends TracksBaseException {
   code = ErrorCode.TRACKS_RESPONSE;
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

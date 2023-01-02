@@ -11,8 +11,6 @@ import { CoreBaseException } from './core-base.exception';
 )
 export class CoreMissingAuthenticationEmailException extends CoreBaseException {
   code = ErrorCode.MISSING_AUTHENTICATION_EMAIL;
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support');
-  }
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

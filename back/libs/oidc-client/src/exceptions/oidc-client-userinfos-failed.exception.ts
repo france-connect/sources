@@ -11,10 +11,6 @@ import { OidcClientBaseException } from './oidc-client-base.exception';
 )
 export class OidcClientUserinfosFailedException extends OidcClientBaseException {
   code = ErrorCode.USERINFOS_FAILED;
-
-  constructor() {
-    super(
-      'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
-    );
-  }
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

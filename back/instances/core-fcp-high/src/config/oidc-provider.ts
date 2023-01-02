@@ -117,6 +117,61 @@ export default {
         'birthplace',
         'birthcountry',
       ],
+      // oidc fashioned name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      rnipp_given_name: ['given_name', 'rnipp_given_name'],
+      // oidc fashioned name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      rnipp_family_name: ['family_name', 'rnipp_family_name'],
+      // oidc fashioned name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      rnipp_gender: ['gender', 'rnipp_gender'],
+      // oidc fashioned name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      rnipp_birthcountry: ['birthcountry', 'rnipp_birthcountry'],
+      // oidc fashioned name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      rnipp_birthplace: ['birthplace', 'rnipp_birthplace'],
+      // oidc fashioned name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      rnipp_birthdate: ['birthdate', 'rnipp_birthdate'],
+      // oidc fashioned name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      rnipp_profile: [
+        'given_name',
+        'family_name',
+        'birthdate',
+        'gender',
+        'preferred_username',
+        'rnipp_given_name',
+        'rnipp_family_name',
+        'rnipp_birthdate',
+        'rnipp_gender',
+      ],
+      // oidc fashioned name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      rnipp_birth: [
+        'birthplace',
+        'birthcountry',
+        'rnipp_birthplace',
+        'rnipp_birthcountry',
+      ],
+      // oidc fashioned name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      rnipp_identite_pivot: [
+        'given_name',
+        'family_name',
+        'birthdate',
+        'gender',
+        'birthplace',
+        'birthcountry',
+        'rnipp_given_name',
+        'rnipp_family_name',
+        'rnipp_birthdate',
+        'rnipp_gender',
+        'rnipp_birthplace',
+        'rnipp_birthcountry',
+      ],
     },
     clientDefaults: {
       // node-oidc-provider defined key

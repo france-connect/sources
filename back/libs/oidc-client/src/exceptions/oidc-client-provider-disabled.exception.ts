@@ -11,8 +11,6 @@ import { OidcClientBaseException } from './oidc-client-base.exception';
 )
 export class OidcClientProviderDisabledException extends OidcClientBaseException {
   code = ErrorCode.DISABLED_PROVIDER;
-
-  constructor() {
-    super("La connexion via ce fournisseur d'identité est désactivée");
-  }
+  message =
+    'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
 }

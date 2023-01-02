@@ -244,28 +244,78 @@ describe('MockIdentityProviderService', () => {
     });
   });
 
+  describe('shouldAbortMiddleware', () => {
+    it('should return true if oidc has an error', () => {
+      // Given
+      const ctxMock = {
+        oidc: {
+          isError: true,
+          entities: {
+            AuthorizationCode: Symbol('authorizationCode'),
+          },
+        },
+      };
+      // When
+      const result = service['shouldAbortMiddleware'](ctxMock);
+      // Then
+      expect(result).toBeTrue();
+    });
+
+    it('should return true if oidc has already an AuthorizationCode params', () => {
+      // Given
+      const ctxMock = {
+        oidc: {
+          isError: false,
+          entities: {
+            AuthorizationCode: Symbol('authorizationCode'),
+          },
+        },
+      };
+      // When
+      const result = service['shouldAbortMiddleware'](ctxMock);
+      // Then
+      expect(result).toBeTrue();
+    });
+
+    it('should return false if oidc has neither an error neither an AuthorizationCode params', () => {
+      // Given
+      const ctxMock = {
+        oidc: {
+          entities: {},
+        },
+      };
+      // When
+      const result = service['shouldAbortMiddleware'](ctxMock);
+      // Then
+      expect(result).toBeFalse();
+    });
+  });
+
   describe('authorizationMiddleware()', () => {
     const spNameMock = 'spNameValue';
     const spAcrMock = 'eidas3';
     const clientIdMock = 'clientIdValue';
-    const getCtxMock = (hasError = false) => {
-      return {
-        req: {
-          sessionId: sessionIdValueMock,
-          headers: { 'x-forwarded-for': '123.123.123.123' },
-        },
-        oidc: {
-          isError: hasError,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          params: { client_id: clientIdMock, acr_values: spAcrMock },
-        },
-        res: {},
-      };
+    const ctxMock = {
+      req: {
+        sessionId: sessionIdValueMock,
+        headers: { 'x-forwarded-for': '123.123.123.123' },
+      },
+      oidc: {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        params: { client_id: clientIdMock, acr_values: spAcrMock },
+      },
+      res: {},
     };
+
+    let shouldAbortMock;
+
+    beforeEach(() => {
+      shouldAbortMock = service['shouldAbortMiddleware'] = jest.fn();
+    });
 
     it('should abort middleware execution if request if flagged as erroring', () => {
       // Given
-      const ctxMock = getCtxMock(true);
+      shouldAbortMock.mockReturnValueOnce(true);
 
       // When
       service['authorizationMiddleware'](ctxMock);
@@ -281,7 +331,8 @@ describe('MockIdentityProviderService', () => {
 
     it('should call session.set()', async () => {
       // Given
-      const ctxMock = getCtxMock();
+      shouldAbortMock.mockReturnValueOnce(false);
+
       oidcProviderServiceMock.getInteractionIdFromCtx.mockReturnValue(
         interactionIdValueMock,
       );
@@ -322,7 +373,8 @@ describe('MockIdentityProviderService', () => {
 
     it('should throw if the session initialization fails', async () => {
       // Given
-      const ctxMock = getCtxMock();
+      shouldAbortMock.mockReturnValueOnce(false);
+
       oidcProviderServiceMock.getInteractionIdFromCtx.mockReturnValue(
         interactionIdValueMock,
       );

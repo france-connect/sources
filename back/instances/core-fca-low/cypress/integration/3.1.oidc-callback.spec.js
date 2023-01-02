@@ -1,13 +1,16 @@
 import * as qs from 'querystring';
+
 import {
   chooseIdpOnCore,
-  getServiceProvider,
   getIdentityProvider,
-  submitFSAuthorizeForm
+  getServiceProvider,
+  submitFSAuthorizeForm,
 } from './mire.utils';
 
 function getOidcCallbackUrl(interactionId, event) {
-  const { IDP_ROOT_URL } = getIdentityProvider(`${Cypress.env('IDP_NAME')}1-low`);
+  const { IDP_ROOT_URL } = getIdentityProvider(
+    `${Cypress.env('IDP_NAME')}1-low`,
+  );
 
   cy.request({
     url: `${IDP_ROOT_URL}/login`,
@@ -47,11 +50,13 @@ function extractInteractionIdFromUrl(url) {
  */
 function prepareOidcCallbackAs(alias) {
   const { SP_ROOT_URL } = getServiceProvider(`${Cypress.env('SP_NAME')}1-low`);
-  const { IDP_ROOT_URL } = getIdentityProvider(`${Cypress.env('IDP_NAME')}1-low`);
+  const { IDP_ROOT_URL } = getIdentityProvider(
+    `${Cypress.env('IDP_NAME')}1-low`,
+  );
 
   cy.visit(SP_ROOT_URL);
   submitFSAuthorizeForm();
-  
+
   chooseIdpOnCore(`${Cypress.env('IDP_NAME')}1-low`);
 
   cy.url().should('contain', IDP_ROOT_URL);
@@ -71,17 +76,16 @@ function prepareOidcCallbackAs(alias) {
  * Beware of the currying! This function actually returns another function
  * that will receive an oidc-callback url as only parameter.
  */
-const finishWithReplacedParam = (param, replacement, exepectedErrorCode) => (
-  url,
-) => {
-  const [host, queryString] = url.split('?');
-  const params = qs.parse(queryString);
-  params[param] = replacement;
-  const replacedQueryString = qs.stringify(params);
+const finishWithReplacedParam =
+  (param, replacement, exepectedErrorCode) => (url) => {
+    const [host, queryString] = url.split('?');
+    const params = qs.parse(queryString);
+    params[param] = replacement;
+    const replacedQueryString = qs.stringify(params);
 
-  cy.visit(`${host}?${replacedQueryString}`, { failOnStatusCode: false });
-  cy.hasError(exepectedErrorCode);
-};
+    cy.visit(`${host}?${replacedQueryString}`, { failOnStatusCode: false });
+    cy.hasError(exepectedErrorCode);
+  };
 
 /**
  * Instead of altering /oidc-callback URL and visiting it,
@@ -94,7 +98,7 @@ function finishWithReplacedUrl(attackerUrl) {
   const { SP_ROOT_URL } = getServiceProvider(`${Cypress.env('SP_NAME')}1-low`);
   cy.visit(SP_ROOT_URL);
   submitFSAuthorizeForm();
-  
+
   chooseIdpOnCore(`${Cypress.env('IDP_NAME')}1-low`);
 
   // Use url from previous interaction

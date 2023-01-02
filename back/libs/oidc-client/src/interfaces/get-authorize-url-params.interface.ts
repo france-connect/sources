@@ -7,4 +7,5 @@ export interface IGetAuthorizeUrlParams {
   acr_values: string;
   nonce: string;
   claims?: string;
+  prompt?: string;
 }

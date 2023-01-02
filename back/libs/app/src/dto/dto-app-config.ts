@@ -7,6 +7,7 @@ import {
   IsIn,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   MinLength,
   ValidateNested,
@@ -57,6 +58,7 @@ export class AppConfig {
 
   @IsOptional()
   @IsNumber()
+  @IsPositive()
   readonly assetsCacheTtl?: number;
 
   @IsOptional()

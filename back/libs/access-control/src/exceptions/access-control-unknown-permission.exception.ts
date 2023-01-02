@@ -11,5 +11,6 @@ import { AccessControlBaseException } from './access-control-base.exception';
 )
 export class UnknownPermissionException extends AccessControlBaseException {
   public readonly code = ErrorCode.UNKNOWN_PERMISSION;
-  public readonly message = "Rôle inconnu associé à l'utilisateur";
+  public readonly message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

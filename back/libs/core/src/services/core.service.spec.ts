@@ -882,20 +882,6 @@ describe('CoreService', () => {
       expect(trackingMock.track).toHaveBeenCalledTimes(0);
     });
 
-    it('should call session.reset()', async () => {
-      // Given
-      const ctxMock = getCtxMock();
-
-      service['getEventContext'] = jest.fn().mockReturnValueOnce(eventCtxMock);
-
-      // When
-      await service['authorizationMiddleware'](ctxMock);
-
-      // Then
-      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.reset).toHaveBeenCalledWith(reqMock, resMock);
-    });
-
     it('should call session.set()', async () => {
       // Given
       const ctxMock = getCtxMock();

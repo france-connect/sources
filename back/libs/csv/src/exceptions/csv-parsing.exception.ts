@@ -10,8 +10,6 @@ import { CsvBaseException } from './csv-base.exception';
 @Description("Problème d'extraction des données CSV")
 export class CsvParsingException extends CsvBaseException {
   code = 0;
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support.');
-  }
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

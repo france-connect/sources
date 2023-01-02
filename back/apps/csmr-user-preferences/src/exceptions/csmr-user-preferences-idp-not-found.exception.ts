@@ -11,5 +11,6 @@ import { CsmrUserPreferencesBaseException } from './csmr-user-preferences-base.e
 )
 export class CsmrUserPreferencesIdpNotFoundException extends CsmrUserPreferencesBaseException {
   code = ErrorCode.IDP_NOT_FOUND;
-  message = "Le fournisseur d'identité en entrée est inconnu";
+  message =
+    'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
 }

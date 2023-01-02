@@ -1,7 +1,7 @@
 import {
-  beforeSuccessScenario,
-  basicSuccessScenario,
   afterSuccessScenario,
+  basicSuccessScenario,
+  beforeSuccessScenario,
   getAuthorizeUrl,
   getServiceProvider,
 } from './mire.utils';

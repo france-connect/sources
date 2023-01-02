@@ -17,6 +17,7 @@ import {
   OidcClientSession,
   RedirectToIdp,
 } from '@fc/oidc-client';
+import { OidcProviderPrompt } from '@fc/oidc-provider';
 import {
   ISessionService,
   Session,
@@ -85,7 +86,7 @@ export class OidcClientController {
     const { nonce, state } =
       await this.oidcClient.utils.buildAuthorizeParameters();
 
-    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl({
+    const authorizeParams = {
       // acr_values is an oidc defined variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
@@ -94,7 +95,14 @@ export class OidcClientController {
       idpId,
       scope,
       state,
-    });
+      // Prompt for the identity provider is forced here
+      // and not linked to the prompt required of the service provider
+      prompt: OidcProviderPrompt.LOGIN,
+    };
+
+    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl(
+      authorizeParams,
+    );
 
     const { name: idpName, title: idpLabel } =
       await this.identityProvider.getById(idpId);

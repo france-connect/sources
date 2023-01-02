@@ -11,8 +11,6 @@ import { OidcClientBaseException } from './oidc-client-base.exception';
 )
 export class OidcClientProviderNotFoundException extends OidcClientBaseException {
   code = ErrorCode.MISSING_PROVIDER;
-
-  constructor() {
-    super("Ce fournisseur d'identité est inconnu");
-  }
+  message =
+    'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
 }

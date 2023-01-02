@@ -37,4 +37,59 @@ export const scopes: IScopes = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   preferred_username: [claims.preferred_username],
   address: [claims.address],
+  // OIDC fashion naming
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  rnipp_identite_pivot: [
+    claims.gender,
+    claims.rnipp_gender,
+    claims.family_name,
+    claims.rnipp_family_name,
+    claims.given_name,
+    claims.rnipp_given_name,
+    claims.birthdate,
+    claims.rnipp_birthdate,
+    claims.birthplace,
+    claims.rnipp_birthplace,
+    claims.birthcountry,
+    claims.rnipp_birthcountry,
+  ],
+  // oidc fashioned name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  rnipp_gender: [claims.gender, claims.rnipp_gender],
+  // oidc fashioned name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  rnipp_family_name: [claims.family_name, claims.rnipp_family_name],
+  // oidc fashioned name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  rnipp_given_name: [claims.given_name, claims.rnipp_given_name],
+  // oidc fashioned name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  rnipp_birthdate: [claims.birthdate, claims.rnipp_birthdate],
+  // oidc fashioned name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  rnipp_birthplace: [claims.birthplace, claims.rnipp_birthplace],
+  // oidc fashioned name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  rnipp_birthcountry: [claims.birthcountry, claims.rnipp_birthcountry],
+  // oidc fashioned name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  rnipp_profile: [
+    claims.given_name,
+    claims.rnipp_given_name,
+    claims.family_name,
+    claims.rnipp_family_name,
+    claims.birthdate,
+    claims.rnipp_birthdate,
+    claims.gender,
+    claims.rnipp_gender,
+    claims.preferred_username,
+  ],
+  // oidc fashioned name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  rnipp_birth: [
+    claims.birthplace,
+    claims.rnipp_birthplace,
+    claims.birthcountry,
+    claims.rnipp_birthcountry,
+  ],
 };

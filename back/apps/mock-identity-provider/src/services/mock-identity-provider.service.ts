@@ -45,14 +45,20 @@ export class MockIdentityProviderService {
     );
   }
 
-  private async authorizationMiddleware(ctx) {
+  private shouldAbortMiddleware({ oidc }): boolean {
     /**
      * Abort middleware if authorize is in error
      *
      * We do not want to start a session
      * nor trigger authorization event for invalid requests
      */
-    if (ctx.oidc['isError'] === true) {
+    const abort =
+      oidc['isError'] === true || 'AuthorizationCode' in oidc.entities;
+    return abort;
+  }
+
+  private async authorizationMiddleware(ctx) {
+    if (this.shouldAbortMiddleware(ctx)) {
       return;
     }
 

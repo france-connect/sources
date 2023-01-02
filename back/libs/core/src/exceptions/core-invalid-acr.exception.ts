@@ -12,10 +12,6 @@ import { CoreBaseException } from './core-base.exception';
 export class CoreInvalidAcrException extends CoreBaseException {
   scope = 2; // identity provider scope
   code = ErrorCode.INVALID_ACR;
-
-  constructor() {
-    super(
-      "Le niveau de sécurité demandé par votre démarche ou utilisé pour vous authentifier n'est pas supporté par la plateforme. Veuillez contacter le support.",
-    );
-  }
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

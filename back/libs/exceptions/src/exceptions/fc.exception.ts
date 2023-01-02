@@ -25,10 +25,15 @@ export class FcException extends Error {
    * - 18: Account
    * - 19: Session
    * - 20: Feature Handler
-   * - 21: Roles
+   * - 21: Data-Provider
+   * - 22: Tracks
+   * - 23: Apache-Ignite
+   * - 24: Access-Control
    * - 27: Mailer
    * - 28: csmr-tracks
    * - 30: Rie Proxy Broker
+   * - 31: Partner account
+   * - 32: Partner service
    * - 40: GeoIp Maxmind
    * - 80: Exceptions
    */

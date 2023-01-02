@@ -38,6 +38,7 @@
     ],
     "import/first": 2,
     "import/newline-after-import": 2,
+    "import/no-anonymous-default-export": 2,
     "import/no-duplicates": 2,
     "linebreak-style": "off",
     "no-unused-vars": [

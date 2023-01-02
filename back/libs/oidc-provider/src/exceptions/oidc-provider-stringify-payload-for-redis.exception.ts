@@ -11,10 +11,6 @@ import { OidcProviderBaseException } from './oidc-provider-base.exception';
 )
 export class OidcProviderStringifyPayloadForRedisException extends OidcProviderBaseException {
   public readonly code = ErrorCode.STRINGIFY_FOR_REDIS;
-
-  constructor() {
-    super(
-      'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
-    );
-  }
+  public readonly message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

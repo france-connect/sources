@@ -146,9 +146,6 @@ export class CoreService {
 
     const { interactionId } = eventContext.fc;
 
-    const { req, res } = ctx;
-    const sessionId = await this.sessionService.reset(req, res);
-
     // oidc defined variable name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { acr_values: spAcr, client_id: spId } = ctx.oidc.params;
@@ -164,7 +161,7 @@ export class CoreService {
 
     const sessionContext: ISessionBoundContext = {
       moduleName: 'OidcClient',
-      sessionId,
+      sessionId: ctx.req.sessionId,
     };
     await this.sessionService.set(sessionContext, sessionProperties);
 

@@ -174,5 +174,14 @@
     }
   },
   "files": ["global.d.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "*.js",
+    "*.ts",
+    "libs/**/*.ts",
+    "apps/**/*.ts",
+    "instances/**/*.ts",
+    "entities/**/*.ts",
+    "migrations/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist", "coverage", "scripts"]
 }

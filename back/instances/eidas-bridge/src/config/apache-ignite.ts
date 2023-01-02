@@ -19,4 +19,5 @@ export default {
     username: env.string('USERNAME'),
     password: env.string('PASSWORD'),
   },
+  maxRetryTimeout: env.number('MAX_RETRY_TIMEOUT'),
 } as ApacheIgniteConfig;

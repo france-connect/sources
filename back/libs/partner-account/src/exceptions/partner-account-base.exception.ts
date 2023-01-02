@@ -4,5 +4,5 @@
 import { FcException } from '@fc/exceptions';
 
 export class PartnerAccountBaseException extends FcException {
-  scope = 4;
+  scope = 31;
 }

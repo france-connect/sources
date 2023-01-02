@@ -57,6 +57,26 @@
             <option value="<%=acr%>" <%= (locals.defaultAcrValue && locals.defaultAcrValue === acr) ? "selected" : "" %>><%=acr%></option>
           <% }) %>
         </select>
+        <h2>Prompt <input
+          id="prompt_toggle"
+          type="checkbox"
+          name="activate-prompt"
+          onChange="togglePrompt()"
+          checked
+        /></h2>
+        <% ['login', 'consent', 'none', 'select_account'].forEach(elem => { %>
+          <div class="prompt-input-wrapper">
+            <input
+              id="prompt_<%=elem%>"
+              type="checkbox"
+              name="selected-prompt"
+              value="<%=elem%>"
+              onChange="updatePrompt()"
+              <%= ((locals.params.prompt || []).includes(elem) ? 'checked' : '') %>
+            />
+            <label for="prompt_<%=elem%>"><%=elem%></label>
+          </div>
+        <% }) %>
       </form>
 
       <form id="authorizeForm" action="<%=locals.params.authorization_endpoint;%>" method="get">
@@ -91,6 +111,13 @@
             </div>
           </div>
 
+          <div class="form-group row">
+            <label class="col-2 col-form-label" for="claims"> Prompt : </label>
+            <div class="col-10">
+              <input id="prompt" name="prompt" type="text" value="" class="form-control" />
+            </div>
+          </div>
+
           <div class="btn d-flex justify-content-center">
             <button
               id="call-authorize-button"
@@ -116,7 +143,6 @@
               <input id="redirectUri" type="text" name="redirect_uri" value="<%=locals.params.redirect_uri;%>" class="form-control" />
             </div>
           </div>
-          <input type="hidden" name="prompt" value="login" />
           <input type="hidden" name="response_type" value="code" />
           <input type="hidden" name="state" value="<%=locals.params.state;%>" />
           <input type="hidden" name="nonce" value="<%=locals.params.nonce;%>" />
@@ -159,6 +185,25 @@
         document.getElementById('claims').value = json;
       }
 
+      function togglePrompt(){
+        const selector = 'input[name="activate-prompt"]'
+        const toggle = document.querySelector(selector);
+        const prompt = document.getElementById('prompt')
+        prompt.disabled = !toggle.checked
+      }
+
+      function getPrompt() {
+        const selector = 'input[name="selected-prompt"]:checked';
+        const elements = [...document.querySelectorAll(selector)];
+        return elements.map(elem => elem.value);
+      }
+
+      function updatePrompt() {
+        const prompt = getPrompt();
+        const promptAreValid = prompt && prompt.length > 0;
+        document.getElementById('prompt').value = promptAreValid ? prompt.join(' '): '';
+      }
+
       function updateAcr() {
         const acr = document.getElementById('acrSelector').value;
         document.getElementById('acrValues').value = acr;
@@ -172,6 +217,7 @@
       updateAcr();
       updateClaim();
       updateScope();
+      updatePrompt();
     </script>
   </body>
 </html>

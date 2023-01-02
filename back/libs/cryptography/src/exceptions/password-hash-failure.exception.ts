@@ -12,9 +12,6 @@ import { CryptographyBaseException } from './cryptography-base.exception';
 )
 export class PasswordHashFailure extends CryptographyBaseException {
   public readonly code = ErrorCode.PASSWORD_HASH_FAILURE;
-
-  constructor(e) {
-    super(e);
-    this.message = `Une erreur technique est survenue.`;
-  }
+  public readonly message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

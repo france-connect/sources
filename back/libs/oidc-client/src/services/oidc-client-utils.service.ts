@@ -76,6 +76,7 @@ export class OidcClientUtilsService {
     acr_values,
     nonce,
     claims,
+    prompt,
   }: IGetAuthorizeUrlParams): Promise<string> {
     const client: Client = await this.issuer.getClient(idpId);
 
@@ -87,7 +88,7 @@ export class OidcClientUtilsService {
       // oidc defined variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
-      prompt: 'login',
+      prompt,
     };
 
     this.logger.trace({ params });

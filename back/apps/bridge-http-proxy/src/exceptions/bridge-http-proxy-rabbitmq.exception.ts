@@ -11,10 +11,6 @@ import { BrigdeHttpProxyBaseException } from './bridge-http-proxy-base.exception
 )
 export class BridgeHttpProxyRabbitmqException extends BrigdeHttpProxyBaseException {
   code = ErrorCode.BROKER_RESPONSE;
-
-  constructor() {
-    super(
-      'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous',
-    );
-  }
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

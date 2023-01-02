@@ -4,5 +4,5 @@
 import { FcException } from '@fc/exceptions';
 
 export class AccessControlBaseException extends FcException {
-  scope = 21;
+  scope = 24;
 }

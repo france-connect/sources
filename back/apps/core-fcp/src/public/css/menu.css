@@ -1,5 +1,5 @@
 .menu-container {
-  margin: 16px;
+  padding: 16px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -56,7 +56,7 @@
 
 @media screen and (min-width: 576px) {
   .menu-container {
-    margin: 32px;
+    padding: 32px;
   }
 
   #fc-plus-logo {

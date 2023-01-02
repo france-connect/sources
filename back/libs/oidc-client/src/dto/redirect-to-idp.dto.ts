@@ -1,6 +1,8 @@
 import { IsAscii, IsOptional, IsString } from 'class-validator';
 
-export class RedirectToIdp {
+import { CrsfToken } from './crsf-token.dto';
+
+export class RedirectToIdp extends CrsfToken {
   @IsString()
   @IsOptional()
   @IsAscii()
@@ -20,9 +22,4 @@ export class RedirectToIdp {
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly acr_values?: string;
-
-  @IsString()
-  @IsAscii()
-  @IsOptional()
-  readonly csrfToken: string;
 }

@@ -11,8 +11,6 @@ import { OidcProviderBaseException } from './oidc-provider-base.exception';
 )
 export class OidcProviderBindingException extends OidcProviderBaseException {
   public readonly code = ErrorCode.BINDING_PROVIDER;
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support.');
-  }
+  public readonly message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

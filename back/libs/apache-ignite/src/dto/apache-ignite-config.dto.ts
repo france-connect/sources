@@ -5,10 +5,12 @@ import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
+  IsNumber,
   IsObject,
   IsOptional,
   IsPositive,
   IsString,
+  Min,
   MinLength,
   ValidateNested,
 } from 'class-validator';
@@ -70,4 +72,8 @@ export class ApacheIgniteConfig {
   @ValidateNested()
   @Type(() => AuthConfig)
   auth: AuthConfig;
+
+  @IsNumber()
+  @Min(1000) // 1 sec
+  readonly maxRetryTimeout: number;
 }

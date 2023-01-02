@@ -1,7 +1,7 @@
-export function hasError(errorCode, errorMessage = 'Une erreur technique est survenue lors de la connexion.') {
+export function hasError(errorCode, errorMessage = "Une erreur s'est produite") {
   cy.contains(
     '.main-title',
     errorMessage,
   );
-  cy.contains('#error-code', `Code d'erreur : ${errorCode}`);
+  cy.contains('#error-code', `Erreur ${errorCode}`);
 }

@@ -10,4 +10,6 @@ import { DataProviderCoreAuthBaseException } from './data-provider-core-auth-bas
 )
 export class CheckTokenFailedException extends DataProviderCoreAuthBaseException {
   code = 5;
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

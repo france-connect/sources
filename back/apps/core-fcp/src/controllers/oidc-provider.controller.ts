@@ -65,8 +65,9 @@ export class OidcProviderController {
       query,
       route: OidcProviderRoutes.AUTHORIZATION,
     });
+
     // Initializes a new session local
-    this.sessionService.reset(req, res);
+    await this.sessionService.reset(req, res);
 
     const errors = await validateDto(
       query,
@@ -117,8 +118,7 @@ export class OidcProviderController {
     });
 
     // Initializes a new session local
-    this.sessionService.reset(req, res);
-
+    await this.sessionService.reset(req, res);
     const errors = await validateDto(
       body,
       AuthorizeParamsDto,

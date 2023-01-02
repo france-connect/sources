@@ -11,8 +11,6 @@ import { RnippBaseException } from './';
 )
 export class RnippTimeoutException extends RnippBaseException {
   public readonly code = ErrorCode.REQUEST_TIMEOUT;
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support.');
-  }
+  public readonly message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

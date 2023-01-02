@@ -11,10 +11,6 @@ import { OidcClientBaseException } from './oidc-client-base.exception';
 )
 export class OidcClientIdpBlacklistedException extends OidcClientBaseException {
   code = ErrorCode.PROVIDER_BLACKLISTED_OR_NON_WHITELISTED;
-
-  constructor() {
-    super(
-      "Le fournisseur d'identité que vous avez choisi n'est pas autorisé pour effectuer votre démarche.",
-    );
-  }
+  message =
+    'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
 }

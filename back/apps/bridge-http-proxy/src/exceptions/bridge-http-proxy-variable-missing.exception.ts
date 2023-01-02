@@ -11,10 +11,6 @@ import { BrigdeHttpProxyBaseException } from './bridge-http-proxy-base.exception
 )
 export class BridgeHttpProxyMissingVariableException extends BrigdeHttpProxyBaseException {
   code = ErrorCode.MISSING_VARIABLE;
-
-  constructor() {
-    super(
-      'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous',
-    );
-  }
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

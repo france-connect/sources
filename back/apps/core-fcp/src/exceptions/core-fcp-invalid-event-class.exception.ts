@@ -15,8 +15,6 @@ import { Description } from '@fc/exceptions';
 )
 export class CoreFcpInvalidEventClassException extends CoreBaseException {
   code = ErrorCode.INVALID_CONSENT_PROCESS;
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support.');
-  }
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

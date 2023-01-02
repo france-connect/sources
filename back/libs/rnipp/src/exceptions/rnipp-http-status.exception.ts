@@ -11,9 +11,6 @@ import { RnippBaseException } from './';
 )
 export class RnippHttpStatusException extends RnippBaseException {
   public readonly code = ErrorCode.HTTP_STATUS;
-  message = 'Une erreur est survenue dans la transmission de votre identité';
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support.');
-  }
+  public readonly message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

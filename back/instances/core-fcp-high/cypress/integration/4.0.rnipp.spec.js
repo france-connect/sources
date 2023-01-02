@@ -1,7 +1,7 @@
 import { basicErrorScenario, basicScenario } from './mire.utils';
 
 describe('4.0 - RNIPP', () => {
-  const headingErrorMessage = 'Une erreur est survenue lors de la vérification de votre identité';
+  const headingErrorMessage = "Une erreur s'est produite";
 
   beforeEach(() => {
     cy.clearBusinessLog();
@@ -45,7 +45,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'fip1-high',
     });
 
-    cy.hasError('Y010007');
+    cy.hasError('Y010007', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
       idpId: 'fip1-high',
@@ -86,7 +86,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'fip1-high',
     });
 
-    cy.hasError('Y010011');
+    cy.hasError('Y010011', headingErrorMessage);
   });
 
   it('should trigger error Y010012', () => {
@@ -97,7 +97,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'fip1-high',
     });
 
-    cy.hasError('Y010012');
+    cy.hasError('Y010012', headingErrorMessage);
   });
 
   it('should trigger error Y010013', () => {
@@ -108,7 +108,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'fip1-high',
     });
 
-    cy.hasError('Y010013');
+    cy.hasError('Y010013', headingErrorMessage);
   });
 
   it('should trigger error Y010013 if user has an invalid COG (AAAAA)', () => {

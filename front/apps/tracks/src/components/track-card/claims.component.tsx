@@ -24,7 +24,11 @@ export const ClaimsComponent = React.memo(
       .setLocale('fr')
       .toFormat(options.LUXON_FORMAT_DATETIME_SHORT_FR);
 
-    const groupedClaims: IGroupedClaims = groupByDataProvider(claims);
+    const filteredClaims = claims.filter(
+      ({ identifier }) => identifier !== 'sub' && !identifier.startsWith('rnipp_'),
+    );
+
+    const groupedClaims: IGroupedClaims = groupByDataProvider(filteredClaims);
 
     let globalBaseLine =
       'Vous avez autorisé la transmission de données personnelles à ce service le :';
@@ -62,11 +66,9 @@ export const ClaimsComponent = React.memo(
             </h4>
 
             <ul data-testid={`ClaimsComponent-claims-list-${dataProvider}`}>
-              {claimLabels
-                .filter((claim) => claim !== 'sub')
-                .map((claim) => (
-                  <li key={claim}>{claim}</li>
-                ))}
+              {claimLabels.map((claim) => (
+                <li key={claim}>{claim}</li>
+              ))}
             </ul>
           </div>
         ))}

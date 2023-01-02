@@ -53,6 +53,8 @@ const serviceProviderMock = {
   name: 'spName mocked value',
 };
 
+const sessionIdMock = 'session-id-mock';
+
 const serviceProviderServiceMock = {
   getById: jest.fn(),
 };
@@ -97,6 +99,8 @@ describe('OidcProviderController', () => {
     serviceProviderServiceMock.getById.mockResolvedValueOnce(
       serviceProviderMock,
     );
+
+    sessionServiceMock.reset.mockResolvedValueOnce(sessionIdMock);
 
     resMock.locals = {};
   });
@@ -145,16 +149,14 @@ describe('OidcProviderController', () => {
     it('should throw an Error if DTO not validated', async () => {
       // Given
       validateDtoMock.mockResolvedValueOnce([{ property: 'invalid param' }]);
-
       // Then
-      expect(
-        async () =>
-          await oidcProviderController.getAuthorize(
-            reqMock,
-            resMock,
-            nextMock,
-            queryMock,
-          ),
+      await expect(
+        oidcProviderController.getAuthorize(
+          reqMock,
+          resMock,
+          nextMock,
+          queryMock,
+        ),
       ).rejects.toThrow(OidcProviderAuthorizeParamsException);
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
       expect(validateDtoMock).toHaveBeenCalledTimes(1);
@@ -213,14 +215,13 @@ describe('OidcProviderController', () => {
       validateDtoMock.mockResolvedValueOnce([{ property: 'invalid param' }]);
 
       // Then
-      expect(
-        async () =>
-          await oidcProviderController.postAuthorize(
-            reqMock,
-            resMock,
-            nextMock,
-            bodyMock,
-          ),
+      await expect(
+        oidcProviderController.postAuthorize(
+          reqMock,
+          resMock,
+          nextMock,
+          bodyMock,
+        ),
       ).rejects.toThrow(OidcProviderAuthorizeParamsException);
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
       expect(validateDtoMock).toHaveBeenCalledTimes(1);

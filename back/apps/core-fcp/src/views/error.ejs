@@ -2,32 +2,22 @@
 <html lang="fr">
   <head>
     <%- include('partials/head.ejs'); %>
-    <link rel="stylesheet" href="/css/error.css">
-    <link rel="stylesheet" href="/css/common/typo.css">
-    <link rel="stylesheet" href="/css/numeric-identity.css">
+    <link rel="stylesheet" href="/css/error.css" />
     <title>Connexion - choix du fournisseur d\'identité</title>
   </head>
   <body>
-    <%- include('partials/menu.ejs'); %>
-    <div id="error">
-      <div class="content">
-        <main>
-          <% if(['Y010004', 'Y010006', 'Y010008', 'Y010009', 'Y010015'].includes(locals.code)){ %>
-            <%- include('partials/error/content-rnipp.ejs'); %>
-          <% } else { %>
+    <div id="error-wrapper">
+      <%- include('partials/menu.ejs'); %>
+      <main>
+        <div id="error">
+          <div id="error-content">
             <%- include('partials/error/content.ejs'); %>
-          <% } %>
-          <div class="detail-error-container">
-            <p>
-              Informations à nous transmettre dans le mail pour faciliter la prise en charge de votre demande :
-            </p>
-            <% if(locals.code){%><p id="error-code"><strong>Code d'erreur : </strong><%= locals.code %></p><%}%> 
-            <% if(locals.id){%><p id="error-id"><strong>ID : </strong><%= locals.id %></p><%}%> 
-            <% if(locals.message){%><p id="error-message"><strong>Message : </strong><%= locals.message %></p><%}%> 
           </div>
-          <%- include('partials/faq-button.ejs'); %>
-        </main>
-      </div>
+          <div id="support-form-button">
+            <%- include('partials/support-form-button.ejs'); %>
+          </div>
+        </div>
+      </main>
     </div>
     <%- include('partials/footer.ejs'); %>
   </body>

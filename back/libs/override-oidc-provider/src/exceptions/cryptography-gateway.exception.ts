@@ -11,8 +11,6 @@ import { CryptographyBaseException } from './cryptography-base.exception';
 )
 export class CryptographyGatewayException extends CryptographyBaseException {
   public readonly code = ErrorCode.GATEWAY;
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support.');
-  }
+  public readonly message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

@@ -94,7 +94,7 @@ describe('10.0 - Error Management', () => {
 
     cy.hasError('Y020023');
     cy.get('#error-message').contains(
-      'Le fournisseur d\'identité que vous avez choisi n\'est pas autorisé pour effectuer votre démarche.',
+      'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
     );
 
     cy.get('.previous-link').should('exist');
@@ -104,7 +104,7 @@ describe('10.0 - Error Management', () => {
 
     cy.url().should(
       'contains',
-      '/error?error=Y020023&error_description=Le%20fournisseur%20d%27identit%C3%A9%20que%20vous%20avez%20choisi%20n%27est%20pas%20autoris%C3%A9%20pour%20effectuer%20votre%20d%C3%A9marche.&state=',
+      'error?error=Y020023&error_description=Une%20erreur%20technique%20est%20survenue%2C%20fermez%20l%E2%80%99onglet%20de%20votre%20navigateur%20et%20reconnectez-vous.&state=stateTraces',
     );
   });
 

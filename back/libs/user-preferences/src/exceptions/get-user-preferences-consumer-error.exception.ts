@@ -12,5 +12,5 @@ import { UserPreferencesBaseException } from './user-preferences-base-exception'
 export class GetUserPreferencesConsumerErrorException extends UserPreferencesBaseException {
   code = ErrorCode.GET_USER_PREFERENCES_CONSUMER_ERROR;
   message =
-    "Une erreur technique s'est produite, merci de réessayer ultérieurement.";
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

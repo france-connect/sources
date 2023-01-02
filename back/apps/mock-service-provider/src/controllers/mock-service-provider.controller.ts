@@ -13,9 +13,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { CryptographyService } from '@fc/cryptography';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
@@ -25,13 +23,14 @@ import {
   OidcClientService,
   OidcClientSession,
 } from '@fc/oidc-client';
+import { OidcProviderPrompt } from '@fc/oidc-provider';
 import {
   ISessionService,
   Session,
   SessionNotFoundException,
 } from '@fc/session';
 
-import { AccessTokenParamsDTO } from '../dto';
+import { AccessTokenParamsDTO, AppConfig } from '../dto';
 import { MockServiceProviderRoutes } from '../enums';
 import {
   MockServiceProviderTokenRevocationException,
@@ -46,7 +45,6 @@ export class MockServiceProviderController {
     private readonly config: ConfigService,
     private readonly oidcClient: OidcClientService,
     private readonly logger: LoggerService,
-    private readonly crypto: CryptographyService,
     private readonly identityProvider: IdentityProviderAdapterEnvService,
   ) {
     this.logger.setContext(this.constructor.name);
@@ -63,7 +61,7 @@ export class MockServiceProviderController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const { defaultAcrValue } = this.config.get('App');
+    const { defaultAcrValue } = this.config.get<AppConfig>('App');
 
     // Only one provider is available with `@fc/identity-provider-env`
     const [provider] = await this.identityProvider.getList();
@@ -392,16 +390,21 @@ export class MockServiceProviderController {
     const { state, nonce } =
       await this.oidcClient.utils.buildAuthorizeParameters();
 
+    const prompt = [OidcProviderPrompt.LOGIN, OidcProviderPrompt.CONSENT];
+
+    const authorizeParams = {
+      state,
+      scope,
+      idpId: provider.uid,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      acr_values: acr,
+      nonce,
+      claims,
+      prompt: prompt.join(' '),
+    };
+
     const authorizationUrl: string =
-      await this.oidcClient.utils.getAuthorizeUrl({
-        state,
-        scope,
-        idpId: provider.uid,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        acr_values: acr,
-        nonce,
-        claims,
-      });
+      await this.oidcClient.utils.getAuthorizeUrl(authorizeParams);
 
     const url = new URL(authorizationUrl);
 
@@ -422,6 +425,7 @@ export class MockServiceProviderController {
         // oidc name
         // eslint-disable-next-line @typescript-eslint/naming-convention
         authorization_endpoint: `${url.origin}${url.pathname}`,
+        prompt,
       },
       authorizationUrl,
     };

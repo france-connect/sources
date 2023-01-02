@@ -11,8 +11,6 @@ import { OidcClientBaseException } from './oidc-client-base.exception';
 )
 export class OidcClientGetEndSessionUrlException extends OidcClientBaseException {
   code = ErrorCode.GET_END_SESSION_URL;
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support.');
-  }
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

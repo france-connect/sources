@@ -91,8 +91,7 @@ Fonctionnalité: Connexion ACR
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique
     Et le code d'erreur est "Y020001"
-    Et le numéro de session FranceConnect est affiché
-    Et le message d'erreur FranceConnect est "Le niveau de sécurité utilisé pour vous authentifier ne correspondant pas au niveau exigé pour votre démarche."
+    Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
 
     Exemples:
       | spAcr  | idpAcr  |

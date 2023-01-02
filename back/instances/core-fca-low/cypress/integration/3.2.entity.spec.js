@@ -1,11 +1,21 @@
-import { checkInStringifiedJson, basicScenario } from './mire.utils';
+import {
+  basicScenario,
+  basicSuccessScenario,
+  beforeSuccessScenario,
+  checkInStringifiedJson,
+} from './mire.utils';
 
-describe('Entity', () => {
+/**
+ * The entityId test can not be done with AgentConnect,
+ * The sub is not link to entityId
+ */
+describe.skip('Entity', () => {
   const idpId = `${Cypress.env('IDP_NAME')}1-low`;
 
   it('should have the same client Sub from 2 SP with same entityId', () => {
     basicScenario({
       idpId,
+      sp: `${Cypress.env('SP_NAME')}1-low`,
     });
 
     // return to FS
@@ -17,10 +27,14 @@ describe('Entity', () => {
       cy.wrap({ sub }).as('client:sub');
     });
 
-    basicScenario({
+    const params = {
+      sp: `${Cypress.env('SP_NAME')}2-low`,
       idpId,
-      sp: `${Cypress.env('SP_NAME')}1-low`,
-    });
+    };
+
+    beforeSuccessScenario(params);
+    basicSuccessScenario(params.idpId);
+    // SSO activated
 
     // return to FS
     cy.url().should('match', /interaction\/[^\/]+\/verify/);

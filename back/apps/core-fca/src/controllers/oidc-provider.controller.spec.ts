@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { LoggerService } from '@fc/logger-legacy';
+import { SessionService } from '@fc/session';
 
 import { AuthorizeParamsDto } from '../dto';
 import { OidcProviderController } from './oidc-provider.controller';
@@ -14,13 +15,23 @@ describe('OidcProviderController', () => {
     trace: jest.fn(),
   } as unknown as LoggerService;
 
+  const sessionServiceMock = {
+    reset: jest.fn(),
+  };
+  const sessionIdMock = 'session-id-mock';
+
+  const reqMock = Symbol('req');
+  const resMock = Symbol('res');
+
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [OidcProviderController],
-      providers: [LoggerService],
+      providers: [LoggerService, SessionService],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
+      .overrideProvider(SessionService)
+      .useValue(sessionServiceMock)
       .compile();
 
     oidcProviderController = await app.get<OidcProviderController>(
@@ -28,28 +39,42 @@ describe('OidcProviderController', () => {
     );
 
     jest.resetAllMocks();
+
+    sessionServiceMock.reset.mockResolvedValueOnce(sessionIdMock);
   });
 
   describe('getAuthorize()', () => {
-    it('should call next', () => {
+    it('should call next', async () => {
       // Given
       const nextMock = jest.fn();
       const queryMock = {} as AuthorizeParamsDto;
       // When
-      oidcProviderController.getAuthorize(nextMock, queryMock);
+      await oidcProviderController.getAuthorize(
+        reqMock,
+        resMock,
+        nextMock,
+        queryMock,
+      );
       // Then
+      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
       expect(nextMock).toHaveReturnedTimes(1);
     });
   });
 
   describe('postAuthorize()', () => {
-    it('should call next', () => {
+    it('should call next', async () => {
       // Given
       const nextMock = jest.fn();
       const bodyMock = {} as AuthorizeParamsDto;
       // When
-      oidcProviderController.postAuthorize(nextMock, bodyMock);
+      await oidcProviderController.postAuthorize(
+        reqMock,
+        resMock,
+        nextMock,
+        bodyMock,
+      );
       // Then
+      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
       expect(nextMock).toHaveReturnedTimes(1);
     });
   });

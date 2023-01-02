@@ -22,13 +22,14 @@ import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import {
+  CrsfToken,
   GetOidcCallback,
   OidcClientConfig,
   OidcClientRoutes,
   OidcClientService,
   OidcClientSession,
-  RedirectToIdp,
 } from '@fc/oidc-client';
+import { OidcProviderPrompt } from '@fc/oidc-provider';
 import {
   ISessionService,
   Session,
@@ -63,7 +64,7 @@ export class OidcClientController {
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async redirectToIdp(
     @Res() res,
-    @Body() body: RedirectToIdp,
+    @Body() body: CrsfToken,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
@@ -91,7 +92,9 @@ export class OidcClientController {
     const { nonce, state } =
       await this.oidcClient.utils.buildAuthorizeParameters();
 
-    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl({
+    const prompt = [OidcProviderPrompt.LOGIN].join(' ');
+
+    const authorizeParams = {
       // acr_values is an oidc defined variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
@@ -99,7 +102,12 @@ export class OidcClientController {
       idpId: PROVIDER_UID,
       scope,
       state,
-    });
+      prompt,
+    };
+
+    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl(
+      authorizeParams,
+    );
 
     const { name: idpName, title: idpLabel } =
       await this.identityProvider.getById(PROVIDER_UID);

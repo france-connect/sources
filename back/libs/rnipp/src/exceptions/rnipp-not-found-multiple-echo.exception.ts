@@ -13,10 +13,6 @@ import { RnippBaseException } from './';
 @Description("Le RNIPP a trouvé plusieurs echos pour l'identité fournie")
 export class RnippNotFoundMultipleEchoException extends RnippBaseException {
   public readonly code = ErrorCode.NOT_FOUND_MULTIPLE_ECHO;
-
-  constructor() {
-    super(
-      'Une erreur est survenue dans la transmission de votre identité. Fermez l’onglet de votre navigateur et reconnectez-vous.',
-    );
-  }
+  public readonly message =
+    "Un problème lié à vos données d'identité empêche la connexion d'aboutir. Nous vous invitons à nous contacter pour corriger le problème.";
 }

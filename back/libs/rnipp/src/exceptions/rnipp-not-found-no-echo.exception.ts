@@ -11,10 +11,6 @@ import { RnippBaseException } from './';
 @Description("Le RNIPP n'a pas trouvé l'identité fournie")
 export class RnippNotFoundNoEchoException extends RnippBaseException {
   public readonly code = ErrorCode.NOT_FOUND_NO_ECHO;
-
-  constructor() {
-    super(
-      'Une erreur est survenue dans la transmission de votre identité. Fermez l’onglet de votre navigateur et reconnectez-vous.',
-    );
-  }
+  public readonly message =
+    "Un problème lié à vos données d'identité empêche la connexion d'aboutir. Nous vous invitons à nous contacter pour corriger le problème.";
 }

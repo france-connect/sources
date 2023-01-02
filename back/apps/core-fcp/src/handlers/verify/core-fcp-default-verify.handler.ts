@@ -124,13 +124,19 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
       },
     );
 
+    const rnippClaims = this.buildRnippClaims(rnippIdentity);
+
     /**
      * Prepare identity that will be retrieved by `oidc-provider`
      * and sent to the SP
      *
      * We need to replace IdP's sub, by our own sub
      */
-    const spIdentity = { ...idpIdentity, sub: subSp };
+    const spIdentity = {
+      ...idpIdentity,
+      ...rnippClaims,
+      sub: subSp,
+    };
 
     // Delete idp identity from volatile memory but keep the sub for the business logs.
     const idpIdentityCleaned = { sub: idpIdentity.sub };
@@ -165,5 +171,18 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     this.logger.trace({ rnippIdentity });
 
     return rnippIdentity;
+  }
+
+  private buildRnippClaims(
+    rnippIdentity: RnippPivotIdentity,
+  ): Record<string, Partial<RnippPivotIdentity>> {
+    const rnippClaims = Object.fromEntries(
+      Object.entries(rnippIdentity).map(([key, value]) => [
+        `rnipp_${key}`,
+        value,
+      ]),
+    );
+
+    return rnippClaims;
   }
 }

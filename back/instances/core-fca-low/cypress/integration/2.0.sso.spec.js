@@ -1,4 +1,9 @@
-import {beforeSuccessScenario, afterSuccessScenario, basicSuccessScenario, checkInformations } from './mire.utils';
+import {
+  afterSuccessScenario,
+  basicSuccessScenario,
+  beforeSuccessScenario,
+  checkInformations,
+} from './mire.utils';
 
 describe('No SSO', () => {
   // Given
@@ -33,7 +38,7 @@ describe('No SSO', () => {
     };
     beforeSuccessScenario(params);
     basicSuccessScenario(params.idpId);
-    afterSuccessScenario(params);
+    // SSO activated
 
     // Then
     checkInformations(userInfos);

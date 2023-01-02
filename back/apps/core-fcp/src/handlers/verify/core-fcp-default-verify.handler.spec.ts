@@ -8,6 +8,7 @@ import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
 import {
+  RnippPivotIdentity,
   RnippReceivedValidEvent,
   RnippRequestedEvent,
   RnippService,
@@ -301,6 +302,13 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     });
 
     it('Should call session set with amr parameter', async () => {
+      // Given
+      const buildRnippClaimsResult = {
+        foo: 'bar',
+      };
+      service['buildRnippClaims'] = jest
+        .fn()
+        .mockReturnValueOnce(buildRnippClaimsResult);
       // When
       await service.handle(handleArgument);
       // Then
@@ -309,7 +317,11 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         accountId: accountIdMock,
         amr: ['fc'],
         idpIdentity: idpIdentityMock,
-        spIdentity: { ...idpIdentityMock, sub: 'computedSubSp' },
+        spIdentity: {
+          ...idpIdentityMock,
+          ...buildRnippClaimsResult,
+          sub: 'computedSubSp',
+        },
       });
     });
 
@@ -446,6 +458,47 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         RnippReceivedValidEvent,
         expectedEventStruct,
       );
+    });
+  });
+
+  describe('buildRnippClaims', () => {
+    it('should return properties prefixed with "rnipp"', () => {
+      // Given
+      const input = {
+        gender: Symbol('gender value'),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        given_name: Symbol('given name value'),
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        family_name: Symbol('family_name'),
+        birthdate: Symbol('birthdate value'),
+        birthplace: Symbol('birthplace value'),
+        birthcountry: Symbol('birthcountry value'),
+      };
+      // When
+      const result = service['buildRnippClaims'](
+        input as unknown as RnippPivotIdentity,
+      );
+      // Then
+      expect(result).toEqual({
+        // oidc fashioned name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        rnipp_gender: input.gender,
+        // oidc fashioned name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        rnipp_given_name: input.given_name,
+        // oidc fashioned name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        rnipp_family_name: input.family_name,
+        // oidc fashioned name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        rnipp_birthdate: input.birthdate,
+        // oidc fashioned name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        rnipp_birthplace: input.birthplace,
+        // oidc fashioned name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        rnipp_birthcountry: input.birthcountry,
+      });
     });
   });
 });

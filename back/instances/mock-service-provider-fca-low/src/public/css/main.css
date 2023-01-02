@@ -26,7 +26,8 @@ section.connect {
 }
 
 #scopes .claim-input-wrapper,
-#scopes .scope-input-wrapper {
+#scopes .scope-input-wrapper,
+#scopes .prompt-input-wrapper {
   display: inline-block;
   padding: 6px;
   margin: 3px;

@@ -11,10 +11,6 @@ import { RnippBaseException } from './';
 )
 export class RnippRejectedBadRequestException extends RnippBaseException {
   public readonly code = ErrorCode.REJECTED_BAD_REQUEST;
-
-  constructor() {
-    super(
-      'Une erreur est survenue dans la transmission de votre identité. Fermez l’onglet de votre navigateur et reconnectez-vous.',
-    );
-  }
+  public readonly message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

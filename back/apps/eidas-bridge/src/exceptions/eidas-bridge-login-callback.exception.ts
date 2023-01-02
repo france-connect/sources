@@ -11,10 +11,6 @@ import { EidasBridgeBaseException } from './eidas-bridge-base.exception';
 )
 export class EidasBridgeLoginCallbackException extends EidasBridgeBaseException {
   code = ErrorCode.LOGIN_CALLBACK;
-
-  constructor() {
-    super(
-      'Le niveau de sécurité utilisé pour vous authentifier ne correspondant pas au niveau exigé pour votre démarche.',
-    );
-  }
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

@@ -57,9 +57,8 @@ describe('MockServiceProviderController', () => {
     get: jest.fn(),
   };
 
-  const randomStringMock = 'randomStringMockValue';
   const interactionIdMock = 'interactionIdMockValue';
-  const nonceMock = randomStringMock;
+  const nonceMock = 'nonceMockValue';
   const idpStateMock = 'idpStateMockValue';
   const idpNonceMock = 'idpNonceMockValue';
   const idpIdTokenMock = 'idpIdTokenMockValue';
@@ -71,10 +70,6 @@ describe('MockServiceProviderController', () => {
     idpState: idpStateMock,
     idpIdToken: idpIdTokenMock,
     idpId: idpIdMock,
-  };
-
-  const cryptographyMock = {
-    genRandomString: jest.fn(),
   };
 
   const configMock = {
@@ -194,8 +189,6 @@ describe('MockServiceProviderController', () => {
       .useValue(loggerServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
-      .overrideProvider(CryptographyService)
-      .useValue(cryptographyMock)
       .overrideProvider(IdentityProviderAdapterEnvService)
       .useValue(identityProviderMock)
       .compile();
@@ -234,7 +227,6 @@ describe('MockServiceProviderController', () => {
 
     sessionServiceMock.get.mockResolvedValue(sessionDataMock);
 
-    cryptographyMock.genRandomString.mockReturnValue(randomStringMock);
     configMock.get.mockReturnValue({
       scope: scopeMock,
       acr: acrMock,
@@ -543,6 +535,7 @@ describe('MockServiceProviderController', () => {
       expect(oidcClientServiceMock.utils.getAuthorizeUrl).toBeCalledTimes(1);
       expect(oidcClientServiceMock.utils.getAuthorizeUrl).toBeCalledWith({
         state: idpStateMock,
+        prompt: 'login consent',
         scope: scopeMock,
         idpId: 'providerUidMock',
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -565,6 +558,7 @@ describe('MockServiceProviderController', () => {
           uid: 'providerUidMock',
           acr: 'acrMock',
           claims: 'claimsMock',
+          prompt: ['login', 'consent'],
           // eslint-disable-next-line @typescript-eslint/naming-convention
           redirect_uri: idp.client.redirect_uris[0],
           scope: scopeMock,

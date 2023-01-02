@@ -19,8 +19,6 @@ import { CsmrHsmBaseException } from './csmr-hsm-base.exception';
 )
 export class CsmrHsmRandomException extends CsmrHsmBaseException {
   code = 2;
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support.');
-  }
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

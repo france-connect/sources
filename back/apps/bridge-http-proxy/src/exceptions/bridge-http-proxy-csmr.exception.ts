@@ -12,14 +12,13 @@ import { BrigdeHttpProxyBaseException } from './bridge-http-proxy-base.exception
 )
 export class BridgeHttpProxyCsmrException extends BrigdeHttpProxyBaseException {
   code = ErrorCode.CSMR_ERROR;
-
   reference: number;
   name: string;
   reason: string;
 
   constructor(error: BridgeError) {
     super(
-      'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous',
+      'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',
     );
     const { code: reference, name, reason } = error;
     this.reference = reference;

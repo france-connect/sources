@@ -11,8 +11,6 @@ import { EidasClientBaseException } from './eidas-client-base.exception';
 )
 export class ReadLightResponseFromCacheException extends EidasClientBaseException {
   public readonly code = ErrorCode.READ_LIGHT_RESPONSE_FROM_CACHE;
-
-  constructor() {
-    super('Une erreur technique est survenue, veuillez contacter le support.');
-  }
+  public readonly message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

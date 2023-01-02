@@ -1,6 +1,6 @@
 import {
-  chooseIdpOnCore,
   checkInStringifiedJson,
+  chooseIdpOnCore,
   getServiceProvider,
   setFSAuthorizeMethod,
   submitFSAuthorizeForm,

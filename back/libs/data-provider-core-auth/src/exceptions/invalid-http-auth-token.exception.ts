@@ -10,4 +10,6 @@ import { DataProviderCoreAuthBaseException } from './data-provider-core-auth-bas
 )
 export class InvalidHttpAuthTokenException extends DataProviderCoreAuthBaseException {
   code = 1;
+  message =
+    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
 }

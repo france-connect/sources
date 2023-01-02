@@ -17,5 +17,6 @@ import { ErrorCode } from '../enums';
 )
 export class CoreFcpFailedAbortSessionException extends CoreBaseException {
   code = ErrorCode.FAILED_ABORT_SESSION;
-  message = 'Erreur technique';
+  message =
+    'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
 }
