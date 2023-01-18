@@ -11,7 +11,13 @@ import {
   IServiceProviderItem,
   PartnerServiceProviderService,
 } from '@fc/partner-service-provider';
+import {
+  PartnerServiceProviderConfigurationService,
+  ServiceProviderConfigurationItemInterface,
+  ServiceProviderConfigurationType,
+} from '@fc/partner-service-provider-configuration';
 
+import { PartnersRoutes } from '../enums';
 import { PartnersService } from './partners.service';
 
 jest.mock('@fc/access-control');
@@ -29,6 +35,11 @@ describe('PartnersService', () => {
     getById: jest.fn(),
   };
 
+  const partnerServiceProviderConfigurationServiceMock = {
+    getByServiceProvider: jest.fn(),
+    addForServiceProvider: jest.fn(),
+  };
+
   const permissionsMock = [] as IPermission[];
 
   const offsetMock = 0;
@@ -41,6 +52,23 @@ describe('PartnersService', () => {
     total: 42,
     items: [serviceProviderItemMock],
   };
+  const getByServiceProviderMockResolvedValue = {
+    total: 2,
+    items: [
+      {
+        id: 'configuration-uuid-1',
+        name: 'configuration name CC',
+      },
+      {
+        id: 'configuration-uuid-2',
+        name: 'configuration name DD',
+      },
+    ],
+  };
+  const postForServiceProviderMockResolvedValue = {
+    id: 'service-configuration-configuration-uuid',
+    name: 'configuration name AA',
+  };
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -51,12 +79,15 @@ describe('PartnersService', () => {
         PartnersService,
         LoggerService,
         PartnerServiceProviderService,
+        PartnerServiceProviderConfigurationService,
       ],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
       .overrideProvider(PartnerServiceProviderService)
       .useValue(partnerServiceProviderServiceMock)
+      .overrideProvider(PartnerServiceProviderConfigurationService)
+      .useValue(partnerServiceProviderConfigurationServiceMock)
       .compile();
 
     service = module.get<PartnersService>(PartnersService);
@@ -67,6 +98,14 @@ describe('PartnersService', () => {
 
     partnerServiceProviderServiceMock.getById.mockResolvedValue(
       serviceProviderItemMock,
+    );
+
+    partnerServiceProviderConfigurationServiceMock.getByServiceProvider.mockResolvedValue(
+      getByServiceProviderMockResolvedValue,
+    );
+
+    partnerServiceProviderConfigurationServiceMock.addForServiceProvider.mockResolvedValue(
+      postForServiceProviderMockResolvedValue,
     );
   });
 
@@ -291,6 +330,205 @@ describe('PartnersService', () => {
           view: '/service-providers/id-mock-value/view',
         },
       });
+    });
+  });
+
+  describe('buildFSA', () => {
+    it('should return payload with correct id and name', () => {
+      // Given
+      const serviceProviderConfigurationMock = {
+        id: 'correctEntityId',
+        name: 'a name',
+      } as ServiceProviderConfigurationItemInterface;
+
+      // When
+      const result = service['buildFSA'](
+        ServiceProviderConfigurationType.ITEM,
+        serviceProviderConfigurationMock,
+      );
+
+      // Then
+      expect(result).toEqual({
+        type: 'SERVICE_PROVIDER_CONFIGURATION_ITEM',
+        payload: {
+          id: 'correctEntityId',
+          name: 'a name',
+        },
+      });
+    });
+  });
+
+  describe('buildUrls', () => {
+    it('should return meta with correct view and delete', () => {
+      // Given
+      const id = 'correctEntityId';
+      const buildUrlsMock = {
+        view: `${PartnersRoutes.SERVICE_PROVIDER_CONFIGURATION_LIST}/${id}`,
+        delete: `${PartnersRoutes.SERVICE_PROVIDER_CONFIGURATION_DELETE.replace(
+          ':id',
+          'correctEntityId',
+        )}`,
+      };
+
+      // When
+      const result = service['buildUrls']('correctEntityId');
+
+      // Then
+      expect(result).toEqual(buildUrlsMock);
+    });
+  });
+
+  describe('getConfigurationsFromServiceProvider', () => {
+    it('should call partnerServiceProviderConfiguration.getByServiceProvider with the service provider id', async () => {
+      // Given
+      const serviceProviderIdMock: uuid = 'one-sp-id-uuid';
+
+      // When
+      await service.getConfigurationsFromServiceProvider(serviceProviderIdMock);
+
+      // Then
+      expect(
+        partnerServiceProviderConfigurationServiceMock.getByServiceProvider,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        partnerServiceProviderConfigurationServiceMock.getByServiceProvider,
+      ).toHaveBeenCalledWith(serviceProviderIdMock);
+    });
+
+    it('should return empty FSA if there no configurations', async () => {
+      // Given
+      const serviceProviderIdMock: uuid = '';
+      const getZeroConfigurationDataMockResolveValue = {
+        total: 0,
+        items: [],
+      };
+
+      // When
+      partnerServiceProviderConfigurationServiceMock.getByServiceProvider.mockResolvedValue(
+        getZeroConfigurationDataMockResolveValue,
+      );
+      const result = await service.getConfigurationsFromServiceProvider(
+        serviceProviderIdMock,
+      );
+
+      // Then
+      expect(result).toEqual({
+        type: 'SERVICE_PROVIDER_CONFIGURATION_LIST',
+        meta: {
+          total: 0,
+        },
+        payload: [],
+      });
+    });
+
+    it('should call this.mapConfigWithMeta()', async () => {
+      // Given
+      const serviceProviderIdMock: uuid = 'one-sp-id-uuid';
+      service['mapConfigWithMeta'] = jest.fn();
+
+      // When
+      await service.getConfigurationsFromServiceProvider(serviceProviderIdMock);
+
+      // Then
+      expect(service['mapConfigWithMeta']).toHaveBeenCalledTimes(1);
+      expect(service['mapConfigWithMeta']).toHaveBeenCalledWith(
+        getByServiceProviderMockResolvedValue.items,
+      );
+    });
+
+    it('should return FSA with configurations', async () => {
+      // Given
+      const serviceProviderIdMock: uuid = 'one-sp-uuid';
+      const expected = {
+        type: 'SERVICE_PROVIDER_CONFIGURATION_LIST',
+        meta: {
+          total: 2,
+        },
+        payload: [
+          {
+            payload: {
+              id: 'configuration-uuid-1',
+              name: 'configuration name CC',
+            },
+            type: 'SERVICE_PROVIDER_CONFIGURATION_ITEM',
+          },
+          {
+            payload: {
+              id: 'configuration-uuid-2',
+              name: 'configuration name DD',
+            },
+            type: 'SERVICE_PROVIDER_CONFIGURATION_ITEM',
+          },
+        ],
+      };
+
+      // When
+      const result = await service.getConfigurationsFromServiceProvider(
+        serviceProviderIdMock,
+      );
+
+      // Then
+      expect(result).toEqual(expected);
+    });
+  });
+
+  describe('saveConfigurationForServiceProvider', () => {
+    // Given
+    const serviceProviderIdMock: uuid = 'one-sp-id-uuid';
+    const serviceProviderConfigurationIdMock: uuid =
+      'service-configuration-configuration-uuid';
+
+    it('should call partnerServiceProviderConfiguration.addForServiceProvider()', async () => {
+      // When
+      await service.saveConfigurationForServiceProvider(serviceProviderIdMock);
+
+      // Then
+      expect(
+        partnerServiceProviderConfigurationServiceMock.addForServiceProvider,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        partnerServiceProviderConfigurationServiceMock.addForServiceProvider,
+      ).toHaveBeenCalledWith(serviceProviderIdMock);
+    });
+
+    it('should call this.buildUrls() with service provider configuration id', async () => {
+      // Given
+      service['buildUrls'] = jest.fn();
+
+      // When
+      await service.saveConfigurationForServiceProvider(serviceProviderIdMock);
+
+      // Then
+      expect(service['buildUrls']).toHaveBeenCalledTimes(1);
+      expect(service['buildUrls']).toHaveBeenCalledWith(
+        serviceProviderConfigurationIdMock,
+      );
+    });
+
+    it('should return configuration item', async () => {
+      // Given
+      const expected = {
+        type: 'SERVICE_PROVIDER_CONFIGURATION_ITEM',
+        meta: {
+          urls: {
+            delete: `/service-provider-configurations/${serviceProviderConfigurationIdMock}`,
+            view: `/service-provider-configurations/${serviceProviderConfigurationIdMock}`,
+          },
+          total: 2,
+        },
+        payload: {
+          id: serviceProviderConfigurationIdMock,
+          name: 'configuration name AA',
+        },
+      };
+
+      // When
+      const result = await service.saveConfigurationForServiceProvider(
+        serviceProviderIdMock,
+      );
+
+      // Then
+      expect(result).toEqual(expected);
     });
   });
 });

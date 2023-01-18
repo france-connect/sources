@@ -13,6 +13,18 @@ items:
     entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
     account: '@user-with-1-sp'
 
+  permissions-spc-list-user-with-1-sp:
+    permissionType: 'SERVICE_PROVIDER_CONFIGURATION_LIST'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-with-1-sp'
+
+  permissions-spc-create-user-with-1-sp:
+    permissionType: 'SERVICE_PROVIDER_CONFIGURATION_CREATE'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-with-1-sp'
+
   # user-with-2-sp:
   permissions-sp-list-user-with-2-sp:
     permissionType: 'SERVICE_PROVIDER_LIST'
@@ -122,6 +134,18 @@ items:
     entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
     account: '@user-sp-owner'
 
+  permissions-spc-list-user-sp-owner:
+    permissionType: 'SERVICE_PROVIDER_CONFIGURATION_LIST'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-sp-owner'
+
+  permissions-spc-create-user-sp-owner:
+    permissionType: 'SERVICE_PROVIDER_CONFIGURATION_CREATE'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-sp-owner'
+
   # user-sp-observer:
   permissions-sp-list-user-sp-observer:
     permissionType: 'SERVICE_PROVIDER_LIST'
@@ -147,3 +171,40 @@ items:
     entity: 'SERVICE_PROVIDER'
     entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
     account: '@user-sp-admin'
+
+  permissions-spc-list-user-sp-admin:
+    permissionType: 'SERVICE_PROVIDER_CONFIGURATION_LIST'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-sp-admin'
+
+  permissions-spc-edit-user-sp-admin:
+    permissionType: 'SERVICE_PROVIDER_CONFIGURATION_CREATE'
+    entity: 'SERVICE_PROVIDER'
+    entityId: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    account: '@user-sp-admin'
+
+  # user-sp-config
+  permissions-sp-list-user-sp-config:
+    permissionType: 'SERVICE_PROVIDER_LIST'
+    entity: null
+    entityId: null
+    account: '@user-sp-config'
+
+  permissions-sp-edit-user-sp-config:
+    permissionType: 'SERVICE_PROVIDER_EDIT'
+    entity: 'SERVICE_PROVIDER'
+    entityId: '0cc241a2-74aa-4187-8c53-ecfd1d7c2a17'
+    account: '@user-sp-config'
+
+  permissions-spc-list-user-sp-config:
+    permissionType: 'SERVICE_PROVIDER_CONFIGURATION_LIST'
+    entity: 'SERVICE_PROVIDER'
+    entityId: '0cc241a2-74aa-4187-8c53-ecfd1d7c2a17'
+    account: '@user-sp-config'
+  
+  permissions-spc-create-user-sp-config:
+    permissionType: 'SERVICE_PROVIDER_CONFIGURATION_CREATE'
+    entity: 'SERVICE_PROVIDER'
+    entityId: '0cc241a2-74aa-4187-8c53-ecfd1d7c2a17'
+    account: '@user-sp-config'

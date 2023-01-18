@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import lget from 'lodash.get';
 import { DependencyList, useCallback } from 'react';
 
@@ -29,8 +28,6 @@ describe('useLocalStorage', () => {
   const useCallbackMockImplementation = (cb: (...args: unknown[]) => unknown) => cb;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-
     const localStorageProto = Object.getPrototypeOf(window.localStorage);
 
     getItemMock = jest.spyOn(localStorageProto, 'getItem').mockReturnValue(localStorageItemMock);
@@ -40,7 +37,7 @@ describe('useLocalStorage', () => {
     jsonParseMock = jest.spyOn(JSON, 'parse').mockReturnValue(jsonParseMockReturnValue);
     jsonStringifyMock = jest.spyOn(JSON, 'stringify').mockReturnValue(jsonStringifyMockReturnValue);
 
-    mocked(useCallback).mockReturnValue(useCallbackReturnValue);
+    jest.mocked(useCallback).mockReturnValue(useCallbackReturnValue);
   });
 
   it('should wrap all methods with useCallback', () => {
@@ -65,12 +62,14 @@ describe('useLocalStorage', () => {
 
   describe('get', () => {
     beforeEach(() =>
-      mocked(useCallback).mockImplementation(
-        useCallbackMockImplementation as <T extends Function>(
-          callback: T,
-          deps: DependencyList,
-        ) => T,
-      ),
+      jest
+        .mocked(useCallback)
+        .mockImplementation(
+          useCallbackMockImplementation as <T extends Function>(
+            callback: T,
+            deps: DependencyList,
+          ) => T,
+        ),
     );
 
     it('should call localStorage.getItem with key', () => {
@@ -144,12 +143,14 @@ describe('useLocalStorage', () => {
 
   describe('set', () => {
     beforeEach(() =>
-      mocked(useCallback).mockImplementation(
-        useCallbackMockImplementation as <T extends Function>(
-          callback: T,
-          deps: DependencyList,
-        ) => T,
-      ),
+      jest
+        .mocked(useCallback)
+        .mockImplementation(
+          useCallbackMockImplementation as <T extends Function>(
+            callback: T,
+            deps: DependencyList,
+          ) => T,
+        ),
     );
 
     it('should call JSON.stringify with input value', () => {
@@ -215,12 +216,14 @@ describe('useLocalStorage', () => {
 
   describe('flush', () => {
     beforeEach(() =>
-      mocked(useCallback).mockImplementation(
-        useCallbackMockImplementation as <T extends Function>(
-          callback: T,
-          deps: DependencyList,
-        ) => T,
-      ),
+      jest
+        .mocked(useCallback)
+        .mockImplementation(
+          useCallbackMockImplementation as <T extends Function>(
+            callback: T,
+            deps: DependencyList,
+          ) => T,
+        ),
     );
 
     it('should call localStorage.removeItem() with input key', () => {

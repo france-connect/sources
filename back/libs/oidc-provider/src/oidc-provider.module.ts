@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+
+// Declarative file
 import { DynamicModule, Module, Type } from '@nestjs/common';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
 import { CqrsModule } from '@nestjs/cqrs';
@@ -7,7 +10,6 @@ import { IServiceProviderAdapter } from '@fc/oidc';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc/tokens';
 import { RedisModule } from '@fc/redis';
 import { SessionModule } from '@fc/session';
-import { TrackingModule } from '@fc/tracking';
 
 import { IOidcProviderConfigAppService } from './interfaces';
 import { OidcProviderController } from './oidc-provider.controller';
@@ -26,16 +28,15 @@ export class OidcProviderModule {
    * This kind of injection can not be done statically.
    * @see https://docs.nestjs.com/fundamentals/custom-providers
    */
-  // does not need to be tested
-  // istanbul ignore next
   static register(
     OidcProviderConfigApp: Type<IOidcProviderConfigAppService>,
-    serviceProviderClass: Type<IServiceProviderAdapter>,
-    serviceProviderModule: Type<ModuleMetadata>,
+    ServiceProviderClass: Type<IServiceProviderAdapter>,
+    ServiceProviderModule: Type<ModuleMetadata>,
+    ExceptionModule: DynamicModule,
   ): DynamicModule {
     const serviceProviderProvider = {
       provide: SERVICE_PROVIDER_SERVICE_TOKEN,
-      useExisting: serviceProviderClass,
+      useExisting: ServiceProviderClass,
     };
 
     const oidcProviderConfigApp = {
@@ -46,9 +47,9 @@ export class OidcProviderModule {
     return {
       module: OidcProviderModule,
       imports: [
+        ExceptionModule,
         RedisModule,
-        TrackingModule.forLib(),
-        serviceProviderModule,
+        ServiceProviderModule,
         CqrsModule,
         SessionModule,
       ],

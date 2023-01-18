@@ -8,10 +8,6 @@ jest.mock('@fc/i18n');
 jest.mock('react-redux');
 
 describe('ServiceProvidersPageTitleComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // when
     const { container } = render(

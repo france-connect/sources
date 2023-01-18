@@ -32,6 +32,10 @@ Core & backoffice applications
 [Informations relatives à la sécurité sur les dépendances](_doc/sécurité-dépendances.md).
 Le document compile les remontées de checkmarx (outil actuel) ainsi que les contre-mesures mises en place.
 
+### List and documentations
+
+- Type-fest : is a collection of essential TypeScript types. [Documentation type-fest](https://github.com/sindresorhus/type-fest)
+
 ## Mise en place des données
 
 ## Etc/hosts

@@ -472,7 +472,7 @@ _mongo_shell_core-fcp-high() {
 
 _mongo_shell_core-fcp-low() {
  echo "starting mongo `core-fcp-low` database in shell..."
-  cd ${WORKING_DIR} && docker-compose exec mongo-fcp-low mongo core-fcp-low -u 'fc' -p 'pass' --authenticationDatabase core-fcp-low --tls
+  cd ${WORKING_DIR} && docker-compose exec mongo-fcp-low mongo core-fcp-low -u 'core-fcp-low' -p 'pass' --authenticationDatabase core-fcp-low --tls
 }
 
 _fca_low_front() {

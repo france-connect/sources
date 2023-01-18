@@ -20,6 +20,11 @@ export class AppPermissionsHandler extends BasePermissionsHandlerService {
     this.logger.setContext(this.constructor.name);
   }
 
+  /**
+   * The role of the fonction is to map the given permission to the right handler.
+   * That does not impact readability.
+   */
+  // eslint-disable-next-line complexity
   protected checkPermissions(
     permissionName: PermissionsType,
     context: ExecutionContext,
@@ -36,6 +41,16 @@ export class AppPermissionsHandler extends BasePermissionsHandlerService {
         return this.checkServiceProviderId(
           context,
           PermissionsType.SERVICE_PROVIDER_VIEW,
+        );
+      case PermissionsType.SERVICE_PROVIDER_CONFIGURATION_LIST:
+        return this.checkServiceProviderForConfigurationIdList(
+          context,
+          PermissionsType.SERVICE_PROVIDER_CONFIGURATION_LIST,
+        );
+      case PermissionsType.SERVICE_PROVIDER_CONFIGURATION_CREATE:
+        return this.checkServiceProviderForConfigurationIdCreate(
+          context,
+          PermissionsType.SERVICE_PROVIDER_CONFIGURATION_CREATE,
         );
       default:
         throw new UnknownPermissionException();
@@ -66,6 +81,42 @@ export class AppPermissionsHandler extends BasePermissionsHandlerService {
       entity: null,
       entityId: null,
     };
+
+    return this.standardMatchPermission(userPermissions, permission);
+  }
+
+  private checkServiceProviderForConfigurationIdCreate(
+    context: ExecutionContext,
+    permissionType: PermissionsType,
+  ) {
+    const { body, userPermissions } = this.extractContextInfos(context);
+    const { serviceProviderId } = body;
+
+    const permission: IPermission = {
+      permissionType,
+      entity: EntityType.SERVICE_PROVIDER,
+      entityId: serviceProviderId,
+    };
+
+    this.logger.trace({ permission });
+
+    return this.standardMatchPermission(userPermissions, permission);
+  }
+
+  private checkServiceProviderForConfigurationIdList(
+    context: ExecutionContext,
+    permissionType: PermissionsType,
+  ) {
+    const { query, userPermissions } = this.extractContextInfos(context);
+    const { serviceProviderId } = query;
+
+    const permission: IPermission = {
+      permissionType,
+      entity: EntityType.SERVICE_PROVIDER,
+      entityId: serviceProviderId as string,
+    };
+
+    this.logger.trace({ permission });
 
     return this.standardMatchPermission(userPermissions, permission);
   }

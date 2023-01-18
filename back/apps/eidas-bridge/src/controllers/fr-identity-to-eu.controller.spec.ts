@@ -1,5 +1,4 @@
 import { Request } from 'express';
-import { mocked } from 'jest-mock';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -712,7 +711,7 @@ describe('FrIdentityToEuController', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         given_name: 'given_nameValue',
       };
-      validateDtoMock = mocked(validateDto);
+      validateDtoMock = jest.mocked(validateDto);
     });
 
     it('should succeed to validate identity', async () => {

@@ -1,6 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`NotFoundPage should match the snapshot 1`] = `
+exports[`NotFoundPage should match the snapshot, when view is greater or equal than a tablet view 1`] = `
+<div>
+  <div
+    class="fr-m-auto fr-px-2w text-center fr-mt-8w"
+    id="page-container"
+  >
+    <h1
+      class="text-center"
+    >
+      404 - Not Found
+    </h1>
+  </div>
+</div>
+`;
+
+exports[`NotFoundPage should match the snapshot, when view is lower than a tablet view 1`] = `
 <div>
   <div
     class="fr-m-auto fr-px-2w text-center fr-mt-5w"

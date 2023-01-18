@@ -26,10 +26,6 @@ describe('I18nService', () => {
 
   const localeMock = 'fr-FR';
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('instance', () => {
     it('should throw if used before initialisation', () => {
       // When / Then

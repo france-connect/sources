@@ -6,10 +6,6 @@ jest.mock('./toggle-input.component');
 jest.mock('./toggle-label.component');
 
 describe('ToggleInput', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // When
     const { container } = renderWithFinalForm(ToggleInput, {

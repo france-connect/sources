@@ -3,48 +3,33 @@
 // Declarative code
 import { DynamicModule, Module, Type } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { CqrsModule } from '@nestjs/cqrs';
 
-import { APP_TRACKING_SERVICE } from './app-tracking-service.token';
 import { TrackingInterceptor } from './interceptors';
-import { IAppTrackingService } from './interfaces';
-import { TrackingService } from './tracking.service';
+import { AppTrackingServiceAbstract } from './interfaces';
+import { TrackingService } from './services';
+import { APP_TRACKING_SERVICE } from './tokens';
 
 @Module({})
 export class TrackingModule {
   static forRoot(
-    appTrackingServiceClass: Type<IAppTrackingService>,
+    appTrackingServiceClass: Type<AppTrackingServiceAbstract>,
   ): DynamicModule {
+    const appTrackingServiceProvider = {
+      provide: APP_TRACKING_SERVICE,
+      useClass: appTrackingServiceClass,
+    };
+
     return {
       module: TrackingModule,
-      imports: [CqrsModule],
       providers: [
         TrackingService,
-        {
-          provide: APP_TRACKING_SERVICE,
-          useClass: appTrackingServiceClass,
-        },
+        appTrackingServiceProvider,
         {
           provide: APP_INTERCEPTOR,
           useClass: TrackingInterceptor,
         },
       ],
-      exports: [TrackingService],
-    };
-  }
-  static forLib() {
-    return {
-      module: TrackingModule,
-      imports: [CqrsModule],
-      providers: [
-        TrackingService,
-        {
-          provide: APP_TRACKING_SERVICE,
-          // We do not need APP_TRACKING_SERVICE for libs.
-          useValue: {},
-        },
-      ],
-      exports: [TrackingService],
+      exports: [appTrackingServiceProvider, TrackingService],
     };
   }
 }

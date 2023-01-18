@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import { lastValueFrom } from 'rxjs';
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -19,7 +18,7 @@ jest.mock('@fc/common');
 describe('TracksService', () => {
   let service: TracksService;
 
-  const lastValueFromMock = mocked(lastValueFrom);
+  const lastValueFromMock = jest.mocked(lastValueFrom);
 
   const loggerServiceMock = {
     debug: jest.fn(),
@@ -161,7 +160,7 @@ describe('TracksService', () => {
   describe('checkTracks()', () => {
     let validateDtoMock;
     beforeEach(() => {
-      validateDtoMock = mocked(validateDto);
+      validateDtoMock = jest.mocked(validateDto);
     });
 
     it('should return null if data is correct', async () => {

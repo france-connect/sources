@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccordionGroupComponent should match the snapshot, and container should have the custom classname 1`] = `
+<div>
+  <div
+    class="fr-accordions-group accordion-group-custom-classname"
+  >
+    <div>
+      AccordionComponent
+    </div>
+    <div>
+      AccordionComponent
+    </div>
+    <div>
+      AccordionComponent
+    </div>
+  </div>
+</div>
+`;
+
+exports[`AccordionGroupComponent should match the snapshot, with required props 1`] = `
+<div>
+  <div
+    class="fr-accordions-group"
+  >
+    <div>
+      AccordionComponent
+    </div>
+    <div>
+      AccordionComponent
+    </div>
+    <div>
+      AccordionComponent
+    </div>
+  </div>
+</div>
+`;

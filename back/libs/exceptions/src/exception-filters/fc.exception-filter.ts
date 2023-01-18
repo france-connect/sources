@@ -2,11 +2,10 @@ import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 
 import { ApiErrorMessage, ApiErrorParams, ApiHttpResponseCode } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { Loggable, Trackable } from '@fc/exceptions';
+import { Loggable } from '@fc/exceptions';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
-import { TrackingService } from '@fc/tracking';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
-import { TrackableEvent } from '../events';
 import { FcException } from '../exceptions';
 import { ExceptionsService } from '../exceptions.service';
 import { FcBaseExceptionFilter } from './fc-base.exception-filter';
@@ -35,26 +34,15 @@ export class FcExceptionFilter
 
     const { message } = exception;
 
-    /**
-     * Business "exceptions" are by definition not technical issues
-     * Thus they do not need to be logged as errors.
-     *
-     * They will most likely trigger a business log.
-     */
-    const isTrackableError = Trackable.isTrackable(exception);
-
     const isLoggableError = Loggable.isLoggable(exception);
 
     if (isLoggableError) {
       this.logException(code, id, exception);
     }
 
-    if (isTrackableError) {
-      /**
-       * @TODO #230 ETQ Dev, je n'envoie pas toute la req
-       * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/230
-       */
-      this.tracking.track(TrackableEvent, { req, exception });
+    if (this.tracking) {
+      const context: TrackedEventContextInterface = { req, exception };
+      this.tracking.trackExceptionIfNeeded(exception, context);
     }
 
     /**

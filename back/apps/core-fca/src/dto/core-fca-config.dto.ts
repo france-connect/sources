@@ -15,6 +15,7 @@ import { OverrideOidcProviderConfig } from '@fc/override-oidc-provider';
 import { RedisConfig } from '@fc/redis';
 import { ServiceProviderAdapterMongoConfig } from '@fc/service-provider-adapter-mongo';
 import { SessionConfig } from '@fc/session';
+import { TrackingConfig } from '@fc/tracking';
 
 export class Core {
   @IsUrl()
@@ -81,4 +82,9 @@ export class CoreFcaConfig {
   @ValidateNested()
   @Type(() => IdentityProviderAdapterMongoConfig)
   readonly IdentityProviderAdapterMongo: IdentityProviderAdapterMongoConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => TrackingConfig)
+  readonly Tracking: TrackingConfig;
 }

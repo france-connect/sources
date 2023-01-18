@@ -1,14 +1,7 @@
-import { mocked } from 'jest-mock';
-
 import { ConfigService } from '@fc/config';
 import * as httpClient from '@fc/http-client';
 
-import {
-  ServiceProviderEditActionTypes,
-  ServiceProvidersActionTypes,
-  ServiceProvidersOptions,
-  ServiceProviderViewActionTypes,
-} from '../enums';
+import { ServiceProvidersActionTypes, ServiceProvidersOptions } from '../enums';
 import {
   serviceProviderEditFailed,
   serviceProviderEditSuccessed,
@@ -61,23 +54,21 @@ describe('side-effects', () => {
   };
   const actionEditMock = {
     payload: itemMock,
-    type: ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_SUCCESSED,
+    type: ServiceProvidersActionTypes.SERVICE_PROVIDER_UPDATE_SUCCESSED,
   };
   const actionViewMock = {
     payload: itemMock,
-    type: ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_SUCCESSED,
+    type: ServiceProvidersActionTypes.SERVICE_PROVIDER_READ_SUCCESSED,
   };
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   describe('Service providers list tests', () => {
     describe('requestServiceProviders when promise is resolved', () => {
       beforeEach(() => {
-        mocked(httpClient.get).mockResolvedValueOnce(responseMock);
-        mocked(serviceProvidersSuccessed).mockReturnValueOnce(actionMock);
-        mocked(ConfigService.get).mockReturnValueOnce({ endpoint: configServiceEndpoint });
+        jest.mocked(httpClient.get).mockResolvedValueOnce(responseMock);
+        jest.mocked(serviceProvidersSuccessed).mockReturnValueOnce(actionMock);
+        jest
+          .mocked(ConfigService.get)
+          .mockReturnValueOnce({ endpoints: { serviceProviders: configServiceEndpoint } });
       });
 
       it('should call ConfigService with parameters', async () => {
@@ -126,8 +117,8 @@ describe('side-effects', () => {
 
     describe('requestServiceProviders when promise is rejected', () => {
       beforeEach(() => {
-        mocked(httpClient.get).mockRejectedValueOnce(new Error(expect.any(String)));
-        mocked(serviceProvidersFailed).mockReturnValueOnce({ type: 'any-event-type' });
+        jest.mocked(httpClient.get).mockRejectedValueOnce(new Error(expect.any(String)));
+        jest.mocked(serviceProvidersFailed).mockReturnValueOnce({ type: 'any-event-type' });
       });
 
       it('should dispatch serviceProvidersFailed action', async () => {
@@ -148,16 +139,18 @@ describe('side-effects', () => {
   describe('Service providers details edit tests', () => {
     describe('requestServiceProviderEdit when promise is resolved', () => {
       beforeEach(() => {
-        mocked(httpClient.get).mockResolvedValueOnce(responseItemMock);
-        mocked(serviceProviderEditSuccessed).mockReturnValueOnce(actionEditMock);
-        mocked(ConfigService.get).mockReturnValueOnce({ endpoint: configServiceEndpoint });
+        jest.mocked(httpClient.get).mockResolvedValueOnce(responseItemMock);
+        jest.mocked(serviceProviderEditSuccessed).mockReturnValueOnce(actionEditMock);
+        jest
+          .mocked(ConfigService.get)
+          .mockReturnValueOnce({ endpoints: { serviceProviders: configServiceEndpoint } });
       });
 
       it('should call ConfigService with parameters', async () => {
         // given
         const actionEdit = {
           payload: { id: '44' },
-          type: ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_REQUESTED,
+          type: ServiceProvidersActionTypes.SERVICE_PROVIDER_UPDATE_REQUESTED,
         };
 
         // when
@@ -171,7 +164,7 @@ describe('side-effects', () => {
         // given
         const actionEdit = {
           payload: { id: '44' },
-          type: ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_REQUESTED,
+          type: ServiceProvidersActionTypes.SERVICE_PROVIDER_UPDATE_REQUESTED,
         };
 
         // when
@@ -185,7 +178,7 @@ describe('side-effects', () => {
         // given
         const actionEdit = {
           payload: { id: '44' },
-          type: ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_REQUESTED,
+          type: ServiceProvidersActionTypes.SERVICE_PROVIDER_UPDATE_REQUESTED,
         };
 
         // when
@@ -201,15 +194,15 @@ describe('side-effects', () => {
 
     describe('requestServiceProviderEdit when promise is rejected', () => {
       beforeEach(() => {
-        mocked(httpClient.get).mockRejectedValueOnce(new Error(expect.any(String)));
-        mocked(serviceProviderEditFailed).mockReturnValueOnce({ type: 'any-event-type' });
+        jest.mocked(httpClient.get).mockRejectedValueOnce(new Error(expect.any(String)));
+        jest.mocked(serviceProviderEditFailed).mockReturnValueOnce({ type: 'any-event-type' });
       });
 
       it('should dispatch serviceProviderEditFailed action', async () => {
         // given
         const action = {
           payload: { id: '44' },
-          type: ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_FAILED,
+          type: ServiceProvidersActionTypes.SERVICE_PROVIDER_UPDATE_FAILED,
         };
 
         // when
@@ -224,16 +217,18 @@ describe('side-effects', () => {
   describe('Service providers details view tests', () => {
     describe('requestServiceProviderView when promise is resolved', () => {
       beforeEach(() => {
-        mocked(httpClient.get).mockResolvedValueOnce(responseItemMock);
-        mocked(serviceProviderViewSuccessed).mockReturnValueOnce(actionViewMock);
-        mocked(ConfigService.get).mockReturnValueOnce({ endpoint: configServiceEndpoint });
+        jest.mocked(httpClient.get).mockResolvedValueOnce(responseItemMock);
+        jest.mocked(serviceProviderViewSuccessed).mockReturnValueOnce(actionViewMock);
+        jest
+          .mocked(ConfigService.get)
+          .mockReturnValueOnce({ endpoints: { serviceProviders: configServiceEndpoint } });
       });
 
       it('should call ConfigService with parameters', async () => {
         // given
         const actionView = {
           payload: { id: '44' },
-          type: ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_REQUESTED,
+          type: ServiceProvidersActionTypes.SERVICE_PROVIDER_READ_REQUESTED,
         };
 
         // when
@@ -247,7 +242,7 @@ describe('side-effects', () => {
         // given
         const actionView = {
           payload: { id: '44' },
-          type: ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_REQUESTED,
+          type: ServiceProvidersActionTypes.SERVICE_PROVIDER_READ_REQUESTED,
         };
 
         // when
@@ -261,7 +256,7 @@ describe('side-effects', () => {
         // given
         const actionView = {
           payload: { id: '44' },
-          type: ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_REQUESTED,
+          type: ServiceProvidersActionTypes.SERVICE_PROVIDER_READ_REQUESTED,
         };
 
         // when
@@ -277,15 +272,15 @@ describe('side-effects', () => {
 
     describe('requestServiceProviderView when promise is rejected', () => {
       beforeEach(() => {
-        mocked(httpClient.get).mockRejectedValueOnce(new Error(expect.any(String)));
-        mocked(serviceProviderViewFailed).mockReturnValueOnce({ type: 'any-event-type' });
+        jest.mocked(httpClient.get).mockRejectedValueOnce(new Error(expect.any(String)));
+        jest.mocked(serviceProviderViewFailed).mockReturnValueOnce({ type: 'any-event-type' });
       });
 
       it('should dispatch serviceProviderViewFailed action', async () => {
         // given
         const action = {
           payload: { id: '44' },
-          type: ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_FAILED,
+          type: ServiceProvidersActionTypes.SERVICE_PROVIDER_READ_FAILED,
         };
 
         // when

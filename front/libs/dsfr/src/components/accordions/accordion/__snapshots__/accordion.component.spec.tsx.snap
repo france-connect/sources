@@ -1,0 +1,156 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccordionComponent should match the snapshot when Accordion is opened 1`] = `
+<div>
+  <section
+    class="fr-accordion"
+    data-testid="AccordionComponent-any-localeid-mock"
+  >
+    <h3
+      class="fr-accordion__title"
+      data-testid="AccordionComponent-heading"
+    >
+      <button
+        aria-controls="accordion-aria-control-any-localeid-mock"
+        aria-expanded="true"
+        class="fr-accordion__btn"
+        data-testid="AccordionComponent-title"
+      >
+        accordion title mock
+      </button>
+    </h3>
+    <div
+      class="fr-collapse fr-px-2w fr-collapse--expanded"
+      data-testid="AccordionComponent-content"
+      id="accordion-aria-control-any-localeid-mock"
+      style="--collapse: -Anypx; --collapse-max-height: none;"
+    >
+      Children
+    </div>
+  </section>
+</div>
+`;
+
+exports[`AccordionComponent should match the snapshot when element is passed in props 1`] = `
+<div>
+  <section
+    class="fr-accordion"
+    data-testid="AccordionComponent-any-localeid-mock"
+  >
+    <h3
+      class="fr-accordion__title"
+      data-testid="AccordionComponent-heading"
+    >
+      <button
+        aria-controls="accordion-aria-control-any-localeid-mock"
+        aria-expanded="false"
+        class="fr-accordion__btn"
+        data-testid="AccordionComponent-title"
+      >
+        accordion title mock
+      </button>
+    </h3>
+    <div
+      class="fr-collapse fr-px-2w"
+      data-testid="AccordionComponent-content"
+      id="accordion-aria-control-any-localeid-mock"
+      style="--collapse: -Anypx; --collapse-max-height: none;"
+    >
+      <div>
+        ELEMENT PROPS
+      </div>
+    </div>
+  </section>
+</div>
+`;
+
+exports[`AccordionComponent should match the snapshot when element or children are not defined 1`] = `
+<div>
+  <section
+    class="fr-accordion"
+    data-testid="AccordionComponent-any-localeid-mock"
+  >
+    <h3
+      class="fr-accordion__title"
+      data-testid="AccordionComponent-heading"
+    >
+      <button
+        aria-controls="accordion-aria-control-any-localeid-mock"
+        aria-expanded="false"
+        class="fr-accordion__btn"
+        data-testid="AccordionComponent-title"
+      >
+        accordion title mock
+      </button>
+    </h3>
+    <div
+      class="fr-collapse fr-px-2w"
+      data-testid="AccordionComponent-content"
+      id="accordion-aria-control-any-localeid-mock"
+      style="--collapse: -Anypx; --collapse-max-height: none;"
+    />
+  </section>
+</div>
+`;
+
+exports[`AccordionComponent should match the snapshot when heading level is defined 1`] = `
+<div>
+  <section
+    class="fr-accordion"
+    data-testid="AccordionComponent-any-localeid-mock"
+  >
+    <h6
+      class="fr-accordion__title"
+      data-testid="AccordionComponent-heading"
+    >
+      <button
+        aria-controls="accordion-aria-control-any-localeid-mock"
+        aria-expanded="false"
+        class="fr-accordion__btn"
+        data-testid="AccordionComponent-title"
+      >
+        accordion title mock
+      </button>
+    </h6>
+    <div
+      class="fr-collapse fr-px-2w"
+      data-testid="AccordionComponent-content"
+      id="accordion-aria-control-any-localeid-mock"
+      style="--collapse: -Anypx; --collapse-max-height: none;"
+    >
+      Children
+    </div>
+  </section>
+</div>
+`;
+
+exports[`AccordionComponent should match the snapshot with default props 1`] = `
+<div>
+  <section
+    class="fr-accordion"
+    data-testid="AccordionComponent-any-localeid-mock"
+  >
+    <h3
+      class="fr-accordion__title"
+      data-testid="AccordionComponent-heading"
+    >
+      <button
+        aria-controls="accordion-aria-control-any-localeid-mock"
+        aria-expanded="false"
+        class="fr-accordion__btn"
+        data-testid="AccordionComponent-title"
+      >
+        accordion title mock
+      </button>
+    </h3>
+    <div
+      class="fr-collapse fr-px-2w"
+      data-testid="AccordionComponent-content"
+      id="accordion-aria-control-any-localeid-mock"
+      style="--collapse: -Anypx; --collapse-max-height: none;"
+    >
+      Children
+    </div>
+  </section>
+</div>
+`;

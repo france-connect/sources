@@ -1,22 +1,18 @@
 /* istanbul ignore file */
 
 // Declarative file
+import type { RequireAtLeastOne } from 'type-fest';
+
 import { EntityType, PermissionsType } from '../enums';
 
 /**
  * @todo use a helper type like typefest
  * @see https://github.com/sindresorhus/type-fest
  */
-type WithEntityOptionType = {
-  entityTypes: EntityType[];
-  permissionTypes?: PermissionsType[];
-};
-
-type WithPermissionOptionType = {
+interface EntityOrPermissionOptionInterface {
   entityTypes?: EntityType[];
-  permissionTypes: PermissionsType[];
-};
+  permissionTypes?: PermissionsType[];
+}
 
 export type RelatedEntitiesHelperGetOptionsType =
-  | WithEntityOptionType
-  | WithPermissionOptionType;
+  RequireAtLeastOne<EntityOrPermissionOptionInterface>;

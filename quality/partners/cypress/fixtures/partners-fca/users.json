@@ -68,5 +68,15 @@
     },
     "firstname": "Edward",
     "lastname": "Petrussen"
+  },
+  {
+    "userId": "user-sp-config",
+    "criteria": ["pour les tests de configuration"],
+    "credentials": {
+      "email": "user-sp-config@partner.fr",
+      "password": "123"
+    },
+    "firstname": "Alain",
+    "lastname": "Proviste"
   }
 ]

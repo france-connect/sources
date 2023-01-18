@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { ValidationError } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -251,7 +249,7 @@ describe('BrokerProxyController', () => {
   });
 
   describe('handleMessage()', () => {
-    const validateDtoMock = mocked(validateDto);
+    const validateDtoMock = jest.mocked(validateDto);
 
     it('should return HTTP message with headers from broker', async () => {
       // Given
@@ -325,7 +323,7 @@ describe('BrokerProxyController', () => {
   });
 
   describe('handleError()', () => {
-    const validateDtoMock = mocked(validateDto);
+    const validateDtoMock = jest.mocked(validateDto);
 
     it('should throw format Error if Error message from Broker is miss formatted', async () => {
       // Given

@@ -1,5 +1,4 @@
 import { City, Reader, ReaderModel } from '@maxmind/geoip2-node';
-import { mocked } from 'jest-mock';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -44,7 +43,7 @@ describe('GeoipMaxmindService', () => {
 
     service = module.get<GeoipMaxmindService>(GeoipMaxmindService);
 
-    readerMock = mocked(Reader);
+    readerMock = jest.mocked(Reader);
     service['db'] = { city: jest.fn() } as unknown as ReaderModel;
   });
 
@@ -101,7 +100,7 @@ describe('GeoipMaxmindService', () => {
       const dataGeoipMock = {
         city: { names: { fr: 'Fizz' } },
       } as unknown as City;
-      mocked(service['db'].city).mockReturnValue(dataGeoipMock);
+      jest.mocked(service['db'].city).mockReturnValue(dataGeoipMock);
 
       // When
       const result = service.getCityName(ipMock);
@@ -115,7 +114,7 @@ describe('GeoipMaxmindService', () => {
       const dataGeoipMock = {
         city: { names: { en: 'Buz' } },
       } as unknown as City;
-      mocked(service['db'].city).mockReturnValue(dataGeoipMock);
+      jest.mocked(service['db'].city).mockReturnValue(dataGeoipMock);
 
       // When
       const result = service.getCityName(ipMock);
@@ -129,7 +128,7 @@ describe('GeoipMaxmindService', () => {
       const dataGeoipMock = {
         city: { names: { pt: 'Foo' } },
       } as unknown as City;
-      mocked(service['db'].city).mockReturnValue(dataGeoipMock);
+      jest.mocked(service['db'].city).mockReturnValue(dataGeoipMock);
 
       // When
       const result = service.getCityName(ipMock);
@@ -154,7 +153,7 @@ describe('GeoipMaxmindService', () => {
       const dataGeoipMock = {
         country: { isoCode: 'FR' },
       } as unknown as City;
-      mocked(service['db'].city).mockReturnValue(dataGeoipMock);
+      jest.mocked(service['db'].city).mockReturnValue(dataGeoipMock);
 
       // When
       const result = service.getCountryIsoCode(ipMock);
@@ -168,7 +167,7 @@ describe('GeoipMaxmindService', () => {
       const dataGeoipMock = {
         country: 'FR',
       } as unknown as City;
-      mocked(service['db'].city).mockReturnValue(dataGeoipMock);
+      jest.mocked(service['db'].city).mockReturnValue(dataGeoipMock);
 
       // When
       const result = service.getCountryIsoCode(ipMock);

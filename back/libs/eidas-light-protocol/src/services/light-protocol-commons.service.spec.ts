@@ -1,6 +1,5 @@
 import * as crypto from 'crypto';
 
-import { mocked } from 'jest-mock';
 import * as moment from 'moment';
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -58,7 +57,7 @@ describe('LightProtocolCommonsService', () => {
   describe('generateToken', () => {
     const formatMock = jest.fn();
     beforeEach(() => {
-      mocked(moment, true).mockReturnValueOnce({
+      jest.mocked(moment, true).mockReturnValueOnce({
         format: formatMock,
       } as unknown as moment.Moment);
 
@@ -114,7 +113,7 @@ describe('LightProtocolCommonsService', () => {
     it('should create a base64 encoded light request with the issuer, id, date, and the signature', () => {
       // setup
       const formatMock = jest.fn().mockReturnValueOnce(date);
-      mocked(moment, true).mockReturnValueOnce({
+      jest.mocked(moment, true).mockReturnValueOnce({
         format: formatMock,
       } as unknown as moment.Moment);
 
@@ -139,7 +138,7 @@ describe('LightProtocolCommonsService', () => {
         .mockReturnValueOnce(tokenDigestMock);
 
       toDateMock.mockReturnValueOnce(fakeDate);
-      mocked(moment, true).mockReturnValueOnce({
+      jest.mocked(moment, true).mockReturnValueOnce({
         toDate: toDateMock,
       } as unknown as moment.Moment);
 
@@ -240,7 +239,7 @@ describe('LightProtocolCommonsService', () => {
     beforeEach(() => {
       mockFormat.mockReturnValueOnce(date);
 
-      mocked(moment, true).mockReturnValueOnce({
+      jest.mocked(moment, true).mockReturnValueOnce({
         format: mockFormat,
       } as unknown as moment.Moment);
     });

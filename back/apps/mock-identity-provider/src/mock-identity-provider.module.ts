@@ -22,10 +22,11 @@ import {
   OidcProviderConfigAppService,
 } from './services';
 
+const exceptionModule = ExceptionsModule.withoutTracking();
 @Global()
 @Module({
   imports: [
-    ExceptionsModule,
+    exceptionModule,
     ServiceProviderAdapterEnvModule,
     SessionModule.forRoot({
       schema: MockIdentityProviderSession,
@@ -34,6 +35,7 @@ import {
       OidcProviderConfigAppService,
       ServiceProviderAdapterEnvService,
       ServiceProviderAdapterEnvModule,
+      exceptionModule,
     ),
   ],
   controllers: [MockIdentityProviderController, OidcProviderController],

@@ -12,10 +12,6 @@ describe('CheckboxComponent', () => {
     value: 'any-field-value-mock',
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // when
     const { container } = render(

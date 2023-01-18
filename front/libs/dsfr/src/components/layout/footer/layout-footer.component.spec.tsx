@@ -14,10 +14,6 @@ jest.mock('./layout-footer-content-links.component');
 jest.mock('./layout-footer-licence.component');
 
 describe('LayoutFooterComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot, with default props', () => {
     // given
     const AppConfigMock = { Layout: expect.any(Object) };

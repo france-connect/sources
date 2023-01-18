@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { AppConfig } from '@fc/app';
-import { ConfigService } from '@fc/config';
 import { OidcSession } from '@fc/oidc';
+import { ISessionBoundContext, SessionService } from '@fc/session';
 import {
-  ISessionBoundContext,
-  SessionNotFoundException,
-  SessionService,
-} from '@fc/session';
-import { IAppTrackingService, IEvent, IEventContext } from '@fc/tracking';
+  TrackedEventContextInterface,
+  TrackedEventInterface,
+} from '@fc/tracking';
 
-import { getEventsMap } from '../events.map';
 import { CoreMissingContextException } from '../exceptions';
 import {
   ICoreTrackingContext,
@@ -20,19 +16,12 @@ import {
 } from '../interfaces';
 
 @Injectable()
-export class CoreTrackingService implements IAppTrackingService {
-  readonly EventsMap;
-
-  constructor(
-    private readonly sessionService: SessionService,
-    private readonly config: ConfigService,
-  ) {
-    this.EventsMap = getEventsMap(this.config.get<AppConfig>('App').urlPrefix);
-  }
+export class CoreTrackingService {
+  constructor(private readonly sessionService: SessionService) {}
 
   async buildLog(
-    event: IEvent,
-    context: IEventContext,
+    trackedEvent: TrackedEventInterface,
+    context: TrackedEventContextInterface,
   ): Promise<ICoreTrackingLog> {
     const {
       ip,
@@ -43,23 +32,19 @@ export class CoreTrackingService implements IAppTrackingService {
       sessionId,
       interactionId,
       claims,
-    }: ICoreTrackingContext = await this.extractContext(context);
+    }: ICoreTrackingContext = this.extractContext(context);
 
-    const { step, category, event: eventName } = event;
-    let data: ICoreTrackingProviders;
+    const { step, category, event } = trackedEvent;
 
     // Authorization route
-    if (event === this.EventsMap.FC_AUTHORIZE_INITIATED) {
-      data = this.getDataFromContext(context);
-    } else {
-      data = await this.getDataFromSession(sessionId);
-    }
+    const data = await this.getDataFromSession(sessionId);
 
     return {
       interactionId,
+      sessionId,
       step,
       category,
-      event: eventName,
+      event,
       ip,
       claims: claims?.join(' '),
       source: {
@@ -74,7 +59,7 @@ export class CoreTrackingService implements IAppTrackingService {
   }
 
   private extractNetworkInfoFromHeaders(
-    context: IEventContext,
+    context: TrackedEventContextInterface,
   ): IUserNetworkInfo {
     if (!context.req.headers) {
       throw new CoreMissingContextException('req.headers');
@@ -84,32 +69,12 @@ export class CoreTrackingService implements IAppTrackingService {
     const port = context.req.headers['x-forwarded-source-port'];
     const originalAddresses = context.req.headers['x-forwarded-for-original'];
 
-    this.checkForMissingHeaders(ip, port, originalAddresses);
-
     return { ip, port, originalAddresses };
   }
 
-  private checkForMissingHeaders(ip, port, originalAddresses): void {
-    if (!ip) {
-      throw new CoreMissingContextException("req.headers['x-forwarded-for']");
-    }
-
-    if (!port) {
-      throw new CoreMissingContextException(
-        "req.headers['x-forwarded-source-port']",
-      );
-    }
-
-    if (!originalAddresses) {
-      throw new CoreMissingContextException(
-        "req.headers['x-forwarded-for-original']",
-      );
-    }
-  }
-
-  private async extractContext(
-    ctx: IEventContext,
-  ): Promise<ICoreTrackingContext> {
+  private extractContext(
+    ctx: TrackedEventContextInterface,
+  ): ICoreTrackingContext {
     /**
      * Throw rather than allow a non-loggable interaction.
      *
@@ -120,13 +85,10 @@ export class CoreTrackingService implements IAppTrackingService {
       throw new CoreMissingContextException('req');
     }
 
-    const { claims } = req;
-
+    const { sessionId } = req;
+    const { claims, interactionId } = ctx;
     const { ip, port, originalAddresses } =
       this.extractNetworkInfoFromHeaders(ctx);
-    const interactionId: string = this.getInteractionIdFromContext(ctx);
-
-    const { sessionId } = req;
 
     return {
       ip,
@@ -136,24 +98,6 @@ export class CoreTrackingService implements IAppTrackingService {
       interactionId,
       claims,
     };
-  }
-
-  private extractInteractionId(req) {
-    return (
-      req.fc?.interactionId ||
-      req.body?.uid ||
-      req.params?.uid ||
-      req.cookies?._interaction
-    );
-  }
-
-  private getInteractionIdFromContext({ req }: IEventContext): string {
-    const interactionId = this.extractInteractionId(req);
-
-    if (!interactionId) {
-      throw new CoreMissingContextException('interactionId missing in context');
-    }
-    return interactionId;
   }
 
   private async getDataFromSession(
@@ -169,14 +113,11 @@ export class CoreTrackingService implements IAppTrackingService {
       boundSessionContext,
     );
 
-    const sessionData: OidcSession = await boundSessionServiceGet();
-
-    if (!sessionData) {
-      throw new SessionNotFoundException(boundSessionContext.moduleName);
-    }
+    const sessionData: OidcSession = (await boundSessionServiceGet()) || {};
 
     const {
       accountId = null,
+      interactionId = null,
 
       spId = null,
       spAcr = null,
@@ -192,14 +133,12 @@ export class CoreTrackingService implements IAppTrackingService {
 
     return {
       accountId,
+      interactionId,
+      sessionId,
 
       spId,
       spAcr,
       spName,
-      /**
-       * @TODO #146 ETQ dev, j'élucide le mystère sur le spIdentity qui est undefined pendant la cinématique
-       * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/229
-       */
       spSub: spIdentity?.sub || null,
 
       idpId,
@@ -207,32 +146,6 @@ export class CoreTrackingService implements IAppTrackingService {
       idpName,
       idpLabel,
       idpSub: idpIdentity?.sub || null,
-    };
-  }
-
-  /**
-   * Authorize logging can't rely on session since session is not created at this stage.
-   * We have to do specific work to retrieve informations to log.
-   */
-  private getDataFromContext(context: IEventContext): ICoreTrackingProviders {
-    if (!context.req) {
-      throw new CoreMissingContextException('req');
-    }
-    const { spId, spAcr, spName, spSub } = context.req;
-
-    return {
-      accountId: null,
-
-      spId,
-      spAcr,
-      spName,
-      spSub,
-
-      idpId: null,
-      idpAcr: null,
-      idpName: null,
-      idpSub: null,
-      idpLabel: null,
     };
   }
 }

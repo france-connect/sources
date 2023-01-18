@@ -13,10 +13,6 @@ describe('ServiceProvidersDetailsHeaderComponent', () => {
     status: 'en intégration',
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // when
     const { container } = render(<ServiceProviderHeaderComponent item={ServiceProviderMock} />);

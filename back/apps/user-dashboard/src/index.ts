@@ -2,5 +2,5 @@
 
 // Declarative code
 export * from './dto';
-export * from './events.map';
+export * from './enums';
 export * from './user-dashboard.module';

@@ -7,10 +7,6 @@ import {
 } from './pagination.utils';
 
 describe('getPagesCount', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should return 1 if totalItems equal 1 and itemsPerPage equal 10', () => {
     // when
     const result = getPagesCount({
@@ -57,10 +53,6 @@ describe('getPagesCount', () => {
 });
 
 describe('getCurrentPage', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should return the current page number as 0, when first item of the page is 0 and 3 items per page', () => {
     // when
     const result = getCurrentPage({
@@ -107,10 +99,6 @@ describe('getCurrentPage', () => {
 });
 
 describe('getNavigationNumbers', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('missing or wrong argument', () => {
     it('should return empty array, when pagesCount is not a number', () => {
       // when
@@ -174,10 +162,6 @@ describe('getNavigationNumbers', () => {
   });
 
   describe('getMobileNavigationNumbers', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
-
     it('should return a result of [0] if the number of pages is one', () => {
       // when
       const result = getMobileNavigationNumbers({

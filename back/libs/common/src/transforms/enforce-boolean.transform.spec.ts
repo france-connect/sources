@@ -1,5 +1,4 @@
 import { TransformFnParams } from 'class-transformer';
-import { mocked } from 'jest-mock';
 
 import { parseBoolean } from '../helpers';
 import { enforceBoolean } from './enforce-boolean.transform';
@@ -8,7 +7,7 @@ jest.mock('../helpers');
 
 describe('Enforce boolean transform from string', () => {
   describe('enforceBoolean', () => {
-    const parsedBooleanMocked = mocked(parseBoolean);
+    const parsedBooleanMocked = jest.mocked(parseBoolean);
 
     it('should return the value returned by parseBoolean', () => {
       // Given

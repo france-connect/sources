@@ -1,3 +1,10 @@
 .shadow-bottom {
   box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.1), 0 8px 16px -16px rgba(0, 0, 0, 0.32);
 }
+
+.accordion-shadow-bottom {
+  /* stylelint-disable-next-line declaration-colon-newline-after */
+  box-shadow: 0 1px 1px var(--background-elevated-grey-active),
+    0 1px 0 -2px var(--background-elevated-grey-active),
+    0 1px 4px var(--background-elevated-grey-active);
+}

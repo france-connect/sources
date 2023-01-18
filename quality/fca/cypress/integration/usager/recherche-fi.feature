@@ -64,6 +64,7 @@ Fonctionnalité: Recherche FI
       | ALL FIS                                      |
       | MOCK - Ministère de la transition écologique |
       | ministere de la transition ecolo             |
+      | ministere ecologique                         |
 
   # TODO La recherche par acronyme ne fonctionne qu'en utilisant l'id
   @ignore

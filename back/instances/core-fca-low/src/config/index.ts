@@ -14,6 +14,7 @@ import OverrideOidcProvider from './override-oidc-provider';
 import Redis from './redis';
 import ServiceProviderAdapterMongo from './service-provider-adapter-mongo';
 import Session from './session';
+import Tracking from './tracking';
 
 export default {
   /**
@@ -33,5 +34,6 @@ export default {
   ServiceProviderAdapterMongo,
   IdentityProviderAdapterMongo,
   Session,
+  Tracking,
   OverrideOidcProvider,
 } as CoreFcaConfig;

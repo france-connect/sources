@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import pino, { Logger } from 'pino';
 
 import { ShutdownSignal } from '@nestjs/common';
@@ -69,7 +68,7 @@ describe('PinoAdapterService', () => {
     );
     getDestinationMock.mockReturnValueOnce(streamMock);
 
-    mocked(pino).mockReturnValueOnce(pinoMock as unknown as Logger);
+    jest.mocked(pino).mockReturnValueOnce(pinoMock as unknown as Logger);
   });
 
   it('should be defined', async () => {

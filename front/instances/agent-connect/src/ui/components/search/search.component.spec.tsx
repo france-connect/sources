@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
 
 import { SearchFormComponent } from '../search-form/search-form.component';
@@ -10,10 +9,6 @@ jest.mock('../search-form/search-form.component');
 jest.mock('../search-results/search-results.component');
 
 describe('SearchComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should have call useMediaQuery with tablet responsive query', () => {
     // when
     render(<SearchComponent />);
@@ -33,7 +28,7 @@ describe('SearchComponent', () => {
 
   it('should match the snapshot for a tablet viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
     // when
     const { container } = render(<SearchComponent />);
 

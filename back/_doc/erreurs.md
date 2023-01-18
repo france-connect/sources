@@ -129,6 +129,12 @@
 
 | Code | Message utilisateur | Description |
 |---|---|---|
+| [Y250001](../libs/partner-service-provider-configuration/src/exceptions/partner-service-provider-configuration-fetch.exception.ts "PartnerServiceProviderConfigurationFetchException") | Une erreur technique est survenue, veuillez contacter le support. | Une erreur est survenue lors de l&#39;appel à la base de donnée au fetch des configurations du service provider. Contacter le support N3. | 
+| [Y250002](../libs/partner-service-provider-configuration/src/exceptions/partner-service-provider-configuration-post.exception.ts "PartnerServiceProviderConfigurationPostException") | Une erreur technique est survenue, veuillez contacter le support. | Une erreur est survenue lors de l&#39;appel à la base de donnée au post de service provider configuration. Contacter le support N3. | 
+| [Y250003](../libs/partner-service-provider-configuration/src/exceptions/partner-service-provider-configuration-missing-sp-id.exception.ts "PartnerServiceProviderConfigurationMissingSpIdException") | Une erreur technique est survenue, veuillez contacter le support. | L&#39;identifiant du service provider configuration est absent. | 
+
+| Code | Message utilisateur | Description |
+|---|---|---|
 | [Y270001](../libs/mailer/src/exceptions/no-email.exception.ts "NoEmailException") | Les informations sur votre identité sont incomplètes et ne permettent pas de vous connecter à votre service. Veuillez contacter le support. | L&#39;identité de l&#39;utilisateur transmise par le fournisseur d&#39;identité ne contient pas de mail. Il n&#39;est pas possible de lui envoyer le mail de notification. Demander au FI de compléter l&#39;identité de l&#39;utilisateur | 
 | [Y270002](../libs/mailer/src/exceptions/mailer-notification-connect.exception.ts "MailerNotificationConnectException") | Une erreur technique est survenue, veuillez contacter le support. | Une erreur s&#39;est produite lors de l&#39;envoi du mail de notification. Cela peut être dû à des données obligatoires manquantes dans l&#39;identité de l&#39;usager ( given_name, family_name ), des données manquantes en session ( nom du FS ou du FI ), date du jour ou la configuration. Vérifier les données de l&#39;utilisateur. Si les données sont bien présentes, contacter le support N3. | 
 | [Y270003](../libs/mailer/src/exceptions/template-not-found.exception.ts "TemplateNotFoundException") | Une erreur technique est survenue, veuillez contacter le support. | Le modèle de mail n&#39;est pas présent. Il faut contacter d&#39;urgence le support N3 car aucun mail ne peut partir. | 
@@ -161,6 +167,7 @@
 |---|---|---|
 | [Y320001](../apps/csmr-user-preferences/src/exceptions/csmr-user-preferences-idp-not-found.exception.ts "CsmrUserPreferencesIdpNotFoundException") | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. | Le fournisseur d&#39;identité en entrée n&#39;existe pas dans la liste des idp | 
 | [Y320001](../libs/partner-service-provider/src/exceptions/postgres-connection-failure.exception.ts "PostgresConnectionFailure") | Une erreur technique est survenue, veuillez contacter le support. | Une erreur est survenue lors de l&#39;appel à la base de donnée. Contacter le support N3. | 
+| [Y320002](../libs/partner-service-provider/src/exceptions/postgres-operation-failure.exception.ts "PostgresOperationFailure") | Une erreur technique est survenue, veuillez contacter le support. | Une erreur est survenue lors de la modification de l&#39;increment du service provider. | 
 
 | Code | Message utilisateur | Description |
 |---|---|---|

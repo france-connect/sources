@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import { lastValueFrom } from 'rxjs';
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -22,7 +21,7 @@ jest.mock('rxjs');
 describe('UserPreferencesService', () => {
   let service: UserPreferencesService;
 
-  const lastValueFromMock = mocked(lastValueFrom);
+  const lastValueFromMock = jest.mocked(lastValueFrom);
 
   const loggerServiceMock = {
     debug: jest.fn(),

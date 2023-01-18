@@ -1,6 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { mocked } from 'jest-mock';
 import * as ReactRouter from 'react-router-dom';
 
 import { useApiGet } from '@fc/common';
@@ -65,20 +64,18 @@ describe('useUserPreferencesApi', () => {
   } as unknown as AxiosResponse<GetCsrfTokenResponse>;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-
     // given
-    mocked(useApiGet).mockReturnValue(userPreferences);
+    jest.mocked(useApiGet).mockReturnValue(userPreferences);
   });
 
   describe('reading preferences', () => {
     beforeEach(() => {
-      mocked(useApiGet).mockReturnValue(userPreferences);
+      jest.mocked(useApiGet).mockReturnValue(userPreferences);
     });
 
     it('should return an object with default values at first render', () => {
       // given
-      mocked(useApiGet).mockReturnValue(undefined);
+      jest.mocked(useApiGet).mockReturnValue(undefined);
 
       // when
       const { result } = renderHook(() => useUserPreferencesApi(options));
@@ -97,12 +94,12 @@ describe('useUserPreferencesApi', () => {
 
   describe('updating preferences', () => {
     beforeEach(() => {
-      mocked(axios.get).mockResolvedValue(getCsrfTokenResponse);
+      jest.mocked(axios.get).mockResolvedValue(getCsrfTokenResponse);
     });
 
     it('should call UserPreferencesService.parseFormData when userPreferences are defined but none formValues', () => {
       // given
-      mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
+      jest.mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
         allowFutureIdp: userPreferences.allowFutureIdp,
         idpList,
       });
@@ -117,7 +114,7 @@ describe('useUserPreferencesApi', () => {
 
     it('should return formValues when userPreferences are defined at first render', () => {
       // given
-      mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
+      jest.mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
         allowFutureIdp: true,
         idpList,
       });
@@ -140,7 +137,7 @@ describe('useUserPreferencesApi', () => {
 
     it('should call UserPreferencesService.encodeFormData when commit is called with params', async () => {
       // given
-      mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
+      jest.mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
         allowFutureIdp: false,
         idpList,
       });
@@ -164,14 +161,14 @@ describe('useUserPreferencesApi', () => {
 
     it('should call axios.post when commit is called with params', async () => {
       // given
-      mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
+      jest.mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
         allowFutureIdp: true,
         idpList,
       });
       const dataMock = new URLSearchParams();
       dataMock.append('allowFutureIdp', 'true');
       dataMock.append('idpList', 'idplistmock');
-      mocked(UserPreferencesService.encodeFormData).mockReturnValueOnce(dataMock);
+      jest.mocked(UserPreferencesService.encodeFormData).mockReturnValueOnce(dataMock);
 
       // when
       const { result } = renderHook(() => useUserPreferencesApi(options));
@@ -202,10 +199,10 @@ describe('useUserPreferencesApi', () => {
           },
         ],
       };
-      const parseFormDataMock = mocked(UserPreferencesService.parseFormData).mockImplementation(
-        (v) => v as unknown as FormValues,
-      );
-      mocked(axios.post).mockResolvedValueOnce({ data: dataValueMock });
+      const parseFormDataMock = jest
+        .mocked(UserPreferencesService.parseFormData)
+        .mockImplementation((v) => v as unknown as FormValues);
+      jest.mocked(axios.post).mockResolvedValueOnce({ data: dataValueMock });
 
       /**
        * @todo review tests format and delimiters
@@ -244,12 +241,12 @@ describe('useUserPreferencesApi', () => {
 
     it('should reject axios.post and return errored values', async () => {
       // given
-      mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
+      jest.mocked(UserPreferencesService.parseFormData).mockReturnValueOnce({
         allowFutureIdp: true,
         idpList,
       });
       const errorMock = new Error('any-error');
-      mocked(axios.post).mockRejectedValueOnce(errorMock);
+      jest.mocked(axios.post).mockRejectedValueOnce(errorMock);
 
       // when
       const { result } = renderHook(() => useUserPreferencesApi(options));
@@ -276,13 +273,14 @@ describe('useUserPreferencesApi', () => {
 
     it('should call react-router-dom navigate when axios.post returns 409', async () => {
       // given
-      mocked(UserPreferencesService.parseFormData).mockReturnValueOnce(formValuesMock);
+      jest.mocked(UserPreferencesService.parseFormData).mockReturnValueOnce(formValuesMock);
 
       const axioErrorMock = { response: { status: 409 } } as AxiosError;
-      mocked(axios.post).mockRejectedValueOnce(axioErrorMock);
+      jest.mocked(axios.post).mockRejectedValueOnce(axioErrorMock);
 
       const navigateMock = jest.fn();
-      mocked(ReactRouter.useNavigate)
+      jest
+        .mocked(ReactRouter.useNavigate)
         .mockReturnValueOnce(navigateMock)
         .mockReturnValueOnce(navigateMock);
 

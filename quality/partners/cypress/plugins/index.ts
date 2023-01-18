@@ -7,6 +7,7 @@ import * as processFixtureTemplate from 'cypress-template-fixtures';
 import * as resolve from 'resolve';
 
 import { getFixturePath } from './fixture-plugin';
+import { resetDbSPConfigurations } from './reset-db-plugin';
 
 const pluginConfig = (
   on: Cypress.PluginEvents,
@@ -22,6 +23,7 @@ const pluginConfig = (
 
   on('task', {
     getFixturePath,
+    resetDbSPConfigurations,
   });
 
   on('file:preprocessor', cucumber(options));

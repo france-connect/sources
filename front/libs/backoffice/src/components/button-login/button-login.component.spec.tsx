@@ -3,12 +3,6 @@ import { render } from '@testing-library/react';
 import { ButtonLoginComponent } from './button-login.component';
 
 describe('ButtonLoginComponent', () => {
-  beforeEach(() => {
-    jest.resetAllMocks();
-    jest.restoreAllMocks();
-    jest.clearAllMocks();
-  });
-
   it('should render an input', () => {
     // setup
     const { container } = render(<ButtonLoginComponent />);

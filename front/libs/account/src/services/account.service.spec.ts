@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { mocked } from 'jest-mock';
 
 import { AccountService } from './account.service';
 
@@ -7,12 +6,8 @@ jest.mock('axios');
 
 describe('AccountService', () => {
   // given
-  const axiosGetMock = mocked(axios.get);
+  const axiosGetMock = jest.mocked(axios.get);
   const consoleWarnMock = jest.spyOn(global.console, 'warn').mockImplementation();
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   describe('fetchData', () => {
     it('should call axios.get with the url', async () => {

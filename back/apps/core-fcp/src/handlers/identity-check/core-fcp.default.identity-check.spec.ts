@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
@@ -49,7 +47,7 @@ describe('CoreFcpDefaultIdentityCheckHandler', () => {
       CoreFcpDefaultIdentityCheckHandler,
     );
 
-    validationDtoMock = mocked(validateDto);
+    validationDtoMock = jest.mocked(validateDto);
   });
 
   it('should be defined', () => {

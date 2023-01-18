@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios';
-import { mocked } from 'jest-mock';
 
 import { objectToFormData } from '@fc/common';
 import { ConfigService } from '@fc/config';
@@ -17,13 +16,11 @@ jest.mock('./../utils');
 
 describe('HttpClientService', () => {
   // given
-  const axiosRequestMock = mocked(axios.request);
-  const getConfigMock = mocked(ConfigService.get);
-  const getRequestOptionsMock = mocked(getRequestOptions);
+  const axiosRequestMock = jest.mocked(axios.request);
+  const getConfigMock = jest.mocked(ConfigService.get);
+  const getRequestOptionsMock = jest.mocked(getRequestOptions);
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.restoreAllMocks();
     // given
     getConfigMock.mockReturnValue({ apiCsrfURL: '/any-csrf-token-endpoint' });
   });
@@ -82,7 +79,7 @@ describe('HttpClientService', () => {
     it('should call axios with parameters', async () => {
       // given
       const requestOptionsMock = { data, method, url: endpoint };
-      mocked(getRequestOptionsMock).mockReturnValueOnce(requestOptionsMock);
+      jest.mocked(getRequestOptionsMock).mockReturnValueOnce(requestOptionsMock);
       // when
       await HttpClientService.makeRequest(method, endpoint, data);
 
@@ -102,8 +99,6 @@ describe('HttpClientService', () => {
     const responseMock = { data: 'any-response-data' } as unknown as AxiosResponse;
 
     beforeEach(() => {
-      jest.clearAllMocks();
-      jest.resetAllMocks();
       // given
       jest.spyOn(HttpClientService, 'makeRequest');
       getConfigMock.mockReturnValue({ apiCsrfURL: '/any-csrf-token-endpoint' });
@@ -112,7 +107,7 @@ describe('HttpClientService', () => {
     describe('getCSRF', () => {
       it('should call ConfigService.get with parameters', async () => {
         // given
-        mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
+        jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
 
         // when
         await HttpClientService.getCSRF();
@@ -124,7 +119,7 @@ describe('HttpClientService', () => {
 
       it('should call makeRequest with parameters', async () => {
         // given
-        mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
+        jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
 
         // when
         await HttpClientService.getCSRF();
@@ -139,7 +134,7 @@ describe('HttpClientService', () => {
 
       it('should throw a AxiosException on error', async () => {
         // given
-        mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
+        jest.mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
 
         // when
         await expect(
@@ -153,7 +148,7 @@ describe('HttpClientService', () => {
     describe('get', () => {
       it('should call makeRequest with parameters', async () => {
         // given
-        mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
+        jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
 
         // when
         await HttpClientService.get(endpoint, data, axiosOptions);
@@ -170,7 +165,7 @@ describe('HttpClientService', () => {
 
       it('should throw an AxiosException on error', async () => {
         // given
-        mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
+        jest.mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
 
         // then
         await expect(() =>
@@ -182,16 +177,16 @@ describe('HttpClientService', () => {
 
     describe('post', () => {
       beforeEach(() => {
-        jest.clearAllMocks();
-        jest.resetAllMocks();
         // given
         jest.spyOn(HttpClientService, 'getCSRF');
       });
 
       it('should call getCSRF', async () => {
         // given
-        mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
-        mocked(HttpClientService.getCSRF).mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
+        jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
+        jest
+          .mocked(HttpClientService.getCSRF)
+          .mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
 
         // when
         await HttpClientService.post(endpoint, data, axiosOptions);
@@ -202,8 +197,10 @@ describe('HttpClientService', () => {
 
       it('should call makeRequest with parameters', async () => {
         // given
-        mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
-        mocked(HttpClientService.getCSRF).mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
+        jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
+        jest
+          .mocked(HttpClientService.getCSRF)
+          .mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
 
         // when
         await HttpClientService.post(endpoint, data, axiosOptions);
@@ -214,14 +211,16 @@ describe('HttpClientService', () => {
           'post',
           endpoint,
           { ...data, _csrf: 'any-csrf-token' },
-          { ...axiosOptions, transformRequest: mocked(objectToFormData) },
+          { ...axiosOptions, transformRequest: jest.mocked(objectToFormData) },
         );
       });
 
       it('should throw an AxiosException on error', async () => {
         // given
-        mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
-        mocked(HttpClientService.getCSRF).mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
+        jest.mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
+        jest
+          .mocked(HttpClientService.getCSRF)
+          .mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
 
         // then
         await expect(() =>

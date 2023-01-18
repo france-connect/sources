@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 
 import { ReturnButtonComponent } from './return-button.component';
 import { useReturnButton } from './use-return-button.hook';
@@ -14,13 +13,9 @@ describe('ReturnButtonComponent', () => {
     showButton: true,
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot, when isMobileViewport is false', () => {
     // given
-    mocked(useReturnButton).mockReturnValueOnce(useReturnButtonMock);
+    jest.mocked(useReturnButton).mockReturnValueOnce(useReturnButtonMock);
 
     // when
     const { container } = render(<ReturnButtonComponent url="any-url-mock" />);
@@ -31,7 +26,7 @@ describe('ReturnButtonComponent', () => {
 
   it('should match the snapshot, when isMobileViewport is true', () => {
     // given
-    mocked(useReturnButton).mockReturnValueOnce(useReturnButtonMock);
+    jest.mocked(useReturnButton).mockReturnValueOnce(useReturnButtonMock);
 
     // when
     const { container } = render(<ReturnButtonComponent isMobileViewport url="any-url-mock" />);
@@ -42,7 +37,7 @@ describe('ReturnButtonComponent', () => {
 
   it('should match the snapshot, when showButton is false', () => {
     // given
-    mocked(useReturnButton).mockReturnValueOnce({ ...useReturnButtonMock, showButton: false });
+    jest.mocked(useReturnButton).mockReturnValueOnce({ ...useReturnButtonMock, showButton: false });
 
     // when
     const { container } = render(<ReturnButtonComponent url="any-url-mock" />);

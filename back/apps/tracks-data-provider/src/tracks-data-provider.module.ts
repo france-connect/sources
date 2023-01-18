@@ -13,7 +13,7 @@ import { TracksDataProviderController } from './controllers';
 @Module({
   imports: [
     DataProviderCoreAuthModule,
-    ExceptionsModule,
+    ExceptionsModule.withoutTracking(),
     HttpProxyModule,
     TracksModule,
   ],

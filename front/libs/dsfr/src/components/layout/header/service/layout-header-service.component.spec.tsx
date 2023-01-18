@@ -10,10 +10,6 @@ describe('LayoutHeaderServiceComponent', () => {
     title: 'title service mock',
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // when
     const { container } = render(<LayoutHeaderServiceComponent service={headerServiceMock} />);

@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { Form } from 'react-final-form';
 
 import { useUserPreferencesApi } from '../hooks';
@@ -33,13 +32,9 @@ describe('UserPreferencesComponent', () => {
     validateHandler: validateHandlerMock,
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // given
-    mocked(useUserPreferencesApi).mockReturnValue(hookResultMock);
+    jest.mocked(useUserPreferencesApi).mockReturnValue(hookResultMock);
 
     // when
     const { container } = render(<UserPreferencesComponent options={optionsMock} />);
@@ -50,7 +45,7 @@ describe('UserPreferencesComponent', () => {
 
   it('should match the snapshot if showServicesList is false because userpreferences is null', () => {
     // given
-    mocked(useUserPreferencesApi).mockReturnValue({
+    jest.mocked(useUserPreferencesApi).mockReturnValue({
       ...hookResultMock,
       userPreferences: null as unknown as UserPreferencesData,
     });
@@ -64,7 +59,7 @@ describe('UserPreferencesComponent', () => {
 
   it('should match the snapshot if showServicesList is false because userpreferences is empty', () => {
     // given
-    mocked(useUserPreferencesApi).mockReturnValue({
+    jest.mocked(useUserPreferencesApi).mockReturnValue({
       ...hookResultMock,
       userPreferences: {} as unknown as UserPreferencesData,
     });
@@ -78,7 +73,7 @@ describe('UserPreferencesComponent', () => {
 
   it('should match the snapshot if showServicesList is false because idpList is missing', () => {
     // given
-    mocked(useUserPreferencesApi).mockReturnValue({
+    jest.mocked(useUserPreferencesApi).mockReturnValue({
       ...hookResultMock,
       userPreferences: { allowFutureIdp: false, idpList: undefined },
     });
@@ -92,7 +87,7 @@ describe('UserPreferencesComponent', () => {
 
   it('should match the snapshot if showServicesList is false because idpList length is null', () => {
     // given
-    mocked(useUserPreferencesApi).mockReturnValue({
+    jest.mocked(useUserPreferencesApi).mockReturnValue({
       ...hookResultMock,
       userPreferences: { ...userPreferencesMock, idpList: [] },
     });
@@ -106,7 +101,7 @@ describe('UserPreferencesComponent', () => {
 
   it('should have called useUserPreferencesApi', () => {
     // given
-    mocked(useUserPreferencesApi).mockReturnValue(hookResultMock);
+    jest.mocked(useUserPreferencesApi).mockReturnValue(hookResultMock);
 
     // when
     render(<UserPreferencesComponent options={optionsMock} />);

@@ -4,9 +4,6 @@ import { render } from '@testing-library/react';
 import { MyModule } from './my-module';
 
 describe('MyModule', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   it('should match the snapshot', () => {
     // when

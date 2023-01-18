@@ -4,10 +4,6 @@ import { IconPlacement, Priorities, Sizes } from '../../enums';
 import { SimpleButton } from './simple.button';
 
 describe('SimpleButton', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // when
     const { container } = render(<SimpleButton label="any-label-mock" />);
@@ -154,5 +150,38 @@ describe('SimpleButton', () => {
     // then
     expect(element).toHaveClass('fr-fi-any-icon-mock');
     expect(element).toHaveClass('fr-btn--icon-left');
+  });
+
+  it('should have a custom classname when props is defined', () => {
+    // when
+    const { getByRole } = render(
+      <SimpleButton
+        className="any-classname-mock"
+        icon="any-icon-mock"
+        iconPlacement={IconPlacement.LEFT}
+        label="any-label-mock"
+      />,
+    );
+    const element = getByRole('button');
+
+    // then
+    expect(element).toHaveClass('any-classname-mock');
+  });
+
+  it('should have a custom data-testid when props is defined', () => {
+    // when
+    const { getByTestId } = render(
+      <SimpleButton
+        className="any-classname-mock"
+        dataTestId="any-datatestid-mock"
+        icon="any-icon-mock"
+        iconPlacement={IconPlacement.LEFT}
+        label="any-label-mock"
+      />,
+    );
+    const element = getByTestId('any-datatestid-mock');
+
+    // then
+    expect(element).toBeInTheDocument();
   });
 });

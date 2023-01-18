@@ -25,10 +25,6 @@ describe('reducers', () => {
     loading: false,
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('ServiceProvidersFailed', () => {
     it('should return the current state with loading equals false', () => {
       // given

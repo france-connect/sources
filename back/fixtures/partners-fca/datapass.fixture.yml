@@ -44,3 +44,7 @@ items:
     remoteId: 6023
     serviceProvider: '@sp-archived'
     createdAt: '2022-02-22'
+  datapass-12:
+    remoteId: 6500
+    serviceProvider: '@sp-config-test'
+    createdAt: '2022-02-22'

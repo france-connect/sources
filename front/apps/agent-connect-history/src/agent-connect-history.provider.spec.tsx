@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 
 import { useLocalStorage } from '@fc/common';
 
@@ -17,10 +16,6 @@ const Wrapper = () => (
 );
 
 describe('AgentConnectHistoryProvider', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should have called useLocalStorage twice at first render', () => {
     // when
     render(<Wrapper />);
@@ -45,7 +40,7 @@ describe('AgentConnectHistoryProvider', () => {
 
   it('should have called contextCallback with defined values from localstorage', () => {
     // given
-    mocked(useLocalStorage).mockReturnValue({
+    jest.mocked(useLocalStorage).mockReturnValue({
       flush: jest.fn(),
       get: jest.fn(() => ['idp-1', 'idp-2']),
       set: jest.fn(),

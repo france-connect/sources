@@ -16,10 +16,6 @@ describe('ToggleLabelComponent', () => {
 
   const legendMock = { checked: 'foo', unchecked: 'bar' } as CheckableLegend;
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // When
     const { container } = render(

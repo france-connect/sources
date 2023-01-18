@@ -56,6 +56,12 @@ describe('AppPermissionsHandler', () => {
       service['checkServiceProviderId'] = jest
         .fn()
         .mockReturnValueOnce(spIdReturnValue);
+      service['checkServiceProviderForConfigurationIdList'] = jest
+        .fn()
+        .mockReturnValueOnce(spIdReturnValue);
+      service['checkServiceProviderForConfigurationIdCreate'] = jest
+        .fn()
+        .mockReturnValueOnce(spIdReturnValue);
     });
 
     it('should return call to this.checkServiceProviderList() for permission SERVICE_PROVIDER_LIST', () => {
@@ -108,9 +114,56 @@ describe('AppPermissionsHandler', () => {
       expect(result).toBe(spIdReturnValue);
     });
 
+    it('should return the result of the call to this.checkServiceProviderForConfigurationIdList() for permission SERVICE_PROVIDER_CONFIGURATION_LIST', () => {
+      // Given
+      const contextMock = {} as ExecutionContext;
+
+      // When
+      const result = service['checkPermissions'](
+        PermissionsType.SERVICE_PROVIDER_CONFIGURATION_LIST,
+        contextMock,
+      );
+
+      // Then
+      expect(
+        service['checkServiceProviderForConfigurationIdList'],
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        service['checkServiceProviderForConfigurationIdList'],
+      ).toHaveBeenCalledWith(
+        contextMock,
+        PermissionsType.SERVICE_PROVIDER_CONFIGURATION_LIST,
+      );
+      expect(result).toBe(spIdReturnValue);
+    });
+
+    it('should return the result of the call to this.checkServiceProviderForConfigurationIdCreate() for permission SERVICE_PROVIDER_CONFIGURATION_CREATE', () => {
+      // Given
+      const contextMock = {} as ExecutionContext;
+
+      // When
+      const result = service['checkPermissions'](
+        PermissionsType.SERVICE_PROVIDER_CONFIGURATION_CREATE,
+        contextMock,
+      );
+
+      // Then
+      expect(
+        service['checkServiceProviderForConfigurationIdCreate'],
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        service['checkServiceProviderForConfigurationIdCreate'],
+      ).toHaveBeenCalledWith(
+        contextMock,
+        PermissionsType.SERVICE_PROVIDER_CONFIGURATION_CREATE,
+      );
+      expect(result).toBe(spIdReturnValue);
+    });
+
     it('should raise an UnkwownRolesException if an unknown permission is given', () => {
       // Given
       const contextMock = {} as ExecutionContext;
+
       // When
       expect(
         () =>
@@ -251,6 +304,148 @@ describe('AppPermissionsHandler', () => {
         );
         // Then
         expect(result).toBe(true);
+        expect(matchPermissionMock).toHaveBeenCalledTimes(1);
+        expect(matchPermissionMock).toHaveBeenCalledWith(
+          userPermissionsMock,
+          permissionMock,
+        );
+      });
+    });
+
+    describe('checkServiceProviderForConfigurationIdList()', () => {
+      const ctxMock = {} as ExecutionContext;
+
+      const permissionMock: IPermission = {
+        permissionType: PermissionsType.SERVICE_PROVIDER_CONFIGURATION_LIST,
+        entity: EntityType.SERVICE_PROVIDER,
+        entityId: infoMock.query.id as string,
+      };
+
+      it('should extract infos from context', () => {
+        // Given
+        matchPermissionMock.mockReturnValueOnce(true);
+
+        // When
+        service['checkServiceProviderForConfigurationIdList'](
+          ctxMock,
+          PermissionsType.SERVICE_PROVIDER_CONFIGURATION_LIST,
+        );
+        // Then
+        expect(extractContextInfosMock).toHaveBeenCalledTimes(1);
+        expect(extractContextInfosMock).toHaveBeenCalledWith(ctxMock);
+      });
+
+      it('should call matchRole with permission, entityType and entityId', () => {
+        // Given
+        matchPermissionMock.mockReturnValueOnce(true);
+
+        // When
+        service['checkServiceProviderForConfigurationIdList'](
+          ctxMock,
+          PermissionsType.SERVICE_PROVIDER_CONFIGURATION_LIST,
+        );
+
+        // Then
+        expect(matchPermissionMock).toHaveBeenCalledTimes(1);
+        expect(matchPermissionMock).toHaveBeenCalledWith(
+          userPermissionsMock,
+          permissionMock,
+        );
+      });
+
+      it("should return the matchRole's call result", () => {
+        // Given
+        matchPermissionMock.mockReturnValueOnce(true);
+        // When
+        const result = service['checkServiceProviderForConfigurationIdList'](
+          ctxMock,
+          PermissionsType.SERVICE_PROVIDER_CONFIGURATION_LIST,
+        );
+        // Then
+        expect(result).toBe(true);
+        expect(matchPermissionMock).toHaveBeenCalledTimes(1);
+        expect(matchPermissionMock).toHaveBeenCalledWith(
+          userPermissionsMock,
+          permissionMock,
+        );
+      });
+
+      it('should not match permissions', () => {
+        // Given
+        matchPermissionMock.mockReturnValueOnce(false);
+
+        // When
+        const result = service['checkServiceProviderForConfigurationIdList'](
+          ctxMock,
+          PermissionsType.SERVICE_PROVIDER_CONFIGURATION_LIST,
+        );
+
+        // Then
+        expect(result).toBe(false);
+        expect(matchPermissionMock).toHaveBeenCalledTimes(1);
+        expect(matchPermissionMock).toHaveBeenCalledWith(
+          userPermissionsMock,
+          permissionMock,
+        );
+      });
+    });
+
+    describe('checkServiceProviderForConfigurationIdCreate()', () => {
+      const ctxMock = {} as ExecutionContext;
+
+      const permissionMock: IPermission = {
+        permissionType: PermissionsType.SERVICE_PROVIDER_CONFIGURATION_CREATE,
+        entity: EntityType.SERVICE_PROVIDER,
+        entityId: infoMock.body.id,
+      };
+
+      it('should extract infos from context', () => {
+        // Given
+        matchPermissionMock.mockReturnValueOnce(true);
+
+        // When
+        service['checkServiceProviderForConfigurationIdCreate'](
+          ctxMock,
+          PermissionsType.SERVICE_PROVIDER_CONFIGURATION_CREATE,
+        );
+        // Then
+        expect(extractContextInfosMock).toHaveBeenCalledTimes(1);
+        expect(extractContextInfosMock).toHaveBeenCalledWith(ctxMock);
+      });
+
+      it('should call matchRole with permission, entityType and entityId', () => {
+        // Given
+        matchPermissionMock.mockReturnValueOnce(true);
+
+        // When
+        service['checkServiceProviderForConfigurationIdCreate'](
+          ctxMock,
+          PermissionsType.SERVICE_PROVIDER_CONFIGURATION_CREATE,
+        );
+        // Then
+        expect(matchPermissionMock).toHaveBeenCalledTimes(1);
+        expect(matchPermissionMock).toHaveBeenCalledWith(
+          userPermissionsMock,
+          permissionMock,
+        );
+      });
+
+      it('should return result of call to matchRole()', () => {
+        // Given
+        const matchPermissionMockedReturnValue = Symbol(
+          'matchPermissionMockedReturnValue',
+        );
+        matchPermissionMock.mockReturnValueOnce(
+          matchPermissionMockedReturnValue,
+        );
+
+        // When
+        const result = service['checkServiceProviderForConfigurationIdCreate'](
+          ctxMock,
+          PermissionsType.SERVICE_PROVIDER_CONFIGURATION_CREATE,
+        );
+        // Then
+        expect(result).toBe(matchPermissionMockedReturnValue);
         expect(matchPermissionMock).toHaveBeenCalledTimes(1);
         expect(matchPermissionMock).toHaveBeenCalledWith(
           userPermissionsMock,

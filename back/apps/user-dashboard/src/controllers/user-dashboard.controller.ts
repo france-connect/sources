@@ -25,7 +25,7 @@ import {
   SessionCsrfService,
   SessionInvalidCsrfSelectIdpException,
 } from '@fc/session';
-import { TrackingService } from '@fc/tracking';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 import { TracksService } from '@fc/tracks';
 import {
   FormattedIdpSettingDto,
@@ -34,13 +34,6 @@ import {
 
 import { GetUserTracesQueryDto, UserPreferencesBodyDto } from '../dto';
 import { UserDashboardBackRoutes } from '../enums';
-import {
-  DisplayedUserPreferencesEvent,
-  DisplayedUserTracksEvent,
-  UpdatedUserPreferencesEvent,
-  UpdatedUserPreferencesFutureIdpEvent,
-  UpdatedUserPreferencesIdpEvent,
-} from '../events';
 import {
   HttpErrorResponse,
   OidcIdentityInterface,
@@ -92,7 +85,7 @@ export class UserDashboardController {
       });
     }
 
-    this.tracking.track(DisplayedUserTracksEvent, {
+    this.tracking.track(this.tracking.TrackedEventsMap.DISPLAYED_USER_TRACKS, {
       req,
       identity: idpIdentity,
     });
@@ -163,10 +156,12 @@ export class UserDashboardController {
       });
     }
 
-    this.tracking.track(DisplayedUserPreferencesEvent, {
+    const { DISPLAYED_USER_PREFERENCES } = this.tracking.TrackedEventsMap;
+    const context: TrackedEventContextInterface = {
       req,
       identity: idpIdentity,
-    });
+    };
+    this.tracking.track(DISPLAYED_USER_PREFERENCES, context);
     // idp_id has been removed because it is not necessary to pass it to the consumer
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { idp_id: _idpId, ...identityFiltered } = idpIdentity;
@@ -279,8 +274,14 @@ export class UserDashboardController {
     // Common id for all events in this changeset
     const changeSetId = uuid();
 
+    const {
+      UPDATED_USER_PREFERENCES,
+      UPDATED_USER_PREFERENCES_FUTURE_IDP,
+      UPDATED_USER_PREFERENCES_IDP,
+    } = this.tracking.TrackedEventsMap;
+
     // Global change tracking
-    this.tracking.track(UpdatedUserPreferencesEvent, {
+    this.tracking.track(UPDATED_USER_PREFERENCES, {
       req,
       changeSetId,
       hasAllowFutureIdpChanged,
@@ -290,7 +291,7 @@ export class UserDashboardController {
 
     // Futures Idp changes tracking
     if (hasAllowFutureIdpChanged) {
-      this.tracking.track(UpdatedUserPreferencesFutureIdpEvent, {
+      this.tracking.track(UPDATED_USER_PREFERENCES_FUTURE_IDP, {
         req,
         identity,
         futureAllowedNewValue,
@@ -300,7 +301,7 @@ export class UserDashboardController {
 
     // Individual Idp changes tracking
     list.forEach((idpChanges) => {
-      this.tracking.track(UpdatedUserPreferencesIdpEvent, {
+      this.tracking.track(UPDATED_USER_PREFERENCES_IDP, {
         req,
         idpChanges,
         identity,

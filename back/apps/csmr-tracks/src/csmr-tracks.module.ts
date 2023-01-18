@@ -23,7 +23,7 @@ import {
 
 @Module({
   imports: [
-    ExceptionsModule,
+    ExceptionsModule.withoutTracking(),
     LoggerModule,
     CryptographyFcpModule,
     ScopesModule.forConfig('FcpHigh'),

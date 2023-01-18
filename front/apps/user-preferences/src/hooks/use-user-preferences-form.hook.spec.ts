@@ -1,5 +1,4 @@
 import { act, renderHook } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import React from 'react';
 
 import { UserPreferencesData } from '../interfaces';
@@ -41,15 +40,10 @@ describe('useUserPreferencesForm', () => {
   const dirtyFields = {};
   const options = { dirtyFields, userPreferences };
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-    jest.clearAllMocks();
-  });
-
   it('should return an object with default values at first render', () => {
     // given
-    mocked(checkHasDefaultConfiguration).mockReturnValueOnce(true);
-    mocked(checkSomeIdpHasBeenChangedSinceLoading).mockReturnValueOnce(true);
+    jest.mocked(checkHasDefaultConfiguration).mockReturnValueOnce(true);
+    jest.mocked(checkSomeIdpHasBeenChangedSinceLoading).mockReturnValueOnce(true);
 
     // when
     const { result } = renderHook(() => useUserPreferencesForm(options));
@@ -66,8 +60,8 @@ describe('useUserPreferencesForm', () => {
 
   it('should call setAlertInfoState when allowingIdPConfirmation is called', () => {
     // given
-    mocked(checkHasDefaultConfiguration).mockReturnValueOnce(true);
-    mocked(checkSomeIdpHasBeenChangedSinceLoading).mockReturnValueOnce(true);
+    jest.mocked(checkHasDefaultConfiguration).mockReturnValueOnce(true);
+    jest.mocked(checkSomeIdpHasBeenChangedSinceLoading).mockReturnValueOnce(true);
     const setAlertInfoStateMock = jest.fn();
     jest.spyOn(React, 'useState').mockImplementationOnce(() => [
       {

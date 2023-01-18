@@ -3,10 +3,6 @@ import { render } from '@testing-library/react';
 import { ServiceProvidersListItemDetailComponent } from './service-providers-list-item-detail.component';
 
 describe('ServiceProvidersListItemDetailComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot with default values', () => {
     // when
     const { container } = render(

@@ -56,4 +56,5 @@ module.exports = {
   transform: {
     '^.+\\.jsx?$': 'babel-jest',
   },
+  clearMocks: true,
 };

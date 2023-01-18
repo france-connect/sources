@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { filteredByDto } from '@fc/common';
@@ -81,7 +79,7 @@ describe('CsvService', () => {
     };
 
     beforeEach(() => {
-      filteredByDtoMock = mocked(filteredByDto);
+      filteredByDtoMock = jest.mocked(filteredByDto);
     });
 
     it('should log if filtered data by DTO is successfull', async () => {
@@ -190,7 +188,7 @@ describe('CsvService', () => {
       );
       pickDataMock.mockResolvedValueOnce(csvMock);
 
-      parseCsvMock = mocked(parseCsv);
+      parseCsvMock = jest.mocked(parseCsv);
       parseCsvMock.mockResolvedValueOnce(csvMock);
     });
 

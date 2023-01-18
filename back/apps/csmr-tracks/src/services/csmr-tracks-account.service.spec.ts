@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import { lastValueFrom } from 'rxjs';
 
 import { ClientProxy } from '@nestjs/microservices';
@@ -16,7 +15,7 @@ jest.mock('rxjs');
 describe('CsmrTracksAccountService', () => {
   let service: CsmrTracksAccountService;
 
-  const lastValueFromMock = mocked(lastValueFrom);
+  const lastValueFromMock = jest.mocked(lastValueFrom);
 
   const loggerServiceMock = {
     setContext: jest.fn(),
@@ -108,7 +107,8 @@ describe('CsmrTracksAccountService', () => {
 
     it('should retrieves the accountId of the current user for fc legacy', async () => {
       // given
-      mocked(service['getAccountId'])
+      jest
+        .mocked(service['getAccountId'])
         .mockResolvedValueOnce(accountIdLegacyMock)
         .mockResolvedValueOnce(accountIdHighMock);
 
@@ -126,7 +126,8 @@ describe('CsmrTracksAccountService', () => {
 
     it('should retrieves the accountId of the current user for fcp high', async () => {
       // given
-      mocked(service['getAccountId'])
+      jest
+        .mocked(service['getAccountId'])
         .mockResolvedValueOnce(accountIdLegacyMock)
         .mockResolvedValueOnce(accountIdHighMock);
 
@@ -144,7 +145,8 @@ describe('CsmrTracksAccountService', () => {
 
     it('should return all accounts id if defined', async () => {
       // given
-      mocked(service['getAccountId'])
+      jest
+        .mocked(service['getAccountId'])
         .mockResolvedValueOnce(accountIdLegacyMock)
         .mockResolvedValueOnce(accountIdHighMock);
 
@@ -157,9 +159,9 @@ describe('CsmrTracksAccountService', () => {
 
     it('should return only the account ids that are defined', async () => {
       // given
-      mocked(service['getAccountId']).mockResolvedValueOnce(
-        accountIdLegacyMock,
-      );
+      jest
+        .mocked(service['getAccountId'])
+        .mockResolvedValueOnce(accountIdLegacyMock);
 
       // when
       const result = await service.getIdsWithIdentityHash(identityHashMock);

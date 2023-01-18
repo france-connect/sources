@@ -1,5 +1,4 @@
 import { CsvParserStream, parseFile, Row } from '@fast-csv/parse';
-import { mocked } from 'jest-mock';
 import { PassThrough } from 'stream';
 
 import { parseCsv } from './csv.helper';
@@ -7,7 +6,7 @@ import { parseCsv } from './csv.helper';
 jest.mock('@fast-csv/parse');
 
 describe('parseCsv()', () => {
-  const parseFileMock = mocked(parseFile);
+  const parseFileMock = jest.mocked(parseFile);
   let streamMock;
 
   const pathMock = '/eur';

@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
+export * from './accordion-group-item.interface';
 export * from './desktop-display-params.interface';
 export * from './get-current-page.interface';
 export * from './get-display-parameters.interface';

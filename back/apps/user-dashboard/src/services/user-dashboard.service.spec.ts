@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
@@ -200,9 +198,9 @@ describe('UserDashboardService', () => {
 
     it('should return html content', async () => {
       // GIVEN
-      mocked(mailerServiceMock.mailToSend).mockResolvedValueOnce(
-        getIdpConfigUpdateEmailBodyContentMock,
-      );
+      jest
+        .mocked(mailerServiceMock.mailToSend)
+        .mockResolvedValueOnce(getIdpConfigUpdateEmailBodyContentMock);
 
       // WHEN
       const result = await service['getIdpConfigUpdateEmailBodyContent'](

@@ -11,11 +11,6 @@ describe('SideEffectsMiddleware', () => {
   };
   const nextMock = jest.fn();
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-    jest.clearAllMocks();
-  });
-
   it('should return the middleware', () => {
     // when
     const result = initSideEffectsMiddleware({});

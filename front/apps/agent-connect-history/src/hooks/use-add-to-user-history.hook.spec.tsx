@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { useLocalStorage } from '@fc/common';
 import { renderWithContext } from '@fc/tests-utils';
 
@@ -18,14 +16,10 @@ const contextValuesMock = {
 };
 
 describe('addToUserHistory', () => {
-  mocked(useLocalStorage).mockReturnValue({
+  jest.mocked(useLocalStorage).mockReturnValue({
     flush: jest.fn(),
     get: getMock,
     set: setMock,
-  });
-
-  beforeEach(() => {
-    jest.clearAllMocks();
   });
 
   it('should have returned a function', () => {
@@ -103,7 +97,7 @@ describe('addToUserHistory', () => {
   it('should have not called context useLocalStorage.set if value already exists', () => {
     // given
     const idpIdMock = 'idp-4';
-    mocked(useLocalStorage).mockReturnValueOnce({
+    jest.mocked(useLocalStorage).mockReturnValueOnce({
       flush: jest.fn(),
       get: jest.fn(() => [idpIdMock, 'idp-3', 'idp-2']),
       set: setMock,
@@ -127,7 +121,7 @@ describe('addToUserHistory', () => {
   it('should have called context useLocalStorage.set 4 times with the uid', () => {
     // given
     const idpIdMock = 'idp-4';
-    mocked(useLocalStorage).mockReturnValueOnce({
+    jest.mocked(useLocalStorage).mockReturnValueOnce({
       flush: jest.fn(),
       get: jest.fn(() => undefined),
       set: setMock,

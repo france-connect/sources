@@ -9,10 +9,6 @@ const userHistoryMock = ['idp-1', 'idp-2', 'idp-3'];
 const contextValuesMock = { setUserHistory: setUserHistoryMock, userHistory: userHistoryMock };
 
 describe('useRemoveFromUserHistory', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should have returned a function', () => {
     // given
     const idpIdMock = 'idp-2';

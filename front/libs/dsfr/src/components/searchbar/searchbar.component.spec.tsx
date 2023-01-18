@@ -12,10 +12,6 @@ describe('SearchBarComponent', () => {
     value: 'form-input-value-mock',
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match snapshot, with default props', () => {
     // when
     const { container } = render(<SearchBarComponent input={formInputMock} />);

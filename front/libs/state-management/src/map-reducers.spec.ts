@@ -6,12 +6,6 @@ describe('mapReducers', () => {
     action2: jest.fn(),
   };
 
-  beforeEach(() => {
-    jest.resetAllMocks();
-    jest.clearAllMocks();
-    jest.restoreAllMocks();
-  });
-
   it('should return a global handler', () => {
     const result = mapReducers(reducersMock);
 

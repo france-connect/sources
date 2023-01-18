@@ -15,9 +15,6 @@ describe('LayoutHomepageLinkComponent', () => {
       },
     },
   };
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   it('should choose prefix: return to homepage, when isFooter is set at true', () => {
     // when

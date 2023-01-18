@@ -1,15 +1,11 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import { mocked } from 'jest-mock';
 
 import { useApiGet } from './use-api-get.hook';
 
 describe('useApiGet', () => {
-  const axiosGetMock = mocked(axios.get);
+  const axiosGetMock = jest.mocked(axios.get);
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.restoreAllMocks();
-
     axiosGetMock.mockResolvedValue({ data: 'any-data-response' });
   });
 

@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { EventBus } from '@nestjs/cqrs';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { asyncFilter, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 import { IServiceProviderAdapter, ServiceProviderMetadata } from '@fc/oidc';
 
 import {
@@ -13,7 +13,6 @@ import {
   ServiceProviderAdapterMongoDTO,
 } from './dto';
 import { Types } from './enums';
-import { ServiceProviderUpdateEvent } from './events';
 import { ServiceProvider } from './schemas';
 
 @Injectable()
@@ -29,40 +28,22 @@ export class ServiceProviderAdapterMongoService
     private readonly serviceProviderModel,
     private readonly cryptography: CryptographyService,
     private readonly config: ConfigService,
-    private readonly eventBus: EventBus,
     private readonly logger: LoggerService,
+    private readonly mongooseWatcher: MongooseCollectionOperationWatcherHelper,
   ) {
     this.logger.setContext(this.constructor.name);
   }
 
   async onModuleInit() {
-    this.initOperationTypeWatcher();
+    this.mongooseWatcher.watchWith(
+      this.serviceProviderModel,
+      this.refreshCache.bind(this),
+    );
     this.logger.debug('Initializing service-provider');
   }
 
-  private initOperationTypeWatcher(): void {
-    const watch: any = this.serviceProviderModel.watch();
-    this.logger.debug(
-      `Service's database OperationType watcher initialization.`,
-    );
-    watch.on('change', this.operationTypeWatcher.bind(this));
-  }
-
-  /**
-   * Method triggered when an operation type occured on
-   * Mongo's 'provider' collection.
-   * @param {object} stream Stream of event retrieved.
-   * @returns {void}
-   */
-  private operationTypeWatcher(stream): void {
-    const operationTypes = ['insert', 'update', 'delete', 'rename', 'replace'];
-    const isOperationListened: boolean = operationTypes.includes(
-      stream.operationType,
-    );
-
-    if (isOperationListened === true) {
-      this.eventBus.publish(new ServiceProviderUpdateEvent());
-    }
+  async refreshCache(): Promise<void> {
+    await this.getList(true);
   }
 
   private async findAllServiceProvider(): Promise<ServiceProviderMetadata[]> {

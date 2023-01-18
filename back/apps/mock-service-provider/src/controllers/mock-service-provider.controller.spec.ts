@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import { encode } from 'querystring';
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -164,7 +163,7 @@ describe('MockServiceProviderController', () => {
     },
   };
 
-  const queryStringEncodeMock = mocked(encode);
+  const queryStringEncodeMock = jest.mocked(encode);
 
   beforeEach(async () => {
     jest.resetAllMocks();

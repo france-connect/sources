@@ -1,5 +1,4 @@
 import { fireEvent, render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 
 import { useRemoveFromUserHistory } from '@fc/agent-connect-history';
 
@@ -8,10 +7,6 @@ import { UserHistoryCardRemoveButtonComponent } from './user-history-card-remove
 jest.mock('@fc/agent-connect-history');
 
 describe('UserHistoryCardRemoveButtonComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should display a specific label', () => {
     // given
     const uid = 'mock-uid';
@@ -40,7 +35,7 @@ describe('UserHistoryCardRemoveButtonComponent', () => {
     // given
     const uid = 'mock-uid';
     const removeFromUserHistoryMock = jest.fn();
-    mocked(useRemoveFromUserHistory).mockReturnValue(removeFromUserHistoryMock);
+    jest.mocked(useRemoveFromUserHistory).mockReturnValue(removeFromUserHistoryMock);
 
     // when
     const { getByTestId } = render(<UserHistoryCardRemoveButtonComponent uid={uid} />);

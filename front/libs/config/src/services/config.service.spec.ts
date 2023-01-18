@@ -2,10 +2,6 @@ import { NotYetInitialized, UnknownConfigurationNameError } from '../errors';
 import { ConfigService } from './config.service';
 
 describe('ConfigService', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('initialize', () => {
     describe('initialize appConfig', () => {
       beforeAll(() => {

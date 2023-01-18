@@ -11,6 +11,7 @@ import {
 import { Datapass } from './partners-datapass.entity';
 import { Organisation } from './partners-organisation.entity';
 import { Platform } from './partners-platform.entity';
+import { ServiceProviderConfiguration } from './partners-service-provider-configuration.entity';
 
 export enum Status {
   SANDBOX = 'SANDBOX',
@@ -59,8 +60,22 @@ export class ServiceProvider {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @OneToMany(
+    () => ServiceProviderConfiguration,
+    (serviceProviderConfiguration) =>
+      serviceProviderConfiguration.serviceProvider,
+  )
+  serviceProviderConfiguration: ServiceProviderConfiguration[];
+
   @OneToMany(() => Datapass, (datapass) => datapass.serviceProvider, {
     onDelete: 'CASCADE',
   })
   datapasses: Datapass[];
+
+  @Column({
+    type: 'smallint',
+    default: 0,
+    nullable: true,
+  })
+  configurationNumberIncrement: number;
 }

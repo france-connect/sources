@@ -14,6 +14,29 @@ export const SearchBarComponent = jest.fn(() => <div>SearchBarComponent</div>);
 
 export const BadgeComponent = jest.fn(() => <div>BadgeComponent</div>);
 
+export const AlertComponent = jest.fn(({ children }) => (
+  <div>
+    <div>AlertComponent</div>
+    <div>{children}</div>
+  </div>
+));
+
+export const PaginationComponent = jest.fn(() => <div>PaginationComponent</div>);
+
+export const AccordionComponent = jest.fn(({ children }) => (
+  <div>
+    <h3>AccordionComponent</h3>
+    <div>{children}</div>
+  </div>
+));
+
+export const AccordionGroupComponent = jest.fn(({ children }) => (
+  <div>
+    <h3>AccordionGroupComponent</h3>
+    <div>{children}</div>
+  </div>
+));
+
 export const Breakpoints = {
   LG: 1248,
   MD: 992,
@@ -34,13 +57,14 @@ export const AlertTypes = {
   WARNING: 'warning',
 };
 
-export const AlertComponent = jest.fn(({ children }) => (
-  <div>
-    <div>AlertComponent</div>
-    <div>{children}</div>
-  </div>
-));
+export const IconPlacement = {
+  LEFT: 'left',
+  RIGHT: 'right',
+};
 
-export const PaginationComponent = jest.fn(() => <div>PaginationComponent</div>);
-
-export { ButtonTypes, IconPlacement, Priorities } from '@fc/dsfr';
+export const Priorities = {
+  PRIMARY: 'primary',
+  SECONDARY: 'secondary',
+  TERTIARY: 'tertiary',
+};
+export { ButtonTypes } from '@fc/dsfr';

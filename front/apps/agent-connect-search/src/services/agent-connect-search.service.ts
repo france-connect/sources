@@ -1,3 +1,4 @@
+import { remove } from 'diacritics';
 import Fuse from 'fuse.js';
 
 import {
@@ -19,6 +20,7 @@ export const FUSE_SEARCH_BASE_OPTIONS = {
   minMatchCharLength: 1,
   shouldSort: true,
   threshold: 0.1,
+  useExtendedSearch: true,
 };
 
 export class AgentConnectSearchService {
@@ -87,9 +89,9 @@ export class AgentConnectSearchService {
       const idp = identityProviders.find(({ uid }) => uid === idpId);
       const data = `${ministryId} ${ministryName}`;
       const searchable = {
-        data: idp ? `${idp.name} ${data}` : data,
-        idpId,
-        ministryId,
+        data: remove(idp ? `${idp.name} ${data}` : data),
+        idpId: idpId ? remove(idpId) : undefined,
+        ministryId: remove(ministryId),
         sort,
       };
       return searchable;
@@ -135,7 +137,11 @@ export class AgentConnectSearchService {
   }
 
   static search(term: string): SearchResult[] {
-    const results = AgentConnectSearchService.FUSE_INSTANCE.search<Searchable>(term);
+    // @SEE https://fusejs.io/examples.html#extended-search
+    const searchTerm = remove(term)
+      .trim()
+      .replace(/(^|\s)+/g, "$1'");
+    const results = AgentConnectSearchService.FUSE_INSTANCE.search<Searchable>(searchTerm);
 
     const formatted = AgentConnectSearchService.formatSearchResults(
       results,

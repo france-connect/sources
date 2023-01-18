@@ -1,16 +1,11 @@
 import { act, render, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import { mocked } from 'jest-mock';
 import React from 'react';
 
 import { AxiosErrorCatcherProvider } from './axios-error-catcher.provider';
 
 describe('AxiosErrorCatcherProvider', () => {
   const setStateMock = jest.fn();
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   it('should render the child component', () => {
     // given
@@ -44,7 +39,7 @@ describe('AxiosErrorCatcherProvider', () => {
   it('should eject axios response interceptor on component unmount', () => {
     // given
     const interceptorNumber = 123;
-    mocked(axios.interceptors.response.use).mockReturnValue(interceptorNumber);
+    jest.mocked(axios.interceptors.response.use).mockReturnValue(interceptorNumber);
 
     const axiosErrorCatcherProvider = (
       <AxiosErrorCatcherProvider>
@@ -79,7 +74,7 @@ describe('AxiosErrorCatcherProvider', () => {
       );
       // when
       render(axiosErrorCatcherProvider);
-      const [firstCall] = mocked(axios.interceptors.response.use).mock.calls;
+      const [firstCall] = jest.mocked(axios.interceptors.response.use).mock.calls;
       const mockResponseErrorCallback = firstCall[1]!;
       act(() => {
         mockResponseErrorCallback(error).catch(() => {});
@@ -106,7 +101,7 @@ describe('AxiosErrorCatcherProvider', () => {
       );
       // when
       render(axiosErrorCatcherProvider);
-      const [firstCall] = mocked(axios.interceptors.response.use).mock.calls;
+      const [firstCall] = jest.mocked(axios.interceptors.response.use).mock.calls;
       const mockResponseErrorCallback = firstCall[1]!;
       act(() => {
         mockResponseErrorCallback(error).catch(() => {});
@@ -132,7 +127,7 @@ describe('AxiosErrorCatcherProvider', () => {
       );
       // when
       render(axiosErrorCatcherProvider);
-      const [firstCall] = mocked(axios.interceptors.response.use).mock.calls;
+      const [firstCall] = jest.mocked(axios.interceptors.response.use).mock.calls;
       const mockResponseErrorCallback = firstCall[1]!;
       act(() => {
         mockResponseErrorCallback(error).catch(() => {});
@@ -164,7 +159,7 @@ describe('AxiosErrorCatcherProvider', () => {
       );
       // when
       render(axiosErrorCatcherProvider);
-      const [firstCall] = mocked(axios.interceptors.response.use).mock.calls;
+      const [firstCall] = jest.mocked(axios.interceptors.response.use).mock.calls;
       const mockResponseErrorCallback = firstCall[1]!;
       act(() => {
         mockResponseErrorCallback(error).catch(() => {});
@@ -190,7 +185,7 @@ describe('AxiosErrorCatcherProvider', () => {
       );
       // when
       render(axiosErrorCatcherProvider);
-      const [firstCall] = mocked(axios.interceptors.response.use).mock.calls;
+      const [firstCall] = jest.mocked(axios.interceptors.response.use).mock.calls;
       const mockResponseErrorCallback = firstCall[1]!;
       act(() => {
         mockResponseErrorCallback(error).catch(() => {});
@@ -216,7 +211,7 @@ describe('AxiosErrorCatcherProvider', () => {
       );
       // when
       render(axiosErrorCatcherProvider);
-      const [firstCall] = mocked(axios.interceptors.response.use).mock.calls;
+      const [firstCall] = jest.mocked(axios.interceptors.response.use).mock.calls;
       const mockResponseErrorCallback = firstCall[1]!;
       act(() => {
         mockResponseErrorCallback(error).catch(() => {});

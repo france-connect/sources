@@ -12,10 +12,6 @@ describe('ToggleInputComponent', () => {
     value: 'any-field-value-mock',
   } as FieldInputProps<unknown, HTMLElement>;
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // When
     const { container } = render(<ToggleInputComponent input={fieldInputPropsMock} />);

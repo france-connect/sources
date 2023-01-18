@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { t } from '@fc/i18n';
 
 import { transformServiceProvidersList } from './transform-service-providers-list.service';
@@ -28,10 +26,6 @@ describe('transformServiceProvidersList', () => {
     },
     type: 'SERVICE_PROVIDER',
   };
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   it('should throw an Error if createdAt is not a valid datetime', () => {
     // given
@@ -84,7 +78,7 @@ describe('transformServiceProvidersList', () => {
     };
 
     // when
-    mocked(t).mockReturnValue('chaine traduite');
+    jest.mocked(t).mockReturnValue('chaine traduite');
     const result = transformServiceProvidersList({
       ...serviceProviderMock,
     });
@@ -107,7 +101,7 @@ describe('transformServiceProvidersList', () => {
       url: '/edit',
     };
 
-    mocked(t).mockReturnValue('chaine traduite');
+    jest.mocked(t).mockReturnValue('chaine traduite');
 
     // when
     const result = transformServiceProvidersList({

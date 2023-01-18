@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
 
 import { AccountContext, AccountInterface } from '@fc/account';
@@ -46,10 +45,6 @@ describe('LayoutHeaderComponent', () => {
       OidcClient: { endpoints: {} },
     },
   };
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   it('should match the snapshot', () => {
     // when
@@ -172,7 +167,7 @@ describe('LayoutHeaderComponent', () => {
 
   it('should not call ReturnButtonComponent into a mobile viewport, if returnButtonUrl is undefined from OidcClient config', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
     const accountMock = { ...accountContextMock, connected: true, ready: true };
 
     // when
@@ -191,7 +186,7 @@ describe('LayoutHeaderComponent', () => {
   it('should call ReturnButtonComponent into a mobile viewport, if returnButtonUrl is defined from OidcClient config', () => {
     // given
     const returnButtonUrlMock = 'any-returnButtonUrlMock-mock';
-    mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
     const accountMock = { ...accountContextMock, connected: true, ready: true };
 
     // when

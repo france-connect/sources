@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 
 import * as ejs from 'ejs';
-import { mocked } from 'jest-mock';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -55,7 +54,7 @@ describe('TemplateService', () => {
       // Given
       const {
         promises: { readFile: readFileMock },
-      } = mocked(fs);
+      } = jest.mocked(fs);
 
       // WHEN
       await service.readFile(templatePath);
@@ -122,7 +121,7 @@ describe('TemplateService', () => {
     it('should return an ejs rendered html', () => {
       // GIVEN
       const expectedResult = 'Hello World';
-      const ejsRenderMock = mocked(ejs.render);
+      const ejsRenderMock = jest.mocked(ejs.render);
       ejsRenderMock.mockReturnValueOnce(expectedResult);
 
       // WHEN

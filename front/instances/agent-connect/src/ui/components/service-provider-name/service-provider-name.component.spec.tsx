@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
 
 import { AgentConnectSearchContext } from '@fc/agent-connect-search';
@@ -60,7 +59,7 @@ describe('ServiceProviderNameComponent', () => {
 
   it('should match the snapshot for a tablet viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(<ServiceProviderNameComponent />);

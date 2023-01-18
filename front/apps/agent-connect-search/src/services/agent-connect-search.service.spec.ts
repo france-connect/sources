@@ -1,5 +1,5 @@
+import diacritics from 'diacritics';
 import Fuse from 'fuse.js';
-import { mocked } from 'jest-mock';
 
 import {
   IdentityProvider,
@@ -16,7 +16,7 @@ import {
 jest.mock('fuse.js');
 
 describe('SearchService', () => {
-  const fuseMock = mocked(Fuse);
+  const fuseMock = jest.mocked(Fuse);
 
   const identityProvidersMock: IdentityProvider[] = [
     {
@@ -75,53 +75,53 @@ describe('SearchService', () => {
   const baseExpected: Searchable[] = [
     // Ministry A
     {
-      data: "Identity Provider 1 ministryA MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
+      data: "Identity Provider 1 ministryA MOCK - Ministere de l'interieur - SOME FIS DISABLED - SORT 1",
       idpId: 'fia1',
       ministryId: 'ministryA',
       sort: 1,
     },
     {
-      data: "Identity Provider 2 ministryA MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
+      data: "Identity Provider 2 ministryA MOCK - Ministere de l'interieur - SOME FIS DISABLED - SORT 1",
       idpId: 'fia2',
       ministryId: 'ministryA',
       sort: 1,
     },
     // Ministry B
     {
-      data: 'Identity Provider 2 ministryB MOCK - Ministère de la transition écologique - ALL FIS - SORT 2',
+      data: 'Identity Provider 2 ministryB MOCK - Ministere de la transition ecologique - ALL FIS - SORT 2',
       idpId: 'fia2',
       ministryId: 'ministryB',
       sort: 2,
     },
     {
-      data: 'Identity Provider 3 ministryB MOCK - Ministère de la transition écologique - ALL FIS - SORT 2',
+      data: 'Identity Provider 3 ministryB MOCK - Ministere de la transition ecologique - ALL FIS - SORT 2',
       idpId: 'fia3',
       ministryId: 'ministryB',
       sort: 2,
     },
     // Ministry C
     {
-      data: "ministryC MOCK - Ministère de l'économie des Finances et de la Relance - NO FIS - SORT 3",
+      data: "ministryC MOCK - Ministere de l'economie des Finances et de la Relance - NO FIS - SORT 3",
       idpId: undefined,
       ministryId: 'ministryC',
       sort: 3,
     },
     // Ministry D
     {
-      data: 'Identity Provider 3 ministryD MOCK - Ministère de la mer - E2E - SORT 4',
+      data: 'Identity Provider 3 ministryD MOCK - Ministere de la mer - E2E - SORT 4',
       idpId: 'fia3',
       ministryId: 'ministryD',
       sort: 4,
     },
     {
-      data: 'Identity Provider 1 ministryD MOCK - Ministère de la mer - E2E - SORT 4',
+      data: 'Identity Provider 1 ministryD MOCK - Ministere de la mer - E2E - SORT 4',
       idpId: 'fia1',
       ministryId: 'ministryD',
       sort: 4,
     },
     // Ministry E
     {
-      data: 'ministryE MOCK - Ministère sans FI valide - SORT 5',
+      data: 'ministryE MOCK - Ministere sans FI valide - SORT 5',
       idpId: undefined,
       ministryId: 'ministryE',
       sort: 5,
@@ -159,7 +159,6 @@ describe('SearchService', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
     jest.restoreAllMocks();
 
     AgentConnectSearchService.FUSE_INSTANCE = {
@@ -345,19 +344,62 @@ describe('SearchService', () => {
   });
 
   describe('search', () => {
-    it('should call fuse.search', () => {
+    it('should remove diacritics from search term', () => {
+      // @SEE https://fusejs.io/examples.html#extended-search
       // Given
-      const termMock = 'some search';
+      const searchResultMock = [] as unknown as Fuse.FuseResult<Searchable>;
+      const termMock = 'éducation ministère à';
       AgentConnectSearchService.FUSE_INSTANCE = {
-        search: jest.fn().mockReturnValueOnce([]),
+        search: jest.fn().mockReturnValueOnce(searchResultMock),
       } as unknown as Fuse<Searchable>;
+      const expectedSearch = "'education 'ministere 'a";
+
+      const removeSpy = jest.spyOn(diacritics, 'remove');
+
+      // When
+      AgentConnectSearchService.search(termMock);
+
+      // Then
+      expect(removeSpy).toHaveBeenCalledTimes(1);
+      expect(removeSpy).toHaveBeenCalledWith(termMock);
+      expect(AgentConnectSearchService.FUSE_INSTANCE.search).toHaveBeenCalledTimes(1);
+      expect(AgentConnectSearchService.FUSE_INSTANCE.search).toHaveBeenCalledWith(expectedSearch);
+    });
+
+    it('should return every word prefixed by include-match token', () => {
+      // @SEE https://fusejs.io/examples.html#extended-search
+      // Given
+      const searchResultMock = [] as unknown as Fuse.FuseResult<Searchable>;
+      const termMock = 'some ministry';
+      AgentConnectSearchService.FUSE_INSTANCE = {
+        search: jest.fn().mockReturnValueOnce(searchResultMock),
+      } as unknown as Fuse<Searchable>;
+
+      const expectedSearch = "'some 'ministry";
 
       // When
       AgentConnectSearchService.search(termMock);
 
       // Then
       expect(AgentConnectSearchService.FUSE_INSTANCE.search).toHaveBeenCalledTimes(1);
-      expect(AgentConnectSearchService.FUSE_INSTANCE.search).toHaveBeenCalledWith(termMock);
+      expect(AgentConnectSearchService.FUSE_INSTANCE.search).toHaveBeenCalledWith(expectedSearch);
+    });
+
+    it('should trim all spaces in search term', () => {
+      // Given
+      const searchResultMock = [] as unknown as Fuse.FuseResult<Searchable>;
+      const termMock = '  some        ministry         ';
+      AgentConnectSearchService.FUSE_INSTANCE = {
+        search: jest.fn().mockReturnValueOnce(searchResultMock),
+      } as unknown as Fuse<Searchable>;
+      const expectedSearch = "'some 'ministry";
+
+      // When
+      AgentConnectSearchService.search(termMock);
+
+      // Then
+      expect(AgentConnectSearchService.FUSE_INSTANCE.search).toHaveBeenCalledTimes(1);
+      expect(AgentConnectSearchService.FUSE_INSTANCE.search).toHaveBeenCalledWith(expectedSearch);
     });
 
     it('should call formatSearchResults with search results', () => {

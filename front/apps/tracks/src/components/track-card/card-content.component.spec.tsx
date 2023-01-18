@@ -45,10 +45,6 @@ describe('TrackCardContentComponent', () => {
     LUXON_FORMAT_TIMEZONE: 'z',
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match snapshot, for connection', () => {
     // when
     const { container } = render(

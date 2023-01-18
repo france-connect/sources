@@ -3,10 +3,6 @@ import { render } from '@testing-library/react';
 import { FranceConnectButton } from './index';
 
 describe('FranceConnectButton', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot, when showHelp is true', () => {
     // when
     const { container } = render(<FranceConnectButton showHelp />);

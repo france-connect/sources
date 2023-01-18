@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { ExecutionContext, SetMetadata } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
@@ -21,7 +19,7 @@ describe('RequirePermission', () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
-    setMetadataMock = mocked(SetMetadata);
+    setMetadataMock = jest.mocked(SetMetadata);
   });
 
   it('set the given permissions as metadata', () => {
@@ -91,8 +89,8 @@ describe('get', () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
-    mocked(reflector.get).mockReturnValueOnce(requiredPermissions);
-    mocked(context.getHandler).mockReturnValueOnce(handlerMock);
+    jest.mocked(reflector.get).mockReturnValueOnce(requiredPermissions);
+    jest.mocked(context.getHandler).mockReturnValueOnce(handlerMock);
   });
 
   it('should retrieve the required permissions from context', () => {
@@ -128,7 +126,7 @@ describe('get', () => {
 
   it('should return an empty array if no metadata was found', () => {
     // Given
-    mocked(reflector.get).mockReset().mockReturnValueOnce(undefined);
+    jest.mocked(reflector.get).mockReset().mockReturnValueOnce(undefined);
 
     // When
     const permissions = RequirePermission.get(reflector, context);

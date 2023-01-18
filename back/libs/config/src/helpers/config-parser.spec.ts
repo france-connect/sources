@@ -1,7 +1,5 @@
 import { existsSync, readFileSync } from 'fs';
 
-import { mocked } from 'jest-mock';
-
 import { parseBoolean, parseJsonProperty } from '@fc/common';
 
 import { ConfigParser } from './config-parser';
@@ -29,10 +27,10 @@ describe('ConfigParser', () => {
   const prefixMock = 'someprefix';
   const separatorMock = '/';
 
-  const parseBooleanMock = mocked(parseBoolean);
-  const parseJsonPropertyMock = mocked(parseJsonProperty);
-  const readFileSyncMock = mocked(readFileSync);
-  const existsSyncMock = mocked(existsSync);
+  const parseBooleanMock = jest.mocked(parseBoolean);
+  const parseJsonPropertyMock = jest.mocked(parseJsonProperty);
+  const readFileSyncMock = jest.mocked(readFileSync);
+  const existsSyncMock = jest.mocked(existsSync);
 
   beforeEach(() => {
     reader = new ConfigParser(configMock, prefixMock, separatorMock);

@@ -4,10 +4,6 @@ import { Sizes } from '../../enums';
 import { LinkComponent } from './link.component';
 
 describe('LinkComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot, with default props', () => {
     // when
     const { container } = render(<LinkComponent href="any-url-mock" />);

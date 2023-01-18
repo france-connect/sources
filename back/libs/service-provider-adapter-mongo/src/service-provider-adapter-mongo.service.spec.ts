@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger-legacy';
+import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 import { ServiceProviderMetadata } from '@fc/oidc';
 
 import { ServiceProvider } from './schemas';
@@ -85,6 +86,11 @@ describe('ServiceProviderAdapterMongoService', () => {
     publish: jest.fn(),
   };
 
+  const mongooseCollectionOperationWatcherHelperMock = {
+    connectAllWatchers: jest.fn(),
+    watchWith: jest.fn(),
+  };
+
   const serviceProviderModel = getModelToken('ServiceProvider');
 
   const configMock = {
@@ -107,6 +113,7 @@ describe('ServiceProviderAdapterMongoService', () => {
         LoggerService,
         EventBus,
         ConfigService,
+        MongooseCollectionOperationWatcherHelper,
       ],
     })
       .overrideProvider(CryptographyService)
@@ -117,6 +124,8 @@ describe('ServiceProviderAdapterMongoService', () => {
       .useValue(loggerMock)
       .overrideProvider(EventBus)
       .useValue(eventBusMock)
+      .overrideProvider(MongooseCollectionOperationWatcherHelper)
+      .useValue(mongooseCollectionOperationWatcherHelperMock)
       .compile();
 
     service = module.get<ServiceProviderAdapterMongoService>(
@@ -132,84 +141,31 @@ describe('ServiceProviderAdapterMongoService', () => {
   });
 
   describe('onModuleInit', () => {
-    it('should call initOperationTypeWatcher', () => {
-      // Given
-      service['initOperationTypeWatcher'] = jest.fn();
+    it('should call watchWith from mongooseHelper', async () => {
       // When
-      service.onModuleInit();
+      await service.onModuleInit();
       // Then
-      expect(service['initOperationTypeWatcher']).toHaveBeenCalledTimes(1);
+      expect(
+        mongooseCollectionOperationWatcherHelperMock.watchWith,
+      ).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('initOperationTypeWatcher', () => {
-    it('should call initOperationTypeWatcher', () => {
+  describe('refreshCache', () => {
+    beforeEach(() => {
       // Given
-      const streamMock = { on: jest.fn() };
-      repositoryMock.watch = jest.fn().mockReturnValueOnce(streamMock);
-      // When
-      service['initOperationTypeWatcher']();
-      // Then
-      expect(repositoryMock.watch).toHaveBeenCalledTimes(1);
+      service.getList = jest.fn();
+      configMock.get.mockReturnValueOnce({
+        disableIdpValidationOnLegacy: false,
+      });
     });
-  });
 
-  describe('operationTypeWatcher', () => {
-    // Given
-    const operationTypes = {
-      INSERT: 'insert',
-      UPDATE: 'update',
-      DELETE: 'delete',
-      RENAME: 'rename',
-      REPLACE: 'replace',
-    };
-    it('should call eventBus.publish() if DB stream.operationType = INSERT', () => {
-      // Given
-      const streamInsertMock = { operationType: operationTypes.INSERT };
+    it('should call getList method with true value in param', async () => {
       // When
-      service['operationTypeWatcher'](streamInsertMock);
+      await service.refreshCache();
       // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(1);
-    });
-    it('should call eventBus.publish() if DB stream.operationType = UPDATE', () => {
-      // Given
-      const streamInsertMock = { operationType: operationTypes.UPDATE };
-      // When
-      service['operationTypeWatcher'](streamInsertMock);
-      // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(1);
-    });
-    it('should call eventBus.publish() if DB stream.operationType = DELETE', () => {
-      // Given
-      const streamInsertMock = { operationType: operationTypes.DELETE };
-      // When
-      service['operationTypeWatcher'](streamInsertMock);
-      // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(1);
-    });
-    it('should call eventBus.publish() if DB stream.operationType = RENAME', () => {
-      // Given
-      const streamInsertMock = { operationType: operationTypes.RENAME };
-      // When
-      service['operationTypeWatcher'](streamInsertMock);
-      // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(1);
-    });
-    it('should call eventBus.publish() if DB stream.operationType = REPLACE', () => {
-      // Given
-      const streamInsertMock = { operationType: operationTypes.REPLACE };
-      // When
-      service['operationTypeWatcher'](streamInsertMock);
-      // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(1);
-    });
-    it("shouldn't call eventBus.publish() if DB stream.operationType = null", () => {
-      // Given
-      const streamInsertMock = { operationType: null };
-      // When
-      service['operationTypeWatcher'](streamInsertMock);
-      // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(0);
+      expect(service.getList).toHaveBeenCalledTimes(1);
+      expect(service.getList).toHaveBeenCalledWith(true);
     });
   });
 

@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { CoreService } from '@fc/core';
 import { CryptographyFcaService, IAgentIdentity } from '@fc/cryptography-fca';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService } from '@fc/session';
+
+import { CoreService } from '../../services';
 
 @Injectable()
 @FeatureHandler('core-fca-default-verify')

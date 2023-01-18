@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import { encode } from 'querystring';
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -92,7 +91,7 @@ describe('OidcClient Controller', () => {
 
   const providerIdMock = 'providerIdMockValue';
   const idpIdMock = 'idpIdMockValue';
-  const queryStringEncodeMock = mocked(encode);
+  const queryStringEncodeMock = jest.mocked(encode);
 
   beforeEach(async () => {
     jest.resetAllMocks();

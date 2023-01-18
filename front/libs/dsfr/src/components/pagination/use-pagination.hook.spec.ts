@@ -1,5 +1,4 @@
 import { act, renderHook } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
 
 import { useScrollTo } from '@fc/common';
@@ -20,21 +19,19 @@ describe('usePagination', () => {
   const scrollToTopMock = jest.fn();
 
   beforeEach(() => {
-    jest.clearAllMocks();
-
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(true);
-    mocked(getDisplayParameters).mockReturnValueOnce({
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(getDisplayParameters).mockReturnValueOnce({
       showFirstEllipsis: true,
       showFirstPage: true,
       showLastEllipsis: true,
       showLastPage: true,
     });
-    mocked(getPagesCount).mockReturnValueOnce(10);
-    mocked(getCurrentPage).mockReturnValueOnce(1);
-    mocked(getNavigationNumbers).mockReturnValueOnce([1, 2, 3, 4, 5]);
-    mocked(getMobileNavigationNumbers).mockReturnValueOnce([0, 1, 9]);
-    mocked(useScrollTo).mockReturnValueOnce({
+    jest.mocked(getPagesCount).mockReturnValueOnce(10);
+    jest.mocked(getCurrentPage).mockReturnValueOnce(1);
+    jest.mocked(getNavigationNumbers).mockReturnValueOnce([1, 2, 3, 4, 5]);
+    jest.mocked(getMobileNavigationNumbers).mockReturnValueOnce([0, 1, 9]);
+    jest.mocked(useScrollTo).mockReturnValueOnce({
       scrollToTop: scrollToTopMock,
     });
   });
@@ -156,7 +153,7 @@ describe('usePagination', () => {
 
     it('should call getMobileNavigationNumbers', () => {
       // given
-      mocked(useMediaQuery).mockReset().mockReturnValueOnce(false);
+      jest.mocked(useMediaQuery).mockReset().mockReturnValueOnce(false);
 
       // when
       renderHook(() =>

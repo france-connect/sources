@@ -1,5 +1,4 @@
 import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
-import { mocked } from 'jest-mock';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -286,7 +285,8 @@ describe('CsmrTracksFormatterService', () => {
         { _id: 4567, fields: { fizz: 'buzz' } },
       ] as unknown as SearchHit<ICsmrTracksFieldsRawData>[];
 
-      mocked(service['homogenizeDataFields'])
+      jest
+        .mocked(service['homogenizeDataFields'])
         .mockReturnValueOnce({ foo: 'bar' } as unknown as ICsmrTracksData)
         .mockReturnValueOnce({ fizz: 'buzz' } as unknown as ICsmrTracksData);
 

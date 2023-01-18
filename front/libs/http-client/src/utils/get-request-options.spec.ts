@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { ConfigService } from '@fc/config';
 
 import { Options } from '../enums';
@@ -11,10 +9,6 @@ jest.mock('@fc/config');
 jest.mock('./slashify-path');
 
 describe('getTimeout', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should call ConfigService.get with HttpClient identifier from enums Options', () => {
     // when
     Module.getTimeout(expect.any(Object));
@@ -34,7 +28,7 @@ describe('getTimeout', () => {
 
   it('should return a timeout from serviceConfig', () => {
     // given
-    mocked(ConfigService.get).mockReturnValueOnce({ timeout: 2000 });
+    jest.mocked(ConfigService.get).mockReturnValueOnce({ timeout: 2000 });
 
     // when
     const result = Module.getTimeout(undefined as unknown as HttpClientOptions);
@@ -45,7 +39,7 @@ describe('getTimeout', () => {
 
   it('should return a timeout from default values', () => {
     // given
-    mocked(ConfigService.get).mockReturnValueOnce({});
+    jest.mocked(ConfigService.get).mockReturnValueOnce({});
 
     // when
     const result = Module.getTimeout({});
@@ -56,10 +50,6 @@ describe('getTimeout', () => {
 });
 
 describe('getBaseURL', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should call ConfigService.get with HttpClient identifier', () => {
     // when
     Module.getBaseURL(expect.any(Object));
@@ -81,7 +71,7 @@ describe('getBaseURL', () => {
 
   it('should return a baseURL from serviceConfig', () => {
     // given
-    mocked(ConfigService.get).mockReturnValueOnce({ baseURL: 'http://any-url.com' });
+    jest.mocked(ConfigService.get).mockReturnValueOnce({ baseURL: 'http://any-url.com' });
     // when
     const result = Module.getBaseURL(undefined as unknown as HttpClientOptions);
 
@@ -91,7 +81,7 @@ describe('getBaseURL', () => {
 
   it('should return a baseURL from default values', () => {
     // given
-    mocked(ConfigService.get).mockReturnValueOnce({});
+    jest.mocked(ConfigService.get).mockReturnValueOnce({});
     // when
     const result = Module.getBaseURL({});
 
@@ -102,7 +92,6 @@ describe('getBaseURL', () => {
 
 describe('getRequestOptions', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     //
     jest.spyOn(Module, 'getTimeout');
     jest.spyOn(Module, 'getBaseURL');
@@ -128,7 +117,7 @@ describe('getRequestOptions', () => {
 
   it('should call slashifyPath with baseURL parameters from getBaseURL', () => {
     // given
-    mocked(Module.getBaseURL).mockReturnValueOnce('http://any-url-config.mock');
+    jest.mocked(Module.getBaseURL).mockReturnValueOnce('http://any-url-config.mock');
 
     // when
     Module.getRequestOptions({
@@ -144,7 +133,7 @@ describe('getRequestOptions', () => {
 
   it('should return a merged request object', () => {
     // given
-    mocked(slashifyPath).mockReturnValueOnce('http://any-url.mock/any-endpoint');
+    jest.mocked(slashifyPath).mockReturnValueOnce('http://any-url.mock/any-endpoint');
     const validateStatusMock = jest.fn();
 
     // when
@@ -172,7 +161,7 @@ describe('getRequestOptions', () => {
 
   it('should have call getBaseUrl', () => {
     // given
-    mocked(ConfigService.get).mockReturnValueOnce({});
+    jest.mocked(ConfigService.get).mockReturnValueOnce({});
     const targetRequest = {
       data: expect.any(Object),
       method: expect.any(String),
@@ -189,7 +178,7 @@ describe('getRequestOptions', () => {
 
   it('should have call getTimeout', () => {
     // given
-    mocked(ConfigService.get).mockReturnValueOnce({});
+    jest.mocked(ConfigService.get).mockReturnValueOnce({});
     const targetRequest = {
       data: expect.any(Object),
       method: expect.any(String),

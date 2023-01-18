@@ -1,8 +1,11 @@
 {
+  "ItemsCounterComponent.separator": "sur",
   "HomePage.welcome": "Bienvenue sur l’espace partenaire FranceConnect",
   "HomePage.baseline": "Vous pourrez gérer vos fournisseurs de services et plein d’autres choses",
   "HomePage.loginButton": "Je me connecte",
   "ServiceProvidersDetailsPage.returnButton": "Revenir à tous mes fournisseurs de service",
+  "ServiceProviderSandbox.addConfig": "Ajouter une configuration de test",
+  "ServiceProviderSandbox.title": "Mon bac à sable",
   "ServiceProvidersPage.ServiceProvider.status.SANDBOX": "en intégration",
   "ServiceProvidersPage.ServiceProvider.status.REVIEW_REQUESTED": "en attente de recette",
   "ServiceProvidersPage.ServiceProvider.status.REVIEW_IN_PROGRESS": "recette en cours",

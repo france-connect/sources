@@ -19,10 +19,6 @@ describe('ConnectionComponent', () => {
     LUXON_FORMAT_TIMEZONE: 'z',
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match snapshot, with default props', () => {
     // when
     const { container } = render(

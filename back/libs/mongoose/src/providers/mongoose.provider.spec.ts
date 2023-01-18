@@ -19,6 +19,10 @@ describe('MongooseService', () => {
     error: jest.fn(),
   } as unknown as LoggerService;
 
+  const eventBusMock = {
+    publish: jest.fn(),
+  };
+
   const connectionStringMock =
     'mongodb://userValue:passwordValue@hostsValue/databaseValue';
 
@@ -47,11 +51,12 @@ describe('MongooseService', () => {
       // When
       MongooseProvider['connectionFactory'](
         loggerMock,
-        connectionStringMock,
         connectionNameMock,
+        eventBusMock,
         connectionMock,
       );
       // Then
+      expect(eventBusMock.publish).toHaveBeenCalledTimes(1);
       expect(connectionMock.on).toHaveBeenCalledTimes(3);
       expect(connectionMock.on).toHaveBeenNthCalledWith(
         1,
@@ -65,7 +70,7 @@ describe('MongooseService', () => {
       );
       expect(connectionMock.on).toHaveBeenNthCalledWith(
         3,
-        'reconnect',
+        'reconnected',
         expect.any(Function),
       );
     });
@@ -74,8 +79,8 @@ describe('MongooseService', () => {
       // Given / When
       const connection = MongooseProvider['connectionFactory'](
         loggerMock,
-        connectionStringMock,
         connectionNameMock,
+        eventBusMock,
         connectionMock,
       );
 
@@ -92,8 +97,8 @@ describe('MongooseService', () => {
 
       const connection = MongooseProvider['connectionFactory'](
         loggerMock,
-        connectionStringMock,
         connectionNameMock,
+        eventBusMock,
         connectionMock,
       );
 
@@ -107,7 +112,7 @@ describe('MongooseService', () => {
       expect(loggerMock.error).toHaveBeenCalledTimes(3);
       expect(loggerMock.error).toHaveBeenNthCalledWith(
         1,
-        'Invalid Mongodb Connection for mongodb://userValue:passwordValue@hostsValue/databaseValue',
+        'Invalid Mongodb Connection for connectionNameValue',
       );
       expect(loggerMock.error).toHaveBeenNthCalledWith(2, '{}');
       expect(loggerMock.error).toHaveBeenNthCalledWith(3, 'Exiting app');
@@ -141,6 +146,7 @@ describe('MongooseService', () => {
         loggerMock,
         configMock,
         connectionNameMock,
+        eventBusMock,
       );
       // Then
       expect(configMock.get).toHaveBeenCalledTimes(1);
@@ -153,6 +159,7 @@ describe('MongooseService', () => {
         loggerMock,
         configMock,
         connectionNameMock,
+        eventBusMock,
       );
       // Then
       expect(result).toStrictEqual(configFactoryMock);

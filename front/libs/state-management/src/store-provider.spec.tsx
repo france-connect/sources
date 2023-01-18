@@ -2,7 +2,6 @@
  * @jest-environment jsdom
  */
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { combineReducers, createStore } from 'redux';
 import { persistStore } from 'redux-persist';
 import { PersistGateProps } from 'redux-persist/integration/react';
@@ -32,7 +31,7 @@ describe('StoreProvider', () => {
     const middlewares = [jest.fn()];
     const debugMode = false;
 
-    const mockConfigure = mocked(configure, true);
+    const mockConfigure = jest.mocked(configure, true);
     mockConfigure.mockReturnValue({
       persistor: mockPersistor,
       store: mockStore,
@@ -64,7 +63,7 @@ describe('StoreProvider', () => {
 
   it('should render the children', () => {
     // given
-    const mockConfigure = mocked(configure, true);
+    const mockConfigure = jest.mocked(configure, true);
     mockConfigure.mockReturnValue({
       persistor: mockPersistor,
       store: mockStore,

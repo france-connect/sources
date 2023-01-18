@@ -18,7 +18,7 @@ En effet chaque application va avoir des besoins qui lui sont propres, tant au n
 
 ### Initialisation
 
-Le module est dynamique est doit être instancié avec la méthode `register`, qui prend en paramètre une classe de service implémentant l'interface [`IAppTrackingService`](src/interfaces/app-tracking-service.interface.ts)
+Le module est dynamique est doit être instancié avec la méthode `register`, qui prend en paramètre une classe de service étendant la classe l'interface [`AppTrackingServiceAbstract`](src/interfaces/app-tracking-service.abstract.ts)
 
 ```typescript
 // Le présent module
@@ -46,7 +46,7 @@ import { MySpecificDependencyService } from '@fc/my-dependency';
 
 #### Typage des log
 
-Chaque application doit définir sa propre interface (ou classe abstraite) étendant `ITrackingLog`, avec les propriétés à journaliser pour cette application.
+Chaque application doit définir sa propre interface (ou classe abstraite) étendant `TrackingLogInterface`, avec les propriétés à journaliser pour cette application.
 
 L'interface de base contient déjà les propriétés suivantes, requises :
 
@@ -64,14 +64,16 @@ ISource:
 **Exemple d'interface spécifique à l'application**
 
 ```typescript
-import { ITrackingLog } from '@fc/tracking';
+import { TrackingLogInterface } from '@fc/tracking';
 
-export class IMyAppTrackingLog extends ITrackingLog {
+export class IMyAppTrackingLog extends TrackingLogInterface {
   readonly interactionId: string;
 }
 ```
 
-La méthode [`buildLog`](src/interfaces/app-tracking-service.interface.ts) doit renvoyer une promesse qui résoudra un objet implémentant l'interface [`ITrackingLog`](src/interfaces/tracking-log.interface.ts).
+La méthode [`buildLog`](src/interfaces/app-tracking-service.abstract.ts) doit renvoyer une promesse qui résoudra un objet implémentant l'interface [`TrackingLogInterface`](src/interfaces/tracking-log.interface.ts).
+
+C'est cet objet qui sera ajouté au journal.
 
 **Exemple d'implémentation du AppTrackingService**
 
@@ -79,9 +81,9 @@ La méthode [`buildLog`](src/interfaces/app-tracking-service.interface.ts) doit 
 import { Injectable } from '@nestjs/common';
 // Interfaces exposées par @fc/tracking
 import {
-  IEvent,
-  IEventContext,
-  IAppTrackingService,
+  TrackedEvent,
+  TrackedEventContext,
+  AppTrackingServiceAbstract,
 } from '@fc/tracking';
 // Mapping des événements de l'application
 import { EventsMap } from '../events.map';
@@ -89,15 +91,12 @@ import { EventsMap } from '../events.map';
 import { IMyAppTrackingLog } from '../interfaces';
 
 @Injectable()
-export class MyAppTrackingService implements IAppTrackingService {
-
-  // Exposition publique de la map d'événement (voir plus bas)
-  readonly EventsMap = EventsMap;
+export class MyAppTrackingService extends AppTrackingServiceAbstract {
 
   // Méthode a implémenter
   async buildLog(
-    event: IEvent,
-    context: IEventContext,
+    trackedEvent: TrackedEventInterface,
+    context: TrackedEventContextInterface,
   ): Promise<IMyAppTrackingLog> {
     // Votre implémentation spécifique...
   };
@@ -105,27 +104,13 @@ export class MyAppTrackingService implements IAppTrackingService {
 
 #### Mapping des événements
 
-L'application doit fournir un mapping des évènements métiers pouvant être inscrits dans le journal.  
-Ce mapping implémente l'interface [`IEventMap`](src/interfaces/event-map.interface.ts) exposée par `@fc/tracking`, voir la définition de cette dernière pour le formalisme.
+La librairie `@fc/tracking` doit être configurée avec un mapping des évènements métiers pouvant être inscrits dans le journal.  
+Ce mapping est typé par le type [`TrackedEventMapType`](src/interfaces/tracked-event-map.interface.ts) exposée par `@fc/tracking`, voir la définition de ce dernier pour le formalisme.
 
-Le mapping des évènements est exposé via le service IAppTrackingService décrit ci-après.
-
-#### Service implémentant `IAppTrackingService`
-
-L'application doit fournir un service implémentant l'interface `IAppTrackingService`.
-
-- **`EventsMap`** : Le service doit exposer le mapping d'évènements via une propriété publique `EventsMap`.
-
-* **`buildLog()`** :Le service doit exposer une méthode `buildLog` avec la signature suivante :
-
-  ```typescript
-  buildLog(event: IEvent, context: IEventContext): object
-  ```
-
-  L'objet renvoyé par la méthode est l'objet qui sera envoyé au journal d'événéments métier.
-
-## Impacts / Effets de bord
+Le mapping des évènements est exposé via la propriété `TrackingService.TrackedEventMap`.
 
 ### Interceptor
 
-La librairie contient et active un [`Interceptor`](src/interceptors/tracking.interceptor.ts) NestJS qui va automatiquement journaliser les routes présentes dans le mapping (sous réserve que le flag `intercept` soit à `true`).
+La librairie contient et active un [`Interceptor`](src/interceptors/tracking.interceptor.ts) NestJS qui va automatiquement journaliser les événements configurés dans le mapping avec la propriété ̀`interceptRoutes`.
+
+> NB: Les évènements journalisés de cette manière reçoivent un contexte générique.

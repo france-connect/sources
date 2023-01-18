@@ -12,10 +12,6 @@ describe('UserPreferencesService', () => {
 
     const csrfToken = 'csrfTokenMockValue';
 
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
-
     it('should return a instance of URLSearchParams', () => {
       // when
       const result = UserPreferencesService.encodeFormData({

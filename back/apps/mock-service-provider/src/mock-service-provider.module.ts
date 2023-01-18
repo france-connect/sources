@@ -32,7 +32,7 @@ const oidcClientModule = OidcClientModule.register(
 
 @Module({
   imports: [
-    ExceptionsModule,
+    ExceptionsModule.withoutTracking(),
     IdentityProviderAdapterEnvModule,
     SessionModule.forRoot({
       schema: MockServiceProviderSession,

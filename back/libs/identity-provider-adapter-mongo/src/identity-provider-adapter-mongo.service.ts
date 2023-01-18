@@ -1,11 +1,13 @@
+import { Model } from 'mongoose';
+
 import { Injectable, Type } from '@nestjs/common';
-import { EventBus } from '@nestjs/cqrs';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { asyncFilter, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger-legacy';
+import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 import {
   ClientMetadata,
   IdentityProviderMetadata,
@@ -18,7 +20,6 @@ import {
   IdentityProviderAdapterMongoConfig,
   IdentityProviderAdapterMongoDTO as NoDiscoveryIdoAdapterMongoDTO,
 } from './dto';
-import { IdentityProviderUpdateEvent } from './events';
 import { FilteringOptions } from './interfaces';
 import { IdentityProvider } from './schemas';
 
@@ -56,45 +57,28 @@ export class IdentityProviderAdapterMongoService
   /* eslint-disable-next-line max-params */
   constructor(
     @InjectModel('IdentityProvider')
-    private readonly identityProviderModel,
+    private readonly identityProviderModel: Model<IdentityProvider>,
     private readonly crypto: CryptographyService,
     private readonly config: ConfigService,
-    private readonly eventBus: EventBus,
     private readonly logger: LoggerService,
+    private readonly mongooseWatcher: MongooseCollectionOperationWatcherHelper,
   ) {
     this.logger.setContext(this.constructor.name);
   }
 
   async onModuleInit() {
-    this.initOperationTypeWatcher();
+    this.mongooseWatcher.watchWith(
+      this.identityProviderModel,
+      this.refreshCache.bind(this),
+    );
     this.logger.debug('Initializing identity-provider');
 
     // Warm up cache and shows up excluded IdPs
     await this.getList();
   }
 
-  private initOperationTypeWatcher(): void {
-    const watch: any = this.identityProviderModel.watch();
-    this.logger.debug(
-      `Provider's database OperationType watcher initialization.`,
-    );
-    watch.on('change', this.operationTypeWatcher.bind(this));
-  }
-
-  /**
-   * Method triggered when an operation type occured on
-   * Mongo's 'provider' collection.
-   * @param {object} stream Stream of event retrieved.
-   * @returns {void}
-   */
-  private operationTypeWatcher(stream): void {
-    const operationTypes = ['insert', 'update', 'delete', 'rename', 'replace'];
-    const isListenedOperation: boolean = operationTypes.includes(
-      stream.operationType,
-    );
-    if (isListenedOperation) {
-      this.eventBus.publish(new IdentityProviderUpdateEvent());
-    }
+  async refreshCache(): Promise<void> {
+    await this.getList(true);
   }
 
   private async findAllIdentityProvider(): Promise<IdentityProviderMetadata[]> {

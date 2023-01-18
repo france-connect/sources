@@ -5,6 +5,14 @@ import * as lodash from 'lodash';
 
 import { Injectable } from '@nestjs/common';
 
+/**
+ * Config service being manually instanciated (in main.ts), nest dependencies
+ * are not working, therefore, we can't go through barrel files,
+ * but need to specify the full path to the helper
+ */
+import { AppHelper } from '@fc/app/helpers/app-helper';
+import { getDtoErrors } from '@fc/common';
+
 import { UnknownConfigurationNameError } from './errors';
 import { IConfigOptions } from './interfaces';
 
@@ -32,9 +40,9 @@ export class ConfigService {
 
     if (errors.length > 0) {
       console.error('Invalid configuration Error');
-      console.error(JSON.stringify(errors, null, 2));
+      console.error(getDtoErrors(errors));
       console.error('Exiting app');
-      process.exit(1);
+      AppHelper.shutdown();
     }
   }
 

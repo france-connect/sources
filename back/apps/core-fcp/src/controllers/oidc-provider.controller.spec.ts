@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
@@ -91,7 +89,7 @@ describe('OidcProviderController', () => {
       OidcProviderController,
     );
 
-    validateDtoMock = mocked(validateDto, true);
+    validateDtoMock = jest.mocked(validateDto, true);
 
     jest.resetAllMocks();
     jest.restoreAllMocks();

@@ -4,6 +4,7 @@ import { ConfigService } from '@fc/config';
 import { RepositoryInterface } from '@fc/csv/interfaces';
 import { LoggerService } from '@fc/logger-legacy';
 
+import { CogConfig } from './dto';
 import { CityInterface, CountryInterface } from './interfaces';
 import { COG_CITY, COG_COUNTRY } from './tokens';
 
@@ -21,7 +22,8 @@ export class CogService {
   }
 
   async onModuleInit() {
-    const { [COG_CITY]: city, [COG_COUNTRY]: country } = this.config.get('Cog');
+    const { [COG_CITY]: city, [COG_COUNTRY]: country } =
+      this.config.get<CogConfig>('Cog');
     await this.cityManager.parse(city);
     await this.countryManager.parse(country);
   }

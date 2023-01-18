@@ -3,12 +3,11 @@
 **Boucher une function exportée d'un fichier**
 
 ```
-import { mocked } from 'jest-mock';
 import { removeIdentityProvider } from '../../../redux/actions';
 ...
 jest.mock('../../../redux/actions');
 ...
-const spy = mocked(removeIdentityProvider, true);
+const spy = jest.mocked(removeIdentityProvider, true);
 spy.mockReturnValueOnce(action);
 ```
 

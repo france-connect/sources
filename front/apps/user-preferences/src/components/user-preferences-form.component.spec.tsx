@@ -1,6 +1,4 @@
 import { fireEvent, render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
-import React from 'react';
 import { useMediaQuery } from 'react-responsive';
 
 import { AlertComponent, SimpleButton, ToggleInput } from '@fc/dsfr';
@@ -29,14 +27,10 @@ describe('UserPreferencesFormComponent', () => {
     allowingIdPConfirmation: jest.fn(),
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot, display into a desktop viewport', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(
@@ -56,8 +50,8 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should match the snapshot, display into a mobile viewport', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(
@@ -77,8 +71,8 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should match the snapshot, display into a desktop viewport when form validation button is not disabled', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(
@@ -98,8 +92,8 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should match the snapshot, display into a mobile viewport when form validation button is not disabled', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(
@@ -119,8 +113,8 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should match the snapshot, display into a desktop viewport when the form has errors', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(
@@ -140,8 +134,8 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should match the snapshot, display into a mobile viewport when the form has errors', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(
@@ -161,7 +155,7 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should call ServicesListComponent with params', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
     // when
     render(
@@ -185,7 +179,7 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should call ToggleInput with params', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
     // when
     render(
@@ -214,11 +208,11 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should render AllowFutureIdpSwitchLabelComponent with params, when labelCallback is called', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
     const toggleInputValue = false;
-    mocked(ToggleInput).mockImplementationOnce(({ label }) => (
-      <div>{(label as Function)(toggleInputValue)}</div>
-    ));
+    jest
+      .mocked(ToggleInput)
+      .mockImplementationOnce(({ label }) => <div>{(label as Function)(toggleInputValue)}</div>);
     // when
     render(
       <UserPreferencesFormComponent
@@ -241,7 +235,7 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should call AlertComponent with params when the form has errors', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
     const expectedProps = {
       children: expect.any(Array),
       type: 'error',
@@ -266,8 +260,8 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should call useUserPreferencesForm with dirtyFields and userPreference when allowingIdPConfirmation is called', () => {
     // given
-    mocked(AlertComponent).mockImplementationOnce(({ children }) => <div>{children}</div>);
-    mocked(useUserPreferencesForm).mockReturnValue({
+    jest.mocked(AlertComponent).mockImplementationOnce(({ children }) => <div>{children}</div>);
+    jest.mocked(useUserPreferencesForm).mockReturnValue({
       alertInfoState: {
         hasInteractedWithAlertInfo: false,
         isDisplayedAlertInfo: true,
@@ -300,7 +294,7 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should not call AlertComponent if there are no errors', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
     // when
     render(
@@ -320,7 +314,7 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should call SimpleButton with params, can not submit', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
     // when
     render(
@@ -348,7 +342,7 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should call SimpleButton with params, can submit', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
     // when
     render(
@@ -376,7 +370,7 @@ describe('UserPreferencesFormComponent', () => {
 
   it('should show a notification when the form has been submitted', () => {
     // given
-    mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
     // when
     const { getByText } = render(

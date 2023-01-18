@@ -10,6 +10,7 @@ import { OidcClientSession } from '@fc/oidc-client';
 import { IClaim, IRichClaim, ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { ISessionService } from '@fc/session';
+import { TrackedEventContextInterface } from '@fc/tracking';
 
 import { ProcessCore } from '../enums';
 import { CoreFcpSendEmailHandler } from '../handlers';
@@ -37,7 +38,7 @@ export class CoreFcpService {
    */
   async verify(
     sessionOidc: ISessionService<OidcClientSession>,
-    trackingContext: Record<string, unknown>,
+    trackingContext: TrackedEventContextInterface,
   ): Promise<void> {
     this.logger.debug('CoreFcpService.verify');
 

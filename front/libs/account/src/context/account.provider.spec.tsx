@@ -17,10 +17,6 @@ const configMock = {
 };
 
 describe('AccountProvider', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should render the child component', () => {
     // given
     const theProvider = (

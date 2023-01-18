@@ -1,5 +1,4 @@
 import { IncomingMessage } from 'http';
-import { mocked } from 'jest-mock';
 
 import { ExecutionContext } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
@@ -66,8 +65,8 @@ describe('extractSessionHelper', () => {
 
   describe('extractSessionFromContext', () => {
     beforeEach(() => {
-      mocked(ctxMock.switchToHttp).mockReturnValueOnce(httpCtxMock);
-      mocked(httpCtxMock.getRequest).mockReturnValueOnce(reqMock);
+      jest.mocked(ctxMock.switchToHttp).mockReturnValueOnce(httpCtxMock);
+      jest.mocked(httpCtxMock.getRequest).mockReturnValueOnce(reqMock);
       jest
         .spyOn(SessionService, 'getBoundedSession')
         .mockReturnValueOnce(boundedSessionServiceMock);

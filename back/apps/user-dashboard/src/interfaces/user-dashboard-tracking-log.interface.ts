@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { ITrackingLog } from '@fc/tracking';
+import { TrackingLogInterface } from '@fc/tracking';
 
-export class UserDashboardTrackingLogInterface extends ITrackingLog {
+export class UserDashboardTrackingLogInterface extends TrackingLogInterface {
   sub?: string;
   sessionId: string;
   changeSetId?: string;

@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
@@ -99,7 +97,7 @@ describe('CsmrUserPreferencesController', () => {
 
   describe('getIdpSettings', () => {
     beforeEach(() => {
-      validationDtoMock = mocked(validateDto);
+      validationDtoMock = jest.mocked(validateDto);
     });
 
     it('should return result of csmrUserPreferencesService.getIdpSettings()', async () => {
@@ -152,7 +150,7 @@ describe('CsmrUserPreferencesController', () => {
     };
 
     beforeEach(() => {
-      validationDtoMock = mocked(validateDto);
+      validationDtoMock = jest.mocked(validateDto);
     });
 
     it('should call setIdpSettings from userPreferencesCsmr service', async () => {

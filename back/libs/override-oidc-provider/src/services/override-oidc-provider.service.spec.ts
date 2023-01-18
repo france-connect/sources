@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import * as KeyStore from 'oidc-provider/lib/helpers/keystore.js';
 import * as OidcProviderInstance from 'oidc-provider/lib/helpers/weak_cache';
 
@@ -34,7 +33,7 @@ describe('OverrideOidcProviderService', () => {
     get: jest.fn(),
   };
 
-  const KeyStoreMock = mocked(KeyStore);
+  const KeyStoreMock = jest.mocked(KeyStore);
   const signHsmPubKeyMock = {
     x: 'foo',
     y: 'bar',

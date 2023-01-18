@@ -1,8 +1,6 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Request } from 'express';
-
 import { ExecutionContext } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
@@ -11,9 +9,9 @@ import { LoggerService } from '@fc/logger-legacy';
 import { RequirePermission } from '../decorators';
 import { PermissionsType } from '../enums';
 import {
-  AccessControlSession,
   IPermission,
   PermissionsRequestInformations,
+  RequestInformations,
 } from '../interfaces';
 import { ACCESS_CONTROL_TOKEN } from '../tokens';
 
@@ -60,7 +58,9 @@ export abstract class BasePermissionsHandlerService {
   ): PermissionsRequestInformations {
     const request = context
       .switchToHttp()
-      .getRequest<Request & AccessControlSession>();
+      //@todo: Find a "Request" type that contains everything that we need
+      //@todo: use a type, well matching
+      .getRequest<RequestInformations>();
 
     const { body, params, query } = request;
     const userPermissions = request[ACCESS_CONTROL_TOKEN];

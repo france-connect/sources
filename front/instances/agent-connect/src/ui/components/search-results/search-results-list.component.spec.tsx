@@ -7,10 +7,6 @@ import { SearchResultsListComponent } from './search-results-list.component';
 jest.mock('./search-result.component');
 
 describe('SearchResultsListComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should have the main label', () => {
     // when
     const { getByText } = render(<SearchResultsListComponent results={[]} />);

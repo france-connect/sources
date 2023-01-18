@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import React, { ReactElement } from 'react';
 
 import { AccountProvider } from '@fc/account';
@@ -27,20 +26,18 @@ jest.mock('./application.routes', () => ({
 }));
 
 describe('Application', () => {
-  const StoreProviderMock = mocked(StoreProvider);
-  const ApplicationRoutesMock = mocked(ApplicationRoutes);
-  const AppContextProviderMock = mocked(AppContextProvider);
+  const StoreProviderMock = jest.mocked(StoreProvider);
+  const ApplicationRoutesMock = jest.mocked(ApplicationRoutes);
+  const AppContextProviderMock = jest.mocked(AppContextProvider);
 
   beforeEach(() => {
-    jest.clearAllMocks();
-
     StoreProviderMock.mockImplementation(({ children }) => children);
 
     AppContextProviderMock.mockImplementation(
       ({ children }: AppContextProviderProps) => children as ReactElement,
     );
 
-    mocked(ConfigService.get).mockReturnValueOnce({
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
       persistKey: 'persistKey-mock',
     });
   });

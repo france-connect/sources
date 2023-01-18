@@ -2,5 +2,8 @@
 
 // declarative file
 export interface ServiceProvidersConfig {
-  endpoint: string;
+  endpoints: {
+    serviceProviders: string;
+    serviceProvidersConfigs: string;
+  };
 }

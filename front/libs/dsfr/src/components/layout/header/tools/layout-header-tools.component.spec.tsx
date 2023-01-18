@@ -12,10 +12,6 @@ jest.mock('./layout-header-tools-account.component');
 jest.mock('../return-button/return-button.component');
 
 describe('LayoutHeaderToolsComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // given
     const appContextConfigMock = {

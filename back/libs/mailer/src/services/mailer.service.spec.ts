@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialExcept } from '@fc/common';
@@ -55,7 +53,7 @@ describe('MailerService', () => {
     send: jest.fn(),
   };
 
-  const StdoutTransportMock = mocked(StdoutTransport);
+  const StdoutTransportMock = jest.mocked(StdoutTransport);
 
   beforeEach(async () => {
     jest.resetAllMocks();

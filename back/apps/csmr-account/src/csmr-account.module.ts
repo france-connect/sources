@@ -14,7 +14,7 @@ import { CsmrAccountController } from './controllers';
 @Module({
   imports: [
     AccountModule,
-    ExceptionsModule,
+    ExceptionsModule.withoutTracking(),
     LoggerModule,
     MongooseModule.forRoot(),
     RabbitmqModule.registerFor('Account'),

@@ -2,6 +2,14 @@ import { IsNumber, IsObject } from 'class-validator';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
+/**
+ * Config service being manually instanciated (in main.ts), nest dependencies
+ * are not working, therefore, we can't go through barrel files,
+ * but need to specify the full path to the helper
+ */
+import { AppHelper } from '@fc/app/helpers/app-helper';
+import { getDtoErrors } from '@fc/common';
+
 import { ConfigService } from './config.service';
 import { UnknownConfigurationNameError } from './errors';
 
@@ -12,6 +20,10 @@ class Schema {
   @IsObject()
   readonly I: any;
 }
+jest.mock('@fc/app/helpers/app-helper');
+jest.mock('@fc/common', () => ({
+  getDtoErrors: jest.fn(),
+}));
 
 describe('ConfigService', () => {
   let service: ConfigService;
@@ -32,6 +44,12 @@ describe('ConfigService', () => {
     },
     schema: Schema,
   };
+  jest.mocked(AppHelper).mockReturnValueOnce({
+    shutdown: jest.fn(),
+  });
+  const getDtoErrorsMock = jest.mocked(getDtoErrors);
+  const errosMock = 'Logger.level: isEnum\nLogger.path: isString';
+  const instantiatedErrosMock = new Error(errosMock);
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -46,6 +64,8 @@ describe('ConfigService', () => {
       .useValue(configService)
       .compile();
     service = module.get<ConfigService>(ConfigService);
+
+    getDtoErrorsMock.mockReturnValue(instantiatedErrosMock);
   });
 
   describe('constructor', () => {
@@ -56,14 +76,25 @@ describe('ConfigService', () => {
   });
 
   describe('validate', () => {
-    it('should exit and give feed back if config is not valid', () => {
+    it('should call getDtoErrors if config is not valid', () => {
       // Given
       const config = {
         foo: 'a string instead of a number',
       };
-      const processExit = jest
-        .spyOn(process, 'exit')
-        .mockImplementation((code) => code as never);
+
+      // When
+      ConfigService['validate'](config, Schema);
+
+      // Then
+      expect(getDtoErrorsMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('should log that config is not valid', () => {
+      // Given
+      const config = {
+        foo: 'a string instead of a number',
+      };
+
       const consoleError = jest
         .spyOn(console, 'error')
         .mockImplementation((log) => log);
@@ -72,10 +103,22 @@ describe('ConfigService', () => {
       ConfigService['validate'](config, Schema);
 
       // Then
-      expect(processExit).toHaveBeenCalledWith(1);
       expect(consoleError).toHaveBeenCalledTimes(3);
       expect(consoleError).toHaveBeenCalledWith('Invalid configuration Error');
       expect(consoleError).toHaveBeenCalledWith('Exiting app');
+    });
+
+    it('should call AppHelper.shutdown if config is not valid', () => {
+      // Given
+      const config = {
+        foo: 'a string instead of a number',
+      };
+
+      // When
+      ConfigService['validate'](config, Schema);
+
+      // Then
+      expect(AppHelper.shutdown).toHaveBeenCalledTimes(1);
     });
   });
 

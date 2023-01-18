@@ -1,5 +1,4 @@
 import { renderHook } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { useState } from 'react';
 
 import { useApiGet } from '@fc/common';
@@ -17,9 +16,7 @@ jest.mock('react', () => {
 
 describe('useReturnButton', () => {
   beforeEach(() => {
-    jest.resetAllMocks();
-    jest.clearAllMocks();
-    mocked(useState).mockImplementation(jest.requireActual('react').useState);
+    jest.mocked(useState).mockImplementation(jest.requireActual('react').useState);
   });
 
   it('should have return default values at first render', () => {
@@ -66,7 +63,7 @@ describe('useReturnButton', () => {
   it('should have returned default values on api error', () => {
     // given
     const url = expect.any(String);
-    mocked(useApiGet).mockReturnValueOnce(null);
+    jest.mocked(useApiGet).mockReturnValueOnce(null);
 
     // when
     const { result } = renderHook(() => useReturnButton(url));
@@ -82,7 +79,7 @@ describe('useReturnButton', () => {
   it('should have returned parsed values on api response', () => {
     // given
     const url = expect.any(String);
-    mocked(useApiGet).mockReturnValueOnce({
+    jest.mocked(useApiGet).mockReturnValueOnce({
       redirectURI: 'redirect-uri-mock',
       redirectURIQuery: { mock: 'mock' },
       spName: 'service-provider-name-mock',
@@ -103,8 +100,8 @@ describe('useReturnButton', () => {
     // given
     const url = expect.any(String);
     const setStateMock = jest.fn();
-    mocked(useState).mockImplementation(() => ['unused-mocked-use-state-value', setStateMock]);
-    mocked(useApiGet).mockReturnValue({
+    jest.mocked(useState).mockImplementation(() => ['unused-mocked-use-state-value', setStateMock]);
+    jest.mocked(useApiGet).mockReturnValue({
       redirectURI: 'redirect-uri-mock',
       redirectURIQuery: { mock: 'mock' },
       spName: 'service-provider-name-mock',

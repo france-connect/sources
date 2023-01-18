@@ -3,7 +3,6 @@
 // Declarative code
 export * from './dto';
 export * from './enums';
-export * from './events';
 export * from './exceptions';
 export * from './interfaces';
 export * from './oidc-provider.controller';

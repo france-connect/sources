@@ -24,14 +24,6 @@ import { UserPreferencesModule } from '@fc/user-preferences';
 
 import { OidcClientController, UserDashboardController } from './controllers';
 import { UserDashboardSession } from './dto';
-import {
-  DisplayedUserPreferencesEventHandler,
-  DisplayedUserTracksEventHandler,
-  TrackableEventHandler,
-  UpdatedUserPreferencesEventHandler,
-  UpdatedUserPreferencesFutureIdpEventHandler,
-  UpdatedUserPreferencesIdpEventHandler,
-} from './handlers';
 import { UserDashboardService, UserDashboardTrackingService } from './services';
 
 const oidcClientModule = OidcClientModule.register(
@@ -44,7 +36,7 @@ const oidcClientModule = OidcClientModule.register(
 @Module({
   controllers: [UserDashboardController, OidcClientController],
   imports: [
-    ExceptionsModule,
+    ExceptionsModule.withoutTracking(),
     AppModule,
     HttpProxyModule,
     IdentityProviderAdapterEnvModule,
@@ -55,15 +47,7 @@ const oidcClientModule = OidcClientModule.register(
     UserPreferencesModule,
     MailerModule,
   ],
-  providers: [
-    UserDashboardService,
-    DisplayedUserPreferencesEventHandler,
-    DisplayedUserTracksEventHandler,
-    TrackableEventHandler,
-    UpdatedUserPreferencesEventHandler,
-    UpdatedUserPreferencesIdpEventHandler,
-    UpdatedUserPreferencesFutureIdpEventHandler,
-  ],
+  providers: [UserDashboardService],
 })
 export class UserDashboardModule {
   constructor(private readonly config: ConfigService) {}

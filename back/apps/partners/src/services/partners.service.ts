@@ -11,15 +11,25 @@ import {
   IServiceProviderItem,
   PartnerServiceProviderService,
 } from '@fc/partner-service-provider';
+import {
+  PartnerServiceProviderConfigurationService,
+  ServiceProviderConfigurationItemInterface,
+  ServiceProviderConfigurationType,
+  UrlMetaInterface,
+} from '@fc/partner-service-provider-configuration';
 
 import { PartnersRoutes } from '../enums';
-import { IServiceProviderList } from '../interfaces';
+import {
+  IServiceProviderList,
+  ServiceProviderConfigurationListInterface,
+} from '../interfaces';
 
 @Injectable()
 export class PartnersService {
   constructor(
     private readonly logger: LoggerService,
     private readonly partnerServiceProvider: PartnerServiceProviderService,
+    private readonly partnerServiceProviderConfiguration: PartnerServiceProviderConfigurationService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -113,10 +123,123 @@ export class PartnersService {
     return permissions;
   }
 
-  private buildUrlsMeta(id: uuid) {
+  private buildUrlsMeta(id: uuid): Pick<UrlMetaInterface, 'view' | 'edit'> {
     return {
       edit: PartnersRoutes.SERVICE_PROVIDER_EDIT.replace(':id', id),
       view: PartnersRoutes.SERVICE_PROVIDER_VIEW.replace(':id', id),
     };
+  }
+
+  private buildUrls(id: uuid): Pick<UrlMetaInterface, 'view' | 'delete'> {
+    const meta = {
+      view: `${PartnersRoutes.SERVICE_PROVIDER_CONFIGURATION_LIST}/${id}`,
+      delete: `${PartnersRoutes.SERVICE_PROVIDER_CONFIGURATION_DELETE.replace(
+        ':id',
+        id,
+      )}`,
+    };
+
+    return meta;
+  }
+
+  private buildFSA(
+    type: string,
+    item: ServiceProviderConfigurationItemInterface,
+    urls?: Partial<UrlMetaInterface>,
+    total?: number,
+  ): FSA<
+    FSAMeta,
+    Pick<ServiceProviderConfigurationItemInterface, 'id' | 'name'>
+  > {
+    const { id, name } = item;
+
+    const fsa: FSA<
+      FSAMeta,
+      Pick<ServiceProviderConfigurationItemInterface, 'id' | 'name'>
+    > = {
+      type,
+      payload: {
+        id,
+        name,
+      },
+    };
+
+    if (urls) {
+      fsa.meta = {
+        urls,
+      };
+    }
+
+    if (total) {
+      fsa.meta = {
+        ...fsa.meta,
+        total,
+      };
+    }
+    return fsa;
+  }
+
+  private mapConfigWithMeta(
+    ConfigurationList: ServiceProviderConfigurationItemInterface[],
+  ) {
+    const mapped = ConfigurationList.map((item) =>
+      this.buildFSA(ServiceProviderConfigurationType.ITEM, item),
+    );
+
+    return mapped;
+  }
+
+  async getConfigurationsFromServiceProvider(
+    serviceProviderId: uuid,
+  ): Promise<ServiceProviderConfigurationListInterface> {
+    const { total, items } =
+      await this.partnerServiceProviderConfiguration.getByServiceProvider(
+        serviceProviderId,
+      );
+
+    const payload = this.mapConfigWithMeta(items);
+
+    /**
+     * @todo : Register all type in centralized list
+     * author: anatole
+     * date: 2022-10-20
+     */
+    const data: ServiceProviderConfigurationListInterface = {
+      type: ServiceProviderConfigurationType.LIST,
+      meta: {
+        total,
+      },
+      payload,
+    };
+
+    return data;
+  }
+
+  async saveConfigurationForServiceProvider(
+    serviceProviderId: uuid,
+  ): Promise<
+    FSA<FSAMeta, Pick<ServiceProviderConfigurationItemInterface, 'id' | 'name'>>
+  > {
+    const payload =
+      await this.partnerServiceProviderConfiguration.addForServiceProvider(
+        serviceProviderId,
+      );
+
+    const { total } =
+      await this.partnerServiceProviderConfiguration.getByServiceProvider(
+        serviceProviderId,
+      );
+
+    const serviceProviderConfigurationId = payload.id;
+    const urls = this.buildUrls(serviceProviderConfigurationId);
+
+    const data = this.buildFSA(
+      ServiceProviderConfigurationType.ITEM,
+      payload,
+      urls,
+      total,
+    );
+
+    return data;
   }
 }

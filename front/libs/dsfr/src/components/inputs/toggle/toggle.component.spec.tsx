@@ -17,10 +17,6 @@ describe('ToggleComponent', () => {
   } as FieldInputProps<unknown, HTMLElement>;
   const legendMock = { checked: 'foo', unchecked: 'bar' } as CheckableLegend;
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match snapshot with default props', () => {
     // When
     const { container } = render(

@@ -4,7 +4,6 @@ const accounts = {
     E000001: {
         id: "E000001",
         identityHash: "grO29G7EujZx15MPnNBR5OCVxyCx2yidDcztss32MO0=",
-        updatedAt: new Date("2019-12-11T12:16:26.931Z"),
         createdAt: new Date("2019-12-11T11:16:23.540Z"),
         active: false,
         servicesProvidersFederationKeys: [

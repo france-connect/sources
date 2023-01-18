@@ -1,22 +1,24 @@
-import { ExecutionContext } from '@nestjs/common';
+import { ExecutionContext, RequestMethod } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
 
-import { IEventMap } from '../interfaces';
-import { TrackingService } from '../tracking.service';
+import { TrackedEventMapType } from '../interfaces';
+import { TrackingService } from '../services';
 import { TrackingInterceptor } from './tracking.interceptor';
 
 describe('TrackingInterceptor', () => {
   let interceptor: TrackingInterceptor;
 
   const trackingMock = {
-    log: jest.fn(),
+    track: jest.fn(),
   };
 
   const loggerMock = {
     setContext: jest.fn(),
     debug: jest.fn(),
+    trace: jest.fn(),
   };
 
   const httpContextMock = {
@@ -33,24 +35,41 @@ describe('TrackingInterceptor', () => {
   };
 
   const eventsMock = {
-    foo: { route: '/foo', intercept: true },
-    bar: { route: '/bar', intercept: true },
-    wizz: { route: '/wizz', intercept: false },
-  } as unknown as IEventMap;
+    foo: { interceptRoutes: [{ path: '/foo', method: RequestMethod.ALL }] },
+    bar: { interceptRoutes: [{ path: '/bar', method: RequestMethod.GET }] },
+    wizz: { interceptRoutes: [{ path: '/wizz', method: RequestMethod.GET }] },
+    bazz: {},
+  } as unknown as TrackedEventMapType;
 
   const nextMock = {
     handle: jest.fn(),
     pipe: jest.fn(),
   };
 
+  const configServiceMock = {
+    get: jest.fn(),
+  };
+  const urlPrefixMock = '/url/prefix';
+
+  const configMock = {
+    urlPrefix: urlPrefixMock,
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [TrackingInterceptor, TrackingService, LoggerService],
+      providers: [
+        TrackingInterceptor,
+        TrackingService,
+        LoggerService,
+        ConfigService,
+      ],
     })
       .overrideProvider(TrackingService)
       .useValue(trackingMock)
       .overrideProvider(LoggerService)
       .useValue(loggerMock)
+      .overrideProvider(ConfigService)
+      .useValue(configServiceMock)
       .compile();
 
     interceptor = module.get<TrackingInterceptor>(TrackingInterceptor);
@@ -58,6 +77,7 @@ describe('TrackingInterceptor', () => {
     jest.resetAllMocks();
     nextMock.handle.mockReturnThis();
     httpContextMock.getRequest.mockReturnValue(reqMock);
+    configServiceMock.get.mockReturnValueOnce(configMock);
   });
 
   it('should be defined', () => {
@@ -81,10 +101,10 @@ describe('TrackingInterceptor', () => {
       const eventMock = {};
       interceptor['getEvent'] = jest.fn().mockReturnValue(eventMock);
       // When
-      interceptor['log'](reqMock);
+      interceptor['log'](reqMock, urlPrefixMock);
       // Then
-      expect(trackingMock.log).toHaveBeenCalledTimes(1);
-      expect(trackingMock.log).toHaveBeenCalledWith(eventMock, {
+      expect(trackingMock.track).toHaveBeenCalledTimes(1);
+      expect(trackingMock.track).toHaveBeenCalledWith(eventMock, {
         req: reqMock,
       });
     });
@@ -93,34 +113,36 @@ describe('TrackingInterceptor', () => {
       const eventMock = undefined;
       interceptor['getEvent'] = jest.fn().mockReturnValue(eventMock);
       // When
-      interceptor['log'](reqMock);
+      interceptor['log'](reqMock, urlPrefixMock);
       // Then
-      expect(trackingMock.log).toHaveBeenCalledTimes(0);
+      expect(trackingMock.track).toHaveBeenCalledTimes(0);
     });
   });
 
   describe('getEvent', () => {
     it('should deduce event from route', () => {
       // Given
-      const req = { route: { path: '/bar' } };
+      const req = { method: 'GET', route: { path: `${urlPrefixMock}/bar` } };
       // When
-      const result = interceptor['getEvent'](req, eventsMock);
+      const result = interceptor['getEvent'](req, eventsMock, urlPrefixMock);
       // Then
       expect(result).toBe(eventsMock.bar);
     });
-    it('should not return event with falsy intercept', () => {
+
+    it('should not return event with wrong method intercept', () => {
       // Given
-      const req = { route: { path: '/wizz' } };
+      const req = { method: 'POST', route: { path: `${urlPrefixMock}/wizz` } };
       // When
-      const result = interceptor['getEvent'](req, eventsMock);
+      const result = interceptor['getEvent'](req, eventsMock, urlPrefixMock);
       // Then
       expect(result).toBeUndefined();
     });
+
     it('should not return event when there is not route match', () => {
       // Given
-      const req = { route: { path: '/nowhere' } };
+      const req = { method: 'POST', route: { path: `/nowhere` } };
       // When
-      const result = interceptor['getEvent'](req, eventsMock);
+      const result = interceptor['getEvent'](req, eventsMock, urlPrefixMock);
       // Then
       expect(result).toBeUndefined();
     });

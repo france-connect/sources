@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 
 // Declarative code
-export * from './app-tracking-service.token';
-export * from './handlers';
+export * from './dto';
 export * from './interceptors';
 export * from './interfaces';
+export * from './services';
+export * from './tokens';
 export * from './tracking.module';
-export * from './tracking.service';

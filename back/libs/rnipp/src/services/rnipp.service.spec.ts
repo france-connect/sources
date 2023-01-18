@@ -1,5 +1,4 @@
 import { AxiosError } from 'axios';
-import { mocked } from 'jest-mock';
 import { lastValueFrom } from 'rxjs';
 
 import { HttpService } from '@nestjs/axios';
@@ -374,7 +373,7 @@ describe('RnippService', () => {
 
     it('should transform the "Observable" of "Http.get" result to a "Promise"', async () => {
       // setup
-      const lastValueMock = mocked(lastValueFrom);
+      const lastValueMock = jest.mocked(lastValueFrom);
       lastValueMock.mockResolvedValueOnce(axiosResponseResolvedMock);
       httpServiceMock.get.mockReturnValue(axiosResponseMock);
 
@@ -389,7 +388,7 @@ describe('RnippService', () => {
 
     it('should resolve to the axiosResponseMock', async () => {
       // setup
-      const lastValueMock = mocked(lastValueFrom);
+      const lastValueMock = jest.mocked(lastValueFrom);
       lastValueMock.mockResolvedValueOnce(axiosResponseResolvedMock);
       httpServiceMock.get.mockReturnValue(axiosResponseMock);
 
@@ -401,7 +400,7 @@ describe('RnippService', () => {
 
     it('should catch the exception thrown by "lastValueMock" and call "checkRnippHttpError" with the error', async () => {
       // setup
-      const lastValueMock = mocked(lastValueFrom);
+      const lastValueMock = jest.mocked(lastValueFrom);
       const axiosErrorMock = new Error('Nani ?');
       lastValueMock.mockRejectedValueOnce(axiosErrorMock);
       httpServiceMock.get.mockReturnValue(axiosResponseMock);
@@ -419,7 +418,7 @@ describe('RnippService', () => {
 
     it('should not catch the exception thrown by "checkRnippHttpError"', async () => {
       // setup
-      const lastValueMock = mocked(lastValueFrom);
+      const lastValueMock = jest.mocked(lastValueFrom);
       const axiosErrorMock = new Error('Nani ?');
       lastValueMock.mockRejectedValueOnce(axiosErrorMock);
       httpServiceMock.get.mockReturnValue(axiosResponseMock);

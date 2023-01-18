@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { RiAccountCircleFill as UserIcon } from 'react-icons/ri';
 
 import { Sizes } from '../../enums';
@@ -8,10 +7,6 @@ import { BadgeComponent } from './badge.component';
 jest.mock('react-icons/ri');
 
 describe('BadgeComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot with default value', () => {
     // when
     const { container } = render(<BadgeComponent label="label" />);
@@ -74,7 +69,7 @@ describe('BadgeComponent', () => {
 
   it('should have element <Icon /> if we define a custom icon and noIcon value set to false', () => {
     // given
-    mocked(UserIcon);
+    jest.mocked(UserIcon);
 
     // when
     render(<BadgeComponent icon={UserIcon} label="label" />);
@@ -85,7 +80,7 @@ describe('BadgeComponent', () => {
 
   it('should not have element <Icon /> even if we define a custom icon with noIcon value at true', () => {
     // given
-    mocked(UserIcon);
+    jest.mocked(UserIcon);
 
     // when
     render(<BadgeComponent noIcon icon={UserIcon} label="label" />);

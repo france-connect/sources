@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { ITrackingLog } from '@fc/tracking';
+import { TrackingLogInterface } from '@fc/tracking';
 
-export class ICoreTrackingLog extends ITrackingLog {
+export class ICoreTrackingLog extends TrackingLogInterface {
   readonly interactionId: string;
   readonly step: string;
   /** Service provider informations */

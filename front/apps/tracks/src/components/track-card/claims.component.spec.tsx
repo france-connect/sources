@@ -40,10 +40,6 @@ describe('ConnexionComponent', () => {
 
   const eventTypeMock = 'eventTypeMockValue';
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match snapshot, with default props', () => {
     // when
     const { container } = render(

@@ -4,10 +4,6 @@ import { render } from '@testing-library/react';
 import { LayoutHeaderToolsAccountComponent } from './layout-header-tools-account.component';
 
 describe('LayoutHeaderToolsAccountComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot, when isMobile true', () => {
     // when
     const { container } = render(

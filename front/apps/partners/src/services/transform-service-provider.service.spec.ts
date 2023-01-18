@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { t } from '@fc/i18n';
 
 import { transformServiceProvider } from './transform-service-provider.service';
@@ -16,10 +14,6 @@ describe('transformServiceProvider', () => {
     status: 'status',
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should return a ServiceProviderItem object', () => {
     // given
     const expectedResult = {
@@ -29,7 +23,7 @@ describe('transformServiceProvider', () => {
       status: 'chaine traduite',
     };
 
-    mocked(t).mockReturnValue('chaine traduite');
+    jest.mocked(t).mockReturnValue('chaine traduite');
 
     // when
     const result = transformServiceProvider(serviceProviderItemMock);
@@ -87,7 +81,7 @@ describe('transformServiceProvider', () => {
 
   it('should throw an error if t throw string', () => {
     // given
-    mocked(t).mockImplementationOnce(() => {
+    jest.mocked(t).mockImplementationOnce(() => {
       throw undefined as unknown as Error;
     });
 

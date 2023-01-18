@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
 
 import { AgentConnectSearchContext } from '@fc/agent-connect-search';
@@ -21,10 +20,6 @@ describe('UserHistoryCardContentComponent', () => {
     setSearchTerm: jest.fn(),
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should have called useMediaQuery with tablet responsive query', () => {
     // then
     render(<UserHistoryCardContentComponent identityProvider={expect.any(Object)} />);
@@ -35,7 +30,7 @@ describe('UserHistoryCardContentComponent', () => {
 
   it('should match the snapshot for a tablet viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(

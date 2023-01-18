@@ -79,7 +79,12 @@ export class CsvService<T> implements RepositoryInterface<T> {
   async find(filters: { [key: string]: string }): Promise<T | null> {
     const criteria = Object.entries(filters);
 
-    const result = this.collection.find((row) => {
+    /*
+     * @Todo #1195 [eIDAS] DTO trop strict sur le CSV COG
+     * Profiter de ce ticket pour typer correctement cette fonction et retirer le any
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1195
+     */
+    const result = this.collection.find((row: any) => {
       const search = ([key, value]) => key in row && row[key] == value;
       return criteria.every(search);
     });

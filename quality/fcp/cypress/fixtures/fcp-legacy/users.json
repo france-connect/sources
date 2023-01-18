@@ -105,5 +105,47 @@
       "birthcountry": "99100",
       "birthplace": "93051"
     }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "présumé né jour"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "étranger_présumé_né_jour",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean",
+      "family_name": "FLEURET",
+      "birthdate": "1992-11-00",
+      "birthcountry": "99217",
+      "email": "jean-fleuret@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "présumé né jour et mois"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "étranger_présumé_né_jour_et_mois",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean",
+      "family_name": "TARGE",
+      "birthdate": "1992-00-00",
+      "birthcountry": "99217",
+      "email": "jean-targe@yopmail.com"
+    }
   }
 ]

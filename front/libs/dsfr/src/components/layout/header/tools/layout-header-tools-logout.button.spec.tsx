@@ -3,10 +3,6 @@ import { render } from '@testing-library/react';
 import { LayoutHeaderToolsLogoutButton } from './layout-header-tools-logout.button';
 
 describe('LayoutHeaderToolsLogoutButton', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot, when isMobile is true', () => {
     // when
     const { container } = render(

@@ -26,10 +26,6 @@ describe('LayoutHeaderMenuComponent', () => {
     },
   ];
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // given
     const onCloseMock = jest.fn();

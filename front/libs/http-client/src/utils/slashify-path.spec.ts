@@ -2,10 +2,6 @@ import { InvalidProtocol } from '../errors';
 import { slashifyPath } from './slashify-path';
 
 describe('slashifyPath', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should return the endpoint, when endpoint is an absolute url', () => {
     // when
     const result = slashifyPath('http://any-url.mock');

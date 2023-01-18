@@ -6,7 +6,6 @@ import { Loggable, Trackable } from '@fc/exceptions';
 import { LoggerService } from '@fc/logger-legacy';
 import { TrackingService } from '@fc/tracking';
 
-import { TrackableEvent } from '../events';
 import { FcException } from '../exceptions';
 import { FcExceptionFilter } from './fc.exception-filter';
 
@@ -23,7 +22,7 @@ describe('FcExceptionFilter', () => {
   } as unknown as LoggerService;
 
   const trackingServiceMock = {
-    track: jest.fn(),
+    trackExceptionIfNeeded: jest.fn(),
   } as unknown as TrackingService;
 
   const resMock: any = {};
@@ -213,36 +212,7 @@ describe('FcExceptionFilter', () => {
       expect(resMock.render).not.toHaveBeenCalled();
     });
 
-    it('should not call tracking service if isTrackable is not defined', () => {
-      // Given
-      const exception = new FcException('message text');
-      exception.scope = STUB_ERROR_SCOPE;
-      exception.code = STUB_ERROR_CODE;
-      // When
-      exceptionFilter.catch(exception, argumentHostMock);
-      // Then
-      expect(trackingServiceMock.track).toHaveBeenCalledTimes(0);
-      expect(resMock.render).toHaveBeenCalled();
-    });
-
-    it('should not call tracking service if isTrackable is defined to false', () => {
-      // Given
-      const exception = new FcException('message text');
-      exception.scope = STUB_ERROR_SCOPE;
-      exception.code = STUB_ERROR_CODE;
-
-      const spy = jest.spyOn(Trackable, 'isTrackable');
-      spy.mockImplementationOnce(() => false);
-      // When
-      exceptionFilter.catch(exception, argumentHostMock);
-      // Then
-      expect(trackingServiceMock.track).toHaveBeenCalledTimes(0);
-      expect(resMock.render).toHaveBeenCalled();
-
-      spy.mockRestore();
-    });
-
-    it('should call tracking service if isTrackable is defined to true', () => {
+    it('should call `TrackingService.trackExceptionIfNeeded()`', () => {
       // Given
       const exception = new FcException('message text');
       exception.scope = STUB_ERROR_SCOPE;
@@ -253,11 +223,16 @@ describe('FcExceptionFilter', () => {
       // When
       exceptionFilter.catch(exception, argumentHostMock);
       // Then
-      expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
-      expect(trackingServiceMock.track).toHaveBeenCalledWith(TrackableEvent, {
-        req: expect.any(Object),
-        exception: expect.any(FcException),
-      });
+      expect(trackingServiceMock.trackExceptionIfNeeded).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(trackingServiceMock.trackExceptionIfNeeded).toHaveBeenCalledWith(
+        exception,
+        {
+          req: reqMock,
+          exception,
+        },
+      );
       expect(resMock.render).toHaveBeenCalled();
 
       spy.mockRestore();

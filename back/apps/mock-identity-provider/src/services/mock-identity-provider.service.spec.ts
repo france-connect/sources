@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
@@ -143,7 +141,7 @@ describe('MockIdentityProviderService', () => {
       configServiceMock.get.mockReturnValueOnce({
         citizenDatabasePath: citizenDatabasePathMock,
       });
-      mocked(getFilesPathsFromDir).mockReturnValueOnce(pathsMock);
+      jest.mocked(getFilesPathsFromDir).mockReturnValueOnce(pathsMock);
 
       loadDatabaseMock = service['loadDatabase'] = jest.fn();
       loadDatabaseMock
@@ -166,8 +164,8 @@ describe('MockIdentityProviderService', () => {
       await service['loadDatabases']();
 
       // Then
-      expect(mocked(getFilesPathsFromDir)).toHaveBeenCalledTimes(1);
-      expect(mocked(getFilesPathsFromDir)).toHaveBeenCalledWith(
+      expect(jest.mocked(getFilesPathsFromDir)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(getFilesPathsFromDir)).toHaveBeenCalledWith(
         citizenDatabasePathMock,
       );
     });
@@ -204,13 +202,16 @@ describe('MockIdentityProviderService', () => {
 
     it('should call parseCsv() with path, trim, ignoreEmpty and headers', async () => {
       // Given
-      mocked(parseCsv).mockResolvedValueOnce(csvMock);
+      jest.mocked(parseCsv).mockResolvedValueOnce(csvMock);
       // When
       await service['loadDatabase'](pathMock);
 
       // Then
-      expect(mocked(parseCsv)).toHaveBeenCalledTimes(1);
-      expect(mocked(parseCsv)).toHaveBeenCalledWith(pathMock, fastCsvOptsMock);
+      expect(jest.mocked(parseCsv)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(parseCsv)).toHaveBeenCalledWith(
+        pathMock,
+        fastCsvOptsMock,
+      );
     });
 
     it('should filter out the empty keys in CSV entry', async () => {
@@ -223,7 +224,7 @@ describe('MockIdentityProviderService', () => {
         { property1: '1', property2: '2', property4: '4' },
         { property2: '6', property3: '7', property4: '8' },
       ];
-      mocked(parseCsv).mockResolvedValueOnce(csvWithEmptyMock);
+      jest.mocked(parseCsv).mockResolvedValueOnce(csvWithEmptyMock);
 
       // When
       const database = await service['loadDatabase'](pathMock);
@@ -235,7 +236,7 @@ describe('MockIdentityProviderService', () => {
     it('should log error when something turns bad', async () => {
       // Given
       const errorMock = new Error();
-      mocked(parseCsv).mockRejectedValueOnce(errorMock);
+      jest.mocked(parseCsv).mockRejectedValueOnce(errorMock);
 
       // When / Then
       await expect(service['loadDatabase'](pathMock)).rejects.toThrow(

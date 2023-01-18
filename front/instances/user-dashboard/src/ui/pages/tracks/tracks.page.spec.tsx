@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 
 import { TracksListComponent } from '@fc/tracks';
 
@@ -10,12 +9,8 @@ jest.mock('@fc/tracks');
 jest.mock('./introduction');
 
 describe('TracksPage', () => {
-  const TracksListComponentMock = mocked(TracksListComponent);
+  const TracksListComponentMock = jest.mocked(TracksListComponent);
   TracksListComponentMock.mockReturnValue(<div>FooBar TracksListComponent</div>);
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   it('should match the snapshot', () => {
     // when

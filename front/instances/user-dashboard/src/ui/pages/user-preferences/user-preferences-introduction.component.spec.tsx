@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
 
 import { UserPreferencesIntroductionComponent } from './user-preferences-introduction.component';
@@ -7,13 +6,9 @@ import { UserPreferencesIntroductionComponent } from './user-preferences-introdu
 jest.mock('react-responsive');
 
 describe('UserPreferencesIntroductionComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match snapshot on mobile', () => {
     // Given
-    mocked(useMediaQuery).mockReturnValueOnce(false).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false).mockReturnValueOnce(false);
 
     // When
     const { container } = render(<UserPreferencesIntroductionComponent />);
@@ -24,7 +19,7 @@ describe('UserPreferencesIntroductionComponent', () => {
 
   it('should match snapshot on tablet', () => {
     // Given
-    mocked(useMediaQuery).mockReturnValueOnce(true).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true).mockReturnValueOnce(false);
 
     // When
     const { container } = render(<UserPreferencesIntroductionComponent />);
@@ -35,7 +30,7 @@ describe('UserPreferencesIntroductionComponent', () => {
 
   it('should match snapshot on desktop', () => {
     // Given
-    mocked(useMediaQuery).mockReturnValueOnce(true).mockReturnValueOnce(true);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true).mockReturnValueOnce(true);
 
     // When
     const { container } = render(<UserPreferencesIntroductionComponent />);

@@ -23,10 +23,6 @@ describe('LayoutFooterBottomLinksComponent', () => {
     },
   ];
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // when
     const { container } = render(<LayoutFooterBottomLinksComponent items={itemsMock} />);

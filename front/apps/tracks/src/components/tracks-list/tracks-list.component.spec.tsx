@@ -1,5 +1,4 @@
 import { act, render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { DateTime } from 'luxon';
 import React from 'react';
 import * as ReactRouterDom from 'react-router-dom';
@@ -58,10 +57,9 @@ const tracksMock = {
 };
 
 describe('TracksListComponent', () => {
-  const usePaginatedTracksMock = mocked(usePaginatedTracks);
+  const usePaginatedTracksMock = jest.mocked(usePaginatedTracks);
 
   beforeEach(() => {
-    jest.clearAllMocks();
     usePaginatedTracksMock.mockReturnValue({ submitErrors: undefined, tracks: tracksMock });
   });
 
@@ -222,7 +220,7 @@ describe('TracksListComponent', () => {
     const navigateFuncMock = jest.fn();
     const useCallbackMock = jest.spyOn(React, 'useCallback').mockImplementation(() => jest.fn());
     jest.spyOn(ReactRouterDom, 'useNavigate').mockImplementationOnce(() => navigateFuncMock);
-    mocked(PaginationComponent).mockImplementation(() => (
+    jest.mocked(PaginationComponent).mockImplementation(() => (
       <button type="button" onClick={() => useCallbackMock}>
         foo
       </button>

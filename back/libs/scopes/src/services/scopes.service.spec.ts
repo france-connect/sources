@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { unique } from '@fc/common';
@@ -11,7 +9,7 @@ jest.mock('@fc/common');
 
 describe('ScopesService', () => {
   let service: ScopesService;
-  const uniqueMock = mocked(unique);
+  const uniqueMock = jest.mocked(unique);
 
   const scopesIndexServiceMock = {
     getClaim: jest.fn(),

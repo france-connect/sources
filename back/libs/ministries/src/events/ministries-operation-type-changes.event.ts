@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+
+// Declarative code
 import { IEvent } from '@nestjs/cqrs';
 
 /** @TODO #447 Voir les nommages des Event/handler qui écoutent les modifications de mongo

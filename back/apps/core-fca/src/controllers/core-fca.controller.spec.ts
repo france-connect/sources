@@ -1,11 +1,10 @@
-import { mocked } from 'jest-mock';
 import { encode } from 'querystring';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { CoreMissingIdentityException, CoreService } from '@fc/core';
+import { CoreMissingIdentityException } from '@fc/core';
 import { CryptographyService } from '@fc/cryptography';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
@@ -22,12 +21,12 @@ import {
   SessionBadFormatException,
   SessionCsrfService,
   SessionNotFoundException,
-  SessionService,
 } from '@fc/session';
+import { TrackingService } from '@fc/tracking';
 
 import { OidcIdentityDto } from '../dto';
 import { CoreFcaInvalidIdentityException } from '../exceptions';
-import { CoreFcaService } from '../services';
+import { CoreFcaService, CoreService } from '../services';
 import { CoreFcaController } from './core-fca.controller';
 
 jest.mock('@fc/common', () => ({
@@ -165,11 +164,14 @@ describe('CoreFcaController', () => {
     spName: spNameMock,
   };
 
-  const sessionServieMock: SessionService = {
-    setAlias: jest.fn(),
-  } as unknown as SessionService;
+  const trackingServiceMock: TrackingService = {
+    track: jest.fn(),
+    TrackedEventsMap: {
+      IDP_CALLEDBACK: {},
+    },
+  } as unknown as TrackingService;
 
-  const queryStringEncodeMock = mocked(encode);
+  const queryStringEncodeMock = jest.mocked(encode);
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -185,8 +187,8 @@ describe('CoreFcaController', () => {
         CryptographyService,
         ConfigService,
         OidcClientService,
-        SessionService,
         SessionCsrfService,
+        TrackingService,
       ],
     })
       .overrideProvider(OidcProviderService)
@@ -209,8 +211,8 @@ describe('CoreFcaController', () => {
       .useValue(configServiceMock)
       .overrideProvider(OidcClientService)
       .useValue(oidcClientServiceMock)
-      .overrideProvider(SessionService)
-      .useValue(sessionServieMock)
+      .overrideProvider(TrackingService)
+      .useValue(trackingServiceMock)
       .overrideProvider(SessionCsrfService)
       .useValue(sessionCsrfServiceMock)
       .compile();
@@ -815,7 +817,7 @@ describe('CoreFcaController', () => {
   describe('validateIdentity()', () => {
     let validateDtoMock;
     beforeEach(() => {
-      validateDtoMock = mocked(validateDto);
+      validateDtoMock = jest.mocked(validateDto);
     });
 
     it('should succeed to validate identity', async () => {

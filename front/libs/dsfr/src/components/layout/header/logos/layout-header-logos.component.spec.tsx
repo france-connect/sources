@@ -7,10 +7,6 @@ jest.mock('../../../logos/logo-republique-francaise.component');
 jest.mock('./../../homepage-link/layout-homepage-link.component');
 
 describe('LayoutHeaderLogosComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // when
     const { container } = render(<LayoutHeaderLogosComponent title="any-title" />);

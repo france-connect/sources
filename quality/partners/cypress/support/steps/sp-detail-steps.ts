@@ -9,8 +9,11 @@ const spDetail = new SPDetailPage();
 Then(
   /^je suis redirigé vers la page détail d'un fournisseur de service en (mode consultation|mode édition)$/,
   function (mode) {
-    // TODO Add a better assertion once the 2 modes differ
-    cy.contains(mode, { matchCase: false });
+    if (mode === 'mode consultation') {
+      spDetail.checkIsViewMode();
+    } else {
+      spDetail.checkIsEditMode();
+    }
   },
 );
 

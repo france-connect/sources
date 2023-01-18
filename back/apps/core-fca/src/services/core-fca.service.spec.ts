@@ -1,7 +1,6 @@
 import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { CoreService } from '@fc/core';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
@@ -16,12 +15,6 @@ describe('CoreFcaService', () => {
     setContext: jest.fn(),
     debug: jest.fn(),
     warn: jest.fn(),
-  };
-
-  const coreServiceMock = {
-    checkIfAccountIsBlocked: jest.fn(),
-    checkIfAcrIsValid: jest.fn(),
-    storeInteraction: jest.fn(),
   };
 
   const sessionServiceMock = {
@@ -76,15 +69,12 @@ describe('CoreFcaService', () => {
       providers: [
         CoreFcaService,
         LoggerService,
-        CoreService,
         IdentityProviderAdapterMongoService,
         SessionService,
       ],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(CoreService)
-      .useValue(coreServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
@@ -97,7 +87,6 @@ describe('CoreFcaService', () => {
     jest.resetAllMocks();
 
     sessionServiceMock.get.mockResolvedValue(sessionDataMock);
-    coreServiceMock.storeInteraction.mockResolvedValue({ spInteraction: {} });
     featureHandlerMock.mockReturnValueOnce(featureHandlerServiceMock);
     IdentityProviderMock.getById.mockResolvedValue(IdentityProviderResultMock);
   });

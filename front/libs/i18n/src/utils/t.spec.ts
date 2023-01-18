@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { I18nService } from '../services';
 import { t } from './t';
 
@@ -18,7 +16,7 @@ describe('t shorthand', () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
-    mocked(I18nService.instance).mockReturnValue(mockedService as unknown as I18nService);
+    jest.mocked(I18nService.instance).mockReturnValue(mockedService as unknown as I18nService);
     mockedService.translate.mockReturnValue(translateMockReturnValue);
   });
 

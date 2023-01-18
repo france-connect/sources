@@ -5,10 +5,6 @@ import { AgentConnectSearchContext } from '../agent-connect-search.context';
 import { useSearchResults } from './use-search-results.hook';
 
 describe('useSearchResults', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should return default value while user has not yet perform a search', () => {
     // given
     const props = {

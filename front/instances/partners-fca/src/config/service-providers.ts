@@ -4,5 +4,8 @@
 import { ServiceProvidersConfig } from '@fc/partners';
 
 export const ServiceProviders: ServiceProvidersConfig = {
-  endpoint: '/api/service-providers',
+  endpoints: {
+    serviceProviders: '/api/service-providers',
+    serviceProvidersConfigs: '/api/service-provider-configurations',
+  },
 };

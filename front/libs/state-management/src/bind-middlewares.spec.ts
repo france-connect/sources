@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import { applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
@@ -15,7 +14,7 @@ describe('bindMiddlewares', () => {
       // given
       const mockIsDevelopment = false;
       const mockMiddlewares = [jest.fn(), jest.fn()];
-      const mockApplyMiddleWares = mocked(applyMiddleware);
+      const mockApplyMiddleWares = jest.mocked(applyMiddleware);
 
       // when
       bindMiddlewares(mockMiddlewares, mockIsDevelopment);
@@ -29,7 +28,7 @@ describe('bindMiddlewares', () => {
       // given
       const mockIsDevelopment = false;
       const mockMiddlewares = [jest.fn(), jest.fn()];
-      const mockComposeWithDevTools = mocked(composeWithDevTools);
+      const mockComposeWithDevTools = jest.mocked(composeWithDevTools);
 
       // when
       bindMiddlewares(mockMiddlewares, mockIsDevelopment);
@@ -44,7 +43,7 @@ describe('bindMiddlewares', () => {
       // given
       const mockIsDevelopment = true;
       const mockMiddlewares = [jest.fn(), jest.fn()];
-      const mockComposeWithDevTools = mocked(composeWithDevTools);
+      const mockComposeWithDevTools = jest.mocked(composeWithDevTools);
       mockComposeWithDevTools.mockReturnValueOnce(jest.fn());
 
       // when

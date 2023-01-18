@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
 
 import { ErrorComponent } from './error.component';
@@ -11,10 +10,6 @@ const errorMock = {
 };
 
 describe('ErrorComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should have call useMediaQuery with params', () => {
     // when
     render(<ErrorComponent errors={errorMock} />);
@@ -26,7 +21,7 @@ describe('ErrorComponent', () => {
 
   it('should match the snapshot for a desktop viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(<ErrorComponent errors={errorMock} />);
@@ -37,7 +32,7 @@ describe('ErrorComponent', () => {
 
   it('should match the snapshot for a tablet viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
     // when
     const { container } = render(<ErrorComponent errors={errorMock} />);
 

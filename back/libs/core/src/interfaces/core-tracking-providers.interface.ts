@@ -3,6 +3,8 @@
 // Declarative code
 export interface ICoreTrackingProviders {
   readonly accountId: string;
+  readonly sessionId: string;
+  readonly interactionId: string;
 
   readonly spId: string;
   readonly spAcr: string;

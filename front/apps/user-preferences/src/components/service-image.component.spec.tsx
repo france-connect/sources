@@ -13,10 +13,6 @@ describe('ServiceImageComponent', () => {
     uid: 'uid-mock',
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // when
     const { container } = render(<ServiceImageComponent service={serviceMock} />);

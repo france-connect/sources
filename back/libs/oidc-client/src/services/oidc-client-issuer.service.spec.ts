@@ -12,8 +12,14 @@ import {
 import { OidcClientConfigService } from './oidc-client-config.service';
 import { OidcClientIssuerService } from './oidc-client-issuer.service';
 
+jest.mock('openid-client');
+
 describe('OidcClientIssuerService', () => {
   let service: OidcClientIssuerService;
+
+  const customMock = jest.mocked(custom);
+
+  customMock.setHttpOptionsDefaults = jest.fn();
 
   const loggerServiceMock = {
     setContext: jest.fn(),
@@ -99,7 +105,7 @@ describe('OidcClientIssuerService', () => {
 
   const idpMetadataMock = {
     jwks: [],
-    httpOtions: {},
+    httpOptions: {},
     providers: [
       {
         uid: 'idpUidMock',
@@ -147,6 +153,30 @@ describe('OidcClientIssuerService', () => {
   describe('constructor', () => {
     it('should be defined', () => {
       expect(service).toBeDefined();
+    });
+  });
+
+  describe('onModuleInit', () => {
+    it('should set httpOptions on client', async () => {
+      // When
+      await service.onModuleInit();
+
+      // Then
+      expect(customMock.setHttpOptionsDefaults).toHaveBeenCalledTimes(1);
+      expect(customMock.setHttpOptionsDefaults).toHaveBeenCalledWith(
+        idpMetadataMock.httpOptions,
+      );
+    });
+
+    it('should log', async () => {
+      // When
+      await service.onModuleInit();
+
+      // Then
+      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.trace).toHaveBeenCalledWith(
+        'Initializing oidc-client',
+      );
     });
   });
 
@@ -228,41 +258,6 @@ describe('OidcClientIssuerService', () => {
       const result = await service.getClient(issuerId);
       // Then
       expect(result).toBe(clientInstanceMock);
-    });
-
-    it('should set httpOptions on client', async () => {
-      // Given
-      const clientInstanceMock = {};
-      issuerMock.Client.mockReturnValue(clientInstanceMock);
-      const getHttpOptionsReturnValue = Symbol('getHttpOptionsReturnValue');
-      service['getHttpOptions'] = jest
-        .fn()
-        .mockReturnValue(getHttpOptionsReturnValue);
-      const options = {};
-      // When
-      const client = await service.getClient(issuerId);
-      const result = client[custom.http_options]({} as URL, options);
-      // Then
-      expect(result).toBe(getHttpOptionsReturnValue);
-    });
-  });
-
-  describe('getHttpOptions', () => {
-    it('should return fusion from config and input', () => {
-      // Given
-      const givenOptions = { auth: 'bar' };
-      const configOptions = { servername: 'buzz' };
-      // When
-      const result = service['getHttpOptions'](
-        configOptions,
-        {} as URL,
-        givenOptions,
-      );
-      // Then
-      expect(result).toEqual({
-        auth: 'bar',
-        servername: 'buzz',
-      });
     });
   });
 

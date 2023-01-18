@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { Link, matchPath } from 'react-router-dom';
 
 import { LayoutHeaderNavigationComponent } from './layout-header-navigation.component';
@@ -18,10 +17,6 @@ describe('LayoutHeaderNavigationComponent', () => {
       label: 'any-label-mock-2',
     },
   ];
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   it('should match the snapshot, with default props', () => {
     // when
@@ -75,7 +70,7 @@ describe('LayoutHeaderNavigationComponent', () => {
 
   it('should call the second Link with aria-current equal page', () => {
     // given
-    mocked(matchPath).mockReturnValueOnce(null).mockReturnValueOnce(expect.any(Object));
+    jest.mocked(matchPath).mockReturnValueOnce(null).mockReturnValueOnce(expect.any(Object));
 
     // when
     render(<LayoutHeaderNavigationComponent navigationItems={navigationItemsMock} />);

@@ -170,7 +170,13 @@
       "@fc/partner-service-provider": ["libs/partner-service-provider/src"],
       "@fc/partner-service-provider/*": ["libs/partner-service-provider/src/*"],
       "@fc/access-control": ["libs/access-control/src"],
-      "@fc/access-control/*": ["libs/access-control/src/*"]
+      "@fc/access-control/*": ["libs/access-control/src/*"],
+      "@fc/partner-service-provider-configuration": [
+        "libs/partner-service-provider-configuration/src"
+      ],
+      "@fc/partner-service-provider-configuration/*": [
+        "libs/partner-service-provider-configuration/src/*"
+      ]
     }
   },
   "files": ["global.d.ts"],

@@ -21,7 +21,6 @@ import { ConfigService } from '@fc/config';
 import {
   CoreMissingIdentityException,
   CoreRoutes,
-  CoreService,
   Interaction,
 } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
@@ -43,12 +42,12 @@ import {
   SessionBadFormatException,
   SessionCsrfService,
   SessionNotFoundException,
-  SessionService,
 } from '@fc/session';
+import { TrackingService } from '@fc/tracking';
 
 import { Core, OidcIdentityDto } from '../dto';
 import { CoreFcaInvalidIdentityException } from '../exceptions';
-import { CoreFcaService } from '../services';
+import { CoreFcaService, CoreService } from '../services';
 
 @Controller()
 export class CoreFcaController {
@@ -63,9 +62,9 @@ export class CoreFcaController {
     private readonly core: CoreFcaService,
     private readonly config: ConfigService,
     private readonly oidcClient: OidcClientService,
-    private readonly sessionService: SessionService,
     private readonly csrfService: SessionCsrfService,
     private readonly coreService: CoreService,
+    private readonly tracking: TrackingService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -362,6 +361,9 @@ export class CoreFcaController {
       throw new SessionNotFoundException('OidcClient');
     }
 
+    const { IDP_CALLEDBACK } = this.tracking.TrackedEventsMap;
+    this.tracking.track(IDP_CALLEDBACK, { req });
+
     const { idpId, idpNonce, idpState, interactionId, spId } = session;
 
     await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
@@ -385,6 +387,9 @@ export class CoreFcaController {
         extraParams,
       );
 
+    const { FC_REQUESTED_IDP_TOKEN } = this.tracking.TrackedEventsMap;
+    this.tracking.track(FC_REQUESTED_IDP_TOKEN, { req });
+
     const userInfoParams = {
       accessToken,
       idpId,
@@ -394,6 +399,9 @@ export class CoreFcaController {
       userInfoParams,
       req,
     );
+
+    const { FC_REQUESTED_IDP_USERINFO } = this.tracking.TrackedEventsMap;
+    this.tracking.track(FC_REQUESTED_IDP_USERINFO, { req });
 
     await this.validateIdentity(idpId, identity);
 

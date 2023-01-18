@@ -11,7 +11,6 @@ describe('ErrorBoundaryComponent', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
     // @NOTE by implementation ErrorBoundaryComponent is throwing errors
     consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
   });

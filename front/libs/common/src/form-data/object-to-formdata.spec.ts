@@ -24,10 +24,6 @@ describe('objectToFormData', () => {
     mockSymbol: Symbol('any symbol value'),
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should throw if argument is null', () => {
     // given
     const object = null as unknown as {};

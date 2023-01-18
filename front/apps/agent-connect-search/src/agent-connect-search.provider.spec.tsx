@@ -1,5 +1,4 @@
 import { fireEvent, render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import React from 'react';
 
 import { useApiGet } from '@fc/common';
@@ -40,10 +39,6 @@ const Wrapper = () => (
   </AgentConnectSearchProvider>
 );
 
-beforeEach(() => {
-  jest.clearAllMocks();
-});
-
 describe('AgentConnectSearchProvider', () => {
   it('should have called useApiGet with url', async () => {
     // when
@@ -80,7 +75,7 @@ describe('api has not yet been called', () => {
 describe('api has been called', () => {
   it('should have called AgentConnectSearchService initialize', async () => {
     // given
-    mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
+    jest.mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
 
     // when
     render(<Wrapper />);
@@ -96,7 +91,7 @@ describe('api has been called', () => {
 
   it('should have called AgentConnectSearchContext.Consumer with value only twice', async () => {
     // given
-    mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
+    jest.mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
 
     // when
     render(<Wrapper />);
@@ -135,7 +130,7 @@ describe('when user start a search', () => {
   describe('api has been called', () => {
     it('should call AgentConnectSearchService.search', async () => {
       // given
-      mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
+      jest.mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
 
       // when
       const { getByTestId } = render(<Wrapper />);
@@ -150,7 +145,7 @@ describe('when user start a search', () => {
 
     it('should call AgentConnectSearchService.search with empty string', async () => {
       // given
-      mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
+      jest.mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
 
       // when
       const { getByTestId } = render(<Wrapper />);
@@ -165,8 +160,8 @@ describe('when user start a search', () => {
 
     it('should have update the consumer with values', async () => {
       // given
-      mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
-      mocked(AgentConnectSearchService.search).mockReturnValueOnce([searchResults]);
+      jest.mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
+      jest.mocked(AgentConnectSearchService.search).mockReturnValueOnce([searchResults]);
 
       // when
       const { getByTestId } = render(<Wrapper />);

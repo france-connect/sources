@@ -47,11 +47,6 @@ describe('tracksGroupComponent', () => {
   };
   const allTracks = [oldestTrack, newestTrack];
 
-  afterEach(() => {
-    jest.clearAllMocks();
-    jest.restoreAllMocks();
-  });
-
   it('should render the defined label', () => {
     // given
     const { getByText, unmount } = render(

@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ItemsCounterComponent should match snapshot 1`] = `
+<div>
+  <div
+    class="any-classname-mock"
+  >
+    <h6>
+      1
+      <span
+        class="fr-mx-1v"
+      >
+        ItemsCounterComponent.separator
+      </span>
+      2
+    </h6>
+  </div>
+</div>
+`;

@@ -1,5 +1,6 @@
 {
   "name": "{{TEST_ENV}}",
   "partnersUrl": "https://partners-fca.{{TEST_ENV}}.dev-franceconnect.fr",
-  "platformName": "Espace partenaire"
+  "platformName": "Espace partenaire",
+  "partnersBackAppId": "partners-fca-back"
 }

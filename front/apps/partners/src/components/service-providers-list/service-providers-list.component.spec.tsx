@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 
 import { AlertComponent, AlertTypes } from '@fc/dsfr';
 
@@ -83,9 +82,8 @@ describe('ServiceProvidersListComponent', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
-
-    mocked(transformServiceProvidersList)
+    jest
+      .mocked(transformServiceProvidersList)
       .mockReturnValueOnce({
         ...serviceProviderMock,
         datapassId: 'Datapass N°1234',

@@ -57,3 +57,10 @@ items:
     lastname: 'Petrussen'
     createdAt: '2022-02-22'
     updatedAt: '2022-05-02'
+  user-sp-config:
+    email: 'user-sp-config@partner.fr'
+    password: '123'
+    firstname: 'Alain'
+    lastname: 'Tuission'
+    createdAt: '2022-02-22'
+    updatedAt: '2022-05-02'

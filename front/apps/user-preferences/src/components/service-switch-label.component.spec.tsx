@@ -3,10 +3,6 @@ import { render } from '@testing-library/react';
 import { ServiceSwitchLabelComponent } from './service-switch-label.component';
 
 describe('ServiceSwitchLabelComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should render the label when switch is disabled', () => {
     // when
     const { getByText } = render(

@@ -2,18 +2,12 @@ import { Injectable } from '@nestjs/common';
 
 import { AccountBlockedException, AccountService } from '@fc/account';
 import { RequiredExcept } from '@fc/common';
-import { CoreService } from '@fc/core';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { FeatureHandler } from '@fc/feature-handler';
 import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
-import {
-  RnippPivotIdentity,
-  RnippReceivedValidEvent,
-  RnippRequestedEvent,
-  RnippService,
-} from '@fc/rnipp';
+import { RnippPivotIdentity, RnippService } from '@fc/rnipp';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { TrackingService } from '@fc/tracking';
 
@@ -21,6 +15,7 @@ import {
   IVerifyFeatureHandler,
   IVerifyFeatureHandlerHandleArgument,
 } from '../../interfaces';
+import { CoreService } from '../../services';
 
 @Injectable()
 @FeatureHandler('core-fcp-default-verify')
@@ -164,9 +159,12 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     >,
     trackingContext: any,
   ): Promise<RnippPivotIdentity> {
-    this.tracking.track(RnippRequestedEvent, trackingContext);
+    const { FC_REQUESTED_RNIPP, FC_RECEIVED_VALID_RNIPP } =
+      this.tracking.TrackedEventsMap;
+
+    this.tracking.track(FC_REQUESTED_RNIPP, trackingContext);
     const rnippIdentity = await this.rnipp.check(idpIdentity);
-    this.tracking.track(RnippReceivedValidEvent, trackingContext);
+    this.tracking.track(FC_RECEIVED_VALID_RNIPP, trackingContext);
 
     this.logger.trace({ rnippIdentity });
 

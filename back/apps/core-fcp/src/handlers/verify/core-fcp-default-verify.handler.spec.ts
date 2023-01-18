@@ -3,20 +3,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AccountBlockedException, AccountService } from '@fc/account';
 import { RequiredExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { CoreService } from '@fc/core';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
-import {
-  RnippPivotIdentity,
-  RnippReceivedValidEvent,
-  RnippRequestedEvent,
-  RnippService,
-} from '@fc/rnipp';
+import { RnippPivotIdentity, RnippService } from '@fc/rnipp';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { CoreService } from '../../services';
 import { CoreFcpDefaultVerifyHandler } from './core-fcp-default-verify.handler';
 
 describe('CoreFcpDefaultVerifyHandler', () => {
@@ -77,6 +72,10 @@ describe('CoreFcpDefaultVerifyHandler', () => {
 
   const trackingMock = {
     track: jest.fn(),
+    TrackedEventsMap: {
+      FC_REQUESTED_RNIPP: {},
+      FC_RECEIVED_VALID_RNIPP: {},
+    },
   };
 
   const accountIdMock = 'accountIdMock value';
@@ -431,11 +430,11 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       // Then
       expect(trackingMock.track).toHaveBeenCalledTimes(2);
       expect(trackingMock.track).toHaveBeenCalledWith(
-        RnippRequestedEvent,
+        trackingMock.TrackedEventsMap.FC_REQUESTED_RNIPP,
         expect.any(Object),
       );
       expect(trackingMock.track).toHaveBeenCalledWith(
-        RnippReceivedValidEvent,
+        trackingMock.TrackedEventsMap.FC_RECEIVED_VALID_RNIPP,
         expect.any(Object),
       );
     });
@@ -451,11 +450,11 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       // Then
       expect(trackingMock.track).toHaveBeenCalledTimes(2);
       expect(trackingMock.track).toHaveBeenCalledWith(
-        RnippRequestedEvent,
+        trackingMock.TrackedEventsMap.FC_REQUESTED_RNIPP,
         expectedEventStruct,
       );
       expect(trackingMock.track).toHaveBeenCalledWith(
-        RnippReceivedValidEvent,
+        trackingMock.TrackedEventsMap.FC_RECEIVED_VALID_RNIPP,
         expectedEventStruct,
       );
     });

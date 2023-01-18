@@ -29,10 +29,6 @@ const routes = [
 ];
 */
 describe('ApplicationLayout', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match snapshot', () => {
     // when
     const { container } = renderWithRouter(<LayoutComponent.ApplicationLayout />);

@@ -7,7 +7,7 @@ import { EnhancedTrack, IRichClaim } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';
-import { MISSING_SP_LABEL_VALUE, TrackCardComponent } from './track-card.component';
+import { TrackCardComponent } from './track-card.component';
 
 jest.mock('./card-badge.component');
 jest.mock('./card-content.component');
@@ -57,10 +57,6 @@ describe('TrackCardComponent', () => {
   };
 
   describe('Initial component render', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-    });
-
     it('should match snapshot, with default props', () => {
       // when
       const { container } = render(<TrackCardComponent options={options} track={track} />);
@@ -155,6 +151,8 @@ describe('TrackCardComponent', () => {
     });
 
     it('should have called card header component with default spLabel', () => {
+      render(<TrackCardComponent options={options} track={track} />);
+
       // then
       expect(TrackCardHeaderComponent).toHaveBeenCalled();
       expect(TrackCardHeaderComponent).toHaveBeenCalledWith(
@@ -162,7 +160,7 @@ describe('TrackCardComponent', () => {
           datetime: track.datetime,
           opened: false,
           options,
-          serviceProviderLabel: MISSING_SP_LABEL_VALUE,
+          serviceProviderLabel: track.spLabel,
         },
         {},
       );

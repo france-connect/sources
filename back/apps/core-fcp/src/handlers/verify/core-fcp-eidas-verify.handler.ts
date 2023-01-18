@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { CoreService } from '@fc/core';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
 import { FeatureHandler } from '@fc/feature-handler';
 import { LoggerService } from '@fc/logger-legacy';
@@ -11,6 +10,7 @@ import {
   IVerifyFeatureHandler,
   IVerifyFeatureHandlerHandleArgument,
 } from '../../interfaces';
+import { CoreService } from '../../services';
 
 @Injectable()
 @FeatureHandler('core-fcp-eidas-verify')

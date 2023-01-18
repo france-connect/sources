@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
@@ -12,14 +11,10 @@ jest.mock('react-router-dom');
 
 describe('AuthedRoute', () => {
   // given
-  const outletMock = mocked(Outlet);
-  const navigateMock = mocked(Navigate);
-  const useLocationMock = mocked(useLocation);
+  const outletMock = jest.mocked(Outlet);
+  const navigateMock = jest.mocked(Navigate);
+  const useLocationMock = jest.mocked(useLocation);
   const useContextMock = jest.spyOn(React, 'useContext');
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   it('should call React.useContext with AccountContext as parameter', () => {
     // when

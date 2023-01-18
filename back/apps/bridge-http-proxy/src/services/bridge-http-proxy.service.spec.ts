@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import { lastValueFrom } from 'rxjs';
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -89,8 +88,8 @@ describe('BridgeHttpProxyService', () => {
       requestTimeout: 6000,
     });
 
-    lastValueMock = mocked(lastValueFrom);
-    validateDtoMock = mocked(validateDto, true);
+    lastValueMock = jest.mocked(lastValueFrom);
+    validateDtoMock = jest.mocked(validateDto, true);
   });
 
   it('should be defined', () => {

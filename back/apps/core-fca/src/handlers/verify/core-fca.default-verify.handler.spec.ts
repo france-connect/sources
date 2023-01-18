@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AccountBlockedException } from '@fc/account';
-import { CoreService } from '@fc/core';
 import { CryptographyFcaService } from '@fc/cryptography-fca';
 import { LoggerService } from '@fc/logger-legacy';
 import { SessionService } from '@fc/session';
 
+import { CoreService } from '../../services';
 import { CoreFcaDefaultVerifyHandler } from './core-fca.default-verify.handler';
 
 describe('CoreFcaDefaultVerifyHandler', () => {

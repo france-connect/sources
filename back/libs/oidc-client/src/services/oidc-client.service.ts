@@ -6,10 +6,9 @@ import { Injectable } from '@nestjs/common';
 import { validateDto } from '@fc/common';
 import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
-import { IEventContext, TrackingService } from '@fc/tracking';
+import { TrackedEventContextInterface } from '@fc/tracking';
 
 import { MinIdentityDto, TokenResultDto } from '../dto';
-import { OidcClientTokenEvent, OidcClientUserinfoEvent } from '../events';
 import { OidcClientUserinfosFailedException } from '../exceptions';
 import {
   ExtraTokenParams,
@@ -28,7 +27,6 @@ const DTO_OPTIONS: ValidatorOptions = {
 export class OidcClientService {
   constructor(
     private readonly logger: LoggerService,
-    private readonly tracking: TrackingService,
     public readonly utils: OidcClientUtilsService,
   ) {
     this.logger.setContext(this.constructor.name);
@@ -37,7 +35,7 @@ export class OidcClientService {
   async getTokenFromProvider(
     idpId: string,
     params: TokenParams,
-    context: IEventContext,
+    context: TrackedEventContextInterface,
     extraParams?: ExtraTokenParams,
   ): Promise<TokenResults> {
     /**
@@ -54,8 +52,6 @@ export class OidcClientService {
       params,
       extraParams,
     );
-
-    this.tracking.track(OidcClientTokenEvent, context);
 
     const { access_token: accessToken, id_token: idToken } = tokenSet;
     const { acr, amr } = tokenSet.claims();
@@ -101,7 +97,7 @@ export class OidcClientService {
 
   async getUserInfosFromProvider(
     { accessToken, idpId }: UserInfosParams,
-    context: IEventContext,
+    context: TrackedEventContextInterface,
   ): Promise<IOidcIdentity> {
     // OIDC: call idp's /userinfo endpoint
     let identity: IOidcIdentity;
@@ -127,8 +123,6 @@ export class OidcClientService {
         identity,
       },
     });
-
-    this.tracking.track(OidcClientUserinfoEvent, context);
 
     const errors = await validateDto(
       identity,

@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import { lastValueFrom } from 'rxjs';
 
 import { HttpService } from '@nestjs/axios';
@@ -27,9 +26,9 @@ jest.mock('rxjs');
 describe('DataProviderCoreAuthService', () => {
   let service: DataProviderCoreAuthService;
 
-  const validateDtoMock = mocked(validateDto);
+  const validateDtoMock = jest.mocked(validateDto);
 
-  const lastValueFromMock = mocked(lastValueFrom);
+  const lastValueFromMock = jest.mocked(lastValueFrom);
 
   const checkTokenResponseMock = {
     scope: ['configuredScopeMockValue'],

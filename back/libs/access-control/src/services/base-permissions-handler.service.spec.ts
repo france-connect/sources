@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { ExecutionContext } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -53,9 +51,9 @@ describe('BaseRoleHandlerService', () => {
 
     it('should extract permissions from metadata', () => {
       // Given
-      mocked(RequirePermission.get).mockReturnValueOnce(
-        controllerPermissionsMock,
-      );
+      jest
+        .mocked(RequirePermission.get)
+        .mockReturnValueOnce(controllerPermissionsMock);
       // When
       service.checkAllPermissions(contextMock);
 
@@ -69,7 +67,7 @@ describe('BaseRoleHandlerService', () => {
 
     it('should return true if no role was required.', () => {
       // Given
-      mocked(RequirePermission.get).mockReturnValueOnce([]);
+      jest.mocked(RequirePermission.get).mockReturnValueOnce([]);
       checkRolesMock.mockReturnValueOnce(false);
 
       // When
@@ -82,9 +80,9 @@ describe('BaseRoleHandlerService', () => {
 
     it('should match role based controller role and context', () => {
       // Given
-      mocked(RequirePermission.get).mockReturnValueOnce(
-        controllerPermissionsMock,
-      );
+      jest
+        .mocked(RequirePermission.get)
+        .mockReturnValueOnce(controllerPermissionsMock);
 
       checkRolesMock.mockReturnValueOnce(true);
 
@@ -102,9 +100,9 @@ describe('BaseRoleHandlerService', () => {
 
     it('should not match role if matching function failed', () => {
       // Given
-      mocked(RequirePermission.get).mockReturnValueOnce(
-        controllerPermissionsMock,
-      );
+      jest
+        .mocked(RequirePermission.get)
+        .mockReturnValueOnce(controllerPermissionsMock);
       checkRolesMock.mockReturnValueOnce(false);
 
       // When
@@ -178,8 +176,8 @@ describe('BaseRoleHandlerService', () => {
     };
 
     beforeEach(() => {
-      mocked(httpArgMock).getRequest.mockReturnValueOnce(reqMock);
-      mocked(ctxMock).switchToHttp.mockReturnValueOnce(httpArgMock);
+      jest.mocked(httpArgMock).getRequest.mockReturnValueOnce(reqMock);
+      jest.mocked(ctxMock).switchToHttp.mockReturnValueOnce(httpArgMock);
     });
 
     it('should retrieve request from context', () => {

@@ -2,12 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { OidcSession } from '@fc/oidc';
-import {
-  ISessionBoundContext,
-  SessionNotFoundException,
-  SessionService,
-} from '@fc/session';
-import { IEventContext } from '@fc/tracking';
+import { ISessionBoundContext, SessionService } from '@fc/session';
 
 import { CoreMissingContextException } from '../exceptions';
 import { ICoreTrackingContext } from '../interfaces';
@@ -70,6 +65,8 @@ describe('CoreTrackingService', () => {
 
   const sessionDataMock: OidcSession = {
     accountId: 'accountId Mock Value',
+    sessionId: sessionIdMock,
+    interactionId: interactionIdMock,
 
     spId: 'some spId',
     spName: 'some spName',
@@ -106,29 +103,11 @@ describe('CoreTrackingService', () => {
   });
 
   describe('buildLog()', () => {
-    let extractContextMock;
-    let getDataFromContextMock;
-    let getDataFromSessionMock;
-
     beforeEach(() => {
-      extractContextMock = jest.spyOn<CoreTrackingService, any>(
-        service,
-        'extractContext',
-      );
-
-      getDataFromContextMock = jest.spyOn<CoreTrackingService, any>(
-        service,
-        'getDataFromContext',
-      );
-
-      getDataFromSessionMock = jest.spyOn<CoreTrackingService, any>(
-        service,
-        'getDataFromSession',
-      );
-
-      extractContextMock.mockResolvedValueOnce(extractedValueMock);
-      getDataFromContextMock.mockReturnValueOnce();
-      getDataFromSessionMock.mockResolvedValueOnce(sessionDataMock);
+      service['extractContext'] = jest.fn().mockReturnValue(extractedValueMock);
+      service['getDataFromSession'] = jest
+        .fn()
+        .mockResolvedValue(sessionDataMock);
     });
 
     it('should call extractContext with req property of context param', async () => {
@@ -138,32 +117,6 @@ describe('CoreTrackingService', () => {
       // Then
       expect(service['extractContext']).toHaveBeenCalledTimes(1);
       expect(service['extractContext']).toHaveBeenCalledWith(contextMock);
-    });
-
-    it('should call service.getDataFromContext if event is FC_AUTHORIZE_INITIATED', async () => {
-      // Given
-      // When
-      await service.buildLog(
-        service.EventsMap.FC_AUTHORIZE_INITIATED,
-        contextMock,
-      );
-      // Then
-      expect(service['getDataFromContext']).toHaveBeenCalledTimes(1);
-      expect(service['getDataFromContext']).toHaveBeenCalledWith(contextMock);
-      expect(service['getDataFromSession']).toHaveBeenCalledTimes(0);
-    });
-
-    it('should call service.getDataFromContext if event is not FC_AUTHORIZE_INITIATED', async () => {
-      // Given
-      // When
-      await service.buildLog(
-        service.EventsMap.FC_SHOWED_IDP_CHOICE,
-        contextMock,
-      );
-      // Then
-      expect(service['getDataFromContext']).toHaveBeenCalledTimes(0);
-      expect(service['getDataFromSession']).toHaveBeenCalledTimes(1);
-      expect(service['getDataFromSession']).toHaveBeenCalledWith(sessionIdMock);
     });
 
     it('should return log message', async () => {
@@ -209,8 +162,9 @@ describe('CoreTrackingService', () => {
       };
       const extractedContextMockValue = { ...extractedValueMock };
       extractedContextMockValue.claims = undefined;
-      extractContextMock.mockReset();
-      extractContextMock.mockResolvedValueOnce(extractedContextMockValue);
+      service['extractContext'] = jest
+        .fn()
+        .mockResolvedValueOnce(extractedContextMockValue);
       // When
       const result = await service.buildLog(eventMock, contextMock);
       // Then
@@ -222,7 +176,6 @@ describe('CoreTrackingService', () => {
 
   describe('extractContext()', () => {
     let extractNetworkInfoFromHeadersMock;
-    let getInteractionIdFromContextMock;
 
     beforeEach(() => {
       extractNetworkInfoFromHeadersMock = jest.spyOn<CoreTrackingService, any>(
@@ -234,15 +187,9 @@ describe('CoreTrackingService', () => {
         port: sourcePortMock,
         originalAddresses: xForwardedForOriginalMock,
       });
-
-      getInteractionIdFromContextMock = jest.spyOn<CoreTrackingService, any>(
-        service,
-        'getInteractionIdFromContext',
-      );
-      getInteractionIdFromContextMock.mockReturnValueOnce(interactionIdMock);
     });
 
-    it('should return informations from context', async () => {
+    it('should return informations from context', () => {
       // Given
       const contextMock = {
         req: {
@@ -250,71 +197,28 @@ describe('CoreTrackingService', () => {
             _interaction: interactionIdMock,
           },
           sessionId: sessionIdMock,
-          claims: ['foo', 'bar'],
         },
+        claims: ['foo', 'bar'],
+        interactionId: interactionIdMock,
       };
       // When
-      const result = await service['extractContext'](contextMock);
+      const result = service['extractContext'](contextMock);
       // Then
       expect(result).toEqual(extractedValueMock);
     });
 
-    it('should throw if req is missing', async () => {
+    it('should throw if req is missing', () => {
       // Given
       const contextMock = { foo: 'bar' };
 
       // Then
-      await expect(() =>
-        service['extractContext'](contextMock),
-      ).rejects.toThrow(CoreMissingContextException);
-    });
-
-    it('should throw if interactionId is missing', async () => {
-      // Given
-      const errorMock = new Error('Unknown Error');
-      getInteractionIdFromContextMock.mockReset().mockImplementationOnce(() => {
-        throw errorMock;
-      });
-
-      const contextMock = { req: {} };
-      // Then
-      await expect(() =>
-        service['extractContext'](contextMock),
-      ).rejects.toThrow(errorMock);
-    });
-
-    it('should throw if `getInteractionIdFromContext` failed', async () => {
-      // Given
-      const errorMock = new Error('Unknown Error');
-      getInteractionIdFromContextMock.mockReset().mockImplementationOnce(() => {
-        throw errorMock;
-      });
-
-      const contextMock = {
-        req: {
-          cookies: {
-            _interaction: interactionIdMock,
-          },
-          sessionId: sessionIdMock,
-        },
-      };
-      // Then
-      await expect(() =>
-        service['extractContext'](contextMock),
-      ).rejects.toThrow(errorMock);
+      expect(() => service['extractContext'](contextMock)).toThrow(
+        CoreMissingContextException,
+      );
     });
   });
 
   describe('extractNetworkInfoFromHeaders', () => {
-    let checkForMissingHeadersMock;
-
-    beforeEach(() => {
-      checkForMissingHeadersMock = jest.spyOn<CoreTrackingService, any>(
-        service,
-        'checkForMissingHeaders',
-      );
-    });
-
     it('should throw if header is missing', () => {
       // Given
       const contextMock = { req: { fc: { interactionId: 'foo' } } };
@@ -322,29 +226,6 @@ describe('CoreTrackingService', () => {
       expect(() =>
         service['extractNetworkInfoFromHeaders'](contextMock),
       ).toThrow(CoreMissingContextException);
-    });
-
-    it('should call checkForMissingHeaders', () => {
-      // Given
-      const contextMock = {
-        req: {
-          headers: {
-            'x-forwarded-for': ipMock,
-            'x-forwarded-source-port': sourcePortMock,
-            'x-forwarded-for-original': xForwardedForOriginalMock,
-          },
-          fc: { interactionId: 'foo' },
-        },
-      };
-      // When
-      service['extractNetworkInfoFromHeaders'](contextMock);
-      // Then
-      expect(checkForMissingHeadersMock).toHaveBeenCalledTimes(1);
-      expect(checkForMissingHeadersMock).toHaveBeenCalledWith(
-        ipMock,
-        sourcePortMock,
-        xForwardedForOriginalMock,
-      );
     });
 
     it('should retrieve network information from the provided context.', () => {
@@ -370,130 +251,6 @@ describe('CoreTrackingService', () => {
     });
   });
 
-  describe('checkForMissingHeaders', () => {
-    it('should throw if ip is missing', () => {
-      expect(() =>
-        service['checkForMissingHeaders'](
-          undefined,
-          sourcePortMock,
-          xForwardedForOriginalMock,
-        ),
-      ).toThrow(CoreMissingContextException);
-    });
-
-    it('should throw if source port is missing', () => {
-      expect(() =>
-        service['checkForMissingHeaders'](
-          ipMock,
-          undefined,
-          xForwardedForOriginalMock,
-        ),
-      ).toThrow(CoreMissingContextException);
-    });
-
-    it('should throw if xForwardedForOriginal is missing', () => {
-      expect(() =>
-        service['checkForMissingHeaders'](ipMock, sourcePortMock, undefined),
-      ).toThrow(CoreMissingContextException);
-    });
-  });
-
-  describe('extractInteractionId', () => {
-    it('should retrieve an interactionId if provided in `req.fc.interactionId`', () => {
-      // Given
-      const eventContextMock: IEventContext = {
-        fc: { interactionId: interactionIdMock },
-      };
-
-      // When
-      const result: string = service['extractInteractionId'](eventContextMock);
-
-      // Then
-      expect(result).toBe(interactionIdMock);
-    });
-
-    it('should retrieve an interactionId if provided in `req.body.uid`', () => {
-      // Given
-      const eventContextMock: IEventContext = {
-        body: { uid: interactionIdMock },
-      };
-
-      // When
-      const result: string = service['extractInteractionId'](eventContextMock);
-
-      // Then
-      expect(result).toBe(interactionIdMock);
-    });
-
-    it('should retrieve an interactionId if provided in `req.params.uid`', () => {
-      // Given
-      const eventContextMock: IEventContext = {
-        params: { uid: interactionIdMock },
-      };
-
-      // When
-      const result: string = service['extractInteractionId'](eventContextMock);
-
-      // Then
-      expect(result).toBe(interactionIdMock);
-    });
-
-    it('should retrieve an interactionId if provided in `req.cookies._interaction`', () => {
-      // Given
-      const eventContextMock: IEventContext = {
-        cookies: { _interaction: interactionIdMock },
-      };
-
-      // When
-      const result: string = service['extractInteractionId'](eventContextMock);
-
-      // Then
-      expect(result).toBe(interactionIdMock);
-    });
-
-    it('should return [undefined] if interactionId is not found / context is corrupted', () => {
-      // Given
-      const eventContextMock: IEventContext = {};
-
-      // When
-      const result: string = service['extractInteractionId'](eventContextMock);
-
-      // Then
-      expect(result).toBe(undefined);
-    });
-  });
-
-  describe('getInteractionIdFromContext()', () => {
-    it('should throw an Exception `CoreMissingContextException` if the context is corrupt', () => {
-      // Given
-      const eventContextMock = {};
-      service['extractInteractionId'] = jest
-        .fn()
-        .mockReturnValueOnce(undefined);
-
-      // When
-      expect(
-        () => service['getInteractionIdFromContext'](eventContextMock),
-        // Then
-      ).toThrowWithMessage(
-        CoreMissingContextException,
-        'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
-      );
-    });
-
-    it('should return interactionId provided by extractInteractionId if the context is ok', () => {
-      // Given
-      const eventContextMock = {};
-      service['extractInteractionId'] = jest
-        .fn()
-        .mockReturnValueOnce(interactionIdMock);
-
-      // When
-      const result = service['getInteractionIdFromContext'](eventContextMock);
-      expect(result).toBe(interactionIdMock);
-    });
-  });
-
   describe('getDataFromSession()', () => {
     it('should call session.get', async () => {
       // Given
@@ -513,20 +270,39 @@ describe('CoreTrackingService', () => {
       );
     });
 
-    it('should throw if session is not found', async () => {
+    it('should return a default object with only sessionId, if session is not found', async () => {
       // Given
+      const expectedResult = {
+        accountId: null,
+        interactionId: null,
+        sessionId: sessionIdMock,
+
+        spId: null,
+        spAcr: null,
+        spName: null,
+        spSub: null,
+
+        idpId: null,
+        idpAcr: null,
+        idpName: null,
+        idpLabel: null,
+        idpSub: null,
+      };
+
       const sessionGetBinded = jest.fn().mockResolvedValue(undefined);
       sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
+      // When
+      const result = await service['getDataFromSession'](sessionIdMock);
       // Then
-      await expect(
-        service['getDataFromSession'](sessionIdMock),
-      ).rejects.toThrow(SessionNotFoundException);
+      expect(result).toEqual(expectedResult);
     });
 
     it('Should return partial data from session.get', async () => {
       // Given
       const expectedResult = {
         accountId: 'accountId Mock Value',
+        sessionId: sessionIdMock,
+        interactionId: interactionIdMock,
 
         spId: 'some spId',
         spName: 'some spName',
@@ -549,6 +325,8 @@ describe('CoreTrackingService', () => {
       // Given
       const expectedResult = {
         accountId: null,
+        sessionId: sessionIdMock,
+        interactionId: null,
 
         spId: 'spIdMock',
         spName: 'spNameMock',
@@ -569,7 +347,7 @@ describe('CoreTrackingService', () => {
       const sessionGetBinded = jest.fn().mockResolvedValue(sessionMock);
       sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
       // When
-      const result = await service['getDataFromSession'](interactionIdMock);
+      const result = await service['getDataFromSession'](sessionIdMock);
       // Then
       expect(result).toEqual(expectedResult);
     });
@@ -578,6 +356,8 @@ describe('CoreTrackingService', () => {
       // Given
       const expectedResult = {
         accountId: null,
+        sessionId: sessionIdMock,
+        interactionId: null,
 
         spId: 'spIdMock',
         spName: 'spNameMock',
@@ -600,7 +380,7 @@ describe('CoreTrackingService', () => {
       sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
 
       // When
-      const result = await service['getDataFromSession'](interactionIdMock);
+      const result = await service['getDataFromSession'](sessionIdMock);
 
       // Then
       expect(result).toEqual(expectedResult);
@@ -610,6 +390,8 @@ describe('CoreTrackingService', () => {
       // Given
       const expectedResult = {
         accountId: null,
+        sessionId: sessionIdMock,
+        interactionId: null,
 
         spId: null,
         spName: null,
@@ -625,57 +407,16 @@ describe('CoreTrackingService', () => {
       const sessionMock: OidcSession = {
         spIdentity: { sub: 'spSubMock' },
       };
-      const sessionGetBinded = jest.fn().mockResolvedValue(sessionMock);
-      sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
+      const boundSessionGet = jest.fn().mockResolvedValue(sessionMock);
+      sessionServiceMock.get.bind = jest
+        .fn()
+        .mockReturnValueOnce(boundSessionGet);
 
       // When
-      const result = await service['getDataFromSession'](interactionIdMock);
+      const result = await service['getDataFromSession'](sessionIdMock);
 
       // Then
       expect(result).toEqual(expectedResult);
-    });
-  });
-
-  describe('getDataFromContext()', () => {
-    it('Should return partial data from context and null values', () => {
-      // Given
-      const expectedResult = {
-        accountId: null,
-
-        spId: 'spIdMock',
-        spName: 'spNameMock',
-        spAcr: 'spAcrMock',
-        spSub: 'spSubMock',
-
-        idpId: null,
-        idpName: null,
-        idpAcr: null,
-        idpSub: null,
-        idpLabel: null,
-      };
-
-      const myContextMock = {
-        ...contextMock,
-        req: {
-          spId: 'spIdMock',
-          spName: 'spNameMock',
-          spAcr: 'spAcrMock',
-          spSub: 'spSubMock',
-        },
-      };
-      // When
-      const result = service['getDataFromContext'](myContextMock);
-      // Then
-      expect(result).toEqual(expectedResult);
-    });
-
-    it('should throw if req is missing', () => {
-      // Given
-      const contextMock = {};
-      // Then
-      expect(() => service['getDataFromContext'](contextMock)).toThrow(
-        CoreMissingContextException,
-      );
     });
   });
 });

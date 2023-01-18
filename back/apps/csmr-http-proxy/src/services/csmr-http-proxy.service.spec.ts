@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock';
 import { lastValueFrom } from 'rxjs';
 
 import { HttpService } from '@nestjs/axios';
@@ -25,7 +24,7 @@ describe('CsmrHttpProxyService', () => {
     post: jest.fn(),
   };
 
-  const lastValueMock = mocked(lastValueFrom);
+  const lastValueMock = jest.mocked(lastValueFrom);
 
   const httpResponseMock = Symbol('httpResponseMock');
 

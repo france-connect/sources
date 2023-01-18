@@ -1,11 +1,7 @@
 import { FSA } from '@fc/common';
 import { InitialState } from '@fc/state-management';
 
-import {
-  ServiceProviderEditActionTypes,
-  ServiceProvidersActionTypes,
-  ServiceProviderViewActionTypes,
-} from '../enums';
+import { ServiceProvidersActionTypes } from '../enums';
 import { ServiceProvidersState, ServiceProviderState } from '../interfaces';
 
 export const ServiceProvidersFailed = (state: InitialState) => ({
@@ -102,10 +98,10 @@ export const servicesProvidersReducers = {
   [ServiceProvidersActionTypes.SERVICE_PROVIDERS_FAILED]: ServiceProvidersFailed,
   [ServiceProvidersActionTypes.SERVICE_PROVIDERS_REQUESTED]: ServiceProvidersRequested,
   [ServiceProvidersActionTypes.SERVICE_PROVIDERS_SUCCESSED]: ServiceProvidersSuccessed,
-  [ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_FAILED]: ServiceProviderEditFailed,
-  [ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_REQUESTED]: ServiceProviderEditRequested,
-  [ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_SUCCESSED]: ServiceProviderEditSuccessed,
-  [ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_FAILED]: ServiceProviderViewFailed,
-  [ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_REQUESTED]: ServiceProviderViewRequested,
-  [ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_SUCCESSED]: ServiceProviderViewSuccessed,
+  [ServiceProvidersActionTypes.SERVICE_PROVIDER_UPDATE_FAILED]: ServiceProviderEditFailed,
+  [ServiceProvidersActionTypes.SERVICE_PROVIDER_UPDATE_REQUESTED]: ServiceProviderEditRequested,
+  [ServiceProvidersActionTypes.SERVICE_PROVIDER_UPDATE_SUCCESSED]: ServiceProviderEditSuccessed,
+  [ServiceProvidersActionTypes.SERVICE_PROVIDER_READ_FAILED]: ServiceProviderViewFailed,
+  [ServiceProvidersActionTypes.SERVICE_PROVIDER_READ_REQUESTED]: ServiceProviderViewRequested,
+  [ServiceProvidersActionTypes.SERVICE_PROVIDER_READ_SUCCESSED]: ServiceProviderViewSuccessed,
 };

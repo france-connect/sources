@@ -1,6 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
-import React from 'react';
 import { useMediaQuery } from 'react-responsive';
 
 import { LinkComponent, Sizes } from '@fc/dsfr';
@@ -18,13 +16,9 @@ jest.mock('../../components/user-history/user-history.component');
 jest.mock('../../components/service-provider-name/service-provider-name.component');
 
 describe('HomePage', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should math the snapshot, in a desktop viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(<HomePage />);
@@ -35,7 +29,7 @@ describe('HomePage', () => {
 
   it('should math the snapshot, in a mobile viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(<HomePage />);

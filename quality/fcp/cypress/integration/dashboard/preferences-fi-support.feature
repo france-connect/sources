@@ -30,6 +30,56 @@ Fonctionnalité: Préférences FI - Support
     Et la date de dernière connexion est affichée
     Et les préférences FI de l'usager ne sont pas affichées
 
+  Scénario: Préférences FI - Support - préférences FI d'un présumé né jour et mois
+    Etant donné que j'utilise un compte usager "présumé né jour et mois"
+    Et que je navigue sur la page d'accueil du dashboard usager
+    Et que je me connecte au dashboard usager
+    Et que je suis redirigé vers la page historique du dashboard usager
+    Et que je clique sur le lien vers la page gestion des accès du dashboard usager
+    Et que je suis sur la page gestion des accès du dashboard usager
+    Et que je réinitialise les préférences de la configuration par défaut
+    Et que je décide de bloquer le fournisseur d'identité "pour le test de préférences FI"
+    Et que je confirme le message "autorisation des futurs fournisseurs d'identité"
+    Et que j'enregistre mes réglages d'accès
+    Et que je décide d'autoriser le fournisseur d'identité "pour le test de préférences FI"
+    Et que j'enregistre mes réglages d'accès
+    Et que je me déconnecte du dashboard usager
+    Et que je navigue sur la page login du support
+    Et que je me connecte au support en tant que "support"
+    Et que je navigue vers la page redressement RNIPP
+    Quand j'effectue un redressement RNIPP pour l'usager "présumé né jour et mois"
+    Alors le numéro de ticket support est affiché
+    Et les informations RNIPP de l'usager sont affichées
+    Et le code retour RNIPP est "2"
+    Et les préférences FI de l'usager sont affichées
+    Et le statut des futurs fournisseurs d'identité dans support est "autorisés"
+    Et tous les fournisseurs d'identité dans exploitation sont "autorisés"
+
+  Scénario: Préférences FI - Support - préférences FI d'un présumé né jour
+    Etant donné que j'utilise un compte usager "présumé né jour"
+    Et que je navigue sur la page d'accueil du dashboard usager
+    Et que je me connecte au dashboard usager
+    Et que je suis redirigé vers la page historique du dashboard usager
+    Et que je clique sur le lien vers la page gestion des accès du dashboard usager
+    Et que je suis sur la page gestion des accès du dashboard usager
+    Et que je réinitialise les préférences de la configuration par défaut
+    Et que je décide de bloquer le fournisseur d'identité "pour le test de préférences FI"
+    Et que je confirme le message "autorisation des futurs fournisseurs d'identité"
+    Et que j'enregistre mes réglages d'accès
+    Et que je décide d'autoriser le fournisseur d'identité "pour le test de préférences FI"
+    Et que j'enregistre mes réglages d'accès
+    Et que je me déconnecte du dashboard usager
+    Et que je navigue sur la page login du support
+    Et que je me connecte au support en tant que "support"
+    Et que je navigue vers la page redressement RNIPP
+    Quand j'effectue un redressement RNIPP pour l'usager "présumé né jour"
+    Alors le numéro de ticket support est affiché
+    Et les informations RNIPP de l'usager sont affichées
+    Et le code retour RNIPP est "2"
+    Et les préférences FI de l'usager sont affichées
+    Et le statut des futurs fournisseurs d'identité dans support est "autorisés"
+    Et tous les fournisseurs d'identité dans exploitation sont "autorisés"
+
   Scénario: Préférences FI - Support - FI bloqué - futur FI autorisé
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du dashboard usager

@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 
 import { AccountProvider, AccountProviderProps } from '@fc/account';
 import { AxiosErrorCatcherProvider, AxiosErrorCatcherProviderProps } from '@fc/axios-error-catcher';
@@ -19,16 +18,12 @@ jest.mock('./application.routes', () => ({
 }));
 
 describe('Application', () => {
-  const AppContextProviderMock = mocked(AppContextProvider);
-  const AccountProviderMock = mocked(AccountProvider);
-  const AxiosErrorCatcherProviderMock = mocked(AxiosErrorCatcherProvider);
-  const ApplicationRoutesMock = mocked(ApplicationRoutes);
+  const AppContextProviderMock = jest.mocked(AppContextProvider);
+  const AccountProviderMock = jest.mocked(AccountProvider);
+  const AxiosErrorCatcherProviderMock = jest.mocked(AxiosErrorCatcherProvider);
+  const ApplicationRoutesMock = jest.mocked(ApplicationRoutes);
 
   beforeEach(() => {
-    jest.resetAllMocks();
-    jest.clearAllMocks();
-    jest.restoreAllMocks();
-
     AppContextProviderMock.mockImplementation(
       ({ children }: AppContextProviderProps) => children as ReactElement,
     );

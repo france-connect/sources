@@ -11,7 +11,10 @@ import { BridgeHttpProxyService } from './services';
 
 @Global()
 @Module({
-  imports: [ExceptionsModule, RabbitmqModule.registerFor('BridgeProxy')],
+  imports: [
+    ExceptionsModule.withoutTracking(),
+    RabbitmqModule.registerFor('BridgeProxy'),
+  ],
   controllers: [BridgeHttpProxyController],
   providers: [BridgeHttpProxyService],
   exports: [],

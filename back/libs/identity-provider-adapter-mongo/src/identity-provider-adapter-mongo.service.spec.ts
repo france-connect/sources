@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock';
-
 import { EventBus } from '@nestjs/cqrs';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -8,6 +6,7 @@ import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger-legacy';
+import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 import { IdentityProviderMetadata } from '@fc/oidc';
 
 import {
@@ -284,6 +283,13 @@ describe('IdentityProviderAdapterMongoService', () => {
     publish: jest.fn(),
   };
 
+  const mongooseCollectionOperationWatcherHelperMock = {
+    connectAllWatchers: jest.fn(),
+    watchWith: jest.fn(),
+    watch: jest.fn(),
+    operationTypeWatcher: jest.fn(),
+  };
+
   const identityProviderModel = getModelToken('IdentityProvider');
 
   beforeEach(async () => {
@@ -302,6 +308,7 @@ describe('IdentityProviderAdapterMongoService', () => {
         LoggerService,
         EventBus,
         ConfigService,
+        MongooseCollectionOperationWatcherHelper,
       ],
     })
       .overrideProvider(CryptographyService)
@@ -312,6 +319,8 @@ describe('IdentityProviderAdapterMongoService', () => {
       .useValue(loggerMock)
       .overrideProvider(EventBus)
       .useValue(eventBusMock)
+      .overrideProvider(MongooseCollectionOperationWatcherHelper)
+      .useValue(mongooseCollectionOperationWatcherHelperMock)
       .compile();
 
     service = module.get<IdentityProviderAdapterMongoService>(
@@ -329,14 +338,7 @@ describe('IdentityProviderAdapterMongoService', () => {
   describe('onModuleInit', () => {
     beforeEach(() => {
       // Given
-      service['initOperationTypeWatcher'] = jest.fn();
       service['getList'] = jest.fn();
-    });
-    it('should call initOperationTypeWatcher', async () => {
-      // When
-      await service.onModuleInit();
-      // Then
-      expect(service['initOperationTypeWatcher']).toHaveBeenCalledTimes(1);
     });
 
     it('should call getList', async () => {
@@ -346,76 +348,30 @@ describe('IdentityProviderAdapterMongoService', () => {
       expect(service['getList']).toHaveBeenCalledTimes(1);
       expect(service['getList']).toHaveBeenCalledWith();
     });
-  });
 
-  describe('initOperationTypeWatcher', () => {
-    it('should call initOperationTypeWatcher', () => {
-      // Given
-      const streamMock = { on: jest.fn() };
-      repositoryMock.watch = jest.fn().mockReturnValueOnce(streamMock);
+    it('should call watchWith from mongooseHelper', async () => {
       // When
-      service['initOperationTypeWatcher']();
+      await service.onModuleInit();
       // Then
-      expect(repositoryMock.watch).toHaveBeenCalledTimes(1);
+      expect(
+        mongooseCollectionOperationWatcherHelperMock.watchWith,
+      ).toHaveBeenCalledTimes(1);
     });
   });
-
-  describe('operationTypeWatcher', () => {
-    // Given
-    const operationTypes = {
-      DELETE: 'delete',
-      INSERT: 'insert',
-      RENAME: 'rename',
-      REPLACE: 'replace',
-      UPDATE: 'update',
-    };
-    it('should call eventBus.publish() if DB stream.operationType = INSERT', () => {
+  describe('refreshCache', () => {
+    beforeEach(() => {
       // Given
-      const streamInsertMock = { operationType: operationTypes.INSERT };
-      // When
-      service['operationTypeWatcher'](streamInsertMock);
-      // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(1);
+      service.getList = jest.fn();
+      configMock.get.mockReturnValueOnce({
+        disableIdpValidationOnLegacy: false,
+      });
     });
-    it('should call eventBus.publish() if DB stream.operationType = UPDATE', () => {
-      // Given
-      const streamInsertMock = { operationType: operationTypes.UPDATE };
+    it('should call getList method with true value in param', async () => {
       // When
-      service['operationTypeWatcher'](streamInsertMock);
+      await service.refreshCache();
       // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(1);
-    });
-    it('should call eventBus.publish() if DB stream.operationType = DELETE', () => {
-      // Given
-      const streamInsertMock = { operationType: operationTypes.DELETE };
-      // When
-      service['operationTypeWatcher'](streamInsertMock);
-      // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(1);
-    });
-    it('should call eventBus.publish() if DB stream.operationType = RENAME', () => {
-      // Given
-      const streamInsertMock = { operationType: operationTypes.RENAME };
-      // When
-      service['operationTypeWatcher'](streamInsertMock);
-      // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(1);
-    });
-    it('should call eventBus.publish() if DB stream.operationType = REPLACE', () => {
-      // Given
-      const streamInsertMock = { operationType: operationTypes.REPLACE };
-      // When
-      service['operationTypeWatcher'](streamInsertMock);
-      // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(1);
-    });
-    it("shouldn't call eventBus.publish() if DB stream.operationType = null", () => {
-      // Given
-      const streamInsertMock = { operationType: null };
-      // When
-      service['operationTypeWatcher'](streamInsertMock);
-      // Then
-      expect(service['eventBus'].publish).toHaveBeenCalledTimes(0);
+      expect(service.getList).toHaveBeenCalledTimes(1);
+      expect(service.getList).toHaveBeenCalledWith(true);
     });
   });
 
@@ -450,7 +406,7 @@ describe('IdentityProviderAdapterMongoService', () => {
   describe('findAllIdentityProvider', () => {
     let validateDtoMock;
     beforeEach(() => {
-      validateDtoMock = mocked(validateDto);
+      validateDtoMock = jest.mocked(validateDto);
       configMock.get.mockReturnValueOnce({
         disableIdpValidationOnLegacy: false,
       });

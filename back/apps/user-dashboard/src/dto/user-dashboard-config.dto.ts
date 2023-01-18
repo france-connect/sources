@@ -12,6 +12,7 @@ import { OidcClientConfig } from '@fc/oidc-client';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 import { RedisConfig } from '@fc/redis';
 import { SessionConfig } from '@fc/session';
+import { TrackingConfig } from '@fc/tracking';
 
 export class UserDashboardConfig {
   @IsObject()
@@ -58,4 +59,9 @@ export class UserDashboardConfig {
   @ValidateNested()
   @Type(() => MailerConfig)
   readonly Mailer: MailerConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => TrackingConfig)
+  readonly Tracking: TrackingConfig;
 }

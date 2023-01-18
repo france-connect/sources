@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import React from 'react';
 import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
@@ -37,14 +36,10 @@ describe('ServiceComponent', () => {
     uid: 'any-uid',
   };
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot, in a desktop viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(true);
-    mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
     const { container } = render(<ServiceComponent service={serviceMock} />, {
       wrapper: Wrapper,
@@ -56,8 +51,8 @@ describe('ServiceComponent', () => {
 
   it('should match the snapshot, in a mobile viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(false);
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
     // when
     const { container } = render(<ServiceComponent service={serviceMock} />, {
       wrapper: Wrapper,

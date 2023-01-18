@@ -7,18 +7,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AccountModule } from '@fc/account';
 import { AppModule } from '@fc/app';
 import { ConfigService, ConfigTemplateInterceptor } from '@fc/config';
-import {
-  CoreService,
-  CoreTrackingService,
-  OidcClientTokenEventHandler,
-  OidcProviderAuthorizationEventHandler,
-  OidcProviderTokenEventHandler,
-  OidcProviderUserinfoEventHandler,
-  RnippReceivedValidEventHandler,
-  RnippRequestedEventHandler,
-  TrackableEventHandler,
-  UserinfoEventHandler,
-} from '@fc/core';
+import { CoreTrackingService } from '@fc/core';
 import { CryptographyEidasModule } from '@fc/cryptography-eidas';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { ExceptionsModule } from '@fc/exceptions';
@@ -49,21 +38,26 @@ import {
 } from './controllers';
 import { CoreFcpSession } from './dto';
 import {
-  CoreFcpDatatransferConsentIdentityEventHandler,
-  CoreFcpDatatransferInformationAnonymousEventHAndler,
-  CoreFcpDatatransferInformationIdentityEventHandler,
   CoreFcpDefaultIdentityCheckHandler,
   CoreFcpDefaultVerifyHandler,
   CoreFcpEidasIdentityCheckHandler,
   CoreFcpEidasVerifyHandler,
   CoreFcpSendEmailHandler,
 } from './handlers';
-import { CoreFcpService, OidcProviderConfigAppService } from './services';
+import {
+  CoreFcpService,
+  CoreFcpTrackingService,
+  CoreService,
+  OidcProviderConfigAppService,
+} from './services';
 
+const trackingModule = TrackingModule.forRoot(CoreFcpTrackingService);
+
+const exceptionModule = ExceptionsModule.withTracking(trackingModule);
 @Global()
 @Module({
   imports: [
-    ExceptionsModule,
+    exceptionModule,
     MongooseModule.forRoot(),
     SessionModule.forRoot({
       schema: CoreFcpSession,
@@ -79,6 +73,7 @@ import { CoreFcpService, OidcProviderConfigAppService } from './services';
       OidcProviderConfigAppService,
       ServiceProviderAdapterMongoService,
       ServiceProviderAdapterMongoModule,
+      exceptionModule,
     ),
     ScopesModule,
     OidcClientModule.register(
@@ -89,7 +84,7 @@ import { CoreFcpService, OidcProviderConfigAppService } from './services';
     ),
     MailerModule,
     /** Inject app specific tracking service */
-    TrackingModule.forRoot(CoreTrackingService),
+    trackingModule,
     NotificationsModule,
     FeatureHandlerModule,
     AppModule,
@@ -100,26 +95,16 @@ import { CoreFcpService, OidcProviderConfigAppService } from './services';
     OidcProviderController,
   ],
   providers: [
-    CoreService,
     CoreTrackingService,
+    CoreFcpTrackingService,
     CoreFcpService,
-    OidcClientTokenEventHandler,
-    UserinfoEventHandler,
-    RnippRequestedEventHandler,
-    RnippReceivedValidEventHandler,
-    OidcProviderAuthorizationEventHandler,
+    CoreService,
     OidcProviderConfigAppService,
-    OidcProviderTokenEventHandler,
-    OidcProviderUserinfoEventHandler,
-    TrackableEventHandler,
     CoreFcpDefaultVerifyHandler,
     CoreFcpEidasVerifyHandler,
     CoreFcpSendEmailHandler,
     CoreFcpDefaultIdentityCheckHandler,
     CoreFcpEidasIdentityCheckHandler,
-    CoreFcpDatatransferInformationIdentityEventHandler,
-    CoreFcpDatatransferInformationAnonymousEventHAndler,
-    CoreFcpDatatransferConsentIdentityEventHandler,
     {
       provide: APP_INTERCEPTOR,
       useClass: ConfigTemplateInterceptor,
@@ -131,6 +116,7 @@ import { CoreFcpService, OidcProviderConfigAppService } from './services';
     CoreFcpEidasVerifyHandler,
     CoreFcpSendEmailHandler,
     OidcProviderConfigAppService,
+    CoreTrackingService,
   ],
 })
 export class CoreFcpModule {

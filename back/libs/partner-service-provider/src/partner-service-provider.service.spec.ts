@@ -34,6 +34,9 @@ describe('PartnerServiceProviderService', () => {
     getQuery: jest.fn(),
     subQuery: jest.fn(),
     getCount: jest.fn(),
+    execute: jest.fn(),
+    update: jest.fn(),
+    set: jest.fn(),
   };
 
   const getQueryReturnedMock = 'getQueryReturnyMockValue';
@@ -66,6 +69,15 @@ describe('PartnerServiceProviderService', () => {
     );
 
     serviceProviderRepositoryMock.createQueryBuilder.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.execute.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.update.mockReturnValue(
+      serviceProviderRepositoryMock,
+    );
+    serviceProviderRepositoryMock.set.mockReturnValue(
       serviceProviderRepositoryMock,
     );
     serviceProviderRepositoryMock.leftJoinAndSelect.mockReturnValue(

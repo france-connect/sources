@@ -29,6 +29,7 @@ export class FcException extends Error {
    * - 22: Tracks
    * - 23: Apache-Ignite
    * - 24: Access-Control
+   * - 25: Service Provider Configuration
    * - 27: Mailer
    * - 28: csmr-tracks
    * - 30: Rie Proxy Broker

@@ -10,7 +10,6 @@ import {
   SERVICE_PROVIDER_SERVICE_TOKEN,
 } from '@fc/oidc';
 import { SessionModule } from '@fc/session';
-import { TrackingModule } from '@fc/tracking';
 
 import { IIdentityProviderAdapter } from './interfaces';
 import {
@@ -36,7 +35,6 @@ export class OidcClientModule {
         serviceProviderModule,
         CryptographyModule,
         CqrsModule,
-        TrackingModule.forLib(),
         SessionModule,
       ],
       providers: [

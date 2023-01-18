@@ -4,10 +4,6 @@ import { AlertTypes, Sizes } from '../../enums';
 import { AlertComponent } from './alert.component';
 
 describe('Alert', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot with default values', () => {
     // when
     const { container } = render(<AlertComponent>Children</AlertComponent>);

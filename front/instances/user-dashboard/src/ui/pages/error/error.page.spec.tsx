@@ -1,6 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
-import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useMediaQuery } from 'react-responsive';
 import { Link, Outlet } from 'react-router-dom';
@@ -8,10 +6,6 @@ import { Link, Outlet } from 'react-router-dom';
 import { ErrorPage } from './error.page';
 
 describe('ErrorPage', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // when
     const { container } = render(<ErrorPage />);
@@ -22,7 +16,7 @@ describe('ErrorPage', () => {
 
   it('should match the snapshot, in a mobile viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValue(false);
+    jest.mocked(useMediaQuery).mockReturnValue(false);
 
     // when
     const { container } = render(<ErrorPage />);

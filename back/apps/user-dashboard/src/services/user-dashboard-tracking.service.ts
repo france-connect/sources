@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 
-import { ConfigService } from '@fc/config';
-import { IAppTrackingService, IEvent, IEventContext } from '@fc/tracking';
-import { getEventsMap } from '@fc/user-dashboard';
+import {
+  AppTrackingServiceAbstract,
+  TrackedEventContextInterface,
+  TrackedEventInterface,
+} from '@fc/tracking';
 
-import { AppConfig } from '../dto';
 import { UserDashboardMissingContextException } from '../exceptions';
 import {
   UserDashboardTrackingContextInterface,
@@ -13,29 +14,23 @@ import {
 } from '../interfaces';
 
 @Injectable()
-export class UserDashboardTrackingService implements IAppTrackingService {
-  readonly EventsMap;
-
-  constructor(private readonly config: ConfigService) {
-    this.EventsMap = getEventsMap(this.config.get<AppConfig>('App').urlPrefix);
-  }
-
+export class UserDashboardTrackingService
+  implements AppTrackingServiceAbstract
+{
   async buildLog(
-    event: IEvent,
-    context: IEventContext,
+    trackedEvent: TrackedEventInterface,
+    context: TrackedEventContextInterface,
   ): Promise<UserDashboardTrackingLogInterface> {
-    const { ip, port, originalAddresses } = await this.extractContext(
-      context.ctx,
-    );
+    const { ip, port, originalAddresses } = await this.extractContext(context);
 
-    const { category, event: eventName } = event;
+    const { category, event: eventName } = trackedEvent;
     const {
       idpChanges,
       hasAllowFutureIdpChanged,
       idpLength,
       changeSetId,
       futureAllowedNewValue,
-    } = context.ctx;
+    } = context;
 
     return {
       category,
@@ -48,8 +43,8 @@ export class UserDashboardTrackingService implements IAppTrackingService {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         original_addresses: originalAddresses,
       },
-      sub: context.ctx.identity.sub,
-      sessionId: context.ctx.req.sessionId,
+      sub: context.identity.sub,
+      sessionId: context.req.sessionId,
       changeSetId,
       payload: {
         ...idpChanges,
@@ -61,7 +56,7 @@ export class UserDashboardTrackingService implements IAppTrackingService {
   }
 
   private extractNetworkInfoFromHeaders(
-    context: IEventContext,
+    context: TrackedEventContextInterface,
   ): UserNetworkInfoInterface {
     if (!context.req.headers) {
       throw new UserDashboardMissingContextException('req.headers');
@@ -97,7 +92,7 @@ export class UserDashboardTrackingService implements IAppTrackingService {
   }
 
   private async extractContext(
-    ctx: IEventContext,
+    ctx: TrackedEventContextInterface,
   ): Promise<UserDashboardTrackingContextInterface> {
     /**
      * Throw rather than allow a non-loggable interaction.

@@ -1,6 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
-import React from 'react';
 import { useMediaQuery } from 'react-responsive';
 
 import { AxiosErrorCatcherContext } from '@fc/axios-error-catcher';
@@ -11,15 +9,11 @@ import { RedirectToIdpFormComponent } from '@fc/oidc-client';
 import { HomePage } from './home.page';
 
 describe('HomePage', () => {
-  const useApiGetMock = mocked(useApiGet);
+  const useApiGetMock = jest.mocked(useApiGet);
   const axiosErrorCatcherMock = {
     codeError: undefined,
     hasError: false,
   };
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
 
   it('should match the snapshot, when csrf token is not defined', () => {
     // when
@@ -60,7 +54,7 @@ describe('HomePage', () => {
 
   it('should match the snapshot on mobile layout', () => {
     // given
-    mocked(useMediaQuery).mockReturnValue(false);
+    jest.mocked(useMediaQuery).mockReturnValue(false);
     useApiGetMock.mockReturnValueOnce({ csrfToken: 'any-string' });
     // when
     const { container } = render(

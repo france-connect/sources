@@ -1,13 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { EventBus } from '@nestjs/cqrs';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { asyncFilter, validateDto } from '@fc/common';
 import { validationOptions } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
+import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 
 import { MinistriesDTO } from './dto';
-import { MinistriesOperationTypeChangesEvent } from './events';
 
 @Injectable()
 export class MinistriesService {
@@ -16,43 +15,22 @@ export class MinistriesService {
   constructor(
     @InjectModel('Ministries')
     private readonly ministriesModel,
-    private readonly eventBus: EventBus,
     private readonly logger: LoggerService,
+    private readonly mongooseWatcher: MongooseCollectionOperationWatcherHelper,
   ) {
     this.logger.setContext(this.constructor.name);
   }
 
   async onModuleInit() {
-    this.initOperationTypeWatcher();
+    this.mongooseWatcher.watchWith(
+      this.ministriesModel,
+      this.refreshCache.bind(this),
+    );
     this.logger.debug('Initializing ministries');
   }
 
-  /**
-   * Listening ministries data update
-   */
-  private initOperationTypeWatcher(): void {
-    const watch: any = this.ministriesModel.watch();
-    const msg = "Ministries's database OperationType watcher initialization.";
-    this.logger.debug(msg);
-    const operationTypeWatcher = this.operationTypeWatcher.bind(this);
-    watch.driverChangeStream.cursor.on('data', operationTypeWatcher);
-  }
-
-  /**
-   * Method triggered when an operation type occured on
-   * Mongo's 'ministries' collection.
-   * @param {object} stream Stream of event retrieved.
-   * @returns {void}
-   */
-  private operationTypeWatcher(stream): void {
-    const operationTypes = ['insert', 'update', 'delete', 'rename', 'replace'];
-    const isListenedOperation: boolean = operationTypes.includes(
-      stream.operationType,
-    );
-    if (isListenedOperation) {
-      const event = new MinistriesOperationTypeChangesEvent();
-      this.eventBus.publish(event);
-    }
+  async refreshCache(): Promise<void> {
+    this.getList(true);
   }
 
   private async findAllMinistries(): Promise<MinistriesDTO[]> {

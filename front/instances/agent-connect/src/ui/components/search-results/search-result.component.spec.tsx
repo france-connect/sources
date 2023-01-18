@@ -1,5 +1,4 @@
 import { fireEvent, render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 
 import { useAddToUserHistory } from '@fc/agent-connect-history';
 import { RedirectToIdpFormComponent } from '@fc/oidc-client';
@@ -7,10 +6,6 @@ import { RedirectToIdpFormComponent } from '@fc/oidc-client';
 import { SearchResultComponent } from './search-result.component';
 
 describe('SearchResultComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should have called useAddToUserHistory with uid props', () => {
     // when
     render(<SearchResultComponent csrfToken="csrf-token-mock" name="name-mock" uid="uid-mock" />);
@@ -34,7 +29,7 @@ describe('SearchResultComponent', () => {
   it('should have called addToUserHistory on button click', () => {
     // given
     const addToUserHistoryMock = jest.fn();
-    mocked(useAddToUserHistory).mockImplementation(() => addToUserHistoryMock);
+    jest.mocked(useAddToUserHistory).mockImplementation(() => addToUserHistoryMock);
 
     // when
     const { getByRole } = render(
@@ -53,7 +48,7 @@ describe('SearchResultComponent', () => {
     const uidMock = 'uid-mock';
     const nameMock = 'name-mock';
     const csrfTokenMock = 'csrf-token-mock';
-    mocked(RedirectToIdpFormComponent).mockReturnValueOnce(<div />);
+    jest.mocked(RedirectToIdpFormComponent).mockReturnValueOnce(<div />);
 
     // when
     render(<SearchResultComponent csrfToken={csrfTokenMock} name={nameMock} uid={uidMock} />);

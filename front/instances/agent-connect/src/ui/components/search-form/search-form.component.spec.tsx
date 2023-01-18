@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { DebouncedFunc } from 'lodash';
 import { Field, Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
@@ -15,10 +14,6 @@ jest.mock('react-final-form');
 jest.mock('react-final-form-listeners');
 
 describe('SearchFormComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should have called useMediaQuery', () => {
     // when
     render(<SearchFormComponent />);
@@ -30,7 +25,7 @@ describe('SearchFormComponent', () => {
 
   it('should match the snapshot for a desktop viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(<SearchFormComponent />);
@@ -41,7 +36,7 @@ describe('SearchFormComponent', () => {
 
   it('should match the snapshot for a tablet viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(<SearchFormComponent />);
@@ -64,9 +59,9 @@ describe('SearchFormComponent', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const formDataMock = { 'fi-search-term': 'field-value-mock' };
     const onSearchMock = jest.fn();
-    mocked(useOnSearch).mockReturnValueOnce(
-      onSearchMock as unknown as DebouncedFunc<(value: string) => void>,
-    );
+    jest
+      .mocked(useOnSearch)
+      .mockReturnValueOnce(onSearchMock as unknown as DebouncedFunc<(value: string) => void>);
 
     // when
     render(<SearchFormComponent formData={formDataMock} />);
@@ -136,9 +131,9 @@ describe('SearchFormComponent', () => {
   it('should call OnChange listener with text input name and onSearchMock as children', () => {
     // given
     const onSearchMock = jest.fn();
-    mocked(useOnSearch).mockReturnValueOnce(
-      onSearchMock as unknown as DebouncedFunc<(value: string) => void>,
-    );
+    jest
+      .mocked(useOnSearch)
+      .mockReturnValueOnce(onSearchMock as unknown as DebouncedFunc<(value: string) => void>);
 
     // when
     render(<SearchFormComponent />);

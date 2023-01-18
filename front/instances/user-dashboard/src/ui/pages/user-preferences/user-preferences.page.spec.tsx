@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
 
 import { UserPreferencesComponent } from '@fc/user-preferences';
@@ -11,13 +10,9 @@ jest.mock('react-responsive');
 jest.mock('@fc/user-preferences');
 
 describe('UserPreferencesPage', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot, display into a desktop viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(<UserPreferencesPage />);
@@ -28,7 +23,7 @@ describe('UserPreferencesPage', () => {
 
   it('should match the snapshot, display into a mobile viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(<UserPreferencesPage />);

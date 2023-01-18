@@ -3,12 +3,7 @@ import { ConfigService } from '@fc/config';
 import * as httpClient from '@fc/http-client';
 import { SideEffectMap } from '@fc/state-management';
 
-import {
-  ServiceProviderEditActionTypes,
-  ServiceProvidersActionTypes,
-  ServiceProvidersOptions,
-  ServiceProviderViewActionTypes,
-} from '../enums';
+import { ServiceProvidersActionTypes, ServiceProvidersOptions } from '../enums';
 import { ServiceProvidersConfig } from '../interfaces';
 import {
   serviceProviderEditFailed,
@@ -21,11 +16,15 @@ import {
 
 export const requestServiceProviders = async (action: FSA, dispatch: Function) => {
   try {
-    const { endpoint } = ConfigService.get<ServiceProvidersConfig>(
-      ServiceProvidersOptions.CONFIG_NAME,
-    );
-    const results = await httpClient.get(endpoint);
-    const { meta, payload } = results.data;
+    // @TODO move this part into an service/utils file
+    // like getServiceProvidersListURL(prefix: string)
+    // it will takes a prefix arguement like </${id}/edit> or nothing
+    const serviceName = ServiceProvidersOptions.CONFIG_NAME;
+    const { endpoints } = ConfigService.get<ServiceProvidersConfig>(serviceName);
+    const { serviceProviders } = endpoints;
+
+    const { data } = await httpClient.get(serviceProviders);
+    const { meta, payload } = data;
 
     dispatch(
       serviceProvidersSuccessed({
@@ -41,12 +40,18 @@ export const requestServiceProviders = async (action: FSA, dispatch: Function) =
 export const requestServiceProviderEdit = async ({ payload }: FSA, dispatch: Function) => {
   try {
     const { id } = payload as { id: string };
-    const { endpoint } = ConfigService.get<ServiceProvidersConfig>(
-      ServiceProvidersOptions.CONFIG_NAME,
-    );
-    const {
-      data: { payload: item },
-    } = await httpClient.get(`${endpoint}/${id}/edit`);
+
+    // @TODO move this part into an service/utils file
+    // like getServiceProvidersListURL(prefix: string)
+    // it will takes a prefix arguement like </${id}/edit> or nothing
+    const serviceName = ServiceProvidersOptions.CONFIG_NAME;
+    const { endpoints } = ConfigService.get<ServiceProvidersConfig>(serviceName);
+    const { serviceProviders } = endpoints;
+
+    const url = `${serviceProviders}/${id}/edit`;
+
+    const { data } = await httpClient.get(url);
+    const { payload: item } = data;
 
     dispatch(
       serviceProviderEditSuccessed({
@@ -61,12 +66,18 @@ export const requestServiceProviderEdit = async ({ payload }: FSA, dispatch: Fun
 export const requestServiceProviderView = async ({ payload }: FSA, dispatch: Function) => {
   try {
     const { id } = payload as { id: string };
-    const { endpoint } = ConfigService.get<ServiceProvidersConfig>(
-      ServiceProvidersOptions.CONFIG_NAME,
-    );
-    const {
-      data: { payload: item },
-    } = await httpClient.get(`${endpoint}/${id}/view`);
+
+    // @TODO move this part into an service/utils file
+    // like getServiceProvidersListURL(prefix: string)
+    // it will takes a prefix arguement like </${id}/edit> or nothing
+    const serviceName = ServiceProvidersOptions.CONFIG_NAME;
+    const { endpoints } = ConfigService.get<ServiceProvidersConfig>(serviceName);
+    const { serviceProviders } = endpoints;
+
+    const url = `${serviceProviders}/${id}/view`;
+
+    const results = await httpClient.get(url);
+    const { payload: item } = results.data;
 
     dispatch(
       serviceProviderViewSuccessed({
@@ -81,6 +92,6 @@ export const requestServiceProviderView = async ({ payload }: FSA, dispatch: Fun
 // sideEffects MUST be exported mapped by corresponding action type to be called later
 export const serviceProvidersSideEffects: SideEffectMap = {
   [ServiceProvidersActionTypes.SERVICE_PROVIDERS_REQUESTED]: requestServiceProviders,
-  [ServiceProviderEditActionTypes.SERVICE_PROVIDER_EDIT_REQUESTED]: requestServiceProviderEdit,
-  [ServiceProviderViewActionTypes.SERVICE_PROVIDER_VIEW_REQUESTED]: requestServiceProviderView,
+  [ServiceProvidersActionTypes.SERVICE_PROVIDER_UPDATE_REQUESTED]: requestServiceProviderEdit,
+  [ServiceProvidersActionTypes.SERVICE_PROVIDER_READ_REQUESTED]: requestServiceProviderView,
 };

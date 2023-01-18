@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 
 import { useSearchResults } from '@fc/agent-connect-search';
 
@@ -9,10 +8,6 @@ import { SearchResultsListComponent } from './search-results-list.component';
 jest.mock('./search-results-list.component');
 
 describe('SearchResultsComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should have called useSearchResults', () => {
     // when
     render(<SearchResultsComponent />);
@@ -23,7 +18,7 @@ describe('SearchResultsComponent', () => {
 
   it('should have shown no results element', () => {
     // given
-    mocked(useSearchResults).mockReturnValue({
+    jest.mocked(useSearchResults).mockReturnValue({
       searchResults: [],
       showNoResults: true,
       showResults: false,
@@ -39,7 +34,7 @@ describe('SearchResultsComponent', () => {
 
   it('should have not shown no results element', () => {
     // given
-    mocked(useSearchResults).mockReturnValue({
+    jest.mocked(useSearchResults).mockReturnValue({
       searchResults: [],
       showNoResults: false,
       showResults: false,
@@ -57,7 +52,7 @@ describe('SearchResultsComponent', () => {
   it('should have called SearchResultsListComponent with results', () => {
     // given
     const searchResultsMock = [expect.any({}), expect.any({}), expect.any({})];
-    mocked(useSearchResults).mockReturnValue({
+    jest.mocked(useSearchResults).mockReturnValue({
       searchResults: searchResultsMock,
       showNoResults: false,
       showResults: true,

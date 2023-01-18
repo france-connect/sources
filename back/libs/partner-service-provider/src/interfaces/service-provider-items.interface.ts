@@ -14,4 +14,5 @@ export interface IServiceProviderItem {
   datapasses: Pick<Datapass, 'remoteId'>[];
   createdAt: Date;
   updatedAt: Date;
+  configurationNumberIncrement: number;
 }

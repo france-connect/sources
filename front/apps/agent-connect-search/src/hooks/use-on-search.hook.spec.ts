@@ -6,10 +6,6 @@ import { AgentConnectSearchContext } from '../agent-connect-search.context';
 import { DEBOUNCE_DELAY_MS, useOnSearch } from './use-on-search.hook';
 
 describe('useOnSearch', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should return a function', () => {
     // when
     const { result } = renderWithContext(useOnSearch, AgentConnectSearchContext);

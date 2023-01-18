@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { mocked } from 'jest-mock';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -55,7 +54,7 @@ describe('AccountController', () => {
     } as unknown as Response;
 
     beforeEach(() => {
-      mocked(resMock.status).mockReturnValue(resMock);
+      jest.mocked(resMock.status).mockReturnValue(resMock);
     });
 
     const csrfMock = { csrfToken: 'any_valid_csrf_token' };
@@ -84,7 +83,7 @@ describe('AccountController', () => {
     };
 
     beforeEach(() => {
-      mocked(resMock.status).mockReturnValue(resMock);
+      jest.mocked(resMock.status).mockReturnValue(resMock);
     });
 
     it('should call sessionPartnerAccountMock.get', async () => {

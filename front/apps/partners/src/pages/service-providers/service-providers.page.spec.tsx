@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -20,14 +19,12 @@ describe('ServiceProvidersPage', () => {
   } as unknown as AccountInterface;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-
-    mocked(useDispatch).mockReturnValueOnce(jest.fn());
+    jest.mocked(useDispatch).mockReturnValueOnce(jest.fn());
   });
 
   it('should match the snapshot when user is connected', () => {
     // given
-    mocked(useSelector).mockReturnValueOnce({ items: [], totalItems: 0 });
+    jest.mocked(useSelector).mockReturnValueOnce({ items: [], totalItems: 0 });
 
     // when
     const { container } = render(
@@ -42,7 +39,7 @@ describe('ServiceProvidersPage', () => {
 
   it('should match the snapshot when user is not connected', () => {
     // given
-    mocked(useSelector).mockReturnValueOnce({ items: [], totalItems: 0 });
+    jest.mocked(useSelector).mockReturnValueOnce({ items: [], totalItems: 0 });
 
     // when
     const { container } = render(
@@ -59,7 +56,7 @@ describe('ServiceProvidersPage', () => {
     // given
     const totalItems = 3;
     const items = [expect.any(Object), expect.any(Object), expect.any(Object)];
-    mocked(useSelector).mockReturnValue({ items, totalItems });
+    jest.mocked(useSelector).mockReturnValue({ items, totalItems });
 
     // when
     render(
@@ -78,7 +75,7 @@ describe('ServiceProvidersPage', () => {
     jest.spyOn(React, 'useRef').mockReturnValueOnce({ current: true });
     const totalItems = 3;
     const items = [expect.any(Object), expect.any(Object), expect.any(Object)];
-    mocked(useSelector).mockReturnValue({ items, totalItems });
+    jest.mocked(useSelector).mockReturnValue({ items, totalItems });
 
     // when
     render(

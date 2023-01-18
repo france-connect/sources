@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ServiceProviderSandboxComponent should match snapshot 1`] = `
+<div>
+  <div
+    class="fr-container fr-p-3w sandboxContainer"
+    data-testid="ServiceProviderSandboxComponent-container"
+  >
+    <div
+      class="fr-grid-row"
+    >
+      <h3
+        class="fr-col text-left is-blue-france"
+        data-testid="ServiceProviderSandboxComponent-sp-config-title"
+      >
+        ServiceProviderSandbox.title
+      </h3>
+      <div
+        class="fr-col text-right"
+      >
+        <div>
+          <h6>
+            2
+            <span
+              class="fr-mx-1v"
+            >
+              ItemsCounterComponent.separator
+            </span>
+            XX
+          </h6>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>
+        AccordionGroupComponent
+      </h3>
+      <div />
+    </div>
+    <div>
+      SimpleButton
+    </div>
+  </div>
+</div>
+`;

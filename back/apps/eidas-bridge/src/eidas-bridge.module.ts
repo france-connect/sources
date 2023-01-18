@@ -13,6 +13,7 @@ import {
   EidasProviderController,
   EidasProviderModule,
 } from '@fc/eidas-provider';
+import { ExceptionsModule } from '@fc/exceptions';
 import { HttpProxyModule } from '@fc/http-proxy';
 import {
   IdentityProviderAdapterEnvModule,
@@ -38,6 +39,8 @@ import {
   OidcProviderConfigAppService,
 } from './services';
 
+const exceptionModule = ExceptionsModule.withoutTracking();
+
 const oidcClientModule = OidcClientModule.register(
   IdentityProviderAdapterEnvService,
   IdentityProviderAdapterEnvModule,
@@ -48,11 +51,13 @@ const oidcProviderModule = OidcProviderModule.register(
   OidcProviderConfigAppService,
   ServiceProviderAdapterEnvService,
   ServiceProviderAdapterEnvModule,
+  exceptionModule,
 );
 
 @Global()
 @Module({
   imports: [
+    exceptionModule,
     EidasClientModule,
     EidasProviderModule,
     SessionModule.forRoot({

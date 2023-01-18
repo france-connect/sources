@@ -1,10 +1,6 @@
 import { isValidProtocol } from './is-valid-protocol';
 
 describe('isValidProtocol', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should return true, when starts with http', () => {
     // when
     const result = isValidProtocol('http://any-url-mock.com');

@@ -4,10 +4,6 @@ import { CinematicEvents } from '../../enums';
 import { TrackCardBadgeComponent } from './card-badge.component';
 
 describe('TrackCardBadgeComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // when
     const { container } = render(

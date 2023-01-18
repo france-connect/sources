@@ -3,10 +3,6 @@ import { fireEvent, render } from '@testing-library/react';
 import { LayoutHeaderMobileBurgerButton } from './layout-header-mobile-burger.button';
 
 describe('LayoutHeaderMobileBurgerButton', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot, when opened', () => {
     // given
     const onOpenMock = jest.fn();

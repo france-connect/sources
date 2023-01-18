@@ -1,0 +1,50 @@
+entity: ServiceProviderConfiguration
+items:
+  spc-sp-sandbox-1:
+    name: 'Configuration de test N°1'
+    serviceProvider: '@sp-sandbox'
+    createdAt: '2022-02-22'
+    updatedAt: '2022-05-02'
+    environment: 'SANDBOX'
+  spc-sp-sandbox-2:
+    name: 'Configuration de test N°2'
+    serviceProvider: '@sp-sandbox'
+    createdAt: '2022-02-22'
+    updatedAt: '2022-05-02'
+    environment: 'SANDBOX'
+  spc-sp-sandbox-3:
+    name: 'Configuration de test N°3'
+    serviceProvider: '@sp-sandbox'
+    createdAt: '2022-02-22'
+    updatedAt: '2022-05-02'
+    environment: 'SANDBOX'
+  spc-sp-review-requested-1:
+    name: 'Configuration de test N°4'
+    serviceProvider: '@sp-review-requested'
+    createdAt: '2022-02-22'
+    updatedAt: '2022-05-02'
+    environment: 'SANDBOX'
+  spc-sp-review-requested-2:
+    name: 'Configuration de test N°5'
+    serviceProvider: '@sp-review-requested'
+    createdAt: '2022-02-22'
+    updatedAt: '2022-05-02'
+    environment: 'SANDBOX'
+  spc-sp-review-requested-3:
+    name: 'Configuration de test N°6'
+    serviceProvider: '@sp-review-requested'
+    createdAt: '2022-02-22'
+    updatedAt: '2022-05-02'
+    environment: 'SANDBOX'
+  spc-sp-review-requested-4:
+    name: 'Configuration de test N°7'
+    serviceProvider: '@sp-review-requested'
+    createdAt: '2022-02-22'
+    updatedAt: '2022-05-02'
+    environment: 'SANDBOX'
+  spc-sp-review-requested-5:
+    name: 'Configuration de test N°8'
+    serviceProvider: '@sp-review-requested'
+    createdAt: '2022-02-22'
+    updatedAt: '2022-05-02'
+    environment: 'SANDBOX'

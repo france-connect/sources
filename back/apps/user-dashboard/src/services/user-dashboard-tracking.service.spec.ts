@@ -45,27 +45,25 @@ describe('UserDashboardTrackingService', () => {
   };
 
   const contextMock = {
-    ctx: {
-      req: {
-        headers: {
-          'x-forwarded-for': ipMock,
-          'x-forwarded-source-port': sourcePortMock,
-          'x-forwarded-for-original': xForwardedForOriginalMock,
-        },
-        sessionId: sessionIdMock,
+    req: {
+      headers: {
+        'x-forwarded-for': ipMock,
+        'x-forwarded-source-port': sourcePortMock,
+        'x-forwarded-for-original': xForwardedForOriginalMock,
       },
-      identity: identityMock,
-      idpChanges: {
-        uid: 'uuidValue',
-        name: 'nameValue',
-        title: 'titleValue',
-        allowed: 'allowedValue',
-      },
-      futureAllowedNewValue: true,
-      hasAllowFutureIdpChanged: true,
-      idpLength: 2,
-      changeSetId: 'changeSetIdValue',
+      sessionId: sessionIdMock,
     },
+    identity: identityMock,
+    idpChanges: {
+      uid: 'uuidValue',
+      name: 'nameValue',
+      title: 'titleValue',
+      allowed: 'allowedValue',
+    },
+    futureAllowedNewValue: true,
+    hasAllowFutureIdpChanged: true,
+    idpLength: 2,
+    changeSetId: 'changeSetIdValue',
   };
 
   const extractedValueMock: UserDashboardTrackingContextInterface = {
@@ -116,7 +114,7 @@ describe('UserDashboardTrackingService', () => {
       await service.buildLog(eventMock, contextMock);
       // Then
       expect(service['extractContext']).toHaveBeenCalledTimes(1);
-      expect(service['extractContext']).toHaveBeenCalledWith(contextMock.ctx);
+      expect(service['extractContext']).toHaveBeenCalledWith(contextMock);
     });
 
     it('should return log message', async () => {

@@ -20,6 +20,7 @@ import Rnipp from './rnipp';
 import Scopes from './scopes';
 import ServiceProviderAdapterMongo from './service-provider-adapter-mongo';
 import Session from './session';
+import Tracking from './tracking';
 
 export default {
   App,
@@ -39,4 +40,5 @@ export default {
   ServiceProviderAdapterMongo,
   IdentityProviderAdapterMongo,
   Scopes,
+  Tracking,
 } as CoreFcpConfig;

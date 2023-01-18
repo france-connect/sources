@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
 
 import { useUserHistory } from '@fc/agent-connect-history';
@@ -10,10 +9,6 @@ import { UserHistoryComponent } from './user-history.component';
 jest.mock('../user-history-card/user-history-card.component');
 
 describe('UserHistoryComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should render the title of the section', () => {
     // when
     const { getByTestId } = render(<UserHistoryComponent />);
@@ -25,7 +20,7 @@ describe('UserHistoryComponent', () => {
 
   it('should not render the title of the section', () => {
     // given
-    mocked(useUserHistory).mockReturnValueOnce([]);
+    jest.mocked(useUserHistory).mockReturnValueOnce([]);
 
     // when
     const { getByTestId } = render(<UserHistoryComponent />);
@@ -46,7 +41,7 @@ describe('UserHistoryComponent', () => {
 
   it('should render a list of history card (4)', () => {
     // given
-    mocked(UserHistoryCardComponent).mockClear();
+    jest.mocked(UserHistoryCardComponent).mockClear();
 
     // when
     render(<UserHistoryComponent />);
@@ -73,7 +68,7 @@ describe('UserHistoryComponent', () => {
 
   it('should match the snapshot for a tablet viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(<UserHistoryComponent />);

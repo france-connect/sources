@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 
 import { UserHistoryCardComponent } from './user-history-card.component';
 import { UserHistoryCardContentComponent } from './user-history-card-content.component';
@@ -26,7 +25,7 @@ describe('UserHistoryCardComponent', () => {
 
   it('should have called UserHistoryCardRemoveButtonComponent', () => {
     // given
-    mocked(UserHistoryCardRemoveButtonComponent).mockClear();
+    jest.mocked(UserHistoryCardRemoveButtonComponent).mockClear();
 
     // when
     render(<UserHistoryCardComponent item={identityProviderMock} />);
@@ -41,7 +40,7 @@ describe('UserHistoryCardComponent', () => {
 
   it('should have called UserHistoryCardContentComponent', () => {
     // given
-    mocked(UserHistoryCardContentComponent).mockClear();
+    jest.mocked(UserHistoryCardContentComponent).mockClear();
 
     // when
     render(<UserHistoryCardComponent item={identityProviderMock} />);

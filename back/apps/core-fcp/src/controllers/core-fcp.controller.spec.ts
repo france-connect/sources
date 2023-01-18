@@ -1,10 +1,9 @@
-import { mocked } from 'jest-mock';
 import { encode } from 'querystring';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { CoreMissingIdentityException, CoreService } from '@fc/core';
+import { CoreMissingIdentityException } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { NotificationsService } from '@fc/notifications';
@@ -22,14 +21,10 @@ import { TrackingService } from '@fc/tracking';
 
 import { ProcessCore } from '../enums';
 import {
-  CoreFcpDatatransferConsentIdentityEvent,
-  CoreFcpDatatransferInformationAnonymousEvent,
-  CoreFcpDatatransferInformationIdentityEvent,
-} from '../events';
-import {
-  CoreFcpInvalidEventClassException,
+  CoreFcpInvalidEventKeyException,
   CoreFcpInvalidIdentityException,
 } from '../exceptions';
+import { CoreService } from '../services';
 import { CoreFcpService } from '../services/core-fcp.service';
 import { CoreFcpController } from './core-fcp.controller';
 
@@ -172,6 +167,11 @@ describe('CoreFcpController', () => {
 
   const trackingServiceMock = {
     track: jest.fn(),
+    TrackedEventsMap: {
+      FC_DATATRANSFER_CONSENT_IDENTITY: {},
+      FC_DATATRANSFER_INFORMATION_IDENTITY: {},
+      FC_DATATRANSFER_INFORMATION_ANONYMOUS: {},
+    },
   };
 
   const csrfMock = 'csrfMockValue';
@@ -189,7 +189,7 @@ describe('CoreFcpController', () => {
     spName: spNameMock,
   };
 
-  const queryStringEncodeMock = mocked(encode);
+  const queryStringEncodeMock = jest.mocked(encode);
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -466,7 +466,7 @@ describe('CoreFcpController', () => {
     });
   });
 
-  describe('getEventClass()', () => {
+  describe('getDataEvent()', () => {
     // Given
     const scopesMock = ['openid', 'profile'];
     const consentRequiredMock = false;
@@ -476,34 +476,42 @@ describe('CoreFcpController', () => {
 
       const consentRequiredMock = true;
       // When
-      const result = coreController['getEventClass'](
+      const result = coreController['getDataEvent'](
         scopesMock,
         consentRequiredMock,
       );
       // Then
-      expect(result).toBe(CoreFcpDatatransferConsentIdentityEvent);
+      expect(result).toBe(
+        trackingServiceMock.TrackedEventsMap.FC_DATATRANSFER_CONSENT_IDENTITY,
+      );
     });
 
     it('should return information for identity', () => {
       // When
-      const result = coreController['getEventClass'](
+      const result = coreController['getDataEvent'](
         scopesMock,
         consentRequiredMock,
       );
       // Then
-      expect(result).toBe(CoreFcpDatatransferInformationIdentityEvent);
+      expect(result).toBe(
+        trackingServiceMock.TrackedEventsMap
+          .FC_DATATRANSFER_INFORMATION_IDENTITY,
+      );
     });
 
     it('should return information for anonymous', () => {
       // Given
       const scopesMock = ['openid'];
       // When
-      const result = coreController['getEventClass'](
+      const result = coreController['getDataEvent'](
         scopesMock,
         consentRequiredMock,
       );
       // Then
-      expect(result).toBe(CoreFcpDatatransferInformationAnonymousEvent);
+      expect(result).toBe(
+        trackingServiceMock.TrackedEventsMap
+          .FC_DATATRANSFER_INFORMATION_ANONYMOUS,
+      );
     });
 
     it('should throw an exception if class is not in map', () => {
@@ -512,8 +520,8 @@ describe('CoreFcpController', () => {
       const consentRequiredMock = true;
       // Then
       expect(() =>
-        coreController['getEventClass'](scopesMock, consentRequiredMock),
-      ).toThrow(CoreFcpInvalidEventClassException);
+        coreController['getDataEvent'](scopesMock, consentRequiredMock),
+      ).toThrow(CoreFcpInvalidEventKeyException);
     });
   });
 
@@ -525,7 +533,7 @@ describe('CoreFcpController', () => {
     const eventClassMock = 'foo';
 
     beforeEach(() => {
-      coreController['getEventClass'] = jest
+      coreController['getDataEvent'] = jest
         .fn()
         .mockReturnValue(eventClassMock);
     });
@@ -570,7 +578,7 @@ describe('CoreFcpController', () => {
       expect(coreServiceMock.isConsentRequired).toHaveBeenCalledWith(spIdMock);
     });
 
-    it('should get event class', async () => {
+    it('should get data event', async () => {
       // When
       await coreController['trackDatatransfer'](
         contextMock,
@@ -578,8 +586,8 @@ describe('CoreFcpController', () => {
         spIdMock,
       );
       // Then
-      expect(coreController['getEventClass']).toHaveBeenCalledTimes(1);
-      expect(coreController['getEventClass']).toHaveBeenCalledWith(
+      expect(coreController['getDataEvent']).toHaveBeenCalledTimes(1);
+      expect(coreController['getDataEvent']).toHaveBeenCalledWith(
         scopesMock,
         true,
       );

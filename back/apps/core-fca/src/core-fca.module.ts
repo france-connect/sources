@@ -5,15 +5,7 @@ import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { AccountModule } from '@fc/account';
 import { ConfigService } from '@fc/config';
-import {
-  CoreService,
-  CoreTrackingService,
-  OidcClientTokenEventHandler,
-  OidcProviderAuthorizationEventHandler,
-  OidcProviderTokenEventHandler,
-  OidcProviderUserinfoEventHandler,
-  UserinfoEventHandler,
-} from '@fc/core';
+import { CoreTrackingService } from '@fc/core';
 import { CryptographyFcaModule } from '@fc/cryptography-fca';
 import { ExceptionsModule } from '@fc/exceptions';
 import { FeatureHandlerModule } from '@fc/feature-handler';
@@ -40,12 +32,20 @@ import {
 } from './controllers';
 import { CoreFcaSession } from './dto';
 import { CoreFcaDefaultVerifyHandler } from './handlers';
-import { CoreFcaService, OidcProviderConfigAppService } from './services';
+import {
+  CoreFcaService,
+  CoreFcaTrackingService,
+  CoreService,
+  OidcProviderConfigAppService,
+} from './services';
 
+const trackingModule = TrackingModule.forRoot(CoreFcaTrackingService);
+
+const exceptionModule = ExceptionsModule.withTracking(trackingModule);
 @Global()
 @Module({
   imports: [
-    ExceptionsModule,
+    exceptionModule,
     MongooseModule.forRoot(),
     CryptographyFcaModule,
     AccountModule,
@@ -57,6 +57,7 @@ import { CoreFcaService, OidcProviderConfigAppService } from './services';
       OidcProviderConfigAppService,
       ServiceProviderAdapterMongoService,
       ServiceProviderAdapterMongoModule,
+      exceptionModule,
     ),
     OidcClientModule.register(
       IdentityProviderAdapterMongoService,
@@ -68,7 +69,7 @@ import { CoreFcaService, OidcProviderConfigAppService } from './services';
       schema: CoreFcaSession,
     }),
     /** Inject app specific tracking service */
-    TrackingModule.forRoot(CoreTrackingService),
+    trackingModule,
     FeatureHandlerModule,
   ],
   controllers: [
@@ -77,19 +78,19 @@ import { CoreFcaService, OidcProviderConfigAppService } from './services';
     OidcProviderController,
   ],
   providers: [
-    CoreService,
     CoreFcaService,
+    CoreService,
     CoreTrackingService,
-    OidcClientTokenEventHandler,
+    CoreFcaTrackingService,
     OidcProviderConfigAppService,
-    UserinfoEventHandler,
-    OidcProviderAuthorizationEventHandler,
-    OidcProviderTokenEventHandler,
-    OidcProviderUserinfoEventHandler,
     CoreFcaDefaultVerifyHandler,
   ],
   // Make `CoreTrackingService` dependencies available
-  exports: [CoreFcaDefaultVerifyHandler, OidcProviderConfigAppService],
+  exports: [
+    CoreFcaDefaultVerifyHandler,
+    CoreTrackingService,
+    OidcProviderConfigAppService,
+  ],
 })
 export class CoreFcaModule {
   constructor(private readonly config: ConfigService) {}

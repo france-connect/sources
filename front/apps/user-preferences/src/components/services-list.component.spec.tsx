@@ -31,8 +31,6 @@ describe('ServicesListComponent', () => {
   ];
 
   beforeEach(() => {
-    jest.clearAllMocks();
-
     // given
     useContextMock = jest.spyOn(React, 'useContext');
   });

@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { mocked } from 'jest-mock';
 import { useMediaQuery } from 'react-responsive';
 
 import { BadgeComponent } from '@fc/dsfr';
@@ -12,10 +11,6 @@ jest.mock('@fc/dsfr');
 jest.mock('./../service-providers-list-item-detail/service-providers-list-item-detail.component');
 
 describe('ServiceProvidersListItemDetailComponent', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot with default values for desktop viewport', () => {
     // when
     const { container } = render(
@@ -37,7 +32,7 @@ describe('ServiceProvidersListItemDetailComponent', () => {
 
   it('should match the snapshot with default values for mobile viewport', () => {
     // given
-    mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(

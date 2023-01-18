@@ -5,10 +5,6 @@ import { CheckboxInput } from './checkbox.input';
 jest.mock('./checkbox.component');
 
 describe('CheckboxInput', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should match the snapshot', () => {
     // when
     const { container } = renderWithFinalForm(CheckboxInput, {

@@ -20,6 +20,7 @@ import { RnippConfig } from '@fc/rnipp';
 import { ScopesConfig } from '@fc/scopes';
 import { ServiceProviderAdapterMongoConfig } from '@fc/service-provider-adapter-mongo';
 import { SessionConfig } from '@fc/session';
+import { TrackingConfig } from '@fc/tracking';
 
 export class CoreConfig {
   @IsUrl()
@@ -117,4 +118,9 @@ export class CoreFcpConfig {
   @ValidateNested()
   @Type(() => ScopesConfig)
   readonly Scopes: ScopesConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => TrackingConfig)
+  readonly Tracking: TrackingConfig;
 }
