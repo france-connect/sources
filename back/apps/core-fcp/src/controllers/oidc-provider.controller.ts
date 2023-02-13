@@ -14,18 +14,40 @@ import {
 } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
-import { CoreRoutes } from '@fc/core';
+import {
+  CoreMissingIdentityException,
+  CoreRoutes,
+  CsrfToken,
+  DataTransfertType,
+} from '@fc/core';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { OidcSession } from '@fc/oidc';
+import { OidcClientSession } from '@fc/oidc-client';
 import {
   OidcProviderAuthorizeParamsException,
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { OidcProviderRoutes } from '@fc/oidc-provider/enums';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { SessionService } from '@fc/session';
+import {
+  ISessionService,
+  Session,
+  SessionCsrfService,
+  SessionInvalidCsrfConsentException,
+  SessionService,
+} from '@fc/session';
+import {
+  TrackedEventContextInterface,
+  TrackedEventInterface,
+  TrackingService,
+} from '@fc/tracking';
 
-import { AuthorizeParamsDto, ErrorParamsDto } from '../dto';
-import { CoreFcpFailedAbortSessionException } from '../exceptions';
+import { AuthorizeParamsDto, ErrorParamsDto, GetLoginSessionDto } from '../dto';
+import {
+  CoreFcpFailedAbortSessionException,
+  CoreFcpInvalidEventKeyException,
+} from '../exceptions';
+import { CoreFcpService } from '../services';
 
 const validatorOptions: ValidatorOptions = {
   forbidNonWhitelisted: true,
@@ -35,11 +57,16 @@ const validatorOptions: ValidatorOptions = {
 
 @Controller()
 export class OidcProviderController {
+  // Dependency injection can require more than 4 parameters
+  /* eslint-disable-next-line max-params */
   constructor(
     private readonly logger: LoggerService,
     private readonly oidcProvider: OidcProviderService,
     private readonly sessionService: SessionService,
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
+    private readonly core: CoreFcpService,
+    private readonly tracking: TrackingService,
+    private readonly csrfService: SessionCsrfService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -157,5 +184,94 @@ export class OidcProviderController {
     } catch (error) {
       throw new CoreFcpFailedAbortSessionException(error);
     }
+  }
+
+  private getDataEvent(
+    scopes: string[],
+    consentRequired: boolean,
+  ): TrackedEventInterface {
+    const dataType = scopes.every((scope) => scope === 'openid')
+      ? 'ANONYMOUS'
+      : 'IDENTITY';
+    const consentOrInfo = consentRequired ? 'CONSENT' : 'INFORMATION';
+
+    const eventKey =
+      `FC_DATATRANSFER_${consentOrInfo}_${dataType}` as DataTransfertType;
+
+    const { TrackedEventsMap } = this.tracking;
+
+    if (!TrackedEventsMap.hasOwnProperty(eventKey)) {
+      throw new CoreFcpInvalidEventKeyException();
+    }
+
+    return TrackedEventsMap[eventKey];
+  }
+
+  private async trackDatatransfer(
+    trackingContext: TrackedEventContextInterface,
+    interaction: any,
+    spId: string,
+  ): Promise<void> {
+    const scopes = this.core.getScopesForInteraction(interaction);
+    const consentRequired = await this.core.isConsentRequired(spId);
+    const claims = this.core.getClaimsForInteraction(interaction);
+
+    const eventKey = this.getDataEvent(scopes, consentRequired);
+    const context = {
+      ...trackingContext,
+      claims,
+    };
+
+    this.tracking.track(eventKey, context);
+  }
+
+  @Post(CoreRoutes.INTERACTION_LOGIN)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async getLogin(
+    @Req() req,
+    @Res() res,
+    @Body() body: CsrfToken,
+    /**
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
+     */
+    @Session('OidcClient', GetLoginSessionDto)
+    sessionOidc: ISessionService<OidcClientSession>,
+  ) {
+    const { _csrf: csrfToken } = body;
+    const session: OidcSession = await sessionOidc.get();
+
+    const { spId, spIdentity } = session;
+
+    try {
+      await this.csrfService.validate(sessionOidc, csrfToken);
+    } catch (error) {
+      this.logger.trace({ error }, LoggerLevelNames.WARN);
+      throw new SessionInvalidCsrfConsentException(error);
+    }
+
+    if (!spIdentity) {
+      this.logger.trace({ spIdentity }, LoggerLevelNames.WARN);
+      throw new CoreMissingIdentityException();
+    }
+
+    this.logger.trace({ csrfToken, spIdentity });
+
+    const interaction = await this.oidcProvider.getInteraction(req, res);
+    const trackingContext: TrackedEventContextInterface = { req };
+    await this.trackDatatransfer(trackingContext, interaction, spId);
+
+    // send the notification mail to the final user
+    await this.core.sendAuthenticationMail(session);
+
+    this.logger.trace({
+      data: { req, res, session },
+      method: 'POST',
+      name: 'CoreRoutes.INTERACTION_LOGIN',
+      route: CoreRoutes.INTERACTION_LOGIN,
+    });
+
+    return this.oidcProvider.finishInteraction(req, res, session);
   }
 }

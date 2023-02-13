@@ -11,9 +11,11 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
-import { OidcProviderRoutes } from '@fc/oidc-provider/enums';
-import { SessionService } from '@fc/session';
+import { CoreMissingIdentityException, CoreRoutes } from '@fc/core';
+import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { OidcClientSession } from '@fc/oidc-client';
+import { OidcProviderRoutes, OidcProviderService } from '@fc/oidc-provider';
+import { ISessionService, Session, SessionService } from '@fc/session';
 
 import { AuthorizeParamsDto } from '../dto';
 
@@ -22,6 +24,7 @@ export class OidcProviderController {
   constructor(
     private readonly logger: LoggerService,
     private readonly sessionService: SessionService,
+    private readonly oidcProvider: OidcProviderService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -92,5 +95,41 @@ export class OidcProviderController {
     await this.sessionService.reset(req, res);
     // Pass the query to oidc-provider
     return next();
+  }
+
+  /**
+   * @TODO #185 Remove this controller once it is globaly available in `@fc/oidc-provider`
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/merge_requests/185
+   */
+  @Get(CoreRoutes.INTERACTION_LOGIN)
+  async getLogin(
+    @Req() req,
+    @Res() res,
+    /**
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
+     */
+    @Session('OidcClient')
+    sessionOidc: ISessionService<OidcClientSession>,
+  ) {
+    const { spIdentity } = await sessionOidc.get();
+    if (!spIdentity) {
+      this.logger.trace(
+        { route: CoreRoutes.INTERACTION_LOGIN },
+        LoggerLevelNames.WARN,
+      );
+      throw new CoreMissingIdentityException();
+    }
+
+    this.logger.trace({
+      method: 'GET',
+      name: 'CoreRoutes.INTERACTION_LOGIN',
+      route: CoreRoutes.INTERACTION_LOGIN,
+      spIdentity,
+    });
+
+    const session: OidcClientSession = await sessionOidc.get();
+    return this.oidcProvider.finishInteraction(req, res, session);
   }
 }

@@ -1,6 +1,6 @@
-import { ArgumentsHost } from '@nestjs/common';
+import { ArgumentsHost, HttpStatus } from '@nestjs/common';
 
-import { ApiErrorMessage, ApiErrorParams, ApiHttpResponseCode } from '@fc/app';
+import { ApiErrorMessage, ApiErrorParams } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { Loggable, Trackable } from '@fc/exceptions';
 import { LoggerService } from '@fc/logger-legacy';
@@ -281,11 +281,10 @@ describe('FcExceptionFilter', () => {
       configServiceMock.get.mockReturnValue({
         apiOutputContentType: 'json',
       });
-      const httpErrorCodeValueMock = 500;
       const exceptionParam: ApiErrorParams = {
         res: resMock,
         error: errorValueMock,
-        httpResponseCode: httpErrorCodeValueMock,
+        httpResponseCode: HttpStatus.BAD_REQUEST,
       };
       // When
       exceptionFilter['errorOutput'](exceptionParam);
@@ -300,11 +299,10 @@ describe('FcExceptionFilter', () => {
 
     it('should return an error through `res.render` if the `apiOutputContentType` value is set to `html`', () => {
       // Given
-      const httpErrorCodeValueMock = ApiHttpResponseCode.ERROR_CODE_NONE;
       const exceptionParam: ApiErrorParams = {
         res: resMock,
         error: errorValueMock,
-        httpResponseCode: httpErrorCodeValueMock,
+        httpResponseCode: HttpStatus.BAD_REQUEST,
       };
       const errorValueReturnedMock: ApiErrorMessage = {
         code: 'codeValueMock',
@@ -321,19 +319,18 @@ describe('FcExceptionFilter', () => {
       );
     });
 
-    it('should return a 500 error code if the status is set to `true`', () => {
+    it('should send an HTTP code corresponding to `httpResponseCode` given in `errorParam`', () => {
       // Given
-      const httpErrorCodeValueMock = 500;
       const exceptionParam: ApiErrorParams = {
         res: resMock,
         error: errorValueMock,
-        httpResponseCode: httpErrorCodeValueMock,
+        httpResponseCode: HttpStatus.BAD_REQUEST,
       };
       // When
       exceptionFilter['errorOutput'](exceptionParam);
       // Then
       expect(resMock.status).toHaveBeenCalledTimes(1);
-      expect(resMock.status).toHaveBeenCalledWith(500);
+      expect(resMock.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
     });
   });
 });

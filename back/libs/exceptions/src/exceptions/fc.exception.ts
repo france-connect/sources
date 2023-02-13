@@ -1,3 +1,5 @@
+import { HttpStatus } from '@nestjs/common';
+
 import { Description, Loggable } from '../decorator';
 
 @Loggable()
@@ -49,7 +51,8 @@ export class FcException extends Error {
   public code: number;
 
   public originalError?: Error;
-  public redirect: boolean;
+  public redirect = false;
+  public httpStatusCode: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 
   constructor(input?: Error | string) {
     let arg: unknown = input;
@@ -63,7 +66,5 @@ export class FcException extends Error {
     if (input instanceof Error) {
       this.originalError = input;
     }
-
-    this.redirect = false;
   }
 }

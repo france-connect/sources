@@ -1,4 +1,4 @@
-@import '@fc/dsfr/styles.scss';
+@import '@fc/dsfr/styles';
 @import '@fc/dsfr/core/funcs/pixel-to-rem';
 
 .user-history-card {

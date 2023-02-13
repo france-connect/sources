@@ -21,14 +21,11 @@
     "import",
     "sort-destructure-keys",
     "sort-keys-fix",
-    "jest",
     "jest-extended"
   ],
   "extends": [
     "react-app",
     "react-app/jest",
-    "plugin:jest/recommended",
-    "plugin:jest/style",
     "plugin:storybook/recommended",
     "airbnb",
     "airbnb-typescript",
@@ -89,7 +86,13 @@
     "sort-imports": 0,
     "sort-keys-fix/sort-keys-fix": 2,
     "sort-destructure-keys/sort-destructure-keys": 2,
-    "sort-keys": [2, "asc", { "caseSensitive": true, "natural": false, "minKeys": 2 }]
+    "sort-keys": [2, "asc", { "caseSensitive": true, "natural": false, "minKeys": 2 }],
+    "testing-library/prefer-screen-queries": 0,
+    "testing-library/no-node-access": 0,
+    "testing-library/no-wait-for-multiple-assertions": 0,
+    "testing-library/no-container": 0,
+    "react/function-component-definition": 0,
+    "react/jsx-no-constructed-context-values": 0
   },
   "overrides": [
     {

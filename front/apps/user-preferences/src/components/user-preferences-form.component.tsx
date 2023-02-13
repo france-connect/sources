@@ -44,7 +44,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
     return (
       <form
         data-testid="user-preferences-form"
-        id="UserPreferencesFormComponent"
+        id="user-preferences-form-component"
         onSubmit={onSubmit}>
         <h2 className={classnames(styles.title, 'fr-h3 fr-mt-5w fr-mb-2w')}>
           <b>Mes réglages&nbsp;:</b>

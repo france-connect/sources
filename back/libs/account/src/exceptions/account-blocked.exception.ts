@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { Description } from '@fc/exceptions';
 
 import { ErrorCode } from '../enums';
@@ -13,4 +15,5 @@ export class AccountBlockedException extends AccountBaseException {
   code = ErrorCode.ACCOUNT_BLOCKED;
   message =
     'Votre accès a été désactivé. Pour le réactiver merci de nous contacter.';
+  public readonly httpStatusCode = HttpStatus.FORBIDDEN;
 }

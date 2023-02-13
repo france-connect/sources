@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { Description } from '@fc/exceptions';
 
 import { ErrorCode } from '../enums';
@@ -11,6 +13,7 @@ import { OidcClientBaseException } from './oidc-client-base.exception';
 )
 export class OidcClientInvalidStateException extends OidcClientBaseException {
   code = ErrorCode.INVALID_STATE;
+  public readonly httpStatusCode = HttpStatus.FORBIDDEN;
 
   constructor() {
     super(

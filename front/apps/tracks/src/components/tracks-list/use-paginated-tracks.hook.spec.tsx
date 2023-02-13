@@ -1,7 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import { Location } from 'history';
-import { useLocation } from 'react-router-dom';
+import { Location, useLocation } from 'react-router-dom';
 
 import { TracksConfig } from '../../interfaces';
 import { DEFAULT_OFFSET, DEFAULT_SIZE, usePaginatedTracks } from './use-paginated-tracks.hook';

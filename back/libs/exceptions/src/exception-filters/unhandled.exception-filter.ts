@@ -1,13 +1,17 @@
 import { Response } from 'express';
 
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import {
+  ArgumentsHost,
+  Catch,
+  ExceptionFilter,
+  HttpStatus,
+} from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 
 import {
   ApiContentType,
   ApiErrorMessage,
   ApiErrorParams,
-  ApiHttpResponseCode,
   AppConfig,
 } from '@fc/app';
 import { ConfigService } from '@fc/config';
@@ -46,7 +50,7 @@ export class UnhandledExceptionFilter
       stackTrace,
     });
 
-    const httpErrorCode: number = ApiHttpResponseCode.ERROR_CODE_500;
+    const httpErrorCode: number = HttpStatus.INTERNAL_SERVER_ERROR;
     const errorMessage: ApiErrorMessage = { code, id, message };
     const exceptionParam: ApiErrorParams = {
       res,

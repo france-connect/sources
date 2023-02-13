@@ -1,10 +1,12 @@
+import { encode } from 'querystring';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
-import { IdentityProviderMetadata } from '@fc/oidc';
-import { OidcClientService } from '@fc/oidc-client';
+import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
+import { OidcClientService, TokenParams } from '@fc/oidc-client';
 import {
   SessionCsrfService,
   SessionInvalidCsrfSelectIdpException,
@@ -12,11 +14,43 @@ import {
 } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { ProcessCore } from '../enums';
+import { CoreFcpInvalidIdentityException } from '../exceptions';
+import { CoreFcpService } from '../services';
 import { OidcClientController } from './oidc-client.controller';
+
+jest.mock('querystring', () => ({
+  encode: jest.fn(),
+}));
 
 describe('OidcClient Controller', () => {
   let controller: OidcClientController;
   let res;
+
+  const interactionIdMock = 'interactionIdMockValue';
+  const acrMock = 'acrMockValue';
+  const idpStateMock = 'idpStateMockValue';
+  const idpNonceMock = 'idpNonceMock';
+  const idpIdMock = 'idpIdMockValue';
+
+  const providerIdMock = 'providerIdMockValue';
+
+  const identityMock = {
+    // oidc spec defined property
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    given_name: 'given_name',
+    sub: '1',
+  } as IOidcIdentity;
+
+  const req = {
+    query: {
+      firstQueryParam: 'first',
+      secondQueryParam: 'second',
+    },
+    params: {
+      providerUid: 'secretProviderUid',
+    },
+  };
 
   const oidcClientServiceMock = {
     utils: {
@@ -26,6 +60,8 @@ describe('OidcClient Controller', () => {
       checkIdpBlacklisted: jest.fn(),
       checkCsrfTokenValidity: jest.fn(),
     },
+    getTokenFromProvider: jest.fn(),
+    getUserInfosFromProvider: jest.fn(),
   };
 
   const loggerServiceMock = {
@@ -53,6 +89,11 @@ describe('OidcClient Controller', () => {
 
   const trackingMock = {
     track: jest.fn(),
+    TrackedEventsMap: {
+      FC_DATATRANSFER_CONSENT_IDENTITY: {},
+      FC_DATATRANSFER_INFORMATION_IDENTITY: {},
+      FC_DATATRANSFER_INFORMATION_ANONYMOUS: {},
+    },
   };
 
   const appConfigMock = {
@@ -60,13 +101,30 @@ describe('OidcClient Controller', () => {
   };
 
   const configServiceMock = {
-    get: () => appConfigMock,
+    get: jest.fn(),
   };
 
-  const stateMock = 'stateMock';
-  const nonceMock = 'nonceMock';
+  const queryStringEncodeMock = jest.mocked(encode);
 
-  const providerIdMock = 'providerIdMockValue';
+  const coreServiceMock = {
+    getFeature: jest.fn(),
+  };
+  const randomStringMock = 'randomStringMockValue';
+  const spIdMock = 'spIdMockValue';
+  const spNameMock = 'some SP';
+
+  const sessionDataMock: OidcSession = {
+    csrfToken: randomStringMock,
+    idpId: idpIdMock,
+    idpNonce: idpNonceMock,
+    idpState: idpStateMock,
+    interactionId: interactionIdMock,
+
+    spAcr: acrMock,
+    spId: spIdMock,
+    spIdentity: {} as IOidcIdentity,
+    spName: spNameMock,
+  };
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -82,6 +140,7 @@ describe('OidcClient Controller', () => {
         TrackingService,
         ConfigService,
         IdentityProviderAdapterMongoService,
+        CoreFcpService,
       ],
     })
       .overrideProvider(OidcClientService)
@@ -98,6 +157,8 @@ describe('OidcClient Controller', () => {
       .useValue(sessionCsrfServiceMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
       .useValue(identityProviderServiceMock)
+      .overrideProvider(CoreFcpService)
+      .useValue(coreServiceMock)
       .compile();
 
     controller = module.get<OidcClientController>(OidcClientController);
@@ -112,14 +173,11 @@ describe('OidcClient Controller', () => {
     };
 
     identityProviderServiceMock.getById.mockReturnValue(idpMock);
-    sessionServiceMock.get.mockResolvedValue({
-      idpState: stateMock,
-      idpNonce: nonceMock,
-    });
+    sessionServiceMock.get.mockResolvedValue(sessionDataMock);
 
     oidcClientServiceMock.utils.buildAuthorizeParameters.mockReturnValue({
-      state: stateMock,
-      nonce: nonceMock,
+      state: idpStateMock,
+      nonce: idpNonceMock,
       scope: 'scopeMock',
       idpId: providerIdMock,
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -127,6 +185,8 @@ describe('OidcClient Controller', () => {
     });
 
     sessionCsrfServiceMock.save.mockResolvedValueOnce(true);
+
+    configServiceMock.get.mockReturnValue(appConfigMock);
   });
 
   it('should be defined', () => {
@@ -143,7 +203,7 @@ describe('OidcClient Controller', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         claims: 'json_stringified',
-        nonce: nonceMock,
+        nonce: idpNonceMock,
         csrfToken: 'csrfMockValue',
       };
 
@@ -158,10 +218,10 @@ describe('OidcClient Controller', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         claims: 'json_stringified',
-        nonce: 'nonceMock',
+        nonce: idpNonceMock,
         idpId: 'providerIdMockValue',
         scope: 'openid',
-        state: 'stateMock',
+        state: idpStateMock,
         prompt: 'login',
       };
 
@@ -186,7 +246,7 @@ describe('OidcClient Controller', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         claims: 'json_stringified',
-        nonce: nonceMock,
+        nonce: idpNonceMock,
         csrfToken: 'csrfMockValue',
       };
 
@@ -213,7 +273,7 @@ describe('OidcClient Controller', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         claims: 'json_stringified',
-        nonce: nonceMock,
+        nonce: idpNonceMock,
         csrfToken: 'csrfMockValue',
       };
 
@@ -232,12 +292,12 @@ describe('OidcClient Controller', () => {
         idpId: body.providerUid,
         idpName: 'nameValue',
         idpLabel: 'titleValue',
-        idpState: stateMock,
-        idpNonce: nonceMock,
+        idpState: idpStateMock,
+        idpNonce: idpNonceMock,
       });
     });
 
-    it('should resolve even if no spId are fetchable', async () => {
+    it('should throw if no spId are fetchable', async () => {
       // setup
       const body = {
         scope: 'openid',
@@ -245,7 +305,7 @@ describe('OidcClient Controller', () => {
         // oidc param
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
-        nonce: nonceMock,
+        nonce: idpNonceMock,
         claims: 'any_formatted_json_string',
         csrfToken: 'csrfMockValue',
       };
@@ -254,10 +314,12 @@ describe('OidcClient Controller', () => {
       });
 
       // action
-      await controller.redirectToIdp(res, body, sessionServiceMock);
+      await expect(
+        controller.redirectToIdp(res, body, sessionServiceMock),
+      ).rejects.toThrow();
 
       // assert
-      expect(res.redirect).toHaveBeenCalledTimes(1);
+      expect(res.redirect).not.toHaveBeenCalled();
     });
 
     it('should throw an error because idp is blacklisted', async () => {
@@ -269,7 +331,7 @@ describe('OidcClient Controller', () => {
         // oidc param
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
-        nonce: nonceMock,
+        nonce: idpNonceMock,
         claims: 'any_formatted_json_string',
         csrfToken: csrfTokenBody,
       };
@@ -293,7 +355,7 @@ describe('OidcClient Controller', () => {
         // oidc param
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
-        nonce: nonceMock,
+        nonce: idpNonceMock,
         claims: 'any_formatted_json_string',
         csrfToken: 'csrfMockValue',
       };
@@ -322,7 +384,7 @@ describe('OidcClient Controller', () => {
           // oidc param
           // eslint-disable-next-line @typescript-eslint/naming-convention
           acr_values: 'eidas3',
-          nonce: nonceMock,
+          nonce: idpNonceMock,
           claims: 'any_formatted_json_string',
           csrfToken: 'csrfMockValue',
         };
@@ -347,7 +409,7 @@ describe('OidcClient Controller', () => {
           // oidc param
           // eslint-disable-next-line @typescript-eslint/naming-convention
           acr_values: 'eidas3',
-          nonce: nonceMock,
+          nonce: idpNonceMock,
           claims: 'any_formatted_json_string',
           csrfToken: 'csrfMockValue',
         };
@@ -374,6 +436,196 @@ describe('OidcClient Controller', () => {
       expect(oidcClientServiceMock.utils.wellKnownKeys).toHaveBeenCalledTimes(
         1,
       );
+    });
+  });
+
+  describe('getLegacyOidcCallback', () => {
+    it('should extract urlPrefix from app config', async () => {
+      // When
+      await controller.getLegacyOidcCallback(req.query, req.params);
+      // Then
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('App');
+    });
+
+    it('should build redirect url with encode from querystring', async () => {
+      // When
+      await controller.getLegacyOidcCallback(req.query, req.params);
+      // Then
+      expect(queryStringEncodeMock).toHaveBeenCalledTimes(1);
+      expect(queryStringEncodeMock).toHaveBeenCalledWith(req.query);
+    });
+
+    it('should redrect to the built oidc callback url', async () => {
+      // Given
+      const queryMock = 'first-query-param=first&second-query-param=second';
+      queryStringEncodeMock.mockReturnValueOnce(queryMock);
+      const redirectOidcCallbackUrl = `${appConfigMock.urlPrefix}/oidc-callback?${queryMock}`;
+      // When
+      const result = await controller.getLegacyOidcCallback(
+        req.query,
+        req.params,
+      );
+      // Then
+      expect(result).toEqual({
+        statusCode: 302,
+        url: redirectOidcCallbackUrl,
+      });
+    });
+  });
+
+  describe('getOidcCallback()', () => {
+    const accessTokenMock = Symbol('accesToken');
+    const amrMock = Symbol('amr');
+
+    const tokenParamsMock: TokenParams = {
+      state: idpStateMock,
+      nonce: idpNonceMock,
+    };
+
+    const userInfoParamsMock = {
+      accessToken: accessTokenMock,
+      idpId: idpIdMock,
+    };
+
+    const identityExchangeMock = {
+      amr: amrMock,
+      idpAccessToken: accessTokenMock,
+      idpAcr: acrMock,
+      idpIdentity: identityMock,
+    };
+    const redirectMock = `/api/v2/interaction/${interactionIdMock}/verify`;
+
+    let validateIdentityMock;
+    beforeEach(() => {
+      oidcClientServiceMock.getTokenFromProvider.mockReturnValueOnce({
+        accessToken: accessTokenMock,
+        acr: acrMock,
+        amr: amrMock,
+      });
+      oidcClientServiceMock.getUserInfosFromProvider.mockReturnValueOnce(
+        identityMock,
+      );
+      validateIdentityMock = jest.spyOn<OidcClientController, any>(
+        controller,
+        'validateIdentity',
+      );
+
+      validateIdentityMock.mockResolvedValueOnce();
+      oidcClientServiceMock.utils.checkIdpBlacklisted.mockResolvedValueOnce(
+        false,
+      );
+    });
+
+    it('should call token with providerId', async () => {
+      // action
+      await controller.getOidcCallback(req, res, sessionServiceMock);
+
+      // assert
+      expect(oidcClientServiceMock.getTokenFromProvider).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(oidcClientServiceMock.getTokenFromProvider).toHaveBeenCalledWith(
+        idpIdMock,
+        tokenParamsMock,
+        req,
+      );
+    });
+
+    it('should call userinfo with acesstoken, dto and context', async () => {
+      // action
+      await controller.getOidcCallback(req, res, sessionServiceMock);
+
+      // assert
+      expect(
+        oidcClientServiceMock.getUserInfosFromProvider,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        oidcClientServiceMock.getUserInfosFromProvider,
+      ).toHaveBeenCalledWith(userInfoParamsMock, req);
+    });
+
+    it('should failed to get identity if validation failed', async () => {
+      // arrange
+      const errorMock = new Error('Unknown Error');
+      validateIdentityMock.mockReset().mockRejectedValueOnce(errorMock);
+
+      // action
+      await expect(
+        controller.getOidcCallback(req, res, sessionServiceMock),
+      ).rejects.toThrow(errorMock);
+
+      // assert
+      expect(validateIdentityMock).toHaveBeenCalledTimes(1);
+      expect(validateIdentityMock).toHaveBeenCalledWith(
+        idpIdMock,
+        identityMock,
+      );
+    });
+
+    it('should set session with identity result and interaction ID', async () => {
+      // action
+      await controller.getOidcCallback(req, res, sessionServiceMock);
+
+      // assert
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.set).toHaveBeenCalledWith(identityExchangeMock);
+    });
+
+    it('should redirect user after token and userinfo received and saved', async () => {
+      // action
+      await controller.getOidcCallback(req, res, sessionServiceMock);
+
+      // assert
+      expect(res.redirect).toHaveBeenCalledTimes(1);
+      expect(res.redirect).toHaveBeenCalledWith(redirectMock);
+    });
+  });
+
+  describe('validateIdentity()', () => {
+    let handleFnMock;
+    let handlerMock;
+
+    beforeEach(() => {
+      handleFnMock = jest.fn();
+      handlerMock = {
+        handle: handleFnMock,
+      };
+      coreServiceMock.getFeature.mockResolvedValueOnce(handlerMock);
+    });
+
+    it('should succeed to get the right handler to validate identity', async () => {
+      // arrange
+      handleFnMock.mockResolvedValueOnce([]);
+      // action
+      await controller['validateIdentity'](idpIdMock, identityMock);
+      // expect
+      expect(coreServiceMock.getFeature).toHaveBeenCalledTimes(1);
+      expect(coreServiceMock.getFeature).toHaveBeenCalledWith(
+        idpIdMock,
+        ProcessCore.ID_CHECK,
+      );
+    });
+
+    it('should succeed validate identity from feature handler', async () => {
+      // arrange
+      handleFnMock.mockResolvedValueOnce([]);
+      // action
+      await controller['validateIdentity'](idpIdMock, identityMock);
+      // expect
+      expect(handleFnMock).toHaveBeenCalledTimes(1);
+      expect(handleFnMock).toHaveBeenCalledWith(identityMock);
+    });
+
+    it('should failed to validate identity', async () => {
+      // arrange
+      handleFnMock.mockResolvedValueOnce(['Unknown Error']);
+
+      await expect(
+        // action
+        controller['validateIdentity'](idpIdMock, identityMock),
+        // expect
+      ).rejects.toThrow(CoreFcpInvalidIdentityException);
     });
   });
 });

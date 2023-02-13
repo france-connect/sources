@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as ejs from 'ejs';
 import * as glob from 'glob';
 
-import { Type } from '@nestjs/common';
+import { HttpStatus, Type } from '@nestjs/common';
 
 import {
   ExceptionsService,
@@ -40,15 +40,23 @@ export default class Runner {
     return typeof param === 'number' && param >= 0;
   }
 
+  static hasValidHttpStatusCode(param: number): boolean {
+    return (
+      typeof param === 'number' && Object.values(HttpStatus).includes(param)
+    );
+  }
+
   static inflateException({
     path,
     Exception,
   }: PathAndException): PathAndInstantiatedException {
     const error = new Exception(new Error());
-    const { scope, code } = error;
+    const { scope, code, httpStatusCode } = error;
     const hasValidScope = Runner.hasValidParam(scope);
     const hasValidCode = Runner.hasValidParam(code);
-    const isException = hasValidScope && hasValidCode;
+    const hasValidHttpStatusCode =
+      Runner.hasValidHttpStatusCode(httpStatusCode);
+    const isException = hasValidScope && hasValidCode && hasValidHttpStatusCode;
     if (!isException) return null;
     return { path, error };
   }
@@ -60,6 +68,7 @@ export default class Runner {
     const {
       scope,
       code,
+      httpStatusCode,
       message,
       constructor: { name: exception },
     } = error;
@@ -72,6 +81,7 @@ export default class Runner {
       scope,
       code,
       errorCode,
+      httpStatusCode,
       message,
       loggable,
       trackable,

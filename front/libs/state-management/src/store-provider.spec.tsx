@@ -31,7 +31,7 @@ describe('StoreProvider', () => {
     const middlewares = [jest.fn()];
     const debugMode = false;
 
-    const mockConfigure = jest.mocked(configure, true);
+    const mockConfigure = jest.mocked(configure, { shallow: true });
     mockConfigure.mockReturnValue({
       persistor: mockPersistor,
       store: mockStore,
@@ -63,7 +63,7 @@ describe('StoreProvider', () => {
 
   it('should render the children', () => {
     // given
-    const mockConfigure = jest.mocked(configure, true);
+    const mockConfigure = jest.mocked(configure, { shallow: true });
     mockConfigure.mockReturnValue({
       persistor: mockPersistor,
       store: mockStore,

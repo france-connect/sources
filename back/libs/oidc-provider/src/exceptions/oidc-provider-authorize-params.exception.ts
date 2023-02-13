@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { Description } from '@fc/exceptions';
 
 import { ErrorCode } from '../enums';
@@ -11,6 +13,7 @@ import { OidcProviderBaseException } from './oidc-provider-base.exception';
 )
 export class OidcProviderAuthorizeParamsException extends OidcProviderBaseException {
   public readonly code = ErrorCode.AUTHORIZATION_ERROR;
+  public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
 
   constructor() {
     super(

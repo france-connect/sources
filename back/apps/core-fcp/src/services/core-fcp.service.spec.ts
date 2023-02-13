@@ -2,7 +2,6 @@ import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialExcept } from '@fc/common';
-import { CoreMissingAuthenticationEmailException } from '@fc/core';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
@@ -127,7 +126,7 @@ describe('CoreFcpService', () => {
     featureHandlerGetSpy = jest.spyOn(FeatureHandler, 'get');
 
     sessionServiceMock.get.mockResolvedValue(sessionDataMock);
-    featureHandlerGetSpy.mockResolvedValueOnce(featureHandlerServiceMock);
+    featureHandlerGetSpy.mockReturnValueOnce(featureHandlerServiceMock);
     IdentityProviderMock.getById.mockResolvedValue(identityProviderResultMock);
     serviceProviderMock.getById.mockResolvedValue(serviceProviderMock);
   });
@@ -275,23 +274,6 @@ describe('CoreFcpService', () => {
         authenticationEmailMock,
         service,
       );
-    });
-
-    it("Should throw `CoreMissingAuthenticationEmailException` if the feature handler doesn't exists", async () => {
-      // Given
-      featureHandlerGetSpy.mockReset().mockImplementationOnce(() => {
-        throw new Error();
-      });
-      IdentityProviderMock.getById.mockResolvedValue({
-        featureHandlers: {
-          coreVerify: coreVerifyMock,
-          authenticationEmail: undefined,
-        },
-      });
-      // When, Then
-      await expect(
-        service.sendAuthenticationMail(sessionDataMock),
-      ).rejects.toThrow(CoreMissingAuthenticationEmailException);
     });
 
     it('Should call featureHandle.handle() with `session`', async () => {

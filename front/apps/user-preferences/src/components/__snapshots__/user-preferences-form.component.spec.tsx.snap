@@ -4,7 +4,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
 <div>
   <form
     data-testid="user-preferences-form"
-    id="UserPreferencesFormComponent"
+    id="user-preferences-form-component"
   >
     <h2
       class="title fr-h3 fr-mt-5w fr-mb-2w"
@@ -56,7 +56,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
 <div>
   <form
     data-testid="user-preferences-form"
-    id="UserPreferencesFormComponent"
+    id="user-preferences-form-component"
   >
     <h2
       class="title fr-h3 fr-mt-5w fr-mb-2w"
@@ -108,7 +108,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
 <div>
   <form
     data-testid="user-preferences-form"
-    id="UserPreferencesFormComponent"
+    id="user-preferences-form-component"
   >
     <h2
       class="title fr-h3 fr-mt-5w fr-mb-2w"
@@ -175,7 +175,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
 <div>
   <form
     data-testid="user-preferences-form"
-    id="UserPreferencesFormComponent"
+    id="user-preferences-form-component"
   >
     <h2
       class="title fr-h3 fr-mt-5w fr-mb-2w"
@@ -227,7 +227,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
 <div>
   <form
     data-testid="user-preferences-form"
-    id="UserPreferencesFormComponent"
+    id="user-preferences-form-component"
   >
     <h2
       class="title fr-h3 fr-mt-5w fr-mb-2w"
@@ -279,7 +279,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
 <div>
   <form
     data-testid="user-preferences-form"
-    id="UserPreferencesFormComponent"
+    id="user-preferences-form-component"
   >
     <h2
       class="title fr-h3 fr-mt-5w fr-mb-2w"

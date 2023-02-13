@@ -1,6 +1,5 @@
 import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { act } from 'react-dom/test-utils';
 
 import { HeadingTag } from '@fc/common';
 
@@ -152,9 +151,7 @@ describe('AccordionComponent', () => {
       </AccordionComponent>,
     );
     const titleBtnElement = getByTestId('AccordionComponent-title');
-    act(() => {
-      fireEvent.click(titleBtnElement);
-    });
+    fireEvent.click(titleBtnElement);
 
     // Then
     expect(onAccordionClickMock).toHaveBeenCalledWith(id);
@@ -172,9 +169,7 @@ describe('AccordionComponent', () => {
       </AccordionComponent>,
     );
     const titleBtnElement = getByTestId('AccordionComponent-title');
-    act(() => {
-      fireEvent.click(titleBtnElement);
-    });
+    fireEvent.click(titleBtnElement);
 
     // Then
     expect(onAccordionClickMock).toHaveBeenCalledWith('any-localedefinedid-mock');

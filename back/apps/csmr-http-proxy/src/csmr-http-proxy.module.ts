@@ -6,6 +6,7 @@ import { Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
 import { HttpProxyModule } from '@fc/http-proxy';
+import { RabbitmqConfig } from '@fc/rabbitmq';
 
 import { rawTransform, validateStatus } from './config';
 import { CsmrHttpProxyController } from './controllers';
@@ -17,7 +18,7 @@ import { CsmrHttpProxyService } from './services';
       imports: [ConfigModule, HttpProxyModule],
       useFactory: async (configService: ConfigService) => {
         const { requestTimeout: timeout } =
-          configService.get('HttpProxyBroker');
+          configService.get<RabbitmqConfig>('HttpProxyBroker');
         return {
           timeout,
           validateStatus,

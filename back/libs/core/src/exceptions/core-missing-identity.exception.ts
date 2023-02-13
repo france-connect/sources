@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { Description } from '@fc/exceptions';
 
 import { ErrorCode } from '../enums';
@@ -11,6 +13,7 @@ import { CoreBaseException } from './core-base.exception';
 )
 export class CoreMissingIdentityException extends CoreBaseException {
   code = ErrorCode.MISSING_IDENTITY;
+  public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
 
   constructor() {
     super(

@@ -9,6 +9,7 @@ import { usePagination } from './use-pagination.hook';
 export interface PaginationComponentProps {
   onPageClick: (nextOffset: number) => void;
   pagination: Pagination;
+  // eslint-disable-next-line react/require-default-props
   numberOfPagesShownIntoNavigation: number;
   useEdgeArrows?: boolean;
   useEllipsis?: boolean;
@@ -140,6 +141,7 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
 );
 
 PaginationComponent.defaultProps = {
+  // eslint-disable-next-line react/default-props-match-prop-types
   numberOfPagesShownIntoNavigation: DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION,
   useEdgeArrows: false,
   useEllipsis: DEFAULT_USE_ELLIPSIS,

@@ -1,11 +1,10 @@
-$PALETTE: (
-  'white': rgba(255, 255, 255, 1),
-  'black': rgba(0, 0, 0, 1),
-  'success': rgba(38, 135, 68, 1),
-  'error': rgba(255, 6, 0, 1),
-  'info': rgba(7, 98, 200, 1),
+$theme-palette: (
+  'white': rgb(255 255 255 / 100%),
+  'black': rgb(0 0 0 / 100%),
+  'success': rgb(38 135 68 / 100%),
+  'error': rgb(255 6 0 / 100%),
+  'info': rgb(7 98 200 / 100%),
 ) !default;
-
 $white: #ffffff;
 $black: #000000;
 $blue-france-100: #f2f2f9;

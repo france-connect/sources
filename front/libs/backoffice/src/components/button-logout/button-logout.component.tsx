@@ -15,7 +15,7 @@ export const ButtonLogoutComponent = () => {
 
   return (
     <a
-      className="ButtonLogoutComponent fr-text--lg fr-p-3v"
+      className="button-logout-component fr-text--lg fr-p-3v"
       href={endSessionUrl}
       title="Se déconnecter">
       <span>Se déconnecter</span>

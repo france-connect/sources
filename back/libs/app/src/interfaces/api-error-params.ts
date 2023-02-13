@@ -2,12 +2,13 @@
 
 import { Response } from 'express';
 
-import { ApiHttpResponseCode } from '../enums';
+import { HttpStatus } from '@nestjs/common';
+
 import { ApiErrorMessage } from './api-error-message';
 
 // Declarative code
 export interface ApiErrorParams {
   error: ApiErrorMessage;
-  httpResponseCode: ApiHttpResponseCode;
+  httpResponseCode: HttpStatus;
   res: Response;
 }

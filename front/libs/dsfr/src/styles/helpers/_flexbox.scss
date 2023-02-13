@@ -4,9 +4,9 @@
 *
 * .flex-1 -> flex: 1
 */
-$flexSpaceSizes: (0, 1, 2, 3, 4, 5, 6, 7, 8);
+$flex-space-sizes: (0, 1, 2, 3, 4, 5, 6, 7, 8);
 
-@each $space in $flexSpaceSizes {
+@each $space in $flex-space-sizes {
   .flex-#{$space} {
     flex: #{$space};
   }
@@ -69,9 +69,7 @@ $flexSpaceSizes: (0, 1, 2, 3, 4, 5, 6, 7, 8);
 }
 
 .flex-justify > * {
-  flex-basis: auto;
-  flex-grow: 1;
-  flex-shrink: 1;
+  flex: 1 1 auto;
 }
 
 .flex-stretch {
@@ -105,8 +103,7 @@ $flexSpaceSizes: (0, 1, 2, 3, 4, 5, 6, 7, 8);
 .flex-wrapper {
   display: flex;
   flex: 1;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
 }
 
 .wrap-1 > *,
@@ -126,7 +123,7 @@ $flexSpaceSizes: (0, 1, 2, 3, 4, 5, 6, 7, 8);
 }
 
 .wrap-3 > * {
-  width: 33.333333%;
+  width: 33.3333%;
 }
 
 .wrap-4 > * {

@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { Description, Loggable, Trackable } from '@fc/exceptions';
 
 import { ErrorCode } from '../enums';
@@ -15,4 +17,5 @@ export class RnippNotFoundSingleEchoException extends RnippBaseException {
   public readonly code = ErrorCode.NOT_FOUND_SINGLE_ECHO;
   public readonly message =
     "Un problème lié à vos données d'identité empêche la connexion d'aboutir. Nous vous invitons à nous contacter pour corriger le problème.";
+  public readonly httpStatusCode = HttpStatus.FORBIDDEN;
 }

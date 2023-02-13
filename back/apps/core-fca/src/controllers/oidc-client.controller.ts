@@ -1,9 +1,16 @@
+import { ClassTransformOptions } from 'class-transformer';
+import { ValidatorOptions } from 'class-validator';
+import { encode } from 'querystring';
+
 import {
   Body,
   Controller,
   Get,
   Header,
+  Param,
   Post,
+  Query,
+  Redirect,
   Render,
   Req,
   Res,
@@ -11,10 +18,14 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
+import { AppConfig } from '@fc/app';
+import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { OidcSession } from '@fc/oidc';
 import {
+  GetOidcCallback,
   OidcClientConfig,
   OidcClientRoutes,
   OidcClientService,
@@ -27,8 +38,13 @@ import {
   Session,
   SessionCsrfService,
   SessionInvalidCsrfSelectIdpException,
+  SessionNotFoundException,
   SessionService,
 } from '@fc/session';
+import { TrackingService } from '@fc/tracking';
+
+import { OidcIdentityDto } from '../dto';
+import { CoreFcaInvalidIdentityException } from '../exceptions';
 
 @Controller()
 export class OidcClientController {
@@ -42,6 +58,7 @@ export class OidcClientController {
     private readonly csrfService: SessionCsrfService,
     private readonly oidcProvider: OidcProviderService,
     private readonly sessionService: SessionService,
+    private readonly tracking: TrackingService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -66,14 +83,7 @@ export class OidcClientController {
   ): Promise<void> {
     const { providerUid: idpId, csrfToken } = body;
 
-    let serviceProviderId: string | null;
-    try {
-      const { spId } = await sessionOidc.get();
-      serviceProviderId = spId;
-    } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
-      serviceProviderId = null;
-    }
+    const { spId } = await sessionOidc.get();
 
     const { scope } = this.config.get<OidcClientConfig>('OidcClient');
     const { params } = await this.oidcProvider.getInteraction(req, res);
@@ -92,9 +102,7 @@ export class OidcClientController {
       throw new SessionInvalidCsrfSelectIdpException(error);
     }
 
-    if (serviceProviderId) {
-      await this.oidcClient.utils.checkIdpBlacklisted(serviceProviderId, idpId);
-    }
+    await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
 
     const { state, nonce } =
       await this.oidcClient.utils.buildAuthorizeParameters();
@@ -121,9 +129,9 @@ export class OidcClientController {
     );
 
     let authorizationUrl = authorizationUrlRaw;
-    if (serviceProviderId) {
+    if (spId) {
       authorizationUrl = this.appendSpIdToAuthorizeUrl(
-        serviceProviderId,
+        spId,
         authorizationUrlRaw,
       );
     }
@@ -221,5 +229,146 @@ export class OidcClientController {
     authorizationUrl: string,
   ): string {
     return `${authorizationUrl}&sp_id=${serviceProviderId}`;
+  }
+
+  @Get(OidcClientRoutes.OIDC_CALLBACK_LEGACY)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  @Redirect()
+  async getLegacyOidcCallback(
+    @Query() query,
+    @Param() params: GetOidcCallback,
+  ) {
+    const { urlPrefix } = this.config.get<AppConfig>('App');
+
+    const response = {
+      statusCode: 302,
+      url: `${urlPrefix}${OidcClientRoutes.OIDC_CALLBACK}?${encode(query)}`,
+    };
+
+    this.logger.trace({
+      method: 'GET',
+      name: 'OidcClientRoutes.OIDC_CALLBACK_LEGACY',
+      providerUid: params.providerUid,
+    });
+
+    return response;
+  }
+
+  /**
+   * @TODO #308 ETQ DEV je veux éviter que deux appels Http soient réalisés au lieu d'un à la discovery Url dans le cadre d'oidc client
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/308
+   */
+  @Get(OidcClientRoutes.OIDC_CALLBACK)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  async getOidcCallback(
+    @Req() req,
+    @Res() res,
+    /**
+     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
+     * @ticket FC-1020
+     */
+    @Session('OidcClient')
+    sessionOidc: ISessionService<OidcClientSession>,
+  ) {
+    const session: OidcSession = await sessionOidc.get();
+
+    if (!session) {
+      throw new SessionNotFoundException('OidcClient');
+    }
+
+    const { IDP_CALLEDBACK } = this.tracking.TrackedEventsMap;
+    this.tracking.track(IDP_CALLEDBACK, { req });
+
+    const { idpId, idpNonce, idpState, interactionId, spId } = session;
+
+    const tokenParams = {
+      state: idpState,
+      nonce: idpNonce,
+    };
+
+    const extraParams = {
+      // OIDC inspired variable name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      sp_id: spId,
+    };
+
+    const { accessToken, idToken, acr, amr } =
+      await this.oidcClient.getTokenFromProvider(
+        idpId,
+        tokenParams,
+        req,
+        extraParams,
+      );
+
+    const { FC_REQUESTED_IDP_TOKEN } = this.tracking.TrackedEventsMap;
+    this.tracking.track(FC_REQUESTED_IDP_TOKEN, { req });
+
+    const userInfoParams = {
+      accessToken,
+      idpId,
+    };
+
+    const identity = await this.oidcClient.getUserInfosFromProvider(
+      userInfoParams,
+      req,
+    );
+
+    const { FC_REQUESTED_IDP_USERINFO } = this.tracking.TrackedEventsMap;
+    this.tracking.track(FC_REQUESTED_IDP_USERINFO, { req });
+
+    await this.validateIdentity(idpId, identity);
+
+    const identityExchange: OidcSession = {
+      amr,
+      idpAccessToken: accessToken,
+      idpIdToken: idToken,
+      idpAcr: acr,
+      idpIdentity: identity,
+    };
+    await sessionOidc.set({ ...identityExchange });
+
+    // BUSINESS: Redirect to business page
+    const { urlPrefix } = this.config.get<AppConfig>('App');
+    const url = `${urlPrefix}/interaction/${interactionId}/verify`;
+
+    this.logger.trace({
+      method: 'GET',
+      name: 'OidcClientRoutes.OIDC_CALLBACK',
+      redirect: url,
+      route: OidcClientRoutes.OIDC_CALLBACK,
+      identityExchange,
+    });
+
+    res.redirect(url);
+  }
+
+  private async validateIdentity(
+    idpId: string,
+    identity: Partial<OidcIdentityDto>,
+  ): Promise<boolean> {
+    const validatorOptions: ValidatorOptions = {
+      forbidNonWhitelisted: true,
+      forbidUnknownValues: true,
+      whitelist: true,
+    };
+    const transformOptions: ClassTransformOptions = {
+      excludeExtraneousValues: true,
+    };
+
+    const errors = await validateDto(
+      identity,
+      OidcIdentityDto,
+      validatorOptions,
+      transformOptions,
+    );
+
+    if (errors.length) {
+      this.logger.trace({ errors }, LoggerLevelNames.WARN);
+      throw new CoreFcaInvalidIdentityException();
+    }
+
+    this.logger.trace({ validate: { identity, idpId } });
+    return true;
   }
 }

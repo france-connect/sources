@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { Description } from '@fc/exceptions';
 
 import { ErrorCode } from '../enums';
@@ -11,6 +13,7 @@ import { SessionBaseException } from './session-base.exception';
 )
 export class SessionInvalidCsrfConsentException extends SessionBaseException {
   public readonly code = ErrorCode.INVALID_CSRF_CONSENT;
+  public readonly httpStatusCode = HttpStatus.UNAUTHORIZED;
 
   constructor(error?: Error) {
     super(error);

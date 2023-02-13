@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { ErrorCode } from '@fc/core';
 import { Description } from '@fc/exceptions';
 
@@ -13,4 +15,5 @@ export class EidasBridgeInvalidIdentityException extends EidasBridgeBaseExceptio
   code = ErrorCode.INVALID_IDENTITY;
   message =
     "Un problème lié à vos données d'identité empêche la connexion d'aboutir. Nous vous invitons à nous contacter pour corriger le problème.";
+  public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
 }

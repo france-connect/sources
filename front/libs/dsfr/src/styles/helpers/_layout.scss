@@ -12,8 +12,7 @@
   }
 
   .sticky-footer {
-    grid-row-end: 3;
-    grid-row-start: 2;
+    grid-row: 2 / 3;
   }
 }
 

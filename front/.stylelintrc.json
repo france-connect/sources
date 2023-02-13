@@ -1,6 +1,6 @@
 {
-  "extends": ["stylelint-config-standard", "stylelint-config-prettier"],
-  "plugins": ["stylelint-order", "stylelint-scss"],
+  "extends": ["stylelint-config-standard-scss", "stylelint-config-prettier"],
+  "plugins": ["stylelint-order"],
   "rules": {
     "color-hex-case": "lower",
     "color-hex-length": "long",
@@ -31,5 +31,13 @@
         ]
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "files": ["./**/*.module.css", "./**/*.module.scss"],
+      "rules": {
+        "selector-class-pattern": null
+      }
+    }
+  ]
 }

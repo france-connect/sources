@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 
-import { CoreMissingAuthenticationEmailException } from '@fc/core';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { IClaim, IRichClaim, ScopesService } from '@fc/scopes';
@@ -80,17 +79,11 @@ export class CoreFcpService {
     const { idpId } = session;
     const idp = await this.identityProvider.getById(idpId);
 
-    let handler: CoreFcpSendEmailHandler;
-    try {
-      const { authenticationEmail } = idp.featureHandlers;
-      handler = await FeatureHandler.get<CoreFcpSendEmailHandler>(
-        authenticationEmail,
-        this,
-      );
-    } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
-      throw new CoreMissingAuthenticationEmailException();
-    }
+    const { authenticationEmail } = idp.featureHandlers;
+    const handler = FeatureHandler.get<CoreFcpSendEmailHandler>(
+      authenticationEmail,
+      this,
+    );
 
     this.logger.trace({ idpId, idp });
 

@@ -13,6 +13,8 @@ export const ReturnButtonComponent: React.FC<ReturnButtonComponentProps> = React
   ({ isMobileViewport, url }: ReturnButtonComponentProps) => {
     const { historyBackURL, serviceProviderName, showButton } = useReturnButton(url);
 
+    // @TODO To be fixed
+    // eslint-disable-next-line react/no-unstable-nested-components
     const WrapperComponent = ({ children }: { children: React.ReactNode }) => {
       if (!isMobileViewport) {
         return <li>{children}</li>;

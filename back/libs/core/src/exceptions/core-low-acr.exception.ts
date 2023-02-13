@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { Description } from '@fc/exceptions';
 
 import { ErrorCode } from '../enums';
@@ -14,4 +16,6 @@ export class CoreLowAcrException extends CoreBaseException {
   code = ErrorCode.LOW_ACR;
   message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
+  // should not happen as we display only valid identity providers on user's ip choice page
+  public readonly httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
 }

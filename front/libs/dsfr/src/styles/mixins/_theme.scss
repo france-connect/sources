@@ -4,7 +4,7 @@
  .is-<color> { setup font-color }
  .bg-<color> { setup background-color }
 */
-@each $name, $value in $PALETTE {
+@each $name, $value in $theme-palette {
   /* generate font colors */
   .is-#{$name} {
     color: $value;

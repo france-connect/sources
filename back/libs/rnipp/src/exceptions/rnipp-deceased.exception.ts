@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { Description, Loggable, Trackable } from '@fc/exceptions';
 
 import { ErrorCode } from '../enums';
@@ -15,4 +17,5 @@ export class RnippDeceasedException extends RnippBaseException {
   public readonly code = ErrorCode.DECEASED;
   public readonly message =
     'Les identifiants utilisés correspondent à une identité qui ne permet plus la connexion.';
+  public readonly httpStatusCode = HttpStatus.FORBIDDEN;
 }

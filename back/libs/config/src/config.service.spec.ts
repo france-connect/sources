@@ -76,6 +76,14 @@ describe('ConfigService', () => {
   });
 
   describe('validate', () => {
+    let consoleError;
+
+    beforeEach(() => {
+      consoleError = jest
+        .spyOn(console, 'error')
+        .mockImplementation((log) => log);
+    });
+
     it('should call getDtoErrors if config is not valid', () => {
       // Given
       const config = {
@@ -94,10 +102,6 @@ describe('ConfigService', () => {
       const config = {
         foo: 'a string instead of a number',
       };
-
-      const consoleError = jest
-        .spyOn(console, 'error')
-        .mockImplementation((log) => log);
 
       // When
       ConfigService['validate'](config, Schema);

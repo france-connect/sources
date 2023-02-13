@@ -7,7 +7,6 @@ import {
   ApiContentType,
   ApiErrorMessage,
   ApiErrorParams,
-  ApiHttpResponseCode,
   AppConfig,
 } from '@fc/app';
 import { ConfigService } from '@fc/config';
@@ -61,13 +60,7 @@ export abstract class FcBaseExceptionFilter extends BaseExceptionFilter {
 
     this.logger.trace(error, LoggerLevelNames.ERROR);
 
-    /**
-     * @todo #139 allow the exception to set the HTTP response code
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/139
-     */
-    if (httpResponseCode !== ApiHttpResponseCode.ERROR_CODE_NONE) {
-      res.status(httpResponseCode);
-    }
+    res.status(httpResponseCode);
 
     switch (apiOutputContentType) {
       case ApiContentType.HTML:

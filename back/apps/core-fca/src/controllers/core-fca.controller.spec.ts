@@ -1,20 +1,12 @@
-import { encode } from 'querystring';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { CoreMissingIdentityException } from '@fc/core';
 import { CryptographyService } from '@fc/cryptography';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { MinistriesService } from '@fc/ministries';
 import { IOidcIdentity } from '@fc/oidc';
-import {
-  OidcClientService,
-  OidcClientSession,
-  TokenParams,
-} from '@fc/oidc-client';
+import { OidcClientService, OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import {
@@ -24,19 +16,8 @@ import {
 } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
-import { OidcIdentityDto } from '../dto';
-import { CoreFcaInvalidIdentityException } from '../exceptions';
 import { CoreFcaService, CoreService } from '../services';
 import { CoreFcaController } from './core-fca.controller';
-
-jest.mock('@fc/common', () => ({
-  ...(jest.requireActual('@fc/common') as any),
-  validateDto: jest.fn(),
-}));
-
-jest.mock('querystring', () => ({
-  encode: jest.fn(),
-}));
 
 describe('CoreFcaController', () => {
   let coreController: CoreFcaController;
@@ -59,9 +40,6 @@ describe('CoreFcaController', () => {
       firstQueryParam: 'first',
       secondQueryParam: 'second',
     },
-    params: {
-      providerUid: 'secretProviderUid',
-    },
   };
 
   const interactionDetailsResolved = {
@@ -70,13 +48,6 @@ describe('CoreFcaController', () => {
     },
     prompt: Symbol('prompt'),
     uid: Symbol('uid'),
-  };
-
-  const identityMock = {
-    // oidc spec defined property
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    given_name: 'given_name',
-    sub: '1',
   };
 
   const interactionFinishedValue = Symbol('interactionFinishedValue');
@@ -170,8 +141,6 @@ describe('CoreFcaController', () => {
       IDP_CALLEDBACK: {},
     },
   } as unknown as TrackingService;
-
-  const queryStringEncodeMock = jest.mocked(encode);
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -543,242 +512,19 @@ describe('CoreFcaController', () => {
   });
 
   describe('getVerify()', () => {
-    it('should call coreService', async () => {
-      // Given
-      const res = {
-        redirect: jest.fn(),
-      };
-      // When
-      await coreController.getVerify(res, params, sessionServiceMock);
-      // Then
-      expect(coreServiceMock.verify).toHaveBeenCalledTimes(1);
-    });
-
-    it('should redirect to /login URL', async () => {
-      // Given
-      const res = {
-        redirect: jest.fn(),
-      };
-      // When
-      await coreController.getVerify(res, params, sessionServiceMock);
-      // Then
-      expect(res.redirect).toHaveBeenCalledTimes(1);
-      expect(res.redirect).toHaveBeenCalledWith(`/api/v2/login`);
-    });
-  });
-
-  describe('getLogin()', () => {
-    it('should throw an exception if no identity in session', async () => {
-      // Given
-      const next = jest.fn();
-      sessionServiceMock.get.mockResolvedValue({
-        csrfToken: randomStringMock,
-        interactionId: interactionIdMock,
-        spAcr: acrMock,
-        spName: spNameMock,
-      });
-      // Then
-      expect(
-        coreController.getLogin(req, next, sessionServiceMock),
-      ).rejects.toThrow(CoreMissingIdentityException);
-    });
-
-    it('should call next', async () => {
-      // Given
-      const res = {};
-      // When
-      await coreController.getLogin(req, res, sessionServiceMock);
-      // Then
-      expect(oidcProviderServiceMock.finishInteraction).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(oidcProviderServiceMock.finishInteraction).toHaveBeenCalledWith(
-        req,
-        res,
-        oidcClientSessionDataMock,
-      );
-    });
-
-    it('should return result from controller.oidcProvider.finishInteraction()', async () => {
-      // Given
-      const res = {};
-      // When
-      const result = await coreController.getLogin(
-        req,
-        res,
-        sessionServiceMock,
-      );
-      // Then
-      expect(result).toBe(interactionFinishedValue);
-    });
-  });
-
-  describe('getLegacyOidcCallback', () => {
-    it('should extract urlPrefix from app config', async () => {
-      // When
-      await coreController.getLegacyOidcCallback(req.query, req.params);
-      // Then
-      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(configServiceMock.get).toHaveBeenCalledWith('App');
-    });
-
-    it('should build redirect url with encode from querystring', async () => {
-      // When
-      await coreController.getLegacyOidcCallback(req.query, req.params);
-      // Then
-      expect(queryStringEncodeMock).toHaveBeenCalledTimes(1);
-      expect(queryStringEncodeMock).toHaveBeenCalledWith(req.query);
-    });
-
-    it('should redrect to the built oidc callback url', async () => {
-      // Given
-      const queryMock = 'first-query-param=first&second-query-param=second';
-      queryStringEncodeMock.mockReturnValueOnce(queryMock);
-      const redirectOidcCallbackUrl = `${appConfigMock.urlPrefix}/oidc-callback?${queryMock}`;
-      // When
-      const result = await coreController.getLegacyOidcCallback(
-        req.query,
-        req.params,
-      );
-      // Then
-      expect(result).toEqual({
-        statusCode: 302,
-        url: redirectOidcCallbackUrl,
-      });
-    });
-  });
-
-  describe('getOidcCallback()', () => {
-    const accessTokenMock = Symbol('accesToken');
-    const acrMock = Symbol('acr');
-    const amrMock = Symbol('amr');
-
-    const tokenParamsMock: TokenParams = {
-      state: idpStateMock,
-      nonce: idpNonceMock,
+    // Given
+    const res = {
+      redirect: jest.fn(),
     };
 
-    const userInfoParamsMock = {
-      accessToken: accessTokenMock,
-      idpId: idpIdMock,
-    };
+    it('should throw if session is not found', async () => {
+      // Given
+      sessionServiceMock.get.mockReturnValueOnce(null);
 
-    const identityExchangeMock = {
-      idpAccessToken: accessTokenMock,
-      idpAcr: acrMock,
-      idpIdentity: identityMock,
-      amr: amrMock,
-    };
-    const redirectMock = `/api/v2/interaction/${interactionIdMock}/verify`;
-
-    let validateIdentityMock;
-    beforeEach(() => {
-      res = {
-        redirect: jest.fn(),
-      };
-
-      oidcClientServiceMock.getTokenFromProvider.mockReturnValueOnce({
-        // oidc spec defined property
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        accessToken: accessTokenMock,
-        // oidc spec defined property
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        acr: acrMock,
-        amr: amrMock,
-      });
-      oidcClientServiceMock.getUserInfosFromProvider.mockReturnValueOnce(
-        identityMock,
-      );
-
-      validateIdentityMock = jest.spyOn<CoreFcaController, any>(
-        coreController,
-        'validateIdentity',
-      );
-      validateIdentityMock.mockResolvedValueOnce();
-
-      oidcClientServiceMock.utils.checkIdpBlacklisted.mockResolvedValueOnce(
-        false,
-      );
-    });
-
-    it('should throw an exception if the oidc session is not defined', async () => {
-      // setup
-      sessionServiceMock.get.mockReset().mockResolvedValueOnce(undefined);
-
-      // action
-      await expect(
-        coreController.getOidcCallback(req, res, sessionServiceMock),
+      // When / Then
+      await expect(() =>
+        coreController.getVerify(res, params, sessionServiceMock),
       ).rejects.toThrow(SessionNotFoundException);
-
-      // assert
-      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call token with providerId', async () => {
-      // action
-      await coreController.getOidcCallback(req, res, sessionServiceMock);
-
-      // assert
-      expect(oidcClientServiceMock.getTokenFromProvider).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(oidcClientServiceMock.getTokenFromProvider).toHaveBeenCalledWith(
-        idpIdMock,
-        tokenParamsMock,
-        req,
-        // OIDC inspired parameter name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        { sp_id: spIdMock },
-      );
-    });
-
-    it('should call userinfo with acesstoken, dto and context', async () => {
-      // action
-      await coreController.getOidcCallback(req, res, sessionServiceMock);
-
-      // assert
-      expect(
-        oidcClientServiceMock.getUserInfosFromProvider,
-      ).toHaveBeenCalledTimes(1);
-      expect(
-        oidcClientServiceMock.getUserInfosFromProvider,
-      ).toHaveBeenCalledWith(userInfoParamsMock, req);
-    });
-
-    it('should failed to get identity if validation failed', async () => {
-      // arrange
-      const errorMock = new Error('Unknown Error');
-      validateIdentityMock.mockReset().mockRejectedValueOnce(errorMock);
-
-      // action
-      await expect(
-        coreController.getOidcCallback(req, res, sessionServiceMock),
-      ).rejects.toThrow(errorMock);
-
-      // assert
-      expect(validateIdentityMock).toHaveBeenCalledTimes(1);
-      expect(validateIdentityMock).toHaveBeenCalledWith(
-        idpIdMock,
-        identityMock,
-      );
-    });
-
-    it('should set session with identity result.', async () => {
-      // action
-      await coreController.getOidcCallback(req, res, sessionServiceMock);
-
-      // assert
-      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.set).toHaveBeenCalledWith(identityExchangeMock);
-    });
-
-    it('should redirect user after token and userinfo received and saved', async () => {
-      // action
-      await coreController.getOidcCallback(req, res, sessionServiceMock);
-
-      // assert
-      expect(res.redirect).toHaveBeenCalledTimes(1);
-      expect(res.redirect).toHaveBeenCalledWith(redirectMock);
     });
 
     describe('Idp blacklisted scenario for get oidc callback', () => {
@@ -796,7 +542,7 @@ describe('CoreFcaController', () => {
 
         // action / assert
         await expect(() =>
-          coreController.getOidcCallback(req, res, sessionServiceMock),
+          coreController.getVerify(res, params, sessionServiceMock),
         ).rejects.toThrow(errorMock);
       });
 
@@ -806,50 +552,26 @@ describe('CoreFcaController', () => {
         isBlacklistedMock.mockReturnValueOnce(false);
 
         // action
-        await coreController.getOidcCallback(req, res, sessionServiceMock);
+        await coreController.getVerify(res, params, sessionServiceMock);
 
         // assert
         expect(res.redirect).toHaveBeenCalledTimes(1);
       });
     });
-  });
 
-  describe('validateIdentity()', () => {
-    let validateDtoMock;
-    beforeEach(() => {
-      validateDtoMock = jest.mocked(validateDto);
+    it('should call coreService', async () => {
+      // When
+      await coreController.getVerify(res, params, sessionServiceMock);
+      // Then
+      expect(coreServiceMock.verify).toHaveBeenCalledTimes(1);
     });
 
-    it('should succeed to validate identity', async () => {
-      // arrange
-      validateDtoMock.mockResolvedValueOnce([]);
-
-      // action
-      await coreController['validateIdentity'](idpIdMock, identityMock);
-
-      // assert
-      expect(validateDtoMock).toHaveBeenCalledTimes(1);
-      expect(validateDtoMock).toHaveBeenCalledWith(
-        identityMock,
-        OidcIdentityDto,
-        {
-          forbidNonWhitelisted: true,
-          forbidUnknownValues: true,
-          whitelist: true,
-        },
-        { excludeExtraneousValues: true },
-      );
-    });
-
-    it('should failed to validate identity', async () => {
-      // arrange
-      validateDtoMock.mockResolvedValueOnce(['Unknown Error']);
-
-      await expect(
-        // action
-        coreController['validateIdentity'](idpIdMock, identityMock),
-        // assert
-      ).rejects.toThrow(CoreFcaInvalidIdentityException);
+    it('should redirect to /login URL', async () => {
+      // When
+      await coreController.getVerify(res, params, sessionServiceMock);
+      // Then
+      expect(res.redirect).toHaveBeenCalledTimes(1);
+      expect(res.redirect).toHaveBeenCalledWith(`/api/v2/login`);
     });
   });
 });

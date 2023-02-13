@@ -5,7 +5,7 @@ import { LayoutHomepageLinkComponent } from '../../homepage-link';
 
 export interface LayoutHeaderLogosComponentProps {
   logo?: string;
-  title: string;
+  title?: string;
 }
 
 export const LayoutHeaderLogosComponent: React.FC<LayoutHeaderLogosComponentProps> = React.memo(

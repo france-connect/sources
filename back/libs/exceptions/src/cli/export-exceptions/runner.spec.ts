@@ -152,6 +152,7 @@ describe('Runner', () => {
         {
           scope: 1,
           code: 2,
+          httpStatusCode: 500,
           errorCode: 'Y010002',
           message: 'any',
           loggable: true,
@@ -163,6 +164,7 @@ describe('Runner', () => {
         {
           scope: 2,
           code: 2,
+          httpStatusCode: 500,
           errorCode: 'Y020002',
           message: 'any',
           loggable: true,

@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
-export { Session } from './decorators';
+export * from './decorators';
 export { SessionConfig } from './dto';
 export {
   SessionBadFormatException,

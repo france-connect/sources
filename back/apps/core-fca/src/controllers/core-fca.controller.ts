@@ -1,13 +1,7 @@
-import { ClassTransformOptions } from 'class-transformer';
-import { ValidatorOptions } from 'class-validator';
-import { encode } from 'querystring';
-
 import {
   Controller,
   Get,
   Param,
-  Query,
-  Redirect,
   Render,
   Req,
   Res,
@@ -16,19 +10,13 @@ import {
 } from '@nestjs/common';
 
 import { AppConfig } from '@fc/app';
-import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import {
-  CoreMissingIdentityException,
-  CoreRoutes,
-  Interaction,
-} from '@fc/core';
+import { CoreRoutes, Interaction } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { MinistriesService } from '@fc/ministries';
 import { OidcSession } from '@fc/oidc';
 import {
-  GetOidcCallback,
   OidcClientConfig,
   OidcClientRoutes,
   OidcClientService,
@@ -43,10 +31,8 @@ import {
   SessionCsrfService,
   SessionNotFoundException,
 } from '@fc/session';
-import { TrackingService } from '@fc/tracking';
 
-import { Core, OidcIdentityDto } from '../dto';
-import { CoreFcaInvalidIdentityException } from '../exceptions';
+import { Core } from '../dto';
 import { CoreFcaService, CoreService } from '../services';
 
 @Controller()
@@ -61,10 +47,9 @@ export class CoreFcaController {
     private readonly ministries: MinistriesService,
     private readonly core: CoreFcaService,
     private readonly config: ConfigService,
-    private readonly oidcClient: OidcClientService,
     private readonly csrfService: SessionCsrfService,
     private readonly coreService: CoreService,
-    private readonly tracking: TrackingService,
+    private readonly oidcClient: OidcClientService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -264,6 +249,15 @@ export class CoreFcaController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
+    const session: OidcSession = await sessionOidc.get();
+
+    if (!session) {
+      throw new SessionNotFoundException('OidcClient');
+    }
+    const { idpId, spId } = session;
+
+    await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
+
     await this.core.verify(sessionOidc);
 
     const { urlPrefix } = this.config.get<AppConfig>('App');
@@ -277,184 +271,5 @@ export class CoreFcaController {
     });
 
     res.redirect(url);
-  }
-
-  /**
-   * @TODO #185 Remove this controller once it is globaly available in `@fc/oidc-provider`
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/merge_requests/185
-   */
-  @Get(CoreRoutes.INTERACTION_LOGIN)
-  async getLogin(
-    @Req() req,
-    @Res() res,
-    /**
-     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
-     * @ticket FC-1020
-     */
-    @Session('OidcClient')
-    sessionOidc: ISessionService<OidcClientSession>,
-  ) {
-    const { spIdentity } = await sessionOidc.get();
-    if (!spIdentity) {
-      this.logger.trace(
-        { route: CoreRoutes.INTERACTION_LOGIN },
-        LoggerLevelNames.WARN,
-      );
-      throw new CoreMissingIdentityException();
-    }
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'CoreRoutes.INTERACTION_LOGIN',
-      route: CoreRoutes.INTERACTION_LOGIN,
-      spIdentity,
-    });
-
-    const session: OidcClientSession = await sessionOidc.get();
-    return this.oidcProvider.finishInteraction(req, res, session);
-  }
-
-  @Get(OidcClientRoutes.OIDC_CALLBACK_LEGACY)
-  @UsePipes(new ValidationPipe({ whitelist: true }))
-  @Redirect()
-  async getLegacyOidcCallback(
-    @Query() query,
-    @Param() params: GetOidcCallback,
-  ) {
-    const { urlPrefix } = this.config.get<AppConfig>('App');
-
-    const response = {
-      statusCode: 302,
-      url: `${urlPrefix}${OidcClientRoutes.OIDC_CALLBACK}?${encode(query)}`,
-    };
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'OidcClientRoutes.OIDC_CALLBACK_LEGACY',
-      providerUid: params.providerUid,
-    });
-
-    return response;
-  }
-
-  /**
-   * @TODO #308 ETQ DEV je veux éviter que deux appels Http soient réalisés au lieu d'un à la discovery Url dans le cadre d'oidc client
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/308
-   */
-  @Get(OidcClientRoutes.OIDC_CALLBACK)
-  @UsePipes(new ValidationPipe({ whitelist: true }))
-  async getOidcCallback(
-    @Req() req,
-    @Res() res,
-    /**
-     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
-     * @ticket FC-1020
-     */
-    @Session('OidcClient')
-    sessionOidc: ISessionService<OidcClientSession>,
-  ) {
-    const session: OidcSession = await sessionOidc.get();
-
-    if (!session) {
-      throw new SessionNotFoundException('OidcClient');
-    }
-
-    const { IDP_CALLEDBACK } = this.tracking.TrackedEventsMap;
-    this.tracking.track(IDP_CALLEDBACK, { req });
-
-    const { idpId, idpNonce, idpState, interactionId, spId } = session;
-
-    await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
-
-    const tokenParams = {
-      state: idpState,
-      nonce: idpNonce,
-    };
-
-    const extraParams = {
-      // OIDC inspired variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      sp_id: spId,
-    };
-
-    const { accessToken, idToken, acr, amr } =
-      await this.oidcClient.getTokenFromProvider(
-        idpId,
-        tokenParams,
-        req,
-        extraParams,
-      );
-
-    const { FC_REQUESTED_IDP_TOKEN } = this.tracking.TrackedEventsMap;
-    this.tracking.track(FC_REQUESTED_IDP_TOKEN, { req });
-
-    const userInfoParams = {
-      accessToken,
-      idpId,
-    };
-
-    const identity = await this.oidcClient.getUserInfosFromProvider(
-      userInfoParams,
-      req,
-    );
-
-    const { FC_REQUESTED_IDP_USERINFO } = this.tracking.TrackedEventsMap;
-    this.tracking.track(FC_REQUESTED_IDP_USERINFO, { req });
-
-    await this.validateIdentity(idpId, identity);
-
-    const identityExchange: OidcSession = {
-      amr,
-      idpAccessToken: accessToken,
-      idpIdToken: idToken,
-      idpAcr: acr,
-      idpIdentity: identity,
-    };
-    await sessionOidc.set({ ...identityExchange });
-
-    // BUSINESS: Redirect to business page
-    const { urlPrefix } = this.config.get<AppConfig>('App');
-    const url = `${urlPrefix}/interaction/${interactionId}/verify`;
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'OidcClientRoutes.OIDC_CALLBACK',
-      redirect: url,
-      route: OidcClientRoutes.OIDC_CALLBACK,
-      identityExchange,
-    });
-
-    res.redirect(url);
-  }
-
-  private async validateIdentity(
-    idpId: string,
-    identity: Partial<OidcIdentityDto>,
-  ): Promise<boolean> {
-    const validatorOptions: ValidatorOptions = {
-      forbidNonWhitelisted: true,
-      forbidUnknownValues: true,
-      whitelist: true,
-    };
-    const transformOptions: ClassTransformOptions = {
-      excludeExtraneousValues: true,
-    };
-
-    const errors = await validateDto(
-      identity,
-      OidcIdentityDto,
-      validatorOptions,
-      transformOptions,
-    );
-
-    if (errors.length) {
-      this.logger.trace({ errors }, LoggerLevelNames.WARN);
-      throw new CoreFcaInvalidIdentityException();
-    }
-
-    this.logger.trace({ validate: { identity, idpId } });
-    return true;
   }
 }

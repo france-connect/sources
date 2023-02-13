@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { Description } from '@fc/exceptions';
 
 import { ErrorCode } from '../enums';
@@ -11,6 +13,7 @@ import { SessionBaseException } from './session-base.exception';
 )
 export class SessionNotFoundException extends SessionBaseException {
   public readonly code = ErrorCode.NOT_FOUND;
+  public readonly httpStatusCode = HttpStatus.UNAUTHORIZED;
 
   /* eslint-disable @typescript-eslint/no-unused-vars */
   constructor(param: string) {

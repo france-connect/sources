@@ -6,7 +6,7 @@
 *
 * .opacity-35 -> opacity: 0.35;
 */
-$opacities_map: (
+$opacities-map: (
   0,
   5,
   10,
@@ -31,7 +31,7 @@ $opacities_map: (
 ) !default;
 
 /* Generate helpers classes for opacity */
-@each $value in $opacities_map {
+@each $value in $opacities-map {
   /* generate font colors */
   .opacity-#{$value} {
     opacity: math.div($value, 100);

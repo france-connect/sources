@@ -4,10 +4,13 @@ import { TranslationMap, TranslationsReplacement, TranslationValue } from '../in
 let INSTANCE: I18nService | null = null;
 
 export class I18nService {
-  private constructor(
-    private readonly locale: string,
-    private readonly translations: TranslationMap,
-  ) {
+  // @todo: solve the trouble to its origin to avoid losing security of unique instanciation for a storybook compilator trouble.
+  // https://gitlab.dev-franceconnect.fr/france-connect/fc/-/merge_requests/940#note_185748
+  locale;
+
+  translations;
+
+  constructor(locale: string, translations: TranslationMap) {
     this.locale = locale;
     this.translations = translations;
   }

@@ -9,6 +9,13 @@
 }
 
 .hide {
+  /* @TODO read sass documentation about placeholder and find a fix :shrug:
+  Error: The following error originated from your application code, not from Cypress.
+  > Module build failed (from ../../node_modules/sass-loader/dist/cjs.js):
+      SassError: The target selector was not found.
+      Use "@extend %is-full-width !optional" to avoid this error.
+  */
+  // stylelint-disable-next-line scss/at-extend-no-missing-placeholder
   @extend .is-hidden;
 
   font-size: 0;
@@ -21,12 +28,26 @@
   width: 0;
 
   &::before {
+    /* @TODO read sass documentation about placeholder and find a fix :shrug:
+    Error: The following error originated from your application code, not from Cypress.
+    > Module build failed (from ../../node_modules/sass-loader/dist/cjs.js):
+        SassError: The target selector was not found.
+        Use "@extend %is-full-width !optional" to avoid this error.
+    */
+    // stylelint-disable-next-line scss/at-extend-no-missing-placeholder
     @extend .is-hidden;
 
     content: none;
   }
 
   &::after {
+    /* @TODO read sass documentation about placeholder and find a fix :shrug:
+    Error: The following error originated from your application code, not from Cypress.
+    > Module build failed (from ../../node_modules/sass-loader/dist/cjs.js):
+        SassError: The target selector was not found.
+        Use "@extend %is-full-width !optional" to avoid this error.
+    */
+    // stylelint-disable-next-line scss/at-extend-no-missing-placeholder
     @extend .is-hidden;
 
     content: none;

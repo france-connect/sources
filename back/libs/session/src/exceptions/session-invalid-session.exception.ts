@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { Description } from '@fc/exceptions';
 
 import { ErrorCode } from '../enums';
@@ -19,6 +21,7 @@ import { SessionBaseException } from './session-base.exception';
 )
 export class SessionInvalidSessionException extends SessionBaseException {
   public readonly code = ErrorCode.INVALID_SESSION;
+  public readonly httpStatusCode = HttpStatus.CONFLICT;
 
   constructor() {
     super(

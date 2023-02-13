@@ -1,6 +1,6 @@
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 
-import { ApiErrorMessage, ApiErrorParams, ApiHttpResponseCode } from '@fc/app';
+import { ApiErrorMessage, ApiErrorParams } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { Loggable } from '@fc/exceptions';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
@@ -59,12 +59,11 @@ export class FcExceptionFilter
 
     this.logger.trace({ exception }, LoggerLevelNames.ERROR);
 
-    const httpErrorCode: number = ApiHttpResponseCode.ERROR_CODE_500;
     const errorMessage: ApiErrorMessage = { code, id, message };
     const exceptionParam: ApiErrorParams = {
       res,
       error: errorMessage,
-      httpResponseCode: httpErrorCode,
+      httpResponseCode: exception.httpStatusCode,
     };
 
     return this.errorOutput(exceptionParam);

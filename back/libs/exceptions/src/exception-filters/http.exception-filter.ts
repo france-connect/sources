@@ -5,7 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 
-import { ApiErrorMessage, ApiErrorParams, ApiHttpResponseCode } from '@fc/app';
+import { ApiErrorMessage, ApiErrorParams } from '@fc/app';
 
 import { ExceptionsService } from '../exceptions.service';
 import { FcBaseExceptionFilter } from './fc-base.exception-filter';
@@ -26,14 +26,11 @@ export class HttpExceptionFilter
 
     this.logException(code, id, exception);
 
-    res.status(exception.getStatus());
-
-    const httpErrorCode: number = ApiHttpResponseCode.ERROR_CODE_NONE;
     const errorMessage: ApiErrorMessage = { code, id, message };
     const exceptionParam: ApiErrorParams = {
       res,
       error: errorMessage,
-      httpResponseCode: httpErrorCode,
+      httpResponseCode: exception.getStatus(),
     };
 
     return this.errorOutput(exceptionParam);

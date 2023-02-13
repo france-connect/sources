@@ -172,8 +172,6 @@ describe('LoggerService', () => {
 
   describe('internalLogger()', () => {
     let logSuperMock: jest.SpyInstance;
-    let outputTraceMock: jest.SpyInstance;
-    let consoleLogMock: jest.SpyInstance;
 
     const level = LoggerLevelNames.LOG;
     const message = 'messageValue';
@@ -184,66 +182,22 @@ describe('LoggerService', () => {
         LoggerLevelNames.LOG,
       );
       logSuperMock.mockReturnValueOnce(void 0);
-
-      outputTraceMock = jest.spyOn<LoggerService, any>(
-        service,
-        'isOutputTrace',
-      );
-      outputTraceMock.mockReturnValueOnce(true);
-
-      consoleLogMock = jest.spyOn(console, level);
-      consoleLogMock.mockReturnValueOnce(void 0);
     });
 
-    it('should call Log function with log and context without console output', () => {
-      // Given
-      outputTraceMock.mockReset().mockReturnValueOnce(false);
+    it('should call log function with log message only because context is missing falsy', () => {
+      // When
+      service['internalLogger'](level, message);
+      // Then
+      expect(logSuperMock).toHaveBeenCalledTimes(1);
+      expect(logSuperMock).toHaveBeenCalledWith(message);
+    });
 
+    it('should call Log function with log and context', () => {
       // When
       service['internalLogger'](level, message, contextMock);
-
       // Then
       expect(logSuperMock).toHaveBeenCalledTimes(1);
       expect(logSuperMock).toHaveBeenCalledWith(message, contextMock);
-
-      expect(outputTraceMock).toHaveBeenCalledTimes(1);
-      expect(consoleLogMock).toHaveBeenCalledTimes(0);
-    });
-    it('should call Log function with log and context with console output', () => {
-      // When
-      service['internalLogger'](level, message, contextMock);
-
-      // Then
-      expect(logSuperMock).toHaveBeenCalledTimes(1);
-      expect(logSuperMock).toHaveBeenCalledWith(message, contextMock);
-
-      expect(outputTraceMock).toHaveBeenCalledTimes(1);
-      expect(consoleLogMock).toHaveBeenCalledTimes(1);
-      expect(consoleLogMock).toHaveBeenCalledWith(message, contextMock);
-    });
-
-    it('should call only Log function with log message because context is missing', () => {
-      // When
-      service['internalLogger'](level, message, undefined);
-
-      // Then
-      expect(logSuperMock).toHaveBeenCalledTimes(1);
-      expect(logSuperMock).toHaveBeenCalledWith(message, undefined);
-
-      expect(outputTraceMock).toHaveBeenCalledTimes(1);
-      expect(consoleLogMock).toHaveBeenCalledTimes(0);
-    });
-
-    it('should call only Log function with context because log message is missing', () => {
-      // When
-      service['internalLogger'](level, null, contextMock);
-
-      // Then
-      expect(logSuperMock).toHaveBeenCalledTimes(1);
-      expect(logSuperMock).toHaveBeenCalledWith(null, contextMock);
-
-      expect(outputTraceMock).toHaveBeenCalledTimes(1);
-      expect(consoleLogMock).toHaveBeenCalledTimes(0);
     });
   });
 

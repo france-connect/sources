@@ -1,15 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
+import { CoreMissingIdentityException } from '@fc/core';
 import { LoggerService } from '@fc/logger-legacy';
+import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import {
   OidcProviderAuthorizeParamsException,
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { SessionService } from '@fc/session';
+import {
+  SessionCsrfService,
+  SessionInvalidCsrfConsentException,
+  SessionService,
+} from '@fc/session';
+import { TrackingService } from '@fc/tracking';
 
 import { AuthorizeParamsDto } from '../dto';
+import { CoreFcpInvalidEventKeyException } from '../exceptions';
+import { CoreFcpService } from '../services';
 import { OidcProviderController } from './oidc-provider.controller';
 
 jest.mock('@fc/common', () => ({
@@ -19,6 +28,9 @@ jest.mock('@fc/common', () => ({
 
 const sessionServiceMock = {
   reset: jest.fn(),
+  get: jest.fn(),
+  set: jest.fn(),
+  setAlias: jest.fn(),
 };
 
 const nextMock = jest.fn();
@@ -57,12 +69,90 @@ const serviceProviderServiceMock = {
   getById: jest.fn(),
 };
 
+const trackingServiceMock = {
+  track: jest.fn(),
+  TrackedEventsMap: {
+    FC_DATATRANSFER_CONSENT_IDENTITY: {},
+    FC_DATATRANSFER_INFORMATION_IDENTITY: {},
+    FC_DATATRANSFER_INFORMATION_ANONYMOUS: {},
+  },
+};
+
+const coreServiceMock = {
+  getClaimsForInteraction: jest.fn(),
+  getClaimsLabelsForInteraction: jest.fn(),
+  getFeature: jest.fn(),
+  getScopesForInteraction: jest.fn(),
+  isConsentRequired: jest.fn(),
+  sendAuthenticationMail: jest.fn(),
+  verify: jest.fn(),
+};
+
+const res = {
+  redirect: jest.fn(),
+  render: jest.fn(),
+};
+
+const interactionIdMock = 'interactionIdMockValue';
+const acrMock = 'acrMockValue';
+const spNameMock = 'some SP';
+const spIdMock = 'spIdMockValue';
+const idpStateMock = 'idpStateMockValue';
+const idpNonceMock = 'idpNonceMock';
+const idpIdMock = 'idpIdMockValue';
+const csrfMock = 'csrfMockValue';
+const randomStringMock = 'randomStringMockValue';
+const scopesMock = ['toto', 'titi'];
+const claimsMock = ['foo', 'bar'];
+const claimsLabelMock = ['F o o', 'B a r'];
+
+const req = {
+  fc: {
+    interactionId: interactionIdMock,
+  },
+  query: {
+    firstQueryParam: 'first',
+    secondQueryParam: 'second',
+  },
+  params: {
+    providerUid: 'secretProviderUid',
+  },
+};
+
+const sessionCsrfServiceMock = {
+  get: jest.fn(),
+  save: jest.fn(),
+  validate: jest.fn(),
+};
+const sessionDataMock: OidcSession = {
+  csrfToken: randomStringMock,
+  idpId: idpIdMock,
+  idpNonce: idpNonceMock,
+  idpState: idpStateMock,
+  interactionId: interactionIdMock,
+
+  spAcr: acrMock,
+  spId: spIdMock,
+  spIdentity: {} as IOidcIdentity,
+  spName: spNameMock,
+};
+
+const interactionDetailsResolved = {
+  params: {
+    scope: 'toto titi',
+  },
+  prompt: Symbol('prompt'),
+  uid: Symbol('uid'),
+};
+
 describe('OidcProviderController', () => {
   let oidcProviderController: OidcProviderController;
   let validateDtoMock;
 
   const oidcProviderServiceMock = {
     abortInteraction: jest.fn(),
+    finishInteraction: jest.fn(),
+    getInteraction: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -73,6 +163,9 @@ describe('OidcProviderController', () => {
         OidcProviderService,
         SessionService,
         ServiceProviderAdapterMongoService,
+        CoreFcpService,
+        TrackingService,
+        SessionCsrfService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -83,6 +176,12 @@ describe('OidcProviderController', () => {
       .useValue(sessionServiceMock)
       .overrideProvider(ServiceProviderAdapterMongoService)
       .useValue(serviceProviderServiceMock)
+      .overrideProvider(CoreFcpService)
+      .useValue(coreServiceMock)
+      .overrideProvider(TrackingService)
+      .useValue(trackingServiceMock)
+      .overrideProvider(SessionCsrfService)
+      .useValue(sessionCsrfServiceMock)
       .compile();
 
     oidcProviderController = await app.get<OidcProviderController>(
@@ -98,7 +197,20 @@ describe('OidcProviderController', () => {
       serviceProviderMock,
     );
 
+    coreServiceMock.verify.mockResolvedValue(interactionDetailsResolved);
+    coreServiceMock.getClaimsForInteraction.mockReturnValue(claimsMock);
+    coreServiceMock.getScopesForInteraction.mockReturnValue(scopesMock);
+    coreServiceMock.isConsentRequired.mockResolvedValue(true);
+    coreServiceMock.getClaimsLabelsForInteraction.mockReturnValue(
+      claimsLabelMock,
+    );
+
     sessionServiceMock.reset.mockResolvedValueOnce(sessionIdMock);
+    sessionServiceMock.get.mockResolvedValueOnce(sessionDataMock);
+    sessionServiceMock.set.mockResolvedValueOnce(undefined);
+
+    sessionCsrfServiceMock.get.mockReturnValueOnce(csrfMock);
+    sessionCsrfServiceMock.save.mockResolvedValueOnce(true);
 
     resMock.locals = {};
   });
@@ -264,6 +376,221 @@ describe('OidcProviderController', () => {
           resMock,
         ),
       ).rejects.toThrow(Error);
+    });
+  });
+
+  describe('getDataEvent()', () => {
+    // Given
+    const scopesMock = ['openid', 'profile'];
+    const consentRequiredMock = false;
+
+    it('should return consent for identity', () => {
+      // Given
+
+      const consentRequiredMock = true;
+      // When
+      const result = oidcProviderController['getDataEvent'](
+        scopesMock,
+        consentRequiredMock,
+      );
+      // Then
+      expect(result).toBe(
+        trackingServiceMock.TrackedEventsMap.FC_DATATRANSFER_CONSENT_IDENTITY,
+      );
+    });
+
+    it('should return information for identity', () => {
+      // When
+      const result = oidcProviderController['getDataEvent'](
+        scopesMock,
+        consentRequiredMock,
+      );
+      // Then
+      expect(result).toBe(
+        trackingServiceMock.TrackedEventsMap
+          .FC_DATATRANSFER_INFORMATION_IDENTITY,
+      );
+    });
+
+    it('should return information for anonymous', () => {
+      // Given
+      const scopesMock = ['openid'];
+      // When
+      const result = oidcProviderController['getDataEvent'](
+        scopesMock,
+        consentRequiredMock,
+      );
+      // Then
+      expect(result).toBe(
+        trackingServiceMock.TrackedEventsMap
+          .FC_DATATRANSFER_INFORMATION_ANONYMOUS,
+      );
+    });
+
+    it('should throw an exception if class is not in map', () => {
+      // Given
+      const scopesMock = ['openid'];
+      const consentRequiredMock = true;
+      // Then
+      expect(() =>
+        oidcProviderController['getDataEvent'](scopesMock, consentRequiredMock),
+      ).toThrow(CoreFcpInvalidEventKeyException);
+    });
+  });
+
+  describe('trackDatatransfer()', () => {
+    // Given
+    const contextMock = {};
+    const interactionMock = {};
+    const spIdMock = 'foo';
+    const eventClassMock = 'foo';
+
+    beforeEach(() => {
+      oidcProviderController['getDataEvent'] = jest
+        .fn()
+        .mockReturnValue(eventClassMock);
+    });
+
+    it('should get scopes', async () => {
+      // When
+      await oidcProviderController['trackDatatransfer'](
+        contextMock,
+        interactionMock,
+        spIdMock,
+      );
+      // Then
+      expect(coreServiceMock.getScopesForInteraction).toHaveBeenCalledTimes(1);
+      expect(coreServiceMock.getScopesForInteraction).toHaveBeenCalledWith(
+        interactionMock,
+      );
+    });
+
+    it('should get claims', async () => {
+      // When
+      await oidcProviderController['trackDatatransfer'](
+        contextMock,
+        interactionMock,
+        spIdMock,
+      );
+      // Then
+      expect(coreServiceMock.getClaimsForInteraction).toHaveBeenCalledTimes(1);
+      expect(coreServiceMock.getClaimsForInteraction).toHaveBeenCalledWith(
+        interactionMock,
+      );
+    });
+
+    it('should get consent requirement', async () => {
+      // When
+      await oidcProviderController['trackDatatransfer'](
+        contextMock,
+        interactionMock,
+        spIdMock,
+      );
+      // Then
+      expect(coreServiceMock.isConsentRequired).toHaveBeenCalledTimes(1);
+      expect(coreServiceMock.isConsentRequired).toHaveBeenCalledWith(spIdMock);
+    });
+
+    it('should get data event', async () => {
+      // When
+      await oidcProviderController['trackDatatransfer'](
+        contextMock,
+        interactionMock,
+        spIdMock,
+      );
+      // Then
+      expect(oidcProviderController['getDataEvent']).toHaveBeenCalledTimes(1);
+      expect(oidcProviderController['getDataEvent']).toHaveBeenCalledWith(
+        scopesMock,
+        true,
+      );
+    });
+
+    it('should call tracking.track', async () => {
+      // When
+      await oidcProviderController['trackDatatransfer'](
+        contextMock,
+        interactionMock,
+        spIdMock,
+      );
+
+      const sentContextMock = {
+        ...contextMock,
+        claims: claimsMock,
+      };
+      // Then
+      expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
+      expect(trackingServiceMock.track).toHaveBeenCalledWith(
+        eventClassMock,
+        sentContextMock,
+      );
+    });
+  });
+
+  describe('getLogin()', () => {
+    it('should throw an exception if no identity in session', async () => {
+      // Given
+      const body = { _csrf: randomStringMock };
+      sessionServiceMock.get.mockReset().mockResolvedValue({
+        csrfToken: randomStringMock,
+        interactionId: interactionIdMock,
+        spAcr: acrMock,
+        spName: spNameMock,
+      });
+      // Then
+      await expect(
+        oidcProviderController.getLogin(req, res, body, sessionServiceMock),
+      ).rejects.toThrow(CoreMissingIdentityException);
+    });
+
+    it('should throw an exception `SessionInvalidCsrfConsentException` if the CSRF token is not valid', async () => {
+      // Given
+      const csrfTokenBodyMock = 'invalidCsrfTokenValue';
+      const csrfTokenSessionMock = randomStringMock;
+      const body = { _csrf: csrfTokenBodyMock };
+      sessionServiceMock.get.mockReset().mockResolvedValue({
+        csrfToken: csrfTokenSessionMock,
+        interactionId: interactionIdMock,
+        spAcr: acrMock,
+        spName: spNameMock,
+      });
+      sessionCsrfServiceMock.validate.mockReset().mockImplementation(() => {
+        throw new Error(
+          'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
+        );
+      });
+      // Then
+      await expect(
+        oidcProviderController.getLogin(req, res, body, sessionServiceMock),
+      ).rejects.toThrow(SessionInvalidCsrfConsentException);
+    });
+
+    it('should send an email notification to the end user by calling core.sendAuthenticationMail', async () => {
+      // Given
+      const body = { _csrf: randomStringMock };
+      // When
+      await oidcProviderController.getLogin(req, res, body, sessionServiceMock);
+      // Then
+      expect(coreServiceMock.sendAuthenticationMail).toBeCalledTimes(1);
+      expect(coreServiceMock.sendAuthenticationMail).toBeCalledWith(
+        sessionDataMock,
+      );
+    });
+
+    it('should call oidcProvider.interactionFinish', async () => {
+      // Given
+      const body = { _csrf: randomStringMock };
+      // When
+      await oidcProviderController.getLogin(req, res, body, sessionServiceMock);
+      // Then
+      expect(oidcProviderServiceMock.finishInteraction).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(oidcProviderServiceMock.finishInteraction).toHaveBeenCalledWith(
+        req,
+        res,
+        sessionDataMock,
+      );
     });
   });
 });
