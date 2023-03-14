@@ -6,7 +6,14 @@ import { IsObject, ValidateNested } from 'class-validator';
 
 import { OidcClientSession } from '@fc/oidc-client';
 
+import { AppSession } from './app-session.dto';
+
 export class CoreFcpSession {
+  @IsObject()
+  @ValidateNested()
+  @Type(() => AppSession)
+  readonly App: AppSession;
+
   @IsObject()
   @ValidateNested()
   @Type(() => OidcClientSession)

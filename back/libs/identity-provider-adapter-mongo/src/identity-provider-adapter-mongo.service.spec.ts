@@ -276,6 +276,7 @@ describe('IdentityProviderAdapterMongoService', () => {
   const repositoryMock = {
     lean: jest.fn(),
     find: jest.fn(),
+    sort: jest.fn(),
     watch: jest.fn(),
   };
 
@@ -329,6 +330,7 @@ describe('IdentityProviderAdapterMongoService', () => {
 
     repositoryMock.lean.mockResolvedValueOnce(identityProviderListMock);
     repositoryMock.find.mockReturnValueOnce(repositoryMock);
+    repositoryMock.sort.mockReturnValueOnce(repositoryMock);
   });
 
   it('should be defined', () => {

@@ -28,6 +28,7 @@
     "build:mock-identity-provider-fcp-low": "nest build mock-identity-provider-fcp-low",
     "build:mock-identity-provider-fca-low": "nest build mock-identity-provider-fca-low",
     "build:mock-service-provider-fca-low": "nest build mock-service-provider-fca-low",
+    "build:mock-rnipp": "nest build mock-rnipp",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\" \"instances/**/*.ts\"",
     "start": "nest start",
     "start:dev": "NODE_ENV=development nest start --watch",
@@ -46,6 +47,7 @@
     "start:prod:mock-identity-provider-fca-low": "node dist/instances/mock-identity-provider-fca-low/main.js > /tmp/.pm2/logs/mock-identity-provider-fca-low-out-0.log 2> /tmp/.pm2/mock-identity-provider-fca-low-error-0.log",
     "start:prod:mock-identity-provider-fcp-high": "node dist/instances/mock-identity-provider-fcp-high/main.js > /tmp/.pm2/logs/mock-identity-provider-fcp-high-out-0.log 2> /tmp/.pm2/mock-identity-provider-fcp-high-error-0.log",
     "start:prod:mock-identity-provider-fcp-low": "node dist/instances/mock-identity-provider-fcp-low/main.js > /tmp/.pm2/logs/mock-identity-provider-fcp-low-out-0.log 2> /tmp/.pm2/mock-identity-provider-fcp-low-error-0.log",
+    "start:prod:mock-rnipp": "node dist/instances/mock-rnipp/main.js > /tmp/.pm2/logs/mock-rnipp-out-0.log 2> /tmp/.pm2/mock-rnipp-error-0.log",
     "lint": "eslint \"{apps,instances,libs}/**/*.ts\"",
     "prettier": "prettier -c \"{apps,instances,libs}/**/*.ts\" --config .prettierrc",
     "test": "jest",
@@ -74,6 +76,7 @@
   },
   "dependencies": {
     "@elastic/elasticsearch": "8.5.0",
+    "@gouvfr/dsfr": "1.8.5",
     "@maxmind/geoip2-node": "^3.4.0",
     "@nestjs-modules/mailer": "^1.7.1",
     "@nestjs/axios": "0.0.8",
@@ -105,8 +108,6 @@
     "jose-openid-client": "npm:jose@^2.0.5",
     "lodash": "^4.17.15",
     "luxon": "^3.1.1",
-    "moment": "^2.24.0",
-    "moment-timezone": "^0.5.34",
     "mongoose": "6.6.7",
     "nodemailer": "^6.7.2",
     "oidc-provider": "7.10.6",
@@ -276,7 +277,9 @@
       "^@fc/partner-organisation(|/.*)$": "<rootDir>/libs/partner-organisation/src/$1",
       "^@fc/partner-service-provider(|/.*)$": "<rootDir>/libs/partner-service-provider/src/$1",
       "^@fc/partner-service-provider-configuration(|/.*)$": "<rootDir>/libs/partner-service-provider-configuration/src/$1",
-      "^@fc/access-control(|/.*)$": "<rootDir>/libs/access-control/src/$1"
+      "^@fc/access-control(|/.*)$": "<rootDir>/libs/access-control/src/$1",
+      "^@fc/mock-rnipp(|/.*)$": "<rootDir>/apps/mock-rnipp/src/$1",
+      "^@fc/oidc-acr(|/.*)$": "<rootDir>/libs/oidc-acr/src/$1"
     },
     "preset": "ts-jest"
   }

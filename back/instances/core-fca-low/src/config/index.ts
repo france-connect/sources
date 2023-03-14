@@ -4,10 +4,12 @@
 import { CoreFcaConfig } from '@fc/core-fca';
 
 import App from './app';
+import Core from './core';
 import CryptographyFca from './cryptography-fca';
 import IdentityProviderAdapterMongo from './identity-provider-adapter-mongo';
 import Logger from './logger';
 import Mongoose from './mongoose';
+import OidcAcr from './oidc-acr';
 import OidcClient from './oidc-client';
 import OidcProvider from './oidc-provider';
 import OverrideOidcProvider from './override-oidc-provider';
@@ -17,15 +19,10 @@ import Session from './session';
 import Tracking from './tracking';
 
 export default {
-  /**
-   * @TODO #253 ETQ Dev, je réfléchis à une manière de gérer des parmètres spécifiques à une app
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/253
-   */
-  Core: {
-    defaultRedirectUri: 'https://franceconnect.gouv.fr',
-  },
   App,
+  Core,
   Logger,
+  OidcAcr,
   OidcProvider,
   OidcClient,
   Mongoose,

@@ -153,7 +153,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       expect(sessionServiceMock.set).toHaveBeenCalledWith({
         accountId: accountIdMock,
         amr: ['pwd'],
-        idpIdentity: { sub: 'computedSubIdp' },
+        idpIdentity: idpIdentityMock,
         spIdentity: {
           ...idpIdentityMock,
           sub: 'computedSubSp',
@@ -225,7 +225,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     it('Should patch the session with idp and sp identity', async () => {
       // Given
       const calledMock = {
-        idpIdentity: { sub: idpIdentityMock.sub },
+        idpIdentity: idpIdentityMock,
         spIdentity: {
           sub: 'computedSubSp',
           // Oidc naming convention

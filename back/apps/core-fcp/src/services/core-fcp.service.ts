@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 
+import { AppConfig } from '@fc/app';
+import { ConfigService } from '@fc/config';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
+import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientSession } from '@fc/oidc-client';
 import { IClaim, IRichClaim, ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
@@ -21,10 +24,12 @@ export class CoreFcpService {
   // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
+    private readonly config: ConfigService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
     public readonly moduleRef: ModuleRef,
     private readonly scopes: ScopesService,
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
+    private readonly oidcAcr: OidcAcrService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -101,6 +106,17 @@ export class CoreFcpService {
     this.logger.trace({ consentRequired });
 
     return consentRequired;
+  }
+
+  isInsufficientAcrLevel(acrValue: string, isSuspicious: boolean) {
+    const { minAcrForContextRequest } = this.config.get<AppConfig>('App');
+
+    const insufficientAcrLevel = !this.oidcAcr.isAcrValid(
+      acrValue,
+      minAcrForContextRequest,
+    );
+
+    return isSuspicious && insufficientAcrLevel;
   }
 
   /**

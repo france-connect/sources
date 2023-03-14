@@ -120,7 +120,9 @@ describe('4.0 - RNIPP', () => {
     });
 
     cy.hasError('Y000006');
-    cy.contains(`Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous`);
+    cy.contains(
+      `Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous`,
+    );
     // birthplace and address
     cy.contains(/(?:"constraints"){2}.*?(constraints)/).should('not.exist');
   });
@@ -136,6 +138,21 @@ describe('4.0 - RNIPP', () => {
     cy.hasError('Y010015', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_DECEASED_RNIPP',
+      idpId: 'fip1-high',
+    });
+  });
+
+  it('should trigger error Y010099', () => {
+    basicErrorScenario({
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      acr_values: 'eidas2',
+      errorCode: 'E010099',
+      idpId: 'fip1-high',
+    });
+
+    cy.hasError('Y010013', headingErrorMessage);
+    cy.hasBusinessLog({
+      event: 'FC_RECEIVED_INVALID_RNIPP',
       idpId: 'fip1-high',
     });
   });

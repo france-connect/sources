@@ -9,6 +9,7 @@ export {
   SessionInvalidCsrfSelectIdpException,
   SessionNotFoundException,
 } from './exceptions';
+export * from './interfaces';
 export {
   ISessionBoundContext,
   ISessionCookieOptions,

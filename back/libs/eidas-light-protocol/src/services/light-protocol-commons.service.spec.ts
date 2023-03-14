@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 
-import * as moment from 'moment';
+import * as luxon from 'luxon';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -11,8 +11,6 @@ import {
   EidasOversizedTokenException,
 } from '../exceptions';
 import { LightProtocolCommonsService } from './light-protocol-commons.service';
-
-jest.mock('moment', () => jest.fn());
 
 describe('LightProtocolCommonsService', () => {
   let service: LightProtocolCommonsService;
@@ -55,48 +53,47 @@ describe('LightProtocolCommonsService', () => {
   });
 
   describe('generateToken', () => {
-    const formatMock = jest.fn();
     beforeEach(() => {
-      jest.mocked(moment, true).mockReturnValueOnce({
-        format: formatMock,
-      } as unknown as moment.Moment);
-
-      formatMock.mockReturnValueOnce(date);
-
       service['generateTokenDigest'] = jest
         .fn()
         .mockReturnValueOnce(tokenDigestMock);
     });
 
-    it('should create a date with format "YYYY-MM-DD HH:mm:ss SSS"', () => {
-      // setup
-      const expectedDate = undefined;
-      const expectedFormat = 'YYYY-MM-DD HH:mm:ss SSS';
-
-      // action
-      service.generateToken(id, issuer, secretMock);
-
-      // expect
-      expect(moment).toHaveBeenCalledTimes(1);
-      expect(moment).toHaveBeenCalledWith(expectedDate);
-
-      expect(formatMock).toHaveBeenCalledTimes(1);
-      expect(formatMock).toHaveBeenCalledWith(expectedFormat);
-    });
-
-    it('should call moment with the date argument if present', () => {
+    it('should call luxon with the date argument and the expected format if date is present present', () => {
       // setup
       const expectedDate = new Date('2012-06-04');
+      const fromJSDateSpy = jest.spyOn(luxon.DateTime, 'fromJSDate');
+      const toFormatSpy = jest.spyOn(luxon.DateTime.prototype, 'toFormat');
 
       // action
       service.generateToken(id, issuer, secretMock, expectedDate);
 
       // expect
-      expect(moment).toHaveBeenCalledTimes(1);
-      expect(moment).toHaveBeenCalledWith(expectedDate);
+      expect(fromJSDateSpy).toHaveBeenCalledTimes(1);
+      expect(fromJSDateSpy).toHaveBeenCalledWith(expectedDate);
+      expect(toFormatSpy).toHaveBeenCalledTimes(1);
+      expect(toFormatSpy).toHaveBeenCalledWith('yyyy-MM-dd HH:mm:ss SSS');
+    });
+
+    it('should call luxon with a new date and the expected format if date argument is not present', () => {
+      // setup
+      const fromJSDateSpy = jest.spyOn(luxon.DateTime, 'fromJSDate');
+      const toFormatSpy = jest.spyOn(luxon.DateTime.prototype, 'toFormat');
+
+      // action
+      service.generateToken(id, issuer, secretMock);
+
+      // expect
+      expect(fromJSDateSpy).toHaveBeenCalledTimes(1);
+      expect(fromJSDateSpy.mock.calls[0][0]).toBeInstanceOf(Date);
+      expect(toFormatSpy).toHaveBeenCalledTimes(1);
+      expect(toFormatSpy).toHaveBeenCalledWith('yyyy-MM-dd HH:mm:ss SSS');
     });
 
     it('should generate the token digest with the id, the issuer and the date extracted from the token and the secret', () => {
+      //setup
+      jest.spyOn(luxon.DateTime.prototype, 'toFormat').mockReturnValue(date);
+
       // action
       service.generateToken(id, issuer, secretMock);
 
@@ -112,10 +109,7 @@ describe('LightProtocolCommonsService', () => {
 
     it('should create a base64 encoded light request with the issuer, id, date, and the signature', () => {
       // setup
-      const formatMock = jest.fn().mockReturnValueOnce(date);
-      jest.mocked(moment, true).mockReturnValueOnce({
-        format: formatMock,
-      } as unknown as moment.Moment);
+      jest.spyOn(luxon.DateTime.prototype, 'toFormat').mockReturnValue(date);
 
       // action
       const result = service.generateToken(id, issuer, secretMock);
@@ -126,9 +120,13 @@ describe('LightProtocolCommonsService', () => {
   });
 
   describe('parseToken', () => {
-    const toDateMock = jest.fn();
-    const toStringMock = jest.fn();
-    const fakeDate = 'By Osiris and Isis, this is a date, *o*, a date !';
+    const decodedDigesMock = 'decodedDigesMock';
+    const toStringMock = jest.fn().mockReturnValueOnce({
+      issuer: issuer,
+      id,
+      date,
+      decodedDigest: decodedDigesMock,
+    });
 
     beforeEach(() => {
       mockConfigService.get.mockReturnValueOnce({ maxTokenSize });
@@ -136,11 +134,6 @@ describe('LightProtocolCommonsService', () => {
       service['generateTokenDigest'] = jest
         .fn()
         .mockReturnValueOnce(tokenDigestMock);
-
-      toDateMock.mockReturnValueOnce(fakeDate);
-      jest.mocked(moment, true).mockReturnValueOnce({
-        toDate: toDateMock,
-      } as unknown as moment.Moment);
 
       toStringMock.mockReturnValueOnce(decodedTokenMock);
       jest
@@ -183,30 +176,58 @@ describe('LightProtocolCommonsService', () => {
       );
     });
 
-    it('should create a native date object from the string fromated "YYYY-MM-DD HH:mm:ss SSS"', () => {
+    it('should throw if decodedDigest is different from computedDigest', () => {
+      // setup
+      service['generateTokenDigest'] = jest
+        .fn()
+        .mockReturnValueOnce('tokenDigestMock');
+
+      //expect
+      expect(
+        // When
+        () => service.parseToken(encodedTokenMock, secretMock),
+        // Then
+      ).toThrow(EidasInvalidTokenChecksumException);
+    });
+
+    it('should create a native date object from the string formatted "YYYY-MM-DD HH:mm:ss SSS"', () => {
+      // setup
+      const FromFormatSpy = jest.spyOn(luxon.DateTime, 'fromFormat');
+      const ToJSDateSpy = jest.spyOn(luxon.DateTime.prototype, 'toJSDate');
+
       // action
       service.parseToken(encodedTokenMock, secretMock);
 
       // expect
-      expect(moment).toHaveBeenCalledTimes(1);
-      expect(moment).toHaveBeenCalledWith(date, 'YYYY-MM-DD HH:mm:ss SSS');
+      expect(FromFormatSpy).toHaveBeenCalledTimes(1);
+      expect(FromFormatSpy).toHaveBeenCalledWith(
+        date,
+        'yyyy-MM-dd:HH:mm:ss.SSS',
+      );
 
-      expect(toDateMock).toHaveBeenCalledTimes(1);
-      expect(toDateMock).toHaveBeenCalledWith();
+      expect(ToJSDateSpy).toHaveBeenCalledTimes(1);
+      expect(ToJSDateSpy).toHaveBeenCalledWith();
     });
 
     it('should return the payload elements parsed but not the digest', () => {
-      const expected = {
-        id,
-        issuer,
-        date: fakeDate,
-      };
+      // setup
+      const newDateMock = luxon.DateTime.fromFormat(
+        date,
+        'yyyy-MM-dd:HH:mm:ss.SSS',
+      ).toJSDate();
+      jest
+        .spyOn(luxon.DateTime.prototype, 'toJSDate')
+        .mockReturnValue(newDateMock);
 
       // action
       const result = service.parseToken(encodedTokenMock, secretMock);
 
       // expect
-      expect(result).toStrictEqual(expected);
+      expect(result).toStrictEqual({
+        issuer,
+        id,
+        date: newDateMock,
+      });
     });
 
     it('should throw an EidasOversizedTokenException if the token size is over the config maxTokenSize', () => {
@@ -235,29 +256,20 @@ describe('LightProtocolCommonsService', () => {
   });
 
   describe('generateTokenDigest', () => {
-    const mockFormat = jest.fn();
-    beforeEach(() => {
-      mockFormat.mockReturnValueOnce(date);
-
-      jest.mocked(moment, true).mockReturnValueOnce({
-        format: mockFormat,
-      } as unknown as moment.Moment);
-    });
-
     it('should create a base64 digested sha256 signature hash with id, issuer, mockSecret, date and lightRequestSecret in this order', () => {
       // setup
       const expectedHash = 'sha256';
       const expectedData = `${id}|${issuer}|${date}|${secretMock}`;
       const expectedDigest = 'base64';
       const mockUpdate = jest.fn();
-      const mockDigest = jest.fn();
+      const mockDigest = jest.fn().mockReturnValueOnce('toto');
       jest.spyOn(crypto, 'createHash').mockReturnValueOnce({
         update: mockUpdate,
         digest: mockDigest,
       } as unknown as crypto.Hash);
 
       // action
-      service.generateToken(id, issuer, secretMock);
+      service['generateTokenDigest'](id, issuer, secretMock, date);
 
       // expect
       expect(crypto.createHash).toHaveBeenCalledTimes(1);
@@ -272,10 +284,15 @@ describe('LightProtocolCommonsService', () => {
 
     it('should return the digest', () => {
       // action
-      const result = service.generateToken(id, issuer, secretMock);
+      const result = service['generateTokenDigest'](
+        id,
+        issuer,
+        secretMock,
+        date,
+      );
 
       // expect
-      expect(result).toStrictEqual(encodedTokenMock);
+      expect(result).toStrictEqual(tokenDigestMock);
     });
   });
 

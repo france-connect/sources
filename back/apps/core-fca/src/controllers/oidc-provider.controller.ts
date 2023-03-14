@@ -45,20 +45,13 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
-  async getAuthorize(
-    @Req() req,
-    @Res() res,
-    @Next() next,
-    @Query() query: AuthorizeParamsDto,
-  ) {
+  async getAuthorize(@Next() next, @Query() query: AuthorizeParamsDto) {
     this.logger.trace({
       route: OidcProviderRoutes.AUTHORIZATION,
       method: 'GET',
       name: 'OidcProviderRoutes.AUTHORIZATION',
       query,
     });
-    // Initializes a new session local
-    await this.sessionService.reset(req, res);
     // Pass the query to oidc-provider
     return next();
   }
@@ -79,20 +72,13 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
-  async postAuthorize(
-    @Req() req,
-    @Res() res,
-    @Next() next,
-    @Body() body: AuthorizeParamsDto,
-  ) {
+  async postAuthorize(@Next() next, @Body() body: AuthorizeParamsDto) {
     this.logger.trace({
       route: OidcProviderRoutes.AUTHORIZATION,
       method: 'POST',
       name: 'OidcProviderRoutes.AUTHORIZATION',
       body,
     });
-    // Initializes a new session local
-    await this.sessionService.reset(req, res);
     // Pass the query to oidc-provider
     return next();
   }

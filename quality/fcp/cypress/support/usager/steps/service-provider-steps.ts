@@ -1,6 +1,7 @@
 import { Then, When } from 'cypress-cucumber-preprocessor/steps';
 
 import {
+  addInterceptHeaders,
   checkFCBasicAuthorization,
   isUsingFCBasicAuthorization,
   navigateTo,
@@ -20,6 +21,13 @@ When('je navigue sur la page fournisseur de service', function () {
 });
 
 When('je clique sur le bouton FranceConnect', function () {
+  if (serviceProviderPage.isLegacySPMock()) {
+    // when on legacy service provider mock we call directly authorize
+    const { fcRootUrl } = this.env;
+    serviceProviderPage.callAuthorize(fcRootUrl, this.requestedScope);
+    return;
+  }
+
   // Setup the requested scope and eidas on mocked environment
   if (this.serviceProvider.mocked === true) {
     serviceProviderPage.setMockAuthorizeHttpMethod(
@@ -38,11 +46,42 @@ When('je clique sur le bouton FranceConnect', function () {
   }
 });
 
+When(
+  /^j'initie une connexion suspecte à (?:FranceConnect low|FranceConnect\+)$/,
+  function () {
+    // TODO to move to serviceProviderPage
+    if (this.serviceProvider.mocked === true) {
+      serviceProviderPage.setMockAuthorizeHttpMethod(
+        this.serviceProvider.authorizeHttpMethod,
+      );
+      serviceProviderPage.setMockRequestedAmr(
+        this.serviceProvider.claims.includes('amr'),
+      );
+      serviceProviderPage.setMockRequestedScope(this.requestedScope);
+      serviceProviderPage.setMockRequestedAcr(this.serviceProvider.acrValue);
+    }
+
+    const headers = {
+      'X-Suspicious': '1',
+    };
+    addInterceptHeaders(headers, 'FC:suspicious');
+
+    serviceProviderPage.getFcButton().click();
+
+    if (isUsingFCBasicAuthorization()) {
+      checkFCBasicAuthorization();
+    }
+  },
+);
+
 Then('je suis redirigé vers la page fournisseur de service', function () {
   serviceProviderPage.checkIsVisible();
 });
 
-Then(/^je suis connecté$/, function () {
+Then('je suis connecté au fournisseur de service', function () {
+  // Init serviceProviderPage because this step can be called without
+  // being preceded by the navigation step
+  serviceProviderPage = new ServiceProviderPage(this.serviceProvider);
   serviceProviderPage.checkIsUserConnected();
 });
 
@@ -55,6 +94,10 @@ Then(
     }
   },
 );
+
+Then('le fournisseur de service a accès aux traces FranceConnect', function () {
+  serviceProviderPage.checkTracks();
+});
 
 Then(
   'la cinématique a utilisé le niveau de sécurité {string}',

@@ -13,4 +13,5 @@ export interface UserData {
   claims: UserClaims;
   credentials: [UserCredentials];
   criteria: string[];
+  eidasClaims?: UserClaims;
 }

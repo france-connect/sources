@@ -1,6 +1,7 @@
 import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { CoreIdentityProviderNotFoundException } from '@fc/core';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
@@ -97,12 +98,31 @@ describe('CoreFcaService', () => {
 
   describe('verify()', () => {
     it('Should call session.get() with `interactionId`', async () => {
-      // Given
       // When
       await service.verify(sessionServiceMock);
       // Then
       expect(sessionServiceMock.get).toBeCalledTimes(1);
       expect(sessionServiceMock.get).toBeCalledWith();
+    });
+
+    it('should call identityProvider.getById with `idpId`', async () => {
+      // When
+      await service.verify(sessionServiceMock);
+      // Then
+      expect(IdentityProviderMock.getById).toBeCalledTimes(1);
+      expect(IdentityProviderMock.getById).toBeCalledWith(
+        sessionDataMock.idpId,
+      );
+    });
+
+    it('should throw if identityProvider.getById returns undefined', async () => {
+      // Given
+      IdentityProviderMock.getById.mockReset().mockResolvedValueOnce(undefined);
+      // When
+      await expect(
+        service.verify(sessionServiceMock),
+        // Then
+      ).rejects.toThrow(CoreIdentityProviderNotFoundException);
     });
 
     it('Should call `FeatureHandler.get()` to get instantiated featureHandler class', async () => {

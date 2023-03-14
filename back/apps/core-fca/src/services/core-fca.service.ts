@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 
+import { CoreIdentityProviderNotFoundException } from '@fc/core';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
@@ -27,6 +28,11 @@ export class CoreFcaService {
 
     const { idpId } = await sessionOidc.get();
     const idp = await this.identityProvider.getById(idpId);
+
+    if (!idp) {
+      throw new CoreIdentityProviderNotFoundException();
+    }
+
     const { coreVerify } = idp.featureHandlers;
 
     const handler = await FeatureHandler.get(coreVerify, this);

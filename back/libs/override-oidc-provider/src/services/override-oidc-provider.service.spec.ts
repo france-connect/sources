@@ -34,10 +34,16 @@ describe('OverrideOidcProviderService', () => {
   };
 
   const KeyStoreMock = jest.mocked(KeyStore);
-  const signHsmPubKeyMock = {
-    x: 'foo',
-    y: 'bar',
-  };
+  const signHsmPubKeysMock = [
+    {
+      x: 'foo',
+      y: 'bar',
+    },
+    {
+      x: 'foo2',
+      y: 'bar2',
+    },
+  ];
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -57,7 +63,7 @@ describe('OverrideOidcProviderService', () => {
 
     jest.resetAllMocks();
     oidcProviderMock.getProvider.mockReturnValue(providerMock);
-    configMock.get.mockReturnValue({ sigHsmPubKey: signHsmPubKeyMock });
+    configMock.get.mockReturnValue({ sigHsmPubKeys: signHsmPubKeysMock });
   });
 
   it('should be defined', () => {
@@ -87,18 +93,23 @@ describe('OverrideOidcProviderService', () => {
       KeyStoreMock.mockImplementationOnce(function (value: any) {
         return value;
       });
+      const expectedKeys = [
+        {
+          ...signHsmPubKeysMock[0],
+          d: 'not-a-private',
+        },
+        {
+          ...signHsmPubKeysMock[1],
+          d: 'not-a-private',
+        },
+      ];
 
       // When
       service['overrideJwksResponse']();
 
       // Then
       expect(KeyStoreMock).toHaveBeenCalledTimes(1);
-      expect(KeyStoreMock).toHaveBeenCalledWith([
-        {
-          ...signHsmPubKeyMock,
-          d: 'not-a-private',
-        },
-      ]);
+      expect(KeyStoreMock).toHaveBeenCalledWith(expectedKeys);
     });
 
     it('should affect the keystore to provider instance', () => {
@@ -109,7 +120,7 @@ describe('OverrideOidcProviderService', () => {
       service['overrideJwksResponse']();
 
       // Then
-      expect(instanceSpy.jwksResponse).toEqual({ keys: [signHsmPubKeyMock] });
+      expect(instanceSpy.jwksResponse).toEqual({ keys: signHsmPubKeysMock });
     });
   });
 

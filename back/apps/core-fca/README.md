@@ -15,3 +15,18 @@ Le _sub_ est supposé permettre l'identification d'une identité dans la durée 
 
 - Changements d'état civil dans le RNIPP (on parle ici de changements rares tels qu'un changement de nom, de genre ou encore une correction de date de naissance)
 - Changement du sel de hashage de l'`identityHash` (un tel changement modifierait tous les subs et est donc improbable)
+
+## Gestion des vérifications business
+
+Dans le service de core-fca `core-fca.service.ts` est définie une fonction `verify`.
+
+Cette fonction sert à effectuer toutes les vérifications métier de l'application:
+
+- Lorsque l'utilisateur vient de se connecter et avant de rediriger vers le FS
+- Lorsque l'utilisateur possède une session active (SSO) et avant de rediriger vers le FS
+
+La vérification à cet endroit permet de s'assurer dans tous les cas que le business est traité à un et un seul endroit.
+
+Pour des raisons UX, certaines vérifications métiers peuvent avoir été faites plus tôt, mais c'est cet appel qui reste le "dernier rempart" et qui fait donc foi.
+
+Si le FI utilisé n'est pas compatible avec le FS (blacklist/whitelist), alors l'utilisateur est renvoyé vers la page de sélection du FI (`/interaction`).

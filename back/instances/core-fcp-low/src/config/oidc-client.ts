@@ -14,7 +14,7 @@ export default {
     timeout: parseInt(process.env.REQUEST_TIMEOUT, 10),
   },
   jwks: {
-    keys: [env.json('CRYPTO_ENC_LOCALE_PRIV_KEY')],
+    keys: env.json('CRYPTO_ENC_LOCALE_PRIV_KEYS'),
   },
   stateLength: 32,
 

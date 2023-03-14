@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <%- include('partials/head.ejs'); %>
+    <%- include('includes/head.ejs'); %>
     <link rel="stylesheet" href="/css/error.css" />
     <title>Connexion - choix du fournisseur d\'identité</title>
   </head>
   <body>
     <div id="error-wrapper">
-      <%- include('partials/menu.ejs'); %>
+      <%- include('includes/menu.ejs'); %>
       <main>
-        <div id="error">
+        <div id="error" data-testid="error-section">
           <div id="error-content">
-            <%- include('partials/error/content.ejs'); %>
+            <%- include('includes/error/content.ejs'); %>
           </div>
           <div id="support-form-button">
-            <%- include('partials/support-form-button.ejs'); %>
+            <%- include('includes/support-form-button.ejs'); %>
           </div>
         </div>
       </main>
     </div>
-    <%- include('partials/footer.ejs'); %>
+    <%- include('includes/footer.ejs'); %>
   </body>
 </html>

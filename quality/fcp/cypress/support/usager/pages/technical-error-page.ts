@@ -1,13 +1,17 @@
 export default class TechnicalErrorPage {
   checkIsVisible(): void {
-    cy.get('h1.main-title').contains("Une erreur s'est produite");
+    cy.get('[data-testid="error-section"]').should('be.visible');
+  }
+
+  checkErrorTitle(message: string): void {
+    cy.get('[data-testid="error-section-title"]').contains(message);
   }
 
   checkErrorCode(errorCode: string): void {
-    cy.get('#error-code').contains(errorCode);
+    cy.get('[data-testid="error-code"]').contains(errorCode);
   }
 
   checkErrorMessage(message: string): void {
-    cy.get('#error-message').contains(message);
+    cy.get('[data-testid="error-message"]').contains(message);
   }
 }

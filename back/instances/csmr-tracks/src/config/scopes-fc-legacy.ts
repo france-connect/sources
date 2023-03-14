@@ -6,6 +6,7 @@ import {
   cnous,
   dgfip,
   fcpLow,
+  fcTracks,
   mesri,
   mi,
   pe,
@@ -13,7 +14,7 @@ import {
 } from '@fc/scopes';
 
 const config: ScopesConfig = {
-  mapping: [cnam, cnous, dgfip, fcpLow, mesri, mi, pe],
+  mapping: [cnam, cnous, dgfip, fcpLow, mesri, mi, pe, fcTracks],
 };
 
 export default config;

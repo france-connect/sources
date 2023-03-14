@@ -19,4 +19,5 @@ export default {
   fqdn: process.env.FQDN,
   // @NOTE a-t-on besoin de cette variable pour fcp low ?
   udFqdn: process.env.UD_FQDN,
+  minAcrForContextRequest: 'eidas2',
 } as AppConfig;

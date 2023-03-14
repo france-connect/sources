@@ -276,6 +276,7 @@ describe('CoreTrackingService', () => {
         accountId: null,
         interactionId: null,
         sessionId: sessionIdMock,
+        isSso: null,
 
         spId: null,
         spAcr: null,
@@ -303,6 +304,7 @@ describe('CoreTrackingService', () => {
         accountId: 'accountId Mock Value',
         sessionId: sessionIdMock,
         interactionId: interactionIdMock,
+        isSso: null,
 
         spId: 'some spId',
         spName: 'some spName',
@@ -327,6 +329,7 @@ describe('CoreTrackingService', () => {
         accountId: null,
         sessionId: sessionIdMock,
         interactionId: null,
+        isSso: null,
 
         spId: 'spIdMock',
         spName: 'spNameMock',
@@ -358,6 +361,7 @@ describe('CoreTrackingService', () => {
         accountId: null,
         sessionId: sessionIdMock,
         interactionId: null,
+        isSso: null,
 
         spId: 'spIdMock',
         spName: 'spNameMock',
@@ -392,6 +396,7 @@ describe('CoreTrackingService', () => {
         accountId: null,
         sessionId: sessionIdMock,
         interactionId: null,
+        isSso: null,
 
         spId: null,
         spName: null,

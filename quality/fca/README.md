@@ -52,13 +52,11 @@ In order to run tests with Cypress,
 
 ```shell
 docker-stack prune && \
-docker-stack up all-fca-low && \
+docker-stack up bdd-fca-low && \
 docker-stack fca-low-front && \
-docker-stack dep core-fca-low exploitation-fca-low && \
+docker-stack dep core-fca-low && \
 docker-stack fixtures-fca-low && \
-docker-stack start exploitation-fca-low && \
-docker-stack start fsa1-low fsa2-low fsa4-low fia1-low fia2-low fia4-low fia5-low && \
-docker-stack start core-fca-low fca-low-front exploitation-fca-low
+docker-stack start-all
 ```
 
 #### Run the tests on docker environment in the terminal (deleting previous results)

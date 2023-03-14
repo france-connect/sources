@@ -7,5 +7,5 @@ import { OverrideOidcProviderConfig } from '@fc/override-oidc-provider';
 const env = new ConfigParser(process.env, 'OverrideOidcProvider');
 
 export default {
-  sigHsmPubKey: env.json('CRYPTO_SIG_HSM_PUB_KEY'),
+  sigHsmPubKeys: env.json('CRYPTO_SIG_HSM_PUB_KEYS'),
 } as OverrideOidcProviderConfig;

@@ -510,11 +510,24 @@ describe('MockServiceProviderController', () => {
       oidcClientServiceMock.utils.getAuthorizeUrl.mockResolvedValue(urlMock);
     });
 
-    it('should call config.get', async () => {
+    it('should call config.get twice', async () => {
       // When
       await controller['getInteractionParameters'](provider);
       // Then
-      expect(configMock.get).toBeCalledTimes(1);
+      expect(configMock.get).toBeCalledTimes(2);
+    });
+
+    it('should get OidcAcr config', async () => {
+      // When
+      await controller['getInteractionParameters'](provider);
+      // Then
+      expect(configMock.get).toBeCalledWith('OidcAcr');
+    });
+
+    it('should get OidcClient config', async () => {
+      // When
+      await controller['getInteractionParameters'](provider);
+      // Then
       expect(configMock.get).toBeCalledWith('OidcClient');
     });
 
@@ -538,7 +551,7 @@ describe('MockServiceProviderController', () => {
         scope: scopeMock,
         idpId: 'providerUidMock',
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        acr_values: 'acrMock',
+        acr_values: 'eidas2',
         nonce: nonceMock,
         claims: 'claimsMock',
       });
@@ -555,7 +568,7 @@ describe('MockServiceProviderController', () => {
           state: idpStateMock,
           nonce: nonceMock,
           uid: 'providerUidMock',
-          acr: 'acrMock',
+          acr: 'eidas2',
           claims: 'claimsMock',
           prompt: ['login', 'consent'],
           // eslint-disable-next-line @typescript-eslint/naming-convention

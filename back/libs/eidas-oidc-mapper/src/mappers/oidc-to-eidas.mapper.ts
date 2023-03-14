@@ -1,9 +1,8 @@
 import * as _ from 'lodash';
 
 import { EidasAttributes, EidasLevelOfAssurances } from '@fc/eidas';
-import { AcrValues } from '@fc/oidc';
 
-import { OidcScopes } from '../enums';
+import { AcrValues, OidcScopes } from '../enums';
 
 /**
  * Get the oidc sub in the claims to return as eidas person identifier

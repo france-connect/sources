@@ -94,3 +94,56 @@ class MyService {
   }
 }
 ```
+
+### output
+
+payload format:
+
+```
+{
+  "type": "TRACKS_DATA",
+  "payload": [],
+  "meta": {
+    "total": 172281, // all events for this user
+    "size": 10, // size of the payload array, maximum 500
+    "offset": 0 // always sending the last events so always 0
+  }
+}
+```
+
+Tracked events:
+
+- FC_VERIFIED : the user has been authenticated and arrived on the consent/information page of FranceConnect
+- FC_DATATRANSFER_CONSENT_IDENTITY : the user has given his consent to share its identity with a private service provider
+- FC_DATATRANSFER_CONSENT_DATA : the user has given his consent to share some data from a data provider with a private service provider
+- DP_REQUESTED_FC_CHECKTOKEN : the data provider has requested the validation of a token before providing its data to the private service provider
+
+event format:
+
+```
+{
+  "event": "FC_VERIFIED",
+  "time": 1675874359719,
+  "spLabel": "sp Label",
+  "spAcr": "eidas1",
+  "idpLabel": "idp Label",
+  "country": "FR",
+  "city": "Paris",
+  "claims": [ ], // claims are not listed for FC_VERIFIED events
+  "trackId": "3840b73f-e46b-4cc3-9fcf-1dce0ec06e91",
+  "platform": "FranceConnect" // or FranceConnect+
+},
+```
+
+claim format:
+
+```
+{
+  "identifier": "birthcountry",
+  "label": "Pays de naissance",
+  "provider": {
+    "key": "FCP_LOW",
+    "label": "FranceConnect"
+  }
+}
+```

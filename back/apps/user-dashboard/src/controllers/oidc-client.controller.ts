@@ -21,6 +21,7 @@ import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
+import { OidcAcrConfig } from '@fc/oidc-acr';
 import {
   CrsfToken,
   GetOidcCallback,
@@ -75,8 +76,10 @@ export class OidcClientController {
   ): Promise<void> {
     // acr_values is an oidc defined variable name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { acr: acr_values, scope } =
-      this.config.get<OidcClientConfig>('OidcClient');
+    const { defaultAcrValue: acr_values } =
+      this.config.get<OidcAcrConfig>('OidcAcr');
+
+    const { scope } = this.config.get<OidcClientConfig>('OidcClient');
     const { csrfToken } = body;
 
     const PROVIDER_UID = 'envIssuer';

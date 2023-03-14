@@ -5,6 +5,7 @@ import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
 import { LoggerConfig } from '@fc/logger-legacy';
+import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { RedisConfig } from '@fc/redis';
 /**
@@ -18,6 +19,11 @@ import { SessionConfig } from '@fc/session';
 import { AppConfig } from './app-config.dto';
 
 export class MockIdentityProviderConfig {
+  @IsObject()
+  @ValidateNested()
+  @Type(() => OidcAcrConfig)
+  readonly OidcAcr: OidcAcrConfig;
+
   @IsObject()
   @ValidateNested()
   @Type(() => OidcProviderConfig)

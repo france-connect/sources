@@ -18,7 +18,7 @@ Fonctionnalité: Préférences FI - Support
 
   Scénario: Préférences FI - Support - sans préférences FI
     Etant donné que j'utilise un compte usager "sans préférence FI"
-    Et que j'ai fait une cinématique FranceConnect Legacy
+    Et que j'ai fait une cinématique FranceConnect
     Et que je navigue sur la page login du support
     Et que je me connecte au support en tant que "support"
     Et que je navigue vers la page redressement RNIPP

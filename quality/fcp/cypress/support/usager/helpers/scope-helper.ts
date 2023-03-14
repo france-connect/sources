@@ -27,6 +27,7 @@ const aliasScopesClaims = {
 };
 
 const DEFAULT_SCOPE_TYPE = 'tous les scopes';
+const DEFAULT_SCOPE_IDP_TYPE = 'tous les scopes sans alias';
 
 /**
  * Get the scope context matching the type
@@ -46,12 +47,21 @@ export const getScopeByType = (
 };
 
 /**
- * Get the default scope context
+ * Get the default scope context for the tests
  * @param {ScopeContext[]} scopes array of all the scope contexts from the fixtures
  * @returns the default scope context
  */
 export const getDefaultScope = (scopes: ScopeContext[]): ScopeContext => {
   return getScopeByType(scopes, DEFAULT_SCOPE_TYPE);
+};
+
+/**
+ * Get the default scope context use for the Identity Provider
+ * @param {ScopeContext[]} scopes array of all the scope contexts from the fixtures
+ * @returns the default scope context
+ */
+export const getDefaultIdpScope = (scopes: ScopeContext[]): ScopeContext => {
+  return getScopeByType(scopes, DEFAULT_SCOPE_IDP_TYPE);
 };
 
 /**

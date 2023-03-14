@@ -33,6 +33,7 @@
       "^@fc/loading(|/.*)$": ["../../libs/loading/src/*"],
       "^@fc/oidc-client(|/.*)$": ["../../libs/oidc-client/src/*"],
       "^@fc/partners(|/.*)$": ["../../apps/partners/src/*"],
+      "^@fc/mock-rnipp(|/.*)$": ["../../apps/mock-rnipp/src/*"],
       "^@fc/routing(|/.*)$": ["../../libs/routing/src/*"],
       "^@fc/state-management(|/.*)$": ["../../libs/state-management/src/*"],
       "^@fc/storybook-config(|/.*)$": ["../../.storybook/*"],

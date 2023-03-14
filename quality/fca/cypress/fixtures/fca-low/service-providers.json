@@ -3,7 +3,8 @@
     "name": "fsa1-low",
     "descriptions": [
       "par défaut",
-      "avec une blacklist de FI"
+      "avec une blacklist de FI",
+      "avec accès au FI par défaut (premier FS)"
     ],
     "mocked": true,
     "url": "https://fsa1-low.{{TEST_ENV}}.dev-franceconnect.fr",
@@ -20,7 +21,8 @@
   {
     "name": "fsa2-low",
     "descriptions": [
-      "avec une whitelist de FI"
+      "avec une whitelist de FI",
+      "avec accès au FI par défaut (deuxième FS)"
     ],
     "mocked": true,
     "url": "https://fsa2-low.{{TEST_ENV}}.dev-franceconnect.fr",
@@ -39,6 +41,19 @@
     "descriptions": ["non habilité à demander le scope belonging_population", "non habilité à demander le claim amr"],
     "mocked": true,
     "url": "https://fsa4-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "claims": [],
+    "selectors": {
+      "fcaButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsa5-low",
+    "descriptions": ["sans accès au FI par défaut", "avec accès exclusif à un FI"],
+    "mocked": true,
+    "url": "https://fsa5-low.{{TEST_ENV}}.dev-franceconnect.fr",
     "acrValue": "eidas1",
     "claims": [],
     "selectors": {

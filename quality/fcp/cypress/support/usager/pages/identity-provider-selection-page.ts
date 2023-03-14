@@ -1,15 +1,19 @@
-import { ChainableElement } from '../../common/types';
+import { ChainableElement, IdentityProvider } from '../../common/types';
 
 export default class IdentityProviderSelectionPage {
   getBackToServiceProviderLink(): ChainableElement {
-    return cy.get('.previous-link-container');
+    return cy.get('[data-testid="back-to-sp-link"]');
   }
 
-  getIdpButton(idpId: string): ChainableElement {
-    return cy.get(`button[id="idp-${idpId}"]`);
+  getIdpGrid(): ChainableElement {
+    return cy.get('[data-testid="main-providers"]');
+  }
+
+  getIdpButton(idp: IdentityProvider): ChainableElement {
+    return cy.get(idp.selectors.idpButton);
   }
 
   checkIsVisible(): void {
-    cy.url().should('include', `/api/v2/interaction`);
+    this.getIdpGrid().should('be.visible');
   }
 }

@@ -85,5 +85,31 @@
       "logoutButton": ".nav-logout"
     },
     "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "eidas-mock",
+    "descriptions": ["eidas-mock"],
+    "mocked": false,
+    "url": "https://eidas-mock.{{TEST_ENV}}.dev-franceconnect.fr",
+    "clientId": "",
+    "acrValue": "eidas2",
+    "claims": [],
+    "scopes": [
+      "eidas"
+    ],
+    "explicitConsent": false
+  },
+  {
+    "name": "eidas-be",
+    "descriptions": ["eidas-be"],
+    "mocked": false,
+    "url": "https://eidas-be.{{TEST_ENV}}.dev-franceconnect.fr",
+    "clientId": "",
+    "acrValue": "eidas2",
+    "claims": [],
+    "scopes": [
+      "eidas"
+    ],
+    "explicitConsent": false
   }
 ]

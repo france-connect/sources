@@ -1,0 +1,53 @@
+<%
+// Helpers function
+function genAttributes(params) {
+  return Object.entries(params)
+    .filter(([attributeName, item]) => item.if)
+    .map(([attributeName, item]) => `${attributeName}="${item.value}"`);
+}
+%>
+
+<% // Settings
+    const badgeClassname = provider.active
+      ? 'fr-badge--info'
+      : '';
+
+    const providerClassname = provider.isBeta
+      ? 'fc-btn--provider-beta'
+      : 'fc-btn--provider';
+
+    const attributesObject = {
+      'disabled': {
+        value: 'disabled',
+        if: !provider.active,
+      },
+    }
+    const attributes = genAttributes(attributesObject);
+  %>
+  <button
+    role="link"
+    id="<%= `idp-${provider.uid}` %>"
+    class="fr-btn fr-btn--tertiary <%= providerClassname %>" <%= attributes %>>
+    <% if (provider.isBeta) { %>
+      <p class="fr-badge <%= badgeClassname %> fr-badge--no-icon">TEST</p>
+    <% } %>
+    <% if (provider.image) { %>
+      <div class="fc-container-image">
+        <img class="" src="/img/fi/<%= provider.image %>" alt="<%- provider.title %>">
+      </div>
+    <% } else { %>
+      <%= provider.title %>
+    <% } %>
+    <% if (!provider.active) { %>
+      <span
+        class="fr-text--xs fr-mt-2v"
+        data-testid="<%- `idp-${provider.name}` %>-status-description">
+        Indisponible
+      </span>
+    <% } %>
+  </button>
+  <input type="hidden" name="providerUid" value="<%= provider.uid %>" />
+  <input type="hidden" name="acr_values" value="<%= params.acr_values %>" />
+  <input type="hidden" name="scope" value="<%= locals.idpScope %>" />
+  <input type="hidden" name="csrfToken" value="<%= locals.csrfToken %>" />
+

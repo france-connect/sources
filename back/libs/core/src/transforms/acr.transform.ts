@@ -1,7 +1,3 @@
-// Oidc naming convention
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export type AcrValues = Partial<{ acr_values: any }>;
-
 export function pickAcr(
   knownAcrValues: string[],
   acrValues: string[],

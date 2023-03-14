@@ -142,6 +142,7 @@ export class IdentityProviderAdapterMongoService
           userinfo_signed_response_alg: true,
         },
       )
+      .sort({ order: 'asc', createdAt: 'asc' })
       .lean();
 
     const { disableIdpValidationOnLegacy } =

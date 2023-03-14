@@ -81,8 +81,10 @@ describe('OidcClient Controller', () => {
     track: jest.fn(),
   };
 
-  const appConfigMock = {
+  const configMock = {
     urlPrefix: '/api/v2',
+    defaultAcrValue: 'eidas3',
+    scope: 'openid',
   };
 
   const configServiceMock = {
@@ -127,7 +129,7 @@ describe('OidcClient Controller', () => {
 
     controller = module.get<OidcClientController>(OidcClientController);
 
-    configServiceMock.get.mockReturnValue(appConfigMock);
+    configServiceMock.get.mockReturnValue(configMock);
     res = {
       redirect: jest.fn(),
     };
@@ -165,7 +167,7 @@ describe('OidcClient Controller', () => {
       state: idpStateMock,
     });
 
-    configServiceMock.get.mockReturnValue(appConfigMock);
+    configServiceMock.get.mockReturnValue(configMock);
     sessionCsrfServiceMock.save.mockResolvedValueOnce(true);
   });
 
@@ -179,11 +181,6 @@ describe('OidcClient Controller', () => {
       const body = {
         csrfToken: 'csrfMockValue',
       };
-
-      configServiceMock.get.mockReturnValueOnce({
-        acr: 'eidas3',
-        scope: 'openid',
-      });
 
       const authorizeUrlMock = 'https://my-authentication-openid-url.com';
 
@@ -220,11 +217,6 @@ describe('OidcClient Controller', () => {
         csrfToken: 'csrfMockValue',
       };
 
-      configServiceMock.get.mockReturnValueOnce({
-        acr: 'eidas3',
-        scope: 'openid',
-      });
-
       const authorizeUrlMock = 'https://my-authentication-openid-url.com';
 
       oidcClientServiceMock.utils.getAuthorizeUrl.mockReturnValueOnce(
@@ -244,11 +236,6 @@ describe('OidcClient Controller', () => {
       const body = {
         csrfToken: 'csrfMockValue',
       };
-
-      configServiceMock.get.mockResolvedValue({
-        acr: 'eidas3',
-        scope: 'openid',
-      });
 
       const authorizeUrlMock = 'https://my-authentication-openid-url.com';
 
@@ -361,7 +348,7 @@ describe('OidcClient Controller', () => {
       // Given
       const queryMock = 'first-query-param=first&second-query-param=second';
       queryStringEncodeMock.mockReturnValueOnce(queryMock);
-      const redirectOidcCallbackUrl = `${appConfigMock.urlPrefix}/oidc-callback?${queryMock}`;
+      const redirectOidcCallbackUrl = `${configMock.urlPrefix}/oidc-callback?${queryMock}`;
       // When
       const result = await controller.getLegacyOidcCallback(
         req.query,

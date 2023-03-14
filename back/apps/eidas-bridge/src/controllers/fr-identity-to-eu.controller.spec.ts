@@ -7,9 +7,12 @@ import { CryptographyService } from '@fc/cryptography';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
 import { EidasAttributes, EidasRequest } from '@fc/eidas';
 import { EidasCountries } from '@fc/eidas-country';
-import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
+import {
+  AcrValues,
+  EidasToOidcService,
+  OidcToEidasService,
+} from '@fc/eidas-oidc-mapper';
 import { LoggerService } from '@fc/logger-legacy';
-import { AcrValues } from '@fc/oidc';
 import {
   OidcClientConfigService,
   OidcClientService,

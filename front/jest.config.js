@@ -29,6 +29,7 @@ module.exports = {
     '^@fc/loading(|/.*)$': '<rootDir>/libs/loading/src/$1',
     '^@fc/partners(|/.*)$': '<rootDir>/apps/partners/src/$1',
     '^@fc/oidc-client(|/.*)$': '<rootDir>/libs/oidc-client/src/$1',
+    '^@fc/mock-rnipp(|/.*)$': '<rootDir>/apps/mock-rnipp/src/$1',
     '^@fc/routing(|/.*)$': '<rootDir>/libs/routing/src/$1',
     '^@fc/state-management(|/.*)$': '<rootDir>/libs/state-management/src/$1',
     '^@fc/tracks(|/.*)$': '<rootDir>/apps/tracks/src/$1',

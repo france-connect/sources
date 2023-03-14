@@ -50,7 +50,7 @@ const fsa = {
     jwks_uri:
       "https://fsa1-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: true,
-    idpFilterList: ["fia3-low", "fia5-low"],
+    idpFilterList: ["fia3-low", "fia5-low", "fia8-low"],
     identityConsent: false,
   },
 
@@ -206,6 +206,59 @@ const fsa = {
     idpFilterList: ["fia1-low", "fia2-low", "fia4-low", "fia5-low"],
     identityConsent: false,
   },
+    // -- FSA - FSA5-LOW - Activated - RS256 - encrypted response - FIA8-LOW only
+    "FSA5-LOW": {
+      name: "FSA - FSA5-LOW",
+      title: "FSA - FSA5-LOW Title",
+      site: "https://site.com",
+      redirect_uris: [
+        "https://fsa5-low.docker.dev-franceconnect.fr/oidc-callback",
+      ],
+      post_logout_redirect_uris: [
+        "https://fsa5-low.docker.dev-franceconnect.fr/logout-callback",
+      ],
+      client_secret:
+        "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
+      key: "1235f347513b860e6b931fae4a1ba70c8489a558a0fc74ecdc094d48a4035e77",
+      entityId:
+        "bb41f9fa5752420a516422a4bf98c09f11e1617d9ebddd4b545cc5cc109680bc",
+      credentialsFlow: false,
+      email: "fsa5@franceconnect.loc",
+      IPServerAddressesAndRanges: ["1.1.1.1"],
+      active: true,
+      type: "public",
+      __v: 4,
+      featureHandlers: { none: "" },
+      updatedAt: new Date("2019-04-24 17:09:17"),
+      updatedBy: "admin",
+      scopes: [
+        "uid",
+        "openid",
+        "given_name",
+        "email",
+        "phone",
+        "organizational_unit",
+        "siren",
+        "siret",
+        "usual_name",
+        "belonging_population",
+        "chorusdt",
+        "idp_id",
+        "idp_acr",
+      ],
+      claims: ["amr"],
+      id_token_signed_response_alg: "RS256",
+      id_token_encrypted_response_alg: "",
+      id_token_encrypted_response_enc: "",
+      userinfo_signed_response_alg: "RS256",
+      userinfo_encrypted_response_alg: "",
+      userinfo_encrypted_response_enc: "",
+      jwks_uri:
+        "https://fsa5-low.docker.dev-franceconnect.fr/client/.well-known/keys",
+      idpFilterExclude: false,
+      idpFilterList: ["fia8-low"],
+      identityConsent: false,
+    },
 };
 
 // -- SPs ----------
@@ -217,3 +270,5 @@ print("Initializing client: fsa3-low - deactivated");
 db.client.update({ name: "fsa3-low" }, fsa["FSA3-LOW"], { upsert: true });
 print("Initializing client: fsa4-low - activated");
 db.client.update({ name: "fsa4-low" }, fsa["FSA4-LOW"], { upsert: true });
+print("Initializing client: fsa5-low - activated");
+db.client.update({ name: "fsa5-low" }, fsa["FSA5-LOW"], { upsert: true });

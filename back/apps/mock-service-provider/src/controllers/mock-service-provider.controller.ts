@@ -17,6 +17,7 @@ import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
+import { OidcAcrConfig } from '@fc/oidc-acr';
 import {
   OidcClientConfig,
   OidcClientRoutes,
@@ -61,7 +62,7 @@ export class MockServiceProviderController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const { defaultAcrValue } = this.config.get<AppConfig>('App');
+    const { defaultAcrValue } = this.config.get<OidcAcrConfig>('OidcAcr');
 
     // Only one provider is available with `@fc/identity-provider-env`
     const [provider] = await this.identityProvider.getList();
@@ -385,8 +386,9 @@ export class MockServiceProviderController {
   }
 
   private async getInteractionParameters(provider: IdentityProviderMetadata) {
-    const oidcClientConfig = this.config.get<OidcClientConfig>('OidcClient');
-    const { scope, acr, claims } = oidcClientConfig;
+    const { defaultAcrValue } = this.config.get<OidcAcrConfig>('OidcAcr');
+    const { scope, claims } = this.config.get<OidcClientConfig>('OidcClient');
+
     const { state, nonce } =
       await this.oidcClient.utils.buildAuthorizeParameters();
 
@@ -397,7 +399,7 @@ export class MockServiceProviderController {
       scope,
       idpId: provider.uid,
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      acr_values: acr,
+      acr_values: defaultAcrValue,
       nonce,
       claims,
       prompt: prompt.join(' '),
@@ -419,7 +421,7 @@ export class MockServiceProviderController {
         uid: provider.uid,
         state,
         scope,
-        acr,
+        acr: defaultAcrValue,
         claims,
         nonce,
         // oidc name

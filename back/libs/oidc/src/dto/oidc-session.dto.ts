@@ -4,6 +4,7 @@
 import {
   IsArray,
   IsAscii,
+  IsBoolean,
   IsJWT,
   IsObject,
   IsOptional,
@@ -140,4 +141,8 @@ export class OidcSession {
   @IsString()
   @IsOptional()
   readonly oidcProviderLogoutForm?: string;
+
+  @IsBoolean()
+  @IsOptional()
+  readonly isSso?: boolean;
 }

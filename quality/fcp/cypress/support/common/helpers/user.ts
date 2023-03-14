@@ -9,6 +9,7 @@ export class User implements UserData {
   public claims: UserClaims;
   public credentials: [UserCredentials];
   public criteria: string[];
+  public eidasClaims: UserClaims;
 
   static extractUserFromData(
     users: UserData[],

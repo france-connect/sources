@@ -19,7 +19,7 @@ Fonctionnalité: Validation Visuelle
     Et que la copie d'écran "informationAvecScope" correspond à l'élément web "article" sur "<device>"
     Quand je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "identite_pivot sans alias"
 
     Exemples:
@@ -49,7 +49,7 @@ Fonctionnalité: Validation Visuelle
     Et la copie d'écran "consentementActif" correspond à la page actuelle sur "<device>"
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "identite_pivot sans alias"
 
     Exemples:
@@ -75,7 +75,7 @@ Fonctionnalité: Validation Visuelle
     Et la copie d'écran "scopeAnonyme" correspond à la page actuelle sur "<device>"
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "anonyme"
 
     Exemples:
@@ -95,8 +95,8 @@ Fonctionnalité: Validation Visuelle
     Et que je clique sur le fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
-    Alors je suis redirigé vers la page erreur technique
-    Et le code d'erreur est "Y180001"
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y180001"
     Et la copie d'écran "erreurUsagerDesactive" correspond à la page actuelle sur "<device>"
 
     Exemples:

@@ -118,6 +118,7 @@ export class CoreTrackingService {
     const {
       accountId = null,
       interactionId = null,
+      isSso = null,
 
       spId = null,
       spAcr = null,
@@ -134,6 +135,7 @@ export class CoreTrackingService {
     return {
       accountId,
       interactionId,
+      isSso,
       sessionId,
 
       spId,

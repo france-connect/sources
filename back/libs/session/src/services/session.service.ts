@@ -314,7 +314,7 @@ export class SessionService {
    * @param {ISessionRequest} req
    * @param {string} sessionId
    */
-  private bindToRequest(req: ISessionRequest, sessionId: string): void {
+  bindToRequest(req: ISessionRequest, sessionId: string): void {
     req.sessionService = this;
     req.sessionId = sessionId;
   }

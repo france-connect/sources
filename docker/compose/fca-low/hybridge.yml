@@ -108,7 +108,7 @@ services:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fia-rie-low.env"
     ports:
-      - 9242:9242
+      - 9264:9264
     tty: true
     networks:
       - rie

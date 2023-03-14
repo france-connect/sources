@@ -16,10 +16,10 @@ Fonctionnalité: Validation Visuelle
     Et que je suis redirigé vers la page d'information
     Et que la copie d'écran "information" correspond à la page actuelle sur "<device>"
     Et que les informations demandées par le fournisseur de service correspondent au scope "identite_pivot sans alias"
-    Et que la copie d'écran "informationAvecScope" correspond à l'élément web "article" sur "<device>"
+    Et que la copie d'écran "informationAvecScope" correspond à l'élément web "[data-testid='consent-detail']" sur "<device>"
     Quand je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "identite_pivot sans alias"
 
     Exemples:
@@ -29,7 +29,6 @@ Fonctionnalité: Validation Visuelle
       | tablet landscape |
       | desktop          |
 
-  @ignoreLow
   Plan du Scénario: Validation Visuelle - cinématique depuis un FS privé avec consentement obligatoire sur <device>
     Etant donné que j'utilise un navigateur web sur "<device>"
     Et que j'utilise un fournisseur de service "privé avec consentement obligatoire"
@@ -50,7 +49,7 @@ Fonctionnalité: Validation Visuelle
     Et la copie d'écran "consentementActif" correspond à la page actuelle sur "<device>"
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "identite_pivot sans alias"
 
     Exemples:
@@ -76,7 +75,7 @@ Fonctionnalité: Validation Visuelle
     Et la copie d'écran "scopeAnonyme" correspond à la page actuelle sur "<device>"
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "anonyme"
 
     Exemples:

@@ -66,10 +66,6 @@ export class OidcClientConfig {
 
   @IsString()
   @IsOptional()
-  readonly acr?: string;
-
-  @IsString()
-  @IsOptional()
   readonly claims?: string;
 
   @IsBoolean()

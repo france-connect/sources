@@ -20,14 +20,14 @@ describe('Successful scenarios', () => {
   const SUB_SP1_IDP2 = '7ee46f66c58da6a0841e26aad127571d0c053a6b74673fe9112c6a9713ec36a9';
   const SUB_SP1_IDP4 = '85b099ff1b3eb74dba1faf2ab839819a5a326b29a3f113b580caf608199ae92e';
 
-  it('should redirect to FC website', () => {
+  it('should redirect to AC website', () => {
     cy.request({
       followRedirect: false,
       method: 'GET',
       url: `${Cypress.env('FC_ROOT_URL')}/api/v2`,
     }).then((response) => {
       expect(response.status).to.eq(301);
-      expect(response.headers.location).to.eq('https://franceconnect.gouv.fr');
+      expect(response.headers.location).to.eq('https://agentconnect.gouv.fr');
     });
   });
 

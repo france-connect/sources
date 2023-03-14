@@ -145,6 +145,9 @@ function initElasticsearchClient() {
   const esClient = new Client({
     nodes,
     auth: { username: ELASTIC_USERNAME, password: ELASTIC_PASSWORD },
+    ssl: {
+      rejectUnauthorized: false,
+    }
   });
   return esClient;
 }

@@ -2,7 +2,8 @@
   {
     "enabled": true,
     "criteria": [
-      "par défaut"
+      "par défaut",
+      "avec genre feminin"
     ],
     "credentials": [
       {
@@ -20,6 +21,11 @@
       "birthplace": "75107",
       "birthcountry": "99100",
       "email": "x1_bdd_default@yopmail.com"
+    },
+    "eidasClaims": {
+      "PersonIdentifier-eidas-mock": "FR/CB/954ad0d34787a2616211a192741aa524aee08166185c36cc4cee035ab529df38v1",
+      "PersonIdentifier-eidas-be": "FR/BE/d0c1ba904bee63e5bfad3b0f60d049479e2c9dd5d6e9c9941e069887af733aefv1",
+      "PlaceOfBirth": "Paris 7e Arrondissement - 75107, FRANCE (FR)"
     }
   },
   {
@@ -240,7 +246,8 @@
   {
     "enabled": true,
     "criteria": [
-      "né en Corse"
+      "né en Corse",
+      "avec genre masculin"
     ],
     "credentials": [
       {
@@ -257,6 +264,10 @@
       "birthplace": "2A115",
       "birthcountry": "99100",
       "email": "baterollu-5399@yopmail.com"
+    },
+    "eidasClaims": {
+      "PersonIdentifier-eidas-mock":	"FR/CB/daf9886e69abe670453e816c6f40af507dd4e7e83af696de277ef6e1f3449d82v1",
+      "PlaceOfBirth": "Foce - 2A115, FRANCE (FR)"
     }
   },
   {
@@ -278,6 +289,11 @@
       "birthdate": "1992-11-00",
       "birthcountry": "99217",
       "email": "jean-fleuret@yopmail.com"
+    },
+    "eidasClaims": {
+      "PersonIdentifier-eidas-mock": "FR/CB/cbf12654369156563d7ab8aae18295501693804c81ec78191ca324e19bca626ev1",
+      "PlaceOfBirth": "JAPON (JP)",
+      "birthdate": "1992-11-01"
     }
   },
   {
@@ -299,6 +315,11 @@
       "birthdate": "1992-00-00",
       "birthcountry": "99217",
       "email": "jean-targe@yopmail.com"
+    },
+    "eidasClaims": {
+      "PersonIdentifier-eidas-mock": "FR/CB/16b7591901ff97c176159512f070366a6da0ea1d719e135738661a0ab59b4d73v1",
+      "PlaceOfBirth": "JAPON (JP)",
+      "birthdate": "1992-01-01"
     }
   },
   {
@@ -407,5 +428,103 @@
         "password": "123"
       }
     ]
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "pour les tests eidas-bridge"
+    ],
+    "credentials": [
+      {
+        "idpId": "eidas-bridge",
+        "username": "xavi",
+        "password": "creus"
+      }
+    ],
+    "claims": {
+      "given_name": "javier",
+      "family_name": "Garcia",
+      "birthdate": "1964-12-31",
+      "gender": "male",
+      "birthplace": "Place of Birth"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec des caractères spéciaux"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "caractères_spéciaux",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "given_name": "Joëlle Françoise",
+      "family_name": "DUBINÔRE",
+      "birthdate": "1992-08-15",
+      "gender": "female",
+      "birthcountry": "99100",
+      "birthplace": "75117",
+      "email": "effannopiq-4009@yopmail.com"
+    },
+    "eidasClaims": {
+      "PersonIdentifier-eidas-mock": "FR/CB/4c48ec450b43404aa190ceae188831c2a5bb277c7a57debe07646b0d1c857d11v1",
+      "PlaceOfBirth": "Paris 17e Arrondissement - 75117, FRANCE (FR)"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec prénom composé"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "prénom_composé",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "given_name": "Anne-Laure",
+      "family_name": "HUCHE",
+      "birthdate": "1945-09-30",
+      "gender": "female",
+      "birthcountry": "99100",
+      "birthplace": "31555",
+      "email": "owallottim-1136@yopmail.com"
+    },
+    "eidasClaims": {
+      "PersonIdentifier-eidas-mock": "FR/CB/8f63b4639d8b1a72c35d99e7fe4d888c262d58dcf5c2a1ace568303560290ad8v1",
+      "PlaceOfBirth": "Toulouse - 31555, FRANCE (FR)"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec un nom de famille long"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "nom_50+_caractères",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "given_name": "Bertrand Cyril",
+      "family_name": "AZERTYUIOPMLKJHGFDSQWXCVBNAZERTYUIOPMLKJHGFDSQWXCVBN",
+      "birthdate": "2000-03-01",
+      "gender": "male",
+      "birthcountry": "99100",
+      "birthplace": "75119",
+      "email": "cyxoxudaj-2393@yopmail.com"
+    },
+    "eidasClaims": {
+      "PersonIdentifier-eidas-mock": "FR/CB/281ca116a31836f14ca477289cad82c6e02e6815a50cf7a8a932dcd1ce69fb6dv1",
+      "PlaceOfBirth": "Paris 19e Arrondissement - 75119, FRANCE (FR)"
+    }
   }
 ]

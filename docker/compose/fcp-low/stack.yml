@@ -1,4 +1,4 @@
-version: '2.4'
+version: "2.4"
 
 services:
   ####################
@@ -8,9 +8,9 @@ services:
   min-fcp-low:
     image: alpine
     depends_on:
-      - 'core-fcp-low'
-      - 'fsp1-low'
-      - 'fip1-low'
+      - "core-fcp-low"
+      - "fsp1-low"
+      - "fip1-low"
 
   ####################
   # BDD FCP LOW
@@ -19,14 +19,16 @@ services:
   bdd-fcp-low:
     image: alpine
     depends_on:
-      - 'core-fcp-low'
+      - "core-fcp-low"
       # -- SP
-      - 'fsp1-low'
-      - 'fsp2-low'
+      - "fsp1-low"
+      - "fsp2-low"
+      - "fsp3-low"
       # -- IdP
-      - 'fip1-low'
-      - 'fip2-low'
-      - 'fip3-low'
+      - "fip1-low"
+      - "fip2-low"
+      - "fip3-low"
+      - "fip4-low"
       # --
       - "rnipp"
 
@@ -37,11 +39,13 @@ services:
   all-fcp-low:
     image: alpine
     depends_on:
-      - 'core-fcp-low'
-      - 'fsp1-low'
-      - 'fsp2-low'
-      - 'fip1-low'
-      - 'fip2-low'
-      - 'fip3-low'
+      - "core-fcp-low"
+      - "fsp1-low"
+      - "fsp2-low"
+      - "fsp3-low"
+      - "fip1-low"
+      - "fip2-low"
+      - "fip3-low"
+      - "fip4-low"
       # --
       - "maildev"

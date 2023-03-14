@@ -16,6 +16,7 @@ import {
 } from '@fc/identity-provider-adapter-mongo';
 import { MinistriesModule } from '@fc/ministries';
 import { MongooseModule } from '@fc/mongoose';
+import { OidcAcrModule } from '@fc/oidc-acr';
 import { OidcClientModule } from '@fc/oidc-client';
 import { OidcProviderModule } from '@fc/oidc-provider';
 import {
@@ -53,6 +54,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     IdentityProviderAdapterMongoModule,
     MinistriesModule,
     HttpProxyModule,
+    OidcAcrModule,
     OidcProviderModule.register(
       OidcProviderConfigAppService,
       ServiceProviderAdapterMongoService,

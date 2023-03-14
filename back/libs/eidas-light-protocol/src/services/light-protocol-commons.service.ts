@@ -1,6 +1,6 @@
 import { createHash } from 'crypto';
 
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 
 import { Injectable } from '@nestjs/common';
 
@@ -31,7 +31,9 @@ export class LightProtocolCommonsService {
     secret: string,
     date?: Date,
   ): string {
-    const finalDate = moment(date).format('YYYY-MM-DD HH:mm:ss SSS');
+    const finalDate = DateTime.fromJSDate(date || new Date()).toFormat(
+      'yyyy-MM-dd HH:mm:ss SSS',
+    );
 
     const digest = this.generateTokenDigest(id, issuer, secret, finalDate);
 
@@ -67,7 +69,7 @@ export class LightProtocolCommonsService {
     return {
       issuer,
       id,
-      date: moment(date, 'YYYY-MM-DD HH:mm:ss SSS').toDate(),
+      date: DateTime.fromFormat(date, 'yyyy-MM-dd:HH:mm:ss.SSS').toJSDate(),
     };
   }
 

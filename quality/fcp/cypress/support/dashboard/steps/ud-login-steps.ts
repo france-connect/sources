@@ -6,7 +6,7 @@ import {
   navigateTo,
 } from '../../common/helpers';
 import { Environment } from '../../common/types';
-import { ConnectionWorkflow } from '../../usager/steps/workflow-legacy-steps';
+import { ConnectionWorkflow } from '../../usager/steps/workflow-steps';
 import UdLoginPage from '../pages/ud-login-page';
 
 let udLoginPage: UdLoginPage;

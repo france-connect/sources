@@ -8,10 +8,13 @@ import { validateDto } from '@fc/common';
 import { CryptographyService } from '@fc/cryptography';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
 import { EidasResponse } from '@fc/eidas';
-import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
+import {
+  AcrValues,
+  EidasToOidcService,
+  OidcToEidasService,
+} from '@fc/eidas-oidc-mapper';
 import { EidasProviderSession } from '@fc/eidas-provider';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
-import { AcrValues } from '@fc/oidc';
 import {
   OidcClientConfigService,
   OidcClientService,
@@ -23,7 +26,7 @@ import {
   SessionNotFoundException,
 } from '@fc/session';
 
-import { EidasBridgeIdentityDto } from '../dto/eidas-bridge-identity.dto';
+import { EidasBridgeIdentityDto } from '../dto';
 import { EidasBridgeRoutes, IDP_ID } from '../enums';
 import { EidasBridgeInvalidIdentityException } from '../exceptions';
 

@@ -15,5 +15,9 @@ export default {
     authSource: env.string('DATABASE'),
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    tls: env.boolean('TLS'),
+    tlsInsecure: env.boolean('TLS_INSECURE'),
+    tlsCAFile: env.string('TLS_CA_FILE'),
+    tlsAllowInvalidHostnames: env.boolean('TLS_ALLOW_INVALID_HOST_NAME'),
   },
 } as MongooseConfig;

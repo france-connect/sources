@@ -1,5 +1,5 @@
 import { registerDecorator, ValidationOptions } from 'class-validator';
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 
 export function validateRnippBirthdate(value: unknown): boolean {
   if (typeof value !== 'string') {
@@ -13,9 +13,9 @@ export function validateRnippBirthdate(value: unknown): boolean {
    * YYYY-MM-DD => YYYY-MM-DD
    */
 
-  const isFullDate = moment(value, 'YYYY-MM-DD', true).isValid();
-  const isPresumeDay = moment(value, 'YYYY-MM', true).isValid();
-  const isPresumeMonth = moment(value, 'YYYY', true).isValid();
+  const isFullDate = DateTime.fromFormat(value, 'yyyy-MM-dd').isValid;
+  const isPresumeDay = DateTime.fromFormat(value, 'yyyy-MM').isValid;
+  const isPresumeMonth = DateTime.fromFormat(value, 'yyyy').isValid;
 
   /**
    * Explanation on "présumés nés": @see https://www.legislation.cnav.fr/Pages/texte.aspx?Nom=CR_CN_2006013_07022006#1

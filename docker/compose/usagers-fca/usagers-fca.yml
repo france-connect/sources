@@ -1,0 +1,27 @@
+version: "2.4"
+
+####################
+####################
+services:
+  # ####################
+  # # Site usagers AgentConnect
+  # ####################
+  usagers-fca:
+    hostname: usagers-fca
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - "squid"
+    volumes:
+      - "${VOLUMES_DIR}/src/usagers-fca:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/usagers-fca/.env/usagers-fca.env"
+    networks:
+      - public
+    command: "tail -f /dev/null"

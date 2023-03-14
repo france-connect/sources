@@ -4,8 +4,11 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
-import { IServiceProviderAdapter, OidcSession } from '@fc/oidc';
-import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc/tokens';
+import {
+  IServiceProviderAdapter,
+  OidcSession,
+  SERVICE_PROVIDER_SERVICE_TOKEN,
+} from '@fc/oidc';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { ISessionBoundContext, SessionService } from '@fc/session';
 
@@ -70,14 +73,8 @@ export class OidcProviderConfigService {
     /**
      * Get data from config file
      */
-    const {
-      prefix,
-      issuer,
-      configuration,
-      forcedPrompt,
-      knownAcrValues,
-      defaultAcrValue,
-    } = this.config.get<OidcProviderConfig>('OidcProvider');
+    const { prefix, issuer, configuration, forcedPrompt } =
+      this.config.get<OidcProviderConfig>('OidcProvider');
 
     /**
      * Bind callbacks to this class before passing them to oidc-provider
@@ -104,8 +101,6 @@ export class OidcProviderConfigService {
       forcedPrompt,
       prefix,
       issuer,
-      knownAcrValues,
-      defaultAcrValue,
       configuration: {
         ...configuration,
         features: {

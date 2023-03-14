@@ -21,7 +21,7 @@ Fonctionnalité: Connexion avec chiffrement
     Et les informations demandées par le fournisseur de service correspondent au scope "tous les scopes"
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "tous les scopes"
 
     Exemples:

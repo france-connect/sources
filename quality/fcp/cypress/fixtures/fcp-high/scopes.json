@@ -17,6 +17,20 @@
     ]
   },
   {
+    "type": "tous les scopes sans alias",
+    "scopes": [
+      "openid",
+      "gender",
+      "birthdate",
+      "birthcountry",
+      "birthplace",
+      "given_name",
+      "family_name",
+      "email",
+      "preferred_username"
+    ]
+  },
+  {
     "type": "identite_pivot sans alias",
     "scopes": [
       "openid",
@@ -71,6 +85,40 @@
   {
     "type": "vide",
     "scopes": [
+    ]
+  },
+  {
+    "type": "eidas",
+    "scopes": [
+      "openid",
+      "gender",
+      "birthdate",
+      "birthplace",
+      "given_name",
+      "family_name",
+      "preferred_username"
+    ]
+  },
+  {
+    "type": "eidas sans birthplace",
+    "scopes": [
+      "openid",
+      "gender",
+      "birthdate",
+      "given_name",
+      "family_name",
+      "preferred_username"
+    ]
+  },
+  {
+    "type": "eidas sans preferred_username",
+    "scopes": [
+      "openid",
+      "gender",
+      "birthdate",
+      "birthplace",
+      "given_name",
+      "family_name"
     ]
   }
 ]

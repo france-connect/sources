@@ -1,19 +1,23 @@
 import { Injectable } from '@nestjs/common';
 
 import { AccountBlockedException, AccountService } from '@fc/account';
+import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import {
-  AcrValues,
   ComputeIdp,
   ComputeSp,
   CoreClaimAmrException,
   CoreFailedPersistenceException,
   CoreInvalidAcrException,
   CoreLowAcrException,
+  CoreRoutes,
   pickAcr,
 } from '@fc/core';
+import { CoreConfig } from '@fc/core-fca';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
-import { Acr, IOidcClaims, OidcSession } from '@fc/oidc';
+import { IOidcClaims, OidcSession } from '@fc/oidc';
+import { OidcAcrConfig, OidcAcrService } from '@fc/oidc-acr';
+import { OidcClientSession } from '@fc/oidc-client';
 import {
   OidcCtx,
   OidcProviderConfig,
@@ -23,7 +27,7 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { ISessionBoundContext, SessionService } from '@fc/session';
+import { ISessionService, SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 @Injectable()
@@ -33,11 +37,11 @@ export class CoreService {
   constructor(
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
+    private readonly oidcAcr: OidcAcrService,
     private readonly oidcProvider: OidcProviderService,
     private readonly oidcErrorService: OidcProviderErrorService,
     private readonly account: AccountService,
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
-    private readonly sessionService: SessionService,
     private readonly tracking: TrackingService,
   ) {
     this.logger.setContext(this.constructor.name);
@@ -76,8 +80,12 @@ export class CoreService {
   }
 
   private registerMiddlewares() {
-    const { defaultAcrValue, forcedPrompt, knownAcrValues } =
+    const { forcedPrompt } =
       this.config.get<OidcProviderConfig>('OidcProvider');
+
+    const { defaultAcrValue } = this.config.get<OidcAcrConfig>('OidcAcr');
+
+    const knownAcrValues = this.oidcAcr.getKnownAcrValues();
 
     this.oidcProvider.registerMiddleware(
       OidcProviderMiddlewareStep.BEFORE,
@@ -128,17 +136,36 @@ export class CoreService {
     );
   }
 
-  private async authorizationMiddleware(ctx) {
-    /**
-     * Abort middleware if authorize is in error
-     *
-     * We do not want to start a session
-     * nor trigger authorization event for invalid requests
-     */
+  private async authorizationMiddleware(ctx: OidcCtx) {
+    this.logger.trace('ssoMiddleware');
+
+    const { enableSso } = this.config.get<CoreConfig>('Core');
+
     if (ctx.oidc['isError'] === true) {
       return;
     }
+    const { req } = ctx;
 
+    const session = SessionService.getBoundedSession<OidcClientSession>(
+      req,
+      'OidcClient',
+    );
+
+    ctx.isSso = await this.isSsoAvailable(session);
+
+    await this.updateSessionWithNewInteraction(session, ctx);
+
+    await this.trackAuthorize(ctx);
+
+    if (enableSso && ctx.isSso) {
+      await this.redirectToSso(ctx);
+    }
+  }
+
+  private async updateSessionWithNewInteraction(
+    session: ISessionService<OidcSession>,
+    ctx: OidcCtx,
+  ): Promise<void> {
     const eventContext = this.getEventContext(ctx);
 
     const { interactionId } = eventContext.fc;
@@ -146,33 +173,60 @@ export class CoreService {
     // oidc defined variable name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { acr_values: spAcr, client_id: spId } = ctx.oidc.params;
+    const { isSso } = ctx;
 
-    const { name: spName } = await this.serviceProvider.getById(spId);
+    /**
+     * We  have to cast properties of `ctx.oidc.params` to `string`
+     * since `oidc-provider`defines them as `unknown`
+     */
+    const { name: spName } = await this.serviceProvider.getById(spId as string);
 
     const sessionProperties: OidcSession = {
       interactionId,
-      spAcr,
-      spId,
+      isSso,
+      spAcr: spAcr as string,
+      spId: spId as string,
       spName,
     };
 
-    const sessionContext: ISessionBoundContext = {
-      moduleName: 'OidcClient',
-      sessionId: ctx.req.sessionId,
-    };
+    await session.set(sessionProperties);
+  }
 
-    await this.sessionService.set(sessionContext, sessionProperties);
-
-    const authEventContext: TrackedEventContextInterface = {
-      ...eventContext,
-      spAcr,
-      spId,
-      spName,
-    };
+  private async trackAuthorize(ctx: OidcCtx) {
+    const eventContext = this.getEventContext(ctx);
 
     const { FC_AUTHORIZE_INITIATED } = this.tracking.TrackedEventsMap;
 
-    this.tracking.track(FC_AUTHORIZE_INITIATED, authEventContext);
+    await this.tracking.track(FC_AUTHORIZE_INITIATED, eventContext);
+  }
+
+  private async trackSso(ctx: OidcCtx) {
+    const eventContext = this.getEventContext(ctx);
+
+    const { FC_SSO_INITIATED } = this.tracking.TrackedEventsMap;
+
+    await this.tracking.track(FC_SSO_INITIATED, eventContext);
+  }
+
+  private async isSsoAvailable(session: ISessionService<OidcSession>) {
+    const spIdentity = await session.get('spIdentity');
+
+    return Boolean(spIdentity);
+  }
+
+  private async redirectToSso(ctx: OidcCtx) {
+    const { res } = ctx;
+    const interactionId = this.oidcProvider.getInteractionIdFromCtx(ctx);
+    const { urlPrefix } = this.config.get<AppConfig>('App');
+
+    const url = `${urlPrefix}${CoreRoutes.INTERACTION_VERIFY.replace(
+      ':uid',
+      interactionId,
+    )}`;
+
+    await this.trackSso(ctx);
+
+    res.redirect(url);
   }
 
   private async overrideClaimAmrMiddleware(ctx) {
@@ -273,7 +327,9 @@ export class CoreService {
     if (['POST', 'GET'].includes(ctx.method)) {
       const isPostMethod = ctx.method === 'POST';
       const data = isPostMethod ? ctx.req.body : ctx.query;
-      const { acr_values: dataAcrValues } = data as AcrValues;
+      // oidc parameter
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { acr_values: dataAcrValues } = data as { acr_values: string };
       const acrValues = dataAcrValues.split(/\s+/);
       data.acr_values = pickAcr(knownAcrValues, acrValues, defaultAcrValue);
     } else {
@@ -358,26 +414,13 @@ export class CoreService {
       throw new CoreInvalidAcrException();
     }
 
-    if (!this.isAcrValid(received, requested)) {
+    if (!this.oidcAcr.isAcrValid(received, requested)) {
       this.logger.trace(
         { error: 'received ACR lower than requested' },
         LoggerLevelNames.WARN,
       );
       throw new CoreLowAcrException();
     }
-  }
-
-  /**
-   * Acr level is high enough to respect provider requirements
-   * @param source Acr given from the user
-   * @param target Acr given from the Idp
-   * @returns
-   */
-  isAcrValid(source: string, target: string): boolean {
-    const sourceAcr = Acr[source];
-    const targetAcr = Acr[target];
-
-    return sourceAcr >= targetAcr;
   }
 
   async rejectInvalidAcr(

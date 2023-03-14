@@ -15,8 +15,6 @@ export default {
   forcedPrompt: [OidcProviderPrompt.LOGIN, OidcProviderPrompt.CONSENT],
   prefix: env.string('PREFIX'),
   issuer: `https://${process.env.FQDN}${env.string('PREFIX')}`,
-  defaultAcrValue: 'eidas1',
-  knownAcrValues: ['eidas1', 'eidas2', 'eidas3'],
   configuration: {
     routes: {
       authorization: OidcProviderRoutes.AUTHORIZATION,
@@ -165,8 +163,8 @@ export default {
     },
     jwks: {
       keys: [
-        env.json('CRYPTO_SIG_ES256_PRIV_KEY'),
-        env.json('CRYPTO_SIG_RS256_PRIV_KEY'),
+        ...env.json('CRYPTO_SIG_ES256_PRIV_KEYS'),
+        ...env.json('CRYPTO_SIG_RS256_PRIV_KEYS'),
       ],
     },
 

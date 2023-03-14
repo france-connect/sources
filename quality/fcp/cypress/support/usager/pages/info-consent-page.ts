@@ -7,6 +7,7 @@ const CLAIM_LABELS = {
   birthcountry: 'Pays de naissance',
   birthdate: 'Date de naissance',
   birthplace: 'Lieu de naissance',
+  connexion_tracks: 'Historique de connexions',
   email: 'Adresse email',
   family_name: 'Nom de naissance',
   gender: 'Sexe',
@@ -17,30 +18,44 @@ const CLAIM_LABELS = {
 
 export default class InfoConsentPage {
   getConsentCheckbox(): ChainableElement {
-    return cy.get('#fc-ask-consent-checkbox');
+    return cy.get('[data-testid="checkbox-consent"]');
+  }
+
+  getConsentCheckboxLabel(): ChainableElement {
+    return cy.get('[data-testid="label-consent"]');
   }
 
   getConsentButton(): ChainableElement {
-    return cy.get('#consent');
+    return cy.get('[data-testid="consent-continue"]');
   }
 
   getShowClaimsToggle(): ChainableElement {
-    return cy.get('#toggleOpenCloseMenu');
+    return cy.get('[data-testid="consent-accordion-toggle"]');
   }
 
   getClaimDetails(): ChainableElement {
-    return cy.get('.content-details__content ul');
+    return cy.get('[data-testid="consent-detail"]');
   }
 
   checkIsVisible(): void {
-    cy.url().should('match', /\/api\/v2\/interaction\/[0-9a-z_-]+\/consent/i);
+    this.getConsentButton().should('be.visible');
   }
 
   checkAnonymousScope(): void {
-    cy.get('.section__identity').contains(
+    cy.get('[data-testid="anonymous-title"]').contains(
+      'Vous allez vous connecter de façon anonyme',
+    );
+    cy.get('[data-testid="anonymous-complementary"]').contains(
+      'Aucune donnée personnelle ne sera transmise',
+    );
+  }
+
+  // TODO: To delete once FC+ uses DSFR design
+  checkAnonymousScopeFcPlus(): void {
+    cy.get('[data-testid="anonymous-title"]').contains(
       'Vous avez été connecté de façon anonyme',
     );
-    cy.get('.section__more-info').contains(
+    cy.get('[data-testid="anonymous-complementary"]').contains(
       "Aucune donnée n'a été échangée pour vous connecter.",
     );
   }
@@ -58,9 +73,6 @@ export default class InfoConsentPage {
       this.getShowClaimsToggle().should('be.visible');
       this.getClaimDetails().should('not.be.visible');
       this.getShowClaimsToggle().click();
-    } else {
-      // Consent page: Claims displayed without toggle
-      this.getShowClaimsToggle().should('not.exist');
     }
 
     this.getClaimDetails().should('be.visible');

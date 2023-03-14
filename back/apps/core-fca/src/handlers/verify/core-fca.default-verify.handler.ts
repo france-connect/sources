@@ -76,14 +76,10 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
       idp_acr: idpAcr,
     };
 
-    // Delete idp identity from volatile memory but keep the sub for the business logs.
-    const idpIdentityCleaned = {
-      sub: idpIdentity.sub,
-    };
     const session: OidcClientSession = {
       amr,
-      idpIdentity: idpIdentityCleaned,
-      spIdentity: spIdentity,
+      idpIdentity,
+      spIdentity,
       accountId,
     };
 

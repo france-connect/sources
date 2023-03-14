@@ -7,8 +7,8 @@ Fonctionnalité: Préférences FI
 
   Scénario: Préférences FI - Connexion d'un usager sans préférence FI
     Etant donné que j'utilise un compte usager "sans préférence FI"
-    Quand je me connecte à FranceConnect Legacy
-    Alors je suis connecté sur la page du fournisseur de service Legacy
+    Quand je me connecte à FranceConnect
+    Alors je suis connecté au fournisseur de service
 
   Scénario: Préférences FI - Configuration par défaut pour un usager sans préférences FI
     Etant donné que j'utilise un compte usager "sans préférence FI"
@@ -38,10 +38,10 @@ Fonctionnalité: Préférences FI
     Et que je clique sur le bouton "enregistrer mes réglages"
     Et que le message "notification de modifications envoyée" est affiché
     Et que je me déconnecte du dashboard usager
-    Quand je me connecte au fournisseur d'identité via FranceConnect Legacy
-    Alors je suis redirigé vers la page erreur technique FranceConnect Legacy
-    Et le code d'erreur FranceConnect Legacy est "E000035"
-    Et le message d'erreur FranceConnect Legacy est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
+    Quand je me connecte au fournisseur d'identité via FranceConnect
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "E000035"
+    Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
 
   Scénario: Préférences FI - FI bloqué - futur FI bloqué
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
@@ -55,10 +55,10 @@ Fonctionnalité: Préférences FI
     Et que je décide de bloquer les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du dashboard usager
-    Quand je me connecte au fournisseur d'identité via FranceConnect Legacy
-    Alors je suis redirigé vers la page erreur technique FranceConnect Legacy
-    Et le code d'erreur FranceConnect Legacy est "E000035"
-    Et le message d'erreur FranceConnect Legacy est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
+    Quand je me connecte au fournisseur d'identité via FranceConnect
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "E000035"
+    Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
 
   Scénario: Préférences FI - FI autorisé - futur FI autorisé
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
@@ -72,8 +72,8 @@ Fonctionnalité: Préférences FI
     Et que je décide d'autoriser les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du dashboard usager
-    Quand je me connecte à FranceConnect Legacy
-    Alors je suis connecté sur la page du fournisseur de service Legacy
+    Quand je me connecte à FranceConnect
+    Alors je suis connecté au fournisseur de service
 
   Scénario: Préférences FI - FI autorisé - futur FI bloqué
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
@@ -87,8 +87,8 @@ Fonctionnalité: Préférences FI
     Et que je décide de bloquer les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du dashboard usager
-    Quand je me connecte à FranceConnect Legacy
-    Alors je suis connecté sur la page du fournisseur de service Legacy
+    Quand je me connecte à FranceConnect
+    Alors je suis connecté au fournisseur de service
 
   Scénario: Préférences FI - FI ajouté - futur FI autorisé
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
@@ -102,8 +102,8 @@ Fonctionnalité: Préférences FI
     Et que je me déconnecte du dashboard usager
     Et que je crée le fournisseur d'identité "fip4_idp-settings" avec la configuration "fiLegacy" sur le site d'exploitation
     Et que j'utilise le dernier fournisseur d'identité créé
-    Quand je me connecte à FranceConnect Legacy
-    Alors je suis connecté sur la page du fournisseur de service Legacy
+    Quand je me connecte à FranceConnect
+    Alors je suis connecté au fournisseur de service
     Et je supprime le fournisseur d'identité "fip4_idp-settings" sur le site d'exploitation
 
   Scénario: Préférences FI - FI ajouté - futur FI bloqué
@@ -118,10 +118,10 @@ Fonctionnalité: Préférences FI
     Et que je me déconnecte du dashboard usager
     Et que je crée le fournisseur d'identité "fip4_idp-settings" avec la configuration "fiLegacy" sur le site d'exploitation
     Et que j'utilise le dernier fournisseur d'identité créé
-    Quand je me connecte au fournisseur d'identité via FranceConnect Legacy
-    Alors je suis redirigé vers la page erreur technique FranceConnect Legacy
-    Et le code d'erreur FranceConnect Legacy est "E000035"
-    Et le message d'erreur FranceConnect Legacy est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
+    Quand je me connecte au fournisseur d'identité via FranceConnect
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "E000035"
+    Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
     Et je supprime le fournisseur d'identité "fip4_idp-settings" sur le site d'exploitation
 
   Scénario: Préférences FI - FI utilisé pour la connexion au user-dashboard ne peut être bloqué
@@ -171,10 +171,10 @@ Fonctionnalité: Préférences FI
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du dashboard usager
     Et que j'utilise le fournisseur d'identité "Aidants Connect"
-    Quand je me connecte au fournisseur d'identité via FranceConnect Legacy
-    Alors je suis redirigé vers la page erreur technique FranceConnect Legacy
-    Et le code d'erreur FranceConnect Legacy est "E000035"
-    Et le message d'erreur FranceConnect Legacy est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
+    Quand je me connecte au fournisseur d'identité via FranceConnect
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "E000035"
+    Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
 
   @ignoreInteg01
   Scénario: Préférences FI - Aidants Connect autorisé quand les futurs FI sont autorisés
@@ -188,5 +188,5 @@ Fonctionnalité: Préférences FI
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du dashboard usager
     Et que j'utilise le fournisseur d'identité "Aidants Connect"
-    Quand je me connecte à FranceConnect Legacy
-    Alors je suis connecté sur la page du fournisseur de service Legacy
+    Quand je me connecte à FranceConnect
+    Alors je suis connecté au fournisseur de service

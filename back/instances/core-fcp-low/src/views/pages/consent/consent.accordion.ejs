@@ -1,0 +1,36 @@
+<%
+
+const sortedNames = [
+  'family_name',
+  'preferred_username',
+  'given_name',
+  'gender',
+  'birthdate',
+  'birthplace',
+  'birthcountry',
+  'email',
+];
+
+const labels = sortedNames
+  .map((claimName) => 
+    locals.claims.find(
+      ({ identifier }) => identifier === claimName
+  ))
+  .filter((claim) => claim)
+  .map(({ label }) => label);
+%>
+
+<section class="fr-accordion fr-col-12 fr-col-lg-6 fr-m-auto">
+  <h3 class="fr-accordion__title">
+    <button data-testid="consent-accordion-toggle" class="fr-accordion__btn" aria-expanded="<%= accordionExpanded %>" aria-controls="accordion-consent">
+      Données transmises
+    </button>
+  </h3>
+  <div class="fr-collapse" id="accordion-consent">
+    <ul data-testid="consent-detail">
+      <% labels.forEach(label => { %>
+        <li><%= label %></li>
+      <% }); %>
+    </ul>
+  </div>
+</section>

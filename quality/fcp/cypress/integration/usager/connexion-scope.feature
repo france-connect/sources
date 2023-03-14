@@ -18,7 +18,7 @@ Fonctionnalité: Connexion Usager - Scope
     Et les informations demandées par le fournisseur de service correspondent aux scopes "<scopeType>"
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations des scopes "<scopeType>"
 
     Exemples:
@@ -43,7 +43,7 @@ Fonctionnalité: Connexion Usager - Scope
     Et aucune information n'est demandée par le fournisseur de service pour le scope "anonyme"
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "anonyme"
 
   Scénario: Connexion d'un usager - attribut scope inconnu ignoré
@@ -59,7 +59,7 @@ Fonctionnalité: Connexion Usager - Scope
     Et les informations demandées par le fournisseur de service correspondent aux scopes "profile"
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations des scopes "profile"
 
   Scénario: Connexion d'un usager - erreur scope vide

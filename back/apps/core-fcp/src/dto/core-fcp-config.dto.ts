@@ -12,6 +12,7 @@ import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapte
 import { LoggerConfig } from '@fc/logger-legacy';
 import { MailerConfig } from '@fc/mailer';
 import { MongooseConfig } from '@fc/mongoose';
+import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { OverrideOidcProviderConfig } from '@fc/override-oidc-provider';
@@ -53,6 +54,11 @@ export class CoreFcpConfig {
   @ValidateNested()
   @Type(() => LoggerConfig)
   readonly Logger: LoggerConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => OidcAcrConfig)
+  readonly OidcAcr: OidcAcrConfig;
 
   @IsObject()
   @ValidateNested()

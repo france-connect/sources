@@ -17,6 +17,7 @@ import {
 import { TrackingService } from '@fc/tracking';
 
 import { AuthorizeParamsDto } from '../dto';
+import { ConfirmationType, DataType } from '../enums';
 import { CoreFcpInvalidEventKeyException } from '../exceptions';
 import { CoreFcpService } from '../services';
 import { OidcProviderController } from './oidc-provider.controller';
@@ -379,36 +380,162 @@ describe('OidcProviderController', () => {
     });
   });
 
+  describe('isAnonymous()', () => {
+    it('should return true if only openid is used as scope', () => {
+      // Given
+      const scopes = ['openid'];
+      // When
+      const result = oidcProviderController['isAnonymous'](scopes);
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return false if more scopes than just openid is used', () => {
+      // Given
+      const scopes = ['openid', 'gender'];
+      // When
+      const result = oidcProviderController['isAnonymous'](scopes);
+      // Then
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('getDataType()', () => {
+    it('should return ANONYMOUS if isAnonymous parameter is true', () => {
+      // Given
+      const isAnonymous = true;
+      // When
+      const result = oidcProviderController['getDataType'](isAnonymous);
+      // Then
+      expect(result).toEqual(DataType.ANONYMOUS);
+    });
+
+    it('should return IDENTITY if isAnonymous parameter is false', () => {
+      // Given
+      const isAnonymous = false;
+      // When
+      const result = oidcProviderController['getDataType'](isAnonymous);
+      // Then
+      expect(result).toEqual(DataType.IDENTITY);
+    });
+  });
+
+  describe('getConfirmationType()', () => {
+    it('should return CONSENT if consentRequired parameter is true and isAnonymous is false', () => {
+      // Given
+      const consentRequired = true;
+      const isAnonymous = false;
+      // When
+      const result = oidcProviderController['getConfirmationType'](
+        consentRequired,
+        isAnonymous,
+      );
+      // Then
+      expect(result).toEqual(ConfirmationType.CONSENT);
+    });
+
+    it('should return INFORMATION if consentRequired parameter is false and isAnonymous is false', () => {
+      // Given
+      const consentRequired = false;
+      const isAnonymous = false;
+      // When
+      const result = oidcProviderController['getConfirmationType'](
+        consentRequired,
+        isAnonymous,
+      );
+      // Then
+      expect(result).toEqual(ConfirmationType.INFORMATION);
+    });
+
+    it('should return INFORMATION if consentRequired parameter is true and isAnonymous is true', () => {
+      // Given
+      const consentRequired = true;
+      const isAnonymous = true;
+      // When
+      const result = oidcProviderController['getConfirmationType'](
+        consentRequired,
+        isAnonymous,
+      );
+      // Then
+      expect(result).toEqual(ConfirmationType.INFORMATION);
+    });
+  });
+
   describe('getDataEvent()', () => {
     // Given
     const scopesMock = ['openid', 'profile'];
     const consentRequiredMock = false;
+    const isAnonymousMock = false;
 
-    it('should return consent for identity', () => {
-      // Given
+    beforeEach(() => {
+      oidcProviderController['isAnonymous'] = jest
+        .fn()
+        .mockReturnValue(isAnonymousMock);
+      oidcProviderController['getDataType'] = jest
+        .fn()
+        .mockReturnValue(DataType.IDENTITY);
+      oidcProviderController['getConfirmationType'] = jest
+        .fn()
+        .mockReturnValue(ConfirmationType.INFORMATION);
+    });
 
-      const consentRequiredMock = true;
+    it('should call isAnonymous', () => {
       // When
-      const result = oidcProviderController['getDataEvent'](
-        scopesMock,
-        consentRequiredMock,
-      );
+      oidcProviderController['getDataEvent'](scopesMock, consentRequiredMock);
       // Then
-      expect(result).toBe(
-        trackingServiceMock.TrackedEventsMap.FC_DATATRANSFER_CONSENT_IDENTITY,
+      expect(oidcProviderController['isAnonymous']).toHaveBeenCalledTimes(1);
+      expect(oidcProviderController['isAnonymous']).toHaveBeenCalledWith(
+        scopesMock,
       );
     });
 
+    it('should call getDataType', () => {
+      // When
+      oidcProviderController['getDataEvent'](scopesMock, consentRequiredMock);
+      // Then
+      expect(oidcProviderController['getDataType']).toHaveBeenCalledTimes(1);
+      expect(oidcProviderController['getDataType']).toHaveBeenCalledWith(
+        isAnonymousMock,
+      );
+    });
+
+    it('should call getConfirmationType', () => {
+      // When
+      oidcProviderController['getDataEvent'](scopesMock, consentRequiredMock);
+      // Then
+      expect(
+        oidcProviderController['getConfirmationType'],
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        oidcProviderController['getConfirmationType'],
+      ).toHaveBeenCalledWith(consentRequiredMock, isAnonymousMock);
+    });
+
     it('should return information for identity', () => {
+      // Given / When
+      const result = oidcProviderController['getDataEvent'](
+        scopesMock,
+        consentRequiredMock,
+      );
+      // Then
+      expect(result).toEqual(
+        trackingServiceMock.TrackedEventsMap
+          .FC_DATATRANSFER_INFORMATION_IDENTITY,
+      );
+    });
+
+    it('should return consent for identity', () => {
+      // Given
+      const consentRequiredMock = true;
+
       // When
       const result = oidcProviderController['getDataEvent'](
         scopesMock,
         consentRequiredMock,
       );
       // Then
-      expect(result).toBe(
-        trackingServiceMock.TrackedEventsMap
-          .FC_DATATRANSFER_INFORMATION_IDENTITY,
+      expect(result).toEqual(
+        trackingServiceMock.TrackedEventsMap.FC_DATATRANSFER_CONSENT_IDENTITY,
       );
     });
 
@@ -421,7 +548,7 @@ describe('OidcProviderController', () => {
         consentRequiredMock,
       );
       // Then
-      expect(result).toBe(
+      expect(result).toEqual(
         trackingServiceMock.TrackedEventsMap
           .FC_DATATRANSFER_INFORMATION_ANONYMOUS,
       );
@@ -429,12 +556,20 @@ describe('OidcProviderController', () => {
 
     it('should throw an exception if class is not in map', () => {
       // Given
-      const scopesMock = ['openid'];
-      const consentRequiredMock = true;
+      oidcProviderController['getDataType'] = jest
+        .fn()
+        .mockReset()
+        .mockReturnValue('ANONYMOUS');
+      oidcProviderController['getConfirmationType'] = jest
+        .fn()
+        .mockReset()
+        .mockReturnValue('CONSENT');
       // Then
       expect(() =>
         oidcProviderController['getDataEvent'](scopesMock, consentRequiredMock),
       ).toThrow(CoreFcpInvalidEventKeyException);
+      oidcProviderController['getDataType'] = jest.fn().mockReset();
+      oidcProviderController['getConfirmationType'] = jest.fn().mockReset();
     });
   });
 

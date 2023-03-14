@@ -60,9 +60,11 @@ services:
           - core-fcp-low.docker.dev-franceconnect.fr
           - fsp1-low.docker.dev-franceconnect.fr
           - fsp2-low.docker.dev-franceconnect.fr
+          - fsp3-low.docker.dev-franceconnect.fr
           - fip1-low.docker.dev-franceconnect.fr
           - fip2-low.docker.dev-franceconnect.fr
           - fip3-low.docker.dev-franceconnect.fr
+          - fip4-low.docker.dev-franceconnect.fr
           # FCA LOW
           - core-fca-low.docker.dev-franceconnect.fr
           - bridge-proxy-rie.docker.dev-franceconnect.fr
@@ -71,10 +73,12 @@ services:
           - fsa2-low.docker.dev-franceconnect.fr
           - fsa3-low.docker.dev-franceconnect.fr
           - fsa4-low.docker.dev-franceconnect.fr
+          - fsa5-low.docker.dev-franceconnect.fr
           - fia1-low.docker.dev-franceconnect.fr
           - fia2-low.docker.dev-franceconnect.fr
           - fia4-low.docker.dev-franceconnect.fr
           - fia5-low.docker.dev-franceconnect.fr
+          - fia8-low.docker.dev-franceconnect.fr
           # EIDAS
           - eidas-bridge.docker.dev-franceconnect.fr
           - eidas-fr.docker.dev-franceconnect.fr
@@ -87,6 +91,10 @@ services:
           # TODO: Move those aliases to exploitation network once runner workaround found
           - exploitation-fca-low.docker.dev-franceconnect.fr
           - exploitation-high.docker.dev-franceconnect.fr
+          # Usagers FCA
+          - usagers-fca.docker.dev-franceconnect.fr
+          # Mock RNIPP
+          - mock-rnipp.docker.dev-franceconnect.fr
           # Storybook
           - storybook.docker.dev-franceconnect.fr
           # Generic
@@ -357,6 +365,26 @@ services:
     networks:
       - data
       - public
+
+  mock-rnipp:
+    hostname: mock-rnipp
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/shared/.env/mock-rnipp.env"
+    ports:
+      - "10300:3001"
+    networks:
+      - public
+    command: "pm2 logs"
 
 ####################
 

@@ -18,13 +18,7 @@
   },
   {
     "type": "profile sans preferred_username",
-    "scopes": [
-      "openid",
-      "gender",
-      "birthdate",
-      "given_name",
-      "family_name"
-    ]
+    "scopes": ["openid", "gender", "birthdate", "given_name", "family_name"]
   },
   {
     "type": "dgfip et cnam",
@@ -53,8 +47,10 @@
   },
   {
     "type": "anonyme",
-    "scopes": [
-      "openid"
-    ]
+    "scopes": ["openid"]
+  },
+  {
+    "type": "connexion_tracks",
+    "scopes": ["openid", "connexion_tracks"]
   }
 ]

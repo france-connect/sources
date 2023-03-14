@@ -1,0 +1,14 @@
+<% if(locals.params) { %>
+  <% const errorDescription = encodeURIComponent("User auth aborted"); %>
+  
+  <div class="fr-mt-5w fc-text--center">
+    <a
+      data-testid="back-to-sp-link"
+      href="<%= locals.params.redirect_uri %>?error=access_denied&error_description=<%= errorDescription %>&state=<%= locals.params.state %>"
+      class="fr-btn fr-btn--sm fr-btn--tertiary-no-outline fr-btn--icon-left fr-icon-arrow-go-back-fill"
+    >
+      Revenir sur <%= locals.spName %>
+    </a>
+  </div>
+<% }%>
+  

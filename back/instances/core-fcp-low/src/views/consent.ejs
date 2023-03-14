@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="fr" data-fr-scheme="light">
+<head>
+  <%- include('includes/head.ejs') %>
+  <title>Connexion - Continuer sur Service <%= locals.spName %> - FranceConnect</title>
+</head>
+<body id="fc-consent-page">
+  <div class="fc-sticky-wrapper">
+    <div class="fc-sticky-body">
+      <%- include('includes/header.ejs') %>
+      <div class="fr-container fr-mt-md-8w fr-mt-5w">
+        <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
+          <% if (locals.isOpenIdScope) { %>
+            <%- include('pages/consent/consent.anonymous.ejs') %>
+          <% } else if (locals.consentRequired) { %>
+            <%- include('pages/consent/consent.consent.ejs') %>
+          <% } else { %>
+            <%- include('pages/consent/consent.confirm.ejs') %>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <%- include('includes/footer.ejs') %>
+  </div>
+  <%- include('includes/scripts.ejs') %>
+  <% if (!locals.isOpenIdScope && locals.consentRequired) { %>
+    <script type="text/javascript" src="/js/dsfr.consent.js"></script>
+  <% } %>
+</body>
+</html>

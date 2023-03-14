@@ -1,9 +1,13 @@
-import * as http from 'http';
+import { Request, Response } from 'express';
 import { KoaContextWithOIDC } from 'oidc-provider';
 
-export interface OidcCtxRequest extends http.IncomingMessage {
+import { ISessionRequest, ISessionResponse } from '@fc/session';
+
+export interface OidcCtxRequest extends Request {
   body: Record<string, string | number | boolean | Array<any>>;
 }
+
 export interface OidcCtx extends KoaContextWithOIDC {
-  req: OidcCtxRequest;
+  req: OidcCtxRequest & ISessionRequest;
+  res: Response & ISessionResponse;
 }

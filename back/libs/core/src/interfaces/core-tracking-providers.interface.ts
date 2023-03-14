@@ -2,18 +2,19 @@
 
 // Declarative code
 export interface ICoreTrackingProviders {
-  readonly accountId: string;
-  readonly sessionId: string;
-  readonly interactionId: string;
+  readonly accountId: string | null;
+  readonly sessionId: string | null;
+  readonly interactionId: string | null;
+  readonly isSso: boolean;
 
-  readonly spId: string;
-  readonly spAcr: string;
-  readonly spName: string;
-  readonly spSub: string;
+  readonly spId: string | null;
+  readonly spAcr: string | null;
+  readonly spName: string | null;
+  readonly spSub: string | null;
 
-  readonly idpId: string;
-  readonly idpAcr: string;
-  readonly idpName: string;
-  readonly idpSub: string;
-  readonly idpLabel: string;
+  readonly idpId: string | null;
+  readonly idpAcr: string | null;
+  readonly idpName: string | null;
+  readonly idpSub: string | null;
+  readonly idpLabel: string | null;
 }

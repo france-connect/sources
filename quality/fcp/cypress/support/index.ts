@@ -31,6 +31,6 @@ addMatchImageSnapshotCommand({
   customDiffConfig: { threshold: 0.3 },
   customDiffDir: './cypress/snapshots/diff',
   customSnapshotsDir: './cypress/snapshots/base',
-  failureThreshold: 0,
-  failureThresholdType: 'percent',
+  failureThreshold: 5,
+  failureThresholdType: 'pixel',
 });

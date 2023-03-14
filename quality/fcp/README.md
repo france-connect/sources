@@ -83,13 +83,10 @@ yarn start:low
 
 ```shell
 docker-stack prune && \
-docker-stack up all-fcp-high && \
+docker-stack up bdd-fcp-high && \
 docker-stack dependencies-all && \
-docker-stack fixtures-fcp-high
-# Start all containers if the computer has more than 16GB of RAM
+docker-stack fixtures-fcp-high && \
 docker-stack start-all
-# Start fewer containers otherwise (only tests using FIP1-high will pass)
-docker-stack start csmr-hsm rnipp fsp1-high fsp2-high fsp5-high fsp6-high fip1-high core-fcp-high exploitation-high
 ```
 
 #### Run the tests on docker environment in the terminal (deleting previous results)
@@ -167,10 +164,9 @@ yarn start:high
 
 ```shell
 docker-stack-legacy prune && \
-docker-stack-legacy up all-v1 && \
-docker-stack up mongo-fcp-high && \
+docker-stack-legacy up bdd-ud && \
 docker-stack-legacy dep-all && \
-docker-stack-legacy fixtures fc-exploitation && \
+docker-stack-legacy fixtures fc-exploitation fc-support && \
 docker-stack-legacy start-all
 ```
 
@@ -190,6 +186,35 @@ yarn test:ud
 
 ```shell
 yarn start:ud
+```
+
+### Run the Cypress tests on eidas-bridge
+
+#### Start the local stack for eidas-bridge
+
+```shell
+docker-stack prune && \
+docker-stack up min-eidas-high && \
+docker-stack dependencies-all && \
+docker-stack start-all
+```
+
+#### Run the tests in the terminal
+
+1. [Start the local stack of eidas-bridge using the docker-stack command](#start-the-local-stack-for-eidas-bridge)
+1. Run Cypress tests on eidas-bridge against docker environment
+
+```shell
+yarn test:eidas
+```
+
+#### Run the tests from Cypress UI
+
+1. [Start the local stack of eidas-bridge using the docker-stack command](#start-the-local-stack-for-eidas-bridge)
+1. Open Cypress UI to run tests on eidas-bridge against docker environment
+
+```shell
+yarn start:eidas
 ```
 
 ### Generate the Cucumber HTML report

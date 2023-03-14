@@ -17,10 +17,8 @@ Then("je suis redirigé vers la page d'information", function () {
 
 Then('je suis redirigé vers la page de consentement', function () {
   infoConsentPage.checkIsVisible();
-  infoConsentPage
-    .getConsentCheckbox()
-    .should('be.visible')
-    .and('not.be.checked');
+  infoConsentPage.getConsentCheckboxLabel().should('be.visible');
+  infoConsentPage.getConsentCheckbox().should('not.be.checked');
 });
 
 When('je clique pour afficher les claims', function () {
@@ -39,6 +37,12 @@ Then(
 Then(
   'aucune information n\'est demandée par le fournisseur de service pour le scope "anonyme"',
   function () {
+    // TODO: Remove once FC+ uses the DSFR design
+    const platform: string = Cypress.env('PLATFORM');
+    if (platform === 'fcp-high') {
+      infoConsentPage.checkAnonymousScopeFcPlus();
+      return;
+    }
     infoConsentPage.checkAnonymousScope();
   },
 );
@@ -46,7 +50,7 @@ Then(
 When(
   'je consens à transmettre mes informations au fournisseur de service',
   function () {
-    infoConsentPage.getConsentCheckbox().check();
+    infoConsentPage.getConsentCheckboxLabel().click();
   },
 );
 

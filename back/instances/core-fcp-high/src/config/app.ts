@@ -19,4 +19,5 @@ export default {
   },
   fqdn: process.env.FQDN,
   udFqdn: process.env.UD_FQDN,
+  minAcrForContextRequest: 'eidas2',
 } as AppConfig;

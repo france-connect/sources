@@ -1,4 +1,5 @@
 /* istanbul ignore file */
 
 // Declarative code
-export * from './dto-app-config';
+export * from './app-config.dto';
+export * from './app-session.dto';

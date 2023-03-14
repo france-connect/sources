@@ -2,10 +2,12 @@ import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialExcept } from '@fc/common';
+import { ConfigService } from '@fc/config';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
+import { OidcAcrService } from '@fc/oidc-acr';
 import { ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
@@ -22,6 +24,14 @@ describe('CoreFcpService', () => {
     debug: jest.fn(),
     warn: jest.fn(),
     trace: jest.fn(),
+  };
+
+  const configServiceMock = {
+    get: jest.fn(),
+  };
+
+  const oidcAcrServiceMock = {
+    isAcrValid: jest.fn(),
   };
 
   const sessionServiceMock = {
@@ -101,6 +111,8 @@ describe('CoreFcpService', () => {
       providers: [
         CoreFcpService,
         LoggerService,
+        ConfigService,
+        OidcAcrService,
         IdentityProviderAdapterMongoService,
         SessionService,
         ScopesService,
@@ -109,6 +121,10 @@ describe('CoreFcpService', () => {
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
+      .overrideProvider(ConfigService)
+      .useValue(configServiceMock)
+      .overrideProvider(OidcAcrService)
+      .useValue(oidcAcrServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
@@ -333,6 +349,88 @@ describe('CoreFcpService', () => {
       const result = await service.isConsentRequired(spIdMock);
       // Then
       expect(result).toEqual(true);
+    });
+  });
+
+  describe('isInsufficientAcrLevel', () => {
+    const minAcrForContextRequestMock = 'eidas2';
+
+    beforeEach(() => {
+      configServiceMock.get.mockReturnValueOnce({
+        minAcrForContextRequest: minAcrForContextRequestMock,
+      });
+    });
+
+    it('should retrieve "minAcrForContextRequest" from AppConfig', () => {
+      // Given
+      const isSuspicious = false;
+
+      // When
+      service.isInsufficientAcrLevel('not_checked_for_this_test', isSuspicious);
+
+      // Then
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('App');
+    });
+
+    it('should return false if context is not suspicious', () => {
+      // Given
+      const isSuspicious = false;
+
+      // When
+      const result = service.isInsufficientAcrLevel(
+        'not_checked_for_this_test',
+        isSuspicious,
+      );
+
+      // Then
+      expect(result).toBeFalse();
+    });
+
+    it('should call oidcAcr.isAcrValid() with given "acrValue" and "minAcrForContextRequest" from AppConfig if context is suspicious', () => {
+      // Given
+      const givenAcr = 'eidas3';
+      const isSuspicious = true;
+
+      // When
+      service.isInsufficientAcrLevel(givenAcr, isSuspicious);
+
+      // Then
+      expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(1);
+      expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledWith(
+        givenAcr,
+        minAcrForContextRequestMock,
+      );
+    });
+
+    it('should return false if context is suspicious and acr is valid', () => {
+      // Given
+      oidcAcrServiceMock.isAcrValid.mockReturnValueOnce(true);
+      const isSuspicious = true;
+
+      // When
+      const result = service.isInsufficientAcrLevel(
+        'not_checked_for_this_test',
+        isSuspicious,
+      );
+
+      // Then
+      expect(result).toBeFalse();
+    });
+
+    it('should return true if context is suspicious and acr is invalid', () => {
+      // Given
+      oidcAcrServiceMock.isAcrValid.mockReturnValueOnce(false);
+      const isSuspicious = true;
+
+      // When
+      const result = service.isInsufficientAcrLevel(
+        'not_checked_for_this_test',
+        isSuspicious,
+      );
+
+      // Then
+      expect(result).toBeTrue();
     });
   });
 

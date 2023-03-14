@@ -146,15 +146,14 @@ describe('CsmrHttpProxyService', () => {
 
     it('should call lastValueFrom when request is called', async () => {
       // Given
-
+      httpService.get.mockReset().mockReturnValueOnce(httpResponseMock);
       lastValueMock.mockResolvedValueOnce(baseResponseMock);
+
       // When
       await service.forwardRequest(options);
       // Then
       expect(lastValueMock).toHaveBeenCalledTimes(1);
-      expect(lastValueMock).toHaveBeenCalledWith(
-        Promise.resolve(httpResponseMock),
-      );
+      expect(lastValueMock).toHaveBeenCalledWith(httpResponseMock);
     });
 
     it('should throw an error if request failed', async () => {

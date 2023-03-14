@@ -1,0 +1,62 @@
+/* -----------------------------------------------------------------
+
+  GENERAL
+
+----------------------------------------------------------------- */
+
+.fc-text--center {
+  text-align: center;
+}
+
+.fc-text--title-mention-grey {
+  color: var(--text-mention-grey);
+}
+
+.fc-text--title-blue-france {
+  color: var(--text-title-blue-france);
+}
+
+.fc-text-align--left-md-center,
+.fc-text-align--left-sm-center {
+  text-align: left;
+}
+
+#fc-consent-page .fc-btn--full-width {
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+@media (min-width: 576px) {
+  .fc-text-align--left-sm-center {
+    text-align: center;
+  }
+}
+
+
+@media (min-width: 992px) {
+  .fc-text-align--left-md-center {
+    text-align: center;
+  }
+
+  #fc-consent-page .fc-btn--full-width {
+    display: inline-flex;
+    text-align: left;
+    width: fit-content;
+  }
+}
+
+/* -----------------------------------------------------------------
+
+  OVERRIDES
+
+----------------------------------------------------------------- */
+.fc-footer {
+  /* CL-349 : change border coolor hack */
+  box-shadow: inset 0 1px 0 0 var(--border-default-grey),
+    inset 0 -1px 0 0 var(--border-default-grey);
+}
+.fc-footer .fr-container .fr-footer__bottom {
+  /* CL-349 : remove border hack */
+  box-shadow: inherit;
+}

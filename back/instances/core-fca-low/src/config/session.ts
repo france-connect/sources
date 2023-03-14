@@ -28,7 +28,6 @@ export default {
   lifetime: 600, // 10 minutes
   sessionIdLength: 64,
   excludedRoutes: [
-    `${app.urlPrefix}${OidcProviderRoutes.AUTHORIZATION}`,
     `${app.urlPrefix}${OidcProviderRoutes.JWKS}`,
     `${app.urlPrefix}${OidcProviderRoutes.OPENID_CONFIGURATION}`,
     `${app.urlPrefix}${OidcClientRoutes.WELL_KNOWN_KEYS}`,

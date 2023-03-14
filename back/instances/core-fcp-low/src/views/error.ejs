@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="fr" data-fr-scheme="light">
+<head>
+  <%- include('includes/head.ejs') %>
+  <link rel="stylesheet" href="/css/pages/error.css">
+  <title>Connexion - choix du compte</title>
+</head>
+<body id="fc-error-page">
+  <div class="fc-sticky-wrapper">
+    <div class="fc-sticky-body">
+      <%- include('includes/header.ejs') %>
+      <div class="fr-container fr-mt-md-8w fr-mt-5w">
+        <main class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
+          <section data-testid="error-section" class="fr-col-lg-10 fr-col-md-10">
+            <%- include('pages/error/error.welcome.ejs') %>
+            <%- include('pages/error/error.action.ejs') %>
+            <%- include('pages/error/error.support.ejs') %>
+          </section>
+        </main>
+      </div>
+    </div>
+    <%- include('includes/footer.ejs') %>
+  </div>
+  <%- include('includes/scripts.ejs') %>
+</body>
+</html>

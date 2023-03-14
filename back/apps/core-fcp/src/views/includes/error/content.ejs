@@ -1,0 +1,8 @@
+<h1 class="main-title" data-testid="error-section-title">
+  Une erreur s'est produite
+</h1>
+<% if(locals.code){%>
+<p id="error-code" data-testid="error-code">Erreur <%= locals.code %></p>
+<%}%> <% if(locals.message){%>
+<p id="error-message" data-testid="error-message"><%= locals.message %></p>
+<%}%>

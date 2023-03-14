@@ -859,18 +859,4 @@ export class OidcProviderConfig {
   @IsArray()
   @IsEnum(OidcProviderPrompt, { each: true })
   readonly forcedPrompt: OidcProviderPrompt[];
-
-  /**
-   * Those values must be coherent with "configuration.acrValues" defined here.
-   * It could contain more values though (because you can know more than you accept).
-   * Exemple:
-   * - configuration.acrValues -> ['anyAcr_2', 'anyAcr_3']
-   * - knownAcrValues -> ['anyAcr_1', 'anyAcr_2', 'anyAcr_3']
-   * - defaultAcrValue -> 'anyAcr_3'
-   */
-  @IsArray()
-  readonly knownAcrValues: string[];
-
-  @IsString()
-  readonly defaultAcrValue: string;
 }

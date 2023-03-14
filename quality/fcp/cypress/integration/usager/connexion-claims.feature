@@ -16,7 +16,7 @@ Fonctionnalité: Connexion avec Claims
     Et je suis redirigé vers la page confirmation de connexion
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et la cinématique a renvoyé l'amr "fc"
 
   Scénario: Connexion avec claims - claim AMR absent si non demandé
@@ -30,7 +30,7 @@ Fonctionnalité: Connexion avec Claims
     Et je suis redirigé vers la page confirmation de connexion
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et la cinématique n'a pas renvoyé d'amr
 
   @ignoreInteg01
@@ -39,5 +39,5 @@ Fonctionnalité: Connexion avec Claims
     Et que le fournisseur de service requiert le claim "amr"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
-    Alors je suis redirigé vers la page erreur technique
-    Et le code d'erreur est "Y030009"
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y030009"

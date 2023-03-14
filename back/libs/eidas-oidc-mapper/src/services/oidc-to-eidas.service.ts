@@ -12,8 +12,9 @@ import {
   EidasSubStatusCodes,
 } from '@fc/eidas';
 import { LoggerService } from '@fc/logger-legacy';
-import { AcrValues, OidcError } from '@fc/oidc';
+import { OidcError } from '@fc/oidc';
 
+import { AcrValues } from '../enums';
 import { IOidcIdentity } from '../interfaces';
 import {
   AcrValuesToLevelOfAssurancesMap,

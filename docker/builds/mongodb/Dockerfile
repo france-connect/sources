@@ -1,4 +1,5 @@
-FROM mongo:4.2
+ARG MONGO_VERSION=4.4
+FROM mongo:${MONGO_VERSION}
 
 RUN openssl rand -base64 756 > /mongo-key-file
 COPY ./volumes/ssl/docker-stack-ca.crt /usr/local/share/ca-certificates/

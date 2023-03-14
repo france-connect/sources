@@ -33,7 +33,6 @@ describe('OidcProviderController', () => {
   const sessionIdMock = 'session-id-mock';
 
   const reqMock = Symbol('req');
-  const resMock = Symbol('res');
 
   const randomStringMock = 'randomStringMockValue';
   const interactionIdMock = 'interactionIdMockValue';
@@ -100,14 +99,8 @@ describe('OidcProviderController', () => {
       const nextMock = jest.fn();
       const queryMock = {} as AuthorizeParamsDto;
       // When
-      await oidcProviderController.getAuthorize(
-        reqMock,
-        resMock,
-        nextMock,
-        queryMock,
-      );
+      await oidcProviderController.getAuthorize(nextMock, queryMock);
       // Then
-      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
       expect(nextMock).toHaveReturnedTimes(1);
     });
   });
@@ -118,14 +111,8 @@ describe('OidcProviderController', () => {
       const nextMock = jest.fn();
       const bodyMock = {} as AuthorizeParamsDto;
       // When
-      await oidcProviderController.postAuthorize(
-        reqMock,
-        resMock,
-        nextMock,
-        bodyMock,
-      );
+      await oidcProviderController.postAuthorize(nextMock, bodyMock);
       // Then
-      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
       expect(nextMock).toHaveReturnedTimes(1);
     });
   });

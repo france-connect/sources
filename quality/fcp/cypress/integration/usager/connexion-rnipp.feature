@@ -19,7 +19,7 @@ Fonctionnalité: Connexion Usager - RNIPP
     Et les informations demandées par le fournisseur de service correspondent aux scopes "tous les scopes"
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations des scopes "tous les scopes"
 
     Exemples:
@@ -37,5 +37,5 @@ Fonctionnalité: Connexion Usager - RNIPP
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que j'utilise un compte usager "avec un COG invalide"
     Quand je m'authentifie avec succès
-    Alors je suis redirigé vers la page erreur technique
-    Et le code d'erreur est "Y000006"
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y000006"

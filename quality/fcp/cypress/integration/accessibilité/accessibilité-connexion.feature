@@ -42,7 +42,6 @@ Fonctionnalité: Accessibilité
       | tablet landscape |
       | desktop          |
 
-  @ignoreLow
   Plan du Scénario: Accessibilité - page consentement sur <device>
     Etant donné que j'utilise un navigateur web sur "<device>"
     Et que j'utilise un fournisseur de service "privé avec consentement obligatoire"
@@ -98,8 +97,8 @@ Fonctionnalité: Accessibilité
     Et que je clique sur le fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que je m'authentifie avec succès
-    Et que je suis redirigé vers la page erreur technique
-    Et que le code d'erreur est "Y180001"
+    Et que je suis redirigé vers la page erreur technique FranceConnect
+    Et que le code d'erreur FranceConnect est "Y180001"
     Quand je vérifie l'accessibilité sur cette page
     Et aucune erreur d'accessibilité n'est présente
 

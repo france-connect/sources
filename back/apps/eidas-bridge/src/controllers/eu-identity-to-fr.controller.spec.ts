@@ -489,15 +489,13 @@ describe('EuIdentityToFrController', () => {
 
       it('should return the promise from the finishInteraction call', async () => {
         // setup
-        const expectedPromise = new Promise((resolves) => {
-          resolves(true);
-        });
+        const expectedInteractionReturn = Symbol('interactionReturn');
         oidcProviderServiceMock.finishInteraction.mockReturnValueOnce(
-          expectedPromise,
+          expectedInteractionReturn,
         );
 
         // action
-        const result = euIdentityToFrController.finishInteraction(
+        const result = await euIdentityToFrController.finishInteraction(
           req,
           res,
           sessionServiceOidcMock,
@@ -505,7 +503,7 @@ describe('EuIdentityToFrController', () => {
         );
 
         // expect
-        expect(result).toStrictEqual(expectedPromise);
+        expect(result).toStrictEqual(expectedInteractionReturn);
       });
     });
 
@@ -609,11 +607,11 @@ describe('EuIdentityToFrController', () => {
         eidasToOidcServiceMock.mapPartialResponseFailure.mockReturnValueOnce(
           failureOidcJson,
         );
-        const expectedPromise = new Promise((resolves) => resolves(true));
-        res.redirect.mockReturnValueOnce(expectedPromise);
+        const expectedRedirect = Symbol('expectedRedirect');
+        res.redirect.mockResolvedValueOnce(expectedRedirect);
 
         // action
-        const result = euIdentityToFrController.finishInteraction(
+        const result = await euIdentityToFrController.finishInteraction(
           req,
           res,
           sessionServiceOidcMock,
@@ -621,12 +619,12 @@ describe('EuIdentityToFrController', () => {
         );
 
         // expect
-        expect(result).toStrictEqual(expectedPromise);
+        expect(result).toStrictEqual(expectedRedirect);
       });
 
       it('should not call mapPartialResponseSuccess', async () => {
         // action
-        euIdentityToFrController.finishInteraction(
+        await euIdentityToFrController.finishInteraction(
           req,
           res,
           sessionServiceOidcMock,
@@ -641,7 +639,7 @@ describe('EuIdentityToFrController', () => {
 
       it('should not call `sessionOidc.set()`', async () => {
         // action
-        euIdentityToFrController.finishInteraction(
+        await euIdentityToFrController.finishInteraction(
           req,
           res,
           sessionServiceOidcMock,
@@ -654,7 +652,7 @@ describe('EuIdentityToFrController', () => {
 
       it('should not call finishInteraction', async () => {
         // action
-        euIdentityToFrController.finishInteraction(
+        await euIdentityToFrController.finishInteraction(
           req,
           res,
           sessionServiceOidcMock,

@@ -16,6 +16,12 @@ export default {
       event: 'FC_AUTHORIZE_INITIATED',
     },
 
+    FC_SSO_INITIATED: {
+      step: '1.1.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_SSO_INITIATED',
+    },
+
     FC_SHOWED_IDP_CHOICE: {
       step: '2.0.0',
       category: EventsCategories.FRONT_CINEMATIC,
@@ -65,9 +71,12 @@ export default {
       step: '5.0.0',
       category: EventsCategories.FRONT_CINEMATIC,
       event: 'FC_VERIFIED',
-      interceptRoutes: [
-        { method: RequestMethod.GET, path: CoreRoutes.INTERACTION_VERIFY },
-      ],
+    },
+
+    FC_BLACKLISTED: {
+      step: '5.1.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_SSO_UNAUTHORIZED_IDP',
     },
 
     FC_REDIRECTED_TO_SP: {

@@ -25,7 +25,8 @@ const ministries = [
         "fia1-low",
         "fia3-desactive-visible",
         "fia6-active-invisible",
-        "fia7-desactive-invisible"
+        "fia7-desactive-invisible",
+        "fia8-low",
       ],
       updatedAt: new Date("2020-12-09T12:00:00.000Z"),
       createdAt: new Date("2020-12-09T12:00:00.000Z"),

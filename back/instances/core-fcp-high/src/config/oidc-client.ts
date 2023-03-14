@@ -15,8 +15,8 @@ export default {
   },
   jwks: {
     keys: [
-      env.json('CRYPTO_ENC_LOCALE_PRIV_KEY'),
-      env.json('JWKS_ENC_ECDH_ES_PRIV_KEY'),
+      ...env.json('CRYPTO_ENC_LOCALE_PRIV_KEYS'),
+      ...env.json('JWKS_ENC_ECDH_ES_PRIV_KEYS'),
     ],
   },
   stateLength: 32,

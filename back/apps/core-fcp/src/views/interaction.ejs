@@ -2,13 +2,13 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <%- include('partials/head.ejs'); %>
+    <%- include('includes/head.ejs'); %>
     <link rel="stylesheet" href="/css/interaction.css">
     <link rel="stylesheet" href="/css/numeric-identity.css">
     <title>Connexion - choix du fournisseur d\'identité</title>
   </head>
   <body>
-    <%- include('partials/menu.ejs'); %>
+    <%- include('includes/menu.ejs'); %>
     <% if(locals.notifications){ %>
     <div id="notifications" role="alert">
       <div>
@@ -24,7 +24,7 @@
         <main role="main">
           <h1>Je choisis un moyen pour me connecter sur:</h1>
           <h2><%= locals.spName %></h2>
-          <section title="liste des fournisseurs d'identité" id="idp-list" class="main__providers">
+          <section title="liste des fournisseurs d'identité" id="idp-list" class="main__providers" data-testid="main-providers">
             <% locals.providers.filter(p => p.display).filter(p => p.uid !== 'eidas-bridge').forEach(provider => { %>
               <form  method="POST" action="/api/v2/redirect-to-idp" id="fs-request-<%= provider.uid %>" name="fs-request">
                 <div class="identity-provider">
@@ -41,7 +41,7 @@
                 <input type="hidden" name="providerUid" value="<%= provider.uid %>" />
                 <input type="hidden" name="uid" value="<%= locals.uid %>" />
                 <input type="hidden" name="acr_values" value="<%= params.acr_values %>" />
-                <input type="hidden" name="scope" value="<%= locals.scope %>" />
+                <input type="hidden" name="scope" value="<%= locals.idpScope %>" />
                 <input type="hidden" name="csrfToken" value="<%= locals.csrfToken %>" />
               </form>
             <% }) %>
@@ -61,7 +61,7 @@
               <input type="hidden" name="providerUid" value="<%= eidasBridgeProvider.uid %>" />
               <input type="hidden" name="uid" value="<%= locals.uid %>" />
               <input type="hidden" name="acr_values" value="<%= params.acr_values %>" />
-              <input type="hidden" name="scope" value="<%= locals.scope %>" />
+              <input type="hidden" name="scope" value="<%= locals.idpScope %>" />
               <input type="hidden" name="csrfToken" value="<%= locals.csrfToken %>" />
             </form>
           <% } %>
@@ -86,8 +86,8 @@
         </main>
       </div>
     </div>
-    <%- include('partials/footer.ejs'); %>
-    <%- include('partials/numeric-identity.ejs'); %>
+    <%- include('includes/footer.ejs'); %>
+    <%- include('includes/numeric-identity.ejs'); %>
     <script type="text/javascript" src="/js/numeric-identity.js" defer></script>
   </body>
 </html>

@@ -127,5 +127,23 @@
     "selectors": {
       "idpButton": "#idp-fia7-desactive-invisible"
     }
+  },
+  {
+    "idpId": "fia8-low",
+    "descriptions": ["disponible que pour un FS"],
+    "ministry": "MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
+    "title": "Identity Provider 8 (fsa5 seulement)- eIDAS faible",
+    "mocked": true,
+    "usable": false,
+    "url": "https://fia8-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "ES256",
+    "selectors": {
+      "idpButton": "#idp-fia8-low",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "button[type='submit']"
+    }
   }
 ]

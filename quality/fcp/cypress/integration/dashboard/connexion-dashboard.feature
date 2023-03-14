@@ -1,5 +1,5 @@
 #language: fr
-@userDashboard @connexionDashboard @ignoreHigh @ignoreLow
+@userDashboard @connexionDashboard
 Fonctionnalité: Connexion User Dashboard
   # En tant qu'usager de FranceConnect,
   # je veux me connecter au user dashboard

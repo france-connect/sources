@@ -12,6 +12,7 @@ import { EidasLightProtocolConfig } from '@fc/eidas-light-protocol';
 import { EidasProviderConfig } from '@fc/eidas-provider';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
 import { LoggerConfig } from '@fc/logger-legacy';
+import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { OverrideOidcProviderConfig } from '@fc/override-oidc-provider';
@@ -70,6 +71,11 @@ export class EidasBridgeConfig {
   @ValidateNested()
   @Type(() => IdentityProviderAdapterEnvConfig)
   readonly IdentityProviderAdapterEnv: IdentityProviderAdapterEnvConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => OidcAcrConfig)
+  readonly OidcAcr: OidcAcrConfig;
 
   @IsObject()
   @ValidateNested()

@@ -20,6 +20,7 @@ import {
 import { MailerModule } from '@fc/mailer';
 import { MongooseModule } from '@fc/mongoose';
 import { NotificationsModule } from '@fc/notifications';
+import { OidcAcrModule } from '@fc/oidc-acr';
 import { OidcClientModule } from '@fc/oidc-client';
 import { OidcProviderModule } from '@fc/oidc-provider';
 import { RnippModule } from '@fc/rnipp';
@@ -69,6 +70,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     ServiceProviderAdapterMongoModule,
     IdentityProviderAdapterMongoModule,
     HttpProxyModule,
+    OidcAcrModule,
     OidcProviderModule.register(
       OidcProviderConfigAppService,
       ServiceProviderAdapterMongoService,

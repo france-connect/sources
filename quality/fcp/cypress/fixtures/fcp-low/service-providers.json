@@ -39,5 +39,23 @@
       "logoutButton": ".nav-logout"
     },
     "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsp3-low",
+    "descriptions": ["privé avec consentement obligatoire"],
+    "mocked": true,
+    "url": "https://fsp3-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "clientId": "5a6e58c6e0cf3cb21de192c567335a8ec121a3f96d0fd48cf58c1f1c48235b63",
+    "acrValue": "eidas1",
+    "claims": [],
+    "scopes": [
+      "tous les scopes"
+    ],
+    "explicitConsent": true,
+    "selectors": {
+      "fcButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
   }
 ]

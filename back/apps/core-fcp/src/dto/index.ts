@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
-export * from './authorize-params.dto';
+export * from './app-session.dto';
 export * from './authorize-params.dto';
 export * from './core-fcp-config.dto';
 export * from './core-fcp-session.dto';

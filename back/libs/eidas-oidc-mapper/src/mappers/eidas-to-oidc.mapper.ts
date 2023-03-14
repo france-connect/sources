@@ -4,7 +4,9 @@ import {
   EidasLevelOfAssurances,
   EidasResponseAttributes,
 } from '@fc/eidas';
-import { AcrValues, IOidcIdentity } from '@fc/oidc';
+import { IOidcIdentity } from '@fc/oidc';
+
+import { AcrValues } from '../enums';
 
 export const LevelOfAssurancesToAcrValueMap = {
   [EidasLevelOfAssurances.LOW]: AcrValues.EIDAS2,

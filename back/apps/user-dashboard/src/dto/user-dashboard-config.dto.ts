@@ -8,6 +8,7 @@ import { AppConfig } from '@fc/app';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
 import { LoggerConfig } from '@fc/logger-legacy';
 import { MailerConfig } from '@fc/mailer';
+import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 import { RedisConfig } from '@fc/redis';
@@ -34,6 +35,11 @@ export class UserDashboardConfig {
   @ValidateNested()
   @Type(() => SessionConfig)
   readonly Session: SessionConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => OidcAcrConfig)
+  readonly OidcAcr: OidcAcrConfig;
 
   @IsObject()
   @ValidateNested()

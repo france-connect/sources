@@ -16,6 +16,7 @@ import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapt
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { NotificationsService } from '@fc/notifications';
 import { OidcSession } from '@fc/oidc';
+import { OidcAcrService } from '@fc/oidc-acr';
 import {
   OidcClientConfig,
   OidcClientService,
@@ -27,11 +28,13 @@ import { ISessionService, Session, SessionCsrfService } from '@fc/session';
 import { TrackedEventContextInterface } from '@fc/tracking';
 
 import {
+  AppSession,
   CoreConfig,
   GetConsentSessionDto,
   GetVerifySessionDto,
   InteractionSessionDto,
 } from '../dto';
+import { InsufficientAcrLevelSuspiciousContextException } from '../exceptions';
 import { CoreFcpService, CoreService } from '../services';
 
 @Controller()
@@ -43,11 +46,12 @@ export class CoreFcpController {
     private readonly oidcProvider: OidcProviderService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
-    private readonly core: CoreFcpService,
+    private readonly coreFcp: CoreFcpService,
     private readonly config: ConfigService,
     private readonly notifications: NotificationsService,
-    private readonly csrfService: SessionCsrfService,
-    private readonly coreService: CoreService,
+    private readonly csrf: SessionCsrfService,
+    private readonly core: CoreService,
+    private readonly oidcAcr: OidcAcrService,
     private readonly oidcClient: OidcClientService,
   ) {
     this.logger.setContext(this.constructor.name);
@@ -67,6 +71,8 @@ export class CoreFcpController {
     res.redirect(301, defaultRedirectUri);
   }
 
+  // More than 4 parameters authorized for dependency injection
+  // eslint-disable-next-line max-params
   @Get(CoreRoutes.INTERACTION)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async getInteraction(
@@ -80,21 +86,21 @@ export class CoreFcpController {
      */
     @Session('OidcClient', InteractionSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
+    @Session('App')
+    sessionApp: ISessionService<AppSession>,
   ) {
-    const session = await sessionOidc.get();
+    const spName = await sessionOidc.get('spName');
 
-    this.logger.trace({ session });
-
-    const { spName } = session;
     const { params, uid } = await this.oidcProvider.getInteraction(req, res);
-    const { scope } = this.config.get<OidcClientConfig>('OidcClient');
+    const { scope: spScope } = params;
+    const { scope: idpScope } = this.config.get<OidcClientConfig>('OidcClient');
     const { acr_values: acrValues, client_id: clientId } = params;
 
     const {
       configuration: { acrValues: allowedAcrValues },
     } = this.config.get<OidcProviderConfig>('OidcProvider');
 
-    const rejected = await this.coreService.rejectInvalidAcr(
+    const rejected = await this.core.rejectInvalidAcr(
       acrValues,
       allowedAcrValues,
       { req, res },
@@ -116,14 +122,23 @@ export class CoreFcpController {
       idpList: idpFilterList,
     });
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const authorizedProviders = providers.filter(({ maxAuthorizedAcr }) =>
-      this.coreService.isAcrValid(maxAuthorizedAcr, acrValues),
-    );
+    const isSuspicious = await sessionApp.get('isSuspicious');
+
+    const authorizedProviders = providers
+      .filter(({ maxAuthorizedAcr }) =>
+        this.oidcAcr.isAcrValid(maxAuthorizedAcr, acrValues),
+      )
+      .filter(({ maxAuthorizedAcr }) => {
+        const authorizedIdp = !this.coreFcp.isInsufficientAcrLevel(
+          maxAuthorizedAcr,
+          isSuspicious,
+        );
+        return authorizedIdp;
+      });
 
     // -- generate and store in session the CSRF token
-    const csrfToken = this.csrfService.get();
-    await this.csrfService.save(sessionOidc, csrfToken);
+    const csrfToken = this.csrf.get();
+    await this.csrf.save(sessionOidc, csrfToken);
 
     const notifications = await this.notifications.getNotifications();
     const response = {
@@ -131,7 +146,8 @@ export class CoreFcpController {
       notifications,
       params,
       providers: authorizedProviders,
-      scope,
+      idpScope,
+      spScope,
       spName,
       uid,
     };
@@ -146,6 +162,8 @@ export class CoreFcpController {
     return res.render('interaction', response);
   }
 
+  // More than 4 parameters authorized for dependency injection
+  // eslint-disable-next-line max-params
   @Get(CoreRoutes.INTERACTION_VERIFY)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async getVerify(
@@ -159,13 +177,25 @@ export class CoreFcpController {
      */
     @Session('OidcClient', GetVerifySessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
+    @Session('App')
+    sessionApp: ISessionService<AppSession>,
   ) {
-    const { idpId, interactionId, spId } = await sessionOidc.get();
+    const { idpId, idpAcr, interactionId, spId } = await sessionOidc.get();
 
     await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
 
+    const isSuspicious = await sessionApp.get('isSuspicious');
+
+    const isInsufficientAcrLevel = this.coreFcp.isInsufficientAcrLevel(
+      idpAcr,
+      isSuspicious,
+    );
+    if (isInsufficientAcrLevel) {
+      throw new InsufficientAcrLevelSuspiciousContextException();
+    }
+
     const trackingContext: TrackedEventContextInterface = { req };
-    await this.core.verify(sessionOidc, trackingContext);
+    await this.coreFcp.verify(sessionOidc, trackingContext);
 
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const url = `${urlPrefix}/interaction/${interactionId}/consent`;
@@ -204,15 +234,17 @@ export class CoreFcpController {
 
     const interaction = await this.oidcProvider.getInteraction(req, res);
 
-    const scopes = this.core.getScopesForInteraction(interaction);
-    const claims = this.core.getClaimsLabelsForInteraction(interaction);
-    const consentRequired = await this.core.isConsentRequired(spId);
+    const scopes = this.coreFcp.getScopesForInteraction(interaction);
+    const claims = this.coreFcp.getClaimsLabelsForInteraction(interaction);
+    const consentRequired = await this.coreFcp.isConsentRequired(spId);
+    const isOpenIdScope = scopes.every((scope) => scope === 'openid');
 
     // -- generate and store in session the CSRF token
-    const csrfToken = this.csrfService.get();
-    await this.csrfService.save(sessionOidc, csrfToken);
+    const csrfToken = this.csrf.get();
+    await this.csrf.save(sessionOidc, csrfToken);
 
     const response = {
+      isOpenIdScope,
       claims,
       consentRequired,
       csrfToken,

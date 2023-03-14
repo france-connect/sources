@@ -2,13 +2,14 @@
 
 // Declarative code
 import { Type } from 'class-transformer';
-import { IsObject, IsUrl, ValidateNested } from 'class-validator';
+import { IsBoolean, IsObject, IsUrl, ValidateNested } from 'class-validator';
 
 import { AppConfig } from '@fc/app';
 import { CryptographyFcaConfig } from '@fc/cryptography-fca';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
 import { LoggerConfig } from '@fc/logger-legacy';
 import { MongooseConfig } from '@fc/mongoose';
+import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { OverrideOidcProviderConfig } from '@fc/override-oidc-provider';
@@ -17,16 +18,19 @@ import { ServiceProviderAdapterMongoConfig } from '@fc/service-provider-adapter-
 import { SessionConfig } from '@fc/session';
 import { TrackingConfig } from '@fc/tracking';
 
-export class Core {
+export class CoreConfig {
   @IsUrl()
   readonly defaultRedirectUri: string;
+
+  @IsBoolean()
+  readonly enableSso: boolean;
 }
 
 export class CoreFcaConfig {
   @IsObject()
   @ValidateNested()
-  @Type(() => Core)
-  readonly Core: Core;
+  @Type(() => CoreConfig)
+  readonly Core: CoreConfig;
 
   @IsObject()
   @ValidateNested()
@@ -37,6 +41,11 @@ export class CoreFcaConfig {
   @ValidateNested()
   @Type(() => LoggerConfig)
   readonly Logger: LoggerConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => OidcAcrConfig)
+  readonly OidcAcr: OidcAcrConfig;
 
   @IsObject()
   @ValidateNested()

@@ -20,7 +20,7 @@ Fonctionnalité: Information Consentement
     Quand je continue sur le fournisseur de service
     Alors l'événement "FC_DATATRANSFER_INFORMATION_IDENTITY" est déclenché
     Et je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "identite_pivot sans alias"
 
   # Aucun FS privé sans consentement obligatoire sur integ01 et fcp-low
@@ -40,11 +40,9 @@ Fonctionnalité: Information Consentement
     Quand je continue sur le fournisseur de service
     Alors l'événement "FC_DATATRANSFER_INFORMATION_IDENTITY" est déclenché
     Et je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "identite_pivot sans alias"
 
-  # Aucun FS privé sur fcp-low
-  @ignoreLow
   Scénario: Consentement - FS privé avec consentement obligatoire
     Etant donné que j'utilise un fournisseur de service "privé avec consentement obligatoire"
     Et le fournisseur de service requiert l'accès aux informations du scope "identite_pivot sans alias"
@@ -63,7 +61,7 @@ Fonctionnalité: Information Consentement
     Et je continue sur le fournisseur de service
     Alors l'événement "FC_DATATRANSFER_CONSENT_IDENTITY" est déclenché
     Et je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "identite_pivot sans alias"
 
   Scénario: Information - scope anonyme avec FS public
@@ -82,7 +80,7 @@ Fonctionnalité: Information Consentement
     Quand je continue sur le fournisseur de service
     Alors l'événement "FC_DATATRANSFER_INFORMATION_ANONYMOUS" est déclenché
     Et je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "anonyme"
 
   # Aucun FS privé sans consentement obligatoire sur integ01 et fcp-low
@@ -103,11 +101,9 @@ Fonctionnalité: Information Consentement
     Quand je continue sur le fournisseur de service
     Alors l'événement "FC_DATATRANSFER_INFORMATION_ANONYMOUS" est déclenché
     Et je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "anonyme"
 
-  # Ignorer à cause du bug https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/540
-  @ignoreHigh @ignoreLow
   Scénario: Information - scope anonyme avec FS privé avec consentement obligatoire
     Etant donné que j'utilise un fournisseur de service "privé avec consentement obligatoire"
     Et le fournisseur de service requiert l'accès aux informations du scope "anonyme"
@@ -124,5 +120,5 @@ Fonctionnalité: Information Consentement
     Quand je continue sur le fournisseur de service
     Alors l'événement "FC_DATATRANSFER_INFORMATION_ANONYMOUS" est déclenché
     Et je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "anonyme"

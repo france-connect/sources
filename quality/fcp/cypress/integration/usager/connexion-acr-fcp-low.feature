@@ -21,7 +21,7 @@ Fonctionnalité: Connexion ACR
     Et les informations demandées par le fournisseur de service correspondent au scope "tous les scopes"
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et la cinématique a utilisé le niveau de sécurité "eidas1"
     Et le fournisseur de service a accès aux informations du scope "tous les scopes"
 
@@ -67,7 +67,7 @@ Fonctionnalité: Connexion ACR
     Et les informations demandées par le fournisseur de service correspondent au scope "tous les scopes"
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et la cinématique a utilisé le niveau de sécurité "<actualAcr>"
     Et le fournisseur de service a accès aux informations du scope "tous les scopes"
 
@@ -89,8 +89,8 @@ Fonctionnalité: Connexion ACR
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que le fournisseur d'identité garantit un niveau de sécurité "<idpAcr>"
     Quand je m'authentifie avec succès
-    Alors je suis redirigé vers la page erreur technique
-    Et le code d'erreur est "Y020001"
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y020001"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
 
     Exemples:

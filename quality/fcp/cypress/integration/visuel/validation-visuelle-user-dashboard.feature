@@ -1,5 +1,5 @@
 #language: fr
-@validationVisuelle @userDashboard @ignoreLow @ignoreHigh
+@validationVisuelle @userDashboard
 Fonctionnalité: Validation Visuelle - User Dashboard
 
   Plan du Scénario: Validation Visuelle - Historique des connexions sur <device>

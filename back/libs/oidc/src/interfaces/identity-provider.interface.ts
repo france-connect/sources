@@ -22,8 +22,6 @@ export interface IdpFCMetadata {
   featureHandlers: {
     [key: string]: string;
   };
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   maxAuthorizedAcr: string;
 }
 

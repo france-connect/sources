@@ -43,6 +43,7 @@ import {
 } from '@fc/tracking';
 
 import { AuthorizeParamsDto, ErrorParamsDto, GetLoginSessionDto } from '../dto';
+import { ConfirmationType, DataType } from '../enums';
 import {
   CoreFcpFailedAbortSessionException,
   CoreFcpInvalidEventKeyException,
@@ -186,18 +187,36 @@ export class OidcProviderController {
     }
   }
 
+  private isAnonymous(scopes): boolean {
+    const anonymousScope = 'openid';
+    return scopes.every((scope) => scope === anonymousScope);
+  }
+
+  private getDataType(isAnonymous: boolean): DataType {
+    return isAnonymous ? DataType.ANONYMOUS : DataType.IDENTITY;
+  }
+
+  private getConfirmationType(
+    consentRequired: boolean,
+    isAnonymous: boolean,
+  ): ConfirmationType {
+    return consentRequired && !isAnonymous
+      ? ConfirmationType.CONSENT
+      : ConfirmationType.INFORMATION;
+  }
+
   private getDataEvent(
     scopes: string[],
     consentRequired: boolean,
   ): TrackedEventInterface {
-    const dataType = scopes.every((scope) => scope === 'openid')
-      ? 'ANONYMOUS'
-      : 'IDENTITY';
-    const consentOrInfo = consentRequired ? 'CONSENT' : 'INFORMATION';
-
+    const isAnonymous = this.isAnonymous(scopes);
+    const dataType = this.getDataType(isAnonymous);
+    const consentOrInfo = this.getConfirmationType(
+      consentRequired,
+      isAnonymous,
+    );
     const eventKey =
       `FC_DATATRANSFER_${consentOrInfo}_${dataType}` as DataTransfertType;
-
     const { TrackedEventsMap } = this.tracking;
 
     if (!TrackedEventsMap.hasOwnProperty(eventKey)) {

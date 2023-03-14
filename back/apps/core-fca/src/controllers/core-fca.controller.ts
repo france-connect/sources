@@ -1,3 +1,5 @@
+import { Request, Response } from 'express';
+
 import {
   Controller,
   Get,
@@ -19,7 +21,6 @@ import { OidcSession } from '@fc/oidc';
 import {
   OidcClientConfig,
   OidcClientRoutes,
-  OidcClientService,
   OidcClientSession,
 } from '@fc/oidc-client';
 import { OidcProviderConfig, OidcProviderService } from '@fc/oidc-provider';
@@ -31,8 +32,9 @@ import {
   SessionCsrfService,
   SessionNotFoundException,
 } from '@fc/session';
+import { TrackingService } from '@fc/tracking';
 
-import { Core } from '../dto';
+import { CoreConfig } from '../dto';
 import { CoreFcaService, CoreService } from '../services';
 
 @Controller()
@@ -49,14 +51,14 @@ export class CoreFcaController {
     private readonly config: ConfigService,
     private readonly csrfService: SessionCsrfService,
     private readonly coreService: CoreService,
-    private readonly oidcClient: OidcClientService,
+    private readonly tracking: TrackingService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
 
   @Get(CoreRoutes.DEFAULT)
   getDefault(@Res() res) {
-    const { defaultRedirectUri } = this.config.get<Core>('Core');
+    const { defaultRedirectUri } = this.config.get<CoreConfig>('Core');
     this.logger.trace({
       method: 'GET',
       name: 'CoreRoutes.DEFAULT',
@@ -236,10 +238,73 @@ export class CoreFcaController {
     return {};
   }
 
+  private async trackBlackListed(req: Request) {
+    const eventContext = { req };
+    const { FC_BLACKLISTED } = this.tracking.TrackedEventsMap;
+
+    await this.tracking.track(FC_BLACKLISTED, eventContext);
+  }
+
+  private async trackVerified(req: Request) {
+    const eventContext = { req };
+    const { FC_VERIFIED } = this.tracking.TrackedEventsMap;
+
+    await this.tracking.track(FC_VERIFIED, eventContext);
+  }
+
+  private async handleBlacklisted(
+    req: Request,
+    res: Response,
+    params: {
+      urlPrefix: string;
+      interactionId: string;
+      sessionOidc: ISessionService<OidcClientSession>;
+    },
+  ): Promise<void> {
+    const { interactionId, urlPrefix, sessionOidc } = params;
+
+    const url = `${urlPrefix}${CoreRoutes.INTERACTION.replace(
+      ':uid',
+      interactionId,
+    )}`;
+
+    /**
+     * Black listing redirects to idp choice,
+     * thus we are no longer in an "sso" interaction,
+     * so we update isSso flag in session.
+     */
+    sessionOidc.set('isSso', false);
+
+    await this.trackBlackListed(req);
+
+    return res.redirect(url);
+  }
+
+  private async handleVerifyIdentity(
+    req: Request,
+    res: Response,
+    params: {
+      urlPrefix: string;
+      interactionId: string;
+      sessionOidc: ISessionService<OidcClientSession>;
+    },
+  ): Promise<void> {
+    const { sessionOidc, urlPrefix } = params;
+
+    await this.core.verify(sessionOidc);
+
+    const url = `${urlPrefix}${CoreRoutes.INTERACTION_LOGIN}`;
+
+    await this.trackVerified(req);
+
+    return res.redirect(url);
+  }
+
   @Get(CoreRoutes.INTERACTION_VERIFY)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async getVerify(
-    @Res() res,
+    @Req() req: Request,
+    @Res() res: Response,
     @Param() _params: Interaction,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
@@ -254,22 +319,21 @@ export class CoreFcaController {
     if (!session) {
       throw new SessionNotFoundException('OidcClient');
     }
-    const { idpId, spId } = session;
 
-    await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
+    const { idpId, interactionId, spId } = session;
 
-    await this.core.verify(sessionOidc);
+    const isBlackListed = await this.serviceProvider.shouldExcludeIdp(
+      spId,
+      idpId,
+    );
 
     const { urlPrefix } = this.config.get<AppConfig>('App');
-    const url = `${urlPrefix}/login`;
+    const params = { urlPrefix, interactionId, sessionOidc };
 
-    this.logger.trace({
-      method: 'GET',
-      name: 'CoreRoutes.INTERACTION_VERIFY',
-      redirect: url,
-      route: CoreRoutes.INTERACTION_VERIFY,
-    });
-
-    res.redirect(url);
+    if (isBlackListed) {
+      return this.handleBlacklisted(req, res, params);
+    } else {
+      return this.handleVerifyIdentity(req, res, params);
+    }
   }
 }

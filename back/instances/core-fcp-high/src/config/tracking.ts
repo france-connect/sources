@@ -7,6 +7,7 @@ import { CoreRoutes } from '@fc/core';
 import { EventsCategories } from '@fc/core-fcp';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import {
+  RnippCitizenStatusFormatException,
   RnippDeceasedException,
   RnippFoundOnlyWithMaritalNameException,
   RnippHttpStatusException,
@@ -116,6 +117,7 @@ export default {
         RnippNotFoundNoEchoException,
         RnippNotFoundSingleEchoException,
         RnippFoundOnlyWithMaritalNameException,
+        RnippCitizenStatusFormatException,
       ],
     },
 

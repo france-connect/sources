@@ -45,10 +45,9 @@ export class OverrideOidcProviderService {
    */
   private overrideJwksResponse() {
     /** Grab HSM public sig key from configuration */
-    const { sigHsmPubKey } = this.config.get<OverrideOidcProviderConfig>(
+    const { sigHsmPubKeys } = this.config.get<OverrideOidcProviderConfig>(
       'OverrideOidcProvider',
     );
-    const key = sigHsmPubKey as KeyLike;
 
     const oidcProvider = this.getOidcProviderService();
 
@@ -57,11 +56,14 @@ export class OverrideOidcProviderService {
     /** Get instance stored in `oidc-provider`'s internal weakMap */
     const instance = OidcProviderInstance(provider);
 
-    const fakePrivKey = { ...(key as object), d: 'not-a-private' };
-    instance.keystore = new KeyStore([fakePrivKey]);
+    const fakePrivKeys = sigHsmPubKeys.map((key: KeyLike) => {
+      return { ...(key as object), d: 'not-a-private' };
+    });
+
+    instance.keystore = new KeyStore(fakePrivKeys as unknown as KeyLike[]);
 
     /** Override jwksResponse */
-    instance.jwksResponse = { keys: [key] };
+    instance.jwksResponse = { keys: sigHsmPubKeys };
   }
 
   private getOidcProviderService(): OidcProviderService {

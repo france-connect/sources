@@ -160,6 +160,12 @@ _up() {
       min-storybook)
         services="$services min-storybook"
         ;;
+      usagers-fca)
+        services="$services usagers-fca"
+        ;;
+      mock-rnipp)
+        services="$services mock-rnipp"
+        ;;
       all)
         services=all
         break
@@ -185,6 +191,8 @@ _up() {
         echo "  - hybridge-fca-low => up minimal needed services to run core-fca-low fca-low-front bridge-proxy-rie fsa1-low lemon-ldap"
         echo "  - partners-fca => up minimal needed services to run partners fca front and back"
         echo "  - partners-fcp => up minimal needed services to run partners fcp front and back"
+        echo "  - usagers-fca => up minimal needed services to run usager agentConnect"
+        echo "  - mock-rnipp => up minimal needed services to run mock-rnipp"
         echo "  - min-storybook => up minimal needed services to run storybook"
         echo "  - all => run all services"
         echo "----"
@@ -430,6 +438,11 @@ _reset_db_fcp_high() {
   cd ${WORKING_DIR} && docker-compose exec $NO_TTY mongo-fcp-high /opt/scripts/manage.sh --reset-db
 }
 
+_reset_db_fcp_low() {
+  echo "Reseting Core FCP low mongo database..."
+  cd ${WORKING_DIR} && docker-compose exec $NO_TTY mongo-fcp-low /opt/scripts/manage.sh --reset-db
+}
+
 _reset_db_core_fca_low() {
   echo "Reseting Core FCA LOW mongo database..."
   cd ${WORKING_DIR} && docker-compose exec $NO_TTY mongo-fca-low /opt/scripts/manage.sh --reset-db
@@ -579,6 +592,9 @@ case "$action" in
     ;;
   reset-db-core-fcp-high)
     _reset_db_fcp_high $@
+    ;;
+  reset-db-core-fcp-low)
+    _reset_db_fcp_low $@
     ;;
   reset-db-core-fca-low)
     _reset_db_core_fca_low $@

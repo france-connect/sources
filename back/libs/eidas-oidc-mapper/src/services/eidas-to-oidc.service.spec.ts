@@ -8,8 +8,8 @@ import {
   EidasSubStatusCodes,
 } from '@fc/eidas';
 import { LoggerService } from '@fc/logger-legacy';
-import { AcrValues } from '@fc/oidc';
 
+import { AcrValues } from '../enums';
 import { EidasToOidcService } from './eidas-to-oidc.service';
 
 describe('EidasToOidcService', () => {
