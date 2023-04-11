@@ -46,6 +46,7 @@ export const scopes: IScopes = {
     claims.rnipp_family_name,
     claims.given_name,
     claims.rnipp_given_name,
+    claims.rnipp_given_name_array,
     claims.birthdate,
     claims.rnipp_birthdate,
     claims.birthplace,
@@ -61,7 +62,11 @@ export const scopes: IScopes = {
   rnipp_family_name: [claims.family_name, claims.rnipp_family_name],
   // oidc fashioned name
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  rnipp_given_name: [claims.given_name, claims.rnipp_given_name],
+  rnipp_given_name: [
+    claims.given_name,
+    claims.rnipp_given_name,
+    claims.rnipp_given_name_array,
+  ],
   // oidc fashioned name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   rnipp_birthdate: [claims.birthdate, claims.rnipp_birthdate],
@@ -76,6 +81,7 @@ export const scopes: IScopes = {
   rnipp_profile: [
     claims.given_name,
     claims.rnipp_given_name,
+    claims.rnipp_given_name_array,
     claims.family_name,
     claims.rnipp_family_name,
     claims.birthdate,

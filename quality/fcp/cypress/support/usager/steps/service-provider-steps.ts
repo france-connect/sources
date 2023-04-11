@@ -6,8 +6,8 @@ import {
   isUsingFCBasicAuthorization,
   navigateTo,
 } from '../../common/helpers';
-import { ServiceProvider } from '../../common/types';
-import { getScopeByType } from '../helpers';
+import { ServiceProvider, UserClaims } from '../../common/types';
+import { getClaims, getRnippClaims, getScopeByType } from '../helpers';
 import ServiceProviderPage from '../pages/service-provider-page';
 
 let serviceProviderPage: ServiceProviderPage;
@@ -88,9 +88,36 @@ Then('je suis connecté au fournisseur de service', function () {
 Then(
   /le fournisseur de service a accès aux informations (?:du|des) scopes? "([^"]+)"/,
   function (type) {
+    const allClaims: UserClaims = this.user.allClaims;
     if (this.serviceProvider.mocked === true) {
+      const platform: string = Cypress.env('PLATFORM');
       const scope = getScopeByType(this.scopes, type);
-      serviceProviderPage.checkMockInformationAccess(scope, this.user.claims);
+      const expectedClaims = getClaims(scope);
+      if (platform === 'fcp-high') {
+        // Get automatically the equivalent RNIPP claims
+        const rnippClaims = getRnippClaims(allClaims);
+        const userClaims = {
+          ...rnippClaims,
+          ...allClaims,
+        };
+        serviceProviderPage.checkMockInformationAccess(
+          expectedClaims,
+          userClaims,
+        );
+        return;
+      }
+      if (platform === 'fcp-low') {
+        // Force the given_name_array claim into expectedClaim
+        if (expectedClaims.includes('given_name')) {
+          expectedClaims.push('given_name_array');
+        }
+        serviceProviderPage.checkMockInformationAccess(
+          expectedClaims,
+          allClaims,
+        );
+        return;
+      }
+      serviceProviderPage.checkMockInformationAccess(expectedClaims, allClaims);
     }
   },
 );
@@ -113,6 +140,19 @@ Then("la cinématique a renvoyé l'amr {string}", function (amrValue) {
 Then("la cinématique n'a pas renvoyé d'amr", function () {
   serviceProviderPage.checkMockAmrValue('N/A');
 });
+
+Then(
+  'le token retourné au FS est signé avec la clé provenant du HSM',
+  function () {
+    serviceProviderPage.getMockIdTokenText().then((idToken: string) => {
+      const es256SigPubKey = Cypress.env('ES256_SIG_PUB_KEY');
+      cy.task('isJwsValid', {
+        jws: idToken,
+        sigPubKey: es256SigPubKey,
+      }).should('be.true');
+    });
+  },
+);
 
 Then(
   'je suis redirigé vers la page erreur du fournisseur de service',

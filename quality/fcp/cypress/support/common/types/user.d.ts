@@ -5,7 +5,7 @@ export interface UserCredentials {
 }
 
 export interface UserClaims {
-  [key: string]: string;
+  [key: string]: string | string[];
 }
 
 export interface UserData {

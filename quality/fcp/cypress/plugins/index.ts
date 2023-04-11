@@ -8,6 +8,7 @@ import * as resolve from 'resolve';
 
 import { log, table } from './console-log-plugin';
 import { getFixturePath } from './fixture-plugin';
+import { isJwsValid } from './is-jws-valid.plugin';
 import { clearBusinessLog, hasBusinessLog } from './log-plugin';
 import { tracksBuilder } from './tracks-plugin';
 
@@ -28,6 +29,7 @@ const pluginConfig = (
     clearBusinessLog,
     getFixturePath,
     hasBusinessLog,
+    isJwsValid,
     log,
     table,
   });

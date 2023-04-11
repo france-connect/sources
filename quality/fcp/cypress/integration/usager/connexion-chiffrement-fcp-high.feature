@@ -30,3 +30,20 @@ Fonctionnalité: Connexion avec chiffrement
       | eidas3    |                  | RS256     |
       | eidas3    | RSA-OAEP,A256GCM | RS256     |
       | eidas3    | ECDH-ES,A256GCM  | ES256     |
+
+  @ignoreInteg01
+  Scénario: Connexion - FCP high - Le HSM est utilisé pour signer les réponses aux FS
+    Etant donné que le fournisseur de service requiert l'accès aux informations du scope "identite_pivot"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que j'utilise un fournisseur d'identité "actif"
+    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Et que je m'authentifie avec succès
+    Et que je suis redirigé vers la page confirmation de connexion
+    Et que les informations demandées par le fournisseur de service correspondent au scope "identite_pivot"
+    Quand je continue sur le fournisseur de service
+    Alors je suis redirigé vers la page fournisseur de service
+    Et je suis connecté au fournisseur de service
+    Et le token retourné au FS est signé avec la clé provenant du HSM

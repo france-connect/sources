@@ -88,6 +88,7 @@ export class IdentityProviderAdapterMongoService
         {
           _id: false,
           active: true,
+          isBeta: true,
           authzURL: true,
           clientID: true,
           // oidc defined variable name

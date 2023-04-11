@@ -10,10 +10,20 @@ interface EidasMockConfigurationInterface {
   spType?: 'not provided' | 'public' | 'private';
 }
 
+interface UserEidasClaimsInterface {
+  birthdate: string;
+  PlaceOfBirth: string;
+  family_name: string;
+  gender: string;
+  given_name: string;
+  PersonIdentifier: string;
+  preferred_username: string;
+}
+
 interface ScopeEidasAttributesMapInterface {
   [key: string]: {
     name: string;
-    transform(claims: UserClaims): string;
+    transform(claims: UserEidasClaimsInterface): string;
   };
 }
 
@@ -120,12 +130,12 @@ export default class SpEidasMockPage {
     eidasClaims: UserClaims,
     spName: string,
   ): void {
-    const allClaims: UserClaims = {
+    const allClaims = {
       ...userClaims,
       ...eidasClaims,
       // Force PersonIdentifier claim for the current sp
       PersonIdentifier: eidasClaims[`PersonIdentifier-${spName}`],
-    };
+    } as UserEidasClaimsInterface;
 
     const expectedIdentity = this.getExpectedIdentity(scopes, allClaims);
 
@@ -172,7 +182,7 @@ export default class SpEidasMockPage {
 
   private getExpectedIdentity(
     scopes: string[],
-    claims: UserClaims,
+    claims: UserEidasClaimsInterface,
   ): IdentityAttributeInterface[] {
     // Add empty string preferred_username claim when scope not requested
     const PREFERRED_USERNAME_SCOPE = 'preferred_username';

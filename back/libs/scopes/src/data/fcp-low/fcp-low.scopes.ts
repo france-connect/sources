@@ -4,6 +4,7 @@ import { claims } from './fcp-low.claims';
 export const scopes: IScopes = {
   profile: [
     claims.given_name,
+    claims.given_name_array,
     claims.family_name,
     claims.birthdate,
     claims.gender,
@@ -15,6 +16,7 @@ export const scopes: IScopes = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   identite_pivot: [
     claims.given_name,
+    claims.given_name_array,
     claims.family_name,
     claims.birthdate,
     claims.gender,
@@ -28,7 +30,7 @@ export const scopes: IScopes = {
   birthplace: [claims.birthplace],
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  given_name: [claims.given_name],
+  given_name: [claims.given_name, claims.given_name_array],
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
   family_name: [claims.family_name],

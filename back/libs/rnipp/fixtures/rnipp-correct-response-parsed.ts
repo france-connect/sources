@@ -22,7 +22,7 @@ export const rnippCorrectResponseParsed = {
             Individu: [
               {
                 Noms: [{ NomFamille: ['DUBOIS'] }],
-                Prenoms: [{ Prenom: ['Angela Claire Louise'] }],
+                Prenoms: [{ Prenom: ['Angela', 'Claire', 'Louise'] }],
                 Naissance: [
                   {
                     DateNaissance: ['1962-08-24'],

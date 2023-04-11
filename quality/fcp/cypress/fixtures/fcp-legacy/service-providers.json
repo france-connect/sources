@@ -102,6 +102,23 @@
     "authorizeHttpMethod": "get"
   },
   {
+    "name": "fsp3",
+    "clientId": "6495f347513b860e6b931fae4a1ba70c8489a558a0fc74ecdc094d48a4035e77",
+    "descriptions": ["privé connecté à FD traces"],
+    "mocked": true,
+    "url": "https://fsp3.{{TEST_ENV}}.dev-franceconnect.fr",
+    "redirectUri": "https://fsp3.{{TEST_ENV}}.dev-franceconnect.fr/tracks-callback",
+    "acrValue": "eidas1",
+    "claims": [],
+    "scopes": ["tous les scopes"],
+    "explicitConsent": true,
+    "selectors": {
+      "fcButton": "[data-role='login-authorize'] input",
+      "logoutButton": "[data-fc-logout-url='/logout']"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
     "name": "ud-home",
     "clientId": "myclientidforud-back-with-so-many-characters",
     "descriptions": ["user-dashboard"],

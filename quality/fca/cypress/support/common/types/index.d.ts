@@ -3,6 +3,7 @@
 export * from './environment';
 export * from './identity-provider';
 export * from './service-provider';
+export * from './service-provider-config';
 export * from './user';
 
 // Cypress Alias

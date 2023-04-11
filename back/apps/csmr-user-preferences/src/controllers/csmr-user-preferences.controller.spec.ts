@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
-import { IPivotIdentity } from '@fc/cryptography-fcp';
 import { LoggerService } from '@fc/logger-legacy';
 
 import { SetIdpSettingsPayloadDto } from '../dto';
+import { IPivotIdentity } from '../interfaces';
 import { CsmrUserPreferencesService } from '../services';
 import { CsmrUserPreferencesController } from './csmr-user-preferences.controller';
 

@@ -4,7 +4,6 @@ import {
   ServiceProviderBase,
   UserClaims,
 } from '../../common/types';
-import { getClaims } from '../helpers';
 
 export default class ServiceProviderPage {
   clientId: string;
@@ -127,10 +126,9 @@ export default class ServiceProviderPage {
   }
 
   checkMockInformationAccess(
-    requestedScope: ScopeContext,
+    expectedClaims: string[],
     userClaims: UserClaims,
   ): void {
-    const expectedClaims = getClaims(requestedScope);
     cy.get('#json-output')
       .invoke('text')
       .then((text) => {
@@ -235,6 +233,10 @@ export default class ServiceProviderPage {
 
   checkMockAmrValue(amrValue: string): void {
     cy.get('[id="info-amr"] strong').contains(amrValue);
+  }
+
+  getMockIdTokenText(): Cypress.Chainable<string> {
+    return cy.get('[id="info-id-token"]').invoke('text');
   }
 
   checkMockErrorCallback(): void {

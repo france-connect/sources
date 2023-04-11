@@ -1,4 +1,10 @@
-import { IsEnum, IsString, MinLength, ValidateIf } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsString,
+  MinLength,
+  ValidateIf,
+} from 'class-validator';
 
 import { IsCog } from '@fc/cog';
 
@@ -23,6 +29,12 @@ export class RnippPivotIdentity {
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly given_name: string;
+
+  @IsString({ each: true })
+  @IsArray()
+  // variable name based on given_name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly given_name_array: string[];
 
   @IsString()
   @IsRnippBirthdate()

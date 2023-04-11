@@ -9,6 +9,9 @@ export interface IOidcIdentity {
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   given_name: string;
+  // variable name based on given_name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  given_name_array: string[];
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   family_name: string;

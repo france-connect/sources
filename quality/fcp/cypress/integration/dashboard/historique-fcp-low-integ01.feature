@@ -25,6 +25,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
 
+  @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS public avec scope data
     Etant donné que j'utilise un compte usager "pour les tests de traces"
     Et que j'utilise le fournisseur de service "pour les scopes data"
@@ -58,6 +59,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et l'évènement concerne 1 donnée "CNAM"
     Et les données "CNAM" de l'évènement contiennent "Paiements d'indemnités journalières versés par l’Assurance Maladie"
 
+  @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS privé avec scope identité
     Etant donné que j'utilise un compte usager "pour les tests de traces"
     Et que j'utilise le fournisseur de service "privé avec consentement obligatoire"
@@ -137,6 +139,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et l'évènement concerne 1 donnée "CNAM"
     Et les données "CNAM" de l'évènement contiennent "Paiements d'indemnités journalières versés par l’Assurance Maladie"
 
+  @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS privé avec scope anonyme
     Etant donné que j'utilise un compte usager "pour les tests de traces"
     Et que j'utilise le fournisseur de service "privé avec consentement obligatoire"
@@ -155,29 +158,65 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
 
+  @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS public avec scope traces
     Etant donné que j'utilise un compte usager "pour les tests de traces"
     Et que j'utilise le fournisseur de service "connecté à FD traces"
     Et que le fournisseur de service requiert l'accès aux informations du scope "connexion_tracks"
-    Et que j'ai fait une cinématique FranceConnect Legacy
+    Et que j'ai fait une cinématique FranceConnect
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
-    Et 2 évènements "FranceConnect" sont affichés
-    Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Service Provider Example"
+    Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Service Provider Example - Authentication"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Connexion"
     Et la date de l'évènement correspond à aujourd'hui
     Et le fournisseur de service de l'évènement est "Service Provider Example - Authentication"
     Et la date et heure de connexion correspondent à maintenant
     # Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
-    Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Service Provider Example"
+    Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Service Provider Example - Authentication"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Échange de Données"
     Et la date de l'évènement correspond à aujourd'hui
     Et le fournisseur de service de l'évènement est "Service Provider Example - Authentication"
+    Et la date et heure de l'évènement correspondent à maintenant
+    Et l'évènement concerne aucune donnée "FCP_LOW"
+    Et l'évènement concerne 1 donnée "FC_TRACKS"
+    Et les données "FC_TRACKS" de l'évènement contiennent "Historique de connexions"
+  
+  Scénario: Historique Connexion - FC Legacy - FS privé avec scope traces
+    Etant donné que j'utilise un compte usager "pour les tests de traces"
+    Et que j'utilise le fournisseur de service "privé connecté à FD traces"
+    Et que le fournisseur de service requiert l'accès aux informations du scope "connexion_tracks"
+    Et que j'ai fait une cinématique FranceConnect
+    Et que je navigue sur la page d'accueil du dashboard usager
+    Quand je me connecte au dashboard usager
+    Alors je suis redirigé vers la page historique du dashboard usager
+    Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Service Provider Example - Data"
+    Et la plateforme de l'évènement est "FranceConnect"
+    Et le type d'action de l'évènement est "Connexion"
+    Et la date de l'évènement correspond à aujourd'hui
+    Et le fournisseur de service de l'évènement est "Service Provider Example - Data"
+    Et la date et heure de connexion correspondent à maintenant
+    # Et la localisation de l'évènement est affichée
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
+    Et le niveau de sécurité de l'évènement est "Faible"
+    Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Service Provider Example - Data"
+    Et la plateforme de l'évènement est "FranceConnect"
+    Et le type d'action de l'évènement est "Autorisation"
+    Et la date de l'évènement correspond à aujourd'hui
+    Et le fournisseur de service de l'évènement est "Service Provider Example - Data"
+    Et la date et heure de l'évènement sont affichées
+    Et l'évènement concerne aucune donnée "FCP_LOW"
+    Et l'évènement concerne 1 donnée "FC_TRACKS"
+    Et les données "FC_TRACKS" de l'évènement contiennent "Historique de connexions"
+    Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Service Provider Example - Data"
+    Et la plateforme de l'évènement est "FranceConnect"
+    Et le type d'action de l'évènement est "Échange de Données"
+    Et la date de l'évènement correspond à aujourd'hui
+    Et le fournisseur de service de l'évènement est "Service Provider Example - Data"
     Et la date et heure de l'évènement correspondent à maintenant
     Et l'évènement concerne aucune donnée "FCP_LOW"
     Et l'évènement concerne 1 donnée "FC_TRACKS"

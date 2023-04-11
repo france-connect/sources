@@ -117,7 +117,11 @@ export default {
       ],
       // oidc fashioned name
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      rnipp_given_name: ['given_name', 'rnipp_given_name'],
+      rnipp_given_name: [
+        'given_name',
+        'rnipp_given_name',
+        'rnipp_given_name_array',
+      ],
       // oidc fashioned name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       rnipp_family_name: ['family_name', 'rnipp_family_name'],
@@ -142,6 +146,7 @@ export default {
         'gender',
         'preferred_username',
         'rnipp_given_name',
+        'rnipp_given_name_array',
         'rnipp_family_name',
         'rnipp_birthdate',
         'rnipp_gender',
@@ -164,6 +169,7 @@ export default {
         'birthplace',
         'birthcountry',
         'rnipp_given_name',
+        'rnipp_given_name_array',
         'rnipp_family_name',
         'rnipp_birthdate',
         'rnipp_gender',

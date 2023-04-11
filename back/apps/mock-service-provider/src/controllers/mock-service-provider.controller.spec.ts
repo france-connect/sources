@@ -52,21 +52,22 @@ describe('MockServiceProviderController', () => {
   };
 
   const sessionServiceMock = {
+    destroy: jest.fn(),
     set: jest.fn(),
     get: jest.fn(),
   };
 
-  const interactionIdMock = 'interactionIdMockValue';
   const nonceMock = 'nonceMockValue';
   const idpStateMock = 'idpStateMockValue';
   const idpNonceMock = 'idpNonceMockValue';
+  const idpIdentityMock = 'idpIdentityValue';
   const idpIdTokenMock = 'idpIdTokenMockValue';
   const idpIdMock = 'idpIdMockValue';
 
   const sessionDataMock = {
-    interactionId: interactionIdMock,
     idpNonce: idpNonceMock,
     idpState: idpStateMock,
+    idpIdentity: idpIdentityMock,
     idpIdToken: idpIdTokenMock,
     idpId: idpIdMock,
   };
@@ -201,9 +202,6 @@ describe('MockServiceProviderController', () => {
     };
 
     req = {
-      fc: {
-        interactionId: interactionIdMock,
-      },
       query: {
         firstQueryParam: 'first',
         secondQueryParam: 'second',
@@ -285,15 +283,25 @@ describe('MockServiceProviderController', () => {
   describe('verify', () => {
     it('Should call session.get', async () => {
       // When
-      await controller.getVerify(sessionServiceMock);
+      await controller.getVerify(res, sessionServiceMock);
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.get).toHaveBeenCalledWith();
     });
 
+    it('Should redirect to the home page if empty session', async () => {
+      // Given
+      sessionServiceMock.get.mockResolvedValueOnce({});
+      // When
+      await controller.getVerify(res, sessionServiceMock);
+      // Then
+      expect(res.redirect).toHaveBeenCalledTimes(1);
+      expect(res.redirect).toHaveBeenCalledWith('/');
+    });
+
     it('Should return session data and hardcoded title', async () => {
       // When
-      const result = await controller.getVerify(sessionServiceMock);
+      const result = await controller.getVerify(res, sessionServiceMock);
       // Then
       expect(result).toEqual({
         titleFront: 'Mock Service Provider - Login Callback',
@@ -432,7 +440,14 @@ describe('MockServiceProviderController', () => {
   });
 
   describe('retrieveUserinfo', () => {
-    it('should retrieve and display userinfo on userinfo page', async () => {
+    const idpIdTokenMock =
+      'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikhlcm1hbiIsImZpcnN0X25hbWUiOiJTdMOpcGhhbmUiLCJpYXQiOjE1MTYyMzkwMjJ9.EWgP3XF8uccp5uokOJV9MFgOwGzcXOW1PlNnAoo1D1ScMB6rv352kFdWORzllA2oJqrpvlY4yI_NpyI5FDQzyQ';
+
+    beforeEach(() => {
+      sessionServiceMock.get.mockResolvedValueOnce(idpIdTokenMock);
+    });
+
+    it('should retrieve and display userinfo as well as cinematic information on userinfo page', async () => {
       // setup
       const providerUid = 'envIssuer';
       const body = { accessToken: 'access_token' };
@@ -442,16 +457,7 @@ describe('MockServiceProviderController', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         given_name: 'given_name',
       });
-      // action
-      const result = await controller.retrieveUserinfo(res, body);
-
-      // assert
-      expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledTimes(1);
-      expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledWith(
-        body.accessToken,
-        providerUid,
-      );
-      expect(result).toEqual({
+      const expectedOutput = {
         accessToken: 'access_token',
         titleFront: 'Mock Service Provider - Userinfo',
         idpIdentity: {
@@ -460,7 +466,23 @@ describe('MockServiceProviderController', () => {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           given_name: 'given_name',
         },
-      });
+        idpIdToken: idpIdTokenMock,
+      };
+
+      // action
+      const result = await controller.retrieveUserinfo(
+        res,
+        body,
+        sessionServiceMock,
+      );
+
+      // assert
+      expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledTimes(1);
+      expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledWith(
+        body.accessToken,
+        providerUid,
+      );
+      expect(result).toEqual(expectedOutput);
     });
 
     it('should redirect to the error page if getUserInfo throw an error', async () => {
@@ -469,7 +491,7 @@ describe('MockServiceProviderController', () => {
       oidcClientServiceMock.utils.getUserInfo.mockRejectedValue(oidcErrorMock);
 
       // action
-      await controller.retrieveUserinfo(res, body);
+      await controller.retrieveUserinfo(res, body, sessionServiceMock);
 
       // assert
       expect(res.redirect).toHaveBeenCalledTimes(1);
@@ -485,15 +507,25 @@ describe('MockServiceProviderController', () => {
 
       // assert
       expect(
-        async () => await controller.retrieveUserinfo(res, body),
+        async () =>
+          await controller.retrieveUserinfo(res, body, sessionServiceMock),
       ).rejects.toThrow(MockServiceProviderUserinfoException);
     });
   });
 
   describe('logoutCallback', () => {
-    it('should redirect on the home page', async () => {
+    it('should destroy the client session', async () => {
       // action
-      await controller.logoutCallback(res);
+      await controller.logoutCallback(req, res);
+
+      // assert
+      expect(sessionServiceMock.destroy).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.destroy).toHaveBeenCalledWith(req, res);
+    });
+
+    it('should redirect to the home page', async () => {
+      // action
+      await controller.logoutCallback(req, res);
 
       // assert
       expect(res.redirect).toHaveBeenCalledTimes(1);
@@ -609,7 +641,7 @@ describe('MockServiceProviderController', () => {
       amr: amrMock,
       idpAccessToken: accessTokenMock,
     };
-    const redirectMock = `/api/v2/interaction/${interactionIdMock}/verify`;
+    const redirectMock = `/api/v2/interaction/verify`;
 
     beforeEach(() => {
       oidcClientServiceMock.getTokenFromProvider.mockReturnValueOnce({

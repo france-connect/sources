@@ -12,6 +12,9 @@ export class IdentityProvider extends Document {
   @Prop({ index: true, type: String })
   clientID: string;
 
+  @Prop({ type: Boolean })
+  isBeta: boolean;
+
   @Prop({ type: String })
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -2,11 +2,14 @@ import { ILabelMapping } from '../../interfaces';
 import { claims } from './fcp-low.claims';
 
 export const labels: ILabelMapping<typeof claims> = {
-  sub: 'sub',
+  sub: null,
   gender: 'Sexe',
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
   given_name: 'Prénom(s)',
+  // OIDC fashion naming
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  given_name_array: null,
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
   family_name: 'Nom de naissance',

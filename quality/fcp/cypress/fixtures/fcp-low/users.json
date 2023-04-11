@@ -2,7 +2,8 @@
   {
     "enabled": true,
     "criteria": [
-      "par défaut"
+      "par défaut",
+      "avec un prénom"
     ],
     "credentials": [
       {
@@ -98,5 +99,77 @@
         "password": "123"
       }
     ]
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec 3 prénoms"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "bdd_last_connection",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "Angela Claire Louise",
+      "family_name": "DULAC",
+      "birthdate": "1962-08-24",
+      "birthplace": "75107",
+      "birthcountry": "99100",
+      "email": "x1_bdd_last_connection@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec prénom composé"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "prénom_composé",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "given_name": "Anne-Laure",
+      "family_name": "HUCHE",
+      "birthdate": "1945-09-30",
+      "gender": "female",
+      "birthcountry": "99100",
+      "birthplace": "31555",
+      "email": "owallottim-1136@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec un prénom contenant un espace"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "prénom_composé_avec_espace",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "given_name": "Jean_PrénomComposéAvecEspace",
+      "family_name": "Martin",
+      "birthdate": "1962-08-24",
+      "gender": "male",
+      "preferred_username": "Martin",
+      "birthcountry": "99100",
+      "birthplace": "75107",
+      "email": "multiPrenom@france.fr",
+      "given_name_array": [
+        "Jean Philippe",
+        "Pierre",
+        "Louis"
+      ]
+    }
   }
 ]

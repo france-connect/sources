@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { RequiredExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger-legacy';
@@ -25,9 +24,14 @@ export class CryptographyFcpService {
    * @returns the identity hash "hex" digested
    */
   computeIdentityHash(
-    pivotIdentity: RequiredExcept<
+    pivotIdentity: Pick<
       IPivotIdentity,
-      'sub' | 'email' | 'preferred_username'
+      | 'given_name'
+      | 'family_name'
+      | 'birthdate'
+      | 'gender'
+      | 'birthplace'
+      | 'birthcountry'
     >,
   ): string {
     const serial =

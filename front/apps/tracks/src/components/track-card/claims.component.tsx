@@ -24,10 +24,7 @@ export const ClaimsComponent = React.memo(
       .setLocale('fr')
       .toFormat(options.LUXON_FORMAT_DATETIME_SHORT_FR);
 
-    const filteredClaims = claims.filter(
-      ({ identifier }) => identifier !== 'sub' && !identifier.startsWith('rnipp_'),
-    );
-
+    const filteredClaims = claims.filter(({ label }) => label !== null);
     const groupedClaims: IGroupedClaims = groupByDataProvider(filteredClaims);
 
     let globalBaseLine =

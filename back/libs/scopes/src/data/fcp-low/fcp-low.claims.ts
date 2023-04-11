@@ -8,6 +8,8 @@ export const claims: IClaims = {
   given_name: 'given_name',
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
+  given_name_array: 'given_name_array',
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   family_name: 'family_name',
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention

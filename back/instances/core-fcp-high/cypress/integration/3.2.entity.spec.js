@@ -21,7 +21,7 @@ describe('3.2 - Entity', () => {
     cy.get('#consent').click();
 
     // return to FS
-    cy.url().should('match', /interaction\/[^\/]+\/verify/);
+    cy.url().should('match', /interaction\/verify/);
 
     // Capture Sub from the first SP
     cy.get('#json-output').then((elem) => {
@@ -45,7 +45,7 @@ describe('3.2 - Entity', () => {
     cy.get('#consent').click();
 
     // return to FS
-    cy.url().should('match', /interaction\/[^\/]+\/verify/);
+    cy.url().should('match', /interaction\/verify/);
 
     // Compare the two Sub from two linked FS
     cy.get('@client:sub').then(({ sub: previousSub }) => {

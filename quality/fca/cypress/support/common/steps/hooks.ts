@@ -47,6 +47,7 @@ beforeEach(function () {
   const pathArray = [platform, testEnv];
   setFixtureContext('environment.json', pathArray, 'env');
   setFixtureContext('service-providers.json', pathArray, 'serviceProviders');
+  setFixtureContext('service-provider-configs.json', pathArray, 'spConfigs');
   setFixtureContext('identity-providers.json', pathArray, 'identityProviders');
   setFixtureContext('scopes.json', pathArray, 'scopes');
   setFixtureContext('users.json', pathArray, 'users');

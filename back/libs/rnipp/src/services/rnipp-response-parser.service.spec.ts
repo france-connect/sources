@@ -25,6 +25,8 @@ describe('RnippResponseParserService', () => {
     // openid claim
     // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Angela Claire Louise',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    given_name_array: ['Angela', 'Claire', 'Louise'],
     birthdate: '1962-08-24',
     birthplace: '75107',
     birthcountry: '99100',
@@ -134,9 +136,10 @@ describe('RnippResponseParserService', () => {
       service['getGenderFromParsedXml'] = jest
         .fn()
         .mockReturnValue(rnippIdentityMock.gender);
-      service['getGivenNamesAttribute'] = jest
-        .fn()
-        .mockReturnValue(rnippIdentityMock.given_name);
+      service['getGivenNamesAttribute'] = jest.fn().mockReturnValue({
+        givenName: rnippIdentityMock.given_name,
+        givenNameArray: rnippIdentityMock.given_name_array,
+      });
       service['getBirthcountryAttribute'] = jest
         .fn()
         .mockReturnValue(rnippIdentityMock.birthcountry);
@@ -416,14 +419,11 @@ describe('RnippResponseParserService', () => {
   });
 
   describe('getGivenNamesAttribute', () => {
-    beforeEach(() => {
-      service['getXmlAttribute'] = jest
-        .fn()
-        .mockReturnValueOnce(rnippIdentityMock.given_name.split(' '));
-    });
-
     it('should call "getXmlAttribute" with the parsed XML, the path to follow in the parsed XML and "[]" as default value', () => {
       // action
+      service['getXmlAttribute'] = jest
+        .fn()
+        .mockReturnValueOnce([rnippIdentityMock.given_name]);
       service['getGivenNamesAttribute'](
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.GIVEN_NAME,
@@ -444,9 +444,11 @@ describe('RnippResponseParserService', () => {
         rnippCorrectResponseParsed as unknown as JSON,
         RnippXmlSelectors.GIVEN_NAME,
       );
-
       // expect
-      expect(result).toStrictEqual(rnippIdentityMock.given_name);
+      expect(result).toStrictEqual({
+        givenName: rnippIdentityMock.given_name,
+        givenNameArray: rnippIdentityMock.given_name_array,
+      });
     });
   });
 

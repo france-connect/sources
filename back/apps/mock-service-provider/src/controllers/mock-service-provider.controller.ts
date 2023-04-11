@@ -29,6 +29,7 @@ import {
   ISessionService,
   Session,
   SessionNotFoundException,
+  SessionService,
 } from '@fc/session';
 
 import { AccessTokenParamsDTO, AppConfig } from '../dto';
@@ -47,6 +48,7 @@ export class MockServiceProviderController {
     private readonly oidcClient: OidcClientService,
     private readonly logger: LoggerService,
     private readonly identityProvider: IdentityProviderAdapterEnvService,
+    private readonly sessionService: SessionService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -96,6 +98,7 @@ export class MockServiceProviderController {
   @Get(MockServiceProviderRoutes.VERIFY)
   @Render('login-callback')
   async getVerify(
+    @Res() res,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
@@ -105,6 +108,11 @@ export class MockServiceProviderController {
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
     const session = await sessionOidc.get();
+
+    // Redirect to the home page if no idpIdentity present in the session
+    if (!session?.idpIdentity) {
+      res.redirect('/');
+    }
 
     const response = {
       ...session,
@@ -155,11 +163,8 @@ export class MockServiceProviderController {
   }
 
   @Get(MockServiceProviderRoutes.LOGOUT_CALLBACK)
-  async logoutCallback(@Res() res) {
-    /**
-     * @TODO #192 ETQ Dev, je complète la session pendant la cinématique des mocks
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/192
-     */
+  async logoutCallback(@Req() req, @Res() res) {
+    await this.sessionService.destroy(req, res);
 
     this.logger.trace({
       route: MockServiceProviderRoutes.LOGOUT_CALLBACK,
@@ -265,7 +270,7 @@ export class MockServiceProviderController {
       throw new SessionNotFoundException('OidcClient');
     }
 
-    const { idpId, idpNonce, idpState, interactionId } = session;
+    const { idpId, idpNonce, idpState } = session;
 
     const tokenParams = {
       state: idpState,
@@ -302,7 +307,7 @@ export class MockServiceProviderController {
 
     // BUSINESS: Redirect to business page
     const { urlPrefix } = this.config.get<AppConfig>('App');
-    const url = `${urlPrefix}/interaction/${interactionId}/verify`;
+    const url = `${urlPrefix}/interaction/verify`;
 
     this.logger.trace({
       route: OidcClientRoutes.OIDC_CALLBACK,
@@ -318,7 +323,12 @@ export class MockServiceProviderController {
   @Post(MockServiceProviderRoutes.USERINFO)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @Render('login-callback')
-  async retrieveUserinfo(@Res() res, @Body() body: AccessTokenParamsDTO) {
+  async retrieveUserinfo(
+    @Res() res,
+    @Body() body: AccessTokenParamsDTO,
+    @Session('OidcClient')
+    sessionOidc: ISessionService<OidcClientSession>,
+  ) {
     let response;
     try {
       /**
@@ -333,10 +343,13 @@ export class MockServiceProviderController {
         providerUid,
       );
 
+      const idpIdToken = await sessionOidc.get('idpIdToken');
+
       response = {
         titleFront: 'Mock Service Provider - Userinfo',
         accessToken,
         idpIdentity,
+        idpIdToken,
       };
     } catch (e) {
       this.logger.trace({ e }, LoggerLevelNames.WARN);

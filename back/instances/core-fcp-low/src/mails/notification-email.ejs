@@ -2,16 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Notification de connexion à FranceConnect+</title>
+    <title>Notification de connexion à FranceConnect</title>
     <style type="text/css">
       body {
         margin: 0;
         padding: 0;
         min-width: 100%;
-      }
-
-      img {
-        height: auto;
+        font-family: 'Marianne', Arial, sans-serif;
       }
 
       .content {
@@ -24,7 +21,7 @@
       }
 
       .header {
-        padding: 16px 30px 26px 30px;
+        padding: 16px 30px 26px 16px;
       }
 
       .footer {
@@ -36,8 +33,8 @@
         padding: 0px 16px 0px 16px;
       }
 
-      .innerpadding25 {
-        padding: 0px 25px 0px 25px;
+      .innerpadding12 {
+        padding: 12px 16px 12px 12px;
       }
 
       .borderbottom {
@@ -47,13 +44,12 @@
       .h1,
       .h2,
       .bodycopy {
-        color: #494f58;
-        font-family: 'Helvetica Neue', Arial, sans-serif;
+        color: #3a3a3a;
       }
 
       a {
-        color: #034ea2;
-        font-family: 'Helvetica Neue', Arial, sans-serif;
+        color: #000091;
+        text-decoration: none;
       }
 
       strong {
@@ -74,12 +70,18 @@
         font-style: normal;
         line-height: 1.31;
         letter-spacing: normal;
-        color: #034ea2;
+        color: #000091;
       }
 
       .bodycopy {
         font-size: 16px;
-        line-height: 22px;
+        line-height: 24px;
+      }
+
+      .bodycopy-small {
+        font-size: 14px;
+        line-height: 24px;
+        color: #666666;
       }
 
       .bold {
@@ -125,19 +127,12 @@
           >
             <tr>
               <td class="header">
-                <table
-                  align="center"
-                  border="0"
-                  cellpadding="0"
-                  cellspacing="0"
-                >
+                <table border="0" cellpadding="0" cellspacing="0">
                   <tr>
                     <td height="73">
                       <img
-                        class="fix"
-                        src="https://<%= locals.fqdn %>/img/fc_logo.png"
-                        width="150"
-                        height="73"
+                        src="https://franceconnect.gouv.fr/images/Marianne-FranceConnect-logo.png"
+                        height="98"
                         border="0"
                         alt=""
                       />
@@ -155,13 +150,15 @@
               <![endif]-->
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td class="h2">
-                      Bonjour,
-                    </td>
+                    <td class="h2">Bonjour,</td>
                   </tr>
                   <tr>
                     <td class="bodycopy">
-                      Une connexion a eu lieu gr&acirc;ce &agrave; FranceConnect+&nbsp;:
+                      Une connexion avec FranceConnect a eu lieu
+                      <strong><%= locals.today %></strong> (heure de Paris) sur
+                      le site <strong><%= locals.spName %></strong> avec votre
+                      compte
+                      <strong><%= locals.idpTitle %>.</strong>
                     </td>
                   </tr>
                 </table>
@@ -176,7 +173,7 @@
             <tr>
               <td
                 class="innerpadding"
-                style="padding-top: 25px; padding-bottom: 25px;"
+                style="padding-top: 25px; padding-bottom: 25px"
               >
                 <!--[if (gte mso 9)|(IE)]>
                 <table width="580" align="center" cellpadding="0" cellspacing="0" border="0">
@@ -185,59 +182,41 @@
               <![endif]-->
                 <table
                   class="content"
-                  bgcolor="#e5edf5"
+                  bgcolor="#f5f5fe"
                   align="center"
                   cellpadding="0"
                   cellspacing="0"
                   border="0"
-                  style="width: 100%; max-width: 580px;"
+                  style="width: 100%; max-width: 580px"
                 >
                   <tr>
                     <td
-                      class="bodycopy innerpadding25"
-                      style="padding-top: 25px; padding-left: 25px;"
+                      class="bodycopy-small"
+                      style="padding: 25px 0px 25px 25px"
                     >
-                      Date :
+                      <img
+                        src="https://franceconnect.gouv.fr/images/info_icon.png"
+                        height="25"
+                        width="25"
+                        border="0"
+                        alt=""
+                      />
                     </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="bodycopy bold innerpadding25"
-                      style="padding-left: 25px;"
-                    >
-                      <strong><%= locals.today %> (heure de Paris)</strong>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="bodycopy innerpadding25"
-                      style="padding-top: 15px; padding-left: 25px;"
-                    >
-                      Service :
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="bodycopy bold innerpadding25"
-                      style="padding-left: 25px;"
-                    >
-                      <strong><%= locals.spName %></strong>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="bodycopy innerpadding25"
-                      style="padding-top: 15px; padding-left: 25px;"
-                    >
-                      Compte utilis&eacute;&nbsp;:
-                    </td>
-                  </tr>
-                  <tr>
-                    <td
-                      class="bodycopy bold innerpadding25"
-                      style="padding-bottom: 25px; padding-left: 25px;"
-                    >
-                      <strong><%= locals.idpName %></strong>
+                    <td class="bodycopy-small innerpadding12">
+                      Si vous n&rsquo;&ecirc;tes pas &agrave; l&rsquo;origine de
+                      cette connexion,
+                      <strong>
+                        <a href="https://franceconnect.gouv.fr/faq#SECURITE"
+                          >consultez notre rubrique d&rsquo;aide
+                          d&eacute;di&eacute;e
+                          <img
+                            src="https://franceconnect.gouv.fr/images/arrow_icon.png"
+                            width="10"
+                            border="0"
+                            alt=""
+                          />
+                        </a>
+                      </strong>
                     </td>
                   </tr>
                 </table>
@@ -253,44 +232,49 @@
               <td class="innerpadding">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td class="bodycopy">
-                      Merci d&rsquo;avoir utilis&eacute; notre service.
+                    <td class="bodycopy-small">
+                      Vous recevez ce mail automatiquement apr&egrave;s chaque
+                      utilisation de FranceConnect pour vous aider &agrave;
+                      contr&ocirc;ler la s&eacute;curit&eacute; de vos
+                      acc&egrave;s. Si vous &ecirc;tes &agrave; l&rsquo;origine
+                      de cette connexion, aucune action n&rsquo;est requise.
                     </td>
                   </tr>
                   <tr>
-                    <td class="bodycopy bold" style="padding-top: 15px;">
-                      <strong>Si ce n&rsquo;&eacute;tait pas vous,
-                      <a href="https://franceconnect.gouv.fr/faq#SECURITE" style="color: #034ea2;">cliquez ici</a></strong>.
+                    <td class="bodycopy" style="padding-top: 15px">
+                      Pour suivre et contr&ocirc;ler votre utilisation de
+                      FranceConnect, vous pouvez &eacute;galement
+                      <strong>
+                        <a href="https://tableaudebord.franceconnect.gouv.fr"
+                          >consulter votre historique de connexions
+                          FranceConnect.</a
+                        >
+                      </strong>
                     </td>
                   </tr>
                   <tr>
-                    <td class="bodycopy" style="padding-top: 15px;">
-                      Pour plus d&rsquo;informations, consultez notre FAQ Usagers &agrave; l&rsquo;adresse suivante:  https://franceconnect.gouv.fr/faq .
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="bodycopy" style="padding-top: 15px;">
-                      Pour toute autre question en lien avec votre d&eacute;marche, merci
-                      de contacter le support du site <%= locals.spName %>.  
+                    <td class="bodycopy" style="padding-top: 15px">
+                      Pour toute autre question en lien avec votre
+                      d&eacute;marche, merci de contacter le support du site <%=
+                      locals.spName %>.
                     </td>
                   </tr>
                 </table>
               </td>
             </tr>
             <tr>
-              <td
-                class="innerpadding"
-                style="padding-top: 15px; padding-bottom: 24px;"
-              >
+              <td class="innerpadding" style="padding-top: 15px">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td class="bodycopy">
-                      Cordialement,
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="bodycopy" style="padding-top: 15px;">
-                      L&#8217;&eacute;quipe FranceConnect+
+                    <td
+                      class="bodycopy"
+                      style="
+                        padding-top: 15px;
+                        padding-bottom: 24px;
+                        font-style: italic;
+                      "
+                    >
+                      <i>L&rsquo;&eacute;quipe FranceConnect</i>
                     </td>
                   </tr>
                 </table>
@@ -303,7 +287,10 @@
                     <td class="bodycopy-small">
                       Si vous ne souhaitez plus recevoir ces notifications, vous
                       pouvez les d&eacute;sactiver
-                      <a class="bodycopy-small" style="text-decoration: underline;" href="[#DL:UNSUBSCRIBE-0#]"
+                      <a
+                        class="bodycopy-small"
+                        style="text-decoration: underline"
+                        href="[#DL:UNSUBSCRIBE-0#]"
                         >en cliquant ici</a
                       >. Vous ne serez plus pr&eacute;venu lors de
                       l&rsquo;utilisation de FranceConnect avec cette adresse

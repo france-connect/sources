@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { RequiredExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger-legacy';
@@ -29,9 +28,14 @@ describe('CryptographyFcpService', () => {
     decrypt: jest.fn(),
   };
 
-  const pivotIdentityMock: RequiredExcept<
+  const pivotIdentityMock: Pick<
     IPivotIdentity,
-    'sub' | 'email' | 'preferred_username'
+    | 'given_name'
+    | 'family_name'
+    | 'birthdate'
+    | 'gender'
+    | 'birthplace'
+    | 'birthcountry'
   > = {
     // scope openid @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
     // eslint-disable-next-line @typescript-eslint/naming-convention

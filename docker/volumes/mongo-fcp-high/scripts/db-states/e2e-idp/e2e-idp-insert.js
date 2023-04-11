@@ -6,6 +6,7 @@ db.provider.update(
     name: "idp-test-update",
     active: false,
     display: true,
+    isBeta: false,
     title: "Idp test Inserted",
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",

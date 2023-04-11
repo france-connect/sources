@@ -290,3 +290,40 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et l'évènement concerne 1 donnée "FC_TRACKS"
     Et les données "FC_TRACKS" de l'évènement contiennent "Historique de connexions"
 
+  Scénario: Historique Connexion - FC Legacy - FS privé avec scope traces
+    Etant donné que j'utilise un compte usager "pour les tests de traces"
+    Et que j'utilise le fournisseur de service "privé connecté à FD traces"
+    Et que le fournisseur de service requiert l'accès aux informations du scope "connexion_tracks"
+    Et que j'ai fait une cinématique FranceConnect
+    Et que les traces sont récupérées dans elasticsearch
+    Et que je navigue sur la page d'accueil du dashboard usager
+    Quand je me connecte au dashboard usager
+    Alors je suis redirigé vers la page historique du dashboard usager
+    Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
+    Et la plateforme de l'évènement est "FranceConnect"
+    Et le type d'action de l'évènement est "Connexion"
+    Et la date de l'évènement correspond à aujourd'hui
+    Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
+    Et la date et heure de connexion correspondent à maintenant
+    # Et la localisation de l'évènement est affichée
+    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
+    Et le niveau de sécurité de l'évènement est "Faible"
+    Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
+    Et la plateforme de l'évènement est "FranceConnect"
+    Et le type d'action de l'évènement est "Autorisation"
+    Et la date de l'évènement correspond à aujourd'hui
+    Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
+    Et la date et heure de l'évènement sont affichées
+    Et l'évènement concerne aucune donnée "FCP_LOW"
+    Et l'évènement concerne 1 donnée "FC_TRACKS"
+    Et les données "FC_TRACKS" de l'évènement contiennent "Historique de connexions"
+    Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
+    Et la plateforme de l'évènement est "FranceConnect"
+    Et le type d'action de l'évènement est "Échange de Données"
+    Et la date de l'évènement correspond à aujourd'hui
+    Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
+    Et la date et heure de l'évènement correspondent à maintenant
+    Et l'évènement concerne aucune donnée "FCP_LOW"
+    Et l'évènement concerne 1 donnée "FC_TRACKS"
+    Et les données "FC_TRACKS" de l'évènement contiennent "Historique de connexions"
+

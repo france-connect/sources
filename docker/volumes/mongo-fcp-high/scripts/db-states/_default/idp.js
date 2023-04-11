@@ -6,6 +6,7 @@ const fip = {
     name: "fip1-high",
     active: true,
     display: true,
+    isBeta: false,
     title: "IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt",
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
@@ -57,6 +58,7 @@ const fip = {
     name: "fip2-high",
     active: true,
     display: true,
+    isBeta: false,
     title: "IDP2 - Identity Provider - eIDAS élevé - nodiscov - nocrypt",
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
@@ -107,6 +109,7 @@ const fip = {
     name: "fip3-desactive-visible",
     active: false,
     display: true,
+    isBeta: false,
     title: "FIP3 - FI désactivé mais visible",
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
@@ -158,6 +161,7 @@ const fip = {
     name: "fip4-desactive-invisible",
     active: false,
     display: false,
+    isBeta: false,
     title: "FIP4 - FI désactivé et invisible",
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
@@ -209,6 +213,7 @@ const fip = {
     name: "fip5-active-invisible",
     active: true,
     display: false,
+    isBeta: false,
     title: "FIP5 - FI activé et invisible",
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
@@ -259,6 +264,7 @@ const fip = {
     name: "fip6-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP6 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt",
     image: "fi-mock-eleve.svg",
@@ -311,6 +317,7 @@ const fip = {
     name: "fip7-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP7 - Identity Provider - eIDAS élevé - blacklisted - discov - nocrypt",
     image: "fi-mock-eleve.svg",
@@ -361,6 +368,7 @@ const fip = {
     name: "fip8-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP8 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
     image: "fi-mock-eleve.svg",
@@ -409,6 +417,7 @@ const fip = {
     name: "fip9-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP9 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
     image: "fi-mock-eleve.svg",
@@ -457,6 +466,7 @@ const fip = {
     name: "fip10-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP10 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
     image: "fi-mock-eleve.svg",
@@ -507,6 +517,7 @@ const fip = {
     name: "fip11-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP11 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt",
     image: "fi-mock-eleve.svg",
@@ -559,6 +570,7 @@ const fip = {
     name: "fip12-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP12 - Identity Provider - eIDAS élevé - crypted (ECDH-ES + A256GCM) - signed (ES256)",
     image: "fi-mock-eleve.svg",
@@ -611,6 +623,7 @@ const fip = {
     name: "fip13-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP13 - Identity Provider - eIDAS élevé - crypted (ECDH-ES + A256GCM) - signed (ES256)",
     image: "fi-mock-eleve.svg",
@@ -663,6 +676,7 @@ const fip = {
     name: "fip14-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP14 - Identity Provider - eIDAS élevé - crypted (RSA-OAEP + A256GCM) - signed (RS256)",
     image: "fi-mock-eleve.svg",
@@ -715,6 +729,7 @@ const fip = {
     name: "fip15-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP15 - Identity Provider - eIDAS substantiel - crypted (RSA-OAEP + A256GCM) - signed (ES256)",
     image: "fi-mock-substantiel.svg",
@@ -769,6 +784,7 @@ const fip = {
     name: "fip16-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP16 - Identity Provider - eIDAS substantiel - crypted (ECDH-ES + A256GCM) - signed (RS256)",
     image: "fi-mock-substantiel.svg",
@@ -821,6 +837,7 @@ const fip = {
     name: "fip17-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP17 - Identity Provider - eIDAS substantiel - crypted (none) - signed (ES256)",
     image: "fi-mock-substantiel.svg",
@@ -873,6 +890,7 @@ const fip = {
     name: "fip18-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP18 - Identity Provider - eIDAS faible - crypted (none) - signed (ES256)",
     image: "fi-mock-faible.svg",
@@ -926,6 +944,7 @@ const fip = {
     name: "fip19-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP19 - Identity Provider - eIDAS faible - crypted (none) - signed (RS256)",
     image: "fi-mock-faible.svg",
@@ -978,6 +997,7 @@ const fip = {
     name: "fip20-high",
     active: true,
     display: true,
+    isBeta: false,
     title:
       "IDP20 - Identity Provider - eIDAS faible - crypted (none) - signed (HS256)",
     image: "fi-mock-faible.svg",
@@ -1022,6 +1042,58 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
     ],
   },
+   // -- FIP - FIP21-HIGH - BETA
+   "FIP21-HIGH": {
+    uid: "fip21-high",
+    name: "fip21-high",
+    active: true,
+    display: true,
+    isBeta: true,
+    title: "IDP21 - Identity Provider - eIDAS élevé - nodiscov - crypt - beta",
+    image: "fi-mock-eleve.svg",
+    imageFocus: "fi-mock-eleve.svg",
+    alt: "IDP21 - Identity Provider - eIDAS élevé - nodiscov - crypt - beta",
+    eidas: 3,
+    featureHandlers: {
+      coreVerify: "core-fcp-default-verify",
+      authenticationEmail: "core-fcp-send-email",
+      idpIdentityCheck: "core-fcp-default-identity-check",
+    },
+    mailto: "",
+    specificText: "specific text fip21-high",
+    url: "https://fip21-high.docker.dev-franceconnect.fr",
+    tokenURL: "https://fip21-high.docker.dev-franceconnect.fr/token",
+    userInfoURL: "https://fip21-high.docker.dev-franceconnect.fr/userinfo",
+    endSessionURL:
+      "https://fip21-high.docker.dev-franceconnect.fr/user/session/end",
+    statusURL: "https://fip21-high.docker.dev-franceconnect.fr/",
+    jwksURL: "https://fip21-high.docker.dev-franceconnect.fr/jwks",
+    authzURL: "https://fip21-high.docker.dev-franceconnect.fr/authorize",
+    discovery: false,
+    response_types: ["code"],
+    clientID: "09a1a2576d8c1742c74d6as3d84b31943",
+    client_secret:
+      "jClItOnQiSZdE4kxm7EWzJbz4ckfD89k1e3NJw/pbGRHD/Jp6ooupqmHTyc3b62L9wqyF2TlR/5hJejE",
+    order: 21,
+    createdAt: new Date("2022-02-23 17:09:17"),
+    updatedAt: new Date("2023-03-10 17:09:17"),
+    updatedBy: "admin",
+    id_token_signed_response_alg: "ES256",
+    token_endpoint_auth_method: "client_secret_post",
+    revocation_endpoint_auth_method: "client_secret_post",
+    id_token_encrypted_response_alg: "RSA-OAEP",
+    id_token_encrypted_response_enc: "A256GCM",
+    userinfo_signed_response_alg: "ES256",
+    userinfo_encrypted_response_alg: "RSA-OAEP",
+    userinfo_encrypted_response_enc: "A256GCM",
+    redirect_uris: [
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
+    ],
+    post_logout_redirect_uris: [
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+    ],
+  },
+
 
   // -- FIPEIDAS - FIPEIDASV2 - Activated
   EIDASBRIDGE: {
@@ -1032,6 +1104,7 @@ const fip = {
     title: "eIDAS Identity Provider",
     active: true,
     display: true,
+    isBeta: false,
     featureHandlers: {
       coreVerify: "core-fcp-eidas-verify",
       authenticationEmail: null,
@@ -1067,7 +1140,8 @@ const fip = {
     eidas: 3,
     mailto: "",
     specificText: "specific text fip1-high",
-    order: 21,
+    // order set at 99: to avoid to change every time a new FI is added
+    order: 99,
     createdAt: new Date("2022-02-23 17:09:17"),
     updatedAt: new Date("2023-03-10 17:09:17"),
     updatedBy: "admin",

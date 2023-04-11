@@ -18,6 +18,7 @@ describe('Identity Provider (Data Transfer Object)', () => {
     client_secret: '7vhnwzo1yUVOJT9GJ91gD5oid56effu1',
     discovery: false,
     display: false,
+    isBeta: false,
     eidas: 2,
     endSessionURL:
       'https://corev2.docker.dev-franceconnect.fr/api/v2/session/end',

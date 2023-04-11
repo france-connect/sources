@@ -120,5 +120,36 @@
       "given_name",
       "family_name"
     ]
+  },
+  {
+    "type": "tous les scopes rnipp (authorize)",
+    "scopes": [
+      "openid",
+      "rnipp_gender",
+      "rnipp_birthdate",
+      "rnipp_birthcountry",
+      "rnipp_birthplace",
+      "rnipp_given_name",
+      "rnipp_family_name"
+    ]
+  },
+  {
+    "type": "tous les scopes rnipp (userinfo)",
+    "scopes": [
+      "openid",
+      "gender",
+      "birthdate",
+      "birthcountry",
+      "birthplace",
+      "given_name",
+      "family_name",
+      "rnipp_gender",
+      "rnipp_birthdate",
+      "rnipp_birthcountry",
+      "rnipp_birthplace",
+      "rnipp_given_name",
+      "rnipp_given_name_array",
+      "rnipp_family_name"
+    ]
   }
 ]

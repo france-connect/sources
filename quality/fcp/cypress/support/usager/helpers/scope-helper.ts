@@ -1,4 +1,4 @@
-import { ScopeContext } from '../../common/types';
+import { ScopeContext, UserClaims } from '../../common/types';
 
 /*
 Alias definition:
@@ -24,6 +24,31 @@ const aliasScopesClaims = {
     'given_name',
     'preferred_username',
   ],
+};
+
+const rnippClaims = {
+  rnipp_birthcountry: 'birthcountry',
+  rnipp_birthdate: 'birthdate',
+  rnipp_birthplace: 'birthplace',
+  rnipp_family_name: 'family_name',
+  rnipp_gender: 'gender',
+  rnipp_given_name: 'given_name',
+  rnipp_given_name_array: 'given_name_array',
+};
+
+/* eslint-disable @typescript-eslint/naming-convention */
+const CLAIM_LABELS = {
+  address: 'Adresse postale',
+  birthcountry: 'Pays de naissance',
+  birthdate: 'Date de naissance',
+  birthplace: 'Lieu de naissance',
+  connexion_tracks: 'Historique de connexions',
+  email: 'Adresse email',
+  family_name: 'Nom de naissance',
+  gender: 'Sexe',
+  given_name: 'Prénom(s)',
+  given_name_array: 'Prénom(s)',
+  preferred_username: 'Nom d’usage',
 };
 
 const DEFAULT_SCOPE_TYPE = 'tous les scopes';
@@ -77,4 +102,27 @@ export const getClaims = (scopeContext: ScopeContext): string[] => {
     )
     .flat();
   return [...new Set(claims)];
+};
+
+export const getRnippClaims = (userClaims: UserClaims): UserClaims => {
+  const userRnippClaims = {};
+  Object.entries(rnippClaims).forEach(([key, value]) => {
+    userRnippClaims[key] = userClaims[value];
+  });
+  return userRnippClaims;
+};
+
+export const getClaimsWithoutRnippPrefix = (
+  scopeContext: ScopeContext,
+): Set<string> => {
+  const expectedClaimsSet = new Set<string>();
+  const expectedClaims = getClaims(scopeContext).filter(
+    (claimName) => claimName !== 'sub',
+  );
+  expectedClaims
+    .map((claimName) => claimName.replace('rnipp_', ''))
+    .map((claim) => CLAIM_LABELS[claim])
+    .forEach((claimLabel) => expectedClaimsSet.add(claimLabel));
+
+  return expectedClaimsSet;
 };

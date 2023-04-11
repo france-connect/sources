@@ -64,6 +64,19 @@ export class User implements UserData {
   get email(): string {
     const { claims } = this;
     const { email } = claims;
-    return email;
+    return email as string;
+  }
+
+  get givenNameArray(): string[] {
+    const { claims } = this;
+    const givenName = claims.given_name as string;
+    const givenNameArray = claims.given_name_array as string[];
+    return givenNameArray ?? givenName.split(' ');
+  }
+
+  get allClaims(): UserClaims {
+    const { claims } = this;
+    claims.given_name_array = this.givenNameArray;
+    return claims;
   }
 }

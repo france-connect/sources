@@ -10,7 +10,8 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       return pluginConfig(on, config);
     },
-    specPattern: 'cypress/integration/{accessibilité,usager,exploitation}/*.feature',
+    specPattern:
+      'cypress/integration/{accessibilité,usager,exploitation}/*.feature',
     supportFile: 'cypress/support/index.ts',
     video: false,
   },
@@ -32,6 +33,8 @@ export default defineConfig({
     FC_ACCESS_USER: '',
     FC_ACCESS_PASS: '',
     // Other Configuration
-    LOG_FILE_PATH: "../../docker/volumes/log/core-fcp-high.log",
+    LOG_FILE_PATH: '../../docker/volumes/log/core-fcp-high.log',
+    ES256_SIG_PUB_KEY:
+      '-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEUvVm7hq8ycQGaKle6kpzUom73IQy\nYINGRdzQC75AXxzKiKAjeHjGNFA8R5fwZ8jJHiZ+Kiq80gY9anv/vHujGQ==\n-----END PUBLIC KEY-----\n',
   },
 });

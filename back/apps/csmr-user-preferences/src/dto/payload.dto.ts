@@ -10,9 +10,8 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { IPivotIdentity } from '@fc/cryptography-fcp';
-
 import { OidcIdentityDto } from '../dto';
+import { IPivotIdentity } from '../interfaces';
 
 class IdpSettingsDto {
   @IsAscii({ each: true })

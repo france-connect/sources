@@ -7,10 +7,10 @@ import {
 } from '@fc/account';
 import { PartialExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { CryptographyFcpService, IPivotIdentity } from '@fc/cryptography-fcp';
+import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
-import { IdentityProviderMetadata, IOidcIdentity } from '@fc/oidc';
+import { IdentityProviderMetadata } from '@fc/oidc';
 
 import { AppConfig } from '../dto';
 import { CsmrUserPreferencesIdpNotFoundException } from '../exceptions';
@@ -18,6 +18,7 @@ import {
   IFormattedIdpList,
   IFormattedIdpSettings,
   IFormattedUserIdpSettingsLists,
+  IPivotIdentity,
   ISetIdpSettingsPayload,
 } from '../interfaces';
 
@@ -94,7 +95,7 @@ export class CsmrUserPreferencesService {
   }
 
   async getIdpSettings(
-    identity: IOidcIdentity | PartialExcept<IOidcIdentity, 'sub'>,
+    identity: IPivotIdentity | PartialExcept<IPivotIdentity, 'sub'>,
   ): Promise<IFormattedIdpSettings> {
     this.logger.debug(`Identity received : ${identity}`);
 

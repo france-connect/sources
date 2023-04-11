@@ -46,6 +46,9 @@ export class MetadataIdpAdapterMongoDTO {
   @IsBoolean()
   readonly display: boolean;
 
+  @IsBoolean()
+  readonly isBeta: boolean;
+
   @IsRegisteredHandler()
   readonly featureHandlers: IFeatureHandlerDatabase;
 

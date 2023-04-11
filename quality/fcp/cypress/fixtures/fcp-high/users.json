@@ -3,7 +3,8 @@
     "enabled": true,
     "criteria": [
       "par défaut",
-      "avec genre feminin"
+      "avec genre feminin",
+      "avec un prénom"
     ],
     "credentials": [
       {
@@ -266,7 +267,7 @@
       "email": "baterollu-5399@yopmail.com"
     },
     "eidasClaims": {
-      "PersonIdentifier-eidas-mock":	"FR/CB/daf9886e69abe670453e816c6f40af507dd4e7e83af696de277ef6e1f3449d82v1",
+      "PersonIdentifier-eidas-mock": "FR/CB/daf9886e69abe670453e816c6f40af507dd4e7e83af696de277ef6e1f3449d82v1",
       "PlaceOfBirth": "Foce - 2A115, FRANCE (FR)"
     }
   },
@@ -382,7 +383,8 @@
   {
     "enabled": true,
     "criteria": [
-      "pour le test de dernière connexion"
+      "pour le test de dernière connexion",
+      "avec 3 prénoms"
     ],
     "credentials": [
       {
@@ -525,6 +527,36 @@
     "eidasClaims": {
       "PersonIdentifier-eidas-mock": "FR/CB/281ca116a31836f14ca477289cad82c6e02e6815a50cf7a8a932dcd1ce69fb6dv1",
       "PlaceOfBirth": "Paris 19e Arrondissement - 75119, FRANCE (FR)"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "avec un prénom contenant un espace"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "prénom_composé_avec_espace",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "given_name": "Jean_PrénomComposéAvecEspace",
+      "family_name": "Martin",
+      "birthdate": "1962-08-24",
+      "gender": "male",
+      "preferred_username": "Martin",
+      "birthcountry": "99100",
+      "birthplace": "75107",
+      "email": "multiPrenom@france.fr",
+      "rnipp_given_name": "Jean Philippe Pierre Louis",
+      "rnipp_given_name_array": [
+        "Jean Philippe",
+        "Pierre",
+        "Louis"
+      ],
+      "rnipp_family_name": "DUBOIS"
     }
   }
 ]

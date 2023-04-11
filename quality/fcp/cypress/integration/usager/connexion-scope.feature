@@ -30,6 +30,56 @@ Fonctionnalité: Connexion Usager - Scope
       | profile                   |
       | identite_pivot            |
 
+  @fcpHigh
+  Plan du Scénario: Connexion d'un usager - tous les claims rnipp avec usager <userType>
+    Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "tous les scopes rnipp (authorize)"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que j'utilise un fournisseur d'identité "actif"
+    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Et que j'utilise un compte usager "<userType>"
+    Quand je m'authentifie avec succès
+    Et je suis redirigé vers la page confirmation de connexion
+    Et les informations demandées par le fournisseur de service correspondent aux scopes "tous les scopes rnipp (authorize)"
+    Et je continue sur le fournisseur de service
+    Alors je suis redirigé vers la page fournisseur de service
+    Et je suis connecté au fournisseur de service
+    Et le fournisseur de service a accès aux informations des scopes "tous les scopes rnipp (userinfo)"
+
+    Exemples:
+      | userType                           |
+      | avec un prénom                     |
+      | avec un prénom contenant un espace |
+      | avec 3 prénoms                     |
+      | avec prénom composé                |
+
+  @fcpLow
+  Plan du Scénario: Connexion d'un usager - claim given_name_array avec usager <userType>
+    Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "tous les scopes"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que j'utilise un fournisseur d'identité "actif"
+    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Et que j'utilise un compte usager "<userType>"
+    Quand je m'authentifie avec succès
+    Et je suis redirigé vers la page confirmation de connexion
+    Et les informations demandées par le fournisseur de service correspondent aux scopes "tous les scopes"
+    Et je continue sur le fournisseur de service
+    Alors je suis redirigé vers la page fournisseur de service
+    Et je suis connecté au fournisseur de service
+    Et le fournisseur de service a accès aux informations des scopes "tous les scopes"
+
+    Exemples:
+      | userType                           |
+      | avec un prénom                     |
+      | avec un prénom contenant un espace |
+      | avec 3 prénoms                     |
+      | avec prénom composé                |
+
   Scénario: Connexion d'un usager - scope anonyme
     Etant donné que le fournisseur de service requiert l'accès aux informations du scope "anonyme"
     Et que je navigue sur la page fournisseur de service
