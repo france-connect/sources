@@ -36,6 +36,10 @@ const rnippClaims = {
   rnipp_given_name_array: 'given_name_array',
 };
 
+const idpClaims = {
+  idp_birthdate: 'birthdate',
+};
+
 /* eslint-disable @typescript-eslint/naming-convention */
 const CLAIM_LABELS = {
   address: 'Adresse postale',
@@ -48,6 +52,7 @@ const CLAIM_LABELS = {
   gender: 'Sexe',
   given_name: 'Prénom(s)',
   given_name_array: 'Prénom(s)',
+  idp_birthdate: 'Date de naissance',
   preferred_username: 'Nom d’usage',
 };
 
@@ -106,10 +111,26 @@ export const getClaims = (scopeContext: ScopeContext): string[] => {
 
 export const getRnippClaims = (userClaims: UserClaims): UserClaims => {
   const userRnippClaims = {};
-  Object.entries(rnippClaims).forEach(([key, value]) => {
-    userRnippClaims[key] = userClaims[value];
+  Object.entries(rnippClaims).forEach(([rnippClaimName, claimName]) => {
+    // Use the "rnipp_" claim if present otherwise use the default user claim
+    userRnippClaims[rnippClaimName] =
+      rnippClaimName in userClaims
+        ? userClaims[rnippClaimName]
+        : userClaims[claimName];
   });
   return userRnippClaims;
+};
+
+export const getIdpClaims = (userClaims: UserClaims): UserClaims => {
+  const userIdpClaims = {};
+  Object.entries(idpClaims).forEach(([idpClaimName, claimName]) => {
+    // Use the "idp_" claim if present otherwise use the default user claim
+    userIdpClaims[idpClaimName] =
+      idpClaimName in userClaims
+        ? userClaims[idpClaimName]
+        : userClaims[claimName];
+  });
+  return userIdpClaims;
 };
 
 export const getClaimsWithoutRnippPrefix = (

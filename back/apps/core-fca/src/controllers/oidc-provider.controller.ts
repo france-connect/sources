@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   Next,
   Post,
   Query,
@@ -38,6 +39,7 @@ export class OidcProviderController {
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/144
    */
   @Get(OidcProviderRoutes.AUTHORIZATION)
+  @Header('cache-control', 'no-store')
   @UsePipes(
     new ValidationPipe({
       transform: true,
@@ -65,6 +67,7 @@ export class OidcProviderController {
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/144
    */
   @Post(OidcProviderRoutes.AUTHORIZATION)
+  @Header('cache-control', 'no-store')
   @UsePipes(
     new ValidationPipe({
       transform: true,
@@ -88,6 +91,7 @@ export class OidcProviderController {
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/merge_requests/185
    */
   @Get(CoreRoutes.INTERACTION_LOGIN)
+  @Header('cache-control', 'no-store')
   async getLogin(
     @Req() req,
     @Res() res,

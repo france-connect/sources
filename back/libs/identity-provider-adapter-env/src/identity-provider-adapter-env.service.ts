@@ -1,3 +1,6 @@
+import * as deepFreeze from 'deep-freeze';
+import { cloneDeep } from 'lodash';
+
 import { Injectable } from '@nestjs/common';
 
 import { asyncFilter, validateDto } from '@fc/common';
@@ -106,10 +109,13 @@ export class IdentityProviderAdapterEnvService
     if (refreshCache || !this.identityProviderCache) {
       const list: IIdentityProviderAdapterEnv[] =
         await this.findAllIdentityProvider();
-
-      this.identityProviderCache = list.map(
-        this.legacyToOpenIdPropertyName.bind(this),
-      );
+      /**
+       * "As" is necessary to prevent error of assigning "readonly" to "modifiable" property
+       * It is a workaround, best would be to modify all types.
+       */
+      this.identityProviderCache = deepFreeze(
+        list.map(this.legacyToOpenIdPropertyName.bind(this)),
+      ) as IdentityProviderMetadata[];
     }
 
     return this.identityProviderCache;
@@ -125,21 +131,25 @@ export class IdentityProviderAdapterEnvService
     idpList: string[],
     blacklist: boolean,
   ): Promise<IdentityProviderMetadata[]> {
-    const providers = await this.getList();
-    const filteredProviders = providers.filter(({ uid }) => {
-      const idpFound = idpList.includes(uid);
+    const providers = cloneDeep(await this.getList());
+    const mappedProviders = providers.map((provider) => {
+      const idpFound = idpList.includes(provider.uid);
+      const isIdpAuthorized = blacklist ? !idpFound : idpFound;
 
-      return blacklist ? !idpFound : idpFound;
+      if (!isIdpAuthorized) {
+        provider.active = false;
+      }
+
+      return provider;
     });
-    return filteredProviders;
+    return mappedProviders;
   }
 
   async getById(
     id: string,
     refreshCache = false,
   ): Promise<IdentityProviderMetadata> {
-    const providers = await this.getList(refreshCache);
-
+    const providers = cloneDeep(await this.getList(refreshCache));
     return providers.find(({ uid }) => uid === id);
   }
 

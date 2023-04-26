@@ -1,3 +1,5 @@
+import { cloneDeep } from 'lodash';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
@@ -417,16 +419,13 @@ describe('IdentityProviderAdapterEnvService', () => {
       expect(result).toBeInstanceOf(Promise);
     });
 
-    it('should return a list of filtered whitelist identity providers', async () => {
+    it('should return a list of mapped whitelisted active identity providers', async () => {
       // setup
       const expected = [
         {
           ...validIdentityProviderMock,
         },
       ];
-      service['decryptClientSecret'] = jest
-        .fn()
-        .mockReturnValueOnce(expected[0].client_secret);
 
       // action
       const result = await service.getFilteredList(['envIssuer'], false);
@@ -435,7 +434,7 @@ describe('IdentityProviderAdapterEnvService', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should return an empty list of filtered whitelist identity providers', async () => {
+    it('should return identity providers with active idp for a given active whitelisted idp', async () => {
       // setup
       const expected = [
         {
@@ -443,23 +442,141 @@ describe('IdentityProviderAdapterEnvService', () => {
         },
       ];
 
-      cryptographyMock.decrypt.mockReturnValueOnce(expected[0].client_secret);
+      // action
+      const result = await service.getFilteredList(['envIssuer'], false);
+
+      // expect
+      expect(result).toEqual(expected);
+    });
+
+    it('should return identity providers with inactive idp for a given inactive whitelisted idp', async () => {
+      // setup
+      const inactiveValidIdentityProviderMock = cloneDeep(
+        validIdentityProviderMock,
+      );
+      inactiveValidIdentityProviderMock.active = false;
+
+      const inactiveIdentityProviderListMock = [
+        inactiveValidIdentityProviderMock,
+      ];
+      service['getList'] = jest
+        .fn()
+        .mockResolvedValueOnce(inactiveIdentityProviderListMock);
+
+      const expected = [
+        {
+          ...inactiveValidIdentityProviderMock,
+        },
+      ];
+
+      // action
+      const result = await service.getFilteredList(['envIssuer'], false);
+
+      // expect
+      expect(result).toEqual(expected);
+    });
+
+    it('should return identity providers with inactive idp for a given active not whitelisted idp', async () => {
+      // setup
+      const inactiveValidIdentityProviderMock = cloneDeep(
+        validIdentityProviderMock,
+      );
+      inactiveValidIdentityProviderMock.active = false;
+
+      const expected = [
+        {
+          ...inactiveValidIdentityProviderMock,
+        },
+      ];
+
+      service['getList'] = jest
+        .fn()
+        .mockResolvedValueOnce(identityProviderListMock);
 
       // action
       const result = await service.getFilteredList(['false_uid'], false);
 
       // expect
-      expect(result).toEqual([]);
+      expect(result).toEqual(expected);
     });
 
-    it('should return an empty list of filtered blacklist identity providers', async () => {
+    it('should return identity providers with inactive idp for a given inactive not whitelisted idp', async () => {
+      // setup
+      const inactiveValidIdentityProviderMock = cloneDeep(
+        validIdentityProviderMock,
+      );
+      inactiveValidIdentityProviderMock.active = false;
+
+      const inactiveIdentityProviderListMock = [
+        inactiveValidIdentityProviderMock,
+      ];
+      service['getList'] = jest
+        .fn()
+        .mockResolvedValueOnce(inactiveIdentityProviderListMock);
+
+      const expected = [
+        {
+          ...inactiveValidIdentityProviderMock,
+        },
+      ];
+
+      // action
+      const result = await service.getFilteredList(['false_uid'], false);
+
+      // expect
+      expect(result).toEqual(expected);
+    });
+
+    it('should return identity providers with inactive idp for a given active blacklisted idp', async () => {
+      // setup
+      const inactiveValidIdentityProviderMock = cloneDeep(
+        validIdentityProviderMock,
+      );
+      inactiveValidIdentityProviderMock.active = false;
+
+      const expected = [
+        {
+          ...inactiveValidIdentityProviderMock,
+        },
+      ];
+
+      service['getList'] = jest
+        .fn()
+        .mockResolvedValueOnce(identityProviderListMock);
+
       const result = await service.getFilteredList(['envIssuer'], true);
 
       // expect
-      expect(result).toEqual([]);
+      expect(result).toEqual(expected);
     });
 
-    it('should return a list of filtered blacklist identity providers', async () => {
+    it('should return identity providers with inactive idp for a given inactive blacklisted idp', async () => {
+      // setup
+      const inactiveValidIdentityProviderMock = cloneDeep(
+        validIdentityProviderMock,
+      );
+      inactiveValidIdentityProviderMock.active = false;
+
+      const inactiveIdentityProviderListMock = [
+        inactiveValidIdentityProviderMock,
+      ];
+      service['getList'] = jest
+        .fn()
+        .mockResolvedValueOnce(inactiveIdentityProviderListMock);
+
+      const expected = [
+        {
+          ...inactiveValidIdentityProviderMock,
+        },
+      ];
+
+      const result = await service.getFilteredList(['envIssuer'], true);
+
+      // expect
+      expect(result).toEqual(expected);
+    });
+
+    it('should return identity providers with active idp for a given active not blacklisted idp', async () => {
       // setup
       const expected = [
         {
@@ -467,9 +584,32 @@ describe('IdentityProviderAdapterEnvService', () => {
         },
       ];
 
-      service['decryptClientSecret'] = jest
+      // action
+      const result = await service.getFilteredList(['false_uid'], true);
+
+      // expect
+      expect(result).toEqual(expected);
+    });
+
+    it('should return identity providers with inactive idp for a given inactive not blacklisted idp', async () => {
+      // setup
+      const inactiveValidIdentityProviderMock = cloneDeep(
+        validIdentityProviderMock,
+      );
+      inactiveValidIdentityProviderMock.active = false;
+
+      const inactiveIdentityProviderListMock = [
+        inactiveValidIdentityProviderMock,
+      ];
+      service['getList'] = jest
         .fn()
-        .mockReturnValueOnce(expected[0].client_secret);
+        .mockResolvedValueOnce(inactiveIdentityProviderListMock);
+
+      const expected = [
+        {
+          ...inactiveValidIdentityProviderMock,
+        },
+      ];
 
       // action
       const result = await service.getFilteredList(['false_uid'], true);

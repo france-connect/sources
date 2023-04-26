@@ -7,7 +7,12 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AccountModule } from '@fc/account';
 import { AppModule } from '@fc/app';
 import { ConfigService, ConfigTemplateInterceptor } from '@fc/config';
-import { CoreTrackingService } from '@fc/core';
+import {
+  CoreAccountService,
+  CoreAcrService,
+  CoreTrackingService,
+  CoreVerifyService,
+} from '@fc/core';
 import { CryptographyEidasModule } from '@fc/cryptography-eidas';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { ExceptionsModule } from '@fc/exceptions';
@@ -46,13 +51,12 @@ import {
   CoreFcpSendEmailHandler,
 } from './handlers';
 import {
+  CoreFcpMiddlewareService,
   CoreFcpService,
-  CoreFcpTrackingService,
-  CoreService,
   OidcProviderConfigAppService,
 } from './services';
 
-const trackingModule = TrackingModule.forRoot(CoreFcpTrackingService);
+const trackingModule = TrackingModule.forRoot(CoreTrackingService);
 
 const exceptionModule = ExceptionsModule.withTracking(trackingModule);
 @Global()
@@ -98,9 +102,11 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
   ],
   providers: [
     CoreTrackingService,
-    CoreFcpTrackingService,
     CoreFcpService,
-    CoreService,
+    CoreAccountService,
+    CoreAcrService,
+    CoreVerifyService,
+    CoreFcpMiddlewareService,
     OidcProviderConfigAppService,
     CoreFcpDefaultVerifyHandler,
     CoreFcpEidasVerifyHandler,

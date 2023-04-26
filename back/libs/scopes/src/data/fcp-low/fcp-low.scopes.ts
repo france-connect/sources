@@ -39,4 +39,6 @@ export const scopes: IScopes = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   preferred_username: [claims.preferred_username],
   address: [claims.address],
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  idp_birthdate: [claims.idp_birthdate],
 };

@@ -13,7 +13,8 @@
       "email",
       "preferred_username",
       "birth",
-      "identite_pivot"
+      "identite_pivot",
+      "idp_birthdate"
     ]
   },
   {
@@ -47,6 +48,10 @@
   {
     "type": "birth",
     "scopes": ["openid", "birth"]
+  },
+  {
+    "type": "birthdate et idp_birthdate",
+    "scopes": ["openid", "idp_birthdate", "birthdate"]
   },
   {
     "type": "profile",

@@ -42,7 +42,10 @@
     "idpId": "fip3-low",
     "name": "fip3-low",
     "title": "IDP3 - LOW",
-    "descriptions": [],
+    "descriptions": [
+      "whitelisté",
+      "blacklisté"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip3-low.{{TEST_ENV}}.dev-franceconnect.fr",
@@ -60,7 +63,10 @@
     "idpId": "fip4-low",
     "name": "fip4-low",
     "title": "IDP4 - Identity Provider - eIDAS substantiel",
-    "descriptions": [],
+    "descriptions": [
+      "non whitelisté",
+      "non blacklisté"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip4-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -69,6 +75,60 @@
     "signature": "ES256",
     "selectors": {
       "idpButton": "#idp-fip4-low",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "button[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip5-low",
+    "name": "fip5-low",
+    "title": "IDP5 - LOW disabled",
+    "descriptions": ["désactivé et visible"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip5-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#idp-fip5-low",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "button[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip6-low",
+    "name": "fip6-low",
+    "title": "IDP6 - LOW invisible",
+    "descriptions": ["actif et non visible"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip6-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#idp-fip6-low",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "button[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip7-low",
+    "name": "fip7-low",
+    "title": "IDP7 - LOW disabled and invisible",
+    "descriptions": ["désactivé et non visible"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip7-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#idp-fip7-low",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"

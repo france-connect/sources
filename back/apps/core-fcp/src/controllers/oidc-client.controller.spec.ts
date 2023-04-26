@@ -3,6 +3,7 @@ import { encode } from 'querystring';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
+import { CoreVerifyService, ProcessCore } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
@@ -14,9 +15,7 @@ import {
 } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
-import { ProcessCore } from '../enums';
 import { CoreFcpInvalidIdentityException } from '../exceptions';
-import { CoreFcpService } from '../services';
 import { OidcClientController } from './oidc-client.controller';
 
 jest.mock('querystring', () => ({
@@ -140,7 +139,7 @@ describe('OidcClient Controller', () => {
         TrackingService,
         ConfigService,
         IdentityProviderAdapterMongoService,
-        CoreFcpService,
+        CoreVerifyService,
       ],
     })
       .overrideProvider(OidcClientService)
@@ -157,7 +156,7 @@ describe('OidcClient Controller', () => {
       .useValue(sessionCsrfServiceMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
       .useValue(identityProviderServiceMock)
-      .overrideProvider(CoreFcpService)
+      .overrideProvider(CoreVerifyService)
       .useValue(coreServiceMock)
       .compile();
 

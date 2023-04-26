@@ -32,7 +32,7 @@
                     <img src='/img/fi/<%-provider.image%>' alt="Logo de <%= provider.name %>" onerror="this.style.display='none'" />
                     <span id="idp-<%= provider.uid %>-title">
                       <%- (!provider.active) ?
-                        `<strong>${provider.title}</strong> est actuellement indisponible` :
+                        `<strong>${provider.title}</strong> est indisponible` :
                         `J’utilise l’application <strong>${provider.title}</strong>`;
                       %>
                     </span>

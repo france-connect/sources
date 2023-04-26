@@ -3,6 +3,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
 
+import { SessionConfig } from '../dto';
 import { ISessionRequest } from '../interfaces';
 import { SessionService } from '../services';
 
@@ -24,11 +25,16 @@ export class SessionMiddleware implements NestMiddleware {
 
   private async handleSession(req, res) {
     const cookieSessionId = this.sessionService.getSessionIdFromCookie(req);
+    const { slidingExpiration } = this.config.get<SessionConfig>('Session');
 
-    if (!cookieSessionId) {
-      await this.sessionService.init(req, res);
-    } else {
-      await this.sessionService.refresh(req, res);
+    if (slidingExpiration) {
+      if (!cookieSessionId) {
+        await this.sessionService.init(req, res);
+      } else {
+        await this.sessionService.refresh(req, res);
+      }
+    } else if (cookieSessionId) {
+      this.sessionService.bindToRequest(req, cookieSessionId);
     }
   }
 }

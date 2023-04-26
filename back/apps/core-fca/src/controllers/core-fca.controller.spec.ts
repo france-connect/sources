@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { CryptographyService } from '@fc/cryptography';
+import { CoreAcrService } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { MinistriesService } from '@fc/ministries';
@@ -16,9 +16,8 @@ import {
   SessionCsrfService,
   SessionNotFoundException,
 } from '@fc/session';
-import { TrackingService } from '@fc/tracking';
 
-import { CoreFcaService, CoreService } from '../services';
+import { CoreFcaVerifyService } from '../services';
 import { CoreFcaController } from './core-fca.controller';
 
 describe('CoreFcaController', () => {
@@ -75,14 +74,17 @@ describe('CoreFcaController', () => {
     trace: jest.fn(),
   } as unknown as LoggerService;
 
-  const coreServiceMock = {
-    getConsent: jest.fn(),
+  const coreVerifyServiceMock = {
     verify: jest.fn(),
   };
 
-  const libCoreServiceMock = {
+  const coreFcaVerifyServiceMock = {
+    handleBlacklisted: jest.fn(),
+    handleVerifyIdentity: jest.fn(),
+  };
+
+  const coreAcrServiceMock = {
     rejectInvalidAcr: jest.fn(),
-    isAcrValid: jest.fn(),
   };
 
   const ministriesServiceMock = {
@@ -136,14 +138,8 @@ describe('CoreFcaController', () => {
     spName: spNameMock,
   };
 
-  const trackingServiceMock: TrackingService = {
-    track: jest.fn(),
-    TrackedEventsMap: {
-      IDP_CALLEDBACK: {},
-      FC_VERIFIED: {},
-      FC_BLACKLISTED: {},
-    },
-  } as unknown as TrackingService;
+  const handleBlackListedResult = 'urlPrefixValue/interaction/interactionId';
+  const handleVerifyResult = 'urlPrefixValue/login';
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -152,14 +148,12 @@ describe('CoreFcaController', () => {
         LoggerService,
         OidcProviderService,
         MinistriesService,
-        CoreFcaService,
-        CoreService,
         IdentityProviderAdapterMongoService,
         ServiceProviderAdapterMongoService,
-        CryptographyService,
         ConfigService,
         SessionCsrfService,
-        TrackingService,
+        CoreAcrService,
+        CoreFcaVerifyService,
       ],
     })
       .overrideProvider(OidcProviderService)
@@ -168,20 +162,16 @@ describe('CoreFcaController', () => {
       .useValue(loggerServiceMock)
       .overrideProvider(MinistriesService)
       .useValue(ministriesServiceMock)
-      .overrideProvider(CoreFcaService)
-      .useValue(coreServiceMock)
-      .overrideProvider(CoreService)
-      .useValue(libCoreServiceMock)
+      .overrideProvider(CoreAcrService)
+      .useValue(coreAcrServiceMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
       .useValue(identityProviderServiceMock)
       .overrideProvider(ServiceProviderAdapterMongoService)
       .useValue(serviceProviderServiceMock)
-      .overrideProvider(CryptographyService)
-      .useValue(cryptographyServiceMock)
+      .overrideProvider(CoreFcaVerifyService)
+      .useValue(coreFcaVerifyServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(TrackingService)
-      .useValue(trackingServiceMock)
       .overrideProvider(SessionCsrfService)
       .useValue(sessionCsrfServiceMock)
       .compile();
@@ -200,8 +190,8 @@ describe('CoreFcaController', () => {
     oidcProviderServiceMock.getInteraction.mockResolvedValue(
       interactionDetailsResolved,
     );
-    coreServiceMock.verify.mockResolvedValue(interactionDetailsResolved);
-    libCoreServiceMock.rejectInvalidAcr.mockResolvedValue(false);
+    coreAcrServiceMock.rejectInvalidAcr.mockResolvedValue(false);
+    coreVerifyServiceMock.verify.mockResolvedValue(interactionDetailsResolved);
 
     serviceProviderServiceMock.getById.mockResolvedValue({
       name: spNameMock,
@@ -466,7 +456,7 @@ describe('CoreFcaController', () => {
         prompt: 'prompt',
         uid: 'uid',
       });
-      libCoreServiceMock.rejectInvalidAcr.mockResolvedValue(true);
+      coreAcrServiceMock.rejectInvalidAcr.mockResolvedValue(true);
       // When
       const result = await coreController.getInteraction(
         req,
@@ -522,16 +512,13 @@ describe('CoreFcaController', () => {
     });
 
     describe('when `serviceProvider.shouldExcludeIdp()` returns `true`', () => {
-      const handleBlackListedResult = Symbol('handleBlackListedResult');
-      const handleVerifyResult = Symbol('handleVerifyResult');
-
       beforeEach(() => {
-        coreController['handleBlacklisted'] = jest
-          .fn()
-          .mockResolvedValue(handleBlackListedResult);
-        coreController['handleVerifyIdentity'] = jest
-          .fn()
-          .mockResolvedValue(handleVerifyResult);
+        coreFcaVerifyServiceMock.handleBlacklisted.mockResolvedValue(
+          handleBlackListedResult,
+        );
+        coreFcaVerifyServiceMock.handleVerifyIdentity.mockResolvedValue(
+          handleVerifyResult,
+        );
       });
 
       it('should call `handleBlackListed()` and not `handleVerify()`', async () => {
@@ -543,35 +530,37 @@ describe('CoreFcaController', () => {
           sessionServiceMock,
         );
         // Then
-        expect(coreController['handleBlacklisted']).toHaveBeenCalledTimes(1);
-        expect(coreController['handleVerifyIdentity']).not.toHaveBeenCalled();
+        expect(
+          coreFcaVerifyServiceMock.handleBlacklisted,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          coreFcaVerifyServiceMock.handleVerifyIdentity,
+        ).not.toHaveBeenCalled();
       });
 
       it('should return result from `handleBlackListed()`', async () => {
         // When
-        const result = await coreController.getVerify(
+        await coreController.getVerify(
           req,
           res as unknown as Response,
           params,
           sessionServiceMock,
         );
         // Then
-        expect(result).toBe(handleBlackListedResult);
+        expect(res.redirect).toBeCalledTimes(1);
+        expect(res.redirect).toBeCalledWith(handleBlackListedResult);
       });
     });
 
     describe('when `serviceProvider.shouldExcludeIdp()` returns `false`', () => {
-      const handleBlackListedResult = Symbol('handleBlackListedResult');
-      const handleVerifyResult = Symbol('handleVerifyResult');
-
       beforeEach(() => {
         serviceProviderServiceMock.shouldExcludeIdp.mockResolvedValue(false);
-        coreController['handleBlacklisted'] = jest
-          .fn()
-          .mockResolvedValue(handleBlackListedResult);
-        coreController['handleVerifyIdentity'] = jest
-          .fn()
-          .mockResolvedValue(handleVerifyResult);
+        coreFcaVerifyServiceMock.handleBlacklisted.mockResolvedValue(
+          handleBlackListedResult,
+        );
+        coreFcaVerifyServiceMock.handleVerifyIdentity.mockResolvedValue(
+          handleVerifyResult,
+        );
       });
 
       it('should call `handleVerify()` and not `handleBlackListed()`', async () => {
@@ -583,162 +572,26 @@ describe('CoreFcaController', () => {
           sessionServiceMock,
         );
         // Then
-        expect(coreController['handleVerifyIdentity']).toHaveBeenCalledTimes(1);
-        expect(coreController['handleBlacklisted']).not.toHaveBeenCalled();
+        expect(
+          coreFcaVerifyServiceMock.handleVerifyIdentity,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          coreFcaVerifyServiceMock.handleBlacklisted,
+        ).not.toHaveBeenCalled();
       });
 
       it('should call return result from `handleVerify()`', async () => {
         // When
-        const result = await coreController.getVerify(
+        await coreController.getVerify(
           req,
           res as unknown as Response,
           params,
           sessionServiceMock,
         );
         // Then
-        expect(result).toBe(handleVerifyResult);
+        expect(res.redirect).toBeCalledTimes(1);
+        expect(res.redirect).toBeCalledWith(handleVerifyResult);
       });
-    });
-  });
-
-  describe('handleVerify()', () => {
-    const params = {
-      urlPrefix: 'urlPrefixValue',
-      interactionId: 'interactionId',
-      sessionOidc: sessionServiceMock,
-    };
-
-    beforeEach(() => {
-      coreController['trackVerified'] = jest.fn();
-    });
-
-    it('should call core.verify()', async () => {
-      // When
-      await coreController['handleVerifyIdentity'](
-        req,
-        res as unknown as Response,
-        params,
-      );
-      // Then
-      expect(coreServiceMock.verify).toHaveBeenCalledTimes(1);
-      expect(coreServiceMock.verify).toHaveBeenCalledWith(sessionServiceMock);
-    });
-
-    it('should call trackVerified()', async () => {
-      // When
-      await coreController['handleVerifyIdentity'](
-        req,
-        res as unknown as Response,
-        params,
-      );
-      // Then
-      expect(coreController['trackVerified']).toHaveBeenCalledTimes(1);
-      expect(coreController['trackVerified']).toHaveBeenCalledWith(req);
-    });
-
-    it('should call res.redirect', async () => {
-      // Given
-      const resRedirectResult = Symbol('resRedirectResult');
-      res.redirect.mockReturnValueOnce(resRedirectResult);
-      // When
-      await coreController['handleVerifyIdentity'](
-        req,
-        res as unknown as Response,
-        params,
-      );
-      // Then
-      expect(res.redirect).toHaveBeenCalledTimes(1);
-    });
-
-    it('should return result from call to res.redirect', async () => {
-      // Given
-      const resRedirectResult = Symbol('resRedirectResult');
-      res.redirect.mockReturnValueOnce(resRedirectResult);
-      // When
-      const result = await coreController['handleVerifyIdentity'](
-        req,
-        res as unknown as Response,
-        params,
-      );
-      // Then
-      expect(result).toBe(resRedirectResult);
-    });
-  });
-
-  describe('handleBlacklisted()', () => {
-    const params = {
-      urlPrefix: 'urlPrefixValue',
-      interactionId: 'interactionId',
-      sessionOidc: sessionServiceMock,
-    };
-
-    beforeEach(() => {
-      coreController['trackBlackListed'] = jest.fn();
-    });
-
-    it('should call session.set()', async () => {
-      // When
-      await coreController['handleBlacklisted'](
-        req,
-        res as unknown as Response,
-        params,
-      );
-      // Then
-      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.set).toHaveBeenCalledWith('isSso', false);
-    });
-
-    it('should call trackBlackListed', async () => {
-      // When
-      await coreController['handleBlacklisted'](
-        req,
-        res as unknown as Response,
-        params,
-      );
-      // Then
-      expect(coreController['trackBlackListed']).toHaveBeenCalledTimes(1);
-      expect(coreController['trackBlackListed']).toHaveBeenCalledWith(req);
-    });
-
-    it('should call res.redirect() and return its result', async () => {
-      // Given
-      const resRedirectResult = Symbol('resRedirectResult');
-      res.redirect.mockReturnValueOnce(resRedirectResult);
-      // When
-      const result = await coreController['handleBlacklisted'](
-        req,
-        res as unknown as Response,
-        params,
-      );
-      // Then
-      expect(res.redirect).toHaveBeenCalledTimes(1);
-      expect(result).toBe(resRedirectResult);
-    });
-  });
-
-  describe('trackVerified', () => {
-    it('should call tracking.track()', async () => {
-      // When
-      await coreController['trackVerified'](req);
-      // Then
-      expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
-      expect(trackingServiceMock.track).toHaveBeenCalledWith(
-        trackingServiceMock.TrackedEventsMap.FC_VERIFIED,
-        { req },
-      );
-    });
-  });
-
-  describe('trackBlackListed', () => {
-    it('should call tracking.track()', async () => {
-      // When
-      await coreController['trackBlackListed'](req);
-      // Then
-      expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
-      expect(trackingServiceMock.track).toHaveBeenCalledWith(
-        trackingServiceMock.TrackedEventsMap.FC_BLACKLISTED,
-        { req },
-      );
     });
   });
 });

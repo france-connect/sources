@@ -24,4 +24,6 @@ export const labels: ILabelMapping<typeof claims> = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   phone_number: 'Téléphone',
   email: 'Adresse email',
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  idp_birthdate: null,
 };

@@ -23,6 +23,7 @@ describe('session.middleware', () => {
   const configMock: Partial<SessionConfig> = {
     sessionCookieName: 'sessionCookieName',
     sessionIdLength: 64,
+    slidingExpiration: true,
   };
 
   const sessionServiceMock = {
@@ -31,7 +32,7 @@ describe('session.middleware', () => {
     init: jest.fn(),
     refresh: jest.fn(),
     getSessionIdFromCookie: jest.fn(),
-    shouldHandleSession: jest.fn(),
+    bindToRequest: jest.fn(),
   };
 
   const cryptographyServiceMock = {
@@ -45,8 +46,6 @@ describe('session.middleware', () => {
     sessionId: 'sessionId',
     sessionService: sessionServiceMock,
   } as unknown as ISessionRequest;
-
-  const setCookieMock = jest.fn();
 
   const resMock = {
     locals: {},
@@ -88,18 +87,18 @@ describe('session.middleware', () => {
   });
 
   describe('use()', () => {
-    it('should call next', async () => {
+    it('should call handleSession', async () => {
+      // Given
+      middleware['handleSession'] = jest.fn();
+
       // When
       await middleware.use(reqMock, resMock, nextMock);
 
       // Then
-      expect(nextMock).toHaveBeenCalledTimes(1);
+      expect(middleware['handleSession']).toHaveBeenCalledTimes(1);
     });
 
     it('should call next', async () => {
-      // Given
-      sessionServiceMock.shouldHandleSession.mockReturnValueOnce(false);
-
       // When
       await middleware.use(reqMock, resMock, nextMock);
 
@@ -110,13 +109,12 @@ describe('session.middleware', () => {
 
   describe('handleSession()', () => {
     beforeEach(() => {
-      middleware['setCookie'] = setCookieMock;
+      configServiceMock.get.mockReturnValueOnce(configMock);
     });
 
-    it('should call `sessionService.init()` if no session cookie found in request signed cookies', async () => {
+    it('should call `sessionService.init()` if slidingExpiration is true and no session cookie has been found in request signed cookies', async () => {
       // Given
       const cookieSessionIdMock = undefined;
-
       sessionServiceMock.getSessionIdFromCookie.mockReturnValue(
         cookieSessionIdMock,
       );
@@ -128,7 +126,7 @@ describe('session.middleware', () => {
       expect(sessionServiceMock.init).toHaveBeenCalledWith(reqMock, resMock);
     });
 
-    it('should call `sessionService.refresh()` if cookie found in request signed cookies', async () => {
+    it('should call `sessionService.refresh()` if slidingExpiration is true and a session cookie has been found in request signed cookies', async () => {
       // Given
       const cookieSessionIdMock = 'cookieSession';
       sessionServiceMock.getSessionIdFromCookie.mockReturnValue(
@@ -140,6 +138,30 @@ describe('session.middleware', () => {
       expect(sessionServiceMock.init).toHaveBeenCalledTimes(0);
       expect(sessionServiceMock.refresh).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.refresh).toHaveBeenCalledWith(reqMock, resMock);
+    });
+
+    it('should call bindToRequest if slidingExpiration is false and a session cookie has been found in request signed cookies', async () => {
+      // Given
+      const cookieSessionIdMock = 'cookieSession';
+      const noSlidingExpiration = {
+        slidingExpiration: false,
+      };
+      sessionServiceMock.getSessionIdFromCookie.mockReturnValue(
+        cookieSessionIdMock,
+      );
+      configServiceMock.get
+        .mockReset()
+        .mockReturnValueOnce(noSlidingExpiration);
+      // When
+      await middleware['handleSession'](reqMock, resMock);
+      // Then
+      expect(sessionServiceMock.init).toHaveBeenCalledTimes(0);
+      expect(sessionServiceMock.refresh).toHaveBeenCalledTimes(0);
+      expect(sessionServiceMock.bindToRequest).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.bindToRequest).toHaveBeenCalledWith(
+        reqMock,
+        cookieSessionIdMock,
+      );
     });
   });
 });

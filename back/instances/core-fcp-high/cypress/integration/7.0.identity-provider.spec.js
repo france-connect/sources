@@ -28,7 +28,7 @@ describe('7.0 - Idp activation & visibility', () => {
         'J’utilise l’application IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt',
       );
       cy.get(`#idp-${idpId}3-desactive-visible-title`).contains(
-        'FI désactivé mais visible est actuellement indisponible',
+        'FI désactivé mais visible est indisponible',
       );
     });
   });
@@ -91,21 +91,6 @@ describe('7.0 - Idp activation & visibility', () => {
     cy.url().should('match', mireUrl);
     // Then
     cy.get(`#idp-list button#idp-${idpId}13bis-high`).should('not.exist');
-  });
-
-  it('should trigger error 020017 when forging click on disabled IdP', () => {
-    // Given
-    cy.visit(getAuthorizeUrl());
-    cy.url().should('match', mireUrl);
-    // When
-    cy.get(`#idp-list button#idp-${idpId}3-desactive-visible`)
-      // Remove the disabled attribute
-      .invoke('attr', 'disabled', false)
-      .click();
-    // Then
-    cy.url().should('contain', '/api/v2/redirect-to-idp');
-
-    cy.hasError('Y020017');
   });
 
   it('should trigger error 020019 when forging click on non existing IdP', () => {
@@ -197,7 +182,7 @@ describe('7.0 - Idp activation & visibility', () => {
       cy.wait(500);
       cy.reload();
       cy.get('#idp-list').contains(
-        'Idp test Updated, desactivated est actuellement indisponible',
+        'Idp test Updated, desactivated est indisponible',
       );
     });
 

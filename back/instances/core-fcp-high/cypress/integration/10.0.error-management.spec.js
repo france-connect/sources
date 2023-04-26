@@ -108,7 +108,7 @@ describe('10.0 - Error Management', () => {
     );
   });
 
-  it('should redirect to Sp if the session failed', () => {
+  it('should display the Y190009 error when no active session exists', () => {
     basicScenario({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
@@ -120,7 +120,7 @@ describe('10.0 - Error Management', () => {
 
     cy.get('#consent').click();
 
-    cy.hasError('Y190001');
+    cy.hasError('Y190009');
     cy.get('#error-message').contains(
       'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous',
     );

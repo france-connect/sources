@@ -24,5 +24,6 @@ export default {
   sessionCookieName: 'sp_session_id',
   lifetime: 600, // 10 minutes
   sessionIdLength: 64,
+  slidingExpiration: true,
   excludedRoutes: [OidcClientRoutes.WELL_KNOWN_KEYS],
 } as SessionConfig;

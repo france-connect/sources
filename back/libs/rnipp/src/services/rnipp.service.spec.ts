@@ -65,6 +65,8 @@ describe('RnippService', () => {
     birthdate: '1981-02-03',
     birthplace: '75112',
     birthcountry: '99100',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    idp_birthdate: 'foo',
   };
   const requestUrlMock =
     'https://rnipp.fr/Brpp2IdentificationComplet/individus?rechercheType=S&nom=MARTIN&prenoms=Jean&dateNaissance=19810203&sexe=M&codeLieuNaissance=75112';

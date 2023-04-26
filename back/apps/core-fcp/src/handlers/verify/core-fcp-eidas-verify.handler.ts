@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { CoreAccountService, CoreAcrService } from '@fc/core';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
 import { FeatureHandler } from '@fc/feature-handler';
 import { LoggerService } from '@fc/logger-legacy';
@@ -10,7 +11,6 @@ import {
   IVerifyFeatureHandler,
   IVerifyFeatureHandlerHandleArgument,
 } from '../../interfaces';
-import { CoreService } from '../../services';
 
 @Injectable()
 @FeatureHandler('core-fcp-eidas-verify')
@@ -19,7 +19,8 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
   /* eslint-disable-next-line max-params */
   constructor(
     private readonly logger: LoggerService,
-    private readonly core: CoreService,
+    private readonly coreAcount: CoreAccountService,
+    private readonly coreAcr: CoreAcrService,
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
     private readonly cryptographyEidas: CryptographyEidasService,
   ) {
@@ -36,7 +37,7 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     const { entityId } = await this.serviceProvider.getById(spId);
 
     // Acr check
-    this.core.checkIfAcrIsValid(idpAcr, spAcr);
+    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr);
 
     // as spIdentity = idpIdentity, hashSp = hashIdp and is used to generate both sub
     const hashSp = this.cryptographyEidas.computeIdentityHash(
@@ -46,7 +47,7 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     const subIdp = this.cryptographyEidas.computeSubV1(spId, hashSp);
 
     // Save interaction to database
-    const accountId = await this.core.computeInteraction(
+    const accountId = await this.coreAcount.computeFederation(
       {
         spId,
         entityId,

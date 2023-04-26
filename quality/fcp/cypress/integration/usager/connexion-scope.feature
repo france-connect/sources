@@ -56,6 +56,23 @@ Fonctionnalité: Connexion Usager - Scope
       | avec prénom composé                |
 
   @fcpLow
+  Scénario: Connexion d'un usager - scope idp_birthdate
+    Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "birthdate et idp_birthdate"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que j'utilise un fournisseur d'identité "actif"
+    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Quand je m'authentifie avec succès
+    Et je suis redirigé vers la page confirmation de connexion
+    Et les informations demandées par le fournisseur de service correspondent aux scopes "birthdate et idp_birthdate"
+    Et je continue sur le fournisseur de service
+    Alors je suis redirigé vers la page fournisseur de service
+    Et je suis connecté au fournisseur de service
+    Et le fournisseur de service a accès aux informations des scopes "birthdate et idp_birthdate"
+
+  @fcpLow
   Plan du Scénario: Connexion d'un usager - claim given_name_array avec usager <userType>
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "tous les scopes"
     Et que je navigue sur la page fournisseur de service

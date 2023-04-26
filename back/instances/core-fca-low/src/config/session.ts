@@ -27,6 +27,7 @@ export default {
   sessionCookieName: 'fc_session_id',
   lifetime: 600, // 10 minutes
   sessionIdLength: 64,
+  slidingExpiration: true,
   excludedRoutes: [
     `${app.urlPrefix}${OidcProviderRoutes.JWKS}`,
     `${app.urlPrefix}${OidcProviderRoutes.OPENID_CONFIGURATION}`,

@@ -90,6 +90,8 @@ Fonctionnalité: Préférences FI
     Quand je me connecte à FranceConnect
     Alors je suis connecté au fournisseur de service
 
+  # A réactiver après https://gitlab.dev-franceconnect.fr/france-connect/fc-apps/-/issues/255
+  @ignore
   Scénario: Préférences FI - FI ajouté - futur FI autorisé
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du dashboard usager
@@ -106,6 +108,8 @@ Fonctionnalité: Préférences FI
     Alors je suis connecté au fournisseur de service
     Et je supprime le fournisseur d'identité "fip4_idp-settings" sur le site d'exploitation
 
+  # A réactiver après https://gitlab.dev-franceconnect.fr/france-connect/fc-apps/-/issues/255
+  @ignore
   Scénario: Préférences FI - FI ajouté - futur FI bloqué
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du dashboard usager

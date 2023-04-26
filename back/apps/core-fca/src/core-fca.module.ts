@@ -5,7 +5,12 @@ import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { AccountModule } from '@fc/account';
 import { ConfigService } from '@fc/config';
-import { CoreTrackingService } from '@fc/core';
+import {
+  CoreAccountService,
+  CoreAcrService,
+  CoreTrackingService,
+  CoreVerifyService,
+} from '@fc/core';
 import { CryptographyFcaModule } from '@fc/cryptography-fca';
 import { ExceptionsModule } from '@fc/exceptions';
 import { FeatureHandlerModule } from '@fc/feature-handler';
@@ -34,13 +39,12 @@ import {
 import { CoreFcaSession } from './dto';
 import { CoreFcaDefaultVerifyHandler } from './handlers';
 import {
-  CoreFcaService,
-  CoreFcaTrackingService,
-  CoreService,
+  CoreFcaMiddlewareService,
+  CoreFcaVerifyService,
   OidcProviderConfigAppService,
 } from './services';
 
-const trackingModule = TrackingModule.forRoot(CoreFcaTrackingService);
+const trackingModule = TrackingModule.forRoot(CoreTrackingService);
 
 const exceptionModule = ExceptionsModule.withTracking(trackingModule);
 @Global()
@@ -80,12 +84,14 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     OidcProviderController,
   ],
   providers: [
-    CoreFcaService,
-    CoreService,
+    CoreAccountService,
+    CoreAcrService,
+    CoreVerifyService,
+    CoreFcaMiddlewareService,
     CoreTrackingService,
-    CoreFcaTrackingService,
     OidcProviderConfigAppService,
     CoreFcaDefaultVerifyHandler,
+    CoreFcaVerifyService,
   ],
   // Make `CoreTrackingService` dependencies available
   exports: [

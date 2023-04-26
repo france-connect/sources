@@ -1,3 +1,5 @@
+import * as deepFreeze from 'deep-freeze';
+import { cloneDeep } from 'lodash';
 import { Model } from 'mongoose';
 
 import { Injectable, Type } from '@nestjs/common';
@@ -192,8 +194,9 @@ export class IdentityProviderAdapterMongoService
     if (refreshCache || !this.listCache) {
       this.logger.debug('Refresh cache from DB');
       const list = await this.findAllIdentityProvider();
-      this.listCache = list.map(this.legacyToOpenIdPropertyName.bind(this));
-
+      this.listCache = deepFreeze(
+        list.map(this.legacyToOpenIdPropertyName.bind(this)),
+      ) as IdentityProviderMetadata[];
       this.logger.trace({ step: 'REFRESH', list, listCache: this.listCache });
     } else {
       this.logger.trace({ list: this.listCache, step: 'CACHE' });
@@ -211,27 +214,26 @@ export class IdentityProviderAdapterMongoService
   async getFilteredList(
     options: FilteringOptions,
   ): Promise<IdentityProviderMetadata[]> {
-    const providers = await this.getList();
+    const providers = cloneDeep(await this.getList());
     const { blacklist, idpList } = options;
+    const mappedProviders = providers.map((provider) => {
+      const idpFound = idpList.includes(provider.uid);
+      const isIdpAuthorized = blacklist ? !idpFound : idpFound;
 
-    /*
-      Blacklist/Whitelist filter (if blacklist is false, 
-      idpList contains a list of whitelisted idp, not a blacklist)
-    */
-    const filteredProviders = providers.filter(({ uid }) => {
-      const idpFound = idpList.includes(uid);
-      return blacklist ? !idpFound : idpFound;
+      if (!isIdpAuthorized) {
+        provider.active = false;
+      }
+
+      return provider;
     });
-    this.logger.trace({ blacklist, filteredProviders });
-
-    return filteredProviders;
+    return mappedProviders;
   }
 
   async getById(
     id: string,
     refreshCache = false,
   ): Promise<IdentityProviderMetadata> {
-    const providers = await this.getList(refreshCache);
+    const providers = cloneDeep(await this.getList(refreshCache));
 
     const provider = providers.find(({ uid }) => uid === id);
 

@@ -84,4 +84,7 @@ export class SessionConfig {
   @IsObject()
   @IsOptional()
   readonly templateExposed?: TemplateExposedType;
+
+  @IsBoolean()
+  readonly slidingExpiration: boolean;
 }

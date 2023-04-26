@@ -288,6 +288,8 @@
       "given_name": "Jean",
       "family_name": "FLEURET",
       "birthdate": "1992-11-00",
+      "rnipp_birthdate": "1992-11",
+      "rnipp_birthplace": "",
       "birthcountry": "99217",
       "email": "jean-fleuret@yopmail.com"
     },
@@ -314,6 +316,8 @@
       "given_name": "Jean",
       "family_name": "TARGE",
       "birthdate": "1992-00-00",
+      "rnipp_birthdate": "1992",
+      "rnipp_birthplace": "",
       "birthcountry": "99217",
       "email": "jean-targe@yopmail.com"
     },

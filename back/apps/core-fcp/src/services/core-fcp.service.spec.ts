@@ -12,8 +12,6 @@ import { ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
 
-import { ProcessCore } from '../enums';
-import { IVerifyFeatureHandler } from '../interfaces';
 import { CoreFcpService } from './core-fcp.service';
 
 describe('CoreFcpService', () => {
@@ -88,8 +86,6 @@ describe('CoreFcpService', () => {
     consentRequired: jest.fn(),
   };
 
-  const reqMock = {};
-
   const coreVerifyMock = 'core-fcp-default-verify';
   const authenticationEmailMock = 'core-fcp-send-email';
 
@@ -149,126 +145,6 @@ describe('CoreFcpService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  describe('verify()', () => {
-    it('should return a promise', async () => {
-      // action
-      const result = service.verify(sessionServiceMock, reqMock);
-      await result;
-      // expect
-      expect(result).toBeInstanceOf(Promise);
-    });
-
-    it('Should call session.get() with `interactionId`', async () => {
-      // Given
-      // When
-      await service.verify(sessionServiceMock, reqMock);
-      // Then
-      expect(sessionServiceMock.get).toBeCalledTimes(1);
-      expect(sessionServiceMock.get).toBeCalledWith();
-    });
-
-    it('Should call `getFeature` to get instantiated featureHandler class', async () => {
-      // Given
-      const getFeatureMock = jest.spyOn<CoreFcpService, any>(
-        service,
-        'getFeature',
-      );
-      // When
-      await service.verify(sessionServiceMock, reqMock);
-      // Then
-      expect(getFeatureMock).toBeCalledTimes(1);
-      expect(getFeatureMock).toBeCalledWith(
-        sessionDataMock.idpId,
-        ProcessCore.CORE_VERIFY,
-      );
-    });
-
-    it('Should call featureHandle.handle() with `sessionService`', async () => {
-      // Given
-      const handlerArgument = {
-        sessionOidc: sessionServiceMock,
-        trackingContext: reqMock,
-      };
-      // When
-      await service.verify(sessionServiceMock, reqMock);
-      // Then
-      expect(featureHandlerServiceMock.handle).toBeCalledTimes(1);
-      expect(featureHandlerServiceMock.handle).toBeCalledWith(handlerArgument);
-    });
-  });
-
-  describe('getFeature()', () => {
-    it('should return class for specific process', async () => {
-      // When
-      const result = await service.getFeature<IVerifyFeatureHandler>(
-        sessionDataMock.idpId,
-        ProcessCore.ID_CHECK,
-      );
-      // Then
-      expect(result).toStrictEqual(featureHandlerServiceMock);
-    });
-
-    it('should have called log when feature is required', async () => {
-      // When
-      const result = await service.getFeature<IVerifyFeatureHandler>(
-        sessionDataMock.idpId,
-        ProcessCore.ID_CHECK,
-      );
-      // Then
-      expect(result).toBeDefined();
-      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.debug).toHaveBeenCalledWith(
-        `getFeature idpIdentityCheck for provider: 42`,
-      );
-    });
-
-    it('should have search idp when feature is required', async () => {
-      // When
-      const result = await service.getFeature<IVerifyFeatureHandler>(
-        sessionDataMock.idpId,
-        ProcessCore.ID_CHECK,
-      );
-      // Then
-      expect(result).toBeDefined();
-      expect(IdentityProviderMock.getById).toHaveBeenCalledTimes(1);
-      expect(IdentityProviderMock.getById).toHaveBeenCalledWith(
-        sessionDataMock.idpId,
-      );
-    });
-
-    it('should have extract class from class id when feature is required', async () => {
-      // When
-      const result = await service.getFeature<IVerifyFeatureHandler>(
-        sessionDataMock.idpId,
-        ProcessCore.ID_CHECK,
-      );
-      // Then
-      expect(result).toBeDefined();
-      expect(featureHandlerGetSpy).toHaveBeenCalledTimes(1);
-      expect(featureHandlerGetSpy).toHaveBeenCalledWith(
-        identityProviderResultMock.featureHandlers.idpIdentityCheck,
-        service,
-      );
-    });
-
-    it('should failed if process is unknown from idp feature list', async () => {
-      // Given
-      const errorMock = new Error('Undefined Feature');
-      featureHandlerGetSpy.mockReset().mockImplementationOnce(() => {
-        throw errorMock;
-      });
-      // When
-      await expect(
-        () =>
-          service.getFeature<IVerifyFeatureHandler>(
-            sessionDataMock.idpId,
-            'Tzeentch' as unknown as ProcessCore,
-          ),
-        // Then
-      ).rejects.toThrow(errorMock);
-    });
   });
 
   describe('sendAuthenticationMail()', () => {

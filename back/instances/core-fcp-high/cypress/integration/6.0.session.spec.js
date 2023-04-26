@@ -8,7 +8,7 @@ describe('6.0 - Session', () => {
   // -- replace by either `fip1-high` or `fia1-low`
   const idpId = `${Cypress.env('IDP_NAME')}1-high`;
 
-  it('should trigger error Y190001 (no session found)', () => {
+  it('should display the Y190009 error when requesting consent page without session', () => {
     basicScenario({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
@@ -21,10 +21,10 @@ describe('6.0 - Session', () => {
     cy.get('#consent').click();
 
     cy.url().should('match', new RegExp(`\/login`));
-    cy.hasError('Y190001');
+    cy.hasError('Y190009');
   });
 
-  it('should trigger error Y190001 if FC session cookie not set', () => {
+  it('should display the Y190009 error when requesting interaction page without session', () => {
     const authorizeUrl = getAuthorizeUrl();
     cy.visit(authorizeUrl);
     cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
@@ -33,11 +33,11 @@ describe('6.0 - Session', () => {
       cy.clearCookie('fc_session_id');
       cy.visit(interactionUrl, { failOnStatusCode: false });
       cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
-      cy.hasError('Y190001');
+      cy.hasError('Y190009');
     });
   });
 
-  it('should trigger error Y190001 if FC session cookie does not match found backend interaction', () => {
+  it('should trigger error Y190009 if FC session id does not match found backend interaction', () => {
     const authorizeUrl = getAuthorizeUrl();
     cy.visit(authorizeUrl);
     cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
@@ -65,7 +65,7 @@ describe('6.0 - Session', () => {
         );
         cy.visit(interactionUrl, { failOnStatusCode: false });
         cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
-        cy.hasError('Y190001');
+        cy.hasError('Y190009');
       });
     });
   });

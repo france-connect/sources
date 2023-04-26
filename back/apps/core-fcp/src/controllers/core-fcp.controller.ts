@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Header,
   Param,
   Render,
   Req,
@@ -11,7 +12,12 @@ import {
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { CoreRoutes, Interaction } from '@fc/core';
+import {
+  CoreAcrService,
+  CoreRoutes,
+  CoreVerifyService,
+  Interaction,
+} from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { NotificationsService } from '@fc/notifications';
@@ -35,7 +41,7 @@ import {
   InteractionSessionDto,
 } from '../dto';
 import { InsufficientAcrLevelSuspiciousContextException } from '../exceptions';
-import { CoreFcpService, CoreService } from '../services';
+import { CoreFcpService } from '../services';
 
 @Controller()
 export class CoreFcpController {
@@ -50,14 +56,16 @@ export class CoreFcpController {
     private readonly config: ConfigService,
     private readonly notifications: NotificationsService,
     private readonly csrf: SessionCsrfService,
-    private readonly core: CoreService,
     private readonly oidcAcr: OidcAcrService,
     private readonly oidcClient: OidcClientService,
+    private readonly coreAcr: CoreAcrService,
+    private readonly coreVerify: CoreVerifyService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
 
   @Get(CoreRoutes.DEFAULT)
+  @Header('cache-control', 'no-store')
   getDefault(@Res() res) {
     const { defaultRedirectUri } = this.config.get<CoreConfig>('Core');
 
@@ -74,6 +82,7 @@ export class CoreFcpController {
   // More than 4 parameters authorized for dependency injection
   // eslint-disable-next-line max-params
   @Get(CoreRoutes.INTERACTION)
+  @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async getInteraction(
     @Req() req,
@@ -100,7 +109,7 @@ export class CoreFcpController {
       configuration: { acrValues: allowedAcrValues },
     } = this.config.get<OidcProviderConfig>('OidcProvider');
 
-    const rejected = await this.core.rejectInvalidAcr(
+    const rejected = await this.coreAcr.rejectInvalidAcr(
       acrValues,
       allowedAcrValues,
       { req, res },
@@ -124,17 +133,23 @@ export class CoreFcpController {
 
     const isSuspicious = await sessionApp.get('isSuspicious');
 
-    const authorizedProviders = providers
-      .filter(({ maxAuthorizedAcr }) =>
-        this.oidcAcr.isAcrValid(maxAuthorizedAcr, acrValues),
-      )
-      .filter(({ maxAuthorizedAcr }) => {
-        const authorizedIdp = !this.coreFcp.isInsufficientAcrLevel(
-          maxAuthorizedAcr,
-          isSuspicious,
-        );
-        return authorizedIdp;
-      });
+    const authorizedProviders = providers.map((provider) => {
+      const isAcrValid = this.oidcAcr.isAcrValid(
+        provider.maxAuthorizedAcr,
+        acrValues,
+      );
+
+      const isInsufficientAcrLevel = this.coreFcp.isInsufficientAcrLevel(
+        provider.maxAuthorizedAcr,
+        isSuspicious,
+      );
+
+      if (!isAcrValid || isInsufficientAcrLevel) {
+        provider.active = false;
+      }
+
+      return provider;
+    });
 
     // -- generate and store in session the CSRF token
     const csrfToken = this.csrf.get();
@@ -165,6 +180,7 @@ export class CoreFcpController {
   // More than 4 parameters authorized for dependency injection
   // eslint-disable-next-line max-params
   @Get(CoreRoutes.INTERACTION_VERIFY)
+  @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async getVerify(
     @Req() req,
@@ -195,7 +211,7 @@ export class CoreFcpController {
     }
 
     const trackingContext: TrackedEventContextInterface = { req };
-    await this.coreFcp.verify(sessionOidc, trackingContext);
+    await this.coreVerify.verify(sessionOidc, trackingContext);
 
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const url = `${urlPrefix}/interaction/${interactionId}/consent`;
@@ -211,6 +227,7 @@ export class CoreFcpController {
   }
 
   @Get(CoreRoutes.INTERACTION_CONSENT)
+  @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @Render('consent')
   async getConsent(

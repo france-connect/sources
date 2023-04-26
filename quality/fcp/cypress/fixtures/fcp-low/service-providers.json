@@ -24,7 +24,10 @@
   },
   {
     "name": "fsp2-low",
-    "descriptions": ["non habilité à demander le claim amr"],
+    "descriptions": [
+      "non habilité à demander le claim amr",
+      "avec une whitelist de FI"
+    ],
     "mocked": true,
     "url": "https://fsp2-low.{{TEST_ENV}}.dev-franceconnect.fr",
     "clientId": "7a79e45107f9ccc6a3a5971d501220dc4fd9e87bb5e3fc62ce4104c756e22775",
@@ -42,7 +45,10 @@
   },
   {
     "name": "fsp3-low",
-    "descriptions": ["privé avec consentement obligatoire"],
+    "descriptions": [
+      "privé avec consentement obligatoire",
+      "avec une blacklist de FI"
+    ],
     "mocked": true,
     "url": "https://fsp3-low.{{TEST_ENV}}.dev-franceconnect.fr",
     "clientId": "5a6e58c6e0cf3cb21de192c567335a8ec121a3f96d0fd48cf58c1f1c48235b63",

@@ -16,6 +16,9 @@ export interface IOidcIdentity {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   family_name: string;
   birthdate: string;
+  // oidc claim
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  idp_birthdate: string;
   gender: string;
   birthplace: string;
   birthcountry: string;

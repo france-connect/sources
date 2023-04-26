@@ -675,13 +675,18 @@ describe('IdentityProviderAdapterMongoService', () => {
       expect(result).toBeInstanceOf(Promise);
     });
 
-    it('should return a list of providers whithout blacklisted ones', async () => {
+    it('should return a list of mapped providers', async () => {
       // GIVEN
       const optionsMock = {
         ...defaultOptionsMock,
-        acrValues: null,
       };
       const expected = [
+        {
+          active: false,
+          eidas: 1,
+          name: 'idp1',
+          uid: 'idp1',
+        },
         {
           eidas: 1,
           name: 'idp2',
@@ -716,9 +721,27 @@ describe('IdentityProviderAdapterMongoService', () => {
       };
       const expected = [
         {
+          active: false,
+          eidas: 1,
+          name: 'idp1',
+          uid: 'idp1',
+        },
+        {
           eidas: 1,
           name: 'idp2',
           uid: 'idp2',
+        },
+        {
+          active: false,
+          eidas: 2,
+          name: 'idp3',
+          uid: 'idp3',
+        },
+        {
+          active: false,
+          eidas: 3,
+          name: 'idp4',
+          uid: 'idp4',
         },
       ];
 

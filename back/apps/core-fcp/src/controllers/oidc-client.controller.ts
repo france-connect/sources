@@ -17,6 +17,7 @@ import {
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
+import { CoreVerifyService, ProcessCore } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
@@ -41,10 +42,8 @@ import {
   OidcIdentityDto,
   RedirectToIdpSessionDto,
 } from '../dto';
-import { ProcessCore } from '../enums';
 import { CoreFcpInvalidIdentityException } from '../exceptions';
 import { IIdentityCheckFeatureHandler } from '../interfaces';
-import { CoreFcpService } from '../services';
 
 @Controller()
 export class OidcClientController {
@@ -56,7 +55,7 @@ export class OidcClientController {
     private readonly identityProvider: IdentityProviderAdapterMongoService,
     private readonly csrfService: SessionCsrfService,
     private readonly config: ConfigService,
-    private readonly core: CoreFcpService,
+    private readonly coreVerify: CoreVerifyService,
     private readonly tracking: TrackingService,
   ) {
     this.logger.setContext(this.constructor.name);
@@ -66,6 +65,7 @@ export class OidcClientController {
    * @todo #242 get configured parameters (scope and acr)
    */
   @Post(OidcClientRoutes.REDIRECT_TO_IDP)
+  @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async redirectToIdp(
     @Res() res,
@@ -163,6 +163,7 @@ export class OidcClientController {
   }
 
   @Get(OidcClientRoutes.OIDC_CALLBACK_LEGACY)
+  @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @Redirect()
   async getLegacyOidcCallback(
@@ -191,6 +192,7 @@ export class OidcClientController {
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/308
    */
   @Get(OidcClientRoutes.OIDC_CALLBACK)
+  @Header('cache-control', 'no-store')
   async getOidcCallback(
     @Req() req,
     @Res() res,
@@ -262,7 +264,7 @@ export class OidcClientController {
 
   private async validateIdentity(idpId: string, identity: OidcIdentityDto) {
     const identityCheckHandler =
-      await this.core.getFeature<IIdentityCheckFeatureHandler>(
+      await this.coreVerify.getFeature<IIdentityCheckFeatureHandler>(
         idpId,
         ProcessCore.ID_CHECK,
       );

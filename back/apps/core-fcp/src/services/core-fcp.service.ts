@@ -3,20 +3,15 @@ import { ModuleRef } from '@nestjs/core';
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
+import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
-import { OidcClientSession } from '@fc/oidc-client';
 import { IClaim, IRichClaim, ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { ISessionService } from '@fc/session';
-import { TrackedEventContextInterface } from '@fc/tracking';
 
-import { ProcessCore } from '../enums';
 import { CoreFcpSendEmailHandler } from '../handlers';
-import { IVerifyFeatureHandler } from '../interfaces';
 
 @Injectable()
 export class CoreFcpService {
@@ -32,44 +27,6 @@ export class CoreFcpService {
     private readonly oidcAcr: OidcAcrService,
   ) {
     this.logger.setContext(this.constructor.name);
-  }
-
-  /**
-   * Main business manipulations occurs in this method
-   *
-   * @param {ISessionService<OidcClientSession>} sessionOidc
-   * @returns {Promise<void>}
-   */
-  async verify(
-    sessionOidc: ISessionService<OidcClientSession>,
-    trackingContext: TrackedEventContextInterface,
-  ): Promise<void> {
-    this.logger.debug('CoreFcpService.verify');
-
-    const { idpId } = await sessionOidc.get();
-
-    const verifyHandler = await this.getFeature<IVerifyFeatureHandler>(
-      idpId,
-      ProcessCore.CORE_VERIFY,
-    );
-
-    this.logger.trace({ idpId, trackingContext });
-
-    return await verifyHandler.handle({ sessionOidc, trackingContext });
-  }
-
-  async getFeature<T extends IFeatureHandler>(
-    idpId: string,
-    process: ProcessCore,
-  ): Promise<T> {
-    this.logger.debug(`getFeature ${process} for provider: ${idpId}`);
-
-    const idp = await this.identityProvider.getById(idpId);
-    const idClass = idp.featureHandlers[process];
-
-    this.logger.trace({ idp, idClass });
-
-    return FeatureHandler.get<T>(idClass, this);
   }
 
   /**

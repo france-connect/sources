@@ -22,4 +22,6 @@ export const claims: IClaims = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   phone_number: 'phone_number',
   email: 'email',
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  idp_birthdate: 'idp_birthdate',
 };

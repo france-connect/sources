@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
+import {
+  CoreAccountService,
+  CoreAcrService,
+  IVerifyFeatureHandlerHandleArgument,
+} from '@fc/core';
 import { CryptographyFcaService, IAgentIdentity } from '@fc/cryptography-fca';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
-import { ISessionService } from '@fc/session';
-
-import { CoreService } from '../../services';
 
 @Injectable()
 @FeatureHandler('core-fca-default-verify')
@@ -15,7 +17,8 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
   /* eslint-disable-next-line max-params */
   constructor(
     private readonly logger: LoggerService,
-    private readonly core: CoreService,
+    private readonly coreAccount: CoreAccountService,
+    private readonly coreAcr: CoreAcrService,
     private readonly cryptographyFca: CryptographyFcaService,
   ) {
     this.logger.setContext(this.constructor.name);
@@ -31,14 +34,16 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
    *
    * @param req
    */
-  async handle(sessionOidc: ISessionService<OidcClientSession>): Promise<void> {
+  async handle({
+    sessionOidc,
+  }: IVerifyFeatureHandlerHandleArgument): Promise<void> {
     this.logger.debug('getConsent service: ##### core-fca-default-verify');
 
     const { idpId, idpIdentity, idpAcr, spId, spAcr, amr } =
       await sessionOidc.get();
 
     // Acr check
-    this.core.checkIfAcrIsValid(idpAcr, spAcr);
+    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr);
 
     const agentIdentity = idpIdentity as unknown as IAgentIdentity;
 
@@ -47,13 +52,13 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
       agentIdentity,
     );
 
-    await this.core.checkIfAccountIsBlocked(agentHash);
+    await this.coreAccount.checkIfAccountIsBlocked(agentHash);
 
     const subSp = this.cryptographyFca.computeSubV1(spId, agentHash);
     const { sub: subIdp } = agentIdentity;
 
     // Save interaction to database & get sp's sub to avoid double computation
-    const accountId = await this.core.computeInteraction(
+    const accountId = await this.coreAccount.computeFederation(
       {
         spId,
         subSp,

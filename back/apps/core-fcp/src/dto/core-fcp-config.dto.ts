@@ -2,7 +2,13 @@
 
 // Declarative code
 import { Type } from 'class-transformer';
-import { IsObject, IsString, IsUrl, ValidateNested } from 'class-validator';
+import {
+  IsEnum,
+  IsObject,
+  IsString,
+  IsUrl,
+  ValidateNested,
+} from 'class-validator';
 
 import { AppConfig } from '@fc/app';
 import { ConfigConfig } from '@fc/config';
@@ -23,6 +29,8 @@ import { ServiceProviderAdapterMongoConfig } from '@fc/service-provider-adapter-
 import { SessionConfig } from '@fc/session';
 import { TrackingConfig } from '@fc/tracking';
 
+import { IdentitySource } from '../enums';
+
 export class CoreConfig {
   @IsUrl()
   readonly defaultRedirectUri: string;
@@ -32,6 +40,9 @@ export class CoreConfig {
 
   @IsString({ each: true })
   readonly supportFormCodes: string[];
+
+  @IsEnum(IdentitySource)
+  readonly useIdentityFrom: IdentitySource;
 }
 
 export class CoreFcpConfig {

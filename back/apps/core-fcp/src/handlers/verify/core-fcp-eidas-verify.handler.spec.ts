@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
+import { CoreAccountService, CoreAcrService } from '@fc/core';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
 import { LoggerService } from '@fc/logger-legacy';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
-import { CoreService } from '../../services';
 import { CoreFcpEidasVerifyHandler } from './core-fcp-eidas-verify.handler';
 
 describe('CoreFcpEidasVerifyHandler', () => {
@@ -62,10 +62,12 @@ describe('CoreFcpEidasVerifyHandler', () => {
 
   const accountIdMock = 'accountIdMock value';
 
-  const coreServiceMock = {
-    checkIfAccountIsBlocked: jest.fn(),
+  const coreAccountServiceMock = {
+    computeFederation: jest.fn(),
+  };
+
+  const coreAcrServiceMock = {
     checkIfAcrIsValid: jest.fn(),
-    computeInteraction: jest.fn(),
   };
 
   const serviceProviderMock = {
@@ -92,7 +94,8 @@ describe('CoreFcpEidasVerifyHandler', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ConfigService,
-        CoreService,
+        CoreAccountService,
+        CoreAcrService,
         CoreFcpEidasVerifyHandler,
         LoggerService,
         SessionService,
@@ -103,8 +106,10 @@ describe('CoreFcpEidasVerifyHandler', () => {
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(CoreService)
-      .useValue(coreServiceMock)
+      .overrideProvider(CoreAccountService)
+      .useValue(coreAccountServiceMock)
+      .overrideProvider(CoreAcrService)
+      .useValue(coreAcrServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
       .overrideProvider(SessionService)
@@ -130,7 +135,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
       .mockReturnValueOnce('computedSubSp')
       .mockReturnValueOnce('computedSubIdp');
 
-    coreServiceMock.computeInteraction.mockResolvedValue(accountIdMock);
+    coreAccountServiceMock.computeFederation.mockResolvedValue(accountIdMock);
   });
 
   it('should be defined', () => {
@@ -163,7 +168,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
     it('Should throw if acr is not validated', async () => {
       // Given
       const errorMock = new Error('my error 1');
-      coreServiceMock.checkIfAcrIsValid.mockImplementation(() => {
+      coreAcrServiceMock.checkIfAcrIsValid.mockImplementation(() => {
         throw errorMock;
       });
       // Then
@@ -199,12 +204,12 @@ describe('CoreFcpEidasVerifyHandler', () => {
       });
     });
 
-    it('Should call computeInteraction()', async () => {
+    it('Should call computeFederation()', async () => {
       // When
       await service.handle(handleArgument);
       // Then
-      expect(coreServiceMock.computeInteraction).toHaveBeenCalledTimes(1);
-      expect(coreServiceMock.computeInteraction).toBeCalledWith(
+      expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledTimes(1);
+      expect(coreAccountServiceMock.computeFederation).toBeCalledWith(
         {
           spId: sessionDataMock.spId,
           entityId: spMock.entityId,

@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AccountBlockedException } from '@fc/account';
+import { CoreAccountService, CoreAcrService } from '@fc/core';
 import { CryptographyFcaService } from '@fc/cryptography-fca';
 import { LoggerService } from '@fc/logger-legacy';
 import { SessionService } from '@fc/session';
 
-import { CoreService } from '../../services';
 import { CoreFcaDefaultVerifyHandler } from './core-fca.default-verify.handler';
 
 describe('CoreFcaDefaultVerifyHandler', () => {
@@ -20,10 +20,13 @@ describe('CoreFcaDefaultVerifyHandler', () => {
 
   const accountIdMock = 'accountIdMock value';
 
-  const coreServiceMock = {
+  const coreAccountServiceMock = {
     checkIfAccountIsBlocked: jest.fn(),
+    computeFederation: jest.fn(),
+  };
+
+  const coreAcrServiceMock = {
     checkIfAcrIsValid: jest.fn(),
-    computeInteraction: jest.fn(),
   };
 
   const sessionServiceMock = {
@@ -59,6 +62,10 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     amr: ['pwd'],
   };
 
+  const handleArgument = {
+    sessionOidc: sessionServiceMock,
+  };
+
   const cryptographyFcaServiceMock = {
     computeSubV1: jest.fn(),
     computeIdentityHash: jest.fn(),
@@ -70,7 +77,8 @@ describe('CoreFcaDefaultVerifyHandler', () => {
         CoreFcaDefaultVerifyHandler,
         SessionService,
         LoggerService,
-        CoreService,
+        CoreAccountService,
+        CoreAcrService,
         CryptographyFcaService,
       ],
     })
@@ -78,8 +86,10 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       .useValue(loggerServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
-      .overrideProvider(CoreService)
-      .useValue(coreServiceMock)
+      .overrideProvider(CoreAccountService)
+      .useValue(coreAccountServiceMock)
+      .overrideProvider(CoreAcrService)
+      .useValue(coreAcrServiceMock)
       .overrideProvider(CryptographyFcaService)
       .useValue(cryptographyFcaServiceMock)
       .compile();
@@ -98,7 +108,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     cryptographyFcaServiceMock.computeSubV1.mockReturnValueOnce(
       'computedSubSp',
     );
-    coreServiceMock.computeInteraction.mockResolvedValue(accountIdMock);
+    coreAccountServiceMock.computeFederation.mockResolvedValue(accountIdMock);
   });
 
   it('should be defined', () => {
@@ -108,31 +118,29 @@ describe('CoreFcaDefaultVerifyHandler', () => {
   describe('handle', () => {
     it('Should not throw if verified', async () => {
       // Then
-      await expect(service.handle(sessionServiceMock)).resolves.not.toThrow();
+      await expect(service.handle(handleArgument)).resolves.not.toThrow();
     });
 
     // Dependencies sevices errors
     it('Should throw if acr is not validated', async () => {
       // Given
       const errorMock = new Error('my error 1');
-      coreServiceMock.checkIfAcrIsValid.mockImplementation(() => {
+      coreAcrServiceMock.checkIfAcrIsValid.mockImplementation(() => {
         throw errorMock;
       });
       // Then
-      await expect(service.handle(sessionServiceMock)).rejects.toThrow(
-        errorMock,
-      );
+      await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
     it('Should throw if account is blocked', async () => {
       // Given
       const errorMock = new AccountBlockedException();
-      coreServiceMock.checkIfAccountIsBlocked.mockRejectedValueOnce(errorMock);
-
-      // Then
-      await expect(service.handle(sessionServiceMock)).rejects.toThrow(
+      coreAccountServiceMock.checkIfAccountIsBlocked.mockRejectedValueOnce(
         errorMock,
       );
+
+      // Then
+      await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
     it('Should throw if identity provider is not usable', async () => {
@@ -140,14 +148,12 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       const errorMock = new Error('my error');
       sessionServiceMock.get.mockRejectedValueOnce(errorMock);
       // Then
-      await expect(service.handle(sessionServiceMock)).rejects.toThrow(
-        errorMock,
-      );
+      await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
     it('Should call session set with amr parameter', async () => {
       // When
-      await service.handle(sessionServiceMock);
+      await service.handle(handleArgument);
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith({
@@ -167,12 +173,12 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       });
     });
 
-    it('Should call computeInteraction()', async () => {
+    it('Should call computeFederation()', async () => {
       // When
-      await service.handle(sessionServiceMock);
+      await service.handle(handleArgument);
       // Then
-      expect(coreServiceMock.computeInteraction).toHaveBeenCalledTimes(1);
-      expect(coreServiceMock.computeInteraction).toBeCalledWith(
+      expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledTimes(1);
+      expect(coreAccountServiceMock.computeFederation).toBeCalledWith(
         {
           spId: sessionDataMock.spId,
           subSp: 'computedSubSp',
@@ -187,7 +193,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
 
     it('should call computeIdentityHash with idp identity and idp id', async () => {
       // When
-      await service.handle(sessionServiceMock);
+      await service.handle(handleArgument);
 
       // Then
       expect(
@@ -200,7 +206,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
 
     it('Should call compute Sub for Sp based on identity hash', async () => {
       // When
-      await service.handle(sessionServiceMock);
+      await service.handle(handleArgument);
 
       // Then
       expect(cryptographyFcaServiceMock.computeSubV1).toHaveBeenCalledTimes(1);
@@ -211,15 +217,13 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       );
     });
 
-    it('Should throw an error if computeInteraction failed', async () => {
+    it('Should throw an error if computeFederation failed', async () => {
       // Given
       const errorMock = new Error('my error');
-      coreServiceMock.computeInteraction.mockRejectedValueOnce(errorMock);
+      coreAccountServiceMock.computeFederation.mockRejectedValueOnce(errorMock);
 
       // Then
-      await expect(service.handle(sessionServiceMock)).rejects.toThrow(
-        errorMock,
-      );
+      await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
     it('Should patch the session with idp and sp identity', async () => {
@@ -244,7 +248,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       };
 
       // When
-      await service.handle(sessionServiceMock);
+      await service.handle(handleArgument);
 
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
@@ -257,9 +261,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       sessionServiceMock.set.mockRejectedValueOnce(errorMock);
 
       // Then
-      await expect(service.handle(sessionServiceMock)).rejects.toThrow(
-        errorMock,
-      );
+      await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
   });
 });

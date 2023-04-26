@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
+import { CoreAcrService, CoreVerifyService } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { NotificationsService } from '@fc/notifications';
@@ -10,10 +11,8 @@ import { OidcClientService } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionCsrfService, SessionService } from '@fc/session';
-import { TrackingService } from '@fc/tracking';
 
 import { InsufficientAcrLevelSuspiciousContextException } from '../exceptions';
-import { CoreService } from '../services';
 import { CoreFcpService } from '../services/core-fcp.service';
 import { CoreFcpController } from './core-fcp.controller';
 
@@ -66,6 +65,10 @@ describe('CoreFcpController', () => {
     isAcrValid: jest.fn(),
   };
 
+  const coreAcrServiceMock = {
+    rejectInvalidAcr: jest.fn(),
+  };
+
   const oidcProviderServiceMock = {
     getInteraction: jest.fn(),
   };
@@ -76,7 +79,7 @@ describe('CoreFcpController', () => {
     trace: jest.fn(),
   } as unknown as LoggerService;
 
-  const coreServiceMock = {
+  const coreFcpServiceMock = {
     getClaimsForInteraction: jest.fn(),
     getClaimsLabelsForInteraction: jest.fn(),
     getFeature: jest.fn(),
@@ -84,11 +87,10 @@ describe('CoreFcpController', () => {
     isConsentRequired: jest.fn(),
     isInsufficientAcrLevel: jest.fn(),
     sendAuthenticationMail: jest.fn(),
-    verify: jest.fn(),
   };
 
-  const libCoreServiceMock = {
-    rejectInvalidAcr: jest.fn(),
+  const coreVerifyServiceMock = {
+    verify: jest.fn(),
   };
 
   const scopesMock = ['toto', 'titi'];
@@ -152,15 +154,6 @@ describe('CoreFcpController', () => {
     type: 'public',
   };
 
-  const trackingServiceMock = {
-    track: jest.fn(),
-    TrackedEventsMap: {
-      FC_DATATRANSFER_CONSENT_IDENTITY: {},
-      FC_DATATRANSFER_INFORMATION_IDENTITY: {},
-      FC_DATATRANSFER_INFORMATION_ANONYMOUS: {},
-    },
-  };
-
   const csrfMock = 'csrfMockValue';
 
   const oidcSessionMock: OidcSession = {
@@ -190,15 +183,15 @@ describe('CoreFcpController', () => {
         OidcAcrService,
         OidcProviderService,
         CoreFcpService,
-        CoreService,
         IdentityProviderAdapterMongoService,
         ServiceProviderAdapterMongoService,
         SessionService,
         ConfigService,
         NotificationsService,
         OidcClientService,
-        TrackingService,
         SessionCsrfService,
+        CoreAcrService,
+        CoreVerifyService,
       ],
     })
       .overrideProvider(OidcAcrService)
@@ -208,9 +201,7 @@ describe('CoreFcpController', () => {
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
       .overrideProvider(CoreFcpService)
-      .useValue(coreServiceMock)
-      .overrideProvider(CoreService)
-      .useValue(libCoreServiceMock)
+      .useValue(coreFcpServiceMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
       .useValue(identityProviderServiceMock)
       .overrideProvider(ServiceProviderAdapterMongoService)
@@ -225,10 +216,12 @@ describe('CoreFcpController', () => {
       .useValue(notificationsServiceMock)
       .overrideProvider(OidcClientService)
       .useValue(oidcClientServiceMock)
-      .overrideProvider(TrackingService)
-      .useValue(trackingServiceMock)
       .overrideProvider(SessionCsrfService)
       .useValue(sessionCsrfServiceMock)
+      .overrideProvider(CoreAcrService)
+      .useValue(coreAcrServiceMock)
+      .overrideProvider(CoreVerifyService)
+      .useValue(coreVerifyServiceMock)
       .compile();
 
     coreController = await app.get<CoreFcpController>(CoreFcpController);
@@ -244,15 +237,15 @@ describe('CoreFcpController', () => {
 
     oidcSessionServiceMock.get.mockResolvedValue(oidcSessionMock);
 
-    coreServiceMock.verify.mockResolvedValue(interactionDetailsMock);
-    coreServiceMock.getClaimsForInteraction.mockReturnValue(claimsMock);
-    coreServiceMock.getScopesForInteraction.mockReturnValue(scopesMock);
-    coreServiceMock.isConsentRequired.mockResolvedValue(true);
-    coreServiceMock.isInsufficientAcrLevel.mockReturnValue(false);
-    coreServiceMock.getClaimsLabelsForInteraction.mockReturnValue(
+    coreVerifyServiceMock.verify.mockResolvedValue(interactionDetailsMock);
+    coreFcpServiceMock.getClaimsForInteraction.mockReturnValue(claimsMock);
+    coreFcpServiceMock.getScopesForInteraction.mockReturnValue(scopesMock);
+    coreFcpServiceMock.isConsentRequired.mockResolvedValue(true);
+    coreFcpServiceMock.isInsufficientAcrLevel.mockReturnValue(false);
+    coreFcpServiceMock.getClaimsLabelsForInteraction.mockReturnValue(
       claimsLabelMock,
     );
-    libCoreServiceMock.rejectInvalidAcr.mockResolvedValue(false);
+    coreAcrServiceMock.rejectInvalidAcr.mockResolvedValue(false);
 
     sessionCsrfServiceMock.get.mockReturnValueOnce(csrfMock);
     sessionCsrfServiceMock.save.mockResolvedValueOnce(true);
@@ -307,7 +300,7 @@ describe('CoreFcpController', () => {
       oidcProviderServiceMock.getInteraction.mockResolvedValue(
         interactionDetailsMock,
       );
-      libCoreServiceMock.rejectInvalidAcr.mockResolvedValue(false);
+      coreAcrServiceMock.rejectInvalidAcr.mockResolvedValue(false);
       serviceProviderServiceMock.getById.mockReturnValue({
         idpFilterExclude: idpFilterExcludeMock,
         idpFilterList: idpFilterListMock,
@@ -317,7 +310,7 @@ describe('CoreFcpController', () => {
       );
       appSessionServiceMock.get.mockResolvedValue(false);
       oidcAcrServiceMock.isAcrValid.mockReturnValue(true);
-      coreServiceMock.isInsufficientAcrLevel.mockReturnValue(false);
+      coreFcpServiceMock.isInsufficientAcrLevel.mockReturnValue(false);
       notificationsServiceMock.getNotifications.mockResolvedValue(
         notificationsMock,
       );
@@ -367,7 +360,7 @@ describe('CoreFcpController', () => {
       expect(configServiceMock.get).toHaveBeenNthCalledWith(2, 'OidcProvider');
     });
 
-    it('should call coreService.rejectInvalidAcr() with interaction acrValues, authorizedAcrValues, req and res', async () => {
+    it('should call coreAcrService.rejectInvalidAcr() with interaction acrValues, authorizedAcrValues, req and res', async () => {
       // When
       await coreController.getInteraction(
         req,
@@ -377,8 +370,8 @@ describe('CoreFcpController', () => {
         appSessionServiceMock,
       );
       // Then
-      expect(libCoreServiceMock.rejectInvalidAcr).toHaveBeenCalledTimes(1);
-      expect(libCoreServiceMock.rejectInvalidAcr).toHaveBeenCalledWith(
+      expect(coreAcrServiceMock.rejectInvalidAcr).toHaveBeenCalledTimes(1);
+      expect(coreAcrServiceMock.rejectInvalidAcr).toHaveBeenCalledWith(
         interactionDetailsMock.params.acr_values,
         appConfigMock.configuration.acrValues,
         { req, res },
@@ -387,7 +380,7 @@ describe('CoreFcpController', () => {
 
     it('should not render anything and return if acr value is not an allowedAcrValue', async () => {
       // Given
-      libCoreServiceMock.rejectInvalidAcr.mockResolvedValueOnce(true);
+      coreAcrServiceMock.rejectInvalidAcr.mockResolvedValueOnce(true);
 
       // When
       const result = await coreController.getInteraction(
@@ -517,14 +510,21 @@ describe('CoreFcpController', () => {
       );
 
       // Then
-      expect(coreServiceMock.isInsufficientAcrLevel).toHaveBeenCalledTimes(2);
-      expect(coreServiceMock.isInsufficientAcrLevel).toHaveBeenNthCalledWith(
+      expect(coreFcpServiceMock.isInsufficientAcrLevel).toHaveBeenCalledTimes(
+        3,
+      );
+      expect(coreFcpServiceMock.isInsufficientAcrLevel).toHaveBeenNthCalledWith(
         1,
         idpFilterListMock[0].maxAuthorizedAcr,
         false,
       );
-      expect(coreServiceMock.isInsufficientAcrLevel).toHaveBeenNthCalledWith(
+      expect(coreFcpServiceMock.isInsufficientAcrLevel).toHaveBeenNthCalledWith(
         2,
+        idpFilterListMock[1].maxAuthorizedAcr,
+        false,
+      );
+      expect(coreFcpServiceMock.isInsufficientAcrLevel).toHaveBeenNthCalledWith(
+        3,
         idpFilterListMock[2].maxAuthorizedAcr,
         false,
       );
@@ -711,8 +711,10 @@ describe('CoreFcpController', () => {
       );
 
       // Then
-      expect(coreServiceMock.isInsufficientAcrLevel).toHaveBeenCalledTimes(1);
-      expect(coreServiceMock.isInsufficientAcrLevel).toHaveBeenCalledWith(
+      expect(coreFcpServiceMock.isInsufficientAcrLevel).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(coreFcpServiceMock.isInsufficientAcrLevel).toHaveBeenCalledWith(
         oidcSessionMock.idpAcr,
         expectedSupiciousRequest,
       );
@@ -720,7 +722,7 @@ describe('CoreFcpController', () => {
 
     it('should throw an "InsufficientAcrLevelSuspiciousContextException" error if the used IdP is not valid and request is suspicious', async () => {
       // Given
-      coreServiceMock.isInsufficientAcrLevel.mockReturnValueOnce(true);
+      coreFcpServiceMock.isInsufficientAcrLevel.mockReturnValueOnce(true);
 
       // When / Then
       await expect(() =>
@@ -734,7 +736,7 @@ describe('CoreFcpController', () => {
       ).rejects.toThrow(InsufficientAcrLevelSuspiciousContextException);
     });
 
-    it('should call coreService', async () => {
+    it('should call coreVerifyService.verify', async () => {
       // When
       await coreController.getVerify(
         req,
@@ -744,7 +746,7 @@ describe('CoreFcpController', () => {
         appSessionServiceMock,
       );
       // Then
-      expect(coreServiceMock.verify).toHaveBeenCalledTimes(1);
+      expect(coreVerifyServiceMock.verify).toHaveBeenCalledTimes(1);
     });
 
     it('should redirect to /consent URL', async () => {
@@ -776,8 +778,10 @@ describe('CoreFcpController', () => {
       // When
       await coreController.getConsent(req, res, params, oidcSessionServiceMock);
       // Then
-      expect(coreServiceMock.isConsentRequired).toHaveBeenCalledTimes(1);
-      expect(coreServiceMock.isConsentRequired).toHaveBeenCalledWith(spIdMock);
+      expect(coreFcpServiceMock.isConsentRequired).toHaveBeenCalledTimes(1);
+      expect(coreFcpServiceMock.isConsentRequired).toHaveBeenCalledWith(
+        spIdMock,
+      );
     });
 
     it('should get data from interaction with oidc provider', async () => {

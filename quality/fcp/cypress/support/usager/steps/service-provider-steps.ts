@@ -7,7 +7,12 @@ import {
   navigateTo,
 } from '../../common/helpers';
 import { ServiceProvider, UserClaims } from '../../common/types';
-import { getClaims, getRnippClaims, getScopeByType } from '../helpers';
+import {
+  getClaims,
+  getIdpClaims,
+  getRnippClaims,
+  getScopeByType,
+} from '../helpers';
 import ServiceProviderPage from '../pages/service-provider-page';
 
 let serviceProviderPage: ServiceProviderPage;
@@ -97,8 +102,8 @@ Then(
         // Get automatically the equivalent RNIPP claims
         const rnippClaims = getRnippClaims(allClaims);
         const userClaims = {
-          ...rnippClaims,
           ...allClaims,
+          ...rnippClaims,
         };
         serviceProviderPage.checkMockInformationAccess(
           expectedClaims,
@@ -111,9 +116,14 @@ Then(
         if (expectedClaims.includes('given_name')) {
           expectedClaims.push('given_name_array');
         }
+        const idpClaims = getIdpClaims(allClaims);
+        const userClaims = {
+          ...allClaims,
+          ...idpClaims,
+        };
         serviceProviderPage.checkMockInformationAccess(
           expectedClaims,
-          allClaims,
+          userClaims,
         );
         return;
       }

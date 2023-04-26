@@ -3,6 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AccountBlockedException, AccountService } from '@fc/account';
 import { RequiredExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { CoreAccountService, CoreAcrService } from '@fc/core';
+import { IdentitySource } from '@fc/core-fcp/enums';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
@@ -11,7 +13,6 @@ import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter
 import { SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
-import { CoreService } from '../../services';
 import { CoreFcpDefaultVerifyHandler } from './core-fcp-default-verify.handler';
 
 describe('CoreFcpDefaultVerifyHandler', () => {
@@ -80,10 +81,12 @@ describe('CoreFcpDefaultVerifyHandler', () => {
 
   const accountIdMock = 'accountIdMock value';
 
-  const coreServiceMock = {
-    checkIfAccountIsBlocked: jest.fn(),
+  const coreAccountServiceMock = {
+    computeFederation: jest.fn(),
+  };
+
+  const coreAcrServiceMock = {
     checkIfAcrIsValid: jest.fn(),
-    computeInteraction: jest.fn(),
   };
 
   const sessionDataMock = {
@@ -96,6 +99,44 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     spName: 'my great SP',
     spIdentity: spIdentityMock,
   };
+
+  const rnippIdentityMock = {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    gender: 'gender',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    given_name: 'given_name',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    given_name_array: ['given_name_array'],
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    family_name: 'family_name',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    birthdate: 'birthdate',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    birthplace: 'birthplace',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    birthcountry: 'birthcountry',
+  };
+  const rnippClaims = {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    rnipp_gender: 'gender',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    rnipp_given_name: 'given_name',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    rnipp_given_name_array: ['given_name_array'],
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    rnipp_family_name: 'family_name',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    rnipp_birthdate: 'birthdate',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    rnipp_birthplace: 'birthplace',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    rnipp_birthcountry: 'birthcountry',
+  };
+  const spMock = {
+    key: '123456',
+    entityId: 'AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHH',
+  };
+  const subSp = 'computedSubSp';
 
   const serviceProviderMock = {
     getById: jest.fn(),
@@ -114,11 +155,16 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     getAccountByIdentityHash: jest.fn(),
   };
 
+  const configReturnedValueMock = {
+    useIdentityFrom: IdentitySource.RNIPP,
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ConfigService,
-        CoreService,
+        CoreAccountService,
+        CoreAcrService,
         CoreFcpDefaultVerifyHandler,
         LoggerService,
         SessionService,
@@ -131,8 +177,10 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(CoreService)
-      .useValue(coreServiceMock)
+      .overrideProvider(CoreAccountService)
+      .useValue(coreAccountServiceMock)
+      .overrideProvider(CoreAcrService)
+      .useValue(coreAcrServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
       .overrideProvider(SessionService)
@@ -147,7 +195,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       .useValue(cryptographyFcpServiceMock)
       .overrideProvider(AccountService)
       .useValue(accountServiceMock)
-
       .compile();
 
     service = module.get<CoreFcpDefaultVerifyHandler>(
@@ -166,11 +213,12 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       .mockReturnValueOnce('computedSubSp')
       .mockReturnValueOnce('computedSubIdp');
 
-    coreServiceMock.computeInteraction.mockResolvedValue(accountIdMock);
+    coreAccountServiceMock.computeFederation.mockResolvedValue(accountIdMock);
 
     accountServiceMock.getAccountByIdentityHash.mockResolvedValueOnce(
       accountDataMock,
     );
+    configServiceMock.get.mockReturnValue(configReturnedValueMock);
   });
 
   it('should be defined', () => {
@@ -178,11 +226,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
   });
 
   describe('handle', () => {
-    const spMock = {
-      key: '123456',
-      entityId: 'AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHH',
-    };
-
     const trackingContext = {};
 
     const handleArgument = {
@@ -228,7 +271,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       await service.handle(handleArgument);
 
       // Then
-      expect(coreServiceMock.computeInteraction).toBeCalledWith(
+      expect(coreAccountServiceMock.computeFederation).toBeCalledWith(
         expect.objectContaining({
           subSp: subFromAccount,
         }),
@@ -249,7 +292,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       await service.handle(handleArgument);
 
       // Then
-      expect(coreServiceMock.computeInteraction).toBeCalledWith(
+      expect(coreAccountServiceMock.computeFederation).toBeCalledWith(
         expect.objectContaining({
           subSp: 'computedSubSp',
         }),
@@ -260,7 +303,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     it('Should throw if acr is not validated', async () => {
       // Given
       const errorMock = new Error('my error 1');
-      coreServiceMock.checkIfAcrIsValid.mockImplementation(() => {
+      coreAcrServiceMock.checkIfAcrIsValid.mockImplementation(() => {
         throw errorMock;
       });
       // Then
@@ -305,9 +348,18 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       const buildRnippClaimsResult = {
         foo: 'bar',
       };
+      const buildSpIdentityResult = {
+        email: 'email',
+        birthdate: 'foo',
+        subSp: 'computedSubSp',
+        sub: 'some idpSub',
+      };
       service['buildRnippClaims'] = jest
         .fn()
         .mockReturnValueOnce(buildRnippClaimsResult);
+      service['buildSpIdentity'] = jest
+        .fn()
+        .mockReturnValueOnce(buildSpIdentityResult);
       // When
       await service.handle(handleArgument);
       // Then
@@ -318,18 +370,19 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         idpIdentity: idpIdentityMock,
         spIdentity: {
           ...idpIdentityMock,
-          ...buildRnippClaimsResult,
-          sub: 'computedSubSp',
+          subSp: 'computedSubSp',
+          email: 'email',
+          birthdate: 'foo',
         },
       });
     });
 
-    it('Should call computeInteraction()', async () => {
+    it('Should call computeFederation()', async () => {
       // When
       await service.handle(handleArgument);
       // Then
-      expect(coreServiceMock.computeInteraction).toHaveBeenCalledTimes(1);
-      expect(coreServiceMock.computeInteraction).toBeCalledWith(
+      expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledTimes(1);
+      expect(coreAccountServiceMock.computeFederation).toBeCalledWith(
         {
           spId: sessionDataMock.spId,
           entityId: spMock.entityId,
@@ -407,6 +460,101 @@ describe('CoreFcpDefaultVerifyHandler', () => {
      * // Service provider usability
      * it('Should throw if service provider is not usable ', async () => {});
      */
+  });
+
+  describe('buildSpIdentity', () => {
+    beforeEach(() => {
+      serviceProviderMock.getById.mockResolvedValue(spMock);
+    });
+
+    it('should call buildFromRnippIdentity when RNIPP identity is selected in configuration', async () => {
+      // Given
+      const configReturnedValueMock = { useIdentityFrom: IdentitySource.RNIPP };
+      configServiceMock.get.mockReturnValue(configReturnedValueMock);
+      service['buildFromRnippIdentity'] = jest.fn();
+      // When
+      service['buildSpIdentity'](subSp, idpIdentityMock, rnippIdentityMock);
+      // Then
+      expect(service['buildFromRnippIdentity']).toHaveBeenCalled();
+      expect(service['buildFromRnippIdentity']).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call buildFromIdpIdentity when IDP identity is selected in configuration', async () => {
+      // Given
+      const configReturnedValueMock = { useIdentityFrom: IdentitySource.IDP };
+      configServiceMock.get.mockReturnValue(configReturnedValueMock);
+      service['buildFromIdpIdentity'] = jest.fn();
+      // When
+      service['buildSpIdentity'](subSp, idpIdentityMock, rnippIdentityMock);
+      // Then
+      expect(service['buildFromIdpIdentity']).toHaveBeenCalled();
+      expect(service['buildFromIdpIdentity']).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('buildFromIdpIdentity', () => {
+    beforeEach(() => {
+      const configReturnedValueMock = { useIdentityFrom: IdentitySource.IDP };
+      serviceProviderMock.getById.mockResolvedValue(spMock);
+      configServiceMock.get.mockReturnValue(configReturnedValueMock);
+    });
+
+    it('should return valide identity when IDP identity is selected in configuration', async () => {
+      // Given
+      service['buildRnippClaims'] = jest.fn().mockReturnValue(rnippClaims);
+      // When
+      const buildFromIdpIdentityResult = service['buildFromIdpIdentity'](
+        subSp,
+        idpIdentityMock,
+        rnippIdentityMock,
+      );
+      // Then
+      expect(buildFromIdpIdentityResult).toEqual({
+        ...rnippClaims,
+        ...idpIdentityMock,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        given_name_array: rnippIdentityMock.given_name_array,
+        sub: subSp,
+      });
+    });
+  });
+
+  describe('buildFromRnippIdentity', () => {
+    const idpIdentityMock = {
+      sub: 'some idpSub',
+      email: 'emailMock',
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      birthdate: 'idpBirthdateMock',
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      preferred_username: 'preferredUsernameMock',
+    };
+
+    beforeEach(() => {
+      const configReturnedValueMock = { useIdentityFrom: IdentitySource.RNIPP };
+      serviceProviderMock.getById.mockResolvedValue(spMock);
+      configServiceMock.get.mockReturnValue(configReturnedValueMock);
+    });
+
+    it('should return valide identity when RNIPP identity is selected in configuration', async () => {
+      // Given
+      service['buildRnippClaims'] = jest.fn().mockReturnValue(rnippClaims);
+      // When
+      const buildFromRnippIdentityResult = service['buildFromRnippIdentity'](
+        subSp,
+        rnippIdentityMock,
+        idpIdentityMock,
+      );
+      // Then
+      expect(buildFromRnippIdentityResult).toEqual({
+        ...rnippIdentityMock,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        idp_birthdate: idpIdentityMock.birthdate,
+        sub: subSp,
+        email: idpIdentityMock.email,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        preferred_username: idpIdentityMock.preferred_username,
+      });
+    });
   });
 
   describe('rnippCheck', () => {

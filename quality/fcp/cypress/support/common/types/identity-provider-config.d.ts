@@ -16,7 +16,7 @@ export interface IdentityProviderConfig {
   image: string;
   imageFocus: string;
   trustedIdentity: string;
-  eidas: number;
+  eidas: string;
   order: number;
   emails: string;
   specificText: string;

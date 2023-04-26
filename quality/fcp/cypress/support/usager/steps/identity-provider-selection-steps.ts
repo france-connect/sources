@@ -30,6 +30,7 @@ Then(
     const isEnabled = state === 'actif';
     identityProviderSelectionPage
       .getIdpButton(this.identityProvider)
+      .should('be.visible')
       .should(isEnabled ? 'be.enabled' : 'be.disabled');
   },
 );
@@ -91,7 +92,7 @@ When(
 When("je force l'utilisation du fournisseur d'identité", function () {
   expect(this.identityProvider).to.exist;
   identityProviderSelectionPage
-    .getIdpButton(this.identityProvider.idpId)
+    .getIdpButton(this.identityProvider)
     // Remove the disabled attribute
     .invoke('attr', 'disabled', false)
     .click({ force: true });

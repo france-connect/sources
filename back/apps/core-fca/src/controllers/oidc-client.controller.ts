@@ -68,6 +68,7 @@ export class OidcClientController {
    */
   @Post(OidcClientRoutes.REDIRECT_TO_IDP)
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @Header('cache-control', 'no-store')
   // eslint-disable-next-line complexity
   async redirectToIdp(
     @Req() req,
@@ -179,6 +180,7 @@ export class OidcClientController {
   }
 
   @Post(OidcClientRoutes.DISCONNECT_FROM_IDP)
+  @Header('cache-control', 'no-store')
   async logoutFromIdp(
     @Res() res,
     @Session('OidcClient')
@@ -202,6 +204,7 @@ export class OidcClientController {
   }
 
   @Get(OidcClientRoutes.CLIENT_LOGOUT_CALLBACK)
+  @Header('cache-control', 'no-store')
   @Render('oidc-provider-logout-form')
   async redirectAfterIdpLogout(
     @Req() req,
@@ -233,6 +236,7 @@ export class OidcClientController {
 
   @Get(OidcClientRoutes.OIDC_CALLBACK_LEGACY)
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @Header('cache-control', 'no-store')
   @Redirect()
   async getLegacyOidcCallback(
     @Query() query,
@@ -259,6 +263,7 @@ export class OidcClientController {
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/308
    */
   @Get(OidcClientRoutes.OIDC_CALLBACK)
+  @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async getOidcCallback(
     @Req() req,

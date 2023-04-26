@@ -23,5 +23,6 @@ export default {
   sessionCookieName: 'partners_fcp_session_id',
   lifetime: 600, // 10 minutes
   sessionIdLength: 64,
+  slidingExpiration: true,
   excludedRoutes: [],
 } as SessionConfig;

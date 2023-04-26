@@ -2,7 +2,7 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
-import { CoreConfig } from '@fc/core-fcp';
+import { CoreConfig, IdentitySource } from '@fc/core-fcp';
 
 const env = new ConfigParser(process.env, 'Core');
 
@@ -48,4 +48,5 @@ export default {
     'Y270002',
     'Y270003',
   ],
+  useIdentityFrom: IdentitySource.RNIPP,
 } as CoreConfig;

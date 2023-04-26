@@ -110,7 +110,8 @@ export default {
         'preferred_username',
       ],
       birth: ['birthplace', 'birthcountry'],
-      // node-oidc-provider defined key
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      idp_birthdate: ['idp_birthdate'],
       // eslint-disable-next-line @typescript-eslint/naming-convention
       identite_pivot: [
         'given_name',

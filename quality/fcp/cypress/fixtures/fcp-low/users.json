@@ -61,7 +61,9 @@
       "gender": "male",
       "given_name": "Jean",
       "family_name": "FLEURET",
-      "birthdate": "1992-11-00",
+      "birthdate": "1992-11",
+      "idp_birthdate": "1992-11-00",
+      "birthplace": "",
       "birthcountry": "99217",
       "email": "jean-fleuret@yopmail.com"
     }
@@ -82,7 +84,9 @@
       "gender": "male",
       "given_name": "Jean",
       "family_name": "TARGE",
-      "birthdate": "1992-00-00",
+      "birthdate": "1992",
+      "idp_birthdate": "1992-00-00",
+      "birthplace": "",
       "birthcountry": "99217",
       "email": "jean-targe@yopmail.com"
     }
@@ -157,8 +161,8 @@
       }
     ],
     "claims": {
-      "given_name": "Jean_PrénomComposéAvecEspace",
-      "family_name": "Martin",
+      "given_name": "Jean Philippe Pierre Louis",
+      "family_name": "DUBOIS",
       "birthdate": "1962-08-24",
       "gender": "male",
       "preferred_username": "Martin",
