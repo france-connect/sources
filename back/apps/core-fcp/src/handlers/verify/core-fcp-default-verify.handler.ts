@@ -11,7 +11,8 @@ import { IOidcIdentity } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { RnippPivotIdentity, RnippService } from '@fc/rnipp';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { TrackingService } from '@fc/tracking';
+import { ISessionService } from '@fc/session';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import { CoreConfig } from '../../dto';
 import { IdentitySource } from '../../enums';
@@ -57,7 +58,8 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     this.logger.debug('getConsent service: ##### core-fcp-default-verify');
 
     // Grab informations on interaction and identity
-    const { idpAcr, idpId, idpIdentity, spAcr, spId } = await sessionOidc.get();
+    const { idpAcr, idpId, idpIdentity, spAcr, spId, isSso, subs } =
+      await sessionOidc.get();
 
     /**
      * @todo #410 - le DTO est permissif et devrait forcer les données
@@ -73,8 +75,9 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     // Acr check
     this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr);
 
-    // Identity check and normalization
-    const rnippIdentity = await this.rnippCheck(
+    const rnippIdentity = await this.retrieveRnippIdentity(
+      isSso,
+      sessionOidc,
       idpIdentity as IOidcIdentity,
       trackingContext,
     );
@@ -118,15 +121,19 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
       },
     );
 
-    const spIdentity = this.buildSpIdentity(subSp, idpIdentity, rnippIdentity);
+    const { sub: _sub, ...spIdentityCleaned } = this.buildSpIdentity(
+      subSp,
+      idpIdentity,
+      rnippIdentity,
+    );
 
-    // Delete idp identity from volatile memory but keep the sub for the business logs.
-    const idpIdentityCleaned = { sub: idpIdentity.sub };
     const session: OidcClientSession = {
       amr: ['fc'],
-      idpIdentity: idpIdentityCleaned,
-      spIdentity,
+      idpIdentity,
+      rnippIdentity,
+      spIdentity: spIdentityCleaned,
       accountId,
+      subs: { ...subs, [spId]: subSp },
     };
 
     this.logger.trace({ session });
@@ -234,5 +241,23 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
       given_name_array,
       sub: subSp,
     };
+  }
+
+  private async retrieveRnippIdentity(
+    isSso: boolean,
+    sessionOidc: ISessionService<OidcClientSession>,
+    idpIdentity: IOidcIdentity,
+    trackingContext: TrackedEventContextInterface,
+  ): Promise<RnippPivotIdentity> {
+    let rnippIdentity: RnippPivotIdentity;
+
+    if (isSso) {
+      rnippIdentity = await sessionOidc.get('rnippIdentity');
+    } else {
+      // Identity check and normalization
+      rnippIdentity = await this.rnippCheck(idpIdentity, trackingContext);
+    }
+
+    return rnippIdentity;
   }
 }

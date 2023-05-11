@@ -16,7 +16,7 @@ import { CoreMissingIdentityException, CoreRoutes } from '@fc/core';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderRoutes, OidcProviderService } from '@fc/oidc-provider';
-import { ISessionService, Session, SessionService } from '@fc/session';
+import { ISessionService, Session } from '@fc/session';
 
 import { AuthorizeParamsDto } from '../dto';
 
@@ -24,7 +24,6 @@ import { AuthorizeParamsDto } from '../dto';
 export class OidcProviderController {
   constructor(
     private readonly logger: LoggerService,
-    private readonly sessionService: SessionService,
     private readonly oidcProvider: OidcProviderService,
   ) {
     this.logger.setContext(this.constructor.name);

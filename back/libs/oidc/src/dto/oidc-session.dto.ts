@@ -15,6 +15,7 @@ import {
 } from 'class-validator';
 
 import { PartialExcept } from '@fc/common';
+import { RnippPivotIdentity } from '@fc/rnipp';
 
 import { IOidcIdentity } from '../interfaces';
 
@@ -91,6 +92,11 @@ export class OidcSession {
   @IsOptional()
   @IsString()
   @MinLength(1)
+  readonly rnippIdentity?: RnippPivotIdentity;
+
+  @IsOptional()
+  @IsString()
+  @MinLength(1)
   readonly idpAcr?: string;
 
   @IsOptional()
@@ -136,7 +142,7 @@ export class OidcSession {
    */
   @IsOptional()
   @IsObject()
-  readonly spIdentity?: PartialExcept<IOidcIdentity, 'sub'>;
+  readonly spIdentity?: Partial<Omit<IOidcIdentity, 'sub'>>;
 
   @IsString()
   @IsOptional()
@@ -145,4 +151,8 @@ export class OidcSession {
   @IsBoolean()
   @IsOptional()
   readonly isSso?: boolean;
+
+  @IsObject()
+  @IsOptional()
+  subs?: Record<string, string>;
 }

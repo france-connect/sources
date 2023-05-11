@@ -15,6 +15,7 @@ import {
 } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
+import { ConfigService } from '@fc/config';
 import {
   CoreMissingIdentityException,
   CoreRoutes,
@@ -43,7 +44,13 @@ import {
   TrackingService,
 } from '@fc/tracking';
 
-import { AuthorizeParamsDto, ErrorParamsDto, GetLoginSessionDto } from '../dto';
+import {
+  AuthorizeParamsDto,
+  CoreConfig,
+  CoreSessionDto,
+  ErrorParamsDto,
+  GetLoginSessionDto,
+} from '../dto';
 import { ConfirmationType, DataType } from '../enums';
 import {
   CoreFcpFailedAbortSessionException,
@@ -69,6 +76,7 @@ export class OidcProviderController {
     private readonly core: CoreFcpService,
     private readonly tracking: TrackingService,
     private readonly csrfService: SessionCsrfService,
+    private readonly config: ConfigService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -96,14 +104,17 @@ export class OidcProviderController {
       route: OidcProviderRoutes.AUTHORIZATION,
     });
 
-    /**
-     * DO NOTE REMOVE !
-     * The session cannot be reset outside the controller,
-     * because we do not always go through the before middleware
-     * according to the different kinematics
-     * */
-    // Initializes a new session local
-    await this.sessionService.reset(req, res);
+    const { enableSso } = this.config.get<CoreConfig>('Core');
+    if (!enableSso) {
+      /**
+       * DO NOT REMOVE !
+       * The session cannot be reset outside the controller,
+       * because we do not always go through the before middleware
+       * according to the different kinematics
+       */
+      // Initializes a new session local
+      await this.sessionService.reset(req, res);
+    }
 
     const errors = await validateDto(
       query,
@@ -154,14 +165,18 @@ export class OidcProviderController {
       route: OidcProviderRoutes.AUTHORIZATION,
     });
 
-    /**
-     * DO NOTE REMOVE !
-     * The session cannot be reset outside the controller,
-     * because we do not always go through the before middleware
-     * according to the different kinematics
-     * */
-    // Initializes a new session local
-    await this.sessionService.reset(req, res);
+    const { enableSso } = this.config.get<CoreConfig>('Core');
+    if (!enableSso) {
+      /**
+       * DO NOT REMOVE !
+       * The session cannot be reset outside the controller,
+       * because we do not always go through the before middleware
+       * according to the different kinematics
+       */
+      // Initializes a new session local
+      await this.sessionService.reset(req, res);
+    }
+
     const errors = await validateDto(
       body,
       AuthorizeParamsDto,
@@ -260,6 +275,8 @@ export class OidcProviderController {
     this.tracking.track(eventKey, context);
   }
 
+  // adding a param reached max params limit
+  // eslint-disable-next-line max-params
   @Post(CoreRoutes.INTERACTION_LOGIN)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -274,6 +291,8 @@ export class OidcProviderController {
      */
     @Session('OidcClient', GetLoginSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
+    @Session('Core')
+    sessionCore: ISessionService<CoreSessionDto>,
   ) {
     const { _csrf: csrfToken } = body;
     const session: OidcSession = await sessionOidc.get();
@@ -299,7 +318,7 @@ export class OidcProviderController {
     await this.trackDatatransfer(trackingContext, interaction, spId);
 
     // send the notification mail to the final user
-    await this.core.sendAuthenticationMail(session);
+    await this.core.sendAuthenticationMail(session, sessionCore);
 
     this.logger.trace({
       data: { req, res, session },

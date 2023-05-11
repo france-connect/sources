@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 import {
   Body,
   Controller,
@@ -6,12 +8,14 @@ import {
   Query,
   Redirect,
   Render,
+  Req,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { ISessionService, Session } from '@fc/session';
+import { TrackingService } from '@fc/tracking';
 
 import {
   EidasClientConfig,
@@ -20,12 +24,14 @@ import {
   ReponseHandlerDTO,
 } from './dto';
 import { EidasClientService } from './eidas-client.service';
+import { EidasClientRoutes } from './enum';
 
-@Controller('eidas-client')
+@Controller(EidasClientRoutes.BASE)
 export class EidasClientController {
   constructor(
     private readonly config: ConfigService,
     private readonly eidasClient: EidasClientService,
+    private readonly tracking: TrackingService,
   ) {}
 
   /**
@@ -34,7 +40,7 @@ export class EidasClientController {
    * the informations for a form to call the FR Node.
    * @returns The light-request token and the URL where it should be posted
    */
-  @Get('/redirect-to-fr-node-connector')
+  @Get(EidasClientRoutes.REDIRECT_TO_FR_NODE_CONNECTOR)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @Render('redirect-to-fr-node-connector')
   async redirectToFrNode(
@@ -75,13 +81,17 @@ export class EidasClientController {
    * @returns The identity found in the light-response as a JSON
    */
   @Redirect()
-  @Post('/response-handler')
+  @Post(EidasClientRoutes.RESPONSE_HANDLER)
   async responseHandler(
+    @Req() req: Request,
     @Body() body: ReponseHandlerDTO,
     @Session('EidasClient')
     sessionEidas: ISessionService<EidasClientSession>,
   ) {
+    const trackingContext = { req };
     const { token } = body;
+    const { INCOMING_EIDAS_RESPONSE } = this.tracking.TrackedEventsMap;
+    this.tracking.track(INCOMING_EIDAS_RESPONSE, trackingContext);
 
     const lightResponse = await this.eidasClient.readLightResponseFromCache(
       token,

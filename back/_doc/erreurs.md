@@ -49,10 +49,12 @@
 | [Y030009](../libs/core/src/exceptions/core-claim-amr.exception.ts "CoreClaimAmrException") | 400 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous | Le claim AMR demandé n&#39;est pas autorisé pour le service provider. | 
 | [Y030025](../libs/oidc-provider/src/exceptions/oidc-provider-interaction-no-found.exception.ts "OidcProviderInteractionNotFoundException") | 500 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. | L&#39;identifiant de cinématique ( interactionId ou sub ) n&#39;a pas été retrouvé dans le contexte de la requête. Cela peut-être dû à un problème de session ou une manipulation de cet identifiant par l&#39;utilisateur (pour l&#39;interactionId).  Il faut recommencer la cinématique. Si le problème persiste, contacter le support N3 | 
 | [Y030026](../libs/oidc-provider/src/exceptions/oidc-provider-grant-save.exception.ts "OidcProviderGrantSaveException") | 500 | Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter. | Problème de sauvegarde du grant. Contacter le support N3 | 
+| [Y030027](../libs/oidc-provider/src/exceptions/oidc-provider-spid-not-found.exception.ts "OidcProviderSpIdNotFoundException") | 400 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. | Le client id associé à ce fournisseur de service n&#39;a pas été trouvé dans le contexte. Si le problème persiste, contacter le support N3 | 
 
 | Code d'erreur | Code HTTP | Message utilisateur | Description |
 |---|---|---|---|
-| [Y050006](../apps/eidas-bridge/src/exceptions/eidas-bridge-invalid-identity.exception.ts "EidasBridgeInvalidIdentityException") | 400 | Un problème lié à vos données d&#39;identité empêche la connexion d&#39;aboutir. Nous vous invitons à nous contacter pour corriger le problème. | L&#39;identité reçue du bridge eIDAS ( venant d&#39;un autre état membre ) n&#39;est pas valide. Contacter le support N3 | 
+| [Y050006](../apps/eidas-bridge/src/exceptions/eidas-bridge-invalid-eu-identity.exception.ts "EidasBridgeInvalidEUIdentityException") | 400 | Un problème lié à vos données d&#39;identité empêche la connexion d&#39;aboutir. Nous vous invitons à nous contacter pour corriger le problème. | L&#39;identité reçue du bridge eIDAS ( venant d&#39;un autre état membre ) n&#39;est pas valide. Contacter le support N3 | 
+| [Y050006](../apps/eidas-bridge/src/exceptions/eidas-bridge-invalid-fr-identity.exception.ts "EidasBridgeInvalidFRIdentityException") | 400 | Un problème lié à vos données d&#39;identité empêche la connexion d&#39;aboutir. Nous vous invitons à nous contacter pour corriger le problème. | L&#39;identité reçue du fournisseur d&#39;identité français n&#39;est pas valide. Contacter le support N3 | 
 
 | Code d'erreur | Code HTTP | Message utilisateur | Description |
 |---|---|---|---|
@@ -99,6 +101,7 @@
 | [Y190007](../libs/session/src/exceptions/session-invalid-csrf-select-idp.exception.ts "SessionInvalidCsrfSelectIdpException") | 401 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. | La page de consentement a été appelée sans avoir effectué les étapes de la cinématique. L&#39;utilisateur doit redémarrer sa cinématique en respectant les étapes de cette dernière. Il s&#39;agit d&#39;une protection contre des attaques qui seraient destinées à sauter des étapes. Il se peut que l&#39;utilisateur ait lancé des cinématiques en parallèle dans plusieurs onglets, dans ce cas il faut fermer tous les onglets du navigateur et relancer la cinématique. | 
 | [Y190008](../libs/session/src/exceptions/session-bad-stringify.exception.ts "SessionBadStringifyException") | 500 | Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous. | Les données pour la session se sont mal formatées avant d&#39;être chiffrées. Si le problème persiste, contacter le support N3 | 
 | [Y190009](../libs/session/src/exceptions/session-no-session-id.exception.ts "SessionNoSessionIdException") | 401 | Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous. | Cette erreur technique est émise lorsque le session id est introuvable dans l&#39;objet &#34;req&#34;. L&#39;interceptor de la session a-t-il pu récupérer le cookie de session ? | 
+| [Y190010](../libs/session/src/exceptions/session-sub-not-found.exception.ts "SessionSubNotFoundException") | 401 | Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous. | Erreur émise lorsque l&#39;on ne retrouve pas le sub dans la session, probablement une fenêtre restée ouverte au delà des 10 minutes. Il faut recommencer la cinématique. Si le problème persiste, contacter le support N3 | 
 
 | Code d'erreur | Code HTTP | Message utilisateur | Description |
 |---|---|---|---|
@@ -166,4 +169,8 @@
 | Code d'erreur | Code HTTP | Message utilisateur | Description |
 |---|---|---|---|
 | [Y400001](../libs/geoip-maxmind/src/exceptions/geoip-maxmind-not-found.exception.ts "GeoipMaxmindNotFoundException") | 500 | Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter. | La base de donnée local GeoIP Maxmind n&#39;a pa pu être chargée | 
+
+| Code d'erreur | Code HTTP | Message utilisateur | Description |
+|---|---|---|---|
+| [Y410001](../libs/tracking-context/src/exceptions/tracking-missing-network-context.exception.ts "TrackingMissingNetworkContextException") | 500 | Missing network context (headers) | L&#39;application n&#39;a pas trouvé de headers dans l&#39;objet request, c&#39;est probablement un bug, Contacter le support N3 | 
 

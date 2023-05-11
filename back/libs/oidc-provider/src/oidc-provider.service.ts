@@ -1,9 +1,5 @@
 import { get } from 'lodash';
-import {
-  InteractionResults,
-  KoaContextWithOIDC,
-  Provider,
-} from 'oidc-provider';
+import { KoaContextWithOIDC, Provider } from 'oidc-provider';
 import { HttpOptions } from 'openid-client';
 
 import { Global, Inject, Injectable } from '@nestjs/common';
@@ -11,7 +7,6 @@ import { HttpAdapterHost } from '@nestjs/core';
 
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
-import { OidcClientSession } from '@fc/oidc-client';
 import { Redis, REDIS_CONNECTION_TOKEN } from '@fc/redis';
 
 import {
@@ -25,11 +20,12 @@ import {
   OidcProviderInteractionNotFoundException,
   OidcProviderRuntimeException,
 } from './exceptions';
+import { IOidcProviderConfigAppService } from './interfaces';
 import {
   OidcProviderConfigService,
   OidcProviderErrorService,
 } from './services';
-import { OidcProviderGrantService } from './services/oidc-provider-grant.service';
+import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
 
 const PATHS = {
   [OidcProviderRoutes.TOKEN]: 'oidc.entities.Grant.accountId',
@@ -57,7 +53,8 @@ export class OidcProviderService {
     readonly redis: Redis,
     private readonly errorService: OidcProviderErrorService,
     private readonly configService: OidcProviderConfigService,
-    private readonly grantService: OidcProviderGrantService,
+    @Inject(OIDC_PROVIDER_CONFIG_APP_TOKEN)
+    private readonly oidcProviderConfigApp: IOidcProviderConfigAppService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -82,6 +79,8 @@ export class OidcProviderService {
     } catch (error) {
       throw new OidcProviderInitialisationException();
     }
+
+    this.oidcProviderConfigApp.setProvider(this.provider);
 
     this.logger.debug('Mouting oidc-provider middleware');
     try {
@@ -189,66 +188,6 @@ export class OidcProviderService {
     }
   }
 
-  /**
-   * @todo #1023 je type les entrées et sortie correctement et non pas avec any
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1023
-   * @ticket #FC-1023
-   */
-  /**
-   * Wrap `oidc-provider` method to
-   *  - lower coupling in other modules
-   *  - handle exceptions
-   *
-   * @param {any} req
-   * @param {any} res
-   * @param {OidcSession} session Object that contains the session info
-   */
-  async finishInteraction(req: any, res: any, session: OidcSession) {
-    const { spAcr: acr, amr }: OidcClientSession = session;
-    /**
-     * Build Interaction results
-     * For all available options, refer to `oidc-provider` documentation:
-     * @see https://github.com/panva/node-oidc-provider/blob/master/docs/README.md#user-flows
-     */
-
-    const grant = await this.grantService.generateGrant(
-      this.provider,
-      req,
-      res,
-      req.sessionId,
-    );
-
-    const grantId = await this.grantService.saveGrant(grant);
-
-    /**
-     * We use `sessionId` as `accountId` in order to to easily retrieve the session for back channel requests
-     * @see OidcProviderConfigService.findAccount()
-     */
-    const result = {
-      login: {
-        amr,
-        acr,
-        accountId: req.sessionId,
-        ts: Math.floor(Date.now() / 1000),
-        remember: false,
-      },
-      /**
-       * We need to return this information, it will always be empty arrays
-       * since franceConnect does not allow for partial authorizations yet,
-       * it's an "all or nothing" consent.
-       */
-      consent: {
-        grantId,
-      },
-    } as InteractionResults;
-
-    try {
-      return await this.provider.interactionFinished(req, res, result);
-    } catch (error) {
-      throw new OidcProviderRuntimeException(error);
-    }
-  }
-
   private async runMiddlewareBeforePattern(
     { step, path, pattern, ctx },
     middleware: Function,
@@ -305,5 +244,9 @@ export class OidcProviderService {
         middleware,
       );
     });
+  }
+
+  async finishInteraction(req: any, res: any, session: OidcSession) {
+    this.oidcProviderConfigApp.finishInteraction(req, res, session);
   }
 }

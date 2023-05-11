@@ -6,11 +6,9 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
 import {
   IServiceProviderAdapter,
-  OidcSession,
   SERVICE_PROVIDER_SERVICE_TOKEN,
 } from '@fc/oidc';
 import { OidcProviderConfig } from '@fc/oidc-provider';
-import { ISessionBoundContext, SessionService } from '@fc/session';
 
 import { OidcProviderRedisAdapter } from '../adapters';
 import { IOidcProviderConfigAppService } from '../interfaces';
@@ -27,7 +25,6 @@ export class OidcProviderConfigService {
     private readonly config: ConfigService,
     @Inject(OIDC_PROVIDER_CONFIG_APP_TOKEN)
     private readonly oidcProviderConfigApp: IOidcProviderConfigAppService,
-    private readonly sessionService: SessionService,
     private readonly errorService: OidcProviderErrorService,
     @Inject(SERVICE_PROVIDER_SERVICE_TOKEN)
     private readonly serviceProvider: IServiceProviderAdapter,
@@ -88,7 +85,9 @@ export class OidcProviderConfigService {
         this.oidcProviderConfigApp,
       );
 
-    const findAccount = this.findAccount.bind(this);
+    const findAccount = this.oidcProviderConfigApp.findAccount.bind(
+      this.oidcProviderConfigApp,
+    );
     const pairwiseIdentifier = this.pairwiseIdentifier.bind(this);
     const renderError = this.errorService.renderError.bind(this.errorService);
     const clientBasedCORS = this.clientBasedCORS.bind(this);
@@ -127,45 +126,6 @@ export class OidcProviderConfigService {
     this.logger.trace({ oidcProviderConfig });
 
     return oidcProviderConfig;
-  }
-
-  /**
-   * Returned object should contains an `accountId` property
-   * and an async `claims` function.
-   * More documentation can be found in oidc-provider repo.
-   * @see https://github.com/panva/node-oidc-provider/blob/master/docs/README.md#accounts
-   */
-  private async findAccount(ctx: any, sessionId: string) {
-    this.logger.debug('OidcProviderConfigService.findAccount');
-
-    try {
-      const boundSessionContext: ISessionBoundContext = {
-        sessionId,
-        moduleName: 'OidcClient',
-      };
-
-      const { spIdentity }: OidcSession = await this.sessionService.get(
-        boundSessionContext,
-      );
-
-      const account = {
-        /**
-         * We used the `sessionId` as `accountId` identifier when building the grant
-         * @see OidcProviderService.finishInteraction()
-         */
-        accountId: sessionId,
-        async claims() {
-          return spIdentity;
-        },
-      };
-
-      this.logger.trace({ account });
-
-      return account;
-    } catch (error) {
-      // Hacky throw from oidc-provider
-      this.errorService.throwError(ctx, error);
-    }
   }
 
   /**

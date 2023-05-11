@@ -46,6 +46,14 @@ export default class InfoConsentPage {
     );
   }
 
+  // TODO: Use this once both FC low and high use dsfr
+  checkClaimsAccordionIsExpended(): void {
+    cy.get('[id="accordion-consent"]').should(
+      'have.class',
+      'fr-collapse--expanded',
+    );
+  }
+
   checkInformationConsent(
     scopeContext: ScopeContext,
     explicitConsent: boolean,
@@ -59,6 +67,9 @@ export default class InfoConsentPage {
       this.getShowClaimsToggle().should('be.visible');
       this.getClaimDetails().should('not.be.visible');
       this.getShowClaimsToggle().click();
+      // Due to accordion animation
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(500);
     }
 
     this.getClaimDetails().should('be.visible');

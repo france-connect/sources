@@ -12,6 +12,7 @@ import {
 
 import { AppConfig } from '@fc/app';
 import { ConfigConfig } from '@fc/config';
+import { CoreConfig as CoreLibConfig } from '@fc/core';
 import { CryptographyEidasConfig } from '@fc/cryptography-eidas';
 import { CryptographyFcpConfig } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
@@ -31,10 +32,7 @@ import { TrackingConfig } from '@fc/tracking';
 
 import { IdentitySource } from '../enums';
 
-export class CoreConfig {
-  @IsUrl()
-  readonly defaultRedirectUri: string;
-
+export class CoreConfig extends CoreLibConfig {
   @IsUrl()
   readonly supportFormUrl: string;
 

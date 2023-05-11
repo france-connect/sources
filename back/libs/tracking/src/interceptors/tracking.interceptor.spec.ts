@@ -27,11 +27,15 @@ describe('TrackingInterceptor', () => {
 
   const contextMock = {
     switchToHttp: () => httpContextMock,
+    getHandler: jest.fn(),
   } as unknown as ExecutionContext;
 
   const reqMock = {
     ip: '123.123.123.123',
     fc: { interactionId: '42' },
+    route: {
+      path: '/mock/path',
+    },
   };
 
   const eventsMock = {

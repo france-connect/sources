@@ -68,10 +68,10 @@ beforeEach(function () {
     addFCBasicAuthorization();
   }
 
-  if (testEnv === 'integ01') {
-    // Avoid cookies side-effect by clearing cookies on all domains
-    clearAllCookies();
+  // Avoid cookies side-effect by clearing cookies on all domains
+  clearAllCookies();
 
+  if (testEnv === 'integ01') {
     // Setup interceptions to override set-cookie samesite values
     const crossDomains = {
       AC: 'dev-agentconnect.fr',

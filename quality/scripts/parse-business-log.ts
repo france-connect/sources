@@ -81,12 +81,29 @@ const interactionHasEvent = async ([logFile, stringifiedTestEvent]: string[]): P
   }
 }
 
-const getDifferences = (test: LogEvent, source: LogEvent): [string, string][] => {
-    const assertions = Object.entries(test).filter(
-      ([key, value]) => source[key] !== value,
-    );
+/**
+ * Compares a test LogEvent (with validation expectations) to a source LogEvent
+ * Values in the test object are by default compared to the ones of the source object using a strict equal comparison (===).
+ * It is possible to use a regular expression for the comparison by providing a string starting with "RegExp:"  
+ * @param test object containing the key/value expectations
+ * @param source LogEvent object to verify
+ * @returns an array with the [key, value] from the source object not matching the test object expectations
+ */
+const getDifferences = (
+  test: LogEvent,
+  source: LogEvent,
+): [string, string][] => {
+  const REG_EXP_PREFIX = 'RegExp:';
+  const isRegExpPattern = (text) => text.startsWith(REG_EXP_PREFIX);
+  const assertions = Object.entries(test).filter(([key, value]) => {
+    if (isRegExpPattern(value)) {
+      const regExp = new RegExp(value.replace(REG_EXP_PREFIX, ''));
+      return !regExp.test(source[key]);
+    }
+    return source[key] !== value;
+  });
 
-    return assertions;
+  return assertions;
 }
 
 interactionHasEvent(process.argv.slice(2));

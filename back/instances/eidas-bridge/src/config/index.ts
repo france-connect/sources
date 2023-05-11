@@ -19,6 +19,7 @@ import OverrideOidcProvider from './override-oidc-provider';
 import Redis from './redis';
 import ServiceProviderAdapterEnv from './service-provider-adapter-env';
 import Session from './session';
+import Tracking from './tracking';
 
 export default {
   /**
@@ -44,4 +45,5 @@ export default {
   Redis,
   ServiceProviderAdapterEnv,
   Session,
+  Tracking,
 } as EidasBridgeConfig;

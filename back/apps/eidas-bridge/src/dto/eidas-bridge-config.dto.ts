@@ -19,6 +19,7 @@ import { OverrideOidcProviderConfig } from '@fc/override-oidc-provider';
 import { RedisConfig } from '@fc/redis';
 import { ServiceProviderAdapterEnvConfig } from '@fc/service-provider-adapter-env';
 import { SessionConfig } from '@fc/session';
+import { TrackingConfig } from '@fc/tracking';
 
 import { AppConfig } from './app-config.dto';
 
@@ -111,4 +112,9 @@ export class EidasBridgeConfig {
   @ValidateNested()
   @Type(() => EidasLightProtocolConfig)
   readonly EidasLightProtocol: EidasLightProtocolConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => TrackingConfig)
+  readonly Tracking: TrackingConfig;
 }

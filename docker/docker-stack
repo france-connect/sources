@@ -202,7 +202,7 @@ _up() {
   done
     echo "Starting FC Dev environment... $@"
     docker login ${FC_DOCKER_REGISTRY}
-    docker pull registry.gitlab.dev-franceconnect.fr/france-connect/fc-docker/nodejs:${DEFAULT_NODE_VERSION}-dev
+    docker pull registry.gitlab.dev-franceconnect.fr/france-connect/fc-docker/nodejs:${NODE_VERSION}-dev
     cd ${WORKING_DIR} && docker-compose up --build -d $services
 
     _get_running_containers

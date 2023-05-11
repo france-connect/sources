@@ -26,8 +26,8 @@ describe('OidcProviderController', () => {
   };
 
   const oidcProviderServiceMock = {
-    finishInteraction: jest.fn(),
     getInteraction: jest.fn(),
+    finishInteraction: jest.fn(),
   };
 
   const sessionIdMock = 'session-id-mock';

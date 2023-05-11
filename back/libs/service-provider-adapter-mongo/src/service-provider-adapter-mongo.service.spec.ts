@@ -56,6 +56,7 @@ describe('ServiceProviderAdapterMongoService', () => {
     idpFilterList: [],
     type: 'public',
     identityConsent: false,
+    ssoDisabled: false,
   };
 
   const invalidServiceProviderMock = {

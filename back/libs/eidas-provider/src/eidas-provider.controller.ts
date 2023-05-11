@@ -1,8 +1,19 @@
-import { Body, Controller, Get, Post, Redirect, Render } from '@nestjs/common';
+import { Request } from 'express';
+
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Redirect,
+  Render,
+  Req,
+} from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
 import { ISessionService, Session } from '@fc/session';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import {
   EidasProviderConfig,
@@ -10,13 +21,15 @@ import {
   RequestHandlerDTO,
 } from './dto';
 import { EidasProviderService } from './eidas-provider.service';
+import { EidasProviderRoutes } from './enums';
 
-@Controller('eidas-provider')
+@Controller(EidasProviderRoutes.BASE)
 export class EidasProviderController {
   constructor(
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly eidasProvider: EidasProviderService,
+    private readonly tracking: TrackingService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -27,15 +40,20 @@ export class EidasProviderController {
    * @param body The body of the request, containing a light-request token
    * @returns The light-response token and the URL where it should be posted
    */
-  @Post('/request-handler')
+  @Post(EidasProviderRoutes.REQUEST_HANDLER)
   @Redirect()
   async requestHandler(
+    @Req() req: Request,
     @Body()
     body: RequestHandlerDTO,
     @Session('EidasProvider')
     sessionEidasProvider: ISessionService<EidasProviderSession>,
   ) {
     const { token } = body;
+    const { INCOMING_EIDAS_REQUEST } = this.tracking.TrackedEventsMap;
+    const trackingContext: TrackedEventContextInterface = { req };
+
+    this.tracking.track(INCOMING_EIDAS_REQUEST, trackingContext);
 
     const lightRequest = await this.eidasProvider.readLightRequestFromCache(
       token,
@@ -59,12 +77,15 @@ export class EidasProviderController {
     return { statusCode: 302, url: redirectAfterRequestHandlingUrl };
   }
 
-  @Get('/response-proxy')
+  @Get(EidasProviderRoutes.RESPONSE_PROXY)
   @Render('redirect-to-fr-node-proxy-service')
   async responseProxy(
+    @Req() req: Request,
     @Session('EidasProvider')
     session: ISessionService<EidasProviderSession>,
   ) {
+    const { REDIRECTING_TO_EIDAS_FR_NODE } = this.tracking.TrackedEventsMap;
+    const trackingContext = { req };
     const eidasReponse = await this.getEidasResponse(session);
 
     const { lightResponse, token } =
@@ -77,6 +98,7 @@ export class EidasProviderController {
 
     const { proxyServiceResponseCacheUrl } =
       this.config.get<EidasProviderConfig>('EidasProvider');
+    this.tracking.track(REDIRECTING_TO_EIDAS_FR_NODE, trackingContext);
 
     return { proxyServiceResponseCacheUrl, token };
   }

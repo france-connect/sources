@@ -6,13 +6,13 @@ import {
   TrackedEventContextInterface,
   TrackedEventInterface,
 } from '@fc/tracking';
+import { extractNetworkInfoFromHeaders } from '@fc/tracking-context';
 
 import { CoreMissingContextException } from '../exceptions';
 import {
   ICoreTrackingContext,
   ICoreTrackingLog,
   ICoreTrackingProviders,
-  IUserNetworkInfo,
 } from '../interfaces';
 
 @Injectable()
@@ -23,16 +23,8 @@ export class CoreTrackingService {
     trackedEvent: TrackedEventInterface,
     context: TrackedEventContextInterface,
   ): Promise<ICoreTrackingLog> {
-    const {
-      ip,
-      port,
-      // logs filter and analyses need this format
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      originalAddresses,
-      sessionId,
-      interactionId,
-      claims,
-    }: ICoreTrackingContext = this.extractContext(context);
+    const { source, sessionId, interactionId, claims }: ICoreTrackingContext =
+      this.extractContext(context);
 
     const { step, category, event } = trackedEvent;
 
@@ -45,31 +37,11 @@ export class CoreTrackingService {
       step,
       category,
       event,
-      ip,
+      ip: source.address,
       claims: claims?.join(' '),
-      source: {
-        address: ip,
-        port,
-        // logs filter and analyses need this format
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        original_addresses: originalAddresses,
-      },
+      source,
       ...data,
     };
-  }
-
-  private extractNetworkInfoFromHeaders(
-    context: TrackedEventContextInterface,
-  ): IUserNetworkInfo {
-    if (!context.req.headers) {
-      throw new CoreMissingContextException('req.headers');
-    }
-
-    const ip = context.req.headers['x-forwarded-for'];
-    const port = context.req.headers['x-forwarded-source-port'];
-    const originalAddresses = context.req.headers['x-forwarded-for-original'];
-
-    return { ip, port, originalAddresses };
   }
 
   private extractContext(
@@ -87,13 +59,10 @@ export class CoreTrackingService {
 
     const { sessionId } = req;
     const { claims, interactionId } = ctx;
-    const { ip, port, originalAddresses } =
-      this.extractNetworkInfoFromHeaders(ctx);
+    const source = extractNetworkInfoFromHeaders(ctx);
 
     return {
-      ip,
-      port,
-      originalAddresses,
+      source,
       sessionId,
       interactionId,
       claims,
@@ -123,7 +92,7 @@ export class CoreTrackingService {
       spId = null,
       spAcr = null,
       spName = null,
-      spIdentity = null,
+      subs = {},
 
       idpId = null,
       idpAcr = null,
@@ -141,7 +110,7 @@ export class CoreTrackingService {
       spId,
       spAcr,
       spName,
-      spSub: spIdentity?.sub || null,
+      spSub: subs[spId] || null,
 
       idpId,
       idpAcr,

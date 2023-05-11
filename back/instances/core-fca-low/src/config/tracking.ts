@@ -22,6 +22,12 @@ export default {
       event: 'FC_SSO_INITIATED',
     },
 
+    FS_DISABLED_SSO: {
+      category: EventsCategories.BACK_CINEMATIC,
+      step: '1.2.0',
+      event: 'FS_DISABLED_SSO',
+    },
+
     FC_SHOWED_IDP_CHOICE: {
       step: '2.0.0',
       category: EventsCategories.FRONT_CINEMATIC,

@@ -1,7 +1,10 @@
+import { Request } from 'express';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { EidasCountries } from '@fc/eidas-country';
+import { TrackingService } from '@fc/tracking';
 
 import { EidasClientController } from './eidas-client.controller';
 import { EidasClientService } from './eidas-client.service';
@@ -26,11 +29,19 @@ describe('EidasClientController', () => {
     set: jest.fn(),
   };
 
-  const req = {
-    query: {
-      country: EidasCountries.BELGIUM,
-    },
+  const query = {
+    country: EidasCountries.BELGIUM,
   };
+
+  const req = {
+    query,
+  } as unknown as Request;
+
+  const trackingServiceMock = {
+    track: jest.fn(),
+    TrackedEventsMap: {},
+  };
+
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
@@ -38,12 +49,14 @@ describe('EidasClientController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EidasClientController],
-      providers: [ConfigService, EidasClientService],
+      providers: [ConfigService, EidasClientService, TrackingService],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .overrideProvider(EidasClientService)
       .useValue(eidasClientServiceMock)
+      .overrideProvider(TrackingService)
+      .useValue(trackingServiceMock)
       .compile();
 
     controller = module.get<EidasClientController>(EidasClientController);
@@ -102,7 +115,7 @@ describe('EidasClientController', () => {
 
     it('should get the eidas partial request from the session', async () => {
       // When
-      await controller.redirectToFrNode(req.query, sessionServiceEidasMock);
+      await controller.redirectToFrNode(query, sessionServiceEidasMock);
       // Then
       expect(sessionServiceEidasMock.get).toHaveBeenCalledTimes(1);
       expect(sessionServiceEidasMock.get).toHaveBeenCalledWith();
@@ -110,7 +123,7 @@ describe('EidasClientController', () => {
 
     it('should complete the eidas request using the partial eidas request from the session and the country from tthe query', async () => {
       // When
-      await controller.redirectToFrNode(req.query, sessionServiceEidasMock);
+      await controller.redirectToFrNode(query, sessionServiceEidasMock);
       // Then
       expect(eidasClientServiceMock.completeEidasRequest).toHaveBeenCalledTimes(
         1,
@@ -123,7 +136,7 @@ describe('EidasClientController', () => {
 
     it('should call the prepareLightRequest with the request object', async () => {
       // When
-      await controller.redirectToFrNode(req.query, sessionServiceEidasMock);
+      await controller.redirectToFrNode(query, sessionServiceEidasMock);
       // Then
       expect(eidasClientServiceMock.prepareLightRequest).toHaveBeenCalledTimes(
         1,
@@ -135,7 +148,7 @@ describe('EidasClientController', () => {
 
     it('should call writeLightRequestInCache with the light request id and the light request', async () => {
       // When
-      await controller.redirectToFrNode(req.query, sessionServiceEidasMock);
+      await controller.redirectToFrNode(query, sessionServiceEidasMock);
       // Then
       expect(
         eidasClientServiceMock.writeLightRequestInCache,
@@ -147,7 +160,7 @@ describe('EidasClientController', () => {
 
     it('should get the connectorRequestCacheUrl from the config', async () => {
       // When
-      await controller.redirectToFrNode(req.query, sessionServiceEidasMock);
+      await controller.redirectToFrNode(query, sessionServiceEidasMock);
       // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
       expect(configServiceMock.get).toHaveBeenCalledWith('EidasClient');
@@ -156,7 +169,7 @@ describe('EidasClientController', () => {
     it('should the connectorRequestCacheUrl and the light request token', async () => {
       // When
       const result = await controller.redirectToFrNode(
-        req.query,
+        query,
         sessionServiceEidasMock,
       );
       // Then
@@ -188,7 +201,7 @@ describe('EidasClientController', () => {
 
     it('should call readLightResponseFromCache with the token in the given body', async () => {
       // When
-      await controller.responseHandler(bodyMock, sessionServiceEidasMock);
+      await controller.responseHandler(req, bodyMock, sessionServiceEidasMock);
       // Then
       expect(
         eidasClientServiceMock.readLightResponseFromCache,
@@ -204,7 +217,7 @@ describe('EidasClientController', () => {
         lightReponse,
       );
       // When
-      await controller.responseHandler(bodyMock, sessionServiceEidasMock);
+      await controller.responseHandler(req, bodyMock, sessionServiceEidasMock);
       // Then
       expect(eidasClientServiceMock.parseLightResponse).toHaveBeenCalledTimes(
         1,
@@ -221,6 +234,7 @@ describe('EidasClientController', () => {
       );
       // When
       const result = await controller.responseHandler(
+        req,
         bodyMock,
         sessionServiceEidasMock,
       );

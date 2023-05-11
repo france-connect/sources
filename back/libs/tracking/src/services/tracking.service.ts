@@ -39,6 +39,8 @@ export class TrackingService {
       trackedEvent,
       context,
     );
+
+    this.logger.trace({ [message.event]: message });
     this.logger.businessEvent(message);
   }
 

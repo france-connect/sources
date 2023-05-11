@@ -64,12 +64,16 @@ beforeEach(function () {
     addFCBasicAuthorization();
   }
 
+  // Avoid cookies side-effect by clearing cookies on all domains
+  clearAllCookies();
+
   if (testEnv === 'docker') {
     clearBusinessLog();
+    const eidasLogPath = Cypress.env('EIDAS_LOG_FILE_PATH');
+    if (eidasLogPath) {
+      clearBusinessLog(eidasLogPath);
+    }
   } else if (testEnv === 'integ01') {
-    // Avoid cookies side-effect by clearing cookies on all domains
-    clearAllCookies();
-
     // Setup interceptions to override set-cookie samesite values
     const crossDomains = {
       FC: 'dev-franceconnect.fr',

@@ -1,13 +1,18 @@
+import { Request } from 'express';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
+import { TrackingService } from '@fc/tracking';
 
 import { EidasProviderController } from './eidas-provider.controller';
 import { EidasProviderService } from './eidas-provider.service';
 
 describe('EidasProviderController', () => {
   let controller: EidasProviderController;
+
+  const reqMock = {} as unknown as Request;
 
   const configMock = {
     proxyServiceResponseCacheUrl: 'proxyServiceResponseCacheUrl',
@@ -43,6 +48,11 @@ describe('EidasProviderController', () => {
     relayState: 'relayState',
   };
 
+  const trackingServiceMock = {
+    track: jest.fn(),
+    TrackedEventsMap: {},
+  };
+
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
@@ -50,7 +60,12 @@ describe('EidasProviderController', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EidasProviderController],
-      providers: [LoggerService, ConfigService, EidasProviderService],
+      providers: [
+        LoggerService,
+        ConfigService,
+        EidasProviderService,
+        TrackingService,
+      ],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
@@ -58,6 +73,8 @@ describe('EidasProviderController', () => {
       .useValue(configServiceMock)
       .overrideProvider(EidasProviderService)
       .useValue(eidasProviderServiceMock)
+      .overrideProvider(TrackingService)
+      .useValue(trackingServiceMock)
       .compile();
 
     controller = module.get<EidasProviderController>(EidasProviderController);
@@ -94,7 +111,7 @@ describe('EidasProviderController', () => {
 
     it('should read the light-request corresponding to the token in the body from the cache', async () => {
       // action
-      await controller.requestHandler(body, sessionEidasMock);
+      await controller.requestHandler(reqMock, body, sessionEidasMock);
 
       // expect
       expect(
@@ -107,7 +124,7 @@ describe('EidasProviderController', () => {
 
     it('should parse the light-request', async () => {
       // action
-      await controller.requestHandler(body, sessionEidasMock);
+      await controller.requestHandler(reqMock, body, sessionEidasMock);
 
       // expect
       expect(eidasProviderServiceMock.parseLightRequest).toHaveBeenCalledTimes(
@@ -120,7 +137,7 @@ describe('EidasProviderController', () => {
 
     it('should put the eidas request in session', async () => {
       // action
-      await controller.requestHandler(body, sessionEidasMock);
+      await controller.requestHandler(reqMock, body, sessionEidasMock);
 
       // expect
       expect(sessionEidasMock.set).toHaveBeenCalledTimes(1);
@@ -132,7 +149,7 @@ describe('EidasProviderController', () => {
 
     it('should retrieve the redirectAfterRequestHandlingUrl from the config', async () => {
       // action
-      await controller.requestHandler(body, sessionEidasMock);
+      await controller.requestHandler(reqMock, body, sessionEidasMock);
 
       // expect
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
@@ -147,7 +164,11 @@ describe('EidasProviderController', () => {
       };
 
       // action
-      const result = await controller.requestHandler(body, sessionEidasMock);
+      const result = await controller.requestHandler(
+        reqMock,
+        body,
+        sessionEidasMock,
+      );
 
       // expect
       expect(result).toStrictEqual(expected);
@@ -182,7 +203,7 @@ describe('EidasProviderController', () => {
 
     it('should get the proxyServiceResponseCacheUrl from the configuration', async () => {
       // action
-      await controller.responseProxy(sessionEidasMock);
+      await controller.responseProxy(reqMock, sessionEidasMock);
 
       // expect
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
@@ -191,7 +212,7 @@ describe('EidasProviderController', () => {
 
     it('should prepare the light response using the eidasReponse', async () => {
       // action
-      await controller.responseProxy(sessionEidasMock);
+      await controller.responseProxy(reqMock, sessionEidasMock);
 
       // expect
       expect(
@@ -204,7 +225,7 @@ describe('EidasProviderController', () => {
 
     it('should write the light-response to the cache', async () => {
       // action
-      await controller.responseProxy(sessionEidasMock);
+      await controller.responseProxy(reqMock, sessionEidasMock);
 
       // expect
       expect(
@@ -224,7 +245,7 @@ describe('EidasProviderController', () => {
         proxyServiceResponseCacheUrl: configMock.proxyServiceResponseCacheUrl,
         token: formattedLightResponseMock.token,
       };
-      const result = await controller.responseProxy(sessionEidasMock);
+      const result = await controller.responseProxy(reqMock, sessionEidasMock);
 
       // expect
       expect(result).toStrictEqual(expected);

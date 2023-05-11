@@ -37,6 +37,11 @@ describe('CoreFcpService', () => {
     set: jest.fn(),
   };
 
+  const sessionCoreServiceMock = {
+    get: jest.fn(),
+    set: jest.fn(),
+  };
+
   const spIdentityMock = {
     // oidc parameter
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -149,8 +154,16 @@ describe('CoreFcpService', () => {
 
   describe('sendAuthenticationMail()', () => {
     it('should return a promise', async () => {
+      // given
+      sessionCoreServiceMock.get.mockReset().mockResolvedValue({
+        sentNotificationsForSp: [],
+      });
+
       // action
-      const result = service.sendAuthenticationMail(sessionDataMock);
+      const result = service.sendAuthenticationMail(
+        sessionDataMock,
+        sessionCoreServiceMock,
+      );
       await result;
       // expect
       expect(result).toBeInstanceOf(Promise);
@@ -158,8 +171,15 @@ describe('CoreFcpService', () => {
 
     it('Should call `FeatureHandler.get()` to get instantiated featureHandler class', async () => {
       // Given
+      sessionCoreServiceMock.get.mockReset().mockResolvedValue({
+        sentNotificationsForSp: [],
+      });
+
       // When
-      await service.sendAuthenticationMail(sessionDataMock);
+      await service.sendAuthenticationMail(
+        sessionDataMock,
+        sessionCoreServiceMock,
+      );
       // Then
       expect(featureHandlerGetSpy).toBeCalledTimes(1);
       expect(featureHandlerGetSpy).toBeCalledWith(
@@ -170,11 +190,53 @@ describe('CoreFcpService', () => {
 
     it('Should call featureHandle.handle() with `session`', async () => {
       // Given
+      sessionCoreServiceMock.get.mockReset().mockResolvedValue({
+        sentNotificationsForSp: [],
+      });
+
       // When
-      await service.sendAuthenticationMail(sessionDataMock);
+      await service.sendAuthenticationMail(
+        sessionDataMock,
+        sessionCoreServiceMock,
+      );
+
       // Then
       expect(featureHandlerServiceMock.handle).toBeCalledTimes(1);
       expect(featureHandlerServiceMock.handle).toBeCalledWith(sessionDataMock);
+    });
+
+    it('Should not call featureHandle.handle() when notification is already sent', async () => {
+      // Given
+      const spIdMock = 'sp_id';
+      sessionCoreServiceMock.get.mockReset().mockResolvedValue({
+        sentNotificationsForSp: [spIdMock],
+      });
+
+      // When
+      await service.sendAuthenticationMail(
+        sessionDataMock,
+        sessionCoreServiceMock,
+      );
+
+      // Then
+      expect(featureHandlerServiceMock.handle).not.toBeCalled();
+    });
+
+    it('Should call featureHandle.handle() when notification from another service provider is already sent', async () => {
+      // Given
+      const anotherSpIdMock = 'another_sp_id';
+      sessionCoreServiceMock.get.mockReset().mockResolvedValue({
+        sentNotificationsForSp: [anotherSpIdMock],
+      });
+
+      // When
+      await service.sendAuthenticationMail(
+        sessionDataMock,
+        sessionCoreServiceMock,
+      );
+
+      // Then
+      expect(featureHandlerServiceMock.handle).toBeCalled();
     });
   });
 

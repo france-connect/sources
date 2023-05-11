@@ -1,4 +1,4 @@
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
 
 import {
   checkFCBasicAuthorization,
@@ -10,6 +10,14 @@ import { getClaims } from '../helpers/scope-helper';
 import ServiceProviderPage from '../pages/service-provider-page';
 
 let serviceProviderPage: ServiceProviderPage;
+
+Given('je mémorise le sub envoyé au fournisseur de service', function () {
+  serviceProviderPage.getMockSubText().as('spSub');
+});
+
+When("je redemande les informations de l'usager", function () {
+  serviceProviderPage.getUserInfoButton().click();
+});
 
 When('je navigue sur la page fournisseur de service', function () {
   const { allAppsUrl } = this.env;
@@ -42,7 +50,7 @@ Then('je suis redirigé vers la page fournisseur de service', function () {
   serviceProviderPage.checkIsVisible();
 });
 
-Then('je suis connecté', function () {
+Then('je suis connecté au fournisseur de service', function () {
   serviceProviderPage.checkIsUserConnected();
 });
 
@@ -104,5 +112,16 @@ Then(
   "la description de l'erreur fournisseur de service est {string}",
   function (errorDescription) {
     serviceProviderPage.checkMockErrorDescription(errorDescription);
+  },
+);
+
+Then(
+  /^le sub transmis au fournisseur de service est (identique|différent) [ad]u sub mémorisé$/,
+  function (text: string) {
+    const comparison = text === 'identique' ? 'be.equal' : 'not.be.equal';
+
+    cy.get<string>('@spSub').then((previousSpSub) => {
+      serviceProviderPage.getMockSubText().should(comparison, previousSpSub);
+    });
   },
 );

@@ -26,5 +26,6 @@ export default defineConfig({
 
     // Other Configuration
     LOG_FILE_PATH: "../../docker/volumes/log/core-fcp-high.log",
+    EIDAS_LOG_FILE_PATH: "../../docker/volumes/log/eidas-bridge.log",
   },
 });

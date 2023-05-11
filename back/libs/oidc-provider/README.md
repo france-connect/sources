@@ -51,4 +51,4 @@ Il y a deux possibilités pour récupérer l'information:
   - Les fonctions `encodeBuffer() derToJose() JWS.compact()` ont été passées en asynchrone donc plus besoin de les overrider
   - Lors de sa sauvegarde dans le Redis notre id de session est maintenant enregistré avec le sub de l'utilisateur en clé pour qu'il puisse être récupéré dans l'ensemble de la cinématique utilisateur
   - L'interaction ID est stocké dans `oidc.entities.Interaction.uid` à part pour la route TOKEN où elle se trouve ici `oidc.entities.Grant.accountId` ou la route USERINFO où elle se trouve là `oidc.entities.Account.accountId`.
-  - La fonction `finishInteraction()` dans le `oidc-provider.service.ts` doit maintenant retourner un `grantId` dans l'object `consent`. Celui-ci est généré par le nouveau `oidc-provider-grant.service.ts`.
+  - La fonction `finishInteraction()` présente dans chaque application dans le fichier `oidc-provider-config-app-service.service.ts` doit maintenant retourner un `grantId` dans l'object `consent`. Celui-ci est généré par le nouveau `oidc-provider-grant.service.ts`.

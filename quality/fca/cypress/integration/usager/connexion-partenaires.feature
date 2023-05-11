@@ -17,4 +17,4 @@ Fonctionnalité: Connexion Partenaires
     Et je suis redirigé vers la page login du fournisseur d'identité
     Et je m'authentifie avec succès
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service

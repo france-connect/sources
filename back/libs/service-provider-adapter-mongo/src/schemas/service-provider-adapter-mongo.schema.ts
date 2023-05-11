@@ -73,6 +73,9 @@ export class ServiceProvider extends Document {
 
   @Prop({ type: Boolean })
   identityConsent: boolean;
+
+  @Prop({ type: Boolean })
+  ssoDisabled: boolean;
 }
 
 export const ServiceProviderSchema =

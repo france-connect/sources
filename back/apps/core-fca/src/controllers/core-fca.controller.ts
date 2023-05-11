@@ -14,7 +14,13 @@ import {
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { CoreAcrService, CoreRoutes, Interaction } from '@fc/core';
+import {
+  CoreAcrService,
+  CoreConfig,
+  CoreRoutes,
+  CoreVerifyService,
+  Interaction,
+} from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { MinistriesService } from '@fc/ministries';
@@ -34,8 +40,7 @@ import {
   SessionNotFoundException,
 } from '@fc/session';
 
-import { CoreConfig } from '../dto';
-import { CoreFcaVerifyService } from '../services/core-fca-verify.service';
+import { CoreFcaVerifyService } from '../services';
 
 @Controller()
 export class CoreFcaController {
@@ -51,6 +56,7 @@ export class CoreFcaController {
     private readonly csrfService: SessionCsrfService,
     private readonly coreAcr: CoreAcrService,
     private readonly coreFcaVerify: CoreFcaVerifyService,
+    private readonly coreVerify: CoreVerifyService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -244,6 +250,8 @@ export class CoreFcaController {
   @Get(CoreRoutes.INTERACTION_VERIFY)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  // we choose to keep code readable here and to be close to fcp
+  // eslint-disable-next-line complexity
   async getVerify(
     @Req() req: Request,
     @Res() res: Response,
@@ -262,22 +270,27 @@ export class CoreFcaController {
       throw new SessionNotFoundException('OidcClient');
     }
 
-    const { idpId, interactionId, spId } = session;
+    const { idpId, interactionId, spId, isSso } = session;
+
+    const { urlPrefix } = this.config.get<AppConfig>('App');
+    const params = { urlPrefix, interactionId, sessionOidc };
+
+    const { ssoDisabled } = await this.serviceProvider.getById(spId);
+    if (isSso && ssoDisabled) {
+      const url = await this.coreFcaVerify.handleSsoDisabled(req, params);
+      return res.redirect(url);
+    }
 
     const isBlackListed = await this.serviceProvider.shouldExcludeIdp(
       spId,
       idpId,
     );
-
-    const { urlPrefix } = this.config.get<AppConfig>('App');
-    const params = { urlPrefix, interactionId, sessionOidc };
-
     if (isBlackListed) {
-      const url = await this.coreFcaVerify.handleBlacklisted(req, params);
-      return res.redirect(url);
-    } else {
-      const url = await this.coreFcaVerify.handleVerifyIdentity(req, params);
+      const url = await this.coreVerify.handleBlacklisted(req, params);
       return res.redirect(url);
     }
+
+    const url = await this.coreFcaVerify.handleVerifyIdentity(req, params);
+    return res.redirect(url);
   }
 }

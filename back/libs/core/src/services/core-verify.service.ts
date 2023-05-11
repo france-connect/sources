@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 
@@ -6,9 +8,9 @@ import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapt
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService } from '@fc/session';
-import { TrackedEventContextInterface } from '@fc/tracking';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
-import { ProcessCore } from '../enums';
+import { CoreRoutes, ProcessCore } from '../enums';
 import { CoreIdentityProviderNotFoundException } from '../exceptions';
 import { IVerifyFeatureHandler } from '../interfaces';
 
@@ -18,6 +20,7 @@ export class CoreVerifyService {
     private readonly logger: LoggerService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
     public readonly moduleRef: ModuleRef,
+    private readonly tracking: TrackingService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -58,5 +61,46 @@ export class CoreVerifyService {
     );
 
     await verifyHandler.handle({ sessionOidc, trackingContext });
+  }
+
+  async handleBlacklisted(
+    req: Request,
+    params: {
+      urlPrefix: string;
+      interactionId: string;
+      sessionOidc: ISessionService<OidcClientSession>;
+    },
+  ): Promise<string> {
+    const { interactionId, urlPrefix, sessionOidc } = params;
+
+    const url = `${urlPrefix}${CoreRoutes.INTERACTION.replace(
+      ':uid',
+      interactionId,
+    )}`;
+
+    /**
+     * Black listing redirects to idp choice,
+     * thus we are no longer in an "sso" interaction,
+     * so we update isSso flag in session.
+     */
+    sessionOidc.set('isSso', false);
+
+    await this.trackBlackListed(req);
+
+    return url;
+  }
+
+  async trackBlackListed(req: Request) {
+    const eventContext = { req };
+    const { FC_BLACKLISTED } = this.tracking.TrackedEventsMap;
+
+    await this.tracking.track(FC_BLACKLISTED, eventContext);
+  }
+
+  async trackVerified(req: Request) {
+    const eventContext = { req };
+    const { FC_VERIFIED } = this.tracking.TrackedEventsMap;
+
+    await this.tracking.track(FC_VERIFIED, eventContext);
   }
 }

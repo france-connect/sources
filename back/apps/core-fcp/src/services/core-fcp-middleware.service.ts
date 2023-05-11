@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { CoreOidcProviderMiddlewareService } from '@fc/core';
+import { CoreConfig, CoreOidcProviderMiddlewareService } from '@fc/core';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientSession } from '@fc/oidc-client';
 import {
+  OidcCtx,
   OidcProviderErrorService,
   OidcProviderMiddlewareStep,
   OidcProviderRoutes,
@@ -15,7 +16,7 @@ import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter
 import { SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
-import { AppSession } from '../dto';
+import { AppSession, CoreSessionDto } from '../dto';
 
 @Injectable()
 export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService {
@@ -88,7 +89,8 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     );
   }
 
-  protected async afterAuthorizeMiddleware(ctx) {
+  // eslint-disable-next-line complexity
+  protected async afterAuthorizeMiddleware(ctx: OidcCtx): Promise<void> {
     /**
      * Abort middleware if authorize is in error
      *
@@ -100,9 +102,12 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     }
 
     const eventContext = this.getEventContext(ctx);
-
     const { req, res } = ctx;
-    await this.sessionService.reset(req, res);
+
+    const { enableSso } = this.config.get<CoreConfig>('Core');
+    if (!enableSso) {
+      await this.sessionService.reset(req, res);
+    }
 
     const oidcSession = SessionService.getBoundedSession<OidcClientSession>(
       req,
@@ -115,12 +120,28 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
       ctx.req.headers['x-suspicious'] === '1',
     );
 
+    const isSsoAvailable = await this.isSsoAvailable(oidcSession);
+    ctx.isSso = enableSso && isSsoAvailable;
+
     const sessionProperties = await this.buildSessionWithNewInteraction(
       ctx,
       eventContext,
     );
 
     await oidcSession.set(sessionProperties);
+
+    const coreSession = SessionService.getBoundedSession<CoreSessionDto>(
+      req,
+      'Core',
+    );
+
+    const sentNotificationsForSp = await coreSession.get(
+      'sentNotificationsForSp',
+    );
+
+    const sentNotificationsForSpRes = sentNotificationsForSp ?? [];
+
+    await coreSession.set('sentNotificationsForSp', sentNotificationsForSpRes);
 
     const { interactionId: _interactionId, ...sessionWithoutInteractionId } =
       sessionProperties;
@@ -130,5 +151,7 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     };
 
     await this.trackAuthorize(authEventContext);
+
+    await this.checkRedirectToSso(ctx);
   }
 }

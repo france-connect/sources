@@ -16,7 +16,7 @@
     "Cucumber"
   ],
   "engines": {
-    "node": "^14.17.0",
+    "node": ">=14.17.0",
     "npm": "DO-NOT-USE-NPM"
   },
   "dependencies": {

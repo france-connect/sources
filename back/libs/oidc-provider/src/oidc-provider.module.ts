@@ -14,9 +14,11 @@ import { SessionModule } from '@fc/session';
 import { IOidcProviderConfigAppService } from './interfaces';
 import { OidcProviderController } from './oidc-provider.controller';
 import { OidcProviderService } from './oidc-provider.service';
-import { OidcProviderConfigService } from './services/oidc-provider-config.service';
-import { OidcProviderErrorService } from './services/oidc-provider-error.service';
-import { OidcProviderGrantService } from './services/oidc-provider-grant.service';
+import {
+  OidcProviderConfigService,
+  OidcProviderErrorService,
+  OidcProviderGrantService,
+} from './services';
 import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
 import { IsValidPromptConstraint } from './validators';
 
@@ -70,6 +72,7 @@ export class OidcProviderModule {
         serviceProviderProvider,
         FcExceptionFilter,
         OidcProviderErrorService,
+        OidcProviderGrantService,
       ],
       controllers: [OidcProviderController],
     };

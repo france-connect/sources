@@ -133,5 +133,23 @@
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
+  },
+  {
+    "idpId": "fip8-low",
+    "name": "fip8-low",
+    "title": "IDP8 - LOW",
+    "descriptions": ["disponible que pour un FS"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip8-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#idp-fip8-low",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "button[type='submit']"
+    }
   }
 ]

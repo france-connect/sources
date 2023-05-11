@@ -4,7 +4,7 @@ import { HttpAdapterHost } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
-import { IOidcIdentity, OidcSession } from '@fc/oidc';
+import { OidcSession } from '@fc/oidc';
 import { REDIS_CONNECTION_TOKEN } from '@fc/redis';
 
 import {
@@ -20,7 +20,7 @@ import {
 import { OidcProviderService } from './oidc-provider.service';
 import { OidcProviderConfigService } from './services/oidc-provider-config.service';
 import { OidcProviderErrorService } from './services/oidc-provider-error.service';
-import { OidcProviderGrantService } from './services/oidc-provider-grant.service';
+import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
 
 describe('OidcProviderService', () => {
   let service: OidcProviderService;
@@ -76,11 +76,6 @@ describe('OidcProviderService', () => {
     getById: jest.fn(),
   };
 
-  const sessionServiceMock = {
-    set: jest.fn(),
-    get: jest.fn(),
-  };
-
   const useSpy = jest.fn();
 
   const providerMock = {
@@ -114,9 +109,9 @@ describe('OidcProviderService', () => {
     findAccount: jest.fn(),
   };
 
-  const oidcProviderGrantServiceMock = {
-    generateGrant: jest.fn(),
-    saveGrant: jest.fn(),
+  const oidcProviderConfigAppMock = {
+    setProvider: jest.fn(),
+    finishInteraction: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -131,7 +126,10 @@ describe('OidcProviderService', () => {
         },
         OidcProviderErrorService,
         OidcProviderConfigService,
-        OidcProviderGrantService,
+        {
+          provide: OIDC_PROVIDER_CONFIG_APP_TOKEN,
+          useValue: oidcProviderConfigAppMock,
+        },
       ],
     })
       .overrideProvider(HttpAdapterHost)
@@ -142,8 +140,6 @@ describe('OidcProviderService', () => {
       .useValue(oidcProviderErrorServiceMock)
       .overrideProvider(OidcProviderConfigService)
       .useValue(oidcProviderConfigServiceMock)
-      .overrideProvider(OidcProviderGrantService)
-      .useValue(oidcProviderGrantServiceMock)
       .compile();
 
     module.useLogger(loggerServiceMock);
@@ -241,6 +237,18 @@ describe('OidcProviderService', () => {
         1,
       );
     });
+
+    it('should call setProvider to allow oidcProviderConfigApp to retrieve this.provider ', async () => {
+      // Given
+      service['ProviderProxy'] = ProviderProxyMock;
+      // When
+      await service.onModuleInit();
+      // Then
+      expect(oidcProviderConfigAppMock.setProvider).toHaveBeenCalledTimes(1);
+      expect(oidcProviderConfigAppMock.setProvider).toHaveBeenCalledWith({
+        proxy: true,
+      });
+    });
   });
 
   describe('getProvider', () => {
@@ -249,117 +257,6 @@ describe('OidcProviderService', () => {
       const result = service.getProvider();
       // Then
       expect(result).toBe(service['provider']);
-    });
-  });
-
-  describe('finishInteraction', () => {
-    // Given
-    const reqMock = {
-      fc: { interactionId: 'interactiondMockValue' },
-      sessionId: 'sessionIdMockedValue',
-    };
-    const resMock = {};
-
-    it('should return the result of oidc-provider.interactionFinished()', async () => {
-      // Given
-      const resolvedValue = Symbol('resolved value');
-
-      providerMock.interactionFinished.mockResolvedValueOnce(resolvedValue);
-      const sessionDataMock: OidcSession = {
-        spAcr: 'spAcrValue',
-        spIdentity: {
-          sub: 'subValue',
-        },
-      };
-      sessionServiceMock.get.mockResolvedValueOnce(sessionDataMock);
-      // When
-      const result = await service.finishInteraction(
-        reqMock,
-        resMock,
-        sessionDataMock,
-      );
-      // Then
-      expect(result).toBe(resolvedValue);
-    });
-
-    it('should finish interaction with grant', async () => {
-      // Given
-      const spAcrMock = 'spAcrValue';
-      const interactionIdMock = 'interactionIdValue';
-      const amrValueMock = ['amrValue'];
-      const spIdentityMock = {
-        sub: 'subValue',
-      } as IOidcIdentity;
-
-      const sessionDataMock: OidcSession = {
-        spAcr: spAcrMock,
-        amr: amrValueMock,
-        interactionId: interactionIdMock,
-        spIdentity: spIdentityMock,
-      };
-      sessionServiceMock.get.mockResolvedValueOnce(sessionDataMock);
-
-      const grantMock = Symbol('grant');
-      const grantIdMock = Symbol('grantIdMock');
-      oidcProviderGrantServiceMock.generateGrant.mockResolvedValueOnce(
-        grantMock,
-      );
-      oidcProviderGrantServiceMock.saveGrant.mockResolvedValueOnce(grantIdMock);
-
-      const resultMock = {
-        consent: {
-          grantId: grantIdMock,
-        },
-        login: {
-          accountId: reqMock.sessionId,
-          acr: spAcrMock,
-          amr: amrValueMock,
-          ts: expect.any(Number),
-          remember: false,
-        },
-      };
-      providerMock.interactionFinished.mockResolvedValueOnce('ignoredValue');
-      // When
-      await service.finishInteraction(reqMock, resMock, sessionDataMock);
-
-      // Then
-      expect(oidcProviderGrantServiceMock.generateGrant).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(oidcProviderGrantServiceMock.generateGrant).toHaveBeenCalledWith(
-        service.getProvider(),
-        reqMock,
-        resMock,
-        reqMock.sessionId,
-      );
-      expect(oidcProviderGrantServiceMock.saveGrant).toHaveBeenCalledTimes(1);
-      expect(oidcProviderGrantServiceMock.saveGrant).toHaveBeenCalledWith(
-        grantMock,
-      );
-
-      expect(providerMock.interactionFinished).toHaveBeenCalledTimes(1);
-      expect(providerMock.interactionFinished).toHaveBeenCalledWith(
-        reqMock,
-        resMock,
-        resultMock,
-      );
-    });
-
-    it('should throw OidcProviderRuntimeException', async () => {
-      // Given
-      const nativeError = new Error('invalid_request');
-      providerMock.interactionFinished.mockRejectedValueOnce(nativeError);
-      const sessionDataMock: OidcSession = {
-        spAcr: 'spAcrValue',
-        spIdentity: {
-          sub: 'subValue',
-        },
-      };
-      sessionServiceMock.get.mockResolvedValueOnce(sessionDataMock);
-      // Then
-      await expect(
-        service.finishInteraction(reqMock, resMock, sessionDataMock),
-      ).rejects.toThrow(OidcProviderRuntimeException);
     });
   });
 
@@ -723,6 +620,27 @@ describe('OidcProviderService', () => {
           error_description: mockErrDescription,
         },
       );
+    });
+  });
+
+  describe('finishInteraction()', () => {
+    it('should call call finishInteraction with param', () => {
+      // Given
+      const reqMock = Symbol('req');
+      const resMock = Symbol('res');
+      const sessionDataMock: OidcSession = {
+        spAcr: 'spAcrValue',
+        spIdentity: {},
+      };
+      // When
+      service.finishInteraction(reqMock, resMock, sessionDataMock);
+      // Then
+      expect(oidcProviderConfigAppMock.finishInteraction).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(
+        oidcProviderConfigAppMock.finishInteraction,
+      ).toHaveBeenLastCalledWith(reqMock, resMock, sessionDataMock);
     });
   });
 });

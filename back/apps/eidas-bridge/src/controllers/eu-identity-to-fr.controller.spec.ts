@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
@@ -12,10 +14,10 @@ import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
-import { SessionService } from '@fc/session';
+import { TrackingService } from '@fc/tracking';
 
 import { AppConfig, EidasBridgeIdentityDto } from '../dto';
-import { EidasBridgeInvalidIdentityException } from '../exceptions';
+import { EidasBridgeInvalidEUIdentityException } from '../exceptions';
 import { EuIdentityToFrController } from './eu-identity-to-fr.controller';
 
 jest.mock('@fc/common', () => ({
@@ -78,6 +80,7 @@ describe('EuIdentityToFrController', () => {
 
   const sessionDataMock: OidcClientSession = {
     spName: 'spNameMockValue',
+    spId: 'spIdMock',
   };
 
   const res = {
@@ -94,7 +97,7 @@ describe('EuIdentityToFrController', () => {
     params: {
       uid: '1234456',
     },
-  };
+  } as unknown as Request;
 
   const interactionMock = {
     uid: Symbol('uidMockValue'),
@@ -114,8 +117,9 @@ describe('EuIdentityToFrController', () => {
     getListByIso: jest.fn(),
   };
 
-  const sessionServiceMock = {
-    setAlias: jest.fn(),
+  const trackingServiceMock = {
+    track: jest.fn(),
+    TrackedEventsMap: {},
   };
 
   beforeEach(async () => {
@@ -124,20 +128,17 @@ describe('EuIdentityToFrController', () => {
       providers: [
         ConfigService,
         LoggerService,
-        SessionService,
         OidcProviderService,
         OidcToEidasService,
         EidasToOidcService,
         EidasCountryService,
-        SessionService,
+        TrackingService,
       ],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(SessionService)
-      .useValue(sessionServiceOidcMock)
       .overrideProvider(OidcProviderService)
       .useValue(oidcProviderServiceMock)
       .overrideProvider(OidcToEidasService)
@@ -146,8 +147,8 @@ describe('EuIdentityToFrController', () => {
       .useValue(eidasToOidcServiceMock)
       .overrideProvider(EidasCountryService)
       .useValue(eidasCountryServiceMock)
-      .overrideProvider(SessionService)
-      .useValue(sessionServiceMock)
+      .overrideProvider(TrackingService)
+      .useValue(trackingServiceMock)
       .compile();
 
     euIdentityToFrController = await app.get<EuIdentityToFrController>(
@@ -447,9 +448,20 @@ describe('EuIdentityToFrController', () => {
       it('should `set` to update the oidc session with the identity to send to the SP', async () => {
         // setup
         const expectedUpdatedSession = {
-          idpIdentity: { sub: successOidcJson.userinfos.sub },
+          idpIdentity: { sub: 'BE/FR/12345' },
           spAcr: successOidcJson.acr,
-          spIdentity: successOidcJson.userinfos,
+          spIdentity: {
+            // oidc parameter
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            family_name: 'Garcia',
+            // oidc parameter
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            given_name: 'javier',
+            birthdate: '1964-12-31',
+          },
+          subs: {
+            spIdMock: 'BE/FR/12345',
+          },
         };
 
         // action
@@ -711,7 +723,7 @@ describe('EuIdentityToFrController', () => {
         // action
         euIdentityToFrController['validateIdentity'](identityMock),
         // assert
-      ).rejects.toThrow(EidasBridgeInvalidIdentityException);
+      ).rejects.toThrow(EidasBridgeInvalidEUIdentityException);
     });
   });
 
@@ -748,6 +760,7 @@ describe('EuIdentityToFrController', () => {
     it('should return a status code and a url', async () => {
       // When
       const result = await euIdentityToFrController.redirectToFrNodeConnector(
+        req,
         req.body,
       );
       // Then

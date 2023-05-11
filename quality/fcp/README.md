@@ -255,6 +255,11 @@ The visual validations are done on Electron 94 headless in the terminal.
 yarn test:high:snapshot
 ```
 
+- FCP-LOW
+```shell
+yarn test:low:snapshot
+```
+
 - USER-DASHBOARD
 ```shell
 yarn test:ud:snapshot
@@ -267,6 +272,11 @@ yarn test:ud:snapshot
 yarn test:high:snapshot --env updateSnapshots=true
 ```
 
+- FCP-LOW
+```shell
+yarn test:low:snapshot --env updateSnapshots=true
+```
+
 - USER-DASHBOARD
 ```shell
 yarn test:ud:snapshot --env updateSnapshots=true
@@ -277,6 +287,11 @@ yarn test:ud:snapshot --env updateSnapshots=true
 - FCP-HIGH
 ```shell
 yarn test:high:snapshot --env failOnSnapshotDiff=false
+```
+
+- FCP-LOW
+```shell
+yarn test:low:snapshot --env failOnSnapshotDiff=false
 ```
 
 - USER-DASHBOARD

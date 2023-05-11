@@ -3,12 +3,7 @@
 // Declarative code
 export * from './decorators';
 export { SessionConfig } from './dto';
-export {
-  SessionBadFormatException,
-  SessionInvalidCsrfConsentException,
-  SessionInvalidCsrfSelectIdpException,
-  SessionNotFoundException,
-} from './exceptions';
+export * from './exceptions';
 export * from './interfaces';
 export {
   ISessionBoundContext,

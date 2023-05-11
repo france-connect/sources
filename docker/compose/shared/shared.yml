@@ -61,10 +61,12 @@ services:
           - fsp1-low.docker.dev-franceconnect.fr
           - fsp2-low.docker.dev-franceconnect.fr
           - fsp3-low.docker.dev-franceconnect.fr
+          - fsp4-low.docker.dev-franceconnect.fr
           - fip1-low.docker.dev-franceconnect.fr
           - fip2-low.docker.dev-franceconnect.fr
           - fip3-low.docker.dev-franceconnect.fr
           - fip4-low.docker.dev-franceconnect.fr
+          - fip8-low.docker.dev-franceconnect.fr
           # FCA LOW
           - core-fca-low.docker.dev-franceconnect.fr
           - bridge-proxy-rie.docker.dev-franceconnect.fr
@@ -140,6 +142,7 @@ services:
 
   haproxy:
     image: haproxy:2.3
+    hostname: haproxy
     ports:
       - 8404:8404
     volumes:
@@ -148,6 +151,7 @@ services:
     networks:
       - public
       - fc
+      - exploitation
     depends_on:
       - rp-all
 

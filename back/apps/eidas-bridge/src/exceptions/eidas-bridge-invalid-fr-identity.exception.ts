@@ -9,9 +9,9 @@ import { Description } from '@fc/exceptions';
 import { EidasBridgeBaseException } from './eidas-bridge-base.exception';
 
 @Description(
-  "L'identité reçue du bridge eIDAS ( venant d'un autre état membre ) n'est pas valide. Contacter le support N3",
+  "L'identité reçue du fournisseur d'identité français n'est pas valide. Contacter le support N3",
 )
-export class EidasBridgeInvalidIdentityException extends EidasBridgeBaseException {
+export class EidasBridgeInvalidFRIdentityException extends EidasBridgeBaseException {
   code = ErrorCode.INVALID_IDENTITY;
   message =
     "Un problème lié à vos données d'identité empêche la connexion d'aboutir. Nous vous invitons à nous contacter pour corriger le problème.";

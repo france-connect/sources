@@ -97,3 +97,13 @@ When("je force l'utilisation du fournisseur d'identité", function () {
     .invoke('attr', 'disabled', false)
     .click({ force: true });
 });
+
+Then(
+  /^le fournisseur d'identité (est|n'est pas) désactivé dans la liste$/,
+  function (text) {
+    const isDisabled = text === 'est';
+    identityProviderSelectionPage
+      .getIdpButton(this.identityProvider)
+      .should(isDisabled ? 'be.disabled' : 'be.enabled');
+  },
+);

@@ -72,8 +72,8 @@ export default {
       AuthorizationCode: 30, // 30 seconds
       Grant: 30, // 30 seconds
       IdToken: 60, // 1 minute
-      Interaction: 600, // 10 minutes
-      Session: 600, // 10 minutes
+      Interaction: 7200, // 2h
+      Session: 7200, // 2h
     },
     acrValues: ['eidas1'],
     scopes: ['openid'],

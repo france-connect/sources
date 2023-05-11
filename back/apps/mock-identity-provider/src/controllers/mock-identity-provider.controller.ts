@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { IOidcIdentity } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { ISessionService, Session, SessionService } from '@fc/session';
@@ -98,21 +99,26 @@ export class MockIdentityProviderController {
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
     const { login, acr } = body;
-    const spIdentity = await this.mockIdentityProviderService.getIdentity(
+    const spIdentity = (await this.mockIdentityProviderService.getIdentity(
       login,
-    );
+    )) as unknown as IOidcIdentity;
 
     if (!spIdentity) {
       this.logger.trace({ spIdentity }, LoggerLevelNames.WARN);
       throw new Error('Identity not found in database');
     }
 
+    const { spId } = await sessionOidc.get();
+
+    const { sub, ...spIdentityCleaned } = spIdentity;
+
     const spAcr = acr;
 
     await sessionOidc.set({
       spAcr,
-      spIdentity,
+      spIdentity: spIdentityCleaned,
       amr: ['pwd'],
+      subs: { [spId]: sub },
     });
 
     this.logger.trace({

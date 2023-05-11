@@ -32,4 +32,5 @@ export enum ErrorCode {
   USERINFO_ERROR = 23,
   INTERACTION_NOT_FOUND = 25,
   GRANT_NOT_SAVED = 26,
+  SP_ID_NOT_FOUND = 27,
 }

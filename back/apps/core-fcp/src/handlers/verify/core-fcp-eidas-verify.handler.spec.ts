@@ -49,7 +49,8 @@ describe('CoreFcpEidasVerifyHandler', () => {
   };
 
   const idpIdentityMock = {
-    sub: 'some idpSub',
+    sub: 'sub',
+    email: 'some@email.com',
   };
 
   const configServiceMock = {
@@ -199,8 +200,13 @@ describe('CoreFcpEidasVerifyHandler', () => {
       expect(sessionServiceMock.set).toHaveBeenCalledWith({
         accountId: accountIdMock,
         amr: ['eidas'],
-        idpIdentity: idpIdentityMock,
-        spIdentity: { ...idpIdentityMock, sub: 'computedSubSp' },
+        idpIdentity: { sub: 'sub' },
+        spIdentity: { email: 'some@email.com' },
+        subs: {
+          // FranceConnect claims naming convention
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          sp_id: 'computedSubSp',
+        },
       });
     });
 

@@ -17,4 +17,5 @@ export const enum ErrorCode {
   INVALID_CSRF_SELECT_IDP = 7,
   BAD_STRINGIFY = 8,
   NO_SESSION_ID = 9,
+  SUB_NOT_FOUND = 10,
 }

@@ -125,9 +125,12 @@ export default {
       step: '5.0.0',
       category: EventsCategories.FRONT_CINEMATIC,
       event: 'FC_VERIFIED',
-      interceptRoutes: [
-        { method: RequestMethod.GET, path: CoreRoutes.INTERACTION_VERIFY },
-      ],
+    },
+
+    FC_BLACKLISTED: {
+      step: '5.1.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_UNAUTHORIZED_IDP',
     },
 
     FC_SHOWED_CONSENT: {

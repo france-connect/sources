@@ -229,6 +229,12 @@
       "@fc/tracking/*": [
         "libs/tracking/src/*"
       ],
+      "@fc/tracking-context": [
+        "libs/tracking-context/src"
+      ],
+      "@fc/tracking-context/*": [
+        "libs/tracking-context/src/*"
+      ],
       "@fc/app": [
         "libs/app/src"
       ],

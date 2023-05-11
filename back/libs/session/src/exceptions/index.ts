@@ -11,3 +11,4 @@ export * from './session-invalid-session.exception';
 export * from './session-no-session-id.exception';
 export * from './session-not-found.exception';
 export * from './session-storage.exception';
+export * from './session-sub-not-found.exception';

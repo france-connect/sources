@@ -15,7 +15,7 @@ Fonctionnalité: Connexion avec Claims
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et la cinématique a renvoyé l'amr "pwd"
 
   Scénario: Connexion avec claims - claim AMR absent si non demandé
@@ -28,7 +28,7 @@ Fonctionnalité: Connexion avec Claims
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et la cinématique n'a pas renvoyé d'amr
 
   Scénario: Connexion avec claims - erreur FS non habilité pour amr

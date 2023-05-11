@@ -1,4 +1,4 @@
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
 
 import {
   addInterceptHeaders,
@@ -51,6 +51,10 @@ When('je clique sur le bouton FranceConnect', function () {
   }
 });
 
+When("je redemande les informations de l'usager", function () {
+  serviceProviderPage.getUserInfoButton().click();
+});
+
 When(
   /^j'initie une connexion suspecte à (?:FranceConnect low|FranceConnect\+)$/,
   function () {
@@ -88,6 +92,10 @@ Then('je suis connecté au fournisseur de service', function () {
   // being preceded by the navigation step
   serviceProviderPage = new ServiceProviderPage(this.serviceProvider);
   serviceProviderPage.checkIsUserConnected();
+});
+
+When('je me déconnecte du fournisseur de service', function () {
+  serviceProviderPage.getLogoutButton().click();
 });
 
 Then(
@@ -129,6 +137,28 @@ Then(
       }
       serviceProviderPage.checkMockInformationAccess(expectedClaims, allClaims);
     }
+  },
+);
+
+Given('je mémorise le sub envoyé au fournisseur de service', function () {
+  serviceProviderPage.getMockSubText().as('spSub');
+});
+
+Then(
+  /^le sub transmis au fournisseur de service est (identique|différent) [ad]u sub mémorisé$/,
+  function (text: string) {
+    const comparison = text === 'identique' ? 'be.equal' : 'not.be.equal';
+
+    cy.get<string>('@spSub').then((previousSpSub) => {
+      serviceProviderPage.getMockSubText().should(comparison, previousSpSub);
+    });
+  },
+);
+
+Then(
+  'le sub transmis au fournisseur de service est {string}',
+  function (sub: string) {
+    serviceProviderPage.getMockSubText().should('be.equal', sub);
   },
 );
 

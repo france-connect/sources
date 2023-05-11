@@ -3,7 +3,9 @@
     "name": "fsp1-low",
     "descriptions": [
       "par défaut",
-      "public"
+      "public",
+      "avec un entityId",
+      "avec accès au FI par défaut (premier FS)"
     ],
     "mocked": true,
     "url": "https://fsp1-low.{{TEST_ENV}}.dev-franceconnect.fr",
@@ -26,7 +28,9 @@
     "name": "fsp2-low",
     "descriptions": [
       "non habilité à demander le claim amr",
-      "avec une whitelist de FI"
+      "avec une whitelist de FI",
+      "avec le même entityId",
+      "avec accès au FI par défaut (deuxième FS)"
     ],
     "mocked": true,
     "url": "https://fsp2-low.{{TEST_ENV}}.dev-franceconnect.fr",
@@ -47,6 +51,8 @@
     "name": "fsp3-low",
     "descriptions": [
       "privé avec consentement obligatoire",
+      "avec un entityId différent",
+      "avec un sub existant",
       "avec une blacklist de FI"
     ],
     "mocked": true,
@@ -58,6 +64,27 @@
       "tous les scopes"
     ],
     "explicitConsent": true,
+    "selectors": {
+      "fcButton": "#call-authorize-button",
+      "logoutButton": ".nav-logout"
+    },
+    "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "fsp4-low",
+    "descriptions": [
+      "sans accès au FI par défaut",
+      "avec accès exclusif à un FI"
+    ],
+    "mocked": true,
+    "url": "https://fsp4-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "clientId": "6925fb7843c76eded44d32b40c0cb1gyu065f7f003de52712b78985704f39950",
+    "acrValue": "eidas1",
+    "claims": [],
+    "scopes": [
+      "tous les scopes"
+    ],
+    "explicitConsent": false,
     "selectors": {
       "fcButton": "#call-authorize-button",
       "logoutButton": ".nav-logout"

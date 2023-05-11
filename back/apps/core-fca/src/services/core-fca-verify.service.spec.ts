@@ -2,13 +2,17 @@ import { Request } from 'express';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { ConfigService } from '@fc/config';
 import { CoreVerifyService } from '@fc/core';
 import { LoggerService } from '@fc/logger-legacy';
+import { OidcClientSession } from '@fc/oidc-client';
+import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
+import { ISessionService, SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
 import { CoreFcaVerifyService } from './core-fca-verify.service';
 
-describe('CoreFcaController', () => {
+describe('CoreFcaVerifyService', () => {
   let service: CoreFcaVerifyService;
 
   const loggerServiceMock = {
@@ -19,6 +23,7 @@ describe('CoreFcaController', () => {
 
   const coreVerifyServiceMock = {
     verify: jest.fn(),
+    trackVerified: jest.fn(),
   };
 
   const sessionServiceMock = {
@@ -29,11 +34,15 @@ describe('CoreFcaController', () => {
   const trackingServiceMock: TrackingService = {
     track: jest.fn(),
     TrackedEventsMap: {
-      IDP_CALLEDBACK: {},
-      FC_VERIFIED: {},
-      FC_BLACKLISTED: {},
+      FS_DISABLED_SSO: {},
     },
   } as unknown as TrackingService;
+
+  const serviceProviderAdapterMongoService = {};
+
+  const configServiceMock = {
+    get: jest.fn(),
+  };
 
   const interactionIdMock = 'interactionIdMockValue';
 
@@ -53,6 +62,8 @@ describe('CoreFcaController', () => {
     sessionOidc: sessionServiceMock,
   };
 
+  const eventContext = { req };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -61,19 +72,29 @@ describe('CoreFcaController', () => {
       providers: [
         CoreFcaVerifyService,
         LoggerService,
-        CoreVerifyService,
         TrackingService,
+        CoreVerifyService,
+        ConfigService,
+        SessionService,
       ],
     })
+      .overrideProvider(SessionService)
+      .useValue(sessionServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(CoreVerifyService)
-      .useValue(coreVerifyServiceMock)
       .overrideProvider(TrackingService)
       .useValue(trackingServiceMock)
+      .overrideProvider(CoreVerifyService)
+      .useValue(coreVerifyServiceMock)
+      .overrideProvider(ConfigService)
+      .useValue(configServiceMock)
+      .overrideProvider(ServiceProviderAdapterMongoService)
+      .useValue(serviceProviderAdapterMongoService)
       .compile();
 
-    service = await app.get<CoreFcaVerifyService>(CoreFcaVerifyService);
+    sessionServiceMock.get.mockResolvedValue(sessionServiceMock);
+
+    service = app.get<CoreFcaVerifyService>(CoreFcaVerifyService);
   });
 
   it('should be defined', () => {
@@ -100,8 +121,8 @@ describe('CoreFcaController', () => {
       // When
       await service['handleVerifyIdentity'](req, params);
       // Then
-      expect(service['trackVerified']).toHaveBeenCalledTimes(1);
-      expect(service['trackVerified']).toHaveBeenCalledWith(req);
+      expect(coreVerifyServiceMock.trackVerified).toHaveBeenCalledTimes(1);
+      expect(coreVerifyServiceMock.trackVerified).toHaveBeenCalledWith(req);
     });
 
     it('should return url result', async () => {
@@ -114,60 +135,49 @@ describe('CoreFcaController', () => {
     });
   });
 
-  describe('handleBlacklisted()', () => {
-    beforeEach(() => {
-      service['trackBlackListed'] = jest.fn();
-    });
+  describe('trackSsoDisabled()', () => {
+    it('should track service provider with sso disallowed', async () => {
+      // When
+      await service['trackSsoDisabled'](eventContext);
 
+      // Then
+      expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
+      expect(trackingServiceMock.track).toHaveBeenCalledWith(
+        trackingServiceMock.TrackedEventsMap.FS_DISABLED_SSO,
+        eventContext,
+      );
+    });
+  });
+
+  describe('handleSsoDisabled()', () => {
     it('should call session.set()', async () => {
       // When
-      await service['handleBlacklisted'](req, params);
+      await service['handleSsoDisabled'](req, params);
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith('isSso', false);
     });
 
-    it('should call trackBlackListed', async () => {
-      // When
-      await service['handleBlacklisted'](req, params);
-      // Then
-      expect(service['trackBlackListed']).toHaveBeenCalledTimes(1);
-      expect(service['trackBlackListed']).toHaveBeenCalledWith(req);
-    });
-
-    it('should return url result', async () => {
+    it('should call trackSsoDisabled()', async () => {
       // Given
-      const expected = 'urlPrefixValue/interaction/interactionId';
-      // When
-      const result = await service['handleBlacklisted'](req, params);
-      // Then
-      expect(result).toBe(expected);
-    });
-  });
+      const urlPrefixMock = 'urlPrefixMock';
+      const isSsoMock = true;
+      const oidcClientSessionDataMock = {
+        isSso: isSsoMock,
+        set: jest.fn(),
+      } as unknown as ISessionService<OidcClientSession>;
+      service['trackSsoDisabled'] = jest.fn();
 
-  describe('trackVerified', () => {
-    it('should call tracking.track()', async () => {
       // When
-      await service['trackVerified'](req);
-      // Then
-      expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
-      expect(trackingServiceMock.track).toHaveBeenCalledWith(
-        trackingServiceMock.TrackedEventsMap.FC_VERIFIED,
-        { req },
-      );
-    });
-  });
+      await service['handleSsoDisabled'](req, {
+        urlPrefix: urlPrefixMock,
+        interactionId: interactionIdMock,
+        sessionOidc: oidcClientSessionDataMock,
+      });
 
-  describe('trackBlackListed', () => {
-    it('should call tracking.track()', async () => {
-      // When
-      await service['trackBlackListed'](req);
       // Then
-      expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
-      expect(trackingServiceMock.track).toHaveBeenCalledWith(
-        trackingServiceMock.TrackedEventsMap.FC_BLACKLISTED,
-        { req },
-      );
+      expect(service['trackSsoDisabled']).toHaveBeenCalledTimes(1);
+      expect(service['trackSsoDisabled']).toHaveBeenCalledWith(eventContext);
     });
   });
 });

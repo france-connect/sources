@@ -52,6 +52,8 @@ const fsa = {
     idpFilterExclude: true,
     idpFilterList: ["fia3-low", "fia5-low", "fia8-low"],
     identityConsent: false,
+    trustedIdentity: false,
+    ssoDisabled: false,
   },
 
   // -- FSA - FSA2-LOW - Activated - ES256 - encrypted response - No post-logout-redirect-uri
@@ -89,6 +91,8 @@ const fsa = {
       "usual_name",
       "belonging_population",
       "chorusdt",
+      "idp_id",
+      "idp_acr",
     ],
     claims: ["amr"],
     id_token_signed_response_alg: "ES256",
@@ -102,6 +106,8 @@ const fsa = {
     idpFilterExclude: false,
     idpFilterList: ["fia1-low", "fia2-low", "fia3-desactive-visible", "fia5-low"],
     identityConsent: false,
+    trustedIdentity: false,
+    ssoDisabled: false,
   },
 
   // -- FSA - FSA3-LOW - Deactivated
@@ -140,6 +146,8 @@ const fsa = {
       "usual_name",
       "belonging_population",
       "chorusdt",
+      "idp_id",
+      "idp_acr",
     ],
     claims: [],
     id_token_signed_response_alg: "ES256",
@@ -153,6 +161,8 @@ const fsa = {
     idpFilterExclude: true,
     idpFilterList: [],
     identityConsent: false,
+    trustedIdentity: false,
+    ssoDisabled: false,
   },
 
   // -- FSA - FSA4-LOW - Activated - RS256 - encrypted response - not autorized to request amr claim
@@ -192,6 +202,8 @@ const fsa = {
       "usual_name",
       // "belonging_population", <-- Removed to test "requested scope not allowed"
       "chorusdt",
+      "idp_id",
+      "idp_acr",
     ],
     claims: [],
     id_token_signed_response_alg: "RS256",
@@ -205,6 +217,8 @@ const fsa = {
     idpFilterExclude: false,
     idpFilterList: ["fia1-low", "fia2-low", "fia4-low", "fia5-low"],
     identityConsent: false,
+    trustedIdentity: false,
+    ssoDisabled: false,
   },
     // -- FSA - FSA5-LOW - Activated - RS256 - encrypted response - FIA8-LOW only
     "FSA5-LOW": {
@@ -258,6 +272,8 @@ const fsa = {
       idpFilterExclude: false,
       idpFilterList: ["fia8-low"],
       identityConsent: false,
+      trustedIdentity: false,
+      ssoDisabled: false,
     },
 };
 

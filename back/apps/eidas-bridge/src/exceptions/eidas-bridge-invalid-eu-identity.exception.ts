@@ -1,0 +1,19 @@
+/* istanbul ignore file */
+
+// Declarative code
+import { HttpStatus } from '@nestjs/common';
+
+import { ErrorCode } from '@fc/core';
+import { Description } from '@fc/exceptions';
+
+import { EidasBridgeBaseException } from './eidas-bridge-base.exception';
+
+@Description(
+  "L'identité reçue du bridge eIDAS ( venant d'un autre état membre ) n'est pas valide. Contacter le support N3",
+)
+export class EidasBridgeInvalidEUIdentityException extends EidasBridgeBaseException {
+  code = ErrorCode.INVALID_IDENTITY;
+  message =
+    "Un problème lié à vos données d'identité empêche la connexion d'aboutir. Nous vous invitons à nous contacter pour corriger le problème.";
+  public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
+}

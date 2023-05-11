@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
+import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
-import { IOidcClaims } from '@fc/oidc';
+import { IOidcClaims, OidcSession } from '@fc/oidc';
 import { OidcAcrConfig, OidcAcrService } from '@fc/oidc-acr';
 import {
   OidcCtx,
@@ -14,9 +15,10 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { SessionService } from '@fc/session';
+import { ISessionService, SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
+import { CoreRoutes } from '../enums';
 import { CoreClaimAmrException } from '../exceptions';
 import { pickAcr } from '../transforms';
 
@@ -147,8 +149,10 @@ export class CoreOidcProviderMiddlewareService {
     spAcr: string;
     spId: string;
     spName: string;
+    isSso: boolean;
   }> {
     const { interactionId } = eventContext.fc;
+    const { isSso } = ctx;
 
     // oidc defined variable name
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -165,6 +169,7 @@ export class CoreOidcProviderMiddlewareService {
       spAcr: spAcr as string,
       spId: spId as string,
       spName,
+      isSso,
     };
 
     return sessionProperties;
@@ -214,7 +219,45 @@ export class CoreOidcProviderMiddlewareService {
     }
   }
 
-  private bindSessionId(ctx) {
+  protected async isSsoAvailable(
+    session: ISessionService<OidcSession>,
+  ): Promise<boolean> {
+    const spIdentity = await session.get('spIdentity');
+
+    return Boolean(spIdentity);
+  }
+
+  protected async redirectToSso(ctx: OidcCtx): Promise<void> {
+    const { res } = ctx;
+    const interactionId = this.oidcProvider.getInteractionIdFromCtx(ctx);
+    const { urlPrefix } = this.config.get<AppConfig>('App');
+
+    const url = `${urlPrefix}${CoreRoutes.INTERACTION_VERIFY.replace(
+      ':uid',
+      interactionId,
+    )}`;
+
+    await this.trackSso(ctx);
+
+    res.redirect(url);
+  }
+
+  protected async trackSso(ctx: OidcCtx): Promise<void> {
+    const eventContext = this.getEventContext(ctx);
+
+    const { FC_SSO_INITIATED } = this.tracking.TrackedEventsMap;
+
+    await this.tracking.track(FC_SSO_INITIATED, eventContext);
+  }
+
+  protected async checkRedirectToSso(ctx: OidcCtx): Promise<void> {
+    if (ctx.isSso) {
+      this.logger.trace('ssoMiddleware');
+      await this.redirectToSso(ctx);
+    }
+  }
+
+  private bindSessionId(ctx: OidcCtx): void {
     const context = this.getEventContext(ctx);
 
     ctx.req.sessionId = context.sessionId;

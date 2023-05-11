@@ -5,7 +5,10 @@ import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { ExceptionsModule } from '@fc/exceptions';
-import { OidcProviderModule } from '@fc/oidc-provider';
+import {
+  OidcProviderGrantService,
+  OidcProviderModule,
+} from '@fc/oidc-provider';
 import {
   ServiceProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
@@ -39,7 +42,11 @@ const exceptionModule = ExceptionsModule.withoutTracking();
     ),
   ],
   controllers: [MockIdentityProviderController, OidcProviderController],
-  providers: [MockIdentityProviderService, OidcProviderConfigAppService],
+  providers: [
+    MockIdentityProviderService,
+    OidcProviderConfigAppService,
+    OidcProviderGrantService,
+  ],
   exports: [OidcProviderConfigAppService],
 })
 export class MockIdentityProviderModule {

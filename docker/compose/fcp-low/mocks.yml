@@ -86,6 +86,33 @@ services:
       - data
     command: 'pm2 logs'
 
+  fsp4-low:
+    hostname: fsp4-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+      - 'squid'
+      - 'haproxy'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-low/.env/fsp4-low.env'
+    ports:
+      - 9304:9304
+    tty: true
+    networks:
+      - public
+      - public-fcp-low
+      - data
+    command: 'pm2 logs'
+
   ####################
   # IDP Mocks V2
   ####################
@@ -193,6 +220,31 @@ services:
       - '${COMPOSE_DIR}/fcp-low/.env/fip4-low.env'
     ports:
       - 9324:9324
+    tty: true
+    networks:
+      - public
+      - data
+    command: 'pm2 logs'
+
+  fip8-low:
+    hostname: fip8-low
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - 'redis-pwd'
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
+      - '${VOLUMES_DIR}/log/:/var/log/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-low/.env/fip8-low.env'
+    ports:
+      - 9328:9328
     tty: true
     networks:
       - public

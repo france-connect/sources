@@ -3,7 +3,8 @@
     "name": "fsp1-high",
     "descriptions": [
       "par défaut",
-      "public"
+      "public",
+      "avec un entityId"
     ],
     "mocked": true,
     "url": "https://fsp1-high.{{TEST_ENV}}.dev-franceconnect.fr",
@@ -26,7 +27,8 @@
     "name": "fsp2-high",
     "descriptions": [
       "habilité à demander le scope identite_pivot",
-      "avec une blacklist de FI"
+      "avec une blacklist de FI",
+      "avec le même entityId"
     ],
     "mocked": true,
     "url": "https://fsp2-high.{{TEST_ENV}}.dev-franceconnect.fr",
@@ -49,7 +51,9 @@
     "name": "fsp5-high",
     "descriptions": [
       "privé avec consentement obligatoire",
-      "avec une whitelist de FI"
+      "avec une whitelist de FI",
+      "avec un entityId différent",
+      "avec un sub existant"
     ],
     "mocked": true,
     "url": "https://fsp5-high.{{TEST_ENV}}.dev-franceconnect.fr",

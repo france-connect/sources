@@ -3,6 +3,10 @@ import { KoaContextWithOIDC } from 'oidc-provider';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { LoggerService } from '@fc/logger-legacy';
+import {
+  OidcProviderErrorService,
+  OidcProviderGrantService,
+} from '@fc/oidc-provider';
 import { SessionService } from '@fc/session';
 
 import { OidcProviderConfigAppService } from './oidc-provider-config-app.service';
@@ -14,6 +18,21 @@ describe('OidcProviderConfigAppService', () => {
     setContext: jest.fn(),
     debug: jest.fn(),
     warn: jest.fn(),
+    trace: jest.fn(),
+  };
+
+  const sessionServiceMock = {
+    set: jest.fn(),
+    get: jest.fn(),
+  };
+
+  const errorServiceMock = {
+    throwError: jest.fn(),
+  };
+
+  const oidcProviderGrantServiceMock = {
+    generateGrant: jest.fn(),
+    saveGrant: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -21,10 +40,22 @@ describe('OidcProviderConfigAppService', () => {
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [OidcProviderConfigAppService, LoggerService],
+      providers: [
+        OidcProviderConfigAppService,
+        LoggerService,
+        SessionService,
+        OidcProviderErrorService,
+        OidcProviderGrantService,
+      ],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
+      .overrideProvider(SessionService)
+      .useValue(sessionServiceMock)
+      .overrideProvider(OidcProviderErrorService)
+      .useValue(errorServiceMock)
+      .overrideProvider(OidcProviderGrantService)
+      .useValue(oidcProviderGrantServiceMock)
       .compile();
 
     service = module.get<OidcProviderConfigAppService>(
@@ -109,38 +140,6 @@ describe('OidcProviderConfigAppService', () => {
 
       // THEN
       expect(ctx).toHaveProperty('body', htmlDisconnectFromFi);
-    });
-  });
-
-  describe('postLogoutSuccessSource', () => {
-    it('should set a body property to koa context', () => {
-      // GIVEN
-      const ctx = {
-        request: {
-          method: 'POST',
-          url: 'https://url.com',
-        },
-        response: {
-          status: 200,
-          message: 'OK',
-        },
-        req: 'toto',
-      } as unknown as KoaContextWithOIDC;
-
-      const htmlPostLogoutSuccessSource = `<!DOCTYPE html>
-        <head>
-          <title>Déconnexion</title>
-        </head>
-        <body>
-          <p>Vous êtes bien déconnecté, vous pouvez fermer votre navigateur.</p>
-        </body>
-        </html>`;
-
-      // WHEN
-      service.postLogoutSuccessSource(ctx);
-
-      // THEN
-      expect(ctx).toHaveProperty('body', htmlPostLogoutSuccessSource);
     });
   });
 });

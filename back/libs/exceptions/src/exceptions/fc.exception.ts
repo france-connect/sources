@@ -38,6 +38,7 @@ export class FcException extends Error {
    * - 31: Partner account
    * - 32: Partner service
    * - 40: GeoIp Maxmind
+   * - 41: Tracking
    * - 80: Exceptions
    */
   public scope: number;

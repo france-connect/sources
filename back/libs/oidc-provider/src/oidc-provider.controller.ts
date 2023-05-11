@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Header,
+  Inject,
   Next,
   Post,
   Req,
@@ -17,13 +18,15 @@ import { ISessionService, Session } from '@fc/session';
 
 import { RevocationTokenParamsDTO } from './dto';
 import { OidcProviderRoutes } from './enums';
-import { OidcProviderService } from './oidc-provider.service';
+import { IOidcProviderConfigAppService } from './interfaces';
+import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
 
 @Controller()
 export class OidcProviderController {
   constructor(
     private readonly logger: LoggerService,
-    private readonly oidcProvider: OidcProviderService,
+    @Inject(OIDC_PROVIDER_CONFIG_APP_TOKEN)
+    private readonly oidcProviderConfigApp: IOidcProviderConfigAppService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -51,7 +54,7 @@ export class OidcProviderController {
       res,
     });
 
-    return this.oidcProvider.finishInteraction(req, res, session);
+    return this.oidcProviderConfigApp.finishInteraction(req, res, session);
   }
 
   @Post(OidcProviderRoutes.TOKEN)

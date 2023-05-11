@@ -246,7 +246,7 @@ describe('CoreFcaMiddlewareService', () => {
       service['isSsoAvailable'] = jest.fn();
       service['buildSessionWithNewInteraction'] = jest.fn();
       service['trackAuthorize'] = jest.fn();
-      service['redirectToSso'] = jest.fn();
+      service['checkRedirectToSso'] = jest.fn();
       service['getEventContext'] = jest.fn();
       getBoundedSessionMock.mockReturnValue(
         sessionServiceMock as unknown as ISessionService<unknown>,
@@ -268,7 +268,7 @@ describe('CoreFcaMiddlewareService', () => {
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(0);
       expect(service['isSsoAvailable']).toHaveBeenCalledTimes(0);
       expect(service['trackAuthorize']).toHaveBeenCalledTimes(0);
-      expect(service['redirectToSso']).toHaveBeenCalledTimes(0);
+      expect(service['checkRedirectToSso']).toHaveBeenCalledTimes(0);
     });
 
     it('should call isSsoAvailable() with the sessionService', async () => {
@@ -342,9 +342,11 @@ describe('CoreFcaMiddlewareService', () => {
       expect(service['trackAuthorize']).toHaveBeenCalledWith(expected);
     });
 
-    it('should call `redirectToSso()` if `isSsoAvailable()` returns `true` and configuration `enableSso` returns true', async () => {
+    it('should call `checkRedirectToSso()` with ctx with isSso = true', async () => {
       // Given
       const ctxMock = getCtxMock(false);
+      const isSsoMock = true;
+
       configServiceMock.get
         .mockReset()
         .mockReturnValueOnce({ enableSso: true });
@@ -356,27 +358,15 @@ describe('CoreFcaMiddlewareService', () => {
       // When
       await service['afterAuthorizeMiddleware'](ctxMock);
       // Then
-      expect(service['redirectToSso']).toHaveBeenCalledTimes(1);
-      expect(service['redirectToSso']).toHaveBeenCalledWith(ctxMock);
+      expect(ctxMock.isSso).toBe(isSsoMock);
+      expect(service['checkRedirectToSso']).toHaveBeenCalledTimes(1);
+      expect(service['checkRedirectToSso']).toHaveBeenCalledWith(ctxMock);
     });
 
-    it('should NOT call `redirectToSso()` if `isSsoAvailable()` returns `true` and configuration `enableSso` returns `false`', async () => {
+    it('should call `redirectToSso()` with params ctx with isSso = false', async () => {
       // Given
       const ctxMock = getCtxMock(false);
-      service['isSsoAvailable'] = jest.fn().mockResolvedValueOnce(true);
-      service['getEventContext'] = jest.fn().mockReturnValueOnce(eventCtxMock);
-      service['buildSessionWithNewInteraction'] = jest
-        .fn()
-        .mockResolvedValue(sessionPropertiesMock);
-      // When
-      await service['afterAuthorizeMiddleware'](ctxMock);
-      // Then
-      expect(service['redirectToSso']).not.toHaveBeenCalled();
-    });
-
-    it('should NOT call `redirectToSso()` if `isSsoAvailable()` returns `false` and configuration `enableSso` returns `false`', async () => {
-      // Given
-      const ctxMock = getCtxMock(false);
+      const isSsoMock = false;
       service['isSsoAvailable'] = jest.fn().mockResolvedValueOnce(false);
       service['getEventContext'] = jest.fn().mockReturnValueOnce(eventCtxMock);
       service['buildSessionWithNewInteraction'] = jest
@@ -385,101 +375,9 @@ describe('CoreFcaMiddlewareService', () => {
       // When
       await service['afterAuthorizeMiddleware'](ctxMock);
       // Then
-      expect(service['redirectToSso']).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('isSsoAvailable', () => {
-    it('should call session.get()', async () => {
-      // When
-      await service['isSsoAvailable'](sessionServiceMock);
-      // Then
-      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.get).toHaveBeenCalledWith('spIdentity');
-    });
-
-    it('should return `true` if spIdentity exists in session', async () => {
-      // Given
-      sessionServiceMock.get.mockResolvedValueOnce({});
-      // When
-      const result = await service['isSsoAvailable'](sessionServiceMock);
-      // Then
-      expect(result).toBe(true);
-    });
-
-    it('should return `false` if spIdentity does not exist in session', async () => {
-      // Given
-      sessionServiceMock.get.mockResolvedValueOnce(undefined);
-      // When
-      const result = await service['isSsoAvailable'](sessionServiceMock);
-      // Then
-      expect(result).toBe(false);
-    });
-  });
-
-  describe('trackSso', () => {
-    it('should call tracking.track()', async () => {
-      // Given
-      const ctxMock = {} as unknown as OidcCtx;
-      const eventContextMock = {};
-      service['getEventContext'] = jest
-        .fn()
-        .mockReturnValueOnce(eventContextMock);
-      // When
-      service['trackSso'](ctxMock);
-      // Then
-      expect(service['tracking'].track).toHaveBeenCalledTimes(1);
-      expect(service['tracking'].track).toHaveBeenCalledWith(
-        trackingMock.TrackedEventsMap.FC_SSO_INITIATED,
-        eventContextMock,
-      );
-    });
-  });
-
-  describe('redirectToSso', () => {
-    const ctxMock = { res: resMock } as unknown as OidcCtx;
-    const urlPrefixMock = 'urlPrefixMock';
-
-    beforeEach(() => {
-      service['trackSso'] = jest.fn();
-      service['getInteractionFromCtx'] = jest.fn();
-
-      configServiceMock.get.mockReturnValueOnce({ urlPrefix: urlPrefixMock });
-    });
-
-    it('should call getInteractionIdFromCtx()', async () => {
-      // When
-      await service['redirectToSso'](ctxMock);
-      // Then
-      expect(
-        oidcProviderServiceMock.getInteractionIdFromCtx,
-      ).toHaveBeenCalledTimes(1);
-      expect(
-        oidcProviderServiceMock.getInteractionIdFromCtx,
-      ).toHaveBeenCalledWith(ctxMock);
-    });
-
-    it('should call trackSso with ctx', async () => {
-      // given
-      oidcProviderServiceMock.getInteractionIdFromCtx.mockReturnValue(
-        interactionIdValueMock,
-      );
-      // When
-      await service['redirectToSso'](ctxMock);
-      // Then
-      expect(service['trackSso']).toHaveBeenCalledTimes(1);
-      expect(service['trackSso']).toHaveBeenCalledWith(ctxMock);
-    });
-
-    it('should call res.redirect', async () => {
-      // given
-      oidcProviderServiceMock.getInteractionIdFromCtx.mockReturnValue(
-        interactionIdValueMock,
-      );
-      // When
-      await service['redirectToSso'](ctxMock);
-      // Then
-      expect(resMock.redirect).toHaveBeenCalledTimes(1);
+      expect(ctxMock.isSso).toBe(isSsoMock);
+      expect(service['checkRedirectToSso']).toHaveBeenCalledTimes(1);
+      expect(service['checkRedirectToSso']).toHaveBeenCalledWith(ctxMock);
     });
   });
 });

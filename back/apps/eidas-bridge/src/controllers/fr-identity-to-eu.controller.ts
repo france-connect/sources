@@ -25,10 +25,11 @@ import {
   Session,
   SessionNotFoundException,
 } from '@fc/session';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import { EidasBridgeIdentityDto } from '../dto';
 import { EidasBridgeRoutes, IDP_ID } from '../enums';
-import { EidasBridgeInvalidIdentityException } from '../exceptions';
+import { EidasBridgeInvalidFRIdentityException } from '../exceptions';
 
 /**
  * @todo #412 Clean the controller (create a service, generalize code, ...)
@@ -46,6 +47,7 @@ export class FrIdentityToEuController {
     private readonly oidcClient: OidcClientService,
     private readonly eidasToOidc: EidasToOidcService,
     private readonly oidcToEidas: OidcToEidasService,
+    private readonly tracking: TrackingService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -71,7 +73,7 @@ export class FrIdentityToEuController {
 
     const response = {
       statusCode: 302,
-      url: `${EidasBridgeRoutes.BASE}${EidasBridgeRoutes.REDIRECT_TO_FC_AUTORIZE}`,
+      url: `${EidasBridgeRoutes.BASE}${EidasBridgeRoutes.REDIRECT_TO_FC_AUTHORIZE}`,
     };
 
     this.logger.trace({
@@ -88,9 +90,10 @@ export class FrIdentityToEuController {
    * @TODO #251 ETQ Dev, j'utilise une configuration pour savoir si j'utilise FC, AC, EIDAS, et avoir les valeurs de scope et acr en config et non en dur.
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/251
    */
-  @Get(EidasBridgeRoutes.REDIRECT_TO_FC_AUTORIZE)
+  @Get(EidasBridgeRoutes.REDIRECT_TO_FC_AUTHORIZE)
   @Redirect()
   async redirectToFcAuthorize(
+    @Req() req: Request,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
@@ -126,9 +129,9 @@ export class FrIdentityToEuController {
 
     this.logger.trace({
       method: 'GET',
-      name: 'EidasBridgeRoutes.REDIRECT_TO_FC_AUTORIZE',
+      name: 'EidasBridgeRoutes.REDIRECT_TO_FC_AUTHORIZE',
       response,
-      route: EidasBridgeRoutes.REDIRECT_TO_FC_AUTORIZE,
+      route: EidasBridgeRoutes.REDIRECT_TO_FC_AUTHORIZE,
     });
 
     return response;
@@ -139,6 +142,9 @@ export class FrIdentityToEuController {
   async redirectToEidasResponseProxy(
     @Req()
     req,
+    /**
+     * @todo Ajouter un DTO pour vérifier la présence du code d'autorisation
+     */
     @Query()
     query,
     @Session('EidasProvider')
@@ -151,6 +157,10 @@ export class FrIdentityToEuController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
+    const trackingContext: TrackedEventContextInterface = { req };
+    const { RECEIVED_FC_AUTH_CODE, RECEIVED_FC_AUTH_ERROR } =
+      this.tracking.TrackedEventsMap;
+
     let partialEidasResponse;
 
     // oidc param name
@@ -158,6 +168,8 @@ export class FrIdentityToEuController {
     const { error, error_description } = query;
     if (error) {
       this.logger.trace({ error }, LoggerLevelNames.WARN);
+      this.tracking.track(RECEIVED_FC_AUTH_ERROR, trackingContext);
+
       partialEidasResponse = this.oidcToEidas.mapPartialResponseFailure({
         error,
         // oidc param name
@@ -165,6 +177,7 @@ export class FrIdentityToEuController {
         error_description,
       });
     } else {
+      this.tracking.track(RECEIVED_FC_AUTH_CODE, trackingContext);
       try {
         partialEidasResponse = await this.handleOidcCallbackAuthCode(
           req,
@@ -173,6 +186,7 @@ export class FrIdentityToEuController {
         );
       } catch (error) {
         this.logger.trace({ error }, LoggerLevelNames.WARN);
+        this.tracking.trackExceptionIfNeeded(error, trackingContext);
         partialEidasResponse =
           this.oidcToEidas.mapPartialResponseFailure(error);
       }
@@ -215,6 +229,7 @@ export class FrIdentityToEuController {
       state: idpState,
       nonce: idpNonce,
     };
+
     const { accessToken, acr } = await this.oidcClient.getTokenFromProvider(
       idpId,
       tokenParams,
@@ -233,6 +248,8 @@ export class FrIdentityToEuController {
       userInfoParams,
       req,
     );
+
+    await sessionOidc.set('idpIdentity', identity);
 
     await this.validateIdentity(identity);
 
@@ -269,7 +286,7 @@ export class FrIdentityToEuController {
       transformOptions,
     );
     if (errors.length) {
-      throw new EidasBridgeInvalidIdentityException();
+      throw new EidasBridgeInvalidFRIdentityException();
     }
   }
 

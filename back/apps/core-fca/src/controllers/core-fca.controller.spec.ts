@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { CoreAcrService } from '@fc/core';
+import { CoreAcrService, CoreVerifyService } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { MinistriesService } from '@fc/ministries';
@@ -12,6 +12,7 @@ import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import {
+  ISessionService,
   SessionBadFormatException,
   SessionCsrfService,
   SessionNotFoundException,
@@ -76,11 +77,12 @@ describe('CoreFcaController', () => {
 
   const coreVerifyServiceMock = {
     verify: jest.fn(),
+    handleBlacklisted: jest.fn(),
   };
 
   const coreFcaVerifyServiceMock = {
-    handleBlacklisted: jest.fn(),
     handleVerifyIdentity: jest.fn(),
+    handleSsoDisabled: jest.fn(),
   };
 
   const coreAcrServiceMock = {
@@ -140,6 +142,8 @@ describe('CoreFcaController', () => {
 
   const handleBlackListedResult = 'urlPrefixValue/interaction/interactionId';
   const handleVerifyResult = 'urlPrefixValue/login';
+  const handleSsoDisabledResult =
+    'urlPrefixValue/interaction/interactionIdMockValue';
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -154,6 +158,7 @@ describe('CoreFcaController', () => {
         SessionCsrfService,
         CoreAcrService,
         CoreFcaVerifyService,
+        CoreVerifyService,
       ],
     })
       .overrideProvider(OidcProviderService)
@@ -170,6 +175,8 @@ describe('CoreFcaController', () => {
       .useValue(serviceProviderServiceMock)
       .overrideProvider(CoreFcaVerifyService)
       .useValue(coreFcaVerifyServiceMock)
+      .overrideProvider(CoreVerifyService)
+      .useValue(coreVerifyServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .overrideProvider(SessionCsrfService)
@@ -511,9 +518,138 @@ describe('CoreFcaController', () => {
       ).rejects.toThrow(SessionNotFoundException);
     });
 
+    it('should not call handleSsoDisabled with ssoDisabled = false and isSso = false', async () => {
+      // When
+      const oidcClientSessionDataMock = {
+        isSso: false,
+      } as unknown as ISessionService<OidcClientSession>;
+      sessionServiceMock.get.mockResolvedValue(oidcClientSessionDataMock);
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        ssoDisabled: false,
+      });
+      await coreController.getVerify(
+        req,
+        res as unknown as Response,
+        params,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(coreFcaVerifyServiceMock.handleSsoDisabled).not.toHaveBeenCalled();
+    });
+
+    it('should not call handleSsoDisabled with isSso = false', async () => {
+      // When
+      const ssoDisabledMock = Symbol('a-boolean') as unknown as boolean;
+      const oidcClientSessionDataMock = {
+        isSso: false,
+      } as unknown as ISessionService<OidcClientSession>;
+      sessionServiceMock.get.mockResolvedValue(oidcClientSessionDataMock);
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        ssoDisabled: ssoDisabledMock,
+      });
+      await coreController.getVerify(
+        req,
+        res as unknown as Response,
+        params,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(coreFcaVerifyServiceMock.handleSsoDisabled).not.toHaveBeenCalled();
+    });
+
+    it('should not call handleSsoDisabled with ssoDisabled = false', async () => {
+      // Given
+      const isSsoMock = Symbol('a-boolean') as unknown as boolean;
+      const oidcClientSessionDataMock = {
+        isSso: isSsoMock,
+      } as unknown as ISessionService<OidcClientSession>;
+
+      // When
+      sessionServiceMock.get.mockResolvedValue(oidcClientSessionDataMock);
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        ssoDisabled: false,
+      });
+      await coreController.getVerify(
+        req,
+        res as unknown as Response,
+        params,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(coreFcaVerifyServiceMock.handleSsoDisabled).not.toHaveBeenCalled();
+    });
+
+    it('should call handleSsoDisabled with isSso = true and ssoDisabled = true', async () => {
+      // Given
+      const oidcClientSessionDataMock = {
+        idpId: 'idpIdMockValue',
+        interactionId: 'interactionIdMockValue',
+        spId: 'spIdMockValue',
+        isSso: true,
+      } as unknown as ISessionService<OidcClientSession>;
+      const urlPrefixMock = '/api/v2';
+
+      // When
+      sessionServiceMock.get.mockResolvedValue(oidcClientSessionDataMock);
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        ssoDisabled: true,
+      });
+      await coreController.getVerify(
+        req,
+        res as unknown as Response,
+        params,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(coreFcaVerifyServiceMock.handleSsoDisabled).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(coreFcaVerifyServiceMock.handleSsoDisabled).toHaveBeenCalledWith(
+        req,
+        {
+          urlPrefix: urlPrefixMock,
+          interactionId: interactionIdMock,
+          sessionOidc: sessionServiceMock,
+        },
+      );
+    });
+
+    it('should return redirect when isSso = true and ssoDisabled = true', async () => {
+      // Given
+      const oidcClientSessionDataMock = {
+        idpId: 'idpIdMockValue',
+        interactionId: 'interactionIdMockValue',
+        spId: 'spIdMockValue',
+        isSso: true,
+      } as unknown as ISessionService<OidcClientSession>;
+
+      // When
+      coreFcaVerifyServiceMock.handleSsoDisabled.mockResolvedValue(
+        handleSsoDisabledResult,
+      );
+      sessionServiceMock.get.mockResolvedValue(oidcClientSessionDataMock);
+      serviceProviderServiceMock.getById.mockResolvedValue({
+        ssoDisabled: true,
+      });
+      await coreController.getVerify(
+        req,
+        res as unknown as Response,
+        params,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(res.redirect).toBeCalledTimes(1);
+      expect(res.redirect).toBeCalledWith(handleSsoDisabledResult);
+    });
+
     describe('when `serviceProvider.shouldExcludeIdp()` returns `true`', () => {
       beforeEach(() => {
-        coreFcaVerifyServiceMock.handleBlacklisted.mockResolvedValue(
+        coreVerifyServiceMock.handleBlacklisted.mockResolvedValue(
           handleBlackListedResult,
         );
         coreFcaVerifyServiceMock.handleVerifyIdentity.mockResolvedValue(
@@ -530,9 +666,9 @@ describe('CoreFcaController', () => {
           sessionServiceMock,
         );
         // Then
-        expect(
-          coreFcaVerifyServiceMock.handleBlacklisted,
-        ).toHaveBeenCalledTimes(1);
+        expect(coreVerifyServiceMock.handleBlacklisted).toHaveBeenCalledTimes(
+          1,
+        );
         expect(
           coreFcaVerifyServiceMock.handleVerifyIdentity,
         ).not.toHaveBeenCalled();
@@ -555,7 +691,7 @@ describe('CoreFcaController', () => {
     describe('when `serviceProvider.shouldExcludeIdp()` returns `false`', () => {
       beforeEach(() => {
         serviceProviderServiceMock.shouldExcludeIdp.mockResolvedValue(false);
-        coreFcaVerifyServiceMock.handleBlacklisted.mockResolvedValue(
+        coreVerifyServiceMock.handleBlacklisted.mockResolvedValue(
           handleBlackListedResult,
         );
         coreFcaVerifyServiceMock.handleVerifyIdentity.mockResolvedValue(
@@ -575,9 +711,7 @@ describe('CoreFcaController', () => {
         expect(
           coreFcaVerifyServiceMock.handleVerifyIdentity,
         ).toHaveBeenCalledTimes(1);
-        expect(
-          coreFcaVerifyServiceMock.handleBlacklisted,
-        ).not.toHaveBeenCalled();
+        expect(coreVerifyServiceMock.handleBlacklisted).not.toHaveBeenCalled();
       });
 
       it('should call return result from `handleVerify()`', async () => {

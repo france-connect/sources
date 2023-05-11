@@ -19,10 +19,11 @@ import {
   TokenParams,
 } from '@fc/oidc-client';
 import { SessionNotFoundException, SessionService } from '@fc/session';
+import { TrackingService } from '@fc/tracking';
 
 import { EidasBridgeIdentityDto } from '../dto';
 import { IDP_ID } from '../enums';
-import { EidasBridgeInvalidIdentityException } from '../exceptions';
+import { EidasBridgeInvalidFRIdentityException } from '../exceptions';
 import { FrIdentityToEuController } from './fr-identity-to-eu.controller';
 
 jest.mock('@fc/common', () => ({
@@ -114,6 +115,12 @@ describe('FrIdentityToEuController', () => {
     },
   } as unknown as Request;
 
+  const trackingServiceMock = {
+    track: jest.fn(),
+    trackExceptionIfNeeded: jest.fn(),
+    TrackedEventsMap: {},
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -129,6 +136,7 @@ describe('FrIdentityToEuController', () => {
         CryptographyEidasService,
         EidasToOidcService,
         OidcToEidasService,
+        TrackingService,
       ],
     })
       .overrideProvider(OidcClientService)
@@ -147,6 +155,8 @@ describe('FrIdentityToEuController', () => {
       .useValue(eidasToOidcServiceMock)
       .overrideProvider(OidcToEidasService)
       .useValue(oidcToEidasServiceMock)
+      .overrideProvider(TrackingService)
+      .useValue(trackingServiceMock)
       .compile();
 
     frIdentityToEuController = await app.get<FrIdentityToEuController>(
@@ -257,6 +267,7 @@ describe('FrIdentityToEuController', () => {
       sessionServiceOidcMock.set.mockResolvedValueOnce('randomStringMockValue');
       // action
       await frIdentityToEuController.redirectToFcAuthorize(
+        req,
         sessionServiceOidcMock,
         sessionServiceEidasMock,
       );
@@ -270,6 +281,7 @@ describe('FrIdentityToEuController', () => {
       // Given
       // When
       await frIdentityToEuController.redirectToFcAuthorize(
+        req,
         sessionServiceOidcMock,
         sessionServiceEidasMock,
       );
@@ -285,6 +297,7 @@ describe('FrIdentityToEuController', () => {
 
       // action
       await frIdentityToEuController.redirectToFcAuthorize(
+        req,
         sessionServiceOidcMock,
         sessionServiceEidasMock,
       );
@@ -315,6 +328,7 @@ describe('FrIdentityToEuController', () => {
 
       // action
       await frIdentityToEuController.redirectToFcAuthorize(
+        req,
         sessionServiceOidcMock,
         sessionServiceEidasMock,
       );
@@ -338,6 +352,7 @@ describe('FrIdentityToEuController', () => {
 
       // action
       await frIdentityToEuController.redirectToFcAuthorize(
+        req,
         sessionServiceOidcMock,
         sessionServiceEidasMock,
       );
@@ -356,6 +371,7 @@ describe('FrIdentityToEuController', () => {
       // expect
       await expect(
         frIdentityToEuController.redirectToFcAuthorize(
+          req,
           sessionServiceOidcMock,
           sessionServiceEidasMock,
         ),
@@ -369,6 +385,7 @@ describe('FrIdentityToEuController', () => {
 
       // action
       const result = await frIdentityToEuController.redirectToFcAuthorize(
+        req,
         sessionServiceOidcMock,
         sessionServiceEidasMock,
       );
@@ -746,7 +763,7 @@ describe('FrIdentityToEuController', () => {
         // action
         frIdentityToEuController['validateIdentity'](identityMock),
         // assert
-      ).rejects.toThrow(EidasBridgeInvalidIdentityException);
+      ).rejects.toThrow(EidasBridgeInvalidFRIdentityException);
     });
   });
 

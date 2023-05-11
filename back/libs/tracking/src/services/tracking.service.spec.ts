@@ -19,6 +19,7 @@ describe('TrackingService', () => {
   const loggerMock = {
     setContext: jest.fn(),
     businessEvent: jest.fn(),
+    trace: jest.fn(),
   };
 
   class ExceptionClass extends FcException {}

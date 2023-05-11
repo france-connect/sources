@@ -1,11 +1,10 @@
-import { ClientMetadata, KoaContextWithOIDC, Provider } from 'oidc-provider';
+import { ClientMetadata, KoaContextWithOIDC } from 'oidc-provider';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc';
-import { SessionService } from '@fc/session';
 
 import { OidcProviderRedisAdapter } from '../adapters';
 import { OidcProviderService } from '../oidc-provider.service';
@@ -24,20 +23,7 @@ describe('OidcProviderConfigService', () => {
     businessEvent: jest.fn(),
   } as unknown as LoggerService;
 
-  const providerMock = {
-    middlewares: [],
-    use: jest.fn(),
-    on: jest.fn(),
-    interactionDetails: jest.fn(),
-    interactionFinished: jest.fn(),
-  } as unknown as Provider;
-
   const configServiceMock = {
-    get: jest.fn(),
-  };
-
-  const sessionServiceMock = {
-    set: jest.fn(),
     get: jest.fn(),
   };
 
@@ -53,6 +39,7 @@ describe('OidcProviderConfigService', () => {
   const oidcProviderConfigAppMock = {
     logoutSource: jest.fn(),
     postLogoutSuccessSource: jest.fn(),
+    findAccount: jest.fn(),
   };
 
   const oidcProviderRedisAdapterMock = class AdapterMock {};
@@ -80,7 +67,6 @@ describe('OidcProviderConfigService', () => {
         OidcProviderConfigService,
         LoggerService,
         ConfigService,
-        SessionService,
         OidcProviderErrorService,
         {
           provide: SERVICE_PROVIDER_SERVICE_TOKEN,
@@ -96,8 +82,6 @@ describe('OidcProviderConfigService', () => {
       .useValue(loggerServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(SessionService)
-      .useValue(sessionServiceMock)
       .overrideProvider(OidcProviderErrorService)
       .useValue(errorServiceMock)
       .compile();
@@ -119,8 +103,6 @@ describe('OidcProviderConfigService', () => {
           };
       }
     });
-
-    service['provider'] = providerMock as any;
   });
 
   describe('getConfig()', () => {
@@ -200,67 +182,6 @@ describe('OidcProviderConfigService', () => {
 
       // Then
       expect(result).toEqual('/prefix/interaction/123');
-    });
-  });
-
-  describe('findAccount()', () => {
-    // Given
-    const contextMock = { not: 'altered' };
-    const interactionIdMock = '123ABC';
-
-    it('Should return an object with accountID', async () => {
-      // Given
-      const identityMock = { foo: 'bar' };
-      sessionServiceMock.get.mockResolvedValueOnce({
-        spIdentity: identityMock,
-      });
-      // When
-      const result = await service['findAccount'](
-        contextMock,
-        interactionIdMock,
-      );
-      // Then
-      expect(result).toHaveProperty('accountId');
-      expect(result.accountId).toBe(interactionIdMock);
-    });
-
-    it('Should not alter the context', async () => {
-      // When
-      await service['findAccount'](contextMock, interactionIdMock);
-      // Then
-      expect(contextMock).toEqual({ not: 'altered' });
-    });
-
-    it('Should return an object with a claims function that returns identity', async () => {
-      // Given
-      const identityMock = { spIdentity: { foo: 'bar' } };
-      sessionServiceMock.get.mockResolvedValueOnce({
-        spIdentity: identityMock,
-      });
-      const result = await service['findAccount'](
-        contextMock,
-        interactionIdMock,
-      );
-      // When
-      const claimsResult = await result.claims();
-      // Then
-      expect(claimsResult).toBe(identityMock);
-      expect(contextMock).toEqual({ not: 'altered' });
-    });
-
-    it('Should call throwError if an exception is catched', async () => {
-      // Given
-      const exception = new Error('foo');
-      sessionServiceMock.get.mockRejectedValueOnce(exception);
-      service['throwError'] = jest.fn();
-      // When
-      await service['findAccount'](contextMock, interactionIdMock);
-      // Then
-      expect(service['errorService']['throwError']).toHaveBeenCalledWith(
-        contextMock,
-        exception,
-      );
-      expect(contextMock).toEqual({ not: 'altered' });
     });
   });
 

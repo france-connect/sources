@@ -60,7 +60,13 @@ export class ConnectionWorkflow {
    * @returns the current ConnectionWorkflow instance
    */
   start(): this {
-    this.serviceProviderPage.startLogin(this.fcRootUrl, this.scopeContext);
+    const { claims }: ServiceProvider = this.serviceProvider;
+
+    this.serviceProviderPage.startLogin(
+      this.fcRootUrl,
+      this.scopeContext,
+      claims,
+    );
     return this;
   }
 
@@ -192,6 +198,21 @@ When('je me connecte à FranceConnect', function () {
     .login(this.user)
     .consent()
     .checkIsConnected();
+});
+
+When("je me connecte au fournisseur d'identité", function () {
+  expect(this.env).to.exist;
+  expect(this.serviceProvider).to.exist;
+  expect(this.scopes).to.exist;
+  expect(this.identityProvider).to.exist;
+  expect(this.user).to.exist;
+  const scopes = this.requestedScope || getDefaultScope(this.scopes);
+  new ConnectionWorkflow(this.env, this.serviceProvider)
+    .init()
+    .withScope(scopes)
+    .start()
+    .selectIdentityProvider(this.identityProvider)
+    .login(this.user);
 });
 
 When("je me connecte au fournisseur d'identité via FranceConnect", function () {

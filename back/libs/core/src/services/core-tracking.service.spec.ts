@@ -3,10 +3,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { OidcSession } from '@fc/oidc';
 import { ISessionBoundContext, SessionService } from '@fc/session';
+import { extractNetworkInfoFromHeaders } from '@fc/tracking-context';
 
 import { CoreMissingContextException } from '../exceptions';
 import { ICoreTrackingContext } from '../interfaces';
 import { CoreTrackingService } from './core-tracking.service';
+
+jest.mock('@fc/tracking-context', () => ({
+  extractNetworkInfoFromHeaders: jest.fn(),
+}));
 
 describe('CoreTrackingService', () => {
   let service: CoreTrackingService;
@@ -55,9 +60,13 @@ describe('CoreTrackingService', () => {
   };
 
   const extractedValueMock: ICoreTrackingContext = {
-    ip: ipMock,
-    port: sourcePortMock,
-    originalAddresses: xForwardedForOriginalMock,
+    source: {
+      address: ipMock,
+      port: sourcePortMock,
+      // logs filter and analyses need this format
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      original_addresses: xForwardedForOriginalMock,
+    },
     sessionId: sessionIdMock,
     interactionId: interactionIdMock,
     claims: ['foo', 'bar'],
@@ -68,10 +77,14 @@ describe('CoreTrackingService', () => {
     sessionId: sessionIdMock,
     interactionId: interactionIdMock,
 
-    spId: 'some spId',
+    subs: {
+      clientId: 'sub client id',
+      otherClientId: 'sub for other client id',
+    },
+    spId: 'clientId',
     spName: 'some spName',
     spAcr: 'some spAcr',
-    spIdentity: { sub: 'some spSub' },
+    spIdentity: {},
 
     idpId: 'some idpId',
     idpName: 'some idpName',
@@ -81,6 +94,9 @@ describe('CoreTrackingService', () => {
   };
 
   beforeEach(async () => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [CoreTrackingService, SessionService, ConfigService],
     })
@@ -91,8 +107,6 @@ describe('CoreTrackingService', () => {
       .compile();
 
     service = module.get<CoreTrackingService>(CoreTrackingService);
-    jest.resetAllMocks();
-    jest.restoreAllMocks();
 
     const sessionGetBinded = jest.fn().mockResolvedValue(sessionDataMock);
     sessionServiceMock.get.bind.mockReturnValue(sessionGetBinded);
@@ -164,7 +178,7 @@ describe('CoreTrackingService', () => {
       extractedContextMockValue.claims = undefined;
       service['extractContext'] = jest
         .fn()
-        .mockResolvedValueOnce(extractedContextMockValue);
+        .mockReturnValueOnce(extractedContextMockValue);
       // When
       const result = await service.buildLog(eventMock, contextMock);
       // Then
@@ -178,14 +192,16 @@ describe('CoreTrackingService', () => {
     let extractNetworkInfoFromHeadersMock;
 
     beforeEach(() => {
-      extractNetworkInfoFromHeadersMock = jest.spyOn<CoreTrackingService, any>(
-        service,
-        'extractNetworkInfoFromHeaders',
+      extractNetworkInfoFromHeadersMock = jest.mocked(
+        extractNetworkInfoFromHeaders,
       );
+
       extractNetworkInfoFromHeadersMock.mockReturnValueOnce({
-        ip: ipMock,
+        address: ipMock,
         port: sourcePortMock,
-        originalAddresses: xForwardedForOriginalMock,
+        // logs filter and analyses need this format
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        original_addresses: xForwardedForOriginalMock,
       });
     });
 
@@ -215,39 +231,6 @@ describe('CoreTrackingService', () => {
       expect(() => service['extractContext'](contextMock)).toThrow(
         CoreMissingContextException,
       );
-    });
-  });
-
-  describe('extractNetworkInfoFromHeaders', () => {
-    it('should throw if header is missing', () => {
-      // Given
-      const contextMock = { req: { fc: { interactionId: 'foo' } } };
-      // Then
-      expect(() =>
-        service['extractNetworkInfoFromHeaders'](contextMock),
-      ).toThrow(CoreMissingContextException);
-    });
-
-    it('should retrieve network information from the provided context.', () => {
-      // Given
-      const contextMock = {
-        req: {
-          headers: {
-            'x-forwarded-for': ipMock,
-            'x-forwarded-source-port': sourcePortMock,
-            'x-forwarded-for-original': xForwardedForOriginalMock,
-          },
-          fc: { interactionId: 'foo' },
-        },
-      };
-      // When
-      const result = service['extractNetworkInfoFromHeaders'](contextMock);
-      // Then
-      expect(result).toEqual({
-        ip: ipMock,
-        port: sourcePortMock,
-        originalAddresses: xForwardedForOriginalMock,
-      });
     });
   });
 
@@ -306,10 +289,10 @@ describe('CoreTrackingService', () => {
         interactionId: interactionIdMock,
         isSso: null,
 
-        spId: 'some spId',
+        spId: 'clientId',
         spName: 'some spName',
         spAcr: 'some spAcr',
-        spSub: 'some spSub',
+        spSub: 'sub client id',
 
         idpId: 'some idpId',
         idpName: 'some idpName',
@@ -334,7 +317,7 @@ describe('CoreTrackingService', () => {
         spId: 'spIdMock',
         spName: 'spNameMock',
         spAcr: 'spAcrMock',
-        spSub: null,
+        spSub: 'sub for spIdMock',
 
         idpId: null,
         idpName: null,
@@ -346,6 +329,7 @@ describe('CoreTrackingService', () => {
         spId: 'spIdMock',
         spName: 'spNameMock',
         spAcr: 'spAcrMock',
+        subs: { spIdMock: 'sub for spIdMock' },
       };
       const sessionGetBinded = jest.fn().mockResolvedValue(sessionMock);
       sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
@@ -366,7 +350,7 @@ describe('CoreTrackingService', () => {
         spId: 'spIdMock',
         spName: 'spNameMock',
         spAcr: 'spAcrMock',
-        spSub: 'spSubMock',
+        spSub: 'sub for spIdMock',
 
         idpId: null,
         idpName: null,
@@ -378,7 +362,8 @@ describe('CoreTrackingService', () => {
         spId: 'spIdMock',
         spName: 'spNameMock',
         spAcr: 'spAcrMock',
-        spIdentity: { sub: 'spSubMock' },
+        subs: { spIdMock: 'sub for spIdMock' },
+        spIdentity: {},
       };
       const sessionGetBinded = jest.fn().mockResolvedValue(sessionMock);
       sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
@@ -401,7 +386,7 @@ describe('CoreTrackingService', () => {
         spId: null,
         spName: null,
         spAcr: null,
-        spSub: 'spSubMock',
+        spSub: null,
 
         idpId: null,
         idpName: null,
@@ -410,7 +395,8 @@ describe('CoreTrackingService', () => {
         idpLabel: null,
       };
       const sessionMock: OidcSession = {
-        spIdentity: { sub: 'spSubMock' },
+        subs: {},
+        spIdentity: {},
       };
       const boundSessionGet = jest.fn().mockResolvedValue(sessionMock);
       sessionServiceMock.get.bind = jest

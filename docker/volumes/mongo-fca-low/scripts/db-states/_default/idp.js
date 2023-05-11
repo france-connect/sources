@@ -11,6 +11,7 @@ const fia = {
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 1,
     mailto: "",
     featureHandlers: {
@@ -59,6 +60,7 @@ const fia = {
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 1,
     mailto: "",
     featureHandlers: {
@@ -107,6 +109,7 @@ const fia = {
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 1,
     mailto: "",
     featureHandlers: {
@@ -155,6 +158,7 @@ const fia = {
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 1,
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
@@ -203,6 +207,7 @@ const fia = {
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 1,
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
@@ -250,6 +255,7 @@ const fia = {
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 1,
     mailto: "",
     featureHandlers: {
@@ -297,6 +303,7 @@ const fia = {
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 1,
     mailto: "",
     featureHandlers: {
@@ -345,6 +352,7 @@ const fia = {
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 1,
     mailto: "",
     featureHandlers: {
@@ -395,6 +403,7 @@ const fia = {
       image: "fi-mock-faible.svg",
       imageFocus: "fi-mock-faible.svg",
       alt: "impots",
+      trustedIdentity: false,
       eidas: 1,
       mailto: "",
       featureHandlers: {
@@ -443,6 +452,7 @@ const fia = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "llng",
+    trustedIdentity: false,
     eidas: 1,
     featureHandlers: {
       coreVerify: "core-fca-default-verify",

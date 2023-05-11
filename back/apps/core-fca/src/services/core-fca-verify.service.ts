@@ -10,6 +10,7 @@ import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 @Injectable()
 export class CoreFcaVerifyService {
+  // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
     private readonly coreVerify: CoreVerifyService,
@@ -31,13 +32,18 @@ export class CoreFcaVerifyService {
 
     await this.coreVerify.verify(sessionOidc, trackingContext);
 
-    await this.trackVerified(req);
+    await this.coreVerify.trackVerified(req);
 
     const url = `${urlPrefix}${CoreRoutes.INTERACTION_LOGIN}`;
     return url;
   }
 
-  async handleBlacklisted(
+  private async trackSsoDisabled(eventContext: TrackedEventContextInterface) {
+    const { FS_DISABLED_SSO } = this.tracking.TrackedEventsMap;
+    await this.tracking.track(FS_DISABLED_SSO, eventContext);
+  }
+
+  async handleSsoDisabled(
     req: Request,
     params: {
       urlPrefix: string;
@@ -45,36 +51,18 @@ export class CoreFcaVerifyService {
       sessionOidc: ISessionService<OidcClientSession>;
     },
   ): Promise<string> {
-    const { interactionId, urlPrefix, sessionOidc } = params;
+    const eventContext = { req };
+    const { interactionId, sessionOidc, urlPrefix } = params;
+
+    sessionOidc.set('isSso', false);
 
     const url = `${urlPrefix}${CoreRoutes.INTERACTION.replace(
       ':uid',
       interactionId,
     )}`;
 
-    /**
-     * Black listing redirects to idp choice,
-     * thus we are no longer in an "sso" interaction,
-     * so we update isSso flag in session.
-     */
-    sessionOidc.set('isSso', false);
-
-    await this.trackBlackListed(req);
+    await this.trackSsoDisabled(eventContext);
 
     return url;
-  }
-
-  private async trackBlackListed(req: Request) {
-    const eventContext = { req };
-    const { FC_BLACKLISTED } = this.tracking.TrackedEventsMap;
-
-    await this.tracking.track(FC_BLACKLISTED, eventContext);
-  }
-
-  private async trackVerified(req: Request) {
-    const eventContext = { req };
-    const { FC_VERIFIED } = this.tracking.TrackedEventsMap;
-
-    await this.tracking.track(FC_VERIFIED, eventContext);
   }
 }

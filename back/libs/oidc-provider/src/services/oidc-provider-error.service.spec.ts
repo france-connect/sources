@@ -23,14 +23,6 @@ describe('OidcProviderErrorService', () => {
     businessEvent: jest.fn(),
   } as unknown as LoggerService;
 
-  const providerMock = {
-    middlewares: [],
-    use: jest.fn(),
-    on: jest.fn(),
-    interactionDetails: jest.fn(),
-    interactionFinished: jest.fn(),
-  } as unknown as Provider;
-
   const exceptionFilterMock = {
     catch: jest.fn(),
   };
@@ -47,8 +39,6 @@ describe('OidcProviderErrorService', () => {
 
     service = module.get<OidcProviderErrorService>(OidcProviderErrorService);
     jest.resetAllMocks();
-
-    service['provider'] = providerMock as any;
   });
 
   describe('catchErrorEvents', () => {

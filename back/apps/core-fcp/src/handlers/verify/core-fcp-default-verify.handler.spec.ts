@@ -11,7 +11,7 @@ import { IOidcIdentity } from '@fc/oidc';
 import { RnippPivotIdentity, RnippService } from '@fc/rnipp';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
-import { TrackingService } from '@fc/tracking';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import { CoreFcpDefaultVerifyHandler } from './core-fcp-default-verify.handler';
 
@@ -159,6 +159,8 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     useIdentityFrom: IdentitySource.RNIPP,
   };
 
+  const trackingContext = {} as unknown as TrackedEventContextInterface;
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -226,14 +228,15 @@ describe('CoreFcpDefaultVerifyHandler', () => {
   });
 
   describe('handle', () => {
-    const trackingContext = {};
-
     const handleArgument = {
       sessionOidc: sessionServiceMock,
       trackingContext,
     };
     beforeEach(() => {
       serviceProviderMock.getById.mockResolvedValue(spMock);
+      service['retrieveRnippIdentity'] = jest
+        .fn()
+        .mockResolvedValueOnce(rnippIdentityMock);
     });
 
     it('Should not throw if verified', async () => {
@@ -330,7 +333,9 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     it('Should throw if rnipp check refuses identity', async () => {
       // Given
       const errorMock = new Error('my error');
-      rnippServiceMock.check.mockRejectedValueOnce(errorMock);
+      service['retrieveRnippIdentity'] = jest
+        .fn()
+        .mockRejectedValueOnce(errorMock);
       // Then
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
@@ -368,11 +373,16 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         accountId: accountIdMock,
         amr: ['fc'],
         idpIdentity: idpIdentityMock,
+        rnippIdentity: rnippIdentityMock,
         spIdentity: {
-          ...idpIdentityMock,
           subSp: 'computedSubSp',
           email: 'email',
           birthdate: 'foo',
+        },
+        subs: {
+          // FranceConnect claims naming convention
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          sp_id: 'computedSubSp',
         },
       });
     });
@@ -406,7 +416,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       ).toHaveBeenCalledTimes(2);
       expect(
         cryptographyFcpServiceMock.computeIdentityHash,
-      ).toHaveBeenNthCalledWith(1, spIdentityMock);
+      ).toHaveBeenNthCalledWith(1, rnippIdentityMock);
     });
 
     it('should call computeIdentityHash with identity given by the identity provider on the second call', async () => {
@@ -445,6 +455,22 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         2,
         sessionDataMock.spId,
         'idpIdentityHash',
+      );
+    });
+
+    it('should call buildSpIdentity with subSp, idpIdentity and rnippIdentity', async () => {
+      // Given
+      service['buildSpIdentity'] = jest
+        .fn()
+        .mockReturnValue({ sub: idpIdentityMock.sub });
+      // When
+      await service.handle(handleArgument);
+      // Then
+      expect(service['buildSpIdentity']).toHaveBeenCalledTimes(1);
+      expect(service['buildSpIdentity']).toHaveBeenCalledWith(
+        subSp,
+        { sub: idpIdentityMock.sub },
+        rnippIdentityMock,
       );
     });
 
@@ -646,6 +672,42 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         rnipp_birthcountry: input.birthcountry,
       });
+    });
+  });
+
+  describe('retrieveRnippIdentity()', () => {
+    const idpIdentityMock = {} as unknown as IOidcIdentity;
+
+    it('should retrieve rnippIdentity from session', async () => {
+      // Given
+      const isSso = false;
+      service['rnippCheck'] = jest
+        .fn()
+        .mockResolvedValueOnce(rnippIdentityMock);
+      // When
+      const result = await service['retrieveRnippIdentity'](
+        isSso,
+        sessionServiceMock,
+        idpIdentityMock,
+        trackingContext,
+      );
+      // Then
+      expect(result).toEqual(rnippIdentityMock);
+    });
+
+    it('should retrieve rnippIdentity from the method rnippCheck', async () => {
+      // Given
+      const isSso = true;
+      sessionServiceMock.get.mockReturnValue(rnippIdentityMock);
+      // When
+      const result = await service['retrieveRnippIdentity'](
+        isSso,
+        sessionServiceMock,
+        idpIdentityMock,
+        trackingContext,
+      );
+      // Then
+      expect(result).toEqual(rnippIdentityMock);
     });
   });
 });

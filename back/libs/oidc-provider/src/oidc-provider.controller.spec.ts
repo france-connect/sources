@@ -8,6 +8,7 @@ import { OidcProviderService } from '@fc/oidc-provider';
 
 import { RevocationTokenParamsDTO } from './dto';
 import { OidcProviderController } from './oidc-provider.controller';
+import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
 
 const interactionIdMock = 'interactionIdMockValue';
 const acrMock = 'acrMockValue';
@@ -35,7 +36,6 @@ describe('OidcProviderController', () => {
     getProvider: () => providerMock,
     wellKnownKeys: jest.fn(),
     decodeAuthorizationHeader: jest.fn(),
-    finishInteraction: jest.fn(),
   };
 
   const serviceProviderServiceMock = {
@@ -55,6 +55,10 @@ describe('OidcProviderController', () => {
     trace: jest.fn(),
   } as unknown as LoggerService;
 
+  const oidcProviderConfigAppMock = {
+    finishInteraction: jest.fn(),
+  };
+
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [OidcProviderController],
@@ -64,6 +68,10 @@ describe('OidcProviderController', () => {
         {
           provide: SERVICE_PROVIDER_SERVICE_TOKEN,
           useValue: serviceProviderServiceMock,
+        },
+        {
+          provide: OIDC_PROVIDER_CONFIG_APP_TOKEN,
+          useValue: oidcProviderConfigAppMock,
         },
       ],
     })
@@ -103,10 +111,10 @@ describe('OidcProviderController', () => {
       // When
       await oidcProviderController.getLogin(req, res, sessionServiceMock);
       // Then
-      expect(oidcProviderServiceMock.finishInteraction).toHaveBeenCalledTimes(
+      expect(oidcProviderConfigAppMock.finishInteraction).toHaveBeenCalledTimes(
         1,
       );
-      expect(oidcProviderServiceMock.finishInteraction).toHaveBeenCalledWith(
+      expect(oidcProviderConfigAppMock.finishInteraction).toHaveBeenCalledWith(
         req,
         res,
         oidcSessionDataMock,

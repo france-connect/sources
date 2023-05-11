@@ -38,7 +38,10 @@
   },
   {
     "name": "fsa4-low",
-    "descriptions": ["non habilité à demander le scope belonging_population", "non habilité à demander le claim amr"],
+    "descriptions": [
+      "non habilité à demander le scope belonging_population",
+      "non habilité à demander le claim amr"
+    ],
     "mocked": true,
     "url": "https://fsa4-low.{{TEST_ENV}}.dev-franceconnect.fr",
     "acrValue": "eidas1",
@@ -51,7 +54,10 @@
   },
   {
     "name": "fsa5-low",
-    "descriptions": ["sans accès au FI par défaut", "avec accès exclusif à un FI"],
+    "descriptions": [
+      "sans accès au FI par défaut",
+      "avec accès exclusif à un FI"
+    ],
     "mocked": true,
     "url": "https://fsa5-low.{{TEST_ENV}}.dev-franceconnect.fr",
     "acrValue": "eidas1",

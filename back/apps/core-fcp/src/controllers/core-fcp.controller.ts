@@ -23,15 +23,10 @@ import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { NotificationsService } from '@fc/notifications';
 import { OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
-import {
-  OidcClientConfig,
-  OidcClientService,
-  OidcClientSession,
-} from '@fc/oidc-client';
+import { OidcClientConfig, OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderConfig, OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { ISessionService, Session, SessionCsrfService } from '@fc/session';
-import { TrackedEventContextInterface } from '@fc/tracking';
 
 import {
   AppSession,
@@ -41,7 +36,7 @@ import {
   InteractionSessionDto,
 } from '../dto';
 import { InsufficientAcrLevelSuspiciousContextException } from '../exceptions';
-import { CoreFcpService } from '../services';
+import { CoreFcpService, CoreFcpVerifyService } from '../services';
 
 @Controller()
 export class CoreFcpController {
@@ -57,9 +52,9 @@ export class CoreFcpController {
     private readonly notifications: NotificationsService,
     private readonly csrf: SessionCsrfService,
     private readonly oidcAcr: OidcAcrService,
-    private readonly oidcClient: OidcClientService,
     private readonly coreAcr: CoreAcrService,
     private readonly coreVerify: CoreVerifyService,
+    private readonly coreFcpVerify: CoreFcpVerifyService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -198,10 +193,20 @@ export class CoreFcpController {
   ) {
     const { idpId, idpAcr, interactionId, spId } = await sessionOidc.get();
 
-    await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
+    const { urlPrefix } = this.config.get<AppConfig>('App');
+    const params = { urlPrefix, interactionId, sessionOidc };
+
+    const isBlackListed = await this.serviceProvider.shouldExcludeIdp(
+      spId,
+      idpId,
+    );
+
+    if (isBlackListed) {
+      const url = await this.coreVerify.handleBlacklisted(req, params);
+      return res.redirect(url);
+    }
 
     const isSuspicious = await sessionApp.get('isSuspicious');
-
     const isInsufficientAcrLevel = this.coreFcp.isInsufficientAcrLevel(
       idpAcr,
       isSuspicious,
@@ -210,20 +215,8 @@ export class CoreFcpController {
       throw new InsufficientAcrLevelSuspiciousContextException();
     }
 
-    const trackingContext: TrackedEventContextInterface = { req };
-    await this.coreVerify.verify(sessionOidc, trackingContext);
-
-    const { urlPrefix } = this.config.get<AppConfig>('App');
-    const url = `${urlPrefix}/interaction/${interactionId}/consent`;
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'CoreRoutes.INTERACTION_VERIFY',
-      redirect: url,
-      route: CoreRoutes.INTERACTION_VERIFY,
-    });
-
-    res.redirect(url);
+    const url = await this.coreFcpVerify.handleVerifyIdentity(req, params);
+    return res.redirect(url);
   }
 
   @Get(CoreRoutes.INTERACTION_CONSENT)

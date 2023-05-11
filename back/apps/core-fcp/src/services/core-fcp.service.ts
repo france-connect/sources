@@ -10,7 +10,9 @@ import { OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
 import { IClaim, IRichClaim, ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
+import { ISessionService } from '@fc/session';
 
+import { CoreSessionDto } from '../dto';
 import { CoreFcpSendEmailHandler } from '../handlers';
 
 @Injectable()
@@ -35,11 +37,17 @@ export class CoreFcpService {
    * @param {ISessionService<OidcClientSession>} sessionOidc
    * @returns {Promise<void>}
    */
-  async sendAuthenticationMail(session: OidcSession): Promise<void> {
+  async sendAuthenticationMail(
+    session: OidcSession,
+    sessionCore: ISessionService<CoreSessionDto>,
+  ): Promise<void> {
     this.logger.debug('CoreFcpService.sendAuthenticationMail()');
 
-    const { idpId } = session;
+    const { sentNotificationsForSp } = await sessionCore.get();
+    const { idpId, spId } = session;
     const idp = await this.identityProvider.getById(idpId);
+
+    this.logger.trace({ idpId, idp });
 
     const { authenticationEmail } = idp.featureHandlers;
     const handler = FeatureHandler.get<CoreFcpSendEmailHandler>(
@@ -47,7 +55,14 @@ export class CoreFcpService {
       this,
     );
 
-    this.logger.trace({ idpId, idp });
+    // notification already sent for this service provider during this session
+    if (sentNotificationsForSp.includes(spId)) {
+      return;
+    }
+
+    // update the session to take into account the notification for this service provider
+    sentNotificationsForSp.push(spId);
+    await sessionCore.set('sentNotificationsForSp', sentNotificationsForSp);
 
     await handler.handle(session);
   }

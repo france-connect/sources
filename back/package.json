@@ -244,6 +244,7 @@
       "^@fc/session(|/.*)$": "<rootDir>/libs/session/src$1",
       "^@fc/override-oidc-provider(|/.*)$": "<rootDir>/libs/override-oidc-provider/src$1",
       "^@fc/mailer(|/.*)$": "<rootDir>/libs/mailer/src$1",
+      "^@fc/tracking-context(|/.*)$": "<rootDir>/libs/tracking-context/src$1",
       "^@fc/tracking(|/.*)$": "<rootDir>/libs/tracking/src$1",
       "^@fc/app(|/.*)$": "<rootDir>/libs/app/src$1",
       "^@fc/eidas-light-protocol(|/.*)$": "<rootDir>/libs/eidas-light-protocol/src$1",

@@ -163,7 +163,7 @@ describe('CsvService', () => {
           fn(headers);
         },
         // Assert
-      ).toThrow("Cannot read property 'toLowerCase' of undefined");
+      ).toThrow();
     });
   });
 

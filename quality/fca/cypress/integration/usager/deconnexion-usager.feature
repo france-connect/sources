@@ -16,7 +16,7 @@ Fonctionnalité: Deconnexion Usager
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que je m'authentifie avec succès
     Et que je suis redirigé vers la page fournisseur de service
-    Et que je suis connecté
+    Et que je suis connecté au fournisseur de service
     Quand je me déconnecte du fournisseur de service
     Alors je suis déconnecté du fournisseur d'identité
     Et la session AgentConnect est détruite

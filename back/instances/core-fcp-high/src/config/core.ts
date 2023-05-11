@@ -49,4 +49,5 @@ export default {
     'Y270003',
   ],
   useIdentityFrom: IdentitySource.IDP,
+  enableSso: false,
 } as CoreConfig;

@@ -672,6 +672,15 @@
         "tsConfigPath": "libs/tracking/tsconfig.lib.json"
       }
     },
+    "tracking-context": {
+      "type": "library",
+      "root": "libs/tracking-context",
+      "entryFile": "index",
+      "sourceRoot": "libs/tracking-context/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tracking-context/tsconfig.lib.json"
+      }
+    },
     "app": {
       "type": "library",
       "root": "libs/app",

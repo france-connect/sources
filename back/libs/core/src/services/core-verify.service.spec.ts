@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -6,6 +8,7 @@ import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
+import { TrackingService } from '@fc/tracking';
 
 import { ProcessCore } from '../enums';
 import { CoreIdentityProviderNotFoundException } from '../exceptions';
@@ -66,6 +69,8 @@ describe('CoreVerifyService', () => {
     getById: jest.fn(),
   };
 
+  const interactionIdMock = 'interactionIdMockValue';
+
   const reqMock = {};
 
   const coreVerifyMock = 'core-fcp-default-verify';
@@ -81,6 +86,15 @@ describe('CoreVerifyService', () => {
     },
   } as unknown as IdentityProviderMetadata;
 
+  const trackingServiceMock: TrackingService = {
+    track: jest.fn(),
+    TrackedEventsMap: {
+      IDP_CALLEDBACK: {},
+      FC_VERIFIED: {},
+      FC_BLACKLISTED: {},
+    },
+  } as unknown as TrackingService;
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -90,6 +104,7 @@ describe('CoreVerifyService', () => {
         CoreVerifyService,
         LoggerService,
         IdentityProviderAdapterMongoService,
+        TrackingService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -98,6 +113,8 @@ describe('CoreVerifyService', () => {
       .useValue(IdentityProviderMock)
       .overrideProvider(ModuleRef)
       .useValue(moduleRefMock)
+      .overrideProvider(TrackingService)
+      .useValue(trackingServiceMock)
       .compile();
 
     service = module.get<CoreVerifyService>(CoreVerifyService);
@@ -244,6 +261,99 @@ describe('CoreVerifyService', () => {
           ),
         // Then
       ).rejects.toThrow(CoreIdentityProviderNotFoundException);
+    });
+  });
+
+  describe('handleBlacklisted()', () => {
+    const req = {
+      fc: {
+        interactionId: interactionIdMock,
+      },
+      query: {
+        firstQueryParam: 'first',
+        secondQueryParam: 'second',
+      },
+    } as unknown as Request;
+
+    const params = {
+      urlPrefix: 'urlPrefixValue',
+      interactionId: 'interactionId',
+      sessionOidc: sessionServiceMock,
+    };
+
+    beforeEach(() => {
+      service['trackBlackListed'] = jest.fn();
+    });
+
+    it('should call session.set()', async () => {
+      // When
+      await service['handleBlacklisted'](req, params);
+      // Then
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.set).toHaveBeenCalledWith('isSso', false);
+    });
+
+    it('should call trackBlackListed', async () => {
+      // When
+      await service['handleBlacklisted'](req, params);
+      // Then
+      expect(service['trackBlackListed']).toHaveBeenCalledTimes(1);
+      expect(service['trackBlackListed']).toHaveBeenCalledWith(req);
+    });
+
+    it('should return url result', async () => {
+      // Given
+      const expected = 'urlPrefixValue/interaction/interactionId';
+      // When
+      const result = await service['handleBlacklisted'](req, params);
+      // Then
+      expect(result).toBe(expected);
+    });
+  });
+
+  describe('trackVerified', () => {
+    const req = {
+      fc: {
+        interactionId: interactionIdMock,
+      },
+      query: {
+        firstQueryParam: 'first',
+        secondQueryParam: 'second',
+      },
+    } as unknown as Request;
+
+    it('should call tracking.track()', async () => {
+      // When
+      await service['trackVerified'](req);
+      // Then
+      expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
+      expect(trackingServiceMock.track).toHaveBeenCalledWith(
+        trackingServiceMock.TrackedEventsMap.FC_VERIFIED,
+        { req },
+      );
+    });
+  });
+
+  describe('trackBlackListed', () => {
+    const req = {
+      fc: {
+        interactionId: interactionIdMock,
+      },
+      query: {
+        firstQueryParam: 'first',
+        secondQueryParam: 'second',
+      },
+    } as unknown as Request;
+
+    it('should call tracking.track()', async () => {
+      // When
+      await service['trackBlackListed'](req);
+      // Then
+      expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
+      expect(trackingServiceMock.track).toHaveBeenCalledWith(
+        trackingServiceMock.TrackedEventsMap.FC_BLACKLISTED,
+        { req },
+      );
     });
   });
 });

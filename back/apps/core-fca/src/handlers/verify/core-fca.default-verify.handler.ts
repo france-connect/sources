@@ -39,7 +39,7 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
   }: IVerifyFeatureHandlerHandleArgument): Promise<void> {
     this.logger.debug('getConsent service: ##### core-fca-default-verify');
 
-    const { idpId, idpIdentity, idpAcr, spId, spAcr, amr } =
+    const { idpId, idpIdentity, idpAcr, spId, spAcr, amr, subs } =
       await sessionOidc.get();
 
     // Acr check
@@ -70,9 +70,10 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
       },
     );
 
+    const { sub: _sub, ...spIdentityCleaned } = idpIdentity;
+
     const spIdentity = {
-      ...idpIdentity,
-      sub: subSp,
+      ...spIdentityCleaned,
       // AgentConnect claims naming convention
       // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_id: idpId,
@@ -86,6 +87,7 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
       idpIdentity,
       spIdentity,
       accountId,
+      subs: { ...subs, [spId]: subSp },
     };
 
     this.logger.trace({ session });

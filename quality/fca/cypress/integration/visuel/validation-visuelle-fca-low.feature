@@ -16,7 +16,7 @@ Fonctionnalité: Validation Visuelle
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page fournisseur de service
-    Et je suis connecté
+    Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations des scopes "tous les scopes"
 
     Exemples:

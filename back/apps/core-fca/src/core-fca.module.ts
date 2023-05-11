@@ -23,7 +23,10 @@ import { MinistriesModule } from '@fc/ministries';
 import { MongooseModule } from '@fc/mongoose';
 import { OidcAcrModule } from '@fc/oidc-acr';
 import { OidcClientModule } from '@fc/oidc-client';
-import { OidcProviderModule } from '@fc/oidc-provider';
+import {
+  OidcProviderGrantService,
+  OidcProviderModule,
+} from '@fc/oidc-provider';
 import {
   ServiceProviderAdapterMongoModule,
   ServiceProviderAdapterMongoService,
@@ -92,6 +95,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     OidcProviderConfigAppService,
     CoreFcaDefaultVerifyHandler,
     CoreFcaVerifyService,
+    OidcProviderGrantService,
   ],
   // Make `CoreTrackingService` dependencies available
   exports: [

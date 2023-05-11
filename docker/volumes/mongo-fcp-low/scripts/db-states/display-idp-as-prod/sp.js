@@ -54,6 +54,7 @@ const fsp = {
     idpFilterList: [],
     identityConsent: false,
     trustedIdentity: false,
+    ssoDisabled: false,
   },
   // FSP2-LOW - amr not authorized
   'FSP2-LOW': {
@@ -110,6 +111,7 @@ const fsp = {
     idpFilterList: [],
     identityConsent: false,
     trustedIdentity: false,
+    ssoDisabled: false,
   },
 };
 

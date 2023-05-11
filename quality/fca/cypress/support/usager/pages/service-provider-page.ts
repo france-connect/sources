@@ -35,6 +35,20 @@ export default class ServiceProviderPage {
     return cy.get(this.logoutButtonSelector);
   }
 
+  getMockSubText(): Cypress.Chainable<string> {
+    return cy
+      .get('#json')
+      .invoke('text')
+      .then((text) => {
+        const responseBody = JSON.parse(text.trim());
+        return responseBody['sub'];
+      });
+  }
+
+  getUserInfoButton(): ChainableElement {
+    return cy.get('#reload-userinfo');
+  }
+
   checkIsVisible(): void {
     cy.url().should('include', this.originUrl);
   }

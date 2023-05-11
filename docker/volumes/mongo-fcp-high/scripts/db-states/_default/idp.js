@@ -11,6 +11,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -63,6 +64,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "IDP2 - Identity Provider - eIDAS élevé - nodiscov - nocrypt",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -114,6 +116,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "FIP3 - FI désactivé mais visible",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -166,6 +169,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "FIP4 - FI désactivé et invisible",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -218,6 +222,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "FIP5 - FI activé et invisible",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -270,6 +275,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "IDP6 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -323,6 +329,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "IDP7 - Identity Provider - eIDAS élevé - blacklisted - discov - nocrypt",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -374,6 +381,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "IDP8 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -423,6 +431,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "IDP9 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -472,6 +481,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "IDP10 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -523,6 +533,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "IDP11 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -576,6 +587,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "IDP12 - Identity Provider - eIDAS élevé - crypted (ECDH-ES + A256GCM) - signed (ES256)",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -629,6 +641,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -682,6 +695,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -735,6 +749,7 @@ const fip = {
     image: "fi-mock-substantiel.svg",
     imageFocus: "fi-mock-substantiel.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 2,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -790,6 +805,7 @@ const fip = {
     image: "fi-mock-substantiel.svg",
     imageFocus: "fi-mock-substantiel.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 2,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -843,6 +859,7 @@ const fip = {
     image: "fi-mock-substantiel.svg",
     imageFocus: "fi-mock-substantiel.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 2,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -896,6 +913,7 @@ const fip = {
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 1,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -950,6 +968,7 @@ const fip = {
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 1,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -1003,6 +1022,7 @@ const fip = {
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 1,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -1053,6 +1073,7 @@ const fip = {
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
     alt: "IDP21 - Identity Provider - eIDAS élevé - nodiscov - crypt - beta",
+    trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -1137,6 +1158,7 @@ const fip = {
     // metadata
     imageFocus: "demonstration_eleve_hover.png",
     alt: "impots",
+    trustedIdentity: false,
     eidas: 3,
     mailto: "",
     specificText: "specific text fip1-high",

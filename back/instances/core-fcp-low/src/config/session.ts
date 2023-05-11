@@ -29,7 +29,6 @@ export default {
   sessionIdLength: 64,
   slidingExpiration: true,
   excludedRoutes: [
-    `${app.urlPrefix}${OidcProviderRoutes.AUTHORIZATION}`,
     `${app.urlPrefix}${OidcProviderRoutes.JWKS}`,
     `${app.urlPrefix}${OidcProviderRoutes.OPENID_CONFIGURATION}`,
     `${app.urlPrefix}${OidcClientRoutes.WELL_KNOWN_KEYS}`,

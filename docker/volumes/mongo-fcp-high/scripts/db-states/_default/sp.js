@@ -64,6 +64,7 @@ const fsp = {
     eidas: 2,
     identityConsent: false,
     trustedIdentity: false,
+    ssoDisabled: false,
   },
 
   // -- FSP - FSP2v2 - Activated - no post-logout-redirect-uri
@@ -117,6 +118,7 @@ const fsp = {
     eidas: 2,
     identityConsent: false,
     trustedIdentity: false,
+    ssoDisabled: false,
   },
 
   // -- FSP - FSP3v2 - Deactivated
@@ -171,6 +173,7 @@ const fsp = {
     idpFilterExclude: true,
     idpFilterList: [],
     identityConsent: false,
+    ssoDisabled: false,
   },
 
   // -- FSP - FSP4v2 - Only openid and birthdate scopes authorized
@@ -210,6 +213,7 @@ const fsp = {
     idpFilterExclude: true,
     idpFilterList: [],
     identityConsent: false,
+    ssoDisabled: false,
   },
 
   // -- FSP - FSP5-HIGH - private FSP and identity consent required
@@ -291,6 +295,7 @@ const fsp = {
     identityConsent: true,
     eidas: 2,
     trustedIdentity: false,
+    ssoDisabled: false,
   },
 
   // -- FSP - FSP6v2 - private FSP and identity consent not required
@@ -348,6 +353,7 @@ const fsp = {
     identityConsent: false,
     eidas: 2,
     trustedIdentity: false,
+    ssoDisabled: false,
   },
 
   // Eidas-bridge
@@ -398,6 +404,7 @@ const fsp = {
     idpFilterExclude: true,
     idpFilterList: ["fip6-high", "fip8-high"],
     identityConsent: false,
+    ssoDisabled: false,
   },
 };
 

@@ -36,7 +36,11 @@ export class TrackingInterceptor implements NestInterceptor {
     next: CallHandler,
   ): Promise<Observable<any>> {
     const req = context.switchToHttp().getRequest();
-    this.logger.trace(`interceptor`);
+    this.logger.trace({
+      path: req.url,
+      route: req.route.path,
+      handler: context.getHandler(),
+    });
 
     const { urlPrefix } = this.config.get<AppConfig>('App');
 
@@ -46,7 +50,6 @@ export class TrackingInterceptor implements NestInterceptor {
   private log(req: TrackedEventContextInterface, urlPrefix: string): void {
     const event = this.getEvent(req, this.tracking.TrackedEventsMap, urlPrefix);
 
-    this.logger.trace({ event, events: this.tracking.TrackedEventsMap });
     if (event) {
       this.tracking.track(event, { req });
     }

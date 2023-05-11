@@ -222,18 +222,20 @@ describe('MockIdentityProviderFcaController', () => {
 
     it('should store identity and acr in session', async () => {
       // Given
-      const identityMock = {};
+      const identityMock = { sub: 'sub' };
       mockIdentityProviderFcaServiceMock.getIdentity.mockResolvedValue(
         identityMock,
       );
+      oidcClientSessionServiceMock.get.mockReturnValue({ spId: 'spId' });
       // When
       await controller.getLogin(next, req, body, oidcClientSessionServiceMock);
       // Then
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledWith({
-        spIdentity: identityMock,
+        spIdentity: {},
         spAcr: acrMock,
         amr: ['pwd'],
+        subs: { spId: 'sub' },
       });
     });
 

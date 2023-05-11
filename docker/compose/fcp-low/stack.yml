@@ -24,11 +24,13 @@ services:
       - "fsp1-low"
       - "fsp2-low"
       - "fsp3-low"
+      - "fsp4-low"
       # -- IdP
       - "fip1-low"
       - "fip2-low"
       - "fip3-low"
       - "fip4-low"
+      - "fip8-low"
       # --
       - "rnipp"
 
@@ -43,9 +45,11 @@ services:
       - "fsp1-low"
       - "fsp2-low"
       - "fsp3-low"
+      - "fsp4-low"
       - "fip1-low"
       - "fip2-low"
       - "fip3-low"
       - "fip4-low"
+      - "fip8-low"
       # --
       - "maildev"

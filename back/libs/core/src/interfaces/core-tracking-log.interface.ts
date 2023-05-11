@@ -19,9 +19,3 @@ export class ICoreTrackingLog extends TrackingLogInterface {
 
   readonly claims?: string;
 }
-
-export interface IUserNetworkInfo {
-  ip: string;
-  originalAddresses: string;
-  port: string;
-}

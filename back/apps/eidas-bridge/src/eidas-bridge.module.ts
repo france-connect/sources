@@ -20,12 +20,16 @@ import {
   IdentityProviderAdapterEnvService,
 } from '@fc/identity-provider-adapter-env';
 import { OidcClientModule } from '@fc/oidc-client';
-import { OidcProviderModule } from '@fc/oidc-provider';
+import {
+  OidcProviderGrantService,
+  OidcProviderModule,
+} from '@fc/oidc-provider';
 import {
   ServiceProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
 } from '@fc/service-provider-adapter-env';
 import { SessionConfig, SessionMiddleware, SessionModule } from '@fc/session';
+import { TrackingModule } from '@fc/tracking';
 
 import {
   EuIdentityToFrController,
@@ -35,11 +39,14 @@ import {
 } from './controllers';
 import { EidasBridgeSession } from './dto';
 import {
+  EidasBridgeTrackingService,
   OidcMiddlewareService,
   OidcProviderConfigAppService,
 } from './services';
 
-const exceptionModule = ExceptionsModule.withoutTracking();
+const trackingModule = TrackingModule.forRoot(EidasBridgeTrackingService);
+
+const exceptionModule = ExceptionsModule.withTracking(trackingModule);
 
 const oidcClientModule = OidcClientModule.register(
   IdentityProviderAdapterEnvService,
@@ -72,6 +79,7 @@ const oidcProviderModule = OidcProviderModule.register(
     CryptographyEidasModule,
     EidasOidcMapperModule,
     EidasCountryModule,
+    trackingModule,
   ],
   controllers: [
     FrIdentityToEuController,
@@ -81,7 +89,11 @@ const oidcProviderModule = OidcProviderModule.register(
     OidcClientController,
     OidcProviderController,
   ],
-  providers: [OidcMiddlewareService, OidcProviderConfigAppService],
+  providers: [
+    OidcMiddlewareService,
+    OidcProviderConfigAppService,
+    OidcProviderGrantService,
+  ],
   exports: [OidcProviderConfigAppService],
 })
 export class EidasBridgeModule {
