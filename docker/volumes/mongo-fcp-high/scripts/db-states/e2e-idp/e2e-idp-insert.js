@@ -42,7 +42,7 @@ db.provider.update(
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip2-high",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   { upsert: true }

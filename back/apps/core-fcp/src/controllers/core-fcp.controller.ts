@@ -18,6 +18,7 @@ import {
   CoreVerifyService,
   Interaction,
 } from '@fc/core';
+import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { NotificationsService } from '@fc/notifications';
@@ -27,6 +28,7 @@ import { OidcClientConfig, OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderConfig, OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { ISessionService, Session, SessionCsrfService } from '@fc/session';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import {
   AppSession,
@@ -55,6 +57,7 @@ export class CoreFcpController {
     private readonly coreAcr: CoreAcrService,
     private readonly coreVerify: CoreVerifyService,
     private readonly coreFcpVerify: CoreFcpVerifyService,
+    private readonly tracking: TrackingService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -79,6 +82,7 @@ export class CoreFcpController {
   @Get(CoreRoutes.INTERACTION)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @IsStep()
   async getInteraction(
     @Req() req,
     @Res() res,
@@ -93,7 +97,7 @@ export class CoreFcpController {
     @Session('App')
     sessionApp: ISessionService<AppSession>,
   ) {
-    const spName = await sessionOidc.get('spName');
+    const { spName, stepRoute } = await sessionOidc.get();
 
     const { params, uid } = await this.oidcProvider.getInteraction(req, res);
     const { scope: spScope } = params;
@@ -150,10 +154,10 @@ export class CoreFcpController {
     const csrfToken = this.csrf.get();
     await this.csrf.save(sessionOidc, csrfToken);
 
-    const notifications = await this.notifications.getNotifications();
+    const notification = await this.notifications.getNotificationToDisplay();
     const response = {
       csrfToken,
-      notifications,
+      notification,
       params,
       providers: authorizedProviders,
       idpScope,
@@ -169,6 +173,14 @@ export class CoreFcpController {
       route: CoreRoutes.INTERACTION,
     });
 
+    const isRefresh = stepRoute === CoreRoutes.INTERACTION;
+
+    if (!isRefresh) {
+      const trackingContext: TrackedEventContextInterface = { req };
+      const { FC_SHOWED_IDP_CHOICE } = this.tracking.TrackedEventsMap;
+      this.tracking.track(FC_SHOWED_IDP_CHOICE, trackingContext);
+    }
+
     return res.render('interaction', response);
   }
 
@@ -177,6 +189,8 @@ export class CoreFcpController {
   @Get(CoreRoutes.INTERACTION_VERIFY)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @IsStep()
+  @ForbidRefresh()
   async getVerify(
     @Req() req,
     @Res() res,
@@ -222,6 +236,7 @@ export class CoreFcpController {
   @Get(CoreRoutes.INTERACTION_CONSENT)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @IsStep()
   @Render('consent')
   async getConsent(
     @Req() req,
@@ -240,6 +255,7 @@ export class CoreFcpController {
       spId,
       spIdentity: identity,
       spName,
+      stepRoute,
     }: OidcSession = await sessionOidc.get();
 
     const interaction = await this.oidcProvider.getInteraction(req, res);
@@ -270,6 +286,14 @@ export class CoreFcpController {
       response,
       route: CoreRoutes.INTERACTION_CONSENT,
     });
+
+    const isRefresh = stepRoute === CoreRoutes.INTERACTION_CONSENT;
+
+    if (!isRefresh) {
+      const trackingContext: TrackedEventContextInterface = { req };
+      const { FC_SHOWED_CONSENT } = this.tracking.TrackedEventsMap;
+      this.tracking.track(FC_SHOWED_CONSENT, trackingContext);
+    }
 
     return response;
   }

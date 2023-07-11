@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 
 import { CoreMissingIdentityException, CoreRoutes } from '@fc/core';
+import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderRoutes, OidcProviderService } from '@fc/oidc-provider';
@@ -46,6 +47,7 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
+  @IsStep()
   async getAuthorize(@Next() next, @Query() query: AuthorizeParamsDto) {
     this.logger.trace({
       route: OidcProviderRoutes.AUTHORIZATION,
@@ -74,6 +76,7 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
+  @IsStep()
   async postAuthorize(@Next() next, @Body() body: AuthorizeParamsDto) {
     this.logger.trace({
       route: OidcProviderRoutes.AUTHORIZATION,
@@ -91,6 +94,8 @@ export class OidcProviderController {
    */
   @Get(CoreRoutes.INTERACTION_LOGIN)
   @Header('cache-control', 'no-store')
+  @IsStep()
+  @ForbidRefresh()
   async getLogin(
     @Req() req,
     @Res() res,

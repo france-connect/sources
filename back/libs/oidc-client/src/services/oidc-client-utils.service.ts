@@ -3,6 +3,7 @@
  * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1024
  * @ticket #FC-1024
  */
+import { isURL } from 'class-validator';
 import { JWK } from 'jose-openid-client';
 import { CallbackExtras, Client, TokenSet } from 'openid-client';
 
@@ -239,6 +240,21 @@ export class OidcClientUtilsService {
     this.logger.trace({ idpId, endSessionUrl });
 
     return endSessionUrl;
+  }
+
+  async hasEndSessionUrl(idpId: string): Promise<boolean> {
+    this.logger.debug('hasEndSessionUrl');
+    const client = await this.issuer.getClient(idpId);
+
+    let endSessionUrl;
+
+    try {
+      endSessionUrl = client.endSessionUrl();
+      return isURL(endSessionUrl, { protocols: ['http', 'https'] });
+    } catch (error) {
+      this.logger.trace({ error }, LoggerLevelNames.WARN);
+      return false;
+    }
   }
 
   /**

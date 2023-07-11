@@ -288,13 +288,13 @@
       "given_name": "Jean",
       "family_name": "FLEURET",
       "birthdate": "1992-11-00",
-      "rnipp_birthdate": "1992-11",
+      "rnipp_birthdate": "1992-11-01",
       "rnipp_birthplace": "",
       "birthcountry": "99217",
       "email": "jean-fleuret@yopmail.com"
     },
     "eidasClaims": {
-      "PersonIdentifier-eidas-mock": "FR/CB/cbf12654369156563d7ab8aae18295501693804c81ec78191ca324e19bca626ev1",
+      "PersonIdentifier-eidas-mock": "FR/CB/a88de297f2f190ded0bbd17075d9d65d314ee9048ebb51e50b53e29b3372bc91v1",
       "PlaceOfBirth": "JAPON (JP)",
       "birthdate": "1992-11-01"
     }
@@ -316,13 +316,13 @@
       "given_name": "Jean",
       "family_name": "TARGE",
       "birthdate": "1992-00-00",
-      "rnipp_birthdate": "1992",
+      "rnipp_birthdate": "1992-01-01",
       "rnipp_birthplace": "",
       "birthcountry": "99217",
       "email": "jean-targe@yopmail.com"
     },
     "eidasClaims": {
-      "PersonIdentifier-eidas-mock": "FR/CB/16b7591901ff97c176159512f070366a6da0ea1d719e135738661a0ab59b4d73v1",
+      "PersonIdentifier-eidas-mock": "FR/CB/0a25f79fb531da2a6ef5eb8e2c3395d2de10d5d9c1dd04aaafdad84b5451b01fv1",
       "PlaceOfBirth": "JAPON (JP)",
       "birthdate": "1992-01-01"
     }

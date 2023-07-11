@@ -49,6 +49,7 @@ describe('OidcClientService', () => {
     getTokenSet: jest.fn(),
     getUserInfo: jest.fn(),
     getEndSessionUrl: jest.fn(),
+    hasEndSessionUrl: jest.fn(),
   };
 
   const claimsMock = jest.fn();
@@ -299,6 +300,21 @@ describe('OidcClientService', () => {
         idpStateMock,
         idTokenMock,
         postLogoutRedirectUriMock,
+      );
+    });
+  });
+
+  describe('hasEndSessionUrlFromProvider()', () => {
+    it('should call oidcClientUtilsServiceMock.hasEndSessionUrl() with given parameters', async () => {
+      // action
+      await service.hasEndSessionUrlFromProvider(idpIdMock);
+
+      // assert
+      expect(oidcClientUtilsServiceMock.hasEndSessionUrl).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(oidcClientUtilsServiceMock.hasEndSessionUrl).toHaveBeenCalledWith(
+        idpIdMock,
       );
     });
   });

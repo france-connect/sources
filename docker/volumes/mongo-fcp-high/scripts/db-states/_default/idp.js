@@ -1,16 +1,16 @@
 // == FI
 const fip = {
-  // -- FIP - FIP1-HIGH - Activated
+  // -- FIP - FIP1-HIGH - Activated - Discovery true
   "FIP1-HIGH": {
     uid: "fip1-high",
     name: "fip1-high",
     active: true,
     display: true,
     isBeta: false,
-    title: "IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt",
+    title: "IDP1 - Identity Provider - eIDAS élevé - discov - crypt",
     image: "fi-mock-eleve.svg",
     imageFocus: "fi-mock-eleve.svg",
-    alt: "IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt",
+    alt: "IDP1 - Identity Provider - eIDAS élevé - discov - crypt",
     trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
@@ -21,14 +21,9 @@ const fip = {
     mailto: "",
     specificText: "specific text fip1-high",
     url: "https://fip1-high.docker.dev-franceconnect.fr",
-    tokenURL: "https://fip1-high.docker.dev-franceconnect.fr/token",
-    userInfoURL: "https://fip1-high.docker.dev-franceconnect.fr/userinfo",
-    endSessionURL:
-      "https://fip1-high.docker.dev-franceconnect.fr/user/session/end",
-    statusURL: "https://fip1-high.docker.dev-franceconnect.fr/",
-    jwksURL: "https://fip1-high.docker.dev-franceconnect.fr/jwks",
-    authzURL: "https://fip1-high.docker.dev-franceconnect.fr/authorize",
-    discovery: false,
+    discovery: true,
+    discoveryUrl:
+      "https://fip1-high.docker.dev-franceconnect.fr/.well-known/openid-configuration",
     response_types: ["code"],
     clientID: "09a1a257648c1742c74d6a3d84b31943",
     client_secret:
@@ -49,7 +44,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -77,7 +72,7 @@ const fip = {
     tokenURL: "https://fip2-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip2-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip2-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip2-high.docker.dev-franceconnect.fr/session/end",
     statusURL: "https://fip2-high.docker.dev-franceconnect.fr/",
     jwksURL: "https://fip2-high.docker.dev-franceconnect.fr/jwks",
     authzURL: "https://fip2-high.docker.dev-franceconnect.fr/authorize",
@@ -102,7 +97,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip2-high",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP3-HIGH - Deactivated but visible
@@ -129,7 +124,7 @@ const fip = {
     tokenURL: "https://fip3-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip3-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip3-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip3-high.docker.dev-franceconnect.fr/session/end",
     statusURL: "https://fip3-high.docker.dev-franceconnect.fr/",
     jwksURL: "https://fip3-high.docker.dev-franceconnect.fr/jwks",
     authzURL: "https://fip3-high.docker.dev-franceconnect.fr/authorize",
@@ -154,7 +149,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP4-HIGH - Deactivated and invisible
@@ -182,7 +177,7 @@ const fip = {
     tokenURL: "https://fip1-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip1-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip1-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip1-high.docker.dev-franceconnect.fr/session/end",
     statusURL: "https://fip1-high.docker.dev-franceconnect.fr/",
     jwksURL: "https://fip1-high.docker.dev-franceconnect.fr/jwks",
     authzURL: "https://fip1-high.docker.dev-franceconnect.fr/authorize",
@@ -207,7 +202,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP5-HIGH - Activated and invisible
@@ -235,7 +230,7 @@ const fip = {
     tokenURL: "https://fip1-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip1-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip1-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip1-high.docker.dev-franceconnect.fr/session/end",
     statusURL: "https://fip1-high.docker.dev-franceconnect.fr/",
     jwksURL: "https://fip1-high.docker.dev-franceconnect.fr/jwks",
     authzURL: "https://fip1-high.docker.dev-franceconnect.fr/authorize",
@@ -260,7 +255,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP6-HIGH
@@ -288,7 +283,7 @@ const fip = {
     tokenURL: "https://fip6-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip6-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip6-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip6-high.docker.dev-franceconnect.fr/session/end",
     statusURL: "https://fip6-high.docker.dev-franceconnect.fr/",
     jwksURL: "https://fip6-high.docker.dev-franceconnect.fr/jwks",
     authzURL: "https://fip6-high.docker.dev-franceconnect.fr/authorize",
@@ -313,7 +308,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP7-HIGH - no discovery attribute
@@ -363,7 +358,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP8-HIGH - blacklisted
@@ -415,7 +410,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP9-HIGH - no discovery url
@@ -465,7 +460,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP10-HIGH - invalid parameter
@@ -517,7 +512,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP11-HIGH
@@ -546,7 +541,7 @@ const fip = {
     tokenURL: "https://fip1-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip1-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip1-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip1-high.docker.dev-franceconnect.fr/session/end",
     statusURL: "https://fip1-high.docker.dev-franceconnect.fr/",
     jwksURL: "https://fip1-high.docker.dev-franceconnect.fr/jwks",
     authzURL: "https://fip1-high.docker.dev-franceconnect.fr/authorize",
@@ -571,7 +566,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - IDP12-HIGH - Identity Provider not respecting the DTO
@@ -600,7 +595,7 @@ const fip = {
     tokenURL: "https://fip1-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip1-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip1-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip1-high.docker.dev-franceconnect.fr/session/end",
     statusURL: "https://fip1-high.docker.dev-franceconnect.fr/",
     jwksURL: "https://fip1-high.docker.dev-franceconnect.fr/jwks",
     // Remove the authorize to not pass the DTO for tests purposes
@@ -626,7 +621,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP13V2 - Activated - eIDAS élevé - crypted (ECDH-ES + A256GCM) - signed (ES256)
@@ -654,7 +649,7 @@ const fip = {
     tokenURL: "https://fip13-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip13-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip13-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip13-high.docker.dev-franceconnect.fr/session/end",
     statusURL: "https://fip13-high.docker.dev-franceconnect.fr/",
     jwksURL: "https://fip13-high.docker.dev-franceconnect.fr/jwks",
     authzURL: "https://fip13-high.docker.dev-franceconnect.fr/authorize",
@@ -679,7 +674,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -710,7 +705,7 @@ const fip = {
     tokenURL: "https://fip14-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip14-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip14-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip14-high.docker.dev-franceconnect.fr/session/end",
     jwksURL: "https://fip14-high.docker.dev-franceconnect.fr/jwks",
     discovery: false,
     response_types: ["code"],
@@ -733,7 +728,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -764,7 +759,7 @@ const fip = {
     tokenURL: "https://fip15-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip15-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip15-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip15-high.docker.dev-franceconnect.fr/session/end",
     jwksURL: "https://fip15-high.docker.dev-franceconnect.fr/jwks",
     discovery: false,
     response_types: ["code"],
@@ -776,7 +771,7 @@ const fip = {
     updatedAt: new Date("2023-03-10 17:09:17"),
     updatedBy: "admin",
     endSessionURL:
-      "https://fip15-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip15-high.docker.dev-franceconnect.fr/session/end",
     id_token_signed_response_alg: "ES256",
     token_endpoint_auth_method: "client_secret_post",
     revocation_endpoint_auth_method: "client_secret_post",
@@ -789,7 +784,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -820,7 +815,7 @@ const fip = {
     tokenURL: "https://fip16-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip16-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip16-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip16-high.docker.dev-franceconnect.fr/session/end",
     jwksURL: "https://fip16-high.docker.dev-franceconnect.fr/jwks",
     discovery: false,
     response_types: ["code"],
@@ -843,7 +838,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -874,7 +869,7 @@ const fip = {
     userInfoURL: "https://fip17-high.docker.dev-franceconnect.fr/userinfo",
     statusURL: "https://fip17-high.docker.dev-franceconnect.fr/",
     endSessionURL:
-      "https://fip17-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip17-high.docker.dev-franceconnect.fr/session/end",
     jwksURL: "https://fip17-high.docker.dev-franceconnect.fr/jwks",
     discovery: false,
     response_types: ["code"],
@@ -897,7 +892,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -928,7 +923,7 @@ const fip = {
     tokenURL: "https://fip18-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip18-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip18-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip18-high.docker.dev-franceconnect.fr/session/end",
     jwksURL: "https://fip18-high.docker.dev-franceconnect.fr/jwks",
     discovery: false,
     response_types: ["code"],
@@ -952,7 +947,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -983,7 +978,7 @@ const fip = {
     tokenURL: "https://fip19-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip19-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip19-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip19-high.docker.dev-franceconnect.fr/session/end",
     jwksURL: "https://fip19-high.docker.dev-franceconnect.fr/jwks",
     discovery: false,
     response_types: ["code"],
@@ -1006,7 +1001,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -1037,7 +1032,7 @@ const fip = {
     tokenURL: "https://fip20-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip20-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip20-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip20-high.docker.dev-franceconnect.fr/session/end",
     discovery: false,
     response_types: ["code"],
     clientID: "myclientidforfip20-high",
@@ -1059,7 +1054,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
    // -- FIP - FIP21-HIGH - BETA
@@ -1086,7 +1081,7 @@ const fip = {
     tokenURL: "https://fip21-high.docker.dev-franceconnect.fr/token",
     userInfoURL: "https://fip21-high.docker.dev-franceconnect.fr/userinfo",
     endSessionURL:
-      "https://fip21-high.docker.dev-franceconnect.fr/user/session/end",
+      "https://fip21-high.docker.dev-franceconnect.fr/session/end",
     statusURL: "https://fip21-high.docker.dev-franceconnect.fr/",
     jwksURL: "https://fip21-high.docker.dev-franceconnect.fr/jwks",
     authzURL: "https://fip21-high.docker.dev-franceconnect.fr/authorize",
@@ -1111,7 +1106,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 
@@ -1138,7 +1133,7 @@ const fip = {
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/oidc-callback/eidas-bridge",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
     response_types: ["code"],
     revocation_endpoint_auth_method: "client_secret_post",

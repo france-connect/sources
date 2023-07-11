@@ -32,9 +32,6 @@ export default {
       step: '2.0.0',
       category: EventsCategories.FRONT_CINEMATIC,
       event: 'FC_SHOWED_IDP_CHOICE',
-      interceptRoutes: [
-        { method: RequestMethod.GET, path: CoreRoutes.INTERACTION },
-      ],
     },
 
     IDP_CHOSEN: {

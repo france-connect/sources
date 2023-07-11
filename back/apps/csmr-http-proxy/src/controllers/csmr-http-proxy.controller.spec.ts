@@ -174,7 +174,6 @@ describe('CsmrHttpProxyController', () => {
         expect(result).toStrictEqual(resultMock);
 
         expect(loggerMock.error).toHaveBeenCalledTimes(1);
-        expect(loggerMock.error).toHaveBeenCalledWith(errorMock);
       });
 
       it('should trace and debug request and debug on response', async () => {

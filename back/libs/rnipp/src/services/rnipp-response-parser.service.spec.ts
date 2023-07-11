@@ -7,6 +7,8 @@ import {
   rnippCorectResponseXml,
   rnippCorrectResponseParsed,
   rnippNotFoundResponseParsed,
+  rnippPresumedDayMonthResponseParsed,
+  rnippPresumedDayResponseParsed,
 } from '../../fixtures';
 import { Genders, RnippResponseCodes, RnippXmlSelectors } from '../enums';
 import { RnippHttpStatusException } from '../exceptions';
@@ -129,9 +131,7 @@ describe('RnippResponseParserService', () => {
       service['getXmlAttribute'] = jest
         .fn()
         .mockReturnValueOnce(RnippResponseCodes.FOUND_NOT_RECTIFIED)
-        .mockReturnValueOnce(rnippIdentityMock.family_name)
-        .mockReturnValueOnce(rnippIdentityMock.birthdate)
-        .mockReturnValueOnce(rnippIdentityMock.birthplace);
+        .mockReturnValueOnce(rnippIdentityMock.family_name);
       service['getDeceasedStateAttribute'] = jest.fn().mockReturnValue(false);
       service['getGenderFromParsedXml'] = jest
         .fn()
@@ -140,9 +140,15 @@ describe('RnippResponseParserService', () => {
         givenName: rnippIdentityMock.given_name,
         givenNameArray: rnippIdentityMock.given_name_array,
       });
+      service['getBirthplaceAttribute'] = jest
+        .fn()
+        .mockReturnValue(rnippIdentityMock.birthplace);
       service['getBirthcountryAttribute'] = jest
         .fn()
         .mockReturnValue(rnippIdentityMock.birthcountry);
+      service['getBirthdateAttribute'] = jest
+        .fn()
+        .mockReturnValue(rnippIdentityMock.birthdate);
     });
 
     it('should extract the "rnippCode" attribute from the parsed XML by calling "getXmlAttribute"', () => {
@@ -152,7 +158,7 @@ describe('RnippResponseParserService', () => {
       );
 
       // expect
-      expect(service['getXmlAttribute']).toHaveBeenCalledTimes(4);
+      expect(service['getXmlAttribute']).toHaveBeenCalledTimes(2);
       expect(service['getXmlAttribute']).toHaveBeenNthCalledWith(
         1,
         rnippCorrectResponseParsed,
@@ -195,7 +201,7 @@ describe('RnippResponseParserService', () => {
       );
 
       // expect
-      expect(service['getXmlAttribute']).toHaveBeenCalledTimes(4);
+      expect(service['getXmlAttribute']).toHaveBeenCalledTimes(2);
       expect(service['getXmlAttribute']).toHaveBeenNthCalledWith(
         2,
         rnippCorrectResponseParsed,
@@ -217,33 +223,32 @@ describe('RnippResponseParserService', () => {
       );
     });
 
-    it('should extract the "birthdate" attribute from the parsed XML by calling "getXmlAttribute"', () => {
+    it('should extract the "birthdate" attribute from the parsed XML by calling "getBirthdateAttribute"', () => {
       // action
       service['extractXmlAttributes'](
         rnippCorrectResponseParsed as unknown as JSON,
       );
 
       // expect
-      expect(service['getXmlAttribute']).toHaveBeenCalledTimes(4);
-      expect(service['getXmlAttribute']).toHaveBeenNthCalledWith(
-        3,
+      expect(service['getBirthdateAttribute']).toHaveBeenCalledTimes(1);
+      expect(service['getBirthdateAttribute']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
         RnippXmlSelectors.BIRTH_DATE,
       );
     });
 
-    it('should extract the "birthplace" attribute from the parsed XML by calling "getXmlAttribute"', () => {
+    it('should extract the "birthplace" attribute from the parsed XML by calling "getBirthplaceAttribute"', () => {
       // action
       service['extractXmlAttributes'](
         rnippCorrectResponseParsed as unknown as JSON,
       );
 
       // expect
-      expect(service['getXmlAttribute']).toHaveBeenCalledTimes(4);
-      expect(service['getXmlAttribute']).toHaveBeenNthCalledWith(
-        4,
+      expect(service['getBirthplaceAttribute']).toHaveBeenCalledTimes(1);
+      expect(service['getBirthplaceAttribute']).toHaveBeenCalledWith(
         rnippCorrectResponseParsed,
         RnippXmlSelectors.BIRTH_PLACE,
+        rnippIdentityMock.birthcountry,
       );
     });
 
@@ -499,6 +504,133 @@ describe('RnippResponseParserService', () => {
 
       // expect
       expect(result).toStrictEqual(true);
+    });
+  });
+
+  describe('getBirthdateAttribute', () => {
+    it('should call "getXmlAttribute" with the parsed XML with the birthdate path', () => {
+      // Given
+      service['getXmlAttribute'] = jest
+        .fn()
+        .mockReturnValueOnce(rnippIdentityMock.birthdate);
+      // When
+      service['getBirthdateAttribute'](
+        rnippCorrectResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_DATE,
+      );
+      // Then
+      expect(service['getXmlAttribute']).toHaveBeenCalledTimes(1);
+      expect(service['getXmlAttribute']).toHaveBeenCalledWith(
+        rnippCorrectResponseParsed,
+        RnippXmlSelectors.BIRTH_DATE,
+      );
+    });
+
+    it('should return the birthdate with correct format YYYY-MM-DD', () => {
+      // Given
+      service['getXmlAttribute'] = jest
+        .fn()
+        .mockReturnValueOnce(rnippIdentityMock.birthdate);
+      // When
+      const result = service['getBirthdateAttribute'](
+        rnippCorrectResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_DATE,
+      );
+      // Then
+      expect(result).toStrictEqual(rnippIdentityMock.birthdate);
+    });
+
+    it('should return the birthdate with correct format YYYY-MM-01 (presumed day)', () => {
+      // Given
+      service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('1962-08');
+      // When
+      const result = service['getBirthdateAttribute'](
+        rnippPresumedDayResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_DATE,
+      );
+      // Then
+      expect(result).toStrictEqual('1962-08-01');
+    });
+
+    it('should return the birthdate with correct format YYYY-01-01 (presumed day and month)', () => {
+      // Given
+      service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('1962');
+      // When
+      const result = service['getBirthdateAttribute'](
+        rnippPresumedDayMonthResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_DATE,
+      );
+      // Then
+      expect(result).toStrictEqual('1962-01-01');
+    });
+  });
+
+  describe('getBirthplaceAttribute', () => {
+    it('should call "getXmlAttribute" with the parsed XML, first the "birthplace" path, second with the "birthcountry"', () => {
+      // Given
+      service['getXmlAttribute'] = jest
+        .fn()
+        .mockReturnValueOnce(rnippIdentityMock.birthplace);
+      service['getBirthcountryAttribute'] = jest
+        .fn()
+        .mockReturnValueOnce(rnippIdentityMock.birthcountry);
+      // When
+      service['getBirthplaceAttribute'](
+        rnippCorrectResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_PLACE,
+        RnippXmlSelectors.BIRTH_COUNTRY,
+      );
+      // Then
+      expect(service['getXmlAttribute']).toHaveBeenCalledTimes(1);
+      expect(service['getXmlAttribute']).toHaveBeenCalledWith(
+        rnippCorrectResponseParsed,
+        RnippXmlSelectors.BIRTH_PLACE,
+      );
+    });
+
+    it('should return birthplace if user born in France', () => {
+      // Given
+      service['getXmlAttribute'] = jest
+        .fn()
+        .mockReturnValueOnce(rnippIdentityMock.birthplace);
+      // When
+      const result = service['getBirthplaceAttribute'](
+        rnippCorrectResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_PLACE,
+        rnippIdentityMock.birthcountry,
+      );
+      // Then
+      expect(result).toStrictEqual(rnippIdentityMock.birthplace);
+    });
+
+    it('should return empty string for birthplace if birthcountry is empty', () => {
+      // Given
+      service['getXmlAttribute'] = jest
+        .fn()
+        .mockReturnValueOnce(rnippIdentityMock.birthplace);
+      // When
+      const result = service['getBirthplaceAttribute'](
+        rnippCorrectResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_PLACE,
+        '',
+      );
+      // Then
+      expect(result).toStrictEqual('');
+    });
+
+    it('should return empty string for birthplace if user not born in France', () => {
+      // Given
+      service['getXmlAttribute'] = jest
+        .fn()
+        .mockReturnValueOnce(rnippIdentityMock.birthplace);
+      // When
+      const result = service['getBirthplaceAttribute'](
+        rnippCorrectResponseParsed as unknown as JSON,
+        RnippXmlSelectors.BIRTH_PLACE,
+        '99217',
+      );
+      // Then
+      expect(result).toStrictEqual('');
     });
   });
 

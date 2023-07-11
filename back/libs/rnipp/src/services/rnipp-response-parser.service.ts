@@ -3,7 +3,7 @@ import * as xmlParser from 'xml2js';
 
 import { Injectable } from '@nestjs/common';
 
-import { CitizenStatus } from '../dto';
+import { CitizenStatus, RnippPivotIdentity } from '../dto';
 import { Genders, RnippResponseCodes, RnippXmlSelectors } from '../enums';
 import { RnippHttpStatusException } from '../exceptions';
 import { GivenNameScopeInterface } from '../interfaces';
@@ -52,7 +52,19 @@ export class RnippResponseParserService {
       RnippXmlSelectors.GIVEN_NAME,
     );
 
-    const identity: /* IIdentity */ any = {
+    const birthcountry = this.getBirthcountryAttribute(
+      parsedXml,
+      RnippXmlSelectors.BIRTH_PLACE,
+      RnippXmlSelectors.BIRTH_COUNTRY,
+    );
+
+    const birthplace = this.getBirthplaceAttribute(
+      parsedXml,
+      RnippXmlSelectors.BIRTH_PLACE,
+      birthcountry,
+    );
+
+    const identity: RnippPivotIdentity = {
       gender: this.getGenderFromParsedXml(parsedXml, RnippXmlSelectors.GENDER),
       // oidc defined variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -64,16 +76,12 @@ export class RnippResponseParserService {
       given_name: givenName,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name_array: givenNameArray,
-      birthdate: this.getXmlAttribute(parsedXml, RnippXmlSelectors.BIRTH_DATE),
-      birthplace: this.getXmlAttribute(
+      birthdate: this.getBirthdateAttribute(
         parsedXml,
-        RnippXmlSelectors.BIRTH_PLACE,
+        RnippXmlSelectors.BIRTH_DATE,
       ),
-      birthcountry: this.getBirthcountryAttribute(
-        parsedXml,
-        RnippXmlSelectors.BIRTH_PLACE,
-        RnippXmlSelectors.BIRTH_COUNTRY,
-      ),
+      birthplace,
+      birthcountry,
     };
 
     return {
@@ -119,6 +127,39 @@ export class RnippResponseParserService {
 
   private getDeceasedStateAttribute(parsedXml: JSON, path: string): boolean {
     return !!this.getXmlAttribute(parsedXml, path, false);
+  }
+
+  private getBirthdateAttribute(
+    parsedXml: JSON,
+    birthdatePath: string,
+  ): string | null {
+    const birthdate = this.getXmlAttribute(parsedXml, birthdatePath);
+
+    if (birthdate.length !== 10) {
+      if (birthdate.match(/^[0-9]{4}$/)) {
+        return `${birthdate}-01-01`;
+      }
+
+      if (birthdate.match(/^[0-9]{4}-[0-9]{2}$/)) {
+        return `${birthdate}-01`;
+      }
+    }
+
+    return birthdate;
+  }
+
+  private getBirthplaceAttribute(
+    parsedXml: JSON,
+    birthplacePath: string,
+    birthcountry: string,
+  ): string {
+    let birthplace = this.getXmlAttribute(parsedXml, birthplacePath);
+
+    if (birthcountry !== FRANCE_COG) {
+      birthplace = '';
+    }
+
+    return birthplace;
   }
 
   private getBirthcountryAttribute(

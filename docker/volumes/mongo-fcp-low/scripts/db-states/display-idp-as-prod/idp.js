@@ -48,7 +48,7 @@ db.provider.replaceOne(
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip1-low",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   }
 );
@@ -105,7 +105,7 @@ db.provider.replaceOne(
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip1-low",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   }
 );
@@ -162,7 +162,7 @@ db.provider.replaceOne(
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip1-low",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   }
 );
@@ -219,7 +219,7 @@ db.provider.replaceOne(
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip1-low",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   }
 );
@@ -276,7 +276,7 @@ db.provider.replaceOne(
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip1-low",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   }
 );
@@ -333,7 +333,7 @@ db.provider.replaceOne(
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip1-low",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   }
 );

@@ -31,6 +31,7 @@ services:
       - "fip3-low"
       - "fip4-low"
       - "fip8-low"
+      - "fip9-low"
       # --
       - "rnipp"
 
@@ -51,5 +52,6 @@ services:
       - "fip3-low"
       - "fip4-low"
       - "fip8-low"
+      - "fip9-low"
       # --
       - "maildev"

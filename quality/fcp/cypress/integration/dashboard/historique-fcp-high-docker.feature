@@ -18,7 +18,7 @@ Fonctionnalité: Historique Connexion FC+ (docker)
     Et le fournisseur de service de l'évènement est "FSP - FSP1-HIGH"
     Et la date et heure de connexion sont affichées
     Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt"
+    Et le nom du fournisseur d'identité de l'évènement est "IDP1 - Identity Provider - eIDAS élevé - discov - crypt"
     Et le niveau de sécurité de l'évènement est "Substantiel"
 
   Scénario: Historique Connexion - FC+ - FS privé avec scope identité
@@ -34,7 +34,7 @@ Fonctionnalité: Historique Connexion FC+ (docker)
     Et le fournisseur de service de l'évènement est "FSP - FSP5-HIGH"
     Et la date et heure de connexion sont affichées
     #Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt"
+    Et le nom du fournisseur d'identité de l'évènement est "IDP1 - Identity Provider - eIDAS élevé - discov - crypt"
     Et le niveau de sécurité de l'évènement est "Substantiel"
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect+" du fournisseur de service "FSP - FSP5-HIGH"
     Et la plateforme de l'évènement est "FranceConnect+"

@@ -20,9 +20,9 @@ les données sont stoqués dans Elasticsearch et visible depuis l'URL:
 
 Le container RabbitMQ est déployé en local depuis le `docker-compose`:
 
-- `./fc-docker/compose/fc-core.yml` in the container `csmr-tracks`.
+- `./fc/docker/compose/shared/shared.yml` in the container `csmr-tracks`.
 - In ths environment settings this two vars have to be set:
-  - `'TracksBroker_URLS=["amqp://tracksbroker:5672"]'`
+  - `'TracksBroker_URLS=["amqp://broker:5672"]'`
   - `'TracksBroker_QUEUE=tracks'`
 
 Accessible depuis l'[interface graphique de RabbitMQ](http://localhost:15673/#/queues/%2F/tracks) :

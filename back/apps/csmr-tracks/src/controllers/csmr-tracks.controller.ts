@@ -107,6 +107,7 @@ export class CsmrTracksController {
 
       return results;
     } catch (error) {
+      this.logger.error(JSON.stringify(error.stack));
       this.logger.trace({ error }, LoggerLevelNames.WARN);
       /**
        * @todo #825 implement Error protocol

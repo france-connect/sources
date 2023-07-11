@@ -43,8 +43,8 @@ export class CsmrHsmController {
       const signed = signedBuffer.toString(payloadEncoding);
       return signed;
     } catch (error) {
+      this.logger.error(JSON.stringify(error.stack));
       this.logger.error(new CsmrHsmSignException());
-      this.logger.error(error);
       return 'ERROR';
     }
   }
@@ -64,6 +64,7 @@ export class CsmrHsmController {
     try {
       return this.hsm.genRandom(length, encoding);
     } catch (error) {
+      this.logger.error(JSON.stringify(error.stack));
       this.logger.error(new CsmrHsmRandomException());
       return 'ERROR';
     }

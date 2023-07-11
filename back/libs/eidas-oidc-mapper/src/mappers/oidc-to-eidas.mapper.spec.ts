@@ -53,7 +53,7 @@ describe('OidcToEidasMapper', () => {
 
       it('should return the given_name within claims splited by space', () => {
         // setup
-        const expected = claims.given_name.split(' ');
+        const expected = [claims.given_name];
 
         // action
         const result =

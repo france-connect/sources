@@ -2,7 +2,7 @@
   {
     "idpId": "fip1-high",
     "name": "fip1-high",
-    "title": "IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt",
+    "title": "IDP1 - Identity Provider - eIDAS élevé - discov - crypt",
     "descriptions": [
       "par défaut",
       "actif",

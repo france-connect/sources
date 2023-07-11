@@ -76,7 +76,7 @@ function getFamilyName(
 ): Partial<IOidcIdentity> {
   // oidc param
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const [family_name] = attributes.currentFamilyName || [];
+  const family_name = attributes.currentFamilyName?.join(' ');
 
   // oidc param
   // eslint-disable-next-line @typescript-eslint/naming-convention

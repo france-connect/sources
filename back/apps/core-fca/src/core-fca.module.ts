@@ -14,6 +14,7 @@ import {
 import { CryptographyFcaModule } from '@fc/cryptography-fca';
 import { ExceptionsModule } from '@fc/exceptions';
 import { FeatureHandlerModule } from '@fc/feature-handler';
+import { FlowStepsModule } from '@fc/flow-steps';
 import { HttpProxyModule } from '@fc/http-proxy';
 import {
   IdentityProviderAdapterMongoModule,
@@ -77,6 +78,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     SessionModule.forRoot({
       schema: CoreFcaSession,
     }),
+    FlowStepsModule,
     /** Inject app specific tracking service */
     trackingModule,
     FeatureHandlerModule,

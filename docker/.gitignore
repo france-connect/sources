@@ -7,6 +7,9 @@ volumes/log/eidas/eidas-fr/*
 !volumes/log/eidas/eidas-fr/.gitkeep
 volumes/log/eidas/eidas-mock/*
 !volumes/log/eidas/eidas-mock/.gitkeep
+volumes/elasticsearch/data/**/*
+!volumes/elasticsearch/data/.gitkeep
+volumes/maxmind/database/**/*.mmdb
 
 !compose/**/.env
 !compose/**/*.env

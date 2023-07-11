@@ -17,6 +17,7 @@ import { CryptographyEidasModule } from '@fc/cryptography-eidas';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { ExceptionsModule } from '@fc/exceptions';
 import { FeatureHandlerModule } from '@fc/feature-handler';
+import { FlowStepsModule } from '@fc/flow-steps';
 import { HttpProxyModule } from '@fc/http-proxy';
 import {
   IdentityProviderAdapterMongoModule,
@@ -71,6 +72,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     SessionModule.forRoot({
       schema: CoreFcpSession,
     }),
+    FlowStepsModule,
     RnippModule,
     CryptographyFcpModule,
     CryptographyEidasModule,

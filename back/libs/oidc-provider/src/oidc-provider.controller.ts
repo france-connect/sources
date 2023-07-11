@@ -12,6 +12,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
+import { ForbidRefresh } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService, Session } from '@fc/session';
@@ -33,6 +34,7 @@ export class OidcProviderController {
 
   @Post(OidcProviderRoutes.REDIRECT_TO_SP)
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @ForbidRefresh()
   async getLogin(
     @Req() req,
     @Res() res,

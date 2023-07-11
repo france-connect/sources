@@ -128,7 +128,7 @@ describe('when user start a search', () => {
   });
 
   describe('api has been called', () => {
-    it('should call AgentConnectSearchService.search', async () => {
+    it('should call AgentConnectSearchService.search and not call AgentConnectSearchService.showAllResults', async () => {
       // given
       jest.mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
 
@@ -143,7 +143,7 @@ describe('when user start a search', () => {
       expect(AgentConnectSearchService.search).toHaveBeenCalledWith('this is the search term');
     });
 
-    it('should call AgentConnectSearchService.search with empty string', async () => {
+    it('should call AgentConnectSearchService.showAllResults and not call AgentConnectSearchService.search with empty string', async () => {
       // given
       jest.mocked(useApiGet).mockReturnValueOnce(apiReturnValue);
 
@@ -154,8 +154,8 @@ describe('when user start a search', () => {
 
       // then
       expect(button).toBeInTheDocument();
-      expect(AgentConnectSearchService.search).toHaveBeenCalledTimes(1);
-      expect(AgentConnectSearchService.search).toHaveBeenCalledWith('');
+      expect(AgentConnectSearchService.showAllResults).toHaveBeenCalled();
+      expect(AgentConnectSearchService.search).not.toHaveBeenCalled();
     });
 
     it('should have update the consumer with values', async () => {

@@ -25,7 +25,7 @@ describe('7.0 - Idp activation & visibility', () => {
       cy.get(`#idp-${idpId}3-desactive-visible-title`).should('exist');
       // Control that the right text is set
       cy.get(`#idp-${idpId}1-high-title`).contains(
-        'J’utilise l’application IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt',
+        'J’utilise l’application IDP1 - Identity Provider - eIDAS élevé - discov - crypt',
       );
       cy.get(`#idp-${idpId}3-desactive-visible-title`).contains(
         'FI désactivé mais visible est indisponible',

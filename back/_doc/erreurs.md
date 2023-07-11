@@ -174,3 +174,7 @@
 |---|---|---|---|
 | [Y410001](../libs/tracking-context/src/exceptions/tracking-missing-network-context.exception.ts "TrackingMissingNetworkContextException") | 500 | Missing network context (headers) | L&#39;application n&#39;a pas trouvé de headers dans l&#39;objet request, c&#39;est probablement un bug, Contacter le support N3 | 
 
+| Code d'erreur | Code HTTP | Message utilisateur | Description |
+|---|---|---|---|
+| [Y420001](../libs/flow-steps/src/exceptions/unexpected-navigation.exception.ts "UnexpectedNavigationException") | 500 | Nous vous invitons à fermer tous les onglets de votre navigateur et à vous authentifier de nouveau en suivant les étapes de connexion. | L&#39;usager fait une navigation anormale, probablement un refresh sur une page déjà en erreur ou un retour arrière non géré | 
+

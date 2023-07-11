@@ -1,42 +1,41 @@
 /* istanbul ignore file */
 
 // Tested by DTO
-import { parseJsonProperty } from '@fc/common';
+import { ConfigParser } from '@fc/config';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
+
+const env = new ConfigParser(process.env, 'IdentityProviderAdapterEnv');
 
 export default {
   discovery: false,
   // No discovery URL for legacy core
   discoveryUrl: undefined,
   provider: {
-    issuer: process.env.ISSUER,
+    issuer: env.string('ISSUER'),
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    client_id: process.env.CLIENT_ID,
+    client_id: env.string('CLIENT_ID'),
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    client_secret: process.env.CLIENT_SECRET,
+    client_secret: env.string('CLIENT_SECRET'),
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    authorization_endpoint: process.env.AUTHORIZATION_ENDPOINT,
+    authorization_endpoint: env.string('AUTHORIZATION_ENDPOINT'),
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    token_endpoint: process.env.TOKEN_ENDPOINT,
+    token_endpoint: env.string('TOKEN_ENDPOINT'),
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    userinfo_endpoint: process.env.USERINFO_ENDPOINT,
+    userinfo_endpoint: env.string('USERINFO_ENDPOINT'),
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     response_types: ['code'],
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    redirect_uris: parseJsonProperty(process.env, 'REDIRECT_URIS'),
+    redirect_uris: env.json('REDIRECT_URIS'),
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    post_logout_redirect_uris: parseJsonProperty(
-      process.env,
-      'POST_LOGOUT_REDIRECT_URIS',
-    ),
+    post_logout_redirect_uris: env.json('POST_LOGOUT_REDIRECT_URIS'),
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_signed_response_alg: 'HS256',
@@ -46,17 +45,18 @@ export default {
 
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    jwks_uri: process.env.JWKS_URI,
+    jwks_uri: env.string('JWKS_URI'),
     //oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    token_endpoint_auth_method: process.env.TOKEN_ENDPOINT_AUTH_METHOD,
+    token_endpoint_auth_method: env.string('TOKEN_ENDPOINT_AUTH_METHOD'),
     //oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    revocation_endpoint_auth_method:
-      process.env.REVOCATION_ENDPOINT_AUTH_METHOD,
+    revocation_endpoint_auth_method: env.string(
+      'REVOCATION_ENDPOINT_AUTH_METHOD',
+    ),
     //oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    end_session_endpoint: process.env.END_SESSION_ENDPOINT,
+    end_session_endpoint: env.string('END_SESSION_ENDPOINT'),
   },
-  clientSecretEncryptKey: process.env.CLIENT_SECRET_CIPHER_PASS,
+  clientSecretEncryptKey: env.string('CLIENT_SECRET_CIPHER_PASS'),
 } as IdentityProviderAdapterEnvConfig;

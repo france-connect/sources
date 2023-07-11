@@ -42,7 +42,13 @@ export const AgentConnectSearchProvider = ({
         return;
       }
       const term = (searchTerm && searchTerm.trim()) || '';
-      const results = AgentConnectSearchService.search(term || '');
+
+      let results = [];
+      if (!term) {
+        results = AgentConnectSearchService.showAllResults();
+      } else {
+        results = AgentConnectSearchService.search(term);
+      }
       setHasSearched(true);
       setSearchResults(results);
     },

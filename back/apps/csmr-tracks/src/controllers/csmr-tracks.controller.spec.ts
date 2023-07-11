@@ -18,6 +18,7 @@ describe('CsmrTracksController', () => {
     debug: jest.fn(),
     trace: jest.fn(),
     setContext: jest.fn(),
+    error: jest.fn(),
   };
 
   const accountMock = {

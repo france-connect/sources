@@ -21,7 +21,7 @@ function getPersonIdentifier(claims): string[] {
  * @return The eidas given name
  */
 function getCurrentGivenName(claims): string[] {
-  return claims.given_name.split(' ');
+  return [claims.given_name];
 }
 
 /**

@@ -10,6 +10,7 @@ import {
   OidcProviderRuntimeException,
   OidcProviderSpIdNotFoundException,
 } from '../exceptions';
+import { LogoutFormParamsInterface } from '../interfaces';
 import { OidcProviderAppConfigLibService } from './oidc-provider-app-config-lib.service';
 import { OidcProviderErrorService } from './oidc-provider-error.service';
 import { OidcProviderGrantService } from './oidc-provider-grant.service';
@@ -44,6 +45,20 @@ describe('OidcProviderAppConfigLibService', () => {
     interactionFinished: jest.fn(),
   };
 
+  const ctx = {
+    request: {
+      method: 'POST',
+      url: 'https://url.com',
+    },
+    response: {
+      status: 200,
+      message: 'OK',
+    },
+    req: 'toto',
+  } as unknown as KoaContextWithOIDC;
+  const form =
+    '<form id="logoutId" method="post" action="https://redirect/me/there"><input type="hidden" name="xsrf" value="123456azerty"/></form>';
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -77,44 +92,28 @@ describe('OidcProviderAppConfigLibService', () => {
   });
 
   describe('logoutSource', () => {
-    const ctx = {
-      request: {
-        method: 'POST',
-        url: 'https://url.com',
-      },
-      response: {
-        status: 200,
-        message: 'OK',
-      },
-      req: 'toto',
-    } as unknown as KoaContextWithOIDC;
-    const form =
-      '<form id="logoutId" method="post" action="https://redirect/me/there"><input type="hidden" name="xsrf" value="123456azerty"/></form>';
-
     it('should set a body property to koa context', async () => {
-      // GIVEN
+      // Given
       const htmlDisconnectFromFi = `<!DOCTYPE html>
-        <head>
-          <title>Déconnexion</title>
-        </head>
-        <body>
-          ${form}
-          <script>
-            var form = document.forms[0];
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'logout';
-            input.value = 'yes';
-            form.appendChild(input);
-            form.submit();
-          </script>
-        </body>
-        </html>`;
-
-      // WHEN
+      <head>
+        <title>Déconnexion</title>
+      </head>
+      <body>
+        ${form}
+        <script>
+          var form = document.forms[0];
+          var input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = 'logout';
+          input.value = 'yes';
+          form.appendChild(input);
+          form.submit();
+        </script>
+      </body>
+    </html>`;
+      // When
       service.logoutSource(ctx, form);
-
-      // THEN
+      // Then
       expect(ctx).toHaveProperty('body', htmlDisconnectFromFi);
     });
   });
@@ -453,6 +452,48 @@ describe('OidcProviderAppConfigLibService', () => {
         ctxMock,
         exception,
       );
+    });
+  });
+
+  describe('logoutFormSessionDestroy', () => {
+    const params: LogoutFormParamsInterface = {
+      method: 'method',
+      uri: '/uri',
+      title: 'Title',
+    };
+
+    it('should save oidc logout confirmation form within oidc client session', async () => {
+      // Given
+      const logoutFormProperty = 'oidcProviderLogoutForm';
+      // When
+      service.logoutFormSessionDestroy(ctx, form, sessionServiceMock, params);
+      // Then
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.set).toHaveBeenCalledWith(
+        logoutFormProperty,
+        form,
+      );
+    });
+
+    it('should set a body property to koa context', async () => {
+      // Given
+      const htmlDisconnectFromFi = `<!DOCTYPE html>
+      <head>
+        <title>Title</title>
+      </head>
+      <body>
+        <form method="method" action="/uri">
+        </form>
+        <script>
+          var form = document.forms[0];
+          form.submit();
+        </script>
+      </body>
+    </html>`;
+      // When
+      service.logoutFormSessionDestroy(ctx, form, sessionServiceMock, params);
+      // Then
+      expect(ctx).toHaveProperty('body', htmlDisconnectFromFi);
     });
   });
 });

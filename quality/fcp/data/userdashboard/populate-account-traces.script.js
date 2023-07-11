@@ -123,7 +123,7 @@ function getDefaultMockDataPaths() {
  * Setup the local elasticsearch database connection.
  *
  * @see https://localhost:9200
- * @see /fc-docker/compose/fc-core.yml:152
+ * @see /fc/docker/compose/shared/shared.yml
  * - Elasticsearch_NODES
  * - Elasticsearch_USERNAME
  * - Elasticsearch_PASSWORD
@@ -147,7 +147,7 @@ function initElasticsearchClient() {
     auth: { username: ELASTIC_USERNAME, password: ELASTIC_PASSWORD },
     ssl: {
       rejectUnauthorized: false,
-    }
+    },
   });
   return esClient;
 }

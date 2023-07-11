@@ -87,7 +87,6 @@ Fonctionnalité: Connexion Usager - SSO
     Quand je clique sur le bouton FranceConnect
     Et je suis redirigé vers la page sélection du fournisseur d'identité
 
-  @ignoreLow
   Scénario: Connexion SSO - déconnexion d'un FS seulement et SSO terminé
     Etant donné que j'utilise un fournisseur de service "avec accès au FI par défaut (premier FS)"
     Et que j'utilise le fournisseur d'identité "par défaut"
@@ -104,7 +103,7 @@ Fonctionnalité: Connexion Usager - SSO
     Et que j'utilise un fournisseur de service "avec accès au FI par défaut (premier FS)"
     Et que je navigue sur la page fournisseur de service
     Et que je suis connecté au fournisseur de service
-    Quand je me déconnecte du fournisseur de service
+    Quand je me déconnecte du fournisseur de service et du fournisseur d'identité
     Alors je suis déconnecté du fournisseur de service
     Et je clique sur le bouton FranceConnect
     Et je suis redirigé vers la page sélection du fournisseur d'identité

@@ -41,8 +41,8 @@ Fonctionnalité: Validation Visuelle
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que je m'authentifie avec succès
     Et que je suis redirigé vers la page de consentement
-    Et que la copie d'écran "consentement" correspond à la page actuelle sur "<device>"
     Et que les informations demandées par le fournisseur de service correspondent au scope "identite_pivot sans alias"
+    Et que la copie d'écran "consentement" correspond à la page actuelle sur "<device>"
     Et que le bouton continuer sur le FS est désactivé
     Quand je consens à transmettre mes informations au fournisseur de service
     Et le bouton continuer sur le FS est actif

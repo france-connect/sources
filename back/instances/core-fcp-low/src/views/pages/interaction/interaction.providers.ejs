@@ -29,7 +29,7 @@ function genAttributes(params) {
     id="<%= `idp-${provider.uid}` %>"
     class="fr-btn fr-btn--tertiary <%= providerClassname %>" <%= attributes %>>
     <% if (provider.isBeta) { %>
-      <p class="fr-badge <%= badgeClassname %> fr-badge--no-icon">TEST</p>
+      <p class="fr-badge <%= badgeClassname %> fr-badge--no-icon">BETA</p>
     <% } %>
     <% if (provider.image) { %>
       <div class="fc-container-image">

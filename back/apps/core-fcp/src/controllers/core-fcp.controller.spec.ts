@@ -13,6 +13,7 @@ import { OidcClientService } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionCsrfService, SessionService } from '@fc/session';
+import { TrackingService } from '@fc/tracking';
 
 import { InsufficientAcrLevelSuspiciousContextException } from '../exceptions';
 import { CoreFcpService, CoreFcpVerifyService } from '../services';
@@ -135,7 +136,7 @@ describe('CoreFcpController', () => {
   const randomStringMock = 'randomStringMockValue';
 
   const notificationsServiceMock = {
-    getNotifications: jest.fn(),
+    getNotificationToDisplay: jest.fn(),
   };
 
   const appConfigMock = {
@@ -154,6 +155,13 @@ describe('CoreFcpController', () => {
       checkIdpBlacklisted: jest.fn(),
     },
   };
+
+  const trackingServiceMock: TrackingService = {
+    track: jest.fn(),
+    TrackedEventsMap: {
+      IDP_CALLEDBACK: {},
+    },
+  } as unknown as TrackingService;
 
   const serviceProviderMock = {
     identityConsent: false,
@@ -176,6 +184,7 @@ describe('CoreFcpController', () => {
     spId: spIdMock,
     spIdentity: {} as IOidcIdentity,
     spName: spNameMock,
+    stepRoute: '/some/route',
   };
 
   const notificationsMock = Symbol('notifications');
@@ -204,6 +213,7 @@ describe('CoreFcpController', () => {
         CoreAcrService,
         CoreVerifyService,
         CoreFcpVerifyService,
+        TrackingService,
       ],
     })
       .overrideProvider(OidcAcrService)
@@ -236,6 +246,8 @@ describe('CoreFcpController', () => {
       .useValue(coreVerifyServiceMock)
       .overrideProvider(CoreFcpVerifyService)
       .useValue(coreFcpVerifyServiceMock)
+      .overrideProvider(TrackingService)
+      .useValue(trackingServiceMock)
       .compile();
 
     coreController = await app.get<CoreFcpController>(CoreFcpController);
@@ -327,7 +339,7 @@ describe('CoreFcpController', () => {
       appSessionServiceMock.get.mockResolvedValue(false);
       oidcAcrServiceMock.isAcrValid.mockReturnValue(true);
       coreFcpServiceMock.isInsufficientAcrLevel.mockReturnValue(false);
-      notificationsServiceMock.getNotifications.mockResolvedValue(
+      notificationsServiceMock.getNotificationToDisplay.mockResolvedValue(
         notificationsMock,
       );
     });
@@ -336,7 +348,7 @@ describe('CoreFcpController', () => {
      * @Todo #486 rework test missing assertion or not complete ones
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/486
      */
-    it('should retrieve the spName from oidcSession', async () => {
+    it('should retrieve the spName and stepRoute from oidcSession', async () => {
       // When
       await coreController.getInteraction(
         req,
@@ -347,7 +359,7 @@ describe('CoreFcpController', () => {
       );
       // Then
       expect(oidcSessionServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(oidcSessionServiceMock.get).toHaveBeenCalledWith('spName');
+      expect(oidcSessionServiceMock.get).toHaveBeenCalledWith();
     });
 
     it('should retrieve get the OidcClient config', async () => {
@@ -590,10 +602,12 @@ describe('CoreFcpController', () => {
       );
 
       // Then
-      expect(notificationsServiceMock.getNotifications).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(notificationsServiceMock.getNotifications).toHaveBeenCalledWith();
+      expect(
+        notificationsServiceMock.getNotificationToDisplay,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        notificationsServiceMock.getNotificationToDisplay,
+      ).toHaveBeenCalledWith();
     });
 
     it('should get the notifications list', async () => {
@@ -602,10 +616,12 @@ describe('CoreFcpController', () => {
       configServiceMock.get.mockReturnValueOnce({
         scope: idpScopeMock,
       });
-      oidcSessionServiceMock.get.mockResolvedValueOnce(oidcSessionMock.spName);
+      oidcSessionServiceMock.get.mockResolvedValueOnce({
+        spName: oidcSessionMock.spName,
+      });
       const expectedInteractionDetails = {
         csrfToken: csrfMock,
-        notifications: notificationsMock,
+        notification: notificationsMock,
         params: interactionDetailsMock.params,
         uid: interactionDetailsMock.uid,
         spName: oidcSessionMock.spName,

@@ -155,4 +155,8 @@ export class OidcSession {
   @IsObject()
   @IsOptional()
   subs?: Record<string, string>;
+
+  @IsString()
+  @IsOptional()
+  stepRoute?: string;
 }

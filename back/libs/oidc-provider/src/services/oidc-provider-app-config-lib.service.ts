@@ -11,6 +11,7 @@ import { OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import {
   ISessionBoundContext,
+  ISessionService,
   SessionService,
   SessionSubNotFoundException,
 } from '@fc/session';
@@ -19,7 +20,10 @@ import {
   OidcProviderRuntimeException,
   OidcProviderSpIdNotFoundException,
 } from '../exceptions';
-import { IOidcProviderConfigAppService } from '../interfaces';
+import {
+  IOidcProviderConfigAppService,
+  LogoutFormParamsInterface,
+} from '../interfaces';
 import { OidcProviderErrorService } from './oidc-provider-error.service';
 import { OidcProviderGrantService } from './oidc-provider-grant.service';
 
@@ -44,24 +48,24 @@ export abstract class OidcProviderAppConfigLibService
    * @TODO #109 Check the behaving of the page when javascript is disabled
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/issues/109
    */
-  async logoutSource(ctx: KoaContextWithOIDC, form: any) {
+  logoutSource(ctx: KoaContextWithOIDC, form: any): void {
     ctx.body = `<!DOCTYPE html>
-        <head>
-          <title>Déconnexion</title>
-        </head>
-        <body>
-          ${form}
-          <script>
-            var form = document.forms[0];
-            var input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'logout';
-            input.value = 'yes';
-            form.appendChild(input);
-            form.submit();
-          </script>
-        </body>
-        </html>`;
+      <head>
+        <title>Déconnexion</title>
+      </head>
+      <body>
+        ${form}
+        <script>
+          var form = document.forms[0];
+          var input = document.createElement('input');
+          input.type = 'hidden';
+          input.name = 'logout';
+          input.value = 'yes';
+          form.appendChild(input);
+          form.submit();
+        </script>
+      </body>
+    </html>`;
   }
 
   /**
@@ -193,9 +197,30 @@ export abstract class OidcProviderAppConfigLibService
     this.provider = provider;
   }
 
-  private getServiceProviderIdFromCtx(
+  logoutFormSessionDestroy(
     ctx: KoaContextWithOIDC,
-  ): string | undefined {
+    form: any,
+    session: ISessionService<OidcClientSession>,
+    { method, uri, title }: LogoutFormParamsInterface,
+  ): void {
+    session.set('oidcProviderLogoutForm', form);
+
+    ctx.body = `<!DOCTYPE html>
+      <head>
+        <title>${title}</title>
+      </head>
+      <body>
+        <form method="${method}" action="${uri}">
+        </form>
+        <script>
+          var form = document.forms[0];
+          form.submit();
+        </script>
+      </body>
+    </html>`;
+  }
+
+  getServiceProviderIdFromCtx(ctx: KoaContextWithOIDC): string | undefined {
     return ctx.oidc?.entities?.Client?.clientId;
   }
 

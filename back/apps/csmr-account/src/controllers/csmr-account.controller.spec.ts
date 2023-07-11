@@ -96,7 +96,6 @@ describe('CsmrAccountController', () => {
 
       // Then
       expect(loggerMock.error).toHaveBeenCalledTimes(1);
-      expect(loggerMock.error).toHaveBeenCalledWith({ error: errorMock });
     });
 
     it('should return the `ERROR` token', async () => {

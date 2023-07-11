@@ -143,6 +143,7 @@ export class IdentityProviderAdapterMongoService
           // oidc defined variable name
           // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: true,
+          endSessionURL: true,
         },
       )
       .sort({ order: 'asc', createdAt: 'asc' })

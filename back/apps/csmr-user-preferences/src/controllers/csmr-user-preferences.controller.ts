@@ -41,6 +41,7 @@ export class CsmrUserPreferencesController {
     try {
       idpSettings = await this.userPreferencesCsmr.getIdpSettings(identity);
     } catch (error) {
+      this.logger.error(JSON.stringify(error.stack));
       this.logger.trace({ error, payload });
       return 'ERROR';
     }
@@ -98,6 +99,8 @@ export class CsmrUserPreferencesController {
         updatedAt,
       };
     } catch (error) {
+      this.logger.error(JSON.stringify(error.stack));
+      this.logger.debug(idpSettings);
       this.logger.trace({ error });
       return 'ERROR';
     }

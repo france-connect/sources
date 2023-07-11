@@ -150,6 +150,7 @@ export class CoreOidcProviderMiddlewareService {
     spId: string;
     spName: string;
     isSso: boolean;
+    stepRoute: string;
   }> {
     const { interactionId } = eventContext.fc;
     const { isSso } = ctx;
@@ -170,6 +171,13 @@ export class CoreOidcProviderMiddlewareService {
       spId: spId as string,
       spName,
       isSso,
+      /**
+       * Explicit stepRoute set
+       *
+       * we can not rely on @SetStep() decorator
+       * since we reset the session.
+       */
+      stepRoute: OidcProviderRoutes.AUTHORIZATION,
     };
 
     return sessionProperties;

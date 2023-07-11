@@ -9,6 +9,7 @@ import {
   Post,
   Query,
   Redirect,
+  Render,
   Req,
   Res,
   UsePipes,
@@ -18,6 +19,7 @@ import {
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { CoreVerifyService, ProcessCore } from '@fc/core';
+import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
@@ -34,6 +36,7 @@ import {
   Session,
   SessionCsrfService,
   SessionInvalidCsrfSelectIdpException,
+  SessionService,
 } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
@@ -57,6 +60,7 @@ export class OidcClientController {
     private readonly config: ConfigService,
     private readonly coreVerify: CoreVerifyService,
     private readonly tracking: TrackingService,
+    private readonly sessionService: SessionService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -67,6 +71,8 @@ export class OidcClientController {
   @Post(OidcClientRoutes.REDIRECT_TO_IDP)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @IsStep()
+  @ForbidRefresh()
   async redirectToIdp(
     @Res() res,
     @Body() body: RedirectToIdp,
@@ -193,6 +199,8 @@ export class OidcClientController {
    */
   @Get(OidcClientRoutes.OIDC_CALLBACK)
   @Header('cache-control', 'no-store')
+  @IsStep()
+  @ForbidRefresh()
   async getOidcCallback(
     @Req() req,
     @Res() res,
@@ -214,7 +222,7 @@ export class OidcClientController {
       nonce: idpNonce,
     };
 
-    const { accessToken, acr, amr } =
+    const { accessToken, idToken, acr, amr } =
       await this.oidcClient.getTokenFromProvider(idpId, tokenParams, req);
 
     this.tracking.track(this.tracking.TrackedEventsMap.FC_REQUESTED_IDP_TOKEN, {
@@ -243,6 +251,7 @@ export class OidcClientController {
     const identityExchange: OidcSession = {
       amr,
       idpAccessToken: accessToken,
+      idpIdToken: idToken,
       idpAcr: acr,
       idpIdentity: identity,
     };
@@ -260,6 +269,46 @@ export class OidcClientController {
     });
 
     res.redirect(url);
+  }
+
+  @Post(OidcClientRoutes.DISCONNECT_FROM_IDP)
+  @Header('cache-control', 'no-store')
+  async logoutFromIdp(
+    @Res() res,
+    @Session('OidcClient')
+    sessionOidc: ISessionService<OidcClientSession>,
+  ) {
+    this.logger.trace({
+      route: OidcClientRoutes.DISCONNECT_FROM_IDP,
+      method: 'POST',
+      name: 'OidcClientRoutes.DISCONNECT_FROM_IDP',
+    });
+    const { idpIdToken, idpState, idpId } = await sessionOidc.get();
+
+    const endSessionUrl: string =
+      await this.oidcClient.getEndSessionUrlFromProvider(
+        idpId,
+        idpState,
+        idpIdToken,
+      );
+
+    return res.redirect(endSessionUrl);
+  }
+
+  @Get(OidcClientRoutes.CLIENT_LOGOUT_CALLBACK)
+  @Header('cache-control', 'no-store')
+  @Render('oidc-provider-logout-form')
+  async redirectAfterIdpLogout(
+    @Req() req,
+    @Res() res,
+    @Session('OidcClient')
+    sessionOidc: ISessionService<OidcClientSession>,
+  ) {
+    const { oidcProviderLogoutForm } = await sessionOidc.get();
+
+    await this.sessionService.destroy(req, res);
+
+    return { oidcProviderLogoutForm };
   }
 
   private async validateIdentity(idpId: string, identity: OidcIdentityDto) {

@@ -159,4 +159,8 @@ export class OidcClientService {
       postLogoutRedirectUri,
     );
   }
+
+  async hasEndSessionUrlFromProvider(ipdId: string): Promise<boolean> {
+    return this.utils.hasEndSessionUrl(ipdId);
+  }
 }

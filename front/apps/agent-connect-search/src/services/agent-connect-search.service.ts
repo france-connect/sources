@@ -113,7 +113,7 @@ export class AgentConnectSearchService {
   }
 
   static formatSearchResults(
-    results: Fuse.FuseResult<Searchable>[],
+    results: Fuse.FuseResult<Searchable>[] | { item: Searchable }[],
     rawData: PayloadEntities,
   ): SearchResult[] {
     // @todo sort the proper way ,?
@@ -134,6 +134,19 @@ export class AgentConnectSearchService {
 
     const formattedResults = Object.values(regroupedByMinistry);
     return formattedResults;
+  }
+
+  static showAllResults() {
+    const searchablesFormatted = AgentConnectSearchService.SEARCHABLES.map((item) => ({
+      item,
+    }));
+
+    const formatted = AgentConnectSearchService.formatSearchResults(
+      searchablesFormatted,
+      AgentConnectSearchService.RAW_DATA,
+    );
+
+    return formatted;
   }
 
   static search(term: string): SearchResult[] {

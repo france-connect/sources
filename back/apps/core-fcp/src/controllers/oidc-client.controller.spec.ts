@@ -31,6 +31,9 @@ describe('OidcClient Controller', () => {
   const idpStateMock = 'idpStateMockValue';
   const idpNonceMock = 'idpNonceMock';
   const idpIdMock = 'idpIdMockValue';
+  const idpIdTokenMock = 'idpIdTokenMock';
+  const oidcProviderLogoutFormMock =
+    '<form id="idLogout" method="post" action="https://endsession"><input type="hidden" name="xsrf" value="1233456azerty"/></form>';
 
   const providerIdMock = 'providerIdMockValue';
 
@@ -61,6 +64,7 @@ describe('OidcClient Controller', () => {
     },
     getTokenFromProvider: jest.fn(),
     getUserInfosFromProvider: jest.fn(),
+    getEndSessionUrlFromProvider: jest.fn(),
   };
 
   const loggerServiceMock = {
@@ -74,6 +78,7 @@ describe('OidcClient Controller', () => {
   const sessionServiceMock = {
     set: jest.fn(),
     get: jest.fn(),
+    destroy: jest.fn(),
   };
 
   const sessionCsrfServiceMock = {
@@ -117,12 +122,15 @@ describe('OidcClient Controller', () => {
     idpId: idpIdMock,
     idpNonce: idpNonceMock,
     idpState: idpStateMock,
+    idpIdToken: idpIdTokenMock,
     interactionId: interactionIdMock,
 
     spAcr: acrMock,
     spId: spIdMock,
     spIdentity: {} as IOidcIdentity,
     spName: spNameMock,
+
+    oidcProviderLogoutForm: oidcProviderLogoutFormMock,
   };
 
   beforeEach(async () => {
@@ -625,6 +633,79 @@ describe('OidcClient Controller', () => {
         controller['validateIdentity'](idpIdMock, identityMock),
         // expect
       ).rejects.toThrow(CoreFcpInvalidIdentityException);
+    });
+  });
+
+  describe('logoutFromIdp', () => {
+    const endsessionurlMock =
+      'https://endsessionurl?id_token_hint=ureadable0123string&post_logout_redirect_uri=https://redirect-me-amigo-logout-callback&state=second-unreadble_string';
+    beforeEach(() => {
+      oidcClientServiceMock.getEndSessionUrlFromProvider.mockReturnValueOnce(
+        endsessionurlMock,
+      );
+    });
+
+    it('should call sessionOidc getter', async () => {
+      // When
+      await controller.logoutFromIdp(res, sessionServiceMock);
+
+      // Then
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call oidcClient getEndSessionUrlFromProvider', async () => {
+      // When
+      await controller.logoutFromIdp(res, sessionServiceMock);
+
+      // Then
+      expect(
+        oidcClientServiceMock.getEndSessionUrlFromProvider,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        oidcClientServiceMock.getEndSessionUrlFromProvider,
+      ).toHaveBeenCalledWith(idpIdMock, idpStateMock, idpIdTokenMock);
+    });
+
+    it('should redirect the user to the endSessionUrl', async () => {
+      // When
+      await controller.logoutFromIdp(res, sessionServiceMock);
+
+      // Then
+      expect(res.redirect).toHaveBeenCalledTimes(1);
+      expect(res.redirect).toHaveBeenCalledWith(endsessionurlMock);
+    });
+  });
+
+  describe('redirectAfterIdpLogout', () => {
+    it('should call oidc session getter', async () => {
+      // When
+      await controller.redirectAfterIdpLogout(req, res, sessionServiceMock);
+
+      // Then
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call session destroy', async () => {
+      // When
+      await controller.redirectAfterIdpLogout(req, res, sessionServiceMock);
+
+      // Then
+      expect(sessionServiceMock.destroy).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.destroy).toHaveBeenCalledWith(req, res);
+    });
+
+    it('should return oidcProviderLogoutForm', async () => {
+      // When
+      const result = await controller.redirectAfterIdpLogout(
+        req,
+        res,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(result).toEqual({
+        oidcProviderLogoutForm: oidcProviderLogoutFormMock,
+      });
     });
   });
 });

@@ -33,7 +33,6 @@ interface IdentityAttributeInterface {
 }
 
 const EIDAS_SUB_CLAIM = 'PersonIdentifier';
-const EIDAS_GIVEN_NAME_CLAIM = 'FirstName';
 
 const scopeEidasAttributesMap: ScopeEidasAttributesMapInterface = {
   birthdate: {
@@ -139,45 +138,13 @@ export default class SpEidasMockPage {
 
     const expectedIdentity = this.getExpectedIdentity(scopes, allClaims);
 
-    expectedIdentity
-      .filter(({ name }) => name !== EIDAS_GIVEN_NAME_CLAIM)
-      .forEach(({ name, value }) => {
-        this.getClaimValueLabel(name).should('contain', `[${value}]`);
-      });
-
-    // Dedicated check for the given names
-    const expectedGivenName =
-      expectedIdentity.find(({ name }) => name === EIDAS_GIVEN_NAME_CLAIM)
-        ?.value ?? '';
-    this.checkGivenNameClaim(expectedGivenName);
+    expectedIdentity.forEach(({ name, value }) => {
+      this.getClaimValueLabel(name).should('contain', `[${value}]`);
+    });
   }
 
   checkSubStartWith(text: string): void {
     this.getClaimValueLabel(EIDAS_SUB_CLAIM).should('contain', `[${text}`);
-  }
-
-  /**
-   * Checks all given names returned by FranceConnect are listed in the eIDAS sp mock
-   * regardless of their orders (display bug on the eIDAS sp mock side)
-   * @param expectedValue given names of the user separated by space characters
-   */
-  private checkGivenNameClaim(expectedValue: string): void {
-    const expectedGivenNames = expectedValue.split(' ');
-    this.getClaimValueLabel(EIDAS_GIVEN_NAME_CLAIM)
-      .invoke('text')
-      .then((text) => {
-        // Retrieve an array of given names from the eIDAS sp mock
-        const actualGivenNames = text.trim().replace(/[[\]]/g, '').split(', ');
-        expect(actualGivenNames).to.have.length(expectedGivenNames.length);
-        expectedGivenNames.forEach((givenName) =>
-          expect(
-            actualGivenNames,
-            `${JSON.stringify(
-              actualGivenNames,
-            )} doesn't contain the expected given name '${givenName}'`,
-          ).to.include(givenName),
-        );
-      });
   }
 
   private getExpectedIdentity(

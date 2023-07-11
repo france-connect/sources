@@ -2,12 +2,15 @@ import { KoaContextWithOIDC } from 'oidc-provider';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
+import { OidcSession } from '@fc/oidc';
+import { OidcClientService } from '@fc/oidc-client';
 import {
   OidcProviderErrorService,
   OidcProviderGrantService,
 } from '@fc/oidc-provider';
-import { SessionService } from '@fc/session';
+import { ISessionService, SessionService } from '@fc/session';
 
 import { OidcProviderConfigAppService } from './oidc-provider-config-app.service';
 
@@ -35,6 +38,32 @@ describe('OidcProviderConfigAppService', () => {
     saveGrant: jest.fn(),
   };
 
+  const oidcClientServiceMock = {
+    hasEndSessionUrlFromProvider: jest.fn(),
+  };
+
+  const configServiceMock = {
+    get: jest.fn(),
+  };
+
+  const ctxMock = {
+    sessionId: 'sessionId',
+    req: 'toto',
+  } as unknown as KoaContextWithOIDC;
+
+  const sessionOidcMock: OidcSession = {
+    idpId: 'idp_id',
+  };
+
+  const appConfigMock = {
+    urlPrefix: '/api/v2',
+  };
+
+  const form =
+    '<form id="logoutId" method="post" action="https://redirect/me/there"><input type="hidden" name="xsrf" value="123456azerty"/></form>';
+
+  let getBoundedSessionMock;
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -46,6 +75,8 @@ describe('OidcProviderConfigAppService', () => {
         SessionService,
         OidcProviderErrorService,
         OidcProviderGrantService,
+        OidcClientService,
+        ConfigService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -56,11 +87,25 @@ describe('OidcProviderConfigAppService', () => {
       .useValue(errorServiceMock)
       .overrideProvider(OidcProviderGrantService)
       .useValue(oidcProviderGrantServiceMock)
+      .overrideProvider(OidcClientService)
+      .useValue(oidcClientServiceMock)
+      .overrideProvider(ConfigService)
+      .useValue(configServiceMock)
       .compile();
 
     service = module.get<OidcProviderConfigAppService>(
       OidcProviderConfigAppService,
     );
+
+    configServiceMock.get.mockReturnValue(appConfigMock);
+
+    getBoundedSessionMock = jest.spyOn(SessionService, 'getBoundedSession');
+
+    getBoundedSessionMock.mockReturnValue(
+      sessionServiceMock as unknown as ISessionService<unknown>,
+    );
+
+    service['logoutFormSessionDestroy'] = jest.fn();
   });
 
   it('should be defined', () => {
@@ -68,78 +113,61 @@ describe('OidcProviderConfigAppService', () => {
   });
 
   describe('logoutSource', () => {
-    let setMock;
-
-    const ctx = {
-      request: {
-        method: 'POST',
-        url: 'https://url.com',
-      },
-      response: {
-        status: 200,
-        message: 'OK',
-      },
-      req: 'toto',
-    } as unknown as KoaContextWithOIDC;
-    const form =
-      '<form id="logoutId" method="post" action="https://redirect/me/there"><input type="hidden" name="xsrf" value="123456azerty"/></form>';
-
-    beforeEach(() => {
-      setMock = jest.fn().mockReturnValue('i am set');
-      jest.spyOn(SessionService, 'getBoundedSession').mockReturnValue({
-        get: jest.fn(),
-        set: setMock,
-      });
+    it('should call hasEndSessionUrlFromProvider if session & idpId is defined', async () => {
+      // Given
+      sessionServiceMock.get.mockResolvedValue(sessionOidcMock);
+      // When
+      await service.logoutSource(ctxMock, form);
+      // Then
+      expect(
+        oidcClientServiceMock.hasEndSessionUrlFromProvider,
+      ).toHaveBeenCalledTimes(1);
     });
 
-    it('should get oidcCLientSession bounded session', () => {
-      // GIVEN
-      const sessionModuleName = 'OidcClient';
-
-      // WHEN
-      service.logoutSource(ctx, form);
-
-      // THEN
-      expect(SessionService.getBoundedSession).toHaveBeenCalledTimes(1);
-      expect(SessionService.getBoundedSession).toHaveBeenCalledWith(
-        ctx.req,
-        sessionModuleName,
+    it('should call logoutFormSessionDestroy with given parameters if session & idpId is defined and hasEndSessionUrlFromProvider return true', async () => {
+      // Given
+      sessionServiceMock.get.mockResolvedValue(sessionOidcMock);
+      oidcClientServiceMock.hasEndSessionUrlFromProvider.mockResolvedValue(
+        true,
+      );
+      const expectedParamsMock = {
+        method: 'POST',
+        title: 'Déconnexion du FI',
+        uri: '/api/v2/client/disconnect-from-idp',
+      };
+      // When
+      await service.logoutSource(ctxMock, form);
+      // Then
+      expect(service['logoutFormSessionDestroy']).toHaveBeenCalledTimes(1);
+      expect(service['logoutFormSessionDestroy']).toHaveBeenCalledWith(
+        ctxMock,
+        form,
+        sessionServiceMock,
+        expectedParamsMock,
       );
     });
 
-    it('should save oidc logout confirmation form within oidc client session', async () => {
-      // GIVEN
-      const logoutFormProperty = 'oidcProviderLogoutForm';
-
-      // WHEN
-      service.logoutSource(ctx, form);
-
-      // THEN
-      expect(setMock).toHaveBeenCalledTimes(1);
-      expect(setMock).toHaveBeenCalledWith(logoutFormProperty, form);
-    });
-
-    it('should set a body property to koa context', async () => {
-      // GIVEN
-      const htmlDisconnectFromFi = `<!DOCTYPE html>
-        <head>
-          <title>Déconnexion du FI</title>
-        </head>
-        <body>
-          <form method="POST" action="/api/v2/client/disconnect-from-idp">
-          </form>
-          <script>
-            var form = document.forms[0];
-            form.submit();
-          </script>
-        </body>
-        </html>`;
-
-      // WHEN
-      service.logoutSource(ctx, form);
-
-      // THEN
-      expect(ctx).toHaveProperty('body', htmlDisconnectFromFi);
+    it('should call logoutFormSessionDestroy with given parameters if hasEndSessionUrlFromProvider is false', async () => {
+      // Given
+      sessionServiceMock.get.mockResolvedValue(sessionOidcMock);
+      oidcClientServiceMock.hasEndSessionUrlFromProvider.mockResolvedValue(
+        false,
+      );
+      const expectedParamsMock = {
+        method: 'GET',
+        title: 'Déconnexion FC',
+        uri: '/api/v2/client/logout-callback',
+      };
+      // When
+      await service.logoutSource(ctxMock, form);
+      // Then
+      expect(service['logoutFormSessionDestroy']).toHaveBeenCalledTimes(1);
+      expect(service['logoutFormSessionDestroy']).toHaveBeenCalledWith(
+        ctxMock,
+        form,
+        sessionServiceMock,
+        expectedParamsMock,
+      );
     });
   });
 });

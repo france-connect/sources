@@ -1,10 +1,13 @@
 /* istanbul ignore file */
 
 // Tested by DTO
+import { ConfigParser } from '@fc/config';
 import { LoggerConfig } from '@fc/logger-legacy';
 
+const env = new ConfigParser(process.env, 'Logger');
+
 export default {
-  path: process.env.EVT_LOG_FILE,
-  level: process.env.LOG_LEVEL,
+  path: env.string('FILE'),
+  level: env.string('LEVEL'),
   isDevelopment: process.env.NODE_ENV === 'development',
 } as LoggerConfig;

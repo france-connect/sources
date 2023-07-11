@@ -31,9 +31,6 @@ export default {
       step: '2.0.0',
       category: EventsCategories.FRONT_CINEMATIC,
       event: 'FC_SHOWED_IDP_CHOICE',
-      interceptRoutes: [
-        { method: RequestMethod.GET, path: CoreRoutes.INTERACTION },
-      ],
     },
 
     IDP_CHOSEN: {
@@ -137,9 +134,6 @@ export default {
       step: '6.1.0',
       category: EventsCategories.FRONT_CINEMATIC,
       event: 'FC_SHOWED_CONSENT',
-      interceptRoutes: [
-        { method: RequestMethod.GET, path: CoreRoutes.INTERACTION_CONSENT },
-      ],
     },
 
     FC_DATATRANSFER_INFORMATION_ANONYMOUS: {

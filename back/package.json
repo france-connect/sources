@@ -280,7 +280,8 @@
       "^@fc/partner-service-provider-configuration(|/.*)$": "<rootDir>/libs/partner-service-provider-configuration/src/$1",
       "^@fc/access-control(|/.*)$": "<rootDir>/libs/access-control/src/$1",
       "^@fc/mock-rnipp(|/.*)$": "<rootDir>/apps/mock-rnipp/src/$1",
-      "^@fc/oidc-acr(|/.*)$": "<rootDir>/libs/oidc-acr/src/$1"
+      "^@fc/oidc-acr(|/.*)$": "<rootDir>/libs/oidc-acr/src/$1",
+      "^@fc/flow-steps(|/.*)$": "<rootDir>/libs/flow-steps/src/$1"
     },
     "preset": "ts-jest"
   }

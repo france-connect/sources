@@ -50,7 +50,7 @@ export class CsmrHttpProxyController {
         data,
       };
     } catch (error) {
-      this.logger.error(error);
+      this.logger.error(JSON.stringify(error.stack));
       response = this.formatError(error);
     }
 

@@ -9,12 +9,12 @@
   </head>
   <body>
     <%- include('includes/menu.ejs'); %>
-    <% if(locals.notifications){ %>
+    <% if (locals.notification) { %>
     <div id="notifications" role="alert">
       <div>
         <p>
           <img src="/img/warning.svg" alt=""/>
-            <%- locals.notifications.message %>
+            <%- locals.notification.message %>
         </p>
       </div>
     </div>

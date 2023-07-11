@@ -21,6 +21,7 @@ import {
   CoreVerifyService,
   Interaction,
 } from '@fc/core';
+import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { MinistriesService } from '@fc/ministries';
@@ -39,6 +40,7 @@ import {
   SessionCsrfService,
   SessionNotFoundException,
 } from '@fc/session';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import { CoreFcaVerifyService } from '../services';
 
@@ -57,6 +59,7 @@ export class CoreFcaController {
     private readonly coreAcr: CoreAcrService,
     private readonly coreFcaVerify: CoreFcaVerifyService,
     private readonly coreVerify: CoreVerifyService,
+    private readonly tracking: TrackingService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -201,6 +204,7 @@ export class CoreFcaController {
   @Get(CoreRoutes.INTERACTION)
   @Header('cache-control', 'no-store')
   @Render('interaction')
+  @IsStep()
   async getInteraction(
     @Req() req,
     @Res() res,
@@ -244,12 +248,23 @@ export class CoreFcaController {
       return;
     }
 
+    const { stepRoute } = session;
+    const isRefresh = stepRoute === CoreRoutes.INTERACTION;
+
+    if (!isRefresh) {
+      const trackingContext: TrackedEventContextInterface = { req };
+      const { FC_SHOWED_IDP_CHOICE } = this.tracking.TrackedEventsMap;
+      this.tracking.track(FC_SHOWED_IDP_CHOICE, trackingContext);
+    }
+
     return {};
   }
 
   @Get(CoreRoutes.INTERACTION_VERIFY)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @IsStep()
+  @ForbidRefresh()
   // we choose to keep code readable here and to be close to fcp
   // eslint-disable-next-line complexity
   async getVerify(

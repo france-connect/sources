@@ -22,6 +22,7 @@ import {
   CsrfToken,
   DataTransfertType,
 } from '@fc/core';
+import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
@@ -91,6 +92,7 @@ export class OidcProviderController {
    */
   @Get(OidcProviderRoutes.AUTHORIZATION)
   @Header('cache-control', 'no-store')
+  @IsStep()
   async getAuthorize(
     @Req() req,
     @Res() res,
@@ -152,6 +154,7 @@ export class OidcProviderController {
    */
   @Post(OidcProviderRoutes.AUTHORIZATION)
   @Header('cache-control', 'no-store')
+  @IsStep()
   async postAuthorize(
     @Req() req,
     @Res() res,
@@ -201,6 +204,7 @@ export class OidcProviderController {
   @Get(CoreRoutes.REDIRECT_TO_SP_WITH_ERROR)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @IsStep()
   async redirectToSpWithError(
     @Query() { error, error_description: errorDescription }: ErrorParamsDto,
     @Req() req,
@@ -280,6 +284,8 @@ export class OidcProviderController {
   @Post(CoreRoutes.INTERACTION_LOGIN)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @IsStep()
+  @ForbidRefresh()
   async getLogin(
     @Req() req,
     @Res() res,

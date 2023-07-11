@@ -63,7 +63,7 @@ Logs an output like :
     "uid": "fip1-high",
     "name": "fip1-high",
     "image": "fi-mock-eleve.svg",
-    "title": "IDP1 - Identity Provider - eIDAS élevé - nodiscov - crypt",
+    "title": "IDP1 - Identity Provider - eIDAS élevé - discov - crypt",
     "active": true,
     "isChecked": true
   },

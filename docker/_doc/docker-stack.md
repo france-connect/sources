@@ -12,7 +12,7 @@ This directory contains everything to run a local FranceConnect or AgentConnect 
 - The services providers mocks (fsp-_ for FC and FC+, fsa-_ for AC).
 - The user websites for [FC / FC+](https://franceconnect.gouv.fr) and [AC](https://agentconnect.gouv.fr).
 - The eIDAS applications which are used for european interoperability.
-- All softwares needed alongside those apps to make the stack work (MongoDB, Redis, SoftHSM, NginX, Squid, Elasticsearch, ...).
+- All software needed alongside those apps to make the stack work (MongoDB, Redis, SoftHSM, NginX, Squid, Elasticsearch, ...).
 
 ## Prerequisites
 
@@ -32,7 +32,7 @@ cat /proc/sys/fs/inotify/max_user_watches # check output -> 524288
 
 ## Setup the working environment
 
-Now we will setup the working environment for the docker-stack.
+Now we will set up the working environment for the docker-stack.
 
 - Add the following lines to your `~/.bashrc`:
 
@@ -109,6 +109,19 @@ ln -s $FC_ROOT/formulaire-usagers
 
 This is the main script you will use to manipulate the local environment. If you run a command `docker-stack` without arguments, it will display most of the available commands. To minimize performances impacts, you can run a sub-stack using `docker-stack up <sub-stack>`.
 
+### Docker Registry
+
+To pull FC docker images, you will need to authenticate against the FC docker registry:
+
+```bash
+docker login $FC_DOCKER_REGISTRY
+```
+
+You will be prompted for:
+
+- a username: use your gitlab.dev-franceconnect.fr username
+- a password: as two factor authentication is mandatory, you'll need to create an access token with only "read_registry" permission from your account settings: https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html. If you are not from the internal team, please ask an FC for one through support.
+
 ### Running FranceConnect
 
 ```bash
@@ -153,6 +166,8 @@ docker-stack start-all
 ```
 
 You will then find a list of accessible URLs here: https://hello.docker.dev-franceconnect.fr. Most URLs follow the same pattern <app-name>.docker.dev-franceconnect.fr
+
+> ⚠️ Note that https://fca-low-front.docker.dev-franceconnect.fr/ and https://fca-low-back.docker.dev-franceconnect.fr/ will return a 502. fca-low-front is the container used to compile the React app into a js bundle through the build process while fca-low-back is the backend API. The bundle is served as a ressource on https://fca-low.docker.dev-franceconnect.fr/ through the nginx reverse proxy. You can start a standard connexion by accessing the service provider mock: https://fsa1-low.docker.dev-franceconnect.fr/
 
 > Nota bene: You can use `docker-stack log <app-container>` to obtain the NodeJS app logs. Ex. `docker-stack log fsp1-low` or `docker-stack log core-fcp-high`.
 
@@ -210,4 +225,8 @@ docker-stack exec <container_name> <command>
 
 You may experience some docker network issues with docker containers, for exemple in case of a switch of network on the hosts or long inactivity of the stack.
 
-In most case you can get back a healthy state by reseting the stack with `docker-stack prune`
+In most case you can get back a healthy state by resetting the stack with `docker-stack prune`
+
+### Maintaining and Extending
+
+See [dedicated README](../bash/README.md) alongside the source code of docker-stack.

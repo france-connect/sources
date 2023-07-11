@@ -15,6 +15,7 @@ services:
   # Shared Services
   ####################
 
+
   rp-all:
     image: nginx:1.14.2
     container_name: fc-rp-all
@@ -32,6 +33,7 @@ services:
       - ${VOLUMES_DIR}/nginx-proxy/public:/var/www:ro
       - ${VOLUMES_DIR}/nginx-proxy/default-vhost:/etc/nginx/html:ro
       - ${VOLUMES_DIR}/ssl:/etc/nginx/docker_host:ro
+      - ${VOLUMES_DIR}/ssl:/etc/nginx/client_certs:ro
     networks:
       public:
         aliases:
@@ -67,6 +69,7 @@ services:
           - fip3-low.docker.dev-franceconnect.fr
           - fip4-low.docker.dev-franceconnect.fr
           - fip8-low.docker.dev-franceconnect.fr
+          - fip9-low.docker.dev-franceconnect.fr
           # FCA LOW
           - core-fca-low.docker.dev-franceconnect.fr
           - bridge-proxy-rie.docker.dev-franceconnect.fr
@@ -101,6 +104,25 @@ services:
           - storybook.docker.dev-franceconnect.fr
           # Generic
           - docker.dev-franceconnect.fr
+          # Stack Legacy
+          - fcp.docker.dev-franceconnect.fr
+          - fip1.docker.dev-franceconnect.fr
+          - fip2.docker.dev-franceconnect.fr
+          - fip3.docker.dev-franceconnect.fr
+          - fip4.docker.dev-franceconnect.fr
+          - aidants-connect-mock.docker.dev-franceconnect.fr
+          - fi-beta-mock.docker.dev-franceconnect.fr
+          - fsp1.docker.dev-franceconnect.fr
+          - fsp2.docker.dev-franceconnect.fr
+          - fsp3.docker.dev-franceconnect.fr
+          - fdp1.docker.dev-franceconnect.fr
+          - assets.docker.dev-franceconnect.fr
+          - fc-exploitation.docker.dev-franceconnect.fr
+          - fc-support.docker.dev-franceconnect.fr
+          - tracks-data-provider.docker.dev-franceconnect.fr
+          - ud.docker.dev-franceconnect.fr 
+          - maildev.docker.dev-franceconnect.fr
+          - partenaires.docker.dev-franceconnect.fr
       fc:
       rie:
         aliases:
@@ -155,20 +177,24 @@ services:
     depends_on:
       - rp-all
 
-  elasticsearch:
-    image: elasticsearch:7.9.2
-    volumes:
-      - "${VOLUMES_DIR}/elasticsearch/data:/usr/share/elasticsearch/data"
-      - "${VOLUMES_DIR}/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
-      - "$FC_ROOT/elasticsearch/elasticsearch-snapshots:/data/elasticsearch-snapshots"
+  broker:
+    build:
+      context: "${WORKING_DIR}"
+      dockerfile: "${WORKING_DIR}/builds/broker/Dockerfile"
+    # Specify hostname to fix cluster name
+    hostname: broker
+    depends_on:
+      - "squid"
     networks:
       - data
-      - public
     ports:
-      - "9200:9200"
-    environment:
-      - "discovery.type=single-node"
-      - "ES_JAVA_OPTS=-Xms64m -Xmx256m"
+      - "5672:5672"
+      - "15672:15672"
+
+
+  ####################
+  # Data storage
+  ####################
 
   redis-pwd:
     image: redis:5.0.14
@@ -241,29 +267,68 @@ services:
     networks:
       - data
 
-  rnipp:
-    hostname: rnipp
-    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
-    user: ${CURRENT_UID}
-    working_dir: /var/www/app
+  mongo-legacy:
+    hostname: mongo-legacy
+    build:
+      context: '${WORKING_DIR}'
+      dockerfile: '${WORKING_DIR}/builds/mongodb/Dockerfile'
+      args:
+        MONGO_VERSION: '4.4'
     volumes:
-      - "${VOLUMES_DIR}/src/rnipp-mock:/var/www/app"
-      - "${VOLUMES_DIR}/app:/opt/scripts"
-      - "${VOLUMES_DIR}/.home:/home"
-    environment:
-      - "VIRTUAL_HOST=rnipp.docker.dev-franceconnect.fr"
-      - "VIRTUAL_PORT=3000"
-      - "NODE_ENV=development"
-      - "PORT=3000"
-      - "PM2_SCRIPT=index.js"
-      - "PM2_CI_SCRIPT=index.js"
-      - "PM2_CWD=/var/www/app/src"
-      - "HOME=/home"
-      - "PM2_HOME=/tmp/.pm2"
-      - "TZ=Europe/Paris"
+      - '${VOLUMES_DIR}/mongo-legacy/scripts:/opt/scripts'
+      - '${VOLUMES_DIR}/mongo-legacy/initdb.d:/docker-entrypoint-initdb.d'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/mongo-legacy.env'
+    ports:
+      - '27020:27017'
     networks:
-      - public
-    command: "tail -f /dev/null"
+      - data
+
+
+  mongo-partenaires:
+    hostname: mongo-partenaires
+    build:
+      context: '${WORKING_DIR}'
+      dockerfile: '${WORKING_DIR}/builds/mongodb/Dockerfile'
+      args:
+        MONGO_VERSION: '4.4'
+    volumes:
+      - '${VOLUMES_DIR}/mongo-partenaires/scripts:/opt/scripts'
+      - '${VOLUMES_DIR}/mongo-partenaires/initdb.d:/docker-entrypoint-initdb.d'
+    env_file:
+      - '${COMPOSE_DIR}/shared/.env/mongo-partenaires.env'
+    ports:
+      - '27021:27017'
+    networks:
+      - data
+
+  mongo-fcp-high:
+    hostname: mongo-fcp-high
+    build:
+      context: "${WORKING_DIR}"
+      dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
+      args:
+        MONGO_VERSION: "4.4"
+    volumes:
+      - "${VOLUMES_DIR}/mongo-fcp-high/scripts:/opt/scripts"
+      - "${VOLUMES_DIR}/mongo-fcp-high/initdb.d:/docker-entrypoint-initdb.d"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/mongo-high.env"
+    ports:
+      - "27018:27017"
+    networks:
+      - data
+
+  ####################
+  # HSM
+  ####################
+  
+  hsm:
+    image: ${FC_DOCKER_REGISTRY}/softhsm
+    networks:
+      - data
+    ports:
+      - "5551:5551"
 
   csmr-hsm:
     hostname: csmr-hsm
@@ -307,54 +372,10 @@ services:
       - data
     command: "pm2 logs"
 
-  csmr-hsm-prod:
-    hostname: csmr-hsm
-    image: ${FC_DOCKER_REGISTRY}/csmr-hsm-high:latest
-    volumes:
-      - "${VOLUMES_DIR}/log/:/var/log/app"
-      - "${VOLUMES_DIR}/log/:/var/log/fc-evt"
-    depends_on:
-      - "broker"
-      - "hsm"
-    environment:
-      - "REQUEST_TIMEOUT=6000"
-      # Logger
-      - "LoggerFILE=/var/log/app/csmr-hsm.log"
-      # Hsm
-      - "PROTECCIO_CONF_DIR=/etc/hsm"
-      - "HSM_HOST=hsm"
-      - "HSM_LIB=/etc/hsm/libpkcs11-proxy.so"
-      - "HSM_PIN=1234"
-      - "HSM_VIRTUAL_HSM_SLOT=0"
-      - "HSM_SIG_HSM_PUB_KEY_CKA_LABEL=key-prime256v1"
-      - "PKCS11_PROXY_SOCKET=tcp://hsm:5551"
-      - 'CryptographyBroker_URLS=["amqp://broker:5672"]'
-      - "CryptographyBroker_QUEUE=crypto"
-      - "LOG_LEVEL=info"
-    networks:
-      - data
-
-  broker:
-    build:
-      context: "${WORKING_DIR}"
-      dockerfile: "${WORKING_DIR}/builds/broker/Dockerfile"
-    # Specify hostname to fix cluster name
-    hostname: broker
-    depends_on:
-      - "squid"
-    networks:
-      - data
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-
-  hsm:
-    image: ${FC_DOCKER_REGISTRY}/softhsm
-    networks:
-      - data
-    ports:
-      - "5551:5551"
-
+  ####################
+  # Shared Mocks
+  ####################
+  
   openldap:
     image: ${FC_DOCKER_REGISTRY}/openldap:0.2
     networks:
@@ -370,6 +391,21 @@ services:
       - data
       - public
 
+  broker:
+    build:
+      context: "${WORKING_DIR}"
+      dockerfile: "${WORKING_DIR}/builds/broker/Dockerfile"
+    # Specify hostname to fix cluster name
+    hostname: broker
+    depends_on:
+      - "squid"
+    networks:
+      - data
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+ # New implementation in monorepo 
   mock-rnipp:
     hostname: mock-rnipp
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
@@ -390,6 +426,227 @@ services:
       - public
     command: "pm2 logs"
 
+ # Old implementation in specific repo
+  rnipp:
+    hostname: rnipp
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - "${VOLUMES_DIR}/src/rnipp-mock:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/.home:/home"
+    environment:
+      - "VIRTUAL_HOST=rnipp.docker.dev-franceconnect.fr"
+      - "VIRTUAL_PORT=3000"
+      - "NODE_ENV=development"
+      - "PORT=3000"
+      - "PM2_SCRIPT=index.js"
+      - "PM2_CI_SCRIPT=index.js"
+      - "PM2_CWD=/var/www/app/src"
+      - "HOME=/home"
+      - "PM2_HOME=/tmp/.pm2"
+      - "TZ=Europe/Paris"
+    networks:
+      - public
+    command: "tail -f /dev/null"
+
+
+  ####################
+  # Tracks related services
+  ####################
+
+  elasticsearch:
+    image: elasticsearch:7.16.3
+    volumes:
+      - "${VOLUMES_DIR}/elasticsearch/data:/usr/share/elasticsearch/data"
+      - "${VOLUMES_DIR}/elasticsearch/config/users:/usr/share/elasticsearch/config/users:ro"
+      - "${VOLUMES_DIR}/elasticsearch/config/users_roles:/usr/share/elasticsearch/config/users_roles:ro"
+      - "${VOLUMES_DIR}/elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro"
+      - "${VOLUMES_DIR}/elasticsearch/config/elasticsearch.crt:/usr/share/elasticsearch/config/elasticsearch.crt:ro"
+      - "${VOLUMES_DIR}/elasticsearch/config/elasticsearch.key:/usr/share/elasticsearch/config/elasticsearch.key:ro"
+      - "${VOLUMES_DIR}/elasticsearch/index/:/index"
+      - "${VOLUMES_DIR}/elasticsearch/ingest_pipelines:/ingest_pipelines"
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    networks:
+      - data
+      - public
+    ports:
+      - "9200:9200"
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms64m -Xmx256m"
+
+  tracks-data-provider:
+    hostname: tracks-data-provider
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - "squid"
+      - "fc-core"
+      - "csmr-tracks"
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/shared/.env/tracks-data-provider.env"
+    networks:
+      - public
+      - data
+    ports:
+      - "3092:3092"
+    command: "pm2 logs"
+
+  csmr-tracks:
+    hostname: csmr-tracks
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - "broker"
+      - "csmr-account-legacy"
+      - "csmr-account-high"
+      - "elasticsearch"
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/maxmind/database/GeoLite2-City:/var/geoipdb"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/shared/.env/csmr-tracks.env"
+    ports:
+      - 10253:10253
+    environment:
+      - "NODE_TLS_REJECT_UNAUTHORIZED=0"
+      - "PM2_SCRIPT=yarn start:dev --debug=0.0.0.0:10253 csmr-tracks-instance"
+      - "PM2_CI_SCRIPT=yarn start:ci csmr-tracks-instance"
+      - "REQUEST_TIMEOUT=6000"
+      # -- Logger
+      - "Logger_FILE=/var/log/app/csmr-tracks.log"
+      - "Logger_LEVEL=trace"
+      # -- RabbitMQ credentials
+      - 'TracksBroker_URLS=["amqp://broker:5672"]'
+      - "TracksBroker_QUEUE=tracks"
+      - 'AccountHighBroker_URLS=["amqp://broker:5672"]'
+      - "AccountHighBroker_QUEUE=account-high"
+      - 'AccountLegacyBroker_URLS=["amqp://broker:5672"]'
+      - "AccountLegacyBroker_QUEUE=account-legacy"
+      - "FC_DB_TYPE=mongodb"
+      - "FC_DB_SYNCHRONIZE=false"
+      - "FC_DB_CONNECT_OPTIONS="
+      - "FC_DB_REPLICASET=rs0"
+        # Elasticsearch credentials
+      - "Elasticsearch_TRACKS_INDEX=tracks"
+      - 'Elasticsearch_NODES=["https://elasticsearch:9200"]'
+      - "Elasticsearch_USERNAME=docker-stack"
+      - "Elasticsearch_PASSWORD=docker-stack"
+        # GeoIP
+      - "GeoIpMaxmind_DATABASE_PATH=/var/geoipdb/GeoLite2-City.mmdb"
+    networks:
+      - data
+    command: "pm2 logs"
+
+  csmr-account-legacy:
+    hostname: csmr-account-legacy
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - "broker"
+      - "mongo-legacy"
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/shared/.env/mongo-legacy.env"
+    ports:
+      - 10254:10254
+    environment:
+      - "PM2_SCRIPT=yarn start:dev --debug=0.0.0.0:10254 csmr-account-instance"
+      - "PM2_CI_SCRIPT=yarn start:ci csmr-account-instance"
+      - "REQUEST_TIMEOUT=6000"
+      # -- Logger
+      - "Logger_FILE=/var/log/app/csmr-account-legacy.log"
+      - "Logger_LEVEL=trace"
+      # -- RabbitMQ credentials
+      - 'AccountBroker_URLS=["amqp://broker:5672"]'
+      - "AccountBroker_QUEUE=account-legacy"
+    networks:
+      - data
+    command: "pm2 logs"
+
+  csmr-account-high:
+    hostname: csmr-account-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - "broker"
+      - "mongo-fcp-high"
+    volumes:
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/shared/.env/mongo-high.env"
+    ports:
+      - 10255:10255
+    environment:
+      - "PM2_SCRIPT=yarn start:dev --debug=0.0.0.0:10255 csmr-account-instance"
+      - "PM2_CI_SCRIPT=yarn start:ci csmr-account-instance"
+      - "REQUEST_TIMEOUT=6000"
+      # -- Logger
+      - "Logger_FILE=/var/log/app/csmr-account-high.log"
+      - "Logger_LEVEL=trace"
+      # -- RabbitMQ credentials
+      - 'AccountBroker_URLS=["amqp://broker:5672"]'
+      - "AccountBroker_QUEUE=account-high"
+    networks:
+      - data
+    command: "pm2 logs"
+ 
+  csmr-user-preferences-high:
+    hostname: csmr-user-preferences-high
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    depends_on:
+      - "broker"
+      - "mongo-legacy"
+    working_dir: /var/www/app
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/shared/.env/csmr-user-preferences-high.env"
+      - "${COMPOSE_DIR}/shared/.env/mongo-legacy.env"
+    tty: true
+    ports:
+      - 9600:9600
+    networks:
+      - data
+    command: "pm2 logs"
+
+####################
+# Networks
 ####################
 
 networks:

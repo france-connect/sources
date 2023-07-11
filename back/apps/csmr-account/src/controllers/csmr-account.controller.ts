@@ -50,7 +50,7 @@ export class CsmrAccountController {
 
       return { type, payload };
     } catch (error) {
-      this.logger.error({ error });
+      this.logger.error(JSON.stringify(error.stack));
       /**
        * @todo #825 implement Error protocol
        */

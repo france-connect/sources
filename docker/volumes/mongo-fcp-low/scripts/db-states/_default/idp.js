@@ -1,6 +1,6 @@
 // == FI
 const fip = {
-  // -- FIP - FIP1-LOW - Activated
+  // -- FIP - FIP1-LOW - Activated - no discov
   "FIP1-LOW": {
     uid: "fip1-low",
     name: "fip1-low",
@@ -20,10 +20,12 @@ const fip = {
       idpIdentityCheck: "core-fcp-default-identity-check",
     },
     specificText: "specific text fip1-low",
-    url: "https://fip1-low.docker.dev-franceconnect.fr/",
-    discoveryUrl:
-      "https://fip1-low.docker.dev-franceconnect.fr/.well-known/openid-configuration",
-    discovery: true,
+    url: "https://fip1-low.docker.dev-franceconnect.fr",
+    tokenURL: "https://fip1-low.docker.dev-franceconnect.fr/token",
+    userInfoURL: "https://fip1-low.docker.dev-franceconnect.fr/userinfo",
+    authzURL: "https://fip1-low.docker.dev-franceconnect.fr/authorize",
+    endSessionURL: "https://fip1-low.docker.dev-franceconnect.fr/session/end",
+    discovery: false,
     clientID: "myclientidforfip1-low",
     client_secret:
       "jClItOnQiSZdE4kxm7EWzJbz4ckfD89k1e3NJw/pbGRHD/Jp6ooupqmHTyc3b62L9wqyF2TlR/5hJejE",
@@ -44,7 +46,7 @@ const fip = {
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP2-LOW - Activated
@@ -67,7 +69,7 @@ const fip = {
       idpIdentityCheck: "core-fcp-default-identity-check",
     },
     specificText: "specific text fip2-low",
-    url: "https://fip2-low.docker.dev-franceconnect.fr/",
+    url: "https://fip2-low.docker.dev-franceconnect.fr",
     discoveryUrl:
       "https://fip2-low.docker.dev-franceconnect.fr/.well-known/openid-configuration",
     discovery: true,
@@ -92,7 +94,7 @@ const fip = {
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip2-low",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP3-LOW - Activated
@@ -115,7 +117,7 @@ const fip = {
       idpIdentityCheck: "core-fcp-default-identity-check",
     },
     specificText: "specific text fip3-low",
-    url: "https://fip3-low.docker.dev-franceconnect.fr/",
+    url: "https://fip3-low.docker.dev-franceconnect.fr",
     discoveryUrl:
       "https://fip3-low.docker.dev-franceconnect.fr/.well-known/openid-configuration",
     discovery: true,
@@ -139,10 +141,10 @@ const fip = {
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
-  // -- FIP - FIP7-LOW - Beta
+  // -- FIP - FIP4-LOW - Beta
   "FIP4-LOW": {
     uid: "fip4-low",
     name: "fip4-low",
@@ -162,7 +164,7 @@ const fip = {
       idpIdentityCheck: "core-fcp-default-identity-check",
     },
     specificText: "specific text fip4-low",
-    url: "https://fip4-low.docker.dev-franceconnect.fr/",
+    url: "https://fip4-low.docker.dev-franceconnect.fr",
     discoveryUrl:
       "https://fip4-low.docker.dev-franceconnect.fr/.well-known/openid-configuration",
     discovery: true,
@@ -186,7 +188,7 @@ const fip = {
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP5-LOW - Disabled
@@ -209,7 +211,7 @@ const fip = {
       idpIdentityCheck: "core-fcp-default-identity-check",
     },
     specificText: "specific text fip5-low",
-    url: "https://fip5-low.docker.dev-franceconnect.fr/",
+    url: "https://fip5-low.docker.dev-franceconnect.fr",
     discoveryUrl:
       "https://fip5-low.docker.dev-franceconnect.fr/.well-known/openid-configuration",
     discovery: true,
@@ -233,7 +235,7 @@ const fip = {
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP6-LOW - Invisible
@@ -256,7 +258,7 @@ const fip = {
       idpIdentityCheck: "core-fcp-default-identity-check",
     },
     specificText: "specific text fip6-low",
-    url: "https://fip6-low.docker.dev-franceconnect.fr/",
+    url: "https://fip6-low.docker.dev-franceconnect.fr",
     discoveryUrl:
       "https://fip6-low.docker.dev-franceconnect.fr/.well-known/openid-configuration",
     discovery: true,
@@ -280,7 +282,7 @@ const fip = {
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
   // -- FIP - FIP7-LOW - Disabled and Invisible
@@ -303,7 +305,7 @@ const fip = {
       idpIdentityCheck: "core-fcp-default-identity-check",
     },
     specificText: "specific text fip7-low",
-    url: "https://fip7-low.docker.dev-franceconnect.fr/",
+    url: "https://fip7-low.docker.dev-franceconnect.fr",
     discoveryUrl:
       "https://fip7-low.docker.dev-franceconnect.fr/.well-known/openid-configuration",
     discovery: true,
@@ -327,10 +329,10 @@ const fip = {
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
-  // -- FIP - FIP7-LOW - Activated - whitelisted by fsp4
+  // -- FIP - FIP8-LOW - Activated - whitelisted by fsp4
   "FIP8-LOW": {
     uid: "fip8-low",
     name: "fip8-low",
@@ -350,7 +352,7 @@ const fip = {
       idpIdentityCheck: "core-fcp-default-identity-check",
     },
     specificText: "specific text fip8-low",
-    url: "https://fip8-low.docker.dev-franceconnect.fr/",
+    url: "https://fip8-low.docker.dev-franceconnect.fr",
     discoveryUrl:
       "https://fip8-low.docker.dev-franceconnect.fr/.well-known/openid-configuration",
     discovery: true,
@@ -374,7 +376,56 @@ const fip = {
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/logout/redirect-from-idp",
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
+    ],
+  },
+  // -- FIP - FIP9-LOW - Activated - no endSessionUrl
+  "FIP9-LOW": {
+    uid: "fip9-low",
+    name: "fip9-low",
+    active: true,
+    display: true,
+    isBeta: false,
+    title: "IDP9 - LOW - no endSessionUrl",
+    image: "fi-mock-faible.svg",
+    imageFocus: "fi-mock-faible.svg",
+    alt: "fip9-low",
+    trustedIdentity: false,
+    eidas: 1,
+    mailto: "",
+    featureHandlers: {
+      coreVerify: "core-fcp-default-verify",
+      authenticationEmail: "core-fcp-send-email",
+      idpIdentityCheck: "core-fcp-default-identity-check",
+    },
+    specificText: "specific text fip9-low",
+    url: "https://fip9-low.docker.dev-franceconnect.fr",
+    tokenURL: "https://fip9-low.docker.dev-franceconnect.fr/token",
+    userInfoURL: "https://fip9-low.docker.dev-franceconnect.fr/userinfo",
+    endSessionURL: "",
+    authzURL: "https://fip9-low.docker.dev-franceconnect.fr/authorize",
+    discovery: false,
+    clientID: "myclientidforfip9-low",
+    client_secret:
+      "jClItOnQiSZdE4kxm7EWzJbz4ckfD89k1e3NJw/pbGRHD/Jp6ooupqmHTyc3b62L9wqyF2TlR/5hJejE",
+    order: 1,
+    createdAt: new Date("2022-02-15 17:09:17"),
+    updatedAt: new Date("2023-03-10 17:09:17"),
+    updatedBy: "admin",
+    response_types: ["code"],
+    id_token_signed_response_alg: "HS256",
+    token_endpoint_auth_method: "client_secret_post",
+    revocation_endpoint_auth_method: "client_secret_post",
+    id_token_encrypted_response_alg: "",
+    id_token_encrypted_response_enc: "",
+    userinfo_signed_response_alg: "HS256",
+    userinfo_encrypted_response_alg: "",
+    userinfo_encrypted_response_enc: "",
+    redirect_uris: [
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
+    ],
+    post_logout_redirect_uris: [
+      "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
 };

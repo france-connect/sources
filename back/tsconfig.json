@@ -468,6 +468,12 @@
       ],
       "@fc/oidc-acr/*": [
         "libs/oidc-acr/src/*"
+      ],
+      "@fc/flow-steps": [
+        "libs/flow-steps/src"
+      ],
+      "@fc/flow-steps/*": [
+        "libs/flow-steps/src/*"
       ]
     }
   },

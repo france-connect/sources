@@ -281,6 +281,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
         spId: 'client_id',
         spName: 'name',
         isSso: true,
+        stepRoute: '/authorize',
       };
       serviceProviderServiceMock.getById.mockResolvedValueOnce({
         name: 'name',

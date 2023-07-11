@@ -164,6 +164,7 @@ describe('SearchService', () => {
     AgentConnectSearchService.FUSE_INSTANCE = {
       search: jest.fn(),
     } as unknown as Fuse<Searchable>;
+    AgentConnectSearchService.SEARCHABLES = baseExpected;
   });
 
   describe('initialize', () => {
@@ -340,6 +341,52 @@ describe('SearchService', () => {
 
       // Then
       expect(result).toStrictEqual(baseSearchResults);
+    });
+  });
+
+  describe('showAllResults', () => {
+    it('should call formatSearchResults', () => {
+      // Given
+      const prepareSearchDataBaseReturnMock =
+        'prepareSearchDataBaseReturnMock' as unknown as Searchable[];
+      jest
+        .spyOn(AgentConnectSearchService, 'prepareSearchDataBase')
+        .mockReturnValueOnce(prepareSearchDataBaseReturnMock);
+      const spy = jest.spyOn(AgentConnectSearchService, 'formatSearchResults');
+
+      const searchablesResultsMock = [
+        {
+          item: baseExpected[0],
+        },
+        {
+          item: baseExpected[1],
+        },
+        {
+          item: baseExpected[2],
+        },
+        {
+          item: baseExpected[3],
+        },
+        {
+          item: baseExpected[4],
+        },
+        {
+          item: baseExpected[5],
+        },
+        {
+          item: baseExpected[6],
+        },
+        {
+          item: baseExpected[7],
+        },
+      ];
+
+      // When
+      AgentConnectSearchService.showAllResults();
+
+      // Then
+      expect(spy).toHaveBeenCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(searchablesResultsMock, AgentConnectSearchService.RAW_DATA);
     });
   });
 

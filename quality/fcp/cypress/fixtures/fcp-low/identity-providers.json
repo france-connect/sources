@@ -84,7 +84,9 @@
     "idpId": "fip5-low",
     "name": "fip5-low",
     "title": "IDP5 - LOW disabled",
-    "descriptions": ["désactivé et visible"],
+    "descriptions": [
+      "désactivé et visible"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip5-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -102,7 +104,9 @@
     "idpId": "fip6-low",
     "name": "fip6-low",
     "title": "IDP6 - LOW invisible",
-    "descriptions": ["actif et non visible"],
+    "descriptions": [
+      "actif et non visible"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip6-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -120,7 +124,9 @@
     "idpId": "fip7-low",
     "name": "fip7-low",
     "title": "IDP7 - LOW disabled and invisible",
-    "descriptions": ["désactivé et non visible"],
+    "descriptions": [
+      "désactivé et non visible"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip7-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -138,7 +144,9 @@
     "idpId": "fip8-low",
     "name": "fip8-low",
     "title": "IDP8 - LOW",
-    "descriptions": ["disponible que pour un FS"],
+    "descriptions": [
+      "disponible que pour un FS"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip8-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
@@ -147,6 +155,26 @@
     "signature": "HS256",
     "selectors": {
       "idpButton": "#idp-fip8-low",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "button[type='submit']"
+    }
+  },
+  {
+    "idpId": "fip9-low",
+    "name": "fip9-low",
+    "title": "IDP9 - LOW",
+    "descriptions": [
+      "sans endSessionUrl"
+    ],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip9-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#idp-fip9-low",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"

@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { CoreAcrService, CoreVerifyService } from '@fc/core';
+import { CoreAcrService, CoreRoutes, CoreVerifyService } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { MinistriesService } from '@fc/ministries';
@@ -17,6 +17,7 @@ import {
   SessionCsrfService,
   SessionNotFoundException,
 } from '@fc/session';
+import { TrackingService } from '@fc/tracking';
 
 import { CoreFcaVerifyService } from '../services';
 import { CoreFcaController } from './core-fca.controller';
@@ -47,6 +48,9 @@ describe('CoreFcaController', () => {
     query: {
       firstQueryParam: 'first',
       secondQueryParam: 'second',
+    },
+    route: {
+      path: '/some/path',
     },
   } as unknown as Request;
 
@@ -128,6 +132,13 @@ describe('CoreFcaController', () => {
     get: jest.fn(),
   };
 
+  const trackingServiceMock: TrackingService = {
+    track: jest.fn(),
+    TrackedEventsMap: {
+      IDP_CALLEDBACK: {},
+    },
+  } as unknown as TrackingService;
+
   const oidcClientSessionDataMock: OidcClientSession = {
     csrfToken: randomStringMock,
     spId: spIdMock,
@@ -138,6 +149,7 @@ describe('CoreFcaController', () => {
     spAcr: acrMock,
     spIdentity: {} as IOidcIdentity,
     spName: spNameMock,
+    stepRoute: '/some/route',
   };
 
   const handleBlackListedResult = 'urlPrefixValue/interaction/interactionId';
@@ -159,6 +171,7 @@ describe('CoreFcaController', () => {
         CoreAcrService,
         CoreFcaVerifyService,
         CoreVerifyService,
+        TrackingService,
       ],
     })
       .overrideProvider(OidcProviderService)
@@ -181,6 +194,8 @@ describe('CoreFcaController', () => {
       .useValue(configServiceMock)
       .overrideProvider(SessionCsrfService)
       .useValue(sessionCsrfServiceMock)
+      .overrideProvider(TrackingService)
+      .useValue(trackingServiceMock)
       .compile();
 
     coreController = await app.get<CoreFcaController>(CoreFcaController);
@@ -499,6 +514,26 @@ describe('CoreFcaController', () => {
         coreController.getInteraction(req, res, sessionServiceMock),
       ).rejects.toThrow(SessionNotFoundException);
       // Then
+    });
+
+    it('should track route if not a refresh', async () => {
+      // When
+      await coreController.getInteraction(req, res, sessionServiceMock);
+
+      // Then
+      expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
+    });
+
+    it('should track route if is a refresh', async () => {
+      // Given
+      sessionServiceMock.get.mockResolvedValueOnce({
+        stepRoute: CoreRoutes.INTERACTION,
+      });
+      // When
+      await coreController.getInteraction(req, res, sessionServiceMock);
+
+      // Then
+      expect(trackingServiceMock.track).not.toHaveBeenCalled();
     });
   });
 
