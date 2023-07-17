@@ -15,6 +15,7 @@ import {
 } from '@fc/core';
 import { CryptographyEidasModule } from '@fc/cryptography-eidas';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
+import { DataProviderAdapterMongoModule } from '@fc/data-provider-adapter-mongo';
 import { ExceptionsModule } from '@fc/exceptions';
 import { FeatureHandlerModule } from '@fc/feature-handler';
 import { FlowStepsModule } from '@fc/flow-steps';
@@ -43,6 +44,7 @@ import { TrackingModule } from '@fc/tracking';
 
 import {
   CoreFcpController,
+  DataProviderController,
   OidcClientController,
   OidcProviderController,
 } from './controllers';
@@ -58,6 +60,7 @@ import {
   CoreFcpMiddlewareService,
   CoreFcpService,
   CoreFcpVerifyService,
+  DataProviderService,
   OidcProviderConfigAppService,
 } from './services';
 
@@ -100,11 +103,13 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     NotificationsModule,
     FeatureHandlerModule,
     AppModule,
+    DataProviderAdapterMongoModule,
   ],
   controllers: [
     CoreFcpController,
     OidcClientController,
     OidcProviderController,
+    DataProviderController,
   ],
   providers: [
     CoreTrackingService,
@@ -125,6 +130,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
       useClass: ConfigTemplateInterceptor,
     },
     OidcProviderGrantService,
+    DataProviderService,
   ],
   // Make `CoreTrackingService` dependencies available
   exports: [

@@ -1,11 +1,15 @@
 import {
   IsArray,
   IsBoolean,
+  IsEnum,
   IsIn,
+  IsOptional,
   IsString,
   IsUrl,
   MinLength,
 } from 'class-validator';
+
+import { platform } from '../enums';
 
 const SUPPORTED_SIG_ALG = ['ES256', 'RS256', 'HS256'];
 
@@ -106,4 +110,8 @@ export class ServiceProviderAdapterMongoDTO {
 
   @IsBoolean()
   readonly ssoDisabled: boolean;
+
+  @IsOptional()
+  @IsEnum(platform)
+  readonly platform?: platform;
 }

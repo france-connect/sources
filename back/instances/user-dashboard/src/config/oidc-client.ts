@@ -2,7 +2,10 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
-import { OidcClientConfig } from '@fc/oidc-client';
+import { OidcClientConfig, OidcClientRoutes } from '@fc/oidc-client';
+import { UserDashboardBackRoutes } from '@fc/user-dashboard';
+
+import app from './app';
 
 const env = new ConfigParser(process.env, 'OidcClient');
 
@@ -26,4 +29,6 @@ export default {
   fapi: false,
   scope:
     'openid gender birthdate birthcountry birthplace given_name family_name email idp_id',
+  postLogoutRedirectUri: `https://${app.fqdn}${app.urlPrefix}${UserDashboardBackRoutes.LOGOUT_CALLBACK}`,
+  redirectUri: `https://${app.fqdn}${app.urlPrefix}${OidcClientRoutes.OIDC_CALLBACK}`,
 } as OidcClientConfig;

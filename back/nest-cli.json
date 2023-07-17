@@ -339,6 +339,15 @@
         "tsConfigPath": "libs/identity-provider-adapter-mongo/tsconfig.lib.json"
       }
     },
+    "data-provider-adapter-mongo": {
+      "type": "library",
+      "root": "libs/data-provider-adapter-mongo",
+      "entryFile": "index",
+      "sourceRoot": "libs/data-provider-adapter-mongo/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/data-provider-adapter-mongo/tsconfig.lib.json"
+      }
+    },
     "service-provider-adapter-mongo": {
       "type": "library",
       "root": "libs/service-provider-adapter-mongo",
@@ -1021,6 +1030,24 @@
       "sourceRoot": "libs/flow-steps/src",
       "compilerOptions": {
         "tsConfigPath": "libs/flow-steps/tsconfig.lib.json"
+      }
+    },
+    "mock-data-provider": {
+      "type": "application",
+      "root": "instances/mock-data-provider",
+      "entryFile": "main",
+      "sourceRoot": "instances/mock-data-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/mock-data-provider/tsconfig.app.json"
+      }
+    },
+    "data-provider-adapter-core": {
+      "type": "library",
+      "root": "libs/data-provider-adapter-core",
+      "entryFile": "index",
+      "sourceRoot": "libs/data-provider-adapter-core/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/data-provider-adapter-core/tsconfig.lib.json"
       }
     }
   }

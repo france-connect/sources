@@ -15,7 +15,7 @@ import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
-import { ISessionService, Session, SessionService } from '@fc/session';
+import { ISessionService, Session } from '@fc/session';
 
 import { AppSession, SignInDTO } from '../dto';
 import { MockIdentityProviderRoutes } from '../enums';
@@ -27,7 +27,6 @@ export class MockIdentityProviderController {
     private readonly logger: LoggerService,
     private readonly oidcProvider: OidcProviderService,
     private readonly mockIdentityProviderService: MockIdentityProviderService,
-    private readonly sessionService: SessionService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -88,7 +87,6 @@ export class MockIdentityProviderController {
   @Post(MockIdentityProviderRoutes.INTERACTION_LOGIN)
   async getLogin(
     @Next() next,
-    @Req() req,
     @Body() body: SignInDTO,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
@@ -97,6 +95,8 @@ export class MockIdentityProviderController {
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
+    @Session('App')
+    sessionApp: ISessionService<AppSession>,
   ): Promise<void> {
     const { login, acr } = body;
     const spIdentity = (await this.mockIdentityProviderService.getIdentity(
@@ -108,10 +108,10 @@ export class MockIdentityProviderController {
       throw new Error('Identity not found in database');
     }
 
-    const { spId } = await sessionOidc.get();
+    await sessionApp.set('userLogin', login);
 
+    const spId = await sessionOidc.get('spId');
     const { sub, ...spIdentityCleaned } = spIdentity;
-
     const spAcr = acr;
 
     await sessionOidc.set({

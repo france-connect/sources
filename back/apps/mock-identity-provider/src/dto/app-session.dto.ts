@@ -8,4 +8,8 @@ export class AppSession {
   @IsString()
   // The sp id of the aggregator if given in the authorize
   readonly finalSpId?: string;
+
+  @IsOptional()
+  @IsString()
+  readonly userLogin?: string;
 }

@@ -15,6 +15,7 @@ import { ConfigConfig } from '@fc/config';
 import { CoreConfig as CoreLibConfig } from '@fc/core';
 import { CryptographyEidasConfig } from '@fc/cryptography-eidas';
 import { CryptographyFcpConfig } from '@fc/cryptography-fcp';
+import { DataProviderAdapterMongoConfig } from '@fc/data-provider-adapter-mongo';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
 import { LoggerConfig } from '@fc/logger-legacy';
 import { MailerConfig } from '@fc/mailer';
@@ -128,6 +129,11 @@ export class CoreFcpConfig {
   @ValidateNested()
   @Type(() => IdentityProviderAdapterMongoConfig)
   readonly IdentityProviderAdapterMongo: IdentityProviderAdapterMongoConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => DataProviderAdapterMongoConfig)
+  readonly DataProviderAdapterMongo: DataProviderAdapterMongoConfig;
 
   @IsObject()
   @ValidateNested()

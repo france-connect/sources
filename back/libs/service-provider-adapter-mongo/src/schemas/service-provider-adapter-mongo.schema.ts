@@ -2,6 +2,8 @@ import { Document } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
+import { platform } from '../enums';
+
 @Schema({ strict: true, collection: 'client' })
 export class ServiceProvider extends Document {
   @Prop({ type: String })
@@ -76,6 +78,9 @@ export class ServiceProvider extends Document {
 
   @Prop({ type: Boolean })
   ssoDisabled: boolean;
+
+  @Prop({ type: String, enums: platform })
+  platform: platform;
 }
 
 export const ServiceProviderSchema =

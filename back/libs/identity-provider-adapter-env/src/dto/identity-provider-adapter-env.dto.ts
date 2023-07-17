@@ -64,18 +64,6 @@ export class IdentityProviderAdapterEnvDTO {
   readonly discoveryUrl: string;
 
   @IsArray()
-  @IsUrl({}, { each: true })
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly redirect_uris: string[];
-
-  @IsArray()
-  @IsUrl({}, { each: true })
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly post_logout_redirect_uris: string[];
-
-  @IsArray()
   @IsString({ each: true })
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention

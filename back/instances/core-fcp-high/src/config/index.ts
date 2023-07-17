@@ -8,6 +8,7 @@ import Core from './core';
 import CryptographyBroker from './cryptography-broker';
 import CryptographyEidas from './cryptography-eidas';
 import CryptographyFcp from './cryptography-fcp';
+import DataProviderAdapterMongo from './data-provider-adapter-mongo';
 import IdentityProviderAdapterMongo from './identity-provider-adapter-mongo';
 import Logger from './logger';
 import Mailer from './mailer';
@@ -42,6 +43,7 @@ export default {
   Mailer,
   ServiceProviderAdapterMongo,
   IdentityProviderAdapterMongo,
+  DataProviderAdapterMongo,
   Scopes,
   Tracking,
 } as CoreFcpHighConfig;

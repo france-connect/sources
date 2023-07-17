@@ -29,6 +29,7 @@
     "build:mock-identity-provider-fca-low": "nest build mock-identity-provider-fca-low",
     "build:mock-service-provider-fca-low": "nest build mock-service-provider-fca-low",
     "build:mock-rnipp": "nest build mock-rnipp",
+    "build:mock-data-provider": "nest build mock-data-provider",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\" \"instances/**/*.ts\"",
     "start": "nest start",
     "start:dev": "NODE_ENV=development nest start --watch",
@@ -48,6 +49,7 @@
     "start:prod:mock-identity-provider-fcp-high": "node dist/instances/mock-identity-provider-fcp-high/main.js > /tmp/.pm2/logs/mock-identity-provider-fcp-high-out-0.log 2> /tmp/.pm2/mock-identity-provider-fcp-high-error-0.log",
     "start:prod:mock-identity-provider-fcp-low": "node dist/instances/mock-identity-provider-fcp-low/main.js > /tmp/.pm2/logs/mock-identity-provider-fcp-low-out-0.log 2> /tmp/.pm2/mock-identity-provider-fcp-low-error-0.log",
     "start:prod:mock-rnipp": "node dist/instances/mock-rnipp/main.js > /tmp/.pm2/logs/mock-rnipp-out-0.log 2> /tmp/.pm2/mock-rnipp-error-0.log",
+    "start:prod:mock-data-provider": "node dist/instances/mock-data-provider/main.js > /tmp/.pm2/logs/mock-data-provider-out-0.log 2> /tmp/.pm2/mock-data-provider-error-0.log",
     "lint": "eslint \"{apps,instances,libs}/**/*.ts\"",
     "prettier": "prettier -c \"{apps,instances,libs}/**/*.ts\" --config .prettierrc",
     "test": "jest",
@@ -69,7 +71,8 @@
     "test:e2e:core-fcp-high:open": "cypress open -P instances/core-fcp-high",
     "test:e2e:eidas-bridge:open": "cypress open -P instances/eidas-bridge",
     "doc:api": "typedoc",
-    "doc:exceptions": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/exceptions/src/cli/export-exceptions"
+    "doc:exceptions": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/exceptions/src/cli/export-exceptions",
+    "doc:env": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/config/src/cli/export-env"
   },
   "resolutions": {
     "cookie-signature": "1.2.0"
@@ -116,6 +119,7 @@
     "pg": "^8.7.3",
     "pino": "^8.4.2",
     "pkcs11js": "^1.0.19",
+    "recursive-readdir": "^2.2.3",
     "reflect-metadata": "^0.1.13",
     "retry": "^0.13.1",
     "rimraf": "^3.0.0",
@@ -215,6 +219,7 @@
       "^@fc/rnipp(|/.*)$": "<rootDir>/libs/rnipp/src$1",
       "^@fc/identity-provider-adapter-env(|/.*)$": "<rootDir>/libs/identity-provider-adapter-env/src$1",
       "^@fc/identity-provider-adapter-mongo(|/.*)$": "<rootDir>/libs/identity-provider-adapter-mongo/src$1",
+      "^@fc/data-provider-adapter-mongo(|/.*)$": "<rootDir>/libs/data-provider-adapter-mongo/src$1",
       "^@fc/identity(|/.*)$": "<rootDir>/libs/identity/src$1",
       "^@fc/service-provider-adapter-env(|/.*)$": "<rootDir>/libs/service-provider-adapter-env/src$1",
       "^@fc/service-provider-adapter-mongo(|/.*)$": "<rootDir>/libs/service-provider-adapter-mongo/src$1",
@@ -281,7 +286,9 @@
       "^@fc/access-control(|/.*)$": "<rootDir>/libs/access-control/src/$1",
       "^@fc/mock-rnipp(|/.*)$": "<rootDir>/apps/mock-rnipp/src/$1",
       "^@fc/oidc-acr(|/.*)$": "<rootDir>/libs/oidc-acr/src/$1",
-      "^@fc/flow-steps(|/.*)$": "<rootDir>/libs/flow-steps/src/$1"
+      "^@fc/flow-steps(|/.*)$": "<rootDir>/libs/flow-steps/src/$1",
+      "^@fc/mock-data-provider(|/.*)$": "<rootDir>/apps/mock-data-provider/src/$1",
+      "^@fc/data-provider-adapter-core(|/.*)$": "<rootDir>/libs/data-provider-adapter-core/src/$1"
     },
     "preset": "ts-jest"
   }

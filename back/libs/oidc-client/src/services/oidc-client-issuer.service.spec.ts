@@ -66,16 +66,6 @@ describe('OidcClientIssuerService', () => {
     client_secret: '7vhnwzo1yUVOJT9GJ91gD5oid56effu1',
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    post_logout_redirect_uris: [
-      'https://corev2.docker.dev-franceconnect.fr/api/v2/logout-from-provider',
-    ],
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    redirect_uris: [
-      'https://corev2.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip1v2',
-    ],
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     response_types: ['code'],
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -112,15 +102,18 @@ describe('OidcClientIssuerService', () => {
         name: 'idpNameMock',
         // oidc defined variable name
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        redirect_uris: ['redirect', 'uris'],
-        // oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         response_types: ['response', 'types'],
         // oidc defined variable name
         // eslint-disable-next-line @typescript-eslint/naming-convention
         discoveryUrl: 'mock well-known url',
       },
     ],
+    // oidc defined variable name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    redirectUri: ['redirect', 'uris'],
+    // oidc defined variable name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    postLogoutRedirectUri: ['post', 'logout', 'redirect', 'uri'],
     client: idpMetadataClientMock,
     issuer: idpMetadataIssuerMock,
     discovery: true,
@@ -327,11 +320,24 @@ describe('OidcClientIssuerService', () => {
 
     it('should return provider in config', async () => {
       // Given
-      oidcClientConfigServiceMock.get.mockResolvedValue({ providers });
+      oidcClientConfigServiceMock.get.mockResolvedValue({
+        ...idpMetadataMock,
+        providers,
+      });
       // When
       const result = await service['getIdpMetadata']('p2');
       // Then
-      expect(result).toBe(providerMock2);
+      expect(result).toEqual({
+        ...providerMock2,
+        client: {
+          // oidc defined variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          post_logout_redirect_uris: [idpMetadataMock.postLogoutRedirectUri],
+          // oidc defined variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          redirect_uris: [idpMetadataMock.redirectUri],
+        },
+      });
     });
     it('should throw if provider is not in config', async () => {
       // Given

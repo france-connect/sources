@@ -1,5 +1,5 @@
 import { ChangeStreamDocument } from 'mongodb';
-import { Model } from 'mongoose';
+import { Document, Model } from 'mongoose';
 
 import { CqrsModule, EventBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -62,7 +62,10 @@ describe('MongooseCollectionOperationWatcherHelper', () => {
       const streamMock = { on: jest.fn() };
       service['watch'] = jest.fn().mockReturnValueOnce(streamMock);
       // When
-      service.watchWith(modelMock as unknown as Model<unknown>, jest.fn());
+      service.watchWith<Document>(
+        modelMock as unknown as Model<Document>,
+        jest.fn(),
+      );
       // Then
       expect(service['watch']).toHaveBeenCalledTimes(1);
     });
@@ -78,7 +81,7 @@ describe('MongooseCollectionOperationWatcherHelper', () => {
         .fn()
         .mockReturnValue(bindReturnValue);
       // When
-      service['watch'](modelMock as unknown as Model<unknown>, callbackMock);
+      service['watch'](modelMock as unknown as Model<Document>, callbackMock);
       // Then
       expect(streamMock.on).toHaveBeenCalledTimes(1);
       expect(streamMock.on).toHaveBeenCalledWith('change', bindReturnValue);
@@ -94,7 +97,7 @@ describe('MongooseCollectionOperationWatcherHelper', () => {
         .fn()
         .mockReturnValue(bindReturnValue);
       // When
-      service['watch'](modelMock as unknown as Model<unknown>, callbackMock);
+      service['watch'](modelMock as unknown as Model<Document>, callbackMock);
       // Then
       expect(service['operationTypeWatcher'].bind).toHaveBeenCalledTimes(1);
       expect(service['operationTypeWatcher'].bind).toHaveBeenCalledWith(

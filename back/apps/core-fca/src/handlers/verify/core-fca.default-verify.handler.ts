@@ -54,21 +54,14 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
 
     await this.coreAccount.checkIfAccountIsBlocked(agentHash);
 
-    const subSp = this.cryptographyFca.computeSubV1(spId, agentHash);
-    const { sub: subIdp } = agentIdentity;
+    const sub = this.cryptographyFca.computeSubV1(spId, agentHash);
 
     // Save interaction to database & get sp's sub to avoid double computation
-    const accountId = await this.coreAccount.computeFederation(
-      {
-        spId,
-        subSp,
-        hashSp: agentHash,
-      },
-      {
-        idpId,
-        subIdp,
-      },
-    );
+    const accountId = await this.coreAccount.computeFederation({
+      key: spId,
+      sub,
+      identityHash: agentHash,
+    });
 
     const { sub: _sub, ...spIdentityCleaned } = idpIdentity;
 
@@ -87,7 +80,7 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
       idpIdentity,
       spIdentity,
       accountId,
-      subs: { ...subs, [spId]: subSp },
+      subs: { ...subs, [spId]: sub },
     };
 
     this.logger.trace({ session });

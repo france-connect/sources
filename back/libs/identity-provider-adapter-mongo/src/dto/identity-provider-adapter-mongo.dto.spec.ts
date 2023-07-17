@@ -2,8 +2,8 @@ import { validateDto } from '@fc/common';
 
 import {
   DiscoveryIdpAdapterMongoDTO,
-  IdentityProviderAdapterMongoDTO,
   MetadataIdpAdapterMongoDTO,
+  NoDiscoveryIdpAdapterMongoDTO,
 } from './identity-provider-adapter-mongo.dto';
 
 const DTO_VALIDATION_OPTIONS = {
@@ -99,7 +99,7 @@ describe('Identity Provider (Data Transfer Object)', () => {
       // When | Action
       const result = await validateDto(
         identityProviderAdapterMongoMock,
-        IdentityProviderAdapterMongoDTO,
+        NoDiscoveryIdpAdapterMongoDTO,
         DTO_VALIDATION_OPTIONS,
       );
       // Then | Assert
@@ -120,7 +120,7 @@ describe('Identity Provider (Data Transfer Object)', () => {
       // When | Action
       const result = await validateDto(
         dto,
-        IdentityProviderAdapterMongoDTO,
+        NoDiscoveryIdpAdapterMongoDTO,
         DTO_VALIDATION_OPTIONS,
       );
 
@@ -146,7 +146,7 @@ describe('Identity Provider (Data Transfer Object)', () => {
       // When | Action
       const result = await validateDto(
         discoveryIdpAdapterMongoMock,
-        IdentityProviderAdapterMongoDTO,
+        NoDiscoveryIdpAdapterMongoDTO,
         DTO_VALIDATION_OPTIONS,
       );
       // Then | Assert

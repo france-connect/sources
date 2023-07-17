@@ -29,16 +29,6 @@ describe('IdentityProviderAdapterEnvService', () => {
       id_token_signed_response_alg: 'ES256',
       // oidc param name
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      post_logout_redirect_uris: [
-        'https://fsp1-high.docker.dev-franceconnect.fr/logout-callback',
-      ],
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      redirect_uris: [
-        'https://fsp1-high.docker.dev-franceconnect.fr/login-callback',
-      ],
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       response_types: ['code'],
       // oidc param name
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -90,16 +80,6 @@ describe('IdentityProviderAdapterEnvService', () => {
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_signed_response_alg: 'ES256',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    post_logout_redirect_uris: [
-      'https://fsp1-high.docker.dev-franceconnect.fr/logout-callback',
-    ],
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    redirect_uris: [
-      'https://fsp1-high.docker.dev-franceconnect.fr/login-callback',
-    ],
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     response_types: ['code'],
@@ -161,16 +141,6 @@ describe('IdentityProviderAdapterEnvService', () => {
       // oidc param name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_signed_response_alg: 'ES256',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      post_logout_redirect_uris: [
-        'https://fsp1-high.docker.dev-franceconnect.fr/logout-callback',
-      ],
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      redirect_uris: [
-        'https://fsp1-high.docker.dev-franceconnect.fr/login-callback',
-      ],
       // oidc param name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       response_types: ['code'],

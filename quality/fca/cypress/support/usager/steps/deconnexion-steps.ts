@@ -15,7 +15,7 @@ When('je me déconnecte du fournisseur de service', function () {
   cy.intercept(`${fcaRootUrl}/api/v2/session/end/confirm*`).as(
     'fca:sessionEndConfirm',
   );
-  cy.intercept(`${spUrl}/logout-callback*`).as('sp:logoutCallback');
+  cy.intercept(`${spUrl}/client/logout-callback*`).as('sp:logoutCallback');
 
   serviceProviderPage.getLogoutButton().click();
 });

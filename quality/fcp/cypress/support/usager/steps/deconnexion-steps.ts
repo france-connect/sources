@@ -17,7 +17,7 @@ When(
     cy.intercept(`${fcRootUrl}/api/v2/session/end/confirm*`).as(
       'fcp:sessionEndConfirm',
     );
-    cy.intercept(`${spUrl}/logout-callback*`).as('sp:logoutCallback');
+    cy.intercept(`${spUrl}/client/logout-callback*`).as('sp:logoutCallback');
 
     serviceProviderPage.getLogoutButton().click();
   },
@@ -36,7 +36,7 @@ When(
     cy.intercept(`${fcRootUrl}/api/v2/session/end/confirm*`).as(
       'fcp:sessionEndConfirm',
     );
-    cy.intercept(`${spUrl}/logout-callback*`).as('sp:logoutCallback');
+    cy.intercept(`${spUrl}/client/logout-callback*`).as('sp:logoutCallback');
 
     serviceProviderPage.getLogoutButton().click();
   },

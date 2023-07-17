@@ -52,7 +52,7 @@
   },
   {
     "name": "fsp2",
-    "clientId": "7a79e45107f9ccc6a3a5971d501220dc4fd9e87bb5e3fc62ce4104c756e22775",
+    "clientId": "8279ce2e262b86324c004afee58ae2d63814baa20ed983696f2245c1f4d7e7fb",
     "descriptions": ["privé sans consentement obligatoire"],
     "mocked": true,
     "url": "https://fsp2.{{TEST_ENV}}.dev-franceconnect.fr",
@@ -69,7 +69,7 @@
   },
   {
     "name": "fsp3",
-    "clientId": "6495f347513b860e6b931fae4a1ba70c8489a558a0fc74ecdc094d48a4035e77",
+    "clientId": "8ae981e67b301291d1f7d3b3b246967cfcc478d25f0aaa6b357386e02cb4476a",
     "descriptions": ["privé avec consentement obligatoire"],
     "mocked": true,
     "url": "https://fsp3.{{TEST_ENV}}.dev-franceconnect.fr",
@@ -86,7 +86,7 @@
   },
   {
     "name": "fsp3",
-    "clientId": "6495f347513b860e6b931fae4a1ba70c8489a558a0fc74ecdc094d48a4035e77",
+    "clientId": "8ae981e67b301291d1f7d3b3b246967cfcc478d25f0aaa6b357386e02cb4476a",
     "descriptions": ["privé pour les scopes data"],
     "mocked": true,
     "url": "https://fsp3.{{TEST_ENV}}.dev-franceconnect.fr",
@@ -103,7 +103,7 @@
   },
   {
     "name": "fsp3",
-    "clientId": "6495f347513b860e6b931fae4a1ba70c8489a558a0fc74ecdc094d48a4035e77",
+    "clientId": "8ae981e67b301291d1f7d3b3b246967cfcc478d25f0aaa6b357386e02cb4476a",
     "descriptions": ["privé connecté à FD traces"],
     "mocked": true,
     "url": "https://fsp3.{{TEST_ENV}}.dev-franceconnect.fr",

@@ -13,12 +13,6 @@ export interface IIdentityProviderAdapterEnv {
   discoveryUrl: string;
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  redirect_uris: string[];
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  post_logout_redirect_uris: string[];
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   response_types: string[];
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -13,7 +13,7 @@ _idp_as_prod_v2() {
 
 _idp_as_prod_legacy() {
   echo "Set IdP as production ..."
-  cd ${WORKING_DIR} && docker-compose exec ${NO_TTY} mongo-legacy /opt/scripts/manage.sh --reset-db=display-idp-as-in-prod
+  cd ${WORKING_DIR} && docker-compose exec ${NO_TTY} mongo-fcp-low /opt/scripts/manage.sh --reset-db=display-idp-as-in-prod
 }
 
 _mongo_core_shell() {
@@ -33,11 +33,14 @@ _mongo_shell() {
     --tls
 }
 
-# Presets for backward compatibility
+_mongo_script() {
+  container=$1
+  script=$2
 
-_reset_db_legacy() {
-  _reset_mongodb "mongo-legacy"
+  docker-compose exec -T ${container} /opt/scripts/run.sh "${script}"
 }
+
+# Presets for backward compatibility
 
 _reset_db_fcp_high() {
   _reset_mongodb "mongo-fcp-high"

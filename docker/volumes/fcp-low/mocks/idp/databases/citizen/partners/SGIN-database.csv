@@ -1,0 +1,68 @@
+login,password,family_name,preferred_username,given_name,gender,email,phone_number,birthdate,birthplace,birthcountry,country,locality,postal_code,street_address
+acesar01,123,CESAR,,Adèle,male,adele.cesar01@yopmail.com,987654321,1934-08-12,67482,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+badam,123,ADAM,NU-ADAM,Basile,male,basil.adam@yopmail.com,987654321,2003-01-09,75056,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+ncalvin,123,CALVIN,,Najat,male,najat.calvin@yopmail.com,987654321,1961-03-12,67482,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+acesar03,123,CESAR,,Adriano,female,adriano.cesar03@yopmail.com,987654321,1961-12-16,75056,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+scesar,123,CESAR,NU-CESAR,SABINE,female,sabine.cesar@yopmail.com,987654321,1962-01-01,,99139,France,Toulouse,31400,1 avenue Jean Jaurès
+ejardin,123,Jardin,NU-Jardin,Eddy,female,eddy.jardin@yopmail.com,987654321,1976-04-16,24045,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+acesar02,123,CESAR,NU-CESAR,Adèle,male,adele.cesar02@yopmail.com,987654321,1961-12-07,77468,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+msy,123,SY,NU-SY,Milo,female,milo.sy@yopmail.com,987654321,1967-04-01,01001,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+nchaillou,123,Chaillou,,Noémie,male,noemi.chaillou@yopmail.com,987654321,1984-12-15,01005,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+acesar01-e1,123,CESAR,,Adèle,female,adele.cesar01@yopmail.com,555555555,1970-08-12,55555,99100,France,CasErreur,31400,1 avenue Jean Jaurès
+badam-e1,123,ADAM,NU-ADAM,Basile Alphonse,male,basil.adam@yopmail.com,555555555,2003-01-09,75056,95100,France,CasErreur,31400,1 avenue Jean Jaurès
+ncalvin-e1,123,KALVIN,,Najat,male,najat.calvin@yopmail.com,555555555,1961-03-12,67482,95100,France,CasErreur,31400,1 avenue Jean Jaurès
+acesar03-e1,123,CESAR,,Adriano,female,adriano.cesar03@yopmail.com,555555555,2000-12-16,55555,95100,France,CasErreur,31400,1 avenue Jean Jaurès
+scesar-e1,123,CESAR,NU-CESAR,SABINE PAULETTE,female,sabine.cesar@yopmail.com,555555555,1962-01-01,,99139,France,CasErreur,31400,1 avenue Jean Jaurès
+ejardin-e1,123,Jardin,NU-Jardin,Eddy,male,eddy.jardin@yopmail.com,555555555,1976-04-16,55555,99100,France,CasErreur,31400,1 avenue Jean Jaurès
+acesar-e2,123,C-ESAR,NU-CESAR,X-Adèle,male,adele.cesar02@yopmail.com,555555555,1961-01-07,71540,99100,France,CasErreur,31400,1 avenue Jean Jaurès
+msy-e1,123,SYMPA,NU-SY,Milano,female,milo.sy@yopmail.com,555555555,1967-04-01,21001,95100,France,CasErreur,31400,1 avenue Jean Jaurès
+nchaillou-e1,123,Chaillou,,Noémie,male,noemi.chaillou@yopmail.com,555555555,1984-12-17,01005,99100,France,CasErreur,31400,1 avenue Jean Jaurès
+ejardin-e2,123,Jardin,NU-Jardin,Eddy Jean-Jacques,male,eddy.jardin@yopmail.com,555555555,1976-04-26,24045,99100,France,CasErreur,31400,1 avenue Jean Jaurès
+badam01,123,ADAM,,Basile,male,basile.adam@yopmail.com,987654321,1961-12-05,34172,99100,,MONTPELLIER,75000,1 rue clair
+nadam,123,ADAM,,Nadine,female,nadine.adam@yopmail.com,987654321,1961-12-30,,99243,Viet Nam,VIET NAM,75000,2 rue clair
+mbaptiste,123,BAPTISTE,,Mohamed,female,mohamed.baptiste@yopmail.com,987654321,1981-05-02,01010,99100,France,ANGLEFORT,75000,3 rue clair
+vbecker,123,BECKER,,Valérie,male,valérie.becker@yopmail.com,987654321,1981-05-02,01045,99100,France,BIRIEUX,75000,4 rue clair
+sberthelot,123,BerthelotBerthelotBerthelot,,Sacha,male,sacha.berthelotberthelotberthelot@yopmail.com,987654321,1961-07-04,13055,99100,France,MARSEILLE,75000,5 rue clair
+lchampion,123,CHAMPION,,Laurence,female,laurence.champion@yopmail.com,987654321,2000-06-03,01026,99100,France,BAGE LE CHATEL,75000,6 rue clair
+sclovisnu,123,CLOVIS,NU-CLOVIS,Sarah  Sophie Marie,female,sarah.clovis@yopmail.com,987654321,1983-08-06,,99127,Italie,Italie,75000,7 rue clair
+sclovis,123,CLOVIS,,Sarah Sophie Marie,female,sarah.clovis@yopmail.com,987654321,1983-08-06,,99127,Italie,,75000,8 rue clair
+ncouderc,123,COUDERC,,Nicolas,male,nicolas.couderc@yopmail.com,987654321,2000-06-03,01041,99100,France,BETTANT,75000,9 rue clair
+ecros,123,CROS,,Edith,male,edith.cros@yopmail.com,987654321,1981-05-02,01033,99100,France,VALSERHONE,75000,10 rue clair
+edelamare,123,DELAMARE,,Esteban,male,esteban.delamare@yopmail.com,987654321,1976-04-16,01022,99100,France,ARTEMARE,75000,11 rue clair
+edoule,123,DOULE,,Eric,male,eric.doule@yopmail.com,987654321,1979-06-06,75056,99100,,PARIS,75000,12 rue clair
+adupont,123,DU PONT,,Adeline,female,adeline.dupont@yopmail.com,987654321,1975-07-10,75056,99100,,PARIS,75000,13 rue clair
+mdupont,123,DUPONT,NU-DUPONT,Madison,female,madison.dupont@yopmail.com,987654321,1961-12-12,69123,99100,,LYON,75000,14 rue clair
+dgage,123,GAGE,,DominiqueDominiqueDominique,female,dominiquedominiquedominique.gage@yopmail.com,987654321,1975-07-10,,99352,Dz,ORAN,75000,15 rue clair
+jgloc,123,GLOC,,Jorge,male,jorge.gloc@yopmail.com,987654321,1979-07-06,69123,99100,,LYON - 4E - ARRONDISSEMENT,75000,16 rue clair
+alucas,123,LUCAS,,Adèle,male,adele.lucas@yopmail.com,987654321,1961-12-17,14087,99100,,Bonnœil,75000,17 rue clair
+blucas,123,LUCAS,,Basille,female,basille.lucas@yopmail.com,987654321,1961-12-08,77337,99100,France,NOISIEL,75000,18 rue clair
+amineur,123,MINEUR,,Adeline,female,adeline.mineur@yopmail.com,987654321,2004-02-10,75056,99100,France,PARIS,75000,19 rue clair
+amineur2,123,MINEUR,,Adeline,female,adeline.mineur@yopmail.com,987654321,2004-02-10,75056,99100,,PARIS,75000,20 rue clair
+mmineur,123,MINEUR,NU-MINEUR,MARIE,male,marie.mineur@yopmail.com,987654321,2005-02-10,51454,99100,,REIMS,75000,21 rue clair
+aorlando,123,ORLANDO,,Adriano,female,adriano.orlando@yopmail.com,987654321,2002-00-00,31555,99100,,Toulouse,75000,22 rue clair
+spaladin,123,PALADIN,,Sabine,female,sabine.paladin@yopmail.com,987654321,2000-03-08,31555,99100,France,TOULOUSE,75000,23 rue clair
+eprivat,123,PRIVAT,,Emmanuel,female,emmanuel.privat@yopmail.com,987654321,1994-07-14,01030,99100,France,BEAUREGARD,75000,24 rue clair
+asamuel02,123,SAMUEL,,Adèle,male,adele.samuel@yopmail.com,987654321,1962-01-04,,99309,TANZANIE,,75000,25 rue clair
+nsamuel,123,SAMUEL,NU-SAMUEL,Najat,female,najat.samuel@yopmail.com,987654321,1989-12-00,77258,99100,,LOGNES,75000,26 rue clair
+asimon01,123,SIMON,,Adriano,female,adriano.simon@yopmail.com,987654321,2005-02-28,74119,99100,France,EVIAN,75000,27 rue clair
+asimon02,123,SIMON,,Adriano,female,adriano.simon@yopmail.com,987654321,2005-02-28,74119,99100,France,EVIAN,75000,28 rue clair
+mvarlet,123,VARLET,,Manon,female,manon.varlet@yopmail.com,987654321,2000-06-03,01004,99100,France,AMBERIEU EN BUGEY,75000,29 rue clair
+ejardin04,123,Jardin,NU-Jardin04,Eddy,female,eddy.jardin@yopmail.com,987654321,1976-00-00,24045,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+ncalvin-e1,123,CALVIN,,Najat,male,najat.calvin@yopmail.com,987654321,1961-03-00,67482,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+madam,123,ADAM,,MICHAL,female,michal.adam@yopmail.com,987654321,1961-12-14,69123,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+madam-e1,123,ADAM,,MICHAEL,male,michal.adam@yopmail.com,987654321,2000-12-14,69123,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+madam-e2,123,ADAM,,MICHAL,female,michal.adam@yopmail.com,987654321,1961-12-00,69123,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+lpaulin,123,PAULIN,,Lila,female,lila.paulin@yopmail.com,987654321,1984-12-15,01021,99100,France,Paris,75007,20 avenue de Ségur
+abarthe,123,BARTHE,,Ambre,female,ambre.barthe@yopmail.com,987654321,1981-05-02,01017,99100,France,Paris,75007,20 avenue de Ségur
+lkara,123,KARA,,Lou,female,lou.kara@yopmail.com,987654321,1976-04-16,01006,99100,France,Paris,75007,20 avenue de Ségur
+bjeanba,123,JEAN-BAPTISTE,,Sabine,female,sabine.jean@yopmail.com,987654321,1999-09-15,01029,99100,France,Chavannes sur Reyssouze,29360,1 Place du Champ de Foire
+samba,123,LUCAS,,Basile,male,basile.lucas@yopmail.com,987654321,1962-01-02,69123,99100,France,Toulouse,31400,1 avenue Jean Jaurès
+jbdupont,123,DUPONT,,Jean-Baptiste,male,Jean-Baptiste.Dupont@yopmail.com,987654321,1999-09-15,75056,99100,France,Toulouse,31401,2 avenue Jean Jaurès
+jbdupons,123,DUPONS,,Jean Baptiste,male,JeanBaptiste.Dupons@yopmail.com,987654321,2000-09-15,75056,99100,France,Toulouse,31402,3 avenue Jean Jaurès
+jbdupond,123,DUPOND,,Jérôme Noël Stéphane,male,JeanBaptiste.Dupond@yopmail.com,987654321,2001-09-15,75056,99100,France,Toulouse,31403,4 avenue Jean Jaurès
+mcarcenac,123,CARCENAC,DUPONT,Myriam Marie-Pierre,female,Carcenac-Myriam@yopmail.com,987654321,2002-09-15,75056,99100,France,Toulouse,31404,5 avenue Jean Jaurès
+rphedre,123,PHEDRE,,Raoul,male,raoul.test@yopmail.com,987654321,1950-01-21,75051,99100,France,Toulouse,31405,6 avenue Jean Jaurès
+jsocrate,123,SOCRATE,,Jimmy,male,raoul.test@yopmail.com,987654321,1950-01-21,75051,99100,France,Toulouse,31406,7 avenue Jean Jaurès
+sarchimed,123,ARCHIMEDE,,Samir,male,raoul.test@yopmail.com,987654321,1980-01-21,92051,99100,France,Toulouse,31407,8 avenue Jean Jaurès
+mmatin,123,MATIN,usage NOM D'USAGE,Maëllis-Gaëlle Marie,female,mmatin@yopmail.com,987654321,1990-07-13,75056,99100,France,Bordeaux,33000,44 rue désiré Saint Clément
+mmartin,123,MARTIN,usage NOM D'USAGE,Maëlis-Gaëlle Marie,female,mmartin@yopmail.com,987654321,1990-07-13,75056,99100,France,Bordeaux,33000,44 rue désiré Saint Clément

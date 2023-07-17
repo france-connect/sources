@@ -1,0 +1,91 @@
+login,password,family_name,preferred_username,given_name,gender,email,phone_number,birthdate,birthplace,birthcountry,country,locality,postal_code,street_address
+test_CLEMENT,123,CORSE,,CLEMENT,male,baterollu-5399@yopmail.com,123456789,1991-02-12,2A115,99100,France,Paris,75107,20 avenue de Ségur
+test_doublon,123,CASA,,MILA,female,Testcas123@yopmail.com,123456789,1986-01-01,,93100,France,Montreuil,93100,9 rue de l'Eglise
+test_doublon1,123,CASA,,MILA,female,Testcas456@yopmail.com,123456789,1986-01-01,,75015,France,Paris,75015,10 rue de l'Opera
+test_doublon2,123,CASA,,MILA,female,Testcas678@yopmail.com,123456789,1972-06-26,,75018,France,Paris,75018,45 rue du Pasteur
+test_droits,123,DURAND,Fournier,Audrey,female,adurand@yopmail.com,143356789,1978-02-15,75108,99200,France,Paris,75109,20 avenue de Ségur
+test_JEROME,123,BERGERE,,JEROME PIERRE ERIC,male,ydozicah-3776@yopmail.com,123456789,1959-08-15,75112,99100,France,Paris,75107,20 avenue de Ségur
+test_GERALDINE,123,LAMPE,LIT,GERALDINE,female,ducowanet-7006@yopmail.com,123456789,1976-09-21,68066,99100,France,Paris,75107,20 avenue de Ségur
+test_PHILIPPE,123,LIT,,PHILIPPE,male,daddalassux-1955@yopmail.com,123456789,1991-02-12,,99137,France,Paris,75107,20 avenue de Ségur
+test_BERTRAND,123,GUERIDON,,BERTRAND,male,uvebaffollo-9913@yopmail.com,123456789,1959-08-15,35118,99100,France,Paris,75107,20 avenue de Ségur
+test_ALAIN,123,BUREAU,,ALAIN,male,raxihuda-0514@yopmail.com,123456789,2003-04-04,75115,99100,France,Paris,75107,20 avenue de Ségur
+test_NICOLAS,123,BUFFET,,NICOLAS,male,ycofolarr-1534@yopmail.com,123456789,1972-01-08,35124,99100,France,Paris,75107,20 avenue de Ségur
+test_CINDY,123,COMMODE,ARMOIRE,CINDY,female,itittotuq-6673@yopmail.com,123456789,1980-06-27,57431,99100,France,Paris,75107,20 avenue de Ségur
+test_DAVID,123,ARMOIRE,,DAVID,male,dicipumo-1782@yopmail.com,123456789,1975-10-28,57530,99100,France,Paris,75107,20 avenue de Ségur
+test_STEPHANE,123,FAUTEUIL,,STEPHANE,male,awakussarri-3287@yopmail.com,123456789,1970-04-10,57253,99100,France,Paris,75107,20 avenue de Ségur
+test_JENNIFER,123,CANAPE,FAUTEUIL,JENNIFER,female,saqetyde-2764@yopmail.com,123456789,1978-05-16,57117,99100,France,Paris,75107,20 avenue de Ségur
+test_WILLIAM,123,BALDAQUIN,,WILLIAM,male,axitamaff-9064@yopmail.com,123456789,1951-08-14,82195,99100,France,Paris,75107,20 avenue de Ségur
+test_LAURENT,123,COIFFEUSE,,LAURENT,male,xarrinedodd-0173@yopmail.com,123456789,1951-07-20,82195,99100,France,Paris,75107,20 avenue de Ségur
+test_ELSA,123,PLACARD,,ELSA,female,ywiwyne-1268@yopmail.com,123456789,1987-04-13,59226,99100,France,Paris,75107,20 avenue de Ségur
+test_FABIEN,123,PENDERIE,,FABIEN,male,doqenaxeq-1682@yopmail.com,123456789,1986-03-25,83028,99100,France,Paris,75107,20 avenue de Ségur
+test_THIBAULT,123,TABLE,,THIBAULT,male,iffikeppano-9064@yopmail.com,123456789,1991-02-13,75116,99100,France,Paris,75107,20 avenue de Ségur
+test_TRACE_USER,123,TRACE_USER,,utilisateur traces,male,aucun@email.com,123456789,1985-01-01,75107,99100,France,Paris,75107,20 avenue de Ségur
+test_fusion,123,DUBOIS,,Angela Claire Louis,female,test.fusion.modac@gmail.com,1234567891,1962-08-24,75107,99100,France,Paris,75107,20 avenue de Ségur
+post_sc_1_2,123,USAGER UN-DEUX,,Ants,male,usager.1.2@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+post_sc_1_3,123,USAGER UN-TROIS,,Ants,male,usager.1.3@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+post_sc_1_5,123,USAGER UN-CINQ,,Ants,male,usager.1.5@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+post_sc_1_6,123,USAGER UN-SIX,,Ants,male,usager.1.6@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_2_1,123,USAGER DEUX-UN,,Ants,male,usager.2.1@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_2_3,123,USAGER DEUX-TROIS,,Ants,male,usager.2.3@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+antepost_sc_3_1,123,USAGER TROIS-UN,,Ants,male,usager.3.1@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+antepost_sc_3_3,123,USAGER TROIS-TROIS,,Ants,male,usager.3.3@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_4_1,123,USAGER QUATRE-UN,,Ants,male,usager.4.1@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_4_3,123,USAGER QUATRE-TROIS,,Ants,male,usager.4.3@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_4_5,123,USAGER QUATRE-CINQ,,Ants,male,usager.4.5@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_6_1,123,USAGER SIX-UN,,Ants,male,usager.6.1@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_6_5,123,USAGER SIX-CINQ,,Ants,male,usager.6.5@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_7_1,123,USAGER SEPT-UN,,Ants,male,usager.7.1@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_7_2,123,USAGER SEPT-DEUX,,Ants,male,usager.7.2@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_7_3,123,USAGER SEPT-TROIS,,Ants,male,usager.7.3@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_7_5,123,USAGER SEPT-CINQ,,Ants,male,usager.7.5@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+ante_sc_7_6,123,USAGER SEPT-SIX,,Ants,male,usager.7.6@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+rusager,123,USAGER,,Roger,male,a.roger_usager@yopmail.com,123456789,1980-01-01,54000,99100,France,Paris13,75013,101 Rue de Tolbiac
+testpiebdf,123,DURAND,,Jean,male,testpiebdf@gmail.com,123456789,1985-01-01,75107,99100,France,Paris,75107,20 avenue de Ségur
+dep_moins_dix,123,DUBOIS,POULAIN,Depart,male,testmodac@gmail.com,1234567891,1985-09-10,02408,99100,France,Paris,75107,20 avenue de Ségur
+inscertif01_primo,123,BOUCHON,,Didier Lucien Gabriel,male,test@yopmail.com,123456789,1961-10-18,47001,99100,France,Paris,75107,20 avenue de Ségur
+inscertif02_primo,123,BOUCHON,,Sophie Céline,female,test@yopmail.com,123456789,1987-12-16,33243,99100,France,Paris,75107,20 avenue de Ségur
+inscertif03,123,BOUCHON-B,,Dpi,female,test@yopmail.com,123456789,1960-01-01,69230,99100,France,Paris,75107,20 avenue de Ségur
+inscertif04,123,BOUCHON,,François Jean Hippolyte Jules,male,test@yopmail.com,123456789,1979-04-25,62193,99100,France,Paris,75107,20 avenue de Ségur
+inscertif05,123,BOUCHONNEAU-MANOUVRIER,,Manon,female,test@yopmail.com,123456789,1993-02-21,31488,99100,France,Paris,75107,20 avenue de Ségur
+inscertif06_tech,123,BOUCHONNET,,Eric,male,test@yopmail.com,123456789,1959-12-12,33036,99100,France,Paris,75107,20 avenue de Ségur
+inscertif07_tech,123,BOUCHON,,Jannick,male,test@yopmail.com,123456789,1964-12-21,33063,99100,France,Paris,75107,20 avenue de Ségur
+insnoncertif08,123,BOUCHONBOUCHONE,,Dpi,female,test@yopmail.com,123456789,1978-05-05,01100,99100,France,Paris,75107,20 avenue de Ségur
+insnoncertif09,123,BOUCHON,,Bouchon Test,female,test@yopmail.com,123456789,1970-07-22,62119,99397,France,Paris,75107,20 avenue de Ségur
+radcertif01,123,BOUCHONVILLE,,Louis-Alexandre,male,test@yopmail.com,123456789,1997-09-15,60159,99100,France,Paris,75107,20 avenue de Ségur
+radcertif02,123,BOUCHONNET,,Philippe Paul Augustin,male,test@yopmail.com,123456789,1958-05-16,90010,99100,France,Paris,75107,20 avenue de Ségur
+radcertif03_tech,123,BOUCHON,,Charles,male,test@yopmail.com,123456789,1990-01-12,2A004,99100,France,Paris,75107,20 avenue de Ségur
+radcertif04_tech,123,BOUCHON CLOVIS,,Fabien,male,test@yopmail.com,123456789,1975-06-02,25104,99100,France,Paris,75107,20 avenue de Ségur
+radnoncertif05_tech,123,BOUCHON A,,Dpi,female,test@yopmail.com,123456789,1985-09-11,68022,99100,France,Paris,75107,20 avenue de Ségur
+radnoncertif06_tech,123,BOUCHONA,,Dpi,male,test@yopmail.com,123456789,1982-11-06,93008,99100,France,Paris,75107,20 avenue de Ségur
+Testmultiplecodepays,123,DUBOIS,,JEANCODE,male,Testmultiplecodepays@yopmail.com,0123456789,1941-11-01,,99123,France,Paris,75015,6 Rue Firmin Gillot
+Testmultiplecodepaysdeux,123,DUMONT,DUMONT,MARIECODE,female,Testmultiplecodepaysdeux@yopmail.com,0123456789,1940-02-02,,99217,France,Paris,75015,6 Rue Firmin Gillot
+Testmultiplecodepostal,123,DUROCHE,,JACQUESCODE,male,Testmultiplecodepostal@yopmail.com,0123456789,2005-01-02,27630,99100,France,Paris,75015,6 Rue Firmin Gillot
+Testanciencodepostal,123,DEPLACE,DEPLACE,ROSECODE,female,Testanciencodepostal@yopmail.com,0123456789,1942-02-03,75012,99100,France,Paris,75015,6 Rue Firmin Gillot
+TestPaysprénom,123,BABA,,Yoann Benoit Clément,male,testFC@yopmail.com,,1941-11-01,,99221,France,Paris,75015,6 Rue Firmin Gillot
+TestPaysprénom2,123,YAGA,BABA,Chantal Amélie Ingrid,female,testFC2@yopmail.com,,1941-11-01,,99121,France,Paris,75015,6 Rue Firmin Gillot
+Testcommuneprénom,123,YOGO,BOBO,Sophie Suzanne,female,testFC3@yopmail.com,,1981-11-01,50528,99100,France,Paris,75015,6 Rue Firmin Gillot
+Testcommuneprénom2,123,BOBO,,Jacob Henri,male,testFC4@yopmail.com,,1981-11-02,21331,99100,France,Paris,75015,6 Rue Firmin Gillot
+TestAttest01,123,TEST UN,,CLAUDIO,male,testtttest01@yopmail.com,,1974-01-01,03117,99100,France,LONS-LE-SAUNIER,39000,8 RUE DES LILAS
+TestAttest02,123,EL ANONYME LONS,,MO'HAMEDI,male,testtttest02@yopmail.com,,1944-12-31,99350,99300,France,LONS-LE-SAUNIER,39000,63 RUE JEAN JAURES
+TestAttest03,123,TEST CINQANTE,,DAMIEN,male,testtttest03@yopmail.com,,1900-01-10,03117,99100,France,LONS-LE-SAUNIER,39000,8 RUE DES LILAS
+TestAttest04,123,TETCV-LONS,,Fettouma,female,testtttest04@yopmail.com,,1938-12-31,01053,99100,France,LONS-LE-SAUNIER,39000,8 RUE DES LILAS
+TestAttest05,123,TEST SOIXANTE,,LEON,male,testtttest05@yopmail.com,,1932-04-10,03117,99100,France,LONS-LE-SAUNIER,39000,8 RUE DES LILAS
+TestAttest06,123,ANONYM'E LONS,,CV TEST UN,male,testtttest06@yopmail.com,,1931-06-17,64102,99100,France,LONS-LE-SAUNIER,42300,12 RUE ALEXANDRE ROCHE
+TestAttest07,123,TEST SIX,,TERON,male,testatttest07@yopmail.com,,1940-06-12,03117,99100,France,LONS-LE-SAUNIER,39000,8 RUE DES LILAS
+TestAttest08,123,CLABAUT ANONYME LONS,,Cedric,male,testatttest08@yopmail.com,,1980-05-25,20041,99100,France,LONS-LE-SAUNIER,42300,24 RUE MULSANT
+TestAttest09,123,TESTE DEUXINY,NOMMARITALYNE,Veronique anays,female,testtttest09@yopmail.com,,1966-02-14,03117,99100,France,LONS-LE-SAUNIER,39000,8 RUE DES LILAS
+TestAttest10,123,MARCHE,L'HERBETTE--ANONYME,Genevieve,female,testtttest10@yopmail.com,,1943-07-13,92515,99352,France,LONS-LE-SAUNIER,39000,8 RUE DES LILAS
+TestAttest11,123,TEST HUIT,,Eve,female,testtttest11@yopmail.com,,2005-06-01,03179,99100,France,LONS-LE-SAUNIER,39000,8 RUE DES LILAS
+TestAttest12,123,L'O'N'S A-A,TESTLONSCARTEVITALE,Marcelle,female,testtttest12@yopmail.com,,1976-07-06,39018,99100,France,LONS-LE-SAUNIER,39000,
+TestAttest13,123,LONS'AAAAAAAAAAAAAAAAAAAA,,Quinze'benef,male,testtttest13@yopmail.com,,1952-01-01,39018,99100,France,LONS-LE-SAUNIER,97100,
+TestAttest14,123,CDR-CARTE,,Test,male,testtttest14@yopmail.com,,1956-01-01,39018,99100,France,LONS-LE-SAUNIER,39000,
+TestAttest15,123,ANO'NYMOS-LONS,,Olivier Martin,male,testtttest15@yopmail.com,,1980-05-24,95491,99100,France,LONS-LE-SAUNIER,42300,9 R DES MONTS DE LA MADELEINE
+insiAmeliQualif,123,DE VINCI,,LEONARDO,male,deVinci@yopmail.com,,2014-02-01,63220,99100,France,Paris,75015,6 Rue Firmin Gillot
+insiAmeliQualif2,123,NESSI,,RUTH,female,nessiRuth@yopmail.com,,1977-07-14,63220,99100,France,Paris,75015,6 Rue Firmin Gillot
+insiAmeliQualif3,123,NESSI,,MICHELANGELO ANTHONY,male,nessiMichelangelo@yopmail.com,,2010-08-07,63220,99100,France,Paris,75015,6 Rue Firmin Gillot
+insiAmeliQualif4,123,ECETINSI,,PIERRE-ALAIN MURIEL FLORIANT,male,ecetinsi@yopmail.com,,2009-07-14,63220,99100,France,Paris,75015,6 Rue Firmin Gillot
+insiAmeliQualif5,123,TCHITCHI,,CATARINA,female,bella@yopmail.com,,1936-06-21,63220,99100,France,Paris,75015,6 Rue Firmin Gillot
+inscertif10_discrilong1,123,BOUCHONCBITRENTE,,Dpi Alexandre Benoit,male,test@yopmail.com,123456789,1983-01-01,44109,99100,France,Paris,75107,20 avenue de Ségur
+inscertif11_discrilong0,123,BOUCHONSNER,,Dpi Mélissandrea Huguette,female,test@yopmail.com,123456789,1980-01-02,11262,99100,France,Paris,75107,20 avenue de Ségur
+MaprocREU1,123,ABDELJALIL,,Cedric Jean,male,smolina.cgi@gmail.com,123456789,1934-02-00,02200,99100,France,Saint-Fons,69190,55 rue Emile Zola
+insee_ancien,123,ACNUSER,ACNTEST,SARAH SOPHIE,female,ucassefa-7807@yopmail.com,123456789,1996-12-06,75012,99100,France,Paris,75107,20 avenue de Ségur

@@ -1,9 +1,7 @@
-import { readdirSync } from 'fs';
-import { join } from 'path';
+import * as recursive from 'recursive-readdir';
 
-export const getFilesPathsFromDir = (dirPath) =>
-  readdirSync(dirPath)
-    // only takes data files
-    .filter((filename) => filename.endsWith('.csv'))
-    // prepend path to filename
-    .map((filename) => join(dirPath, filename));
+export const NON_CSV_GLOBAL = '!*.csv';
+
+export async function getFilesPathsFromDir(dirPath: string): Promise<string[]> {
+  return await recursive(dirPath, [NON_CSV_GLOBAL]);
+}

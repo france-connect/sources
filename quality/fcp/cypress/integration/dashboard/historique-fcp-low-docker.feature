@@ -22,7 +22,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Service Provider Example"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
+    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
 
   Scénario: Historique Connexion - FC Legacy - FS public avec scope data
@@ -42,7 +42,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Service Provider Example"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
+    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Service Provider Example"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -77,7 +77,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Service Provider Example"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
+    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Service Provider Example"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -104,7 +104,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
+    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -137,7 +137,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
+    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -187,7 +187,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
+    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du 1er évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -258,7 +258,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
+    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
 
   Scénario: Historique Connexion - FC Legacy - FS public avec scope traces
@@ -278,7 +278,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Service Provider Example"
     Et la date et heure de connexion correspondent à maintenant
     Et la localisation de l'évènement n'est pas affichée
-    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
+    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Service Provider Example"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -306,7 +306,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et le fournisseur de service de l'évènement est "Virtual Private Service Provider for Consent"
     Et la date et heure de connexion correspondent à maintenant
     # Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé"
+    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"

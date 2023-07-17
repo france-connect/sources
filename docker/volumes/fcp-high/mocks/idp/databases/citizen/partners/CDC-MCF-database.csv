@@ -1,0 +1,141 @@
+login,family_name,preferred_username,given_name,gender,email,phone_number,birthdate,birthplace,birthcountry,country,postal_code,locality,street_address
+lamy                      ,LAMY                      ,,BLANDINE     ,male  ,mcf-test@caissedesdepots.fr,,1987-07-12,2A004,99100,France,Bordeaux,33044,rue du vergne
+da cunha                  ,DA CUNHA                  ,,SABRINA      ,female,mcf-test@caissedesdepots.fr,,1987-07-22,2A004,99100,France,Bordeaux,33044,rue du vergne
+francois                  ,FRANCOIS                  ,,YOAN         ,male  ,mcf-test@caissedesdepots.fr,,1987-07-26,2A004,99100,France,Bordeaux,33044,rue du vergne
+seguin                    ,SEGUIN                    ,,MARGOT       ,female,mcf-test@caissedesdepots.fr,,1987-07-04,2A004,99100,France,Bordeaux,33044,rue du vergne
+lepoultier                ,LEPOULTIER                ,,MARIE        ,male  ,mcf-test@caissedesdepots.fr,,1987-07-09,2B033,99100,France,Bordeaux,33044,rue du vergne
+morgo-orella              ,MORGO-ORELLA              ,,ALEXANDRE    ,male  ,mcf-test@caissedesdepots.fr,,1987-07-16,2B033,99100,France,Bordeaux,33044,rue du vergne
+tillard                   ,TILLARD                   ,,LUCIE        ,male  ,mcf-test@caissedesdepots.fr,,1987-07-16,2B033,99100,France,Bordeaux,33044,rue du vergne
+pepin                     ,PEPIN                     ,,DIMITRI      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-31,2B033,99100,France,Bordeaux,33044,rue du vergne
+poirot                    ,POIROT                    ,,JEREMIE      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-02,2B033,99100,France,Bordeaux,33044,rue du vergne
+jude                      ,JUDE                      ,,MEDERIC      ,female,mcf-test@caissedesdepots.fr,,1987-07-29,2B033,99100,France,Bordeaux,33044,rue du vergne
+zimmermann                ,ZIMMERMANN                ,,SYLVAIN      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-02,13055,99100,France,Bordeaux,33044,rue du vergne
+camilleri                 ,CAMILLERI                 ,,CELINE       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-11,13055,99100,France,Bordeaux,33044,rue du vergne
+marolleau                 ,MAROLLEAU                 ,,LYDIE        ,male  ,mcf-test@caissedesdepots.fr,,1987-07-13,13055,99100,France,Bordeaux,33044,rue du vergne
+granger                   ,GRANGER                   ,,ROMAIN       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-16,13055,99100,France,Bordeaux,33044,rue du vergne
+huet                      ,HUET                      ,,MANUEL       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-11,13055,99100,France,Bordeaux,33044,rue du vergne
+leclair                   ,LECLAIR                   ,,AURELIE      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-14,13055,99100,France,Bordeaux,33044,rue du vergne
+deroubaix                 ,DEROUBAIX                 ,,JULIEN       ,female,mcf-test@caissedesdepots.fr,,1987-07-23,13055,99100,France,Bordeaux,33044,rue du vergne
+carroue                   ,CARROUE                   ,,JENNIFER     ,male  ,mcf-test@caissedesdepots.fr,,1987-07-14,13055,99100,France,Bordeaux,33044,rue du vergne
+peltot                    ,PELTOT                    ,,JEREMY       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-27,13055,99100,France,Bordeaux,33044,rue du vergne
+brachet                   ,BRACHET                   ,,GARY         ,female,mcf-test@caissedesdepots.fr,,1987-07-17,13055,99100,France,Bordeaux,33044,rue du vergne
+rousseau                  ,ROUSSEAU                  ,,EMMANUEL     ,male  ,mcf-test@caissedesdepots.fr,,1987-07-12,13055,99100,France,Bordeaux,33044,rue du vergne
+renaudineau               ,RENAUDINEAU               ,,CHRISTOPHE   ,female,mcf-test@caissedesdepots.fr,,1987-07-13,13055,99100,France,Bordeaux,33044,rue du vergne
+gallot                    ,GALLOT                    ,,BASILE       ,female,mcf-test@caissedesdepots.fr,,1987-07-03,13056,99100,France,Bordeaux,33044,rue du vergne
+palluau                   ,PALLUAU                   ,,THIBAUT      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-06,13056,99100,France,Bordeaux,33044,rue du vergne
+goubaud                   ,GOUBAUD                   ,,DELPHINE     ,female,mcf-test@caissedesdepots.fr,,1987-07-07,13056,99100,France,Bordeaux,33044,rue du vergne
+gedeau                    ,GEDEAU                    ,,JONATHAN     ,male  ,mcf-test@caissedesdepots.fr,,1987-07-09,13056,99100,France,Bordeaux,33044,rue du vergne
+bouilland                 ,BOUILLAND                 ,,TERENCE      ,female,mcf-test@caissedesdepots.fr,,1987-07-04,13056,99100,France,Bordeaux,33044,rue du vergne
+pronine                   ,PRONINE                   ,,CAROLINE     ,male  ,mcf-test@caissedesdepots.fr,,1987-07-12,13056,99100,France,Bordeaux,33044,rue du vergne
+deniol                    ,DENIOL                    ,,JULIEN       ,female,mcf-test@caissedesdepots.fr,,1987-07-14,13081,99100,France,Bordeaux,33044,rue du vergne
+moreau                    ,MOREAU                    ,,ALEXIS       ,female,mcf-test@caissedesdepots.fr,,1987-07-15,13081,99100,France,Bordeaux,33044,rue du vergne
+hameon                    ,HAMEON                    ,,DEBORAH      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-20,21231,99100,France,Bordeaux,33044,rue du vergne
+godard                    ,GODARD                    ,,ELISE        ,male  ,mcf-test@caissedesdepots.fr,,1987-07-27,21231,99100,France,Bordeaux,33044,rue du vergne
+fontanille                ,FONTANILLE                ,,FANELIE      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-03,21231,99100,France,Bordeaux,33044,rue du vergne
+carre                     ,CARRE                     ,,OPHELIE      ,female,mcf-test@caissedesdepots.fr,,1987-07-29,21231,99100,France,Bordeaux,33044,rue du vergne
+papin                     ,PAPIN                     ,,CHARLOTTE    ,male  ,mcf-test@caissedesdepots.fr,,1987-07-04,21231,99100,France,Bordeaux,33044,rue du vergne
+rousselcorbineau          ,ROUSSEL-CORBINEAU         ,,JULIA        ,female,mcf-test@caissedesdepots.fr,,1987-07-16,21231,99100,France,Bordeaux,33044,rue du vergne
+granger                   ,GRANGER                   ,,BAPTISTE     ,female,mcf-test@caissedesdepots.fr,,1987-07-24,21231,99100,France,Bordeaux,33044,rue du vergne
+rummel                    ,RUMMEL                    ,,STEVE        ,female,mcf-test@caissedesdepots.fr,,1987-07-26,21231,99100,France,Bordeaux,33044,rue du vergne
+delaporte                 ,DELAPORTE                 ,,STEVEN       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-14,21278,99100,France,Bordeaux,33044,rue du vergne
+sackda                    ,SACKDA                    ,,BANDASACK    ,female,mcf-test@caissedesdepots.fr,,1987-07-16,21278,99100,France,Bordeaux,33044,rue du vergne
+sauffroy                  ,SAUFFROY                  ,,GUILLAUME    ,male  ,mcf-test@caissedesdepots.fr,,1987-07-06,21278,99100,France,Bordeaux,33044,rue du vergne
+provenzale                ,PROVENZALE                ,,THIBAUT      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-09,22050,99100,France,Bordeaux,33044,rue du vergne
+supiot                    ,SUPIOT                    ,,GUILLAUME    ,male  ,mcf-test@caissedesdepots.fr,,1987-07-04,22050,99100,France,Bordeaux,33044,rue du vergne
+guyon                     ,GUYON                     ,,GAEL         ,female,mcf-test@caissedesdepots.fr,,1987-07-30,22113,99100,France,Bordeaux,33044,rue du vergne
+simonnot                  ,SIMONNOT                  ,,JEAN-BAPTISTE,female,mcf-test@caissedesdepots.fr,,1987-07-30,22113,99100,France,Bordeaux,33044,rue du vergne
+perquin                   ,PERQUIN                   ,,CORALIE      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-31,22113,99100,France,Bordeaux,33044,rue du vergne
+jaspart                   ,JASPART                   ,,ANAIS        ,male  ,mcf-test@caissedesdepots.fr,,1987-07-28,22113,99100,France,Bordeaux,33044,rue du vergne
+creusat                   ,CREUSAT                   ,,AGNES        ,male  ,mcf-test@caissedesdepots.fr,,1987-07-27,22113,99100,France,Bordeaux,33044,rue du vergne
+simon                     ,SIMON                     ,,ANGELIQUE    ,female,mcf-test@caissedesdepots.fr,,1987-07-05,22113,99100,France,Bordeaux,33044,rue du vergne
+nappez                    ,NAPPEZ                    ,,VIRGINIE     ,male  ,mcf-test@caissedesdepots.fr,,1987-07-02,22123,99100,France,Bordeaux,33044,rue du vergne
+saib                      ,SAIB                      ,,MADJID       ,female,mcf-test@caissedesdepots.fr,,1987-07-09,22123,99100,France,Bordeaux,33044,rue du vergne
+bulut                     ,BULUT                     ,,FERAT        ,male  ,mcf-test@caissedesdepots.fr,,1987-07-20,30189,99100,France,Bordeaux,33044,rue du vergne
+confort                   ,CONFORT                   ,,ROMAIN       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-22,30189,99100,France,Bordeaux,33044,rue du vergne
+schatz                    ,SCHATZ                    ,,JOSEPH       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-25,30189,99100,France,Bordeaux,33044,rue du vergne
+bouklihacene              ,BOUKLI-HACENE             ,,FODIL        ,male  ,mcf-test@caissedesdepots.fr,,1987-07-09,30189,99100,France,Bordeaux,33044,rue du vergne
+palix                     ,PALIX                     ,,LAETITIA     ,female,mcf-test@caissedesdepots.fr,,1987-07-27,30189,99100,France,Bordeaux,33044,rue du vergne
+peyre                     ,PEYRE                     ,,FREDERIC     ,male  ,mcf-test@caissedesdepots.fr,,1987-07-25,30189,99100,France,Bordeaux,33044,rue du vergne
+prodhomme                 ,PROD'HOMME                ,,CORALIE      ,female,mcf-test@caissedesdepots.fr,,1987-07-05,30189,99100,France,Bordeaux,33044,rue du vergne
+ben brahim                ,BEN BRAHIM                ,,ANIS         ,male  ,mcf-test@caissedesdepots.fr,,1987-07-09,30189,99100,France,Bordeaux,33044,rue du vergne
+santos                    ,SANTOS                    ,,TONY         ,male  ,mcf-test@caissedesdepots.fr,,1987-07-27,30189,99100,France,Bordeaux,33044,rue du vergne
+largilliere               ,LARGILLIERE               ,,NICOLAS      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-11,30189,99100,France,Bordeaux,33044,rue du vergne
+mansour                   ,MANSOUR                   ,,HYLLELE      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-12,30189,99100,France,Bordeaux,33044,rue du vergne
+carrie                    ,CARRIE                    ,,CHARLENE     ,female,mcf-test@caissedesdepots.fr,,1987-07-22,30189,99100,France,Bordeaux,33044,rue du vergne
+ferron                    ,FERRON                    ,,CYNTHIA      ,female,mcf-test@caissedesdepots.fr,,1987-07-29,30189,99100,France,Bordeaux,33044,rue du vergne
+sabathier                 ,SABATHIER                 ,,JEAN         ,male  ,mcf-test@caissedesdepots.fr,,1987-07-31,30189,99100,France,Bordeaux,33044,rue du vergne
+boussat                   ,BOUSSAT                   ,,IMAN         ,female,mcf-test@caissedesdepots.fr,,1987-07-30,31483,99100,France,Bordeaux,33044,rue du vergne
+pla                       ,PLA                       ,,JESSICA      ,female,mcf-test@caissedesdepots.fr,,1987-07-14,31483,99100,France,Bordeaux,33044,rue du vergne
+botreau roussel bonneterre,BOTREAU ROUSSEL BONNETERRE,,JEROME       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-02,31555,99100,France,Bordeaux,33044,rue du vergne
+sayegh                    ,SAYEGH                    ,,ISABELLE     ,female,mcf-test@caissedesdepots.fr,,1987-07-02,31555,99100,France,Bordeaux,33044,rue du vergne
+cottin                    ,COTTIN                    ,,PIERRE       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-26,31555,99100,France,Bordeaux,33044,rue du vergne
+pagnoux                   ,PAGNOUX                   ,,YOHAN        ,male  ,mcf-test@caissedesdepots.fr,,1987-07-28,31555,99100,France,Bordeaux,33044,rue du vergne
+zanchetta                 ,ZANCHETTA                 ,,CORALIE      ,female,mcf-test@caissedesdepots.fr,,1987-07-14,31555,99100,France,Bordeaux,33044,rue du vergne
+gil                       ,GIL                       ,,ROMAIN       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-29,33522,99100,France,Bordeaux,33044,rue du vergne
+lauruol                   ,LAURUOL                   ,,AURELIEN     ,male  ,mcf-test@caissedesdepots.fr,,1987-07-10,33529,99100,France,Bordeaux,33044,rue du vergne
+lafon                     ,LAFON                     ,,CLAIRE       ,female,mcf-test@caissedesdepots.fr,,1987-07-13,33529,99100,France,Bordeaux,33044,rue du vergne
+goepp                     ,GOEPP                     ,,GWENAEL      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-04,34011,99100,France,Bordeaux,33044,rue du vergne
+paquet                    ,PAQUET                    ,,JONATHAN     ,male  ,mcf-test@caissedesdepots.fr,,1987-07-16,34032,99100,France,Bordeaux,33044,rue du vergne
+pradarelli                ,PRADARELLI                ,,ALEXIS       ,female,mcf-test@caissedesdepots.fr,,1987-07-03,34032,99100,France,Bordeaux,33044,rue du vergne
+lefevre                   ,LEFEVRE                   ,,FLORIAN      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-19,34032,99100,France,Bordeaux,33044,rue du vergne
+herault                   ,HERAULT                   ,,ELODIE       ,female,mcf-test@caissedesdepots.fr,,1987-07-16,34032,99100,France,Bordeaux,33044,rue du vergne
+piquemal                  ,PIQUEMAL                  ,,GUILLAUME    ,male  ,mcf-test@caissedesdepots.fr,,1987-07-27,34032,99100,France,Bordeaux,33044,rue du vergne
+nucho                     ,NUCHO                     ,,MAGALI       ,female,mcf-test@caissedesdepots.fr,,1987-07-28,34032,99100,France,Bordeaux,33044,rue du vergne
+touitou                   ,TOUITOU                   ,,CHLOE        ,female,mcf-test@caissedesdepots.fr,,1987-07-07,34172,99100,France,Bordeaux,33044,rue du vergne
+baudot                    ,BAUDOT                    ,,CECILE       ,female,mcf-test@caissedesdepots.fr,,1987-07-08,34172,99100,France,Bordeaux,33044,rue du vergne
+perrone                   ,PERRONE                   ,,ALEXANDRE    ,male  ,mcf-test@caissedesdepots.fr,,1987-07-28,34172,99100,France,Bordeaux,33044,rue du vergne
+vollerin                  ,VOLLERIN                  ,,SERVANE      ,female,mcf-test@caissedesdepots.fr,,1987-07-06,34172,99100,France,Bordeaux,33044,rue du vergne
+nicolas                   ,NICOLAS                   ,,LUDMILLA     ,female,mcf-test@caissedesdepots.fr,,1987-07-17,34172,99100,France,Bordeaux,33044,rue du vergne
+diaz                      ,DIAZ                      ,,JEAN-PHILIPPE,male  ,mcf-test@caissedesdepots.fr,,1987-07-17,34172,99100,France,Bordeaux,33044,rue du vergne
+baudoin                   ,BAUDOIN                   ,,YANN         ,female,mcf-test@caissedesdepots.fr,,1987-07-23,49007,99100,France,Bordeaux,33044,rue du vergne
+kochert                   ,KOCHERT                   ,,LOIC         ,male  ,mcf-test@caissedesdepots.fr,,1987-07-03,49007,99100,France,Bordeaux,33044,rue du vergne
+agusti                    ,AGUSTI                    ,,CORALIE      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-28,49007,99100,France,Bordeaux,33044,rue du vergne
+auzou                     ,AUZOU                     ,,JENNIFER     ,male  ,mcf-test@caissedesdepots.fr,,1987-07-19,49007,99100,France,Bordeaux,33044,rue du vergne
+gagnier                   ,GAGNIER                   ,,NOEMIE       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-22,49007,99100,France,Bordeaux,33044,rue du vergne
+durand                    ,DURAND                    ,,MATHILDE     ,male  ,mcf-test@caissedesdepots.fr,,1987-07-29,49007,99100,France,Bordeaux,33044,rue du vergne
+guillem                   ,GUILLEM                   ,,JUSTINE      ,female,mcf-test@caissedesdepots.fr,,1987-07-29,49007,99100,France,Bordeaux,33044,rue du vergne
+curlier                   ,CURLIER                   ,,ARIANE       ,male  ,mcf-test@caissedesdepots.fr,,1987-07-03,49007,99100,France,Bordeaux,33044,rue du vergne
+labanti                   ,LABANTI                   ,,VANESSA      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-08,49007,99100,France,Bordeaux,33044,rue du vergne
+chaux                     ,CHAUX                     ,,VINCENT      ,male  ,mcf-test@caissedesdepots.fr,,1987-07-22,49007,99100,France,Bordeaux,33044,rue du vergne
+mariel                    ,MARIEL                    ,,EMILIE       ,female,mcf-test@caissedesdepots.fr,,1987-07-05,49023,99100,France,Bordeaux,33044,rue du vergne
+lafitte                   ,LAFITTE                   ,,DIDIER       ,male  ,mcf-test@caissedesdepots.fr,,1968-02-07,64102,99100,France,Bordeaux,33044,rue du vergne
+lardieg                   ,LARDIEG                   ,,CHRISTIAN    ,male  ,mcf-test@caissedesdepots.fr,,1961-02-05,64422,99100,France,Bordeaux,33044,rue du vergne
+lecoeur                   ,LECOEUR                   ,,DOMINIQUE    ,male  ,mcf-test@caissedesdepots.fr,,1965-08-30,64430,99100,France,Bordeaux,33044,rue du vergne
+liautaud                  ,LIAUTAUD                  ,,THIERRY      ,male  ,mcf-test@caissedesdepots.fr,,1963-11-15,19031,99100,France,Bordeaux,33044,rue du vergne
+lacoste                   ,LACOSTE                   ,,STEPHANE     ,male  ,mcf-test@caissedesdepots.fr,,1964-04-24,75120,99100,France,Bordeaux,33044,rue du vergne
+lartigue                  ,LARTIGUE                  ,,MARIE        ,female,mcf-test@caissedesdepots.fr,,1959-08-19,64422,99100,France,Bordeaux,33044,rue du vergne
+loinaz                    ,LOINAZ                    ,,FABRICE      ,male  ,mcf-test@caissedesdepots.fr,,1968-04-02,64102,99100,France,Bordeaux,33044,rue du vergne
+lapeze                    ,LAPEZE                    ,,FRANCK       ,male  ,mcf-test@caissedesdepots.fr,,1971-11-30,64102,99100,France,Bordeaux,33044,rue du vergne
+loiret                    ,LOIRET                    ,,BERTRAND     ,male  ,mcf-test@caissedesdepots.fr,,1966-10-05,44109,99100,France,Bordeaux,33044,rue du vergne
+lapaduleroy               ,LAPADU-LEROY              ,,CHRISTIAN    ,male  ,mcf-test@caissedesdepots.fr,,1960-08-13,64445,99100,France,Bordeaux,33044,rue du vergne
+linxe                     ,LINXE                     ,,PIERRE       ,male  ,mcf-test@caissedesdepots.fr,,1962-01-31,75112,99100,France,Bordeaux,33044,rue du vergne
+lartigue                  ,LARTIGUE                  ,,LIONEL       ,male  ,mcf-test@caissedesdepots.fr,,1970-04-15,64102,99100,France,Bordeaux,33044,rue du vergne
+lefeuvre                  ,LEFEUVRE                  ,,FRANCOIS     ,male  ,mcf-test@caissedesdepots.fr,,1965-05-22,33063,99100,France,Bordeaux,33044,rue du vergne
+laffargue                 ,LAFFARGUE                 ,,ISABELLE     ,female,mcf-test@caissedesdepots.fr,,1965-04-22,64445,99100,France,Bordeaux,33044,rue du vergne
+laplassottepauly          ,LAPLASSOTTE-PAULY         ,,PHILIPPE     ,male  ,mcf-test@caissedesdepots.fr,,1971-08-19,64422,99100,France,Bordeaux,33044,rue du vergne
+larregain                 ,LARREGAIN                 ,,ANTOINE      ,male  ,mcf-test@caissedesdepots.fr,,1967-04-01,64371,99100,France,Bordeaux,33044,rue du vergne
+larroque                  ,LARROQUE                  ,,FRANCK       ,male  ,mcf-test@caissedesdepots.fr,,1970-09-03,82121,99100,France,Bordeaux,33044,rue du vergne
+lacarrieu                 ,LACARRIEU                 ,,JEAN-PIERRE  ,male  ,mcf-test@caissedesdepots.fr,,1969-10-29,64430,99100,France,Bordeaux,33044,rue du vergne
+lestel                    ,LESTEL                    ,,DIDIER       ,male  ,mcf-test@caissedesdepots.fr,,1965-05-22,64445,99100,France,Bordeaux,33044,rue du vergne
+lansalot                  ,LANSALOT                  ,,JEAN         ,male  ,mcf-test@caissedesdepots.fr,,1963-12-01,64422,99100,France,Bordeaux,33044,rue du vergne
+lahon                     ,LAHON                     ,,MICHEL       ,male  ,mcf-test@caissedesdepots.fr,,1966-02-12,64430,99100,France,Bordeaux,33044,rue du vergne
+lahon                     ,LAHON                     ,,FERNAND      ,male  ,mcf-test@caissedesdepots.fr,,1968-01-03,64430,99100,France,Bordeaux,33044,rue du vergne
+larcade                   ,LARCADE                   ,,JEAN-NOEL    ,male  ,mcf-test@caissedesdepots.fr,,1968-12-03,64445,99100,France,Bordeaux,33044,rue du vergne
+lamothe                   ,LAMOTHE                   ,,PATRICK      ,male  ,mcf-test@caissedesdepots.fr,,1968-06-29,5046,99100,France,Bordeaux,33044,rue du vergne
+lassalle                  ,LASSALLE                  ,,JEAN-BAPTISTE,male  ,mcf-test@caissedesdepots.fr,,1972-09-16,77305,99100,France,Bordeaux,33044,rue du vergne
+lavie                     ,LAVIE                     ,,PASCAL       ,male  ,mcf-test@caissedesdepots.fr,,1964-08-11,47157,99100,France,Bordeaux,33044,rue du vergne
+lasala                    ,LASALA                    ,,PATRICK      ,male  ,mcf-test@caissedesdepots.fr,,1967-08-05,64430,99100,France,Bordeaux,33044,rue du vergne
+larragueta                ,LARRAGUETA                ,,DAVID        ,male  ,mcf-test@caissedesdepots.fr,,1969-10-12,64445,99100,France,Bordeaux,33044,rue du vergne
+lefort                    ,LEFORT                    ,,JEAN-FRANCOIS,male  ,mcf-test@caissedesdepots.fr,,1970-08-03,64122,99100,France,Bordeaux,33044,rue du vergne
+leman                     ,LEMAN                     ,,LAURENT      ,male  ,mcf-test@caissedesdepots.fr,,1972-04-18,36044,99100,France,Bordeaux,33044,rue du vergne
+loiseau                   ,LOISEAU                   ,,PASCAL       ,male  ,mcf-test@caissedesdepots.fr,,1962-07-29,64410,99100,France,Bordeaux,33044,rue du vergne
+lauret                    ,LAURET                    ,,ALAIN        ,male  ,mcf-test@caissedesdepots.fr,,1969-07-10,65440,99100,France,Bordeaux,33044,rue du vergne
+lacabanne                 ,LACABANNE                 ,,MARC         ,male  ,mcf-test@caissedesdepots.fr,,1963-08-26,64445,99100,France,Bordeaux,33044,rue du vergne
+listre                    ,LISTRE                    ,,JEAN-MARC    ,male  ,mcf-test@caissedesdepots.fr,,1960-12-18,64445,99100,France,Bordeaux,33044,rue du vergne
+lannevere                 ,LANNEVERE                 ,,THIERRY      ,male  ,mcf-test@caissedesdepots.fr,,1962-10-18,33063,99100,France,Bordeaux,33044,rue du vergne
+leyx                      ,LEYX                      ,,PASCAL       ,male  ,mcf-test@caissedesdepots.fr,,1965-04-17,64430,99100,France,Bordeaux,33044,rue du vergne
+reault                    ,REAULT                    ,,CLAUDETTE    ,female,mcf-test@caissedesdepots.fr,,1954-08-03,83300,99100,France,Bordeaux,33044,rue du vergne
+ajaj                      ,AJAJ                      ,,JUANE        ,female,mcf-test@caissedesdepots.fr,,1954-11-15,75029,99100,France,Bordeaux,33044,rue du vergne
+argento                   ,ARGENTO                   ,,JUANE        ,female,mcf-test@caissedesdepots.fr,,1952-06-30,78401,99100,France,Bordeaux,33044,rue du vergne
+dan                       ,DAN                       ,,SUZANNE      ,female,mcf-test@caissedesdepots.fr,,1954-03-12,73181,99100,France,Bordeaux,33044,rue du vergne
+common                    ,COMMON                    ,,JACKY        ,male  ,mcf-test@caissedesdepots.fr,,1953-03-26,89456,99100,France,Bordeaux,33044,rue du vergne

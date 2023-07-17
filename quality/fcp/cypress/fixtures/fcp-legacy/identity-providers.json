@@ -1,152 +1,60 @@
 [
   {
-    "idpId": "fip1",
-    "name": "fip1",
-    "title": "Identity Provider - eIDAS élevé",
+    "idpId": "8dfc4080-c90d-4234-969b-f6c961de3e90",
+    "name": "fip1-no-discovery",
+    "title": "FIP1-LOW - eIDAS LOW - NO DISCOVERY",
     "descriptions": ["par défaut", "actif", "whitelisté", "non blacklisté"],
     "mocked": true,
     "usable": true,
-    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr",
-    "acrValue": "eidas3",
-    "encryption": "",
-    "signature": "HS256",
-    "selectors": {
-      "idpButton": "#fi-fip1",
-      "username": "input[name='login']",
-      "password": "input[name='password']",
-      "loginButton": "[type='submit']"
-    }
-  },
-  {
-    "idpId": "fip2",
-    "name": "fip2",
-    "title": "Identity Provider - eIDAS faible",
-    "descriptions": ["distinct"],
-    "mocked": true,
-    "usable": true,
-    "url": "https://fip2.{{TEST_ENV}}.dev-franceconnect.fr",
+    "url": "https://fip1-low.{{TEST_ENV}}.dev-franceconnect.fr",
     "acrValue": "eidas1",
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "#fi-fip2",
+      "idpButton": "#fi-fip1-no-discovery",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "[type='submit']"
     }
   },
   {
-    "idpId": "fip3",
-    "name": "fip3",
-    "title": "Identity Provider - eIDAS substantiel",
-    "descriptions": ["pour le test de préférences FI"],
+    "idpId": "b5e9539a-599a-4ed2-9b4f-8f4bfc5fbb64",
+    "name": "fip2-low",
+    "title": "FIP2-LOW - eIDAS SUBSTANTIAL - NO DISCOVERY",
+    "descriptions": ["distinct"],
     "mocked": true,
     "usable": true,
-    "url": "https://fip3.{{TEST_ENV}}.dev-franceconnect.fr",
+    "url": "https://fip2-low.{{TEST_ENV}}.dev-franceconnect.fr",
     "acrValue": "eidas2",
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "#fi-fip3",
+      "idpButton": "#fi-fip2-low",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "[type='submit']"
     }
   },
   {
-    "idpId": "fip1_blacklisted_by_fsp2",
-    "name": "fip1_blacklisted_by_fsp2",
-    "title": "Identity Provider - Blacklisté par FSP2",
-    "descriptions": ["blacklisté"],
+    "idpId": "0adf04be-536e-4986-b639-73ea8d38493e",
+    "name": "fip3-low",
+    "title": "FIP3-LOW - eIDAS HIGH - NO DISCOVERY",
+    "descriptions": ["pour le test de préférences FI"],
     "mocked": true,
     "usable": true,
-    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr",
-    "acrValue": "eidas1",
+    "url": "https://fip3-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "acrValue": "eidas3",
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "#fi-fip1_blacklisted_by_fsp2",
+      "idpButton": "#fi-fip3-low",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "[type='submit']"
     }
   },
   {
-    "idpId": "fip1_not_whitelisted_by_fsp3",
-    "name": "fip1_not_whitelisted_by_fsp3",
-    "title": "Identity Provider - Non Whitelisté par FSP3",
-    "descriptions": ["non whitelisté"],
-    "mocked": true,
-    "usable": true,
-    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr",
-    "acrValue": "eidas1",
-    "encryption": "",
-    "signature": "HS256",
-    "selectors": {
-      "idpButton": "#fi-fip1_not_whitelisted_by_fsp3",
-      "username": "input[name='login']",
-      "password": "input[name='password']",
-      "loginButton": "[type='submit']"
-    }
-  },
-  {
-    "idpId": "fip1_deactivated",
-    "name": "fip1_deactivated",
-    "title": "Identity Provider - Désactivé",
-    "descriptions": ["désactivé et visible"],
-    "mocked": true,
-    "usable": false,
-    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr",
-    "acrValue": "eidas1",
-    "encryption": "",
-    "signature": "HS256",
-    "selectors": {
-      "idpButton": "#fi-fip1_deactivated",
-      "username": "input[name='login']",
-      "password": "input[name='password']",
-      "loginButton": "[type='submit']"
-    }
-  },
-  {
-    "idpId": "fip1_not_displayed",
-    "name": "fip1_not_displayed",
-    "title": "Identity Provider - Non Affiché",
-    "descriptions": ["actif et non visible"],
-    "mocked": true,
-    "usable": false,
-    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr",
-    "acrValue": "eidas1",
-    "encryption": "",
-    "signature": "HS256",
-    "selectors": {
-      "idpButton": "#fi-fip1_not_displayed",
-      "username": "input[name='login']",
-      "password": "input[name='password']",
-      "loginButton": "[type='submit']"
-    }
-  },
-  {
-    "idpId": "fip1_not_displayed_and_deactivated",
-    "name": "fip1_not_displayed_and_deactivated",
-    "title": "Identity Provider - Non Affiché et Désactivé",
-    "descriptions": ["désactivé et non visible"],
-    "mocked": true,
-    "usable": false,
-    "url": "https://fip1.{{TEST_ENV}}.dev-franceconnect.fr",
-    "acrValue": "eidas1",
-    "encryption": "",
-    "signature": "HS256",
-    "selectors": {
-      "idpButton": "#fi-fip1_not_displayed_and_deactivated",
-      "username": "input[name='login']",
-      "password": "input[name='password']",
-      "loginButton": "[type='submit']"
-    }
-  },
-  {
-    "idpId": "aidants-connect-mock",
-    "name": "aidants-connect-mock",
-    "title": "Aidants Connect mock",
+    "idpId": "3189d655-0c78-4ff7-9758-f3a3ac36dd7e",
     "descriptions": ["Aidants Connect"],
     "mocked": true,
     "usable": true,

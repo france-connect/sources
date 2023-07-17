@@ -39,6 +39,7 @@ describe('OidcClient Controller', () => {
   const sessionServiceMock = {
     set: jest.fn(),
     get: jest.fn(),
+    destroy: jest.fn(),
   };
 
   const sessionCsrfServiceMock = {
@@ -362,6 +363,27 @@ describe('OidcClient Controller', () => {
         expect(sessionServiceMock.get).toHaveBeenLastCalledWith();
         expect(res.redirect).toHaveBeenCalledTimes(1);
       });
+    });
+  });
+
+  describe('logoutCallback', () => {
+    const reqMock = Symbol('reqMock');
+    it('should destroy the client session', async () => {
+      // action
+      await controller.logoutCallback(reqMock, res);
+
+      // assert
+      expect(sessionServiceMock.destroy).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.destroy).toHaveBeenCalledWith(reqMock, res);
+    });
+
+    it('should redirect to the home page', async () => {
+      // action
+      await controller.logoutCallback(reqMock, res);
+
+      // assert
+      expect(res.redirect).toHaveBeenCalledTimes(1);
+      expect(res.redirect).toHaveBeenCalledWith('/');
     });
   });
 

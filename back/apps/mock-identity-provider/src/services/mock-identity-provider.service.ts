@@ -95,7 +95,7 @@ export class MockIdentityProviderService {
      */
     const { citizenDatabasePath } = this.config.get<AppConfig>('App');
 
-    const paths = getFilesPathsFromDir(citizenDatabasePath);
+    const paths = await getFilesPathsFromDir(citizenDatabasePath);
 
     const allFiles = await Promise.all(
       paths.map((path) => this.loadDatabase(path)),

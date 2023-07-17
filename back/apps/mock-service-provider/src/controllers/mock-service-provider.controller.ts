@@ -29,7 +29,6 @@ import {
   ISessionService,
   Session,
   SessionNotFoundException,
-  SessionService,
 } from '@fc/session';
 
 import { AccessTokenParamsDTO, AppConfig } from '../dto';
@@ -48,7 +47,6 @@ export class MockServiceProviderController {
     private readonly oidcClient: OidcClientService,
     private readonly logger: LoggerService,
     private readonly identityProvider: IdentityProviderAdapterEnvService,
-    private readonly sessionService: SessionService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -160,20 +158,6 @@ export class MockServiceProviderController {
     });
 
     res.redirect(endSessionUrl);
-  }
-
-  @Get(MockServiceProviderRoutes.LOGOUT_CALLBACK)
-  async logoutCallback(@Req() req, @Res() res) {
-    await this.sessionService.destroy(req, res);
-
-    this.logger.trace({
-      route: MockServiceProviderRoutes.LOGOUT_CALLBACK,
-      method: 'GET',
-      name: 'MockServiceProviderRoutes.LOGOUT_CALLBACK',
-      redirect: '/',
-    });
-
-    return res.redirect('/');
   }
 
   @Post(MockServiceProviderRoutes.REVOCATION)
@@ -400,7 +384,8 @@ export class MockServiceProviderController {
 
   private async getInteractionParameters(provider: IdentityProviderMetadata) {
     const { defaultAcrValue } = this.config.get<OidcAcrConfig>('OidcAcr');
-    const { scope, claims } = this.config.get<OidcClientConfig>('OidcClient');
+    const { scope, claims, redirectUri } =
+      this.config.get<OidcClientConfig>('OidcClient');
 
     const { state, nonce } =
       await this.oidcClient.utils.buildAuthorizeParameters();
@@ -427,7 +412,7 @@ export class MockServiceProviderController {
       params: {
         // oidc name
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        redirect_uri: provider.client.redirect_uris[0],
+        redirect_uri: redirectUri,
         // oidc name
         // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: provider.client.client_id,

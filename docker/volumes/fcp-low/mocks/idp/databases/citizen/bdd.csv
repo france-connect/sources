@@ -1,0 +1,7 @@
+login,password,family_name,preferred_username,given_name,gender,email,phone_number,birthdate,birthplace,birthcountry,country,locality,postal_code,street_address
+TestInteg,123,NUM,FC,Lady Di,female,franceconnect.recette@gmail.com,123456789,1962-08-24,29200,99100,France,Paris,75107,20 avenue de Ségur
+bdd_default,123,DURAND,MARTIN,Jeanne,female,x1_bdd_default@yopmail.com,,1962-08-24,75107,99100,,,,
+bdd_last_connection,123,DULAC,,Angela Claire Louise,female,x1_bdd_last_connection@yopmail.com,,1962-08-24,75107,99100,,,,
+bdd_enable_disable,123,DUPOND,,François,male,x1_bdd_enable_disable@yopmail.com,,1962-08-24,75107,99100,,,,
+bdd_idp_settings,123,BON,,Jean,male,x1_bdd_idp_settings@yopmail.com,,1992-09-25,94073,99100,,,,
+bdd_no_idp_settings,123,ADDI,,Jack,male,x1_bdd_no_idp_settings@yopmail.com,,2000-10-01,75113,99100,,,,

@@ -1,0 +1,7 @@
+login,password,family_name,preferred_username,given_name,gender,email,phone_number,birthdate,birthplace,birthcountry,country,locality,postal_code,street_address
+
+Désactivé,123,DUPLANTY,,Mélodie,female,duplanty.test@gmail.com,123456789,1962-08-24,75107,99100,France,Paris,75107,20 avenue de Ségur
+test_CORSE_INVALID,123,CORSE,,CLEMENT,male,baterollu-5399@yopmail.com,123456789,1991-02-12,2A115,AZERTY,France,Paris,75107,20 avenue de Ségur
+test_INVALID_COG,123,Sofa,Canapé,Canapé,male,canape.sofa@france.fr,0123456789,1981-02-03,AAAAA,99100,France,AAAAA,Ikea,1 Place Salengro
+
+Y180001,123,Martin,Martin,Jean_Y180001,male,jean_Y180001.martin@france.fr,0123456789,1981-02-03,75112,99100,France,Marseille,13016,97 Boulevard François Robert

@@ -141,7 +141,7 @@ describe('MockIdentityProviderService', () => {
       configServiceMock.get.mockReturnValueOnce({
         citizenDatabasePath: citizenDatabasePathMock,
       });
-      jest.mocked(getFilesPathsFromDir).mockReturnValueOnce(pathsMock);
+      jest.mocked(getFilesPathsFromDir).mockResolvedValueOnce(pathsMock);
 
       loadDatabaseMock = service['loadDatabase'] = jest.fn();
       loadDatabaseMock

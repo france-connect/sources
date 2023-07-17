@@ -31,6 +31,7 @@ export class OidcIdentityDto {
   birthcountry: string;
 
   @IsString()
+  @IsOptional()
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   preferred_username?: string;

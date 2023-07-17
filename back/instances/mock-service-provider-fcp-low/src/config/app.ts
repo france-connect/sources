@@ -13,6 +13,7 @@ export default {
     cert: env.file('HTTPS_SERVER_CERT', { optional: true }),
     key: env.file('HTTPS_SERVER_KEY', { optional: true }),
   },
+  fqdn: process.env.FQDN,
   name: 'MOCK_SERVICE_PROVIDER_FCP_LOW',
   urlPrefix: '',
   viewsPaths: env.json('VIEWS_PATHS'),

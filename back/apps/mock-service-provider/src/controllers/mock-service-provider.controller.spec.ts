@@ -8,7 +8,7 @@ import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter
 import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata } from '@fc/oidc';
 import { OidcClientService } from '@fc/oidc-client';
-import { SessionNotFoundException, SessionService } from '@fc/session';
+import { SessionNotFoundException } from '@fc/session';
 
 import {
   MockServiceProviderTokenRevocationException,
@@ -175,7 +175,6 @@ describe('MockServiceProviderController', () => {
       providers: [
         OidcClientService,
         LoggerService,
-        SessionService,
         CryptographyService,
         ConfigService,
         IdentityProviderAdapterEnvService,
@@ -187,8 +186,6 @@ describe('MockServiceProviderController', () => {
       .useValue(oidcClientServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(SessionService)
-      .useValue(sessionServiceMock)
       .overrideProvider(IdentityProviderAdapterEnvService)
       .useValue(identityProviderMock)
       .compile();
@@ -230,6 +227,7 @@ describe('MockServiceProviderController', () => {
       claims: claimsMock,
       urlPrefix: '/api/v2',
       defaultAcrValue: 'eidas2',
+      redirectUri: ['redirect', 'uri'],
     });
     identityProviderMock.getList.mockResolvedValue(identityProviderList);
   });
@@ -513,26 +511,6 @@ describe('MockServiceProviderController', () => {
     });
   });
 
-  describe('logoutCallback', () => {
-    it('should destroy the client session', async () => {
-      // action
-      await controller.logoutCallback(req, res);
-
-      // assert
-      expect(sessionServiceMock.destroy).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.destroy).toHaveBeenCalledWith(req, res);
-    });
-
-    it('should redirect to the home page', async () => {
-      // action
-      await controller.logoutCallback(req, res);
-
-      // assert
-      expect(res.redirect).toHaveBeenCalledTimes(1);
-      expect(res.redirect).toHaveBeenCalledWith('/');
-    });
-  });
-
   describe('getInteractionParameters', () => {
     const provider = identityProviderFull as IdentityProviderMetadata;
     const urlMock = 'https://somewhere.com/foo';
@@ -604,7 +582,7 @@ describe('MockServiceProviderController', () => {
           claims: 'claimsMock',
           prompt: ['login', 'consent'],
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          redirect_uri: idp.client.redirect_uris[0],
+          redirect_uri: ['redirect', 'uri'],
           scope: scopeMock,
           // eslint-disable-next-line @typescript-eslint/naming-convention
           authorization_endpoint: 'https://somewhere.com/foo',

@@ -8,6 +8,7 @@ import { LoggerService } from '@fc/logger-legacy';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 import { ServiceProviderMetadata } from '@fc/oidc';
 
+import { platform } from './enums';
 import { ServiceProvider } from './schemas';
 import { ServiceProviderAdapterMongoService } from './service-provider-adapter-mongo.service';
 
@@ -200,12 +201,75 @@ describe('ServiceProviderAdapterMongoService', () => {
   });
 
   describe('findAllServiceProvider', () => {
+    const { CORE_FCP } = platform;
+    const expectedRetreivedFields = {
+      _id: false,
+      active: true,
+      claims: true,
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      client_secret: true,
+      entityId: true,
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      id_token_encrypted_response_alg: true,
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      id_token_encrypted_response_enc: true,
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      id_token_signed_response_alg: true,
+      identityConsent: true,
+      idpFilterExclude: true,
+      idpFilterList: true,
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      jwks_uri: true,
+      key: true,
+      name: true,
+      platform: true,
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      post_logout_redirect_uris: true,
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      redirect_uris: true,
+      scopes: true,
+      ssoDisabled: true,
+      title: true,
+      type: true,
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      userinfo_encrypted_response_alg: true,
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      userinfo_encrypted_response_enc: true,
+      // openid defined property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      userinfo_signed_response_alg: true,
+    };
+
+    beforeEach(() => {
+      configMock.get.mockReturnValue({ platform: CORE_FCP });
+    });
+
     it('should resolve', async () => {
       // action
       const result = service['findAllServiceProvider']();
 
       // expect
       expect(result).toBeInstanceOf(Promise);
+    });
+
+    it('should retrieve platform from config', async () => {
+      // action
+      await service['findAllServiceProvider']();
+
+      // expect
+      expect(configMock.get).toHaveBeenCalledTimes(1);
+      expect(configMock.get).toHaveBeenCalledWith(
+        'ServiceProviderAdapterMongo',
+      );
     });
 
     it('should have called find once', async () => {
@@ -215,6 +279,39 @@ describe('ServiceProviderAdapterMongoService', () => {
       // expect
       expect(repositoryMock.find).toHaveBeenCalledTimes(1);
     });
+
+    it('should have called find with a filter argument containing active true and platform being CORE_FCP', async () => {
+      // setup
+      const expectedRequestFilter = {
+        active: true,
+        platform: CORE_FCP,
+      };
+      // action
+      await service['findAllServiceProvider']();
+
+      // expect
+      expect(repositoryMock.find).toHaveBeenCalledWith(
+        expectedRequestFilter,
+        expectedRetreivedFields,
+      );
+    });
+
+    it('should have called find with a filter argument containing active true and without platform argument', async () => {
+      // setup
+      configMock.get.mockReset().mockReturnValue({ platform: undefined });
+      const expectedRequestFilter = {
+        active: true,
+      };
+      // action
+      await service['findAllServiceProvider']();
+
+      // expect
+      expect(repositoryMock.find).toHaveBeenCalledWith(
+        expectedRequestFilter,
+        expectedRetreivedFields,
+      );
+    });
+
     it('should return result of type list', async () => {
       // action
       const result = await service['findAllServiceProvider']();

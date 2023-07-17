@@ -9,7 +9,7 @@ const fsp = {
       "https://fsp1-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://fsp1-high.docker.dev-franceconnect.fr/logout-callback",
+      "https://fsp1-high.docker.dev-franceconnect.fr/client/logout-callback",
     ],
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
@@ -130,7 +130,7 @@ const fsp = {
       "https://fsp3-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://fsp3-high.docker.dev-franceconnect.fr/logout-callback",
+      "https://fsp3-high.docker.dev-franceconnect.fr/client/logout-callback",
     ],
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
@@ -185,7 +185,7 @@ const fsp = {
       "https://fsp1-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://fsp1-high.docker.dev-franceconnect.fr/logout-callback",
+      "https://fsp1-high.docker.dev-franceconnect.fr/client/logout-callback",
     ],
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
@@ -226,7 +226,7 @@ const fsp = {
       "https://fsp5-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://fsp5-high.docker.dev-franceconnect.fr/logout-callback",
+      "https://fsp5-high.docker.dev-franceconnect.fr/client/logout-callback",
     ],
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
@@ -307,7 +307,7 @@ const fsp = {
       "https://fsp6-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://fsp6-high.docker.dev-franceconnect.fr/logout-callback",
+      "https://fsp6-high.docker.dev-franceconnect.fr/client/logout-callback",
     ],
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
@@ -365,7 +365,7 @@ const fsp = {
       "https://eidas-bridge.docker.dev-franceconnect.fr/oidc-client/redirect-to-eidas-response-proxy",
     ],
     post_logout_redirect_uris: [
-      "https://eidas-bridge.docker.dev-franceconnect.fr/logout-callback",
+      "https://eidas-bridge.docker.dev-franceconnect.fr/client/logout-callback",
     ],
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",

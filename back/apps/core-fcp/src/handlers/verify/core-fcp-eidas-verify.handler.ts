@@ -33,33 +33,23 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     this.logger.debug('getConsent service: ##### core-fcp-eidas-verify ');
 
     // Grab informations on interaction and identity
-    const { idpId, idpIdentity, idpAcr, spId, spAcr, subs } =
-      await sessionOidc.get();
+    const { idpIdentity, idpAcr, spId, spAcr, subs } = await sessionOidc.get();
     const { entityId } = await this.serviceProvider.getById(spId);
 
     // Acr check
     this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr);
 
-    // as spIdentity = idpIdentity, hashSp = hashIdp and is used to generate both sub
-    const hashSp = this.cryptographyEidas.computeIdentityHash(
+    const identityHash = this.cryptographyEidas.computeIdentityHash(
       idpIdentity as IOidcIdentity,
     );
-    const subSp = this.cryptographyEidas.computeSubV1(entityId, hashSp);
-    const subIdp = this.cryptographyEidas.computeSubV1(spId, hashSp);
+    const sub = this.cryptographyEidas.computeSubV1(entityId, identityHash);
 
     // Save interaction to database
-    const accountId = await this.coreAcount.computeFederation(
-      {
-        spId,
-        entityId,
-        subSp,
-        hashSp,
-      },
-      {
-        idpId,
-        subIdp,
-      },
-    );
+    const accountId = await this.coreAcount.computeFederation({
+      key: entityId,
+      sub,
+      identityHash,
+    });
 
     /**
      * Prepare identity that will be retrieved by `oidc-provider`
@@ -77,7 +67,7 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
       idpIdentity: idpIdentityCleaned,
       spIdentity: spIdentityCleaned,
       accountId,
-      subs: { ...subs, [spId]: subSp },
+      subs: { ...subs, [spId]: sub },
     });
   }
 }

@@ -4,6 +4,7 @@ import {
   Get,
   Header,
   Post,
+  Req,
   Res,
   UsePipes,
   ValidationPipe,
@@ -22,15 +23,19 @@ import {
   Session,
   SessionCsrfService,
   SessionInvalidCsrfSelectIdpException,
+  SessionService,
 } from '@fc/session';
 
 @Controller()
 export class OidcClientController {
+  // Allowed for dependency injection
+  // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
     private readonly oidcClient: OidcClientService,
     private readonly identityProvider: IdentityProviderAdapterEnvService,
     private readonly csrfService: SessionCsrfService,
+    private readonly session: SessionService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -119,6 +124,20 @@ export class OidcClientController {
     });
 
     res.redirect(authorizationUrl);
+  }
+
+  @Get(OidcClientRoutes.CLIENT_LOGOUT_CALLBACK)
+  async logoutCallback(@Req() req, @Res() res) {
+    await this.session.destroy(req, res);
+
+    this.logger.trace({
+      route: OidcClientRoutes.CLIENT_LOGOUT_CALLBACK,
+      method: 'GET',
+      name: 'OidcClientRoutes.CLIENT_LOGOUT_CALLBACK',
+      redirect: '/',
+    });
+
+    return res.redirect('/');
   }
 
   /**

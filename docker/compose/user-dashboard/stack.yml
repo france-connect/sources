@@ -21,9 +21,9 @@ services:
       - 'fsp1' # for public tests
       - 'fsp3' # for private tests
       # -- IdP
-      - 'fip1'
-      - 'fip3'
-      - 'fip4'
+      - 'fip1-low'
+      - 'fip3-low'
+      - 'fip4-low'
       - 'aidants-connect-mock'
       # -- DP
       - 'fdp1'

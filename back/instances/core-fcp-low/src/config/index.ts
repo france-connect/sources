@@ -8,6 +8,7 @@ import Config from './config';
 import Core from './core';
 import CryptographyEidas from './cryptography-eidas';
 import CryptographyFcp from './cryptography-fcp';
+import DataProviderAdapterMongo from './data-provider-adapter-mongo';
 import IdentityProviderAdapterMongo from './identity-provider-adapter-mongo';
 import Logger from './logger';
 import Mailer from './mailer';
@@ -27,6 +28,7 @@ export default {
   App,
   Config,
   Core,
+  DataProviderAdapterMongo,
   Logger,
   OidcAcr,
   OidcProvider,

@@ -100,6 +100,9 @@ services:
           - usagers-fca.docker.dev-franceconnect.fr
           # Mock RNIPP
           - mock-rnipp.docker.dev-franceconnect.fr
+          # Mock Data Provider
+          - mock-data-provider-high.docker.dev-franceconnect.fr
+          - mock-data-provider-low.docker.dev-franceconnect.fr
           # Storybook
           - storybook.docker.dev-franceconnect.fr
           # Generic
@@ -267,41 +270,6 @@ services:
     networks:
       - data
 
-  mongo-legacy:
-    hostname: mongo-legacy
-    build:
-      context: '${WORKING_DIR}'
-      dockerfile: '${WORKING_DIR}/builds/mongodb/Dockerfile'
-      args:
-        MONGO_VERSION: '4.4'
-    volumes:
-      - '${VOLUMES_DIR}/mongo-legacy/scripts:/opt/scripts'
-      - '${VOLUMES_DIR}/mongo-legacy/initdb.d:/docker-entrypoint-initdb.d'
-    env_file:
-      - '${COMPOSE_DIR}/shared/.env/mongo-legacy.env'
-    ports:
-      - '27020:27017'
-    networks:
-      - data
-
-
-  mongo-partenaires:
-    hostname: mongo-partenaires
-    build:
-      context: '${WORKING_DIR}'
-      dockerfile: '${WORKING_DIR}/builds/mongodb/Dockerfile'
-      args:
-        MONGO_VERSION: '4.4'
-    volumes:
-      - '${VOLUMES_DIR}/mongo-partenaires/scripts:/opt/scripts'
-      - '${VOLUMES_DIR}/mongo-partenaires/initdb.d:/docker-entrypoint-initdb.d'
-    env_file:
-      - '${COMPOSE_DIR}/shared/.env/mongo-partenaires.env'
-    ports:
-      - '27021:27017'
-    networks:
-      - data
-
   mongo-fcp-high:
     hostname: mongo-fcp-high
     build:
@@ -390,20 +358,6 @@ services:
     networks:
       - data
       - public
-
-  broker:
-    build:
-      context: "${WORKING_DIR}"
-      dockerfile: "${WORKING_DIR}/builds/broker/Dockerfile"
-    # Specify hostname to fix cluster name
-    hostname: broker
-    depends_on:
-      - "squid"
-    networks:
-      - data
-    ports:
-      - "5672:5672"
-      - "15672:15672"
 
  # New implementation in monorepo 
   mock-rnipp:
@@ -561,7 +515,7 @@ services:
     working_dir: /var/www/app
     depends_on:
       - "broker"
-      - "mongo-legacy"
+      - "mongo-fcp-low"
     volumes:
       - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
       - '${VOLUMES_DIR}/app:/opt/scripts'
@@ -570,7 +524,7 @@ services:
       - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
-      - "${COMPOSE_DIR}/shared/.env/mongo-legacy.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
     ports:
       - 10254:10254
     environment:
@@ -626,7 +580,7 @@ services:
     user: ${CURRENT_UID}
     depends_on:
       - "broker"
-      - "mongo-legacy"
+      - "mongo-fcp-low"
     working_dir: /var/www/app
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
@@ -637,7 +591,7 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/csmr-user-preferences-high.env"
-      - "${COMPOSE_DIR}/shared/.env/mongo-legacy.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
     tty: true
     ports:
       - 9600:9600

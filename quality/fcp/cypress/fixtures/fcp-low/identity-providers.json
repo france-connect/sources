@@ -1,8 +1,8 @@
 [
   {
-    "idpId": "fip1-low",
-    "name": "fip1-low",
-    "title": "IDP1 - LOW",
+    "idpId": "8dfc4080-c90d-4234-969b-f6c961de3e90",
+    "name": "fip1-no-discovery",
+    "title": "IDP1 - NO DISCOVERY",
     "descriptions": [
       "par défaut",
       "actif"
@@ -14,74 +14,98 @@
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "#idp-fip1-low",
+      "idpButton": "#idp-8dfc4080-c90d-4234-969b-f6c961de3e90",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fip2-low",
+    "idpId": "07e573f2-3312-4bb9-bc48-6fcec737e497",
+    "name": "fip1-low",
+    "title": "IDP1 - LOW",
+    "descriptions": [
+      "actif"
+    ],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip1-low.{{TEST_ENV}}.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "#idp-07e573f2-3312-4bb9-bc48-6fcec737e497",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "button[type='submit']"
+    }
+  },
+  {
+    "idpId": "b5e9539a-599a-4ed2-9b4f-8f4bfc5fbb64",
     "name": "fip2-low",
     "title": "IDP2 - LOW",
-    "descriptions": [],
+    "descriptions": [
+      "actif"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip2-low.{{TEST_ENV}}.dev-franceconnect.fr",
-    "acrValue": "eidas1",
+    "acrValue": "eidas2",
     "encryption": "",
-    "signature": "ES256",
+    "signature": "HS256",
     "selectors": {
-      "idpButton": "#idp-fip2-low",
+      "idpButton": "#idp-b5e9539a-599a-4ed2-9b4f-8f4bfc5fbb64",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fip3-low",
+    "idpId": "0adf04be-536e-4986-b639-73ea8d38493e",
     "name": "fip3-low",
     "title": "IDP3 - LOW",
     "descriptions": [
+      "actif",
       "whitelisté",
       "blacklisté"
     ],
     "mocked": true,
     "usable": true,
     "url": "https://fip3-low.{{TEST_ENV}}.dev-franceconnect.fr",
-    "acrValue": "eidas1",
+    "acrValue": "eidas3",
     "encryption": "",
-    "signature": "RS256",
+    "signature": "HS256",
     "selectors": {
-      "idpButton": "#idp-fip3-low",
+      "idpButton": "#idp-0adf04be-536e-4986-b639-73ea8d38493e",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fip4-low",
+    "idpId": "ed9e1fdb-f2df-4d8d-85ca-fc72510e9ec8",
     "name": "fip4-low",
-    "title": "IDP4 - Identity Provider - eIDAS substantiel",
+    "title": "IDP4 - ES256",
     "descriptions": [
+      "actif",
       "non whitelisté",
       "non blacklisté"
     ],
     "mocked": true,
     "usable": true,
     "url": "https://fip4-low.{{TEST_ENV}}.dev-franceconnect.fr/interaction",
-    "acrValue": "eidas2",
+    "acrValue": "eidas1",
     "encryption": "",
     "signature": "ES256",
     "selectors": {
-      "idpButton": "#idp-fip4-low",
+      "idpButton": "#idp-ed9e1fdb-f2df-4d8d-85ca-fc72510e9ec8",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fip5-low",
+    "idpId": "b18cb985-9492-4737-9890-da69a87a012a",
     "name": "fip5-low",
     "title": "IDP5 - LOW disabled",
     "descriptions": [
@@ -94,14 +118,14 @@
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "#idp-fip5-low",
+      "idpButton": "#idp-b18cb985-9492-4737-9890-da69a87a012a",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fip6-low",
+    "idpId": "caf0fe8d-0d8b-4288-9850-ce8b2a4b5251",
     "name": "fip6-low",
     "title": "IDP6 - LOW invisible",
     "descriptions": [
@@ -114,14 +138,14 @@
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "#idp-fip6-low",
+      "idpButton": "#idp-caf0fe8d-0d8b-4288-9850-ce8b2a4b5251",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fip7-low",
+    "idpId": "0c1edaa3-c0a5-4cac-902e-29872bae2c6e",
     "name": "fip7-low",
     "title": "IDP7 - LOW disabled and invisible",
     "descriptions": [
@@ -134,14 +158,14 @@
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "#idp-fip7-low",
+      "idpButton": "#idp-0c1edaa3-c0a5-4cac-902e-29872bae2c6e",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fip8-low",
+    "idpId": "77fe5e8c-364c-440e-909f-5ef4f494e170",
     "name": "fip8-low",
     "title": "IDP8 - LOW",
     "descriptions": [
@@ -154,14 +178,14 @@
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "#idp-fip8-low",
+      "idpButton": "#idp-77fe5e8c-364c-440e-909f-5ef4f494e170",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fip9-low",
+    "idpId": "720a5453-1964-4c71-a8fa-00bfb880fe9f",
     "name": "fip9-low",
     "title": "IDP9 - LOW",
     "descriptions": [
@@ -174,7 +198,7 @@
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "#idp-fip9-low",
+      "idpButton": "#idp-720a5453-1964-4c71-a8fa-00bfb880fe9f",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"

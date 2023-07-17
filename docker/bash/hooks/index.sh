@@ -22,9 +22,6 @@ function _init_hooks() {
   *"lemon-ldap"*)
     _hook_lemon_ldap
     ;;
-  *"mongo-legacy"*)
-    _hook_mongo "mongo-legacy"
-    ;;
   *"mongo-fca-low"*)
     _hook_mongo "mongo-fca-low"
     ;;

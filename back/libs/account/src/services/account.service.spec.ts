@@ -131,12 +131,11 @@ describe('AccountService', () => {
     const id = 'mock-id';
     const newInteractionMock = {
       identityHash,
-      idpFederation: { idp1Id: { sub: 'idp1Sub' } },
-      spFederation: { sp1Id: { sub: 'sp1Sub' } },
+      spFederation: { sp1Id: 'sp1Sub' },
       lastConnection: new Date('2020-05-01'),
     } as IInteraction;
 
-    it('should return an object with idp and sp arrays when no account found', async () => {
+    it('should return an object with sp properties when no account is found', async () => {
       // Given
       findOneSpy.mockResolvedValueOnce(null);
       // When
@@ -148,19 +147,17 @@ describe('AccountService', () => {
       expect(constructorSpy).toHaveBeenCalledWith(newInteractionMock);
       expect(result).toEqual({
         identityHash,
-        idpFederation: { idp1Id: { sub: 'idp1Sub' } },
-        spFederation: { sp1Id: { sub: 'sp1Sub' } },
+        spFederation: { sp1Id: 'sp1Sub' },
         lastConnection: new Date('2020-05-01'),
       });
     });
 
-    it('should return an object with idp and sp arrays when an account exists', async () => {
+    it('should return an object with sp informations when an account exists', async () => {
       // Given
       const databaseInteractionMock = {
         id,
         identityHash,
-        idpFederation: { idp2Id: { sub: 'idp2Sub' } },
-        spFederation: { sp2Id: { sub: 'sp2Sub' } },
+        spFederation: { sp2Id: 'sp2Sub' },
         lastConnection: new Date('2020-04-15'),
       };
       findOneSpy.mockResolvedValueOnce(databaseInteractionMock);
@@ -173,13 +170,9 @@ describe('AccountService', () => {
       expect(result).toEqual({
         id,
         identityHash,
-        idpFederation: {
-          idp1Id: { sub: 'idp1Sub' },
-          idp2Id: { sub: 'idp2Sub' },
-        },
         spFederation: {
-          sp1Id: { sub: 'sp1Sub' },
-          sp2Id: { sub: 'sp2Sub' },
+          sp1Id: 'sp1Sub',
+          sp2Id: 'sp2Sub',
         },
         lastConnection: new Date('2020-05-01'),
       });
@@ -229,7 +222,6 @@ describe('AccountService', () => {
         lastConnection: new Date(),
         identityHash: identityHashMock,
         active: true,
-        idpFederation: {},
         spFederation: {},
       } as Account;
       findOneSpy.mockResolvedValueOnce(accountMock);
@@ -265,7 +257,6 @@ describe('AccountService', () => {
         lastConnection: now,
         identityHash: identityHashMock,
         active: true,
-        idpFederation: {},
         spFederation: {},
         preferences: {
           idpSettings: {

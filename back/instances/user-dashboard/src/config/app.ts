@@ -15,5 +15,6 @@ export default {
     key: env.file('HTTPS_SERVER_KEY', { optional: true }),
     cert: env.file('HTTPS_SERVER_CERT', { optional: true }),
   },
+  fqdn: process.env.FQDN,
   timezone: 'Europe/Paris',
 } as AppConfig;

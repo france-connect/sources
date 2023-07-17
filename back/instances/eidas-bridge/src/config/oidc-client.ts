@@ -2,7 +2,10 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
-import { OidcClientConfig } from '@fc/oidc-client';
+import { EidasBridgeRoutes } from '@fc/eidas-bridge';
+import { OidcClientConfig, OidcClientRoutes } from '@fc/oidc-client';
+
+import app from './app';
 
 const env = new ConfigParser(process.env, 'OidcClient');
 
@@ -22,4 +25,6 @@ export default {
 
   // Toggle Financial Grade API
   fapi: env.boolean('FAPI'),
+  postLogoutRedirectUri: `https://${app.fqdn}${app.urlPrefix}${OidcClientRoutes.CLIENT_LOGOUT_CALLBACK}`,
+  redirectUri: `https://${app.fqdn}${app.urlPrefix}${EidasBridgeRoutes.BASE}${EidasBridgeRoutes.REDIRECT_TO_EIDAS_RESPONSE_PROXY}`,
 } as OidcClientConfig;

@@ -21,4 +21,6 @@ export default {
   },
   scope: env.string('SCOPE'),
   stateLength: 32,
+  postLogoutRedirectUri: env.string('POST_LOGOUT_REDIRECT_URI'),
+  redirectUri: env.string('REDIRECT_URI'),
 } as OidcClientConfig;

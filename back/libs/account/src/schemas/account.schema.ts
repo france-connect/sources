@@ -41,13 +41,6 @@ export class Account extends Document {
   active: boolean;
 
   /**
-   * Expected format : { [identityProviderId]: identityProviderUserSub, ... },
-   * Stores keys (subs OpenIdConnect) for Identity Provider
-   */
-  @Prop({ type: SchemaNative.Types.Mixed })
-  idpFederation: IFederation;
-
-  /**
    * Expected format : { [serviceProviderId]: serviceProviderUserSub, ... },
    * Stores keys (subs OpenIdConnect) for Service Provider
    */

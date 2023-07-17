@@ -53,7 +53,23 @@ export class OidcClientIssuerService implements OnModuleInit {
       throw new OidcClientProviderDisabledException();
     }
 
-    return idpMetadata;
+    const { redirectUri, postLogoutRedirectUri } = configuration;
+
+    const result = {
+      ...idpMetadata,
+      client: {
+        ...idpMetadata.client,
+
+        // OIDC style naming
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        redirect_uris: [redirectUri],
+        // OIDC style naming
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        post_logout_redirect_uris: [postLogoutRedirectUri],
+      },
+    };
+
+    return result;
   }
 
   /**

@@ -20,7 +20,7 @@ import { IIdentityProviderAdapter } from '@fc/oidc-client';
 import {
   DiscoveryIdpAdapterMongoDTO,
   IdentityProviderAdapterMongoConfig,
-  IdentityProviderAdapterMongoDTO as NoDiscoveryIdoAdapterMongoDTO,
+  NoDiscoveryIdpAdapterMongoDTO,
 } from './dto';
 import { FilteringOptions } from './interfaces';
 import { IdentityProvider } from './schemas';
@@ -28,8 +28,6 @@ import { IdentityProvider } from './schemas';
 const CLIENT_METADATA = [
   'client_id',
   'client_secret',
-  'post_logout_redirect_uris',
-  'redirect_uris',
   'response_types',
   'id_token_signed_response_alg',
   'token_endpoint_auth_method',
@@ -69,7 +67,7 @@ export class IdentityProviderAdapterMongoService
   }
 
   async onModuleInit() {
-    this.mongooseWatcher.watchWith(
+    this.mongooseWatcher.watchWith<IdentityProvider>(
       this.identityProviderModel,
       this.refreshCache.bind(this),
     );
@@ -114,12 +112,6 @@ export class IdentityProviderAdapterMongoService
           issuer: true,
           jwksURL: true,
           name: true,
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          post_logout_redirect_uris: true,
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          redirect_uris: true,
           // oidc defined variable name
           // eslint-disable-next-line @typescript-eslint/naming-convention
           response_types: true,
@@ -267,6 +259,7 @@ export class IdentityProviderAdapterMongoService
       result[oidcName] = source[legacyName];
       Reflect.deleteProperty(result, legacyName);
     });
+
     // openid defined property names
     // eslint-disable-next-line @typescript-eslint/naming-convention
     result.client_secret = this.decryptClientSecret(source.client_secret);
@@ -322,9 +315,9 @@ export class IdentityProviderAdapterMongoService
 
   private getIdentityProviderDTO(
     discovery: boolean,
-  ): Type<DiscoveryIdpAdapterMongoDTO | NoDiscoveryIdoAdapterMongoDTO> {
+  ): Type<DiscoveryIdpAdapterMongoDTO | NoDiscoveryIdpAdapterMongoDTO> {
     return discovery
       ? DiscoveryIdpAdapterMongoDTO
-      : NoDiscoveryIdoAdapterMongoDTO;
+      : NoDiscoveryIdpAdapterMongoDTO;
   }
 }

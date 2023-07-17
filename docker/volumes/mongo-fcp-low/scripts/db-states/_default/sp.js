@@ -9,7 +9,7 @@ const fsp = {
       "https://fsp1-low.docker.dev-franceconnect.fr/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://fsp1-low.docker.dev-franceconnect.fr/logout-callback",
+      "https://fsp1-low.docker.dev-franceconnect.fr/client/logout-callback",
     ],
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
@@ -53,11 +53,12 @@ const fsp = {
       "https://fsp1-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: true,
     idpFilterList: [
-      "fip8-low",
+      "77fe5e8c-364c-440e-909f-5ef4f494e170",
     ],
     identityConsent: false,
     trustedIdentity: false,
     ssoDisabled: false,
+    platform: 'CORE_FCP',
   },
   // FSP2-LOW - amr not authorized
   "FSP2-LOW": {
@@ -69,7 +70,7 @@ const fsp = {
       "https://fsp2-low.docker.dev-franceconnect.fr/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://fsp2-low.docker.dev-franceconnect.fr/logout-callback",
+      "https://fsp2-low.docker.dev-franceconnect.fr/client/logout-callback",
     ],
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
@@ -112,10 +113,11 @@ const fsp = {
     jwks_uri:
       "https://fsp1-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: false,
-    idpFilterList: ["fip1-low","fip2-low","fip3-low"],
+    idpFilterList: ["8dfc4080-c90d-4234-969b-f6c961de3e90","b5e9539a-599a-4ed2-9b4f-8f4bfc5fbb64","0adf04be-536e-4986-b639-73ea8d38493e"],
     identityConsent: false,
     trustedIdentity: false,
     ssoDisabled: false,
+    platform: 'CORE_FCP',
   },
   // FSP3-LOW - private sp
   "FSP3-LOW": {
@@ -127,7 +129,7 @@ const fsp = {
       "https://fsp3-low.docker.dev-franceconnect.fr/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://fsp3-low.docker.dev-franceconnect.fr/logout-callback",
+      "https://fsp3-low.docker.dev-franceconnect.fr/client/logout-callback",
     ],
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
@@ -170,10 +172,11 @@ const fsp = {
     jwks_uri:
       "https://fsp3-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: true,
-    idpFilterList: ["fip3-low"],
+    idpFilterList: ["0adf04be-536e-4986-b639-73ea8d38493e"],
     identityConsent: true,
     trustedIdentity: false,
     ssoDisabled: false,
+    platform: 'CORE_FCP',
   },
   // FSP4-LOW - whitelist fip8
   'FSP4-LOW': {
@@ -185,7 +188,7 @@ const fsp = {
       "https://fsp4-low.docker.dev-franceconnect.fr/oidc-callback",
     ],
     post_logout_redirect_uris: [
-      "https://fsp4-low.docker.dev-franceconnect.fr/logout-callback",
+      "https://fsp4-low.docker.dev-franceconnect.fr/client/logout-callback",
     ],
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
@@ -229,11 +232,12 @@ const fsp = {
       "https://fsp4-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: false,
     idpFilterList: [
-      "fip8-low",
+      "77fe5e8c-364c-440e-909f-5ef4f494e170",
     ],
     identityConsent: false,
     trustedIdentity: false,
     ssoDisabled: false,
+    platform: 'CORE_FCP',
   },
 };
 

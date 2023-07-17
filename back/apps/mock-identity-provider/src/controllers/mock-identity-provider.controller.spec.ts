@@ -1,14 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { LoggerService } from '@fc/logger-legacy';
-import { OidcClientService } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
-import { SessionService } from '@fc/session';
 
 import { MockIdentityProviderService } from '../services';
 import { MockIdentityProviderController } from './mock-identity-provider.controller';
 
-describe('MockIdentityProviderFcaController', () => {
+describe('MockIdentityProviderController', () => {
   let controller: MockIdentityProviderController;
 
   const req = {
@@ -39,8 +37,11 @@ describe('MockIdentityProviderFcaController', () => {
   const oidcClientSessionServiceMock = {
     set: jest.fn(),
     get: jest.fn(),
-    getId: jest.fn(),
-    setAlias: jest.fn(),
+  };
+
+  const appSessionServiceMock = {
+    set: jest.fn(),
+    get: jest.fn(),
   };
 
   const oidcProviderServiceMock = {
@@ -48,7 +49,7 @@ describe('MockIdentityProviderFcaController', () => {
     finishInteraction: jest.fn(),
   };
 
-  const mockIdentityProviderFcaServiceMock = {
+  const mockIdentityProviderServiceMock = {
     getIdentity: jest.fn(),
   };
 
@@ -59,7 +60,6 @@ describe('MockIdentityProviderFcaController', () => {
   const loginMockValue = 'loginMockValue';
   const randomStringMock = 'randomStringMockValue';
   const stateMock = randomStringMock;
-  const sessionIdMock = randomStringMock;
 
   const interactionMock = {
     uid: 'uidMockValue',
@@ -72,23 +72,17 @@ describe('MockIdentityProviderFcaController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [MockIdentityProviderController],
       providers: [
-        OidcClientService,
         LoggerService,
-        SessionService,
         OidcProviderService,
         MockIdentityProviderService,
       ],
     })
-      .overrideProvider(OidcClientService)
-      .useValue(oidcClientServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(SessionService)
-      .useValue(oidcClientSessionServiceMock)
       .overrideProvider(OidcProviderService)
       .useValue(oidcProviderServiceMock)
       .overrideProvider(MockIdentityProviderService)
-      .useValue(mockIdentityProviderFcaServiceMock)
+      .useValue(mockIdentityProviderServiceMock)
       .compile();
 
     controller = module.get<MockIdentityProviderController>(
@@ -107,8 +101,6 @@ describe('MockIdentityProviderFcaController', () => {
 
     oidcProviderServiceMock.getInteraction.mockResolvedValue(interactionMock);
     oidcClientSessionServiceMock.get.mockResolvedValue(spNameMock);
-
-    oidcClientSessionServiceMock.getId.mockReturnValue(sessionIdMock);
   });
 
   it('should be defined', () => {
@@ -202,33 +194,104 @@ describe('MockIdentityProviderFcaController', () => {
       acr: acrMock,
     };
 
-    it('should call service.getIdentity()', async () => {
+    it('should call service.getIdentity() to retrieve sp identity', async () => {
       // Given
       const identityMock = {};
-      mockIdentityProviderFcaServiceMock.getIdentity.mockResolvedValue(
+      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
         identityMock,
       );
       // When
-      await controller.getLogin(next, req, body, oidcClientSessionServiceMock);
+      await controller.getLogin(
+        next,
+        body,
+        oidcClientSessionServiceMock,
+        appSessionServiceMock,
+      );
       // Then
+      expect(mockIdentityProviderServiceMock.getIdentity).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(mockIdentityProviderServiceMock.getIdentity).toHaveBeenCalledWith(
+        body.login,
+      );
+    });
 
-      expect(
-        mockIdentityProviderFcaServiceMock.getIdentity,
-      ).toHaveBeenCalledTimes(1);
-      expect(
-        mockIdentityProviderFcaServiceMock.getIdentity,
-      ).toHaveBeenCalledWith(body.login);
+    it('should throw an error and not call "next" if the identity is not found', async () => {
+      // Given
+      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(undefined);
+      const interactionId: string = interactionIdMock;
+      const body = {
+        interactionId,
+        login: loginMockValue,
+        acr: acrMock,
+      };
+      const expectedError = new Error('Identity not found in database');
+
+      // When / Then
+      await expect(() =>
+        controller.getLogin(
+          next,
+          body,
+          oidcClientSessionServiceMock,
+          appSessionServiceMock,
+        ),
+      ).rejects.toThrow(expectedError);
+      expect(next).toHaveBeenCalledTimes(0);
+    });
+
+    it('should save the login in app session', async () => {
+      // Given
+      const identityMock = {};
+      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
+        identityMock,
+      );
+      // When
+      await controller.getLogin(
+        next,
+        body,
+        oidcClientSessionServiceMock,
+        appSessionServiceMock,
+      );
+      // Then
+      expect(appSessionServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(appSessionServiceMock.set).toHaveBeenCalledWith(
+        'userLogin',
+        body.login,
+      );
+    });
+
+    it('should get the spId from oidcSession', async () => {
+      // Given
+      const identityMock = {};
+      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
+        identityMock,
+      );
+      // When
+      await controller.getLogin(
+        next,
+        body,
+        oidcClientSessionServiceMock,
+        appSessionServiceMock,
+      );
+      // Then
+      expect(oidcClientSessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(oidcClientSessionServiceMock.get).toHaveBeenCalledWith('spId');
     });
 
     it('should store identity and acr in session', async () => {
       // Given
       const identityMock = { sub: 'sub' };
-      mockIdentityProviderFcaServiceMock.getIdentity.mockResolvedValue(
+      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
         identityMock,
       );
-      oidcClientSessionServiceMock.get.mockReturnValue({ spId: 'spId' });
+      oidcClientSessionServiceMock.get.mockReturnValueOnce('spId');
       // When
-      await controller.getLogin(next, req, body, oidcClientSessionServiceMock);
+      await controller.getLogin(
+        next,
+        body,
+        oidcClientSessionServiceMock,
+        appSessionServiceMock,
+      );
       // Then
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledWith({
@@ -242,7 +305,7 @@ describe('MockIdentityProviderFcaController', () => {
     it('should call next if the identity is found', async () => {
       // Given
       const accountMock = {};
-      mockIdentityProviderFcaServiceMock.getIdentity.mockResolvedValue(
+      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
         accountMock,
       );
       const interactionId: string = interactionIdMock;
@@ -252,27 +315,14 @@ describe('MockIdentityProviderFcaController', () => {
         acr: acrMock,
       };
       // When
-      await controller.getLogin(next, req, body, oidcClientSessionServiceMock);
+      await controller.getLogin(
+        next,
+        body,
+        oidcClientSessionServiceMock,
+        appSessionServiceMock,
+      );
       // Then
       expect(next).toHaveBeenCalledTimes(1);
     });
-  });
-
-  it('should throw an error and not call "next" if the identity is not found', async () => {
-    // Given
-    mockIdentityProviderFcaServiceMock.getIdentity.mockResolvedValue(undefined);
-    const interactionId: string = interactionIdMock;
-    const body = {
-      interactionId,
-      login: loginMockValue,
-      acr: acrMock,
-    };
-    const expectedError = new Error('Identity not found in database');
-
-    // When / Then
-    await expect(() =>
-      controller.getLogin(next, req, body, oidcClientSessionServiceMock),
-    ).rejects.toThrow(expectedError);
-    expect(next).toHaveBeenCalledTimes(0);
   });
 });

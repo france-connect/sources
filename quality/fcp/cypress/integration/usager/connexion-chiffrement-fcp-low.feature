@@ -28,4 +28,5 @@ Fonctionnalité: Connexion avec chiffrement
       | signature |
       | ES256     |
       | HS256     |
-      | RS256     |
+# Supporté par FCP-LOW mais pas par core-legacy
+#     | RS256     |

@@ -24,8 +24,6 @@ import { IIdentityProviderAdapterEnv } from './interfaces';
 const CLIENT_METADATA = [
   'client_id',
   'client_secret',
-  'post_logout_redirect_uris',
-  'redirect_uris',
   'response_types',
   'id_token_signed_response_alg',
   'token_endpoint_auth_method',

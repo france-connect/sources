@@ -171,19 +171,15 @@ export class OidcClientController {
 
     const { idpIdToken, idpState, idpId } = session;
 
-    const {
-      // OIDC style variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      client: { post_logout_redirect_uris },
-    } = await this.identityProvider.getById('envIssuer');
+    const { postLogoutRedirectUri } =
+      this.config.get<OidcClientConfig>('OidcClient');
 
     const endSessionUrl: string =
       await this.oidcClient.getEndSessionUrlFromProvider(
         idpId,
         idpState,
         idpIdToken,
-        // pop() : We only have one URL but the standard implies an array
-        post_logout_redirect_uris[0],
+        postLogoutRedirectUri,
       );
 
     res.redirect(endSessionUrl);

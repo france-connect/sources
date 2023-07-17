@@ -21,12 +21,6 @@ export default {
     response_types: ['code'],
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    redirect_uris: env.json('REDIRECT_URIS'),
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    post_logout_redirect_uris: env.json('POST_LOGOUT_REDIRECT_URIS'),
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_signed_response_alg: env.string('ID_TOKEN_SIGNED_RESPONSE_ALG'),
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention

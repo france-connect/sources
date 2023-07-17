@@ -2,7 +2,9 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
-import { OidcClientConfig } from '@fc/oidc-client';
+import { OidcClientConfig, OidcClientRoutes } from '@fc/oidc-client';
+
+import app from './app';
 
 const env = new ConfigParser(process.env, 'OidcClient');
 
@@ -28,4 +30,6 @@ export default {
   scope: env.string('SCOPE'),
   // Toggle Financial Grade API
   fapi: env.boolean('FAPI'),
+  postLogoutRedirectUri: `https://${app.fqdn}${app.urlPrefix}${OidcClientRoutes.CLIENT_LOGOUT_CALLBACK}`,
+  redirectUri: `https://${app.fqdn}${app.urlPrefix}${OidcClientRoutes.OIDC_CALLBACK}`,
 } as OidcClientConfig;

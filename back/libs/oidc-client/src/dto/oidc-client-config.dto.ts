@@ -9,6 +9,7 @@ import {
   IsObject,
   IsOptional,
   IsString,
+  IsUrl,
   Min,
   MinLength,
   ValidateNested,
@@ -70,4 +71,10 @@ export class OidcClientConfig {
 
   @IsBoolean()
   readonly fapi: boolean;
+
+  @IsUrl()
+  readonly redirectUri: string;
+
+  @IsUrl()
+  readonly postLogoutRedirectUri: string;
 }

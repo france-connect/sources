@@ -3,6 +3,7 @@
 // Declarative code
 export * from './app-session.dto';
 export * from './authorize-params.dto';
+export * from './check-token-request.dto';
 export * from './core-fcp-config.dto';
 export * from './core-fcp-session.dto';
 export * from './core-session.dto';

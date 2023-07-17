@@ -73,11 +73,6 @@ export class AccountService {
     }
 
     // Spread new interactions
-    account.idpFederation = {
-      ...account.idpFederation,
-      ...interaction.idpFederation,
-    };
-
     account.spFederation = {
       ...account.spFederation,
       ...interaction.spFederation,

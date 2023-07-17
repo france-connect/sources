@@ -25,6 +25,12 @@
       "@fc/identity-provider-adapter-mongo/*": [
         "libs/identity-provider-adapter-mongo/src/*"
       ],
+      "@fc/data-provider-adapter-mongo": [
+        "libs/data-provider-adapter-mongo/src"
+      ],
+      "@fc/data-provider-adapter-mongo/*": [
+        "libs/data-provider-adapter-mongo/src/*"
+      ],
       "@fc/identity": [
         "libs/identity/src"
       ],
@@ -463,6 +469,12 @@
       "@fc/mock-rnipp/*": [
         "apps/mock-rnipp/src/*"
       ],
+      "@fc/mock-data-provider": [
+        "apps/mock-data-provider/src"
+      ],
+      "@fc/mock-data-provider/*": [
+        "apps/mock-data-provider/src/*"
+      ],
       "@fc/oidc-acr": [
         "libs/oidc-acr/src"
       ],
@@ -474,6 +486,12 @@
       ],
       "@fc/flow-steps/*": [
         "libs/flow-steps/src/*"
+      ],
+      "@fc/data-provider-adapter-core": [
+        "libs/data-provider-adapter-core/src"
+      ],
+      "@fc/data-provider-adapter-core/*": [
+        "libs/data-provider-adapter-core/src/*"
       ]
     }
   },

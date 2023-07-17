@@ -23,6 +23,8 @@ import { MockIdentityProviderSession } from './dto';
 import {
   MockIdentityProviderService,
   OidcProviderConfigAppService,
+  OidcProviderMiddlewareService,
+  ScenariosService,
 } from './services';
 
 const exceptionModule = ExceptionsModule.withoutTracking();
@@ -46,6 +48,8 @@ const exceptionModule = ExceptionsModule.withoutTracking();
     MockIdentityProviderService,
     OidcProviderConfigAppService,
     OidcProviderGrantService,
+    OidcProviderMiddlewareService,
+    ScenariosService,
   ],
   exports: [OidcProviderConfigAppService],
 })

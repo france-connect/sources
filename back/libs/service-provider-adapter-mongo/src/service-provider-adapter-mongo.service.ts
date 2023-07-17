@@ -1,3 +1,5 @@
+import { Model } from 'mongoose';
+
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -13,6 +15,7 @@ import {
   ServiceProviderAdapterMongoDTO,
 } from './dto';
 import { Types } from './enums';
+import { MongoRequestFilterArgument } from './interfaces';
 import { ServiceProvider } from './schemas';
 
 @Injectable()
@@ -25,7 +28,7 @@ export class ServiceProviderAdapterMongoService
   /* eslint-disable-next-line max-params */
   constructor(
     @InjectModel('ServiceProvider')
-    private readonly serviceProviderModel,
+    private readonly serviceProviderModel: Model<ServiceProvider>,
     private readonly cryptography: CryptographyService,
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
@@ -35,7 +38,7 @@ export class ServiceProviderAdapterMongoService
   }
 
   async onModuleInit() {
-    this.mongooseWatcher.watchWith(
+    this.mongooseWatcher.watchWith<ServiceProvider>(
       this.serviceProviderModel,
       this.refreshCache.bind(this),
     );
@@ -47,57 +50,65 @@ export class ServiceProviderAdapterMongoService
   }
 
   private async findAllServiceProvider(): Promise<ServiceProviderMetadata[]> {
+    const { platform } = this.config.get<ServiceProviderAdapterMongoConfig>(
+      'ServiceProviderAdapterMongo',
+    );
+
+    const requestFilterArgument: MongoRequestFilterArgument = {
+      active: true,
+    };
+
+    if (platform) {
+      requestFilterArgument.platform = platform;
+    }
+
     const rawResult = await this.serviceProviderModel
-      .find(
-        {
-          active: true,
-        },
-        {
-          _id: false,
-          active: true,
-          name: true,
-          title: true,
-          key: true,
-          entityId: true,
-          // openid defined property names
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          client_secret: true,
-          scopes: true,
-          claims: true,
-          // openid defined property names
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          redirect_uris: true,
-          // openid defined property names
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          post_logout_redirect_uris: true,
-          // openid defined property names
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          id_token_signed_response_alg: true,
-          // openid defined property names
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          id_token_encrypted_response_alg: true,
-          // openid defined property names
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          id_token_encrypted_response_enc: true,
-          // openid defined property names
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          userinfo_signed_response_alg: true,
-          // openid defined property names
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          userinfo_encrypted_response_alg: true,
-          // openid defined property names
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          userinfo_encrypted_response_enc: true,
-          // openid defined property names
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          jwks_uri: true,
-          idpFilterExclude: true,
-          idpFilterList: true,
-          type: true,
-          identityConsent: true,
-          ssoDisabled: true,
-        },
-      )
+      .find(requestFilterArgument, {
+        _id: false,
+        active: true,
+        name: true,
+        title: true,
+        key: true,
+        entityId: true,
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        client_secret: true,
+        scopes: true,
+        claims: true,
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        redirect_uris: true,
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        post_logout_redirect_uris: true,
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        id_token_signed_response_alg: true,
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        id_token_encrypted_response_alg: true,
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        id_token_encrypted_response_enc: true,
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        userinfo_signed_response_alg: true,
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        userinfo_encrypted_response_alg: true,
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        userinfo_encrypted_response_enc: true,
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        jwks_uri: true,
+        idpFilterExclude: true,
+        idpFilterList: true,
+        type: true,
+        identityConsent: true,
+        ssoDisabled: true,
+        platform: true,
+      })
       .lean();
 
     const serviceProviders = await asyncFilter<ServiceProviderMetadata[]>(
@@ -135,6 +146,7 @@ export class ServiceProviderAdapterMongoService
   async getList(refreshCache = false): Promise<ServiceProviderMetadata[]> {
     if (refreshCache || !this.listCache) {
       this.logger.debug('Refresh cache from DB');
+
       const list = await this.findAllServiceProvider();
       this.listCache = list.map(this.legacyToOpenIdPropertyName.bind(this));
 

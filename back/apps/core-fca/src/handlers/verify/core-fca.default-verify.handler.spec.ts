@@ -184,17 +184,11 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       await service.handle(handleArgument);
       // Then
       expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledTimes(1);
-      expect(coreAccountServiceMock.computeFederation).toBeCalledWith(
-        {
-          spId: sessionDataMock.spId,
-          subSp: 'computedSubSp',
-          hashSp: 'spIdentityHash',
-        },
-        {
-          idpId: sessionDataMock.idpId,
-          subIdp: 'computedSubIdp',
-        },
-      );
+      expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledWith({
+        key: sessionDataMock.spId,
+        sub: 'computedSubSp',
+        identityHash: 'spIdentityHash',
+      });
     });
 
     it('should call computeIdentityHash with idp identity and idp id', async () => {

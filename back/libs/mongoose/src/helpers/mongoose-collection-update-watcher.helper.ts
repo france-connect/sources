@@ -1,5 +1,5 @@
 import { ChangeStreamDocument } from 'mongodb';
-import { Model } from 'mongoose';
+import { Document, Model } from 'mongoose';
 
 import { Injectable } from '@nestjs/common';
 
@@ -15,15 +15,15 @@ export class MongooseCollectionOperationWatcherHelper {
     this.logger.setContext(this.constructor.name);
   }
 
-  watchWith(model: Model<unknown>, callback: Function): void {
+  watchWith<T extends Document>(model: Model<T>, callback: Function): void {
     MongooseCollectionOperationWatcherHelper.listeners.push({
       model,
       callback,
     });
-    this.watch(model, callback);
+    this.watch<T>(model, callback);
   }
 
-  private watch(model: Model<unknown>, callback: Function): void {
+  private watch<T extends Document>(model: Model<T>, callback: Function): void {
     const watch = model.watch();
     this.logger.debug(
       `database OperationType watcher initialization for ${model.modelName}`,

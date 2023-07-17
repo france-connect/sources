@@ -8,6 +8,7 @@ import {
 import { SessionService } from '@fc/session';
 
 import { OidcProviderConfigAppService } from './oidc-provider-config-app.service';
+import { ScenariosService } from './scenarios.service';
 
 describe('OidcProviderConfigAppService', () => {
   let service: OidcProviderConfigAppService;
@@ -26,6 +27,10 @@ describe('OidcProviderConfigAppService', () => {
     saveGrant: jest.fn(),
   };
 
+  const scenariosServiceMock = {
+    deleteClaims: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -37,6 +42,7 @@ describe('OidcProviderConfigAppService', () => {
         SessionService,
         OidcProviderErrorService,
         OidcProviderGrantService,
+        ScenariosService,
       ],
     })
       .overrideProvider(SessionService)
@@ -45,6 +51,8 @@ describe('OidcProviderConfigAppService', () => {
       .useValue(errorServiceMock)
       .overrideProvider(OidcProviderGrantService)
       .useValue(oidcProviderGrantServiceMock)
+      .overrideProvider(ScenariosService)
+      .useValue(scenariosServiceMock)
       .compile();
 
     service = module.get<OidcProviderConfigAppService>(
@@ -54,5 +62,117 @@ describe('OidcProviderConfigAppService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('formatAccount', () => {
+    const sessionIdMock = '42';
+    const spSubMock = 'the-world';
+    const spIdentityMock = {
+      sub: spSubMock,
+      email: 'dio@brando.it',
+      // oidc parameter
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      given_name: 'Dio',
+      // oidc parameter
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      family_name: 'Brando',
+    };
+
+    const userLoginMock = 'dbrando';
+
+    beforeEach(() => {
+      jest.resetAllMocks();
+      jest.restoreAllMocks();
+
+      jest
+        .spyOn(SessionService, 'getBoundedSession')
+        .mockReturnValue(sessionServiceMock);
+    });
+
+    it('should get the bounded app session', async () => {
+      // Given
+      const reqMock = {
+        sessionId: sessionIdMock,
+        sessionService: sessionServiceMock,
+      };
+
+      // When
+      await service['formatAccount'](sessionIdMock, spIdentityMock, spSubMock);
+
+      // Then
+      expect(SessionService.getBoundedSession).toHaveBeenCalledTimes(1);
+      expect(SessionService.getBoundedSession).toHaveBeenCalledWith(
+        reqMock,
+        'App',
+      );
+    });
+
+    it('should retrieve the current user login in app session', async () => {
+      // When
+      await service['formatAccount'](sessionIdMock, spIdentityMock, spSubMock);
+
+      // Then
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.get).toHaveBeenCalledWith('userLogin');
+    });
+
+    it('should call the "deleteClaims" scenario handler with the current login, the sp identity and the sp sub', async () => {
+      // Given
+      sessionServiceMock.get.mockResolvedValueOnce(userLoginMock);
+
+      // When
+      await service['formatAccount'](sessionIdMock, spIdentityMock, spSubMock);
+
+      // Then
+      expect(scenariosServiceMock.deleteClaims).toHaveBeenCalledTimes(1);
+      expect(scenariosServiceMock.deleteClaims).toHaveBeenCalledWith(
+        userLoginMock,
+        spIdentityMock,
+        spSubMock,
+      );
+    });
+
+    it('should return an account for the oidc-provider library to interact with', async () => {
+      // Given
+      sessionServiceMock.get.mockResolvedValueOnce(userLoginMock);
+
+      const expected = {
+        accountId: sessionIdMock,
+        claims: expect.any(Function),
+      };
+
+      // When
+      const result = await service['formatAccount'](
+        sessionIdMock,
+        spIdentityMock,
+        spSubMock,
+      );
+
+      // Then
+      expect(result).toStrictEqual(expected);
+    });
+
+    it('should return the claims after filtering from "deleteClaims" scenario handler', async () => {
+      // Given
+      sessionServiceMock.get.mockResolvedValueOnce(userLoginMock);
+
+      const claimsMock = {
+        sub: spSubMock,
+        ...spIdentityMock,
+      };
+      scenariosServiceMock.deleteClaims.mockReturnValue(claimsMock);
+
+      const account = await service['formatAccount'](
+        sessionIdMock,
+        spIdentityMock,
+        spSubMock,
+      );
+
+      // When
+      const result = await account.claims();
+
+      // Then
+      expect(result).toStrictEqual(claimsMock);
+    });
   });
 });

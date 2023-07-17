@@ -109,18 +109,7 @@ export abstract class OidcProviderAppConfigLibService
       const subSp = spId && subs[spId];
       this.checkSub(ctx, subSp);
 
-      const account = {
-        /**
-         * We used the `sessionId` as `accountId` identifier when building the grant
-         * @see OidcProviderService.finishInteraction()
-         */
-        accountId: sessionId,
-        async claims() {
-          return { ...spIdentity, sub: subSp };
-        },
-      };
-
-      this.logger.trace({ account });
+      const account = await this.formatAccount(sessionId, spIdentity, subSp);
 
       return account;
     } catch (error) {
@@ -224,7 +213,7 @@ export abstract class OidcProviderAppConfigLibService
     return ctx.oidc?.entities?.Client?.clientId;
   }
 
-  private checkSpId(ctx: KoaContextWithOIDC, spId: string): void {
+  protected checkSpId(ctx: KoaContextWithOIDC, spId: string): void {
     if (!spId) {
       this.errorService.throwError(
         ctx,
@@ -233,9 +222,22 @@ export abstract class OidcProviderAppConfigLibService
     }
   }
 
-  private checkSub(ctx: KoaContextWithOIDC, sub: string): void {
+  protected checkSub(ctx: KoaContextWithOIDC, sub: string): void {
     if (!sub) {
       this.errorService.throwError(ctx, new SessionSubNotFoundException());
     }
+  }
+
+  protected async formatAccount(sessionId, spIdentity, subSp) {
+    return {
+      /**
+       * We used the `sessionId` as `accountId` identifier when building the grant
+       * @see OidcProviderService.finishInteraction()
+       */
+      accountId: sessionId,
+      async claims() {
+        return { ...spIdentity, sub: subSp };
+      },
+    };
   }
 }

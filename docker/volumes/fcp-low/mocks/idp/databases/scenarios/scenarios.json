@@ -1,0 +1,53 @@
+[
+  {
+    "name": "Do not send a sub",
+    "login": "E020005",
+    "type": "DELETE_CLAIMS",
+    "claims": [
+      "sub"
+    ]
+  },
+  {
+    "name": "IdP respond with 200 but unexpected format",
+    "login": "E020007",
+    "type": "SERVER_RESPONSE",
+    "status": 200,
+    "body": "Spanish inquisition"
+  },
+  {
+    "name": "IdP respond with 401",
+    "login": "E020008",
+    "type": "SERVER_RESPONSE",
+    "status": 401,
+    "body": "HTTP 401 - Unauthorize"
+  },
+  {
+    "name": "IdP respond with 500",
+    "login": "E020009",
+    "type": "SERVER_RESPONSE",
+    "status": 500,
+    "body": "HTTP 500 - Internal Server Error"
+  },
+  {
+    "name": "IdP respond with 502",
+    "login": "E020010",
+    "type": "SERVER_RESPONSE",
+    "status": 502,
+    "body": "HTTP 502 - Bad Gateway"
+  },
+  {
+    "name": "IdP respond with 503",
+    "login": "E020011",
+    "type": "SERVER_RESPONSE",
+    "status": 503,
+    "body": "HTTP 503 - Service Unavailable"
+  },
+  {
+    "name": "IdP respond with too much delay",
+    "login": "E020018",
+    "type": "SERVER_RESPONSE",
+    "status": 500,
+    "body": "HTTP 500 - Internal Server Error",
+    "delay": 32000
+  }
+]

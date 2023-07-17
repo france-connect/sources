@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { AccountBlockedException, AccountService } from '@fc/account';
+import { Account, AccountBlockedException, AccountService } from '@fc/account';
 import { PartialExcept, RequiredExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CoreAccountService, CoreAcrService } from '@fc/core';
@@ -72,7 +72,7 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
      * }
      */
 
-    // Acr check
+    // 1. Acr check
     this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr);
 
     const rnippIdentity = await this.retrieveRnippIdentity(
@@ -82,63 +82,66 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
       trackingContext,
     );
 
+    const identityHash =
+      this.cryptographyFcp.computeIdentityHash(rnippIdentity);
+
+    const account = await this.account.getAccountByIdentityHash(identityHash);
+
+    // 2. Account activeCheck (account)
+    this.checkAccountBlocked(account);
+
+    // 3. IdpBLocked check (account)
+    this.coreAccount.checkIfIdpIsBlockedForAccount(account, idpId);
+
     const { entityId } = await this.serviceProvider.getById(spId);
 
-    const hashSp = this.cryptographyFcp.computeIdentityHash(rnippIdentity);
+    const sub = this.getSub(account, identityHash, entityId);
 
-    const account = await this.account.getAccountByIdentityHash(hashSp);
+    // 5. Save interaction to database & get sp's sub to avoid double computation
+    const accountId = await this.coreAccount.computeFederation({
+      key: entityId,
+      identityHash,
+      sub,
+    });
 
-    if (account.active === false) {
-      throw new AccountBlockedException();
-    }
-
-    let subSp: string;
-
-    if (account.spFederation?.hasOwnProperty(entityId)) {
-      this.logger.trace('using existing sub from spFederation');
-      subSp = account.spFederation[entityId].sub;
-    } else {
-      this.logger.trace('creating new sub');
-      subSp = this.cryptographyFcp.computeSubV1(entityId, hashSp);
-    }
-
-    const idpIdentityHash = this.cryptographyFcp.computeIdentityHash(
-      idpIdentity as IOidcIdentity,
-    );
-    const subIdp = this.cryptographyFcp.computeSubV1(spId, idpIdentityHash);
-
-    // Save interaction to database & get sp's sub to avoid double computation
-    const accountId = await this.coreAccount.computeFederation(
-      {
-        entityId,
-        hashSp,
-        spId,
-        subSp,
-      },
-      {
-        idpId,
-        subIdp,
-      },
-    );
-
-    const { sub: _sub, ...spIdentityCleaned } = this.buildSpIdentity(
-      subSp,
-      idpIdentity,
-      rnippIdentity,
-    );
+    const spIdentity = this.buildSpIdentity(idpIdentity, rnippIdentity);
 
     const session: OidcClientSession = {
       amr: ['fc'],
       idpIdentity,
       rnippIdentity,
-      spIdentity: spIdentityCleaned,
+      spIdentity,
       accountId,
-      subs: { ...subs, [spId]: subSp },
+      subs: { ...subs, [spId]: sub },
     };
 
     this.logger.trace({ session });
 
     await sessionOidc.set(session);
+  }
+
+  private checkAccountBlocked(account: Account): void {
+    if (account.active === false) {
+      throw new AccountBlockedException();
+    }
+  }
+
+  private getSub(
+    account: Account,
+    identityHash: string,
+    entityId: string,
+  ): string {
+    let sub: string;
+    if (account.spFederation?.hasOwnProperty(entityId)) {
+      const subData = account.spFederation[entityId];
+      this.logger.trace('using existing sub from spFederation');
+      sub = typeof subData === 'string' ? subData : subData.sub;
+    } else {
+      this.logger.trace('creating new sub');
+      sub = this.cryptographyFcp.computeSubV1(entityId, identityHash);
+    }
+
+    return sub;
   }
 
   /**
@@ -179,17 +182,16 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
   }
 
   private buildSpIdentity(
-    subSp: string,
     idpIdentity: PartialExcept<IOidcIdentity, 'sub'>,
     rnippIdentity: RnippPivotIdentity,
-  ): PartialExcept<IOidcIdentity, 'sub'> {
+  ): Partial<Omit<IOidcIdentity, 'sub'>> {
     const { useIdentityFrom } = this.config.get<CoreConfig>('Core');
 
     switch (useIdentityFrom) {
       case IdentitySource.RNIPP:
-        return this.buildFromRnippIdentity(subSp, rnippIdentity, idpIdentity);
+        return this.buildFromRnippIdentity(rnippIdentity, idpIdentity);
       case IdentitySource.IDP:
-        return this.buildFromIdpIdentity(subSp, idpIdentity, rnippIdentity);
+        return this.buildFromIdpIdentity(idpIdentity, rnippIdentity);
     }
   }
 
@@ -198,10 +200,9 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
    * we need to provide the idp birthdate not completed with "01" by default
    */
   private buildFromRnippIdentity(
-    subSp: string,
     rnippIdentity: RnippPivotIdentity,
     idpIdentity: PartialExcept<IOidcIdentity, 'sub'>,
-  ): PartialExcept<IOidcIdentity, 'sub'> {
+  ): Partial<Omit<IOidcIdentity, 'sub'>> {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { birthdate, email, preferred_username } = idpIdentity;
     return {
@@ -209,18 +210,16 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
       // oidc claim
       // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_birthdate: birthdate,
-      sub: subSp,
-      email: email,
+      email,
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      preferred_username: preferred_username,
+      preferred_username,
     };
   }
 
   private buildFromIdpIdentity(
-    subSp: string,
     idpIdentity: PartialExcept<IOidcIdentity, 'sub'>,
     rnippIdentity: RnippPivotIdentity,
-  ): PartialExcept<IOidcIdentity, 'sub'> {
+  ): Partial<Omit<IOidcIdentity, 'sub'>> {
     const rnippClaims: Partial<RnippPivotIdentity> =
       this.buildRnippClaims(rnippIdentity);
 
@@ -239,7 +238,6 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
       // oidc claims
       // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name_array,
-      sub: subSp,
     };
   }
 

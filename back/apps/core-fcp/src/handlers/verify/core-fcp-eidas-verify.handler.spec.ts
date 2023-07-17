@@ -132,9 +132,9 @@ describe('CoreFcpEidasVerifyHandler', () => {
     cryptographyEidasServiceMock.computeIdentityHash.mockReturnValueOnce(
       'spIdentityHash',
     );
-    cryptographyEidasServiceMock.computeSubV1
-      .mockReturnValueOnce('computedSubSp')
-      .mockReturnValueOnce('computedSubIdp');
+    cryptographyEidasServiceMock.computeSubV1.mockReturnValueOnce(
+      'computedSubSp',
+    );
 
     coreAccountServiceMock.computeFederation.mockResolvedValue(accountIdMock);
   });
@@ -215,18 +215,11 @@ describe('CoreFcpEidasVerifyHandler', () => {
       await service.handle(handleArgument);
       // Then
       expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledTimes(1);
-      expect(coreAccountServiceMock.computeFederation).toBeCalledWith(
-        {
-          spId: sessionDataMock.spId,
-          entityId: spMock.entityId,
-          subSp: 'computedSubSp',
-          hashSp: 'spIdentityHash',
-        },
-        {
-          idpId: sessionDataMock.idpId,
-          subIdp: 'computedSubIdp',
-        },
-      );
+      expect(coreAccountServiceMock.computeFederation).toBeCalledWith({
+        key: spMock.entityId,
+        sub: 'computedSubSp',
+        identityHash: 'spIdentityHash',
+      });
     });
 
     /**
@@ -254,32 +247,16 @@ describe('CoreFcpEidasVerifyHandler', () => {
       ).toHaveBeenCalledWith(idpIdentityMock);
     });
 
-    it('should call computeSubV1 with entityId and rnippIdentityHash on first call', async () => {
+    it('should call computeSubV1 with entityId and spIdentityHash', async () => {
       // When
       await service.handle(handleArgument);
 
       // Then
       expect(cryptographyEidasServiceMock.computeSubV1).toHaveBeenCalledTimes(
-        2,
-      );
-      expect(cryptographyEidasServiceMock.computeSubV1).toHaveBeenNthCalledWith(
         1,
+      );
+      expect(cryptographyEidasServiceMock.computeSubV1).toHaveBeenCalledWith(
         spMock.entityId,
-        'spIdentityHash',
-      );
-    });
-
-    it('should call computeSubV1 with spId and idpIdentityHash on the second call', async () => {
-      // When
-      await service.handle(handleArgument);
-
-      // Then
-      expect(cryptographyEidasServiceMock.computeSubV1).toHaveBeenCalledTimes(
-        2,
-      );
-      expect(cryptographyEidasServiceMock.computeSubV1).toHaveBeenNthCalledWith(
-        2,
-        sessionDataMock.spId,
         'spIdentityHash',
       );
     });

@@ -11,6 +11,8 @@
 | [Y000007](../apps/core-fcp/src/exceptions/core-fcp-invalid-event-key.exception.ts "CoreFcpInvalidEventKeyException") | 500 | Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter. | La configuration du FS concernant le consentement demandé est incorrect ( un consentement est demandé sur une connexion anonyme, ... ). Contacter le support N3. | 
 | [Y000010](../libs/core/src/exceptions/core-identity-provider-not-found.exception.ts "CoreIdentityProviderNotFoundException") | 400 |  | N/A | 
 | [Y000011](../apps/core-fcp/src/exceptions/core-fcp-insufficient-acr-level-suspicious-context.exception.ts "InsufficientAcrLevelSuspiciousContextException") | 500 | Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter. | Une connexion a eu lieu dans un context suspect et le FI a identifié l&#39;utilisateur avec un niveau eidas jugé trop faible. | 
+| [Y000012](../libs/core/src/exceptions/core-idp-blocked-for-account.exception.ts "CoreIdpBlockedForAccountException") | 403 | Vous avez bloqué l&#39;utilisation de ce fournisseur d&#39;identité. Pour pouvoir l&#39;utiliser, merci de vous rendre dans vos préférences FranceConnect pour l&#39;autoriser. | Le fournisseur d&#39;identité a été bloqué par l&#39;utilisateur. | 
+| [Y000013](../apps/core-fcp/src/exceptions/core-fcp-invalid-check-token-request.exception.ts "InvalidChecktokenRequestException") | 400 | Required parameter missing or invalid. | La requête reçue pour vérifier le token n&#39;est pas valide. Des paramètres obligatoires sont manquants ou au mauvais format. | 
 
 | Code d'erreur | Code HTTP | Message utilisateur | Description |
 |---|---|---|---|
@@ -168,6 +170,11 @@
 
 | Code d'erreur | Code HTTP | Message utilisateur | Description |
 |---|---|---|---|
+| [Y330001](../libs/data-provider-adapter-mongo/src/exceptions/data-provider-not-found.exception.ts "DataProviderNotFoundException") | 401 | Unknown client. | Aucun fournisseur de données trouvé avec ce client_id. | 
+| [Y330002](../libs/data-provider-adapter-mongo/src/exceptions/data-provider-invalid-credentials.exception.ts "DataProviderInvalidCredentialsException") | 401 | Client authentication failed. | Le client_id ou le client_secret ne correspond pas à celui d&#39;un fournisseur de données. | 
+
+| Code d'erreur | Code HTTP | Message utilisateur | Description |
+|---|---|---|---|
 | [Y400001](../libs/geoip-maxmind/src/exceptions/geoip-maxmind-not-found.exception.ts "GeoipMaxmindNotFoundException") | 500 | Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter. | La base de donnée local GeoIP Maxmind n&#39;a pa pu être chargée | 
 
 | Code d'erreur | Code HTTP | Message utilisateur | Description |
@@ -177,4 +184,9 @@
 | Code d'erreur | Code HTTP | Message utilisateur | Description |
 |---|---|---|---|
 | [Y420001](../libs/flow-steps/src/exceptions/unexpected-navigation.exception.ts "UnexpectedNavigationException") | 500 | Nous vous invitons à fermer tous les onglets de votre navigateur et à vous authentifier de nouveau en suivant les étapes de connexion. | L&#39;usager fait une navigation anormale, probablement un refresh sur une page déjà en erreur ou un retour arrière non géré | 
+
+| Code d'erreur | Code HTTP | Message utilisateur | Description |
+|---|---|---|---|
+| [Y430001](../libs/data-provider-adapter-core/src/exceptions/checktoken-timeout.exception.ts "ChecktokenTimeoutException") | 408 | The authorization server is currently unable to handle the request. | Un problème est survenu lors de l&#39;appel au checktoken, le core est injoignable | 
+| [Y430002](../libs/data-provider-adapter-core/src/exceptions/checktoken-http-status.exception.ts "ChecktokenHttpStatusException") | 500 | The authorization server encountered an unexpected condition that prevented it from fulfilling the request. | Impossible de joindre le core. L&#39;utilisateur doit redémarrer sa cinématique. Si cela persiste, contacter le support N3 | 
 

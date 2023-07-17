@@ -11,7 +11,7 @@ services:
     depends_on:
       - 'squid'
       - 'fc-core'
-      - 'fip1'
+      - 'fip1-low'
       - 'redis-pwd'
       - 'csmr-account-legacy'
       - 'csmr-account-high'

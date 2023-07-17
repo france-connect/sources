@@ -66,10 +66,10 @@ export default class InfoConsentPage {
       // Information page: Use the toggle to display the claims
       this.getShowClaimsToggle().should('be.visible');
       this.getClaimDetails().should('not.be.visible');
-      this.getShowClaimsToggle().click();
-      // Due to accordion animation
+      // Wait for element to be bound to click event
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(500);
+      this.getShowClaimsToggle().click();
     }
 
     this.getClaimDetails().should('be.visible');

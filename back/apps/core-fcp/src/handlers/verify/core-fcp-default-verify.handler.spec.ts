@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { AccountBlockedException, AccountService } from '@fc/account';
+import { Account, AccountBlockedException, AccountService } from '@fc/account';
 import { RequiredExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CoreAccountService, CoreAcrService } from '@fc/core';
@@ -83,6 +83,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
 
   const coreAccountServiceMock = {
     computeFederation: jest.fn(),
+    checkIfIdpIsBlockedForAccount: jest.fn(),
   };
 
   const coreAcrServiceMock = {
@@ -136,7 +137,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     key: '123456',
     entityId: 'AAAABBBBCCCCDDDDEEEEFFFFGGGGHHHH',
   };
-  const subSp = 'computedSubSp';
 
   const serviceProviderMock = {
     getById: jest.fn(),
@@ -149,6 +149,13 @@ describe('CoreFcpDefaultVerifyHandler', () => {
 
   const accountDataMock = {
     active: true,
+    preferences: {
+      idpSettings: {
+        isExcludeList: true,
+        list: ['fip3-low'],
+      },
+    },
+    identityHash: 'spIdentityHash',
   };
 
   const accountServiceMock = {
@@ -208,12 +215,12 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     getInteractionMock.mockResolvedValue(getInteractionResultMock);
     sessionServiceMock.get.mockResolvedValue(sessionDataMock);
     rnippServiceMock.check.mockResolvedValue(spIdentityMock);
-    cryptographyFcpServiceMock.computeIdentityHash
-      .mockReturnValueOnce('spIdentityHash')
-      .mockReturnValueOnce('idpIdentityHash');
-    cryptographyFcpServiceMock.computeSubV1
-      .mockReturnValueOnce('computedSubSp')
-      .mockReturnValueOnce('computedSubIdp');
+    cryptographyFcpServiceMock.computeIdentityHash.mockReturnValueOnce(
+      'spIdentityHash',
+    );
+    cryptographyFcpServiceMock.computeSubV1.mockReturnValueOnce(
+      'computedSubSp',
+    );
 
     coreAccountServiceMock.computeFederation.mockResolvedValue(accountIdMock);
 
@@ -244,65 +251,18 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       await expect(service.handle(handleArgument)).resolves.not.toThrow();
     });
 
-    it('Should throw if account is blocked', async () => {
+    it('Should call checkAccountBlocked', async () => {
       // Given
-      const errorMock = new AccountBlockedException();
-      accountServiceMock.getAccountByIdentityHash
-        .mockReset()
-        .mockResolvedValueOnce({ active: false });
-
-      // Then
-      await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
-    });
-
-    it('should use existing sub', async () => {
-      // Given
-      const subFromAccount = 'subMockValue';
-      const accountMock = {
-        active: true,
-        spFederation: {
-          [spMock.entityId]: {
-            sub: subFromAccount,
-          },
-        },
-      };
-      accountServiceMock.getAccountByIdentityHash
-        .mockReset()
-        .mockResolvedValueOnce(accountMock);
-
+      service['checkAccountBlocked'] = jest.fn();
       // When
       await service.handle(handleArgument);
-
       // Then
-      expect(coreAccountServiceMock.computeFederation).toBeCalledWith(
-        expect.objectContaining({
-          subSp: subFromAccount,
-        }),
-        expect.any(Object),
+      expect(service['checkAccountBlocked']).toHaveBeenCalledTimes(1);
+      expect(service['checkAccountBlocked']).toHaveBeenCalledWith(
+        accountDataMock,
       );
     });
 
-    it('should use newly generated sub', async () => {
-      // Given
-      const accountMock = {
-        active: true,
-      };
-      accountServiceMock.getAccountByIdentityHash
-        .mockReset()
-        .mockResolvedValueOnce(accountMock);
-
-      // When
-      await service.handle(handleArgument);
-
-      // Then
-      expect(coreAccountServiceMock.computeFederation).toBeCalledWith(
-        expect.objectContaining({
-          subSp: 'computedSubSp',
-        }),
-        expect.any(Object),
-      );
-    });
-    // Dependencies sevices errors
     it('Should throw if acr is not validated', async () => {
       // Given
       const errorMock = new Error('my error 1');
@@ -356,8 +316,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       const buildSpIdentityResult = {
         email: 'email',
         birthdate: 'foo',
-        subSp: 'computedSubSp',
-        sub: 'some idpSub',
+        sub: 'computedSubSp',
       };
       service['buildRnippClaims'] = jest
         .fn()
@@ -375,7 +334,8 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         idpIdentity: idpIdentityMock,
         rnippIdentity: rnippIdentityMock,
         spIdentity: {
-          subSp: 'computedSubSp',
+          ...idpIdentityMock,
+          sub: 'computedSubSp',
           email: 'email',
           birthdate: 'foo',
         },
@@ -392,73 +352,39 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       await service.handle(handleArgument);
       // Then
       expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledTimes(1);
-      expect(coreAccountServiceMock.computeFederation).toBeCalledWith(
-        {
-          spId: sessionDataMock.spId,
-          entityId: spMock.entityId,
-          subSp: 'computedSubSp',
-          hashSp: 'spIdentityHash',
-        },
-        {
-          idpId: sessionDataMock.idpId,
-          subIdp: 'computedSubIdp',
-        },
-      );
+      expect(coreAccountServiceMock.computeFederation).toBeCalledWith({
+        key: spMock.entityId,
+        sub: 'computedSubSp',
+        identityHash: 'spIdentityHash',
+      });
     });
 
-    it('should call computeIdentityHash with rnipp identity on first call', async () => {
+    it('should call computeIdentityHash with rnipp identity', async () => {
       // When
       await service.handle(handleArgument);
 
       // Then
       expect(
         cryptographyFcpServiceMock.computeIdentityHash,
-      ).toHaveBeenCalledTimes(2);
+      ).toHaveBeenCalledTimes(1);
       expect(
         cryptographyFcpServiceMock.computeIdentityHash,
-      ).toHaveBeenNthCalledWith(1, rnippIdentityMock);
+      ).toHaveBeenCalledWith(rnippIdentityMock);
     });
 
-    it('should call computeIdentityHash with identity given by the identity provider on the second call', async () => {
+    it('should call computeSubV1 with entityId and rnippIdentityHash', async () => {
       // When
       await service.handle(handleArgument);
 
       // Then
-      expect(
-        cryptographyFcpServiceMock.computeIdentityHash,
-      ).toHaveBeenCalledTimes(2);
-      expect(
-        cryptographyFcpServiceMock.computeIdentityHash,
-      ).toHaveBeenNthCalledWith(2, idpIdentityMock);
-    });
-
-    it('should call computeSubV1 with entityId and rnippIdentityHash on first call', async () => {
-      // When
-      await service.handle(handleArgument);
-
-      // Then
-      expect(cryptographyFcpServiceMock.computeSubV1).toHaveBeenCalledTimes(2);
-      expect(cryptographyFcpServiceMock.computeSubV1).toHaveBeenNthCalledWith(
-        1,
+      expect(cryptographyFcpServiceMock.computeSubV1).toHaveBeenCalledTimes(1);
+      expect(cryptographyFcpServiceMock.computeSubV1).toHaveBeenCalledWith(
         spMock.entityId,
         'spIdentityHash',
       );
     });
 
-    it('should call computeSubV1 with spId and idpIdentityHash on the second call', async () => {
-      // When
-      await service.handle(handleArgument);
-
-      // Then
-      expect(cryptographyFcpServiceMock.computeSubV1).toHaveBeenCalledTimes(2);
-      expect(cryptographyFcpServiceMock.computeSubV1).toHaveBeenNthCalledWith(
-        2,
-        sessionDataMock.spId,
-        'idpIdentityHash',
-      );
-    });
-
-    it('should call buildSpIdentity with subSp, idpIdentity and rnippIdentity', async () => {
+    it('should call buildSpIdentity with sub, idpIdentity and rnippIdentity', async () => {
       // Given
       service['buildSpIdentity'] = jest
         .fn()
@@ -468,8 +394,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       // Then
       expect(service['buildSpIdentity']).toHaveBeenCalledTimes(1);
       expect(service['buildSpIdentity']).toHaveBeenCalledWith(
-        subSp,
-        { sub: idpIdentityMock.sub },
+        idpIdentityMock,
         rnippIdentityMock,
       );
     });
@@ -488,6 +413,101 @@ describe('CoreFcpDefaultVerifyHandler', () => {
      */
   });
 
+  describe('checkAccountBlocked', () => {
+    it('Should throw if account is blocked', () => {
+      // Given
+      const accountMock = { active: false } as Account;
+      // Then
+      expect(() => service['checkAccountBlocked'](accountMock)).toThrow(
+        AccountBlockedException,
+      );
+    });
+
+    it('Should NOT throw if account is not blocked', () => {
+      // Given
+      const accountMock = { active: true } as Account;
+      // Then
+      expect(() => service['checkAccountBlocked'](accountMock)).not.toThrow();
+    });
+
+    it('Should NOT throw if account does not exists', () => {
+      // Given
+      const accountMock = { id: null } as Account;
+      // Then
+      expect(() => service['checkAccountBlocked'](accountMock)).not.toThrow();
+    });
+  });
+
+  describe('getSub', () => {
+    const identityHashMock = 'identityHashMockValue';
+
+    it('should use existing sub', async () => {
+      // Given
+      const subFromAccount = 'subMockValue';
+      const accountMock = {
+        active: true,
+        spFederation: {
+          [spMock.entityId]: subFromAccount,
+        },
+      } as Account;
+
+      // When
+      const result = service['getSub'](
+        accountMock,
+        identityHashMock,
+        spMock.entityId,
+      );
+
+      // Then
+      expect(result).toBe(subFromAccount);
+    });
+
+    it('should use existing sub using old spFederation format', async () => {
+      // Given
+      const subFromAccount = 'subMockValue';
+      const accountMock = {
+        active: true,
+        spFederation: {
+          [spMock.entityId]: {
+            sub: subFromAccount,
+          },
+        },
+      } as Account;
+
+      // When
+      const result = service['getSub'](
+        accountMock,
+        identityHashMock,
+        spMock.entityId,
+      );
+
+      // Then
+      expect(result).toBe(subFromAccount);
+    });
+
+    it('should use newly generated sub', async () => {
+      // Given
+      const accountMock = {
+        active: true,
+      } as Account;
+
+      const generatedSubMock = 'generatedSubMockValue';
+      cryptographyFcpServiceMock.computeSubV1
+        .mockReset()
+        .mockReturnValueOnce(generatedSubMock);
+
+      // When
+      const result = service['getSub'](
+        accountMock,
+        identityHashMock,
+        spMock.entityId,
+      );
+
+      // Then
+      expect(result).toBe(generatedSubMock);
+    });
+  });
+
   describe('buildSpIdentity', () => {
     beforeEach(() => {
       serviceProviderMock.getById.mockResolvedValue(spMock);
@@ -499,7 +519,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       configServiceMock.get.mockReturnValue(configReturnedValueMock);
       service['buildFromRnippIdentity'] = jest.fn();
       // When
-      service['buildSpIdentity'](subSp, idpIdentityMock, rnippIdentityMock);
+      service['buildSpIdentity'](idpIdentityMock, rnippIdentityMock);
       // Then
       expect(service['buildFromRnippIdentity']).toHaveBeenCalled();
       expect(service['buildFromRnippIdentity']).toHaveBeenCalledTimes(1);
@@ -511,7 +531,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       configServiceMock.get.mockReturnValue(configReturnedValueMock);
       service['buildFromIdpIdentity'] = jest.fn();
       // When
-      service['buildSpIdentity'](subSp, idpIdentityMock, rnippIdentityMock);
+      service['buildSpIdentity'](idpIdentityMock, rnippIdentityMock);
       // Then
       expect(service['buildFromIdpIdentity']).toHaveBeenCalled();
       expect(service['buildFromIdpIdentity']).toHaveBeenCalledTimes(1);
@@ -530,7 +550,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       service['buildRnippClaims'] = jest.fn().mockReturnValue(rnippClaims);
       // When
       const buildFromIdpIdentityResult = service['buildFromIdpIdentity'](
-        subSp,
         idpIdentityMock,
         rnippIdentityMock,
       );
@@ -540,7 +559,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         ...idpIdentityMock,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         given_name_array: rnippIdentityMock.given_name_array,
-        sub: subSp,
       });
     });
   });
@@ -566,7 +584,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       service['buildRnippClaims'] = jest.fn().mockReturnValue(rnippClaims);
       // When
       const buildFromRnippIdentityResult = service['buildFromRnippIdentity'](
-        subSp,
         rnippIdentityMock,
         idpIdentityMock,
       );
@@ -575,7 +592,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         ...rnippIdentityMock,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         idp_birthdate: idpIdentityMock.birthdate,
-        sub: subSp,
         email: idpIdentityMock.email,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         preferred_username: idpIdentityMock.preferred_username,
