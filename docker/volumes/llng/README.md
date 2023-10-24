@@ -12,11 +12,9 @@ Vous pouvez trouver cette configuration dans le fichier `llng-conf.json`.
 
 Pour lancer la commande docker : `docker-stack llng-configure`
 
-
 ## Interface de configuration
 
 Une interface existe également afin de pouvoir modifier la configuration. Il faut se rendre à l'adresse suivante : `https://manager.llng.docker.dev-franceconnect.fr/`
-
 
 ### Documentation 2.0
 

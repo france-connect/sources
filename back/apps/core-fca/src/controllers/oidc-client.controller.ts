@@ -39,12 +39,16 @@ import {
   Session,
   SessionCsrfService,
   SessionInvalidCsrfSelectIdpException,
-  SessionNotFoundException,
   SessionService,
 } from '@fc/session';
-import { TrackingService } from '@fc/tracking';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
-import { OidcIdentityDto } from '../dto';
+import {
+  GetOidcCallbackOidcClientSessionDto,
+  GetOidcCallbackSessionDto,
+  GetRedirectToIdpOidcClientSessionDto,
+  OidcIdentityDto,
+} from '../dto';
 import { CoreFcaInvalidIdentityException } from '../exceptions';
 
 @Controller()
@@ -82,7 +86,7 @@ export class OidcClientController {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
      * @ticket FC-1020
      */
-    @Session('OidcClient')
+    @Session('OidcClient', GetRedirectToIdpOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
     const { providerUid: idpId, csrfToken } = body;
@@ -107,6 +111,8 @@ export class OidcClientController {
     }
 
     await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
+
+    await this.oidcClient.utils.checkIdpDisabled(spId, idpId);
 
     const { state, nonce } =
       await this.oidcClient.utils.buildAuthorizeParameters();
@@ -148,6 +154,9 @@ export class OidcClientController {
       idpLabel,
       idpState: state,
       idpNonce: nonce,
+      idpIdentity: undefined,
+      spIdentity: undefined,
+      accountId: undefined,
     };
 
     await sessionOidc.set(session);
@@ -179,7 +188,7 @@ export class OidcClientController {
       method: 'GET',
       name: 'OidcClientRoutes.WELL_KNOWN_KEYS',
     });
-    return this.oidcClient.utils.wellKnownKeys();
+    return await this.oidcClient.utils.wellKnownKeys();
   }
 
   @Post(OidcClientRoutes.DISCONNECT_FROM_IDP)
@@ -217,6 +226,10 @@ export class OidcClientController {
   ) {
     const { oidcProviderLogoutForm } = await sessionOidc.get();
 
+    const trackingContext: TrackedEventContextInterface = { req };
+    const { FC_SESSION_TERMINATED } = this.tracking.TrackedEventsMap;
+    await this.tracking.track(FC_SESSION_TERMINATED, trackingContext);
+
     await this.sessionService.destroy(req, res);
 
     return { oidcProviderLogoutForm };
@@ -241,10 +254,7 @@ export class OidcClientController {
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @Header('cache-control', 'no-store')
   @Redirect()
-  async getLegacyOidcCallback(
-    @Query() query,
-    @Param() params: GetOidcCallback,
-  ) {
+  getLegacyOidcCallback(@Query() query, @Param() params: GetOidcCallback) {
     const { urlPrefix } = this.config.get<AppConfig>('App');
 
     const response = {
@@ -278,19 +288,22 @@ export class OidcClientController {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
      * @ticket FC-1020
      */
-    @Session('OidcClient')
-    sessionOidc: ISessionService<OidcClientSession>,
+    @Session('OidcClient', GetOidcCallbackOidcClientSessionDto)
+    _sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const session: OidcSession = await sessionOidc.get();
+    await this.sessionService.detach(req, res);
+    await this.sessionService.duplicate(req, res, GetOidcCallbackSessionDto);
 
-    if (!session) {
-      throw new SessionNotFoundException('OidcClient');
-    }
+    const newSessionOidc = SessionService.getBoundSession<OidcClientSession>(
+      req,
+      'OidcClient',
+    );
 
     const { IDP_CALLEDBACK } = this.tracking.TrackedEventsMap;
-    this.tracking.track(IDP_CALLEDBACK, { req });
+    await this.tracking.track(IDP_CALLEDBACK, { req });
 
-    const { idpId, idpNonce, idpState, interactionId, spId } = session;
+    const { idpId, idpNonce, idpState, interactionId, spId } =
+      await newSessionOidc.get();
 
     const tokenParams = {
       state: idpState,
@@ -312,7 +325,7 @@ export class OidcClientController {
       );
 
     const { FC_REQUESTED_IDP_TOKEN } = this.tracking.TrackedEventsMap;
-    this.tracking.track(FC_REQUESTED_IDP_TOKEN, { req });
+    await this.tracking.track(FC_REQUESTED_IDP_TOKEN, { req });
 
     const userInfoParams = {
       accessToken,
@@ -325,7 +338,7 @@ export class OidcClientController {
     );
 
     const { FC_REQUESTED_IDP_USERINFO } = this.tracking.TrackedEventsMap;
-    this.tracking.track(FC_REQUESTED_IDP_USERINFO, { req });
+    await this.tracking.track(FC_REQUESTED_IDP_USERINFO, { req });
 
     await this.validateIdentity(idpId, identity);
 
@@ -336,7 +349,7 @@ export class OidcClientController {
       idpAcr: acr,
       idpIdentity: identity,
     };
-    await sessionOidc.set({ ...identityExchange });
+    await newSessionOidc.set({ ...identityExchange });
 
     // BUSINESS: Redirect to business page
     const { urlPrefix } = this.config.get<AppConfig>('App');

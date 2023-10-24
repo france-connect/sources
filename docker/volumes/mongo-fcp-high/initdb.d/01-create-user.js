@@ -8,8 +8,8 @@ db.createUser({
   pwd: "pass",
   roles: [
     { role: "dbOwner", db: "core-fcp-high" },
-    { role: "readWrite", db: "core-fcp-high" }
-  ]
+    { role: "readWrite", db: "core-fcp-high" },
+  ],
 });
 
 /* ------------------------------------------------------------------------------- */

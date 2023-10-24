@@ -8,8 +8,8 @@ import { IdentityProviderMetadata } from '@fc/oidc';
 
 import { OidcClientClass } from '../enums';
 import {
-  OidcClientProviderDisabledException,
-  OidcClientProviderNotFoundException,
+  OidcClientIdpDisabledException,
+  OidcClientIdpNotFoundException,
 } from '../exceptions';
 import { OidcClientConfigService } from './oidc-client-config.service';
 
@@ -46,11 +46,11 @@ export class OidcClientIssuerService implements OnModuleInit {
     );
 
     if (!idpMetadata) {
-      throw new OidcClientProviderNotFoundException();
+      throw new OidcClientIdpNotFoundException();
     }
 
     if (!idpMetadata.active) {
-      throw new OidcClientProviderDisabledException();
+      throw new OidcClientIdpDisabledException();
     }
 
     const { redirectUri, postLogoutRedirectUri } = configuration;

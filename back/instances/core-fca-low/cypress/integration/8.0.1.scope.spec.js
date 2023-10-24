@@ -14,7 +14,7 @@ describe('Scope', () => {
 
     setFSAuthorizeMethod('post');
     submitFSAuthorizeForm();
-    chooseIdpOnCore('fia1-low');
+    chooseIdpOnCore('9c716f61-b8a1-435c-a407-ef4d677ec270');
     cy.get('#login').clear().type('12551');
     cy.get('button[type=submit]').click();
 
@@ -23,7 +23,7 @@ describe('Scope', () => {
     checkInStringifiedJson('email', 'test@abcd.com'); // mandatory
     checkInStringifiedJson(
       'sub',
-      'af37dcbf9d81106b9a8731b284da17e56c075eeae5c5aa2fb8df76923010e9f0',
+      '70ae1aef90b7c4936b3b7b739d4245a1f1cb91ad61bc826f74786b47085eddbc',
     ); // mandatory
     checkInStringifiedJson('belonging_population', undefined);
   });

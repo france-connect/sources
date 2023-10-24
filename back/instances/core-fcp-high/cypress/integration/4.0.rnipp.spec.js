@@ -12,13 +12,13 @@ describe('4.0 - RNIPP', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
       errorCode: 'E010004',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
     cy.hasError('Y010004', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
   });
 
@@ -27,13 +27,13 @@ describe('4.0 - RNIPP', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
       errorCode: 'E010006',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
     cy.hasError('Y010006', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
   });
 
@@ -42,13 +42,13 @@ describe('4.0 - RNIPP', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
       errorCode: 'E010007',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
     cy.hasError('Y010007', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
   });
 
@@ -57,13 +57,13 @@ describe('4.0 - RNIPP', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
       errorCode: 'E010008',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
     cy.hasError('Y010008', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
   });
 
@@ -72,7 +72,7 @@ describe('4.0 - RNIPP', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
       errorCode: 'E010009',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
     cy.hasError('Y010009', headingErrorMessage);
@@ -83,7 +83,7 @@ describe('4.0 - RNIPP', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
       errorCode: 'E010011',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
     cy.hasError('Y010011', headingErrorMessage);
@@ -94,7 +94,7 @@ describe('4.0 - RNIPP', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
       errorCode: 'E010012',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
     cy.hasError('Y010012', headingErrorMessage);
@@ -105,7 +105,7 @@ describe('4.0 - RNIPP', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
       errorCode: 'E010013',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
     cy.hasError('Y010013', headingErrorMessage);
@@ -115,7 +115,7 @@ describe('4.0 - RNIPP', () => {
     basicScenario({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
       userName: 'test_INVALID_COG',
     });
 
@@ -132,13 +132,13 @@ describe('4.0 - RNIPP', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
       errorCode: 'E010015',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
     cy.hasError('Y010015', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_DECEASED_RNIPP',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
   });
 
@@ -147,13 +147,13 @@ describe('4.0 - RNIPP', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
       errorCode: 'E010099',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
     cy.hasError('Y010013', headingErrorMessage);
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
   });
 });

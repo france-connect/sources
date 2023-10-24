@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { AppConfig } from '@fc/app';
 import { validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
@@ -17,6 +16,7 @@ import {
 } from '@fc/mailer';
 import { OidcSession } from '@fc/oidc';
 
+import { AppConfig } from '../../dto';
 import { EmailsTemplates } from '../../enums';
 
 @Injectable()
@@ -118,16 +118,18 @@ export class CoreFcpSendEmailHandler
       throw new NoEmailException();
     }
 
+    const { platform } = this.config.get<AppConfig>('App');
+
     // -- email body
     const body = await this.getConnectNotificationEmailBodyContent(session);
 
     this.logger.trace({ from, to });
 
     // -- send
-    this.mailer.send({
+    await this.mailer.send({
       from,
       to,
-      subject: `Notification de connexion au service "${spName}" grâce à FranceConnect+`,
+      subject: `Notification de connexion au service "${spName}" grâce à ${platform}`,
       body,
     });
   }

@@ -37,7 +37,7 @@ export class ServiceProviderAdapterMongoService
     this.logger.setContext(this.constructor.name);
   }
 
-  async onModuleInit() {
+  onModuleInit() {
     this.mongooseWatcher.watchWith<ServiceProvider>(
       this.serviceProviderModel,
       this.refreshCache.bind(this),

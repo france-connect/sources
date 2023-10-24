@@ -119,7 +119,7 @@ export class EidasToOidcService {
     const attributesKeys = Object.keys(attributes);
 
     return attributesKeys.reduce(
-      this.getClaimsBoundedAttributesToClaimsReducer(attributes),
+      this.getClaimsBoundAttributesToClaimsReducer(attributes),
       {} as IOidcIdentity,
     );
   }
@@ -130,9 +130,9 @@ export class EidasToOidcService {
    * @param attributes The eIDAS attributes from the eIDAS node
    * @param claims The oidc claims accumulator
    * @param currentAttribute The current eIDAS attribute
-   * @return The attributesToClaimsReducer with bounded eIDAS attributes
+   * @return The attributesToClaimsReducer with bound eIDAS attributes
    */
-  private getClaimsBoundedAttributesToClaimsReducer(
+  private getClaimsBoundAttributesToClaimsReducer(
     attributes: Partial<EidasResponseAttributes>,
   ) {
     return this.attributesToClaimsReducer.bind(EidasToOidcService, attributes);

@@ -7,6 +7,8 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
 import { SessionService } from '@fc/session';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { ForbidRefresh } from '../decorators';
 import { UnexpectedNavigationException } from '../exceptions';
 import { ForbidRefreshInterceptor } from './forbid-refresh.interceptor';
@@ -22,11 +24,7 @@ jest.mock('../decorators', () => ({
 describe('ForbidRefreshInterceptor', () => {
   let interceptor: ForbidRefreshInterceptor;
 
-  const sessionServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-    shouldHandleSession: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const httpContextMock = {
     getRequest: jest.fn(),
@@ -40,7 +38,7 @@ describe('ForbidRefreshInterceptor', () => {
   };
 
   const SessionServiceMock = jest.mocked(SessionService);
-  SessionServiceMock.getBoundedSession = jest.fn();
+  SessionServiceMock.getBoundSession = jest.fn();
 
   const ForbidRefreshMock = jest.mocked(ForbidRefresh);
 
@@ -95,10 +93,10 @@ describe('ForbidRefreshInterceptor', () => {
     configServiceMock.get.mockReturnValue(configMock);
     httpContextMock.getRequest.mockReturnValue(reqMock);
     sessionServiceMock.get.mockResolvedValue(sessionMock);
-    SessionServiceMock.getBoundedSession.mockReturnValue(sessionServiceMock);
+    SessionServiceMock.getBoundSession.mockReturnValue(sessionServiceMock);
   });
 
-  it('should be defined', async () => {
+  it('should be defined', () => {
     expect(interceptor).toBeDefined();
     expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
   });
@@ -174,7 +172,9 @@ describe('ForbidRefreshInterceptor', () => {
         req: { sessionId: undefined },
       });
       // When / Then
-      expect(() => interceptor['checkRefresh'](contextMock)).not.toThrow();
+      await expect(
+        interceptor['checkRefresh'](contextMock),
+      ).resolves.not.toThrow();
     });
 
     it('should not call extractSession if there is no active session', async () => {
@@ -188,7 +188,7 @@ describe('ForbidRefreshInterceptor', () => {
       await interceptor['checkRefresh'](contextMock);
 
       // Then
-      expect(SessionServiceMock.getBoundedSession).not.toHaveBeenCalled();
+      expect(SessionServiceMock.getBoundSession).not.toHaveBeenCalled();
     });
 
     it('should not throw if it is not a refresh', async () => {
@@ -198,14 +198,16 @@ describe('ForbidRefreshInterceptor', () => {
       });
 
       // When
-      expect(() => interceptor['checkRefresh'](contextMock)).not.toThrow();
+      await expect(
+        interceptor['checkRefresh'](contextMock),
+      ).resolves.not.toThrow();
     });
 
     it('should throw if it is a refresh', async () => {
       // When / Then
-      await expect(() =>
-        interceptor['checkRefresh'](contextMock),
-      ).rejects.toThrow(UnexpectedNavigationException);
+      await expect(interceptor['checkRefresh'](contextMock)).rejects.toThrow(
+        UnexpectedNavigationException,
+      );
     });
   });
 });

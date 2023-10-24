@@ -21,6 +21,8 @@ import {
   OidcClientFailedToFetchBlacklist,
   OidcClientGetEndSessionUrlException,
   OidcClientIdpBlacklistedException,
+  OidcClientIdpDisabledException,
+  OidcClientIdpNotFoundException,
   OidcClientInvalidStateException,
   OidcClientMissingCodeException,
   OidcClientMissingStateException,
@@ -29,8 +31,10 @@ import {
 import {
   ExtraTokenParams,
   IGetAuthorizeUrlParams,
+  IIdentityProviderAdapter,
   TokenParams,
 } from '../interfaces';
+import { IDENTITY_PROVIDER_SERVICE } from '../tokens';
 import { OidcClientConfigService } from './oidc-client-config.service';
 import { OidcClientIssuerService } from './oidc-client-issuer.service';
 
@@ -45,6 +49,8 @@ export class OidcClientUtilsService {
     private readonly crypto: CryptographyService,
     @Inject(SERVICE_PROVIDER_SERVICE_TOKEN)
     private readonly serviceProvider: IServiceProviderAdapter,
+    @Inject(IDENTITY_PROVIDER_SERVICE)
+    private readonly identityProvider: IIdentityProviderAdapter,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -263,9 +269,11 @@ export class OidcClientUtilsService {
    *
    * @param {string} spId service provider ID
    * @param {string} idpId identity provider ID
-   * @returns {Promise<boolean>}
+   * @returns {Promise<void>}
+   * @throws OidcClientFailedToFetchBlacklist if the idp restrictions of the sp couldn't be fetched
+   * @throws OidcClientIdpBlacklistedException if the idp is blacklisted or not whitelisted
    */
-  async checkIdpBlacklisted(spId: string, idpId: string): Promise<boolean> {
+  async checkIdpBlacklisted(spId: string, idpId: string): Promise<void> {
     let isIdpExcluded = false;
     try {
       isIdpExcluded = await this.serviceProvider.shouldExcludeIdp(spId, idpId);
@@ -280,7 +288,32 @@ export class OidcClientUtilsService {
     }
 
     this.logger.trace({ check: { spId, idpId, isIdpExcluded } });
+  }
 
-    return false;
+  /**
+   * Method to check if
+   * an identity provider is disabled.
+   *
+   * @param {string} spId service provider ID
+   * @param {string} idpId identity provider ID
+   * @returns {Promise<void>}
+   * @throws OidcClientFailedToFetchIdpActiveStatusException if the idp active status couldn't be fetched
+   * @throws OidcClientIdpDisabledException if the idp is disabled
+   */
+  async checkIdpDisabled(spId: string, idpId: string): Promise<void> {
+    let isIdpActive = true;
+    try {
+      isIdpActive = await this.identityProvider.isActiveById(idpId);
+    } catch (error) {
+      this.logger.trace({ error }, LoggerLevelNames.WARN);
+      throw new OidcClientIdpNotFoundException();
+    }
+
+    if (!isIdpActive) {
+      this.logger.trace({ isIdpActive }, LoggerLevelNames.WARN);
+      throw new OidcClientIdpDisabledException();
+    }
+
+    this.logger.trace({ check: { spId, idpId, isIdpActive } });
   }
 }

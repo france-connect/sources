@@ -9,6 +9,8 @@ import {
 } from '@fc/oidc-provider';
 import { SessionService } from '@fc/session';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { OidcProviderMiddlewareService } from './oidc-provider-middleware.service';
 import { ScenariosService } from './scenarios.service';
 
@@ -30,10 +32,7 @@ describe('OidcProviderConfigAppService', () => {
     alterServerResponse: jest.fn(),
   };
 
-  const appSessionMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
+  const appSessionMock = getSessionServiceMock();
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -124,7 +123,7 @@ describe('OidcProviderConfigAppService', () => {
       service['bindSessionId'] = jest.fn();
 
       jest
-        .spyOn(SessionService, 'getBoundedSession')
+        .spyOn(SessionService, 'getBoundSession')
         .mockReturnValue(appSessionMock);
 
       appSessionMock.get.mockResolvedValue(userLoginMock);
@@ -144,8 +143,8 @@ describe('OidcProviderConfigAppService', () => {
       await service['userinfoMiddleware'](ctxMock);
 
       // Then
-      expect(SessionService.getBoundedSession).toHaveBeenCalledTimes(1);
-      expect(SessionService.getBoundedSession).toHaveBeenCalledWith(
+      expect(SessionService.getBoundSession).toHaveBeenCalledTimes(1);
+      expect(SessionService.getBoundSession).toHaveBeenCalledWith(
         ctxMock.req,
         'App',
       );

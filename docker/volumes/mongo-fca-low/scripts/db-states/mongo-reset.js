@@ -15,7 +15,7 @@ db.provider.remove({});
 print("Reseting scopes collection");
 db.scopes.remove({});
 
-print('Reseting ministries collection...');
+print("Reseting ministries collection...");
 db.ministries.remove({});
 
 print("Reseting claims collection");

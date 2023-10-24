@@ -206,7 +206,7 @@ describe('CsmrTracksAccountService', () => {
       lastValueFromMock.mockResolvedValue(errorToken);
 
       // When / Then
-      expect(() =>
+      await expect(() =>
         service['getAccountId'](castedBrokerMock, identityHashMock),
       ).rejects.toThrow(CsmrTracksAccountResponseException);
     });
@@ -218,7 +218,7 @@ describe('CsmrTracksAccountService', () => {
       });
 
       // When / Then
-      expect(() =>
+      await expect(() =>
         service['getAccountId'](castedBrokerMock, identityHashMock),
       ).rejects.toThrow(CsmrTracksAccountResponseException);
     });

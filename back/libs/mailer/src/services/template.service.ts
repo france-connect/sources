@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class TemplateService {
   async readFile(path): Promise<string> {
-    return fsAsync.readFile(path, 'utf-8');
+    return await fsAsync.readFile(path, 'utf-8');
   }
 
   render(template, values): string {

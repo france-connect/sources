@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 
-import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
@@ -12,7 +11,7 @@ import { IClaim, IRichClaim, ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { ISessionService } from '@fc/session';
 
-import { CoreSessionDto } from '../dto';
+import { AppConfig, CoreSessionDto } from '../dto';
 import { CoreFcpSendEmailHandler } from '../handlers';
 
 @Injectable()

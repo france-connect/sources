@@ -24,7 +24,8 @@ export class HttpProxyService {
   onModuleInit() {
     // Instanciate proxy params for Got library and basic NodeJS Request
     // Activate the GLOBAL_AGENT_HTTP(S)_PROXY env variable on proxy settings
-    bootstrap();
+
+    void bootstrap();
 
     this.logger.debug(
       `Set up HTTPS proxy to: ${globalThis['GLOBAL_AGENT'].HTTPS_PROXY}`,

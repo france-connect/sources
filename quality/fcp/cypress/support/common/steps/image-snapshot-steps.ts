@@ -67,7 +67,8 @@ Then(
   "la copie d'écran {string} correspond à la page actuelle sur {string}",
   function (name, device) {
     const { title: scenarioName } = this.test;
-    cy.waitForNetworkIdle(500);
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500);
     addBlackoutMethods();
     cy.matchImageSnapshot(snapshotName(scenarioName, name, device));
   },
@@ -77,7 +78,8 @@ Then(
   "la copie d'écran {string} correspond à l'élément web {string} sur {string}",
   function (name, selector, device) {
     const { title: scenarioName } = this.test;
-    cy.waitForNetworkIdle(500);
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500);
     addBlackoutMethods();
     cy.get(selector).then(($el) =>
       cy.wrap($el).matchImageSnapshot(snapshotName(scenarioName, name, device)),

@@ -16,3 +16,13 @@ les données sont injectés en configuration avec les tokens (Symbol):
 - COG_COUNTRY
 
 > De même ils sont utilisés pour associer les données à leur validation à la création du service de parsing CSV.
+
+## Commande pour générer le fichier CSV country.csv pour le support
+
+> docker-stack generate-insee:country [path/to/country-insee-csv]
+
+## Commande pour générer le fichier CSV city.csv pour le support
+
+🚨 Attention le fichier csv de la poste n'est pas au bon format. il faut le reformater en modifiant les points-virgule par des virgules avec de pouvoir l'exploiter
+
+> docker-stack generate-insee:city [path/to/commune-insee-csv] [path/to/laposte-csv]

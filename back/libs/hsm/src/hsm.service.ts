@@ -54,10 +54,7 @@ export class HsmService {
    * @param digest alg used to digest data before signing (default to sha256).
    * @returns signed data
    */
-  async sign(
-    data: Buffer,
-    digest: SignatureDigest = SignatureDigest.SHA256,
-  ): Promise<Buffer> {
+  sign(data: Buffer, digest: SignatureDigest = SignatureDigest.SHA256): Buffer {
     const { sigKeyCkaLabel } = this.config.get<HsmConfig>('Hsm');
 
     /** The hash is not computed by the HSM (would be too slow) */

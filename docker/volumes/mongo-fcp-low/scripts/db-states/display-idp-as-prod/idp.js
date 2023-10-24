@@ -4,10 +4,10 @@
 print("Initializing impot_gouv");
 db.provider.replaceOne(
   {
-    uid: "impot_gouv",
+    uid: "45387392-621b-4830-85c3-4a1e1d4ef18c",
   },
   {
-    uid: "impot_gouv",
+    uid: "45387392-621b-4830-85c3-4a1e1d4ef18c",
     name: "impot_gouv",
     active: true,
     display: false,
@@ -50,7 +50,7 @@ db.provider.replaceOne(
     post_logout_redirect_uris: [
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
-  }
+  },
 );
 
 /* ------------------------------------------------------------------------------- */
@@ -61,10 +61,10 @@ db.provider.replaceOne(
 print("Initializing ameli");
 db.provider.replaceOne(
   {
-    uid: "ameli",
+    uid: "67fb107f-337d-4543-8eae-038b450dac01",
   },
   {
-    uid: "ameli",
+    uid: "67fb107f-337d-4543-8eae-038b450dac01",
     name: "ameli",
     active: true,
     display: false,
@@ -107,7 +107,7 @@ db.provider.replaceOne(
     post_logout_redirect_uris: [
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
-  }
+  },
 );
 
 /* ------------------------------------------------------------------------------- */
@@ -118,10 +118,10 @@ db.provider.replaceOne(
 print("Initializing la_poste");
 db.provider.replaceOne(
   {
-    uid: "la_poste",
+    uid: "bd2618cc-1d7f-4384-9f04-13352e8d51c6",
   },
   {
-    uid: "la_poste",
+    uid: "bd2618cc-1d7f-4384-9f04-13352e8d51c6",
     name: "la_poste",
     active: true,
     display: true,
@@ -164,7 +164,7 @@ db.provider.replaceOne(
     post_logout_redirect_uris: [
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
-  }
+  },
 );
 
 /* ------------------------------------------------------------------------------- */
@@ -175,10 +175,10 @@ db.provider.replaceOne(
 print("Initializing mobile_connect");
 db.provider.replaceOne(
   {
-    uid: "mobile_connect",
+    uid: "7769ef21-d29c-4a87-9025-4970ba0f6be1",
   },
   {
-    uid: "mobile_connect",
+    uid: "7769ef21-d29c-4a87-9025-4970ba0f6be1",
     name: "mobile_connect",
     active: true,
     display: true,
@@ -221,7 +221,7 @@ db.provider.replaceOne(
     post_logout_redirect_uris: [
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
-  }
+  },
 );
 
 /* ------------------------------------------------------------------------------- */
@@ -232,10 +232,10 @@ db.provider.replaceOne(
 print("Initializing msa");
 db.provider.replaceOne(
   {
-    uid: "msa",
+    uid: "10685777-0965-468e-a3c3-6a7a0bdbbf5e",
   },
   {
-    uid: "msa",
+    uid: "10685777-0965-468e-a3c3-6a7a0bdbbf5e",
     name: "msa",
     active: true,
     display: false,
@@ -278,7 +278,7 @@ db.provider.replaceOne(
     post_logout_redirect_uris: [
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
-  }
+  },
 );
 
 /* ------------------------------------------------------------------------------- */
@@ -289,10 +289,10 @@ db.provider.replaceOne(
 print("Initializing alicem");
 db.provider.replaceOne(
   {
-    uid: "alicem",
+    uid: "81d72ad1-b0c1-431c-ad5b-72cbb0e547a7",
   },
   {
-    uid: "alicem",
+    uid: "81d72ad1-b0c1-431c-ad5b-72cbb0e547a7",
     name: "alicem",
     active: false,
     display: true,
@@ -335,7 +335,7 @@ db.provider.replaceOne(
     post_logout_redirect_uris: [
       "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
-  }
+  },
 );
 
 /* ------------------------------------------------------------------------------- */

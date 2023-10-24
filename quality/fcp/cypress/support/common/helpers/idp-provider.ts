@@ -41,6 +41,18 @@ export const getIdentityProviderByDescription = (
   return identityProvider;
 };
 
+export const getIdentityProviderByName = (
+  identityProviders: IdentityProvider[],
+  idpName: string,
+): IdentityProvider => {
+  const identityProvider: IdentityProvider = identityProviders.find(
+    (idp) => idp.name === idpName,
+  );
+  expect(identityProvider, `No identity provider matches the name '${idpName}'`)
+    .to.exist;
+  return identityProvider;
+};
+
 export const getDefaultIdentityProvider = (
   identityProviders: IdentityProvider[],
 ): IdentityProvider =>

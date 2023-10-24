@@ -11,6 +11,8 @@ export class MongooseConnectionConnectedHandler
     private readonly mongooseHelper: MongooseCollectionOperationWatcherHelper,
   ) {}
 
+  // Needed to match interface
+  // eslint-disable-next-line require-await
   public async handle(): Promise<void> {
     this.mongooseHelper.connectAllWatchers();
   }

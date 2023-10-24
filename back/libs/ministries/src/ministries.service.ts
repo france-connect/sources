@@ -21,7 +21,7 @@ export class MinistriesService {
     this.logger.setContext(this.constructor.name);
   }
 
-  async onModuleInit() {
+  onModuleInit() {
     this.mongooseWatcher.watchWith(
       this.ministriesModel,
       this.refreshCache.bind(this),
@@ -30,7 +30,7 @@ export class MinistriesService {
   }
 
   async refreshCache(): Promise<void> {
-    this.getList(true);
+    await this.getList(true);
   }
 
   private async findAllMinistries(): Promise<MinistriesDTO[]> {

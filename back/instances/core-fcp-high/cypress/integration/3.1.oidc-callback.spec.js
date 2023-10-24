@@ -3,7 +3,7 @@ import * as qs from 'querystring';
 import {
   getIdentityProvider,
   setFSAuthorizeAcr,
-  submitFSAuthorizeForm,
+  submitFSAuthorizeForm
 } from './mire.utils';
 
 function getOidcCallbackUrl(idpInfo, event) {
@@ -33,7 +33,7 @@ function getOidcCallbackUrl(idpInfo, event) {
  * @param {Function} next a callback function that will receive `/oidc-callback` url as parameter.
  */
 function prepareOidcCallbackAs(alias) {
-  const idpId = `${Cypress.env('IDP_NAME')}1-high`;
+  const idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18';
 
   const idpInfo = getIdentityProvider(idpId);
 
@@ -78,7 +78,7 @@ function finishWithReplacedUrl(attackerUrl) {
   cy.visit(Cypress.env('SP1_ROOT_URL'));
   setFSAuthorizeAcr('eidas2');
   submitFSAuthorizeForm();
-  cy.get(`#idp-${Cypress.env('IDP_NAME')}1-high`).click();
+  cy.get('#idp-dedc7160-8811-4d0f-9dd7-c072c15f2f18').click();
 
   // Use url from previous interaction
   cy.visit(attackerUrl, { failOnStatusCode: false });

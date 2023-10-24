@@ -46,8 +46,8 @@ async function bootstrap() {
    *    This is an issue when the HSM is unavailable at the launch of the consumer (which is most likely to happen after a first "suicide").
    */
   consumer.get(HsmService).shutdownConsumer = () => {
-    setTimeout(() => {
-      consumer.close();
+    setTimeout(async () => {
+      await consumer.close();
     }, 1000);
   };
 
@@ -55,4 +55,5 @@ async function bootstrap() {
   await consumer.listen();
   console.log(`Consumer is listening on queue "${options.queue}"`);
 }
-bootstrap();
+
+void bootstrap();

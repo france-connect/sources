@@ -1,8 +1,5 @@
-import { KoaContextWithOIDC } from 'oidc-provider';
-
 import { Injectable } from '@nestjs/common';
 
-import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
@@ -13,11 +10,16 @@ import {
 } from '@fc/oidc-client';
 import {
   LogoutFormParamsInterface,
+  OidcCtx,
   OidcProviderAppConfigLibService,
   OidcProviderErrorService,
   OidcProviderGrantService,
 } from '@fc/oidc-provider';
-import { SessionService } from '@fc/session';
+import { ISessionService, SessionService } from '@fc/session';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
+
+import { AppConfig } from '../dto';
+import { CoreFcpMissingAtHashException } from '../exceptions';
 
 @Injectable()
 export class OidcProviderConfigAppService extends OidcProviderAppConfigLibService {
@@ -29,6 +31,7 @@ export class OidcProviderConfigAppService extends OidcProviderAppConfigLibServic
     protected readonly grantService: OidcProviderGrantService,
     private readonly oidcClient: OidcClientService,
     private readonly config: ConfigService,
+    private tracking: TrackingService,
   ) {
     super(logger, sessionService, errorService, grantService);
     this.logger.setContext(this.constructor.name);
@@ -40,33 +43,73 @@ export class OidcProviderConfigAppService extends OidcProviderAppConfigLibServic
    * @TODO #109 Check the behaving of the page when javascript is disabled
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/issues/109
    */
-  async logoutSource(ctx: KoaContextWithOIDC, form: any): Promise<void> {
-    const boundedSession = SessionService.getBoundedSession<OidcClientSession>(
-      ctx.req,
+  async logoutSource(ctx: OidcCtx, form: any): Promise<void> {
+    await this.switchToAliasedSession(ctx);
+    const { req } = ctx;
+
+    const session = SessionService.getBoundSession<OidcClientSession>(
+      req,
       'OidcClient',
     );
-    const session: OidcSession = await boundedSession.get();
+
+    const params = await this.getLogoutParams(session);
+
+    const trackingContext: TrackedEventContextInterface = { req };
+    const { SP_REQUESTED_LOGOUT } = this.tracking.TrackedEventsMap;
+    await this.tracking.track(SP_REQUESTED_LOGOUT, trackingContext);
+
+    await this.logoutFormSessionDestroy(ctx, form, session, params);
+  }
+
+  private async switchToAliasedSession(ctx: OidcCtx): Promise<void> {
+    const { req, res, oidc } = ctx;
+    const alias = oidc.entities?.IdTokenHint?.payload?.at_hash;
+
+    // Check on `typeof` since `oidc-provider` types `at_hash` as `unknown`
+    if (typeof alias !== 'string') {
+      throw new CoreFcpMissingAtHashException();
+    }
+
+    const sessionId = await this.sessionService.getAlias(alias);
+    await this.sessionService.attach(req, res, sessionId);
+    this.logger.debug({
+      dbg: 'switched session',
+      from: req.sessionId,
+      to: sessionId,
+    });
+  }
+
+  private async getLogoutParams(
+    session: ISessionService<OidcSession>,
+  ): Promise<LogoutFormParamsInterface> {
     const { urlPrefix } = this.config.get<AppConfig>('App');
 
-    let params: LogoutFormParamsInterface = {
+    const hasIdpLogoutUrl = await this.hasIdpLogoutUrl(session);
+
+    if (hasIdpLogoutUrl) {
+      return {
+        method: 'POST',
+        uri: `${urlPrefix}${OidcClientRoutes.DISCONNECT_FROM_IDP}`,
+        title: 'Déconnexion du FI',
+      };
+    }
+
+    return {
       method: 'GET',
       uri: `${urlPrefix}${OidcClientRoutes.CLIENT_LOGOUT_CALLBACK}`,
       title: 'Déconnexion FC',
     };
+  }
 
-    if (session && session.idpId) {
-      const idpHasEndSessionUrl =
-        await this.oidcClient.hasEndSessionUrlFromProvider(session.idpId);
+  private async hasIdpLogoutUrl(
+    session: ISessionService<OidcSession>,
+  ): Promise<boolean> {
+    const idpId = await session.get('idpId');
 
-      if (idpHasEndSessionUrl) {
-        params = {
-          method: 'POST',
-          uri: `${urlPrefix}${OidcClientRoutes.DISCONNECT_FROM_IDP}`,
-          title: 'Déconnexion du FI',
-        };
-      }
+    if (!idpId) {
+      return false;
     }
 
-    this.logoutFormSessionDestroy(ctx, form, boundedSession, params);
+    return this.oidcClient.hasEndSessionUrlFromProvider(idpId);
   }
 }

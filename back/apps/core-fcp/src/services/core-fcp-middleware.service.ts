@@ -1,5 +1,8 @@
+import { v4 as uuid } from 'uuid';
+
 import { Injectable } from '@nestjs/common';
 
+import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CoreConfig, CoreOidcProviderMiddlewareService } from '@fc/core';
 import { LoggerService } from '@fc/logger-legacy';
@@ -13,10 +16,15 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { SessionService } from '@fc/session';
+import { ISessionService, SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
-import { AppSession, CoreSessionDto } from '../dto';
+import {
+  AppSession,
+  CoreSessionDto,
+  GetAuthorizeOidcClientSsoSession,
+  GetAuthorizeSessionDto,
+} from '../dto';
 
 @Injectable()
 export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService {
@@ -89,6 +97,45 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     );
   }
 
+  private async isSsoSession(ctx: OidcCtx) {
+    const { req } = ctx;
+    const oidcSession = SessionService.getBoundSession<OidcClientSession>(
+      req,
+      'OidcClient',
+    );
+
+    const data = await oidcSession.get();
+
+    const validationErrors = await validateDto(
+      data,
+      GetAuthorizeOidcClientSsoSession,
+      { forbidNonWhitelisted: true },
+    );
+
+    this.logger.trace({ data, validationErrors });
+
+    return validationErrors.length === 0;
+  }
+
+  private async renewSession(ctx: OidcCtx, enableSso: boolean): Promise<void> {
+    const { req, res } = ctx;
+
+    const isSsoSession = await this.isSsoSession(ctx);
+
+    if (enableSso && isSsoSession) {
+      await this.sessionService.detach(req, res);
+      await this.sessionService.duplicate(req, res, GetAuthorizeSessionDto);
+    } else {
+      await this.sessionService.reset(req, res);
+    }
+  }
+
+  private async getBrowsingSessionId(
+    session: ISessionService<OidcClientSession>,
+  ): Promise<string> {
+    return (await session.get('browsingSessionId')) || uuid();
+  }
+
   // eslint-disable-next-line complexity
   protected async afterAuthorizeMiddleware(ctx: OidcCtx): Promise<void> {
     /**
@@ -102,19 +149,18 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     }
 
     const eventContext = this.getEventContext(ctx);
-    const { req, res } = ctx;
+    const { req } = ctx;
 
     const { enableSso } = this.config.get<CoreConfig>('Core');
-    if (!enableSso) {
-      await this.sessionService.reset(req, res);
-    }
 
-    const oidcSession = SessionService.getBoundedSession<OidcClientSession>(
+    await this.renewSession(ctx, enableSso);
+
+    const oidcSession = SessionService.getBoundSession<OidcClientSession>(
       req,
       'OidcClient',
     );
 
-    const appSession = SessionService.getBoundedSession<AppSession>(req, 'App');
+    const appSession = SessionService.getBoundSession<AppSession>(req, 'App');
     await appSession.set(
       'isSuspicious',
       ctx.req.headers['x-suspicious'] === '1',
@@ -128,9 +174,11 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
       eventContext,
     );
 
-    await oidcSession.set(sessionProperties);
+    const browsingSessionId = await this.getBrowsingSessionId(oidcSession);
 
-    const coreSession = SessionService.getBoundedSession<CoreSessionDto>(
+    await oidcSession.set({ ...sessionProperties, browsingSessionId });
+
+    const coreSession = SessionService.getBoundSession<CoreSessionDto>(
       req,
       'Core',
     );

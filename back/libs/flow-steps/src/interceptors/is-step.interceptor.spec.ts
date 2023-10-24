@@ -9,6 +9,8 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
 import { SessionService } from '@fc/session';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { IsStep } from '../decorators';
 import { IsStepInterceptor } from './is-step.interceptor';
 
@@ -27,11 +29,7 @@ jest.mock('rxjs', () => ({
 describe('IsStepInterceptor', () => {
   let interceptor: IsStepInterceptor;
 
-  const sessionServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-    shouldHandleSession: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const httpContextMock = {
     getRequest: jest.fn(),
@@ -45,7 +43,7 @@ describe('IsStepInterceptor', () => {
   };
 
   const SessionServiceMock = jest.mocked(SessionService);
-  SessionServiceMock.getBoundedSession = jest.fn();
+  SessionServiceMock.getBoundSession = jest.fn();
 
   const IsStepMock = jest.mocked(IsStep);
 
@@ -96,21 +94,21 @@ describe('IsStepInterceptor', () => {
     configServiceMock.get.mockReturnValue(configMock);
     httpContextMock.getRequest.mockReturnValue(reqMock);
     sessionServiceMock.get.mockResolvedValue(sessionMock);
-    SessionServiceMock.getBoundedSession.mockReturnValue(sessionServiceMock);
+    SessionServiceMock.getBoundSession.mockReturnValue(sessionServiceMock);
   });
 
-  it('should be defined', async () => {
+  it('should be defined', () => {
     expect(interceptor).toBeDefined();
     expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
   });
 
   describe('intercept', () => {
-    it('should retrieve flag from IsStep decorator', async () => {
+    it('should retrieve flag from IsStep decorator', () => {
       // Given
       IsStepMock.get = jest.fn().mockReturnValueOnce(false);
 
       // When
-      await interceptor.intercept(contextMock, nextMock);
+      interceptor.intercept(contextMock, nextMock);
 
       // Then
       expect(IsStepMock.get).toHaveBeenCalledTimes(1);
@@ -121,25 +119,25 @@ describe('IsStepInterceptor', () => {
         IsStepMock.get = jest.fn().mockReturnValueOnce(false);
       });
 
-      it('should return result from next.handle()', async () => {
+      it('should return result from next.handle()', () => {
         // Given
         const handleResultMock = Symbol('handleResultMock');
         nextMock.handle.mockReturnValueOnce(handleResultMock);
 
         // When
-        const result = await interceptor.intercept(contextMock, nextMock);
+        const result = interceptor.intercept(contextMock, nextMock);
 
         // Then
         expect(result).toBe(handleResultMock);
       });
 
-      it('should not call handle().pipe()', async () => {
+      it('should not call handle().pipe()', () => {
         // Given
         const handleResultMock = { pipe: jest.fn() };
         nextMock.handle.mockReturnValueOnce(handleResultMock);
 
         // When
-        await interceptor.intercept(contextMock, nextMock);
+        interceptor.intercept(contextMock, nextMock);
 
         // Then
         expect(handleResultMock.pipe).not.toHaveBeenCalled();
@@ -156,17 +154,17 @@ describe('IsStepInterceptor', () => {
         IsStepMock.get = jest.fn().mockReturnValueOnce(true);
       });
 
-      it('should call handle().pipe()', async () => {
+      it('should call handle().pipe()', () => {
         // When
-        await interceptor.intercept(contextMock, nextMock);
+        interceptor.intercept(contextMock, nextMock);
 
         // Then
         expect(handleResultMock.pipe).toHaveBeenCalledTimes(1);
       });
 
-      it('should call tap()', async () => {
+      it('should call tap()', () => {
         // When
-        await interceptor.intercept(contextMock, nextMock);
+        interceptor.intercept(contextMock, nextMock);
 
         // Then
         expect(tapMock).toHaveBeenCalledTimes(1);
@@ -186,7 +184,7 @@ describe('IsStepInterceptor', () => {
       await interceptor['setStep'](contextMock);
 
       // Then
-      expect(SessionServiceMock.getBoundedSession).not.toHaveBeenCalled();
+      expect(SessionServiceMock.getBoundSession).not.toHaveBeenCalled();
     });
 
     it('should set stepRoute in session', async () => {

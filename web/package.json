@@ -1,0 +1,19 @@
+{
+  "name": "fc-web",
+  "version": "0.1.0",
+  "description": "FC custom DSFR Eleventy Statics Websites",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "fs-extra": "^11.1.1",
+    "prettier": "^2.1.2"
+  },
+  "dependencies": {},
+  "scripts": {
+    "start:example": "./scripts/yarn-watch.sh example",
+    "build:example": "./scripts/yarn-build.sh example"
+  }
+}

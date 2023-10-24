@@ -1,0 +1,14 @@
+/* istanbul ignore file */
+
+// Declarative file
+export enum ErrorCode {
+  NO_RELEVANT_KEY = 1,
+  INVALID_SIGNATURE = 2,
+  CAN_NOT_DECODE_PROTECTED_HEADER = 3,
+  CAN_NOT_IMPORT_JWK = 4,
+  CAN_NOT_ENCRYPT = 5,
+  CAN_NOT_DECRYPT = 6,
+  CAN_NOT_DECODE_PLAINTEXT = 7,
+  CAN_NOT_SIGN_JWT = 8,
+  MULTIPLE_RELEVANT_KEYS = 9,
+}

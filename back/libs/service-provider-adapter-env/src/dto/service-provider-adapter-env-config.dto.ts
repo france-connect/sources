@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -8,11 +9,19 @@ import {
   IsString,
   IsUrl,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 
-const SUPPORTED_SIG_ALG = ['ES256', 'RS256', 'HS256'];
+import { SUPPORTED_SIG_ALG } from '@fc/cryptography';
 
 export class ServiceProviderAdapterEnvConfig {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceProvider)
+  readonly list: ServiceProvider[];
+}
+
+export class ServiceProvider {
   @IsBoolean()
   readonly active: boolean;
 

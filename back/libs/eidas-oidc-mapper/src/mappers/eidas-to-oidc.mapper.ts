@@ -33,7 +33,7 @@ function getSub(attributes: EidasResponseAttributes): Partial<IOidcIdentity> {
 function getGender(
   attributes: EidasResponseAttributes,
 ): Partial<IOidcIdentity> {
-  const [eidasGender] = attributes.gender || [];
+  const [eidasGender] = attributes[EidasAttributes.GENDER] || [];
 
   let gender;
   if (eidasGender) {
@@ -46,7 +46,7 @@ function getGender(
 function getBirthdate(
   attributes: EidasResponseAttributes,
 ): Partial<IOidcIdentity> {
-  const [birthdate] = attributes.dateOfBirth || [];
+  const [birthdate] = attributes[EidasAttributes.DATE_OF_BIRTH] || [];
 
   return { birthdate };
 }
@@ -54,7 +54,7 @@ function getBirthdate(
 function getBirthplace(
   attributes: EidasResponseAttributes,
 ): Partial<IOidcIdentity> {
-  const [birthplace] = attributes.placeOfBirth || [];
+  const [birthplace] = attributes[EidasAttributes.PLACE_OF_BIRTH] || [];
 
   return { birthplace };
 }
@@ -64,7 +64,7 @@ function getGivenNames(
 ): Partial<IOidcIdentity> {
   // oidc param
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const given_name = attributes.currentGivenName?.join(' ');
+  const given_name = attributes[EidasAttributes.CURRENT_GIVEN_NAME]?.join(' ');
 
   // oidc param
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -76,11 +76,12 @@ function getFamilyName(
 ): Partial<IOidcIdentity> {
   // oidc param
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const family_name = attributes.currentFamilyName?.join(' ');
+  const family_name =
+    attributes[EidasAttributes.CURRENT_FAMILY_NAME]?.join(' ');
 
   // oidc param
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  return { family_name };
+  return { family_name, preferred_username: family_name };
 }
 
 export const AttributesToClaimsMap = {

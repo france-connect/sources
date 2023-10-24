@@ -6,8 +6,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '@fc/logger-legacy';
 
 import {
-  OidcClientProviderDisabledException,
-  OidcClientProviderNotFoundException,
+  OidcClientIdpDisabledException,
+  OidcClientIdpNotFoundException,
 } from '../exceptions';
 import { OidcClientConfigService } from './oidc-client-config.service';
 import { OidcClientIssuerService } from './oidc-client-issuer.service';
@@ -343,16 +343,16 @@ describe('OidcClientIssuerService', () => {
       // Given
       oidcClientConfigServiceMock.get.mockResolvedValue({ providers });
       // Then
-      expect(service['getIdpMetadata']('p0')).rejects.toThrow(
-        OidcClientProviderNotFoundException,
+      await expect(service['getIdpMetadata']('p0')).rejects.toThrow(
+        OidcClientIdpNotFoundException,
       );
     });
     it('should throw if provider is not active', async () => {
       // Given
       oidcClientConfigServiceMock.get.mockResolvedValue({ providers });
       // Then
-      expect(service['getIdpMetadata']('p3')).rejects.toThrow(
-        OidcClientProviderDisabledException,
+      await expect(service['getIdpMetadata']('p3')).rejects.toThrow(
+        OidcClientIdpDisabledException,
       );
     });
   });

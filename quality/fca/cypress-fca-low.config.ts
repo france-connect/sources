@@ -31,5 +31,7 @@ export default defineConfig({
     EXPLOIT_USER_TOTP: 'KVKFKRCPNZQUYMLXOVYDSQKJKZDTSRLD',
     FC_ACCESS_USER: '',
     FC_ACCESS_PASS: '',
+    // Other Configuration
+    LOG_FILE_PATH: "../../docker/volumes/log/core-fca-low.log",
   },
 });

@@ -3,9 +3,7 @@
     "name": "Do not send a sub",
     "login": "E020005",
     "type": "DELETE_CLAIMS",
-    "claims": [
-      "sub"
-    ]
+    "claims": ["sub"]
   },
   {
     "name": "IdP respond with 200 but unexpected format",

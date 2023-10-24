@@ -24,6 +24,7 @@ import {
   IdentityProviderAdapterMongoModule,
   IdentityProviderAdapterMongoService,
 } from '@fc/identity-provider-adapter-mongo';
+import { JwtModule } from '@fc/jwt';
 import { MailerModule } from '@fc/mailer';
 import { MongooseModule } from '@fc/mongoose';
 import { NotificationsModule } from '@fc/notifications';
@@ -81,6 +82,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     CryptographyEidasModule,
     AccountModule,
     ServiceProviderAdapterMongoModule,
+    JwtModule,
     IdentityProviderAdapterMongoModule,
     HttpProxyModule,
     OidcAcrModule,

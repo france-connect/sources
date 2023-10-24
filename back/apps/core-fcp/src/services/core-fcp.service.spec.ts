@@ -12,6 +12,8 @@ import { ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { CoreFcpService } from './core-fcp.service';
 
 describe('CoreFcpService', () => {
@@ -37,10 +39,7 @@ describe('CoreFcpService', () => {
     set: jest.fn(),
   };
 
-  const sessionCoreServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
+  const sessionCoreServiceMock = getSessionServiceMock();
 
   const spIdentityMock = {
     // oidc parameter

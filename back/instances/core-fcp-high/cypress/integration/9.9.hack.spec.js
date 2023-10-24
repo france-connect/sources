@@ -1,12 +1,12 @@
 import {
-  basicErrorScenario,
-  setFSAuthorizeAcr,
-  submitFSAuthorizeForm,
+    basicErrorScenario,
+    setFSAuthorizeAcr,
+    submitFSAuthorizeForm
 } from './mire.utils';
 
 describe('9.9 - Interaction steps discarding', () => {
   // -- replace by either `fip1-high` or `fia1-low`
-  const idpId = `${Cypress.env('IDP_NAME')}1-high`;
+  const idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18';
 
   /**
    * @TODO #252

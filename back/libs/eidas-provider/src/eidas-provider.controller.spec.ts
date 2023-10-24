@@ -6,6 +6,8 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
 import { TrackingService } from '@fc/tracking';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { EidasProviderController } from './eidas-provider.controller';
 import { EidasProviderService } from './eidas-provider.service';
 
@@ -37,11 +39,7 @@ describe('EidasProviderController', () => {
     writeLightResponseInCache: jest.fn(),
   };
 
-  const sessionEidasMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
-
+  const sessionEidasMock = getSessionServiceMock();
   const eidasRequestMock = {
     id: 'id',
     levelOfAssurance: 'levelOfAssurance',

@@ -1,5 +1,4 @@
 import { render } from '@testing-library/react';
-import { Link } from 'react-router-dom';
 
 import { LayoutFooterBottomLinksComponent } from './layout-footer-bottom-links.component';
 
@@ -29,40 +28,5 @@ describe('LayoutFooterBottomLinksComponent', () => {
 
     // then
     expect(container).toMatchSnapshot();
-  });
-
-  it('should call react router Link component 3 times', () => {
-    // when
-    render(<LayoutFooterBottomLinksComponent items={itemsMock} />);
-
-    // then
-    expect(Link).toHaveBeenCalledTimes(3);
-    expect(Link).toHaveBeenNthCalledWith(
-      1,
-      expect.objectContaining({
-        children: itemsMock[0].label,
-        title: itemsMock[0].a11y,
-        to: itemsMock[0].href,
-      }),
-      {},
-    );
-    expect(Link).toHaveBeenNthCalledWith(
-      2,
-      expect.objectContaining({
-        children: itemsMock[1].label,
-        title: itemsMock[1].a11y,
-        to: itemsMock[1].href,
-      }),
-      {},
-    );
-    expect(Link).toHaveBeenNthCalledWith(
-      3,
-      expect.objectContaining({
-        children: itemsMock[2].label,
-        title: itemsMock[2].a11y,
-        to: itemsMock[2].href,
-      }),
-      {},
-    );
   });
 });

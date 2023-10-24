@@ -85,10 +85,13 @@ export class UserDashboardController {
       });
     }
 
-    this.tracking.track(this.tracking.TrackedEventsMap.DISPLAYED_USER_TRACKS, {
-      req,
-      identity: idpIdentity,
-    });
+    await this.tracking.track(
+      this.tracking.TrackedEventsMap.DISPLAYED_USER_TRACKS,
+      {
+        req,
+        identity: idpIdentity,
+      },
+    );
 
     this.logger.trace({ idpIdentity });
     const tracks = await this.tracks.getList(idpIdentity, query);
@@ -161,7 +164,7 @@ export class UserDashboardController {
       req,
       identity: idpIdentity,
     };
-    this.tracking.track(DISPLAYED_USER_PREFERENCES, context);
+    await this.tracking.track(DISPLAYED_USER_PREFERENCES, context);
     // idp_id has been removed because it is not necessary to pass it to the consumer
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { idp_id: _idpId, ...identityFiltered } = idpIdentity;
@@ -230,7 +233,7 @@ export class UserDashboardController {
       { idpList, allowFutureIdp },
     );
 
-    this.trackUserPreferenceChange(req, preferences, idpIdentity);
+    await this.trackUserPreferenceChange(req, preferences, idpIdentity);
 
     const {
       idpList: formattedIdpSettingsList,
@@ -260,7 +263,7 @@ export class UserDashboardController {
     return res.json(preferences);
   }
 
-  private trackUserPreferenceChange(
+  private async trackUserPreferenceChange(
     req: Request,
     formattedIdpSetting: FormattedIdpSettingDto,
     identity: IOidcIdentity | PartialExcept<IOidcIdentity, 'sub'>,
@@ -281,7 +284,7 @@ export class UserDashboardController {
     } = this.tracking.TrackedEventsMap;
 
     // Global change tracking
-    this.tracking.track(UPDATED_USER_PREFERENCES, {
+    await this.tracking.track(UPDATED_USER_PREFERENCES, {
       req,
       changeSetId,
       hasAllowFutureIdpChanged,
@@ -291,7 +294,7 @@ export class UserDashboardController {
 
     // Futures Idp changes tracking
     if (hasAllowFutureIdpChanged) {
-      this.tracking.track(UPDATED_USER_PREFERENCES_FUTURE_IDP, {
+      await this.tracking.track(UPDATED_USER_PREFERENCES_FUTURE_IDP, {
         req,
         identity,
         futureAllowedNewValue,
@@ -300,8 +303,8 @@ export class UserDashboardController {
     }
 
     // Individual Idp changes tracking
-    list.forEach((idpChanges) => {
-      this.tracking.track(UPDATED_USER_PREFERENCES_IDP, {
+    list.forEach(async (idpChanges) => {
+      await this.tracking.track(UPDATED_USER_PREFERENCES_IDP, {
         req,
         idpChanges,
         identity,

@@ -6,6 +6,8 @@ import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc/tokens';
 import { OidcProviderService } from '@fc/oidc-provider';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { RevocationTokenParamsDTO } from './dto';
 import { OidcProviderController } from './oidc-provider.controller';
 import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
@@ -42,10 +44,7 @@ describe('OidcProviderController', () => {
     isActive: jest.fn(),
   };
 
-  const sessionServiceMock = {
-    set: jest.fn(),
-    get: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const loggerServiceMock = {
     setContext: jest.fn(),

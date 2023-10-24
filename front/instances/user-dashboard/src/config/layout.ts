@@ -13,7 +13,7 @@ export const Layout: LayoutConfig = {
     {
       a11y: 'Accessibilité',
       href: 'https://franceconnect.gouv.fr/accessibilite',
-      label: 'Accessibilité',
+      label: 'Accessibilité : non conforme',
     },
     {
       a11y: 'Mentions légales',

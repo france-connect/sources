@@ -2,5 +2,5 @@
 
 function _llng-configure() {
   cd ${WORKING_DIR}
-  docker-compose exec fia-llng-low bash /scripts/init.sh
+  $DOCKER_COMPOSE exec fia-llng-low bash /scripts/init.sh
 }

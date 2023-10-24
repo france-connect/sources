@@ -2,7 +2,7 @@
 
 _up() {
   task " * Checking required services" \
-    "_check_for_unknown_services "${@}""
+    "_check_for_unknown_services" "${@}"
 
   echo " * Starting services: $(format_emphasis $(join_by ", " "${@}"))"
 
@@ -10,7 +10,7 @@ _up() {
     "_pull_node_image"
 
   task " * Up containers" \
-    "_do_up $@"
+    "_do_up" "${@}"
 
   task " * Populate global variables"
   "_get_running_containers"
@@ -24,17 +24,19 @@ _up() {
 
 _add_node_app() {
   task " * Up containers" \
-    "_do_up "${@}""
+    "_do_up" "${@}"
 
   _start "${@}"
 }
 
 _do_up() {
   # Get wanted services
+
+  echo "TEST========>  ${@}"
   local services=$(_get_services "$@")
 
   cd ${WORKING_DIR}
-  docker-compose up --build -d $services
+  $DOCKER_COMPOSE up --build -d $services
 }
 
 _check_for_unknown_services() {
@@ -71,6 +73,6 @@ _auto_install_dependencies() {
 
 _auto_init_containers() {
   for app in ${FC_CONTAINERS}; do
-    task "   * init $(format_emphasis "${app}")" "_init_hooks "${app}""
+    task "   * init $(format_emphasis "${app}")" "_init_hooks" "${app}"
   done
 }

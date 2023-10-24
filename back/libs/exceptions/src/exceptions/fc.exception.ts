@@ -40,6 +40,8 @@ export class FcException extends Error {
    * - 40: GeoIp Maxmind
    * - 41: Tracking
    * - 42: Flow-steps
+   * - 43: data-provider-adapter-core
+   * - 44: jwt
    * - 80: Exceptions
    */
   public scope: number;

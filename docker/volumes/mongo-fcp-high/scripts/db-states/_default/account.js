@@ -59,5 +59,5 @@ const accounts = [
 // -- ACCOUNTS -----
 print("Initializing user account...");
 accounts.forEach((account) =>
-  db.account.update({ id: account.id }, account, { upsert: true })
+  db.account.update({ id: account.id }, account, { upsert: true }),
 );

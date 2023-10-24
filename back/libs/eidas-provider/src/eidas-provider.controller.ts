@@ -53,7 +53,7 @@ export class EidasProviderController {
     const { INCOMING_EIDAS_REQUEST } = this.tracking.TrackedEventsMap;
     const trackingContext: TrackedEventContextInterface = { req };
 
-    this.tracking.track(INCOMING_EIDAS_REQUEST, trackingContext);
+    await this.tracking.track(INCOMING_EIDAS_REQUEST, trackingContext);
 
     const lightRequest = await this.eidasProvider.readLightRequestFromCache(
       token,
@@ -98,7 +98,7 @@ export class EidasProviderController {
 
     const { proxyServiceResponseCacheUrl } =
       this.config.get<EidasProviderConfig>('EidasProvider');
-    this.tracking.track(REDIRECTING_TO_EIDAS_FR_NODE, trackingContext);
+    await this.tracking.track(REDIRECTING_TO_EIDAS_FR_NODE, trackingContext);
 
     return { proxyServiceResponseCacheUrl, token };
   }

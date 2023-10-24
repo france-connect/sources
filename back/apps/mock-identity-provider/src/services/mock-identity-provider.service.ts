@@ -17,7 +17,7 @@ import { ISessionBoundContext, SessionService } from '@fc/session';
 
 import { AppConfig } from '../dto';
 import { getFilesPathsFromDir, parseCsv } from '../helpers';
-import { Csv, OidcClaims } from '../interfaces';
+import { Csv, IdentityFixture, OidcClaims } from '../interfaces';
 
 @Injectable()
 export class MockIdentityProviderService {
@@ -36,7 +36,7 @@ export class MockIdentityProviderService {
   }
 
   async onModuleInit() {
-    this.loadDatabases();
+    await this.loadDatabases();
 
     this.oidcProvider.registerMiddleware(
       OidcProviderMiddlewareStep.AFTER,
@@ -131,7 +131,7 @@ export class MockIdentityProviderService {
     }
   }
 
-  getIdentity(inputLogin: string) {
+  getIdentity(inputLogin: string): IdentityFixture | void {
     const identity: Csv = this.database.find(
       ({ login }) => login === inputLogin,
     );
@@ -140,7 +140,17 @@ export class MockIdentityProviderService {
       return;
     }
 
-    return this.toOidcFormat(identity);
+    return this.toOidcFormat(identity) as IdentityFixture;
+  }
+
+  isPasswordValid(password: string, inputPassword: string): boolean {
+    const { passwordVerification } = this.config.get<AppConfig>('App');
+
+    if (!passwordVerification) {
+      return true;
+    }
+
+    return password === inputPassword;
   }
 
   private toOidcFormat(identity: Csv): OidcClaims {

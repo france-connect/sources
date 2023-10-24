@@ -1,4 +1,4 @@
-<% const eidasBridgeProvider = locals.providers.find((p) => p.uid === 'eidas-bridge' && p.display && p.active) %>
+<% const eidasBridgeProvider = locals.providers.find((p) => p.uid === locals.config.App.eidasBridgeUid && p.display && p.active) %>
 <!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -25,7 +25,7 @@
           <h1>Je choisis un moyen pour me connecter sur:</h1>
           <h2><%= locals.spName %></h2>
           <section title="liste des fournisseurs d'identité" id="idp-list" class="main__providers" data-testid="main-providers">
-            <% locals.providers.filter(p => p.display).filter(p => p.uid !== 'eidas-bridge').forEach(provider => { %>
+            <% locals.providers.filter(p => p.display).filter(p => p.uid !== locals.config.App.eidasBridgeUid).forEach(provider => { %>
               <form  method="POST" action="/api/v2/redirect-to-idp" id="fs-request-<%= provider.uid %>" name="fs-request">
                 <div class="identity-provider">
                   <button id="idp-<%= provider.uid %>" <%= (!provider.active)? 'disabled' : '' %>>

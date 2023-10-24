@@ -33,7 +33,7 @@ export class AccountController {
   @Get(PartnersRoutes.CSRF)
   async getCSRF(@Res() res: Response): Promise<Record<string, any>> {
     // @TODO remove or implement true CSRF
-    return res.json({ csrfToken: 'any_valid_csrf_token' });
+    return await res.json({ csrfToken: 'any_valid_csrf_token' });
   }
 
   @Get(PartnersRoutes.ME)

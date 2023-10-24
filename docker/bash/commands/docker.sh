@@ -28,7 +28,7 @@ _container-to-compose-name() {
 _halt() {
   echo "Stopping FC Dev environment..."
   cd ${WORKING_DIR}
-  docker-compose stop
+  $DOCKER_COMPOSE stop
 }
 
 _exec() {
@@ -42,13 +42,19 @@ _exec() {
     ;;
   *)
     cd ${WORKING_DIR}
-    docker-compose exec ${NO_TTY} ${app} ${@}
+    $DOCKER_COMPOSE exec ${NO_TTY} ${app} ${@}
     ;;
   esac
 }
 
 _list_services() {
-  docker-compose ps --services | sort
+  local search=$1
+
+  if [ -z ${search} ]; then
+    $DOCKER_COMPOSE ps --services | sort
+  else
+    $DOCKER_COMPOSE ps --services | grep "${search}" | sort
+  fi
 }
 
 _pull_node_image() {

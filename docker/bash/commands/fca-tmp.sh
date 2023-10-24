@@ -2,8 +2,8 @@
 
 _fca_low_front() {
   cd ${WORKING_DIR}
-  docker-compose exec $NO_TTY fca-low-front yarn install
-  docker-compose exec $NO_TTY fca-low-front yarn build:fca-low-front
+  $DOCKER_COMPOSE exec $NO_TTY fca-low-front yarn install
+  $DOCKER_COMPOSE exec $NO_TTY fca-low-front yarn build:fca-low-front
   cd ${FC_ROOT}/fc/back/apps/core-fca/src/
 
   if [ -d 'public' ]; then

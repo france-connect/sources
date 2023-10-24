@@ -100,24 +100,25 @@ describe('TrackingInterceptor', () => {
   });
 
   describe('log', () => {
-    it('should call TrackingService.log', () => {
+    it('should call TrackingService.log', async () => {
       // Given
       const eventMock = {};
       interceptor['getEvent'] = jest.fn().mockReturnValue(eventMock);
       // When
-      interceptor['log'](reqMock, urlPrefixMock);
+      await interceptor['log'](reqMock, urlPrefixMock);
       // Then
       expect(trackingMock.track).toHaveBeenCalledTimes(1);
       expect(trackingMock.track).toHaveBeenCalledWith(eventMock, {
         req: reqMock,
       });
     });
-    it('should not call TrackingService.log if event not found', () => {
+
+    it('should not call TrackingService.log if event not found', async () => {
       // Given
       const eventMock = undefined;
       interceptor['getEvent'] = jest.fn().mockReturnValue(eventMock);
       // When
-      interceptor['log'](reqMock, urlPrefixMock);
+      await interceptor['log'](reqMock, urlPrefixMock);
       // Then
       expect(trackingMock.track).toHaveBeenCalledTimes(0);
     });

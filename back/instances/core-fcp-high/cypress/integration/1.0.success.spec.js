@@ -3,13 +3,13 @@ import {
   checkInformationsServiceProvider,
   checkInStringifiedJson,
   getAuthorizeUrl,
-  navigateToMire,
+  navigateToMire
 } from './mire.utils';
 
 describe('1.0 - Successful scenarios', () => {
   // -- replace by either `fip1-high` or `fia1-high`
-  const idpId = `${Cypress.env('IDP_NAME')}1-high`;
-  const idpId2 = `${Cypress.env('IDP_NAME')}2-high`;
+  const idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18';
+  const idpId2 = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18';
 
   // For tests purposes, fip2 is configured with an oidc callback having
   // providerUid as a parameter

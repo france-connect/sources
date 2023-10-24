@@ -128,10 +128,22 @@ export default {
       event: 'FC_VERIFIED',
     },
 
-    FC_BLACKLISTED: {
+    FC_IDP_DISABLED: {
       step: '5.1.0',
       category: EventsCategories.FRONT_CINEMATIC,
-      event: 'FC_SSO_UNAUTHORIZED_IDP',
+      event: 'FC_IDP_DISABLED',
+    },
+
+    FC_IDP_BLACKLISTED: {
+      step: '5.2.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_IDP_BLACKLISTED',
+    },
+
+    FC_IDP_INSUFFICIENT_ACR: {
+      step: '5.3.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_IDP_INSUFFICIENT_ACR',
     },
 
     FC_SHOWED_CONSENT: {
@@ -203,11 +215,28 @@ export default {
       interceptRoutes: [{ method: RequestMethod.ALL, path: '/checktoken' }],
     },
 
-    // Not implemented yet
     SP_REQUESTED_LOGOUT: {
       step: '8.0.0',
       category: EventsCategories.FRONT_CINEMATIC,
       event: 'SP_REQUESTED_LOGOUT',
+    },
+
+    FC_REQUESTED_LOGOUT_FROM_IDP: {
+      step: '8.1.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_REQUESTED_LOGOUT_FROM_IDP',
+      interceptRoutes: [
+        {
+          method: RequestMethod.ALL,
+          path: OidcClientRoutes.DISCONNECT_FROM_IDP,
+        },
+      ],
+    },
+
+    FC_SESSION_TERMINATED: {
+      step: '8.2.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_SESSION_TERMINATED',
     },
   },
 } as TrackingConfig;

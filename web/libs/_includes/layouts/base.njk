@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="{{ metadata.language }}" data-fr-scheme="system" dir="ltr">
+  {% include "templates/head.njk" %}
+
+  <body id="top">
+    {% include "templates/header.njk" %}
+
+    <main id="content">{{ content | safe }}</main>
+
+    {% include "templates/footer.njk" %}
+    {% include "templates/display.njk" %}
+
+    <!-- Script en version es6 module et nomodule pour les navigateurs le ne supportant pas -->
+    <script type="module" src="/js/dsfr.module.min.js"></script>
+    <script
+      type="text/javascript"
+      nomodule
+      src="/js/dsfr.nomodule.min.js"
+    ></script>
+  </body>
+</html>

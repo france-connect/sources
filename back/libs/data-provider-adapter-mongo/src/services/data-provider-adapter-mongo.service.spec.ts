@@ -447,11 +447,10 @@ describe('DataProviderAdapterMongoService', () => {
       const clientId = 'client_id_1';
       const clientSecret = 'client_secret_1';
       service['getByClientId'] = jest.fn().mockReturnValue(dpMock);
-      // When
-      const call = async () =>
-        await service.checkAuthentication(clientId, clientSecret);
-      // Then
-      expect(call).not.toThrow();
+      // When / Then
+      await expect(
+        service.checkAuthentication(clientId, clientSecret),
+      ).resolves.not.toThrow();
     });
     it('should throw an error when client_id and client_secret are differents of data provider', async () => {
       // Given

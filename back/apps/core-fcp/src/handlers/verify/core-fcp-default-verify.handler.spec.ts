@@ -44,6 +44,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
   const sessionServiceMock = {
     get: jest.fn(),
     set: jest.fn(),
+    setAlias: jest.fn(),
   };
 
   const rnippServiceMock = {
@@ -441,7 +442,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
   describe('getSub', () => {
     const identityHashMock = 'identityHashMockValue';
 
-    it('should use existing sub', async () => {
+    it('should use existing sub', () => {
       // Given
       const subFromAccount = 'subMockValue';
       const accountMock = {
@@ -462,7 +463,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       expect(result).toBe(subFromAccount);
     });
 
-    it('should use existing sub using old spFederation format', async () => {
+    it('should use existing sub using old spFederation format', () => {
       // Given
       const subFromAccount = 'subMockValue';
       const accountMock = {
@@ -485,7 +486,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       expect(result).toBe(subFromAccount);
     });
 
-    it('should use newly generated sub', async () => {
+    it('should use newly generated sub', () => {
       // Given
       const accountMock = {
         active: true,
@@ -513,7 +514,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       serviceProviderMock.getById.mockResolvedValue(spMock);
     });
 
-    it('should call buildFromRnippIdentity when RNIPP identity is selected in configuration', async () => {
+    it('should call buildFromRnippIdentity when RNIPP identity is selected in configuration', () => {
       // Given
       const configReturnedValueMock = { useIdentityFrom: IdentitySource.RNIPP };
       configServiceMock.get.mockReturnValue(configReturnedValueMock);
@@ -525,7 +526,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       expect(service['buildFromRnippIdentity']).toHaveBeenCalledTimes(1);
     });
 
-    it('should call buildFromIdpIdentity when IDP identity is selected in configuration', async () => {
+    it('should call buildFromIdpIdentity when IDP identity is selected in configuration', () => {
       // Given
       const configReturnedValueMock = { useIdentityFrom: IdentitySource.IDP };
       configServiceMock.get.mockReturnValue(configReturnedValueMock);
@@ -545,7 +546,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       configServiceMock.get.mockReturnValue(configReturnedValueMock);
     });
 
-    it('should return valide identity when IDP identity is selected in configuration', async () => {
+    it('should return valide identity when IDP identity is selected in configuration', () => {
       // Given
       service['buildRnippClaims'] = jest.fn().mockReturnValue(rnippClaims);
       // When
@@ -579,7 +580,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       configServiceMock.get.mockReturnValue(configReturnedValueMock);
     });
 
-    it('should return valide identity when RNIPP identity is selected in configuration', async () => {
+    it('should return valide identity when RNIPP identity is selected in configuration', () => {
       // Given
       service['buildRnippClaims'] = jest.fn().mockReturnValue(rnippClaims);
       // When
@@ -602,7 +603,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
   describe('rnippCheck', () => {
     it('should not throw if rnipp service does not', async () => {
       // Then
-      expect(
+      await expect(
         service['rnippCheck'](spIdentityMock, reqMock),
       ).resolves.not.toThrow();
     });

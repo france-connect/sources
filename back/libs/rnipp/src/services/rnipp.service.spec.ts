@@ -445,7 +445,7 @@ describe('RnippService', () => {
   });
 
   describe('checkRnippRectificationError', () => {
-    it('should throw a "RnippNotFoundSingleEchoException" error if the given "rnippCode" is 4 (NOT_FOUND_SINGLE_ECHO)', async () => {
+    it('should throw a "RnippNotFoundSingleEchoException" error if the given "rnippCode" is 4 (NOT_FOUND_SINGLE_ECHO)', () => {
       // setup
       const rnippCode = RnippResponseCodes.NOT_FOUND_SINGLE_ECHO;
       const deceased = false;
@@ -462,7 +462,7 @@ describe('RnippService', () => {
       expect.hasAssertions();
     });
 
-    it('should throw a "RnippNotFoundMultipleEchoException" error if the given "rnippCode" is 6 (NOT_FOUND_MULTIPLE_ECHO)', async () => {
+    it('should throw a "RnippNotFoundMultipleEchoException" error if the given "rnippCode" is 6 (NOT_FOUND_MULTIPLE_ECHO)', () => {
       // setup
       const rnippCode = RnippResponseCodes.NOT_FOUND_MULTIPLE_ECHO;
       const deceased = false;
@@ -479,7 +479,7 @@ describe('RnippService', () => {
       expect.hasAssertions();
     });
 
-    it('should throw a "RnippFoundOnlyWithMaritalNameException" error if the given "rnippCode" is 7 (FOUND_ONLY_WITH_MARITAL_NAME)', async () => {
+    it('should throw a "RnippFoundOnlyWithMaritalNameException" error if the given "rnippCode" is 7 (FOUND_ONLY_WITH_MARITAL_NAME)', () => {
       // setup
       const rnippCode = RnippResponseCodes.FOUND_ONLY_WITH_MARITAL_NAME;
       const deceased = false;
@@ -496,7 +496,7 @@ describe('RnippService', () => {
       expect.hasAssertions();
     });
 
-    it('should throw a "RnippNotFoundNoEchoException" error if the given "rnippCode" is 8 (NOT_FOUND_NO_ECHO)', async () => {
+    it('should throw a "RnippNotFoundNoEchoException" error if the given "rnippCode" is 8 (NOT_FOUND_NO_ECHO)', () => {
       // setup
       const rnippCode = RnippResponseCodes.NOT_FOUND_NO_ECHO;
       const deceased = false;
@@ -513,7 +513,7 @@ describe('RnippService', () => {
       expect.hasAssertions();
     });
 
-    it('should throw a "RnippRejectedBadRequestException" error if the given "rnippCode" is 9 (REJECTED_BAD_REQUEST)', async () => {
+    it('should throw a "RnippRejectedBadRequestException" error if the given "rnippCode" is 9 (REJECTED_BAD_REQUEST)', () => {
       // setup
       const rnippCode = RnippResponseCodes.REJECTED_BAD_REQUEST;
       const deceased = false;
@@ -530,7 +530,7 @@ describe('RnippService', () => {
       expect.hasAssertions();
     });
 
-    it('should throw a "RnippDeceasedException" if "deceased" argument equals "true" and the given "rnippCode" is not recognized as an error', async () => {
+    it('should throw a "RnippDeceasedException" if "deceased" argument equals "true" and the given "rnippCode" is not recognized as an error', () => {
       // setup
       const rnippCode = '42';
       const deceased = true;
@@ -547,7 +547,7 @@ describe('RnippService', () => {
       expect.hasAssertions();
     });
 
-    it('should not throw a "RnippDeceasedException" if "deceased" argument equals "true" and the given "rnippCode" is "9" (REJECTED_BAD_REQUEST)', async () => {
+    it('should not throw a "RnippDeceasedException" if "deceased" argument equals "true" and the given "rnippCode" is "9" (REJECTED_BAD_REQUEST)', () => {
       // setup
       const rnippCode = RnippResponseCodes.REJECTED_BAD_REQUEST;
       const deceased = true;
@@ -564,7 +564,7 @@ describe('RnippService', () => {
       expect.hasAssertions();
     });
 
-    it('should not throw a "RnippDeceasedException" if "deceased" argument equals "false" and there is no other error', async () => {
+    it('should not throw a "RnippDeceasedException" if "deceased" argument equals "false" and there is no other error', () => {
       // setup
       const rnippCode = RnippResponseCodes.FOUND_NOT_RECTIFIED;
       const deceased = false;
@@ -581,7 +581,7 @@ describe('RnippService', () => {
   });
 
   describe('checkRnippHttpError', () => {
-    it('should throw a "RnippTimeoutException" error if the AxiosError code equals "ETIMEDOUT"', async () => {
+    it('should throw a "RnippTimeoutException" error if the AxiosError code equals "ETIMEDOUT"', () => {
       // setup
       const axiosErrorMock = {
         code: 'ETIMEDOUT',
@@ -599,7 +599,7 @@ describe('RnippService', () => {
       expect.hasAssertions();
     });
 
-    it('should throw a "RnippTimeoutException" error if the AxiosError code equals "ECONNABORTED"', async () => {
+    it('should throw a "RnippTimeoutException" error if the AxiosError code equals "ECONNABORTED"', () => {
       // setup
       const axiosErrorMock = {
         code: 'ECONNABORTED',
@@ -617,7 +617,7 @@ describe('RnippService', () => {
       expect.hasAssertions();
     });
 
-    it('should throw a "RnippTimeoutException" error if the AxiosError code equals "ECONNRESET"', async () => {
+    it('should throw a "RnippTimeoutException" error if the AxiosError code equals "ECONNRESET"', () => {
       // setup
       const axiosErrorMock = {
         code: 'ECONNRESET',
@@ -635,7 +635,7 @@ describe('RnippService', () => {
       expect.hasAssertions();
     });
 
-    it('should throw a "RnippHttpStatusException" error if the AxiosError code is not a "timeout"', async () => {
+    it('should throw a "RnippHttpStatusException" error if the AxiosError code is not a "timeout"', () => {
       // setup
       const axiosErrorMock = {
         code: 'ETOTO',
@@ -655,7 +655,7 @@ describe('RnippService', () => {
   });
 
   describe('checkCitizenStatusError', () => {
-    it('should not throw if there is no error in the dto "validate" return', async () => {
+    it('should not throw if there is no error in the dto "validate" return', () => {
       // action
       const result = service['checkCitizenStatusError']([]);
 
@@ -663,7 +663,7 @@ describe('RnippService', () => {
       expect(result).toBeUndefined();
     });
 
-    it('should throw a "RnippCitizenStatusFormatException" if there is an error in the dto "validate" return', async () => {
+    it('should throw a "RnippCitizenStatusFormatException" if there is an error in the dto "validate" return', () => {
       // setup
       const dtoValidateReturn = [
         {

@@ -112,19 +112,19 @@ yarn start:high
 1. Duplicate `cypress-fcp-high.json` and rename it `cypress-recette.json`
 2. Change the following env attributes
 
-  ```json
-  "TEST_ENV": "recette",
-  "FC_ACCESS_USER": "<FranceConnect access user for HTTP Basic Authentication>",
-  "FC_ACCESS_PASS": "<FranceConnect access password for HTTP Basic Authentication>",
-  ```
+```json
+"TEST_ENV": "recette",
+"FC_ACCESS_USER": "<FranceConnect access user for HTTP Basic Authentication>",
+"FC_ACCESS_PASS": "<FranceConnect access password for HTTP Basic Authentication>",
+```
 
 3. Run the job `review-fcp-high` on the merge request, in order to deploy the recette environment
 4. Check that the recette environment is up and running navigating from `https://recette.dev-franceconnect.fr/fcp.html`
 5. Open Cypress UI to run tests on FCP-HIGH against recette environment
 
-  ```shell
-  yarn start:high --config-file cypress-recette.json
-  ```
+```shell
+yarn start:high --config-file cypress-recette.json
+```
 
 6. Run the `usager` tests (user connection) or `exploitation` tests (admin configuration)
 
@@ -133,26 +133,26 @@ yarn start:high
 1. Duplicate `cypress-fcp-high.json` and rename it `cypress-integ01.json`
 2. Change the following env attributes
 
-  ```json
-  "TEST_ENV": "integ01",
-  "EXPLOIT_USER_NAME": "<your integ01 operator user>",
-  "EXPLOIT_USER_PASS": "<your integ01 operator password>",
-  "EXPLOIT_USER_TOTP": "<your integ01 operator totp secret",
-  "FC_ACCESS_USER": "<FranceConnect access user for HTTP Basic Authentication>",
-  "FC_ACCESS_PASS": "<FranceConnect access password for HTTP Basic Authentication>",
-  ```
+```json
+"TEST_ENV": "integ01",
+"EXPLOIT_USER_NAME": "<your integ01 operator user>",
+"EXPLOIT_USER_PASS": "<your integ01 operator password>",
+"EXPLOIT_USER_TOTP": "<your integ01 operator totp secret",
+"FC_ACCESS_USER": "<FranceConnect access user for HTTP Basic Authentication>",
+"FC_ACCESS_PASS": "<FranceConnect access password for HTTP Basic Authentication>",
+```
 
 3. Start the proxy to access `https://docker.dev-franceconnect.fr/integ01/fcp.html`
 
-  ```shell
-  docker-stack up rp-all
-  ```
+```shell
+docker-stack up rp-all
+```
 
 4. Open Cypress UI to run tests on FCP-HIGH against integ01 environment
 
-  ```shell
-  yarn start:high --config-file cypress-integ01.json
-  ```
+```shell
+yarn start:high --config-file cypress-integ01.json
+```
 
 5. Run the `usager` tests (user connection) or `exploitation` tests (if you have an operator user)
 
@@ -163,11 +163,9 @@ yarn start:high
 - [More information regarding the local user-dashboard stack](/front/apps/user-dashboard/README.md)
 
 ```shell
-docker-stack-legacy prune && \
-docker-stack-legacy up bdd-ud && \
-docker-stack-legacy dep-all && \
-docker-stack-legacy fixtures fc-exploitation fc-support && \
-docker-stack-legacy start-all
+docker-stack prune && \
+docker-stack up bdd-ud && \
+docker-stack start-all
 ```
 
 #### Run the tests in the terminal
@@ -251,16 +249,19 @@ The visual validations are done on Electron 94 headless in the terminal.
 ### Run the snapshot tests
 
 - FCP-HIGH
+
 ```shell
 yarn test:high:snapshot
 ```
 
 - FCP-LOW
+
 ```shell
 yarn test:low:snapshot
 ```
 
 - USER-DASHBOARD
+
 ```shell
 yarn test:ud:snapshot
 ```
@@ -268,16 +269,19 @@ yarn test:ud:snapshot
 ### Update the base image files for all of your tests
 
 - FCP-HIGH
+
 ```shell
 yarn test:high:snapshot --env updateSnapshots=true
 ```
 
 - FCP-LOW
+
 ```shell
 yarn test:low:snapshot --env updateSnapshots=true
 ```
 
 - USER-DASHBOARD
+
 ```shell
 yarn test:ud:snapshot --env updateSnapshots=true
 ```
@@ -285,16 +289,19 @@ yarn test:ud:snapshot --env updateSnapshots=true
 ### Prevent test failures when an image diff does not pass
 
 - FCP-HIGH
+
 ```shell
 yarn test:high:snapshot --env failOnSnapshotDiff=false
 ```
 
 - FCP-LOW
+
 ```shell
 yarn test:low:snapshot --env failOnSnapshotDiff=false
 ```
 
 - USER-DASHBOARD
+
 ```shell
 yarn test:ud:snapshot --env failOnSnapshotDiff=false
 ```

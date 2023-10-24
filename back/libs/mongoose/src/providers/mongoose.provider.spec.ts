@@ -34,7 +34,7 @@ describe('MongooseService', () => {
     },
   } as unknown as NestJsConnection;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
   });

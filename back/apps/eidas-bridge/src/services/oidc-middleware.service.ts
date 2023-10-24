@@ -26,7 +26,7 @@ export class OidcMiddlewareService {
     this.logger.setContext(this.constructor.name);
   }
 
-  async onModuleInit() {
+  onModuleInit() {
     this.oidcProvider.registerMiddleware(
       OidcProviderMiddlewareStep.AFTER,
       OidcProviderRoutes.AUTHORIZATION,
@@ -109,23 +109,23 @@ export class OidcMiddlewareService {
     await saveWithContext(sessionProperties);
   }
 
-  private tokenMiddleware(ctx) {
+  private async tokenMiddleware(ctx) {
     try {
       this.bindSessionId(ctx);
       const eventContext = this.getEventContext(ctx);
       const { RECEIVED_CALL_ON_TOKEN } = this.tracking.TrackedEventsMap;
-      this.tracking.track(RECEIVED_CALL_ON_TOKEN, eventContext);
+      await this.tracking.track(RECEIVED_CALL_ON_TOKEN, eventContext);
     } catch (exception) {
       this.oidcErrorService.throwError(ctx, exception);
     }
   }
 
-  private userinfoMiddleware(ctx) {
+  private async userinfoMiddleware(ctx) {
     try {
       this.bindSessionId(ctx);
       const eventContext = this.getEventContext(ctx);
       const { RECEIVED_CALL_ON_USERINFO } = this.tracking.TrackedEventsMap;
-      this.tracking.track(RECEIVED_CALL_ON_USERINFO, eventContext);
+      await this.tracking.track(RECEIVED_CALL_ON_USERINFO, eventContext);
     } catch (exception) {
       this.oidcErrorService.throwError(ctx, exception);
     }

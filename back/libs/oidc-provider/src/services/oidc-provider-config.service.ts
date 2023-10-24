@@ -38,11 +38,9 @@ export class OidcProviderConfigService {
    *  - database (SP configuration).
    *
    * @param {boolean} refresh Default false
-   * @returns {Promise<OidcProviderConfig>}
+   * @returns {OidcProviderConfig}
    */
-  async getConfig(
-    oidcProviderService: OidcProviderService,
-  ): Promise<OidcProviderConfig> {
+  getConfig(oidcProviderService: OidcProviderService): OidcProviderConfig {
     /**
      * Build our memory adapter for oidc-provider
      * @see https://github.com/panva/node-oidc-provider/tree/master/docs#adapter
@@ -160,11 +158,7 @@ export class OidcProviderConfigService {
    * More documentation can be found in oidc-provider repo
    * @see https://github.com/panva/node-oidc-provider/blob/master/docs/README.md#interactionsurl
    */
-  private async url(
-    prefix: string,
-    _ctx: KoaContextWithOIDC,
-    interaction: any,
-  ) {
+  private url(prefix: string, _ctx: KoaContextWithOIDC, interaction: any) {
     return `${prefix}/interaction/${interaction.uid}`;
   }
 }

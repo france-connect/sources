@@ -18,6 +18,8 @@ import {
   UserPreferencesService,
 } from '@fc/user-preferences';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { GetUserTracesQueryDto } from '../dto';
 import { UserInfosInterface } from '../interfaces';
 import { UserDashboardService } from '../services';
@@ -49,11 +51,7 @@ describe('UserDashboardController', () => {
     trace: jest.fn(),
   } as unknown as LoggerService;
 
-  const sessionServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
-
+  const sessionServiceMock = getSessionServiceMock();
   const randomStringMock = 'randomStringMockValue';
   const idpStateMock = 'idpStateMockValue';
   const identityMock = {
@@ -604,9 +602,9 @@ describe('UserDashboardController', () => {
         .mockReturnValueOnce(formatUserPreferenceChangeTrackLogReturnValue);
     });
 
-    it('should call userDashboard.formatUserPreferenceChangeTrackLog()', () => {
+    it('should call userDashboard.formatUserPreferenceChangeTrackLog()', async () => {
       // When
-      controller['trackUserPreferenceChange'](
+      await controller['trackUserPreferenceChange'](
         reqMock,
         formattedIdpSettingsMock,
         identityMock,
@@ -620,9 +618,9 @@ describe('UserDashboardController', () => {
       ).toHaveBeenCalledWith(formattedIdpSettingsMock);
     });
 
-    it('should call tracking.track() for global event', () => {
+    it('should call tracking.track() for global event', async () => {
       // When
-      controller['trackUserPreferenceChange'](
+      await controller['trackUserPreferenceChange'](
         reqMock,
         formattedIdpSettingsMock,
         identityMock,
@@ -642,9 +640,9 @@ describe('UserDashboardController', () => {
       );
     });
 
-    it('should call tracking.track() for future idp change', () => {
+    it('should call tracking.track() for future idp change', async () => {
       // When
-      controller['trackUserPreferenceChange'](
+      await controller['trackUserPreferenceChange'](
         reqMock,
         formattedIdpSettingsMock,
         identityMock,
@@ -662,9 +660,9 @@ describe('UserDashboardController', () => {
       );
     });
 
-    it('should call tracking.track() for each changed idp', () => {
+    it('should call tracking.track() for each changed idp', async () => {
       // When
-      controller['trackUserPreferenceChange'](
+      await controller['trackUserPreferenceChange'](
         reqMock,
         formattedIdpSettingsMock,
         identityMock,

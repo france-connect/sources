@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import * as OidcProvider from 'oidc-provider';
 
 import { HttpAdapterHost } from '@nestjs/core';
@@ -17,7 +18,7 @@ import {
   OidcProviderInteractionNotFoundException,
   OidcProviderRuntimeException,
 } from './exceptions';
-import { OidcProviderService } from './oidc-provider.service';
+import { COOKIES, OidcProviderService } from './oidc-provider.service';
 import { OidcProviderConfigService } from './services/oidc-provider-config.service';
 import { OidcProviderErrorService } from './services/oidc-provider-error.service';
 import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
@@ -331,7 +332,7 @@ describe('OidcProviderService', () => {
       providerMock.middlewares = [];
       const callback = jest.fn();
       const ctx = { path: OidcProviderMiddlewarePattern.USERINFO };
-      const next = async () => Promise.resolve();
+      const next = jest.fn().mockResolvedValue(undefined);
       service['runMiddlewareBeforePattern'] = jest.fn();
       // When
       service.registerMiddleware(
@@ -351,7 +352,7 @@ describe('OidcProviderService', () => {
       const ctx = {
         oidc: { route: OidcProviderMiddlewarePattern.USERINFO },
       };
-      const next = () => async () => Promise.resolve();
+      const next = jest.fn().mockResolvedValue(undefined);
       service['runMiddlewareAfterPattern'] = jest.fn();
       // When
       service.registerMiddleware(
@@ -371,7 +372,7 @@ describe('OidcProviderService', () => {
       const ctx = {
         path: OidcProviderMiddlewarePattern.USERINFO,
       };
-      const next = () => async () => Promise.resolve();
+      const next = jest.fn().mockResolvedValue(undefined);
       // When
       service.registerMiddleware(
         OidcProviderMiddlewareStep.AFTER,
@@ -392,7 +393,7 @@ describe('OidcProviderService', () => {
         oidc: { route: OidcProviderMiddlewarePattern.USERINFO },
       };
       // When
-      service['runMiddlewareBeforePattern'](
+      await service['runMiddlewareBeforePattern'](
         {
           step: OidcProviderMiddlewareStep.BEFORE,
           path: OidcProviderMiddlewarePattern.USERINFO,
@@ -405,14 +406,14 @@ describe('OidcProviderService', () => {
       expect(callback).toHaveBeenCalledTimes(1);
     });
 
-    it('should not call the callback method if wrong path is send', () => {
+    it('should not call the callback method if wrong path is send', async () => {
       // Given
       const callback = jest.fn();
       const ctx = {
         oidc: { route: OidcProviderMiddlewarePattern.USERINFO },
       };
       // When
-      service['runMiddlewareBeforePattern'](
+      await service['runMiddlewareBeforePattern'](
         {
           step: OidcProviderMiddlewareStep.BEFORE,
           path: '',
@@ -425,14 +426,14 @@ describe('OidcProviderService', () => {
       expect(callback).toHaveBeenCalledTimes(0);
     });
 
-    it('should not call the callback method if wrong step is send', () => {
+    it('should not call the callback method if wrong step is send', async () => {
       // Given
       const callback = jest.fn();
       const ctx = {
         oidc: { route: OidcProviderMiddlewarePattern.USERINFO },
       };
       // When
-      service['runMiddlewareBeforePattern'](
+      await service['runMiddlewareBeforePattern'](
         {
           step: OidcProviderMiddlewareStep.AFTER,
           path: OidcProviderMiddlewarePattern.USERINFO,
@@ -454,7 +455,7 @@ describe('OidcProviderService', () => {
         oidc: { route: OidcProviderMiddlewarePattern.USERINFO },
       };
       // When
-      service['runMiddlewareAfterPattern'](
+      await service['runMiddlewareAfterPattern'](
         {
           step: OidcProviderMiddlewareStep.AFTER,
           route: OidcProviderMiddlewarePattern.USERINFO,
@@ -475,7 +476,7 @@ describe('OidcProviderService', () => {
         oidc: { route: OidcProviderMiddlewarePattern.USERINFO },
       };
       // When
-      service['runMiddlewareAfterPattern'](
+      await service['runMiddlewareAfterPattern'](
         {
           step: OidcProviderMiddlewareStep.AFTER,
           route: '',
@@ -489,14 +490,14 @@ describe('OidcProviderService', () => {
       expect(callback).toHaveBeenCalledTimes(1);
     });
 
-    it('should not call the callback method if wrong step is send', () => {
+    it('should not call the callback method if wrong step is send', async () => {
       // Given
       const callback = jest.fn();
       const ctx = {
         oidc: { route: OidcProviderMiddlewarePattern.USERINFO },
       };
       // When
-      service['runMiddlewareAfterPattern'](
+      await service['runMiddlewareAfterPattern'](
         {
           step: OidcProviderMiddlewareStep.BEFORE,
           route: OidcProviderMiddlewarePattern.USERINFO,
@@ -510,14 +511,14 @@ describe('OidcProviderService', () => {
       expect(callback).toHaveBeenCalledTimes(0);
     });
 
-    it('should not call the callback method if wrong path or route is send', () => {
+    it('should not call the callback method if wrong path or route is send', async () => {
       // Given
       const callback = jest.fn();
       const ctx = {
         oidc: { route: OidcProviderMiddlewarePattern.USERINFO },
       };
       // When
-      service['runMiddlewareAfterPattern'](
+      await service['runMiddlewareAfterPattern'](
         {
           step: OidcProviderMiddlewareStep.BEFORE,
           route: '',
@@ -607,7 +608,12 @@ describe('OidcProviderService', () => {
       const mockErrDescription = 'this is an error description';
 
       // when
-      service.abortInteraction(reqMock, resMock, mockErr, mockErrDescription);
+      await service.abortInteraction(
+        reqMock,
+        resMock,
+        mockErr,
+        mockErrDescription,
+      );
 
       // then
       expect(providerMock.interactionFinished).toHaveBeenCalledTimes(1);
@@ -641,6 +647,23 @@ describe('OidcProviderService', () => {
       expect(
         oidcProviderConfigAppMock.finishInteraction,
       ).toHaveBeenLastCalledWith(reqMock, resMock, sessionDataMock);
+    });
+  });
+
+  describe('clearCookies', () => {
+    it('should iterate over COOKIES and call res.clearCookie with entry from COOKIES', () => {
+      // Given
+      const resMock = {
+        clearCookie: jest.fn(),
+      } as unknown as Response;
+      // When
+      service.clearCookies(resMock);
+      // Then
+      expect(resMock.clearCookie).toHaveBeenCalledTimes(3);
+
+      expect(resMock.clearCookie).toHaveBeenNthCalledWith(1, COOKIES[0]);
+      expect(resMock.clearCookie).toHaveBeenNthCalledWith(2, COOKIES[1]);
+      expect(resMock.clearCookie).toHaveBeenNthCalledWith(3, COOKIES[2]);
     });
   });
 });

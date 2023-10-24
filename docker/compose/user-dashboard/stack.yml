@@ -1,4 +1,4 @@
-version: '2.4'
+version: "2.4"
 
 services:
   ####################
@@ -8,25 +8,25 @@ services:
   ud:
     image: alpine
     depends_on:
-      - 'ud-front'
-      - 'ud-back'
+      - "ud-front"
+      - "ud-back"
 
   bdd-ud:
     image: alpine
     depends_on:
       # -- Core v1
-      - 'fc-exploitation'
-      - 'fc-support'
+      - "fc-exploitation"
+      - "fc-support"
       # -- SP
-      - 'fsp1' # for public tests
-      - 'fsp3' # for private tests
+      - "fsp1" # for public tests
+      - "fsp3" # for private tests
       # -- IdP
-      - 'fip1-low'
-      - 'fip3-low'
-      - 'fip4-low'
-      - 'aidants-connect-mock'
+      - "fip1-low"
+      - "fip3-low"
+      - "fip4-low"
+      - "aidants-connect-mock"
       # -- DP
-      - 'fdp1'
-      - 'tracks-data-provider'
+      - "fdp1"
+      - "tracks-data-provider"
       # -- UD
-      - 'ud'
+      - "ud"

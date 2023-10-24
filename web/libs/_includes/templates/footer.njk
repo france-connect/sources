@@ -1,0 +1,103 @@
+<footer class="fr-footer" role="contentinfo" id="footer">
+  <div class="fr-container">
+    <div class="fr-footer__body">
+      <div class="fr-footer__brand fr-enlarge-link">
+        <a href="/" title="{{ i18n.home }} - {{ metadata.service }}">
+          <p class="fr-logo">République<br/>française</p>
+        </a>
+      </div>
+      <div class="fr-footer__content">
+        <p class="fr-footer__content-desc">
+          {{ i18n.footer_content_description | safe }}
+        </p>
+        <ul class="fr-footer__content-list">
+          <li class="fr-footer__content-item">
+            <a
+              class="fr-footer__content-link"
+              target="_blank"
+              rel="noreferrer noopener"
+              href="https://legifrance.gouv.fr"
+              >legifrance.gouv.fr</a
+            >
+          </li>
+          <li class="fr-footer__content-item">
+            <a
+              class="fr-footer__content-link"
+              target="_blank"
+              rel="noreferrer noopener"
+              href="https://gouvernement.fr"
+              >gouvernement.fr</a
+            >
+          </li>
+          <li class="fr-footer__content-item">
+            <a
+              class="fr-footer__content-link"
+              target="_blank"
+              rel="noreferrer noopener"
+              href="https://service-public.fr"
+              >service-public.fr</a
+            >
+          </li>
+          <li class="fr-footer__content-item">
+            <a
+              class="fr-footer__content-link"
+              target="_blank"
+              rel="noreferrer noopener"
+              href="https://data.gouv.fr"
+              >data.gouv.fr</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="fr-footer__bottom">
+      <ul class="fr-footer__bottom-list">
+        <li class="fr-footer__bottom-item">
+          <a class="fr-footer__bottom-link" href="/sitemap/"
+            >{{ i18n.sitemap }}</a
+          >
+        </li>
+        <li class="fr-footer__bottom-item">
+          <a class="fr-footer__bottom-link" href="/accessibilite/">
+            {{ i18n.accessibility }} : {{ i18n.not_compliant }}
+          </a>
+        </li>
+        <li class="fr-footer__bottom-item">
+          <a class="fr-footer__bottom-link" href="/mentions-legales/"
+            >{{ i18n.legal }}</a
+          >
+        </li>
+        <li class="fr-footer__bottom-item">
+          <a class="fr-footer__bottom-link" href="/donnees-personnelles/"
+            >{{ i18n.personal_data }}</a
+          >
+        </li>
+        {#
+        <li class="fr-footer__bottom-item">
+          <a class="fr-footer__bottom-link" href="#">{{ i18n.cookies }}</a>
+        </li>
+        FIXME Uncomment when DSFR cookie component #}
+        <li class="fr-footer__bottom-item">
+          <button
+            class="fr-footer__bottom-link fr-fi-theme-fill fr-link--icon-left"
+            aria-controls="fr-theme-modal"
+            data-fr-opened="false"
+          >
+            {{ i18n.display_params }}
+          </button>
+        </li>
+      </ul>
+      <div class="fr-footer__bottom-copy">
+        <p>
+          Sauf mention contraire, tous les contenus de ce site sont sous
+          <a
+            href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
+            target="_blank"
+            rel="noreferrer noopener">
+            licence etalab-2.0
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

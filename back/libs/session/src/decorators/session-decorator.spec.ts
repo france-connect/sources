@@ -1,5 +1,6 @@
 import { createParamDecorator } from '@nestjs/common';
 
+import { getSessionServiceMock } from '../../.mocks';
 import { checkSession, extractSessionFromContext } from '../helper';
 import { Session } from './session.decorator';
 
@@ -16,10 +17,7 @@ describe('@Session()', () => {
   const moduleNameMock = 'moduleNameMockValue';
   const argMock = '';
   const sessionDataMock = {};
-  const sessionServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const createParamDecoratorMock = jest.mocked(createParamDecorator);
   const extractSessionFromContextMock = jest.mocked(extractSessionFromContext);

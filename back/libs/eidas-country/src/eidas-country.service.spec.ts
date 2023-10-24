@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { EidasCountryServiceInterface } from './eidas-country.service';
+import { EidasCountryService } from './eidas-country.service';
 import { IEidasCountryElement } from './interfaces';
 
 /**
  * Allow to import dynamically the service and mock the data
  * @returns {EidasCountryService}
  */
-async function getServiceMock(): Promise<EidasCountryServiceInterface> {
+async function getServiceMock(): Promise<EidasCountryService> {
   const { EidasCountryService } = await import('./eidas-country.service');
   const module: TestingModule = await Test.createTestingModule({
     providers: [EidasCountryService],
@@ -17,7 +17,7 @@ async function getServiceMock(): Promise<EidasCountryServiceInterface> {
 }
 
 describe('EidasCountryService', () => {
-  let service: EidasCountryServiceInterface;
+  let service: EidasCountryService;
   const mockCountryList: IEidasCountryElement[] = [
     {
       iso: 'iso1Value',
@@ -31,7 +31,7 @@ describe('EidasCountryService', () => {
     },
   ];
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.resetAllMocks();
     jest.resetModules();
   });

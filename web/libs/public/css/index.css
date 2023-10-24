@@ -1,0 +1,172 @@
+/* Defaults */
+:root {
+    --font-family-monospace: Consolas, Menlo, Monaco, Andale Mono WT, Andale Mono, Lucida Console, Lucida Sans Typewriter, DejaVu Sans Mono, Bitstream Vera Sans Mono, Liberation Mono, Nimbus Mono L, Courier New, Courier, monospace;
+    --syntax-tab-size: 2;
+}
+
+/* Global stylesheet */
+/* https://www.a11yproject.com/posts/how-to-hide-content/ */
+.visually-hidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+.links-nextprev {
+    box-shadow: inset 0 1px 0 0 var(--background-contrast-grey);
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    width: 100%;
+}
+
+table {
+    margin: 1em 0;
+}
+
+table td,
+table th {
+    padding-right: 1em;
+}
+
+pre,
+code {
+    font-family: var(--font-family-monospace);
+}
+
+pre[class*="language-"] {
+    margin-bottom: 1.5em !important;
+}
+
+pre:not([class*="language-"]) {
+    margin: .5em 0;
+    line-height: 1.375; /* 22px /16 */
+    -moz-tab-size: var(--syntax-tab-size);
+    -o-tab-size: var(--syntax-tab-size);
+    tab-size: var(--syntax-tab-size);
+    -webkit-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+    direction: ltr;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+}
+
+code {
+    word-break: break-all;
+}
+
+/* Direct Links / Markdown Headers */
+.header-anchor {
+    text-decoration: none;
+    font-style: normal;
+    font-size: 1em;
+    margin-left: .1em;
+}
+
+a[href].header-anchor,
+a[href].header-anchor:visited {
+    color: transparent;
+}
+
+a[href].header-anchor:focus,
+a[href].header-anchor:hover {
+    text-decoration: underline;
+}
+
+a[href].header-anchor:focus,
+:hover > a[href].header-anchor {
+    color: #aaa;
+}
+
+h2 + .header-anchor {
+    font-size: 1.5em;
+}
+
+/* Custom DSFR */
+.fr-pagination__list {
+    justify-content: flex-end !important;
+}
+
+@media (min-width: 48em) {
+    .fr-share__group {
+        justify-content: flex-end !important;
+    }
+}
+
+.fr-responsive-img.fr-ratio-auto {
+    object-fit: contain;
+}
+
+.fr-quote__image img {
+    object-fit: cover;
+}
+
+/** Properly render text in Markdown callout containers **/
+div.fr-callout__text p {
+    font-size: inherit;
+    line-height: inherit;
+}
+
+/** Missing icons **/
+.fr-follow .fr-link--mastodon:before,
+.fr-follow .fr-link--peertube:before,
+.fr-follow .fr-link--github:before,
+.fr-follow .fr-link--sourcehut:before {
+    background-color: currentColor !important;
+    content: "" !important;
+    display: inline-block !important;
+    flex: 0 0 auto !important;
+    height: var(--icon-size) !important;
+    -webkit-mask-size: 100% 100% !important;
+    mask-size: 100% 100% !important;
+    vertical-align: calc((.75em - var(--icon-size)) * .5) !important;
+    width: var(--icon-size) !important;
+}
+
+.fr-follow .fr-link--mastodon:before {
+    -webkit-mask-image: url(icons/logo/mastodon-fill.svg) !important;
+    mask-image: url(icons/logo/mastodon-fill.svg) !important;
+}
+
+.fr-follow .fr-link--peertube:before {
+    -webkit-mask-image: url(../icons/logo/peertube.svg) !important;
+    mask-image: url(../icons/logo/peertube.svg) !important;
+}
+
+.fr-follow .fr-link--github:before {
+    -webkit-mask-image: url(icons/logo/github-fill.svg) !important;
+    mask-image: url(icons/logo/github-fill.svg) !important;
+}
+
+.fr-follow .fr-link--sourcehut:before {
+    -webkit-mask-image: url(../icons/logo/sourcehut.svg) !important;
+    mask-image: url(../icons/logo/sourcehut.svg) !important;
+}
+
+.fr-tile__link:after {
+    content: none !important;
+}
+
+/* Custom */
+.banner-primary {
+    background: var(--background-alt-green-archipel);
+}
+
+.banner-secondary {
+    background: var(--background-alt-grey);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.col-center {
+    justify-content: center;
+}

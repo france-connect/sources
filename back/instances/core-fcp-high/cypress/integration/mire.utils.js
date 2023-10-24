@@ -459,7 +459,7 @@ export function getAuthorizeUrl(overrideParams = {}, removeParams = []) {
  *                     "IDP_INTERACTION_URL": "https://fip1-high.docker.dev-franceconnect.fr/interaction"
  *                   }
  */
-export function getIdentityProvider(idpId = 'fip1-high') {
+export function getIdentityProvider(idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18') {
   return Cypress.env('IDP_AVAILABLES').find(({ ID }) => ID === idpId);
 }
 

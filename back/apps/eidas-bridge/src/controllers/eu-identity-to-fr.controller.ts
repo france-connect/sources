@@ -127,7 +127,7 @@ export class EuIdentityToFrController {
     const { SELECTED_CITIZEN_COUNTRY } = this.tracking.TrackedEventsMap;
     const trackingContext = { req, countryCodeDst };
 
-    this.tracking.track(SELECTED_CITIZEN_COUNTRY, trackingContext);
+    await this.tracking.track(SELECTED_CITIZEN_COUNTRY, trackingContext);
 
     this.logger.trace({
       route: EidasBridgeRoutes.INTERACTION_LOGIN,
@@ -160,7 +160,7 @@ export class EuIdentityToFrController {
     const { eidasResponse } = await sessionEidas.get();
 
     if (eidasResponse.status.failure) {
-      this.tracking.track(EIDAS_RESPONSE_ERROR, trackingContext);
+      await this.tracking.track(EIDAS_RESPONSE_ERROR, trackingContext);
 
       const { params } = await this.oidcProvider.getInteraction(req, res);
 
@@ -204,7 +204,9 @@ export class EuIdentityToFrController {
       name: 'EidasBridgeRoutes.FINISH_FC_INTERACTION',
       session,
     });
-    this.tracking.track(REDIRECT_TO_FC, trackingContext);
+
+    await this.tracking.track(REDIRECT_TO_FC, trackingContext);
+
     return this.oidcProvider.finishInteraction(req, res, sessionClient);
   }
 

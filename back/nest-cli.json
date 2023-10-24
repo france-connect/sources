@@ -15,9 +15,7 @@
       "sourceRoot": "instances/core-fca-low/src",
       "compilerOptions": {
         "tsConfigPath": "instances/core-fca-low/tsconfig.app.json",
-        "assets": [
-          "../../../apps/core-fca/**/*.ejs"
-        ]
+        "assets": ["../../../apps/core-fca/**/*.ejs"]
       }
     },
     "eidas-bridge-instance": {
@@ -289,9 +287,7 @@
       "sourceRoot": "instances/csmr-user-preferences-high/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
-        "assets": [
-          "../../../instances/csmr-user-preferences-high/**/*.ejs"
-        ]
+        "assets": ["../../../instances/csmr-user-preferences-high/**/*.ejs"]
       }
     },
     "tracks-data-provider-instance": {
@@ -1048,6 +1044,15 @@
       "sourceRoot": "libs/data-provider-adapter-core/src",
       "compilerOptions": {
         "tsConfigPath": "libs/data-provider-adapter-core/tsconfig.lib.json"
+      }
+    },
+    "jwt": {
+      "type": "library",
+      "root": "libs/jwt",
+      "entryFile": "index",
+      "sourceRoot": "libs/jwt/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/jwt/tsconfig.lib.json"
       }
     }
   }

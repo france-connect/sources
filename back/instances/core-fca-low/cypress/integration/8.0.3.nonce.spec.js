@@ -29,14 +29,14 @@ describe('nonce', () => {
 
   it('should send the nonce through the authorize url (FC as FS)', () => {
     const { IDP_ROOT_URL } = getIdentityProvider(
-      `${Cypress.env('IDP_NAME')}1-low`,
+      '9c716f61-b8a1-435c-a407-ef4d677ec270',
     );
     const url = getAuthorizeUrl();
     cy.visit(url);
 
     cy.intercept(`${IDP_ROOT_URL}/authorize?*`).as('getIdp');
 
-    chooseIdpOnCore('fia1-low');
+    chooseIdpOnCore('9c716f61-b8a1-435c-a407-ef4d677ec270');
     cy.wait('@getIdp').then(({ request: { url } }) => {
       const nonceIsDefined = url.includes('nonce');
       expect(nonceIsDefined).to.be.true;

@@ -577,8 +577,9 @@ describe('CoreFcpSendEmailHandler', () => {
 
   describe('handle()', () => {
     beforeEach(() => {
+      const AppConfigMock = { platform: 'FranceConnect+' };
       serviceProviderMock.getById.mockResolvedValue(spMock);
-      configServiceMock.get.mockReturnValue(configMailerMock);
+      configServiceMock.get.mockReturnValue(AppConfigMock);
       service['configMailer'] = configMailerMock;
 
       service['getConnectNotificationEmailBodyContent'] = jest
@@ -603,7 +604,7 @@ describe('CoreFcpSendEmailHandler', () => {
       );
     });
 
-    it('should send the email to the end-user by calling "mailer.send"', async () => {
+    it('should send the email to the end-user by calling "mailer.send" (FranceConnect+)', async () => {
       // Given
       const mailTo: MailTo = {
         email: spIdentityWithEmailMock.email,
@@ -615,6 +616,29 @@ describe('CoreFcpSendEmailHandler', () => {
         subject: `Notification de connexion au service "${sessionDataMock.spName}" grâce à FranceConnect+`,
         to: [mailTo],
       };
+
+      // When
+      await service.handle(sessionDataMock);
+
+      // Then
+      expect(mailerServiceMock.send).toBeCalledTimes(1);
+      expect(mailerServiceMock.send).toBeCalledWith(expectedEmailParams);
+    });
+
+    it('should send the email to the end-user by calling "mailer.send" (FranceConnect)', async () => {
+      // Given
+      const mailTo: MailTo = {
+        email: spIdentityWithEmailMock.email,
+        name: `${spIdentityWithEmailMock.given_name} ${spIdentityWithEmailMock.family_name}`,
+      };
+      const expectedEmailParams = {
+        body: `connect notification html body content`,
+        from: fromMock,
+        subject: `Notification de connexion au service "${sessionDataMock.spName}" grâce à FranceConnect`,
+        to: [mailTo],
+      };
+      const AppConfigMock = { platform: 'FranceConnect' };
+      configServiceMock.get.mockReset().mockReturnValue(AppConfigMock);
 
       // When
       await service.handle(sessionDataMock);

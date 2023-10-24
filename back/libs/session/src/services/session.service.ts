@@ -1,8 +1,8 @@
-import { IncomingMessage } from 'http';
+import { ClassTransformOptions } from 'class-transformer';
 
 import { Inject, Injectable } from '@nestjs/common';
 
-import { validateDto } from '@fc/common';
+import { getTransformed, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
@@ -24,8 +24,13 @@ import {
   ISessionService,
 } from '../interfaces';
 import { SESSION_TOKEN_OPTIONS } from '../tokens';
+import { SessionTemplateService } from './session-template.service';
 
 export type RedisQueryResult = [Error | null, any];
+
+export const DUPLICATE_OPTIONS: ClassTransformOptions = {
+  excludeExtraneousValues: true,
+};
 
 @Injectable()
 export class SessionService {
@@ -39,21 +44,16 @@ export class SessionService {
     @Inject(REDIS_CONNECTION_TOKEN)
     private readonly redis: Redis,
     private readonly cryptography: CryptographyService,
+    private readonly sessionTemplate: SessionTemplateService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
 
-  static getBoundedSession<T = unknown>(
-    req: IncomingMessage,
+  static getBoundSession<T = unknown>(
+    req: ISessionRequest,
     moduleName: string,
   ): ISessionService<T> {
-    const {
-      sessionId,
-      sessionService,
-    }: {
-      sessionId: string;
-      sessionService: SessionService;
-    } = req as ISessionRequest;
+    const { sessionId, sessionService } = req;
 
     if (!sessionId) {
       throw new SessionNoSessionIdException();
@@ -71,13 +71,17 @@ export class SessionService {
     return {
       get: sessionService.get.bind(sessionService, boundSessionContext),
       set: sessionService.set.bind(sessionService, boundSessionContext),
+      setAlias: sessionService.setAlias.bind(
+        sessionService,
+        boundSessionContext,
+      ),
     };
   }
 
   /**
    * Retrieves a module session or a part of it
    *
-   * @param ctx The context bounded by the interceptor
+   * @param ctx The context bound by the interceptor
    * @param key The key of the sub data to retrieve
    * @return The module session or a part of it
    */
@@ -85,7 +89,7 @@ export class SessionService {
     ctx: ISessionBoundContext,
     key?: string,
   ): Promise<unknown | undefined> {
-    const session = await this.getFullSession(ctx);
+    const session = await this.getFullSession(ctx.sessionId);
 
     if (key) {
       return this.getByKey(ctx, session, key);
@@ -97,7 +101,7 @@ export class SessionService {
   /**
    * Patch a module session or a part of it
    *
-   * @param ctx The context bounded by the interceptor
+   * @param ctx The context bound by the interceptor
    * @param keyOrData The module data if it's a patch, else the key
    * @param data The data to set in session if the key is provided
    * @return The "save" operation result as a boolean
@@ -109,7 +113,9 @@ export class SessionService {
   ): Promise<boolean> {
     this.logger.debug('store session in redis');
 
-    const session = await this.getFullSession(ctx);
+    const { sessionId } = ctx;
+
+    const session = await this.getFullSession(sessionId);
 
     if (typeof keyOrData === 'string') {
       this.setByKey(ctx, session, keyOrData, data);
@@ -117,13 +123,13 @@ export class SessionService {
       this.setModule(ctx, session, keyOrData);
     }
 
-    return this.save(ctx, session);
+    return this.save(sessionId, session);
   }
 
   /**
    * Refresh the TTL of the session in redis
    *
-   * @param ctx The context bounded by the interceptor to the "set" or "get" operation
+   * @param ctx The context bound by the interceptor to the "set" or "get" operation
    * @return The "expire" operation result as a boolean
    */
   async refresh(req: ISessionRequest, res: ISessionResponse): Promise<string> {
@@ -145,11 +151,11 @@ export class SessionService {
    * Retrieves the entire session in redis and validate it using the DTO
    *
    * provided at the initialization
-   * @param ctx The context bounded by the interceptor
+   * @param ctx The context bound by the interceptor
    * @return The full session
    */
-  private async getFullSession(ctx: ISessionBoundContext): Promise<object> {
-    const sessionKey = this.getSessionKey(ctx.sessionId);
+  private async getFullSession(sessionId: string): Promise<object> {
+    const sessionKey = this.getSessionKey(sessionId);
 
     let dataCipher: string;
     try {
@@ -168,7 +174,7 @@ export class SessionService {
     const data = this.unserialize(dataCipher);
     await this.validate(data);
 
-    this.logger.trace({ ctx, data });
+    this.logger.trace({ sessionId, data });
 
     return data;
   }
@@ -176,7 +182,7 @@ export class SessionService {
   /**
    * Get a value in the session module corresponding to the provided key
    *
-   * @param ctx The context bounded by the interceptor
+   * @param ctx The context bound by the interceptor
    * @param session The full session
    * @param key The key to retrieve in the ctx module session
    * @return The part of the session module corresponding to the provided key
@@ -192,7 +198,7 @@ export class SessionService {
   /**
    * Get the session module
    *
-   * @param ctx The context bounded by the interceptor
+   * @param ctx The context bound by the interceptor
    * @param session The full session
    * @return The session module
    */
@@ -206,7 +212,7 @@ export class SessionService {
   /**
    * Set a value in the session module corresponding to the provided key
    *
-   * @param ctx The context bounded by the interceptor
+   * @param ctx The context bound by the interceptor
    * @param session The full session
    * @param key The key to set in the ctx module session
    * @param data The data to set in the ctx module session
@@ -229,7 +235,7 @@ export class SessionService {
   /**
    * Patch the session module with the provided data
    *
-   * @param ctx The context bounded by the interceptor
+   * @param ctx The context bound by the interceptor
    * @param session The full session
    * @param data The data to patch in the ctx module session
    */
@@ -245,18 +251,15 @@ export class SessionService {
   }
 
   /**
-   * Serialize, encrypt, enxpire and save the data to redis
+   * Serialize, encrypt, expire and save the data to redis
    *
-   * @param ctx The context bounded by the interceptor
+   * @param sessionId The id of the session to save
    * @param data The full session to save
    * @return The boolean result of the multi operation in redis
    */
-  private async save(
-    ctx: ISessionBoundContext,
-    data: object,
-  ): Promise<boolean> {
+  private async save(sessionId: string, data: object): Promise<boolean> {
     const { lifetime } = this.config.get<SessionConfig>('Session');
-    const key = this.getSessionKey(ctx.sessionId);
+    const key = this.getSessionKey(sessionId);
 
     const serialized = this.serialize(data);
 
@@ -295,12 +298,68 @@ export class SessionService {
   async destroy(req: ISessionRequest, res: ISessionResponse) {
     const sessionId = this.getSessionIdFromCookie(req);
     const sessionKey = this.getSessionKey(sessionId);
-    const { sessionCookieName } = this.config.get<SessionConfig>('Session');
 
     res.locals.session = {};
-    res.clearCookie(sessionCookieName);
+    this.clearCookie(res);
 
     return await this.redis.del(sessionKey);
+  }
+
+  async duplicate(req: ISessionRequest, res: ISessionResponse, schema) {
+    const { sessionId } = req;
+
+    // Fetch current session data
+    const currentData = await this.getFullSession(sessionId);
+
+    // Keep only data in schema
+    const cleanData = getTransformed(currentData, schema, DUPLICATE_OPTIONS);
+
+    // // Init new session
+    const newSessionId = this.init(req, res);
+
+    // Bind the session to Response
+    res.locals.session = cleanData;
+
+    await this.save(newSessionId, cleanData);
+
+    return cleanData;
+  }
+
+  async detach(
+    req: ISessionRequest,
+    res: ISessionResponse,
+    backendLifetime?: number,
+  ): Promise<void> {
+    // Reset value bound to Response
+    res.locals.session = {};
+
+    // Expire value stored in redis
+    if (backendLifetime) {
+      const sessionKey = this.getSessionKey(req.sessionId);
+      await this.redis.expire(sessionKey, backendLifetime);
+    }
+
+    // Reset sessionId stored in browser
+    this.clearCookie(res);
+  }
+
+  async attach(req: ISessionRequest, res: ISessionResponse, sessionId: string) {
+    this.bindToRequest(req, sessionId);
+    this.setCookies(res, sessionId);
+    await this.sessionTemplate.bindSessionToRes(req, res);
+  }
+
+  private clearCookie(res: ISessionResponse) {
+    const { cookieOptions, sessionCookieName } =
+      this.config.get<SessionConfig>('Session');
+
+    const removeCookieOptions = {
+      ...cookieOptions,
+      maxAge: -9,
+      signed: false, // Pas indispensable mais permet d'éviter d'envoyer la signature d'une chaîne vide.
+    };
+
+    res.clearCookie(sessionCookieName, removeCookieOptions);
   }
 
   getSessionIdFromCookie(req: ISessionRequest): string | undefined {
@@ -411,7 +470,7 @@ export class SessionService {
   /**
    * Contruct the session key using the context
    *
-   * @param ctx The context bounded by the interceptor
+   * @param ctx The context bound by the interceptor
    * @return The session key
    */
   private getSessionKey(sessionId: string) {
@@ -428,11 +487,14 @@ export class SessionService {
    * @param {number} lifetime in milisec
    * @returns {RedisQueryResult[]>}
    */
-  async setAlias(key: string, value: string): Promise<RedisQueryResult[]> {
+  async setAlias(
+    ctx: ISessionBoundContext,
+    key: string,
+  ): Promise<RedisQueryResult[]> {
     const { lifetime } = this.config.get<SessionConfig>('Session');
     const multi = this.redis.multi();
 
-    multi.set(key, value);
+    multi.set(key, ctx.sessionId);
     multi.expire(key, lifetime);
 
     const result: RedisQueryResult[] = await multi.exec();

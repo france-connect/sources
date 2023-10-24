@@ -52,13 +52,11 @@ const fsp = {
     jwks_uri:
       "https://fsp1-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: true,
-    idpFilterList: [
-      "77fe5e8c-364c-440e-909f-5ef4f494e170",
-    ],
+    idpFilterList: ["77fe5e8c-364c-440e-909f-5ef4f494e170"],
     identityConsent: false,
     trustedIdentity: false,
     ssoDisabled: false,
-    platform: 'CORE_FCP',
+    platform: "CORE_FCP",
   },
   // FSP2-LOW - amr not authorized
   "FSP2-LOW": {
@@ -113,11 +111,15 @@ const fsp = {
     jwks_uri:
       "https://fsp1-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: false,
-    idpFilterList: ["8dfc4080-c90d-4234-969b-f6c961de3e90","b5e9539a-599a-4ed2-9b4f-8f4bfc5fbb64","0adf04be-536e-4986-b639-73ea8d38493e"],
+    idpFilterList: [
+      "8dfc4080-c90d-4234-969b-f6c961de3e90",
+      "b5e9539a-599a-4ed2-9b4f-8f4bfc5fbb64",
+      "0adf04be-536e-4986-b639-73ea8d38493e",
+    ],
     identityConsent: false,
     trustedIdentity: false,
     ssoDisabled: false,
-    platform: 'CORE_FCP',
+    platform: "CORE_FCP",
   },
   // FSP3-LOW - private sp
   "FSP3-LOW": {
@@ -176,10 +178,10 @@ const fsp = {
     identityConsent: true,
     trustedIdentity: false,
     ssoDisabled: false,
-    platform: 'CORE_FCP',
+    platform: "CORE_FCP",
   },
   // FSP4-LOW - whitelist fip8
-  'FSP4-LOW': {
+  "FSP4-LOW": {
     name: "fsp4-low",
     title: "FSP4 - LOW",
     eidas: 1,
@@ -221,7 +223,7 @@ const fsp = {
       "identite_pivot",
       "idp_birthdate",
     ],
-    claims: ['amr'],
+    claims: ["amr"],
     id_token_signed_response_alg: "HS256",
     id_token_encrypted_response_alg: "",
     id_token_encrypted_response_enc: "",
@@ -231,13 +233,11 @@ const fsp = {
     jwks_uri:
       "https://fsp4-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: false,
-    idpFilterList: [
-      "77fe5e8c-364c-440e-909f-5ef4f494e170",
-    ],
+    idpFilterList: ["77fe5e8c-364c-440e-909f-5ef4f494e170"],
     identityConsent: false,
     trustedIdentity: false,
     ssoDisabled: false,
-    platform: 'CORE_FCP',
+    platform: "CORE_FCP",
   },
 };
 

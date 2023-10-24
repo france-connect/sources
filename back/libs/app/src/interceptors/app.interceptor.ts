@@ -15,10 +15,7 @@ export class AppInterceptor implements NestInterceptor {
     this.logger.setContext(this.constructor.name);
   }
 
-  async intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Promise<Observable<unknown>> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const req = context.switchToHttp().getRequest();
 
     this.logger.debug(`${req.method}/ ${req.path}`);

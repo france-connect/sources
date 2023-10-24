@@ -1,12 +1,12 @@
 import {
-  basicScenario,
-  getAuthorizeUrl,
-  getIdentityProvider,
+    basicScenario,
+    getAuthorizeUrl,
+    getIdentityProvider
 } from './mire.utils';
 
 describe('6.0 - Session', () => {
   // -- replace by either `fip1-high` or `fia1-low`
-  const idpId = `${Cypress.env('IDP_NAME')}1-high`;
+  const idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18';
 
   it('should display the Y190009 error when requesting consent page without session', () => {
     basicScenario({

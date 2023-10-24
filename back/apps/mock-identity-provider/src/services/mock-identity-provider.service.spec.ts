@@ -94,18 +94,18 @@ describe('MockIdentityProviderService', () => {
     beforeEach(() => {
       loadDatabasesMock = service['loadDatabases'] = jest.fn();
     });
-    it('should call loadDatabase', () => {
+    it('should call loadDatabase', async () => {
       // Given
       // When
-      service.onModuleInit();
+      await service.onModuleInit();
       // Then
       expect(loadDatabasesMock).toHaveBeenCalledTimes(1);
     });
 
-    it('should register oidc provider middleware', () => {
+    it('should register oidc provider middleware', async () => {
       // Given
       // When
-      service.onModuleInit();
+      await service.onModuleInit();
       // Then
       expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledTimes(
         1,
@@ -314,12 +314,12 @@ describe('MockIdentityProviderService', () => {
       shouldAbortMock = service['shouldAbortMiddleware'] = jest.fn();
     });
 
-    it('should abort middleware execution if request if flagged as erroring', () => {
+    it('should abort middleware execution if request if flagged as erroring', async () => {
       // Given
       shouldAbortMock.mockReturnValueOnce(true);
 
       // When
-      service['authorizationMiddleware'](ctxMock);
+      await service['authorizationMiddleware'](ctxMock);
 
       // Then
       expect(
@@ -422,6 +422,53 @@ describe('MockIdentityProviderService', () => {
 
       // Then
       expect(result).toStrictEqual(undefined);
+    });
+  });
+
+  describe('isPasswordValid()', () => {
+    beforeEach(() => {
+      configServiceMock.get.mockReturnValue({ passwordVerification: true });
+    });
+
+    it('should return true if password check is enabled and password is valid', () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({ passwordVerification: true });
+      const password = 'password';
+      const inputPassword = 'password';
+
+      // When
+      const result = service.isPasswordValid(password, inputPassword);
+
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return false if password check is enabled and password is invalid', () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({ passwordVerification: true });
+      const password = 'password';
+      const inputPassword = 'foo';
+
+      // When
+      const result = service.isPasswordValid(password, inputPassword);
+
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should return true if password check is disabled even if password is invalid', () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({
+        passwordVerification: false,
+      });
+      const password = 'password';
+      const inputPassword = 'foo';
+
+      // When
+      const result = service.isPasswordValid(password, inputPassword);
+
+      // Then
+      expect(result).toBe(true);
     });
   });
 

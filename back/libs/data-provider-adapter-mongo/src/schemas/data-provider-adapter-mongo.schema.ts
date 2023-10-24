@@ -23,6 +23,11 @@ export class DataProvider extends Document {
   // oidc like property
   // eslint-disable-next-line @typescript-eslint/naming-convention
   client_secret: string;
+
+  @Prop({ type: String })
+  // oidc like property
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  jwks_uri: string;
 }
 
 export const DataProviderSchema = SchemaFactory.createForClass(DataProvider);

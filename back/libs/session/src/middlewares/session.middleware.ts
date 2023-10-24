@@ -33,7 +33,7 @@ export class SessionMiddleware implements NestMiddleware {
       } else {
         await this.sessionService.refresh(req, res);
       }
-    } else if (cookieSessionId) {
+    } else {
       this.sessionService.bindToRequest(req, cookieSessionId);
     }
   }

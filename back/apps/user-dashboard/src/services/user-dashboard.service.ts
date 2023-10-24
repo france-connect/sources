@@ -61,7 +61,7 @@ export class UserDashboardService {
 
     this.logger.trace({ from, to });
 
-    this.mailer.send({
+    await this.mailer.send({
       from,
       to,
       subject: `Modification de vos accès dans FranceConnect`,

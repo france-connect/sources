@@ -15,7 +15,7 @@ const cookieOptions: ISessionCookieOptions = {
   sameSite: 'Lax',
   httpOnly: true,
   secure: true,
-  maxAge: 600000, // 10 minutes
+  maxAge: 1800000, // 30 minutes
   domain: process.env.FQDN,
 };
 
@@ -25,15 +25,16 @@ export default {
   cookieOptions,
   cookieSecrets: env.json('COOKIE_SECRETS'),
   sessionCookieName: 'fc_session_id',
-  lifetime: 600, // 10 minutes
+  lifetime: 1800, // 30 minutes
   sessionIdLength: 64,
   slidingExpiration: true,
   excludedRoutes: [
     `${app.urlPrefix}${OidcProviderRoutes.JWKS}`,
     `${app.urlPrefix}${OidcProviderRoutes.OPENID_CONFIGURATION}`,
+    `${app.urlPrefix}${OidcProviderRoutes.END_SESSION_CONFIRMATION}`,
     `${app.urlPrefix}${OidcClientRoutes.WELL_KNOWN_KEYS}`,
   ],
   templateExposed: {
-    OidcClient: { spId: true, spName: true, idpName: true },
+    OidcClient: { spId: true, spName: true, idpName: true, idpLabel: true },
   },
 } as SessionConfig;

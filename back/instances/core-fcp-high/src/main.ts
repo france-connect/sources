@@ -19,8 +19,8 @@ import helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
+import { AppConfig } from '@fc/core-fcp';
 import { LoggerService } from '@fc/logger-legacy';
 import { SessionConfig } from '@fc/session';
 
@@ -138,4 +138,5 @@ async function bootstrap() {
 
   await app.listen(3000);
 }
-bootstrap();
+
+void bootstrap();

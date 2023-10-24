@@ -114,9 +114,9 @@ describe('OidcProviderRedisAdapter', () => {
       // Given
       const expires = 'not a number';
       // Then
-      expect(adapter.upsert(idMock, defaultPayload, expires)).rejects.toThrow(
-        TypeError,
-      );
+      await expect(
+        adapter.upsert(idMock, defaultPayload, expires),
+      ).rejects.toThrow(TypeError);
     });
     it('should call expires if expiresIn is provided', async () => {
       // When
@@ -206,7 +206,9 @@ describe('OidcProviderRedisAdapter', () => {
       const error = new Error('exec failed');
       multiMock.exec.mockRejectedValueOnce(error);
       // Then
-      expect(adapter.upsert(idMock, defaultPayload)).rejects.toThrow(error);
+      await expect(adapter.upsert(idMock, defaultPayload)).rejects.toThrow(
+        error,
+      );
     });
   });
 
@@ -279,7 +281,7 @@ describe('OidcProviderRedisAdapter', () => {
   });
 
   describe('saveKey', () => {
-    it('Should throw if JSON.stringiy fails', async () => {
+    it('Should throw if JSON.stringiy fails', () => {
       // Given
       const payload = { foo: 'bar', circularRef: null };
       const keyMock = 'foo';
@@ -290,7 +292,7 @@ describe('OidcProviderRedisAdapter', () => {
       );
     });
 
-    it('should call hmset if name is in consumable var', async () => {
+    it('should call hmset if name is in consumable var', () => {
       // Given
       const authorizationCodeAdapter = new OidcProviderRedisAdapter(
         loggerMock,
@@ -309,7 +311,7 @@ describe('OidcProviderRedisAdapter', () => {
         payload: '{}',
       });
     });
-    it('should call set if name is not in consumable var', async () => {
+    it('should call set if name is not in consumable var', () => {
       // Given
       const key = 'foo';
       const defaultPayload = {};
@@ -398,7 +400,7 @@ describe('OidcProviderRedisAdapter', () => {
       const id = 'greatId';
 
       // WHEN
-      adapter['findServiceProvider'](id);
+      await adapter['findServiceProvider'](id);
 
       // THEN
       expect(ServiceProviderAdapterMock.getById).toHaveBeenCalledTimes(1);
@@ -512,7 +514,7 @@ describe('OidcProviderRedisAdapter', () => {
     const id = 'greatId';
     it('should call the logger', async () => {
       // WHEN
-      adapter.find(id);
+      await adapter.find(id);
 
       // THEN
       expect(loggerMock.debug).toHaveBeenCalledTimes(1);
@@ -525,7 +527,7 @@ describe('OidcProviderRedisAdapter', () => {
       adapter['findServiceProvider'] = jest.fn();
 
       // WHEN
-      adapter.find(id);
+      await adapter.find(id);
 
       // THEN
       expect(adapter['findServiceProvider']).toHaveBeenCalledTimes(1);
@@ -537,7 +539,7 @@ describe('OidcProviderRedisAdapter', () => {
       adapter['findInRedis'] = jest.fn();
 
       // WHEN
-      adapter.find(id);
+      await adapter.find(id);
 
       // THEN
       expect(adapter['findInRedis']).toHaveBeenCalledTimes(1);
@@ -546,7 +548,7 @@ describe('OidcProviderRedisAdapter', () => {
   });
 
   describe('parsedPayload', () => {
-    it('should return a merged object if response is an object', async () => {
+    it('should return a merged object if response is an object', () => {
       // Given
       const payloadMock = '{"fizz":"buzz"}';
       // When
@@ -554,7 +556,7 @@ describe('OidcProviderRedisAdapter', () => {
       // Then
       expect(result).toEqual({ fizz: 'buzz' });
     });
-    it('should throw if raw response can not be JSON parsed', async () => {
+    it('should throw if raw response can not be JSON parsed', () => {
       // Given
       const payloadMock = 'not so much json';
       // Then
@@ -648,7 +650,7 @@ describe('OidcProviderRedisAdapter', () => {
       const errorMock = new Error('exec failed');
       multiMock.exec.mockRejectedValueOnce(errorMock);
       // Then
-      expect(adapter.revokeByGrantId(idMock)).rejects.toThrow(errorMock);
+      await expect(adapter.revokeByGrantId(idMock)).rejects.toThrow(errorMock);
     });
   });
 

@@ -76,6 +76,8 @@ export class CsvService<T> implements RepositoryInterface<T> {
     }
   }
 
+  // Needed to match the interface
+  // eslint-disable-next-line require-await
   async find(filters: { [key: string]: string }): Promise<T | null> {
     const criteria = Object.entries(filters);
 

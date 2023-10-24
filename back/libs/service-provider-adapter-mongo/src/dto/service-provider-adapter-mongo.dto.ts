@@ -9,9 +9,9 @@ import {
   MinLength,
 } from 'class-validator';
 
-import { platform } from '../enums';
+import { SUPPORTED_SIG_ALG } from '@fc/cryptography';
 
-const SUPPORTED_SIG_ALG = ['ES256', 'RS256', 'HS256'];
+import { platform } from '../enums';
 
 export class ServiceProviderAdapterMongoDTO {
   @IsBoolean()

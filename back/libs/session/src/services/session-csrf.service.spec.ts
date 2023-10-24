@@ -32,6 +32,7 @@ const randomStringMockValue = 'randomStringMockValue';
 const sessionServiceMock = {
   get: jest.fn(),
   set: jest.fn(),
+  setAlias: jest.fn(),
 };
 
 const sessionDataMock: OidcSession = {
@@ -74,7 +75,7 @@ describe('SessionCsrfService', () => {
   });
 
   describe('get()', () => {
-    it('should return the CSRF Token string value', async () => {
+    it('should return the CSRF Token string value', () => {
       // Given
       const randomMockValue = 'randomStringMockValue';
       // When

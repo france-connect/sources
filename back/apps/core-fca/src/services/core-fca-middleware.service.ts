@@ -1,5 +1,8 @@
+import { v4 as uuid } from 'uuid';
+
 import { Injectable } from '@nestjs/common';
 
+import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CoreConfig, CoreOidcProviderMiddlewareService } from '@fc/core';
 import { LoggerService } from '@fc/logger-legacy';
@@ -13,8 +16,13 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { SessionService } from '@fc/session';
+import { ISessionService, SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
+
+import {
+  GetAuthorizeOidcClientSsoSession,
+  GetAuthorizeSessionDto,
+} from '../dto';
 
 @Injectable()
 export class CoreFcaMiddlewareService extends CoreOidcProviderMiddlewareService {
@@ -99,14 +107,13 @@ export class CoreFcaMiddlewareService extends CoreOidcProviderMiddlewareService 
     }
 
     const eventContext = this.getEventContext(ctx);
-    const { req, res } = ctx;
+    const { req } = ctx;
 
     const { enableSso } = this.config.get<CoreConfig>('Core');
-    if (!enableSso) {
-      this.sessionService.init(req, res);
-    }
 
-    const oidcSession = SessionService.getBoundedSession<OidcClientSession>(
+    await this.renewSession(ctx, enableSso);
+
+    const oidcSession = SessionService.getBoundSession<OidcClientSession>(
       req,
       'OidcClient',
     );
@@ -119,10 +126,50 @@ export class CoreFcaMiddlewareService extends CoreOidcProviderMiddlewareService 
       eventContext,
     );
 
-    await oidcSession.set(sessionProperties);
+    const browsingSessionId = await this.getBrowsingSessionId(oidcSession);
+    await oidcSession.set({ ...sessionProperties, browsingSessionId });
 
     await this.trackAuthorize(eventContext);
 
     await this.checkRedirectToSso(ctx);
+  }
+
+  private async isSsoSession(ctx: OidcCtx) {
+    const { req } = ctx;
+    const oidcSession = SessionService.getBoundSession<OidcClientSession>(
+      req,
+      'OidcClient',
+    );
+
+    const data = await oidcSession.get();
+
+    const validationErrors = await validateDto(
+      data,
+      GetAuthorizeOidcClientSsoSession,
+      { forbidNonWhitelisted: true },
+    );
+
+    this.logger.trace({ data, validationErrors });
+
+    return validationErrors.length === 0;
+  }
+
+  private async renewSession(ctx: OidcCtx, enableSso: boolean): Promise<void> {
+    const { req, res } = ctx;
+
+    const isSsoSession = await this.isSsoSession(ctx);
+
+    if (enableSso && isSsoSession) {
+      await this.sessionService.detach(req, res);
+      await this.sessionService.duplicate(req, res, GetAuthorizeSessionDto);
+    } else {
+      await this.sessionService.reset(req, res);
+    }
+  }
+
+  private async getBrowsingSessionId(
+    session: ISessionService<OidcClientSession>,
+  ): Promise<string> {
+    return (await session.get('browsingSessionId')) || uuid();
   }
 }

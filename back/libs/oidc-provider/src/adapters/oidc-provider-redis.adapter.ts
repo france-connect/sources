@@ -58,7 +58,7 @@ export class OidcProviderRedisAdapter implements Adapter {
   }
 
   /**
-   * Method to get a bounded class
+   * Method to get a bound class
    */
   static getConstructorWithDI(
     oidcProviderService: OidcProviderService,
@@ -79,7 +79,7 @@ export class OidcProviderRedisAdapter implements Adapter {
     /**
      * `oidc-provider` makes checks to ensure that we pass a class,
      * rather than encapsulating the instantiation in a try/catch block,
-     * prototype is analysed, so we have to provide something more fancy than a bounded function.
+     * prototype is analysed, so we have to provide something more fancy than a bound function.
      *
      * @see https://github.com/panva/node-oidc-provider/blob/master/lib/helpers/initialize_adapter.js#L13
      * We have to forward prototype

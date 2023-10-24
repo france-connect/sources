@@ -2,6 +2,7 @@ import { Response } from 'express';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { ConfigService } from '@fc/config';
 import { DataProviderAdapterCoreService } from '@fc/data-provider-adapter-core';
 
 import { MockDataProviderController } from './mock-data-provider.controller';
@@ -17,21 +18,31 @@ describe('MockDataProviderController', () => {
     checktoken: jest.fn(),
   };
 
+  const configServiceMock = {
+    get: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
     const app: TestingModule = await Test.createTestingModule({
       controllers: [MockDataProviderController],
-      providers: [DataProviderAdapterCoreService],
+      providers: [DataProviderAdapterCoreService, ConfigService],
     })
       .overrideProvider(DataProviderAdapterCoreService)
       .useValue(dataProviderAdapterCoreServiceMock)
+      .overrideProvider(ConfigService)
+      .useValue(configServiceMock)
       .compile();
 
     mockDataProviderController = app.get<MockDataProviderController>(
       MockDataProviderController,
     );
+
+    configServiceMock.get.mockResolvedValueOnce({
+      jwks: { keys: 'some keys' },
+    });
   });
 
   it('should be defined', () => {
@@ -64,13 +75,22 @@ describe('MockDataProviderController', () => {
     });
 
     it('should set response status', async () => {
+      // Given
+      const checktokenErrorMock = {
+        error: 'error',
+        message: 'message',
+        httpStatusCode: 400,
+      };
+      dataProviderAdapterCoreServiceMock.checktoken.mockRejectedValue(
+        checktokenErrorMock,
+      );
       // When
       await mockDataProviderController.data(resMock);
 
       // Then
       expect(resMock.status).toHaveBeenCalledTimes(1);
       expect(resMock.status).toHaveBeenCalledWith(
-        checktokenResponseMock.status,
+        checktokenErrorMock.httpStatusCode,
       );
     });
 
@@ -79,7 +99,7 @@ describe('MockDataProviderController', () => {
       const result = await mockDataProviderController.data(resMock);
 
       // Then
-      expect(result).toStrictEqual(checktokenResponseMock.data);
+      expect(result).toStrictEqual(checktokenResponseMock);
     });
 
     it('should return error if checktoken throws', async () => {
@@ -103,6 +123,16 @@ describe('MockDataProviderController', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: checktokenErrorMock.message,
       });
+    });
+  });
+
+  describe('jwks', () => {
+    it('Should return some status object', async () => {
+      // When
+      const result = await mockDataProviderController.jwks();
+
+      // assert
+      expect(result).toEqual({ keys: 'some keys' });
     });
   });
 });

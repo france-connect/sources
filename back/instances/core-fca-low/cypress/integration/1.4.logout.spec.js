@@ -9,12 +9,11 @@ import {
 } from './mire.utils';
 
 describe('RP Initiated logout scenarios', () => {
-  // -- replace by either `fip1-high` or `fia1-low`
-  const idpId = `${Cypress.env('IDP_NAME')}1-low`;
+  const idpId = '9c716f61-b8a1-435c-a407-ef4d677ec270';
 
   it('should log out from AgentConnect with post logout redirect uri', () => {
     const SUB =
-      '9aeda75d9da1edba7051a7d16e413a72d5206f16cf68c5872dd4894558dde16a';
+      '4a897042fa9e7a1098a1951a7a3f461db54be2105c400f8594ce0eeb03cc5756';
 
     const params = {
       userName: 'test',
@@ -40,7 +39,7 @@ describe('RP Initiated logout scenarios', () => {
 
   it('should log out from AgentConnect without post logout redirect uri', () => {
     const SUB =
-      '85cd916363d19e8b77ea6e7caf7977381b8c5db6505195a5efd02d57e6087f3b';
+      '3ff73e7fa55d48533a434b52b8ffc8c223660775c1fad17022ae8feedcc63ce4';
 
     const params = {
       userName: 'test',

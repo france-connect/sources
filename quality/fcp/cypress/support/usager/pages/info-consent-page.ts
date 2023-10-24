@@ -23,6 +23,10 @@ export default class InfoConsentPage {
     return cy.get('[data-testid="consent-detail"]');
   }
 
+  getClaimDetailsItems(): ChainableElement {
+    return cy.get('[data-testid="consent-detail"] li');
+  }
+
   checkIsVisible(): void {
     this.getConsentButton().should('be.visible');
   }
@@ -46,14 +50,6 @@ export default class InfoConsentPage {
     );
   }
 
-  // TODO: Use this once both FC low and high use dsfr
-  checkClaimsAccordionIsExpended(): void {
-    cy.get('[id="accordion-consent"]').should(
-      'have.class',
-      'fr-collapse--expanded',
-    );
-  }
-
   checkInformationConsent(
     scopeContext: ScopeContext,
     explicitConsent: boolean,
@@ -72,7 +68,8 @@ export default class InfoConsentPage {
       this.getShowClaimsToggle().click();
     }
 
-    this.getClaimDetails().should('be.visible');
+    this.getClaimDetailsItems().last().should('be.visible');
+
     this.getClaimDetails()
       .invoke('text')
       .then((text) => {

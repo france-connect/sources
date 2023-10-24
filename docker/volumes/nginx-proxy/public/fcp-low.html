@@ -1,93 +1,190 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>Review PO CI_COMMIT_REF_NAME</title>
-  <style type="text/css">
-    body {
-      font-family: Helvetica, Arial, sans-serif;
-      font-size: 16px;
-      line-height: 150%;
-      background-image: url("background.svg");
-    }
-    #all {
-      margin: 0 auto 10em auto;
-      width: 100%;
-      min-width: 32em;
-      max-width: 60em;
-    }
-    #links {
-      column-count: auto;
-      column-width: 15em;
-    }
-    a {
-      color: #666;
-      text-decoration: none;
-    }
-    a {
-      display: list-item;
-      list-style-type: square;
-      list-style-position: inside;
-    }
-    a:hover, a:active {
-      color: black;
-      text-decoration: underline;
-    }
-    h3 {
-      font-size: 1.4em;
-      margin: 0 0 1em 0;
-    }
-    .block {
-      margin-top: 4em;
-      break-inside: avoid-column;
-      width: 15em;
-      display: inline-block;
-    }
-    ul {
-      margin: 1em 0 0 0;
-      list-style: none;
-      padding: 0 0 0 1em;
-    }
-  </style>
-</head>
+  <head>
+    <meta charset="utf-8" />
+    <title>Review PO CI_COMMIT_REF_NAME</title>
+    <style type="text/css">
+      body {
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        line-height: 150%;
+        background-image: url("background.svg");
+      }
+      #all {
+        margin: 0 auto 10em auto;
+        width: 100%;
+        min-width: 32em;
+        max-width: 60em;
+      }
+      #links {
+        column-count: auto;
+        column-width: 15em;
+      }
+      a {
+        color: #666;
+        text-decoration: none;
+      }
+      a {
+        display: list-item;
+        list-style-type: square;
+        list-style-position: inside;
+      }
+      a:hover,
+      a:active {
+        color: black;
+        text-decoration: underline;
+      }
+      h3 {
+        font-size: 1.4em;
+        margin: 0 0 1em 0;
+      }
+      .block {
+        margin-top: 4em;
+        break-inside: avoid-column;
+        width: 15em;
+        display: inline-block;
+      }
+      ul {
+        margin: 1em 0 0 0;
+        list-style: none;
+        padding: 0 0 0 1em;
+      }
+    </style>
+  </head>
 
-<body>
-  <img src="fc_logo.png">
-  <h1 align=center>Review PO CI_COMMIT_REF_NAME</h1>
-  <div id="all">
-    <div id="links">
-      <div class="block">
-        <h3>Urls</h3>
-        <ul>
-          <li><a href="https://fsp1-low.docker.dev-franceconnect.fr/interaction/verify" id="fsp1-low">fsp1-low</a></li>
-          <li><a href="https://fsp2-low.docker.dev-franceconnect.fr/interaction/verify" id="fsp2-low">fsp2-low</a></li>
-          <li><a href="https://fsp3-low.docker.dev-franceconnect.fr/interaction/verify" id="fsp3-low">fsp3-low</a></li>
-          <li><a href="https://fsp4-low.docker.dev-franceconnect.fr/interaction/verify" id="fsp4-low">fsp4-low</a></li>
-          <li><a href="https://fip1-low.docker.dev-franceconnect.fr/" id="fip1-low">fip1-low</a></li>
-          <li><a href="https://fip2-low.docker.dev-franceconnect.fr/" id="fip2-low">fip2-low</a></li>
-          <li><a href="https://fip3-low.docker.dev-franceconnect.fr/" id="fip3-low">fip3-low</a></li>
-          <li><a href="https://fip4-low.docker.dev-franceconnect.fr/" id="fip4-low">fip4-low</a></li>
-          <li><a href="https://fip8-low.docker.dev-franceconnect.fr/" id="fip8-low">fip8-low</a></li>
-          <li><a href="https://fip9-low.docker.dev-franceconnect.fr/" id="fip9-low">fip9-low</a></li>
-          <li><a href="https://rnipp.docker.dev-franceconnect.fr/" id="rnipp">rnipp</a></li>
-          <li><a href="https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/.well-known/openid-configuration" id="openid-configuration">fcp openid-configuration</a></li>
-          <li><a href="https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/.well-known/keys" id="keys">fcp keys</a></li>
-          <li><a href="https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/jwks" id="jwks">fcp jwks</a></li>
-        </ul>
-      </div>
-      <div class="block">
-        <h3>Merge request</h3>
-        <ul>
-          <li><a href="https://gitlab.dev-franceconnect.fr/france-connect/fc/-/merge_requests/CI_OPEN_MERGE_REQUESTS" target="_blank" rel="noopener">CI_COMMIT_REF_NAME</a></li>
-        </ul>
-      </div>
-      <div class="block">
-        <h3>Branche fc-apps</h3>
-        <ul>
-          <li><a href="https://gitlab.dev-franceconnect.fr/france-connect/fc-apps/-/compare/staging...FC_APPS_VERSION" target="_blank" rel="noopener">FC_APPS_VERSION</a></li>
-        </ul>
+  <body>
+    <img src="fc_logo.png" />
+    <h1 align="center">Review PO CI_COMMIT_REF_NAME</h1>
+    <div id="all">
+      <div id="links">
+        <div class="block">
+          <h3>Urls</h3>
+          <ul>
+            <li>
+              <a
+                href="https://fsp1-low.docker.dev-franceconnect.fr/interaction/verify"
+                id="fsp1-low"
+                >fsp1-low</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://fsp2-low.docker.dev-franceconnect.fr/interaction/verify"
+                id="fsp2-low"
+                >fsp2-low</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://fsp3-low.docker.dev-franceconnect.fr/interaction/verify"
+                id="fsp3-low"
+                >fsp3-low</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://fsp4-low.docker.dev-franceconnect.fr/interaction/verify"
+                id="fsp4-low"
+                >fsp4-low</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://fip1-low.docker.dev-franceconnect.fr/"
+                id="fip1-low"
+                >fip1-low</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://fip2-low.docker.dev-franceconnect.fr/"
+                id="fip2-low"
+                >fip2-low</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://fip3-low.docker.dev-franceconnect.fr/"
+                id="fip3-low"
+                >fip3-low</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://fip4-low.docker.dev-franceconnect.fr/"
+                id="fip4-low"
+                >fip4-low</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://fip8-low.docker.dev-franceconnect.fr/"
+                id="fip8-low"
+                >fip8-low</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://fip9-low.docker.dev-franceconnect.fr/"
+                id="fip9-low"
+                >fip9-low</a
+              >
+            </li>
+            <li>
+              <a href="https://rnipp.docker.dev-franceconnect.fr/" id="rnipp"
+                >rnipp</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/.well-known/openid-configuration"
+                id="openid-configuration"
+                >fcp openid-configuration</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/.well-known/keys"
+                id="keys"
+                >fcp keys</a
+              >
+            </li>
+            <li>
+              <a
+                href="https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/jwks"
+                id="jwks"
+                >fcp jwks</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>Merge request</h3>
+          <ul>
+            <li>
+              <a
+                href="https://gitlab.dev-franceconnect.fr/france-connect/fc/-/merge_requests/CI_OPEN_MERGE_REQUESTS"
+                target="_blank"
+                rel="noopener"
+                >CI_COMMIT_REF_NAME</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="block">
+          <h3>Branche fc-apps</h3>
+          <ul>
+            <li>
+              <a
+                href="https://gitlab.dev-franceconnect.fr/france-connect/fc-apps/-/compare/staging...FC_APPS_VERSION"
+                target="_blank"
+                rel="noopener"
+                >FC_APPS_VERSION</a
+              >
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>

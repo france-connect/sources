@@ -1,4 +1,4 @@
-version: '2.4'
+version: "2.4"
 
 services:
   ####################
@@ -11,18 +11,18 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - 'redis-pwd'
-      - 'squid'
-      - 'haproxy'
+      - "redis-pwd"
+      - "squid"
+      - "haproxy"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log/:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fcp-low/.env/fsp1-low.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/fsp1-low.env"
     ports:
       - 9301:9301
     tty: true
@@ -30,7 +30,7 @@ services:
       - public
       - public-fcp-low
       - data
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   fsp2-low:
     hostname: fsp2-low
@@ -38,18 +38,18 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - 'redis-pwd'
-      - 'squid'
-      - 'haproxy'
+      - "redis-pwd"
+      - "squid"
+      - "haproxy"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log/:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fcp-low/.env/fsp2-low.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/fsp2-low.env"
     ports:
       - 9302:9302
     tty: true
@@ -57,7 +57,7 @@ services:
       - public
       - public-fcp-low
       - data
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   fsp3-low:
     hostname: fsp3-low
@@ -65,18 +65,18 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - 'redis-pwd'
-      - 'squid'
-      - 'haproxy'
+      - "redis-pwd"
+      - "squid"
+      - "haproxy"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log/:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fcp-low/.env/fsp3-low.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/fsp3-low.env"
     ports:
       - 9303:9303
     tty: true
@@ -84,7 +84,7 @@ services:
       - public
       - public-fcp-low
       - data
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   fsp4-low:
     hostname: fsp4-low
@@ -92,18 +92,18 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - 'redis-pwd'
-      - 'squid'
-      - 'haproxy'
+      - "redis-pwd"
+      - "squid"
+      - "haproxy"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log/:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fcp-low/.env/fsp4-low.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/fsp4-low.env"
     ports:
       - 9304:9304
     tty: true
@@ -111,7 +111,7 @@ services:
       - public
       - public-fcp-low
       - data
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   ####################
   # IDP Mocks V2
@@ -123,19 +123,19 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - 'redis-pwd'
-      - 'squid'
-      - 'haproxy'
+      - "redis-pwd"
+      - "squid"
+      - "haproxy"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/fcp-low/mocks/idp/databases:/var/databases'
-      - '${VOLUMES_DIR}/log/:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/fcp-low/mocks/idp/databases:/var/databases"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fcp-low/.env/fip1-low.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/fip1-low.env"
     ports:
       - 9321:9321
     tty: true
@@ -143,7 +143,7 @@ services:
       - public
       - public-fcp-low
       - data
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   fip2-low:
     hostname: fip2-low
@@ -151,19 +151,19 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - 'redis-pwd'
-      - 'squid'
-      - 'haproxy'
+      - "redis-pwd"
+      - "squid"
+      - "haproxy"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/fcp-low/mocks/idp/databases:/var/databases'
-      - '${VOLUMES_DIR}/log/:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/fcp-low/mocks/idp/databases:/var/databases"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fcp-low/.env/fip2-low.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/fip2-low.env"
     ports:
       - 9322:9322
     tty: true
@@ -171,7 +171,7 @@ services:
       - public
       - public-fcp-low
       - data
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   fip3-low:
     hostname: fip3-low
@@ -179,19 +179,19 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - 'redis-pwd'
-      - 'squid'
-      - 'haproxy'
+      - "redis-pwd"
+      - "squid"
+      - "haproxy"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/fcp-low/mocks/idp/databases:/var/databases'
-      - '${VOLUMES_DIR}/log/:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/fcp-low/mocks/idp/databases:/var/databases"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fcp-low/.env/fip3-low.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/fip3-low.env"
     ports:
       - 9323:9323
     tty: true
@@ -199,7 +199,7 @@ services:
       - public
       - public-fcp-low
       - data
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   fip4-low:
     hostname: fip4-low
@@ -207,24 +207,24 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - 'redis-pwd'
+      - "redis-pwd"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
-      - '${VOLUMES_DIR}/log/:/var/log/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fcp-low/.env/fip4-low.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/fip4-low.env"
     ports:
       - 9324:9324
     tty: true
     networks:
       - public
       - data
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   fip8-low:
     hostname: fip8-low
@@ -232,24 +232,24 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - 'redis-pwd'
+      - "redis-pwd"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
-      - '${VOLUMES_DIR}/log/:/var/log/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fcp-low/.env/fip8-low.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/fip8-low.env"
     ports:
       - 9328:9328
     tty: true
     networks:
       - public
       - data
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   fip9-low:
     hostname: fip9-low
@@ -257,24 +257,24 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - 'redis-pwd'
+      - "redis-pwd"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases'
-      - '${VOLUMES_DIR}/log/:/var/log/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/fcp-high/mocks/idp/databases:/var/databases"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fcp-low/.env/fip9-low.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/fip9-low.env"
     ports:
       - 9329:9329
     tty: true
     networks:
       - public
       - data
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   ####################
   # DP Mocks V2
@@ -286,16 +286,16 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     volumes:
-      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
-      - "${VOLUMES_DIR}/app:/opt/scripts"
-      - "${VOLUMES_DIR}/log:/var/log/app"
-      - "${VOLUMES_DIR}/.home:/home"
-      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
+      - '${VOLUMES_DIR}/app:/opt/scripts'
+      - '${VOLUMES_DIR}/log:/var/log/app'
+      - '${VOLUMES_DIR}/.home:/home'
+      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
     env_file:
-      - "${COMPOSE_DIR}/shared/.env/base-app.env"
-      - "${COMPOSE_DIR}/fcp-low/.env/mock-data-provider-low.env"
+      - '${COMPOSE_DIR}/shared/.env/base-app.env'
+      - '${COMPOSE_DIR}/fcp-low/.env/mock-data-provider-low.env'
     ports:
-      - "9265:9265"
+      - '9266:9266'
     networks:
       - public
-    command: "pm2 logs"
+    command: 'pm2 logs'

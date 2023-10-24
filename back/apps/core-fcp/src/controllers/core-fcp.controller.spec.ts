@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -13,9 +13,10 @@ import { OidcClientService } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionCsrfService, SessionService } from '@fc/session';
-import { TrackingService } from '@fc/tracking';
+import { TrackedEventInterface, TrackingService } from '@fc/tracking';
 
-import { InsufficientAcrLevelSuspiciousContextException } from '../exceptions';
+import { getSessionServiceMock } from '@mocks/session';
+
 import { CoreFcpService, CoreFcpVerifyService } from '../services';
 import { CoreFcpController } from './core-fcp.controller';
 
@@ -94,11 +95,12 @@ describe('CoreFcpController', () => {
 
   const coreVerifyServiceMock = {
     verify: jest.fn(),
-    handleBlacklisted: jest.fn(),
+    handleUnavailableIdp: jest.fn(),
   };
 
   const coreFcpVerifyServiceMock = {
     handleVerifyIdentity: jest.fn(),
+    handleInsufficientAcrLevel: jest.fn(),
   };
 
   const scopesMock = ['toto', 'titi'];
@@ -108,6 +110,7 @@ describe('CoreFcpController', () => {
   const identityProviderServiceMock = {
     getFilteredList: jest.fn(),
     getList: jest.fn(),
+    isActiveById: jest.fn(),
   };
 
   const serviceProviderServiceMock = {
@@ -116,16 +119,9 @@ describe('CoreFcpController', () => {
     getById: jest.fn(),
   };
 
-  const oidcSessionServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-    setAlias: jest.fn(),
-  };
+  const oidcSessionServiceMock = getSessionServiceMock();
 
-  const appSessionServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
+  const appSessionServiceMock = getSessionServiceMock();
 
   const sessionCsrfServiceMock = {
     get: jest.fn(),
@@ -189,7 +185,6 @@ describe('CoreFcpController', () => {
 
   const notificationsMock = Symbol('notifications');
 
-  const handleBlackListedResult = 'urlPrefixValue/interaction/interactionId';
   const handleVerifyResult = 'urlPrefixValue/login';
 
   beforeEach(async () => {
@@ -277,6 +272,8 @@ describe('CoreFcpController', () => {
     sessionCsrfServiceMock.save.mockResolvedValueOnce(true);
 
     serviceProviderServiceMock.shouldExcludeIdp.mockResolvedValue(true);
+
+    identityProviderServiceMock.isActiveById.mockResolvedValue(true);
   });
 
   describe('getDefault()', () => {
@@ -667,149 +664,441 @@ describe('CoreFcpController', () => {
   });
 
   describe('getVerify()', () => {
-    const res = {
+    const resMock = {
       redirect: jest.fn(),
     };
 
-    describe('when `serviceProvider.shouldExcludeIdp()` returns `true`', () => {
-      beforeEach(() => {
-        coreVerifyServiceMock.handleBlacklisted.mockResolvedValue(
-          handleBlackListedResult,
-        );
-        coreFcpVerifyServiceMock.handleVerifyIdentity.mockResolvedValue(
-          handleVerifyResult,
-        );
-      });
+    const reqMock = {
+      foo: 'bar',
+    };
 
-      it('should call `handleBlackListed()` and not `handleVerify()`', async () => {
-        // When
-        await coreController.getVerify(
-          req,
-          res as unknown as Response,
-          params,
-          oidcSessionServiceMock,
-          appSessionServiceMock,
-        );
-        // Then
-        expect(coreVerifyServiceMock.handleBlacklisted).toHaveBeenCalledTimes(
-          1,
-        );
-        expect(
-          coreFcpVerifyServiceMock.handleVerifyIdentity,
-        ).not.toHaveBeenCalled();
-      });
+    const paramsMock = {
+      uid: 'uidMockValue',
+    };
 
-      it('should return result from `handleBlackListed()`', async () => {
-        // When
-        await coreController.getVerify(
-          req,
-          res as unknown as Response,
-          params,
-          oidcSessionServiceMock,
-          appSessionServiceMock,
-        );
-        // Then
-        expect(res.redirect).toBeCalledTimes(1);
-        expect(res.redirect).toBeCalledWith(handleBlackListedResult);
+    const oidcSessionMock = {
+      idpId: 'idpIdMockValue',
+      idpAcr: 'idpAcrMockValue',
+      interactionId: 'interactionIdMockValue',
+      spId: 'spIdMockValue',
+    };
+
+    beforeEach(() => {
+      oidcSessionServiceMock.get.mockResolvedValue(oidcSessionMock);
+      identityProviderServiceMock.isActiveById.mockResolvedValue(true);
+      serviceProviderServiceMock.shouldExcludeIdp.mockResolvedValue(false);
+      appSessionServiceMock.get.mockResolvedValue(false);
+      coreFcpServiceMock.isInsufficientAcrLevel.mockReturnValue(false);
+      coreFcpVerifyServiceMock.handleVerifyIdentity.mockResolvedValue(
+        handleVerifyResult,
+      );
+    });
+
+    it('should get the oidcSession', async () => {
+      // When
+      await coreController.getVerify(
+        reqMock,
+        resMock,
+        paramsMock,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+      // Then
+      expect(oidcSessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(oidcSessionServiceMock.get).toHaveBeenCalledWith();
+    });
+
+    it('should get the App config', async () => {
+      // When
+      await coreController.getVerify(
+        reqMock,
+        resMock,
+        paramsMock,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+      // Then
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('App');
+    });
+
+    it('should check if idp is active', async () => {
+      // When
+      await coreController.getVerify(
+        reqMock,
+        resMock,
+        paramsMock,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+      // Then
+      expect(identityProviderServiceMock.isActiveById).toHaveBeenCalledTimes(1);
+      expect(identityProviderServiceMock.isActiveById).toHaveBeenCalledWith(
+        oidcSessionMock.idpId,
+      );
+    });
+
+    it('should check if idp is blacklisted', async () => {
+      // When
+      await coreController.getVerify(
+        reqMock,
+        resMock,
+        paramsMock,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+      // Then
+      expect(serviceProviderServiceMock.shouldExcludeIdp).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(serviceProviderServiceMock.shouldExcludeIdp).toHaveBeenCalledWith(
+        oidcSessionMock.spId,
+        oidcSessionMock.idpId,
+      );
+    });
+
+    it('should retrieve suspicious context from AppSession', async () => {
+      // When
+      await coreController.getVerify(
+        reqMock,
+        resMock,
+        paramsMock,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+      // Then
+      expect(appSessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(appSessionServiceMock.get).toHaveBeenCalledWith('isSuspicious');
+    });
+
+    it('should check if acr level is sufficient', async () => {
+      // When
+      await coreController.getVerify(
+        reqMock,
+        resMock,
+        paramsMock,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+      // Then
+      expect(coreFcpServiceMock.isInsufficientAcrLevel).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(coreFcpServiceMock.isInsufficientAcrLevel).toHaveBeenCalledWith(
+        oidcSessionMock.idpAcr,
+        false,
+      );
+    });
+
+    it('should verify the identity', async () => {
+      // When
+      await coreController.getVerify(
+        reqMock,
+        resMock,
+        paramsMock,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+      // Then
+      expect(
+        coreFcpVerifyServiceMock.handleVerifyIdentity,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        coreFcpVerifyServiceMock.handleVerifyIdentity,
+      ).toHaveBeenCalledWith(reqMock, {
+        interactionId: oidcSessionMock.interactionId,
+        sessionOidc: oidcSessionServiceMock,
+        urlPrefix: appConfigMock.urlPrefix,
       });
     });
 
-    describe('when `serviceProvider.shouldExcludeIdp()` returns `false`', () => {
+    it('should redirect to the result of coreFcpVerifyService.handleVerifyIdentity()', async () => {
+      // When
+      await coreController.getVerify(
+        reqMock,
+        resMock,
+        paramsMock,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+      // Then
+      expect(resMock.redirect).toHaveBeenCalledTimes(1);
+      expect(resMock.redirect).toHaveBeenCalledWith(handleVerifyResult);
+    });
+
+    it('should return the result of res.redirect()', async () => {
+      // Given
+      const redirectResult = Symbol('redirectResult');
+      resMock.redirect.mockReturnValueOnce(redirectResult);
+
+      // When
+      const result = await coreController.getVerify(
+        reqMock,
+        resMock,
+        paramsMock,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+
+      // Then
+      expect(result).toStrictEqual(redirectResult);
+    });
+
+    describe('when idp is not active', () => {
       beforeEach(() => {
-        serviceProviderServiceMock.shouldExcludeIdp.mockResolvedValue(false);
-        coreVerifyServiceMock.handleBlacklisted.mockResolvedValue(
-          handleBlackListedResult,
-        );
-        coreFcpVerifyServiceMock.handleVerifyIdentity.mockResolvedValue(
-          handleVerifyResult,
-        );
+        identityProviderServiceMock.isActiveById.mockResolvedValue(false);
       });
 
-      it('should call `handleVerify()` and not `handleBlackListed()`', async () => {
+      it('should call coreVerifyService.handleUnavailableIdp()', async () => {
+        // Given
+        const handleUnavailableIdpParamsMock = {
+          interactionId: 'interactionIdMockValue',
+          sessionOidc: oidcSessionServiceMock,
+          urlPrefix: appConfigMock.urlPrefix,
+        };
+
         // When
         await coreController.getVerify(
-          req,
-          res as unknown as Response,
-          params,
+          reqMock,
+          resMock,
+          paramsMock,
           oidcSessionServiceMock,
           appSessionServiceMock,
         );
         // Then
         expect(
-          coreFcpVerifyServiceMock.handleVerifyIdentity,
+          coreVerifyServiceMock.handleUnavailableIdp,
         ).toHaveBeenCalledTimes(1);
-        expect(coreVerifyServiceMock.handleBlacklisted).not.toHaveBeenCalled();
-      });
-
-      it('should call return result from `handleVerify()`', async () => {
-        // When
-        await coreController.getVerify(
-          req,
-          res as unknown as Response,
-          params,
-          oidcSessionServiceMock,
-          appSessionServiceMock,
+        expect(coreVerifyServiceMock.handleUnavailableIdp).toHaveBeenCalledWith(
+          reqMock,
+          handleUnavailableIdpParamsMock,
+          true,
         );
-        // Then
-        expect(res.redirect).toBeCalledTimes(1);
-        expect(res.redirect).toBeCalledWith(handleVerifyResult);
       });
 
-      it('should get the suspicious request status from AppSession', async () => {
-        // When
-        await coreController.getVerify(
-          req,
-          res,
-          params,
-          oidcSessionServiceMock,
-          appSessionServiceMock,
-        );
-
-        // Then
-        expect(appSessionServiceMock.get).toHaveBeenCalledTimes(1);
-        expect(appSessionServiceMock.get).toHaveBeenCalledWith('isSuspicious');
-      });
-
-      it('should check if the idpAcr is sufficient for the given request suspicious status', async () => {
+      it('should call res.redirect() with the result of coreVerifyService.handleUnavailableIdp()', async () => {
         // Given
-        const expectedSupiciousRequest = false;
-        appSessionServiceMock.get.mockResolvedValueOnce(
-          expectedSupiciousRequest,
+        const expectHandleUnavailableIdpResult = Symbol(
+          'expectHandleUnavailableIdpResult',
+        );
+        coreVerifyServiceMock.handleUnavailableIdp.mockReturnValueOnce(
+          expectHandleUnavailableIdpResult,
         );
 
         // When
         await coreController.getVerify(
-          req,
-          res,
-          params,
+          reqMock,
+          resMock,
+          paramsMock,
+          oidcSessionServiceMock,
+          appSessionServiceMock,
+        );
+        // Then
+        expect(resMock.redirect).toHaveBeenCalledTimes(1);
+        expect(resMock.redirect).toHaveBeenCalledWith(
+          expectHandleUnavailableIdpResult,
+        );
+      });
+
+      it('should return the result of res redirect', async () => {
+        // Given
+        const expectedRedirect = Symbol('expectedRedirect');
+        resMock.redirect.mockReturnValueOnce(expectedRedirect);
+
+        // When
+        const result = await coreController.getVerify(
+          reqMock,
+          resMock,
+          paramsMock,
           oidcSessionServiceMock,
           appSessionServiceMock,
         );
 
         // Then
-        expect(coreFcpServiceMock.isInsufficientAcrLevel).toHaveBeenCalledTimes(
-          1,
+        expect(result).toStrictEqual(expectedRedirect);
+      });
+    });
+
+    describe('when idp is blacklisted', () => {
+      beforeEach(() => {
+        serviceProviderServiceMock.shouldExcludeIdp.mockResolvedValue(true);
+      });
+
+      it('should call coreVerifyService.handleUnavailableIdp()', async () => {
+        // Given
+        const handleUnavailableIdpParamsMock = {
+          interactionId: 'interactionIdMockValue',
+          sessionOidc: oidcSessionServiceMock,
+          urlPrefix: appConfigMock.urlPrefix,
+        };
+
+        // When
+        await coreController.getVerify(
+          reqMock,
+          resMock,
+          paramsMock,
+          oidcSessionServiceMock,
+          appSessionServiceMock,
         );
-        expect(coreFcpServiceMock.isInsufficientAcrLevel).toHaveBeenCalledWith(
-          oidcSessionMock.idpAcr,
-          expectedSupiciousRequest,
+        // Then
+        expect(
+          coreVerifyServiceMock.handleUnavailableIdp,
+        ).toHaveBeenCalledTimes(1);
+        expect(coreVerifyServiceMock.handleUnavailableIdp).toHaveBeenCalledWith(
+          reqMock,
+          handleUnavailableIdpParamsMock,
+          false,
         );
       });
 
-      it('should throw an "InsufficientAcrLevelSuspiciousContextException" error if the used IdP is not valid and request is suspicious', async () => {
+      it('should call res.redirect() with the result of coreVerifyService.handleUnavailableIdp()', async () => {
         // Given
-        coreFcpServiceMock.isInsufficientAcrLevel.mockReturnValueOnce(true);
+        const expectHandleUnavailableIdpResult = Symbol(
+          'expectHandleUnavailableIdpResult',
+        );
+        coreVerifyServiceMock.handleUnavailableIdp.mockReturnValueOnce(
+          expectHandleUnavailableIdpResult,
+        );
 
-        // When / Then
-        await expect(() =>
-          coreController.getVerify(
-            req,
-            res,
-            params,
-            oidcSessionServiceMock,
-            appSessionServiceMock,
-          ),
-        ).rejects.toThrow(InsufficientAcrLevelSuspiciousContextException);
+        // When
+        await coreController.getVerify(
+          reqMock,
+          resMock,
+          paramsMock,
+          oidcSessionServiceMock,
+          appSessionServiceMock,
+        );
+        // Then
+        expect(resMock.redirect).toHaveBeenCalledTimes(1);
+        expect(resMock.redirect).toHaveBeenCalledWith(
+          expectHandleUnavailableIdpResult,
+        );
+      });
+
+      it('should return the result of res redirect', async () => {
+        // Given
+        const expectedRedirect = Symbol('expectedRedirect');
+        resMock.redirect.mockReturnValueOnce(expectedRedirect);
+
+        // When
+        const result = await coreController.getVerify(
+          reqMock,
+          resMock,
+          paramsMock,
+          oidcSessionServiceMock,
+          appSessionServiceMock,
+        );
+
+        // Then
+        expect(result).toStrictEqual(expectedRedirect);
+      });
+    });
+
+    describe('when acr level is insufficient', () => {
+      beforeEach(() => {
+        coreFcpServiceMock.isInsufficientAcrLevel.mockReturnValue(true);
+      });
+
+      it('should call coreFcpVerifyService.handleInsufficientAcrLevel()', async () => {
+        // Given
+        const interactionIdMock = 'interactionIdMockValue';
+
+        // When
+        await coreController.getVerify(
+          reqMock,
+          resMock,
+          paramsMock,
+          oidcSessionServiceMock,
+          appSessionServiceMock,
+        );
+        // Then
+        expect(
+          coreFcpVerifyServiceMock.handleInsufficientAcrLevel,
+        ).toHaveBeenCalledTimes(1);
+        expect(
+          coreFcpVerifyServiceMock.handleInsufficientAcrLevel,
+        ).toHaveBeenCalledWith(interactionIdMock);
+      });
+
+      it('should terminate sso session', async () => {
+        // When
+        await coreController.getVerify(
+          reqMock,
+          resMock,
+          paramsMock,
+          oidcSessionServiceMock,
+          appSessionServiceMock,
+        );
+        // Then
+        expect(oidcSessionServiceMock.set).toHaveBeenCalledTimes(1);
+        expect(oidcSessionServiceMock.set).toHaveBeenCalledWith('isSso', false);
+      });
+
+      it('should track the event FC_IDP_INSUFFICIENT_ACR', async () => {
+        // Given
+        trackingServiceMock.TrackedEventsMap.FC_IDP_INSUFFICIENT_ACR = Symbol(
+          'FC_IDP_INSUFFICIENT_ACR',
+        ) as unknown as TrackedEventInterface;
+        const ctxMock = {
+          req: reqMock,
+        };
+
+        // When
+        await coreController.getVerify(
+          reqMock,
+          resMock,
+          paramsMock,
+          oidcSessionServiceMock,
+          appSessionServiceMock,
+        );
+        // Then
+        expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
+        expect(trackingServiceMock.track).toHaveBeenCalledWith(
+          trackingServiceMock.TrackedEventsMap.FC_IDP_INSUFFICIENT_ACR,
+          ctxMock,
+        );
+      });
+
+      it('should call res.redirect() with the result of coreFcpVerifyService.handleInsufficientAcrLevel()', async () => {
+        // Given
+        const expectHandleInsufficientAcrLevelResult = Symbol(
+          'expectHandleInsufficientAcrLevelResult',
+        );
+        coreFcpVerifyServiceMock.handleInsufficientAcrLevel.mockReturnValueOnce(
+          expectHandleInsufficientAcrLevelResult,
+        );
+
+        // When
+        await coreController.getVerify(
+          reqMock,
+          resMock,
+          paramsMock,
+          oidcSessionServiceMock,
+          appSessionServiceMock,
+        );
+        // Then
+        expect(resMock.redirect).toHaveBeenCalledTimes(1);
+        expect(resMock.redirect).toHaveBeenCalledWith(
+          expectHandleInsufficientAcrLevelResult,
+        );
+      });
+
+      it('should return the result of res redirect', async () => {
+        // Given
+        const expectedRedirect = Symbol('expectedRedirect');
+        resMock.redirect.mockReturnValueOnce(expectedRedirect);
+
+        // When
+        const result = await coreController.getVerify(
+          reqMock,
+          resMock,
+          paramsMock,
+          oidcSessionServiceMock,
+          appSessionServiceMock,
+        );
+
+        // Then
+        expect(result).toStrictEqual(expectedRedirect);
       });
     });
   });

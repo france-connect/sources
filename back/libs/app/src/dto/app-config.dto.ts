@@ -77,4 +77,8 @@ export class AppConfig {
   @IsOptional()
   @IsString()
   readonly minAcrForContextRequest?: string;
+
+  @IsOptional()
+  @IsString()
+  eidasBridgeUid?: string;
 }

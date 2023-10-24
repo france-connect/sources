@@ -6,6 +6,6 @@ import { ConfigConfig } from '@fc/config';
 export default {
   templateExposed: {
     Core: { supportFormUrl: true, supportFormCodes: true },
-    App: { name: true },
+    App: { name: true, eidasBridgeUid: true },
   },
 } as ConfigConfig;

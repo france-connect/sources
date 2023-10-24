@@ -1,4 +1,4 @@
-version: '2.4'
+version: "2.4"
 
 ####################
 ####################
@@ -13,7 +13,7 @@ services:
       - "rnipp"
       - "csmr-hsm"
       - "mock-data-provider-high"
-  
+
   bdd-fcp-high:
     image: alpine
     depends_on:

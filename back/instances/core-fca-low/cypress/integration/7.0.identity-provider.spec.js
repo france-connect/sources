@@ -6,10 +6,8 @@ import {
 } from './mire.utils';
 
 describe('Idp activation & visibility', () => {
-  // -- replace by either `fip` or `fia`
-  const idpId = `${Cypress.env('IDP_NAME')}`;
   const { IDP_INTERACTION_URL, MINISTRY_NAME, TITLE } = getIdentityProvider(
-    `${idpId}1-low`,
+    `9c716f61-b8a1-435c-a407-ef4d677ec270`,
   );
 
   const mireUrl = new RegExp('/interaction/[^/]+');
@@ -21,7 +19,7 @@ describe('Idp activation & visibility', () => {
     cy.get('#fi-search-term').type(MINISTRY_NAME);
 
     cy.get(
-      '#identity-provider-result input[name="providerUid"][value="fia1-low"]',
+      '#identity-provider-result input[name="providerUid"][value="9c716f61-b8a1-435c-a407-ef4d677ec270"]',
     ).should('exist');
 
     cy.contains(TITLE).click();
@@ -35,7 +33,7 @@ describe('Idp activation & visibility', () => {
     cy.get('#fi-search-term').type('mock - ministère de la');
 
     cy.get(
-      '#identity-provider-result input[name="providerUid"][value="fia1-low"]',
+      '#identity-provider-result input[name="providerUid"][value="9c716f61-b8a1-435c-a407-ef4d677ec270"]',
     ).should('exist');
 
     cy.contains(TITLE).click();
@@ -49,7 +47,7 @@ describe('Idp activation & visibility', () => {
     cy.get('#fi-search-term').type('mock - ministere de la');
 
     cy.get(
-      '#identity-provider-result input[name="providerUid"][value="fia1-low"]',
+      '#identity-provider-result input[name="providerUid"][value="9c716f61-b8a1-435c-a407-ef4d677ec270"]',
     ).should('exist');
 
     cy.contains(TITLE).click();
@@ -78,11 +76,13 @@ describe('Idp activation & visibility', () => {
     cy.get('#fi-search-term').type(
       'MOCK - Ministère de la transition écologique - ALL FIS - SORT 2',
     );
-    cy.get(`#fca-search-idp-${idpId}1-low > input[name="csrfToken"]`)
+    cy.get(
+      `#fca-search-idp-9c716f61-b8a1-435c-a407-ef4d677ec270 > input[name="csrfToken"]`,
+    )
       // Reset CSRF form value
       .invoke('attr', 'value', 'INVALID-CSRF-VALUE');
     // When
-    cy.get(`#idp-${idpId}1-low-button`).click();
+    cy.get(`#idp-9c716f61-b8a1-435c-a407-ef4d677ec270-button`).click();
     // Then
     cy.url().should('contain', '/api/v2/redirect-to-idp');
     cy.hasError('Y190007');

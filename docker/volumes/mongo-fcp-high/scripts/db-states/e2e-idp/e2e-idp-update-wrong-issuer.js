@@ -4,6 +4,6 @@ db.provider.update(
     $set: {
       title: "aGreatTitle",
       url: "https://fip1-high.docker.dev-franceconnect.fr",
-    }
-  }
-)
+    },
+  },
+);

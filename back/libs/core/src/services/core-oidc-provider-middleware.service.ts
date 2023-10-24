@@ -3,8 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
-import { IOidcClaims, OidcSession } from '@fc/oidc';
+import { atHashFromAccessToken, IOidcClaims, OidcSession } from '@fc/oidc';
 import { OidcAcrConfig, OidcAcrService } from '@fc/oidc-acr';
+import { OidcClientSession } from '@fc/oidc-client';
 import {
   OidcCtx,
   OidcProviderConfig,
@@ -47,12 +48,13 @@ export class CoreOidcProviderMiddlewareService {
     this.oidcProvider.registerMiddleware(step, pattern, middleware.bind(this));
   }
 
-  protected async beforeAuthorizeMiddleware({ req }: OidcCtx): Promise<void> {
+  protected beforeAuthorizeMiddleware({ req, res }: OidcCtx): void {
     /**
      * Force cookies to be reset to prevent panva from keeping
      * a session open if you use several service provider in a row
      * @param ctx
      */
+    this.oidcProvider.clearCookies(res);
     req.headers.cookie = '';
   }
 
@@ -200,29 +202,43 @@ export class CoreOidcProviderMiddlewareService {
     const spAmrIsAuthorized = spClaimsAuthorized.includes('amr');
 
     if (!spAmrIsAuthorized) {
+      ctx.oidc['isError'] = true;
       const exception = new CoreClaimAmrException();
       this.oidcErrorService.throwError(ctx, exception);
     }
   }
 
-  protected tokenMiddleware(ctx) {
+  protected async tokenMiddleware(ctx: OidcCtx) {
     try {
       this.bindSessionId(ctx);
+
+      const sessionOidc = SessionService.getBoundSession<OidcClientSession>(
+        ctx.req,
+        'OidcClient',
+      );
+
+      const { AccessToken } = ctx.oidc.entities;
+      const atHash = atHashFromAccessToken(AccessToken);
+
+      await sessionOidc.setAlias(atHash);
+
       const eventContext = this.getEventContext(ctx);
       const { SP_REQUESTED_FC_TOKEN } = this.tracking.TrackedEventsMap;
-      this.tracking.track(SP_REQUESTED_FC_TOKEN, eventContext);
+      await this.tracking.track(SP_REQUESTED_FC_TOKEN, eventContext);
     } catch (exception) {
+      ctx.oidc['isError'] = true;
       this.oidcErrorService.throwError(ctx, exception);
     }
   }
 
-  protected userinfoMiddleware(ctx) {
+  protected async userinfoMiddleware(ctx) {
     try {
       this.bindSessionId(ctx);
       const eventContext = this.getEventContext(ctx);
       const { SP_REQUESTED_FC_USERINFO } = this.tracking.TrackedEventsMap;
-      this.tracking.track(SP_REQUESTED_FC_USERINFO, eventContext);
+      await this.tracking.track(SP_REQUESTED_FC_USERINFO, eventContext);
     } catch (exception) {
+      ctx.oidc['isError'] = true;
       this.oidcErrorService.throwError(ctx, exception);
     }
   }

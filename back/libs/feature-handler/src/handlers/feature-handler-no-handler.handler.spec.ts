@@ -28,11 +28,8 @@ describe('FeatureHandlerNoHandler', () => {
     });
 
     it('should return a null value', async () => {
-      // Given
-      const result = service.handle();
-      await result;
-      // Then
-      expect(result).resolves.toEqual(null);
+      // Given / When / Then
+      await expect(service.handle()).resolves.toEqual(null);
     });
   });
 });

@@ -46,7 +46,7 @@ export class ForbidRefreshInterceptor implements NestInterceptor {
     if (!req.sessionId) {
       return;
     }
-    const session = SessionService.getBoundedSession<OidcSession>(
+    const session = SessionService.getBoundSession<OidcSession>(
       req,
       'OidcClient',
     );

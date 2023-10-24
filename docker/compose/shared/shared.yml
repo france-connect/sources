@@ -15,7 +15,6 @@ services:
   # Shared Services
   ####################
 
-
   rp-all:
     image: nginx:1.14.2
     container_name: fc-rp-all
@@ -123,7 +122,7 @@ services:
           - fc-exploitation.docker.dev-franceconnect.fr
           - fc-support.docker.dev-franceconnect.fr
           - tracks-data-provider.docker.dev-franceconnect.fr
-          - ud.docker.dev-franceconnect.fr 
+          - ud.docker.dev-franceconnect.fr
           - maildev.docker.dev-franceconnect.fr
           - partenaires.docker.dev-franceconnect.fr
       fc:
@@ -193,7 +192,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-
 
   ####################
   # Data storage
@@ -290,7 +288,7 @@ services:
   ####################
   # HSM
   ####################
-  
+
   hsm:
     image: ${FC_DOCKER_REGISTRY}/softhsm
     networks:
@@ -343,7 +341,7 @@ services:
   ####################
   # Shared Mocks
   ####################
-  
+
   openldap:
     image: ${FC_DOCKER_REGISTRY}/openldap:0.2
     networks:
@@ -359,7 +357,7 @@ services:
       - data
       - public
 
- # New implementation in monorepo 
+  # New implementation in monorepo
   mock-rnipp:
     hostname: mock-rnipp
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
@@ -380,7 +378,7 @@ services:
       - public
     command: "pm2 logs"
 
- # Old implementation in specific repo
+  # Old implementation in specific repo
   rnipp:
     hostname: rnipp
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
@@ -405,7 +403,6 @@ services:
       - public
     command: "tail -f /dev/null"
 
-
   ####################
   # Tracks related services
   ####################
@@ -421,7 +418,7 @@ services:
       - "${VOLUMES_DIR}/elasticsearch/config/elasticsearch.key:/usr/share/elasticsearch/config/elasticsearch.key:ro"
       - "${VOLUMES_DIR}/elasticsearch/index/:/index"
       - "${VOLUMES_DIR}/elasticsearch/ingest_pipelines:/ingest_pipelines"
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     networks:
       - data
       - public
@@ -445,7 +442,7 @@ services:
       - "${VOLUMES_DIR}/app:/opt/scripts"
       - "${VOLUMES_DIR}/log/:/var/log/app"
       - "${VOLUMES_DIR}/.home:/home"
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/tracks-data-provider.env"
@@ -467,11 +464,11 @@ services:
       - "csmr-account-high"
       - "elasticsearch"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
       - "${VOLUMES_DIR}/maxmind/database/GeoLite2-City:/var/geoipdb"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
@@ -517,11 +514,11 @@ services:
       - "broker"
       - "mongo-fcp-low"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
@@ -550,11 +547,11 @@ services:
       - "broker"
       - "mongo-fcp-high"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/mongo-high.env"
@@ -573,7 +570,7 @@ services:
     networks:
       - data
     command: "pm2 logs"
- 
+
   csmr-user-preferences-high:
     hostname: csmr-user-preferences-high
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev

@@ -4,7 +4,6 @@
 import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
-import { AppConfig } from '@fc/app';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
 import { LoggerConfig } from '@fc/logger-legacy';
 import { MailerConfig } from '@fc/mailer';
@@ -14,6 +13,8 @@ import { RabbitmqConfig } from '@fc/rabbitmq';
 import { RedisConfig } from '@fc/redis';
 import { SessionConfig } from '@fc/session';
 import { TrackingConfig } from '@fc/tracking';
+
+import { AppConfig } from './app-config.dto';
 
 export class UserDashboardConfig {
   @IsObject()

@@ -24,7 +24,7 @@ export class CryptoOverrideService {
     this.logger.setContext(this.constructor.name);
   }
 
-  onModuleInit() {
+  async onModuleInit() {
     /**
      * Override dependecies
      * Function has to be wrapped at init time,
@@ -32,7 +32,7 @@ export class CryptoOverrideService {
      * @see your main.ts file
      */
     this.registerOverride('crypto.sign');
-    this.broker.connect();
+    await this.broker.connect();
   }
 
   onModuleDestroy() {
@@ -76,6 +76,8 @@ export class CryptoOverrideService {
    * @param {string} digest default to sha256 (Cf. crypto.createSign)
    * @returns {Promise<Buffer>} Retuns a Promise with signed data or an error Exception.
    */
+  // Actually returns a promise
+  // eslint-disable-next-line require-await
   async sign(
     _unusedKey: any,
     dataBuffer: Buffer,

@@ -1,8 +1,8 @@
 db.provider.update(
-  { uid: "idp-test-update" },
+  { uid: "ebe0026f-d6e3-4807-bfa2-c65c8ae46d07" },
   {
     _id: ObjectId("5eedbcb60c59aa5a1f1a56e3"),
-    uid: "idp-test-update",
+    uid: "ebe0026f-d6e3-4807-bfa2-c65c8ae46d07",
     name: "idp-test-update",
     active: false,
     display: true,
@@ -44,14 +44,14 @@ db.provider.update(
       "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
-  { upsert: true }
+  { upsert: true },
 );
 
 db.ministries.update(
   { id: "mock-ministere-de-la-transition-ecologique-all-fis-sort-2" },
   {
     $push: {
-      identityProviders: "idp-test-update",
+      identityProviders: "ebe0026f-d6e3-4807-bfa2-c65c8ae46d07",
     },
-  }
+  },
 );

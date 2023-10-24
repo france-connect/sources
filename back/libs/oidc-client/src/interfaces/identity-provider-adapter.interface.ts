@@ -7,4 +7,6 @@ export interface IIdentityProviderAdapter {
     id: string,
     refreshCache?: boolean,
   ): Promise<IdentityProviderMetadata>;
+
+  isActiveById(id: string): Promise<boolean>;
 }

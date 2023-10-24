@@ -9,7 +9,11 @@ import { RedisModule } from '@fc/redis';
 
 import { SessionTemplateInterceptor } from './interceptors';
 import { ISessionOptions } from './interfaces';
-import { SessionCsrfService, SessionService } from './services';
+import {
+  SessionCsrfService,
+  SessionService,
+  SessionTemplateService,
+} from './services';
 import { SESSION_TOKEN_OPTIONS } from './tokens';
 
 @Module({})
@@ -30,9 +34,11 @@ export class SessionModule {
         },
         SessionService,
         SessionCsrfService,
+        SessionTemplateService,
       ],
       exports: [
         SessionService,
+        SessionTemplateService,
         SessionCsrfService,
         RedisModule,
         CryptographyModule,

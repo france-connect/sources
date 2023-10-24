@@ -12,6 +12,8 @@ import {
 } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { OidcClientController } from './oidc-client.controller';
 
 describe('OidcClient Controller', () => {
@@ -36,10 +38,7 @@ describe('OidcClient Controller', () => {
     trace: jest.fn(),
   } as unknown as LoggerService;
 
-  const sessionServiceMock = {
-    set: jest.fn(),
-    get: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const sessionCsrfServiceMock = {
     get: jest.fn(),

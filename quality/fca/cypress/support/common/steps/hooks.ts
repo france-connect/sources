@@ -3,6 +3,7 @@ import { Before } from 'cypress-cucumber-preprocessor/steps';
 import {
   addFCBasicAuthorization,
   clearAllCookies,
+  clearBusinessLog,
   forceSameSiteNone,
   getDefaultIdentityProvider,
   getDefaultServiceProvider,
@@ -71,7 +72,9 @@ beforeEach(function () {
   // Avoid cookies side-effect by clearing cookies on all domains
   clearAllCookies();
 
-  if (testEnv === 'integ01') {
+  if (testEnv === 'docker') {
+    clearBusinessLog();
+  } else if (testEnv === 'integ01') {
     // Setup interceptions to override set-cookie samesite values
     const crossDomains = {
       AC: 'dev-agentconnect.fr',

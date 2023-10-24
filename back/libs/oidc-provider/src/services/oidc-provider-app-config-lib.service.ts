@@ -74,7 +74,7 @@ export abstract class OidcProviderAppConfigLibService
    * @TODO #109 Check the behaving of the page when javascript is disabled
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/issues/109
    */
-  async postLogoutSuccessSource(ctx: KoaContextWithOIDC) {
+  postLogoutSuccessSource(ctx: KoaContextWithOIDC) {
     ctx.body = `<!DOCTYPE html>
         <head>
           <title>Déconnexion</title>
@@ -186,13 +186,13 @@ export abstract class OidcProviderAppConfigLibService
     this.provider = provider;
   }
 
-  logoutFormSessionDestroy(
+  async logoutFormSessionDestroy(
     ctx: KoaContextWithOIDC,
     form: any,
     session: ISessionService<OidcClientSession>,
     { method, uri, title }: LogoutFormParamsInterface,
-  ): void {
-    session.set('oidcProviderLogoutForm', form);
+  ): Promise<void> {
+    await session.set('oidcProviderLogoutForm', form);
 
     ctx.body = `<!DOCTYPE html>
       <head>
@@ -228,6 +228,8 @@ export abstract class OidcProviderAppConfigLibService
     }
   }
 
+  // Needed for consistent typing
+  // eslint-disable-next-line require-await
   protected async formatAccount(sessionId, spIdentity, subSp) {
     return {
       /**
@@ -235,6 +237,8 @@ export abstract class OidcProviderAppConfigLibService
        * @see OidcProviderService.finishInteraction()
        */
       accountId: sessionId,
+      // Needed to match panva interface
+      // eslint-disable-next-line require-await
       async claims() {
         return { ...spIdentity, sub: subSp };
       },

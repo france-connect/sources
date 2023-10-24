@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
+import { atHashFromAccessToken } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
 import {
   OidcCtx,
@@ -14,11 +15,15 @@ import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter
 import { SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { CoreClaimAmrException } from '../exceptions';
 import { pickAcr } from '../transforms';
 import { CoreOidcProviderMiddlewareService } from './core-oidc-provider-middleware.service';
 
 jest.mock('../transforms');
+
+jest.mock('@fc/oidc');
 
 describe('CoreOidcProviderMiddlewareService', () => {
   let service: CoreOidcProviderMiddlewareService;
@@ -29,18 +34,14 @@ describe('CoreOidcProviderMiddlewareService', () => {
     trace: jest.fn(),
   };
 
-  const sessionServiceMock = {
-    get: jest.fn(),
-    reset: jest.fn(),
-    set: jest.fn(),
-    getSessionIdFromCookie: jest.fn(),
-    init: jest.fn(),
-    bindToRequest: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
+
+  const atHashFromAccessTokenMock = jest.mocked(atHashFromAccessToken);
 
   const oidcProviderServiceMock = {
     getInteractionIdFromCtx: jest.fn(),
     registerMiddleware: jest.fn(),
+    clearCookies: jest.fn(),
   };
 
   const serviceProviderServiceMock = {
@@ -76,6 +77,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
     getKnownAcrValues: jest.fn(),
   };
 
+  const atHashMock = 'atHashMock value';
   const sessionIdMock = 'session-id-mock';
   const spAcrMock = 'eidas3';
   const spIdMock = 'spIdValue';
@@ -135,6 +137,12 @@ describe('CoreOidcProviderMiddlewareService', () => {
     service = module.get<CoreOidcProviderMiddlewareService>(
       CoreOidcProviderMiddlewareService,
     );
+
+    atHashFromAccessTokenMock.mockReturnValue(atHashMock);
+
+    SessionService.getBoundSession = jest
+      .fn()
+      .mockReturnValue(sessionServiceMock);
   });
 
   it('should be defined', () => {
@@ -234,7 +242,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
         .fn()
         .mockReturnValueOnce(eventContextMock);
       // When
-      service['trackAuthorize'](ctxMock);
+      await service['trackAuthorize'](ctxMock);
       // Then
       expect(service['tracking'].track).toHaveBeenCalledTimes(1);
       expect(service['tracking'].track).toHaveBeenCalledWith(
@@ -690,33 +698,56 @@ describe('CoreOidcProviderMiddlewareService', () => {
   });
 
   describe('tokenMiddleware()', () => {
-    beforeEach(() => {
-      service['bindSessionId'] = jest.fn();
-    });
-    it('should publish a token event', async () => {
-      // Given
-      const eventCtxMock: TrackedEventContextInterface = {
-        fc: { interactionId: interactionIdValueMock },
+    // Given
+    const eventCtxMock: TrackedEventContextInterface = {
+      fc: { interactionId: interactionIdValueMock },
+      headers: {
+        'x-forwarded-for': '123.123.123.123',
+        'x-forwarded-source-port': '443',
+        'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
+      },
+    };
+    const ctxMock = {
+      req: {
         headers: {
           'x-forwarded-for': '123.123.123.123',
           'x-forwarded-source-port': '443',
           'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
         },
-      };
-      const ctxMock = {
-        req: {
-          headers: {
-            'x-forwarded-for': '123.123.123.123',
-            'x-forwarded-source-port': '443',
-            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
-          },
-          // oidc
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          query: { acr_values: 'eidas3', client_id: 'foo' },
-        },
-        res: {},
-      };
+        // oidc
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        query: { acr_values: 'eidas3', client_id: 'foo' },
+      },
+      res: {},
+      oidc: {
+        entities: {},
+      },
+    } as unknown as OidcCtx;
 
+    beforeEach(() => {
+      service['bindSessionId'] = jest.fn();
+    });
+
+    it('should create a session alias based on at_hash', async () => {
+      // Given
+      service['getEventContext'] = jest
+        .fn()
+        .mockReturnValue(eventCtxMock as TrackedEventContextInterface);
+
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        name: 'name',
+      });
+
+      // When
+      await service['tokenMiddleware'](ctxMock);
+
+      // Then
+      expect(sessionServiceMock.setAlias).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.setAlias).toHaveBeenCalledWith(atHashMock);
+    });
+
+    it('should publish a token event', async () => {
+      // Given
       service['getEventContext'] = jest
         .fn()
         .mockReturnValue(eventCtxMock as TrackedEventContextInterface);
@@ -725,7 +756,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
         name: 'name',
       });
       // When
-      service['tokenMiddleware'](ctxMock);
+      await service['tokenMiddleware'](ctxMock);
       // Then
       expect(trackingMock.track).toHaveBeenCalledTimes(1);
       expect(service['getEventContext']).toHaveBeenCalledTimes(1);
@@ -738,17 +769,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
     it('should call throwError if getEventContext failed', async () => {
       // Given
-      const ctxMock: any = {
-        not: 'altered',
-        req: {
-          headers: {
-            'x-forwarded-for': '123.123.123.123',
-            'x-forwarded-source-port': '443',
-            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
-          },
-        },
-      };
-
       const errorMock = new Error('unknowError');
 
       service['getEventContext'] = jest.fn().mockImplementationOnce(() => {
@@ -769,16 +789,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
     it('should call throwError if tracking.track throw an error', async () => {
       // Given
       const unknownError = new Error('Unknown Error');
-      const ctxMock: any = {
-        not: 'altered',
-        req: {
-          headers: {
-            'x-forwarded-for': '123.123.123.123',
-            'x-forwarded-source-port': '443',
-            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
-          },
-        },
-      };
 
       trackingMock.track.mockImplementationOnce(() => {
         throw unknownError;
@@ -801,7 +811,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
     beforeEach(() => {
       service['bindSessionId'] = jest.fn();
     });
-    it('should publish a token event', () => {
+    it('should publish a token event', async () => {
       // Given
       const ctxMock = {
         req: {
@@ -823,7 +833,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
         },
       });
       // When
-      service['userinfoMiddleware'](ctxMock);
+      await service['userinfoMiddleware'](ctxMock);
       // Then
       expect(trackingMock.track).toHaveBeenCalledTimes(1);
       expect(trackingMock.track).toHaveBeenCalledWith(
@@ -832,9 +842,10 @@ describe('CoreOidcProviderMiddlewareService', () => {
       );
     });
 
-    it('should call throwError if getEventContext fail', () => {
+    it('should set oidc error if getEventContext failed', async () => {
       // Given
       const ctxMock: any = {
+        oidc: {},
         not: 'altered',
         req: {
           headers: {
@@ -851,7 +862,32 @@ describe('CoreOidcProviderMiddlewareService', () => {
         throw errorMock;
       });
       // When
-      service['userinfoMiddleware'](ctxMock);
+      await service['userinfoMiddleware'](ctxMock);
+      // Then
+      expect(ctxMock.oidc.isError).toBe(true);
+    });
+
+    it('should call throwError if getEventContext fail', async () => {
+      // Given
+      const ctxMock: any = {
+        oidc: {},
+        not: 'altered',
+        req: {
+          headers: {
+            'x-forwarded-for': '123.123.123.123',
+            'x-forwarded-source-port': '443',
+            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
+          },
+        },
+      };
+
+      const errorMock = new Error('unknowError');
+
+      service['getEventContext'] = jest.fn().mockImplementationOnce(() => {
+        throw errorMock;
+      });
+      // When
+      await service['userinfoMiddleware'](ctxMock);
       // Then
       expect(service['getEventContext']).toHaveBeenCalledTimes(1);
       expect(service['oidcErrorService']['throwError']).toHaveBeenNthCalledWith(
@@ -861,9 +897,10 @@ describe('CoreOidcProviderMiddlewareService', () => {
       );
     });
 
-    it('should call throwError if tracking.track throw an error', () => {
+    it('should call throwError if tracking.track throw an error', async () => {
       // Given
       const ctxMock: any = {
+        oidc: {},
         not: 'altered',
         req: {
           headers: {
@@ -882,7 +919,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
         throw errorMock;
       });
       // When
-      service['userinfoMiddleware'](ctxMock);
+      await service['userinfoMiddleware'](ctxMock);
       // Then
       expect(service['getEventContext']).toHaveBeenCalledTimes(1);
       expect(service['oidcErrorService']['throwError']).toHaveBeenNthCalledWith(
@@ -930,7 +967,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
         .fn()
         .mockReturnValueOnce(eventContextMock);
       // When
-      service['trackSso'](ctxMock);
+      await service['trackSso'](ctxMock);
       // Then
       expect(service['tracking'].track).toHaveBeenCalledTimes(1);
       expect(service['tracking'].track).toHaveBeenCalledWith(

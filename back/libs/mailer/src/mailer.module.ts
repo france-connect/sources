@@ -13,7 +13,7 @@ import { MailerService, SmtpService, TemplateService } from './services';
   imports: [
     NestMailerModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         const {
           from: { name, email },
           options,

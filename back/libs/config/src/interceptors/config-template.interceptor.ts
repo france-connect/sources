@@ -15,10 +15,7 @@ import { TemplateExposedType } from '../types';
 export class ConfigTemplateInterceptor implements NestInterceptor {
   constructor(private readonly config: ConfigService) {}
 
-  async intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Promise<Observable<any>> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const res = context.switchToHttp().getResponse();
     const { templateExposed } = this.config.get<ConfigConfig>('Config');
 

@@ -10,6 +10,8 @@ import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter
 import { ISessionService, SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { CoreFcaVerifyService } from './core-fca-verify.service';
 
 describe('CoreFcaVerifyService', () => {
@@ -26,10 +28,7 @@ describe('CoreFcaVerifyService', () => {
     trackVerified: jest.fn(),
   };
 
-  const sessionServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const trackingServiceMock: TrackingService = {
     track: jest.fn(),

@@ -33,6 +33,21 @@ export class ApacheIgniteService {
     );
   }
 
+  onModuleInit(): void {
+    this.logger.debug('onModuleInit');
+
+    this.retryApacheIgnite(this.triggerIgnite.bind(this));
+  }
+
+  /**
+   * Disconnect the apache ignite cache instance
+   * @returns A promise that resolves when the cache is disconnected
+   */
+  onModuleDestroy(): unknown {
+    this.clearRetryApacheIgnite();
+    return this.igniteClient.disconnect();
+  }
+
   /**
    * Connect to the apache ignite server defined in the configuration and the
    * client initialized by the constructor
@@ -71,20 +86,6 @@ export class ApacheIgniteService {
       socketKeepAlive.enable,
       socketKeepAlive.initialDelay,
     );
-  }
-  async onModuleInit(): Promise<void> {
-    this.logger.debug('onModuleInit');
-
-    this.retryApacheIgnite(this.triggerIgnite.bind(this));
-  }
-
-  /**
-   * Disconnect the apache ignite cache instance
-   * @returns A promise that resolves when the cache is disconnected
-   */
-  async onModuleDestroy(): Promise<unknown> {
-    this.clearRetryApacheIgnite();
-    return this.igniteClient.disconnect();
   }
 
   /**

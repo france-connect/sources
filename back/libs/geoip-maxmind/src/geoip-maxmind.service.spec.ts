@@ -95,7 +95,7 @@ describe('GeoipMaxmindService', () => {
   });
 
   describe('getCityName()', () => {
-    it('should retrieve city name from "fr" object city name', async () => {
+    it('should retrieve city name from "fr" object city name', () => {
       // Given
       const dataGeoipMock = {
         city: { names: { fr: 'Fizz' } },
@@ -109,7 +109,7 @@ describe('GeoipMaxmindService', () => {
       expect(result).toStrictEqual('Fizz');
     });
 
-    it('should retrieve city name from "en" object city name', async () => {
+    it('should retrieve city name from "en" object city name', () => {
       // Given
       const dataGeoipMock = {
         city: { names: { en: 'Buz' } },
@@ -123,7 +123,7 @@ describe('GeoipMaxmindService', () => {
       expect(result).toStrictEqual('Buz');
     });
 
-    it('should return undefined city name if no name found', async () => {
+    it('should return undefined city name if no name found', () => {
       // Given
       const dataGeoipMock = {
         city: { names: { pt: 'Foo' } },
@@ -148,7 +148,7 @@ describe('GeoipMaxmindService', () => {
   });
 
   describe('getCountryIsoCode()', () => {
-    it('should retrieve country iso code', async () => {
+    it('should retrieve country iso code', () => {
       // Given
       const dataGeoipMock = {
         country: { isoCode: 'FR' },
@@ -162,7 +162,7 @@ describe('GeoipMaxmindService', () => {
       expect(result).toStrictEqual('FR');
     });
 
-    it('should return undefined country iso code if no one found', async () => {
+    it('should return undefined country iso code if no one found', () => {
       // Given
       const dataGeoipMock = {
         country: 'FR',

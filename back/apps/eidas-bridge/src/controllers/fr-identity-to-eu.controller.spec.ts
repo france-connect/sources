@@ -3,6 +3,7 @@ import { Request } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
+import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
 import { EidasAttributes, EidasRequest } from '@fc/eidas';
@@ -21,8 +22,9 @@ import {
 import { SessionNotFoundException, SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { EidasBridgeIdentityDto } from '../dto';
-import { IDP_ID } from '../enums';
 import { EidasBridgeInvalidFRIdentityException } from '../exceptions';
 import { FrIdentityToEuController } from './fr-identity-to-eu.controller';
 
@@ -65,15 +67,9 @@ describe('FrIdentityToEuController', () => {
     mapPartialResponseSuccess: jest.fn(),
   };
 
-  const sessionServiceOidcMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
+  const sessionServiceOidcMock = getSessionServiceMock();
 
-  const sessionServiceEidasMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
+  const sessionServiceEidasMock = getSessionServiceMock();
 
   const oidcErrorMock = {
     error: 'error',
@@ -83,7 +79,7 @@ describe('FrIdentityToEuController', () => {
 
   const interactionIdMock = 'interactionIdMockValue';
   const acrMock = 'eidas2';
-  const providerUidMock = 'envIssuer';
+  const idpIdMock = Symbol('idpIdMock');
   const randomStringMock = 'randomStringMockValue';
   const stateMock = randomStringMock;
   const idpStateMock = 'idpStateMockValue';
@@ -98,7 +94,7 @@ describe('FrIdentityToEuController', () => {
   };
 
   const sessionMockValue = {
-    idpId: providerUidMock,
+    idpId: idpIdMock,
     idpNonce: idpNonceMock,
     idpState: idpStateMock,
   };
@@ -121,6 +117,10 @@ describe('FrIdentityToEuController', () => {
     TrackedEventsMap: {},
   };
 
+  const configServiceMock = {
+    get: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -130,6 +130,7 @@ describe('FrIdentityToEuController', () => {
       providers: [
         OidcClientService,
         OidcClientConfigService,
+        ConfigService,
         LoggerService,
         SessionService,
         CryptographyService,
@@ -143,6 +144,8 @@ describe('FrIdentityToEuController', () => {
       .useValue(oidcClientServiceMock)
       .overrideProvider(OidcClientConfigService)
       .useValue(oidcClientConfigServiceMock)
+      .overrideProvider(ConfigService)
+      .useValue(configServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
       .overrideProvider(SessionService)
@@ -176,6 +179,9 @@ describe('FrIdentityToEuController', () => {
   describe('initSession', () => {
     beforeEach(() => {
       oidcClientConfigServiceMock.get.mockReturnValue({ stateLength: 32 });
+      frIdentityToEuController['getIdpId'] = jest
+        .fn()
+        .mockReturnValue(idpIdMock);
     });
 
     it('should call oidc config', async () => {
@@ -202,6 +208,15 @@ describe('FrIdentityToEuController', () => {
       expect(cryptographyMock.genRandomString).toHaveBeenCalledWith(randSize);
     });
 
+    it('should get IdP id from app config', async () => {
+      // When
+      await frIdentityToEuController.initSession(sessionServiceOidcMock);
+
+      // Then
+      expect(frIdentityToEuController['getIdpId']).toHaveBeenCalledTimes(1);
+      expect(frIdentityToEuController['getIdpId']).toHaveBeenCalledWith();
+    });
+
     it('Should init the session', async () => {
       // setup
       sessionServiceOidcMock.set.mockResolvedValueOnce(undefined);
@@ -213,7 +228,7 @@ describe('FrIdentityToEuController', () => {
       // assert
       expect(sessionServiceOidcMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceOidcMock.set).toHaveBeenCalledWith({
-        idpId: IDP_ID,
+        idpId: idpIdMock,
         idpState: 'random',
       });
     });
@@ -260,6 +275,9 @@ describe('FrIdentityToEuController', () => {
       oidcClientServiceMock.utils.getAuthorizeUrl.mockReturnValueOnce(
         authorizeUrlMock,
       );
+      frIdentityToEuController['getIdpId'] = jest
+        .fn()
+        .mockReturnValue(idpIdMock);
     });
 
     it('Should get the eidas request from the session', async () => {
@@ -317,7 +335,7 @@ describe('FrIdentityToEuController', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: oidcRequestMock.acr_values,
         nonce: idpNonceMock,
-        idpId: IDP_ID,
+        idpId: idpIdMock,
         scope: oidcRequestMock.scope.join(' '),
         state: 'state',
       };
@@ -345,6 +363,19 @@ describe('FrIdentityToEuController', () => {
         scope: authorizeParametersMock.scope,
         state: authorizeParametersMock.state,
       });
+    });
+
+    it('should get IdP id from app config', async () => {
+      // When
+      await frIdentityToEuController.redirectToFcAuthorize(
+        req,
+        sessionServiceOidcMock,
+        sessionServiceEidasMock,
+      );
+
+      // Then
+      expect(frIdentityToEuController['getIdpId']).toHaveBeenCalledTimes(1);
+      expect(frIdentityToEuController['getIdpId']).toHaveBeenCalledWith();
     });
 
     it('Should patch the session', async () => {
@@ -797,6 +828,31 @@ describe('FrIdentityToEuController', () => {
 
       // Then
       expect(result).toBe(subComputedMock);
+    });
+  });
+
+  describe('getIdpId()', () => {
+    beforeEach(() => {
+      configServiceMock.get.mockReturnValueOnce({
+        idpId: idpIdMock,
+      });
+    });
+
+    it('should get the idpId from the config', () => {
+      // When
+      frIdentityToEuController['getIdpId']();
+
+      // Then
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('App');
+    });
+
+    it('should return the idpId from the config', () => {
+      // When
+      const result = frIdentityToEuController['getIdpId']();
+
+      // Then
+      expect(result).toBe(idpIdMock);
     });
   });
 });

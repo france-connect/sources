@@ -73,12 +73,12 @@ describe('ConfigTemplateInterceptor', () => {
       expect(nextMock.handle).toHaveBeenCalledTimes(1);
     });
 
-    it('should call getConfigParts before next.handle()', async () => {
+    it('should call getConfigParts before next.handle()', () => {
       // Given
       interceptor['getConfigParts'] = jest.fn();
 
       // When
-      await interceptor.intercept(contextMock, nextMock);
+      interceptor.intercept(contextMock, nextMock);
 
       // Then
       expect(interceptor['getConfigParts']).toHaveBeenCalledTimes(1);
@@ -88,7 +88,7 @@ describe('ConfigTemplateInterceptor', () => {
       expect(nextMock.handle).toHaveBeenCalledTimes(1);
     });
 
-    it('should set res.locals.config to returned value from call to getConfigParts()', async () => {
+    it('should set res.locals.config to returned value from call to getConfigParts()', () => {
       // Given
       const getConfigPartsMockedReturn = Symbol(
         'getConfigPartsMockedReturnValue',
@@ -105,7 +105,7 @@ describe('ConfigTemplateInterceptor', () => {
   });
 
   describe('fillObject', () => {
-    it('should return partial object', async () => {
+    it('should return partial object', () => {
       // Given
       const source = {
         bar: 'barValue',

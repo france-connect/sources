@@ -40,7 +40,7 @@ describe('TemplateService', () => {
   describe('readFile', () => {
     const templatePath = 'path/exists/and/is/last';
 
-    beforeEach(async () => {
+    beforeEach(() => {
       jest.resetAllMocks();
       jest.restoreAllMocks();
       jest.clearAllMocks();

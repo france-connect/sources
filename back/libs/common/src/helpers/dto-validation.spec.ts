@@ -41,6 +41,8 @@ describe('DtoValidation', () => {
     it('should call "plainToInstance" from "class-transformer" through "getTransformed" call', async () => {
       // setup
       jest.spyOn(ClassTransformer, 'plainToInstance');
+      // Actual async
+      // eslint-disable-next-line require-await
       jest.spyOn(ClassValidator, 'validate').mockImplementation(async () => []);
 
       class TestClass {}
@@ -63,6 +65,8 @@ describe('DtoValidation', () => {
     it('should call "plainToInstance" from "class-transformer" through "getTransformed" call with full options', async () => {
       // setup
       jest.spyOn(ClassTransformer, 'plainToInstance');
+      // Actual async
+      // eslint-disable-next-line require-await
       jest.spyOn(ClassValidator, 'validate').mockImplementation(async () => []);
 
       class TestClass {}

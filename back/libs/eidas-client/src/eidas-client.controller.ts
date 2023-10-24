@@ -91,7 +91,7 @@ export class EidasClientController {
     const trackingContext = { req };
     const { token } = body;
     const { INCOMING_EIDAS_RESPONSE } = this.tracking.TrackedEventsMap;
-    this.tracking.track(INCOMING_EIDAS_RESPONSE, trackingContext);
+    await this.tracking.track(INCOMING_EIDAS_RESPONSE, trackingContext);
 
     const lightResponse = await this.eidasClient.readLightResponseFromCache(
       token,

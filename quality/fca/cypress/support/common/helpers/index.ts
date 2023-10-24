@@ -2,6 +2,7 @@ export * from './accessibility-helper';
 export * from './basic-authorization-helper';
 export * from './cookie-helper';
 export * from './idp-provider';
+export * from './log-helper';
 export * from './navigation-helper';
 export * from './sp-provider';
 export * from './user';

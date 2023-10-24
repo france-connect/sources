@@ -16,4 +16,5 @@ export default {
   },
   name: process.env.APP_NAME,
   urlPrefix: '',
+  passwordVerification: env.boolean('PASSWORD_VERIFICATION'),
 } as AppConfig;

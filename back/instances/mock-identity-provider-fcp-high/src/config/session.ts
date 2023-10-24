@@ -21,7 +21,7 @@ export default {
   prefix: 'FCP-LOW-SESS:',
   cookieOptions,
   cookieSecrets: env.json('COOKIE_SECRETS'),
-  sessionCookieName: 'fc_session_id',
+  sessionCookieName: 'idp_session_id',
   lifetime: 600, // 10 minutes
   sessionIdLength: 64,
   slidingExpiration: true,

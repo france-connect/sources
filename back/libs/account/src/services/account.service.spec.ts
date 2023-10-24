@@ -30,10 +30,14 @@ describe('AccountService', () => {
       return obj;
     }
 
+    // Actually async
+    // eslint-disable-next-line require-await
     static async findOne(...args) {
       return findOneSpy(...args);
     }
 
+    // Actually async
+    // eslint-disable-next-line require-await
     static async findOneAndUpdate(...args) {
       return findOneAndUpdateSpy(...args);
     }
@@ -290,7 +294,7 @@ describe('AccountService', () => {
       const idpListMock = ['foo', 'bar'];
       findOneAndUpdateSpy.mockResolvedValueOnce(null);
       // When/Then
-      expect(
+      await expect(
         service.updatePreferences(identityHashMock, idpListMock, false),
       ).rejects.toThrow(AccountNotFoundException);
     });

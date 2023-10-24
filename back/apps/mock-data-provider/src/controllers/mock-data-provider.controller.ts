@@ -1,8 +1,13 @@
 import { Response } from 'express';
+import { JSONWebKeySet } from 'jose';
 
 import { Controller, Get, Res } from '@nestjs/common';
 
-import { DataProviderAdapterCoreService } from '@fc/data-provider-adapter-core';
+import { ConfigService } from '@fc/config';
+import {
+  DataProviderAdapterCoreConfig,
+  DataProviderAdapterCoreService,
+} from '@fc/data-provider-adapter-core';
 
 import { MockDataProviderRoutes } from '../enums';
 
@@ -10,18 +15,17 @@ import { MockDataProviderRoutes } from '../enums';
 export class MockDataProviderController {
   constructor(
     private readonly dataProviderAdapterCoreService: DataProviderAdapterCoreService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Get(MockDataProviderRoutes.DATA)
   async data(@Res({ passthrough: true }) res: Response): Promise<any> {
     try {
-      const { data, status } =
-        await this.dataProviderAdapterCoreService.checktoken(
-          'unrevelent_mock_access_token',
-        );
+      const claims = await this.dataProviderAdapterCoreService.checktoken(
+        'unrevelent_mock_access_token',
+      );
 
-      res.status(status);
-      return data;
+      return claims;
     } catch (exception) {
       const { error, message, httpStatusCode } = exception;
 
@@ -35,5 +39,14 @@ export class MockDataProviderController {
       res.status(httpStatusCode);
       return result;
     }
+  }
+
+  @Get(MockDataProviderRoutes.JWKS)
+  async jwks(): Promise<JSONWebKeySet> {
+    const { jwks } =
+      await this.configService.get<DataProviderAdapterCoreConfig>(
+        'DataProviderAdapterCore',
+      );
+    return jwks;
   }
 }

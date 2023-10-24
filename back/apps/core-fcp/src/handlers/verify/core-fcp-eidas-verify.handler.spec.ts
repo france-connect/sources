@@ -8,6 +8,8 @@ import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter
 import { SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { CoreFcpEidasVerifyHandler } from './core-fcp-eidas-verify.handler';
 
 describe('CoreFcpEidasVerifyHandler', () => {
@@ -35,10 +37,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
   };
   const getInteractionMock = jest.fn();
 
-  const sessionServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const spIdentityMock = {
     // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -26,7 +26,11 @@ export class OidcSession {
   readonly sessionId?: string;
 
   @IsOptional()
-  @IsUUID()
+  @IsUUID(4)
+  readonly browsingSessionId?: string;
+
+  @IsOptional()
+  @IsUUID(4)
   readonly accountId?: string;
 
   @IsOptional()
@@ -154,9 +158,9 @@ export class OidcSession {
 
   @IsObject()
   @IsOptional()
-  subs?: Record<string, string>;
+  readonly subs?: Record<string, string>;
 
   @IsString()
   @IsOptional()
-  stepRoute?: string;
+  readonly stepRoute?: string;
 }

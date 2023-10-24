@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+
+// Declarative file
 import {
   IsArray,
   IsOptional,

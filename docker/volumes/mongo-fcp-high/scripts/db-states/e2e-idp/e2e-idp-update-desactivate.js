@@ -4,6 +4,6 @@ db.provider.update(
     $set: {
       title: "Idp test Updated, desactivated",
       active: false,
-    }
-  }
-)
+    },
+  },
+);

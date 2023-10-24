@@ -1,10 +1,4 @@
-import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
-
-import { clearAllCookies } from '../helpers';
-
-Given('je supprime tous les cookies', function () {
-  clearAllCookies();
-});
+import { Then, When } from 'cypress-cucumber-preprocessor/steps';
 
 When(/^je rafraîchis la page$/, function () {
   cy.reload();

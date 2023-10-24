@@ -1,6 +1,6 @@
 // == FS
 const fsp = {
-  'FSP1-LOW': {
+  "FSP1-LOW": {
     name: "fsp1-low",
     title: "FSP1 - LOW",
     eidas: 2,
@@ -41,7 +41,7 @@ const fsp = {
       "birth",
       "identite_pivot",
     ],
-    claims: ['amr'],
+    claims: ["amr"],
     id_token_signed_response_alg: "HS256",
     id_token_encrypted_response_alg: "",
     id_token_encrypted_response_enc: "",
@@ -57,7 +57,7 @@ const fsp = {
     ssoDisabled: false,
   },
   // FSP2-LOW - amr not authorized
-  'FSP2-LOW': {
+  "FSP2-LOW": {
     name: "fsp2-low",
     title: "FSP2 - LOW",
     eidas: 2,

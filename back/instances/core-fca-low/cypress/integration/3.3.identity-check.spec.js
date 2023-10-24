@@ -7,7 +7,7 @@ import {
 const scopes = 'openid given_name usual_name uid email';
 
 // -- replace by either `fip1-high` or `fia1-low`
-const idpId = `${Cypress.env('IDP_NAME')}1-low`;
+const idpId = '9c716f61-b8a1-435c-a407-ef4d677ec270';
 
 describe('Identity Check', () => {
   it('should failed when userInfos AgentConnect have missing claims returned from IdP', () => {

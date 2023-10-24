@@ -10,7 +10,7 @@ import {
  * The sub is not link to entityId
  */
 describe.skip('Entity', () => {
-  const idpId = `${Cypress.env('IDP_NAME')}1-low`;
+  const idpId = '9c716f61-b8a1-435c-a407-ef4d677ec270';
 
   it('should have the same client Sub from 2 SP with same entityId', () => {
     basicScenario({

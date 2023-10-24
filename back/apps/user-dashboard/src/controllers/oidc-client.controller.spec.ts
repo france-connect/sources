@@ -16,6 +16,8 @@ import {
 } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { UserDashboardFrontRoutes } from '../enums';
 import { UserDashboardTokenRevocationException } from '../exceptions';
 import { OidcClientController } from './oidc-client.controller';
@@ -61,11 +63,7 @@ describe('OidcClient Controller', () => {
     verbose: jest.fn(),
   } as unknown as LoggerService;
 
-  const sessionServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-    reset: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const sessionCsrfServiceMock = {
     get: jest.fn(),
@@ -81,18 +79,18 @@ describe('OidcClient Controller', () => {
     track: jest.fn(),
   };
 
+  const idpIdMock = 'idpIdMockValue';
   const configMock = {
     urlPrefix: '/api/v2',
     defaultAcrValue: 'eidas3',
     scope: 'openid',
+    idpId: idpIdMock,
   };
 
   const configServiceMock = {
     get: jest.fn(),
   };
 
-  const providerIdMock = 'providerIdMockValue';
-  const idpIdMock = 'idpIdMockValue';
   const queryStringEncodeMock = jest.mocked(encode);
 
   beforeEach(async () => {
@@ -162,12 +160,11 @@ describe('OidcClient Controller', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'acrMock',
       nonce: idpNonceMock,
-      providerUid: providerIdMock,
+      providerUid: configMock.idpId,
       scope: 'scopeMock',
       state: idpStateMock,
     });
 
-    configServiceMock.get.mockReturnValue(configMock);
     sessionCsrfServiceMock.save.mockResolvedValueOnce(true);
   });
 
@@ -176,6 +173,10 @@ describe('OidcClient Controller', () => {
   });
 
   describe('redirectToIdp()', () => {
+    beforeEach(() => {
+      controller['getIdpId'] = jest.fn().mockReturnValue(configMock.idpId);
+    });
+
     it('should call oidc-client-service to retrieve authorize url', async () => {
       // setup
       const body = {
@@ -193,7 +194,7 @@ describe('OidcClient Controller', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         nonce: idpNonceMock,
-        idpId: 'envIssuer',
+        idpId: configMock.idpId,
         scope: 'openid',
         state: idpStateMock,
         prompt: 'login',
@@ -249,7 +250,7 @@ describe('OidcClient Controller', () => {
       // assert
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith({
-        idpId: 'envIssuer',
+        idpId: configMock.idpId,
         idpName: 'nameValue',
         idpLabel: 'titleValue',
         idpNonce: idpNonceMock,
@@ -266,7 +267,7 @@ describe('OidcClient Controller', () => {
         claims: 'any_formatted_json_string',
         csrfToken: 'csrfMockValue',
         nonce: idpNonceMock,
-        providerUid: providerIdMock,
+        providerUid: configMock.idpId,
         scope: 'openid',
       };
       sessionServiceMock.get.mockImplementationOnce(() => {
@@ -289,7 +290,7 @@ describe('OidcClient Controller', () => {
         claims: 'any_formatted_json_string',
         csrfToken: 'csrfMockValue',
         nonce: idpNonceMock,
-        providerUid: providerIdMock,
+        providerUid: configMock.idpId,
         scope: 'openid',
       };
       sessionServiceMock.get.mockReturnValueOnce('spId');
@@ -328,32 +329,29 @@ describe('OidcClient Controller', () => {
   });
 
   describe('getLegacyOidcCallback', () => {
-    it('should extract urlPrefix from app config', async () => {
+    it('should extract urlPrefix from app config', () => {
       // When
-      await controller.getLegacyOidcCallback(req.query, req.params);
+      controller.getLegacyOidcCallback(req.query, req.params);
       // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
       expect(configServiceMock.get).toHaveBeenCalledWith('App');
     });
 
-    it('should build redirect url with encode from querystring', async () => {
+    it('should build redirect url with encode from querystring', () => {
       // When
-      await controller.getLegacyOidcCallback(req.query, req.params);
+      controller.getLegacyOidcCallback(req.query, req.params);
       // Then
       expect(queryStringEncodeMock).toHaveBeenCalledTimes(1);
       expect(queryStringEncodeMock).toHaveBeenCalledWith(req.query);
     });
 
-    it('should redrect to the built oidc callback url', async () => {
+    it('should redrect to the built oidc callback url', () => {
       // Given
       const queryMock = 'first-query-param=first&second-query-param=second';
       queryStringEncodeMock.mockReturnValueOnce(queryMock);
       const redirectOidcCallbackUrl = `${configMock.urlPrefix}/oidc-callback?${queryMock}`;
       // When
-      const result = await controller.getLegacyOidcCallback(
-        req.query,
-        req.params,
-      );
+      const result = controller.getLegacyOidcCallback(req.query, req.params);
       // Then
       expect(result).toEqual({
         statusCode: 302,
@@ -554,16 +552,41 @@ describe('OidcClient Controller', () => {
       );
     });
 
-    it('Should throw mock service provider revoke token exception if error is not an instance of OPError', () => {
+    it('Should throw mock service provider revoke token exception if error is not an instance of OPError', async () => {
       // setup
       const unknowError = { foo: 'bar' };
       const body = { accessToken: 'access_token' };
       oidcClientServiceMock.utils.revokeToken.mockRejectedValue(unknowError);
 
       // assert
-      expect(
-        async () => await controller.revocationToken(res, body),
-      ).rejects.toThrow(UserDashboardTokenRevocationException);
+      await expect(controller.revocationToken(res, body)).rejects.toThrow(
+        UserDashboardTokenRevocationException,
+      );
+    });
+  });
+
+  describe('getIdpId()', () => {
+    beforeEach(() => {
+      configServiceMock.get.mockReturnValueOnce({
+        idpId: idpIdMock,
+      });
+    });
+
+    it('should get the idpId from the config', () => {
+      // When
+      controller['getIdpId']();
+
+      // Then
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('App');
+    });
+
+    it('should return the idpId from the config', () => {
+      // When
+      const result = controller['getIdpId']();
+
+      // Then
+      expect(result).toBe(idpIdMock);
     });
   });
 });

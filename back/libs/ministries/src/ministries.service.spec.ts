@@ -144,13 +144,6 @@ describe('MinistriesService', () => {
   });
 
   describe('findAllMinistries', () => {
-    it('should resolve', async () => {
-      // action
-      const result = service['findAllMinistries']();
-      // expect
-      expect(result).toBeInstanceOf(Promise);
-    });
-
     it('should have called find once', async () => {
       // action
       await service['findAllMinistries']();
@@ -223,13 +216,6 @@ describe('MinistriesService', () => {
       service['findAllMinistries'] = jest
         .fn()
         .mockResolvedValueOnce(ministriesListMock.map(({ _doc }) => _doc));
-    });
-
-    it('should resolve', async () => {
-      // action
-      const result = service.getList();
-      // expect
-      expect(result).toBeInstanceOf(Promise);
     });
 
     it('should return a list of valids ministries', async () => {

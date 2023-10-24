@@ -70,9 +70,11 @@
     "test:e2e:core-fcp-low:open": "cypress open -P instances/core-fcp-low",
     "test:e2e:core-fcp-high:open": "cypress open -P instances/core-fcp-high",
     "test:e2e:eidas-bridge:open": "cypress open -P instances/eidas-bridge",
-    "doc:api": "typedoc",
     "doc:exceptions": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/exceptions/src/cli/export-exceptions",
-    "doc:env": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/config/src/cli/export-env"
+    "doc:env": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/config/src/cli/export-env",
+    "doc": "yarn doc:exceptions && yarn doc:env",
+    "generate-insee:country": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/cog/src/cli/generate-country",
+    "generate-insee:city": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/cog/src/cli/generate-city"
   },
   "resolutions": {
     "cookie-signature": "1.2.0"
@@ -102,6 +104,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.5",
+    "csv-parser": "^3.0.0",
     "deep-freeze": "^0.0.1",
     "fast-csv": "^4.3.6",
     "global-agent": "^3.0.0",
@@ -288,7 +291,10 @@
       "^@fc/oidc-acr(|/.*)$": "<rootDir>/libs/oidc-acr/src/$1",
       "^@fc/flow-steps(|/.*)$": "<rootDir>/libs/flow-steps/src/$1",
       "^@fc/mock-data-provider(|/.*)$": "<rootDir>/apps/mock-data-provider/src/$1",
-      "^@fc/data-provider-adapter-core(|/.*)$": "<rootDir>/libs/data-provider-adapter-core/src/$1"
+      "^@fc/data-provider-adapter-core(|/.*)$": "<rootDir>/libs/data-provider-adapter-core/src/$1",
+      "^@mocks/session(|/.*)$": "<rootDir>/libs/session/.mocks/$1",
+      "^@fc/jwt(|/.*)$": "<rootDir>/libs/jwt/src/$1",
+      "^@mocks/jwt(|/.*)$": "<rootDir>/libs/jwt/.mocks/$1"
     },
     "preset": "ts-jest"
   }

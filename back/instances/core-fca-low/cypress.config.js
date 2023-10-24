@@ -27,7 +27,7 @@ module.exports = defineConfig({
     IDP_NAME_NOT_EXIST: 'not-fia',
     IDP_AVAILABLES: [
       {
-        ID: 'fia1-low',
+        ID: '9c716f61-b8a1-435c-a407-ef4d677ec270',
         IDP_ROOT_URL: 'https://fia1-low.docker.dev-franceconnect.fr',
         IDP_INTERACTION_URL:
           'https://fia1-low.docker.dev-franceconnect.fr/interaction',
@@ -36,7 +36,7 @@ module.exports = defineConfig({
         TITLE: 'Identity Provider 1 - eIDAS faible - ES256',
       },
       {
-        ID: 'fia2-low',
+        ID: '0e7c099f-fe86-49a0-b7d1-19df45397212',
         IDP_ROOT_URL: 'https://fia2-low.docker.dev-franceconnect.fr',
         IDP_INTERACTION_URL:
           'https://fia2-low.docker.dev-franceconnect.fr/interaction',
@@ -45,7 +45,7 @@ module.exports = defineConfig({
         TITLE: 'Identity Provider 2 - eIDAS faible - RS256',
       },
       {
-        ID: 'fia4-low',
+        ID: '87762a76-7da0-442d-8243-5785f859b88b',
         IDP_ROOT_URL: 'https://fia4-low.docker.dev-franceconnect.fr',
         IDP_INTERACTION_URL:
           'https://fia4-low.docker.dev-franceconnect.fr/interaction',
@@ -53,7 +53,7 @@ module.exports = defineConfig({
         TITLE: 'Identity Provider 4 - eIDAS faible - HS256',
       },
       {
-        ID: 'fia5-low',
+        ID: '46f5d9f9-881d-46b1-bdcc-0548913ea443',
         IDP_ROOT_URL: 'https://fia5-low.docker.dev-franceconnect.fr',
         IDP_INTERACTION_URL:
           'https://fia5-low.docker.dev-franceconnect.fr/interaction',

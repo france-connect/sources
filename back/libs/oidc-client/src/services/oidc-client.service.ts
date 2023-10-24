@@ -152,7 +152,7 @@ export class OidcClientService {
     idTokenHint?: TokenSet | string,
     postLogoutRedirectUri?: string,
   ) {
-    return this.utils.getEndSessionUrl(
+    return await this.utils.getEndSessionUrl(
       ipdId,
       stateFromSession,
       idTokenHint,
@@ -161,6 +161,6 @@ export class OidcClientService {
   }
 
   async hasEndSessionUrlFromProvider(ipdId: string): Promise<boolean> {
-    return this.utils.hasEndSessionUrl(ipdId);
+    return await this.utils.hasEndSessionUrl(ipdId);
   }
 }

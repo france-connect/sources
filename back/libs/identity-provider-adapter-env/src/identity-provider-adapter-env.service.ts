@@ -7,42 +7,16 @@ import { asyncFilter, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger-legacy';
-import {
-  ClientMetadata,
-  IdentityProviderMetadata,
-  IssuerMetadata,
-} from '@fc/oidc';
+import { IdentityProviderMetadata } from '@fc/oidc';
 import { IIdentityProviderAdapter } from '@fc/oidc-client';
 
 import {
+  IdentityProviderAdapter,
   IdentityProviderAdapterEnvConfig,
   IdentityProviderAdapterEnvDTO,
 } from './dto';
-import { IdentityProvider } from './enums';
 import { IIdentityProviderAdapterEnv } from './interfaces';
 
-const CLIENT_METADATA = [
-  'client_id',
-  'client_secret',
-  'response_types',
-  'id_token_signed_response_alg',
-  'token_endpoint_auth_method',
-  'revocation_endpoint_auth_method',
-  'id_token_encrypted_response_alg',
-  'id_token_encrypted_response_enc',
-  'userinfo_encrypted_response_alg',
-  'userinfo_encrypted_response_enc',
-  'userinfo_signed_response_alg',
-];
-
-const ISSUER_METADATA = [
-  'issuer',
-  'token_endpoint',
-  'authorization_endpoint',
-  'jwks_uri',
-  'userinfo_endpoint',
-  'end_session_endpoint',
-];
 @Injectable()
 export class IdentityProviderAdapterEnvService
   implements IIdentityProviderAdapter
@@ -58,29 +32,18 @@ export class IdentityProviderAdapterEnvService
   }
 
   private async findAllIdentityProvider(): Promise<
-    IdentityProviderAdapterEnvDTO[]
+    IIdentityProviderAdapterEnv[]
   > {
-    const { discoveryUrl, discovery, provider } =
-      this.config.get<IdentityProviderAdapterEnvConfig>(
-        'IdentityProviderAdapterEnv',
-      );
+    const { list } = this.config.get<IdentityProviderAdapterEnvConfig>(
+      'IdentityProviderAdapterEnv',
+    );
 
-    const configuration = [
-      {
-        uid: IdentityProvider.IDP_ID,
-        name: 'envIssuer',
-        title: 'envIssuer Title',
-        active: true,
-        display: true,
-        discoveryUrl,
-        discovery,
-        ...provider,
-      },
-    ];
-
-    const result: any = await asyncFilter(
-      configuration,
-      async (configuration) => {
+    const result: IdentityProviderAdapter[] = await asyncFilter(
+      list,
+      async ({
+        clientSecretEncryptKey: _clientSecretEncryptKey,
+        ...configuration
+      }) => {
         const errors = await validateDto(
           configuration,
           IdentityProviderAdapterEnvDTO,
@@ -97,7 +60,8 @@ export class IdentityProviderAdapterEnvService
         return errors.length === 0;
       },
     );
-    return result.map((configuration) => configuration);
+
+    return result;
   }
 
   /**
@@ -151,45 +115,30 @@ export class IdentityProviderAdapterEnvService
     return providers.find(({ uid }) => uid === id);
   }
 
-  private legacyToOpenIdPropertyName(
-    source: IIdentityProviderAdapterEnv,
-  ): IdentityProviderMetadata {
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const client_secret = this.decryptClientSecret(source.client_secret);
+  async isActiveById(id: string): Promise<boolean> {
+    const idp = await this.getById(id);
 
-    const result = {
-      ...source,
-      // openid defined property names
+    return Boolean(idp?.active);
+  }
+
+  private legacyToOpenIdPropertyName(
+    list: IdentityProviderAdapter,
+  ): IIdentityProviderAdapterEnv {
+    const { clientSecretEncryptKey, ...configuration } = list;
+
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const client_secret = this.decryptClientSecret(
+      configuration.client.client_secret,
+      clientSecretEncryptKey,
+    );
+
+    const clientLegacyToOpenId = {
+      ...configuration.client,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret,
     };
 
-    /**
-     * @TODO #326 Fix type issues between legacy model and `oidc-client` library
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/merge_requests/326
-     * We have non blocking incompatilities.
-     */
-    return this.toPanvaFormat(result);
-  }
-
-  private toPanvaFormat(result: unknown): IdentityProviderMetadata {
-    const panvaFormatted = {
-      client: {} as ClientMetadata,
-      issuer: {} as IssuerMetadata,
-    };
-
-    Object.entries(result).forEach(([key, value]) => {
-      if (CLIENT_METADATA.includes(key)) {
-        panvaFormatted.client[key] = value;
-      } else if (ISSUER_METADATA.includes(key)) {
-        panvaFormatted.issuer[key] = value;
-      } else {
-        panvaFormatted[key] = value;
-      }
-    });
-
-    return panvaFormatted as IdentityProviderMetadata;
+    return { ...configuration, client: clientLegacyToOpenId };
   }
 
   /**
@@ -197,11 +146,10 @@ export class IdentityProviderAdapterEnvService
    *
    * @param clientSecret
    */
-  private decryptClientSecret(clientSecret: string): string {
-    const { clientSecretEncryptKey } =
-      this.config.get<IdentityProviderAdapterEnvConfig>(
-        'IdentityProviderAdapterEnv',
-      );
+  private decryptClientSecret(
+    clientSecret: string,
+    clientSecretEncryptKey: string,
+  ): string {
     return this.cryptography.decrypt(
       clientSecretEncryptKey,
       Buffer.from(clientSecret, 'base64'),

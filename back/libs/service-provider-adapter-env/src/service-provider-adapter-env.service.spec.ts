@@ -79,7 +79,7 @@ describe('ServiceProviderService', () => {
       ServiceProviderAdapterEnvService,
     );
 
-    configMock.get.mockReturnValue(validServiceProviderMock);
+    configMock.get.mockReturnValue({ list: [validServiceProviderMock] });
   });
 
   it('should be defined', () => {
@@ -93,34 +93,13 @@ describe('ServiceProviderService', () => {
         .mockResolvedValueOnce(serviceProviderListMock);
     });
 
-    it('should resolve', async () => {
-      // setup
-
-      // action
-      const result = service.getList();
-
-      // expect
-      expect(result).toBeInstanceOf(Promise);
-    });
-
     it('should return service provider list', async () => {
-      const expected = [
-        {
-          ...validServiceProviderMock,
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          client_id: '123',
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          client_secret: 'client_secret',
-          scope: 'openid profile',
-        },
-      ];
-      // action
+      // Given
+      const expected = [validServiceProviderMock];
+      // When
       const result = await service.getList();
-
-      // expect
-      expect(result).toEqual(JSON.parse(JSON.stringify(expected)));
+      // Then
+      expect(result).toEqual(expected);
     });
   });
 
@@ -203,30 +182,29 @@ describe('ServiceProviderService', () => {
     ];
 
     it('Should return true because idp1 is blacklist', async () => {
-      // setup
+      // Given
       service.getById = jest.fn().mockReturnValueOnce(spListMock[0]);
-
-      // action
+      // When
       const result = await service.shouldExcludeIdp('wizz', 'idp1');
-
-      // expected
+      // Then
       expect(result).toBe(true);
     });
 
     it('Should return false because idp1 is whitelist', async () => {
-      // setup
+      // Given
       service.getById = jest.fn().mockReturnValueOnce(spListMock[1]);
-
-      // action
+      // When
       const result = await service.shouldExcludeIdp('foo', 'idp1');
-      // expected
+      // Then
       expect(result).toBe(false);
     });
 
     it('Should return false because idp1 is not blacklist', async () => {
+      // Given
       service.getById = jest.fn().mockReturnValueOnce(spListMock[2]);
-
+      // When
       const result = await service.shouldExcludeIdp('bar', 'idp1');
+      // Then
       expect(result).toBe(false);
     });
   });

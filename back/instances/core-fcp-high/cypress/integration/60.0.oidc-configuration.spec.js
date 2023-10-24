@@ -1,5 +1,5 @@
 import {
-  submitFSAuthorizeForm,
+  submitFSAuthorizeForm
 } from './mire.utils';
 
 describe('Update cache', () => {
@@ -14,7 +14,7 @@ describe('Update cache', () => {
     // purposefully corrupting the BDD so that we make the kinematics fail
     cy.e2e('idp_update_wrong_issuer');
 
-    cy.get('#idp-fip2-high').click();
+    cy.get('#idp-f9a3f6fe-f9b3-4cec-b787-33713fdffc79').click();
     cy.get('form').submit();
     cy.url().should('includes', Cypress.env('FC_ROOT_URL'));
 

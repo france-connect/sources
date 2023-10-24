@@ -9,7 +9,7 @@ import { AccountPermission } from '@entities/typeorm';
 import { uuid } from '@fc/common';
 import { LoggerService } from '@fc/logger-legacy';
 import { PartnerAccountSession } from '@fc/partner-account';
-import { SessionService } from '@fc/session';
+import { ISessionRequest, SessionService } from '@fc/session';
 
 import { AccessControlSession, IPermission } from '../interfaces';
 import { AccountPermissionRepository } from '../services';
@@ -27,7 +27,7 @@ export class AccessControlSessionMiddleware
   }
 
   async use(
-    req: IncomingMessage & AccessControlSession,
+    req: ISessionRequest & AccessControlSession,
     _res: Response,
     next: NextFunction,
   ) {
@@ -48,9 +48,9 @@ export class AccessControlSessionMiddleware
   }
 
   private async getAccountIdFromContext(
-    req: IncomingMessage,
+    req: ISessionRequest,
   ): Promise<string | undefined> {
-    const userSession = SessionService.getBoundedSession<PartnerAccountSession>(
+    const userSession = SessionService.getBoundSession<PartnerAccountSession>(
       req,
       'PartnerAccount',
     );

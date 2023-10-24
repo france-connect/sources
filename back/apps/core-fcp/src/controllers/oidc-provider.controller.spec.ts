@@ -17,6 +17,8 @@ import {
 } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { AuthorizeParamsDto } from '../dto';
 import { ConfirmationType, DataType } from '../enums';
 import { CoreFcpInvalidEventKeyException } from '../exceptions';
@@ -28,17 +30,9 @@ jest.mock('@fc/common', () => ({
   validateDto: jest.fn(),
 }));
 
-const sessionServiceMock = {
-  reset: jest.fn(),
-  get: jest.fn(),
-  set: jest.fn(),
-  setAlias: jest.fn(),
-};
+const sessionServiceMock = getSessionServiceMock();
 
-const coreSessionServiceMock = {
-  get: jest.fn(),
-  set: jest.fn(),
-};
+const coreSessionServiceMock = getSessionServiceMock();
 
 const nextMock = jest.fn();
 
@@ -775,6 +769,40 @@ describe('OidcProviderController', () => {
         sessionDataMock,
         coreSessionServiceMock,
       );
+    });
+
+    it('should detach session if sso is not enabled', async () => {
+      // Given
+      const body = { _csrf: randomStringMock };
+      // When
+      await oidcProviderController.getLogin(
+        req,
+        res,
+        body,
+        sessionServiceMock,
+        coreSessionServiceMock,
+      );
+      // Then
+      expect(sessionServiceMock.detach).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.detach).toHaveBeenCalledWith(req, res);
+    });
+
+    it('should not detach session if sso is enabled', async () => {
+      // Given
+      const body = { _csrf: randomStringMock };
+      configServiceMock.get.mockReset().mockReturnValueOnce({
+        enableSso: true,
+      });
+      // When
+      await oidcProviderController.getLogin(
+        req,
+        res,
+        body,
+        sessionServiceMock,
+        coreSessionServiceMock,
+      );
+      // Then
+      expect(sessionServiceMock.detach).not.toHaveBeenCalled();
     });
 
     it('should call oidcProvider.interactionFinish', async () => {

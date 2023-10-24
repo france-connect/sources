@@ -235,6 +235,12 @@ export class IdentityProviderAdapterMongoService
     return provider;
   }
 
+  async isActiveById(id: string): Promise<boolean> {
+    const idp = await this.getById(id);
+
+    return Boolean(idp?.active);
+  }
+
   private legacyToOpenIdPropertyName(
     source: IdentityProvider,
   ): IdentityProviderMetadata {

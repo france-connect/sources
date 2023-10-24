@@ -415,6 +415,18 @@
       "@fc/geoip-maxmind/*": [
         "libs/geoip-maxmind/src/*"
       ],
+      "@fc/jwt": [
+        "libs/jwt/src"
+      ],
+      "@fc/jwt/*": [
+        "libs/jwt/src/*"
+      ],
+      "@mocks/jwt": [
+        "libs/jwt/.mocks"
+      ],      
+      "@mocks/jwt/*": [
+        "libs/jwt/.mocks/*"
+      ],
       "@fc/postgres": [
         "libs/postgres/src"
       ],
@@ -492,7 +504,13 @@
       ],
       "@fc/data-provider-adapter-core/*": [
         "libs/data-provider-adapter-core/src/*"
-      ]
+      ],
+      "@mocks/session": [
+        "libs/session/.mocks"
+      ],      
+      "@mocks/session/*": [
+        "libs/session/.mocks/*"
+      ],
     }
   },
   "files": [

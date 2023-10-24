@@ -26,10 +26,7 @@ export class IsStepInterceptor implements NestInterceptor {
     this.logger.setContext(this.constructor.name);
   }
 
-  async intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Promise<Observable<any>> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const isFlowStep = IsStep.get(this.reflector, context);
 
     if (!isFlowStep) {
@@ -51,7 +48,7 @@ export class IsStepInterceptor implements NestInterceptor {
       return;
     }
 
-    const session = SessionService.getBoundedSession<OidcSession>(
+    const session = SessionService.getBoundSession<OidcSession>(
       req,
       'OidcClient',
     );

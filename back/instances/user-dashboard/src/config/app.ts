@@ -17,4 +17,5 @@ export default {
   },
   fqdn: process.env.FQDN,
   timezone: 'Europe/Paris',
+  idpId: env.string('IDP_ID'),
 } as AppConfig;

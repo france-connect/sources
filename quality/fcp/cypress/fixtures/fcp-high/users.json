@@ -450,6 +450,7 @@
     "claims": {
       "given_name": "javier",
       "family_name": "Garcia",
+      "preferred_username": "Garcia",
       "birthdate": "1964-12-31",
       "gender": "male",
       "birthplace": "Place of Birth"

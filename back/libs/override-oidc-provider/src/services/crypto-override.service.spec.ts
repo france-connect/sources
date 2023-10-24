@@ -77,17 +77,17 @@ describe('CryptoOverrideService', () => {
   });
 
   describe('onModuleInit', () => {
-    it('should call OverrideCode 1 times', () => {
+    it('should call OverrideCode 1 times', async () => {
       // Given
       const OVERRIDE_COUNT = 1;
       // When
-      service.onModuleInit();
+      await service.onModuleInit();
       // Then
       expect(OverrideCodeSpy).toHaveBeenCalledTimes(OVERRIDE_COUNT);
     });
-    it('should call broker.connect', () => {
+    it('should call broker.connect', async () => {
       // When
-      service.onModuleInit();
+      await service.onModuleInit();
       // Then
       expect(brokerMock.connect).toHaveBeenCalledTimes(1);
     });
@@ -135,18 +135,6 @@ describe('CryptoOverrideService', () => {
     const dataMock = Buffer.from('data');
     const digestMock = 'digest';
 
-    it('should return a `Promise` in case of success', async () => {
-      // When
-      const result = service.sign(keyMock, dataMock, digestMock);
-
-      // Then
-      expect(result instanceof Promise);
-      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(2);
-
-      // Clean
-      await result;
-    });
-
     it('should call reject and throw a `CryptoOverrideService` exception in case of failure', async () => {
       // Given
       const badKeyMock = null;
@@ -158,7 +146,7 @@ describe('CryptoOverrideService', () => {
       );
     });
 
-    it('should call signSuccess with error message', async () => {
+    it('should call reject with error message', () => {
       // Given
       const resolveMock = jest.fn();
       const rejectMock = jest.fn();

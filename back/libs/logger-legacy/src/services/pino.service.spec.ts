@@ -56,7 +56,7 @@ describe('PinoAdapterService', () => {
     return service;
   }
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 

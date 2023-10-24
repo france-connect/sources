@@ -133,13 +133,13 @@ describe('ApacheIgniteService', () => {
     let triggerIgniteMock;
     const triggerFn = Symbol('triggerFn');
 
-    beforeEach(async () => {
+    beforeEach(() => {
       retryApacheIgniteMock = service['retryApacheIgnite'] = jest.fn();
       triggerIgniteMock = service['triggerIgnite'] = jest.fn();
       triggerIgniteMock.bind = jest.fn().mockReturnValueOnce(triggerFn);
     });
 
-    it('should log on init module', async () => {
+    it('should log on init module', () => {
       // when
       service['onModuleInit']();
 
@@ -158,7 +158,7 @@ describe('ApacheIgniteService', () => {
   describe('triggerIgnite', () => {
     let connectIgniteMock;
 
-    beforeEach(async () => {
+    beforeEach(() => {
       connectIgniteMock = service['connectIgnite'] = jest.fn();
     });
 
@@ -218,7 +218,7 @@ describe('ApacheIgniteService', () => {
         service['retryOperation'] = null;
       });
 
-      it('should log create retry process', async () => {
+      it('should log create retry process', () => {
         // when
         service['retryApacheIgnite'](functionMock);
 
@@ -229,7 +229,7 @@ describe('ApacheIgniteService', () => {
         );
       });
 
-      it('should retrieve the max retry timeout from the config', async () => {
+      it('should retrieve the max retry timeout from the config', () => {
         // when
         service['retryApacheIgnite'](functionMock);
 
@@ -413,7 +413,7 @@ describe('ApacheIgniteService', () => {
     let triggerIgniteMock;
     const triggerFn = Symbol('triggerFn');
 
-    beforeEach(async () => {
+    beforeEach(() => {
       retryApacheIgniteMock = service['retryApacheIgnite'] = jest.fn();
       triggerIgniteMock = service['triggerIgnite'] = jest.fn();
       triggerIgniteMock.bind = jest.fn().mockReturnValueOnce(triggerFn);

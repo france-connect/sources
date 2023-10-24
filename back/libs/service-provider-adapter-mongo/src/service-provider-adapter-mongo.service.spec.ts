@@ -253,14 +253,6 @@ describe('ServiceProviderAdapterMongoService', () => {
       configMock.get.mockReturnValue({ platform: CORE_FCP });
     });
 
-    it('should resolve', async () => {
-      // action
-      const result = service['findAllServiceProvider']();
-
-      // expect
-      expect(result).toBeInstanceOf(Promise);
-    });
-
     it('should retrieve platform from config', async () => {
       // action
       await service['findAllServiceProvider']();

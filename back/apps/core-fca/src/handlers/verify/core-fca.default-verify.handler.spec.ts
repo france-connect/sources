@@ -6,6 +6,8 @@ import { CryptographyFcaService } from '@fc/cryptography-fca';
 import { LoggerService } from '@fc/logger-legacy';
 import { SessionService } from '@fc/session';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { CoreFcaDefaultVerifyHandler } from './core-fca.default-verify.handler';
 
 describe('CoreFcaDefaultVerifyHandler', () => {
@@ -29,10 +31,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     checkIfAcrIsValid: jest.fn(),
   };
 
-  const sessionServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const spIdentityMock = {
     // eslint-disable-next-line @typescript-eslint/naming-convention

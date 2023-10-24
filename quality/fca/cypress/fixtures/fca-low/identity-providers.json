@@ -1,6 +1,6 @@
 [
   {
-    "idpId": "fia1-low",
+    "idpId": "9c716f61-b8a1-435c-a407-ef4d677ec270",
     "descriptions": [
       "par défaut",
       "actif",
@@ -16,15 +16,18 @@
     "encryption": "",
     "signature": "ES256",
     "selectors": {
-      "idpButton": "#idp-fia1-low",
+      "idpButton": "#idp-9c716f61-b8a1-435c-a407-ef4d677ec270",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fia2-low",
-    "descriptions": ["FI eidas1 avec signature RS256"],
+    "idpId": "0e7c099f-fe86-49a0-b7d1-19df45397212",
+    "descriptions": [
+      "FI eidas1 avec signature RS256",
+      "différent"
+    ],
     "ministry": "MOCK - Ministère de la transition écologique - ALL FIS - SORT 2",
     "title": "Identity Provider 2 - eIDAS faible - RS256",
     "mocked": true,
@@ -34,14 +37,14 @@
     "encryption": "",
     "signature": "RS256",
     "selectors": {
-      "idpButton": "#idp-fia2-low",
+      "idpButton": "#idp-0e7c099f-fe86-49a0-b7d1-19df45397212",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fia3-desactive-visible",
+    "idpId": "405d3839-9182-415f-9926-597489d11509",
     "descriptions": ["désactivé et visible"],
     "ministry": "MOCK - Ministère de la transition écologique - ALL FIS - SORT 2",
     "title": "Identity Provider 3 (désactivé)- eIDAS faible",
@@ -52,11 +55,11 @@
     "encryption": "",
     "signature": "ES256",
     "selectors": {
-      "idpButton": "#idp-fia3-desactive-visible"
+      "idpButton": "#idp-405d3839-9182-415f-9926-597489d11509"
     }
   },
   {
-    "idpId": "fia4-low",
+    "idpId": "87762a76-7da0-442d-8243-5785f859b88b",
     "descriptions": [
       "FI eidas1 avec signature HS256",
       "non whitelisté",
@@ -71,14 +74,14 @@
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "#idp-fia4-low",
+      "idpButton": "#idp-87762a76-7da0-442d-8243-5785f859b88b",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fia5-low",
+    "idpId": "46f5d9f9-881d-46b1-bdcc-0548913ea443",
     "descriptions": [
       "whitelisté",
       "blacklisté"
@@ -92,14 +95,14 @@
     "encryption": "",
     "signature": "RS256",
     "selectors": {
-      "idpButton": "#idp-fia5-low",
+      "idpButton": "#idp-46f5d9f9-881d-46b1-bdcc-0548913ea443",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
     }
   },
   {
-    "idpId": "fia6-active-invisible",
+    "idpId": "ccae1186-3695-4ae2-8b38-d3a9926d92c4",
     "descriptions": ["actif et non visible"],
     "ministry": "MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
     "title": "Identity Provider 6 (non visible)- eIDAS faible",
@@ -110,11 +113,11 @@
     "encryption": "",
     "signature": "ES256",
     "selectors": {
-      "idpButton": "#idp-fia6-active-invisible"
+      "idpButton": "#idp-ccae1186-3695-4ae2-8b38-d3a9926d92c4"
     }
   },
   {
-    "idpId": "fia7-desactive-invisible",
+    "idpId": "b61f31b8-c131-40d0-9eca-109219249db6",
     "descriptions": ["désactivé et non visible"],
     "ministry": "MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
     "title": "Identity Provider 7 (désactivé et non visible)- eIDAS faible",
@@ -125,11 +128,11 @@
     "encryption": "",
     "signature": "ES256",
     "selectors": {
-      "idpButton": "#idp-fia7-desactive-invisible"
+      "idpButton": "#idp-b61f31b8-c131-40d0-9eca-109219249db6"
     }
   },
   {
-    "idpId": "fia8-low",
+    "idpId": "56c5831b-7749-4206-b961-11f840bc566b",
     "descriptions": ["disponible que pour un FS"],
     "ministry": "MOCK - Ministère de l'intérieur - SOME FIS DISABLED - SORT 1",
     "title": "Identity Provider 8 (fsa5 seulement)- eIDAS faible",
@@ -140,7 +143,7 @@
     "encryption": "",
     "signature": "ES256",
     "selectors": {
-      "idpButton": "#idp-fia8-low",
+      "idpButton": "#idp-56c5831b-7749-4206-b961-11f840bc566b",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"

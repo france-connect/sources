@@ -141,7 +141,7 @@ export class OidcToEidasService {
     requestedAttributes: EidasAttributes[],
   ): EidasResponseAttributes {
     return requestedAttributes.reduce(
-      this.getClaimsBoundedClaimsToAttributesReducer(claims),
+      this.getClaimsBoundClaimsToAttributesReducer(claims),
       {},
     );
   }
@@ -150,9 +150,9 @@ export class OidcToEidasService {
    * Bind the claims to the claimsToAttributesReducer
    *
    * @param claims The oidc claims retrieved from the userinfos endpoint
-   * @return The claimsToAttributesReducer with bounded claims
+   * @return The claimsToAttributesReducer with bound claims
    */
-  private getClaimsBoundedClaimsToAttributesReducer(
+  private getClaimsBoundClaimsToAttributesReducer(
     claims: Partial<IOidcIdentity>,
   ) {
     return this.claimsToAttributesReducer.bind(OidcToEidasService, claims);

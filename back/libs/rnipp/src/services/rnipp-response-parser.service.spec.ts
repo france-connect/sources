@@ -65,14 +65,6 @@ describe('RnippResponseParserService', () => {
         .mockReturnValue(rnippIdentityMock);
     });
 
-    it('should return a promise', async () => {
-      // action
-      const result = service.parseRnippData(rnippCorectResponseXml);
-
-      // expect
-      expect(result).toBeInstanceOf(Promise);
-    });
-
     it('should call "parseStringPromise" with the given XML', async () => {
       // action
       await service.parseRnippData(rnippCorectResponseXml);

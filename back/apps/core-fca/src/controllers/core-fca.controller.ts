@@ -25,7 +25,6 @@ import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { MinistriesService } from '@fc/ministries';
-import { OidcSession } from '@fc/oidc';
 import {
   OidcClientConfig,
   OidcClientRoutes,
@@ -38,10 +37,13 @@ import {
   Session,
   SessionBadFormatException,
   SessionCsrfService,
-  SessionNotFoundException,
 } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
+import {
+  GetInteractionOidcClientSessionDto,
+  GetVerifyOidcClientSessionDto,
+} from '../dto';
 import { CoreFcaVerifyService } from '../services';
 
 @Controller()
@@ -208,24 +210,9 @@ export class CoreFcaController {
   async getInteraction(
     @Req() req,
     @Res() res,
-    @Session('OidcClient')
+    @Session('OidcClient', GetInteractionOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const session = await sessionOidc.get();
-    if (!session) {
-      this.logger.trace(
-        { route: CoreRoutes.INTERACTION },
-        LoggerLevelNames.WARN,
-      );
-      throw new SessionNotFoundException('OidcClient');
-    }
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'CoreRoutes.INTERACTION',
-      route: CoreRoutes.INTERACTION,
-      session,
-    });
     const { params } = await this.oidcProvider.getInteraction(req, res);
 
     const { acr_values: acrValues } = params;
@@ -248,13 +235,13 @@ export class CoreFcaController {
       return;
     }
 
-    const { stepRoute } = session;
+    const stepRoute = await sessionOidc.get('stepRoute');
     const isRefresh = stepRoute === CoreRoutes.INTERACTION;
 
     if (!isRefresh) {
       const trackingContext: TrackedEventContextInterface = { req };
       const { FC_SHOWED_IDP_CHOICE } = this.tracking.TrackedEventsMap;
-      this.tracking.track(FC_SHOWED_IDP_CHOICE, trackingContext);
+      await this.tracking.track(FC_SHOWED_IDP_CHOICE, trackingContext);
     }
 
     return {};
@@ -276,16 +263,10 @@ export class CoreFcaController {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
      * @ticket FC-1020
      */
-    @Session('OidcClient')
+    @Session('OidcClient', GetVerifyOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const session: OidcSession = await sessionOidc.get();
-
-    if (!session) {
-      throw new SessionNotFoundException('OidcClient');
-    }
-
-    const { idpId, interactionId, spId, isSso } = session;
+    const { idpId, interactionId, spId, isSso } = await sessionOidc.get();
 
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const params = { urlPrefix, interactionId, sessionOidc };
@@ -295,13 +276,19 @@ export class CoreFcaController {
       const url = await this.coreFcaVerify.handleSsoDisabled(req, params);
       return res.redirect(url);
     }
+    const isIdpActive = await this.identityProvider.isActiveById(idpId);
 
     const isBlackListed = await this.serviceProvider.shouldExcludeIdp(
       spId,
       idpId,
     );
-    if (isBlackListed) {
-      const url = await this.coreVerify.handleBlacklisted(req, params);
+
+    if (isBlackListed || !isIdpActive) {
+      const url = await this.coreVerify.handleUnavailableIdp(
+        req,
+        params,
+        !isIdpActive,
+      );
       return res.redirect(url);
     }
 

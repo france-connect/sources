@@ -161,14 +161,6 @@ describe('MailerService', () => {
       service['transport'] = { send: transportSendMock };
     });
 
-    it('should return a promise', async () => {
-      // action
-      const result = service.send(emailParamsMock);
-
-      // expect
-      expect(result).toBeInstanceOf(Promise);
-    });
-
     it('should call the transport "send" function with the mail parameters', async () => {
       // action
       await service.send(emailParamsMock);
@@ -238,7 +230,7 @@ describe('MailerService', () => {
     const template = 'html file';
     const html = 'Hello world';
 
-    beforeEach(async () => {
+    beforeEach(() => {
       jest.resetAllMocks();
       jest.restoreAllMocks();
       jest.clearAllMocks();
@@ -285,12 +277,12 @@ describe('MailerService', () => {
       );
     });
 
-    it('should throw an error if the file path is not found', () => {
+    it('should throw an error if the file path is not found', async () => {
       // GIVEN
       templateServiceMock.getFilePath.mockReturnValueOnce(undefined);
 
       // WHEN / THEN
-      expect(() =>
+      await expect(() =>
         service.mailToSend(fileName, connectNotificationEmailParametersMock),
       ).rejects.toThrow(TemplateNotFoundException);
     });

@@ -6,6 +6,8 @@ import { ConfigService } from '@fc/config';
 import { EidasCountries } from '@fc/eidas-country';
 import { TrackingService } from '@fc/tracking';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { EidasClientController } from './eidas-client.controller';
 import { EidasClientService } from './eidas-client.service';
 
@@ -24,10 +26,7 @@ describe('EidasClientController', () => {
     completeEidasRequest: jest.fn(),
   };
 
-  const sessionServiceEidasMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
+  const sessionServiceEidasMock = getSessionServiceMock();
 
   const query = {
     country: EidasCountries.BELGIUM,

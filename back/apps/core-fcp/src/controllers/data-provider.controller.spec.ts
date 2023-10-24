@@ -1,5 +1,6 @@
 import { Response } from 'express';
 
+import { HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { DataProviderAdapterMongoService } from '@fc/data-provider-adapter-mongo';
@@ -16,6 +17,7 @@ describe('DataProviderController', () => {
 
   const dataProviderServiceMock = {
     checkRequestValid: jest.fn(),
+    generateJwt: jest.fn(),
   };
 
   const dataProviderAdapterMongoMock = {
@@ -25,6 +27,7 @@ describe('DataProviderController', () => {
   const loggerServiceMock = {
     debug: jest.fn(),
     setContext: jest.fn(),
+    trace: jest.fn(),
   } as unknown as LoggerService;
 
   beforeEach(async () => {
@@ -61,10 +64,11 @@ describe('DataProviderController', () => {
   describe('checktoken', () => {
     const resMock = {
       status: jest.fn(),
-      end: jest.fn(),
+      send: jest.fn(),
       json: jest.fn(),
     } as unknown as Response;
 
+    const claimsMock = {};
     beforeEach(() => {
       jest.mocked(resMock.status).mockReturnValue(resMock);
     });
@@ -72,6 +76,7 @@ describe('DataProviderController', () => {
     it('should return HTTP code 200 and call end function', async () => {
       // Given
       dataProviderServiceMock.checkRequestValid.mockReturnValue(true);
+      dataProviderServiceMock.generateJwt.mockReturnValue(claimsMock);
       dataProviderAdapterMongoMock.checkAuthentication.mockResolvedValue(
         Promise.resolve(),
       );
@@ -87,8 +92,9 @@ describe('DataProviderController', () => {
       await dataProviderController.checktoken(resMock, bodyMock);
       // Then
       expect(resMock.status).toHaveBeenCalledTimes(1);
-      expect(resMock.status).toHaveBeenCalledWith(200);
-      expect(resMock.end).toHaveBeenCalledTimes(1);
+      expect(resMock.status).toHaveBeenCalledWith(HttpStatus.OK);
+      expect(resMock.send).toHaveBeenCalledTimes(1);
+      expect(resMock.send).toHaveBeenCalledWith(claimsMock);
     });
 
     it('should return HTTP code 401 and send error message when checkAuthentication method failed', async () => {

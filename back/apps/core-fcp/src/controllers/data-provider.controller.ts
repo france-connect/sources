@@ -22,18 +22,24 @@ export class DataProviderController {
     @Res() res,
     @Body() bodyChecktokenRequest: ChecktokenRequestDto,
   ) {
+    const payload = { testKey: 'testValue' };
+
+    let jwt: string;
+
+    const { client_id: clientId, client_secret: clientSecret } =
+      bodyChecktokenRequest;
     try {
       await this.dataProviderService.checkRequestValid(bodyChecktokenRequest);
-      const { client_id: clientId, client_secret: clientSecret } =
-        bodyChecktokenRequest;
       await this.dataProviderAdapter.checkAuthentication(
         clientId,
         clientSecret,
       );
+
+      jwt = await this.dataProviderService.generateJwt(payload, clientId);
     } catch (exception) {
       const { error, message, httpStatusCode } = exception;
       this.logger.debug(
-        `POST checktoken error in data-provider-controller : ${error}`,
+        `POST checktoken error in data-provider-controller : ${exception}`,
       );
       const result = {
         error,
@@ -42,6 +48,8 @@ export class DataProviderController {
       };
       return res.status(httpStatusCode).json(result);
     }
-    return res.status(HttpStatus.OK).end();
+
+    this.logger.trace({ jwt });
+    return res.status(HttpStatus.OK).send(jwt);
   }
 }

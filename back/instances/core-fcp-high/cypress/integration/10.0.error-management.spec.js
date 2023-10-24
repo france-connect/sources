@@ -1,11 +1,11 @@
 import {
   basicScenario,
   getAuthorizeUrl,
-  getIdentityProvider,
+  getIdentityProvider
 } from './mire.utils';
 
 describe('10.0 - Error Management', () => {
-  const idpId = `${Cypress.env('IDP_NAME')}1-high`;
+  const idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18';
   const mireUrl = new RegExp('/interaction/[^/]+');
 
   it('should not have link to error management after wrong client_id in authorize', () => {

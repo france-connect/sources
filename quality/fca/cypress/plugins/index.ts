@@ -8,6 +8,11 @@ import * as resolve from 'resolve';
 
 import { log, table } from './console-log-plugin';
 import { getFixturePath } from './fixture-plugin';
+import {
+  clearBusinessLog,
+  getBusinessLogs,
+  hasBusinessLog,
+} from './log-plugin';
 
 const pluginConfig = (
   on: Cypress.PluginEvents,
@@ -22,7 +27,10 @@ const pluginConfig = (
   };
 
   on('task', {
+    clearBusinessLog,
+    getBusinessLogs,
     getFixturePath,
+    hasBusinessLog,
     log,
     table,
   });

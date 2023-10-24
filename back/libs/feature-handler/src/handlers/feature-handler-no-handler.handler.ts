@@ -8,6 +8,8 @@ import { IFeatureHandler } from '../interfaces';
  */
 @Injectable()
 export class FeatureHandlerNoHandler implements IFeatureHandler<null, void> {
+  // Needed to match the interface
+  // eslint-disable-next-line require-await
   async handle() {
     return null;
   }

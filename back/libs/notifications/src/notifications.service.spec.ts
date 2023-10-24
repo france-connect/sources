@@ -19,12 +19,14 @@ const serviceProviderModel = getModelToken('Notifications');
 describe('NotificationsService', () => {
   let service: NotificationsService;
 
+  const now = Date.now();
+
   const notificationMock = [
     {
       isActive: true,
       message: 'message mock',
-      startDate: new Date(Date.now() - 3000), // 3 seconds ago
-      stopDate: new Date(Date.now() + 60000), // in 1 minute
+      startDate: new Date(now - 3000), // 3 seconds ago
+      stopDate: new Date(now + 60000), // in 1 minute
     },
   ];
 
@@ -35,8 +37,8 @@ describe('NotificationsService', () => {
     {
       isActive: true,
       message: 'message mock',
-      startDate: new Date(Date.now() - 3000), // 3 seconds ago
-      stopDate: new Date(Date.now() + 60000), // in 60 seconds
+      startDate: new Date(now - 3000), // 3 seconds ago
+      stopDate: new Date(now + 60000), // in 60 seconds
     },
   ];
 
@@ -44,8 +46,8 @@ describe('NotificationsService', () => {
     {
       isActive: true,
       message: 'message mock2',
-      startDate: new Date(Date.now() - 2000), // 2 seconds ago
-      stopDate: new Date(Date.now() + 60000), // in 60 seconds
+      startDate: new Date(now - 2000), // 2 seconds ago
+      stopDate: new Date(now + 60000), // in 60 seconds
     },
   ];
 
@@ -53,8 +55,8 @@ describe('NotificationsService', () => {
     {
       isActive: true,
       message: 'Invalid mock',
-      startDate: new Date(Date.now() - 60000), // 60 seconds ago
-      stopDate: new Date(Date.now() - 30000), // 30 seconds ago
+      startDate: new Date(now - 60000), // 60 seconds ago
+      stopDate: new Date(now - 30000), // 30 seconds ago
     },
   ];
 

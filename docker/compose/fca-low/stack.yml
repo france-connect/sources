@@ -1,4 +1,4 @@
-version: '2.4'
+version: "2.4"
 
 ####################
 ####################
@@ -6,73 +6,73 @@ services:
   min-fca-low:
     image: alpine
     depends_on:
-      - 'core-fca-low'
-      - 'fca-low-front'
-      - 'fsa1-low'
-      - 'fia1-low'
+      - "core-fca-low"
+      - "fca-low-front"
+      - "fsa1-low"
+      - "fia1-low"
 
   bdd-fca-low:
     image: alpine
     depends_on:
-      - 'core-fca-low'
-      - 'fca-low-front'
-      - 'exploitation-fca-low'
+      - "core-fca-low"
+      - "fca-low-front"
+      - "exploitation-fca-low"
       # -- SP
-      - 'fsa1-low'
-      - 'fsa2-low'
-      - 'fsa4-low'
-      - 'fsa5-low'
+      - "fsa1-low"
+      - "fsa2-low"
+      - "fsa4-low"
+      - "fsa5-low"
       # -- IdP
-      - 'fia1-low'
-      - 'fia2-low'
-      - 'fia4-low'
-      - 'fia5-low'
-      - 'fia8-low'
+      - "fia1-low"
+      - "fia2-low"
+      - "fia4-low"
+      - "fia5-low"
+      - "fia8-low"
 
   exploit-fca-low:
     image: alpine
     depends_on:
-      - 'exploit-fca-low-back'
-      - 'exploit-fca-low-front'
+      - "exploit-fca-low-back"
+      - "exploit-fca-low-front"
 
   all-fca-low:
     image: alpine
     depends_on:
-      - 'core-fca-low'
-      - 'fca-low-front'
-      - 'fsa1-low'
-      - 'fsa2-low'
-      - 'fsa3-low'
-      - 'fsa4-low'
-      - 'fsa5-low'
-      - 'fia1-low'
-      - 'fia2-low'
-      - 'fia4-low'
-      - 'fia5-low'
-      - 'fia8-low'
-      - 'exploitation-fca-low'
-      - 'pg-exploit-fca-low'
-      - 'exploit-fca-low-back'
-      - 'exploit-fca-low-front'
+      - "core-fca-low"
+      - "fca-low-front"
+      - "fsa1-low"
+      - "fsa2-low"
+      - "fsa3-low"
+      - "fsa4-low"
+      - "fsa5-low"
+      - "fia1-low"
+      - "fia2-low"
+      - "fia4-low"
+      - "fia5-low"
+      - "fia8-low"
+      - "exploitation-fca-low"
+      - "pg-exploit-fca-low"
+      - "exploit-fca-low-back"
+      - "exploit-fca-low-front"
       ### Hybridge
-      - 'lemon-ldap'
-      - 'rp-bridge-proxy'
-      - 'bridge-proxy-rie'
-      - 'csmr-rie'
+      - "lemon-ldap"
+      - "rp-bridge-proxy"
+      - "bridge-proxy-rie"
+      - "csmr-rie"
 
   lemon-ldap:
     image: alpine
     depends_on:
-    - 'fia-llng-low'
-    - 'openldap'
+      - "fia-llng-low"
+      - "openldap"
 
   hybridge-fca-low:
     image: alpine
     depends_on:
-      - 'min-fca-low'
-      - 'rp-bridge-proxy'
-      - 'bridge-proxy-rie'
+      - "min-fca-low"
+      - "rp-bridge-proxy"
+      - "bridge-proxy-rie"
       ### RIE
-      - 'lemon-ldap'
-      - 'csmr-rie'
-      - 'fia-rie-low'
+      - "lemon-ldap"
+      - "csmr-rie"
+      - "fia-rie-low"

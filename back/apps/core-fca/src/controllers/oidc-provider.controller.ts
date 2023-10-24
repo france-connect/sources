@@ -19,7 +19,7 @@ import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderRoutes, OidcProviderService } from '@fc/oidc-provider';
 import { ISessionService, Session } from '@fc/session';
 
-import { AuthorizeParamsDto } from '../dto';
+import { AuthorizeParamsDto, GetLoginOidcClientSessionDto } from '../dto';
 
 @Controller()
 export class OidcProviderController {
@@ -48,7 +48,7 @@ export class OidcProviderController {
     }),
   )
   @IsStep()
-  async getAuthorize(@Next() next, @Query() query: AuthorizeParamsDto) {
+  getAuthorize(@Next() next, @Query() query: AuthorizeParamsDto) {
     this.logger.trace({
       route: OidcProviderRoutes.AUTHORIZATION,
       method: 'GET',
@@ -77,7 +77,7 @@ export class OidcProviderController {
     }),
   )
   @IsStep()
-  async postAuthorize(@Next() next, @Body() body: AuthorizeParamsDto) {
+  postAuthorize(@Next() next, @Body() body: AuthorizeParamsDto) {
     this.logger.trace({
       route: OidcProviderRoutes.AUTHORIZATION,
       method: 'POST',
@@ -104,7 +104,7 @@ export class OidcProviderController {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
      * @ticket FC-1020
      */
-    @Session('OidcClient')
+    @Session('OidcClient', GetLoginOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
     const { spIdentity } = await sessionOidc.get();

@@ -1,0 +1,25 @@
+{% if not tile %}
+  {% set tile = params %}
+{% endif %}
+<div class="fr-tile fr-enlarge-link">
+  <div class="fr-tile__body">
+    {% set tileUrl = tile.url or tile.externalUrl %}
+    {% set urlDescription %}
+    {{ tile.title }}
+    {% if tile.externalUrl %} - {{ i18n.new_window }}
+    {% endif %}
+    {% endset %}
+    <h4 class="fr-tile__title">
+      <a class="fr-tile__link" href="{{ tileUrl }}"
+         title="{{ urlDescription }}"{% if tile.externalUrl %} target="_blank"{% endif %}>
+        {{ tile.title }}
+      </a>
+    </h4>
+    <p class="fr-tile__desc">{{ tile.description | safe }}</p>
+  </div>
+  {% if tile.imageSrc %}
+    <div class="fr-tile__img">
+      <img src="{{ tile.imageSrc }}" alt="" class="fr-responsive-img">
+    </div>
+  {% endif %}
+</div>
