@@ -239,6 +239,52 @@ const fsp = {
     ssoDisabled: false,
     platform: 'CORE_FCP',
   },
+  'FSP-PUB-LOW': {
+    name: "fsp-pub-low",
+    title: "FSP PUBLIC - LOW",
+    eidas: 2,
+    site: "https://unregisteredRelyingParty.docker.dev-franceconnect.fr/login",
+    redirect_uris: [
+      "https://unregisteredRelyingParty.docker.dev-franceconnect.fr/oidc-callback",// unused
+    ],
+    post_logout_redirect_uris: [
+      "https://unregisteredRelyingParty.docker.dev-franceconnect.fr/logout-callback",// unused
+    ],
+    client_secret:// unused
+    "4eQRa1ab1h8jIKVs53cW8FBUGIa5KQLlXQpdP/lGe3EJifIwUMHR0w6HKxu3ccGzR0y6+aS2wLAifrmhsT76TtVCvnNQAF5rONzLejQ7Hqy1LBF8TAUpx+8yFak=",
+    key: "unregisteredRelyingParty", // shared public client id
+    entityId:
+      "abeba7280c42968a2df6ae0e4d6fc2ce30cb961628b5a6440bc1e969f334181a",
+    credentialsFlow: false,
+    featureHandlers: { none: "" },
+    email: "fsp-pub@franceconnect.loc",
+    IPServerAddressesAndRanges: ["1.1.1.1"],
+    active: true,
+    type: "public",
+    __v: 4,
+    updatedAt: new Date("2019-04-24 17:09:17"),
+    updatedBy: "admin",
+    scopes: [
+      "openid",
+    ],
+    claims: ['amr'],
+    grant_types: ['implicit'],
+    response_types: ['id_token'],
+    id_token_signed_response_alg: "ES256",
+    id_token_encrypted_response_alg: "",
+    id_token_encrypted_response_enc: "",
+    userinfo_signed_response_alg: "ES256",
+    userinfo_encrypted_response_alg: "",
+    userinfo_encrypted_response_enc: "",
+    jwks_uri:// unused
+      "https://unregisteredRelyingParty.docker.dev-franceconnect.fr/client/.well-known/keys",
+    idpFilterExclude: true,
+    idpFilterList: [],
+    identityConsent: false,
+    trustedIdentity: false,
+    ssoDisabled: false,
+    platform: 'CORE_FCP',
+  },
 };
 
 /* ------------------------------------------------------------------------------- */

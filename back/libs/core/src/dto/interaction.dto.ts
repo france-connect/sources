@@ -5,4 +5,5 @@ export class Interaction {
   @IsAscii()
   @Length(21, 21)
   readonly uid: string;
+  params: any;
 }

@@ -114,4 +114,14 @@ export class ServiceProviderAdapterMongoDTO {
   @IsOptional()
   @IsEnum(platform)
   readonly platform?: platform;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  readonly grant_types?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  readonly response_types?: string[];
 }

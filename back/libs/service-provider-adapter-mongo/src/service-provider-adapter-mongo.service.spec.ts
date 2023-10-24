@@ -206,6 +206,8 @@ describe('ServiceProviderAdapterMongoService', () => {
       _id: false,
       active: true,
       claims: true,
+      grant_types: true ,
+      response_types: true,
       // openid defined property names
       // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret: true,

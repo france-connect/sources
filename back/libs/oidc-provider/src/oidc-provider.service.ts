@@ -80,6 +80,21 @@ export class OidcProviderService {
       throw new OidcProviderInitialisationException();
     }
 
+    const { redirectUriAllowed, postLogoutRedirectUriAllowed } = this.provider.Client.prototype;
+    this.provider.Client.prototype.redirectUriAllowed = function publicRedirectUriAllowed(redirectUri) {
+      if (this.clientId == 'unregisteredRelyingParty') {
+        return true;
+      }
+      return redirectUriAllowed.call(this, redirectUri);
+    };
+
+    this.provider.Client.prototype.postLogoutRedirectUriAllowed = function publicPostLogoutRedirectUriAllowed(uri) {
+      if (this.clientId == 'unregisteredRelyingParty') {
+        return true;
+      }
+      return postLogoutRedirectUriAllowed.call(this, uri);
+    };
+
     this.oidcProviderConfigApp.setProvider(this.provider);
 
     this.logger.debug('Mouting oidc-provider middleware');

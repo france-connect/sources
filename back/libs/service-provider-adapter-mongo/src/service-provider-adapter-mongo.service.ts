@@ -75,6 +75,8 @@ export class ServiceProviderAdapterMongoService
         client_secret: true,
         scopes: true,
         claims: true,
+        grant_types: true,
+        response_types: true,
         // openid defined property names
         // eslint-disable-next-line @typescript-eslint/naming-convention
         redirect_uris: true,

@@ -140,7 +140,7 @@ export default {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       application_type: 'web',
     },
-    responseTypes: ['code'],
+    responseTypes: ['code', 'id_token'],
     revocationEndpointAuthMethods: ['client_secret_post', 'private_key_jwt'],
     tokenEndpointAuthMethods: ['client_secret_post', 'private_key_jwt'],
     enabledJWA: {

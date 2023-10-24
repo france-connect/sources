@@ -5,6 +5,7 @@ import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcProviderService } from '@fc/oidc-provider';
 
 import { CoreInvalidAcrException, CoreLowAcrException } from '../exceptions';
+import { Interaction } from '@fc/core';
 
 @Injectable()
 export class CoreAcrService {
@@ -62,5 +63,10 @@ export class CoreAcrService {
       );
       throw new CoreLowAcrException();
     }
+  }
+
+  async findInteraction(interactionId): Promise<Interaction> {
+    const provider = this.oidcProvider.getProvider();
+    return await provider.Interaction.find(interactionId);
   }
 }

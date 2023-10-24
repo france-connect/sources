@@ -58,7 +58,7 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     this.logger.debug('getConsent service: ##### core-fcp-default-verify');
 
     // Grab informations on interaction and identity
-    const { idpAcr, idpId, idpIdentity, spAcr, spId, isSso, subs } =
+    const { idpAcr, idpId, idpIdentity, spAcr, spId, isSso, subs, interactionId } =
       await sessionOidc.get();
 
     /**
@@ -93,7 +93,16 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     // 3. IdpBLocked check (account)
     this.coreAccount.checkIfIdpIsBlockedForAccount(account, idpId);
 
-    const { entityId } = await this.serviceProvider.getById(spId);
+    let { entityId, client_id } = await this.serviceProvider.getById(spId);
+
+    if(client_id == 'unregisteredRelyingParty')
+    {
+      // In case of unregistered RP, entityId is derived from redirect_uri to ensure distinct entityId for each uRP.
+      // Sub caching mechanism in account.spFederation is preserved.
+      this.logger.trace('clientId is unregisteredRelyingParty');
+      const interaction = await this.coreAcr.findInteraction(interactionId);
+      entityId = this.cryptographyFcp.computeSubV1(entityId, interaction.params.redirect_uri);
+    }
 
     const sub = this.getSub(account, identityHash, entityId);
 
