@@ -11,7 +11,12 @@ import {
 import { ServiceProviderAdapterEnvService } from '@fc/service-provider-adapter-env';
 import { ISessionBoundContext, SessionService } from '@fc/session';
 
-import { getFilesPathsFromDir, parseCsv } from '../helpers';
+import {
+  getFilesPathsFromDir,
+  parseCsv,
+  removeEmptyProperties,
+  transformColumnsIntoBoolean,
+} from '../helpers';
 import { MockIdentityProviderService } from './mock-identity-provider.service';
 
 jest.mock('../helpers');
@@ -52,6 +57,8 @@ describe('MockIdentityProviderService', () => {
   };
 
   const citizenDatabasePathMock = '/eur';
+  const csvBooleanColumnsMock = ['is_service_public'];
+
   const fastCsvOptsMock = {
     trim: true,
     ignoreEmpty: true,
@@ -94,18 +101,18 @@ describe('MockIdentityProviderService', () => {
     beforeEach(() => {
       loadDatabasesMock = service['loadDatabases'] = jest.fn();
     });
-    it('should call loadDatabase', () => {
+    it('should call loadDatabase', async () => {
       // Given
       // When
-      service.onModuleInit();
+      await service.onModuleInit();
       // Then
       expect(loadDatabasesMock).toHaveBeenCalledTimes(1);
     });
 
-    it('should register oidc provider middleware', () => {
+    it('should register oidc provider middleware', async () => {
       // Given
       // When
-      service.onModuleInit();
+      await service.onModuleInit();
       // Then
       expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledTimes(
         1,
@@ -140,6 +147,7 @@ describe('MockIdentityProviderService', () => {
     beforeEach(() => {
       configServiceMock.get.mockReturnValueOnce({
         citizenDatabasePath: citizenDatabasePathMock,
+        csvBooleanColumns: csvBooleanColumnsMock,
       });
       jest.mocked(getFilesPathsFromDir).mockResolvedValueOnce(pathsMock);
 
@@ -193,6 +201,12 @@ describe('MockIdentityProviderService', () => {
   });
 
   describe('loadDatabase()', () => {
+    beforeEach(() => {
+      configServiceMock.get.mockReturnValueOnce({
+        csvBooleanColumns: csvBooleanColumnsMock,
+      });
+    });
+
     const csvMock = [
       { property1: '1', property2: '2', property3: '3', property4: '4' },
       { property1: '5', property2: '6', property3: '7', property4: '8' },
@@ -214,23 +228,116 @@ describe('MockIdentityProviderService', () => {
       );
     });
 
-    it('should filter out the empty keys in CSV entry', async () => {
+    it('should filter out the empty keys in CSV entry with removeEmptyProperties', async () => {
       // Given
       const csvWithEmptyMock = [
-        { property1: '1', property2: '2', property3: '', property4: '4' },
-        { property1: '', property2: '6', property3: '7', property4: '8' },
+        {
+          property1: '1',
+          property2: '2',
+          property3: '',
+          property4: '4',
+        },
+        {
+          property1: '',
+          property2: '6',
+          property3: '7',
+          property4: '8',
+        },
       ];
-      const expected = [
+
+      const cleanedMock = [
         { property1: '1', property2: '2', property4: '4' },
         { property2: '6', property3: '7', property4: '8' },
       ];
+
       jest.mocked(parseCsv).mockResolvedValueOnce(csvWithEmptyMock);
+      jest.mocked(removeEmptyProperties).mockReturnValueOnce(cleanedMock);
+
+      // When
+      await service['loadDatabase'](pathMock);
+
+      // Then
+      expect(jest.mocked(parseCsv)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(removeEmptyProperties)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(removeEmptyProperties)).toHaveBeenCalledWith(
+        csvWithEmptyMock,
+      );
+    });
+
+    it('should transform the selected properties in boolean with transformColumnsIntoBoolean', async () => {
+      // Given
+      const csvWithEmptyMock = [
+        {
+          property1: '1',
+          property2: '2',
+          property3: '3',
+          isBoolean: 'true',
+        },
+        {
+          property1: '',
+          property2: '6',
+          property3: '7',
+          isBoolean: 'false',
+        },
+      ];
+
+      const cleanedMock = [
+        {
+          property1: '1',
+          property2: '2',
+          property3: '3',
+          // is_service_public is a moncomptepro variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          is_service_public: 'true',
+        },
+        {
+          property1: '6',
+          property2: '7',
+          property3: '8',
+          // is_service_public is a moncomptepro variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          is_service_public: 'false',
+        },
+      ];
+
+      const expectedMock = [
+        {
+          property1: '1',
+          property2: '2',
+          property3: '3',
+          // is_service_public is a moncomptepro variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          is_service_public: 'true',
+        },
+        {
+          property1: '6',
+          property2: '7',
+          property3: '8',
+          // is_service_public is a moncomptepro variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          is_service_public: 'false',
+        },
+      ];
+
+      jest.mocked(parseCsv).mockResolvedValueOnce(csvWithEmptyMock);
+      jest.mocked(removeEmptyProperties).mockReturnValueOnce(cleanedMock);
+      jest
+        .mocked(transformColumnsIntoBoolean)
+        .mockReturnValueOnce(expectedMock);
 
       // When
       const database = await service['loadDatabase'](pathMock);
 
       // Then
-      expect(database).toStrictEqual(expected);
+      expect(jest.mocked(parseCsv)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(removeEmptyProperties)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(transformColumnsIntoBoolean)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(transformColumnsIntoBoolean)).toHaveBeenCalledWith(
+        expectedMock,
+        ['is_service_public'],
+      );
+
+      expect(database).toStrictEqual(expectedMock);
     });
 
     it('should log error when something turns bad', async () => {
@@ -314,12 +421,12 @@ describe('MockIdentityProviderService', () => {
       shouldAbortMock = service['shouldAbortMiddleware'] = jest.fn();
     });
 
-    it('should abort middleware execution if request if flagged as erroring', () => {
+    it('should abort middleware execution if request if flagged as erroring', async () => {
       // Given
       shouldAbortMock.mockReturnValueOnce(true);
 
       // When
-      service['authorizationMiddleware'](ctxMock);
+      await service['authorizationMiddleware'](ctxMock);
 
       // Then
       expect(
@@ -422,6 +529,53 @@ describe('MockIdentityProviderService', () => {
 
       // Then
       expect(result).toStrictEqual(undefined);
+    });
+  });
+
+  describe('isPasswordValid()', () => {
+    beforeEach(() => {
+      configServiceMock.get.mockReturnValue({ passwordVerification: true });
+    });
+
+    it('should return true if password check is enabled and password is valid', () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({ passwordVerification: true });
+      const password = 'password';
+      const inputPassword = 'password';
+
+      // When
+      const result = service.isPasswordValid(password, inputPassword);
+
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return false if password check is enabled and password is invalid', () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({ passwordVerification: true });
+      const password = 'password';
+      const inputPassword = 'foo';
+
+      // When
+      const result = service.isPasswordValid(password, inputPassword);
+
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should return true if password check is disabled even if password is invalid', () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({
+        passwordVerification: false,
+      });
+      const password = 'password';
+      const inputPassword = 'foo';
+
+      // When
+      const result = service.isPasswordValid(password, inputPassword);
+
+      // Then
+      expect(result).toBe(true);
     });
   });
 

@@ -7,12 +7,12 @@ import { ISessionService } from '../interfaces';
 
 /**
  *
- * @param {string} moduleName  The session part we want our session service to be bounded to
+ * @param {string} moduleName  The session part we want our session service to be bound to
  * @param {class} [dto]  The DTO validation schema
  * @return ISessionService
  *
  * This decorator gets a sessionService
- * bounded to the session part given as first argument (`moduleName`).
+ * bound to the session part given as first argument (`moduleName`).
  *
  * If a second argument is provided, it is used as a DTO validation schema.
  * In this case, if the asked session part is undefined,

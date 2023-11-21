@@ -1,4 +1,4 @@
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { navigateTo } from '../../common/helpers';
 
@@ -15,8 +15,7 @@ When(
 
 Then(/^le scope "([^"]+)" (est|n'est pas) supporté$/, function (scope, text) {
   const includeNotInclude = text === 'est' ? 'include' : 'not.include';
-  cy.document()
-    .its('body')
+  cy.get('body')
     .invoke('text')
     .then((json) => JSON.parse(json))
     .its('scopes_supported')

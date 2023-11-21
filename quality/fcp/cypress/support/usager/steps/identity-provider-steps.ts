@@ -1,4 +1,4 @@
-import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { User } from '../../common/helpers';
 import { UserCredentials } from '../../common/types';
@@ -8,7 +8,7 @@ let identityProviderPage: IdentityProviderPage;
 
 Then(
   /^je (suis|ne suis pas) redirigé vers la page login du fournisseur d'identité$/,
-  function (text) {
+  function (text: string) {
     const expectVisible = text === 'suis';
     identityProviderPage = new IdentityProviderPage(this.identityProvider);
     if (expectVisible) {
@@ -21,7 +21,7 @@ Then(
 
 Given(
   "le fournisseur d'identité garantit un niveau de sécurité {string}",
-  function (idpAcr) {
+  function (idpAcr: string) {
     identityProviderPage.setMockAcrValue(idpAcr);
   },
 );

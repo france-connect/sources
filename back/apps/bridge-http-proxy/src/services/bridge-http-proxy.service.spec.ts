@@ -89,7 +89,7 @@ describe('BridgeHttpProxyService', () => {
     });
 
     lastValueMock = jest.mocked(lastValueFrom);
-    validateDtoMock = jest.mocked(validateDto, true);
+    validateDtoMock = jest.mocked(validateDto);
   });
 
   it('should be defined', () => {

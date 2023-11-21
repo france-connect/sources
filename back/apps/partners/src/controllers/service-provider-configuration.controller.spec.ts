@@ -78,9 +78,8 @@ describe('ServiceProviderConfigurationController', () => {
       );
 
       // When
-      const result = await controller.getConfigurationsFromServiceProvider(
-        queryMock,
-      );
+      const result =
+        await controller.getConfigurationsFromServiceProvider(queryMock);
 
       // Then
       expect(result).toEqual(getServiceResponseMock);
@@ -130,9 +129,8 @@ describe('ServiceProviderConfigurationController', () => {
       );
 
       // When
-      const result = await controller.postServiceProviderConfiguration(
-        bodyMock,
-      );
+      const result =
+        await controller.postServiceProviderConfiguration(bodyMock);
 
       // Then
       expect(result).toEqual(postServiceResponseMock);

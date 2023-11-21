@@ -317,32 +317,32 @@ describe('EidasToOidcService', () => {
   });
 
   describe('requestedAttributesToScopesReducer', () => {
-    const getClaimsBoundedAttributesToClaimsReducerMock = jest.fn();
+    const getClaimsBoundAttributesToClaimsReducerMock = jest.fn();
     const expectedReduced = { currentGivenName: true, personIdentifier: true };
 
     beforeEach(() => {
-      getClaimsBoundedAttributesToClaimsReducerMock.mockReturnValueOnce(
+      getClaimsBoundAttributesToClaimsReducerMock.mockReturnValueOnce(
         (accu, attr) => {
           accu[attr] = true;
           return accu;
         },
       );
 
-      service['getClaimsBoundedAttributesToClaimsReducer'] =
-        getClaimsBoundedAttributesToClaimsReducerMock;
+      service['getClaimsBoundAttributesToClaimsReducer'] =
+        getClaimsBoundAttributesToClaimsReducerMock;
     });
 
-    it('should call getClaimsBoundedAttributesToClaimsReducerMock with the attribures', () => {
+    it('should call getClaimsBoundAttributesToClaimsReducerMock with the attribures', () => {
       // action
       service['mapAttributesToClaims'](attributesMock);
 
       // expect
-      expect(
-        getClaimsBoundedAttributesToClaimsReducerMock,
-      ).toHaveBeenCalledTimes(1);
-      expect(
-        getClaimsBoundedAttributesToClaimsReducerMock,
-      ).toHaveBeenCalledWith(attributesMock);
+      expect(getClaimsBoundAttributesToClaimsReducerMock).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(getClaimsBoundAttributesToClaimsReducerMock).toHaveBeenCalledWith(
+        attributesMock,
+      );
     });
 
     it('should return the result of the reduce operation', () => {
@@ -354,7 +354,7 @@ describe('EidasToOidcService', () => {
     });
   });
 
-  describe('getClaimsBoundedAttributesToClaimsReducer', () => {
+  describe('getClaimsBoundAttributesToClaimsReducer', () => {
     it('should bind the attributesToClaimsReducer with the EidasToOidc service and the eidas attributes', () => {
       // setup
       const attributesToClaimsReducerMock = jest.fn();
@@ -362,7 +362,7 @@ describe('EidasToOidcService', () => {
       service['attributesToClaimsReducer'] = attributesToClaimsReducerMock;
 
       // action
-      service['getClaimsBoundedAttributesToClaimsReducer'](attributesMock);
+      service['getClaimsBoundAttributesToClaimsReducer'](attributesMock);
 
       // expect
       expect(attributesToClaimsReducerMock.bind).toHaveBeenCalledTimes(1);
@@ -375,7 +375,7 @@ describe('EidasToOidcService', () => {
     it('should bind the attributesToClaimsReducer with the EidasToOidc service and the eidas attributes', () => {
       // action
       const result =
-        service['getClaimsBoundedAttributesToClaimsReducer'](attributesMock);
+        service['getClaimsBoundAttributesToClaimsReducer'](attributesMock);
 
       // expect
       expect(result).toStrictEqual(expect.any(Function));

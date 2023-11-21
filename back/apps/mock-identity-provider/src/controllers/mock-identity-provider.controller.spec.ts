@@ -3,6 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcProviderService } from '@fc/oidc-provider';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { MockIdentityProviderService } from '../services';
 import { MockIdentityProviderController } from './mock-identity-provider.controller';
 
@@ -34,15 +36,9 @@ describe('MockIdentityProviderController', () => {
     trace: jest.fn(),
   } as unknown as LoggerService;
 
-  const oidcClientSessionServiceMock = {
-    set: jest.fn(),
-    get: jest.fn(),
-  };
+  const oidcClientSessionServiceMock = getSessionServiceMock();
 
-  const appSessionServiceMock = {
-    set: jest.fn(),
-    get: jest.fn(),
-  };
+  const appSessionServiceMock = getSessionServiceMock();
 
   const oidcProviderServiceMock = {
     getInteraction: jest.fn(),
@@ -51,6 +47,7 @@ describe('MockIdentityProviderController', () => {
 
   const mockIdentityProviderServiceMock = {
     getIdentity: jest.fn(),
+    isPasswordValid: jest.fn(),
   };
 
   const interactionIdMock = 'interactionIdMockValue';
@@ -58,6 +55,7 @@ describe('MockIdentityProviderController', () => {
   const scopeMock = 'scopeMock';
   const providerUidMock = 'providerUidMock';
   const loginMockValue = 'loginMockValue';
+  const passwordMockValue = 'passwordMockValue';
   const randomStringMock = 'randomStringMockValue';
   const stateMock = randomStringMock;
 
@@ -108,11 +106,9 @@ describe('MockIdentityProviderController', () => {
   });
 
   describe('index', () => {
-    it('Should return some status object', async () => {
-      // setup
-      oidcClientSessionServiceMock.set.mockResolvedValueOnce(undefined);
+    it('Should return some status object', () => {
       // action
-      const result = await controller.index();
+      const result = controller.index();
       // assert
       expect(result).toEqual({ status: 'ok' });
     });
@@ -122,6 +118,7 @@ describe('MockIdentityProviderController', () => {
     const appSessionServiceMock = {
       get: jest.fn(),
       set: jest.fn(),
+      setAlias: jest.fn(),
     };
     const finalSpIdMock = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
@@ -190,9 +187,14 @@ describe('MockIdentityProviderController', () => {
     const interactionId: string = interactionIdMock;
     const body = {
       login: loginMockValue,
+      password: passwordMockValue,
       interactionId,
       acr: acrMock,
     };
+
+    beforeEach(() => {
+      mockIdentityProviderServiceMock.isPasswordValid.mockReturnValue(true);
+    });
 
     it('should call service.getIdentity() to retrieve sp identity', async () => {
       // Given
@@ -223,6 +225,7 @@ describe('MockIdentityProviderController', () => {
       const body = {
         interactionId,
         login: loginMockValue,
+        password: passwordMockValue,
         acr: acrMock,
       };
       const expectedError = new Error('Identity not found in database');
@@ -237,6 +240,70 @@ describe('MockIdentityProviderController', () => {
         ),
       ).rejects.toThrow(expectedError);
       expect(next).toHaveBeenCalledTimes(0);
+    });
+
+    it('should check if password is valid', async () => {
+      // Given
+      const identityMock = {
+        password: passwordMockValue,
+      };
+      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
+        identityMock,
+      );
+      const interactionId: string = interactionIdMock;
+      const body = {
+        interactionId,
+        login: loginMockValue,
+        password: `${passwordMockValue}_foo`,
+        acr: acrMock,
+      };
+
+      // When
+      await controller.getLogin(
+        next,
+        body,
+        oidcClientSessionServiceMock,
+        appSessionServiceMock,
+      );
+
+      // Then
+      expect(
+        mockIdentityProviderServiceMock.isPasswordValid,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        mockIdentityProviderServiceMock.isPasswordValid,
+      ).toHaveBeenCalledWith(passwordMockValue, body.password);
+    });
+
+    it('should throw an error and not call "next" if the password is not valid', async () => {
+      // Given
+      mockIdentityProviderServiceMock.isPasswordValid.mockReturnValueOnce(
+        false,
+      );
+      const identityMock = {
+        password: passwordMockValue,
+      };
+      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
+        identityMock,
+      );
+      const interactionId: string = interactionIdMock;
+      const body = {
+        interactionId,
+        login: loginMockValue,
+        password: `${passwordMockValue}_foo`,
+        acr: acrMock,
+      };
+      const expectedError = new Error('Password is invalid');
+
+      // When / Then
+      await expect(() =>
+        controller.getLogin(
+          next,
+          body,
+          oidcClientSessionServiceMock,
+          appSessionServiceMock,
+        ),
+      ).rejects.toThrow(expectedError);
     });
 
     it('should save the login in app session', async () => {
@@ -312,6 +379,7 @@ describe('MockIdentityProviderController', () => {
       const body = {
         interactionId,
         login: loginMockValue,
+        password: passwordMockValue,
         acr: acrMock,
       };
       // When

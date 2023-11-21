@@ -21,6 +21,8 @@ import {
   OidcClientFailedToFetchBlacklist,
   OidcClientGetEndSessionUrlException,
   OidcClientIdpBlacklistedException,
+  OidcClientIdpDisabledException,
+  OidcClientIdpNotFoundException,
   OidcClientInvalidStateException,
   OidcClientMissingCodeException,
   OidcClientMissingStateException,
@@ -29,8 +31,10 @@ import {
 import {
   ExtraTokenParams,
   IGetAuthorizeUrlParams,
+  IIdentityProviderAdapter,
   TokenParams,
 } from '../interfaces';
+import { IDENTITY_PROVIDER_SERVICE } from '../tokens';
 import { OidcClientConfigService } from './oidc-client-config.service';
 import { OidcClientIssuerService } from './oidc-client-issuer.service';
 
@@ -45,6 +49,8 @@ export class OidcClientUtilsService {
     private readonly crypto: CryptographyService,
     @Inject(SERVICE_PROVIDER_SERVICE_TOKEN)
     private readonly serviceProvider: IServiceProviderAdapter,
+    @Inject(IDENTITY_PROVIDER_SERVICE)
+    private readonly identityProvider: IIdentityProviderAdapter,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -78,6 +84,9 @@ export class OidcClientUtilsService {
     nonce,
     claims,
     prompt,
+    // acr_values is an oidc defined variable name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    idp_hint,
   }: IGetAuthorizeUrlParams): Promise<string> {
     const client: Client = await this.issuer.getClient(idpId);
 
@@ -90,6 +99,9 @@ export class OidcClientUtilsService {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
       prompt,
+      // oidc defined variable name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      idp_hint,
     };
 
     this.logger.trace({ params });
@@ -263,9 +275,11 @@ export class OidcClientUtilsService {
    *
    * @param {string} spId service provider ID
    * @param {string} idpId identity provider ID
-   * @returns {Promise<boolean>}
+   * @returns {Promise<void>}
+   * @throws OidcClientFailedToFetchBlacklist if the idp restrictions of the sp couldn't be fetched
+   * @throws OidcClientIdpBlacklistedException if the idp is blacklisted or not whitelisted
    */
-  async checkIdpBlacklisted(spId: string, idpId: string): Promise<boolean> {
+  async checkIdpBlacklisted(spId: string, idpId: string): Promise<void> {
     let isIdpExcluded = false;
     try {
       isIdpExcluded = await this.serviceProvider.shouldExcludeIdp(spId, idpId);
@@ -280,7 +294,17 @@ export class OidcClientUtilsService {
     }
 
     this.logger.trace({ check: { spId, idpId, isIdpExcluded } });
+  }
 
-    return false;
+  async checkIdpDisabled(idpId: string): Promise<void> {
+    const idp = await this.identityProvider.getById(idpId);
+
+    if (!idp) {
+      throw new OidcClientIdpNotFoundException();
+    }
+
+    if (!idp.active) {
+      throw new OidcClientIdpDisabledException();
+    }
   }
 }

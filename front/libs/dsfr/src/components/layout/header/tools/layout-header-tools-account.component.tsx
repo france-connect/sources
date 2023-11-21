@@ -12,7 +12,7 @@ export const LayoutHeaderToolsAccountComponent: React.FC<LayoutHeaderToolsAccoun
       ? 'layout-header-tools-account-component-mobile'
       : 'layout-header-tools-account-component-desktop';
     return (
-      <span className="fr-btn fr-fi-account-line" data-testid={dataTestId}>
+      <span className="fr-btn fr-icon-account-line" data-testid={dataTestId}>
         {firstname} {lastname}
       </span>
     );

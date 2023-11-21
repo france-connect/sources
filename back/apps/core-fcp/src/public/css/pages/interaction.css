@@ -1,0 +1,94 @@
+:root {
+  --fc-fi-height: 90px;
+  --fc-fi-width: 226px;
+  --fc-fi-margin: 12px;
+  --fc-fi-grid-row-max: 3;
+  --fc-fi-img-width: 156px;
+  --fc-fi-img-height: 156px;
+}
+
+#fc-interaction-page #grid-main-providers {
+  --fc-fi-outer-margin: calc(var(--fc-fi-margin) * 2);
+  --fc-fi-outer-width: calc(var(--fc-fi-width) + var(--fc-fi-outer-margin));
+
+  max-width: calc(var(--fc-fi-outer-width) * var(--fc-fi-grid-row-max));
+  margin: 0 auto;
+}
+
+#fc-interaction-page .fc-grid--provider {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* -----------------------------------------------------------------
+
+  BUTTON
+
+----------------------------------------------------------------- */
+
+#fc-interaction-page .fc-grid--provider .fc-btn--provider {
+  width: var(--fc-fi-width);
+  min-width: var(--fc-fi-width);
+  max-width: var(--fc-fi-width);
+  margin: var(--fc-fi-margin);
+  height: var(--fc-fi-height);
+  overflow: hidden;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+#fc-interaction-page .fc-grid--provider .fc-btn--provider .fr-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+#fc-interaction-page .fc-grid--provider .fc-btn--provider img {
+  height: auto;
+  max-width: var(--fc-fi-img-width);
+  max-height: var(--fc-fi-img-height);
+}
+
+#fc-interaction-page .fc-grid--provider .fc-btn--provider .fc-container-image {
+  max-width: var(--fc-fi-img-width);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* -----------------------------------------------------------------
+
+  BUTTON : HOVER
+
+----------------------------------------------------------------- */
+
+#fc-interaction-page .fc-grid--provider .fc-btn--provider:hover {
+  box-shadow: inset 0 0 0 2px var(--text-action-high-blue-france);
+  background-color: var(--background-alt-blue-france);
+}
+
+/* -----------------------------------------------------------------
+
+  BUTTON : DISABLED
+
+----------------------------------------------------------------- */
+
+#fc-interaction-page .fc-grid--provider .fc-btn--provider:disabled {
+  box-shadow: none;
+  font-weight: bold;
+  color: var(--text-disabled-grey);
+  background-color: var(--background-disabled-grey);
+  justify-content: flex-end;
+}
+
+#fc-interaction-page .fc-grid--provider .fc-btn--provider:disabled span {
+  font-weight: bold;
+}
+
+#fc-interaction-page .fc-grid--provider .fc-btn--provider:disabled .fr-badge {
+  opacity: 0.5;
+}

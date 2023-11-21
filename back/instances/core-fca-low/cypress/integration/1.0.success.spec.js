@@ -10,16 +10,16 @@ describe('Successful scenarios', () => {
   // -- replace by either `fip1-high` or `fia1-low`
   const sp1 = `${Cypress.env('SP_NAME')}1-low`;
   const sp2 = `${Cypress.env('SP_NAME')}2-low`;
-  const idp1 = `${Cypress.env('IDP_NAME')}1-low`;
-  const idp4 = `${Cypress.env('IDP_NAME')}4-low`;
+  const idp1 = '9c716f61-b8a1-435c-a407-ef4d677ec270';
+  const idp4 = '87762a76-7da0-442d-8243-5785f859b88b';
 
   // 4 different subs for the same agent
   const SUB_SP1_IDP1 =
-    '9aeda75d9da1edba7051a7d16e413a72d5206f16cf68c5872dd4894558dde16a';
+    '4a897042fa9e7a1098a1951a7a3f461db54be2105c400f8594ce0eeb03cc5756';
   const SUB_SP2_IDP1 =
-    '85cd916363d19e8b77ea6e7caf7977381b8c5db6505195a5efd02d57e6087f3b';
+    '3ff73e7fa55d48533a434b52b8ffc8c223660775c1fad17022ae8feedcc63ce4';
   const SUB_SP1_IDP4 =
-    '85b099ff1b3eb74dba1faf2ab839819a5a326b29a3f113b580caf608199ae92e';
+    'e6a77535107e54fd686adc431153ce39507170c43ea6bc0c33c34055c9674fc0';
 
   it('should redirect to AC website', () => {
     cy.request({

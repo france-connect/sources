@@ -15,7 +15,6 @@
 
 import 'cypress-axe';
 import 'cypress-maildev';
-import 'cypress-network-idle';
 import 'cypress-xpath';
 
 import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';
@@ -24,6 +23,14 @@ import { injectAxeFromQualityModules } from './common/helpers';
 
 // Overwrite injectAxe because not supporting dependencies workspace
 Cypress.Commands.overwrite('injectAxe', injectAxeFromQualityModules);
+
+Cypress.Commands.add(
+  'clearThenType',
+  { prevSubject: 'element' },
+  // Force Cypress to accept chaining clear and type commands
+  // eslint-disable-next-line cypress/unsafe-to-chain-command
+  (subject, text, options) => cy.wrap(subject).clear().type(text, options),
+);
 
 addMatchImageSnapshotCommand({
   blackout: [], // We use a custom blackout in image-snapshot-steps.ts

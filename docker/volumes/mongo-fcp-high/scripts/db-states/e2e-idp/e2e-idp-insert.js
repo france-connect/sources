@@ -1,15 +1,15 @@
 db.provider.update(
-  { uid: "idp-test-update" },
+  { uid: "da5bbb8d-3a93-4434-b1bf-448c69fa7fc9" },
   {
     _id: ObjectId("5eedbcb60c59aa5a1f1a56e3"),
-    uid: "idp-test-update",
+    uid: "da5bbb8d-3a93-4434-b1bf-448c69fa7fc9",
     name: "idp-test-update",
     active: false,
     display: true,
     isBeta: false,
     title: "Idp test Inserted",
-    image: "fi-mock-eleve.svg",
-    imageFocus: "fi-mock-eleve.svg",
+    image: "",
+    imageFocus: "",
     alt: "idp test",
     eidas: 3,
     featureHandlers: { coreVerify: "core-fcp-default-verify" },
@@ -45,12 +45,12 @@ db.provider.update(
       "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
     ],
   },
-  { upsert: true }
+  { upsert: true },
 );
 
 db.provider.update(
-  { uid: "fip2v2" },
+  { uid: "99b9d1dd-8104-4219-a1ca-8842f37dd0d3" },
   {
     $set: { title: "Idp test Inserted" },
-  }
+  },
 );

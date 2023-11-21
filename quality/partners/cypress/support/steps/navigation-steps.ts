@@ -1,4 +1,4 @@
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import HomePage from '../pages/home-page';
 import NavigationPage from '../pages/navigation-page';

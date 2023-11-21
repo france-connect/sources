@@ -1,30 +1,19 @@
 /* istanbul ignore file */
 
 // Declarative code
-import {
-  IsBoolean,
-  IsObject,
-  IsOptional,
-  IsString,
-  IsUrl,
-  ValidateIf,
-} from 'class-validator';
-import { ClientMetadata } from 'openid-client';
+import { Type } from 'class-transformer';
+import { IsArray, IsString, ValidateNested } from 'class-validator';
+
+import { IdentityProviderAdapterEnvDTO } from './identity-provider-adapter-env.dto';
 
 export class IdentityProviderAdapterEnvConfig {
-  // Mock Service Provider
-  @IsObject()
-  @IsOptional()
-  readonly provider: ClientMetadata;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => IdentityProviderAdapter)
+  readonly list: IdentityProviderAdapter[];
+}
 
-  @IsBoolean()
-  readonly discovery: boolean;
-
-  @IsUrl()
-  @IsOptional()
-  @ValidateIf((o) => o.discovery)
-  readonly discoveryUrl: string;
-
+export class IdentityProviderAdapter extends IdentityProviderAdapterEnvDTO {
   @IsString()
   readonly clientSecretEncryptKey: string;
 }

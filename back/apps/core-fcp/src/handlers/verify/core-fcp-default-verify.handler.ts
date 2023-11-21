@@ -159,9 +159,9 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     const { FC_REQUESTED_RNIPP, FC_RECEIVED_VALID_RNIPP } =
       this.tracking.TrackedEventsMap;
 
-    this.tracking.track(FC_REQUESTED_RNIPP, trackingContext);
+    await this.tracking.track(FC_REQUESTED_RNIPP, trackingContext);
     const rnippIdentity = await this.rnipp.check(idpIdentity);
-    this.tracking.track(FC_RECEIVED_VALID_RNIPP, trackingContext);
+    await this.tracking.track(FC_RECEIVED_VALID_RNIPP, trackingContext);
 
     this.logger.trace({ rnippIdentity });
 

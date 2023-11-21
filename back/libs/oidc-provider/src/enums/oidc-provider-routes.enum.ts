@@ -5,6 +5,7 @@ export enum OidcProviderRoutes {
   CODE_VERIFICATION = '/device',
   DEVICE_AUTHORIZATION = '/device/auth',
   END_SESSION = '/session/end',
+  END_SESSION_CONFIRMATION = '/session/end/confirm',
   INTROSPECTION = '/token/introspection',
   JWKS = '/jwks',
   PUSHED_AUTHORIZATION_REQUEST = '/request',

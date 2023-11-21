@@ -102,7 +102,7 @@ describe('UserDashboardTrackingService', () => {
     beforeEach(() => {
       service['extractContext'] = jest
         .fn()
-        .mockResolvedValueOnce(extractedValueMock);
+        .mockReturnValueOnce(extractedValueMock);
       service['getDataFromContext'] = jest
         .fn()
         .mockReturnValue(extractedContextMock);
@@ -165,7 +165,7 @@ describe('UserDashboardTrackingService', () => {
       });
     });
 
-    it('should return informations from context', async () => {
+    it('should return informations from context', () => {
       // Given
       const contextMock = {
         req: {
@@ -173,19 +173,19 @@ describe('UserDashboardTrackingService', () => {
         },
       };
       // When
-      const result = await service['extractContext'](contextMock);
+      const result = service['extractContext'](contextMock);
       // Then
       expect(result).toEqual(extractedValueMock);
     });
 
-    it('should throw if req is missing', async () => {
+    it('should throw if req is missing', () => {
       // Given
       const contextMock = {};
 
       // Then
-      await expect(() =>
-        service['extractContext'](contextMock),
-      ).rejects.toThrow(UserDashboardMissingContextException);
+      expect(() => service['extractContext'](contextMock)).toThrow(
+        UserDashboardMissingContextException,
+      );
     });
   });
 

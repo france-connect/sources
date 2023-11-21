@@ -114,9 +114,9 @@ describe('OidcProviderRedisAdapter', () => {
       // Given
       const expires = 'not a number';
       // Then
-      expect(adapter.upsert(idMock, defaultPayload, expires)).rejects.toThrow(
-        TypeError,
-      );
+      await expect(
+        adapter.upsert(idMock, defaultPayload, expires),
+      ).rejects.toThrow(TypeError);
     });
     it('should call expires if expiresIn is provided', async () => {
       // When
@@ -206,7 +206,9 @@ describe('OidcProviderRedisAdapter', () => {
       const error = new Error('exec failed');
       multiMock.exec.mockRejectedValueOnce(error);
       // Then
-      expect(adapter.upsert(idMock, defaultPayload)).rejects.toThrow(error);
+      await expect(adapter.upsert(idMock, defaultPayload)).rejects.toThrow(
+        error,
+      );
     });
   });
 
@@ -279,7 +281,7 @@ describe('OidcProviderRedisAdapter', () => {
   });
 
   describe('saveKey', () => {
-    it('Should throw if JSON.stringiy fails', async () => {
+    it('Should throw if JSON.stringiy fails', () => {
       // Given
       const payload = { foo: 'bar', circularRef: null };
       const keyMock = 'foo';
@@ -290,7 +292,7 @@ describe('OidcProviderRedisAdapter', () => {
       );
     });
 
-    it('should call hmset if name is in consumable var', async () => {
+    it('should call hmset if name is in consumable var', () => {
       // Given
       const authorizationCodeAdapter = new OidcProviderRedisAdapter(
         loggerMock,
@@ -309,7 +311,7 @@ describe('OidcProviderRedisAdapter', () => {
         payload: '{}',
       });
     });
-    it('should call set if name is not in consumable var', async () => {
+    it('should call set if name is not in consumable var', () => {
       // Given
       const key = 'foo';
       const defaultPayload = {};
@@ -398,7 +400,7 @@ describe('OidcProviderRedisAdapter', () => {
       const id = 'greatId';
 
       // WHEN
-      adapter['findServiceProvider'](id);
+      await adapter['findServiceProvider'](id);
 
       // THEN
       expect(ServiceProviderAdapterMock.getById).toHaveBeenCalledTimes(1);
@@ -512,7 +514,7 @@ describe('OidcProviderRedisAdapter', () => {
     const id = 'greatId';
     it('should call the logger', async () => {
       // WHEN
-      adapter.find(id);
+      await adapter.find(id);
 
       // THEN
       expect(loggerMock.debug).toHaveBeenCalledTimes(1);
@@ -525,7 +527,7 @@ describe('OidcProviderRedisAdapter', () => {
       adapter['findServiceProvider'] = jest.fn();
 
       // WHEN
-      adapter.find(id);
+      await adapter.find(id);
 
       // THEN
       expect(adapter['findServiceProvider']).toHaveBeenCalledTimes(1);
@@ -537,7 +539,7 @@ describe('OidcProviderRedisAdapter', () => {
       adapter['findInRedis'] = jest.fn();
 
       // WHEN
-      adapter.find(id);
+      await adapter.find(id);
 
       // THEN
       expect(adapter['findInRedis']).toHaveBeenCalledTimes(1);
@@ -546,7 +548,7 @@ describe('OidcProviderRedisAdapter', () => {
   });
 
   describe('parsedPayload', () => {
-    it('should return a merged object if response is an object', async () => {
+    it('should return a merged object if response is an object', () => {
       // Given
       const payloadMock = '{"fizz":"buzz"}';
       // When
@@ -554,7 +556,7 @@ describe('OidcProviderRedisAdapter', () => {
       // Then
       expect(result).toEqual({ fizz: 'buzz' });
     });
-    it('should throw if raw response can not be JSON parsed', async () => {
+    it('should throw if raw response can not be JSON parsed', () => {
       // Given
       const payloadMock = 'not so much json';
       // Then
@@ -648,7 +650,7 @@ describe('OidcProviderRedisAdapter', () => {
       const errorMock = new Error('exec failed');
       multiMock.exec.mockRejectedValueOnce(errorMock);
       // Then
-      expect(adapter.revokeByGrantId(idMock)).rejects.toThrow(errorMock);
+      await expect(adapter.revokeByGrantId(idMock)).rejects.toThrow(errorMock);
     });
   });
 
@@ -665,6 +667,143 @@ describe('OidcProviderRedisAdapter', () => {
         'consumed',
         expect.any(Number),
       );
+    });
+  });
+
+  describe('fetchTtlAndValue', () => {
+    const ttlMock = 42;
+    const valueMock = 'someValue';
+
+    const successMock = [
+      [undefined, ttlMock],
+      [undefined, valueMock],
+    ];
+
+    beforeEach(() => {
+      redisMock.multi.mockReturnValue(redisMock);
+      redisMock.ttl.mockReturnValue(redisMock);
+      redisMock.get.mockReturnValue(multiMock);
+      multiMock.exec.mockResolvedValue(successMock);
+    });
+    it('should call redis.multi', async () => {
+      // Given
+      const idMock = 'foo';
+      // When
+      await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(redisMock.multi).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call redis.ttl', async () => {
+      // Given
+      const idMock = 'foo';
+      // When
+      await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(redisMock.ttl).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call redis.get', async () => {
+      // Given
+      const idMock = 'foo';
+      // When
+      await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(redisMock.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call redis.multi.exec', async () => {
+      // Given
+      const idMock = 'foo';
+      // When
+      await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(multiMock.exec).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return an object with ttl and value', async () => {
+      // Given
+      const idMock = 'foo';
+      // When
+      const result = await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(result).toEqual({ ttl: ttlMock, value: valueMock });
+    });
+
+    it('should return ttl = -1 and value = null', async () => {
+      // Given
+      const idMock = 'foo';
+      multiMock.exec.mockResolvedValueOnce([
+        [undefined, undefined],
+        [undefined, null],
+      ]);
+      // When
+      const result = await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(result).toEqual({ ttl: -1, value: null });
+    });
+  });
+
+  describe('getExpireAndPayload', () => {
+    // Given
+    const idMock = 'foo';
+    const ttlMock = 42;
+    const valueMock = '{"some": "json", "payload": "here"}';
+    const payloadMock = { some: 'json', payload: 'here' };
+    const nowMock = 100000;
+    const keyMock = 'keyMockValue';
+
+    beforeEach(() => {
+      adapter.fetchTtlAndValue = jest.fn().mockResolvedValue({
+        ttl: ttlMock,
+        value: valueMock,
+      });
+      adapter.key = jest.fn().mockReturnValue(keyMock);
+      adapter.parsedPayload = jest.fn().mockReturnValue(payloadMock);
+      jest.spyOn(Date, 'now').mockReturnValue(nowMock);
+    });
+
+    it('should call key', async () => {
+      // When
+      await adapter.getExpireAndPayload(idMock);
+      // Then
+      expect(adapter.key).toHaveBeenCalledTimes(1);
+      expect(adapter.key).toHaveBeenCalledWith(idMock);
+    });
+
+    it('should call fetchTtlAndValue', async () => {
+      // When
+      await adapter.getExpireAndPayload(idMock);
+      // Then
+      expect(adapter.fetchTtlAndValue).toHaveBeenCalledTimes(1);
+      expect(adapter.fetchTtlAndValue).toHaveBeenCalledWith(keyMock);
+    });
+
+    it('should call parsedPayload', async () => {
+      // When
+      await adapter.getExpireAndPayload(idMock);
+      // Then
+      expect(adapter.parsedPayload).toHaveBeenCalledTimes(1);
+      expect(adapter.parsedPayload).toHaveBeenCalledWith(valueMock);
+    });
+
+    it('should return an object with expire and payload', async () => {
+      // When
+      const result = await adapter.getExpireAndPayload(idMock);
+      // Then
+      expect(result).toEqual({ expire: 142, payload: payloadMock });
+    });
+
+    it('should return expire = -1 and payload = null', async () => {
+      // Given
+      adapter.fetchTtlAndValue.mockResolvedValueOnce({
+        ttl: -1,
+        value: null,
+      });
+      // When
+      const result = await adapter.getExpireAndPayload(idMock);
+      // Then
+      expect(result).toEqual({ expire: -1, payload: null });
     });
   });
 });

@@ -29,6 +29,7 @@ async function bootstrap() {
   const {
     urlPrefix,
     assetsPaths,
+    assetsCacheTtl,
     viewsPaths,
     httpsOptions: { key, cert },
   } = configService.get<AppConfig>('App');
@@ -145,7 +146,9 @@ async function bootstrap() {
     },
   );
   assetsPaths.forEach((assetsPath) => {
-    app.useStaticAssets(join(__dirname, assetsPath, 'public'));
+    app.useStaticAssets(join(__dirname, assetsPath, 'public'), {
+      maxAge: assetsCacheTtl * 1000,
+    });
   });
 
   const { cookieSecrets } = configService.get<SessionConfig>('Session');
@@ -161,4 +164,5 @@ async function bootstrap() {
 
   await app.listen(3000);
 }
-bootstrap();
+
+void bootstrap();

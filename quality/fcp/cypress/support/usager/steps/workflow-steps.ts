@@ -1,4 +1,4 @@
-import { When } from 'cypress-cucumber-preprocessor/steps';
+import { When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { navigateTo, User } from '../../common/helpers';
 import {
@@ -60,12 +60,13 @@ export class ConnectionWorkflow {
    * @returns the current ConnectionWorkflow instance
    */
   start(): this {
-    const { claims }: ServiceProvider = this.serviceProvider;
+    const { acrValue, claims }: ServiceProvider = this.serviceProvider;
 
     this.serviceProviderPage.startLogin(
       this.fcRootUrl,
       this.scopeContext,
       claims,
+      acrValue,
     );
     return this;
   }

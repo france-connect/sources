@@ -24,7 +24,7 @@ export class FcExceptionFilter
     this.logger.setContext(this.constructor.name);
   }
 
-  catch(exception: FcException, host: ArgumentsHost) {
+  async catch(exception: FcException, host: ArgumentsHost) {
     this.logger.debug('Exception from FcException');
 
     const res = host.switchToHttp().getResponse();
@@ -42,7 +42,7 @@ export class FcExceptionFilter
 
     if (this.tracking) {
       const context: TrackedEventContextInterface = { req, exception };
-      this.tracking.trackExceptionIfNeeded(exception, context);
+      await this.tracking.trackExceptionIfNeeded(exception, context);
     }
 
     /**

@@ -1,8 +1,10 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { IsArray, IsBoolean, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsNumber, IsString } from 'class-validator';
 import { ClientAuthMethod, ResponseType } from 'openid-client';
+
+import { SUPPORTED_SIG_ALG } from '@fc/cryptography';
 
 export class ClientMetadata {
   @IsString()
@@ -16,9 +18,10 @@ export class ClientMetadata {
   readonly client_secret: string;
 
   @IsString()
+  @IsIn(SUPPORTED_SIG_ALG)
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly id_token_signed_response_alg: string;
+  readonly id_token_signed_response_alg: 'ES256' | 'RS256' | 'HS256';
 
   @IsString()
   // openid defined property names

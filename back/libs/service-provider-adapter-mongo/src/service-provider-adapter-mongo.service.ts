@@ -43,6 +43,8 @@ export class ServiceProviderAdapterMongoService
       this.refreshCache.bind(this),
     );
     this.logger.debug('Initializing service-provider');
+    // Warm up cache and shows up excluded SpPs
+    await this.getList();
   }
 
   async refreshCache(): Promise<void> {

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <%- include('includes/head') %>
+    <title><%= locals.titleFront %></title>
+  </head>
+  <body>
+    <%- include('includes/menu') %>
+
+    <section class="welcome">
+      <div class="container text-center">
+        <h1>Mes données</h1>
+      </div>
+    </section>
+
+    <section class="container">
+      <% dataApiActive && data.forEach(({ name, response }) => { %>
+        <% if (response?.error) { %>
+          <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading"><%= name %> returned error:</h4>
+            <p><strong>Error:</strong> <%= response.error %></p>
+            <p><strong>Description:</strong> <%= response.error_description %></p>
+          </div>
+        <% } else if (typeof response === 'string') { %>
+          <div class="alert alert-warning" role="alert">
+            <h4 class="alert-heading"><%= name %> returned no data (Not up ?)</h4>
+          </div>
+        <% } else { %>
+          <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading"><%= name %> returned data:</h4>
+            <pre id="json"><%= JSON.stringify(response, null, 2) %></pre>
+          </div>
+        <% } %>
+      <% }); %>
+    </section>
+
+    <%- include('includes/footer') %>
+  </body>
+</html>

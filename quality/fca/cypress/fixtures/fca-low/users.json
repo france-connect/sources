@@ -24,5 +24,31 @@
       "chorusdt:matricule": "USER_AGC",
       "chorusdt:societe": "CHT"
     }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "différent"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "12354",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "uid": "2",
+      "given_name": "bernard",
+      "usual_name": "Martinot",
+      "email": "test@abcd.com",
+      "siren": "343293775",
+      "siret": "34329377500037",
+      "organizational_unit": "comptabilite",
+      "belonging_population": "agent",
+      "phone_number": "+331-12-44-45-23",
+      "chorusdt:matricule": "123457",
+      "chorusdt:societe": "MinistèreIntérieur"
+    }
   }
 ]

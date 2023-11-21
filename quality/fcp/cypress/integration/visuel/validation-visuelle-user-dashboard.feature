@@ -5,7 +5,7 @@ Fonctionnalité: Validation Visuelle - User Dashboard
   Plan du Scénario: Validation Visuelle - Historique des connexions sur <device>
     Etant donné que j'utilise un compte usager "pour les tests de traces"
     Et que j'utilise un navigateur web sur "<device>"
-    Et que les traces "FranceConnect et FranceConnect+" contiennent "des connexions récentes et anciennes de plus de 6 mois"
+    Et que les traces "FranceConnect(CL) et FranceConnect+" contiennent "des connexions récentes et anciennes de plus de 6 mois"
     Et que je navigue sur la page d'accueil du dashboard usager
     Et que la copie d'écran "udHome" correspond à la page actuelle sur "<device>"
     Quand je me connecte au dashboard usager
@@ -51,7 +51,7 @@ Fonctionnalité: Validation Visuelle - User Dashboard
     Et je clique sur le lien gérer mes accés dans le menu de navigation mobile
     Alors je suis redirigé vers la page gestion des accès du dashboard usager
     Et la copie d'écran "udPreferences" correspond à la page actuelle sur "mobile"
-  
+
   Plan du Scénario: Validation Visuelle - Mail de modification des Préférences FI sur <device>
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que j'utilise un navigateur web sur "<device>"

@@ -3,6 +3,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsNumber,
   IsObject,
   IsOptional,
@@ -10,6 +11,11 @@ import {
   ValidateIf,
   ValidateNested,
 } from 'class-validator';
+
+class TlsConfig {
+  @IsString()
+  readonly ca: string;
+}
 
 export class RedisConfig {
   @IsString()
@@ -35,6 +41,19 @@ export class RedisConfig {
   @Type(() => Sentinel)
   @ValidateIf(({ host }) => host === undefined)
   readonly sentinels: Sentinel[];
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => TlsConfig)
+  readonly tls: TlsConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => TlsConfig)
+  readonly sentinelTLS: TlsConfig;
+
+  @IsBoolean()
+  readonly enableTLSForSentinelMode: boolean;
 
   @IsString()
   @IsOptional()

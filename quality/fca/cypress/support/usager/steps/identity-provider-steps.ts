@@ -1,4 +1,4 @@
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { User } from '../../common/helpers';
 import { UserCredentials } from '../../common/types';
@@ -21,7 +21,7 @@ Then(
 
 When(
   "le fournisseur d'identité garantit un niveau de sécurité {string}",
-  function (acr) {
+  function (acr: string) {
     identityProviderPage.setMockAcrValue(acr);
   },
 );

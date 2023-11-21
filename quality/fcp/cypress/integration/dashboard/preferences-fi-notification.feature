@@ -1,5 +1,5 @@
 #language: fr
-@userDashboard @preferencesFI @ignoreHigh @ignoreLow @ignoreInteg01
+@userDashboard @preferencesFI @ignoreInteg01
 Fonctionnalité: Préférences FI - Notification
   # En tant qu'usager de FranceConnect,
   # je veux recevoir une notification quand mes préférences FI sont changées

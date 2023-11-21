@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionUsager @ci
+@usager @connexionUsager
 Fonctionnalité: Connexion Usager
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter en utilisant un fournisseur d'identité
@@ -19,6 +19,7 @@ Fonctionnalité: Connexion Usager
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "tous les scopes"
 
+  @ci
   Plan du Scénario: Connexion d'un usager - FI avec signature <signature>
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "obligatoires"

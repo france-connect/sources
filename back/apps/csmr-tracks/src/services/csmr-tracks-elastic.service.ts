@@ -14,20 +14,14 @@ import { ConfigService } from '@fc/config';
 import { ElasticsearchConfig, formatMultiMatchGroup } from '@fc/elasticsearch';
 import { LoggerService } from '@fc/logger-legacy';
 
+import { EVENT_MAPPING, NOW, SIX_MONTHS_AGO } from '../constants';
 import {
-  EVENT_MAPPING,
-  FIELDS_FC_LEGACY,
-  FIELDS_FCP_HIGH,
-  NOW,
-  SIX_MONTHS_AGO,
-} from '../constants';
-import {
+  ICsmrTracksData,
   ICsmrTracksElasticResults,
-  ICsmrTracksFieldsRawData,
   Search,
 } from '../interfaces';
 
-export type SearchResponseTracks = SearchResponse<ICsmrTracksFieldsRawData>;
+export type SearchResponseTracks = SearchResponse<ICsmrTracksData>;
 
 // Constants
 const DEFAULT_OFFSET = 0;
@@ -55,7 +49,6 @@ export class CsmrTracksElasticService {
   fields: (QueryDslFieldAndFormat | Field)[];
   eventsQuery: QueryDslQueryContainer;
 
-  // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
@@ -65,25 +58,6 @@ export class CsmrTracksElasticService {
   }
 
   onModuleInit() {
-    /**
-     * @todo add ES logs during development
-     * We need "isDevelopment" from app Config
-     *
-     * Author: Arnaud PSA
-     * Date: 13/06/22
-     *
-      this.elasticsearch.on('request', (...events) => {
-        console.log(util.inspect(events, true, 50, true));
-      });
-      this.elasticsearch.on('response', (...events) => {
-        this.logger.trace({ events });
-      });
-      this.elasticsearch.on('sniff', (...events) => {
-        this.logger.trace({ events });
-      });
-     */
-
-    this.fields = this.getFields();
     this.eventsQuery = this.createEventsQuery();
   }
 
@@ -115,26 +89,6 @@ export class CsmrTracksElasticService {
     };
 
     return results;
-  }
-
-  private getFields(): (QueryDslFieldAndFormat | Field)[] {
-    const globalFields = [
-      'source.geo.city_name',
-      'source.geo.country_iso_code',
-      'source.geo.region_name',
-    ];
-
-    const sortableFields = [{ field: 'time', format: 'epoch_millis' }];
-    const fields = [
-      ...new Set([
-        ...globalFields,
-        ...(FIELDS_FCP_HIGH as string[]),
-        ...(FIELDS_FC_LEGACY as string[]),
-        ...sortableFields,
-      ]),
-    ];
-
-    return fields;
   }
 
   private createEventsQuery(): QueryDslQueryContainer {
@@ -181,7 +135,6 @@ export class CsmrTracksElasticService {
       index: tracksIndex,
       from: offset,
       size,
-      fields: this.fields,
       sort: [
         {
           time: {

@@ -1,4 +1,4 @@
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { getScopeByType } from '../helpers';
 import InfoConsentPage from '../pages/info-consent-page';
@@ -23,11 +23,14 @@ Then('je suis redirigé vers la page de consentement', function () {
 
 When('je clique pour afficher les claims', function () {
   infoConsentPage.getShowClaimsToggle().click();
+  // Wait for accordion opened
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(500);
 });
 
 Then(
   /les informations demandées par le fournisseur de service correspondent aux? scopes? "([^"]+)"/,
-  function (type) {
+  function (type: string) {
     const scope = getScopeByType(this.scopes, type);
     const { explicitConsent } = this.serviceProvider;
     infoConsentPage.checkInformationConsent(scope, explicitConsent);
@@ -37,12 +40,6 @@ Then(
 Then(
   'aucune information n\'est demandée par le fournisseur de service pour le scope "anonyme"',
   function () {
-    // TODO: Remove once FC+ uses the DSFR design
-    const platform: string = Cypress.env('PLATFORM');
-    if (platform === 'fcp-high') {
-      infoConsentPage.checkAnonymousScopeFcPlus();
-      return;
-    }
     infoConsentPage.checkAnonymousScope();
   },
 );
@@ -54,10 +51,13 @@ When(
   },
 );
 
-Then(/^le bouton continuer sur le FS est (actif|désactivé)$/, function (text) {
-  const beEnabledOrNot = text === 'actif' ? 'be.enabled' : 'be.disabled';
-  infoConsentPage.getConsentButton().should(beEnabledOrNot);
-});
+Then(
+  /^le bouton continuer sur le FS est (actif|désactivé)$/,
+  function (text: string) {
+    const beEnabledOrNot = text === 'actif' ? 'be.enabled' : 'be.disabled';
+    infoConsentPage.getConsentButton().should(beEnabledOrNot);
+  },
+);
 
 When('je continue sur le fournisseur de service', function () {
   infoConsentPage.getConsentButton().click();

@@ -14,6 +14,10 @@ export interface CustomClientMetadata extends AllClientMetadata {
  */
 export type ServiceProviderMetadata = CustomClientMetadata;
 
+export interface ServiceProviderMetadataList {
+  list: ServiceProviderMetadata[];
+}
+
 export interface IServiceProviderAdapter {
   getList(refreshCache?: boolean): Promise<ServiceProviderMetadata[]>;
   shouldExcludeIdp(spId: string, idpId: string): Promise<boolean>;

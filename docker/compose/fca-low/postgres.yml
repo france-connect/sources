@@ -1,4 +1,4 @@
-version: '2.4'
+version: "2.4"
 
 ####################
 ####################
@@ -6,9 +6,9 @@ services:
   pg-exploit-fca-low:
     image: postgres:11
     environment:
-      - 'POSTGRES_DB=pg-db'
-      - 'POSTGRES_USER=pg-user'
-      - 'POSTGRES_PASSWORD=pg-password'
+      - "POSTGRES_DB=pg-db"
+      - "POSTGRES_USER=pg-user"
+      - "POSTGRES_PASSWORD=pg-password"
     networks:
       - data
 
@@ -16,8 +16,8 @@ services:
   pg-exploitation-fca-low:
     image: postgres:11
     environment:
-      - 'POSTGRES_DB=pg-db'
-      - 'POSTGRES_USER=pg-user'
-      - 'POSTGRES_PASSWORD=pg-password'
+      - "POSTGRES_DB=pg-db"
+      - "POSTGRES_USER=pg-user"
+      - "POSTGRES_PASSWORD=pg-password"
     networks:
       - data

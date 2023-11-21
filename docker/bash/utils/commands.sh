@@ -17,7 +17,7 @@ function _command_run() {
 
   if [ -v ${key} ]; then
     echo "No command found"
-    echo "Use help to see all avilable commands:"
+    echo "Use help to see all available commands:"
     echo " > ./docker-stack help"
     exit 1
   fi
@@ -26,7 +26,7 @@ function _command_run() {
 
   if [ -v ${cmd} ]; then
     echo "Command not found: <${key}>"
-    echo "Use help to see all avilable commands:"
+    echo "Use help to see all available commands:"
     echo " > ./docker-stack help"
     exit 1
   fi
@@ -35,10 +35,16 @@ function _command_run() {
 }
 
 function _command_list() {
+  local search=$1
+
   echo ""
   echo "Available commands:"
 
-  echo "$(_do_list_commands | sort)"
+  if [ -z ${search} ]; then
+    echo "$(_do_list_commands | sort)"
+  else
+    echo "$(_do_list_commands | grep "${search}" | sort)"
+  fi
 
   echo "---------------------------"
   echo "Use env variable 'VERBOSE' to get verbose output"

@@ -42,4 +42,5 @@ export const labels: ILabelMapping<typeof claims> = {
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
   rnipp_birthcountry: null,
+  amr: null,
 };

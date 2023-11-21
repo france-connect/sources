@@ -1,4 +1,4 @@
-version: '2.4'
+version: "2.4"
 
 ####################
 ####################
@@ -12,8 +12,8 @@ services:
       # --
       - "rnipp"
       - "csmr-hsm"
-      - "mock-data-provider-high"
-  
+      - "dp1-high"
+
   bdd-fcp-high:
     image: alpine
     depends_on:
@@ -38,6 +38,8 @@ services:
       - "fip18-high"
       - "fip19-high"
       - "fip20-high"
+      # -- Mailer
+      - "maildev"
 
   exploit-fcp-high:
     image: alpine
@@ -75,4 +77,5 @@ services:
       - "exploit-fcp-high-front"
       # --
       - "maildev"
-      - "mock-data-provider-high"
+      - "dp1-high"
+      - "dp2-high"

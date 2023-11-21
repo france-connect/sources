@@ -1,0 +1,11 @@
+version: "2.4"
+
+services:
+  ###########################
+  # Web Static Example
+  ###########################
+
+  web:
+    image: alpine
+    depends_on:
+      - doc-example

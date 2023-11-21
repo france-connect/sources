@@ -1,14 +1,11 @@
 import {
-  afterSuccessScenario,
-  basicSuccessScenario,
-  beforeSuccessScenario,
+  basicScenario,
   getAuthorizeUrl,
   getServiceProvider,
 } from './mire.utils';
 
 describe('Session', () => {
-  // -- replace by either `fip1-high` or `fia1-low`
-  const idpId = `${Cypress.env('IDP_NAME')}1-low`;
+  const idpId = '9c716f61-b8a1-435c-a407-ef4d677ec270';
 
   /**
    * @TODO #306 Backport this test from core-fcp :
@@ -62,19 +59,18 @@ describe('Session', () => {
   });
 
   it('should have cookie stored for IdP with the property `sameSite` value set to `lax`', () => {
-    const loginInfo = {
+    const domain = Cypress.env('APP_DOMAIN');
+    const params = {
       acrValues: 'eidas1',
       userName: 'test',
-      password: '123',
       idpId,
     };
 
-    beforeSuccessScenario(loginInfo);
-    basicSuccessScenario(loginInfo.idpId);
-    afterSuccessScenario(loginInfo);
+    basicScenario(params);
 
-    cy.getCookie('fc_session_id').then((cookie) => {
-      expect(cookie).to.have.property('sameSite', 'lax');
-    });
+    cy.getCookie('fc_session_id', { domain })
+      .should('exist')
+      .its('sameSite')
+      .should('equal', 'lax');
   });
 });

@@ -7,6 +7,8 @@ import {
   NetworkContextInterface,
 } from '@fc/tracking-context';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { EventsCategoriesEnum } from '../enums';
 import { EidasBridgeTrackedEventInterface } from '../interfaces';
 import { EidasBridgeTrackingService } from './eidas-bridge-tracking.service';
@@ -156,25 +158,26 @@ describe('EidasBridgeTrackingService', () => {
   });
 
   describe('extractContextFromEuRequest', () => {
+    const getBoundSessionMock = getSessionServiceMock();
+
     beforeEach(() => {
-      jest.spyOn(SessionService, 'getBoundedSession').mockReturnValue({
-        get: jest.fn(),
-        set: jest.fn(),
-      });
+      jest
+        .spyOn(SessionService, 'getBoundSession')
+        .mockReturnValue(getBoundSessionMock);
     });
 
-    it('should call SessionService.getBoundedSession', async () => {
+    it('should call SessionService.getBoundSession', async () => {
       // When
       await service['extractContextFromEuRequest'](eventContextMock);
       // Then
-      expect(SessionService.getBoundedSession).toHaveBeenCalledTimes(2);
+      expect(SessionService.getBoundSession).toHaveBeenCalledTimes(2);
     });
 
     it('should retrieve OidcClient session', async () => {
       // When
       await service['extractContextFromEuRequest'](eventContextMock);
       // Then
-      expect(SessionService.getBoundedSession).toHaveBeenNthCalledWith(
+      expect(SessionService.getBoundSession).toHaveBeenNthCalledWith(
         1,
         eventContextMock.req,
         'OidcClient',
@@ -185,7 +188,7 @@ describe('EidasBridgeTrackingService', () => {
       // When
       await service['extractContextFromEuRequest'](eventContextMock);
       // Then
-      expect(SessionService.getBoundedSession).toHaveBeenNthCalledWith(
+      expect(SessionService.getBoundSession).toHaveBeenNthCalledWith(
         2,
         eventContextMock.req,
         'EidasProvider',
@@ -205,21 +208,12 @@ describe('EidasBridgeTrackingService', () => {
           subject: 'subjectValue',
         },
       };
-      jest
-        .spyOn(SessionService, 'getBoundedSession')
-        .mockReset()
-        .mockReturnValue({
-          get: jest
-            .fn()
-            .mockResolvedValueOnce(oidcClientSessionMock)
-            .mockResolvedValueOnce(eidasProviderSessionMock),
-          set: jest.fn(),
-        });
-
+      getBoundSessionMock.get
+        .mockResolvedValueOnce(oidcClientSessionMock)
+        .mockResolvedValueOnce(eidasProviderSessionMock);
       // When
-      const result = await service['extractContextFromEuRequest'](
-        eventContextMock,
-      );
+      const result =
+        await service['extractContextFromEuRequest'](eventContextMock);
       // Then
       expect(result).toEqual({
         eidasLevelRequested:
@@ -234,9 +228,8 @@ describe('EidasBridgeTrackingService', () => {
 
     it('should return undefined values for properties that are not available', async () => {
       // When
-      const result = await service['extractContextFromEuRequest'](
-        eventContextMock,
-      );
+      const result =
+        await service['extractContextFromEuRequest'](eventContextMock);
       // Then
       expect(result).toEqual({
         eidasLevelRequested: undefined,
@@ -249,25 +242,26 @@ describe('EidasBridgeTrackingService', () => {
   });
 
   describe('extractContextFromFrRequest', () => {
+    const getBoundSessionMock = getSessionServiceMock();
+
     beforeEach(() => {
-      jest.spyOn(SessionService, 'getBoundedSession').mockReturnValue({
-        get: jest.fn(),
-        set: jest.fn(),
-      });
+      jest
+        .spyOn(SessionService, 'getBoundSession')
+        .mockReturnValue(getBoundSessionMock);
     });
 
-    it('should call SessionService.getBoundedSession', async () => {
+    it('should call SessionService.getBoundSession', async () => {
       // When
       await service['extractContextFromFrRequest'](eventContextMock);
       // Then
-      expect(SessionService.getBoundedSession).toHaveBeenCalledTimes(2);
+      expect(SessionService.getBoundSession).toHaveBeenCalledTimes(2);
     });
 
     it('should retrieve OidcClient session', async () => {
       // When
       await service['extractContextFromFrRequest'](eventContextMock);
       // Then
-      expect(SessionService.getBoundedSession).toHaveBeenNthCalledWith(
+      expect(SessionService.getBoundSession).toHaveBeenNthCalledWith(
         1,
         eventContextMock.req,
         'OidcClient',
@@ -278,7 +272,7 @@ describe('EidasBridgeTrackingService', () => {
       // When
       await service['extractContextFromFrRequest'](eventContextMock);
       // Then
-      expect(SessionService.getBoundedSession).toHaveBeenNthCalledWith(
+      expect(SessionService.getBoundSession).toHaveBeenNthCalledWith(
         2,
         eventContextMock.req,
         'EidasClient',
@@ -303,21 +297,13 @@ describe('EidasBridgeTrackingService', () => {
           levelOfAssurance: 'levelOfAssuranceValue (response)',
         },
       };
-      jest
-        .spyOn(SessionService, 'getBoundedSession')
-        .mockReset()
-        .mockReturnValue({
-          get: jest
-            .fn()
-            .mockResolvedValueOnce(oidcClientSessionMock)
-            .mockResolvedValueOnce(eidasClientSessionMock),
-          set: jest.fn(),
-        });
+      getBoundSessionMock.get
+        .mockResolvedValueOnce(oidcClientSessionMock)
+        .mockResolvedValueOnce(eidasClientSessionMock);
 
       // When
-      const result = await service['extractContextFromFrRequest'](
-        eventContextMock,
-      );
+      const result =
+        await service['extractContextFromFrRequest'](eventContextMock);
       // Then
       expect(result).toEqual({
         eidasLevelRequested:
@@ -332,9 +318,8 @@ describe('EidasBridgeTrackingService', () => {
 
     it('should return undefined values for properties that are not available', async () => {
       // When
-      const result = await service['extractContextFromFrRequest'](
-        eventContextMock,
-      );
+      const result =
+        await service['extractContextFromFrRequest'](eventContextMock);
       // Then
       expect(result).toEqual({
         eidasLevelRequested: undefined,

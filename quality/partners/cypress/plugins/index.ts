@@ -1,41 +1,29 @@
 /// <reference types="cypress" />
 
-import * as browserify from '@cypress/browserify-preprocessor';
-import cucumber from 'cypress-cucumber-preprocessor';
-import { addMatchImageSnapshotPlugin } from 'cypress-image-snapshot/plugin';
-import * as processFixtureTemplate from 'cypress-template-fixtures';
-import * as resolve from 'resolve';
+import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor';
+import { createEsbuildPlugin } from '@badeball/cypress-cucumber-preprocessor/esbuild';
+import createBundler from '@bahmutov/cypress-esbuild-preprocessor';
 
 import { getFixturePath } from './fixture-plugin';
 import { resetDbSPConfigurations } from './reset-db-plugin';
 
-const pluginConfig = (
+const pluginConfig = async (
   on: Cypress.PluginEvents,
   config: Cypress.PluginConfigOptions,
-): Cypress.PluginConfigOptions => {
-  processFixtureTemplate(on, config);
-  addMatchImageSnapshotPlugin(on, config);
-
-  const options = {
-    ...browserify.defaultOptions,
-    typescript: resolve.sync('typescript', { baseDir: config.projectRoot }),
-  };
+): Promise<Cypress.PluginConfigOptions> => {
+  await addCucumberPreprocessorPlugin(on, config);
 
   on('task', {
     getFixturePath,
     resetDbSPConfigurations,
   });
 
-  on('file:preprocessor', cucumber(options));
-
-  on('before:browser:launch', (browser, launchOptions) => {
-    if (browser.name === 'electron' && browser.isHeadless) {
-      // Use larger headless screen size to support all viewports
-      launchOptions.preferences.width = 1440;
-      launchOptions.preferences.height = 1200;
-    }
-    return launchOptions;
-  });
+  on(
+    'file:preprocessor',
+    createBundler({
+      plugins: [createEsbuildPlugin(config)],
+    }),
+  );
 
   return config;
 };

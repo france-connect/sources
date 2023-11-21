@@ -1,5 +1,6 @@
 import { errors } from 'oidc-provider';
 
+import { ErrorCode } from '../enums';
 import { OidcProviderRuntimeException } from './oidc-provider-runtime-exception';
 
 describe('OidcProviderRuntimeException', () => {
@@ -53,7 +54,10 @@ describe('OidcProviderRuntimeException', () => {
     it('shoud return default code if the error is not instance of any known error and an unknown code is provided', () => {
       // Given
       const error = new TypeError('foo');
-      const exception = new OidcProviderRuntimeException(error, 666);
+      const exception = new OidcProviderRuntimeException(
+        error,
+        ErrorCode.SERVER_ERROR,
+      );
       // When
       const result = exception.getCodeFromError(
         error as errors.OIDCProviderError,

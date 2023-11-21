@@ -1,5 +1,5 @@
 #language: fr
-@eidasBridge @eidasBridgeConfig @ci @ignoreLow @ignoreHigh
+@eidasBridge @eidasBridgeConfig
 Fonctionnalité: Eidas Bridge Configuration
   # En tant que partenaire eIDAS,
   # je veux connaître la liste des scopes supportés par le noeud eIDAS français

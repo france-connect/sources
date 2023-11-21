@@ -1,5 +1,5 @@
 #language: fr
-@userDashboard @preferencesFI @ignoreHigh @ignoreLow
+@userDashboard @preferencesFI
 Fonctionnalité: Préférences FI - Message d'information autorisation futurs FI
 
   Scénario: Préférences FI - Un usager sans préférence FI bloque un FI TA02

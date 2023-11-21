@@ -34,7 +34,7 @@ interface IdentityAttributeInterface {
 
 const EIDAS_SUB_CLAIM = 'PersonIdentifier';
 
-const scopeEidasAttributesMap: ScopeEidasAttributesMapInterface = {
+const scopeMandatoryEidasAttributesMap: ScopeEidasAttributesMapInterface = {
   birthdate: {
     name: 'DateOfBirth',
     transform: (claims) => claims['birthdate'],
@@ -44,8 +44,9 @@ const scopeEidasAttributesMap: ScopeEidasAttributesMapInterface = {
     transform: (claims) => claims['PlaceOfBirth'],
   },
   family_name: {
-    name: 'BirthName',
-    transform: (claims) => claims['family_name'],
+    name: 'FamilyName',
+    transform: (claims) =>
+      claims['preferred_username'] || claims['family_name'],
   },
   gender: {
     name: 'Gender',
@@ -66,12 +67,20 @@ const scopeEidasAttributesMap: ScopeEidasAttributesMapInterface = {
   },
 };
 
+const scopeOptionalEidasAttributesMap = {
+  family_name: {
+    name: 'BirthName',
+    transform: (claims) => claims['family_name'],
+  },
+};
+
 export default class SpEidasMockPage {
   configureEidasSpMock(params: EidasMockConfigurationInterface): void {
     const config = {
       loa: EidasAssuranceLevelEnum.D,
       loaCompareType: 'minimum',
       nameId: 'unspecified',
+      optionalScopes: ['family_name'],
       scopes: ['openid'],
       spType: 'public',
       ...params,
@@ -92,9 +101,15 @@ export default class SpEidasMockPage {
     cy.get('#tab2_toggle1').click();
 
     config.scopes
-      .map((scope) => scopeEidasAttributesMap[scope]?.name)
+      .map((scope) => scopeMandatoryEidasAttributesMap[scope]?.name)
       .forEach((attribute) => {
         cy.get(`#Mandatory_${attribute}Eidas`).click();
+      });
+
+    config.optionalScopes
+      .map((scope) => scopeOptionalEidasAttributesMap[scope]?.name)
+      .forEach((attribute) => {
+        cy.get(`#Optional_${attribute}Eidas`).click();
       });
 
     // Submit configuration
@@ -160,8 +175,8 @@ export default class SpEidasMockPage {
 
     // Retrieve the expected value for the eIDAS claims
     const identity: IdentityAttributeInterface[] = scopes.map((scope) => {
-      expect(scopeEidasAttributesMap[scope]).to.exist;
-      const { name, transform } = scopeEidasAttributesMap[scope];
+      expect(scopeMandatoryEidasAttributesMap[scope]).to.exist;
+      const { name, transform } = scopeMandatoryEidasAttributesMap[scope];
 
       return {
         name,

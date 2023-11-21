@@ -50,7 +50,7 @@ import {
   CoreConfig,
   CoreSessionDto,
   ErrorParamsDto,
-  GetLoginSessionDto,
+  GetLoginOidcClientSessionDto,
 } from '../dto';
 import { ConfirmationType, DataType } from '../enums';
 import {
@@ -276,7 +276,7 @@ export class OidcProviderController {
       claims,
     };
 
-    this.tracking.track(eventKey, context);
+    await this.tracking.track(eventKey, context);
   }
 
   // adding a param reached max params limit
@@ -295,7 +295,7 @@ export class OidcProviderController {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
      * @ticket FC-1020
      */
-    @Session('OidcClient', GetLoginSessionDto)
+    @Session('OidcClient', GetLoginOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
     @Session('Core')
     sessionCore: ISessionService<CoreSessionDto>,
@@ -332,6 +332,11 @@ export class OidcProviderController {
       name: 'CoreRoutes.INTERACTION_LOGIN',
       route: CoreRoutes.INTERACTION_LOGIN,
     });
+
+    const { enableSso } = this.config.get<CoreConfig>('Core');
+    if (!enableSso) {
+      await this.sessionService.detach(req, res);
+    }
 
     return this.oidcProvider.finishInteraction(req, res, session);
   }

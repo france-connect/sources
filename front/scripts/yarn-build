@@ -6,4 +6,5 @@ APP=$1
 
 cp ../../tsconfig.app.json tsconfig.json
 
+../../scripts/yarn-dsfr $APP
 craco build

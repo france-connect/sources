@@ -162,7 +162,7 @@
                     <td class="h2">Bonjour,</td>
                   </tr>
                   <tr>
-                    <td class="bodycopy">
+                    <td class="bodycopy" data-testid="connection-notification-message">
                       Une connexion avec FranceConnect+ a eu lieu
                       <strong><%= locals.today %></strong> (heure de Paris) sur le site
                       <strong><%= locals.spName %></strong> avec votre compte
@@ -277,9 +277,35 @@
                   <tr>
                     <td
                       class="bodycopy"
-                      style="padding-top: 15px; padding-bottom: 24px;"
+                      style="padding-top: 15px;"
                     >
                       <i>L&rsquo;&eacute;quipe FranceConnect+</i>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td class="innerpadding" style="padding-top: 15px;padding-bottom: 48px;">
+                <table
+                  width="100%"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  style="border-top: 1px solid rgba(102, 102, 102, 0.5);padding-top: 24px;"
+                >
+                  <tr>
+                    <td valign="top">
+                      <img
+                        src="https://franceconnect.gouv.fr/images/question_icon.png"
+                        height="25"
+                        width="25"
+                        border="0"
+                        alt=""
+                      />
+                    </td>
+                    <td class="bodycopy" style="padding-left: 12px">
+                      Vous souhaitez nous aider &agrave; am&eacute;liorer FranceConnect+&nbsp;? Dans ce cas, vous pouvez <strong><a href="https://framaforms.org/enquete-utilisateurs-franceconnect-1691139986">r&eacute;pondre &agrave; ce questionnaire.</a></strong>
                     </td>
                   </tr>
                 </table>

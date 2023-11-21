@@ -14,4 +14,16 @@ export default {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   client_secret: env.string('CLIENT_SECRET'),
   checktokenEndpoint: env.string('CHECKTOKEN_ENDPOINT'),
+  checktokenSignedResponseAlg: env.string('CHECKTOKEN_JWT_SIGNED_RESPONSE_ALG'),
+  checktokenEncryptedResponseAlg: env.string(
+    'CHECKTOKEN_JWT_ENCRYPTED_RESPONSE_ALG',
+  ),
+  checktokenEncryptedResponseEnc: env.string(
+    'CHECKTOKEN_JWT_ENCRYPTED_RESPONSE_ENC',
+  ),
+  jwks: {
+    keys: env.json('JWKS'),
+  },
+  jwksEndpoint: env.string('JWKS_ENDPOINT'),
+  issuer: env.string('ISSUER'),
 } as DataProviderAdapterCoreConfig;

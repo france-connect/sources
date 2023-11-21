@@ -16,7 +16,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
@@ -40,7 +39,7 @@ import {
   SessionService,
 } from '@fc/session';
 
-import { AccessTokenParamsDTO } from '../dto';
+import { AccessTokenParamsDTO, AppConfig } from '../dto';
 import { UserDashboardBackRoutes, UserDashboardFrontRoutes } from '../enums';
 import { UserDashboardTokenRevocationException } from '../exceptions';
 
@@ -82,7 +81,7 @@ export class OidcClientController {
     const { scope } = this.config.get<OidcClientConfig>('OidcClient');
     const { csrfToken } = body;
 
-    const PROVIDER_UID = 'envIssuer';
+    const idpId = this.getIdpId();
 
     // -- control if the CSRF provided is the same as the one previously saved in session.
     try {
@@ -102,20 +101,19 @@ export class OidcClientController {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
       nonce,
-      idpId: PROVIDER_UID,
+      idpId,
       scope,
       state,
       prompt,
     };
 
-    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl(
-      authorizeParams,
-    );
+    const authorizationUrl =
+      await this.oidcClient.utils.getAuthorizeUrl(authorizeParams);
 
     const { name: idpName, title: idpLabel } =
-      await this.identityProvider.getById(PROVIDER_UID);
+      await this.identityProvider.getById(idpId);
     const session: OidcClientSession = {
-      idpId: PROVIDER_UID,
+      idpId,
       idpName,
       idpLabel,
       idpNonce: nonce,
@@ -151,7 +149,7 @@ export class OidcClientController {
       name: 'OidcClientRoutes.WELL_KNOWN_KEYS',
       route: OidcClientRoutes.WELL_KNOWN_KEYS,
     });
-    return this.oidcClient.utils.wellKnownKeys();
+    return await this.oidcClient.utils.wellKnownKeys();
   }
 
   @Get(UserDashboardBackRoutes.LOGOUT)
@@ -240,10 +238,7 @@ export class OidcClientController {
   @Get(OidcClientRoutes.OIDC_CALLBACK_LEGACY)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @Redirect()
-  async getLegacyOidcCallback(
-    @Query() query,
-    @Param() _params: GetOidcCallback,
-  ) {
+  getLegacyOidcCallback(@Query() query, @Param() _params: GetOidcCallback) {
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const queryParams = encode(query);
 
@@ -321,5 +316,11 @@ export class OidcClientController {
     await sessionOidc.set({ ...identityExchange });
 
     res.redirect(UserDashboardFrontRoutes.MES_TRACES);
+  }
+
+  private getIdpId(): string {
+    const { idpId } = this.config.get<AppConfig>('App');
+
+    return idpId;
   }
 }

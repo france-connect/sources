@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 
 task() {
+  local message=${1}
+  local cmd=${2}
+  local args=${@:3}
+
   if [ -z $VERBOSE ]; then
-    echo -ne "$1: "
-    ($($2 &>"$__DKS_LAST_LOG_FILE") && _task_success) || _task_fail "$1" "$2" "$?"
+    echo -ne "${message}: "
+    ($(${cmd} ${args} &>"$__DKS_LAST_LOG_FILE") && _task_success) || _task_fail "$1" "$2" "$?"
   else
-    $2
+    ${cmd} ${args}
   fi
 }
 

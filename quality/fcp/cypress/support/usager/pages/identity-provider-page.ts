@@ -30,15 +30,16 @@ export default class IdentityProviderPage {
       if ($elem.is('select')) {
         cy.wrap($elem).select(idpAcr);
       } else {
-        cy.wrap($elem).clear().type(idpAcr);
+        cy.wrap($elem).clear();
+        cy.wrap($elem).type(idpAcr);
       }
     });
   }
 
   login(userCredentials: UserCredentials): void {
     const { password, username } = userCredentials;
-    cy.get(this.usernameSelector).clear().type(username);
-    cy.get(this.passwordSelector).clear().type(password, { log: false });
+    cy.get(this.usernameSelector).clearThenType(username);
+    cy.get(this.passwordSelector).clearThenType(password, { log: false });
     cy.get(this.loginButtonSelector).click();
   }
 }

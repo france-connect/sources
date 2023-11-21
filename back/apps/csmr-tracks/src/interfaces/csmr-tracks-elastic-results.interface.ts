@@ -6,9 +6,9 @@ import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
 import { IPaginationResult } from '@fc/common';
 
-import { ICsmrTracksFieldsRawData } from './csmr-tracks-fields-data.interface';
+import { ICsmrTracksData } from './csmr-tracks-fields-data.interface';
 
 export type ICsmrTracksElasticResults = {
   meta: IPaginationResult;
-  payload: SearchHit<ICsmrTracksFieldsRawData>[];
+  payload: SearchHit<ICsmrTracksData>[];
 };

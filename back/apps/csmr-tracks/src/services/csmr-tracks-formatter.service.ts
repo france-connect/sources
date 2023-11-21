@@ -2,100 +2,48 @@ import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
-import { PLATFORM_V2_IDENTIFIER_TOKEN } from '../constants';
-import { Platform } from '../enums';
+import { CoreInstance } from '../enums';
+import { CsmrTracksUnknownInstanceException } from '../exceptions';
 import {
-  IAppTracksDataService,
-  ICsmrTracksData,
-  ICsmrTracksFieldsRawData,
-} from '../interfaces';
-import { CsmrTracksHighDataService } from './csmr-tracks-data-high.service';
-import { CsmrTracksLegacyDataService } from './csmr-tracks-data-legacy.service';
+  TracksFcpHighFormatter,
+  TracksFcpLowFormatter,
+  TracksLegacyFormatter,
+} from '../formatters';
+import { ICsmrTracksData, TracksFormatterInterface } from '../interfaces';
 
 @Injectable()
 export class CsmrTracksFormatterService {
   constructor(
-    private readonly logger: LoggerService,
-    private readonly formatterFcpHigh: CsmrTracksHighDataService,
-    private readonly formatterLegacy: CsmrTracksLegacyDataService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+    private readonly formatterFcpHigh: TracksFcpHighFormatter,
+    private readonly formatterFcpLow: TracksFcpLowFormatter,
+    private readonly formatterLegacy: TracksLegacyFormatter,
+  ) {}
 
-  public formatTracks(
-    tracks: SearchHit<ICsmrTracksFieldsRawData>[],
+  formatTracks(
+    rawTracks: SearchHit<ICsmrTracksData>[],
   ): ICsmrTracksOutputTrack[] {
-    const data = this.extractDataFromFields(tracks);
-
-    const fcpHigh = this.generateTracks(
-      data,
-      Platform.FCP_HIGH,
-      this.formatterFcpHigh,
-    );
-
-    const fcLegacy = this.generateTracks(
-      data,
-      Platform.FC_LEGACY,
-      this.formatterLegacy,
-    );
-
-    const output = this.sortTracks([...fcpHigh, ...fcLegacy]);
-    return output;
-  }
-
-  private homogenizeDataFields(
-    fields: ICsmrTracksFieldsRawData,
-  ): ICsmrTracksData {
-    const entries = Object.entries(fields);
-    const flattened = entries.map((field) => field.flat());
-    const flattenedTrack = Object.fromEntries(flattened);
-
-    const spLabel = flattenedTrack.fs_label || flattenedTrack.spName;
-    const platform =
-      flattenedTrack?.service === PLATFORM_V2_IDENTIFIER_TOKEN
-        ? Platform.FCP_HIGH
-        : Platform.FC_LEGACY;
-
-    // @TODO cleanup useless props (spName, fs_label, service...)
-    const result = { ...flattenedTrack, spLabel, platform };
-    return result;
-  }
-
-  private extractDataFromFields(
-    docs: SearchHit<ICsmrTracksFieldsRawData>[],
-  ): ICsmrTracksData[] {
-    const data = docs.map(({ _id, fields }) => {
-      const entries = fields as ICsmrTracksFieldsRawData;
-      const transformed = this.homogenizeDataFields(entries);
-      const result = { trackId: _id, ...transformed };
-      return result;
+    const tracks = rawTracks.map((rawTrack) => {
+      const instance = rawTrack._source.service || CoreInstance.FC_LEGACY;
+      const formatter = this.getFormatter(instance);
+      const track = formatter.formatTrack(rawTrack);
+      return track;
     });
 
-    this.logger.trace({ fields: data });
-    return data;
+    return tracks;
   }
 
-  private generateTracks(
-    data: ICsmrTracksData[],
-    platform: Platform,
-    formatter: IAppTracksDataService,
-  ) {
-    const selectedData: ICsmrTracksData[] = data.filter(
-      (fields) => fields.platform === platform,
-    );
-    const output = formatter.formatTracks(selectedData);
-    return output;
-  }
-
-  private sortTracks(
-    groups: ICsmrTracksOutputTrack[],
-  ): ICsmrTracksOutputTrack[] {
-    this.logger.debug('Sort tracks');
-    const sorted = groups.sort(({ time: a }, { time: b }) => a - b);
-    this.logger.trace({ sorted });
-    return sorted;
+  private getFormatter(instance: CoreInstance): TracksFormatterInterface {
+    switch (instance) {
+      case CoreInstance.FC_LEGACY:
+        return this.formatterLegacy;
+      case CoreInstance.FCP_HIGH:
+        return this.formatterFcpHigh;
+      case CoreInstance.FCP_LOW:
+        return this.formatterFcpLow;
+      default:
+        throw new CsmrTracksUnknownInstanceException(instance);
+    }
   }
 }

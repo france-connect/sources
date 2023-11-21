@@ -10,7 +10,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import {
   CoreAcrService,
@@ -24,20 +23,20 @@ import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { NotificationsService } from '@fc/notifications';
 import { OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
-import { OidcClientConfig, OidcClientSession } from '@fc/oidc-client';
+import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderConfig, OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { ISessionService, Session, SessionCsrfService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import {
+  AppConfig,
   AppSession,
   CoreConfig,
-  GetConsentSessionDto,
-  GetVerifySessionDto,
-  InteractionSessionDto,
+  GetConsentOidcClientSessionDto,
+  GetInteractionOidcClientSessionDto,
+  GetVerifyOidcClientSessionDto,
 } from '../dto';
-import { InsufficientAcrLevelSuspiciousContextException } from '../exceptions';
 import { CoreFcpService, CoreFcpVerifyService } from '../services';
 
 @Controller()
@@ -92,17 +91,19 @@ export class CoreFcpController {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
      * @ticket FC-1020
      */
-    @Session('OidcClient', InteractionSessionDto)
+    @Session('OidcClient', GetInteractionOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
     @Session('App')
     sessionApp: ISessionService<AppSession>,
   ) {
     const { spName, stepRoute } = await sessionOidc.get();
 
-    const { params, uid } = await this.oidcProvider.getInteraction(req, res);
-    const { scope: spScope } = params;
-    const { scope: idpScope } = this.config.get<OidcClientConfig>('OidcClient');
-    const { acr_values: acrValues, client_id: clientId } = params;
+    const { params } = await this.oidcProvider.getInteraction(req, res);
+    const {
+      acr_values: acrValues,
+      client_id: clientId,
+      scope: spScope,
+    } = params;
 
     const {
       configuration: { acrValues: allowedAcrValues },
@@ -160,10 +161,8 @@ export class CoreFcpController {
       notification,
       params,
       providers: authorizedProviders,
-      idpScope,
-      spScope,
       spName,
-      uid,
+      spScope,
     };
 
     this.logger.trace({
@@ -178,7 +177,7 @@ export class CoreFcpController {
     if (!isRefresh) {
       const trackingContext: TrackedEventContextInterface = { req };
       const { FC_SHOWED_IDP_CHOICE } = this.tracking.TrackedEventsMap;
-      this.tracking.track(FC_SHOWED_IDP_CHOICE, trackingContext);
+      await this.tracking.track(FC_SHOWED_IDP_CHOICE, trackingContext);
     }
 
     return res.render('interaction', response);
@@ -200,7 +199,7 @@ export class CoreFcpController {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
      * @ticket FC-1020
      */
-    @Session('OidcClient', GetVerifySessionDto)
+    @Session('OidcClient', GetVerifyOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
     @Session('App')
     sessionApp: ISessionService<AppSession>,
@@ -210,13 +209,19 @@ export class CoreFcpController {
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const params = { urlPrefix, interactionId, sessionOidc };
 
+    const isIdpActive = await this.identityProvider.isActiveById(idpId);
+
     const isBlackListed = await this.serviceProvider.shouldExcludeIdp(
       spId,
       idpId,
     );
 
-    if (isBlackListed) {
-      const url = await this.coreVerify.handleBlacklisted(req, params);
+    if (isBlackListed || !isIdpActive) {
+      const url = await this.coreVerify.handleUnavailableIdp(
+        req,
+        params,
+        !isIdpActive,
+      );
       return res.redirect(url);
     }
 
@@ -226,7 +231,21 @@ export class CoreFcpController {
       isSuspicious,
     );
     if (isInsufficientAcrLevel) {
-      throw new InsufficientAcrLevelSuspiciousContextException();
+      const url =
+        await this.coreFcpVerify.handleInsufficientAcrLevel(interactionId);
+
+      /**
+       * Suspect context redirects to idp choice,
+       * thus we are no longer in an "sso" interaction,
+       * so we update isSso flag in session.
+       */
+      await sessionOidc.set('isSso', false);
+
+      const trackingContext: TrackedEventContextInterface = { req };
+      const { FC_IDP_INSUFFICIENT_ACR } = this.tracking.TrackedEventsMap;
+      await this.tracking.track(FC_IDP_INSUFFICIENT_ACR, trackingContext);
+
+      return res.redirect(url);
     }
 
     const url = await this.coreFcpVerify.handleVerifyIdentity(req, params);
@@ -247,7 +266,7 @@ export class CoreFcpController {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
      * @ticket FC-1020
      */
-    @Session('OidcClient', GetConsentSessionDto)
+    @Session('OidcClient', GetConsentOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
     const {
@@ -292,7 +311,7 @@ export class CoreFcpController {
     if (!isRefresh) {
       const trackingContext: TrackedEventContextInterface = { req };
       const { FC_SHOWED_CONSENT } = this.tracking.TrackedEventsMap;
-      this.tracking.track(FC_SHOWED_CONSENT, trackingContext);
+      await this.tracking.track(FC_SHOWED_CONSENT, trackingContext);
     }
 
     return response;

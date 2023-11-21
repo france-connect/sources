@@ -14,6 +14,11 @@
       <input id="access-token" class="form-control" type="hidden" name="accessToken" value="<%= locals.accessToken %>">
       <input id="reload-userinfo" class="form-control" type="submit" value="Recharger userinfo">
     </form>
+    <% if (locals.dataApiActive) { %>
+    <a href="/data" style="text-decoration: none;" data-testid="get-data-link">
+      <button type="button" class="form-control">Récupérer les données utilisateur</button>
+    </a>
+    <% } %>
     <% } %>
     <ul class="navbar-nav">
       <% if (locals.idpIdentity) { %>

@@ -7,19 +7,23 @@
     "@fc/agent-connect-search": "^0.1.0",
     "@fc/common": "^0.1.0",
     "@fc/dsfr": "^0.1.0",
+    "@gouvfr/dsfr": "1.10.1",
     "classnames": "^2.2.6",
-    "final-form": "^4.20.6",
+    "final-form": "^4.20.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-final-form": "^6.5.7",
     "react-final-form-listeners": "^1.0.3",
-    "react-icons": "^4.3.1",
+    "react-icons": "^4.11.0",
     "react-responsive": "^9.0.0-beta.10",
-    "react-router-dom": "^6.3.0",
-    "sass-rem": "^3.0.0",
-    "typescript": "^4.3.4"
+    "react-router-dom": "^6.15.0",
+    "sass-rem": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   },
   "scripts": {
+    "prestart": "../../scripts/yarn-dsfr",
     "start": "../../scripts/yarn-start agent-connect",
     "build": "../../scripts/yarn-build agent-connect"
   },

@@ -5,7 +5,7 @@
   "dependencies": {
     "@fc/oidc-client": "^0.1.0",
     "react": "^18.2.0",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.15.0"
   },
   "main": "src/index.ts"
 }

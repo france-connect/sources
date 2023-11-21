@@ -43,4 +43,5 @@ export const claims: IClaims = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   phone_number: 'phone_number',
   email: 'email',
+  amr: 'amr',
 };

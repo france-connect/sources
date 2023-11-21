@@ -1,0 +1,63 @@
+{% if not card %}
+  {% set card = params %}
+{% endif %}
+<div class="fr-card{% if not card.externalUrl %} fr-enlarge-link{% endif %}{% if card.orientation == 'horizontal' %} fr-card--horizontal-tier{% endif %}">
+  <div class="fr-card__body">
+    <div class="fr-card__content">
+      {% set cardUrl = card.url or card.externalUrl %}
+      <h3 class="fr-card__title">
+        {% if not card.externalUrl %}
+          <a href="{{ cardUrl }}">
+            {{ card.title }}
+          </a>
+        {% else %}
+          {{ card.title }}
+        {% endif %}
+      </h3>
+      <p class="fr-card__desc">{{ card.description | safe }}</p>
+      <div class="fr-card__start">
+        {% if card.tags %}
+          {% set tags = card.tags %}
+          {% include "components/taggroup-disabled.njk" %}
+        {% endif %}
+        {% if card.date %}
+          <p class="fr-card__detail fr-icon-time-fill">
+            <time class="postlist-date" datetime="{{ card.date | htmlDateString }}">
+              {{ card.date | readableDate }}
+            </time>
+          </p>
+        {% endif %}
+      </div>
+    </div>
+    <div class="fr-card__footer">
+      {% if card.externalUrl %}
+        <ul class="fr-links-group">
+          <li>
+            <a class="fr-link fr-icon-arrow-right-line fr-link--icon-right"
+              href="{{ card.externalUrl }}"
+              title="{{ card.title }} - {{ i18n.new_window }}"
+              target="_blank"
+              rel="noreferrer noopener">
+              {{ card.urlDescription or i18n.see_more }}
+            </a>
+          </li>
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+  <div class="fr-card__header">
+    {% if card.badges %}
+      <ul class="fr-badges-group">
+        {% for badge in card.badges %}
+          <li>
+            <p class="fr-badge fr-badge--green-emeraude">{{ badge }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if card.image.path %}
+      <div class="fr-card__img">{% imageSync card.image.path,
+        card.image.alt %}</div>
+    {% endif %}
+  </div>
+</div>

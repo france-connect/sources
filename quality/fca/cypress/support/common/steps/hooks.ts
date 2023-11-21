@@ -1,8 +1,8 @@
-import { Before } from 'cypress-cucumber-preprocessor/steps';
+import { After, Before } from '@badeball/cypress-cucumber-preprocessor';
 
 import {
   addFCBasicAuthorization,
-  clearAllCookies,
+  clearBusinessLog,
   forceSameSiteNone,
   getDefaultIdentityProvider,
   getDefaultServiceProvider,
@@ -15,17 +15,6 @@ import {
   ServiceProvider,
   UserData,
 } from '../types';
-
-const skipTest = (): void => {
-  /**
-   * @todo: Use the plug-in cypress-skip-test once migrated to Cypress 8
-   * @author: Nicolas Legeay
-   * @link https://github.com/cypress-io/cypress-skip-test
-   * date: 18/08/2021
-   */
-  // @ts-expect-error "cy.state" is not in the "cy" type
-  cy.state('runnable').ctx.skip();
-};
 
 const setFixtureContext = (
   fixture: string,
@@ -40,7 +29,7 @@ const setFixtureContext = (
   );
 };
 
-beforeEach(function () {
+Before(function () {
   // Load environment config and test data
   const platform: string = Cypress.env('PLATFORM');
   const testEnv: string = Cypress.env('TEST_ENV');
@@ -68,10 +57,9 @@ beforeEach(function () {
     addFCBasicAuthorization();
   }
 
-  // Avoid cookies side-effect by clearing cookies on all domains
-  clearAllCookies();
-
-  if (testEnv === 'integ01') {
+  if (testEnv === 'docker') {
+    clearBusinessLog();
+  } else if (testEnv === 'integ01') {
     // Setup interceptions to override set-cookie samesite values
     const crossDomains = {
       AC: 'dev-agentconnect.fr',
@@ -86,7 +74,7 @@ beforeEach(function () {
  * author: Nicolas
  * date: 18/05/2021
  */
-afterEach(function () {
+After(function () {
   // Delete the Context variable changed during the scenario
   delete this.requestedScope;
   delete this.serviceProvider;
@@ -97,13 +85,13 @@ afterEach(function () {
 
 Before({ tags: '@ignoreDocker' }, function () {
   if (['docker', 'recette'].includes(Cypress.env('TEST_ENV'))) {
-    skipTest();
+    this.skip();
   }
 });
 
 Before({ tags: '@ignoreInteg01' }, function () {
   if (Cypress.env('TEST_ENV') === 'integ01') {
-    skipTest();
+    this.skip();
   }
 });
 

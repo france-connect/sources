@@ -2,12 +2,11 @@ import {
   basicSuccessScenario,
   checkInformationsServiceProvider,
   checkInStringifiedJson,
-  logout,
+  logout
 } from './mire.utils';
 
 describe('RP Initiated logout scenarios', () => {
-  // -- replace by either `fip1-high` or `fia1-low`
-  const idpId = `${Cypress.env('IDP_NAME')}1-high`;
+  const idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18';
 
   it('should log out from FC+ with post logout redirect uri', () => {
     basicSuccessScenario({

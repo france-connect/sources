@@ -1,0 +1,8 @@
+{
+  "pick_theme": "Choississez un thème",
+  "light_theme": "Thème clair",
+  "system": "Thème par défaut du poste utilisateur",
+  "dark_theme": "Thème sombre",
+  "use_system_params": "Utiliser les paramètres du système",
+  "display_params": "Paramètres d'affichage"
+}

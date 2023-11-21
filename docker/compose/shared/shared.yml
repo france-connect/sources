@@ -15,7 +15,6 @@ services:
   # Shared Services
   ####################
 
-
   rp-all:
     image: nginx:1.14.2
     container_name: fc-rp-all
@@ -84,6 +83,7 @@ services:
           - fia4-low.docker.dev-franceconnect.fr
           - fia5-low.docker.dev-franceconnect.fr
           - fia8-low.docker.dev-franceconnect.fr
+          - moncomptepro.docker.dev-franceconnect.fr
           # EIDAS
           - eidas-bridge.docker.dev-franceconnect.fr
           - eidas-fr.docker.dev-franceconnect.fr
@@ -101,8 +101,10 @@ services:
           # Mock RNIPP
           - mock-rnipp.docker.dev-franceconnect.fr
           # Mock Data Provider
-          - mock-data-provider-high.docker.dev-franceconnect.fr
-          - mock-data-provider-low.docker.dev-franceconnect.fr
+          - dp1-high.docker.dev-franceconnect.fr
+          - dp2-high.docker.dev-franceconnect.fr
+          - dp1-low.docker.dev-franceconnect.fr
+          - dp2-low.docker.dev-franceconnect.fr
           # Storybook
           - storybook.docker.dev-franceconnect.fr
           # Generic
@@ -123,7 +125,7 @@ services:
           - fc-exploitation.docker.dev-franceconnect.fr
           - fc-support.docker.dev-franceconnect.fr
           - tracks-data-provider.docker.dev-franceconnect.fr
-          - ud.docker.dev-franceconnect.fr 
+          - ud.docker.dev-franceconnect.fr
           - maildev.docker.dev-franceconnect.fr
           - partenaires.docker.dev-franceconnect.fr
       fc:
@@ -194,50 +196,66 @@ services:
       - "5672:5672"
       - "15672:15672"
 
-
   ####################
   # Data storage
   ####################
 
   redis-pwd:
-    image: redis:5.0.14
-    command: redis-server --requirepass Ivae1feiThoogahquohDei7iwie0ceeM
+    image: "bitnami/redis:6.0.15"
+    env_file:
+      - ${COMPOSE_DIR}/shared/.env/redis.env
+    environment:
+      - REDIS_TLS_CERT_FILE=/bitnami/redis/data/ssl/redis-pwd.crt
+      - REDIS_TLS_KEY_FILE=/bitnami/redis/data/ssl/redis-pwd.key
+    volumes:
+      - "${VOLUMES_DIR}/ssl:/bitnami/redis/data/ssl"
+    healthcheck:
+      test: redis-c-li -a $${REDIS_PASSWORD} --tls --cacert $${REDIS_TLS_CA_FILE} role | grep master
+      interval: 2s
+      start_period: 5s
     networks:
-      - data
-      - rie
+      rie:
+      data:
+        ipv4_address: 172.16.4.105
 
   redis-cluster-master:
-    image: "bitnami/redis:5.0.14"
+    image: "bitnami/redis:6.0.15"
     env_file:
       - ${COMPOSE_DIR}/shared/.env/redis.env
     environment:
       - REDIS_REPLICATION_MODE=master
+    volumes:
+      - "${VOLUMES_DIR}/ssl:/bitnami/redis/data/ssl"
     healthcheck:
-      test: redis-cli -a $${REDIS_PASSWORD} role | grep master
+      test: redis-cli -a $${REDIS_PASSWORD} --tls --cacert $${REDIS_TLS_CA_FILE} role | grep master
       interval: 2s
       start_period: 5s
     networks:
-      - data
+      data:
+        ipv4_address: 172.16.4.100
 
   redis-cluster-replica:
-    image: "bitnami/redis:5.0.14"
+    image: "bitnami/redis:6.0.15"
     env_file:
       - ${COMPOSE_DIR}/shared/.env/redis.env
     environment:
       - REDIS_REPLICATION_MODE=slave
       - REDIS_MASTER_HOST=redis-cluster-master
       - REDIS_MASTER_PORT_NUMBER=6379
+    volumes:
+      - "${VOLUMES_DIR}/ssl:/bitnami/redis/data/ssl"
     healthcheck:
-      test: redis-cli -a $${REDIS_PASSWORD} role | grep slave
+      test: redis-cli -a $${REDIS_PASSWORD} --tls --cacert $${REDIS_TLS_CA_FILE} role | grep slave
       interval: 2s
       start_period: 5s
     depends_on:
       - redis-cluster-master
     networks:
-      - data
+      data:
+        ipv4_address: 172.16.4.101
 
   redis-sentinel:
-    image: "bitnami/redis-sentinel:5.0.14"
+    image: "bitnami/redis-sentinel:6.0.15"
     scale: 3
     env_file:
       - ${COMPOSE_DIR}/shared/.env/redis.env
@@ -247,8 +265,16 @@ services:
       - REDIS_MASTER_HOST=redis-cluster-master
       - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=1000
       - REDIS_SENTINEL_FAILOVER_TIMEOUT=2000
+      - REDIS_SENTINEL_TLS_ENABLED=true
+      - REDIS_SENTINEL_TLS_PORT=26379
+      - REDIS_SENTINEL_TLS_CERT_FILE=/bitnami/redis/data/ssl/redis.crt
+      - REDIS_SENTINEL_TLS_KEY_FILE=/bitnami/redis/data/ssl/redis.key
+      - REDIS_SENTINEL_TLS_CA_FILE=/bitnami/redis/data/ssl/docker-stack-ca.crt
+      - REDIS_SENTINEL_TLS_AUTH_CLIENTS=no
+    volumes:
+      - "${VOLUMES_DIR}/ssl:/bitnami/redis/data/ssl"
     healthcheck:
-      test: redis-cli -p 26379 ping
+      test: redis-cli -p 26379 --tls --cacert $${REDIS_SENTINEL_TLS_CA_FILE} ping
       interval: 2s
       start_period: 5s
     depends_on:
@@ -290,7 +316,7 @@ services:
   ####################
   # HSM
   ####################
-  
+
   hsm:
     image: ${FC_DOCKER_REGISTRY}/softhsm
     networks:
@@ -343,7 +369,7 @@ services:
   ####################
   # Shared Mocks
   ####################
-  
+
   openldap:
     image: ${FC_DOCKER_REGISTRY}/openldap:0.2
     networks:
@@ -359,7 +385,7 @@ services:
       - data
       - public
 
- # New implementation in monorepo 
+  # New implementation in monorepo
   mock-rnipp:
     hostname: mock-rnipp
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
@@ -380,7 +406,7 @@ services:
       - public
     command: "pm2 logs"
 
- # Old implementation in specific repo
+  # Old implementation in specific repo
   rnipp:
     hostname: rnipp
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
@@ -405,13 +431,12 @@ services:
       - public
     command: "tail -f /dev/null"
 
-
   ####################
   # Tracks related services
   ####################
 
   elasticsearch:
-    image: elasticsearch:7.16.3
+    image: elasticsearch:7.17.9
     volumes:
       - "${VOLUMES_DIR}/elasticsearch/data:/usr/share/elasticsearch/data"
       - "${VOLUMES_DIR}/elasticsearch/config/users:/usr/share/elasticsearch/config/users:ro"
@@ -421,7 +446,7 @@ services:
       - "${VOLUMES_DIR}/elasticsearch/config/elasticsearch.key:/usr/share/elasticsearch/config/elasticsearch.key:ro"
       - "${VOLUMES_DIR}/elasticsearch/index/:/index"
       - "${VOLUMES_DIR}/elasticsearch/ingest_pipelines:/ingest_pipelines"
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     networks:
       - data
       - public
@@ -445,7 +470,7 @@ services:
       - "${VOLUMES_DIR}/app:/opt/scripts"
       - "${VOLUMES_DIR}/log/:/var/log/app"
       - "${VOLUMES_DIR}/.home:/home"
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/tracks-data-provider.env"
@@ -467,11 +492,11 @@ services:
       - "csmr-account-high"
       - "elasticsearch"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
       - "${VOLUMES_DIR}/maxmind/database/GeoLite2-City:/var/geoipdb"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
@@ -517,11 +542,11 @@ services:
       - "broker"
       - "mongo-fcp-low"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
@@ -550,11 +575,11 @@ services:
       - "broker"
       - "mongo-fcp-high"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/mongo-high.env"
@@ -573,7 +598,7 @@ services:
     networks:
       - data
     command: "pm2 logs"
- 
+
   csmr-user-preferences-high:
     hostname: csmr-user-preferences-high
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev

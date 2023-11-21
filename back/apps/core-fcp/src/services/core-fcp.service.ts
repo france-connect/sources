@@ -1,22 +1,30 @@
+import { Response } from 'express';
+
 import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 
-import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
+import { CoreServiceInterface } from '@fc/core';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
-import { OidcSession } from '@fc/oidc';
+import { OidcSession, stringToArray } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
+import {
+  OidcClientConfig,
+  OidcClientService,
+  OidcClientSession,
+} from '@fc/oidc-client';
+import { OidcProviderPrompt } from '@fc/oidc-provider';
 import { IClaim, IRichClaim, ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { ISessionService } from '@fc/session';
 
-import { CoreSessionDto } from '../dto';
+import { AppConfig, CoreSessionDto } from '../dto';
 import { CoreFcpSendEmailHandler } from '../handlers';
 
 @Injectable()
-export class CoreFcpService {
+export class CoreFcpService implements CoreServiceInterface {
   // Dependency injection can require more than 4 parameters
   // eslint-disable-next-line max-params
   constructor(
@@ -27,6 +35,7 @@ export class CoreFcpService {
     private readonly scopes: ScopesService,
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
     private readonly oidcAcr: OidcAcrService,
+    private readonly oidcClient: OidcClientService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -80,6 +89,57 @@ export class CoreFcpService {
     return consentRequired;
   }
 
+  async redirectToIdp(
+    res: Response,
+    acr: string,
+    idpId: string,
+    session: ISessionService<OidcClientSession>,
+  ): Promise<void> {
+    const { spId } = await session.get();
+
+    const { scope } = this.config.get<OidcClientConfig>('OidcClient');
+
+    await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
+    await this.oidcClient.utils.checkIdpDisabled(idpId);
+
+    const { nonce, state } =
+      await this.oidcClient.utils.buildAuthorizeParameters();
+
+    const authorizeParams = {
+      // acr_values is an oidc defined variable name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      acr_values: acr,
+      nonce,
+      idpId,
+      scope,
+      state,
+      // Prompt for the identity provider is forced here
+      // and not linked to the prompt required of the service provider
+      prompt: OidcProviderPrompt.LOGIN,
+    };
+
+    const authorizationUrl =
+      await this.oidcClient.utils.getAuthorizeUrl(authorizeParams);
+
+    const { name: idpName, title: idpLabel } =
+      await this.identityProvider.getById(idpId);
+    const sessionPayload: OidcClientSession = {
+      idpId,
+      idpName,
+      idpLabel,
+      idpNonce: nonce,
+      idpState: state,
+      rnippIdentity: undefined,
+      idpIdentity: undefined,
+      spIdentity: undefined,
+      accountId: undefined,
+    };
+
+    await session.set(sessionPayload);
+
+    res.redirect(authorizationUrl);
+  }
+
   isInsufficientAcrLevel(acrValue: string, isSuspicious: boolean) {
     const { minAcrForContextRequest } = this.config.get<AppConfig>('App');
 
@@ -130,7 +190,7 @@ export class CoreFcpService {
     const {
       params: { scope },
     } = interaction;
-    const scopes = scope.split(' ');
+    const scopes = stringToArray(scope);
 
     this.logger.trace({ interaction, scopes });
 

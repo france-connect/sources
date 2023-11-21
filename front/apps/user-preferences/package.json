@@ -6,7 +6,7 @@
     "@fc/backoffice": "^0.1.0",
     "@fc/http-client": "^0.1.0",
     "classnames": "^2.3.1",
-    "final-form": "^4.20.6",
+    "final-form": "^4.20.10",
     "react": "^18.2.0",
     "react-final-form": "^6.5.7",
     "react-final-form-listeners": "^1.0.3"

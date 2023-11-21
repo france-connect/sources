@@ -11,7 +11,7 @@ services:
       - "core-fcp-low"
       - "fsp1-low"
       - "fip1-low"
-      - "mock-data-provider-low"
+      - "dp1-low"
 
   ####################
   # BDD FCP LOW
@@ -56,4 +56,5 @@ services:
       - "fip9-low"
       # --
       - "maildev"
-      - "mock-data-provider-low"
+      - "dp1-low"
+      - "dp2-low"

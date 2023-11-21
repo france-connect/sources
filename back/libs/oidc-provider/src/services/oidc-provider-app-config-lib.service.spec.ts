@@ -6,6 +6,8 @@ import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import { SessionService, SessionSubNotFoundException } from '@fc/session';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import {
   OidcProviderRuntimeException,
   OidcProviderSpIdNotFoundException,
@@ -27,10 +29,7 @@ describe('OidcProviderAppConfigLibService', () => {
     trace: jest.fn(),
   };
 
-  const sessionServiceMock = {
-    set: jest.fn(),
-    get: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const errorServiceMock = {
     throwError: jest.fn(),
@@ -92,7 +91,7 @@ describe('OidcProviderAppConfigLibService', () => {
   });
 
   describe('logoutSource', () => {
-    it('should set a body property to koa context', async () => {
+    it('should set a body property to koa context', () => {
       // Given
       const htmlDisconnectFromFi = `<!DOCTYPE html>
       <head>
@@ -414,7 +413,7 @@ describe('OidcProviderAppConfigLibService', () => {
   });
 
   describe('checkSpId()', () => {
-    it('should throw OidcProviderSpIdNotFoundException if sp id not defined on panva context', () => {
+    it('should throw OidcProviderSpIdNotFoundException if sp id not defined on panva context', async () => {
       // Given
       const spIdMock = undefined;
       const ctxMock = {
@@ -425,7 +424,7 @@ describe('OidcProviderAppConfigLibService', () => {
       } as unknown as KoaContextWithOIDC;
       const exception = new OidcProviderSpIdNotFoundException();
       // When
-      service['checkSpId'](ctxMock, spIdMock);
+      await service['checkSpId'](ctxMock, spIdMock);
       // Then
       expect(service['errorService']['throwError']).toHaveBeenCalledWith(
         ctxMock,
@@ -435,7 +434,7 @@ describe('OidcProviderAppConfigLibService', () => {
   });
 
   describe('checkSub()', () => {
-    it('should throw SessionSubNotFoundException if sub not found in session', () => {
+    it('should throw SessionSubNotFoundException if sub not found in session', async () => {
       // Given
       const subMock = undefined;
       const ctxMock = {
@@ -446,7 +445,7 @@ describe('OidcProviderAppConfigLibService', () => {
       } as unknown as KoaContextWithOIDC;
       const exception = new SessionSubNotFoundException();
       // When
-      service['checkSub'](ctxMock, subMock);
+      await service['checkSub'](ctxMock, subMock);
       // Then
       expect(service['errorService']['throwError']).toHaveBeenCalledWith(
         ctxMock,
@@ -466,7 +465,12 @@ describe('OidcProviderAppConfigLibService', () => {
       // Given
       const logoutFormProperty = 'oidcProviderLogoutForm';
       // When
-      service.logoutFormSessionDestroy(ctx, form, sessionServiceMock, params);
+      await service.logoutFormSessionDestroy(
+        ctx,
+        form,
+        sessionServiceMock,
+        params,
+      );
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith(
@@ -491,7 +495,12 @@ describe('OidcProviderAppConfigLibService', () => {
       </body>
     </html>`;
       // When
-      service.logoutFormSessionDestroy(ctx, form, sessionServiceMock, params);
+      await service.logoutFormSessionDestroy(
+        ctx,
+        form,
+        sessionServiceMock,
+        params,
+      );
       // Then
       expect(ctx).toHaveProperty('body', htmlDisconnectFromFi);
     });

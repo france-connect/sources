@@ -7,7 +7,7 @@ _reset_stats() {
   ES_URL="https://localhost:9200"
   ES_AUTH="docker-stack:docker-stack"
 
-  RUN_CONTEXT="docker-compose exec $NO_TTY elasticsearch"
+  RUN_CONTEXT="$DOCKER_COMPOSE exec $NO_TTY elasticsearch"
 
   CURL_OPTIONS="-k -u $ES_AUTH"
 
@@ -39,7 +39,7 @@ _reset_stats() {
 }
 
 _create_es_ingest_pipeline() {
-  docker-compose exec $NO_TTY elasticsearch curl -u docker-stack:docker-stack -k -XPUT -H 'Content-Type:application/json' https://elasticsearch:9200/_ingest/pipeline/geo -d "@/ingest_pipelines/geo.json"
+  $DOCKER_COMPOSE exec $NO_TTY elasticsearch curl -u docker-stack:docker-stack -k -XPUT -H 'Content-Type:application/json' https://elasticsearch:9200/_ingest/pipeline/geo -d "@/ingest_pipelines/geo.json"
 }
 
 _create_es_alias() {
@@ -47,7 +47,7 @@ _create_es_alias() {
   CEA_ALIAS=$2
 
   echo " ## create traces alias: $CEA_TARGET ~> $CEA_ALIAS"
-  docker-compose exec $NO_TTY elasticsearch curl -u docker-stack:docker-stack -k -XPOST -H 'Content-Type:application/json' https://elasticsearch:9200/$CEA_TARGET/_alias/$CEA_ALIAS
+  $DOCKER_COMPOSE exec $NO_TTY elasticsearch curl -u docker-stack:docker-stack -k -XPOST -H 'Content-Type:application/json' https://elasticsearch:9200/$CEA_TARGET/_alias/$CEA_ALIAS
 }
 
 _generate_legacy_traces() {
@@ -92,12 +92,12 @@ _generate_events() {
   cd ${WORKING_DIR}
 
   echo "Generate logs"
-  docker-compose exec $NO_TTY fc-workers bash -c "cd tests/fixtures && node generate-logs.js $START $STOP $LOGS_PER_DAY $VARIATION"
+  $DOCKER_COMPOSE exec $NO_TTY fc-workers bash -c "cd tests/fixtures && node generate-logs.js $START $STOP $LOGS_PER_DAY $VARIATION"
   echo "Sleep 2 seconds to give elastic some rest"
   sleep 1
 
   echo "Generate stats"
-  docker-compose exec $NO_TTY fc-workers ./run IndexElasticLogs --start=$START --stop=$STOP
+  $DOCKER_COMPOSE exec $NO_TTY fc-workers ./run IndexElasticLogs --start=$START --stop=$STOP
 }
 
 _generate_metrics() {
@@ -109,11 +109,11 @@ _generate_metrics() {
   METRIC_GROWTH=0.03
 
   echo "Generate metrics"
-  docker-compose exec $NO_TTY fc-workers bash -c "cd tests/fixtures && node generate-metrics.js $START $STOP $METRIC_GROWTH"
+  $DOCKER_COMPOSE exec $NO_TTY fc-workers bash -c "cd tests/fixtures && node generate-metrics.js $START $STOP $METRIC_GROWTH"
 
   echo "Generate Identities"
-  docker-compose up -d mongo
-  docker-compose exec $NO_TTY fc-workers bash -c "yarn debug generate-identities.js && ./run InitIdentityES && ./run IndexUserStats --metric=identity"
+  $DOCKER_COMPOSE up -d mongo
+  $DOCKER_COMPOSE exec $NO_TTY fc-workers bash -c "yarn debug generate-identities.js && ./run InitIdentityES && ./run IndexUserStats --metric=identity"
 }
 
 _delete_indexes() {
@@ -140,7 +140,7 @@ _delete_indexes() {
 
 _es_restore_snapshot() {
   echo "Create repository..."
-  cd ${WORKING_DIR} && docker-compose exec $NO_TTY elasticsearch curl -X PUT "localhost:9200/_snapshot/snapshots?pretty" -H 'Content-Type: application/json' -d '{"type":"fs","settings":{"location":"/data/elasticsearch-snapshots"}}'
+  cd ${WORKING_DIR} && $DOCKER_COMPOSE exec $NO_TTY elasticsearch curl -X PUT "localhost:9200/_snapshot/snapshots?pretty" -H 'Content-Type: application/json' -d '{"type":"fs","settings":{"location":"/data/elasticsearch-snapshots"}}'
   echo "Restore snapshot..."
-  cd ${WORKING_DIR} && docker-compose exec $NO_TTY elasticsearch curl -X POST "localhost:9200/_snapshot/snapshots/2020-05-13/_restore?pretty"
+  cd ${WORKING_DIR} && $DOCKER_COMPOSE exec $NO_TTY elasticsearch curl -X POST "localhost:9200/_snapshot/snapshots/2020-05-13/_restore?pretty"
 }

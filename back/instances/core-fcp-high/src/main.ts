@@ -19,8 +19,8 @@ import helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
+import { AppConfig } from '@fc/core-fcp';
 import { LoggerService } from '@fc/logger-legacy';
 import { SessionConfig } from '@fc/session';
 
@@ -111,6 +111,8 @@ async function bootstrap() {
   const logger = await app.resolve(LoggerService);
 
   app.useLogger(logger);
+
+  app.setViewEngine('ejs');
   app.engine('ejs', renderFile);
   app.set(
     'views',
@@ -118,7 +120,38 @@ async function bootstrap() {
       return join(__dirname, viewsPath, 'views');
     }),
   );
-  app.setViewEngine('ejs');
+
+  /**
+   * @TODO #1203 All below useStaticAssets functions need to be removed (until line 146) when webpack has been configured to load assets from @gouvfr/dsfr package
+   * @ticket FC-1203
+   */
+  app.useStaticAssets(
+    join(__dirname, '../../../node_modules/@gouvfr/dsfr/dist/dsfr'),
+    {
+      prefix: '/dsfr',
+    },
+  );
+
+  app.useStaticAssets(
+    join(__dirname, '../../../node_modules/@gouvfr/dsfr/dist/fonts'),
+    {
+      prefix: '/fonts',
+    },
+  );
+
+  app.useStaticAssets(
+    join(__dirname, '../../../node_modules/@gouvfr/dsfr/dist/icons'),
+    {
+      prefix: '/icons',
+    },
+  );
+
+  app.useStaticAssets(
+    join(__dirname, '../../../node_modules/@gouvfr/dsfr/dist/utility/icons'),
+    {
+      prefix: '/utility',
+    },
+  );
   assetsPaths.forEach((assetsPath) => {
     app.useStaticAssets(join(__dirname, assetsPath, 'public'), {
       maxAge: assetsCacheTtl * 1000,
@@ -138,4 +171,5 @@ async function bootstrap() {
 
   await app.listen(3000);
 }
-bootstrap();
+
+void bootstrap();

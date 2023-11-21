@@ -6,9 +6,9 @@ import {
 
 describe('6.0 - Session', () => {
   // -- replace by either `fip1-high` or `fia1-low`
-  const idpId = `${Cypress.env('IDP_NAME')}1-high`;
+  const idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18';
 
-  it('should display the Y190009 error when requesting consent page without session', () => {
+  it('should display the Y420002 error when requesting consent page without session', () => {
     basicScenario({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
@@ -18,13 +18,13 @@ describe('6.0 - Session', () => {
 
     cy.clearCookies();
 
-    cy.get('#consent').click();
+    cy.get('[data-testid="consent-continue"]').click();
 
     cy.url().should('match', new RegExp(`\/login`));
-    cy.hasError('Y190009');
+    cy.hasError('Y420002');
   });
 
-  it('should display the Y190009 error when requesting interaction page without session', () => {
+  it('should display the Y190001 error when requesting interaction page without session', () => {
     const authorizeUrl = getAuthorizeUrl();
     cy.visit(authorizeUrl);
     cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
@@ -33,11 +33,11 @@ describe('6.0 - Session', () => {
       cy.clearCookie('fc_session_id');
       cy.visit(interactionUrl, { failOnStatusCode: false });
       cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
-      cy.hasError('Y190009');
+      cy.hasError('Y190001');
     });
   });
 
-  it('should trigger error Y190009 if FC session id does not match found backend interaction', () => {
+  it('should trigger error Y190001 if FC session id does not match found backend interaction', () => {
     const authorizeUrl = getAuthorizeUrl();
     cy.visit(authorizeUrl);
     cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
@@ -65,7 +65,7 @@ describe('6.0 - Session', () => {
         );
         cy.visit(interactionUrl, { failOnStatusCode: false });
         cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
-        cy.hasError('Y190009');
+        cy.hasError('Y190001');
       });
     });
   });
@@ -97,11 +97,10 @@ describe('6.0 - Session', () => {
     cy.request({
       url: `${idpInfo.IDP_ROOT_URL}`,
       method: 'GET',
-    })
-      .then(() => {
-        cy.getCookie('fc_session_id').then((cookie) => {
-          expect(cookie).to.have.property('sameSite', 'lax');
-        });
+    }).then(() => {
+      cy.getCookie('fc_session_id').then((cookie) => {
+        expect(cookie).to.have.property('sameSite', 'lax');
       });
+    });
   });
 });

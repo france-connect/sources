@@ -1,4 +1,4 @@
-version: '2.4'
+version: "2.4"
 services:
   ####################
   ##
@@ -25,30 +25,30 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - 'squid'
+      - "squid"
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
-      - '${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fca-low/.env/bridge-proxy-rie.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fca-low/.env/bridge-proxy-rie.env"
     tty: true
     ports:
       - 9262:9262
     networks:
       - public
       - data
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   ####################
   ##
   ##   RIE network
   ##
   ####################
-  
+
   squid-rie:
     image: ${FC_DOCKER_REGISTRY}/squid:4.6
     networks:
@@ -63,30 +63,30 @@ services:
       - broker
       - squid-rie
     volumes:
-      - '${VOLUMES_DIR}/src/fc/back:/var/www/app'
-      - '${VOLUMES_DIR}/app:/opt/scripts'
-      - '${VOLUMES_DIR}/log/:/var/log/app'
-      - '${VOLUMES_DIR}/.home:/home'
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log/:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
       - ${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro
     env_file:
-      - '${COMPOSE_DIR}/shared/.env/base-app.env'
-      - '${COMPOSE_DIR}/fca-low/.env/csmr-rie.env'
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/fca-low/.env/csmr-rie.env"
     tty: true
     ports:
       - 9263:9263
     networks:
       - rie
-    command: 'pm2 logs'
+    command: "pm2 logs"
 
   fia-llng-low:
     build:
-      context: '${WORKING_DIR}'
-      dockerfile: '${WORKING_DIR}/builds/lemonldap/Dockerfile'
+      context: "${WORKING_DIR}"
+      dockerfile: "${WORKING_DIR}/builds/lemonldap/Dockerfile"
     volumes:
-      - '${VOLUMES_DIR}/llng/scripts/:/scripts:ro'
-      - '${VOLUMES_DIR}/llng/llng-conf.json:/llng-conf.json:ro'
+      - "${VOLUMES_DIR}/llng/scripts/:/scripts:ro"
+      - "${VOLUMES_DIR}/llng/llng-conf.json:/llng-conf.json:ro"
     env_file:
-      - '${COMPOSE_DIR}/fca-low/.env/fia-llng-low.env'
+      - "${COMPOSE_DIR}/fca-low/.env/fia-llng-low.env"
     networks:
       - rie
 

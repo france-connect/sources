@@ -232,6 +232,7 @@ storybook-static
 cypress/snapshots
 cypress/screenshots
 instances/**/build
+instances/**/public/dsfr
 instances/**/public/*.mock.json
 
 # ignore all (apps|instances)/yarn.lock
@@ -239,3 +240,4 @@ instances/**/*.yarn.lock
 
 # history local files extension vscode
 .history/**/*
+

@@ -3,8 +3,11 @@ import { mocked } from 'jest-mock';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
+import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger-legacy';
+import { atHashFromAccessToken } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
+import { OidcClientRoutes } from '@fc/oidc-client';
 import {
   OidcCtx,
   OidcProviderErrorService,
@@ -14,11 +17,16 @@ import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter
 import { SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
-import { CoreClaimAmrException } from '../exceptions';
+import { getSessionServiceMock } from '@mocks/session';
+
+import { CoreClaimAmrException, CoreIdpHintException } from '../exceptions';
+import { CORE_SERVICE } from '../tokens';
 import { pickAcr } from '../transforms';
 import { CoreOidcProviderMiddlewareService } from './core-oidc-provider-middleware.service';
 
 jest.mock('../transforms');
+
+jest.mock('@fc/oidc');
 
 describe('CoreOidcProviderMiddlewareService', () => {
   let service: CoreOidcProviderMiddlewareService;
@@ -29,18 +37,14 @@ describe('CoreOidcProviderMiddlewareService', () => {
     trace: jest.fn(),
   };
 
-  const sessionServiceMock = {
-    get: jest.fn(),
-    reset: jest.fn(),
-    set: jest.fn(),
-    getSessionIdFromCookie: jest.fn(),
-    init: jest.fn(),
-    bindToRequest: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
+
+  const atHashFromAccessTokenMock = jest.mocked(atHashFromAccessToken);
 
   const oidcProviderServiceMock = {
     getInteractionIdFromCtx: jest.fn(),
     registerMiddleware: jest.fn(),
+    clearCookies: jest.fn(),
   };
 
   const serviceProviderServiceMock = {
@@ -55,6 +59,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       SP_REQUESTED_FC_TOKEN: {},
       SP_REQUESTED_FC_USERINFO: {},
       FC_SSO_INITIATED: {},
+      FC_REDIRECTED_TO_HINTED_IDP: {},
     },
   };
 
@@ -66,6 +71,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
   };
   const oidcProviderErrorServiceMock = {
     throwError: jest.fn(),
+    handleRedirectableError: jest.fn(),
   };
 
   const configServiceMock = {
@@ -74,8 +80,10 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
   const oidcAcrServiceMock = {
     getKnownAcrValues: jest.fn(),
+    isAcrValid: jest.fn(),
   };
 
+  const atHashMock = 'atHashMock value';
   const sessionIdMock = 'session-id-mock';
   const spAcrMock = 'eidas3';
   const spIdMock = 'spIdValue';
@@ -97,6 +105,14 @@ describe('CoreOidcProviderMiddlewareService', () => {
     redirect: jest.fn(),
   };
 
+  const coreServiceMock = {
+    redirectToIdp: jest.fn(),
+  };
+
+  const flowStepsMock = {
+    setStep: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
@@ -112,6 +128,11 @@ describe('CoreOidcProviderMiddlewareService', () => {
         OidcAcrService,
         ServiceProviderAdapterMongoService,
         OidcProviderErrorService,
+        {
+          provide: CORE_SERVICE,
+          useValue: coreServiceMock,
+        },
+        FlowStepsService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -130,11 +151,19 @@ describe('CoreOidcProviderMiddlewareService', () => {
       .useValue(configServiceMock)
       .overrideProvider(OidcAcrService)
       .useValue(oidcAcrServiceMock)
+      .overrideProvider(FlowStepsService)
+      .useValue(flowStepsMock)
       .compile();
 
     service = module.get<CoreOidcProviderMiddlewareService>(
       CoreOidcProviderMiddlewareService,
     );
+
+    atHashFromAccessTokenMock.mockReturnValue(atHashMock);
+
+    SessionService.getBoundSession = jest
+      .fn()
+      .mockReturnValue(sessionServiceMock);
   });
 
   it('should be defined', () => {
@@ -234,7 +263,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
         .fn()
         .mockReturnValueOnce(eventContextMock);
       // When
-      service['trackAuthorize'](ctxMock);
+      await service['trackAuthorize'](ctxMock);
       // Then
       expect(service['tracking'].track).toHaveBeenCalledTimes(1);
       expect(service['tracking'].track).toHaveBeenCalledWith(
@@ -690,33 +719,56 @@ describe('CoreOidcProviderMiddlewareService', () => {
   });
 
   describe('tokenMiddleware()', () => {
-    beforeEach(() => {
-      service['bindSessionId'] = jest.fn();
-    });
-    it('should publish a token event', async () => {
-      // Given
-      const eventCtxMock: TrackedEventContextInterface = {
-        fc: { interactionId: interactionIdValueMock },
+    // Given
+    const eventCtxMock: TrackedEventContextInterface = {
+      fc: { interactionId: interactionIdValueMock },
+      headers: {
+        'x-forwarded-for': '123.123.123.123',
+        'x-forwarded-source-port': '443',
+        'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
+      },
+    };
+    const ctxMock = {
+      req: {
         headers: {
           'x-forwarded-for': '123.123.123.123',
           'x-forwarded-source-port': '443',
           'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
         },
-      };
-      const ctxMock = {
-        req: {
-          headers: {
-            'x-forwarded-for': '123.123.123.123',
-            'x-forwarded-source-port': '443',
-            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
-          },
-          // oidc
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          query: { acr_values: 'eidas3', client_id: 'foo' },
-        },
-        res: {},
-      };
+        // oidc
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        query: { acr_values: 'eidas3', client_id: 'foo' },
+      },
+      res: {},
+      oidc: {
+        entities: {},
+      },
+    } as unknown as OidcCtx;
 
+    beforeEach(() => {
+      service['bindSessionId'] = jest.fn();
+    });
+
+    it('should create a session alias based on at_hash', async () => {
+      // Given
+      service['getEventContext'] = jest
+        .fn()
+        .mockReturnValue(eventCtxMock as TrackedEventContextInterface);
+
+      serviceProviderServiceMock.getById.mockResolvedValueOnce({
+        name: 'name',
+      });
+
+      // When
+      await service['tokenMiddleware'](ctxMock);
+
+      // Then
+      expect(sessionServiceMock.setAlias).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.setAlias).toHaveBeenCalledWith(atHashMock);
+    });
+
+    it('should publish a token event', async () => {
+      // Given
       service['getEventContext'] = jest
         .fn()
         .mockReturnValue(eventCtxMock as TrackedEventContextInterface);
@@ -725,7 +777,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
         name: 'name',
       });
       // When
-      service['tokenMiddleware'](ctxMock);
+      await service['tokenMiddleware'](ctxMock);
       // Then
       expect(trackingMock.track).toHaveBeenCalledTimes(1);
       expect(service['getEventContext']).toHaveBeenCalledTimes(1);
@@ -738,17 +790,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
     it('should call throwError if getEventContext failed', async () => {
       // Given
-      const ctxMock: any = {
-        not: 'altered',
-        req: {
-          headers: {
-            'x-forwarded-for': '123.123.123.123',
-            'x-forwarded-source-port': '443',
-            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
-          },
-        },
-      };
-
       const errorMock = new Error('unknowError');
 
       service['getEventContext'] = jest.fn().mockImplementationOnce(() => {
@@ -769,16 +810,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
     it('should call throwError if tracking.track throw an error', async () => {
       // Given
       const unknownError = new Error('Unknown Error');
-      const ctxMock: any = {
-        not: 'altered',
-        req: {
-          headers: {
-            'x-forwarded-for': '123.123.123.123',
-            'x-forwarded-source-port': '443',
-            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
-          },
-        },
-      };
 
       trackingMock.track.mockImplementationOnce(() => {
         throw unknownError;
@@ -801,7 +832,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
     beforeEach(() => {
       service['bindSessionId'] = jest.fn();
     });
-    it('should publish a token event', () => {
+    it('should publish a token event', async () => {
       // Given
       const ctxMock = {
         req: {
@@ -823,7 +854,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
         },
       });
       // When
-      service['userinfoMiddleware'](ctxMock);
+      await service['userinfoMiddleware'](ctxMock);
       // Then
       expect(trackingMock.track).toHaveBeenCalledTimes(1);
       expect(trackingMock.track).toHaveBeenCalledWith(
@@ -832,9 +863,10 @@ describe('CoreOidcProviderMiddlewareService', () => {
       );
     });
 
-    it('should call throwError if getEventContext fail', () => {
+    it('should set oidc error if getEventContext failed', async () => {
       // Given
       const ctxMock: any = {
+        oidc: {},
         not: 'altered',
         req: {
           headers: {
@@ -851,7 +883,32 @@ describe('CoreOidcProviderMiddlewareService', () => {
         throw errorMock;
       });
       // When
-      service['userinfoMiddleware'](ctxMock);
+      await service['userinfoMiddleware'](ctxMock);
+      // Then
+      expect(ctxMock.oidc.isError).toBe(true);
+    });
+
+    it('should call throwError if getEventContext fail', async () => {
+      // Given
+      const ctxMock: any = {
+        oidc: {},
+        not: 'altered',
+        req: {
+          headers: {
+            'x-forwarded-for': '123.123.123.123',
+            'x-forwarded-source-port': '443',
+            'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
+          },
+        },
+      };
+
+      const errorMock = new Error('unknowError');
+
+      service['getEventContext'] = jest.fn().mockImplementationOnce(() => {
+        throw errorMock;
+      });
+      // When
+      await service['userinfoMiddleware'](ctxMock);
       // Then
       expect(service['getEventContext']).toHaveBeenCalledTimes(1);
       expect(service['oidcErrorService']['throwError']).toHaveBeenNthCalledWith(
@@ -861,9 +918,10 @@ describe('CoreOidcProviderMiddlewareService', () => {
       );
     });
 
-    it('should call throwError if tracking.track throw an error', () => {
+    it('should call throwError if tracking.track throw an error', async () => {
       // Given
       const ctxMock: any = {
+        oidc: {},
         not: 'altered',
         req: {
           headers: {
@@ -882,7 +940,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
         throw errorMock;
       });
       // When
-      service['userinfoMiddleware'](ctxMock);
+      await service['userinfoMiddleware'](ctxMock);
       // Then
       expect(service['getEventContext']).toHaveBeenCalledTimes(1);
       expect(service['oidcErrorService']['throwError']).toHaveBeenNthCalledWith(
@@ -894,28 +952,92 @@ describe('CoreOidcProviderMiddlewareService', () => {
   });
 
   describe('isSsoAvailable', () => {
+    const idpAcrMock = 'eidas2';
+
+    beforeEach(() => {
+      configServiceMock.get.mockReturnValueOnce({
+        allowedSsoAcrs: ['eidas2'],
+        enableSso: true,
+      });
+
+      sessionServiceMock.get.mockResolvedValueOnce({
+        idpAcr: idpAcrMock,
+        spIdentity: 'mockSpIdentity',
+      });
+    });
     it('should call session.get()', async () => {
       // When
-      await service['isSsoAvailable'](sessionServiceMock);
+      await service['isSsoAvailable'](sessionServiceMock, spAcrMock);
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.get).toHaveBeenCalledWith('spIdentity');
     });
 
-    it('should return `true` if spIdentity exists in session', async () => {
-      // Given
-      sessionServiceMock.get.mockResolvedValueOnce({});
+    it('should call isAcrValid', async () => {
       // When
-      const result = await service['isSsoAvailable'](sessionServiceMock);
+      await service['isSsoAvailable'](sessionServiceMock, spAcrMock);
+      // Then
+      expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(1);
+      expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledWith(
+        idpAcrMock,
+        spAcrMock,
+      );
+    });
+
+    it('should call ssoCanBeUsed', async () => {
+      // Given
+      service['ssoCanBeUsed'] = jest.fn();
+
+      oidcAcrServiceMock.isAcrValid.mockReturnValue(true);
+      // When
+      await service['isSsoAvailable'](sessionServiceMock, spAcrMock);
+      // Then
+      expect(service['ssoCanBeUsed']).toHaveBeenCalledTimes(1);
+      expect(service['ssoCanBeUsed']).toHaveBeenCalledWith(
+        true,
+        false,
+        true,
+        true,
+      );
+    });
+
+    it('should defined spIdentity and idpAcr to undefined if destructure method is impossible', async () => {
+      // Given
+      service['ssoCanBeUsed'] = jest.fn();
+
+      sessionServiceMock.get.mockReset().mockResolvedValueOnce(null);
+      oidcAcrServiceMock.isAcrValid.mockReturnValue(false);
+      // When
+      await service['isSsoAvailable'](sessionServiceMock, spAcrMock);
+      // Then
+      expect(service['ssoCanBeUsed']).toHaveBeenCalledTimes(1);
+      expect(service['ssoCanBeUsed']).toHaveBeenCalledWith(
+        true,
+        false,
+        false,
+        false,
+      );
+    });
+
+    it('should return `true` if ssoCanBeUsed return true', async () => {
+      // Given
+      service['ssoCanBeUsed'] = jest.fn().mockReturnValue(true);
+      // When
+      const result = await service['isSsoAvailable'](
+        sessionServiceMock,
+        spAcrMock,
+      );
       // Then
       expect(result).toBe(true);
     });
 
-    it('should return `false` if spIdentity does not exist in session', async () => {
+    it('should return `false` if ssoCanBeUsed return false', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce(undefined);
+      service['ssoCanBeUsed'] = jest.fn().mockReturnValue(false);
       // When
-      const result = await service['isSsoAvailable'](sessionServiceMock);
+      const result = await service['isSsoAvailable'](
+        sessionServiceMock,
+        spAcrMock,
+      );
       // Then
       expect(result).toBe(false);
     });
@@ -930,7 +1052,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
         .fn()
         .mockReturnValueOnce(eventContextMock);
       // When
-      service['trackSso'](ctxMock);
+      await service['trackSso'](ctxMock);
       // Then
       expect(service['tracking'].track).toHaveBeenCalledTimes(1);
       expect(service['tracking'].track).toHaveBeenCalledWith(
@@ -998,7 +1120,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       await service['checkRedirectToSso'](ctxMock);
       // Then
       expect(service['redirectToSso']).toHaveBeenCalledTimes(1);
-      expect(service['redirectToSso']).toHaveBeenCalledOnceWith(ctxMock);
+      expect(service['redirectToSso']).toHaveBeenCalledWith(ctxMock);
     });
 
     it('should not call `redirectToSso()` if ctx.isSso = false', async () => {
@@ -1033,6 +1155,231 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Then
       expect(ctxMock.req['sessionId']).toBeDefined();
       expect(ctxMock.req['sessionId']).toBe(eventContextMock.sessionId);
+    });
+  });
+
+  describe('redirectToHintedIdpMiddleware', () => {
+    // Given
+    const idpHintMock = Symbol('idpHintMock');
+    const ctxMock = {
+      req: {
+        query: {
+          // OIDC fashion variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          idp_hint: idpHintMock,
+        },
+      },
+      oidc: {
+        params: {
+          // OIDC fashion variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          acr_values: Symbol('acr'),
+        },
+      },
+    } as unknown as OidcCtx;
+
+    const idpHintConfigMock = {
+      allowedIdpHints: [idpHintMock, 'foo'],
+    };
+
+    beforeEach(() => {
+      configServiceMock.get.mockReturnValue(idpHintConfigMock);
+    });
+
+    it('should call oidcErrorService.handleRedirectableError if an idp hint was provided but is NOT valid', async () => {
+      // Given
+      const invalidIdpHintCtx = {
+        ...ctxMock,
+        req: {
+          query: {
+            // OIDC fashion variable name
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            idp_hint: 'invalidIdpHint',
+          },
+        },
+      } as unknown as OidcCtx;
+
+      // When
+      await service['redirectToHintedIdpMiddleware'](invalidIdpHintCtx);
+
+      // Then
+      expect(
+        oidcProviderErrorServiceMock.handleRedirectableError,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        oidcProviderErrorServiceMock.handleRedirectableError,
+      ).toHaveBeenCalledWith(
+        invalidIdpHintCtx,
+        expect.any(CoreIdpHintException),
+      );
+    });
+
+    it('should call flowStep.setStep if an idp hint was provided and is valid', async () => {
+      // When
+      await service['redirectToHintedIdpMiddleware'](ctxMock);
+
+      // Then
+      expect(flowStepsMock.setStep).toHaveBeenCalledTimes(1);
+      expect(flowStepsMock.setStep).toHaveBeenCalledWith(
+        ctxMock.req,
+        OidcClientRoutes.REDIRECT_TO_IDP,
+      );
+    });
+
+    it('should call tracking.track() if a valid idp_hint was provided', async () => {
+      // Given
+      service['getEventContext'] = jest
+        .fn()
+        .mockReturnValueOnce(eventContextMock);
+
+      // When
+      await service['redirectToHintedIdpMiddleware'](ctxMock);
+
+      // Then
+      expect(trackingMock.track).toHaveBeenCalledTimes(1);
+      expect(trackingMock.track).toHaveBeenCalledWith(
+        trackingMock.TrackedEventsMap.FC_REDIRECTED_TO_HINTED_IDP,
+        eventContextMock,
+      );
+    });
+
+    it('should call core.redirectToIdp() if a valid idp_hint was provided', async () => {
+      // When
+      await service['redirectToHintedIdpMiddleware'](ctxMock);
+
+      // Then
+      expect(coreServiceMock.redirectToIdp).toHaveBeenCalledTimes(1);
+      expect(coreServiceMock.redirectToIdp).toHaveBeenCalledWith(
+        ctxMock.res,
+        ctxMock.oidc.params.acr_values,
+        idpHintMock,
+        sessionServiceMock,
+      );
+    });
+
+    it('should not do anything if no idp_hint was provided', async () => {
+      // Given
+      const noIdpHintCtx = {
+        ...ctxMock,
+        req: { query: {} },
+      } as unknown as OidcCtx;
+
+      // When
+      await service['redirectToHintedIdpMiddleware'](noIdpHintCtx);
+
+      // Then
+      expect(
+        oidcProviderErrorServiceMock.handleRedirectableError,
+      ).not.toHaveBeenCalled();
+      expect(flowStepsMock.setStep).not.toHaveBeenCalled();
+      expect(trackingMock.track).not.toHaveBeenCalled();
+      expect(coreServiceMock.redirectToIdp).not.toHaveBeenCalled();
+    });
+
+    it('should not do anything if ctx.isSso is true', async () => {
+      // Given
+      const noIdpHintCtx = {
+        ...ctxMock,
+        isSso: true,
+      } as unknown as OidcCtx;
+
+      // When
+      await service['redirectToHintedIdpMiddleware'](noIdpHintCtx);
+
+      // Then
+      expect(
+        oidcProviderErrorServiceMock.handleRedirectableError,
+      ).not.toHaveBeenCalled();
+      expect(flowStepsMock.setStep).not.toHaveBeenCalled();
+      expect(trackingMock.track).not.toHaveBeenCalled();
+      expect(coreServiceMock.redirectToIdp).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('ssoCanBeUsed', () => {
+    it('should return true if all params are true', () => {
+      // Given
+      const enableSsoMock = true;
+      const hasAuthorizedAcrMock = true;
+      const hasSufficientAcrMock = true;
+      const hasSpIdentityMock = true;
+      // When
+      const result = service['ssoCanBeUsed'](
+        enableSsoMock,
+        hasAuthorizedAcrMock,
+        hasSufficientAcrMock,
+        hasSpIdentityMock,
+      );
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return false if enableSso is defined to false and others to true', () => {
+      // Given
+      const enableSsoMock = false;
+      const hasAuthorizedAcrMock = true;
+      const hasSufficientAcrMock = true;
+      const hasSpIdentityMock = true;
+      // When
+      const result = service['ssoCanBeUsed'](
+        enableSsoMock,
+        hasAuthorizedAcrMock,
+        hasSufficientAcrMock,
+        hasSpIdentityMock,
+      );
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should return false if hasAuthorizedAcr is defined to false and others to true', () => {
+      // Given
+      const enableSsoMock = true;
+      const hasAuthorizedAcrMock = false;
+      const hasSufficientAcrMock = true;
+      const hasSpIdentityMock = true;
+      // When
+      const result = service['ssoCanBeUsed'](
+        enableSsoMock,
+        hasAuthorizedAcrMock,
+        hasSufficientAcrMock,
+        hasSpIdentityMock,
+      );
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should return false if hasSufficientAcr is defined to false and others to true', () => {
+      // Given
+      const enableSsoMock = true;
+      const hasAuthorizedAcrMock = true;
+      const hasSufficientAcrMock = false;
+      const hasSpIdentityMock = true;
+      // When
+      const result = service['ssoCanBeUsed'](
+        enableSsoMock,
+        hasAuthorizedAcrMock,
+        hasSufficientAcrMock,
+        hasSpIdentityMock,
+      );
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should return false if hasSpIdentity is defined to false and others to true', () => {
+      // Given
+      const enableSsoMock = true;
+      const hasAuthorizedAcrMock = true;
+      const hasSufficientAcrMock = true;
+      const hasSpIdentityMock = false;
+      // When
+      const result = service['ssoCanBeUsed'](
+        enableSsoMock,
+        hasAuthorizedAcrMock,
+        hasSufficientAcrMock,
+        hasSpIdentityMock,
+      );
+      // Then
+      expect(result).toBe(false);
     });
   });
 });

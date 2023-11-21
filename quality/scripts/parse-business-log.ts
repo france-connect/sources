@@ -28,10 +28,14 @@ const loadLog = async (path: string): Promise<LogEvent[]> => {
   return rawData
     .split('\n')
     .filter(Boolean)
-    .map((row) => JSON.parse(row));
-}
+    .map((row) => JSON.parse(row))
+    .reverse();
+};
 
-const interactionHasEvent = async ([logFile, stringifiedTestEvent]: string[]): Promise<void> => {
+const interactionHasEvent = async ([
+  logFile,
+  stringifiedTestEvent,
+]: string[]): Promise<void> => {
   try {
     const logs: LogEvent[] = await loadLog(logFile);
     const testEvent: LogEvent = JSON.parse(stringifiedTestEvent);
@@ -43,7 +47,9 @@ const interactionHasEvent = async ([logFile, stringifiedTestEvent]: string[]): P
      * rather than having no match at all,
      * usefull for debuging purpose.
      */
-    const foundEvent: LogEvent = logs.find((log) => log.event === testEvent.event);
+    const foundEvent: LogEvent = logs.find(
+      (log) => log.event === testEvent.event,
+    );
 
     if (!foundEvent) {
       // eslint-disable-next-line no-console
@@ -67,7 +73,8 @@ const interactionHasEvent = async ([logFile, stringifiedTestEvent]: string[]): P
         Diff: ${JSON.stringify(differences)}
         Found event: ${JSON.stringify(foundEvent)}
         Test event: ${JSON.stringify(testEvent)}
-        `);
+        `,
+      );
       process.exit(4);
     }
 
@@ -79,12 +86,12 @@ const interactionHasEvent = async ([logFile, stringifiedTestEvent]: string[]): P
     console.error(error);
     process.exit(1);
   }
-}
+};
 
 /**
  * Compares a test LogEvent (with validation expectations) to a source LogEvent
  * Values in the test object are by default compared to the ones of the source object using a strict equal comparison (===).
- * It is possible to use a regular expression for the comparison by providing a string starting with "RegExp:"  
+ * It is possible to use a regular expression for the comparison by providing a string starting with "RegExp:"
  * @param test object containing the key/value expectations
  * @param source LogEvent object to verify
  * @returns an array with the [key, value] from the source object not matching the test object expectations
@@ -94,7 +101,8 @@ const getDifferences = (
   source: LogEvent,
 ): [string, string][] => {
   const REG_EXP_PREFIX = 'RegExp:';
-  const isRegExpPattern = (text) => text.startsWith(REG_EXP_PREFIX);
+  const isRegExpPattern = (value) =>
+    typeof value === 'string' && value.startsWith(REG_EXP_PREFIX);
   const assertions = Object.entries(test).filter(([key, value]) => {
     if (isRegExpPattern(value)) {
       const regExp = new RegExp(value.replace(REG_EXP_PREFIX, ''));
@@ -104,6 +112,6 @@ const getDifferences = (
   });
 
   return assertions;
-}
+};
 
 interactionHasEvent(process.argv.slice(2));

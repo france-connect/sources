@@ -15,12 +15,15 @@ import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc';
 import {
   OidcClientGetEndSessionUrlException,
   OidcClientIdpBlacklistedException,
+  OidcClientIdpDisabledException,
+  OidcClientIdpNotFoundException,
   OidcClientInvalidStateException,
   OidcClientMissingCodeException,
   OidcClientMissingStateException,
   OidcClientTokenFailedException,
 } from '../exceptions';
 import { TokenParams } from '../interfaces';
+import { IDENTITY_PROVIDER_SERVICE } from '../tokens';
 import { OidcClientConfigService } from './oidc-client-config.service';
 import { OidcClientIssuerService } from './oidc-client-issuer.service';
 import { OidcClientUtilsService } from './oidc-client-utils.service';
@@ -101,6 +104,10 @@ describe('OidcClientUtilsService', () => {
     shouldExcludeIdp: jest.fn(),
   };
 
+  const identityProviderServiceMock = {
+    getById: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -113,20 +120,20 @@ describe('OidcClientUtilsService', () => {
           provide: SERVICE_PROVIDER_SERVICE_TOKEN,
           useValue: serviceProviderServiceMock,
         },
+        {
+          provide: IDENTITY_PROVIDER_SERVICE,
+          useValue: identityProviderServiceMock,
+        },
       ],
     })
       .overrideProvider(OidcClientIssuerService)
       .useValue(oidcClientIssuerServiceMock)
-
       .overrideProvider(OidcClientConfigService)
       .useValue(oidcClientConfigServiceMock)
-
       .overrideProvider(CryptographyService)
       .useValue(cryptoServiceMock)
-
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-
       .compile();
 
     service = module.get<OidcClientUtilsService>(OidcClientUtilsService);
@@ -398,9 +405,9 @@ describe('OidcClientUtilsService', () => {
       const errorMock = new Error('lol');
       callbackMock.mockRejectedValueOnce(errorMock);
       // Then
-      expect(service.getTokenSet(req, providerId, params)).rejects.toThrow(
-        OidcClientTokenFailedException,
-      );
+      await expect(
+        service.getTokenSet(req, providerId, params),
+      ).rejects.toThrow(OidcClientTokenFailedException);
     });
   });
 
@@ -413,9 +420,9 @@ describe('OidcClientUtilsService', () => {
         state: 'callbackParamsState',
       });
       // Then
-      expect(service['extractParams'](req, clientMock, state)).rejects.toThrow(
-        OidcClientMissingCodeException,
-      );
+      await expect(
+        service['extractParams'](req, clientMock, state),
+      ).rejects.toThrow(OidcClientMissingCodeException);
     });
     it('should throw if state is not provided in url', async () => {
       // Given
@@ -423,9 +430,9 @@ describe('OidcClientUtilsService', () => {
         code: 'callbackParamsCode',
       });
       // Then
-      expect(service['extractParams'](req, clientMock, state)).rejects.toThrow(
-        OidcClientMissingStateException,
-      );
+      await expect(
+        service['extractParams'](req, clientMock, state),
+      ).rejects.toThrow(OidcClientMissingStateException);
     });
     it('should throw if state in url does not match state in session', async () => {
       // Given
@@ -435,7 +442,7 @@ describe('OidcClientUtilsService', () => {
       });
       const invalidState = 'notTheSameStateAsInRequest';
       // Then
-      expect(
+      await expect(
         service['extractParams'](req, clientMock, invalidState),
       ).rejects.toThrow(OidcClientInvalidStateException);
     });
@@ -480,7 +487,6 @@ describe('OidcClientUtilsService', () => {
         idTokenMock,
         postLogoutRedirectUriMock,
       );
-
       // Then
       expect(oidcClientIssuerServiceMock.getClient).toHaveBeenCalledTimes(1);
       expect(oidcClientIssuerServiceMock.getClient).toHaveBeenCalledWith(
@@ -496,7 +502,6 @@ describe('OidcClientUtilsService', () => {
         idTokenMock,
         postLogoutRedirectUriMock,
       );
-
       // Then
       expect(clientMock.endSessionUrl).toHaveBeenCalledTimes(1);
       expect(clientMock.endSessionUrl).toHaveBeenCalledWith({
@@ -518,19 +523,17 @@ describe('OidcClientUtilsService', () => {
         idTokenMock,
         postLogoutRedirectUriMock,
       );
-
       // Then
       expect(result).toStrictEqual(endSessionUrlWithParamsMock);
     });
 
     it('should throw an OidcClientGetEndSessionUrlException', async () => {
-      // given
+      // Given
       clientMock.endSessionUrl.mockReset().mockImplementationOnce(() => {
         throw new Error('Unknown Error');
       });
       const expectedError = new OidcClientGetEndSessionUrlException();
-
-      // When / Then
+      // When
       await expect(() =>
         service.getEndSessionUrl(
           providerUidMock,
@@ -544,38 +547,75 @@ describe('OidcClientUtilsService', () => {
 
   describe('checkIdpBlacklisted()', () => {
     it('should return OidcClientRuntimeException isIdpBlacklist throw an error', async () => {
-      // setup
+      // Given
       const errorMock = new Error(
         'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',
       );
-      // action
+      // When
       serviceProviderServiceMock.shouldExcludeIdp.mockRejectedValueOnce(
         errorMock,
       );
-
-      // assert
+      // Then
       await expect(
         service.checkIdpBlacklisted('spId', 'idpId'),
       ).rejects.toThrow(errorMock);
     });
 
     it('should throw OidcClientIdpBlacklistedException because identity provider is blacklisted', async () => {
-      // setup
+      // Given
       const errorMock = new OidcClientIdpBlacklistedException();
-      // action
+      // When
       serviceProviderServiceMock.shouldExcludeIdp.mockReturnValueOnce(true);
-
-      // assert
+      // Then
       await expect(
         service.checkIdpBlacklisted('spId', 'idpId'),
       ).rejects.toThrow(errorMock);
     });
 
     it('should return false because identity provider is not blacklisted', async () => {
+      // Given
       serviceProviderServiceMock.shouldExcludeIdp.mockReturnValueOnce(false);
+      // When
+      await service.checkIdpBlacklisted('spId', 'idpId');
+      // Then
+      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.trace).toHaveBeenCalledWith({
+        check: { spId: 'spId', idpId: 'idpId', isIdpExcluded: false },
+      });
+    });
+  });
 
-      const result = await service.checkIdpBlacklisted('spId', 'idpId');
-      expect(result).toBeFalsy();
+  describe('checkIdpDisabled()', () => {
+    it('should throw OidcClientIdpNotFoundException because identity provider is disabled', async () => {
+      // Given
+      identityProviderServiceMock.getById.mockResolvedValueOnce(undefined);
+
+      // When / Then
+      await expect(service.checkIdpDisabled('idpId')).rejects.toThrow(
+        OidcClientIdpNotFoundException,
+      );
+    });
+
+    it('should throw OidcClientIdpDisabledException because identity provider is disabled', async () => {
+      // Given
+      identityProviderServiceMock.getById.mockResolvedValueOnce({
+        active: false,
+      });
+
+      // When / Then
+      await expect(service.checkIdpDisabled('idpId')).rejects.toThrow(
+        OidcClientIdpDisabledException,
+      );
+    });
+
+    it('should not do anything because identity provider exists and is not disabled', async () => {
+      // Given
+      identityProviderServiceMock.getById.mockResolvedValueOnce({
+        active: true,
+      });
+
+      // When / Then
+      await expect(() => service.checkIdpDisabled('idpId')).not.toThrow();
     });
   });
 

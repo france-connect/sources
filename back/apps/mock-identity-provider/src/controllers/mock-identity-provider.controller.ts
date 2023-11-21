@@ -11,8 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
-import { IOidcIdentity } from '@fc/oidc';
+import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { ISessionService, Session } from '@fc/session';
@@ -32,7 +31,7 @@ export class MockIdentityProviderController {
   }
 
   @Get(MockIdentityProviderRoutes.INDEX)
-  async index() {
+  index() {
     const response = { status: 'ok' };
 
     this.logger.trace({
@@ -98,14 +97,21 @@ export class MockIdentityProviderController {
     @Session('App')
     sessionApp: ISessionService<AppSession>,
   ): Promise<void> {
-    const { login, acr } = body;
-    const spIdentity = (await this.mockIdentityProviderService.getIdentity(
-      login,
-    )) as unknown as IOidcIdentity;
+    const { login, password, acr } = body;
+    const spIdentity =
+      await this.mockIdentityProviderService.getIdentity(login);
 
     if (!spIdentity) {
-      this.logger.trace({ spIdentity }, LoggerLevelNames.WARN);
       throw new Error('Identity not found in database');
+    }
+
+    if (
+      !this.mockIdentityProviderService.isPasswordValid(
+        spIdentity.password,
+        password,
+      )
+    ) {
+      throw new Error('Password is invalid');
     }
 
     await sessionApp.set('userLogin', login);

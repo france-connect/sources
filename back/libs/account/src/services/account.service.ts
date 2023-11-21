@@ -19,7 +19,7 @@ export class AccountService {
   }
 
   /**
-   * Check in database if an account is registred and blocked
+   * Check in database if an account is registered and blocked
    * with provided identityHash
    *
    * @param identityHash

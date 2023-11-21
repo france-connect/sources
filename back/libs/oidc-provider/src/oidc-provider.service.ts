@@ -1,3 +1,4 @@
+import { Response } from 'express';
 import { get } from 'lodash';
 import { KoaContextWithOIDC, Provider } from 'oidc-provider';
 import { HttpOptions } from 'openid-client';
@@ -32,6 +33,8 @@ const PATHS = {
   [OidcProviderRoutes.USERINFO]: 'oidc.entities.Account.accountId',
 };
 const DEFAULT_PATH = 'oidc.entities.Interaction.uid';
+
+export const COOKIES = ['_session', '_interaction', '_interaction_resume'];
 
 /**
  * Make service global in order to ease retrieval and override from other libraries.
@@ -246,7 +249,13 @@ export class OidcProviderService {
     });
   }
 
-  async finishInteraction(req: any, res: any, session: OidcSession) {
+  finishInteraction(req: any, res: any, session: OidcSession) {
     this.oidcProviderConfigApp.finishInteraction(req, res, session);
+  }
+
+  clearCookies(res: Response) {
+    COOKIES.forEach((cookieName) => {
+      res.clearCookie(cookieName);
+    });
   }
 }

@@ -8,6 +8,7 @@ import { LayoutHeaderNavigationComponent } from './layout-header-navigation.comp
 
 export interface LayoutHeaderMenuComponentProps {
   opened: boolean;
+  isMobile: boolean;
   onClose: MouseEventHandler<HTMLButtonElement>;
   navigationItems?: NavigationLink[];
   lastname: string | undefined;
@@ -15,7 +16,14 @@ export interface LayoutHeaderMenuComponentProps {
 }
 
 export const LayoutHeaderMenuComponent: React.FC<LayoutHeaderMenuComponentProps> = React.memo(
-  ({ firstname, lastname, navigationItems, onClose, opened }: LayoutHeaderMenuComponentProps) => (
+  ({
+    firstname,
+    isMobile,
+    lastname,
+    navigationItems,
+    onClose,
+    opened,
+  }: LayoutHeaderMenuComponentProps) => (
     <div
       aria-labelledby="burger-button-mobile-menu"
       className={classnames('fr-header__menu fr-modal', styles.menu, {
@@ -34,6 +42,7 @@ export const LayoutHeaderMenuComponent: React.FC<LayoutHeaderMenuComponentProps>
         <LayoutHeaderToolsComponent isModalMenu firstname={firstname} lastname={lastname} />
         {navigationItems?.length && (
           <LayoutHeaderNavigationComponent
+            className={isMobile ? styles.nav : undefined}
             navigationItems={navigationItems}
             onItemClick={onClose}
           />

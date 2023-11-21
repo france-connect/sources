@@ -9,6 +9,9 @@ FCP validation with system tests implemented using a Test Framework (based on Cy
 ## Folder Structure
 
 - Features folder: [/cypress/integration](./cypress/integration)
+- Steps/Pages folder (common): [/cypress/support/common](./cypress/support/common)
+- Steps/Pages folder (dashboard): [/cypress/support/dashboard](./cypress/support/dashboard)
+- Steps/Pages folder (eidas-bridge): [/cypress/support/eidas-bridge](./cypress/support/eidas-bridge)
 - Steps/Pages folder (exploitation): [/cypress/support/exploitation](./cypress/support/exploitation)
 - Steps/Pages folder (usager): [/cypress/support/usager](./cypress/support/usager)
 - Test Data folder: [/cypress/fixtures](./cypress/fixtures)
@@ -17,8 +20,8 @@ FCP validation with system tests implemented using a Test Framework (based on Cy
 
 | Environment Variable | Description                       | Comment                                      |
 | -------------------- | --------------------------------- | -------------------------------------------- |
-| PLATFORM             | Platform under test               | `fcp-high` or `fcp-low`                      |
-| TEST_ENV             | Test environment                  | `docker` or `recette`, etc.                  |
+| PLATFORM             | Platform under test               | `fcp-high` or `fcp-low` or `fcp-legacy`      |
+| TEST_ENV             | Test environment                  | `docker` or `integ01`, etc.                  |
 | TAGS                 | Tags expression                   | `not @ignoreLow and not @fcpHigh`            |
 | EXPLOIT_ADMIN_NAME   | Exploitation admin username       | needed only for integ01/preprod              |
 | EXPLOIT_ADMIN_PASS   | Exploitation admin password       | needed only for integ01/preprod              |
@@ -42,6 +45,21 @@ In order to run tests with Cypress,
   - [beforeEach hook](./cypress/support/common/steps/hooks.ts)
   - [Read more about SameSite cookie attribute](https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Set-Cookie/SameSite)
 
+## Continuous Integration
+
+The BDD tests are run at different moments of the continuous integration:
+
+### 1. on the merge request
+  Before being able to merge a branch to `staging` branch, the BDD scenarios tagged with `@ci` are run. They represent the critical scenarios to pass in order to prevent system regression. When a new feature is implemented most of its scenarios should be tagged `@ci`. Then overtime, once the feature is more stable, only key scenarios remain tagged `@ci`.
+
+### 2. overnight build of the `staging` branch
+
+  Overnight build of the `staging` branch are executed. Those build run all the BDD tests. As no developpers are using Gitlab, we can run all the tests and not only the critical ones (tagged `@ci`).
+
+### 3. after deployment to integ01 environment
+
+  Most BDD tests are designed to be executed on both the local stack and the integ01 environment. We run all the scenarios available and not tagged `@ignoreInteg01`.
+
 ## Scripts
 
 ### Run the Cypress tests on FCP-LOW
@@ -52,8 +70,7 @@ In order to run tests with Cypress,
 
 ```shell
 docker-stack prune && \
-docker-stack up all-fcp-low && \
-docker-stack dependencies-all && \
+docker-stack up bdd-fcp-low && \
 docker-stack start-all
 ```
 
@@ -84,8 +101,6 @@ yarn start:low
 ```shell
 docker-stack prune && \
 docker-stack up bdd-fcp-high && \
-docker-stack dependencies-all && \
-docker-stack fixtures-fcp-high && \
 docker-stack start-all
 ```
 
@@ -107,54 +122,32 @@ yarn test:high
 yarn start:high
 ```
 
-#### Run the tests from Cypress UI for recette environment
-
-1. Duplicate `cypress-fcp-high.json` and rename it `cypress-recette.json`
-2. Change the following env attributes
-
-  ```json
-  "TEST_ENV": "recette",
-  "FC_ACCESS_USER": "<FranceConnect access user for HTTP Basic Authentication>",
-  "FC_ACCESS_PASS": "<FranceConnect access password for HTTP Basic Authentication>",
-  ```
-
-3. Run the job `review-fcp-high` on the merge request, in order to deploy the recette environment
-4. Check that the recette environment is up and running navigating from `https://recette.dev-franceconnect.fr/fcp.html`
-5. Open Cypress UI to run tests on FCP-HIGH against recette environment
-
-  ```shell
-  yarn start:high --config-file cypress-recette.json
-  ```
-
-6. Run the `usager` tests (user connection) or `exploitation` tests (admin configuration)
-
 #### Run the tests from Cypress UI for integ01 environment
 
-1. Duplicate `cypress-fcp-high.json` and rename it `cypress-integ01.json`
-2. Change the following env attributes
+1. Update `cypress-fcp-high-base.config.ts` by changing the following env attributes
 
-  ```json
-  "TEST_ENV": "integ01",
-  "EXPLOIT_USER_NAME": "<your integ01 operator user>",
-  "EXPLOIT_USER_PASS": "<your integ01 operator password>",
-  "EXPLOIT_USER_TOTP": "<your integ01 operator totp secret",
-  "FC_ACCESS_USER": "<FranceConnect access user for HTTP Basic Authentication>",
-  "FC_ACCESS_PASS": "<FranceConnect access password for HTTP Basic Authentication>",
-  ```
+```json
+"TEST_ENV": "integ01",
+"EXPLOIT_USER_NAME": "<your integ01 operator user>",
+"EXPLOIT_USER_PASS": "<your integ01 operator password>",
+"EXPLOIT_USER_TOTP": "<your integ01 operator totp secret",
+"FC_ACCESS_USER": "<FranceConnect access user for HTTP Basic Authentication>",
+"FC_ACCESS_PASS": "<FranceConnect access password for HTTP Basic Authentication>",
+```
 
-3. Start the proxy to access `https://docker.dev-franceconnect.fr/integ01/fcp.html`
+2. Start the proxy to access `https://docker.dev-franceconnect.fr/integ01/fcp-high.html`
 
-  ```shell
-  docker-stack up rp-all
-  ```
+```shell
+docker-stack up rp-all
+```
 
-4. Open Cypress UI to run tests on FCP-HIGH against integ01 environment
+3. Open Cypress UI to run tests on FCP-HIGH against integ01 environment
 
-  ```shell
-  yarn start:high --config-file cypress-integ01.json
-  ```
+```shell
+yarn start:high
+```
 
-5. Run the `usager` tests (user connection) or `exploitation` tests (if you have an operator user)
+4. Run the `usager` tests (user connection) or `exploitation` tests (if you have an operator user)
 
 ### Run the Cypress tests on user-dashboard
 
@@ -163,11 +156,9 @@ yarn start:high
 - [More information regarding the local user-dashboard stack](/front/apps/user-dashboard/README.md)
 
 ```shell
-docker-stack-legacy prune && \
-docker-stack-legacy up bdd-ud && \
-docker-stack-legacy dep-all && \
-docker-stack-legacy fixtures fc-exploitation fc-support && \
-docker-stack-legacy start-all
+docker-stack prune && \
+docker-stack up bdd-ud && \
+docker-stack start-all
 ```
 
 #### Run the tests in the terminal
@@ -195,7 +186,6 @@ yarn start:ud
 ```shell
 docker-stack prune && \
 docker-stack up min-eidas-high && \
-docker-stack dependencies-all && \
 docker-stack start-all
 ```
 
@@ -220,11 +210,8 @@ yarn start:eidas
 ### Generate the Cucumber HTML report
 
 ```shell
-# Add Screenshots/Videos to the Cucumber logs
-yarn report:prepare
-
 # Generate the report for fcp-high integ01
-CYPRESS_PLATFORM=fcp-high CYPRESS_TEST_ENV=integ01 yarn report:generate
+CYPRESS_PLATFORM=fcp-high CYPRESS_TEST_ENV=integ01 yarn report
 ```
 
 ## Accessibility Validation
@@ -251,16 +238,19 @@ The visual validations are done on Electron 94 headless in the terminal.
 ### Run the snapshot tests
 
 - FCP-HIGH
+
 ```shell
 yarn test:high:snapshot
 ```
 
 - FCP-LOW
+
 ```shell
 yarn test:low:snapshot
 ```
 
 - USER-DASHBOARD
+
 ```shell
 yarn test:ud:snapshot
 ```
@@ -268,16 +258,19 @@ yarn test:ud:snapshot
 ### Update the base image files for all of your tests
 
 - FCP-HIGH
+
 ```shell
 yarn test:high:snapshot --env updateSnapshots=true
 ```
 
 - FCP-LOW
+
 ```shell
 yarn test:low:snapshot --env updateSnapshots=true
 ```
 
 - USER-DASHBOARD
+
 ```shell
 yarn test:ud:snapshot --env updateSnapshots=true
 ```
@@ -285,19 +278,45 @@ yarn test:ud:snapshot --env updateSnapshots=true
 ### Prevent test failures when an image diff does not pass
 
 - FCP-HIGH
+
 ```shell
 yarn test:high:snapshot --env failOnSnapshotDiff=false
 ```
 
 - FCP-LOW
+
 ```shell
 yarn test:low:snapshot --env failOnSnapshotDiff=false
 ```
 
 - USER-DASHBOARD
+
 ```shell
 yarn test:ud:snapshot --env failOnSnapshotDiff=false
 ```
+
+## Gitlab test pipeline
+
+You can create a test pipeline in Gitlab from a merge request or from the staging branch
+
+1. Navigate to https://gitlab.dev-franceconnect.fr/france-connect/fc/-/pipelines/new
+2. Add the pipeline variables (table below)
+3. Click on the "Run pipeline" button
+4. Start the back and front jobs
+
+| Environment Variable | Description                           | Comment                                                        |
+| -------------------- | ------------------------------------- | -------------------------------------------------------------- |
+| CI_PIPELINE_SOURCE   | merge_request_event                   | if pipeline linked to a merge request                          |
+| CI_MERGE_REQUEST_IID | id of the merge request               | for instance 860 for the merge request `/-/merge_requests/860` |
+| FC_LEGACY_VERSION    | branch from core-legacy repository    | only if not staging                                            |
+| FC_APPS_VERSION      | branch from fc-apps repository        | only if not staging                                            |
+| BDD_TAGS_FCP_LOW     | tags for the fcp-low BDD tests        | by default '@ci and not @ignoreLow and not @fcpHigh'           |
+| BDD_TAGS_FCP_HIGH    | tags for the fcp-high BDD tests       | by default '@ci and not @ignoreHigh and not @fcpLow'           |
+| BDD_TAGS_FCA_LOW     | tags for the fca-low BDD tests        | by default '@ci and not @ignore'                               |
+| BDD_TAGS_EIDAS       | tags for the eidas-bridge BDD tests   | by default '@ci and not @ignore'                               |
+| BDD_TAGS_UD          | tags for the user-dashboard BDD tests | by default '@ci and not @ignore'                               |
+| RUN_E2E_FCP_HIGH     | 0 (skip end-to-end tests) or 1                                | by default 0 on MR and 1 on staging branch                     |
+| RUN_E2E_FCA_LOW      | 0 (skip end-to-end tests) or 1                                | by default 0 on MR and 1 on staging branch                     |
 
 ## Plugins VSCode
 

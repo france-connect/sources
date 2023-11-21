@@ -79,6 +79,7 @@ export const LayoutHeaderComponent = React.memo(() => {
           // - Desktop pages navigation bar (inline menu)
           <LayoutHeaderMenuComponent
             firstname={firstname}
+            isMobile={ltDesktop}
             lastname={lastname}
             navigationItems={navigationItems}
             opened={mobileMenuOpened}

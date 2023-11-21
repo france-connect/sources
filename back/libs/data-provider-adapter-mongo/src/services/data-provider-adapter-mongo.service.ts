@@ -144,9 +144,8 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
     clientId: string,
     clientSecret: string,
   ): Promise<void> {
-    const dataProvider: DataProviderMetadata = await this.getByClientId(
-      clientId,
-    );
+    const dataProvider: DataProviderMetadata =
+      await this.getByClientId(clientId);
 
     if (!dataProvider) {
       throw new DataProviderNotFoundException();

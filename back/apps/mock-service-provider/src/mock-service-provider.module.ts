@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { HttpModule } from '@nestjs/axios';
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
@@ -22,6 +23,7 @@ import {
   OidcClientController,
 } from './controllers';
 import { MockServiceProviderSession } from './dto';
+import { MockServiceProviderService } from './services';
 
 const oidcClientModule = OidcClientModule.register(
   IdentityProviderAdapterEnvService,
@@ -39,8 +41,10 @@ const oidcClientModule = OidcClientModule.register(
     }),
     CryptographyModule,
     oidcClientModule,
+    HttpModule,
   ],
   controllers: [OidcClientController, MockServiceProviderController],
+  providers: [MockServiceProviderService],
 })
 export class MockServiceProviderModule {
   constructor(private readonly config: ConfigService) {}

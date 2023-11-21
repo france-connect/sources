@@ -7,17 +7,15 @@ import {
 } from '@fc/oidc-provider';
 import { SessionService } from '@fc/session';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { OidcProviderConfigAppService } from './oidc-provider-config-app.service';
 import { ScenariosService } from './scenarios.service';
 
 describe('OidcProviderConfigAppService', () => {
   let service: OidcProviderConfigAppService;
 
-  const sessionServiceMock = {
-    set: jest.fn(),
-    get: jest.fn(),
-  };
-
+  const sessionServiceMock = getSessionServiceMock();
   const errorServiceMock = {
     throwError: jest.fn(),
   };
@@ -85,11 +83,11 @@ describe('OidcProviderConfigAppService', () => {
       jest.restoreAllMocks();
 
       jest
-        .spyOn(SessionService, 'getBoundedSession')
+        .spyOn(SessionService, 'getBoundSession')
         .mockReturnValue(sessionServiceMock);
     });
 
-    it('should get the bounded app session', async () => {
+    it('should get the bound app session', async () => {
       // Given
       const reqMock = {
         sessionId: sessionIdMock,
@@ -100,8 +98,8 @@ describe('OidcProviderConfigAppService', () => {
       await service['formatAccount'](sessionIdMock, spIdentityMock, spSubMock);
 
       // Then
-      expect(SessionService.getBoundedSession).toHaveBeenCalledTimes(1);
-      expect(SessionService.getBoundedSession).toHaveBeenCalledWith(
+      expect(SessionService.getBoundSession).toHaveBeenCalledTimes(1);
+      expect(SessionService.getBoundSession).toHaveBeenCalledWith(
         reqMock,
         'App',
       );

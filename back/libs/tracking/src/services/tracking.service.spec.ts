@@ -87,7 +87,7 @@ describe('TrackingService', () => {
   });
 
   describe('track', () => {
-    it('should call `appTrackingService.buildLog()` method', () => {
+    it('should call `appTrackingService.buildLog()` method', async () => {
       // Given
       const EventMock = {
         category: 'EventMockCategory',
@@ -98,7 +98,7 @@ describe('TrackingService', () => {
         'context',
       ) as unknown as TrackedEventContextInterface;
       // When
-      service.track(EventMock, context);
+      await service.track(EventMock, context);
       // Then
       expect(appTrackingMock.buildLog).toHaveBeenCalledTimes(1);
       expect(appTrackingMock.buildLog).toHaveBeenCalledWith(EventMock, context);

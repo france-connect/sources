@@ -8,11 +8,18 @@ import {
   Redirect,
   Render,
   Req,
+  Res,
 } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
-import { ISessionService, Session } from '@fc/session';
+import {
+  ISessionRequest,
+  ISessionResponse,
+  ISessionService,
+  Session,
+  SessionService,
+} from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import {
@@ -25,11 +32,14 @@ import { EidasProviderRoutes } from './enums';
 
 @Controller(EidasProviderRoutes.BASE)
 export class EidasProviderController {
+  // Authorized for dependency injection
+  // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly eidasProvider: EidasProviderService,
     private readonly tracking: TrackingService,
+    private readonly session: SessionService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -43,21 +53,31 @@ export class EidasProviderController {
   @Post(EidasProviderRoutes.REQUEST_HANDLER)
   @Redirect()
   async requestHandler(
-    @Req() req: Request,
+    @Req() req: ISessionRequest,
+    @Res() res: ISessionResponse,
     @Body()
     body: RequestHandlerDTO,
-    @Session('EidasProvider')
-    sessionEidasProvider: ISessionService<EidasProviderSession>,
   ) {
+    await this.session.reset(req, res);
+
+    /**
+     * We need to bind the session after the reset to prevent using
+     * the previous session, so we can't use the decorator.
+     */
+    const sessionEidasProvider =
+      SessionService.getBoundSession<EidasProviderSession>(
+        req,
+        'EidasProvider',
+      );
+
     const { token } = body;
     const { INCOMING_EIDAS_REQUEST } = this.tracking.TrackedEventsMap;
     const trackingContext: TrackedEventContextInterface = { req };
 
-    this.tracking.track(INCOMING_EIDAS_REQUEST, trackingContext);
+    await this.tracking.track(INCOMING_EIDAS_REQUEST, trackingContext);
 
-    const lightRequest = await this.eidasProvider.readLightRequestFromCache(
-      token,
-    );
+    const lightRequest =
+      await this.eidasProvider.readLightRequestFromCache(token);
 
     const request = this.eidasProvider.parseLightRequest(lightRequest);
 
@@ -98,7 +118,7 @@ export class EidasProviderController {
 
     const { proxyServiceResponseCacheUrl } =
       this.config.get<EidasProviderConfig>('EidasProvider');
-    this.tracking.track(REDIRECTING_TO_EIDAS_FR_NODE, trackingContext);
+    await this.tracking.track(REDIRECTING_TO_EIDAS_FR_NODE, trackingContext);
 
     return { proxyServiceResponseCacheUrl, token };
   }

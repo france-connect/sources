@@ -2,7 +2,7 @@
 
 // Declarative code
 
-import { ICsmrTracksGeneratedData } from './csmr-tracks-generated-data.interface';
+import { CoreInstance } from '../enums';
 import { ICsmrTracksGeoData } from './csmr-tracks-geo.interface';
 
 /**
@@ -26,16 +26,12 @@ export type ICsmrTracksLegacyData = {
   fs_label: string;
   eidas: string;
   time: string;
+  service: CoreInstance;
 };
 
 /**
  * data specific to legacy from ElasticSearch source with geo and script generated data
  */
 export type ICsmrTracksLegacyFieldsData = Readonly<
-  ICsmrTracksLegacyData & ICsmrTracksGeoData & ICsmrTracksGeneratedData
->;
-
-export type ICsmrTracksLegacyTransformData = Omit<
-  ICsmrTracksLegacyFieldsData,
-  'trackId' | 'platform'
+  ICsmrTracksLegacyData & ICsmrTracksGeoData
 >;

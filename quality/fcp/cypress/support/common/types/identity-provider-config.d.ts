@@ -1,4 +1,5 @@
-export interface IdentityProviderConfig {
+export interface IdentityProviderConfig
+  extends Record<string, string | string[]> {
   uid?: string;
   name?: string;
   jwksUrl?: string;
@@ -17,7 +18,7 @@ export interface IdentityProviderConfig {
   imageFocus: string;
   trustedIdentity: string;
   eidas: string;
-  order: number;
+  order: string;
   emails: string;
   specificText: string;
   token_endpoint_auth_method: string;

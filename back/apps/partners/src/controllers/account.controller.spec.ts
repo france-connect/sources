@@ -5,6 +5,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { LoggerService } from '@fc/logger-legacy';
 import { PartnerAccountService } from '@fc/partner-account';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { AccountController } from './account.controller';
 
 describe('AccountController', () => {
@@ -20,10 +22,7 @@ describe('AccountController', () => {
     findByEmail: jest.fn(),
   };
 
-  const sessionPartnerAccountMock = {
-    set: jest.fn(),
-    get: jest.fn(),
-  };
+  const sessionPartnerAccountMock = getSessionServiceMock();
 
   beforeEach(async () => {
     jest.resetAllMocks();

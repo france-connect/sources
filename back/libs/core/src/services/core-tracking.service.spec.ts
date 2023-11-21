@@ -45,6 +45,7 @@ describe('CoreTrackingService', () => {
   const xForwardedForOriginalMock = '123.123.123.123, 124.124.124.124';
   const interactionIdMock = 'interactionIdValue';
   const sessionIdMock = 'sessionIdValue';
+  const browsingSessionIdMock = 'browsingSessionId Mock Value';
 
   const contextMock = {
     req: {
@@ -74,6 +75,7 @@ describe('CoreTrackingService', () => {
 
   const sessionDataMock: OidcSession = {
     accountId: 'accountId Mock Value',
+    browsingSessionId: 'browsingSessionId Mock Value',
     sessionId: sessionIdMock,
     interactionId: interactionIdMock,
 
@@ -257,6 +259,7 @@ describe('CoreTrackingService', () => {
       // Given
       const expectedResult = {
         accountId: null,
+        browsingSessionId: null,
         interactionId: null,
         sessionId: sessionIdMock,
         isSso: null,
@@ -285,6 +288,7 @@ describe('CoreTrackingService', () => {
       // Given
       const expectedResult = {
         accountId: 'accountId Mock Value',
+        browsingSessionId: 'browsingSessionId Mock Value',
         sessionId: sessionIdMock,
         interactionId: interactionIdMock,
         isSso: null,
@@ -310,6 +314,7 @@ describe('CoreTrackingService', () => {
       // Given
       const expectedResult = {
         accountId: null,
+        browsingSessionId: browsingSessionIdMock,
         sessionId: sessionIdMock,
         interactionId: null,
         isSso: null,
@@ -330,6 +335,7 @@ describe('CoreTrackingService', () => {
         spName: 'spNameMock',
         spAcr: 'spAcrMock',
         subs: { spIdMock: 'sub for spIdMock' },
+        browsingSessionId: browsingSessionIdMock,
       };
       const sessionGetBinded = jest.fn().mockResolvedValue(sessionMock);
       sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
@@ -344,6 +350,7 @@ describe('CoreTrackingService', () => {
       const expectedResult = {
         accountId: null,
         sessionId: sessionIdMock,
+        browsingSessionId: browsingSessionIdMock,
         interactionId: null,
         isSso: null,
 
@@ -364,6 +371,7 @@ describe('CoreTrackingService', () => {
         spAcr: 'spAcrMock',
         subs: { spIdMock: 'sub for spIdMock' },
         spIdentity: {},
+        browsingSessionId: browsingSessionIdMock,
       };
       const sessionGetBinded = jest.fn().mockResolvedValue(sessionMock);
       sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
@@ -380,6 +388,7 @@ describe('CoreTrackingService', () => {
       const expectedResult = {
         accountId: null,
         sessionId: sessionIdMock,
+        browsingSessionId: browsingSessionIdMock,
         interactionId: null,
         isSso: null,
 
@@ -397,6 +406,7 @@ describe('CoreTrackingService', () => {
       const sessionMock: OidcSession = {
         subs: {},
         spIdentity: {},
+        browsingSessionId: browsingSessionIdMock,
       };
       const boundSessionGet = jest.fn().mockResolvedValue(sessionMock);
       sessionServiceMock.get.bind = jest

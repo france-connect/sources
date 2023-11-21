@@ -15,7 +15,10 @@ import { OidcSession } from '@fc/oidc';
 import { SessionService } from '@fc/session';
 
 import { ForbidRefresh } from '../decorators';
-import { UnexpectedNavigationException } from '../exceptions';
+import {
+  UndefinedStepRouteException,
+  UnexpectedNavigationException,
+} from '../exceptions';
 
 @Injectable()
 export class ForbidRefreshInterceptor implements NestInterceptor {
@@ -40,19 +43,24 @@ export class ForbidRefreshInterceptor implements NestInterceptor {
     return next.handle();
   }
 
+  // eslint-disable-next-line complexity
   private async checkRefresh(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
 
     if (!req.sessionId) {
       return;
     }
-    const session = SessionService.getBoundedSession<OidcSession>(
+    const session = SessionService.getBoundSession<OidcSession>(
       req,
       'OidcClient',
     );
-    const { stepRoute } = await session.get();
+    const { stepRoute } = (await session.get()) || {};
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const currentRoute = req.route.path.replace(urlPrefix, '');
+
+    if (!stepRoute) {
+      throw new UndefinedStepRouteException();
+    }
 
     if (currentRoute === stepRoute) {
       throw new UnexpectedNavigationException(stepRoute);

@@ -5,9 +5,10 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.15.0"
   },
   "scripts": {
+    "prestart": "../../scripts/yarn-dsfr",
     "start": "../../scripts/yarn-start partners-fca",
     "build": "../../scripts/yarn-build partners-fca"
   },

@@ -2,21 +2,28 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   Next,
   Post,
   Query,
+  Req,
+  Res,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcProviderRoutes } from '@fc/oidc-provider/enums';
+import { ISessionRequest, ISessionResponse, SessionService } from '@fc/session';
 
 import { AuthorizeParamsDto } from '../dto';
 
 @Controller()
 export class OidcProviderController {
-  constructor(private readonly logger: LoggerService) {
+  constructor(
+    private readonly logger: LoggerService,
+    private readonly session: SessionService,
+  ) {
     this.logger.setContext(this.constructor.name);
   }
 
@@ -29,6 +36,7 @@ export class OidcProviderController {
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/144
    */
   @Get(OidcProviderRoutes.AUTHORIZATION)
+  @Header('cache-control', 'no-store')
   @UsePipes(
     new ValidationPipe({
       transform: true,
@@ -36,7 +44,14 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
-  getAuthorize(@Next() next, @Query() query: AuthorizeParamsDto) {
+  async getAuthorize(
+    @Req() req: ISessionRequest,
+    @Res() res: ISessionResponse,
+    @Next() next,
+    @Query() query: AuthorizeParamsDto,
+  ) {
+    await this.session.reset(req, res);
+
     this.logger.trace({
       route: OidcProviderRoutes.AUTHORIZATION,
       method: 'GET',
@@ -56,6 +71,7 @@ export class OidcProviderController {
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/144
    */
   @Post(OidcProviderRoutes.AUTHORIZATION)
+  @Header('cache-control', 'no-store')
   @UsePipes(
     new ValidationPipe({
       transform: true,

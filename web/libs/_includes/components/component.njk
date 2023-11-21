@@ -1,0 +1,3 @@
+{% macro component(name, params = {}) %}
+  {% include "components/" + name + ".njk" ignore missing %}
+{% endmacro %}

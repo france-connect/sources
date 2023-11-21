@@ -49,6 +49,12 @@
       "@fc/logger-legacy/*": [
         "libs/logger-legacy/src/*"
       ],
+      "@mocks/logger-legacy": [
+        "libs/logger-legacy/.mocks"
+      ],
+      "@mocks/logger-legacy/*": [
+        "libs/logger-legacy/.mocks/*"
+      ],
       "@fc/logger": [
         "libs/logger/src"
       ],
@@ -144,6 +150,12 @@
       ],
       "@fc/config/*": [
         "libs/config/src/*"
+      ],
+      "@mocks/config": [
+        "libs/config/.mocks"
+      ],
+      "@mocks/config/*": [
+        "libs/config/.mocks/*"
       ],
       "@fc/exceptions": [
         "libs/exceptions/src"
@@ -415,6 +427,18 @@
       "@fc/geoip-maxmind/*": [
         "libs/geoip-maxmind/src/*"
       ],
+      "@fc/jwt": [
+        "libs/jwt/src"
+      ],
+      "@fc/jwt/*": [
+        "libs/jwt/src/*"
+      ],
+      "@mocks/jwt": [
+        "libs/jwt/.mocks"
+      ],      
+      "@mocks/jwt/*": [
+        "libs/jwt/.mocks/*"
+      ],
       "@fc/postgres": [
         "libs/postgres/src"
       ],
@@ -492,7 +516,19 @@
       ],
       "@fc/data-provider-adapter-core/*": [
         "libs/data-provider-adapter-core/src/*"
-      ]
+      ],
+      "@mocks/session": [
+        "libs/session/.mocks"
+      ],      
+      "@mocks/session/*": [
+        "libs/session/.mocks/*"
+      ],
+      "@fc/fqdn-to-idp-adapter-mongo": [
+        "libs/fqdn-to-idp-adapter-mongo/src"
+      ],
+      "@fc/fqdn-to-idp-adapter-mongo/*": [
+        "libs/fqdn-to-idp-adapter-mongo/src/*"
+      ],
     }
   },
   "files": [

@@ -28,7 +28,7 @@ describe('FeatureHandler exception decorator', () => {
   });
 
   describe('get()', () => {
-    it('should retrieve a `FeatureHandlerNoHandler` response for a `null` featureHandler request', async () => {
+    it('should retrieve a `FeatureHandlerNoHandler` response for a `null` featureHandler request', () => {
       // Given
       const resultMock = new FeatureHandlerNoHandler();
       // Then
@@ -36,7 +36,7 @@ describe('FeatureHandler exception decorator', () => {
       expect(result).toStrictEqual(resultMock);
     });
 
-    it('should throw an `Error` if an empty string as key is requested', async () => {
+    it('should throw an `Error` if an empty string as key is requested', () => {
       // Given
       const emptyFeatureHandlerTopicGetMock = '';
 
@@ -47,7 +47,7 @@ describe('FeatureHandler exception decorator', () => {
       ).toThrow(FeatureHandlerEmptyException);
     });
 
-    it('should throw an `Error` if an `undefined` featureHandler is requested', async () => {
+    it('should throw an `Error` if an `undefined` featureHandler is requested', () => {
       // Given
       const emptyFeatureHandlerMock = undefined;
       // When
@@ -57,10 +57,10 @@ describe('FeatureHandler exception decorator', () => {
       );
     });
 
-    it('should retrieve a instantiated class for a given existing featureHandler', async () => {
+    it('should retrieve a instantiated class for a given existing featureHandler', () => {
       // Given
       const featureHandlerServiceMock = class {
-        async handle(): Promise<void> {
+        handle(): Promise<void> {
           return;
         }
       };
@@ -70,9 +70,9 @@ describe('FeatureHandler exception decorator', () => {
         featureHandlerTopicMock,
         featureHandlerServiceMock,
       );
-      ctx.moduleRef.get.mockResolvedValueOnce(featureHandlerServiceMock);
+      ctx.moduleRef.get.mockReturnValueOnce(featureHandlerServiceMock);
       // When
-      const result = await FeatureHandler.get(
+      const result = FeatureHandler.get(
         featureHandlerTopicMock,
         // the ctx must contains a module
         ctx as unknown as { moduleRef: ModuleRef },
@@ -122,7 +122,7 @@ describe('FeatureHandler exception decorator', () => {
   });
 
   describe('getAll()', () => {
-    it('should retrieve the mapping list of all setted FeatureHandler decorator', async () => {
+    it('should retrieve the mapping list of all setted FeatureHandler decorator', () => {
       // Given
       const featureHandlerTopicMock = 'core-fcp-eidas-verify';
       FeatureHandler.getInternalMappingForTestingPurposes().set(

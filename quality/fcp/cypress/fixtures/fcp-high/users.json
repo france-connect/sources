@@ -177,7 +177,7 @@
       "gender": "male",
       "given_name": "Arthur Philip",
       "birthdate": "1978-03-08",
-      "birthplace": "42424",
+      "birthplace": "95277",
       "birthcountry": "99100"
     }
   },
@@ -198,7 +198,7 @@
       "given_name": "Arthur Philip",
       "family_name": "DENT",
       "birthdate": "2001-03-08",
-      "birthplace": "42424",
+      "birthplace": "95277",
       "birthcountry": "99100"
     }
   },
@@ -240,8 +240,8 @@
       "given_name": "Simone",
       "family_name": "Veil",
       "birthdate": "1927-07-13",
-      "birthplace": "06000",
-      "birthcountry": "99100"
+      "birthplace": "",
+      "birthcountry": "99139"
     }
   },
   {
@@ -450,6 +450,7 @@
     "claims": {
       "given_name": "javier",
       "family_name": "Garcia",
+      "preferred_username": "Garcia",
       "birthdate": "1964-12-31",
       "gender": "male",
       "birthplace": "Place of Birth"

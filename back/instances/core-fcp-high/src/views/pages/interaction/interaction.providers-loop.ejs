@@ -1,0 +1,15 @@
+<%
+locals.providers
+  .filter(p => p.display).filter(p => p.uid !== locals.config.App.eidasBridgeUid)
+  .forEach(provider => {
+%>
+  <form
+    action="/api/v2/redirect-to-idp"
+    method="POST"
+    class="interaction-main-content-form"
+    name="fs-request"
+    data-testid="fs-request-<%= provider.uid %>">
+    <%- include('pages/interaction/interaction.provider.ejs', { provider }); %>
+    <%- include('pages/interaction/interaction.provider-inputs.ejs', { provider }) %>
+  </form>
+<% }) %>

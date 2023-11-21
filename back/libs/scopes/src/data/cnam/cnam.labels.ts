@@ -29,5 +29,5 @@ export const labels: ILabelMapping<typeof claims> = {
   // OIDC fashion variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   cnam_paiements_ij:
-    "Paiements d'indemnités journalières versés par l’Assurance Maladie",
+    "Paiements d'indemnités journalières versées par l'Assurance Maladie",
 };

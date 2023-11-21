@@ -1,6 +1,6 @@
 const fip = {
   IMPOT_GOUV: {
-    uid: "impot_gouv",
+    uid: "1059fef5-3e1b-40dc-a740-1ef44687552c",
     name: "impot_gouv",
     active: false,
     display: false,
@@ -46,7 +46,7 @@ const fip = {
     ],
   },
   AMELI: {
-    uid: "ameli",
+    uid: "12f7d007-d98f-47c2-8488-8171b3c38d84",
     name: "ameli",
     active: false,
     display: false,
@@ -92,7 +92,7 @@ const fip = {
     ],
   },
   LA_POSTE: {
-    uid: "la_poste",
+    uid: "87e69e8d-dc70-40c7-9d9f-48a7a33d6dfd",
     name: "la_poste",
     active: true,
     display: true,
@@ -138,7 +138,7 @@ const fip = {
     ],
   },
   MOBILE_CONNECT: {
-    uid: "mobile_connect",
+    uid: "2498e330-380d-4183-90bd-0e51f1bb0be2",
     name: "mobile_connect",
     active: false,
     display: false,
@@ -184,7 +184,7 @@ const fip = {
     ],
   },
   MSA: {
-    uid: "msa",
+    uid: "c55d13bd-dd61-4390-862f-ef37d5cf834f",
     name: "msa",
     active: false,
     display: false,
@@ -230,7 +230,7 @@ const fip = {
     ],
   },
   ALICEM: {
-    uid: "alicem",
+    uid: "7b759a5d-aa7e-4224-b038-d809d2312cbd",
     name: "alicem",
     active: false,
     display: false,
@@ -276,7 +276,7 @@ const fip = {
     ],
   },
   EIDASBRIDGE: {
-    uid: "eidas-bridge",
+    uid: "392afb25-ef72-4e65-8f6d-fc48d2790b27",
     name: "eidas-bridge",
     active: true,
     display: true,

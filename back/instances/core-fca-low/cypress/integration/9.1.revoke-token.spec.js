@@ -8,11 +8,11 @@ import {
 } from './mire.utils';
 
 const BASIC_SUB =
-  '9aeda75d9da1edba7051a7d16e413a72d5206f16cf68c5872dd4894558dde16a';
+  '4a897042fa9e7a1098a1951a7a3f461db54be2105c400f8594ce0eeb03cc5756';
 
 describe('Revoke token', () => {
   // -- replace by either `fip1-high` or `fia1-low`
-  const idpId = `${Cypress.env('IDP_NAME')}1-low`;
+  const idpId = '9c716f61-b8a1-435c-a407-ef4d677ec270';
   const { SP_ROOT_URL } = getServiceProvider(`${Cypress.env('SP_NAME')}1-low`);
 
   it('should trigger error Y030116 when token is revoked and we call userInfo endpoint', () => {

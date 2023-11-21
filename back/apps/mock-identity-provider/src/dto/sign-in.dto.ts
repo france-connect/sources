@@ -11,5 +11,8 @@ export class SignInDTO {
   login: string;
 
   @IsString()
+  password: string;
+
+  @IsString()
   acr: string;
 }

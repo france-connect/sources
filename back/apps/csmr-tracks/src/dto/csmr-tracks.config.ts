@@ -50,6 +50,11 @@ export class CsmrTracksConfig {
 
   @IsObject()
   @ValidateNested()
+  @Type(() => ScopesConfig)
+  readonly ScopesFcpLow: ScopesConfig;
+
+  @IsObject()
+  @ValidateNested()
   @Type(() => GeoipMaxmindConfig)
   readonly GeoipMaxmind: GeoipMaxmindConfig;
 

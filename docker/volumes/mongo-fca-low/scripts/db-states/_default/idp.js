@@ -2,7 +2,7 @@
 const fia = {
   // -- FIA - FIA1-LOW - Activated
   "FIA1-LOW": {
-    uid: "fia1-low",
+    uid: "9c716f61-b8a1-435c-a407-ef4d677ec270",
     name: "fia1-low",
     active: true,
     display: true,
@@ -17,6 +17,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
+      fcaAuthorizationUrl: "core-fca-default-authorization-url",
     },
     specificText: "specific text fia1-low",
     url: "https://fia1-low.docker.dev-franceconnect.fr/",
@@ -51,7 +52,7 @@ const fia = {
 
   // -- FIA - FIA2-LOW - Activated
   "FIA2-LOW": {
-    uid: "fia2-low",
+    uid: "0e7c099f-fe86-49a0-b7d1-19df45397212",
     name: "fia2-low",
     active: true,
     display: true,
@@ -66,6 +67,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
+      fcaAuthorizationUrl: "core-fca-default-authorization-url",
     },
     specificText: "specific text fia2-low",
     url: "https://fia2-low.docker.dev-franceconnect.fr/",
@@ -100,7 +102,7 @@ const fia = {
 
   // -- FIA - FIA3-LOW - Deactivated but visible
   "FIA3-LOW": {
-    uid: "fia3-desactive-visible",
+    uid: "405d3839-9182-415f-9926-597489d11509",
     name: "fia3-desactive-visible",
     active: false,
     display: true,
@@ -115,6 +117,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
+      fcaAuthorizationUrl: "core-fca-default-authorization-url",
     },
     specificText: "specific text fia3-low",
     url: "https://fia3-low.docker.dev-franceconnect.fr/",
@@ -149,7 +152,7 @@ const fia = {
 
   // -- FIA - FIA4-LOW - Activated - HS256
   "FIA4-LOW": {
-    uid: "fia4-low",
+    uid: "87762a76-7da0-442d-8243-5785f859b88b",
     name: "fia4-low",
     active: true,
     display: true,
@@ -163,6 +166,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
+      fcaAuthorizationUrl: "core-fca-default-authorization-url",
     },
     mailto: "",
     specificText: "specific text fia4-low",
@@ -198,7 +202,7 @@ const fia = {
 
   // -- FIA - FIA5-LOW - activated - RS256
   "FIA5-LOW": {
-    uid: "fia5-low",
+    uid: "46f5d9f9-881d-46b1-bdcc-0548913ea443",
     name: "fia5-low",
     active: true,
     display: true,
@@ -212,6 +216,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
+      fcaAuthorizationUrl: "core-fca-default-authorization-url",
     },
     mailto: "",
     specificText: "specific text fia5-low",
@@ -247,10 +252,11 @@ const fia = {
 
   // -- FIA - FIA6-LOW - Activated but not visible
   "FIA6-LOW": {
-    uid: "fia6-active-invisible",
+    uid: "ccae1186-3695-4ae2-8b38-d3a9926d92c4",
     name: "fia6-active-invisible",
     active: true,
     display: false,
+    isBeta: false,
     title: "Identity Provider 6 (non visible)- eIDAS faible",
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
@@ -261,6 +267,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
+      fcaAuthorizationUrl: "core-fca-default-authorization-url",
     },
     specificText: "specific text fia6-low",
     url: "https://fia6-low.docker.dev-franceconnect.fr/",
@@ -295,10 +302,11 @@ const fia = {
 
   // -- FIA - FIA7-LOW - Deactivated and not visible
   "FIA7-LOW": {
-    uid: "fia7-desactive-invisible",
+    uid: "b61f31b8-c131-40d0-9eca-109219249db6",
     name: "fia7-desactive-invisible",
     active: false,
     display: false,
+    isBeta: false,
     title: "Identity Provider 7 (désactivé et non visible)- eIDAS faible",
     image: "fi-mock-faible.svg",
     imageFocus: "fi-mock-faible.svg",
@@ -309,6 +317,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
+      fcaAuthorizationUrl: "core-fca-default-authorization-url",
     },
     specificText: "specific text fia7-low",
     url: "https://fia7-low.docker.dev-franceconnect.fr/",
@@ -343,7 +352,7 @@ const fia = {
 
   // -- FIA - FIA8-LOW - FSA5 ONLY
   "FIA8-LOW": {
-    uid: "fia8-low",
+    uid: "56c5831b-7749-4206-b961-11f840bc566b",
     name: "fia8-low",
     active: true,
     display: true,
@@ -358,6 +367,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
+      fcaAuthorizationUrl: "core-fca-default-authorization-url",
     },
     specificText: "specific text fia1-low",
     url: "https://fia8-low.docker.dev-franceconnect.fr/",
@@ -390,60 +400,109 @@ const fia = {
     ],
   },
 
-  // RIE 
-
-    // -- FIA - FIA-RIE-LOW - Activated
-    "FIA-RIE-LOW": {
-      uid: "fia-rie-low",
-      name: "fia-rie-low",
-      active: true,
-      display: true,
-      isBeta: false,
-      title: "Identity Provider RIE - eIDAS faible - ES256",
-      image: "fi-mock-faible.svg",
-      imageFocus: "fi-mock-faible.svg",
-      alt: "impots",
-      trustedIdentity: false,
-      eidas: 1,
-      mailto: "",
-      featureHandlers: {
-        coreVerify: "core-fca-default-verify",
-        authenticationEmail: null,
-      },
-      specificText: "specific text fia-rie-low",
-      url: "https://fia-rie-low.docker.dev-franceconnect.fr/",
-      statusURL: "https://fia-rie-low.docker.dev-franceconnect.fr/",
-      discoveryUrl:
-        "https://fia-rie-low.docker.dev-franceconnect.fr/.well-known/openid-configuration",
-      discovery: true,
-      clientID: "myclientidforfia-rie-low",
-      client_secret:
-        "jClItOnQiSZdE4kxm7EWzJbz4ckfD89k1e3NJw/pbGRHD/Jp6ooupqmHTyc3b62L9wqyF2TlR/5hJejE",
-      order: null,
-      updatedAt: new Date("2019-04-24 17:09:17"),
-      updatedBy: "admin",
-      endSessionURL:
-        "https://fia-rie-low.docker.dev-franceconnect.fr/user/session/end",
-      response_types: ["code"],
-      id_token_signed_response_alg: "ES256",
-      token_endpoint_auth_method: "client_secret_post",
-      revocation_endpoint_auth_method: "client_secret_post",
-      id_token_encrypted_response_alg: "",
-      id_token_encrypted_response_enc: "",
-      userinfo_signed_response_alg: "ES256",
-      userinfo_encrypted_response_alg: "",
-      userinfo_encrypted_response_enc: "",
-      redirect_uris: [
-        "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
-      ],
-      post_logout_redirect_uris: [
-        "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
-      ],
+  // -- FIA - MonComptePro - Activated
+  "MONCOMPTEPRO": {
+    uid: "71144ab3-ee1a-4401-b7b3-79b44f7daeeb",
+    name: "moncomptepro",
+    active: true,
+    display: true,
+    isBeta: false,
+    title: "Identity Provider MonComptePro",
+    image: "fi-mock-faible.svg",
+    imageFocus: "fi-mock-faible.svg",
+    alt: "moncomptepro ",
+    trustedIdentity: false,
+    eidas: 1,
+    mailto: "",
+    featureHandlers: {
+      coreVerify: "core-fca-mcp-verify",
+      authenticationEmail: null,
+      fcaAuthorizationUrl: "core-fca-mcp-authorization-url",
     },
+    specificText: "specific text MonComptePro",
+    url: "https://moncomptepro.docker.dev-franceconnect.fr",
+    discoveryUrl:
+      "https://moncomptepro.docker.dev-franceconnect.fr/.well-known/openid-configuration",
+    discovery: true,
+    clientID: "myclientidformoncomptepro",
+    client_secret:
+      "jClItOnQiSZdE4kxm7EWzJbz4ckfD89k1e3NJw/pbGRHD/Jp6ooupqmHTyc3b62L9wqyF2TlR/5hJejE",
+    order: null,
+    updatedAt: new Date("2019-04-24 17:09:17"),
+    updatedBy: "admin",
+    endSessionURL:
+      "https://moncomptepro.docker.dev-franceconnect.fr/user/session/end",
+    response_types: ["code"],
+    id_token_signed_response_alg: "ES256",
+    token_endpoint_auth_method: "client_secret_post",
+    revocation_endpoint_auth_method: "client_secret_post",
+    id_token_encrypted_response_alg: "",
+    id_token_encrypted_response_enc: "",
+    userinfo_signed_response_alg: "ES256",
+    userinfo_encrypted_response_alg: "",
+    userinfo_encrypted_response_enc: "",
+    redirect_uris: [
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
+    ],
+    post_logout_redirect_uris: [
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
+    ],
+  },
+  // RIE
 
-  // -- FIA using LemonLDAP 
+  // -- FIA - FIA-RIE-LOW - Activated
+  "FIA-RIE-LOW": {
+    uid: "c6ecab5e-dc67-4390-af57-fe208e97b649",
+    name: "fia-rie-low",
+    active: true,
+    display: true,
+    isBeta: false,
+    title: "Identity Provider RIE - eIDAS faible - ES256",
+    image: "fi-mock-faible.svg",
+    imageFocus: "fi-mock-faible.svg",
+    alt: "impots",
+    trustedIdentity: false,
+    eidas: 1,
+    mailto: "",
+    featureHandlers: {
+      coreVerify: "core-fca-default-verify",
+      authenticationEmail: null,
+      fcaAuthorizationUrl: "core-fca-default-authorization-url",
+    },
+    specificText: "specific text fia-rie-low",
+    url: "https://fia-rie-low.docker.dev-franceconnect.fr/",
+    statusURL: "https://fia-rie-low.docker.dev-franceconnect.fr/",
+    discoveryUrl:
+      "https://fia-rie-low.docker.dev-franceconnect.fr/.well-known/openid-configuration",
+    discovery: true,
+    clientID: "myclientidforfia-rie-low",
+    client_secret:
+      "jClItOnQiSZdE4kxm7EWzJbz4ckfD89k1e3NJw/pbGRHD/Jp6ooupqmHTyc3b62L9wqyF2TlR/5hJejE",
+    order: null,
+    updatedAt: new Date("2019-04-24 17:09:17"),
+    updatedBy: "admin",
+    endSessionURL:
+      "https://fia-rie-low.docker.dev-franceconnect.fr/user/session/end",
+    response_types: ["code"],
+    id_token_signed_response_alg: "ES256",
+    token_endpoint_auth_method: "client_secret_post",
+    revocation_endpoint_auth_method: "client_secret_post",
+    id_token_encrypted_response_alg: "",
+    id_token_encrypted_response_enc: "",
+    userinfo_signed_response_alg: "ES256",
+    userinfo_encrypted_response_alg: "",
+    userinfo_encrypted_response_enc: "",
+    redirect_uris: [
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback",
+    ],
+    post_logout_redirect_uris: [
+      "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/logout-callback",
+    ],
+  },
+
+  // -- FIA using LemonLDAP
   "FIA-LLNG-LOW": {
-    uid: "fia-llng-low",
+    uid: "4be87184-1052-460b-9e14-3e164f584200",
     name: "LemonLDAP::ng",
     active: true,
     display: true,
@@ -457,6 +516,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
+      fcaAuthorizationUrl: "core-fca-default-authorization-url",
     },
     mailto: "",
     specificText: "specific text llng",
@@ -490,24 +550,8 @@ const fia = {
   },
 };
 
-// -- IDPs ----------
-print("FIA > Initializing provider: fia1-low - Activated");
-db.provider.update({ name: "fia1-low" }, fia["FIA1-LOW"], { upsert: true });
-print("FIA > Initializing provider: fia2-low - Activated");
-db.provider.update({ name: "fia2-low" }, fia["FIA2-LOW"], { upsert: true });
-print("FIA > Initializing provider: fia3-low - Activated");
-db.provider.update({ name: "fia3-low" }, fia["FIA3-LOW"], { upsert: true });
-print("FIP > Initializing provider: fia4-low - Activated");
-db.provider.update({ name: "fia4-low" }, fia["FIA4-LOW"], { upsert: true });
-print("FIP > Initializing provider: fia5-low - Activated");
-db.provider.update({ name: "fia5-low" }, fia["FIA5-LOW"], { upsert: true });
-print("FIP > Initializing provider: fia6-low - Activated");
-db.provider.update({ name: "fia6-low" }, fia["FIA6-LOW"], { upsert: true });
-print("FIP > Initializing provider: fia7-low - Activated");
-db.provider.update({ name: "fia7-low" }, fia["FIA7-LOW"], { upsert: true });
-print("FIP > Initializing provider: fia8-low - Activated");
-db.provider.update({ name: "fia8-low" }, fia["FIA8-LOW"], { upsert: true });
-print("FIA > Initializing provider: llng - Activated");
-db.provider.update({ name: "LemonLDAP-ng" }, fia["FIA-LLNG-LOW"], { upsert: true });
-print("FIA > Initializing provider: fia-rie-low - Activated");
-db.provider.update({ name: "fia-rie-low" }, fia["FIA-RIE-LOW"], { upsert: true });
+// -- Idps ----------
+Object.values(fia).forEach((idp) => {
+  print(`${idp.name} > Initializing provider: ${idp.name}`);
+  db.provider.update({ name: idp.name }, idp, { upsert: true });
+});

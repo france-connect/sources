@@ -13,7 +13,6 @@ import {
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
 
-import { DEFAULT_CONNECTION_NAME } from './constants';
 import { MongooseConnectionConnectedHandler } from './handlers';
 import { MongooseCollectionOperationWatcherHelper } from './helpers';
 import { MongooseProvider } from './providers';
@@ -21,22 +20,16 @@ import { MongooseProvider } from './providers';
 @Global()
 @Module({})
 export class MongooseModule {
-  static forRoot(connectionName = DEFAULT_CONNECTION_NAME): DynamicModule {
+  static forRoot(): DynamicModule {
     const mongoose = MongooseNativeModule.forRootAsync({
       imports: [CqrsModule],
-      connectionName,
       inject: [LoggerService, ConfigService, EventBus],
       useFactory: (
         logger: LoggerService,
         config: ConfigService,
         eventBus: EventBus,
       ): MongooseModuleOptions =>
-        MongooseProvider.buildMongoParams(
-          logger,
-          config,
-          connectionName,
-          eventBus,
-        ),
+        MongooseProvider.buildMongoParams(logger, config, eventBus),
     });
     return {
       ...mongoose,
@@ -50,11 +43,8 @@ export class MongooseModule {
     };
   }
 
-  static forFeature(
-    models: ModelDefinition[],
-    connectionName = DEFAULT_CONNECTION_NAME,
-  ): DynamicModule {
-    const mongoose = MongooseNativeModule.forFeature(models, connectionName);
+  static forFeature(models: ModelDefinition[]): DynamicModule {
+    const mongoose = MongooseNativeModule.forFeature(models);
     return {
       ...mongoose,
       imports: [CqrsModule],

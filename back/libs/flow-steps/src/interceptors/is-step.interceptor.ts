@@ -11,10 +11,9 @@ import { Reflector } from '@nestjs/core';
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
-import { OidcSession } from '@fc/oidc';
-import { SessionService } from '@fc/session';
 
 import { IsStep } from '../decorators';
+import { FlowStepsService } from '../services';
 
 @Injectable()
 export class IsStepInterceptor implements NestInterceptor {
@@ -22,14 +21,12 @@ export class IsStepInterceptor implements NestInterceptor {
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly reflector: Reflector,
+    private readonly flowStep: FlowStepsService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
 
-  async intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Promise<Observable<any>> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const isFlowStep = IsStep.get(this.reflector, context);
 
     if (!isFlowStep) {
@@ -51,16 +48,11 @@ export class IsStepInterceptor implements NestInterceptor {
       return;
     }
 
-    const session = SessionService.getBoundedSession<OidcSession>(
-      req,
-      'OidcClient',
-    );
     const { urlPrefix } = this.config.get<AppConfig>('App');
-
     const stepRoute = req.route.path.replace(urlPrefix, '');
 
     this.logger.trace(`new stepRoute: ${stepRoute}`);
 
-    await session.set('stepRoute', stepRoute);
+    await this.flowStep.setStep(req, stepRoute);
   }
 }

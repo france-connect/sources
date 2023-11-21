@@ -1,12 +1,12 @@
 #language: fr
-@usager @connexionSuspecte @ci @ignoreInteg01
+@usager @connexionSuspecte @ignoreInteg01
 Fonctionnalité: Connexion Suspecte
   # En tant qu'usager initiateur d'une connexion "suspecte"
   # je veux pouvoir utiliser un fournisseur d'identité niveau substentiel ou élevé
   # (les FI niveau eIDAS faible seront marqués indisponibles)
   # afin de pouvoir accéder à mon fournisseur de service
 
-  @fcpLow
+  @fcpLow @ci
   Scénario: Connexion Suspecte - Affichage de la mire avec FI niveau eidas1 non présent
     Etant donné que je navigue sur la page fournisseur de service
     Quand j'initie une connexion suspecte à FranceConnect low
@@ -16,7 +16,7 @@ Fonctionnalité: Connexion Suspecte
     Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2"
     Et le fournisseur d'identité est actif dans la mire
 
-  @fcpLow
+  @fcpLow @ci
   Scénario: Connexion Suspecte - via FI niveau substentiel ou élevé
     Etant donné que je navigue sur la page fournisseur de service
     Et que j'initie une connexion suspecte à FranceConnect low
@@ -42,9 +42,10 @@ Fonctionnalité: Connexion Suspecte
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que le fournisseur d'identité garantit un niveau de sécurité "eidas1"
     Quand je m'authentifie avec succès
-    Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y000011"
-    Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
+    Alors je suis redirigé vers la page sélection du fournisseur d'identité
+    Et l'événement "FC_IDP_INSUFFICIENT_ACR" est journalisé
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas1"
+    Et le fournisseur d'identité est désactivé dans la mire
 
   @fcpLow
   Scénario: Connexion Suspecte - via FI niveau faible bloquée
@@ -56,9 +57,26 @@ Fonctionnalité: Connexion Suspecte
     Et que je force l'utilisation du fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
-    Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y000011"
-    Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
+    Alors je suis redirigé vers la page sélection du fournisseur d'identité
+    Et l'événement "FC_IDP_INSUFFICIENT_ACR" est journalisé
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas1"
+    Et le fournisseur d'identité est désactivé dans la mire
+
+  @fcpLow
+  Scénario: Connexion Suspecte - Affichage de la mire avec FI eidas2/eidas3 affichés pour une cinématique FS eidas1
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que j'initie une connexion suspecte à FranceConnect low
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que j'utilise un fournisseur d'identité avec niveau de sécurité "eidas1"
+    Et que le fournisseur d'identité est désactivé dans la mire
+    Et que je force l'utilisation du fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Quand je m'authentifie avec succès
+    Alors je suis redirigé vers la page sélection du fournisseur d'identité
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2"
+    Et le fournisseur d'identité est actif dans la mire
+    Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas3"
+    Et le fournisseur d'identité est actif dans la mire
 
   @fcpHigh
   Scénario: Connexion Suspecte - Affichage de la mire avec FI eidas2/eidas3 affichés pour une cinématique FS eidas2

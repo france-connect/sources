@@ -19,3 +19,11 @@ services:
       - "eidas-fr"
       - "eidas-mock"
       - "eidas-be"
+  min-eidas-low:
+    image: alpine
+    depends_on:
+      - "min-fcp-low"
+      - "eidas-bridge"
+      - "eidas-fr"
+      - "eidas-mock"
+      - "eidas-be"

@@ -5,7 +5,7 @@ _test() {
 
   for app in ${apps}; do
     cd ${WORKING_DIR}
-    docker-compose exec ${NO_TTY} "${app}" "/opt/scripts/test.sh"
+    $DOCKER_COMPOSE exec ${NO_TTY} "${app}" "/opt/scripts/test.sh"
   done
 }
 
@@ -38,7 +38,7 @@ _e2e() {
 
 _storybook() {
   cd ${WORKING_DIR}
-  docker-compose up storybook
-  docker-compose exec ${NO_TTY} storybook "/opt/scripts/install.sh"
-  docker-compose exec ${NO_TTY} storybook "/opt/scripts/start.sh"
+  $DOCKER_COMPOSE up storybook
+  $DOCKER_COMPOSE exec ${NO_TTY} storybook "/opt/scripts/install.sh"
+  $DOCKER_COMPOSE exec ${NO_TTY} storybook "/opt/scripts/start.sh"
 }

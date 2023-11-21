@@ -39,8 +39,8 @@ export class CoreFcaVerifyService {
   }
 
   private async trackSsoDisabled(eventContext: TrackedEventContextInterface) {
-    const { FS_DISABLED_SSO } = this.tracking.TrackedEventsMap;
-    await this.tracking.track(FS_DISABLED_SSO, eventContext);
+    const { SP_DISABLED_SSO } = this.tracking.TrackedEventsMap;
+    await this.tracking.track(SP_DISABLED_SSO, eventContext);
   }
 
   async handleSsoDisabled(
@@ -54,7 +54,7 @@ export class CoreFcaVerifyService {
     const eventContext = { req };
     const { interactionId, sessionOidc, urlPrefix } = params;
 
-    sessionOidc.set('isSso', false);
+    await sessionOidc.set('isSso', false);
 
     const url = `${urlPrefix}${CoreRoutes.INTERACTION.replace(
       ':uid',

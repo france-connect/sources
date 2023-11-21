@@ -24,4 +24,5 @@ export const claims: IClaims = {
   email: 'email',
   // eslint-disable-next-line @typescript-eslint/naming-convention
   idp_birthdate: 'idp_birthdate',
+  amr: 'amr',
 };

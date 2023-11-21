@@ -14,11 +14,16 @@ import { ScopesModule } from '@fc/scopes';
 
 import { CsmrTracksController } from './controllers';
 import {
+  TracksFcpHighFormatter,
+  TracksFcpLowFormatter,
+  TracksLegacyFormatter,
+} from './formatters';
+import {
   CsmrTracksAccountService,
   CsmrTracksElasticService,
   CsmrTracksFormatterService,
-  CsmrTracksHighDataService,
-  CsmrTracksLegacyDataService,
+  CsmrTracksGeoService,
+  CsmrTracksService,
 } from './services';
 
 @Module({
@@ -27,6 +32,7 @@ import {
     LoggerModule,
     CryptographyFcpModule,
     ScopesModule.forConfig('FcpHigh'),
+    ScopesModule.forConfig('FcpLow'),
     ScopesModule.forConfig('FcLegacy'),
     GeoipMaxmindModule,
     ElasticsearchModule.register(),
@@ -36,8 +42,11 @@ import {
   ],
   controllers: [CsmrTracksController],
   providers: [
-    CsmrTracksHighDataService,
-    CsmrTracksLegacyDataService,
+    TracksFcpHighFormatter,
+    TracksFcpLowFormatter,
+    TracksLegacyFormatter,
+    CsmrTracksGeoService,
+    CsmrTracksService,
     CsmrTracksAccountService,
     CsmrTracksElasticService,
     CsmrTracksFormatterService,

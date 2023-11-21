@@ -66,9 +66,10 @@ export class ServiceProviderConfigurationController {
       throw new PartnerServiceProviderConfigurationMissingSpIdException();
     }
 
-    const data = await this.partnersService.saveConfigurationForServiceProvider(
-      serviceProviderId,
-    );
+    const data =
+      await this.partnersService.saveConfigurationForServiceProvider(
+        serviceProviderId,
+      );
 
     return data;
   }

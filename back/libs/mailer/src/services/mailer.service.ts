@@ -40,7 +40,7 @@ export class MailerService {
 
   async send(params: MailOptions): Promise<unknown> {
     try {
-      return this.transport.send(params);
+      return await this.transport.send(params);
     } catch (e) {
       this.logger.error(e);
     }

@@ -8,6 +8,7 @@ import { AccountModule } from '@fc/account';
 import { AppModule } from '@fc/app';
 import { ConfigService, ConfigTemplateInterceptor } from '@fc/config';
 import {
+  CORE_SERVICE,
   CoreAccountService,
   CoreAcrService,
   CoreTrackingService,
@@ -24,6 +25,7 @@ import {
   IdentityProviderAdapterMongoModule,
   IdentityProviderAdapterMongoService,
 } from '@fc/identity-provider-adapter-mongo';
+import { JwtModule } from '@fc/jwt';
 import { MailerModule } from '@fc/mailer';
 import { MongooseModule } from '@fc/mongoose';
 import { NotificationsModule } from '@fc/notifications';
@@ -81,6 +83,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     CryptographyEidasModule,
     AccountModule,
     ServiceProviderAdapterMongoModule,
+    JwtModule,
     IdentityProviderAdapterMongoModule,
     HttpProxyModule,
     OidcAcrModule,
@@ -128,6 +131,10 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     {
       provide: APP_INTERCEPTOR,
       useClass: ConfigTemplateInterceptor,
+    },
+    {
+      provide: CORE_SERVICE,
+      useClass: CoreFcpService,
     },
     OidcProviderGrantService,
     DataProviderService,

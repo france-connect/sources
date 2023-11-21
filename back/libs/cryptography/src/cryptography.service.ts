@@ -143,6 +143,8 @@ export class CryptographyService {
     return receivedPlaintext;
   }
 
+  // Actually returns a promise
+  // eslint-disable-next-line require-await
   async passwordHash(password: string): Promise<string> {
     return new Promise((resolve, reject) => {
       const { passwordSalt } =

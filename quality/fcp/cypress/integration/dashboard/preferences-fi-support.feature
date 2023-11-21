@@ -1,5 +1,5 @@
 #language: fr
-@userDashboard @preferencesFISupport @ignoreHigh @ignoreLow
+@userDashboard @preferencesFISupport
 Fonctionnalité: Préférences FI - Support
   # En tant que membre de l'équipe Support de FranceConnect,
   # je veux consulter les préférences de fournisseurs d'identité d'un usager
@@ -30,6 +30,7 @@ Fonctionnalité: Préférences FI - Support
     Et la date de dernière connexion est affichée
     Et les préférences FI de l'usager ne sont pas affichées
 
+  @ci
   Scénario: Préférences FI - Support - préférences FI d'un présumé né jour et mois
     Etant donné que j'utilise un compte usager "présumé né jour et mois"
     Et que je navigue sur la page d'accueil du dashboard usager

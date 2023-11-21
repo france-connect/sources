@@ -66,11 +66,7 @@ yarn start:fcp
 #### Generate the Cucumber HTML report
 
 ```shell
-# Add Screenshots/Videos to the Cucumber logs
-yarn report:prepare
-
-# Generate the report
-CYPRESS_PLATFORM=partners-fcp CYPRESS_TEST_ENV=docker yarn report:generate
+CYPRESS_PLATFORM=partners-fcp CYPRESS_TEST_ENV=docker yarn report
 ```
 
 ### Run the Cypress tests on PARTNERS-FCA
@@ -106,11 +102,7 @@ yarn start:fca
 #### Generate the Cucumber HTML report
 
 ```shell
-# Add Screenshots/Videos to the Cucumber logs
-yarn report:prepare
-
-# Generate the report
-CYPRESS_PLATFORM=partners-fca CYPRESS_TEST_ENV=docker yarn report:generate
+CYPRESS_PLATFORM=partners-fca CYPRESS_TEST_ENV=docker yarn report
 ```
 
 ## Plugins VSCode

@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
+import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger-legacy';
-import { IOidcClaims, OidcSession } from '@fc/oidc';
+import { atHashFromAccessToken, IOidcClaims, OidcSession } from '@fc/oidc';
 import { OidcAcrConfig, OidcAcrService } from '@fc/oidc-acr';
+import { OidcClientRoutes, OidcClientSession } from '@fc/oidc-client';
 import {
   OidcCtx,
   OidcProviderConfig,
@@ -18,8 +20,11 @@ import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter
 import { ISessionService, SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
+import { CoreConfig } from '../dto';
 import { CoreRoutes } from '../enums';
-import { CoreClaimAmrException } from '../exceptions';
+import { CoreClaimAmrException, CoreIdpHintException } from '../exceptions';
+import { CoreServiceInterface } from '../interfaces';
+import { CORE_SERVICE } from '../tokens';
 import { pickAcr } from '../transforms';
 
 @Injectable()
@@ -35,6 +40,9 @@ export class CoreOidcProviderMiddlewareService {
     protected readonly tracking: TrackingService,
     protected readonly oidcErrorService: OidcProviderErrorService,
     protected readonly oidcAcr: OidcAcrService,
+    @Inject(CORE_SERVICE)
+    protected readonly core: CoreServiceInterface,
+    protected readonly flowSteps: FlowStepsService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -47,12 +55,13 @@ export class CoreOidcProviderMiddlewareService {
     this.oidcProvider.registerMiddleware(step, pattern, middleware.bind(this));
   }
 
-  protected async beforeAuthorizeMiddleware({ req }: OidcCtx): Promise<void> {
+  protected beforeAuthorizeMiddleware({ req, res }: OidcCtx): void {
     /**
      * Force cookies to be reset to prevent panva from keeping
      * a session open if you use several service provider in a row
      * @param ctx
      */
+    this.oidcProvider.clearCookies(res);
     req.headers.cookie = '';
   }
 
@@ -200,39 +209,93 @@ export class CoreOidcProviderMiddlewareService {
     const spAmrIsAuthorized = spClaimsAuthorized.includes('amr');
 
     if (!spAmrIsAuthorized) {
+      ctx.oidc['isError'] = true;
       const exception = new CoreClaimAmrException();
-      this.oidcErrorService.throwError(ctx, exception);
+      await this.oidcErrorService.throwError(ctx, exception);
     }
   }
 
-  protected tokenMiddleware(ctx) {
+  protected async tokenMiddleware(ctx: OidcCtx) {
     try {
       this.bindSessionId(ctx);
+
+      const sessionOidc = SessionService.getBoundSession<OidcClientSession>(
+        ctx.req,
+        'OidcClient',
+      );
+
+      const { AccessToken } = ctx.oidc.entities;
+      const atHash = atHashFromAccessToken(AccessToken);
+
+      await sessionOidc.setAlias(atHash);
+
       const eventContext = this.getEventContext(ctx);
       const { SP_REQUESTED_FC_TOKEN } = this.tracking.TrackedEventsMap;
-      this.tracking.track(SP_REQUESTED_FC_TOKEN, eventContext);
+      await this.tracking.track(SP_REQUESTED_FC_TOKEN, eventContext);
     } catch (exception) {
-      this.oidcErrorService.throwError(ctx, exception);
+      ctx.oidc['isError'] = true;
+      await this.oidcErrorService.throwError(ctx, exception);
     }
   }
 
-  protected userinfoMiddleware(ctx) {
+  protected async userinfoMiddleware(ctx) {
     try {
       this.bindSessionId(ctx);
       const eventContext = this.getEventContext(ctx);
       const { SP_REQUESTED_FC_USERINFO } = this.tracking.TrackedEventsMap;
-      this.tracking.track(SP_REQUESTED_FC_USERINFO, eventContext);
+      await this.tracking.track(SP_REQUESTED_FC_USERINFO, eventContext);
     } catch (exception) {
-      this.oidcErrorService.throwError(ctx, exception);
+      ctx.oidc['isError'] = true;
+      await this.oidcErrorService.throwError(ctx, exception);
     }
+  }
+
+  protected async redirectToHintedIdpMiddleware(ctx: OidcCtx) {
+    const { req, res } = ctx;
+    const idpHint = req.query.idp_hint as string;
+    const { allowedIdpHints } = this.config.get<CoreConfig>('Core');
+    const acr = ctx.oidc.params.acr_values as string;
+    const session = SessionService.getBoundSession<OidcClientSession>(
+      req,
+      'OidcClient',
+    );
+
+    if (ctx.isSso || !idpHint) {
+      return;
+    }
+
+    if (!allowedIdpHints.includes(idpHint)) {
+      const exception = new CoreIdpHintException();
+      return this.oidcErrorService.handleRedirectableError(ctx, exception);
+    }
+
+    await this.flowSteps.setStep(req, OidcClientRoutes.REDIRECT_TO_IDP);
+
+    await this.core.redirectToIdp(res, acr, idpHint, session);
+
+    const eventContext = this.getEventContext(ctx);
+    const { FC_REDIRECTED_TO_HINTED_IDP } = this.tracking.TrackedEventsMap;
+    await this.tracking.track(FC_REDIRECTED_TO_HINTED_IDP, eventContext);
   }
 
   protected async isSsoAvailable(
     session: ISessionService<OidcSession>,
+    spAcr: string,
   ): Promise<boolean> {
-    const spIdentity = await session.get('spIdentity');
+    const { allowedSsoAcrs, enableSso } = this.config.get<CoreConfig>('Core');
+    const { spIdentity, idpAcr } = (await session.get()) || {};
 
-    return Boolean(spIdentity);
+    const hasSpIdentity = Boolean(spIdentity);
+    const hasSufficientAcr = this.oidcAcr.isAcrValid(idpAcr, spAcr);
+    const hasAuthorizedAcr = allowedSsoAcrs.includes(spAcr);
+    const ssoCanBeUsed = this.ssoCanBeUsed(
+      enableSso,
+      hasAuthorizedAcr,
+      hasSufficientAcr,
+      hasSpIdentity,
+    );
+
+    return ssoCanBeUsed;
   }
 
   protected async redirectToSso(ctx: OidcCtx): Promise<void> {
@@ -269,5 +332,14 @@ export class CoreOidcProviderMiddlewareService {
     const context = this.getEventContext(ctx);
 
     ctx.req.sessionId = context.sessionId;
+  }
+
+  private ssoCanBeUsed(
+    enableSso: boolean,
+    hasAuthorizedAcr: boolean,
+    hasSufficientAcr: boolean,
+    hasSpIdentity: boolean,
+  ): boolean {
+    return enableSso && hasAuthorizedAcr && hasSufficientAcr && hasSpIdentity;
   }
 }

@@ -1,5 +1,3 @@
-import { IncomingMessage } from 'http';
-
 import { Injectable } from '@nestjs/common';
 
 import { LoggerService } from '@fc/logger-legacy';
@@ -8,7 +6,7 @@ import {
   OidcProviderErrorService,
   OidcProviderGrantService,
 } from '@fc/oidc-provider';
-import { SessionService } from '@fc/session';
+import { ISessionRequest, SessionService } from '@fc/session';
 
 import { AppSession } from '../dto';
 import { ScenariosService } from './scenarios.service';
@@ -31,9 +29,9 @@ export class OidcProviderConfigAppService extends OidcProviderAppConfigLibServic
     const req = {
       sessionId,
       sessionService: this.sessionService,
-    } as unknown as IncomingMessage;
+    } as ISessionRequest;
 
-    const appSession = SessionService.getBoundedSession<AppSession>(req, 'App');
+    const appSession = SessionService.getBoundSession<AppSession>(req, 'App');
 
     const userLogin = await appSession.get('userLogin');
 
@@ -45,6 +43,8 @@ export class OidcProviderConfigAppService extends OidcProviderAppConfigLibServic
        * @see OidcProviderService.finishInteraction()
        */
       accountId: sessionId,
+      // compliant to oidc-provider spec
+      // eslint-disable-next-line require-await
       async claims() {
         return claims;
       },

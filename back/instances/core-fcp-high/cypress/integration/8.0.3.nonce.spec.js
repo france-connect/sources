@@ -9,14 +9,14 @@ describe('8.0.3 - nonce', () => {
 
   it('should return an error if the nonce is too short (FC as IDP)', () => {
     const url = getAuthorizeUrl({
-      nonce: 'thirtyonecharcterscharacterssss',
+      nonce: 'thirtyone',
     });
     cy.visit(url, { failOnStatusCode: false });
     cy.hasError('Y030007');
   });
 
   it('should send the nonce through the authorize url (FC as FS) - a nonce being at least 32 characters long', () => {
-    const idpId = 'fip1-high';
+    const idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18';
     const idpInfo = getIdentityProvider(idpId);
 
     const url = getAuthorizeUrl({
@@ -34,7 +34,7 @@ describe('8.0.3 - nonce', () => {
   });
 
   it('should succeed to pass through the nonce if it has a length of 64 characters (and special characters)', () => {
-    const idpId = 'fip1-high';
+    const idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18';
     const idpInfo = getIdentityProvider(idpId);
 
     const url = getAuthorizeUrl({

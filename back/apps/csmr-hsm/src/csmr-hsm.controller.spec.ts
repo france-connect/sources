@@ -86,7 +86,7 @@ describe('CsmrHsmController', () => {
     // Given
     const payload = { length: 64, encoding: 'hex' as BufferEncoding };
 
-    it('should call hsm.random', async () => {
+    it('should call hsm.random', () => {
       // When
       csmrHsmController.random(payload);
       // Then

@@ -1,4 +1,4 @@
-import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import SPDetailPage from '../pages/sp-detail-page';
 import { Environment } from '../types';

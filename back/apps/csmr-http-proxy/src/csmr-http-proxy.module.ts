@@ -16,7 +16,7 @@ import { CsmrHttpProxyService } from './services';
   imports: [
     HttpModule.registerAsync({
       imports: [ConfigModule, HttpProxyModule],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         const { requestTimeout: timeout } =
           configService.get<RabbitmqConfig>('HttpProxyBroker');
         return {

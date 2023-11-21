@@ -4,7 +4,6 @@ import React from 'react';
 import * as ReactRouterDom from 'react-router-dom';
 
 import { PaginationComponent } from '@fc/dsfr';
-import { renderWithRouter } from '@fc/tests-utils';
 
 import { Track } from '../../interfaces';
 import { orderGroupByKeyAsc, transformTrackToEnhanced } from '../../utils';
@@ -227,7 +226,7 @@ describe('TracksListComponent', () => {
     ));
 
     // when
-    renderWithRouter(<TracksListComponent options={options} />);
+    render(<TracksListComponent options={options} />);
     const callback = useCallbackMock.mock.calls[0][0];
     act(() => {
       callback(indexMock);

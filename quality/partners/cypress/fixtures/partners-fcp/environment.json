@@ -1,6 +1,6 @@
 {
-  "name": "{{TEST_ENV}}",
-  "partnersUrl": "https://partners-fcp.{{TEST_ENV}}.dev-franceconnect.fr",
+  "name": "docker",
+  "partnersUrl": "https://partners-fcp.docker.dev-franceconnect.fr",
   "platformName": "Espace partenaire",
   "partnersBackAppId": "partners-fcp-back"
 }

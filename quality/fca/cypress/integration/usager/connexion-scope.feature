@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionScope @ci
+@usager @connexionScope
 Fonctionnalité: Connexion Usager - Scope
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter en utilisant un fournisseur d'identité
@@ -19,9 +19,13 @@ Fonctionnalité: Connexion Usager - Scope
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations des scopes "<scopeType>"
 
+    @ci
     Exemples:
       | scopeType                                 |
       | tous les scopes                           |
+
+    Exemples:
+      | scopeType                                 |
       | obligatoires                              |
       | obligatoires et siren/siret               |
       | obligatoires et organizational_unit/phone |
@@ -31,6 +35,7 @@ Fonctionnalité: Connexion Usager - Scope
       | email                                     |
       | chorusdt                                  |
 
+  @ci
   Scénario: Connexion d'un usager - scope anonyme
     Etant donné que le fournisseur de service requiert l'accès aux informations du scope "anonyme"
     Et que je navigue sur la page fournisseur de service
@@ -45,6 +50,7 @@ Fonctionnalité: Connexion Usager - Scope
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "anonyme"
 
+  @ci
   Scénario: Connexion d'un usager - attribut scope inconnu ignoré
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "email avec scope inconnu"
     Et que je navigue sur la page fournisseur de service

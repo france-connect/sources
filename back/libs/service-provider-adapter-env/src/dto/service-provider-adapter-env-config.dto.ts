@@ -1,18 +1,28 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsIn,
+  IsOptional,
   IsString,
   IsUrl,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 
-const SUPPORTED_SIG_ALG = ['ES256', 'RS256', 'HS256'];
+import { SUPPORTED_SIG_ALG } from '@fc/cryptography';
 
 export class ServiceProviderAdapterEnvConfig {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceProvider)
+  readonly list: ServiceProvider[];
+}
+
+export class ServiceProvider {
   @IsBoolean()
   readonly active: boolean;
 
@@ -61,10 +71,11 @@ export class ServiceProviderAdapterEnvConfig {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_encrypted_response_enc: string;
 
+  @IsOptional()
   @IsString()
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly userinfo_signed_response_alg: string;
+  readonly userinfo_signed_response_alg?: string;
 
   @IsString()
   // oidc defined variable name

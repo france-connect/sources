@@ -1,15 +1,13 @@
-import { IncomingMessage } from 'http';
-
 import { ExecutionContext } from '@nestjs/common';
 
-import { ISessionService } from '../interfaces';
+import { ISessionRequest, ISessionService } from '../interfaces';
 import { SessionService } from '../services';
 
 export function extractSessionFromRequest<T>(
   moduleName: string,
-  req: IncomingMessage,
+  req: ISessionRequest,
 ): ISessionService<T> {
-  return SessionService.getBoundedSession<T>(req, moduleName);
+  return SessionService.getBoundSession<T>(req, moduleName);
 }
 
 export function extractSessionFromContext<T>(

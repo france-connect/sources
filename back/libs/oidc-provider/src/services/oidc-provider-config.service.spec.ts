@@ -106,14 +106,14 @@ describe('OidcProviderConfigService', () => {
   });
 
   describe('getConfig()', () => {
-    it('should call several services and concat their outputs', async () => {
+    it('should call several services and concat their outputs', () => {
       // Given
       OidcProviderRedisAdapter.getConstructorWithDI = jest
         .fn()
         .mockReturnValue(oidcProviderRedisAdapterMock);
 
       // When
-      const result = await service.getConfig(oidcProviderServiceMock);
+      const result = service.getConfig(oidcProviderServiceMock);
 
       // Then
       expect(
@@ -132,20 +132,20 @@ describe('OidcProviderConfigService', () => {
       expect(result).toMatchObject(configOidcProviderMock);
     });
 
-    it('should return false to pkce output if we pass two empty objects', async () => {
+    it('should return false to pkce output if we pass two empty objects', () => {
       // Given
       OidcProviderRedisAdapter.getConstructorWithDI = jest
         .fn()
         .mockReturnValue(oidcProviderRedisAdapterMock);
       // When
-      const result = await service.getConfig(oidcProviderServiceMock);
+      const result = service.getConfig(oidcProviderServiceMock);
       const pkceResult = result.configuration.pkce.required({}, {});
       expect(pkceResult).toEqual(false);
     });
 
-    it('should bind methods to config', async () => {
+    it('should bind methods to config', () => {
       // When
-      const result = await service.getConfig(oidcProviderServiceMock);
+      const result = service.getConfig(oidcProviderServiceMock);
 
       // Then
       expect(result).toHaveProperty(
@@ -163,7 +163,7 @@ describe('OidcProviderConfigService', () => {
   });
 
   describe('url()', () => {
-    it('Should return a relative interaction url with prefix', async () => {
+    it('Should return a relative interaction url with prefix', () => {
       // Given
       const prefix = '/prefix';
       const ctx = {
@@ -178,7 +178,7 @@ describe('OidcProviderConfigService', () => {
       const { interaction } = ctx.oidc.entities;
 
       // When
-      const result = await service['url'](prefix, ctx, interaction);
+      const result = service['url'](prefix, ctx, interaction);
 
       // Then
       expect(result).toEqual('/prefix/interaction/123');

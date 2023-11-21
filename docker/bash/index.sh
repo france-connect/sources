@@ -34,6 +34,10 @@ _command_register "reset-mongo" "_reset_mongodb" "reset-mongo <mongo-service-nam
 _command_register "idp-as-prod-v2" "_idp_as_prod_v2" ""         # Description to be defined
 _command_register "idp-as-prod-legacy" "_idp_as_prod_legacy" "" # Description to be defined
 
+### Redis
+
+_command_register "redis" "_redis_cli" "Connect to redis cli: redis <db>"
+
 ### Elastic
 _command_register "init-ud" "_init_ud" "init-ud => Initialize data for user dashboard"
 _command_register "reset-stats" "_reset_stats" "reset-stats => drop stats index"
@@ -79,16 +83,16 @@ _command_register "exec" "_exec" "exec <container_name> <command> => exec a comm
 _command_register "halt" "_halt" "alt => stop docker-compose and delete containers"
 
 _command_register "run-prod" "_run_prod" "" # Description to be defined
-_command_register "list" "_list_services" "List available services / stacks"
+_command_register "list" "_list_services" "List available services / stacks: list <search term>"
 
 ## General / utils
-_command_register "help" "_command_list" "Display this help"
+_command_register "help" "_command_list" "Display this help: help <search term>"
 
 _command_register "reload-rp" "_reload-rp" "Reload Reverse proxy"
 
 _command_register "storybook" "_storybook" "" # Description to be defined
 
-_command_register "compose" "cd ${WORKING_DIR} && docker-compose" "Alias for docker-compose"
+_command_register "compose" "cd ${WORKING_DIR} && ${DOCKER_COMPOSE}" "Alias for docker-compose"
 
 _command_register "llng-configure" "_llng-configure" "Restore LemonLDAP configuration from ./docker/volumes/llng/llng-conf.json dump file"
 
@@ -106,5 +110,5 @@ _command_register "mongo-shell-core-fcp-low" "_mongo_shell_core-fcp-low" "[depre
 _command_register "mongo-shell-core-legacy" "_mongo_shell_core-legacy" "[deprecated] Open mongo shell for core-legacy"
 _command_register "mongo-script" "_mongo_script" "Execute MongoDB <script> on given <container>: docker-stack mongo-script <container> <script>"
 
-_command_register "add" "_add_node_app" ""
+_command_register "add" "_add_node_app" "Start a node application."
 _command_run "$1" "${@:2}"

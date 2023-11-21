@@ -1,0 +1,9 @@
+{
+  "name": "docker",
+  "allAppsUrl": "https://docker.dev-franceconnect.fr/fcp-high.html",
+  "udAppId": "user-dashboard",
+  "udRootUrl": "https://ud.docker.dev-franceconnect.fr",
+  "exploitAppId": "exploitation-high",
+  "exploitRootUrl": "https://exploitation-high.docker.dev-franceconnect.fr",
+  "fcRootUrl": "https://core-fcp-high.docker.dev-franceconnect.fr"
+}

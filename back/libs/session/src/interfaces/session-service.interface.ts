@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 // declarative code ISessionService
+import { RedisQueryResult } from '../services';
 
 /**
  * To understand, please read the following documentation
@@ -32,4 +33,6 @@ export interface ISessionService<T> {
    * @return The "set" operation result as a boolean
    */
   set(value: Partial<T>): Promise<boolean>;
+
+  setAlias(value: string): Promise<RedisQueryResult[]>;
 }

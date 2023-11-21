@@ -35,4 +35,4 @@ async function bootstrap() {
   console.log(`Consumer is listening "${options.queue}" queue`);
 }
 
-bootstrap();
+void bootstrap();

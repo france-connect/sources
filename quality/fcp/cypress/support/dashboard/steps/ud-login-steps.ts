@@ -1,4 +1,4 @@
-import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import {
   getDefaultIdentityProvider,
@@ -61,6 +61,7 @@ Then(
       'user-dashboard',
     );
     new ConnectionWorkflow(this.env, serviceProvider)
+      .init()
       .start()
       .checkIdpSelectionPageDisplayed();
   },

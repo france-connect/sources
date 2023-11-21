@@ -45,7 +45,7 @@ export class OidcProviderMiddlewareService {
   protected async userinfoMiddleware(ctx: OidcCtx) {
     this.bindSessionId(ctx);
 
-    const appSessionService = SessionService.getBoundedSession<AppSession>(
+    const appSessionService = SessionService.getBoundSession<AppSession>(
       ctx.req,
       'App',
     );

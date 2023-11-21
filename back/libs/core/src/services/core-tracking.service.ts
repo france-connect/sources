@@ -85,6 +85,7 @@ export class CoreTrackingService {
     const sessionData: OidcSession = (await boundSessionServiceGet()) || {};
 
     const {
+      browsingSessionId = null,
       accountId = null,
       interactionId = null,
       isSso = null,
@@ -102,6 +103,7 @@ export class CoreTrackingService {
     } = sessionData;
 
     return {
+      browsingSessionId,
       accountId,
       interactionId,
       isSso,

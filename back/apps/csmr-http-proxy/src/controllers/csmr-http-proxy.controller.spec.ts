@@ -71,7 +71,7 @@ describe('CsmrHttpProxyController', () => {
           test: 'world',
         },
         data: null,
-      });
+      } as unknown as BridgePayloadDto);
 
       it('should get the data from external service without data params', async () => {
         // Arrange
@@ -149,14 +149,14 @@ describe('CsmrHttpProxyController', () => {
           throw errorMock;
         });
         // Arrange
-        const payload: BridgePayloadDto = {
+        const payload = {
           url: 'https://test.com/getToken',
           method: 'post',
           headers: {
             test: 'world',
           },
           data: '{"sarah":"connor"}',
-        };
+        } as unknown as BridgePayloadDto;
 
         const resultMock: BridgeProtocol<BridgeError> = {
           type: MessageType.ERROR,

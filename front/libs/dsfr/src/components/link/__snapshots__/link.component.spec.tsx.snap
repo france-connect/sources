@@ -21,7 +21,7 @@ exports[`LinkComponent should match the snapshot, with default props 1`] = `
 exports[`LinkComponent should match the snapshot, with icon props 1`] = `
 <div>
   <a
-    class="fr-link fr-link--md fr-fi-any-icon-mock fr-link--icon-left"
+    class="fr-link fr-link--md fr-icon-any-icon-mock fr-link--icon-left"
     href="any-url-mock"
   />
 </div>
@@ -30,7 +30,7 @@ exports[`LinkComponent should match the snapshot, with icon props 1`] = `
 exports[`LinkComponent should match the snapshot, with iconPlacement props 1`] = `
 <div>
   <a
-    class="fr-link fr-link--md fr-fi-any-icon-mock fr-link--icon-right"
+    class="fr-link fr-link--md fr-icon-any-icon-mock fr-link--icon-right"
     href="any-url-mock"
   />
 </div>

@@ -31,10 +31,7 @@ export class TrackingInterceptor implements NestInterceptor {
     this.logger.setContext(this.constructor.name);
   }
 
-  async intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Promise<Observable<any>> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const req = context.switchToHttp().getRequest();
     this.logger.trace({
       path: req.url,
@@ -47,11 +44,14 @@ export class TrackingInterceptor implements NestInterceptor {
     return next.handle().pipe(tap(this.log.bind(this, req, urlPrefix)));
   }
 
-  private log(req: TrackedEventContextInterface, urlPrefix: string): void {
+  private async log(
+    req: TrackedEventContextInterface,
+    urlPrefix: string,
+  ): Promise<void> {
     const event = this.getEvent(req, this.tracking.TrackedEventsMap, urlPrefix);
 
     if (event) {
-      this.tracking.track(event, { req });
+      await this.tracking.track(event, { req });
     }
   }
 

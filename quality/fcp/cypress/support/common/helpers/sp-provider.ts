@@ -2,17 +2,35 @@ import { ServiceProvider } from '../../common/types';
 
 const DEFAULT_SP_DESCRIPTION = 'par défaut';
 
+export const getServiceProviderNameByDescription = (
+  serviceProviders: ServiceProvider[],
+  description: string,
+  shouldExist = true,
+): string | undefined => {
+  const { name: spName } =
+    getServiceProviderByDescription(
+      serviceProviders,
+      description,
+      shouldExist,
+    ) ?? {};
+
+  return spName;
+};
+
 export const getServiceProviderByDescription = (
   serviceProviders: ServiceProvider[],
   description: string,
-): ServiceProvider => {
+  shouldExist = true,
+): ServiceProvider | undefined => {
   const serviceProvider: ServiceProvider = serviceProviders.find(
     (serviceProvider) => serviceProvider.descriptions.includes(description),
   );
-  expect(
-    serviceProvider,
-    `No service provider matches the description '${description}'`,
-  ).to.exist;
+  if (shouldExist) {
+    expect(
+      serviceProvider,
+      `No service provider matches the description '${description}'`,
+    ).to.exist;
+  }
   return serviceProvider;
 };
 

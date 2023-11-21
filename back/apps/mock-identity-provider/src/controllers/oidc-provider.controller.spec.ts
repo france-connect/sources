@@ -109,4 +109,25 @@ describe('OidcProviderController', () => {
       expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
     });
   });
+
+  describe('getEndSession()', () => {
+    it('should call logout service', () => {
+      // Given
+      const queryMock = {
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        id_token_hint: 'id_token_hint',
+        // openid defined property names
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        post_logout_redirect_uri: 'https://postLogoutRedirectUriMock',
+        state: 'stateMock',
+      };
+      const next = jest.fn();
+
+      // When
+      oidcProviderController.getEndSession(next, queryMock);
+      // Then
+      expect(next).toBeCalledTimes(1);
+    });
+  });
 });

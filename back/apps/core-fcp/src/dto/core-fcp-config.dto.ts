@@ -10,7 +10,6 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { AppConfig } from '@fc/app';
 import { ConfigConfig } from '@fc/config';
 import { CoreConfig as CoreLibConfig } from '@fc/core';
 import { CryptographyEidasConfig } from '@fc/cryptography-eidas';
@@ -32,6 +31,7 @@ import { SessionConfig } from '@fc/session';
 import { TrackingConfig } from '@fc/tracking';
 
 import { IdentitySource } from '../enums';
+import { AppConfig } from './app-config.dto';
 
 export class CoreConfig extends CoreLibConfig {
   @IsUrl()

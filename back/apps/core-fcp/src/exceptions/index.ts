@@ -2,7 +2,10 @@
 
 // Declarative code
 export * from './core-fcp-failed-abort-session.exception';
-export * from './core-fcp-insufficient-acr-level-suspicious-context.exception';
+export * from './core-fcp-fetch-access-token-from-redis-failed.exception';
+export * from './core-fcp-fetch-data-provider-jwks-failed.exception';
+export * from './core-fcp-invalid-access-token-from-data-provider.exception';
 export * from './core-fcp-invalid-check-token-request.exception';
 export * from './core-fcp-invalid-event-key.exception';
 export * from './core-fcp-invalid-identity.exception';
+export * from './core-fcp-missing-at-hash.exception';

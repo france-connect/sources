@@ -1,52 +1,74 @@
-import { createHash } from 'crypto';
+import { Then } from '@badeball/cypress-cucumber-preprocessor';
 
-import { Then } from 'cypress-cucumber-preprocessor/steps';
-
-const createScenarioHash = (scenarioName: string): string => {
-  const scenarioTrimmed = scenarioName.trim().toLowerCase();
-  const hash = createHash('sha512').update(scenarioTrimmed).digest('hex');
-  return hash.substring(0, 10);
+const prepareScreenshot = () => {
+  cy.document().then((doc) => {
+    const style = doc.createElement('style');
+    style.innerHTML = 'body { caret-color: transparent !important; }';
+    doc.head.appendChild(style);
+  });
 };
 
-const snapshotName = (scenarioName, name, device) => {
-  const scenarioHash = createScenarioHash(scenarioName);
-  return `${scenarioHash}_${name}_${device}`;
+const createScenarioHash = (
+  scenarioName: string,
+): Cypress.Chainable<string> => {
+  const scenarioTrimmed = scenarioName.trim().toLowerCase();
+  return cy.task<string>('createHexaHash', { text: scenarioTrimmed });
+};
+
+const getSnapshotName = (
+  scenarioName: string,
+  name: string,
+  device: string,
+): Cypress.Chainable<string> => {
+  return createScenarioHash(scenarioName).then(
+    (scenarioHash) => `${scenarioHash}_${name}_${device}`,
+  );
 };
 
 Then(
   "la copie d'écran {string} correspond à la page actuelle sur {string}",
-  function (name, device) {
+  function (name: string, device: string) {
     const { title: scenarioName } = this.test;
+    // Wait for the page to be still before taking a screenshot
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(750);
-    cy.matchImageSnapshot(snapshotName(scenarioName, name, device));
+    prepareScreenshot();
+    getSnapshotName(scenarioName, name, device).then((snapshotName) =>
+      cy.matchImageSnapshot(snapshotName),
+    );
   },
 );
 
 Then(
   "la copie d'écran {string} correspond à l'élément web {string} sur {string}",
-  function (name, selector, device) {
+  function (name: string, selector: string, device: string) {
     const { title: scenarioName } = this.test;
+    // Wait for the page to be still before taking a screenshot
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(750);
-    cy.get(selector).then(($el) =>
-      cy.wrap($el).matchImageSnapshot(snapshotName(scenarioName, name, device)),
+    prepareScreenshot();
+    getSnapshotName(scenarioName, name, device).then((snapshotName) =>
+      cy.get(selector).matchImageSnapshot(snapshotName),
     );
   },
 );
 
 Then(
   "la copie d'écran {string} sans {string} correspond à la page actuelle sur {string}",
-  function (name, hiddenSelector, device) {
+  function (name: string, hiddenSelector: string, device: string) {
     const { title: scenarioName } = this.test;
+    // Wait for the page to be still before taking a screenshot
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(750);
 
+    prepareScreenshot();
     // @todo Replace with blackout config when this Cypress defect is fixed
     // @link https://github.com/cypress-io/cypress/issues/5842
     const blackoutStyle = 'color: black; background-color: black;';
     cy.get(hiddenSelector).invoke('attr', 'style', blackoutStyle);
-    cy.matchImageSnapshot(snapshotName(scenarioName, name, device));
+    getSnapshotName(scenarioName, name, device).then((snapshotName) =>
+      cy.matchImageSnapshot(snapshotName),
+    );
     cy.get(hiddenSelector).invoke('attr', 'style', '');
   },
 );

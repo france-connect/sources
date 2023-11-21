@@ -17,4 +17,6 @@ export default {
   name: 'MOCK_SERVICE_PROVIDER_FCP_LOW',
   urlPrefix: '',
   viewsPaths: env.json('VIEWS_PATHS'),
+  idpId: env.string('IDP_ID'),
+  dataApis: env.json('DATA_APIS'),
 } as AppConfig;

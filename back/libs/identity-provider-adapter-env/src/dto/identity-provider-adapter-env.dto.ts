@@ -1,17 +1,131 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
+  IsIn,
+  IsObject,
   IsOptional,
   IsString,
   IsUrl,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 
-export class IdentityProviderAdapterEnvDTO {
+import { SUPPORTED_SIG_ALG } from '@fc/cryptography';
+
+class IssuerDto {
   @IsString()
   @IsOptional()
-  readonly issuer: string;
+  readonly issuer?: string;
 
+  @IsUrl()
+  @IsOptional()
+  // oidc param name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly authorization_endpoint?: string;
+
+  @IsUrl()
+  @IsOptional()
+  // oidc param name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly token_endpoint?: string;
+
+  @IsUrl()
+  @IsOptional()
+  // oidc param name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly userinfo_endpoint?: string;
+
+  @IsUrl()
+  @IsOptional()
+  //oidc param name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly end_session_endpoint?: string;
+
+  @IsUrl()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly jwks_uri: string;
+}
+
+class ClientMetadataDto {
+  @IsString()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly client_id: string;
+
+  @IsString()
+  @MinLength(32)
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly client_secret: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly response_types: string[];
+
+  @IsString()
+  @IsIn(SUPPORTED_SIG_ALG)
+  // oidc defined variable name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly id_token_signed_response_alg: 'ES256' | 'RS256' | 'HS256';
+
+  @IsString()
+  @IsOptional()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly id_token_encrypted_response_alg?: string;
+
+  @IsString()
+  @IsOptional()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly id_token_encrypted_response_enc?: string;
+
+  @IsString()
+  @IsOptional()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly userinfo_signed_response_alg?: string;
+
+  @IsString()
+  @IsOptional()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly userinfo_encrypted_response_alg?: string;
+
+  @IsString()
+  @IsOptional()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly userinfo_encrypted_response_enc?: string;
+
+  @IsString()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly token_endpoint_auth_method: string;
+
+  @IsString()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly revocation_endpoint_auth_method: string;
+
+  @IsUrl()
+  @IsOptional()
+  // oidc param name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly redirect_uris?: string;
+
+  @IsUrl()
+  @IsOptional()
+  // oidc param name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly post_logout_redirect_uris?: string;
+}
+
+export class IdentityProviderAdapterEnvDTO {
   @IsString()
   readonly uid: string;
 
@@ -27,106 +141,20 @@ export class IdentityProviderAdapterEnvDTO {
   @IsBoolean()
   readonly display: boolean;
 
-  @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly client_id: string;
-
-  @IsString()
-  @MinLength(32)
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly client_secret: string;
-
-  @IsString()
-  @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly authorization_endpoint: string;
-
-  @IsString()
-  @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly token_endpoint: string;
-
-  @IsString()
-  @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly userinfo_endpoint: string;
-
   @IsBoolean()
   readonly discovery: boolean;
 
   @IsUrl()
   @IsOptional()
-  readonly discoveryUrl: string;
+  readonly discoveryUrl: string | undefined;
 
-  @IsArray()
-  @IsString({ each: true })
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly response_types: string[];
+  @IsObject()
+  @ValidateNested({ each: true })
+  @Type(() => ClientMetadataDto)
+  readonly client: ClientMetadataDto;
 
-  @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly id_token_signed_response_alg: string;
-
-  @IsString()
-  @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly id_token_encrypted_response_alg: string;
-
-  @IsString()
-  @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly id_token_encrypted_response_enc: string;
-
-  @IsString()
-  @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly userinfo_signed_response_alg: string;
-
-  @IsString()
-  @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly userinfo_encrypted_response_alg: string;
-
-  @IsString()
-  @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly userinfo_encrypted_response_enc: string;
-
-  @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly token_endpoint_auth_method: string;
-
-  @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly revocation_endpoint_auth_method: string;
-
-  @IsUrl()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly jwks_uri: string;
-
-  @IsUrl()
-  /**
-   * @todo #920 je ne veux pas de valeur optionnelle dans les DTO
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/920
-   * @ticket #FC-920
-   */
-  @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly end_session_endpoint: string;
+  @IsObject()
+  @ValidateNested({ each: true })
+  @Type(() => IssuerDto)
+  readonly issuer: IssuerDto;
 }

@@ -29,10 +29,11 @@ describe('MongooseConnectionConnectedHandler', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+
   describe('handle', () => {
-    it('should call connectAllWatcher from mongooseHelper', () => {
+    it('should call connectAllWatcher from mongooseHelper', async () => {
       // When
-      service.handle();
+      await service.handle();
       // Then
       expect(
         mongooseCollectionOperationWatcherHelperMock.connectAllWatchers,

@@ -1,10 +1,9 @@
-import { IncomingMessage } from 'http';
-
 import { ExecutionContext } from '@nestjs/common';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 
-import { ISessionService, SessionService } from '@fc/session';
+import { ISessionRequest, ISessionService, SessionService } from '@fc/session';
 
+import { getSessionServiceMock } from '../../.mocks';
 import * as extractSessionHelper from './extract-session.helper';
 
 describe('extractSessionHelper', () => {
@@ -12,11 +11,8 @@ describe('extractSessionHelper', () => {
 
   const reqMock = {
     sessionId: 'sessionId',
-    sessionService: {
-      get: jest.fn(),
-      set: jest.fn(),
-    },
-  } as unknown as IncomingMessage;
+    sessionService: getSessionServiceMock(),
+  } as unknown as ISessionRequest;
 
   const httpCtxMock = {
     getRequest: jest.fn(),
@@ -26,7 +22,7 @@ describe('extractSessionHelper', () => {
     switchToHttp: jest.fn(),
   } as unknown as ExecutionContext;
 
-  const boundedSessionServiceMock = {
+  const boundSessionServiceMock = {
     get: jest.fn(),
     set: jest.fn(),
   } as unknown as ISessionService<unknown>;
@@ -37,9 +33,9 @@ describe('extractSessionHelper', () => {
   });
 
   describe('extractSessionFromRequest', () => {
-    it('should retrieve the session service bounded to the right module', () => {
+    it('should retrieve the session service bound to the right module', () => {
       // setup
-      const spy = jest.spyOn(SessionService, 'getBoundedSession');
+      const spy = jest.spyOn(SessionService, 'getBoundSession');
       // action
       extractSessionHelper.extractSessionFromRequest(moduleNameMock, reqMock);
 
@@ -48,10 +44,10 @@ describe('extractSessionHelper', () => {
       expect(spy).toHaveBeenCalledWith(reqMock, moduleNameMock);
     });
 
-    it('should return the bounded session service', () => {
+    it('should return the bound session service', () => {
       jest
-        .spyOn(SessionService, 'getBoundedSession')
-        .mockReturnValueOnce(boundedSessionServiceMock);
+        .spyOn(SessionService, 'getBoundSession')
+        .mockReturnValueOnce(boundSessionServiceMock);
       // action
       const result = extractSessionHelper.extractSessionFromRequest(
         moduleNameMock,
@@ -59,7 +55,7 @@ describe('extractSessionHelper', () => {
       );
 
       // expect
-      expect(result).toBe(boundedSessionServiceMock);
+      expect(result).toBe(boundSessionServiceMock);
     });
   });
 
@@ -68,8 +64,8 @@ describe('extractSessionHelper', () => {
       jest.mocked(ctxMock.switchToHttp).mockReturnValueOnce(httpCtxMock);
       jest.mocked(httpCtxMock.getRequest).mockReturnValueOnce(reqMock);
       jest
-        .spyOn(SessionService, 'getBoundedSession')
-        .mockReturnValueOnce(boundedSessionServiceMock);
+        .spyOn(SessionService, 'getBoundSession')
+        .mockReturnValueOnce(boundSessionServiceMock);
     });
 
     it('should switch to http context', () => {
@@ -90,7 +86,7 @@ describe('extractSessionHelper', () => {
       expect(httpCtxMock.getRequest).toHaveBeenCalledWith();
     });
 
-    it('should return the bounded session service', () => {
+    it('should return the bound session service', () => {
       // action
       const result = extractSessionHelper.extractSessionFromContext(
         moduleNameMock,
@@ -98,7 +94,7 @@ describe('extractSessionHelper', () => {
       );
 
       // expect
-      expect(result).toBe(boundedSessionServiceMock);
+      expect(result).toBe(boundSessionServiceMock);
     });
   });
 });

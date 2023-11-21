@@ -4,9 +4,10 @@
 import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
-import { AppConfig } from '@fc/app';
 import { DataProviderAdapterCoreConfig } from '@fc/data-provider-adapter-core';
 import { LoggerConfig } from '@fc/logger-legacy';
+
+import { AppConfig } from '../dto';
 
 export class MockDataProviderConfig {
   @IsObject()

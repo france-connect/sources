@@ -421,6 +421,28 @@ describe('I18nService', () => {
       // Then
       expect(result).toBe(mapMock.inputMock.definition.other);
     });
+
+    it('should use parseInt if countProperty is a string', () => {
+      // Given
+      const mockParseInt = jest.spyOn(global, 'parseInt');
+      const valuesMock = { countProperty: '7' };
+      const mapMock = {
+        inputMock: {
+          definition: { other: 'other value' },
+          term: 'countProperty',
+        },
+      };
+
+      I18nService.initialize(localeMock, mapMock);
+      const service = I18nService.instance();
+
+      // When
+      service['handlePlural'](mapMock.inputMock, valuesMock);
+
+      // Then
+      expect(mockParseInt).toHaveBeenCalledTimes(1);
+      expect(mockParseInt).toHaveBeenCalledWith('7', 10);
+    });
   });
 
   describe('handleSubstitution', () => {

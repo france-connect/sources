@@ -26,13 +26,13 @@ export default class IdentityProviderPage {
   }
 
   setMockAcrValue(acrValue: string): void {
-    cy.get('[name="acr"]').clear().type(acrValue);
+    cy.get('[name="acr"]').clearThenType(acrValue);
   }
 
   login(userCredentials: UserCredentials): void {
     const { password, username } = userCredentials;
-    cy.get(this.usernameSelector).clear().type(username);
-    cy.get(this.passwordSelector).clear().type(password, { log: false });
+    cy.get(this.usernameSelector).clearThenType(username);
+    cy.get(this.passwordSelector).clearThenType(password, { log: false });
     cy.get(this.loginButtonSelector).click();
   }
 }

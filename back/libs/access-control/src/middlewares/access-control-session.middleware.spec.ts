@@ -6,7 +6,7 @@ import { AccountPermission } from '@entities/typeorm';
 
 import { uuid } from '@fc/common';
 import { LoggerService } from '@fc/logger-legacy';
-import { SessionService } from '@fc/session';
+import { ISessionRequest, SessionService } from '@fc/session';
 
 import { EntityType, PermissionsType } from '../enums';
 import { AccessControlSession, IPermission } from '../interfaces';
@@ -49,7 +49,7 @@ describe('AccessControlMiddleware', () => {
 
   const reqMock = {
     sessionId: 'sessionIdValue',
-  } as unknown as IncomingMessage & AccessControlSession;
+  } as unknown as ISessionRequest & AccessControlSession;
   const resMock = {} as Response;
   const nextMock = jest.fn();
 
@@ -155,21 +155,21 @@ describe('AccessControlMiddleware', () => {
       get: jest.fn(),
     };
 
-    let getBoundedSessionMock: jest.SpyInstance;
+    let getBoundSessionMock: jest.SpyInstance;
 
     beforeEach(() => {
       userSessionMock.get.mockReturnValueOnce(idMock);
 
-      getBoundedSessionMock = jest.spyOn(SessionService, 'getBoundedSession');
-      getBoundedSessionMock.mockReturnValueOnce(userSessionMock);
+      getBoundSessionMock = jest.spyOn(SessionService, 'getBoundSession');
+      getBoundSessionMock.mockReturnValueOnce(userSessionMock);
     });
 
     it('should call session handler', async () => {
       // When
       await middleware['getAccountIdFromContext'](reqMock);
       // Then
-      expect(getBoundedSessionMock).toHaveBeenCalledTimes(1);
-      expect(getBoundedSessionMock).toHaveBeenCalledWith(
+      expect(getBoundSessionMock).toHaveBeenCalledTimes(1);
+      expect(getBoundSessionMock).toHaveBeenCalledWith(
         reqMock,
         'PartnerAccount',
       );

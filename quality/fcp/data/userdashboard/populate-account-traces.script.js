@@ -93,7 +93,6 @@ function parseLogs(raw) {
 function buildEventsFromLogs(logs) {
   const events = logs.map((event) => ({
     ...event,
-    service: 'fc_core_v2_app',
     '@version': TRACE_MARK, // traceur
   }));
   return events;

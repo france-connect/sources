@@ -40,7 +40,7 @@ export async function validateDto(
    *    problem: on valide l'object transformé mais on ne récupère pas l'objet transformé et donc nettoyé des inconnues
    *    action: renvoyer un objet contenant résultat ou erreurs éventuelles.
    */
-  return validate(object, validatorOptions);
+  return await validate(object, validatorOptions);
 }
 
 /**

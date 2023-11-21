@@ -20,6 +20,9 @@ body {
 
 #mire .header-logo {
   margin: 20px auto;
+  width: auto;
+  height: 70px;
+  max-height: 70px;
 }
 
 #container {

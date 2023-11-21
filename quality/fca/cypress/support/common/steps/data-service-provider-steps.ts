@@ -1,10 +1,10 @@
-import { Given } from 'cypress-cucumber-preprocessor/steps';
+import { Given } from '@badeball/cypress-cucumber-preprocessor';
 
 import { getServiceProviderByDescription } from '../helpers';
 
 Given(
   /^j'utilise (?:un|le) fournisseur de service "([^"]+)"$/,
-  function (description) {
+  function (description: string) {
     this.serviceProvider = getServiceProviderByDescription(
       this.serviceProviders,
       description,
@@ -15,14 +15,14 @@ Given(
 
 Given(
   /^le fournisseur de service requiert l'accès aux informations (?:du|des) scopes? "([^"]+)"$/,
-  function (type) {
+  function (type: string) {
     this.requestedScope = this.scopes.find((scope) => scope.type === type);
   },
 );
 
 Given(
   /^le fournisseur de service (requiert|ne requiert pas) le claim "([^"]+)"$/,
-  function (text, currentClaim) {
+  function (text: string, currentClaim: string) {
     const isRequested = text === 'requiert';
     const { claims } = this.serviceProvider;
 
@@ -36,14 +36,14 @@ Given(
 
 Given(
   /^le fournisseur de service a configuré sa requête authorize avec (?:un scope|des scopes) "([^"]+)"$/,
-  function (type) {
+  function (type: string) {
     this.requestedScope = this.scopes.find((scope) => scope.type === type);
   },
 );
 
 Given(
   'le fournisseur de service requiert un niveau de sécurité {string}',
-  function (acrValue) {
+  function (acrValue: string) {
     this.serviceProvider.acrValue = acrValue;
   },
 );

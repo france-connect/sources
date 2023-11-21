@@ -113,6 +113,11 @@ export default {
         'birthplace',
         'birthcountry',
       ],
+      // claims for FC legacy compatibility
+      address: ['address'],
+      // node-oidc-provider defined key
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      phone: ['phone_number'],
     },
     clientDefaults: {
       // node-oidc-provider defined key

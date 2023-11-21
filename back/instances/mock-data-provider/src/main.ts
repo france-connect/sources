@@ -97,4 +97,5 @@ async function bootstrap() {
   app.useLogger(logger);
   await app.listen(3000);
 }
-bootstrap();
+
+void bootstrap();

@@ -16,16 +16,17 @@
     "jest": true
   },
   "plugins": [
-    "@typescript-eslint",
     "simple-import-sort",
     "import",
     "sort-destructure-keys",
     "sort-keys-fix",
-    "jest-extended"
+    "jest-extended",
+    "jsx-a11y"
   ],
   "extends": [
-    "react-app",
     "react-app/jest",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended",
     "plugin:storybook/recommended",
     "airbnb",
     "airbnb-typescript",
@@ -49,6 +50,7 @@
     "import/no-extraneous-dependencies": 0,
     "import/no-default-export": 2,
     "import/prefer-default-export": 0,
+    "simple-import-sort/exports": 2,
     "simple-import-sort/imports": [
       2,
       {
@@ -82,8 +84,6 @@
         "reservedFirst": true
       }
     ],
-    "simple-import-sort/exports": 2,
-    "sort-imports": 0,
     "sort-keys-fix/sort-keys-fix": 2,
     "sort-destructure-keys/sort-destructure-keys": 2,
     "sort-keys": [2, "asc", { "caseSensitive": true, "natural": false, "minKeys": 2 }],

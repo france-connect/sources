@@ -5,6 +5,7 @@ const asyncExec = promisify(exec);
 
 // Path to script
 const EXEC_TOOL_PATH = '../scripts/parse-business-log.ts';
+const GET_BUSINESS_LOG_SCRIPT_PATH = '../scripts/get-business-logs.ts';
 
 interface clearBusinessLogArgs {
   logFilePath: string;
@@ -43,4 +44,27 @@ export const hasBusinessLog = async (
     exitCode = err.code;
   }
   return exitCode;
+};
+
+export const getBusinessLogs = async (
+  args: hasBusinessLogArgs,
+): Promise<Record<string, string>> => {
+  const { event, logFilePath } = args;
+  const stringifiedEvent = JSON.stringify(event);
+  const command = `ts-node ${GET_BUSINESS_LOG_SCRIPT_PATH} '${logFilePath}' '${stringifiedEvent}'`;
+
+  const { stdout } = await asyncExec(command);
+
+  return JSON.parse(stdout);
+};
+
+export const getAllBusinessLogs = async (
+  args: hasBusinessLogArgs,
+): Promise<Record<string, string>> => {
+  const { logFilePath } = args;
+  const command = `ts-node ${GET_BUSINESS_LOG_SCRIPT_PATH} '${logFilePath}'`;
+
+  const { stdout } = await asyncExec(command);
+
+  return JSON.parse(stdout);
 };

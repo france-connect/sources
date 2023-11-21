@@ -1,0 +1,13 @@
+---
+layout: layouts/base.njk
+---
+<div class="fr-container fr-py-8v">
+  {% if showBreadcrumb %}
+    {% include "components/breadcrumb.njk" %}
+  {% endif %}
+  <div class="fr-grid-row" data-pagefind-body>
+    <div class="fr-col-12">
+      {{ content | safe }}
+    </div>
+  </div>
+</div>

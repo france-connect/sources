@@ -42,6 +42,7 @@ describe('MockIdentityProviderFcaService', () => {
     getInteraction: getInteractionMock,
     registerMiddleware: jest.fn(),
     getInteractionIdFromCtx: jest.fn(),
+    clearCookies: jest.fn(),
   };
 
   const oidcProviderErrorServiceMock = {
@@ -93,12 +94,52 @@ describe('MockIdentityProviderFcaService', () => {
       service.onModuleInit();
       // Then
       expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledTimes(
-        3,
+        4,
       );
     });
   });
 
-  describe('authorizationMiddleware()', () => {
+  describe('beforeAuthorizeMiddleware', () => {
+    it('should set cookies to nothing if cookies do not exist', () => {
+      // Given
+      const ctxMock: any = {
+        req: { headers: { foo: 'bar' } },
+      };
+
+      // When
+      service['beforeAuthorizeMiddleware'](ctxMock);
+
+      // Then
+      expect(ctxMock).toEqual({
+        req: { headers: { foo: 'bar', cookie: '' } },
+      });
+    });
+
+    it('should set cookies to nothing if cookies exist', () => {
+      // Given
+      const ctxMock: any = {
+        req: {
+          headers: {
+            cookie: {
+              _interaction: '123',
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              session_id: 'test',
+            },
+          },
+        },
+      };
+
+      // When
+      service['beforeAuthorizeMiddleware'](ctxMock);
+
+      // Then
+      expect(ctxMock).toEqual({
+        req: { headers: { cookie: '' } },
+      });
+    });
+  });
+
+  describe('afterAuthorizeMiddleware()', () => {
     const spIdMock = 'spIdValue';
     const spNameMock = 'spNameValue';
     const spAcrMock = 'eidas3';
@@ -118,13 +159,13 @@ describe('MockIdentityProviderFcaService', () => {
       };
     };
 
-    it('should abort middleware execution if request if flagged as erroring', () => {
+    it('should abort middleware execution if request if flagged as erroring', async () => {
       // Given
       const ctxMock = getCtxMock(true);
       service['getInteractionIdFromCtx'] = jest.fn();
 
       // When
-      service['authorizationMiddleware'](ctxMock);
+      await service['afterAuthorizeMiddleware'](ctxMock);
 
       // Then
       expect(service['getInteractionIdFromCtx']).toHaveBeenCalledTimes(0);
@@ -159,7 +200,7 @@ describe('MockIdentityProviderFcaService', () => {
       };
 
       // When
-      await service['authorizationMiddleware'](ctxMock);
+      await service['afterAuthorizeMiddleware'](ctxMock);
 
       // Then
       expect(sessionServiceMock.set.bind).toHaveBeenCalledTimes(1);
@@ -183,7 +224,7 @@ describe('MockIdentityProviderFcaService', () => {
 
       // When / Then
       await expect(
-        service['authorizationMiddleware'](ctxMock),
+        service['afterAuthorizeMiddleware'](ctxMock),
       ).rejects.toThrow();
     });
   });
@@ -280,16 +321,16 @@ describe('MockIdentityProviderFcaService', () => {
       service['getEventContext'] = jest.fn().mockReturnValue(eventContextMock);
     });
 
-    it('should retrieve context', () => {
+    it('should retrieve context', async () => {
       // When
-      service['tokenMiddleware'](eventCtxMock);
+      await service['tokenMiddleware'](eventCtxMock);
       // Then
       expect(service['getEventContext']).toHaveBeenCalledTimes(1);
       expect(service['getEventContext']).toHaveBeenCalledWith(eventCtxMock);
     });
-    it('should publish a token event', () => {
+    it('should publish a token event', async () => {
       // When
-      service['tokenMiddleware'](eventCtxMock);
+      await service['tokenMiddleware'](eventCtxMock);
       // Then
       expect(trackingMock.track).toHaveBeenCalledTimes(1);
       expect(trackingMock.track).toHaveBeenCalledWith(
@@ -298,14 +339,14 @@ describe('MockIdentityProviderFcaService', () => {
       );
     });
 
-    it('should call throwError if getEventContext failed', () => {
+    it('should call throwError if getEventContext failed', async () => {
       // Given
       const errorMock = new Error('unknownError');
       service['getEventContext'] = jest.fn().mockImplementationOnce(() => {
         throw errorMock;
       });
       // When
-      service['tokenMiddleware'](eventCtxMock);
+      await service['tokenMiddleware'](eventCtxMock);
       // Then
       expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
       expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledWith(
@@ -321,7 +362,7 @@ describe('MockIdentityProviderFcaService', () => {
         throw errorMock;
       });
       // When
-      service['tokenMiddleware'](eventCtxMock);
+      await service['tokenMiddleware'](eventCtxMock);
       // Then
       expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
       expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledWith(
@@ -339,16 +380,16 @@ describe('MockIdentityProviderFcaService', () => {
       service['getEventContext'] = jest.fn().mockReturnValue(eventContextMock);
     });
 
-    it('should retrieve context', () => {
+    it('should retrieve context', async () => {
       // When
-      service['userinfoMiddleware'](eventCtxMock);
+      await service['userinfoMiddleware'](eventCtxMock);
       // Then
       expect(service['getEventContext']).toHaveBeenCalledTimes(1);
       expect(service['getEventContext']).toHaveBeenCalledWith(eventCtxMock);
     });
-    it('should publish a token event', () => {
+    it('should publish a token event', async () => {
       // When
-      service['userinfoMiddleware'](eventCtxMock);
+      await service['userinfoMiddleware'](eventCtxMock);
       // Then
       expect(trackingMock.track).toHaveBeenCalledTimes(1);
       expect(trackingMock.track).toHaveBeenCalledWith(
@@ -357,14 +398,14 @@ describe('MockIdentityProviderFcaService', () => {
       );
     });
 
-    it('should call throwError if getEventContext failed', () => {
+    it('should call throwError if getEventContext failed', async () => {
       // Given
       const errorMock = new Error('unknownError');
       service['getEventContext'] = jest.fn().mockImplementationOnce(() => {
         throw errorMock;
       });
       // When
-      service['userinfoMiddleware'](eventCtxMock);
+      await service['userinfoMiddleware'](eventCtxMock);
       // Then
       expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
       expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledWith(
@@ -380,7 +421,7 @@ describe('MockIdentityProviderFcaService', () => {
         throw errorMock;
       });
       // When
-      service['userinfoMiddleware'](eventCtxMock);
+      await service['userinfoMiddleware'](eventCtxMock);
       // Then
       expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
       expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledWith(

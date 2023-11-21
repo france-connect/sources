@@ -9,3 +9,4 @@ node_modules/
 **/build/**/*.scss
 
 libs/dsfr/src/fonts/**
+instances/**/public/**/*.css

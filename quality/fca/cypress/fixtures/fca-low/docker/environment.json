@@ -1,0 +1,7 @@
+{
+  "name": "docker",
+  "allAppsUrl": "https://docker.dev-franceconnect.fr/fca.html",
+  "exploitAppId": "exploitation-fca-low",
+  "exploitRootUrl": "https://exploitation-fca-low.docker.dev-franceconnect.fr",
+  "fcaRootUrl": "https://core-fca-low.docker.dev-franceconnect.fr"
+}

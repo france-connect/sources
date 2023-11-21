@@ -45,7 +45,7 @@ describe('OidcProviderGrantService', () => {
       },
     };
 
-    beforeEach(async () => {
+    beforeEach(() => {
       grantMock = {
         accountId: '',
         clientId: '',

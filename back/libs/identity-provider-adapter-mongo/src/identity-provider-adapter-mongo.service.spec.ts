@@ -646,14 +646,6 @@ describe('IdentityProviderAdapterMongoService', () => {
       service.getList = jest.fn().mockResolvedValueOnce(defaultProvidersMock);
     });
 
-    it('should resolve', async () => {
-      // action
-      const result = service.getFilteredList(defaultOptionsMock);
-
-      // expect
-      expect(result).toBeInstanceOf(Promise);
-    });
-
     it('should return a list of mapped providers', async () => {
       // GIVEN
       const optionsMock = {
@@ -860,6 +852,41 @@ describe('IdentityProviderAdapterMongoService', () => {
       const result = service['getIdentityProviderDTO'](discovery);
       // Then
       expect(result).toBe(NoDiscoveryIdpAdapterMongoDTO);
+    });
+  });
+
+  describe('isActiveById()', () => {
+    it('should return true if idp is active', async () => {
+      // Given
+      service['getById'] = jest
+        .fn()
+        .mockResolvedValue(validIdentityProviderMock);
+      // When
+      const result = await service.isActiveById('id');
+      // Then
+      expect(result).toBeTrue();
+    });
+
+    it('should return false if idp is disabled', async () => {
+      // Given
+      service['getById'] = jest
+        .fn()
+        .mockResolvedValue({ ...validIdentityProviderMock, active: false });
+      // When
+      const result = await service.isActiveById('id');
+      // Then
+      expect(result).toBeFalse();
+    });
+
+    it('should return false if idp is not found', async () => {
+      // Given
+      const { active: _active, ...idpWithoutActiveKeyMock } =
+        validIdentityProviderMock;
+      service['getById'] = jest.fn().mockResolvedValue(idpWithoutActiveKeyMock);
+      // When
+      const result = await service.isActiveById('id');
+      // Then
+      expect(result).toBeFalse();
     });
   });
 });

@@ -103,6 +103,9 @@ export default {
       // // eslint-disable-next-line @typescript-eslint/naming-convention
       // identity_provider: ['identity_provider'],
       chorusdt: ['chorusdt:matricule', 'chorusdt:societe'],
+      // MonComptePro claims naming convention
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      is_service_public: ['is_service_public'],
     },
     clientDefaults: {
       // node-oidc-provider defined key

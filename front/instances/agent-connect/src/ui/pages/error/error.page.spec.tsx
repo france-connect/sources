@@ -2,14 +2,16 @@ import { render } from '@testing-library/react';
 import { useMediaQuery } from 'react-responsive';
 
 import { ErrorComponent } from './error.component';
-import { ErrorPage } from './error.page';
+import { AGENT_NOT_FOUND_ERROR_CODE, ErrorPage } from './error.page';
 import { NotFoundComponent } from './not-found.component';
+import { PublicnessErrorComponent } from './publicness-error.component';
 
 jest.mock('./error.component');
 jest.mock('./not-found.component');
+jest.mock('./publicness-error.component');
 
 describe('ErrorPage', () => {
-  it('should math the snapshot, in a desktop viewport', () => {
+  it('should match the snapshot, in a desktop viewport', () => {
     // given
     jest.mocked(useMediaQuery).mockReturnValueOnce(true);
 
@@ -20,7 +22,7 @@ describe('ErrorPage', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should math the snapshot, in a mobile viewport', () => {
+  it('should match the snapshot, in a mobile viewport', () => {
     // given
     jest.mocked(useMediaQuery).mockReturnValueOnce(true);
 
@@ -50,5 +52,18 @@ describe('ErrorPage', () => {
     // then
     expect(ErrorComponent).toHaveBeenCalledTimes(1);
     expect(ErrorComponent).toHaveBeenCalledWith({ errors: 'something' }, {});
+  });
+
+  it('should render the PublicnessErrorComponent when window.appError.code is AGENT_NOT_FOUND_ERROR_CODE', () => {
+    // given
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).appError = { code: AGENT_NOT_FOUND_ERROR_CODE };
+
+    // when
+    render(<ErrorPage />);
+
+    // then
+    // then
+    expect(PublicnessErrorComponent).toHaveBeenCalledTimes(1);
   });
 });

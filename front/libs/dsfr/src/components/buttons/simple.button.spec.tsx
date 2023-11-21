@@ -132,7 +132,7 @@ describe('SimpleButton', () => {
     const element = getByRole('button');
 
     // then
-    expect(element).toHaveClass('fr-fi-any-icon-mock');
+    expect(element).toHaveClass('fr-icon-any-icon-mock');
     expect(element).toHaveClass('fr-btn--icon-right');
   });
 
@@ -148,7 +148,7 @@ describe('SimpleButton', () => {
     const element = getByRole('button');
 
     // then
-    expect(element).toHaveClass('fr-fi-any-icon-mock');
+    expect(element).toHaveClass('fr-icon-any-icon-mock');
     expect(element).toHaveClass('fr-btn--icon-left');
   });
 

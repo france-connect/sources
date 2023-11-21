@@ -1,0 +1,35 @@
+{% if eleventyNavigation %}
+  {% set segments = collections.all | eleventyNavigationBreadcrumb(eleventyNavigation.key) %}
+{% elif not segments %}
+  {% set segments = params.segments %}
+{% endif %}
+<nav
+  role="navigation"
+  class="fr-breadcrumb"
+  aria-label="{{ i18n.you_are_here }}:">
+  <button
+    class="fr-breadcrumb__button"
+    aria-expanded="false"
+    aria-controls="breadcrumb-1">
+    {{ i18n.see_breadcrumb }}
+  </button>
+  <div class="fr-collapse" id="breadcrumb-1">
+    <ol class="fr-breadcrumb__list">
+      <li>
+        <a class="fr-breadcrumb__link" href="/">{{ i18n.home }}</a>
+      </li>
+      {% for segment in segments %}
+        <li>
+          <a class="fr-breadcrumb__link" href="{{ segment.url }}">
+            {{ segment.title }}
+          </a>
+        </li>
+      {% endfor %}
+      <li>
+        <a class="fr-breadcrumb__link" aria-current="page">
+          {{ title }}
+        </a>
+      </li>
+    </ol>
+  </div>
+</nav>

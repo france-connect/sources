@@ -1,7 +1,7 @@
 import {
   basicSuccessScenario,
   checkInformationsServiceProvider,
-  checkInStringifiedJson,
+  checkInStringifiedJson
 } from './mire.utils';
 
 describe('9.1 - Revoke token', () => {
@@ -10,7 +10,7 @@ describe('9.1 - Revoke token', () => {
       userName: 'test',
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas2',
-      idpId: 'fip1-high',
+      idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
     // Check user information

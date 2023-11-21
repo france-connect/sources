@@ -6,7 +6,7 @@ import {
 
 describe('9.9 - Interaction steps discarding', () => {
   // -- replace by either `fip1-high` or `fia1-low`
-  const idpId = `${Cypress.env('IDP_NAME')}1-high`;
+  const idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18';
 
   /**
    * @TODO #252
@@ -63,7 +63,7 @@ describe('9.9 - Interaction steps discarding', () => {
       csrf[0].value = 'obviouslyBadCSRF';
     });
 
-    cy.get('#consent').click();
+    cy.get('[data-testid="consent-continue"]').click();
 
     cy.url().should('match', new RegExp(`\/login`));
     cy.hasError('Y190006');
@@ -81,7 +81,7 @@ describe('9.9 - Interaction steps discarding', () => {
       csrf[0].value = '';
     });
 
-    cy.get('#consent').click();
+    cy.get('[data-testid="consent-continue"]').click();
 
     cy.url().should('match', new RegExp(`\/login`));
     cy.hasError('Y190006');
@@ -120,7 +120,7 @@ describe('9.9 - Interaction steps discarding', () => {
       csrf[0].remove();
     });
 
-    cy.get('#consent').click();
+    cy.get('[data-testid="consent-continue"]').click();
 
     cy.url().should('match', new RegExp(`\/login`));
     cy.hasError('Y000400');

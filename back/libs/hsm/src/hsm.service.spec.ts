@@ -130,7 +130,7 @@ describe('HsmService', () => {
   });
 
   describe('onModuleInit', () => {
-    it('should call instanciatePkcs11js with the shared library', async () => {
+    it('should call instanciatePkcs11js with the shared library', () => {
       service['instanciatePkcs11js'] = jest.fn();
       service['openSessionWithTheHsm'] = jest.fn();
       service['authenticateWithTheHsm'] = jest.fn();
@@ -145,7 +145,7 @@ describe('HsmService', () => {
       );
     });
 
-    it('should store the PKCS#11 instance in a private attribute', async () => {
+    it('should store the PKCS#11 instance in a private attribute', () => {
       service['instanciatePkcs11js'] = jest
         .fn()
         .mockReturnValueOnce(mockPkcs11Instance);
@@ -161,7 +161,7 @@ describe('HsmService', () => {
       // restore
     });
 
-    it('should call openSessionWithTheHsm', async () => {
+    it('should call openSessionWithTheHsm', () => {
       service['instanciatePkcs11js'] = jest.fn();
       service['openSessionWithTheHsm'] = jest.fn();
       service['authenticateWithTheHsm'] = jest.fn();
@@ -188,7 +188,7 @@ describe('HsmService', () => {
       expect(service['pkcs11Session']).toStrictEqual(mockHsmSession);
     });
 
-    it('should call authenticateWithTheHsm', async () => {
+    it('should call authenticateWithTheHsm', () => {
       service['instanciatePkcs11js'] = jest.fn();
       service['openSessionWithTheHsm'] = jest.fn();
       service['authenticateWithTheHsm'] = jest.fn();
@@ -200,7 +200,7 @@ describe('HsmService', () => {
       expect(service['authenticateWithTheHsm']).toHaveBeenCalledTimes(1);
     });
 
-    it('should call handleError with the error thrown by instanciatePkcs11js', async () => {
+    it('should call handleError with the error thrown by instanciatePkcs11js', () => {
       service['handleError'] = jest.fn();
       service['instanciatePkcs11js'] = jest.fn().mockImplementationOnce(() => {
         throw mockError;
@@ -216,7 +216,7 @@ describe('HsmService', () => {
       expect(service['handleError']).toHaveBeenCalledWith(mockError);
     });
 
-    it('should call handleError with the error thrown by openSessionWithTheHsm', async () => {
+    it('should call handleError with the error thrown by openSessionWithTheHsm', () => {
       service['handleError'] = jest.fn();
       service['instanciatePkcs11js'] = jest.fn();
       service['openSessionWithTheHsm'] = jest
@@ -234,7 +234,7 @@ describe('HsmService', () => {
       expect(service['handleError']).toHaveBeenCalledWith(mockError);
     });
 
-    it('should call handleError with the error thrown by authenticateWithTheHsm', async () => {
+    it('should call handleError with the error thrown by authenticateWithTheHsm', () => {
       service['handleError'] = jest.fn();
       service['instanciatePkcs11js'] = jest.fn();
       service['openSessionWithTheHsm'] = jest.fn();
@@ -254,7 +254,7 @@ describe('HsmService', () => {
   });
 
   describe('onModuleClose', () => {
-    it('should call closeCurrentSessionWithTheHsm without argument', async () => {
+    it('should call closeCurrentSessionWithTheHsm without argument', () => {
       // setup
       service['closeCurrentSessionWithTheHsm'] = jest.fn();
 
@@ -268,12 +268,12 @@ describe('HsmService', () => {
   });
 
   describe('sign', () => {
-    it('should hash the data with the given digest algo prior to sign', async () => {
+    it('should hash the data with the given digest algo prior to sign', () => {
       // setup
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(mockRawSignature);
 
       // action
-      await service['sign'](mockData);
+      service['sign'](mockData);
 
       // expect
       expect(crypto.createHash).toHaveBeenCalledTimes(1);
@@ -283,7 +283,7 @@ describe('HsmService', () => {
       expect(crypto.Hash.prototype.digest).toHaveBeenCalledTimes(1);
     });
 
-    it('should call getPrivateKeySlotByLabel with the given CKA_LABEL', async () => {
+    it('should call getPrivateKeySlotByLabel with the given CKA_LABEL', () => {
       // setup
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(mockRawSignature);
       const originalGetPrivateKeySlotByLabel =
@@ -291,7 +291,7 @@ describe('HsmService', () => {
       service['getPrivateKeySlotByLabel'] = jest.fn();
 
       // action
-      await service['sign'](mockData);
+      service['sign'](mockData);
 
       // expect
       expect(service['getPrivateKeySlotByLabel']).toHaveBeenCalledTimes(1);
@@ -303,7 +303,7 @@ describe('HsmService', () => {
       service['getPrivateKeySlotByLabel'] = originalGetPrivateKeySlotByLabel;
     });
 
-    it('should call C_SignInit with the PKCS#11 session, the CKM_ECDSA mekanism and the key slot returned by getPrivateKeySlotByLabel', async () => {
+    it('should call C_SignInit with the PKCS#11 session, the CKM_ECDSA mekanism and the key slot returned by getPrivateKeySlotByLabel', () => {
       // setup
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(mockRawSignature);
       const originalGetPrivateKeySlotByLabel =
@@ -313,7 +313,7 @@ describe('HsmService', () => {
         .mockReturnValueOnce(mockKeySlot);
 
       // action
-      await service['sign'](mockData);
+      service['sign'](mockData);
 
       // expect
       expect(mockPkcs11Instance.C_SignInit).toHaveBeenCalledTimes(1);
@@ -329,12 +329,12 @@ describe('HsmService', () => {
       service['getPrivateKeySlotByLabel'] = originalGetPrivateKeySlotByLabel;
     });
 
-    it('should call C_Sign with the PKCS#11 session, the dataDigest, and a Buffer sizeof MAX_SIG_OUTPUT_SIZE', async () => {
+    it('should call C_Sign with the PKCS#11 session, the dataDigest, and a Buffer sizeof MAX_SIG_OUTPUT_SIZE', () => {
       // setup
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(mockRawSignature);
 
       // action
-      await service['sign'](mockData);
+      service['sign'](mockData);
 
       // expect
       expect(mockPkcs11Instance.C_Sign).toHaveBeenCalledTimes(1);
@@ -345,24 +345,24 @@ describe('HsmService', () => {
       );
     });
 
-    it('should returnthe signature to RAW (r, s) format', async () => {
+    it('should returnthe signature to RAW (r, s) format', () => {
       // setup
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(mockRawSignature);
       // action
-      const result = await service['sign'](mockData);
+      const result = service['sign'](mockData);
 
       // expect
       expect(result).toStrictEqual(mockRawSignature);
     });
 
-    it('should call "handleError" with a "E_SIG_NOT_FOUND" error if C_Sign does not return a Buffer', async () => {
+    it('should call "handleError" with a "E_SIG_NOT_FOUND" error if C_Sign does not return a Buffer', () => {
       // setup
       const expectedError = new Error('E_SIG_NOT_FOUND');
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(undefined);
       service['handleError'] = jest.fn();
 
       // action
-      await service['sign'](mockData);
+      service['sign'](mockData);
       expect(service['handleError']).toHaveBeenCalledTimes(1);
       expect(service['handleError']).toHaveBeenCalledWith(expectedError);
 
@@ -370,7 +370,7 @@ describe('HsmService', () => {
       expect.hasAssertions();
     });
 
-    it('should not catch the error if "handleError" throws', async () => {
+    it('should not catch the error if "handleError" throws', () => {
       // setup
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(undefined);
       service['handleError'] = jest.fn().mockImplementationOnce(() => {
@@ -379,7 +379,7 @@ describe('HsmService', () => {
 
       // action
       try {
-        await service['sign'](mockData);
+        service['sign'](mockData);
       } catch (e) {
         expect(e).toBeInstanceOf(Error);
         expect(e.message).toStrictEqual('E_SIG');
@@ -389,13 +389,13 @@ describe('HsmService', () => {
       expect.hasAssertions();
     });
 
-    it('should call "handleError" with a "E_SIG_NOT_FOUND" error if C_Sign returns an empty Buffer', async () => {
+    it('should call "handleError" with a "E_SIG_NOT_FOUND" error if C_Sign returns an empty Buffer', () => {
       const expectedError = new Error('E_SIG_NOT_FOUND');
       mockPkcs11Instance.C_Sign.mockReturnValueOnce(Buffer.alloc(0));
       service['handleError'] = jest.fn();
 
       // action
-      await service['sign'](mockData);
+      service['sign'](mockData);
       expect(service['handleError']).toHaveBeenCalledTimes(1);
       expect(service['handleError']).toHaveBeenCalledWith(expectedError);
 

@@ -20,7 +20,7 @@ export const ServiceProviderHeaderComponent = React.memo(
       <React.Fragment>
         <div className="fr-mb-2w">
           <Link
-            className="fr-btn fr-btn--tertiary-no-outline fr-fi-arrow-go-back-fill fr-btn--icon-left"
+            className="fr-btn fr-btn--tertiary-no-outline fr-icon-arrow-go-back-fill fr-btn--icon-left"
             data-testid="ServiceProviderHeaderComponent-return-sp-list-button"
             to="/service-providers">
             {t('ServiceProvidersDetailsPage.returnButton')}

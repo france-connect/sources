@@ -3,4 +3,4 @@
 // Declarative code
 import { Runner } from './runner';
 
-Runner.run();
+void Runner.run();

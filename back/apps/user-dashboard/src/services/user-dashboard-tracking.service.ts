@@ -17,11 +17,13 @@ import {
 export class UserDashboardTrackingService
   implements AppTrackingServiceAbstract
 {
+  // Needed to match the interface
+  // eslint-disable-next-line require-await
   async buildLog(
     trackedEvent: TrackedEventInterface,
     context: TrackedEventContextInterface,
   ): Promise<UserDashboardTrackingLogInterface> {
-    const { ip, port, originalAddresses } = await this.extractContext(context);
+    const { ip, port, originalAddresses } = this.extractContext(context);
 
     const { category, event: eventName } = trackedEvent;
     const {
@@ -91,9 +93,9 @@ export class UserDashboardTrackingService
     }
   }
 
-  private async extractContext(
+  private extractContext(
     ctx: TrackedEventContextInterface,
-  ): Promise<UserDashboardTrackingContextInterface> {
+  ): UserDashboardTrackingContextInterface {
     /**
      * Throw rather than allow a non-loggable interaction.
      *

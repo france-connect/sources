@@ -36,6 +36,19 @@ describe('LayoutHeaderNavigationComponent', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('should match the snapshot, with className defined', () => {
+    // when
+    const { container } = render(
+      <LayoutHeaderNavigationComponent
+        className="any-classname"
+        navigationItems={navigationItemsMock}
+      />,
+    );
+
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
   it('should call react router Link 2 times', () => {
     // when
     render(<LayoutHeaderNavigationComponent navigationItems={navigationItemsMock} />);

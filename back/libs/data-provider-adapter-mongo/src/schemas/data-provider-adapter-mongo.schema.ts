@@ -11,6 +11,10 @@ export class DataProvider extends Document {
   // :warning: Ceci est un champ métier (Ex: "Les services de la DGFIP")
   title: string;
 
+  @Prop({ type: String })
+  // :warning: Ceci est un champ métier (Ex: "Les services de la DGFIP")
+  slug: string;
+
   @Prop({ type: Boolean })
   active: boolean;
 
@@ -23,6 +27,11 @@ export class DataProvider extends Document {
   // oidc like property
   // eslint-disable-next-line @typescript-eslint/naming-convention
   client_secret: string;
+
+  @Prop({ type: String })
+  // oidc like property
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  jwks_uri: string;
 }
 
 export const DataProviderSchema = SchemaFactory.createForClass(DataProvider);

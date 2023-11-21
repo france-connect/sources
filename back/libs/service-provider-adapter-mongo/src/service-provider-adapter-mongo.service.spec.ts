@@ -143,6 +143,10 @@ describe('ServiceProviderAdapterMongoService', () => {
   });
 
   describe('onModuleInit', () => {
+    beforeEach(() => {
+      service.getList = jest.fn();
+    });
+
     it('should call watchWith from mongooseHelper', async () => {
       // When
       await service.onModuleInit();
@@ -150,6 +154,13 @@ describe('ServiceProviderAdapterMongoService', () => {
       expect(
         mongooseCollectionOperationWatcherHelperMock.watchWith,
       ).toHaveBeenCalledTimes(1);
+    });
+
+    it('should warmup cache', async () => {
+      // When
+      await service.onModuleInit();
+      // Then
+      expect(service.getList).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -251,14 +262,6 @@ describe('ServiceProviderAdapterMongoService', () => {
 
     beforeEach(() => {
       configMock.get.mockReturnValue({ platform: CORE_FCP });
-    });
-
-    it('should resolve', async () => {
-      // action
-      const result = service['findAllServiceProvider']();
-
-      // expect
-      expect(result).toBeInstanceOf(Promise);
     });
 
     it('should retrieve platform from config', async () => {

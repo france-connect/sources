@@ -97,7 +97,8 @@ export default class ServiceProviderPage {
   }
 
   setMockRequestedAcr(acrValue: string): void {
-    cy.get('input[name="acr_values"]').clear().type(acrValue);
+    cy.get('input[name="acr_values"]').clear();
+    cy.get('input[name="acr_values"]').type(acrValue);
   }
 
   setMockRequestedAmr(isRequested: boolean): void {
@@ -108,10 +109,16 @@ export default class ServiceProviderPage {
     }
   }
 
+  setIdpHint(idpHint: string): void {
+    cy.get('input[name="idp_hint"]').clear();
+    cy.get('input[name="idp_hint"]').type(idpHint);
+  }
+
   startLogin(
     fcRootUrl: string,
     scopeContext: ScopeContext,
     claims: string[] = [],
+    acrValue: string,
   ): void {
     // Initiate FS connection from Legacy SP mock
     if (this.isLegacySPMock()) {
@@ -122,6 +129,7 @@ export default class ServiceProviderPage {
     if (this.mocked) {
       this.setMockRequestedScope(scopeContext);
       this.setMockRequestedAmr(claims.includes('amr'));
+      this.setMockRequestedAcr(acrValue);
     }
     this.getFcButton().click();
   }
@@ -155,7 +163,7 @@ export default class ServiceProviderPage {
 
         // Check mandatory data
         const mandatoryData = {
-          aud: /^\w+$/,
+          aud: /^[\w-]+$/,
           exp: /^\d+/,
           iat: /^\d+/,
           iss: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,

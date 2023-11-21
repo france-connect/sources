@@ -1,5 +1,5 @@
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 import { Result } from 'axe-core';
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
 
 import { displayViolations } from '../helpers';
 

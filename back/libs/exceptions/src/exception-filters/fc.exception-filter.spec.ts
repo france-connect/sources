@@ -120,13 +120,13 @@ describe('FcExceptionFilter', () => {
     const STUB_ERROR_SCOPE = 2;
     const STUB_ERROR_CODE = 3;
 
-    it('should log a warning by default', () => {
+    it('should log a warning by default', async () => {
       // Given
       const exception = new FcException('message text');
       exception.scope = STUB_ERROR_SCOPE;
       exception.code = STUB_ERROR_CODE;
       // When
-      exceptionFilter.catch(exception, argumentHostMock);
+      await exceptionFilter.catch(exception, argumentHostMock);
       // Then
       expect(loggerServiceMock.warn).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -137,14 +137,14 @@ describe('FcExceptionFilter', () => {
       );
     });
 
-    it('should concat stack trace from original error', () => {
+    it('should concat stack trace from original error', async () => {
       // Given
       const exception = new FcException();
       exception.scope = STUB_ERROR_SCOPE;
       exception.code = STUB_ERROR_CODE;
       exception.originalError = new Error('foo bar');
       // When
-      exceptionFilter.catch(exception, argumentHostMock);
+      await exceptionFilter.catch(exception, argumentHostMock);
       // Then
       expect(loggerServiceMock.warn).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -155,13 +155,13 @@ describe('FcExceptionFilter', () => {
       );
     });
 
-    it('should render error template', () => {
+    it('should render error template', async () => {
       // Given
       const exception = new FcException('message text');
       exception.scope = STUB_ERROR_SCOPE;
       exception.code = STUB_ERROR_CODE;
       // When
-      exceptionFilter.catch(exception, argumentHostMock);
+      await exceptionFilter.catch(exception, argumentHostMock);
       // Then
       expect(resMock.render).toHaveBeenCalledWith(
         'error',
@@ -172,7 +172,7 @@ describe('FcExceptionFilter', () => {
       );
     });
 
-    it('should not log error', () => {
+    it('should not log error', async () => {
       // Given
       @Loggable(false)
       class ClassMock extends FcException {}
@@ -181,38 +181,38 @@ describe('FcExceptionFilter', () => {
       exception.code = STUB_ERROR_CODE;
       exceptionFilter['logException'] = jest.fn();
       // When
-      exceptionFilter.catch(exception, argumentHostMock);
+      await exceptionFilter.catch(exception, argumentHostMock);
       // Then
       expect(exceptionFilter['logException']).toHaveBeenCalledTimes(0);
       expect(resMock.render).toHaveBeenCalled();
     });
 
-    it('should log error', () => {
+    it('should log error', async () => {
       // Given
       const exception = new FcException('message text');
       exception.scope = STUB_ERROR_SCOPE;
       exception.code = STUB_ERROR_CODE;
       exceptionFilter['logException'] = jest.fn();
       // When
-      exceptionFilter.catch(exception, argumentHostMock);
+      await exceptionFilter.catch(exception, argumentHostMock);
       // Then
       expect(exceptionFilter['logException']).toHaveBeenCalledTimes(1);
       expect(resMock.render).toHaveBeenCalled();
     });
 
-    it('should not render for redirections', () => {
+    it('should not render for redirections', async () => {
       // Given
       const exception = new FcException('message text');
       exception.scope = STUB_ERROR_SCOPE;
       exception.code = STUB_ERROR_CODE;
       exception.redirect = true;
       // When
-      exceptionFilter.catch(exception, argumentHostMock);
+      await exceptionFilter.catch(exception, argumentHostMock);
       // Then
       expect(resMock.render).not.toHaveBeenCalled();
     });
 
-    it('should call `TrackingService.trackExceptionIfNeeded()`', () => {
+    it('should call `TrackingService.trackExceptionIfNeeded()`', async () => {
       // Given
       const exception = new FcException('message text');
       exception.scope = STUB_ERROR_SCOPE;
@@ -221,7 +221,7 @@ describe('FcExceptionFilter', () => {
       const spy = jest.spyOn(Trackable, 'isTrackable');
       spy.mockImplementationOnce(() => true);
       // When
-      exceptionFilter.catch(exception, argumentHostMock);
+      await exceptionFilter.catch(exception, argumentHostMock);
       // Then
       expect(trackingServiceMock.trackExceptionIfNeeded).toHaveBeenCalledTimes(
         1,

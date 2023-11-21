@@ -23,6 +23,10 @@ export default class InfoConsentPage {
     return cy.get('[data-testid="consent-detail"]');
   }
 
+  getClaimDetailsItems(): ChainableElement {
+    return cy.get('[data-testid="consent-detail"] li');
+  }
+
   checkIsVisible(): void {
     this.getConsentButton().should('be.visible');
   }
@@ -33,24 +37,6 @@ export default class InfoConsentPage {
     );
     cy.get('[data-testid="anonymous-complementary"]').contains(
       'Aucune donnée personnelle ne sera transmise',
-    );
-  }
-
-  // TODO: To delete once FC+ uses DSFR design
-  checkAnonymousScopeFcPlus(): void {
-    cy.get('[data-testid="anonymous-title"]').contains(
-      'Vous avez été connecté de façon anonyme',
-    );
-    cy.get('[data-testid="anonymous-complementary"]').contains(
-      "Aucune donnée n'a été échangée pour vous connecter.",
-    );
-  }
-
-  // TODO: Use this once both FC low and high use dsfr
-  checkClaimsAccordionIsExpended(): void {
-    cy.get('[id="accordion-consent"]').should(
-      'have.class',
-      'fr-collapse--expanded',
     );
   }
 
@@ -72,7 +58,8 @@ export default class InfoConsentPage {
       this.getShowClaimsToggle().click();
     }
 
-    this.getClaimDetails().should('be.visible');
+    this.getClaimDetailsItems().last().should('be.visible');
+
     this.getClaimDetails()
       .invoke('text')
       .then((text) => {

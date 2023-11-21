@@ -63,13 +63,14 @@ export class CoreVerifyService {
     await verifyHandler.handle({ sessionOidc, trackingContext });
   }
 
-  async handleBlacklisted(
+  async handleUnavailableIdp(
     req: Request,
     params: {
       urlPrefix: string;
       interactionId: string;
       sessionOidc: ISessionService<OidcClientSession>;
     },
+    idpDisabled: boolean,
   ): Promise<string> {
     const { interactionId, urlPrefix, sessionOidc } = params;
 
@@ -83,18 +84,29 @@ export class CoreVerifyService {
      * thus we are no longer in an "sso" interaction,
      * so we update isSso flag in session.
      */
-    sessionOidc.set('isSso', false);
+    await sessionOidc.set('isSso', false);
 
-    await this.trackBlackListed(req);
+    if (idpDisabled) {
+      await this.trackIdpDisabled(req);
+    } else {
+      await this.trackIdpBlackListed(req);
+    }
 
     return url;
   }
 
-  async trackBlackListed(req: Request) {
+  async trackIdpBlackListed(req: Request) {
     const eventContext = { req };
-    const { FC_BLACKLISTED } = this.tracking.TrackedEventsMap;
+    const { FC_IDP_BLACKLISTED } = this.tracking.TrackedEventsMap;
 
-    await this.tracking.track(FC_BLACKLISTED, eventContext);
+    await this.tracking.track(FC_IDP_BLACKLISTED, eventContext);
+  }
+
+  async trackIdpDisabled(req: Request) {
+    const eventContext = { req };
+    const { FC_IDP_DISABLED } = this.tracking.TrackedEventsMap;
+
+    await this.tracking.track(FC_IDP_DISABLED, eventContext);
   }
 
   async trackVerified(req: Request) {

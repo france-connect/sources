@@ -1,4 +1,4 @@
-import { Then } from 'cypress-cucumber-preprocessor/steps';
+import { Then } from '@badeball/cypress-cucumber-preprocessor';
 
 import TechnicalErrorPage from '../pages/technical-error-page';
 
@@ -13,11 +13,11 @@ Then('je suis redirigé vers la page erreur technique', function () {
   checkIsVisible();
 });
 
-Then("le code d'erreur est {string}", function (errorCode) {
+Then("le code d'erreur est {string}", function (errorCode: string) {
   checkErrorCode(errorCode);
 });
 
-Then("le message d'erreur est {string}", function (errorCode) {
+Then("le message d'erreur est {string}", function (errorCode: string) {
   checkErrorMessage(errorCode);
 });
 

@@ -1,0 +1,20 @@
+<div class="fr-checkbox-group fr-mb-md-2w fr-mb-3w">
+  <input
+    type="checkbox"
+    data-testid="checkbox-consent"
+    id="consent"
+    name="consent"
+    aria-label="consent"
+  />
+  <label
+    class="fr-label"
+    data-testid="label-consent"
+    for="consent">
+    J’accepte que <%= locals.config.App.platform %> transmette mes données au service pour me connecter
+  </label>
+  <p id="checkbox-error-desc-error" class="fr-error-text" hidden>
+    Veuillez cocher la case pour accepter le transfert des données
+  </p>
+</div>
+<%# hidden input to prove that the user accepted consent %>
+<input type="hidden" name="accept" value="1" aria-label="accept" />

@@ -100,9 +100,8 @@ export class OidcClientController {
       prompt: OidcProviderPrompt.LOGIN,
     };
 
-    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl(
-      authorizeParams,
-    );
+    const authorizationUrl =
+      await this.oidcClient.utils.getAuthorizeUrl(authorizeParams);
 
     const { name: idpName, title: idpLabel } =
       await this.identityProvider.getById(idpId);
@@ -143,6 +142,6 @@ export class OidcClientController {
       method: 'GET',
       name: 'OidcClientRoutes.WELL_KNOWN_KEYS',
     });
-    return this.oidcClient.utils.wellKnownKeys();
+    return await this.oidcClient.utils.wellKnownKeys();
   }
 }

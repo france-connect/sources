@@ -25,3 +25,33 @@ export function hasBusinessLog(
     ).to.eq(result);
   });
 }
+
+export function getBusinessLogs(
+  event: Record<string, unknown>,
+  logPath?: string,
+): Cypress.Chainable<Record<string, string>[]> {
+  const logFilePath: string = logPath || Cypress.env('LOG_FILE_PATH');
+  return cy.task<Record<string, string>[]>('getBusinessLogs', {
+    event,
+    logFilePath,
+  });
+}
+
+export function getAllBusinessLogs(
+  logPath?: string,
+): Cypress.Chainable<Record<string, string>[]> {
+  const logFilePath: string = logPath || Cypress.env('LOG_FILE_PATH');
+  return cy.task<Record<string, string>[]>('getAllBusinessLogs', {
+    logFilePath,
+  });
+}
+
+export function getValueByKeyFromFirstEvent(
+  key: string,
+  logs: Record<string, string>[],
+): string {
+  expect(logs?.length).to.be.ok;
+  const [firstEvent] = logs;
+  const value = firstEvent[key];
+  return value;
+}

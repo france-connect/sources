@@ -1,5 +1,5 @@
 #language: fr
-@usager @fiEidasBridge @ci @fcpHigh @ignoreInteg01
+@usager @fiEidasBridge @fcpHigh @ignoreInteg01
 Fonctionnalité: Fournisseur Identité - Eidas Bridge
   # En tant qu'usager,
   # je veux que le bouton eIDAS bridge ne soit visible que si disponible
@@ -13,10 +13,14 @@ Fonctionnalité: Fournisseur Identité - Eidas Bridge
     Et j'utilise le fournisseur d'identité "eidas-bridge"
     Et le fournisseur d'identité <result> dans la mire
 
+    @ci
     Exemples:
       | display   | active    | result            |
       | invisible | actif     | n'est pas affiché |
       | invisible | désactivé | n'est pas affiché |
+
+    Exemples:
+      | display   | active    | result            |
       | visible   | désactivé | n'est pas affiché |
       | visible   | actif     | est affiché       |
 

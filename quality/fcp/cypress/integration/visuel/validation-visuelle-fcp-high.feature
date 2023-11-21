@@ -16,7 +16,7 @@ Fonctionnalité: Validation Visuelle
     Et que je suis redirigé vers la page d'information
     Et que la copie d'écran "information" correspond à la page actuelle sur "<device>"
     Et que les informations demandées par le fournisseur de service correspondent au scope "identite_pivot sans alias"
-    Et que la copie d'écran "informationAvecScope" correspond à l'élément web "article" sur "<device>"
+    Et que la copie d'écran "informationAvecScope" correspond à l'élément web "[data-testid='consent-detail']" sur "<device>"
     Quand je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
     Et je suis connecté au fournisseur de service
@@ -41,8 +41,8 @@ Fonctionnalité: Validation Visuelle
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que je m'authentifie avec succès
     Et que je suis redirigé vers la page de consentement
-    Et que la copie d'écran "consentement" correspond à la page actuelle sur "<device>"
     Et que les informations demandées par le fournisseur de service correspondent au scope "identite_pivot sans alias"
+    Et que la copie d'écran "consentement" correspond à la page actuelle sur "<device>"
     Et que le bouton continuer sur le FS est désactivé
     Quand je consens à transmettre mes informations au fournisseur de service
     Et le bouton continuer sur le FS est actif
@@ -98,6 +98,23 @@ Fonctionnalité: Validation Visuelle
     Alors je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y180001"
     Et la copie d'écran "erreurUsagerDesactive" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Notification de Connexion sur <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page fournisseur de service
+    Quand je me connecte à FranceConnect
+    Alors je suis redirigé vers la page fournisseur de service
+    Et je suis connecté au fournisseur de service
+    Et le mail "notification de connexion" est envoyé
+    Et le message de notification de connexion à FranceConnect+ est correct
+    Et la copie d'écran "notificationConnectionUsager" correspond à la page actuelle sur "<device>"
 
     Exemples:
       | device           |

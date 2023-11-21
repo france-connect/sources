@@ -9,7 +9,7 @@ import {
 
 function getOidcCallbackUrl(interactionId, event) {
   const { IDP_ROOT_URL } = getIdentityProvider(
-    `${Cypress.env('IDP_NAME')}1-low`,
+    '9c716f61-b8a1-435c-a407-ef4d677ec270',
   );
 
   cy.request({
@@ -51,13 +51,13 @@ function extractInteractionIdFromUrl(url) {
 function prepareOidcCallbackAs(alias) {
   const { SP_ROOT_URL } = getServiceProvider(`${Cypress.env('SP_NAME')}1-low`);
   const { IDP_ROOT_URL } = getIdentityProvider(
-    `${Cypress.env('IDP_NAME')}1-low`,
+    '9c716f61-b8a1-435c-a407-ef4d677ec270',
   );
 
   cy.visit(SP_ROOT_URL);
   submitFSAuthorizeForm();
 
-  chooseIdpOnCore(`${Cypress.env('IDP_NAME')}1-low`);
+  chooseIdpOnCore('9c716f61-b8a1-435c-a407-ef4d677ec270');
 
   cy.url().should('contain', IDP_ROOT_URL);
 
@@ -99,7 +99,7 @@ function finishWithReplacedUrl(attackerUrl) {
   cy.visit(SP_ROOT_URL);
   submitFSAuthorizeForm();
 
-  chooseIdpOnCore(`${Cypress.env('IDP_NAME')}1-low`);
+  chooseIdpOnCore('9c716f61-b8a1-435c-a407-ef4d677ec270');
 
   // Use url from previous interaction
   cy.visit(attackerUrl, { failOnStatusCode: false });

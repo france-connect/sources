@@ -12,6 +12,7 @@ import Logger from './logger';
 import IdpMappings from './mappings';
 import ScopesFcLegacy from './scopes-fc-legacy';
 import ScopesFcpHigh from './scopes-fcp-high';
+import ScopesFcpLow from './scopes-fcp-low';
 import TracksBroker from './tracks-broker';
 
 export default {
@@ -22,6 +23,7 @@ export default {
   TracksBroker,
   ScopesFcLegacy,
   ScopesFcpHigh,
+  ScopesFcpLow,
   GeoipMaxmind,
   IdpMappings,
 } as CsmrTracksConfig;

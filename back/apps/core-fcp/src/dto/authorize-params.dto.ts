@@ -1,3 +1,6 @@
+/* istanbul ignore file */
+
+// Declarative file
 import {
   IsArray,
   IsOptional,
@@ -36,7 +39,7 @@ export class AuthorizeParamsDto {
   readonly response_type: string;
 
   @IsString()
-  @MinLength(32)
+  @MinLength(22)
   readonly nonce: string;
 
   @IsString()
@@ -64,4 +67,10 @@ export class AuthorizeParamsDto {
   @IsValidPrompt()
   @IsOptional()
   readonly prompt?: string;
+
+  @IsOptional()
+  @IsString()
+  // openid inspired property name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly idp_hint?: string;
 }

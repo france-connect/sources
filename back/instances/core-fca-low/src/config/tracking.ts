@@ -22,16 +22,22 @@ export default {
       event: 'FC_SSO_INITIATED',
     },
 
-    FS_DISABLED_SSO: {
-      category: EventsCategories.BACK_CINEMATIC,
+    SP_DISABLED_SSO: {
+      category: EventsCategories.FRONT_CINEMATIC,
       step: '1.2.0',
-      event: 'FS_DISABLED_SSO',
+      event: 'SP_DISABLED_SSO',
     },
 
     FC_SHOWED_IDP_CHOICE: {
       step: '2.0.0',
       category: EventsCategories.FRONT_CINEMATIC,
       event: 'FC_SHOWED_IDP_CHOICE',
+    },
+
+    FC_REDIRECTED_TO_HINTED_IDP: {
+      step: '2.1.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_REDIRECTED_TO_HINTED_IDP',
     },
 
     IDP_CHOSEN: {
@@ -76,10 +82,16 @@ export default {
       event: 'FC_VERIFIED',
     },
 
-    FC_BLACKLISTED: {
+    FC_IDP_DISABLED: {
       step: '5.1.0',
       category: EventsCategories.FRONT_CINEMATIC,
-      event: 'FC_SSO_UNAUTHORIZED_IDP',
+      event: 'FC_IDP_DISABLED',
+    },
+
+    FC_IDP_BLACKLISTED: {
+      step: '5.2.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_IDP_BLACKLISTED',
     },
 
     FC_REDIRECTED_TO_SP: {
@@ -112,11 +124,28 @@ export default {
       event: 'SP_REQUESTED_FC_USERINFO',
     },
 
-    // Not implemented yet
     SP_REQUESTED_LOGOUT: {
       step: '8.0.0',
       category: EventsCategories.FRONT_CINEMATIC,
       event: 'SP_REQUESTED_LOGOUT',
+    },
+
+    FC_REQUESTED_LOGOUT_FROM_IDP: {
+      step: '8.1.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_REQUESTED_LOGOUT_FROM_IDP',
+      interceptRoutes: [
+        {
+          method: RequestMethod.ALL,
+          path: OidcClientRoutes.DISCONNECT_FROM_IDP,
+        },
+      ],
+    },
+
+    FC_SESSION_TERMINATED: {
+      step: '8.2.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_SESSION_TERMINATED',
     },
   },
 } as TrackingConfig;

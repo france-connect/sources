@@ -85,10 +85,10 @@ describe('RedisFactoryModule', () => {
 
       // expect
       expect(res).toMatchInlineSnapshot(`
-        Object {
-          "exports": Array [
-            Object {
-              "inject": Array [
+        {
+          "exports": [
+            {
+              "inject": [
                 "IORedisModuleOptionsToken",
               ],
               "provide": "IORedisModuleConnectionToken",
@@ -97,19 +97,19 @@ describe('RedisFactoryModule', () => {
           ],
           "imports": undefined,
           "module": [Function],
-          "providers": Array [
-            Object {
-              "inject": Array [],
+          "providers": [
+            {
+              "inject": [],
               "provide": "IORedisModuleOptionsToken",
-              "useFactory": Object {
+              "useFactory": {
                 "db": 0,
                 "host": "host",
                 "password": "PassPart0ut",
                 "port": 1234,
               },
             },
-            Object {
-              "inject": Array [
+            {
+              "inject": [
                 "IORedisModuleOptionsToken",
               ],
               "provide": "IORedisModuleConnectionToken",

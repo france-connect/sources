@@ -6,7 +6,7 @@ import {
 } from './mire.utils';
 
 describe('1.1 sp_id parameter', () => {
-  const idpId = `${Cypress.env('IDP_NAME')}1-low`;
+  const idpId = '9c716f61-b8a1-435c-a407-ef4d677ec270';
   const spId =
     '6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950';
 
@@ -41,10 +41,10 @@ describe('1.1 sp_id parameter', () => {
 
     cy.log('Search for sp_id in /authorize');
     const authorizeLog = JSON.stringify(['/authorize', 'sp_id', spId]);
-    cy.hasLog(idpId, authorizeLog);
+    cy.hasLog('fia1-low', authorizeLog);
 
     cy.log('Search for sp_id in /token');
     const tokenLog = JSON.stringify(['/token', 'sp_id', spId]);
-    cy.hasLog(idpId, tokenLog);
+    cy.hasLog('fia1-low', tokenLog);
   });
 });

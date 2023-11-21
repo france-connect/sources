@@ -71,14 +71,13 @@ export class EidasBridgeTrackingService implements AppTrackingServiceAbstract {
   private async extractContextFromEuRequest(ctx: TrackedEventContextInterface) {
     const { req } = ctx;
 
-    const sessionOidc =
-      await SessionService.getBoundedSession<OidcClientSession>(
-        req,
-        'OidcClient',
-      ).get();
+    const sessionOidc = await SessionService.getBoundSession<OidcClientSession>(
+      req,
+      'OidcClient',
+    ).get();
 
     const sessionEidas =
-      await SessionService.getBoundedSession<EidasProviderSession>(
+      await SessionService.getBoundSession<EidasProviderSession>(
         req,
         'EidasProvider',
       ).get();
@@ -97,14 +96,13 @@ export class EidasBridgeTrackingService implements AppTrackingServiceAbstract {
   private async extractContextFromFrRequest(ctx: TrackedEventContextInterface) {
     const { req, countryCodeDst } = ctx;
 
-    const sessionOidc =
-      await SessionService.getBoundedSession<OidcClientSession>(
-        req,
-        'OidcClient',
-      ).get();
+    const sessionOidc = await SessionService.getBoundSession<OidcClientSession>(
+      req,
+      'OidcClient',
+    ).get();
 
     const sessionEidas =
-      await SessionService.getBoundedSession<EidasClientSession>(
+      await SessionService.getBoundSession<EidasClientSession>(
         req,
         'EidasClient',
       ).get();

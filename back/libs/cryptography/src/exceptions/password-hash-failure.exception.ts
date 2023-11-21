@@ -3,7 +3,7 @@
 // Declarative code
 import { Description, Loggable } from '@fc/exceptions';
 
-import { ErrorCode } from '../enum';
+import { ErrorCode } from '../enums';
 import { CryptographyBaseException } from './cryptography-base.exception';
 
 @Loggable()

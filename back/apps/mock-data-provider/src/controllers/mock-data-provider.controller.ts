@@ -1,27 +1,40 @@
 import { Response } from 'express';
+import { JSONWebKeySet } from 'jose';
 
-import { Controller, Get, Res } from '@nestjs/common';
+import { Controller, Get, Headers, Res } from '@nestjs/common';
 
-import { DataProviderAdapterCoreService } from '@fc/data-provider-adapter-core';
+import { ConfigService } from '@fc/config';
+import {
+  DataProviderAdapterCoreConfig,
+  DataProviderAdapterCoreService,
+} from '@fc/data-provider-adapter-core';
 
 import { MockDataProviderRoutes } from '../enums';
+import { MockDataProviderService } from '../services';
 
 @Controller(MockDataProviderRoutes.BASE)
 export class MockDataProviderController {
   constructor(
-    private readonly dataProviderAdapterCoreService: DataProviderAdapterCoreService,
+    private readonly dataProviderAdapterCore: DataProviderAdapterCoreService,
+    private readonly config: ConfigService,
+    private readonly mockDataProvider: MockDataProviderService,
   ) {}
 
   @Get(MockDataProviderRoutes.DATA)
-  async data(@Res({ passthrough: true }) res: Response): Promise<any> {
-    try {
-      const { data, status } =
-        await this.dataProviderAdapterCoreService.checktoken(
-          'unrevelent_mock_access_token',
-        );
+  async data(
+    @Res({ passthrough: true }) res: Response,
+    @Headers('authorization') authorization = '',
+  ): Promise<any> {
+    const encodedBearer = authorization.replace('Bearer ', '');
+    const bearer = Buffer.from(encodedBearer, 'base64').toString('utf-8');
+    const [accessToken, receivedSecret] = bearer.split(':');
 
-      res.status(status);
-      return data;
+    try {
+      this.mockDataProvider.authenticateServiceProvider(receivedSecret);
+
+      const claims = await this.dataProviderAdapterCore.checktoken(accessToken);
+
+      return claims;
     } catch (exception) {
       const { error, message, httpStatusCode } = exception;
 
@@ -35,5 +48,13 @@ export class MockDataProviderController {
       res.status(httpStatusCode);
       return result;
     }
+  }
+
+  @Get(MockDataProviderRoutes.JWKS)
+  async jwks(): Promise<JSONWebKeySet> {
+    const { jwks } = await this.config.get<DataProviderAdapterCoreConfig>(
+      'DataProviderAdapterCore',
+    );
+    return jwks;
   }
 }

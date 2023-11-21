@@ -187,7 +187,7 @@ export function chooseIdpOnCore(idpId) {
  *
  * Available params :
  *  - acrValues
- *  - idpAcr 
+ *  - idpAcr
  *  - idpId
  *  - method
  *  - scope
@@ -202,7 +202,7 @@ export function basicScenario(params) {
     method = 'GET',
     scope,
     sp = 'fsa1-low',
-    userName = 'test'
+    userName = 'test',
   } = params;
   const password = '123';
   const { IDP_INTERACTION_URL } = getIdentityProvider(idpId);
@@ -290,7 +290,9 @@ export function getServiceProvider(sp = 'fsa1-low') {
  * Retrieve service provider information
  * @param {*} idp : identity provider uid
  */
-export function getIdentityProvider(idp = 'fia1-low') {
+export function getIdentityProvider(
+  idp = '9c716f61-b8a1-435c-a407-ef4d677ec270',
+) {
   return Cypress.env('IDP_AVAILABLES').find(({ ID }) => ID === idp);
 }
 

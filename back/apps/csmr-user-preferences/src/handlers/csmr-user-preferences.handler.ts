@@ -25,6 +25,8 @@ export class CsmrUserPreferenceHandler {
     this.logger.setContext(this.constructor.name);
   }
 
+  // Async needed for the handler signature
+  // eslint-disable-next-line require-await
   async handle(): Promise<void> {
     throw new Error();
   }

@@ -1,5 +1,5 @@
 #language: fr
-@userDashboard @historiqueConnexion @ignoreHigh @ignoreLow
+@userDashboard @historiqueConnexion
 Fonctionnalité: Connexion au FD traces
   # En tant que FS partenaire,
   # je veux contacter le FD traces

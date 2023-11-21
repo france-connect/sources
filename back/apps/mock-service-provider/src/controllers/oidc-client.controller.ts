@@ -64,6 +64,9 @@ export class OidcClientController {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
       csrfToken,
+      // acr_values is an oidc defined variable name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      idp_hint,
     } = body;
 
     let serviceProviderId: string | null;
@@ -99,6 +102,9 @@ export class OidcClientController {
       acr_values,
       nonce,
       claims,
+      // acr_values is an oidc defined variable name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      idp_hint,
     });
 
     const { name: idpName, title: idpLabel } =
@@ -154,6 +160,6 @@ export class OidcClientController {
       method: 'GET',
       name: 'OidcClientRoutes.WELL_KNOWN_KEYS',
     });
-    return this.oidcClient.utils.wellKnownKeys();
+    return await this.oidcClient.utils.wellKnownKeys();
   }
 }

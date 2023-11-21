@@ -40,6 +40,8 @@ export class FcException extends Error {
    * - 40: GeoIp Maxmind
    * - 41: Tracking
    * - 42: Flow-steps
+   * - 43: data-provider-adapter-core
+   * - 44: jwt
    * - 80: Exceptions
    */
   public scope: number;
@@ -55,6 +57,7 @@ export class FcException extends Error {
   public originalError?: Error;
   public redirect = false;
   public httpStatusCode: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+  public oidc?: { error: string; description: string };
 
   constructor(input?: Error | string) {
     let arg: unknown = input;

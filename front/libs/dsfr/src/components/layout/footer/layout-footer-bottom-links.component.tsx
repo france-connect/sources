@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 import { NavigationLink } from '../../../interfaces';
 
@@ -14,9 +13,9 @@ export const LayoutFooterBottomLinksComponent = React.memo(
         const uniqKey = `layout-footer-bottom-links::${index}`;
         return (
           <li key={uniqKey} className="fr-footer__bottom-item">
-            <Link className="fr-footer__bottom-link" title={a11y} to={href}>
+            <a className="fr-footer__bottom-link" href={href} title={a11y}>
               {label}
-            </Link>
+            </a>
           </li>
         );
       })}
