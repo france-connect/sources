@@ -1,7 +1,5 @@
 import {
-  afterSuccessScenario,
-  basicSuccessScenario,
-  beforeSuccessScenario,
+  basicScenario,
   getAuthorizeUrl,
   getServiceProvider,
 } from './mire.utils';
@@ -61,19 +59,18 @@ describe('Session', () => {
   });
 
   it('should have cookie stored for IdP with the property `sameSite` value set to `lax`', () => {
-    const loginInfo = {
+    const domain = Cypress.env('APP_DOMAIN');
+    const params = {
       acrValues: 'eidas1',
       userName: 'test',
-      password: '123',
       idpId,
     };
 
-    beforeSuccessScenario(loginInfo);
-    basicSuccessScenario(loginInfo.idpId);
-    afterSuccessScenario(loginInfo);
+    basicScenario(params);
 
-    cy.getCookie('fc_session_id').then((cookie) => {
-      expect(cookie).to.have.property('sameSite', 'lax');
-    });
+    cy.getCookie('fc_session_id', { domain })
+      .should('exist')
+      .its('sameSite')
+      .should('equal', 'lax');
   });
 });

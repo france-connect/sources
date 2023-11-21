@@ -48,12 +48,13 @@
           "../../../apps/core-fcp/**/*.js",
           "../../../apps/core-fcp/**/*.svg",
           "../../../apps/core-fcp/**/*.woff2",
-          "../../../instances/core-fcp-low/**/*.css",
-          "../../../instances/core-fcp-low/**/*.ejs",
-          "../../../instances/core-fcp-low/**/*.ico",
-          "../../../instances/core-fcp-low/**/*.svg",
-          "../../../instances/core-fcp-low/**/*.png",
-          "../../../instances/core-fcp-low/**/*.woff2"
+          "../../../instances/core-fcp-low/src/**/*.js",
+          "../../../instances/core-fcp-low/src/**/*.css",
+          "../../../instances/core-fcp-low/src/**/*.ejs",
+          "../../../instances/core-fcp-low/src/**/*.ico",
+          "../../../instances/core-fcp-low/src/**/*.svg",
+          "../../../instances/core-fcp-low/src/**/*.png",
+          "../../../instances/core-fcp-low/src/**/*.woff2"
         ]
       }
     },
@@ -67,12 +68,16 @@
         "assets": [
           "../../../apps/core-fcp/**/*.ejs",
           "../../../apps/core-fcp/**/*.css",
-          "../../../apps/core-fcp/**/*.ico",
           "../../../apps/core-fcp/**/*.js",
           "../../../apps/core-fcp/**/*.svg",
-          "../../../apps/core-fcp/**/*.png",
           "../../../apps/core-fcp/**/*.woff2",
-          "**/*.ejs"
+          "../../../instances/core-fcp-high/src/**/*.js",
+          "../../../instances/core-fcp-high/src/**/*.css",
+          "../../../instances/core-fcp-high/src/**/*.ejs",
+          "../../../instances/core-fcp-high/src/**/*.ico",
+          "../../../instances/core-fcp-high/src/**/*.svg",
+          "../../../instances/core-fcp-high/src/**/*.png",
+          "../../../instances/core-fcp-high/src/**/*.woff2"
         ]
       }
     },
@@ -1053,6 +1058,15 @@
       "sourceRoot": "libs/jwt/src",
       "compilerOptions": {
         "tsConfigPath": "libs/jwt/tsconfig.lib.json"
+      }
+    },
+    "fqdn-to-idp-adapter-mongo": {
+      "type": "library",
+      "root": "libs/fqdn-to-idp-adapter-mongo",
+      "entryFile": "index",
+      "sourceRoot": "libs/fqdn-to-idp-adapter-mongo/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/fqdn-to-idp-adapter-mongo/tsconfig.lib.json"
       }
     }
   }

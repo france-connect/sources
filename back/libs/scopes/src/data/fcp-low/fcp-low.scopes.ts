@@ -41,4 +41,5 @@ export const scopes: IScopes = {
   address: [claims.address],
   // eslint-disable-next-line @typescript-eslint/naming-convention
   idp_birthdate: [claims.idp_birthdate],
+  amr: [claims.amr],
 };

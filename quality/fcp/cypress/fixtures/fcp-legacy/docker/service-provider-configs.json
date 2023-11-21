@@ -1,0 +1,20 @@
+{
+  "sans restriction de FI": {
+    "name": "bdd-sp-without-restriction",
+    "signupId": "12345",
+    "platform": "CORE_LEGACY",
+    "redirectUri": "https://fsp1.docker.dev-franceconnect.fr/login-callback",
+    "redirectUriLogout": "https://fsp1.docker.dev-franceconnect.fr/logout-callback",
+    "site": "https://fsp1.docker.dev-franceconnect.fr",
+    "emails": ["fsp1@franceconnect.loc", "fsp2@franceconnect.loc"],
+    "ipAddresses": "1.1.1.1",
+    "scopes": ["gender", "birthdate", "given_name", "family_name", "preferred_username", "email"],
+    "type": "public",
+    "identityConsent": "false",
+    "trustedIdentity": "false",
+    "eidas": "1",
+    "userinfo_signed_response_alg": "HS256",
+    "id_token_signed_response_alg": "HS256",
+    "entityId": "a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc"
+  }
+}

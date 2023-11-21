@@ -4,6 +4,7 @@ export interface DataProviderMetadata {
   uid: string;
   title: string;
   active: boolean;
+  slug: string;
   // openid inspired property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
   client_id: string;

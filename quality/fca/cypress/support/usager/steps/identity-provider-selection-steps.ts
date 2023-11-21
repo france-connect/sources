@@ -1,4 +1,4 @@
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import IdentityProviderSelectionPage from '../pages/identity-provider-selection-page';
 
@@ -27,7 +27,7 @@ When("je cherche le fournisseur d'identité par son nom", function () {
 
 When(
   /^je cherche le fournisseur d'identité(?: par son nom| par son ministère)? avec "([^"]+)"$/,
-  function (terms) {
+  function (terms: string) {
     identityProviderSelectionPage.searchIdentityProvider(terms);
   },
 );
@@ -41,7 +41,7 @@ Then('plusieurs ministères sont affichés dans la liste', function () {
   identityProviderSelectionPage.getMinistries().should('have.length.above', 1);
 });
 
-Then('le nombre de ministère affiché est {int}', function (count) {
+Then('le nombre de ministère affiché est {int}', function (count: number) {
   identityProviderSelectionPage.getMinistries().should('have.length', count);
 });
 
@@ -54,6 +54,11 @@ Then(
   },
 );
 
+Then('moncomptepro est retourné', function () {
+  identityProviderSelectionPage.checkIsNoResultMonCompteProMessageIsVisible();
+  identityProviderSelectionPage.getIdentityProviders().should('not.exist');
+});
+
 Then("aucun fournisseur d'identité n'est trouvé", function () {
   identityProviderSelectionPage.checkIsNoResultMessageIsVisible();
   identityProviderSelectionPage.getIdentityProviders().should('not.exist');
@@ -61,7 +66,7 @@ Then("aucun fournisseur d'identité n'est trouvé", function () {
 
 Then(
   /^le fournisseur d'identité (est|n'est pas) affiché dans la liste$/,
-  function (text) {
+  function (text: string) {
     const isVisible = text === 'est';
     identityProviderSelectionPage
       .getIdpButton(this.identityProvider.idpId)
@@ -71,7 +76,7 @@ Then(
 
 Then(
   /^le fournisseur d'identité est (actif|désactivé) dans la liste$/,
-  function (state) {
+  function (state: string) {
     const isEnabled = state === 'actif';
     identityProviderSelectionPage
       .getIdpButton(this.identityProvider.idpId)

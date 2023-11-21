@@ -196,7 +196,7 @@ describe('OidcProviderController', () => {
       OidcProviderController,
     );
 
-    validateDtoMock = jest.mocked(validateDto, true);
+    validateDtoMock = jest.mocked(validateDto);
 
     jest.resetAllMocks();
     jest.restoreAllMocks();

@@ -10,7 +10,8 @@
     "instances/**/*.ts",
     "instances/**/*.d.ts",
     "instances/**/*.tsx",
-    "instances/**/*.js"
+    "instances/**/*.js",
+    "jest.config.ts"
   ],
   "compilerOptions": {
     "target": "es6",

@@ -9,7 +9,10 @@ import { LoggerService } from '@fc/logger-legacy';
 
 @Injectable()
 export class CsmrHttpProxyService {
-  constructor(private logger: LoggerService, private http: HttpService) {
+  constructor(
+    private logger: LoggerService,
+    private http: HttpService,
+  ) {
     this.logger.setContext(this.constructor.name);
   }
 

@@ -6,8 +6,6 @@ import { NestJsConnection } from '../interfaces';
 import { MongooseProvider } from './mongoose.provider';
 
 describe('MongooseService', () => {
-  const connectionNameMock = 'connectionNameValue';
-
   const configMock = {
     get: jest.fn(),
   } as unknown as ConfigService;
@@ -51,7 +49,6 @@ describe('MongooseService', () => {
       // When
       MongooseProvider['connectionFactory'](
         loggerMock,
-        connectionNameMock,
         eventBusMock,
         connectionMock,
       );
@@ -79,7 +76,6 @@ describe('MongooseService', () => {
       // Given / When
       const connection = MongooseProvider['connectionFactory'](
         loggerMock,
-        connectionNameMock,
         eventBusMock,
         connectionMock,
       );
@@ -97,7 +93,6 @@ describe('MongooseService', () => {
 
       const connection = MongooseProvider['connectionFactory'](
         loggerMock,
-        connectionNameMock,
         eventBusMock,
         connectionMock,
       );
@@ -112,7 +107,7 @@ describe('MongooseService', () => {
       expect(loggerMock.error).toHaveBeenCalledTimes(3);
       expect(loggerMock.error).toHaveBeenNthCalledWith(
         1,
-        'Invalid Mongodb Connection for connectionNameValue',
+        'Invalid Mongodb Connection',
       );
       expect(loggerMock.error).toHaveBeenNthCalledWith(2, '{}');
       expect(loggerMock.error).toHaveBeenNthCalledWith(3, 'Exiting app');
@@ -142,15 +137,10 @@ describe('MongooseService', () => {
 
     it('should construct params with config options from connection name', () => {
       // When
-      MongooseProvider.buildMongoParams(
-        loggerMock,
-        configMock,
-        connectionNameMock,
-        eventBusMock,
-      );
+      MongooseProvider.buildMongoParams(loggerMock, configMock, eventBusMock);
       // Then
       expect(configMock.get).toHaveBeenCalledTimes(1);
-      expect(configMock.get).toHaveBeenCalledWith(connectionNameMock);
+      expect(configMock.get).toHaveBeenCalledWith('Mongoose');
     });
 
     it('should return the result from buildConnexion string and config options', () => {
@@ -158,7 +148,6 @@ describe('MongooseService', () => {
       const result = MongooseProvider.buildMongoParams(
         loggerMock,
         configMock,
-        connectionNameMock,
         eventBusMock,
       );
       // Then

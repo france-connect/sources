@@ -8,4 +8,7 @@ export interface IGetAuthorizeUrlParams {
   nonce: string;
   claims?: string;
   prompt?: string;
+  // acr_values is an oidc defined variable name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  idp_hint?: string;
 }

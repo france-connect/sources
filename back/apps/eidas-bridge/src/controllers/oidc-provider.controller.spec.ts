@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { LoggerService } from '@fc/logger-legacy';
+import { ISessionRequest, ISessionResponse, SessionService } from '@fc/session';
 
 import { AuthorizeParamsDto } from '../dto';
 import { OidcProviderController } from './oidc-provider.controller';
@@ -11,16 +12,22 @@ const loggerServiceMock = {
   trace: jest.fn(),
 } as unknown as LoggerService;
 
+const sessionServiceMock = {
+  reset: jest.fn(),
+} as unknown as SessionService;
+
 describe('OidcProviderController', () => {
   let oidcProviderController: OidcProviderController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [OidcProviderController],
-      providers: [LoggerService],
+      providers: [LoggerService, SessionService],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
+      .overrideProvider(SessionService)
+      .useValue(sessionServiceMock)
       .compile();
 
     oidcProviderController = await app.get<OidcProviderController>(
@@ -31,12 +38,33 @@ describe('OidcProviderController', () => {
   });
 
   describe('getAuthorize()', () => {
-    it('should call next', () => {
-      // Given
-      const nextMock = jest.fn();
-      const queryMock = {} as AuthorizeParamsDto;
+    const reqMock = {} as ISessionRequest;
+    const resMock = {} as ISessionResponse;
+    const queryMock = {} as AuthorizeParamsDto;
+    const nextMock = jest.fn();
+
+    it('should reset session', async () => {
       // When
-      oidcProviderController.getAuthorize(nextMock, queryMock);
+      await oidcProviderController.getAuthorize(
+        reqMock,
+        resMock,
+        nextMock,
+        queryMock,
+      );
+
+      // Then
+      expect(sessionServiceMock.reset).toHaveReturnedTimes(1);
+      expect(sessionServiceMock.reset).toHaveBeenCalledWith(reqMock, resMock);
+    });
+
+    it('should call next', async () => {
+      // When
+      await oidcProviderController.getAuthorize(
+        reqMock,
+        resMock,
+        nextMock,
+        queryMock,
+      );
       // Then
       expect(nextMock).toHaveReturnedTimes(1);
     });

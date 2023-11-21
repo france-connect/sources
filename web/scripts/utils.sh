@@ -6,7 +6,7 @@ RED='\033[0;31m'
 GREEN='\033[32m'
 
 print_error() {
-  echo -e "${RED}$1${RESET}" >&2
+  echo -e "${RED}ERROR : $1${RESET}" >&2
   exit 1
 }
 
@@ -46,5 +46,5 @@ copy_file() {
   local src="$1"
   local dest="$2"
   echo "Copie de ${src} vers ${dest}"
-  cp -r "$src" "$dest"
+  cp "$src" "$dest"
 }

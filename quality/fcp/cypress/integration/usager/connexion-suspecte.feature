@@ -1,12 +1,12 @@
 #language: fr
-@usager @connexionSuspecte @ci @ignoreInteg01
+@usager @connexionSuspecte @ignoreInteg01
 Fonctionnalité: Connexion Suspecte
   # En tant qu'usager initiateur d'une connexion "suspecte"
   # je veux pouvoir utiliser un fournisseur d'identité niveau substentiel ou élevé
   # (les FI niveau eIDAS faible seront marqués indisponibles)
   # afin de pouvoir accéder à mon fournisseur de service
 
-  @fcpLow
+  @fcpLow @ci
   Scénario: Connexion Suspecte - Affichage de la mire avec FI niveau eidas1 non présent
     Etant donné que je navigue sur la page fournisseur de service
     Quand j'initie une connexion suspecte à FranceConnect low
@@ -16,7 +16,7 @@ Fonctionnalité: Connexion Suspecte
     Et j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2"
     Et le fournisseur d'identité est actif dans la mire
 
-  @fcpLow
+  @fcpLow @ci
   Scénario: Connexion Suspecte - via FI niveau substentiel ou élevé
     Etant donné que je navigue sur la page fournisseur de service
     Et que j'initie une connexion suspecte à FranceConnect low

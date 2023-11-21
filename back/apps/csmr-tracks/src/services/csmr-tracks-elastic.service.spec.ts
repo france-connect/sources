@@ -9,8 +9,8 @@ import { ElasticsearchConfig } from '@fc/elasticsearch';
 import { LoggerService } from '@fc/logger-legacy';
 
 import {
+  ICsmrTracksData,
   ICsmrTracksElasticResults,
-  ICsmrTracksFieldsRawData,
   Search,
 } from '../interfaces';
 import * as helper from './csmr-tracks-elastic.service';
@@ -124,7 +124,6 @@ describe('CsmrTracksElasticService', () => {
   });
 
   describe('onModuleInit()', () => {
-    const fieldsMock = ['field1', 'field2', 'field3'];
     const queryMock = {
       bool: {
         should: ['test'],
@@ -132,20 +131,10 @@ describe('CsmrTracksElasticService', () => {
     };
 
     beforeEach(() => {
-      service['getFields'] = jest.fn().mockReturnValueOnce(fieldsMock);
       service['createEventsQuery'] = jest.fn().mockReturnValueOnce(queryMock);
     });
 
-    it('should get the filter fields for the ES query', () => {
-      // When
-      service.onModuleInit();
-      // Then
-      expect(service['getFields']).toHaveBeenCalledTimes(1);
-      expect(service['getFields']).toHaveBeenCalledWith();
-      expect(service.fields).toStrictEqual(fieldsMock);
-    });
-
-    it('should create fields params for ES query', () => {
+    it('should create event query params for ES query', () => {
       // When
       service.onModuleInit();
       // Then
@@ -185,31 +174,10 @@ describe('CsmrTracksElasticService', () => {
       // Given
       const resultMock: ICsmrTracksElasticResults = {
         meta: { offset: 12, size: 42, total: totalMock },
-        payload: dataMock as unknown as SearchHit<ICsmrTracksFieldsRawData>[],
+        payload: dataMock as unknown as SearchHit<ICsmrTracksData>[],
       };
       // When
       const result = await service.getTracks(idsMock, optionsMock);
-      // Then
-      expect(result).toStrictEqual(resultMock);
-    });
-  });
-
-  describe('getFields()', () => {
-    it('should get fields for ES query', () => {
-      // Given
-      const resultMock = [
-        'source.geo.city_name',
-        'source.geo.country_iso_code',
-        'source.geo.region_name',
-        'fieldHighValue1',
-        'fieldHighValue2',
-        'fieldLegacyValue1',
-        'fieldLegacyValue2',
-
-        { field: 'time', format: 'epoch_millis' },
-      ];
-      // When
-      const result = service['getFields']();
       // Then
       expect(result).toStrictEqual(resultMock);
     });
@@ -312,7 +280,6 @@ describe('CsmrTracksElasticService', () => {
     };
 
     const queryMock: Search = {
-      fields: ['field1', 'field2'],
       query: {
         bool: {
           filter: [

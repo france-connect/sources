@@ -1,10 +1,11 @@
 #language: fr
-@usager @rechercheFi @ci
+@usager @rechercheFi
 Fonctionnalité: Recherche FI
   # En tant qu'usager d'un fournisseur de service,
   # je veux rechercher un FI par ministère ou par son nom,
   # afin de m'authentifier
 
+  @ci
   Scénario: Recherche FI - par son nom
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que je navigue sur la page fournisseur de service
@@ -34,6 +35,7 @@ Fonctionnalité: Recherche FI
       | eidas faible        |
       | es256               |
 
+  @ci
   Scénario: Recherche FI - par son ministère
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que je navigue sur la page fournisseur de service
@@ -79,12 +81,19 @@ Fonctionnalité: Recherche FI
     Et le ministère du FI est affiché dans la liste
     Et le nombre de ministère affiché est 1
 
-  Scénario: Recherche FI - FI inexistant
+  Scénario: Recherche FI - FI inexistant et actif
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Et que j'utilise un fournisseur d'identité "actif"
+    Quand je cherche le fournisseur d'identité par son nom avec "FI inexistant"
+    Alors moncomptepro est retourné
+
+  Scénario: Recherche FI - FI inexistant et MCP blacklisté
+    Etant donné que j'utilise le fournisseur de service "avec une whitelist de FI"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton AgentConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
     Quand je cherche le fournisseur d'identité par son nom avec "FI inexistant"
     Alors aucun fournisseur d'identité n'est trouvé
 

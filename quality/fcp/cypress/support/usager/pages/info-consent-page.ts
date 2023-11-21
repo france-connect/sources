@@ -40,16 +40,6 @@ export default class InfoConsentPage {
     );
   }
 
-  // TODO: To delete once FC+ uses DSFR design
-  checkAnonymousScopeFcPlus(): void {
-    cy.get('[data-testid="anonymous-title"]').contains(
-      'Vous avez été connecté de façon anonyme',
-    );
-    cy.get('[data-testid="anonymous-complementary"]').contains(
-      "Aucune donnée n'a été échangée pour vous connecter.",
-    );
-  }
-
   checkInformationConsent(
     scopeContext: ScopeContext,
     explicitConsent: boolean,

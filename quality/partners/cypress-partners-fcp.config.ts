@@ -5,20 +5,20 @@ import { defineConfig } from 'cypress';
 import pluginConfig from './cypress/plugins';
 
 export default defineConfig({
+  chromeWebSecurity: false,
+  video: false,
   e2e: {
     baseUrl: 'https://docker.dev-franceconnect.fr',
-    setupNodeEvents(on, config) {
-      return pluginConfig(on, config);
+    async setupNodeEvents(on, config) {
+      return await pluginConfig(on, config);
     },
     specPattern: 'cypress/integration/**/*.feature',
     supportFile: 'cypress/support/index.ts',
-    video: false,
+    experimentalRunAllSpecs: true,
+    experimentalMemoryManagement: true,
   },
   env: {
     // Base Configuration
-    BASE_URLS: {
-      recette: 'https://recette.dev-franceconnect.fr',
-    },
     PLATFORM: 'partners-fcp',
     TEST_ENV: 'docker',
     TAGS: 'not @fca and not @ignoreFcp',

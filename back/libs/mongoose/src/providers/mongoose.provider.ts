@@ -16,12 +16,11 @@ import { NestJsConnection } from '../interfaces';
 export class MongooseProvider {
   static connectionFactory(
     logger: LoggerService,
-    connectionName: string,
     eventBus,
     connection: NestJsConnection,
   ): NestJsConnection {
     eventBus.publish(new MongooseConnectionReconnectedEvent());
-    logger.debug(`Connection ${connectionName}`);
+    logger.debug(`Connection`);
 
     // too simple to be extracted in a testable function
     /* istanbul ignore next line */
@@ -41,7 +40,7 @@ export class MongooseProvider {
 
     connection.$initialConnection = connection.$initialConnection.catch(
       (error) => {
-        logger.error(`Invalid Mongodb Connection for ${connectionName}`);
+        logger.error('Invalid Mongodb Connection');
         logger.error(JSON.stringify(error, null, 2));
         logger.error('Exiting app');
         process.exit(1);
@@ -54,11 +53,10 @@ export class MongooseProvider {
   static buildMongoParams(
     logger: LoggerService,
     config: ConfigService,
-    connectionName: string,
     eventBus,
   ): MongooseModuleOptions {
     const { user, password, hosts, database, options } =
-      config.get<MongooseConfig>(connectionName);
+      config.get<MongooseConfig>('Mongoose');
 
     const uri = `mongodb://${user}:${password}@${hosts}/${database}`;
     const params: MongooseModuleOptions = {
@@ -67,12 +65,9 @@ export class MongooseProvider {
       connectionFactory: MongooseProvider.connectionFactory.bind(
         this,
         logger,
-        connectionName,
         eventBus,
       ),
     };
-
-    logger.trace({ connectionName });
 
     return params;
   }

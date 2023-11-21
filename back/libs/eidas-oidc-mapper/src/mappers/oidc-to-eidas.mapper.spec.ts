@@ -103,26 +103,6 @@ describe('OidcToEidasMapper', () => {
       });
     });
 
-    describe('getBirthName', () => {
-      it('should be a function', () => {
-        expect(
-          ClaimsToAttributesMap[EidasAttributes.BIRTH_NAME],
-        ).toBeInstanceOf(Function);
-      });
-
-      it('should return the family_name within claims as an Array', () => {
-        // setup
-        const expected = [claims.family_name];
-
-        // action
-        const result =
-          ClaimsToAttributesMap[EidasAttributes.BIRTH_NAME](claims);
-
-        // expect
-        expect(result).toStrictEqual(expected);
-      });
-    });
-
     describe('getDateOfBirth', () => {
       it('should be a function', () => {
         expect(

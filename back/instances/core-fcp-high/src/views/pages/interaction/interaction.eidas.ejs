@@ -1,0 +1,33 @@
+<%
+const eidasBridgeProvider = locals.providers
+  .find((p) => p.uid === locals.config.App.eidasBridgeUid && p.display && p.active)
+%>
+<% if (eidasBridgeProvider) { %>
+<form
+  method="POST"
+  action="/api/v2/redirect-to-idp"
+  id="fs-request-<%= eidasBridgeProvider.uid %>"
+  name="fs-request">
+  <div class="fc-text--center fr-mt-4w fr-mt-md-5w fr-mb-2w">
+    <span lang="en">
+    or
+    </span>
+  </div>
+  <button
+    class="fr-btn fr-btn--tertiary fc-text--left"
+    id="idp-<%= eidasBridgeProvider.uid %>">
+    <img
+      src="/img/fi/fi-europe.svg"
+      class="fr-mr-6v"
+      alt="Logo de <%= eidasBridgeProvider.name %>" />
+    <span lang="en">
+      Sign in with <strong>a digital identity from another European country</strong>
+    </span>
+  </button>
+  <%-
+  include('pages/interaction/interaction.provider-inputs.ejs', {
+    provider: eidasBridgeProvider
+  })
+  %>
+</form>
+<% } %>

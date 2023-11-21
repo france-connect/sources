@@ -1,0 +1,9 @@
+<%
+locals.providers
+  .filter(p => p.display) .forEach((provider) => {
+%>
+  <form action="/api/v2/redirect-to-idp" method="POST" class="interaction-main-content-form" name="fs-request">
+    <%- include('pages/interaction/interaction.provider.ejs', { provider }) %>
+    <%- include('pages/interaction/interaction.provider-inputs.ejs', { provider }) %>
+  </form>
+<% }); %>

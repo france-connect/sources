@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionScope @ci
+@usager @connexionScope
 Fonctionnalité: Connexion Usager - Scope
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter en utilisant un fournisseur d'identité
@@ -48,14 +48,18 @@ Fonctionnalité: Connexion Usager - Scope
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations des scopes "tous les scopes rnipp (userinfo)"
 
+    @ci
+    Exemples:
+      | userType                           |
+      | avec un prénom contenant un espace |
+
     Exemples:
       | userType                           |
       | avec un prénom                     |
-      | avec un prénom contenant un espace |
       | avec 3 prénoms                     |
       | avec prénom composé                |
 
-  @fcpLow
+  @fcpLow @ci
   Scénario: Connexion d'un usager - scope idp_birthdate
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "birthdate et idp_birthdate"
     Et que je navigue sur la page fournisseur de service
@@ -90,10 +94,14 @@ Fonctionnalité: Connexion Usager - Scope
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations des scopes "tous les scopes"
 
+    @ci
+    Exemples:
+      | userType                           |
+      | avec un prénom contenant un espace |
+    
     Exemples:
       | userType                           |
       | avec un prénom                     |
-      | avec un prénom contenant un espace |
       | avec 3 prénoms                     |
       | avec prénom composé                |
 

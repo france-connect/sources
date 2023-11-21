@@ -1,4 +1,4 @@
-import { IsBoolean, IsUrl } from 'class-validator';
+import { IsArray, IsBoolean, IsString, IsUrl } from 'class-validator';
 
 export class CoreConfig {
   @IsUrl()
@@ -6,4 +6,12 @@ export class CoreConfig {
 
   @IsBoolean()
   readonly enableSso: boolean;
+
+  @IsArray()
+  @IsString({ each: true })
+  readonly allowedIdpHints: string[];
+
+  @IsString({ each: true })
+  @IsArray()
+  readonly allowedSsoAcrs: string[];
 }

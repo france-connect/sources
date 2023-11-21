@@ -1,11 +1,17 @@
 import { v4 as uuid } from 'uuid';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { CoreConfig, CoreOidcProviderMiddlewareService } from '@fc/core';
+import {
+  CORE_SERVICE,
+  CoreConfig,
+  CoreOidcProviderMiddlewareService,
+} from '@fc/core';
+import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger-legacy';
+import { stringToArray } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientSession } from '@fc/oidc-client';
 import {
@@ -25,6 +31,7 @@ import {
   GetAuthorizeOidcClientSsoSession,
   GetAuthorizeSessionDto,
 } from '../dto';
+import { CoreFcpService } from './core-fcp.service';
 
 @Injectable()
 export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService {
@@ -39,6 +46,9 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     protected readonly tracking: TrackingService,
     protected readonly oidcErrorService: OidcProviderErrorService,
     protected readonly oidcAcr: OidcAcrService,
+    @Inject(CORE_SERVICE)
+    protected readonly core: CoreFcpService,
+    protected readonly flowSteps: FlowStepsService,
   ) {
     super(
       logger,
@@ -49,6 +59,8 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
       tracking,
       oidcErrorService,
       oidcAcr,
+      core,
+      flowSteps,
     );
     this.logger.setContext(this.constructor.name);
   }
@@ -70,6 +82,12 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
       OidcProviderMiddlewareStep.BEFORE,
       OidcProviderRoutes.AUTHORIZATION,
       this.overrideAuthorizePrompt,
+    );
+
+    this.registerMiddleware(
+      OidcProviderMiddlewareStep.AFTER,
+      OidcProviderRoutes.AUTHORIZATION,
+      this.redirectToHintedIdpMiddleware,
     );
 
     this.registerMiddleware(
@@ -117,15 +135,23 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     return validationErrors.length === 0;
   }
 
-  private async renewSession(ctx: OidcCtx, enableSso: boolean): Promise<void> {
+  private async renewSession(ctx: OidcCtx, spAcr: string): Promise<void> {
     const { req, res } = ctx;
 
-    const isSsoSession = await this.isSsoSession(ctx);
+    const { allowedSsoAcrs, enableSso } = this.config.get<CoreConfig>('Core');
+    const sessionSsoCompatible = await this.isSsoSession(ctx);
 
-    if (enableSso && isSsoSession) {
+    const hasAuthorizedAcr = allowedSsoAcrs.includes(spAcr);
+
+    if (enableSso && sessionSsoCompatible && hasAuthorizedAcr) {
       await this.sessionService.detach(req, res);
       await this.sessionService.duplicate(req, res, GetAuthorizeSessionDto);
     } else {
+      /**
+       * @TODO #1418 Je ne veux pas supprimer ma première session si je passe d'un FS substantiel à élevé
+       * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1418
+       * @ticket FC-1418
+       */
       await this.sessionService.reset(req, res);
     }
   }
@@ -151,9 +177,9 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     const eventContext = this.getEventContext(ctx);
     const { req } = ctx;
 
-    const { enableSso } = this.config.get<CoreConfig>('Core');
-
-    await this.renewSession(ctx, enableSso);
+    // We force string casting because if it's undefined SSO will not be enable
+    const spAcr = ctx?.oidc?.params?.acr_values as string;
+    await this.renewSession(ctx, spAcr);
 
     const oidcSession = SessionService.getBoundSession<OidcClientSession>(
       req,
@@ -166,17 +192,19 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
       ctx.req.headers['x-suspicious'] === '1',
     );
 
-    const isSsoAvailable = await this.isSsoAvailable(oidcSession);
-    ctx.isSso = enableSso && isSsoAvailable;
+    ctx.isSso = await this.isSsoAvailable(oidcSession, spAcr);
 
     const sessionProperties = await this.buildSessionWithNewInteraction(
       ctx,
       eventContext,
     );
 
+    const scope = ctx.oidc.params.scope as string;
+    const spScope = stringToArray(scope);
+
     const browsingSessionId = await this.getBrowsingSessionId(oidcSession);
 
-    await oidcSession.set({ ...sessionProperties, browsingSessionId });
+    await oidcSession.set({ ...sessionProperties, browsingSessionId, spScope });
 
     const coreSession = SessionService.getBoundSession<CoreSessionDto>(
       req,

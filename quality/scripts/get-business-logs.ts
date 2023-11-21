@@ -30,14 +30,25 @@ const loadLog = async (path: string): Promise<LogEvent[]> => {
     .filter(Boolean)
     .map((row) => JSON.parse(row))
     .reverse();
-}
+};
 
-const getBusinessLogs = async ([logFile, stringifiedTestEvent]: string[]): Promise<void> => {
+const getBusinessLogs = async ([
+  logFile,
+  stringifiedTestEvent,
+]: string[]): Promise<void> => {
   try {
     const logs: LogEvent[] = await loadLog(logFile);
-    const testEvent: LogEvent = JSON.parse(stringifiedTestEvent);
 
-    const foundEvents: LogEvent[] = logs.filter((log) => log.event === testEvent.event);
+    if (!stringifiedTestEvent) {
+      // eslint-disable-next-line no-console
+      console.log(JSON.stringify(logs));
+      process.exit(0);
+    }
+
+    const testEvent: LogEvent = JSON.parse(stringifiedTestEvent);
+    const foundEvents: LogEvent[] = logs.filter(
+      (log) => log.event === testEvent.event,
+    );
 
     // eslint-disable-next-line no-console
     console.log(JSON.stringify(foundEvents));
@@ -47,6 +58,6 @@ const getBusinessLogs = async ([logFile, stringifiedTestEvent]: string[]): Promi
     console.error(error);
     process.exit(1);
   }
-}
+};
 
 getBusinessLogs(process.argv.slice(2));

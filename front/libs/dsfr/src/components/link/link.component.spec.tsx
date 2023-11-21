@@ -36,7 +36,7 @@ describe('LinkComponent', () => {
 
     // then
     expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveClass('fr-fi-any-icon-mock');
+    expect(container.firstChild).toHaveClass('fr-icon-any-icon-mock');
   });
 
   it('should match the snapshot, with iconPlacement props', () => {

@@ -49,6 +49,12 @@
       "@fc/logger-legacy/*": [
         "libs/logger-legacy/src/*"
       ],
+      "@mocks/logger-legacy": [
+        "libs/logger-legacy/.mocks"
+      ],
+      "@mocks/logger-legacy/*": [
+        "libs/logger-legacy/.mocks/*"
+      ],
       "@fc/logger": [
         "libs/logger/src"
       ],
@@ -144,6 +150,12 @@
       ],
       "@fc/config/*": [
         "libs/config/src/*"
+      ],
+      "@mocks/config": [
+        "libs/config/.mocks"
+      ],
+      "@mocks/config/*": [
+        "libs/config/.mocks/*"
       ],
       "@fc/exceptions": [
         "libs/exceptions/src"
@@ -510,6 +522,12 @@
       ],      
       "@mocks/session/*": [
         "libs/session/.mocks/*"
+      ],
+      "@fc/fqdn-to-idp-adapter-mongo": [
+        "libs/fqdn-to-idp-adapter-mongo/src"
+      ],
+      "@fc/fqdn-to-idp-adapter-mongo/*": [
+        "libs/fqdn-to-idp-adapter-mongo/src/*"
       ],
     }
   },

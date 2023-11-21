@@ -9,7 +9,7 @@ describe('8.0.3 - nonce', () => {
 
   it('should return an error if the nonce is too short (FC as IDP)', () => {
     const url = getAuthorizeUrl({
-      nonce: 'thirtyonecharcterscharacterssss',
+      nonce: 'thirtyone',
     });
     cy.visit(url, { failOnStatusCode: false });
     cy.hasError('Y030007');

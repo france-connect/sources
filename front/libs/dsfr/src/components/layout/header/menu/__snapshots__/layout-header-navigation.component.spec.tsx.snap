@@ -1,5 +1,35 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`LayoutHeaderNavigationComponent should match the snapshot, with className defined 1`] = `
+<div>
+  <nav
+    aria-label="Menu principal"
+    class="fr-nav any-classname"
+    id="navigation-869"
+    role="navigation"
+  >
+    <ul
+      class="fr-nav__list"
+    >
+      <li
+        class="fr-nav__item"
+      >
+        <span>
+          any-label-mock-1
+        </span>
+      </li>
+      <li
+        class="fr-nav__item"
+      >
+        <span>
+          any-label-mock-2
+        </span>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
 exports[`LayoutHeaderNavigationComponent should match the snapshot, with default props 1`] = `
 <div>
   <nav

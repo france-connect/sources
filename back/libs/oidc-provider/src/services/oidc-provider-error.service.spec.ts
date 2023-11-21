@@ -10,6 +10,7 @@ import {
   OidcProviderInitialisationException,
   OidcProviderRuntimeException,
 } from '../exceptions';
+import { OidcCtx } from '../interfaces';
 import { OidcProviderErrorService } from './oidc-provider-error.service';
 
 describe('OidcProviderErrorService', () => {
@@ -54,13 +55,13 @@ describe('OidcProviderErrorService', () => {
   });
 
   describe('renderError', () => {
-    it('should call exceptionFilter.catch', () => {
+    it('should call exceptionFilter.catch', async () => {
       // Given
       const ctx = { res: {} } as KoaContextWithOIDC;
       const out = '';
       const error = new Error('foo bar');
       // When
-      service['renderError'](ctx, out, error);
+      await service['renderError'](ctx, out, error);
       // Then
       expect(exceptionFilterMock.catch).toHaveBeenCalledTimes(1);
     });
@@ -121,6 +122,55 @@ describe('OidcProviderErrorService', () => {
       func(ctxMock, errorMock);
       // Then
       expect(service['throwError']).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('handleRedirectableError', () => {
+    const redirectUriMock = 'redirectUriMockValue';
+    const ctxMock = {
+      res: {
+        redirect: jest.fn(),
+      },
+      oidc: {
+        params: {
+          // OIDC fashion naming
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          redirect_uri: redirectUriMock,
+        },
+      },
+    } as unknown as OidcCtx;
+
+    it('should call res.redirect if exception.redirect is true', () => {
+      // Given
+      const exceptionMock = {
+        redirect: true,
+        oidc: {
+          error: 'some error',
+          description: 'some description',
+        },
+      } as OidcProviderInitialisationException;
+
+      // When
+      service['handleRedirectableError'](ctxMock, exceptionMock);
+
+      // Then
+      expect(ctxMock.res.redirect).toHaveBeenCalledTimes(1);
+      expect(ctxMock.res.redirect).toHaveBeenCalledWith(
+        `${redirectUriMock}?error=${exceptionMock.oidc.error}&error_description=${exceptionMock.oidc.description}`,
+      );
+    });
+
+    it('should not do anything if exception.redirect is false', () => {
+      // Given
+      const exceptionMock = {
+        redirect: false,
+      } as OidcProviderInitialisationException;
+
+      // When
+      service['handleRedirectableError'](ctxMock, exceptionMock);
+
+      // Then
+      expect(ctxMock.res.redirect).toHaveBeenCalledTimes(0);
     });
   });
 });

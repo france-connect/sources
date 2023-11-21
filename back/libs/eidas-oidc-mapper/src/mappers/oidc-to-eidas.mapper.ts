@@ -36,16 +36,6 @@ function getCurrentFamilyName(claims): string[] {
 }
 
 /**
- * Get the oidc family name in the claims to return as eidas birth name
- *
- * @param claims The oidc claims retrieved from the userinfos endpoint
- * @return The eidas birth name
- */
-function getBirthName(claims): string[] {
-  return [claims.family_name];
-}
-
-/**
  * Get the oidc birthdate in the claims to return as eidas date of birth
  *
  * @param claims The oidc claims retrieved from the userinfos endpoint
@@ -85,7 +75,6 @@ export const ClaimsToAttributesMap = {
   [EidasAttributes.PERSON_IDENTIFIER]: getPersonIdentifier,
   [EidasAttributes.CURRENT_GIVEN_NAME]: getCurrentGivenName,
   [EidasAttributes.CURRENT_FAMILY_NAME]: getCurrentFamilyName,
-  [EidasAttributes.BIRTH_NAME]: getBirthName,
   [EidasAttributes.DATE_OF_BIRTH]: getDateOfBirth,
   [EidasAttributes.PLACE_OF_BIRTH]: getPlaceOfBirth,
   [EidasAttributes.GENDER]: getGender,

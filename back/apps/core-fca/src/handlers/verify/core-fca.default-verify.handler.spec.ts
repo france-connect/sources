@@ -47,6 +47,10 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'givenNameValue',
     uid: 'uidValue',
+    // Oidc Naming convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    usual_name: 'usalNameValue',
+    email: 'myemail@mail.fr',
   };
 
   const { sub: _sub, ...idpIdentityMockCleaned } = idpIdentityMock;
@@ -71,6 +75,8 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     computeSubV1: jest.fn(),
     computeIdentityHash: jest.fn(),
   };
+
+  const agentHashMock = 'spIdentityHash';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -116,7 +122,105 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     expect(service).toBeDefined();
   });
 
-  describe('handle', () => {
+  describe('getAgentHash()', () => {
+    it('should call computeIdentityHash() with correct params', () => {
+      service['getAgentHash'](sessionDataMock.idpId, idpIdentityMock);
+
+      expect(
+        cryptographyFcaServiceMock.computeIdentityHash,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        cryptographyFcaServiceMock.computeIdentityHash,
+      ).toHaveBeenCalledWith('42', idpIdentityMock);
+    });
+
+    it('should return a computed identity hash', () => {
+      const result = service['getAgentHash'](
+        sessionDataMock.idpId,
+        idpIdentityMock,
+      );
+
+      expect(
+        cryptographyFcaServiceMock.computeIdentityHash,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        cryptographyFcaServiceMock.computeIdentityHash,
+      ).toHaveBeenCalledWith('42', idpIdentityMock);
+
+      expect(result).toStrictEqual('spIdentityHash');
+    });
+  });
+
+  describe('saveInteractionToDatabase()', () => {
+    it('should call saveInteractionToDatabase() with correct params', async () => {
+      await service['saveInteractionToDatabase'](
+        sessionDataMock.spId,
+        idpIdentityMock.sub,
+        agentHashMock,
+      );
+
+      expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledTimes(1);
+      expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledWith({
+        key: sessionDataMock.spId,
+        sub: idpIdentityMock.sub,
+        identityHash: agentHashMock,
+      });
+    });
+
+    it('should return a nominal response for saveInteractionToDatabase()', async () => {
+      const result = await service['saveInteractionToDatabase'](
+        sessionDataMock.spId,
+        idpIdentityMock.sub,
+        agentHashMock,
+      );
+
+      expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledTimes(1);
+      expect(coreAccountServiceMock.computeFederation).toHaveBeenCalledWith({
+        key: sessionDataMock.spId,
+        sub: idpIdentityMock.sub,
+        identityHash: agentHashMock,
+      });
+
+      expect(result).toStrictEqual(accountIdMock);
+    });
+  });
+
+  describe('getSpSub()', () => {
+    it('should return a clean identity', () => {
+      const result = service['getSpSub'](
+        idpIdentityMock,
+        sessionDataMock.idpId,
+        sessionDataMock.idpAcr,
+      );
+
+      const expected = {
+        ...idpIdentityMockCleaned,
+        // AgentConnect claims naming convention
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        idp_id: '42',
+        // AgentConnect claims naming convention
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        idp_acr: 'eidas3',
+      };
+
+      expect(result).toStrictEqual(expected);
+    });
+  });
+
+  describe('storeIdentityWithSessionService()', () => {
+    it('should set the Oidc session', async () => {
+      await service['storeIdentityWithSessionService'](
+        sessionServiceMock,
+        idpIdentityMock.sub,
+        spIdentityMock,
+        accountIdMock,
+      );
+
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('handle()', () => {
     it('Should not throw if verified', async () => {
       // Then
       await expect(service.handle(handleArgument)).resolves.not.toThrow();
@@ -240,6 +344,10 @@ describe('CoreFcaDefaultVerifyHandler', () => {
           // AgentConnect claims naming convention
           // eslint-disable-next-line @typescript-eslint/naming-convention
           idp_acr: sessionDataMock.idpAcr,
+          email: idpIdentityMock.email,
+          // Oidc Naming convention
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          usual_name: idpIdentityMock.usual_name,
         },
         subs: {
           // AgentConnect claims naming convention

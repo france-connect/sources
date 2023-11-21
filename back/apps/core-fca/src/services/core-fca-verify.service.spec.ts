@@ -33,7 +33,7 @@ describe('CoreFcaVerifyService', () => {
   const trackingServiceMock: TrackingService = {
     track: jest.fn(),
     TrackedEventsMap: {
-      FS_DISABLED_SSO: {},
+      SP_DISABLED_SSO: {},
     },
   } as unknown as TrackingService;
 
@@ -142,7 +142,7 @@ describe('CoreFcaVerifyService', () => {
       // Then
       expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
       expect(trackingServiceMock.track).toHaveBeenCalledWith(
-        trackingServiceMock.TrackedEventsMap.FS_DISABLED_SSO,
+        trackingServiceMock.TrackedEventsMap.SP_DISABLED_SSO,
         eventContext,
       );
     });

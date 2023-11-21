@@ -1,4 +1,4 @@
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { serviceProviderStatus } from '../helpers';
 import SPDetailPage from '../pages/sp-detail-page';

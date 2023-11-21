@@ -86,8 +86,7 @@ Fonctionnalité: Connexion Usager - session fca-low (avec SSO)
     Et je clique sur le fournisseur d'identité
     Et je suis redirigé vers la page login du fournisseur d'identité
     # FC_IDP_BLACKLISTED: l'attribut isSso devient false
-    Et l'événement "FC_IDP_BLACKLISTED" est journalisé
-    Et l'événement "FC_SHOWED_IDP_CHOICE" est journalisé avec "isSso" "false"
+    Et l'événement "FC_IDP_BLACKLISTED" est journalisé avec "isSso" "false"
     # Evènement IDP_CHOSEN: les données de session concernant l'usager sont supprimées une fois le FI sélectionné
     Et l'événement "IDP_CHOSEN" est journalisé avec "accountId" "null" et "idpSub" "null" et "isSso" "false"
     Et la valeur "sessionId" est identique dans l'événement "IDP_CHOSEN"
@@ -155,9 +154,8 @@ Fonctionnalité: Connexion Usager - session fca-low (avec SSO)
     Et la valeur "browsingSessionId" est identique dans l'événement "FC_AUTHORIZE_INITIATED"
     Et la valeur "accountId" est identique dans l'événement "FC_AUTHORIZE_INITIATED"
     Et la valeur "sessionId" est différente dans l'événement "FC_AUTHORIZE_INITIATED"
-    # FS_DISABLED_SSO: l'attribut isSso devient false
-    Et l'événement "FS_DISABLED_SSO" est journalisé
-    Et l'événement "FC_SHOWED_IDP_CHOICE" est journalisé avec "isSso" "false"
+    # SP_DISABLED_SSO: l'attribut isSso devient false
+    Et l'événement "SP_DISABLED_SSO" est journalisé avec "isSso" "false"
     # Evènement IDP_CHOSEN: les données de session concernant l'usager sont supprimées une fois le FI sélectionné
     Et l'événement "IDP_CHOSEN" est journalisé avec "accountId" "null" et "idpSub" "null" et "isSso" "false"
     Et la valeur "idpId" est différente dans l'événement "IDP_CHOSEN"

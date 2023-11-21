@@ -3,7 +3,7 @@
 exports[`LayoutHeaderToolsAccountComponent should match the snapshot, when isMobile false 1`] = `
 <div>
   <span
-    class="fr-btn fr-fi-account-line"
+    class="fr-btn fr-icon-account-line"
     data-testid="layout-header-tools-account-component-desktop"
   >
     any-firstname-mock
@@ -16,7 +16,7 @@ exports[`LayoutHeaderToolsAccountComponent should match the snapshot, when isMob
 exports[`LayoutHeaderToolsAccountComponent should match the snapshot, when isMobile true 1`] = `
 <div>
   <span
-    class="fr-btn fr-fi-account-line"
+    class="fr-btn fr-icon-account-line"
     data-testid="layout-header-tools-account-component-mobile"
   >
     any-firstname-mock

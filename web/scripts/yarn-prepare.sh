@@ -7,10 +7,10 @@ source "./scripts/utils.sh"
 APP_NAME=$1
 [ -z "$APP_NAME" ] && print_error "L'argument app_name est manquant" && exit 1
 
-# Check if APP_NAME folder exists
 INSTANCE_FOLDER="./instances/$APP_NAME"
-FOLDERS=("data" "includes" "content" "public" "dist")
 
+# Cleanup existing folders
+FOLDERS=("data" "includes" "content" "public" "dist")
 for folder in "${FOLDERS[@]}"; do
   # Use double quotes to properly handle folder names with spaces or special characters
   if [ -d "${INSTANCE_FOLDER}/${folder}" ]; then
@@ -32,6 +32,8 @@ APP_FOLDER="./apps/$APP_NAME"
 copy_folders "$LIBS_FOLDER" "$INSTANCE_FOLDER"
 copy_folders "$APP_FOLDER" "$INSTANCE_FOLDER"
 
+copy_file "$LIBS_FOLDER/.slugignore" "$INSTANCE_FOLDER/.slugignore"
+
 # ----------------------------------------------------------------------
 # Install dependencies
 # ----------------------------------------------------------------------
@@ -42,5 +44,5 @@ copy_folders "$APP_FOLDER" "$INSTANCE_FOLDER"
   yarn
 )
 
-print_success "L'application ${APP_NAME} est prête"
+print_success "L'application ${APP_NAME} est prête (http://localhost:3000)"
 exit 0

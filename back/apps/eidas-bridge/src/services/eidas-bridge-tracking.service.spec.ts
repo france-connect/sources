@@ -212,9 +212,8 @@ describe('EidasBridgeTrackingService', () => {
         .mockResolvedValueOnce(oidcClientSessionMock)
         .mockResolvedValueOnce(eidasProviderSessionMock);
       // When
-      const result = await service['extractContextFromEuRequest'](
-        eventContextMock,
-      );
+      const result =
+        await service['extractContextFromEuRequest'](eventContextMock);
       // Then
       expect(result).toEqual({
         eidasLevelRequested:
@@ -229,9 +228,8 @@ describe('EidasBridgeTrackingService', () => {
 
     it('should return undefined values for properties that are not available', async () => {
       // When
-      const result = await service['extractContextFromEuRequest'](
-        eventContextMock,
-      );
+      const result =
+        await service['extractContextFromEuRequest'](eventContextMock);
       // Then
       expect(result).toEqual({
         eidasLevelRequested: undefined,
@@ -304,9 +302,8 @@ describe('EidasBridgeTrackingService', () => {
         .mockResolvedValueOnce(eidasClientSessionMock);
 
       // When
-      const result = await service['extractContextFromFrRequest'](
-        eventContextMock,
-      );
+      const result =
+        await service['extractContextFromFrRequest'](eventContextMock);
       // Then
       expect(result).toEqual({
         eidasLevelRequested:
@@ -321,9 +318,8 @@ describe('EidasBridgeTrackingService', () => {
 
     it('should return undefined values for properties that are not available', async () => {
       // When
-      const result = await service['extractContextFromFrRequest'](
-        eventContextMock,
-      );
+      const result =
+        await service['extractContextFromFrRequest'](eventContextMock);
       // Then
       expect(result).toEqual({
         eidasLevelRequested: undefined,

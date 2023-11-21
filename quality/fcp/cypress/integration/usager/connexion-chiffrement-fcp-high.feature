@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionChiffrement @ci @fcpHigh
+@usager @connexionChiffrement @fcpHigh
 Fonctionnalité: Connexion avec chiffrement
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter à un FI en utilisant du chiffrement
@@ -22,16 +22,20 @@ Fonctionnalité: Connexion avec chiffrement
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "identite_pivot"
 
+    @ci
     Exemples:
       | acrValues | encoding         | signature |
-      | eidas2    |                  | ES256     |
       | eidas2    | RSA-OAEP,A256GCM | ES256     |
       | eidas2    | ECDH-ES,A256GCM  | RS256     |
       | eidas3    |                  | RS256     |
+
+    Exemples:
+      | acrValues | encoding         | signature |
+      | eidas2    |                  | ES256     |
       | eidas3    | RSA-OAEP,A256GCM | RS256     |
       | eidas3    | ECDH-ES,A256GCM  | ES256     |
 
-  @ignoreInteg01
+  @ignoreInteg01 @ci
   Scénario: Connexion - FCP high - Le HSM est utilisé pour signer les réponses aux FS
     Etant donné que le fournisseur de service requiert l'accès aux informations du scope "identite_pivot"
     Et que je navigue sur la page fournisseur de service

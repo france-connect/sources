@@ -1,0 +1,52 @@
+<%
+// Helpers function
+function genAttributes(params) {
+  return Object.entries(params)
+    .filter(([attributeName, item]) => item.if)
+    .map(([attributeName, item]) => `${attributeName}="${item.value}"`);
+}
+%>
+
+<% // Settings
+    const badgeClassname = provider.active
+      ? 'fr-badge--info'
+      : '';
+
+    const providerClassname = provider.isBeta
+      ? 'fc-btn--provider-beta'
+      : '';
+
+    const attributesObject = {
+      'disabled': {
+        value: 'disabled',
+        if: !provider.active,
+      },
+    }
+    const attributes = genAttributes(attributesObject);
+  %>
+  <button
+    role="link"
+    id="idp-<%= provider.uid %>"
+    data-testid="idp-<%= provider.uid %>"
+    class="fr-btn fr-btn--tertiary fc-btn--provider <%= providerClassname %>" <%= attributes %>>
+    <% if (provider.isBeta) { %>
+      <p class="fr-badge <%= badgeClassname %> fr-badge--no-icon">BETA</p>
+    <% } %>
+    <% if (provider.image) { %>
+      <div class="fc-container-image">
+        <img
+          src="/img/fi/<%= provider.image %>"
+          alt="<%- !provider.active ? 'Indisponible ' : '' %><%- provider.title %>">
+      </div>
+    <% } else { %>
+      <%= provider.title %>
+    <% } %>
+    <% if (!provider.active) { %>
+      <span
+        class="fr-text--xs fr-mt-2v"
+        data-testid="idp-status-description">
+        Indisponible
+      </span>
+    <% } %>
+  </button>
+

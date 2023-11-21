@@ -38,6 +38,12 @@ export default {
       event: 'FC_SHOWED_IDP_CHOICE',
     },
 
+    FC_REDIRECTED_TO_HINTED_IDP: {
+      step: '2.1.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_REDIRECTED_TO_HINTED_IDP',
+    },
+
     IDP_CHOSEN: {
       step: '3.0.0',
       category: EventsCategories.FRONT_CINEMATIC,

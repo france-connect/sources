@@ -58,12 +58,10 @@ IP.1  = 127.0.0.1
     -CAkey docker-stack-ca.key \
     -CAcreateserial \
     -out mongo.crt \
-    -days 365 \
+    -days 3650 \
     -extfile requests/mongo-req.conf \
     -extensions req_ext
 ```
-
-> Concernant l'option `-days 365`, certains OS invalident les certificats de plus d'un an.
 
 ## Utilisation des certificats
 

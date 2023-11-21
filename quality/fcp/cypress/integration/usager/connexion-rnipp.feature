@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionRnipp @ci
+@usager @connexionRnipp
 Fonctionnalité: Connexion Usager - RNIPP
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter en utilisant un fournisseur d'identité et récupérer mes informations du RNIPP
@@ -23,11 +23,15 @@ Fonctionnalité: Connexion Usager - RNIPP
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations des scopes "tous les scopes"
 
+    @ci
+    Exemples:
+      | userType                |
+      | présumé né jour         |
+      | présumé né jour et mois |
+
     Exemples:
       | userType                |
       | né en Corse             |
-      | présumé né jour         |
-      | présumé né jour et mois |
 
   @fcpHigh
   Plan du Scénario: Connexion d'un usager - tous les claims rnipp avec usager <userType>
@@ -47,11 +51,15 @@ Fonctionnalité: Connexion Usager - RNIPP
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations des scopes "tous les scopes rnipp (userinfo)"
 
+    @ci
+    Exemples:
+      | userType                |
+      | présumé né jour         |
+      | présumé né jour et mois |
+
     Exemples:
       | userType                |
       | né en Corse             |
-      | présumé né jour         |
-      | présumé né jour et mois |
 
   Scénario: Connexion d'un usager - erreur invalide COG
     Etant donné que je navigue sur la page fournisseur de service

@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
+import { ISessionRequest, ISessionResponse, SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
 import { getSessionServiceMock } from '@mocks/session';
@@ -51,6 +52,10 @@ describe('EidasProviderController', () => {
     TrackedEventsMap: {},
   };
 
+  const sessionServiceMock = {
+    reset: jest.fn(),
+  } as unknown as SessionService;
+
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
@@ -63,6 +68,7 @@ describe('EidasProviderController', () => {
         ConfigService,
         EidasProviderService,
         TrackingService,
+        SessionService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -73,6 +79,8 @@ describe('EidasProviderController', () => {
       .useValue(eidasProviderServiceMock)
       .overrideProvider(TrackingService)
       .useValue(trackingServiceMock)
+      .overrideProvider(SessionService)
+      .useValue(sessionServiceMock)
       .compile();
 
     controller = module.get<EidasProviderController>(EidasProviderController);
@@ -90,6 +98,9 @@ describe('EidasProviderController', () => {
    * of the FranceConnect openid cinematic
    */
   describe('requestHandler', () => {
+    const reqMock = {} as ISessionRequest;
+    const resMock = {} as ISessionResponse;
+
     const body = {
       token:
         'VGhlIExvc3QgQmF0dGFsaW9uIGlzIHRoZSBuYW1lIGdpdmVuIHRvIG5pbmUgY29tcGFuaWVzIG9mIHRoZSBVbml0ZWQgU3RhdGVzIDc3OnRoIERpdmlzaW9uIGR1cmluZyB0aGUgYmF0dGxlIG9mIHRoZSBBcmdvbm5lIGluIDE5MTgu',
@@ -105,11 +116,36 @@ describe('EidasProviderController', () => {
       eidasProviderServiceMock.parseLightRequest.mockReturnValueOnce(
         eidasRequestMock,
       );
+
+      jest
+        .spyOn(SessionService, 'getBoundSession')
+        .mockReturnValue(sessionEidasMock);
+    });
+
+    it('should reset the session', async () => {
+      // action
+      await controller.requestHandler(reqMock, resMock, body);
+
+      // expect
+      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.reset).toHaveBeenCalledWith(reqMock, resMock);
+    });
+
+    it('should get the session bound to the request', async () => {
+      // action
+      await controller.requestHandler(reqMock, resMock, body);
+
+      // expect
+      expect(SessionService.getBoundSession).toHaveBeenCalledTimes(1);
+      expect(SessionService.getBoundSession).toHaveBeenCalledWith(
+        reqMock,
+        'EidasProvider',
+      );
     });
 
     it('should read the light-request corresponding to the token in the body from the cache', async () => {
       // action
-      await controller.requestHandler(reqMock, body, sessionEidasMock);
+      await controller.requestHandler(reqMock, resMock, body);
 
       // expect
       expect(
@@ -122,7 +158,7 @@ describe('EidasProviderController', () => {
 
     it('should parse the light-request', async () => {
       // action
-      await controller.requestHandler(reqMock, body, sessionEidasMock);
+      await controller.requestHandler(reqMock, resMock, body);
 
       // expect
       expect(eidasProviderServiceMock.parseLightRequest).toHaveBeenCalledTimes(
@@ -135,7 +171,7 @@ describe('EidasProviderController', () => {
 
     it('should put the eidas request in session', async () => {
       // action
-      await controller.requestHandler(reqMock, body, sessionEidasMock);
+      await controller.requestHandler(reqMock, resMock, body);
 
       // expect
       expect(sessionEidasMock.set).toHaveBeenCalledTimes(1);
@@ -147,7 +183,7 @@ describe('EidasProviderController', () => {
 
     it('should retrieve the redirectAfterRequestHandlingUrl from the config', async () => {
       // action
-      await controller.requestHandler(reqMock, body, sessionEidasMock);
+      await controller.requestHandler(reqMock, resMock, body);
 
       // expect
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
@@ -162,11 +198,7 @@ describe('EidasProviderController', () => {
       };
 
       // action
-      const result = await controller.requestHandler(
-        reqMock,
-        body,
-        sessionEidasMock,
-      );
+      const result = await controller.requestHandler(reqMock, resMock, body);
 
       // expect
       expect(result).toStrictEqual(expected);

@@ -1,4 +1,4 @@
-import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import {
   checkFCBasicAuthorization,
@@ -56,7 +56,7 @@ Then('je suis connecté au fournisseur de service', function () {
 
 Then(
   /le fournisseur de service a accès aux informations (?:du|des) scopes? "([^"]+)"/,
-  function (type) {
+  function (type: string) {
     if (this.serviceProvider.mocked === true) {
       const scope = this.scopes.find((scope) => scope.type === type);
       serviceProviderPage.checkMandatoryData();
@@ -81,12 +81,12 @@ Then(
 
 Then(
   'la cinématique a utilisé le niveau de sécurité {string}',
-  function (acrValue) {
+  function (acrValue: string) {
     serviceProviderPage.checkMockAcrValue(acrValue);
   },
 );
 
-Then("la cinématique a renvoyé l'amr {string}", function (amrValue) {
+Then("la cinématique a renvoyé l'amr {string}", function (amrValue: string) {
   serviceProviderPage.checkMockAmrValue(amrValue);
 });
 
@@ -103,14 +103,14 @@ Then(
 
 Then(
   "le titre de l'erreur fournisseur de service est {string}",
-  function (errorCode) {
+  function (errorCode: string) {
     serviceProviderPage.checkMockErrorCode(errorCode);
   },
 );
 
 Then(
   "la description de l'erreur fournisseur de service est {string}",
-  function (errorDescription) {
+  function (errorDescription: string) {
     serviceProviderPage.checkMockErrorDescription(errorDescription);
   },
 );
@@ -123,5 +123,13 @@ Then(
     cy.get<string>('@spSub').then((previousSpSub) => {
       serviceProviderPage.getMockSubText().should(comparison, previousSpSub);
     });
+  },
+);
+
+Given(
+  "je rentre l'id du fournisseur d'identité dans le champ idp_hint",
+  function () {
+    const { idpId } = this.identityProvider;
+    serviceProviderPage.setIdpHint(idpId);
   },
 );

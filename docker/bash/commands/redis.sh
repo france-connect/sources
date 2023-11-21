@@ -12,7 +12,11 @@ _redis_cli() {
 
   echo -e "\r  * $(format_success "Found") Redis DB number for ${service}: $(format_success "${db}")   "
 
-  local command="REDISCLI_AUTH=\$REDIS_PASSWORD redis-cli -n ${db}"
+  local command="REDISCLI_AUTH=\$REDIS_PASSWORD\
+    redis-cli\
+    --tls\
+    -n ${db}\
+    --cacert \$REDIS_TLS_CA_FILE"
 
   docker exec -ti fc_redis-cluster-master_1 bash -c "$command"
 }

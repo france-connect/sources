@@ -3,5 +3,5 @@
 // Declarative code
 export const enum Platform {
   FCP_HIGH = 'FranceConnect+',
-  FC_LEGACY = 'FranceConnect',
+  FCP_LOW = 'FranceConnect',
 }

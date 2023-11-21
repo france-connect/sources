@@ -98,9 +98,8 @@ export class MockIdentityProviderController {
     sessionApp: ISessionService<AppSession>,
   ): Promise<void> {
     const { login, password, acr } = body;
-    const spIdentity = await this.mockIdentityProviderService.getIdentity(
-      login,
-    );
+    const spIdentity =
+      await this.mockIdentityProviderService.getIdentity(login);
 
     if (!spIdentity) {
       throw new Error('Identity not found in database');

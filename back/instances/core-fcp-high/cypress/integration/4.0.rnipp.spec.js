@@ -1,8 +1,6 @@
 import { basicErrorScenario, basicScenario } from './mire.utils';
 
 describe('4.0 - RNIPP', () => {
-  const headingErrorMessage = "Une erreur s'est produite";
-
   beforeEach(() => {
     cy.clearBusinessLog();
   });
@@ -15,7 +13,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
-    cy.hasError('Y010004', headingErrorMessage);
+    cy.hasError('Y010004');
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
@@ -30,7 +28,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
-    cy.hasError('Y010006', headingErrorMessage);
+    cy.hasError('Y010006');
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
@@ -45,7 +43,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
-    cy.hasError('Y010007', headingErrorMessage);
+    cy.hasError('Y010007');
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
@@ -60,7 +58,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
-    cy.hasError('Y010008', headingErrorMessage);
+    cy.hasError('Y010008');
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
@@ -75,7 +73,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
-    cy.hasError('Y010009', headingErrorMessage);
+    cy.hasError('Y010009');
   });
 
   it('should trigger error Y010011', () => {
@@ -86,7 +84,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
-    cy.hasError('Y010011', headingErrorMessage);
+    cy.hasError('Y010011');
   });
 
   it('should trigger error Y010012', () => {
@@ -97,7 +95,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
-    cy.hasError('Y010012', headingErrorMessage);
+    cy.hasError('Y010012');
   });
 
   it('should trigger error Y010013', () => {
@@ -108,7 +106,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
-    cy.hasError('Y010013', headingErrorMessage);
+    cy.hasError('Y010013');
   });
 
   it('should trigger error Y010013 if user has an invalid COG (AAAAA)', () => {
@@ -135,7 +133,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
-    cy.hasError('Y010015', headingErrorMessage);
+    cy.hasError('Y010015');
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_DECEASED_RNIPP',
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
@@ -150,7 +148,7 @@ describe('4.0 - RNIPP', () => {
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
     });
 
-    cy.hasError('Y010013', headingErrorMessage);
+    cy.hasError('Y010013');
     cy.hasBusinessLog({
       event: 'FC_RECEIVED_INVALID_RNIPP',
       idpId: 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',

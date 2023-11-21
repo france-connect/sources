@@ -567,9 +567,10 @@ describe('CoreFcpSendEmailHandler', () => {
       // Given
       mailerServiceMock.mailToSend.mockReturnValueOnce('my HTML content');
       // When
-      const result = await service['getConnectNotificationEmailBodyContent'](
-        sessionDataMock,
-      );
+      const result =
+        await service['getConnectNotificationEmailBodyContent'](
+          sessionDataMock,
+        );
       // Then
       expect(result).toEqual('my HTML content');
     });

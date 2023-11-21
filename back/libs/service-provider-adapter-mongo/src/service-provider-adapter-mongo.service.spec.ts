@@ -143,6 +143,10 @@ describe('ServiceProviderAdapterMongoService', () => {
   });
 
   describe('onModuleInit', () => {
+    beforeEach(() => {
+      service.getList = jest.fn();
+    });
+
     it('should call watchWith from mongooseHelper', async () => {
       // When
       await service.onModuleInit();
@@ -150,6 +154,13 @@ describe('ServiceProviderAdapterMongoService', () => {
       expect(
         mongooseCollectionOperationWatcherHelperMock.watchWith,
       ).toHaveBeenCalledTimes(1);
+    });
+
+    it('should warmup cache', async () => {
+      // When
+      await service.onModuleInit();
+      // Then
+      expect(service.getList).toHaveBeenCalledTimes(1);
     });
   });
 

@@ -3,6 +3,7 @@
 // Declarative file
 import { Expose } from 'class-transformer';
 import {
+  IsArray,
   IsAscii,
   IsBoolean,
   IsNotEmpty,
@@ -60,6 +61,13 @@ export class CoreBaseOidcClientSessionDto {
   @IsNotEmpty()
   @Expose()
   readonly spAcr: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  @IsNotEmpty()
+  @Expose()
+  readonly spScope?: string;
 
   /**
    * Identity Provider

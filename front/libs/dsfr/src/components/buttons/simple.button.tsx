@@ -44,7 +44,7 @@ export const SimpleButton: React.FC<SimpleButtonProps> = React.memo(
           // eslint-disable-next-line @typescript-eslint/naming-convention
           'fr-btn--tertiary-no-outline': priority === Priorities.TERTIARY && noOutline,
           [`fr-btn--icon-${iconPlacement}`]: !!icon,
-          [`fr-fi-${icon}`]: !!icon,
+          [`fr-icon-${icon}`]: !!icon,
         },
         className,
       )}

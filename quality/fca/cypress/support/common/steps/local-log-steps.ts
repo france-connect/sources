@@ -1,4 +1,4 @@
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import {
   getBusinessLogs,
@@ -13,7 +13,7 @@ import {
 
 Then(
   /^l'événement "([^"]+)" (est|n'est pas) journalisé(?: avec )?((?:"[^"]+" "(?:[^"]*)"(?: et )?)+)?$/,
-  function (event, text, info) {
+  function (event: string, text: string, info?: string) {
     const { name } = this.env;
     if (name !== 'docker') {
       cy.log(

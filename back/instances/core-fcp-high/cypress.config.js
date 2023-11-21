@@ -14,6 +14,8 @@ module.exports = defineConfig({
     excludeSpecPattern: 'cypress/integration/**/*.utils.js',
     supportFile: 'cypress/support/index.js',
     video: false,
+    experimentalRunAllSpecs: true,
+    experimentalMemoryManagement: true,
   },
   env: {
     APP_DOMAIN: 'core-fcp-high.docker.dev-franceconnect.fr',
@@ -109,7 +111,7 @@ module.exports = defineConfig({
     SP6_ID: '#fsp6-high',
     SP6_ROOT_URL: 'https://fsp6-high.docker.dev-franceconnect.fr',
     WELL_KNOWN: '/api/v2/.well-known/openid-configuration',
-    ALL_APPS_LISTED: 'https://docker.dev-franceconnect.fr/fcp.html',
+    ALL_APPS_LISTED: 'https://docker.dev-franceconnect.fr/fcp-high.html',
     EXPLOITATION: [
       {
         USER_NAME: 'jean_patoche',
@@ -125,7 +127,6 @@ module.exports = defineConfig({
     SECRET_TOTP: 'KVKFKRCPNZQUYMLXOVYDSQKJKZDTSRLD',
   },
   chromeWebSecurity: false,
-  videoUploadOnPasses: false,
   viewportHeight: 1000,
   viewportWidth: 1400,
   pageLoadTimeout: 30000,

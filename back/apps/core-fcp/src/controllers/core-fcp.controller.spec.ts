@@ -359,19 +359,6 @@ describe('CoreFcpController', () => {
       expect(oidcSessionServiceMock.get).toHaveBeenCalledWith();
     });
 
-    it('should retrieve get the OidcClient config', async () => {
-      // When
-      await coreController.getInteraction(
-        req,
-        res,
-        params,
-        oidcSessionServiceMock,
-        appSessionServiceMock,
-      );
-      // Then
-      expect(configServiceMock.get).toHaveBeenNthCalledWith(1, 'OidcClient');
-    });
-
     it('should retrieve get the OidcProvider config', async () => {
       // When
       await coreController.getInteraction(
@@ -382,7 +369,8 @@ describe('CoreFcpController', () => {
         appSessionServiceMock,
       );
       // Then
-      expect(configServiceMock.get).toHaveBeenNthCalledWith(2, 'OidcProvider');
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('OidcProvider');
     });
 
     it('should call coreAcrService.rejectInvalidAcr() with interaction acrValues, authorizedAcrValues, req and res', async () => {
@@ -609,10 +597,6 @@ describe('CoreFcpController', () => {
 
     it('should get the notifications list', async () => {
       // Given
-      const idpScopeMock = 'openid email';
-      configServiceMock.get.mockReturnValueOnce({
-        scope: idpScopeMock,
-      });
       oidcSessionServiceMock.get.mockResolvedValueOnce({
         spName: oidcSessionMock.spName,
       });
@@ -620,11 +604,9 @@ describe('CoreFcpController', () => {
         csrfToken: csrfMock,
         notification: notificationsMock,
         params: interactionDetailsMock.params,
-        uid: interactionDetailsMock.uid,
-        spName: oidcSessionMock.spName,
-        idpScope: idpScopeMock,
-        spScope: interactionDetailsMock.params.scope,
         providers: idpFilterListMock,
+        spName: oidcSessionMock.spName,
+        spScope: interactionDetailsMock.params.scope,
       };
 
       // When

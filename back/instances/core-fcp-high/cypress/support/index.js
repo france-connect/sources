@@ -8,6 +8,7 @@ import {
   clearBusinessLog,
   hasBusinessLog,
   hasError,
+  hasErrorMessage,
   resetdb,
   registerProxyURL,
   proxyURLWasActivated,
@@ -21,6 +22,7 @@ import {
 import 'cypress-plugin-tab';
 
 Cypress.Commands.add('hasError', hasError);
+Cypress.Commands.add('hasErrorMessage', hasErrorMessage);
 Cypress.Commands.add('hasBusinessLog', hasBusinessLog);
 Cypress.Commands.add('clearBusinessLog', clearBusinessLog);
 Cypress.Commands.add('e2e', e2e);

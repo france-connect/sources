@@ -5,7 +5,7 @@ Fonctionnalité: Connexion Usager - session fcp-low (avec SSO)
   # je souhaite que mes données de session ne soit accessible que lorsqu'elles sont requises
   # afin d'éviter le vol de mes données personnelles
 
-  Scénario: Session avec SSO activé - Nouvelle session créée lors de l'appel à authorize (1ère connexion)
+  Scénario: Session - FCP Low - Nouvelle session créée lors de l'appel à authorize (1ère connexion)
     Etant donné que j'utilise un fournisseur de service "par défaut"
     Et que j'utilise le fournisseur d'identité "par défaut"
     Et que je navigue sur la page fournisseur de service
@@ -14,7 +14,7 @@ Fonctionnalité: Connexion Usager - session fcp-low (avec SSO)
     Et le cookie "fc_session_id" est présent
     Et l'événement "FC_AUTHORIZE_INITIATED" est journalisé avec "browsingSessionId" "non null" et "sessionId" "non null" et "isSso" "false"
 
-  Scénario: Session avec SSO activé - Nouvelle session initialisée lors de l'appel à authorize (2ème connexion)
+  Scénario: Session - FCP Low - Nouvelle session initialisée lors de l'appel à authorize (2ème connexion)
     Etant donné que j'utilise un fournisseur de service "avec accès au FI par défaut (premier FS)"
     Et que j'utilise le fournisseur d'identité "par défaut"
     Et que je navigue sur la page fournisseur de service
@@ -57,7 +57,7 @@ Fonctionnalité: Connexion Usager - session fcp-low (avec SSO)
     Et la valeur "sessionId" est identique dans l'événement "SP_REQUESTED_FC_USERINFO"
     Et la valeur "accountId" est identique dans l'événement "SP_REQUESTED_FC_USERINFO"
 
-  Scénario: Session avec SSO activé - Nouvelle session après retour du FI si FI non disponible
+  Scénario: Session - FCP Low - Nouvelle session après retour du FI si FI non disponible
     Etant donné que j'utilise un compte usager "par défaut"
     Et que j'utilise un fournisseur de service "avec accès exclusif à un FI"
     Et que j'utilise le fournisseur d'identité "disponible que pour un FS"
@@ -85,8 +85,7 @@ Fonctionnalité: Connexion Usager - session fcp-low (avec SSO)
     Et que la valeur "sessionId" est différente dans l'événement "FC_AUTHORIZE_INITIATED"
     Et que je mémorise la valeur "sessionId" de l'événement "FC_AUTHORIZE_INITIATED"
     # FC_IDP_BLACKLISTED: l'attribut isSso devient false
-    Et que l'événement "FC_IDP_BLACKLISTED" est journalisé
-    Et que l'événement "FC_SHOWED_IDP_CHOICE" est journalisé avec "isSso" "false"
+    Et que l'événement "FC_IDP_BLACKLISTED" est journalisé avec "isSso" "false"
     Quand j'utilise un fournisseur d'identité "par défaut"
     Et je clique sur le fournisseur d'identité
     Et je suis redirigé vers la page login du fournisseur d'identité
@@ -119,7 +118,7 @@ Fonctionnalité: Connexion Usager - session fcp-low (avec SSO)
     Et la valeur "accountId" est identique dans l'événement "SP_REQUESTED_FC_USERINFO"
     Et la valeur "idpId" est identique dans l'événement "SP_REQUESTED_FC_USERINFO"
 
-  Scénario: Session avec SSO activé - Session non détachée avant le retour au FS
+  Scénario: Session - FCP Low - Session non détachée avant le retour au FS
     Etant donné que j'utilise un fournisseur de service "par défaut"
     Et que j'utilise le fournisseur d'identité "par défaut"
     Et que je navigue sur la page fournisseur de service

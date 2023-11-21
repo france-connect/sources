@@ -1,0 +1,17 @@
+version: "2.4"
+
+services:
+  ####################
+  # Documentation website example
+  ####################
+
+  doc-example:
+    extends:
+      service: web-base
+      file: "${COMPOSE_DIR}/web/base.yml"
+    hostname: doc-example
+    depends_on:
+      - "rp-all"
+    environment:
+      - "PM2_SCRIPT=yarn start doc-example"
+      - "VIRTUAL_HOST=doc-example.docker.dev-franceconnect.fr"

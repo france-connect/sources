@@ -2,3 +2,4 @@
 
 // Declarative file
 export * from './at-hash.helper';
+export * from './stringToArray';

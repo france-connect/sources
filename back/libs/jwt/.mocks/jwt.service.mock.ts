@@ -6,5 +6,6 @@ export function getJwtServiceMock() {
     decrypt: jest.fn(),
     sign: jest.fn(),
     verify: jest.fn(),
+    retrieveJwtHeaders: jest.fn(),
   };
 }

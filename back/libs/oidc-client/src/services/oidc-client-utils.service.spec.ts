@@ -16,6 +16,7 @@ import {
   OidcClientGetEndSessionUrlException,
   OidcClientIdpBlacklistedException,
   OidcClientIdpDisabledException,
+  OidcClientIdpNotFoundException,
   OidcClientInvalidStateException,
   OidcClientMissingCodeException,
   OidcClientMissingStateException,
@@ -104,7 +105,7 @@ describe('OidcClientUtilsService', () => {
   };
 
   const identityProviderServiceMock = {
-    isActiveById: jest.fn(),
+    getById: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -585,40 +586,36 @@ describe('OidcClientUtilsService', () => {
   });
 
   describe('checkIdpDisabled()', () => {
-    it('should return OidcClientRuntimeException isIdpActive throw an error', async () => {
+    it('should throw OidcClientIdpNotFoundException because identity provider is disabled', async () => {
       // Given
-      const errorMock = new Error(
-        'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
-      );
-      // When
-      identityProviderServiceMock.isActiveById.mockRejectedValueOnce(errorMock);
-      // Then
-      await expect(service.checkIdpDisabled('spId', 'idpId')).rejects.toThrow(
-        errorMock,
+      identityProviderServiceMock.getById.mockResolvedValueOnce(undefined);
+
+      // When / Then
+      await expect(service.checkIdpDisabled('idpId')).rejects.toThrow(
+        OidcClientIdpNotFoundException,
       );
     });
 
     it('should throw OidcClientIdpDisabledException because identity provider is disabled', async () => {
       // Given
-      const errorMock = new OidcClientIdpDisabledException();
-      // When
-      identityProviderServiceMock.isActiveById.mockReturnValueOnce(false);
-      // Then
-      await expect(service.checkIdpDisabled('spId', 'idpId')).rejects.toThrow(
-        errorMock,
+      identityProviderServiceMock.getById.mockResolvedValueOnce({
+        active: false,
+      });
+
+      // When / Then
+      await expect(service.checkIdpDisabled('idpId')).rejects.toThrow(
+        OidcClientIdpDisabledException,
       );
     });
 
-    it('should log because identity provider is not disabled', async () => {
+    it('should not do anything because identity provider exists and is not disabled', async () => {
       // Given
-      identityProviderServiceMock.isActiveById.mockReturnValueOnce(true);
-      // When
-      await service.checkIdpDisabled('spId', 'idpId');
-      // Then
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledWith({
-        check: { spId: 'spId', idpId: 'idpId', isIdpActive: true },
+      identityProviderServiceMock.getById.mockResolvedValueOnce({
+        active: true,
       });
+
+      // When / Then
+      await expect(() => service.checkIdpDisabled('idpId')).not.toThrow();
     });
   });
 

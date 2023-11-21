@@ -1,29 +1,28 @@
-<head>
-  <meta charset="utf-8"/>
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-  <link
-    rel="stylesheet"
-    href="/css/index.css"/>
-  <link rel="stylesheet" href="/css/dsfr.min.css"/>
-  <link rel="stylesheet" href="/css/utility/utility.min.css"/>
-  <link rel="stylesheet" href="/css/styles.css"/>
-  <meta
-    name="description"
-    content="{{ description or metadata.description }}"/>
-  <meta name="theme-color" content="#000091"/>
-  <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png"/>
-  <!-- 180×180 -->
-  <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml"/>
-  <link rel="shortcut icon" href="/favicon/favicon.ico" type="image/x-icon"/>
-  <!-- 32×32 -->
-  <link
-    rel="manifest"
-    href="/favicon/manifest.webmanifest"
-    crossorigin="use-credentials"/>
-  <meta
-    name="generator"
-    content="{{ eleventy.generator }}"/>
-  <title>{{ title or metadata.title }}</title>
-</head>
+<meta charset="utf-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+{% css "body" %}
+<link rel="stylesheet" href="/css/index.css" />
+<link rel="stylesheet" href="/css/dsfr.min.css" />
+<link rel="stylesheet" href="/css/dsfr/utility.min.css" />
+{% endcss %}
+{% getBundle "css",
+"body" %}
+<meta
+  name="description"
+  content="{{ description or metadata.description }}" />
+<meta name="theme-color" content="#000091" />
+<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
+<!-- 180×180 -->
+<link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml" />
+<link rel="shortcut icon" href="/favicon/favicon.ico" type="image/x-icon" />
+<!-- 32×32 -->
+<link
+  rel="manifest"
+  href="/favicon/manifest.webmanifest"
+  crossorigin="use-credentials" />
+<meta
+  name="generator"
+  content="{{ eleventy.generator }}" />
+<title>{{ title or metadata.title }}</title>

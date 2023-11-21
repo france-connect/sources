@@ -1,5 +1,5 @@
 #language: fr
-@userDashboard @historiqueConnexion @ignoreInteg01 @ignoreHigh @ignoreLow
+@userDashboard @historiqueConnexion @ignoreInteg01
 Fonctionnalité: Historique Connexion FC Legacy et FC+ (docker)
   # En tant qu'usager de FranceConnect,
   # je veux me connecter au user-dashboard
@@ -7,7 +7,7 @@ Fonctionnalité: Historique Connexion FC Legacy et FC+ (docker)
 
   Scénario: Historique Connexion - FC Legacy et FC+ - connexions de moins de 6 mois sont affichées
     Etant donné que j'utilise un compte usager "pour les tests de traces"
-    Et que les traces "FranceConnect et FranceConnect+" contiennent "des connexions récentes et anciennes de plus de 6 mois"
+    Et que les traces "FranceConnect(CL) et FranceConnect+" contiennent "des connexions récentes et anciennes de plus de 6 mois"
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
@@ -32,11 +32,11 @@ Fonctionnalité: Historique Connexion FC Legacy et FC+ (docker)
     Et les navigations désactivées dans la pagination de l'historique sont "première page, page précédente, page suivante, dernière page"
 
     Exemples:
-      | platform                        | tracksType    | pageEventCount | device           |
-      | FranceConnect+                  | 2 connexions  | 2              | tablet portrait  |
-      | FranceConnect                   | 6 connexions  | 6              | tablet landscape |
-      | FranceConnect et FranceConnect+ | 10 connexions | 10             | desktop          |
-      | FranceConnect+                  | 2 connexions  | 2              | mobile           |
+      | platform                            | tracksType    | pageEventCount | device           |
+      | FranceConnect+                      | 2 connexions  | 2              | tablet portrait  |
+      | FranceConnect(CL)                   | 6 connexions  | 6              | tablet landscape |
+      | FranceConnect(CL) et FranceConnect+ | 10 connexions | 10             | desktop          |
+      | FranceConnect+                      | 2 connexions  | 2              | mobile           |
 
   Plan du Scénario: Historique Connexion - <platform> - pagination en mode desktop avec plusieurs pages sur <device>
     Etant donné que j'utilise un navigateur web sur "<device>"
@@ -73,15 +73,15 @@ Fonctionnalité: Historique Connexion FC Legacy et FC+ (docker)
     Et les navigations autorisées dans la pagination de l'historique sont "page suivante, dernière page"
 
     Exemples:
-      | platform                        | tracksType    | lastPage | lastPageEventCount | device           |
-      | FranceConnect+                  | 26 connexions | 3        | 6                  | tablet portrait  |
-      | FranceConnect                   | 30 connexions | 3        | 10                 | tablet landscape |
-      | FranceConnect et FranceConnect+ | 32 connexions | 4        | 2                  | desktop          |
+      | platform                            | tracksType    | lastPage | lastPageEventCount | device           |
+      | FranceConnect+                      | 26 connexions | 3        | 6                  | tablet portrait  |
+      | FranceConnect(CL)                   | 30 connexions | 3        | 10                 | tablet landscape |
+      | FranceConnect(CL) et FranceConnect+ | 32 connexions | 4        | 2                  | desktop          |
 
   Scénario: Historique Connexion - pagination en mode mobile avec plusieurs pages sur <device>
     Etant donné que j'utilise un navigateur web sur "mobile"
     Et que j'utilise un compte usager "pour les tests de traces"
-    Et que les traces "FranceConnect et FranceConnect+" contiennent "124 connexions"
+    Et que les traces "FranceConnect(CL) et FranceConnect+" contiennent "124 connexions"
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager
@@ -118,7 +118,7 @@ Fonctionnalité: Historique Connexion FC Legacy et FC+ (docker)
   Plan du Scénario: Historique Connexion - pagination avec plus de 100 connexions - <device>
     Etant donné que j'utilise un navigateur web sur "<device>"
     Et que j'utilise un compte usager "pour les tests de traces"
-    Et que les traces "FranceConnect et FranceConnect+" contiennent "124 connexions"
+    Et que les traces "FranceConnect(CL) et FranceConnect+" contiennent "124 connexions"
     Et que je navigue sur la page d'accueil du dashboard usager
     Quand je me connecte au dashboard usager
     Alors je suis redirigé vers la page historique du dashboard usager

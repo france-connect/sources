@@ -1,9 +1,7 @@
 /**
  * Generate a HTML report
- * @link https://github.com/wswebcreation/multiple-cucumber-html-reporter
+ * @link https://github.com/WasiqB/multiple-cucumber-html-reporter
  */
-import * as fs from 'fs-extra';
-
 import * as reporter from 'multiple-cucumber-html-reporter';
 
 const gitLabProjectUrl =
@@ -27,7 +25,7 @@ const platformName = {
   'fcp-legacy': 'User-Dashboard FC Legacy',
   'fcp-low': 'FranceConnect',
   'partners-fca': 'Partenaires AgentConnect',
-  'partners-fcp': 'Partenaires FranceConnect'
+  'partners-fcp': 'Partenaires FranceConnect',
 };
 
 const platform = platformName[process.env.CYPRESS_PLATFORM] || 'N/A';
@@ -71,7 +69,7 @@ const customData = {
 const metadata = {
   browser: {
     name: 'chrome',
-    version: '106',
+    version: '116',
   },
   device,
   platform: {
@@ -115,17 +113,3 @@ const options = {
 };
 
 reporter.generate(options);
-
-// Move the screenshots into the assets folder
-const originFolder = `${projectDir}/cypress/screenshots`;
-const destinationFolder = `${reportPath}/assets/screenshots`;
-if (fs.existsSync(originFolder)) {
-  fs.copy(originFolder, destinationFolder, (err) => {
-    if (err) {
-      // eslint-disable-next-line no-console
-      return console.error(err);
-    }
-    // eslint-disable-next-line no-console
-    console.log('screenshots copied!');
-  });
-}

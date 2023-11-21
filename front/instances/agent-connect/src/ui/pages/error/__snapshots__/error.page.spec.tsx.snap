@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ErrorPage should math the snapshot, in a desktop viewport 1`] = `
+exports[`ErrorPage should match the snapshot, in a desktop viewport 1`] = `
 <div>
   <div>
     <div>
@@ -13,7 +13,7 @@ exports[`ErrorPage should math the snapshot, in a desktop viewport 1`] = `
 </div>
 `;
 
-exports[`ErrorPage should math the snapshot, in a mobile viewport 1`] = `
+exports[`ErrorPage should match the snapshot, in a mobile viewport 1`] = `
 <div>
   <div>
     <div>

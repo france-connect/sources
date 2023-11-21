@@ -1,23 +1,4 @@
-import { getCwdForDirectory, getParameterValue } from './utils.helper';
-
-describe('getParameterValue', () => {
-  test('should return the value at the specified index', () => {
-    const args = ['value1', 'value2', 'value3', 'value4'];
-    expect(getParameterValue(args, 1)).toBe('value2');
-    expect(getParameterValue(args, 3)).toBe('value4');
-  });
-
-  test('should return undefined if the index is out of range', () => {
-    const args = ['value1'];
-    expect(getParameterValue(args, 2)).toBeUndefined();
-    expect(getParameterValue([], 0)).toBeUndefined();
-  });
-
-  test('should return undefined if the argument at the index is falsy', () => {
-    const args = ['value1', '', 'value3'];
-    expect(getParameterValue(args, 1)).toBeUndefined();
-  });
-});
+import { getCwdForDirectory, replaceAllOccurrences } from './utils.helper';
 
 describe('getCwdForDirectory', () => {
   // Mock la fonction process.cwd() pour contrôler la valeur du répertoire de travail actuel
@@ -40,5 +21,23 @@ describe('getCwdForDirectory', () => {
     const result = getCwdForDirectory(directory);
 
     expect(result).toEqual(expectedPath);
+  });
+});
+
+describe('replaceAllOccurrences', () => {
+  const input = 'Hello World Hello';
+
+  it('replace single occurrence', () => {
+    const findsMock = 'Hello';
+    const replaceMock = 'Hi';
+    const result = replaceAllOccurrences(input, findsMock, replaceMock);
+    expect(result).toBe('Hi World Hi');
+  });
+
+  it('replace multiple occurrences with array', () => {
+    const findsMock = ['Hello', 'World'];
+    const replaceMock = 'Hi';
+    const result = replaceAllOccurrences(input, findsMock, replaceMock);
+    expect(result).toBe('Hi Hi Hi');
   });
 });

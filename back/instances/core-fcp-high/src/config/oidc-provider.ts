@@ -7,6 +7,16 @@ import {
   OidcProviderPrompt,
   OidcProviderRoutes,
 } from '@fc/oidc-provider';
+import {
+  cnam,
+  cnous,
+  dgfip,
+  fcpHigh,
+  fcTracks,
+  mesri,
+  mi,
+  pe,
+} from '@fc/scopes';
 
 const env = new ConfigParser(process.env, 'OidcProvider');
 
@@ -77,105 +87,14 @@ export default {
     acrValues: ['eidas2', 'eidas3'],
     scopes: ['openid'],
     claims: {
-      amr: ['amr'],
-      openid: ['sub'],
-      gender: ['gender'],
-      birthdate: ['birthdate'],
-      birthcountry: ['birthcountry'],
-      birthplace: ['birthplace'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      given_name: ['given_name'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      family_name: ['family_name'],
-      email: ['email'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      preferred_username: ['preferred_username'],
-      address: ['address'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      phone: ['phone_number'],
-      profile: [
-        'given_name',
-        'family_name',
-        'birthdate',
-        'gender',
-        'preferred_username',
-      ],
-      birth: ['birthplace', 'birthcountry'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      identite_pivot: [
-        'given_name',
-        'family_name',
-        'birthdate',
-        'gender',
-        'birthplace',
-        'birthcountry',
-      ],
-      // oidc fashioned name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      rnipp_given_name: [
-        'given_name',
-        'rnipp_given_name',
-        'rnipp_given_name_array',
-      ],
-      // oidc fashioned name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      rnipp_family_name: ['family_name', 'rnipp_family_name'],
-      // oidc fashioned name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      rnipp_gender: ['gender', 'rnipp_gender'],
-      // oidc fashioned name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      rnipp_birthcountry: ['birthcountry', 'rnipp_birthcountry'],
-      // oidc fashioned name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      rnipp_birthplace: ['birthplace', 'rnipp_birthplace'],
-      // oidc fashioned name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      rnipp_birthdate: ['birthdate', 'rnipp_birthdate'],
-      // oidc fashioned name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      rnipp_profile: [
-        'given_name',
-        'family_name',
-        'birthdate',
-        'gender',
-        'preferred_username',
-        'rnipp_given_name',
-        'rnipp_given_name_array',
-        'rnipp_family_name',
-        'rnipp_birthdate',
-        'rnipp_gender',
-      ],
-      // oidc fashioned name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      rnipp_birth: [
-        'birthplace',
-        'birthcountry',
-        'rnipp_birthplace',
-        'rnipp_birthcountry',
-      ],
-      // oidc fashioned name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      rnipp_identite_pivot: [
-        'given_name',
-        'family_name',
-        'birthdate',
-        'gender',
-        'birthplace',
-        'birthcountry',
-        'rnipp_given_name',
-        'rnipp_given_name_array',
-        'rnipp_family_name',
-        'rnipp_birthdate',
-        'rnipp_gender',
-        'rnipp_birthplace',
-        'rnipp_birthcountry',
-      ],
+      ...fcpHigh.scopes,
+      ...dgfip.scopes,
+      ...cnam.scopes,
+      ...cnous.scopes,
+      ...mesri.scopes,
+      ...mi.scopes,
+      ...pe.scopes,
+      ...fcTracks.scopes,
     },
     clientDefaults: {
       // node-oidc-provider defined key

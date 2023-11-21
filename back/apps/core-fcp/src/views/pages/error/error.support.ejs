@@ -1,30 +1,48 @@
-<% if (locals.config?.Core?.supportFormCodes?.includes(locals.code)) { %>
-  <%
-  const { OidcClient } = locals.session;
-  const sp_name = OidcClient?.spName || locals.spName;
-  const idp_name = OidcClient?.idpLabel || OidcClient?.idpName;
+<%
+const showSupportButton = locals.config?.Core?.supportFormCodes?.includes(locals.code);
+const offsetLgClass = showSupportButton
+  ? 'fr-col-offset-lg-0'
+  : 'fr-col-offset-lg-1';
+%>
 
-  const params = {
-    platform: locals.config.App?.name,
-    error_code: locals.code,
-    sp_name,
-    idp_name,
-    error_id: locals.id,
-  };
+<% if (showSupportButton) { %>
+<%
+const { OidcClient } = locals.session;
+const sp_name = OidcClient?.spName || locals.spName;
+const idp_name = OidcClient?.idpLabel || OidcClient?.idpName;
 
-  const queryString = Object.entries(params).reduce((acc, [key, value]) => {
-    const separator = acc === '' ? '?' : '&';
-    return value ? `${acc}${separator}${key}=${encodeURIComponent(value)}` : acc;
-  }, '');
+const params = {
+  platform: locals.config.App?.name,
+  error_code: locals.code,
+  sp_name,
+  idp_name,
+  error_id: locals.id,
+};
 
-  const href = `${locals.config.Core.supportFormUrl}${queryString}`;
-  %>
+const queryString = Object.entries(params).reduce((acc, [key, value]) => {
+  const separator = acc === '' ? '?' : '&';
+  return value ? `${acc}${separator}${key}=${encodeURIComponent(value)}` : acc;
+}, '');
+
+const href = `${locals.config.Core.supportFormUrl}${queryString}`;
+%>
+<section
+  data-testid="error-support"
+  class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 fr-col-offset-lg-1 fr-col-lg-3 fr-mb-2w">
   <a
     href="<%= href %>"
     rel="noreferrer noopener"
-    id="form-link-button"
-    title="Naviguer vers le formulaire d'aide"
+    data-testid="form-link-container"
+    class="fr-btn fr-btn--lg fc-btn--full-width fc-text--center"
+    title="Naviguer vers le formulaire d’aide"
   >
-    Formulaire d'aide
+    Contactez-nous
   </a>
+</section>
 <% } %>
+
+<section
+  data-testid="error-back"
+  class="fr-col-12 fr-col-offset-md-1 fr-col-md-10 <%= offsetLgClass %> fr-col-lg-8 fr-mb-2w fc-text--center fc-text-lg--left">
+  <%- include('includes/back-button.ejs') %>
+</section>

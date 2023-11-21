@@ -7,12 +7,15 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
+import { DekAlg, KekAlg } from '@fc/cryptography';
 import { JwtService } from '@fc/jwt';
 import { LoggerService } from '@fc/logger-legacy';
 
 import { DataProviderAdapterCoreConfig } from './dto';
 import {
   ChecktokenHttpStatusException,
+  ChecktokenInvalidAlgorithmException,
+  ChecktokenInvalidEncodingException,
   ChecktokenTimeoutException,
   JwksFetchFailedException,
 } from './exceptions';
@@ -20,7 +23,7 @@ import {
 @Injectable()
 export class DataProviderAdapterCoreService {
   constructor(
-    private config: ConfigService,
+    private readonly config: ConfigService,
     private readonly logger: LoggerService,
     private readonly http: HttpService,
     private readonly jwt: JwtService,
@@ -38,6 +41,12 @@ export class DataProviderAdapterCoreService {
     } catch (error) {
       this.checktokenHttpError(error);
     }
+
+    const { checktokenEncryptedResponseAlg, checktokenEncryptedResponseEnc } =
+      this.config.get<DataProviderAdapterCoreConfig>('DataProviderAdapterCore');
+
+    this.checkEncryptAlgorithm(cryptedToken, checktokenEncryptedResponseAlg);
+    this.checkEncryptEncoding(cryptedToken, checktokenEncryptedResponseEnc);
 
     const claims = await this.getDecryptedAndVerifiedToken(cryptedToken);
 
@@ -109,7 +118,11 @@ export class DataProviderAdapterCoreService {
     return response.data as JSONWebKeySet;
   }
 
-  private checktokenHttpError(error: AxiosError) {
+  private checktokenHttpError(
+    // oidc compliant
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    error: AxiosError<{ error: string; error_description: string }>,
+  ) {
     switch (error.code) {
       /**
        * At the moment Axios does not use "ETIMEOUT" like native
@@ -121,6 +134,24 @@ export class DataProviderAdapterCoreService {
         throw new ChecktokenTimeoutException();
     }
 
-    throw new ChecktokenHttpStatusException();
+    throw new ChecktokenHttpStatusException(error);
+  }
+
+  private checkEncryptAlgorithm(jwt: string, encryptAlgorithm: string): void {
+    const headers = this.jwt.retrieveJwtHeaders(jwt);
+
+    const alg = headers.alg as KekAlg;
+    if (typeof alg !== 'string' || encryptAlgorithm !== alg) {
+      throw new ChecktokenInvalidAlgorithmException();
+    }
+  }
+
+  private checkEncryptEncoding(jwt: string, encryptEncoding: string): void {
+    const headers = this.jwt.retrieveJwtHeaders(jwt);
+
+    const enc = headers.enc as DekAlg;
+    if (typeof enc !== 'string' || encryptEncoding !== enc) {
+      throw new ChecktokenInvalidEncodingException();
+    }
   }
 }

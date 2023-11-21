@@ -37,6 +37,15 @@ export function getBusinessLogs(
   });
 }
 
+export function getAllBusinessLogs(
+  logPath?: string,
+): Cypress.Chainable<Record<string, string>[]> {
+  const logFilePath: string = logPath || Cypress.env('LOG_FILE_PATH');
+  return cy.task<Record<string, string>[]>('getAllBusinessLogs', {
+    logFilePath,
+  });
+}
+
 export function getValueByKeyFromFirstEvent(
   key: string,
   logs: Record<string, string>[],

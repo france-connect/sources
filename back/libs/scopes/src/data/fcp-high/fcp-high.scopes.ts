@@ -98,4 +98,5 @@ export const scopes: IScopes = {
     claims.birthcountry,
     claims.rnipp_birthcountry,
   ],
+  amr: [claims.amr],
 };

@@ -12,6 +12,7 @@ export default {
   platform: 'FranceConnect',
   urlPrefix: '/api/v2',
   assetsPaths: env.json('ASSETS_PATHS'),
+  assetsCacheTtl: env.number('ASSETS_CACHE_TTL'),
   viewsPaths: env.json('VIEWS_PATHS'),
   httpsOptions: {
     key: env.file('HTTPS_SERVER_KEY', { optional: true }),

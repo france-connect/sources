@@ -64,7 +64,11 @@ describe('Idp activation & visibility', () => {
       'not.exist',
     );
 
-    cy.contains('Aucun fournisseur d’identité n’a été trouvé').should(
+    cy.contains('Nous ne trouvons pas votre administration').should(
+      'be.visible',
+    );
+
+    cy.contains('Vous pouvez continuer en utilisant MonComptePro').should(
       'be.visible',
     );
   });

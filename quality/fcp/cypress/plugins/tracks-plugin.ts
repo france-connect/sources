@@ -4,6 +4,7 @@ import { getCallerFrom } from './helpers';
 
 interface IAddTracksArgs {
   tracksType: string;
+  mockSet?: string;
 }
 
 interface IAddTracksParams {
@@ -65,19 +66,27 @@ export function tracksBuilder(
   );
 
   async function addTracks(args: IAddTracksArgs): Promise<void> {
-    const { tracksType } = args;
+    const { mockSet = 'high', tracksType } = args;
     const accountId = 'test_TRACE_USER';
-    const DEFAULT_MOCKDATA_FILES = [
-      '/tracks/fsp1-high/public_fip1-high.mock.ejs',
-      '/tracks/fsp5-high/private_fip1-high.mock.ejs',
-      '/tracks/missing/missing_fip1-high.mock.ejs',
-    ];
+
+    const mocks = {
+      high: [
+        '/tracks/fsp1-high/public_fip1-high.mock.ejs',
+        '/tracks/fsp5-high/private_fip1-high.mock.ejs',
+        '/tracks/missing/missing_fip1-high.mock.ejs',
+      ],
+      low: [
+        '/tracks/fsp1-low/public_fip1-low.mock.ejs',
+        '/tracks/fsp5-low/private_fip1-low.mock.ejs',
+        '/tracks/missing/missing_fip1-low.mock.ejs',
+      ],
+    };
 
     // eslint-disable-next-line no-console
-    console.log(`Add tracks 'FranceConnect+' for '${tracksType}'`);
+    console.log(`Add tracks '${mockSet}' for '${tracksType}'`);
     const { datesParam, filesParam } = getParamsByTracksType(
       tracksType,
-      DEFAULT_MOCKDATA_FILES,
+      mocks[mockSet],
     );
     await tracksScript(`generate ${accountId} ${filesParam} ${datesParam}`);
 

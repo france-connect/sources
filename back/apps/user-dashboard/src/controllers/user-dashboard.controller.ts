@@ -169,9 +169,8 @@ export class UserDashboardController {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { idp_id: _idpId, ...identityFiltered } = idpIdentity;
 
-    const preferences = await this.userPreferences.getUserPreferencesList(
-      identityFiltered,
-    );
+    const preferences =
+      await this.userPreferences.getUserPreferencesList(identityFiltered);
 
     return res.json(preferences);
   }

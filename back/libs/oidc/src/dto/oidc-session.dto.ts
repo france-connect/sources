@@ -116,6 +116,11 @@ export class OidcSession {
   // == SP
 
   @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  readonly spScope?: string[];
+
+  @IsOptional()
   @IsString()
   @MinLength(1)
   readonly spId?: string;

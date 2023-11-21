@@ -11,7 +11,7 @@ module.exports = function (eleventyConfig) {
     './node_modules/@gouvfr/dsfr/dist/fonts': '/css/fonts',
     './node_modules/@gouvfr/dsfr/dist/icons': '/css/icons',
     './node_modules/@gouvfr/dsfr/dist/dsfr.min.css': '/css/dsfr.min.css',
-    './node_modules/@gouvfr/dsfr/dist/utility/utility.min.css': '/css/utility/utility.min.css',
+    './node_modules/@gouvfr/dsfr/dist/utility/utility.min.css': '/css/dsfr/utility.min.css',
     './node_modules/@gouvfr/dsfr/dist/dsfr.module.min.js': '/js/dsfr.module.min.js',
     './node_modules/@gouvfr/dsfr/dist/dsfr.nomodule.min.js': '/js/dsfr.nomodule.min.js',
     './node_modules/@gouvfr/dsfr/dist/artwork': '/artwork',

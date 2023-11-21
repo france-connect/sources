@@ -17,3 +17,18 @@ process.on('unhandledRejection', (err: unknown) => {
     fail(`\x1b[1;31m${JSON.stringify(err)}\x1b[0m`);
   }
 });
+
+/**
+ * Hide odic-provider unsupported nodejs runtime version warning
+ * since this is not a blocking issue
+ * and justs causes a lot of noise in tests output
+ */
+const consoleWarnOriginal = console.warn;
+const OIDC_PROVIDER_UNSUPPORTED_RUNTIME_WARNING =
+  'oidc-provider WARNING: Unsupported Node.js runtime version. Use ^12.19.0, ^14.15.0, or ^16.13.0';
+
+console.warn = function warn(...args) {
+  if (args[0] !== OIDC_PROVIDER_UNSUPPORTED_RUNTIME_WARNING) {
+    consoleWarnOriginal(...args);
+  }
+};

@@ -25,7 +25,7 @@ const accountsLegacy = [
 
   {
     id: "utilisateur_français_actif",
-    identityHash: "24fv5KvxUdDcBq0CNnvXeSa4WWQiAW4hqMa69w+FrwE=",
+    identityHash: "G6I4QnBKE6tWKLhHS7BHswMD9FSkSXmZcbaxy6qC4fo=",
     updatedAt: ISODate("2020-01-08T14:33:26.495Z"),
     createdAt: ISODate("2020-01-08T14:33:13.841Z"),
     active: true,
@@ -76,7 +76,7 @@ const accountsLegacy = [
   },
 
   {
-    id: "utilisateur_français_actif_à_désactiver",
+    id: "utilisateur_japonais_actif_à_désactiver",
     identityHash: "3sJDedlavuVqQPW4b7f3IVMncImUnvjOJcDDvlx4848=",
     updatedAt: ISODate("2020-01-08T14:33:26.495Z"),
     createdAt: ISODate("2020-01-08T14:33:13.841Z"),
@@ -148,6 +148,52 @@ const accountsLegacy = [
     id: "test_TRACE_USER",
     identityHash: "m+yf8zrTpLBGrSjYIL+kzpjNkTtE6LTbl9dikcHd7A0=",
     active: true,
+    __v: 0,
+  },
+
+  {
+    id: "utilisateur_français_actif_homonyme_1",
+    identityHash: "uM0vHEOW6N9aKS8eQjVRFGcLVuPacH6C6o0/DE0DKFQ=",
+    updatedAt: ISODate("2020-01-08T14:33:26.495Z"),
+    createdAt: ISODate("2020-01-08T14:33:13.841Z"),
+    active: true,
+    servicesProvidersFederationKeys: [
+      {
+        sub: "4d327dd1e427daf4d50296ab71d6f3fc82ccc40742943521d42cb2bae4df41afv1",
+        clientId:
+          "a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc",
+      },
+    ],
+    federationKeys: [
+      {
+        clientId: "fip1",
+        sub: "1",
+        matchRNIPP: false,
+      },
+    ],
+    __v: 0,
+  },
+
+  {
+    id: "utilisateur_français_actif_desactive_homonyme_2",
+    identityHash: "QbICB/D3TsJ/6rwO87Fr4HylXTZiMvga+h/JT+AzDBA=",
+    updatedAt: ISODate("2020-01-08T14:33:26.495Z"),
+    createdAt: ISODate("2020-01-08T14:33:13.841Z"),
+    active: false,
+    servicesProvidersFederationKeys: [
+      {
+        sub: "4d327dd1e427daf4d50296ab71d6f3fc82ccc40742943521d42cb2bae4df41afv1",
+        clientId:
+          "a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc",
+      },
+    ],
+    federationKeys: [
+      {
+        clientId: "fip1",
+        sub: "1",
+        matchRNIPP: false,
+      },
+    ],
     __v: 0,
   },
 ];

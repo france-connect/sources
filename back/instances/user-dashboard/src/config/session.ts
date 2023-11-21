@@ -5,8 +5,6 @@ import { ConfigParser } from '@fc/config';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
 
-import app from './app';
-
 const env = new ConfigParser(process.env, 'Session');
 
 const cookieOptions: ISessionCookieOptions = {
@@ -27,5 +25,5 @@ export default {
   lifetime: 600, // 10 minutes
   sessionIdLength: 64,
   slidingExpiration: true,
-  excludedRoutes: [`${app.urlPrefix}${OidcClientRoutes.WELL_KNOWN_KEYS}`],
+  excludedRoutes: [OidcClientRoutes.WELL_KNOWN_KEYS],
 } as SessionConfig;

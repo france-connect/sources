@@ -1,6 +1,8 @@
-import { When } from 'cypress-cucumber-preprocessor/steps';
+import { When } from '@badeball/cypress-cucumber-preprocessor';
 
 When(/^je rafraîchis la page$/, function () {
   cy.reload();
-  cy.waitForNetworkIdle('/api', 500);
+  // Wait for the page to load
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(500);
 });

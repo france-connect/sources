@@ -10,7 +10,7 @@ setup() {
 APP_NAME=$1
 [ -z "$APP_NAME" ] && print_error "L'argument app_name est manquant" && exit 1
 
-setup $APP_NAME
+setup "$APP_NAME"
 
 CWD=$(pwd)
 cd "instances/$APP_NAME"
@@ -18,10 +18,10 @@ cd "instances/$APP_NAME"
 LOG_NODE=/var/tmp/watch-node.log
 LOG_ELEVENTY=/var/tmp/watch-eleventy.log
 
-yarn eleventy --serve > $LOG_ELEVENTY &
-node $CWD/scripts/apps.watch.js $APP_NAME > $LOG_NODE &
+yarn eleventy --serve --port=3000 > "$LOG_ELEVENTY" &
+node "$CWD/scripts/apps.watch.js" "$APP_NAME" > "$LOG_NODE" &
 
-tail -f $LOG_ELEVENTY
-tail -f $LOG_NODE
+tail -f "$LOG_ELEVENTY"
+tail -f "$LOG_NODE"
 
 wait

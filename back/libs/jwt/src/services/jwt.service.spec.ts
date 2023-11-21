@@ -138,23 +138,11 @@ describe('JwtService', () => {
     const jwks = { keys: [] };
     const use = Use.SIG;
 
-    it('should throw an error if the protected header can not be decoded', () => {
-      // Given
-      jest.mocked(decodeProtectedHeader).mockImplementationOnce(() => {
-        throw new Error('foo');
-      });
-
-      // When / Then
-      expect(() => service.getKeyForToken(jwt, jwks, use)).toThrowError(
-        CanNotDecodeProtectedHeaderException,
-      );
-    });
-
     it('should return result from getFirstRelevantKey', () => {
       // Given
       const key = { alg: 'RS256', use: 'sig' };
       service['getFirstRelevantKey'] = jest.fn().mockReturnValue(key);
-      jest.mocked(decodeProtectedHeader).mockReturnValueOnce({
+      service['retrieveJwtHeaders'] = jest.fn().mockReturnValueOnce({
         alg: 'RS256',
       });
       // When
@@ -477,6 +465,37 @@ describe('JwtService', () => {
 
       // Then
       expect(result).toEqual(key);
+    });
+  });
+
+  describe('retrieveJwtHeaders', () => {
+    // Given
+    const jwt = 'foo';
+
+    it('should throw an error if the protected header can not be decoded', () => {
+      // Given
+      jest.mocked(decodeProtectedHeader).mockImplementationOnce(() => {
+        throw new Error('foo');
+      });
+
+      // When / Then
+      expect(() => service.retrieveJwtHeaders(jwt)).toThrowError(
+        CanNotDecodeProtectedHeaderException,
+      );
+    });
+
+    it('should return result from getFirstRelevantKey', () => {
+      // Given
+      const headers = { alg: 'RS256' };
+      jest.mocked(decodeProtectedHeader).mockReturnValueOnce({
+        alg: 'RS256',
+      });
+
+      // When
+      const result = service.retrieveJwtHeaders(jwt);
+
+      // Then
+      expect(result).toEqual(headers);
     });
   });
 });

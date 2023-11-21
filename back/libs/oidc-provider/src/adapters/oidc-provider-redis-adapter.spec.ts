@@ -669,4 +669,141 @@ describe('OidcProviderRedisAdapter', () => {
       );
     });
   });
+
+  describe('fetchTtlAndValue', () => {
+    const ttlMock = 42;
+    const valueMock = 'someValue';
+
+    const successMock = [
+      [undefined, ttlMock],
+      [undefined, valueMock],
+    ];
+
+    beforeEach(() => {
+      redisMock.multi.mockReturnValue(redisMock);
+      redisMock.ttl.mockReturnValue(redisMock);
+      redisMock.get.mockReturnValue(multiMock);
+      multiMock.exec.mockResolvedValue(successMock);
+    });
+    it('should call redis.multi', async () => {
+      // Given
+      const idMock = 'foo';
+      // When
+      await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(redisMock.multi).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call redis.ttl', async () => {
+      // Given
+      const idMock = 'foo';
+      // When
+      await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(redisMock.ttl).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call redis.get', async () => {
+      // Given
+      const idMock = 'foo';
+      // When
+      await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(redisMock.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call redis.multi.exec', async () => {
+      // Given
+      const idMock = 'foo';
+      // When
+      await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(multiMock.exec).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return an object with ttl and value', async () => {
+      // Given
+      const idMock = 'foo';
+      // When
+      const result = await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(result).toEqual({ ttl: ttlMock, value: valueMock });
+    });
+
+    it('should return ttl = -1 and value = null', async () => {
+      // Given
+      const idMock = 'foo';
+      multiMock.exec.mockResolvedValueOnce([
+        [undefined, undefined],
+        [undefined, null],
+      ]);
+      // When
+      const result = await adapter.fetchTtlAndValue(idMock);
+      // Then
+      expect(result).toEqual({ ttl: -1, value: null });
+    });
+  });
+
+  describe('getExpireAndPayload', () => {
+    // Given
+    const idMock = 'foo';
+    const ttlMock = 42;
+    const valueMock = '{"some": "json", "payload": "here"}';
+    const payloadMock = { some: 'json', payload: 'here' };
+    const nowMock = 100000;
+    const keyMock = 'keyMockValue';
+
+    beforeEach(() => {
+      adapter.fetchTtlAndValue = jest.fn().mockResolvedValue({
+        ttl: ttlMock,
+        value: valueMock,
+      });
+      adapter.key = jest.fn().mockReturnValue(keyMock);
+      adapter.parsedPayload = jest.fn().mockReturnValue(payloadMock);
+      jest.spyOn(Date, 'now').mockReturnValue(nowMock);
+    });
+
+    it('should call key', async () => {
+      // When
+      await adapter.getExpireAndPayload(idMock);
+      // Then
+      expect(adapter.key).toHaveBeenCalledTimes(1);
+      expect(adapter.key).toHaveBeenCalledWith(idMock);
+    });
+
+    it('should call fetchTtlAndValue', async () => {
+      // When
+      await adapter.getExpireAndPayload(idMock);
+      // Then
+      expect(adapter.fetchTtlAndValue).toHaveBeenCalledTimes(1);
+      expect(adapter.fetchTtlAndValue).toHaveBeenCalledWith(keyMock);
+    });
+
+    it('should call parsedPayload', async () => {
+      // When
+      await adapter.getExpireAndPayload(idMock);
+      // Then
+      expect(adapter.parsedPayload).toHaveBeenCalledTimes(1);
+      expect(adapter.parsedPayload).toHaveBeenCalledWith(valueMock);
+    });
+
+    it('should return an object with expire and payload', async () => {
+      // When
+      const result = await adapter.getExpireAndPayload(idMock);
+      // Then
+      expect(result).toEqual({ expire: 142, payload: payloadMock });
+    });
+
+    it('should return expire = -1 and payload = null', async () => {
+      // Given
+      adapter.fetchTtlAndValue.mockResolvedValueOnce({
+        ttl: -1,
+        value: null,
+      });
+      // When
+      const result = await adapter.getExpireAndPayload(idMock);
+      // Then
+      expect(result).toEqual({ expire: -1, payload: null });
+    });
+  });
 });

@@ -231,4 +231,9 @@ $RECYCLE.BIN/
 # FC
 #
 # -------------------------------------------------------------
+_tmp/
+*.tar.gz
 instances/*
+apps/tmp
+apps/temp
+package-lock.json

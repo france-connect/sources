@@ -23,6 +23,9 @@ export class DataProviderAdapterMongoDTO {
   readonly title: string;
 
   @IsString()
+  readonly slug: string;
+
+  @IsString()
   @MinLength(32)
   // oidc like
   // eslint-disable-next-line @typescript-eslint/naming-convention

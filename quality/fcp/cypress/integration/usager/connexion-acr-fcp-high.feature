@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionAcr @ci @fcpHigh
+@usager @connexionAcr @fcpHigh
 Fonctionnalité: Connexion ACR
   # En tant qu'usager d'un fournisseur de service,
   # je veux utiliser un niveau de sécurité spécifique lors de ma connexion
@@ -25,14 +25,18 @@ Fonctionnalité: Connexion ACR
     Et la cinématique a utilisé le niveau de sécurité "<actualAcr>"
     Et le fournisseur de service a accès aux informations du scope "tous les scopes"
 
+    @ci
     Exemples:
       | acrValues             | method | actualAcr |
       | eidas2                | get    | eidas2    |
+      | eidas3                | post   | eidas3    |
+      | niveau_inconnu        | post   | eidas3    |
+
+    Exemples:
+      | acrValues             | method | actualAcr |
       | eidas2                | post   | eidas2    |
       | eidas3                | get    | eidas3    |
-      | eidas3                | post   | eidas3    |
       | eidas2 niveau_inconnu | get    | eidas2    |
-      | niveau_inconnu        | post   | eidas3    |
       | eidas3 eidas2         | post   | eidas2    |
       | eidas2 eidas3         | get    | eidas2    |
 
@@ -55,6 +59,7 @@ Fonctionnalité: Connexion ACR
       | inconnu eidas1       | post   | eidas1    |
       | eidas1 eidas2 eidas3 | post   | eidas1    |
 
+  @ci
   Plan du Scénario: Connexion ACR - FCP high - cinématique "<spAcr>" avec FI retournant niveau "<idpAcr>"
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"

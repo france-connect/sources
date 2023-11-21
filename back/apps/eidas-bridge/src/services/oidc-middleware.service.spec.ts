@@ -42,6 +42,7 @@ describe('MockIdentityProviderFcaService', () => {
     getInteraction: getInteractionMock,
     registerMiddleware: jest.fn(),
     getInteractionIdFromCtx: jest.fn(),
+    clearCookies: jest.fn(),
   };
 
   const oidcProviderErrorServiceMock = {
@@ -93,12 +94,52 @@ describe('MockIdentityProviderFcaService', () => {
       service.onModuleInit();
       // Then
       expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledTimes(
-        3,
+        4,
       );
     });
   });
 
-  describe('authorizationMiddleware()', () => {
+  describe('beforeAuthorizeMiddleware', () => {
+    it('should set cookies to nothing if cookies do not exist', () => {
+      // Given
+      const ctxMock: any = {
+        req: { headers: { foo: 'bar' } },
+      };
+
+      // When
+      service['beforeAuthorizeMiddleware'](ctxMock);
+
+      // Then
+      expect(ctxMock).toEqual({
+        req: { headers: { foo: 'bar', cookie: '' } },
+      });
+    });
+
+    it('should set cookies to nothing if cookies exist', () => {
+      // Given
+      const ctxMock: any = {
+        req: {
+          headers: {
+            cookie: {
+              _interaction: '123',
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              session_id: 'test',
+            },
+          },
+        },
+      };
+
+      // When
+      service['beforeAuthorizeMiddleware'](ctxMock);
+
+      // Then
+      expect(ctxMock).toEqual({
+        req: { headers: { cookie: '' } },
+      });
+    });
+  });
+
+  describe('afterAuthorizeMiddleware()', () => {
     const spIdMock = 'spIdValue';
     const spNameMock = 'spNameValue';
     const spAcrMock = 'eidas3';
@@ -124,7 +165,7 @@ describe('MockIdentityProviderFcaService', () => {
       service['getInteractionIdFromCtx'] = jest.fn();
 
       // When
-      await service['authorizationMiddleware'](ctxMock);
+      await service['afterAuthorizeMiddleware'](ctxMock);
 
       // Then
       expect(service['getInteractionIdFromCtx']).toHaveBeenCalledTimes(0);
@@ -159,7 +200,7 @@ describe('MockIdentityProviderFcaService', () => {
       };
 
       // When
-      await service['authorizationMiddleware'](ctxMock);
+      await service['afterAuthorizeMiddleware'](ctxMock);
 
       // Then
       expect(sessionServiceMock.set.bind).toHaveBeenCalledTimes(1);
@@ -183,7 +224,7 @@ describe('MockIdentityProviderFcaService', () => {
 
       // When / Then
       await expect(
-        service['authorizationMiddleware'](ctxMock),
+        service['afterAuthorizeMiddleware'](ctxMock),
       ).rejects.toThrow();
     });
   });

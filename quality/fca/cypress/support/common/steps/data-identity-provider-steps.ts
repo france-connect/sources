@@ -1,4 +1,4 @@
-import { Given } from 'cypress-cucumber-preprocessor/steps';
+import { Given } from '@badeball/cypress-cucumber-preprocessor';
 
 import {
   getIdentityProviderByAttributes,
@@ -7,7 +7,7 @@ import {
 
 Given(
   /^j'utilise (?:un|le) fournisseur d'identité "([^"]+)"$/,
-  function (description) {
+  function (description: string) {
     this.identityProvider = getIdentityProviderByDescription(
       this.identityProviders,
       description,
@@ -20,7 +20,7 @@ Given(
 
 Given(
   "j'utilise un fournisseur d'identité avec niveau de sécurité {string} et signature {string}",
-  function (acrValue, signature) {
+  function (acrValue: string, signature: string) {
     this.identityProvider = getIdentityProviderByAttributes(
       this.identityProviders,
       {

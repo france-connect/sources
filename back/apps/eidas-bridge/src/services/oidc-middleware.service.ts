@@ -3,7 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import {
+  OidcCtx,
   OidcProviderErrorService,
+  OidcProviderMiddlewarePattern,
   OidcProviderMiddlewareStep,
   OidcProviderRoutes,
   OidcProviderService,
@@ -27,23 +29,37 @@ export class OidcMiddlewareService {
   }
 
   onModuleInit() {
-    this.oidcProvider.registerMiddleware(
+    this.registerMiddleware(
+      OidcProviderMiddlewareStep.BEFORE,
+      OidcProviderRoutes.AUTHORIZATION,
+      this.beforeAuthorizeMiddleware,
+    );
+
+    this.registerMiddleware(
       OidcProviderMiddlewareStep.AFTER,
       OidcProviderRoutes.AUTHORIZATION,
-      this.authorizationMiddleware.bind(this),
+      this.afterAuthorizeMiddleware,
     );
 
-    this.oidcProvider.registerMiddleware(
+    this.registerMiddleware(
       OidcProviderMiddlewareStep.AFTER,
       OidcProviderRoutes.TOKEN,
-      this.tokenMiddleware.bind(this),
+      this.tokenMiddleware,
     );
 
-    this.oidcProvider.registerMiddleware(
+    this.registerMiddleware(
       OidcProviderMiddlewareStep.AFTER,
       OidcProviderRoutes.USERINFO,
-      this.userinfoMiddleware.bind(this),
+      this.userinfoMiddleware,
     );
+  }
+
+  protected registerMiddleware(
+    step: OidcProviderMiddlewareStep,
+    pattern: OidcProviderMiddlewarePattern | OidcProviderRoutes,
+    middleware: Function,
+  ) {
+    this.oidcProvider.registerMiddleware(step, pattern, middleware.bind(this));
   }
 
   private getEventContext(ctx): TrackedEventContextInterface {
@@ -71,7 +87,17 @@ export class OidcMiddlewareService {
     ctx.req.sessionId = context.sessionId;
   }
 
-  private async authorizationMiddleware(ctx) {
+  protected beforeAuthorizeMiddleware({ req, res }: OidcCtx): void {
+    /**
+     * Force cookies to be reset to prevent panva from keeping
+     * a session open if you use several service provider in a row
+     * @param ctx
+     */
+    this.oidcProvider.clearCookies(res);
+    req.headers.cookie = '';
+  }
+
+  private async afterAuthorizeMiddleware(ctx) {
     /**
      * Abort middleware if authorize is in error
      *
@@ -116,7 +142,7 @@ export class OidcMiddlewareService {
       const { RECEIVED_CALL_ON_TOKEN } = this.tracking.TrackedEventsMap;
       await this.tracking.track(RECEIVED_CALL_ON_TOKEN, eventContext);
     } catch (exception) {
-      this.oidcErrorService.throwError(ctx, exception);
+      await this.oidcErrorService.throwError(ctx, exception);
     }
   }
 
@@ -127,7 +153,7 @@ export class OidcMiddlewareService {
       const { RECEIVED_CALL_ON_USERINFO } = this.tracking.TrackedEventsMap;
       await this.tracking.track(RECEIVED_CALL_ON_USERINFO, eventContext);
     } catch (exception) {
-      this.oidcErrorService.throwError(ctx, exception);
+      await this.oidcErrorService.throwError(ctx, exception);
     }
   }
 }

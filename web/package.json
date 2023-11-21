@@ -13,7 +13,9 @@
   },
   "dependencies": {},
   "scripts": {
-    "start:example": "./scripts/yarn-watch.sh example",
-    "build:example": "./scripts/yarn-build.sh example"
+    "start": "./scripts/yarn-watch.sh",
+    "build": "./scripts/yarn-build.sh",
+    "make:search": "./scripts/make-search.sh",
+    "cleanup": "rm -rf node_modules && rm -rf instances/*"
   }
 }

@@ -38,7 +38,7 @@ export const ReturnButtonComponent: React.FC<ReturnButtonComponentProps> = React
       <WrapperComponent>
         {(showButton && (
           <a
-            className={classnames(styles.button, 'fr-btn  fr-fi-arrow-left-line', {
+            className={classnames(styles.button, 'fr-btn  fr-icon-arrow-left-line', {
               // @NOTE unable to create a eslint rule to match this case
               // eslint-disable-next-line @typescript-eslint/naming-convention
               'fr-btn--icon-left': isMobileViewport,

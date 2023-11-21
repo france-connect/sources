@@ -25,3 +25,8 @@ load("/opt/scripts/db-states/_default/scopes.js");
 
 print("Initializing Claims...");
 load("/opt/scripts/db-states/_default/claims.js");
+
+/* ------------------------------------------------------------------------------- */
+
+print("Initializing fqdnToProvider...");
+load("/opt/scripts/db-states/_default/fqdn-to-provider.js");

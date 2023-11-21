@@ -1,4 +1,4 @@
-import { Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { User } from '../../common/helpers';
 import UdMenuComponent from '../pages/ud-menu-component';
@@ -30,6 +30,8 @@ When(
 
 When('je me déconnecte du dashboard usager', function () {
   udMenuComponent.getLogoutLink().click();
+  // TODO: Stop clearing the cookies once https://github.com/cypress-io/cypress/issues/25841 is fixed
+  cy.clearAllCookies();
 });
 
 When("j'ouvre le menu de navigation mobile du user dashboard", function () {

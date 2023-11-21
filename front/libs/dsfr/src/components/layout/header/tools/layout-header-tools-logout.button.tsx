@@ -12,7 +12,7 @@ export const LayoutHeaderToolsLogoutButton: React.FC<LayoutHeaderToolsLogoutButt
       : 'layout-header-tools-logout-button-desktop';
     return (
       <a
-        className="fr-btn fr-fi-logout-box-r-line"
+        className="fr-btn fr-icon-logout-box-r-line"
         data-testid={dataTestId}
         href={endSessionUrl}
         title="bouton permettant la déconnexion de votre compte">

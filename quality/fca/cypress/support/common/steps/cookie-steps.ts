@@ -1,52 +1,44 @@
-import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
-import { clearAllCookies } from '../helpers';
+import { getCookieFromUrl } from '../helpers';
+import { Environment } from '../types';
 
 Then(
   /^le cookie "([^"]+)" est (présent|absent|supprimé)$/,
   function (cookieName: string, text: string) {
-    const shouldExist = text === 'présent';
-    cy.getCookie(cookieName).then((cookie) => {
-      if (shouldExist) {
-        expect(cookie).to.exist;
-      } else {
-        expect(cookie).not.to.be.ok;
-      }
-    });
+    const existNotExist = text === 'présent' ? 'exist' : 'not.exist';
+    const { fcaRootUrl }: Environment = this.env;
+    getCookieFromUrl(cookieName, fcaRootUrl).should(existNotExist);
   },
 );
 
 When(
   /^je mémorise la valeur du cookie "([^"]+)"$/,
   function (cookieName: string) {
-    cy.getCookie(cookieName).then((cookie) => {
-      expect(cookie).to.exist;
-      cy.wrap(cookie).as(`cookie:${cookieName}`);
-    });
+    const { fcaRootUrl }: Environment = this.env;
+    getCookieFromUrl(cookieName, fcaRootUrl)
+      .should('exist')
+      .as(`cookie:${cookieName}`);
   },
 );
 
 Then(
   /^la valeur du cookie "([^"]+)" est (identique|différente)$/,
   function (cookieName: string, text: string) {
-    const shouldBeEqual = text === 'identique';
+    const { fcaRootUrl }: Environment = this.env;
+    const equalNotEqual = text === 'identique' ? 'equal' : 'not.equal';
     cy.get<Cypress.Cookie>(`@cookie:${cookieName}`).then((previousCookie) => {
       expect(previousCookie).to.exist;
       const { value: previousValue } = previousCookie;
 
-      cy.getCookie(cookieName).then((cookie) => {
-        expect(cookie).to.exist;
-        const { value } = cookie;
-        if (shouldBeEqual) {
-          expect(value).to.equal(previousValue);
-        } else {
-          expect(value).not.to.equal(previousValue);
-        }
-      });
+      getCookieFromUrl(cookieName, fcaRootUrl)
+        .should('exist')
+        .its('value')
+        .should(equalNotEqual, previousValue);
     });
   },
 );
 
 Given('je supprime tous les cookies', function () {
-  clearAllCookies();
+  cy.clearAllCookies();
 });

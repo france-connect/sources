@@ -1010,7 +1010,7 @@ describe('SessionService', () => {
   });
 
   describe('validate()', () => {
-    const validateDtoMock = jest.mocked(validateDto, true);
+    const validateDtoMock = jest.mocked(validateDto);
     it('should validate the session using the DTO provided in for the instance and validation options from config service', async () => {
       // action
       await service['validate'](fullSessionMock);

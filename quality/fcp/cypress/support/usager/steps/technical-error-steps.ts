@@ -1,4 +1,4 @@
-import { Then } from 'cypress-cucumber-preprocessor/steps';
+import { Then } from '@badeball/cypress-cucumber-preprocessor';
 
 import TechnicalErrorPage from '../pages/technical-error-page';
 
@@ -12,16 +12,22 @@ Then(
   },
 );
 
-Then("le code d'erreur FranceConnect est {string}", function (errorCode) {
-  checkErrorCode(errorCode);
-});
+Then(
+  "le code d'erreur FranceConnect est {string}",
+  function (errorCode: string) {
+    checkErrorCode(errorCode);
+  },
+);
 
-Then("le message d'erreur FranceConnect est {string}", function (message) {
-  // TODO: Delete this once FC Legacy page design is made consistent with the others
-  const platform: string = Cypress.env('PLATFORM');
-  if (platform === 'fcp-legacy') {
-    checkErrorTitle(message);
-    return;
-  }
-  checkErrorMessage(message);
-});
+Then(
+  "le message d'erreur FranceConnect est {string}",
+  function (message: string) {
+    // TODO: Delete this once FC Legacy page design is made consistent with the others
+    const platform: string = Cypress.env('PLATFORM');
+    if (platform === 'fcp-legacy') {
+      checkErrorTitle(message);
+      return;
+    }
+    checkErrorMessage(message);
+  },
+);

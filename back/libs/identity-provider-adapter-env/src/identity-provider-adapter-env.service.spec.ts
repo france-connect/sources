@@ -270,7 +270,6 @@ describe('IdentityProviderAdapterEnvService', () => {
           },
         ],
       };
-      console.log({ invalidEnvMock });
       configMock.get.mockReturnValueOnce(invalidEnvMock);
 
       // action
@@ -292,7 +291,6 @@ describe('IdentityProviderAdapterEnvService', () => {
           },
         ],
       };
-      console.log({ invalidEnvMock });
       configMock.get.mockReturnValueOnce(invalidEnvMock);
 
       // action

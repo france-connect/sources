@@ -143,9 +143,8 @@ describe('AccountService', () => {
       // Given
       findOneSpy.mockResolvedValueOnce(null);
       // When
-      const result = await service['getAccountWithInteraction'](
-        newInteractionMock,
-      );
+      const result =
+        await service['getAccountWithInteraction'](newInteractionMock);
       // Then
       expect(constructorSpy).toHaveBeenCalledTimes(1);
       expect(constructorSpy).toHaveBeenCalledWith(newInteractionMock);
@@ -166,9 +165,8 @@ describe('AccountService', () => {
       };
       findOneSpy.mockResolvedValueOnce(databaseInteractionMock);
       // When
-      const result = await service['getAccountWithInteraction'](
-        newInteractionMock,
-      );
+      const result =
+        await service['getAccountWithInteraction'](newInteractionMock);
       // Then
       expect(constructorSpy).toHaveBeenCalledTimes(0);
       expect(result).toEqual({

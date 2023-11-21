@@ -1,5 +1,6 @@
 export function getSessionServiceMock() {
   return {
+    init: jest.fn(),
     attach: jest.fn(),
     destroy: jest.fn(),
     detach: jest.fn(),

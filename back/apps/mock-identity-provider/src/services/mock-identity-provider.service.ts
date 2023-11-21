@@ -16,12 +16,17 @@ import { ServiceProviderAdapterEnvService } from '@fc/service-provider-adapter-e
 import { ISessionBoundContext, SessionService } from '@fc/session';
 
 import { AppConfig } from '../dto';
-import { getFilesPathsFromDir, parseCsv } from '../helpers';
-import { Csv, IdentityFixture, OidcClaims } from '../interfaces';
+import {
+  getFilesPathsFromDir,
+  parseCsv,
+  removeEmptyProperties,
+  transformColumnsIntoBoolean,
+} from '../helpers';
+import { Csv, CsvParsed, IdentityFixture, OidcClaims } from '../interfaces';
 
 @Injectable()
 export class MockIdentityProviderService {
-  private database: Csv[];
+  private database: Csv[] | CsvParsed[];
 
   // Authorized in constructors
   // eslint-disable-next-line max-params
@@ -108,7 +113,7 @@ export class MockIdentityProviderService {
     );
   }
 
-  private async loadDatabase(path: string): Promise<Csv[]> {
+  private async loadDatabase(path: string): Promise<CsvParsed[]> {
     try {
       this.logger.debug('Loading database...');
 
@@ -118,13 +123,10 @@ export class MockIdentityProviderService {
         headers: true,
       });
 
-      // remove empty properties
-      database.forEach((entry) => {
-        const cleaner = (key) => entry[key] === '' && delete entry[key];
-        Object.keys(entry).forEach(cleaner);
-      });
+      const cleanedDatabase = removeEmptyProperties(database);
+      const { csvBooleanColumns } = this.config.get<AppConfig>('App');
 
-      return database;
+      return transformColumnsIntoBoolean(cleanedDatabase, csvBooleanColumns);
     } catch (error) {
       this.logger.fatal(`Failed to load CSV database, path was: ${path}`);
       throw error;
@@ -132,7 +134,7 @@ export class MockIdentityProviderService {
   }
 
   getIdentity(inputLogin: string): IdentityFixture | void {
-    const identity: Csv = this.database.find(
+    const identity: Csv | CsvParsed = this.database.find(
       ({ login }) => login === inputLogin,
     );
 
@@ -153,7 +155,7 @@ export class MockIdentityProviderService {
     return password === inputPassword;
   }
 
-  private toOidcFormat(identity: Csv): OidcClaims {
+  private toOidcFormat(identity: CsvParsed): OidcClaims {
     // This copy works because "Csv" type only contains strings. Beware !
     const identityCopy = {
       ...identity,
@@ -161,7 +163,7 @@ export class MockIdentityProviderService {
 
     const sub = crypto
       .createHash('sha256')
-      .update(identity.login)
+      .update(identity.login as string)
       .digest('hex');
     identityCopy.sub = sub;
     delete identityCopy.login;
@@ -173,7 +175,7 @@ export class MockIdentityProviderService {
     return identityCopy as OidcClaims;
   }
 
-  private formatOidcAddress(identity: Csv): Partial<OidcClaims> {
+  private formatOidcAddress(identity: CsvParsed): Partial<OidcClaims> {
     const oidcIdentity: Partial<OidcClaims> = _.omit(identity, [
       'country',
       'postal_code',
@@ -183,23 +185,25 @@ export class MockIdentityProviderService {
 
     // oidc parameter
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { country, postal_code, locality, street_address } = identity;
+    const { country, postal_code, locality, street_address } =
+      identity as Record<string, string>;
+
     oidcIdentity.address = {
-      country,
+      country: country,
       // oidc parameter
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      postal_code,
-      locality,
+      postal_code: postal_code,
+      locality: locality,
       // oidc parameter
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      street_address,
+      street_address: street_address,
       formatted: `${country} ${locality} ${postal_code} ${street_address}`,
     };
 
     return oidcIdentity;
   }
 
-  private oidcAddressFieldPresent(identity: Csv) {
+  private oidcAddressFieldPresent(identity: CsvParsed) {
     return Boolean(
       identity.country ||
         identity.postal_code ||

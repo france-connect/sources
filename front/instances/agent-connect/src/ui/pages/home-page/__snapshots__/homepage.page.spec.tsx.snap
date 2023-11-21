@@ -27,6 +27,20 @@ exports[`HomePage should math the snapshot, in a desktop viewport 1`] = `
       </div>
     </div>
   </div>
+  <div>
+    <p
+      class="text-center fr-mt-6w"
+    >
+      <a
+        class="fr-link fr-link--lg fr-icon-question-fill fr-link--icon-left link"
+        href="https://tally.so/r/w5jJVN"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Que pensez-vous d'AgentConnect ?
+      </a>
+    </p>
+  </div>
 </div>
 `;
 
@@ -56,6 +70,20 @@ exports[`HomePage should math the snapshot, in a mobile viewport 1`] = `
         LinkComponent
       </div>
     </div>
+  </div>
+  <div>
+    <p
+      class="text-center fr-mt-6w"
+    >
+      <a
+        class="fr-link fr-link--lg fr-icon-question-fill fr-link--icon-left link"
+        href="https://tally.so/r/w5jJVN"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        Que pensez-vous d'AgentConnect ?
+      </a>
+    </p>
   </div>
 </div>
 `;

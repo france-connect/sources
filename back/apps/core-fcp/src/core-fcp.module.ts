@@ -8,6 +8,7 @@ import { AccountModule } from '@fc/account';
 import { AppModule } from '@fc/app';
 import { ConfigService, ConfigTemplateInterceptor } from '@fc/config';
 import {
+  CORE_SERVICE,
   CoreAccountService,
   CoreAcrService,
   CoreTrackingService,
@@ -130,6 +131,10 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     {
       provide: APP_INTERCEPTOR,
       useClass: ConfigTemplateInterceptor,
+    },
+    {
+      provide: CORE_SERVICE,
+      useClass: CoreFcpService,
     },
     OidcProviderGrantService,
     DataProviderService,

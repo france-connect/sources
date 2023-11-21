@@ -5,6 +5,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { CORE_SERVICE } from '@fc/core';
+import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger-legacy';
 import { OidcAcrService } from '@fc/oidc-acr';
 import {
@@ -30,6 +32,7 @@ jest.mock('uuid');
 jest.mock('@fc/common', () => ({
   ...jest.requireActual('@fc/common'),
   validateDto: jest.fn(),
+  stringToArray: jest.fn(),
 }));
 
 describe('CoreFcpMiddlewareService', () => {
@@ -70,6 +73,7 @@ describe('CoreFcpMiddlewareService', () => {
   const spNameMock = 'my SP';
   const spAcrMock = 'eidas3';
   const spIdMock = 'spIdValue';
+  const spScopeMock = ['openid', 'givenName', 'gender'];
   const ipMock = '123.123.123.123';
   const sourcePortMock = '443';
   const xForwardedForOriginalMock = '123.123.123.123,124.124.124.124';
@@ -94,7 +98,9 @@ describe('CoreFcpMiddlewareService', () => {
       SP_REQUESTED_FC_USERINFO: {},
     },
   };
+  const coreFcpServiceMock = {};
 
+  const FlowStepsServiceMock = {};
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.resetAllMocks();
@@ -110,6 +116,11 @@ describe('CoreFcpMiddlewareService', () => {
         ServiceProviderAdapterMongoService,
         OidcAcrService,
         OidcProviderErrorService,
+        {
+          provide: CORE_SERVICE,
+          useValue: coreFcpServiceMock,
+        },
+        FlowStepsService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -128,6 +139,8 @@ describe('CoreFcpMiddlewareService', () => {
       .useValue(configServiceMock)
       .overrideProvider(OidcAcrService)
       .useValue(oidcAcrServiceMock)
+      .overrideProvider(FlowStepsService)
+      .useValue(FlowStepsServiceMock)
       .compile();
 
     service = module.get<CoreFcpMiddlewareService>(CoreFcpMiddlewareService);
@@ -144,10 +157,10 @@ describe('CoreFcpMiddlewareService', () => {
       // When
       service.onModuleInit();
       // Then
-      expect(service['registerMiddleware']).toHaveBeenCalledTimes(7);
+      expect(service['registerMiddleware']).toHaveBeenCalledTimes(8);
     });
 
-    it('should register 7 events', () => {
+    it('should register 8 events', () => {
       // Given
       service['overrideAuthorizePrompt'] = jest.fn();
       service['overrideAuthorizeAcrValues'] = jest.fn();
@@ -190,9 +203,15 @@ describe('CoreFcpMiddlewareService', () => {
       return {
         oidc: {
           isError: hasError,
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          params: { acr_values: spAcrMock, client_id: spIdMock },
+          params: {
+            // oidc param
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            acr_values: spAcrMock,
+            // oidc param
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            client_id: spIdMock,
+            scope: 'openid givenName gender',
+          },
         },
         req: reqMock,
         res: resMock,
@@ -212,6 +231,7 @@ describe('CoreFcpMiddlewareService', () => {
       spAcr: spAcrMock,
       spId: spIdMock,
       spName: spNameMock,
+      spScope: spScopeMock,
     };
 
     const getBoundSessionMock = jest.spyOn(SessionService, 'getBoundSession');
@@ -228,8 +248,6 @@ describe('CoreFcpMiddlewareService', () => {
       service['buildSessionWithNewInteraction'] = jest.fn();
       service['trackAuthorize'] = jest.fn();
       service['renewSession'] = jest.fn();
-
-      configServiceMock.get.mockReturnValueOnce({ enableSso: false });
     });
 
     it('should abort middleware execution if the request is flagged with an error', async () => {
@@ -260,7 +278,7 @@ describe('CoreFcpMiddlewareService', () => {
 
       // Then
       expect(service['renewSession']).toHaveBeenCalledTimes(1);
-      expect(service['renewSession']).toHaveBeenCalledWith(ctxMock, false);
+      expect(service['renewSession']).toHaveBeenCalledWith(ctxMock, spAcrMock);
     });
 
     it('should get three bound session services', async () => {
@@ -451,6 +469,7 @@ describe('CoreFcpMiddlewareService', () => {
           },
           sessionId: '42',
         },
+        spScope: ['openid', 'givenName', 'gender'],
       };
       service['buildSessionWithNewInteraction'] = jest
         .fn()
@@ -477,6 +496,7 @@ describe('CoreFcpMiddlewareService', () => {
       expect(service['isSsoAvailable']).toHaveBeenCalledTimes(1);
       expect(service['isSsoAvailable']).toHaveBeenCalledWith(
         sessionServiceMock,
+        ctxMock.oidc.params.acr_values,
       );
     });
 
@@ -503,9 +523,6 @@ describe('CoreFcpMiddlewareService', () => {
     it('should call `checkRedirectToSso()` with ctx', async () => {
       // Given
       const ctxMock = getCtxMock();
-      configServiceMock.get
-        .mockReset()
-        .mockReturnValueOnce({ enableSso: true });
       service['isSsoAvailable'] = jest.fn().mockResolvedValue(true);
       service['getEventContext'] = jest.fn().mockReturnValueOnce(eventCtxMock);
       service['buildSessionWithNewInteraction'] = jest
@@ -518,37 +535,11 @@ describe('CoreFcpMiddlewareService', () => {
       expect(service['checkRedirectToSso']).toHaveBeenCalledWith(ctxMock);
     });
 
-    it('should be isSso = true when enableSso = true and isSsoAvailable = true', async () => {
+    it('should be isSso = true when isSsoAvailable = true', async () => {
       // Given
       const ctxMock = getCtxMock();
       const isSsoMock = true;
-      configServiceMock.get
-        .mockReset()
-        .mockReturnValueOnce({ enableSso: true });
       service['isSsoAvailable'] = jest.fn().mockResolvedValue(true);
-      service['getEventContext'] = jest.fn().mockReturnValueOnce(eventCtxMock);
-      service['buildSessionWithNewInteraction'] = jest
-        .fn()
-        .mockResolvedValue(sessionPropertiesMock);
-
-      // When
-      await service['afterAuthorizeMiddleware'](ctxMock);
-
-      // Then
-      expect(ctxMock.isSso).toBe(isSsoMock);
-    });
-
-    it('should be isSso = false when enableSso = false', async () => {
-      // Given
-      const ctxMock = getCtxMock();
-      const isSsoMock = false;
-      const isSsoAvailableMock = Symbol('boolean') as unknown as boolean;
-      configServiceMock.get
-        .mockReset()
-        .mockReturnValueOnce({ enableSso: false });
-      service['isSsoAvailable'] = jest
-        .fn()
-        .mockResolvedValue(isSsoAvailableMock);
       service['getEventContext'] = jest.fn().mockReturnValueOnce(eventCtxMock);
       service['buildSessionWithNewInteraction'] = jest
         .fn()
@@ -669,45 +660,62 @@ describe('CoreFcpMiddlewareService', () => {
         .fn()
         .mockReturnValue(sessionServiceMock);
       service['isSsoSession'] = jest.fn().mockReturnValue(true);
+
+      configServiceMock.get.mockReturnValueOnce({
+        enableSso: true,
+        allowedSsoAcrs: ['eidas3'],
+      });
     });
 
-    it('should call session.reset() if no sso', async () => {
+    it('should call session.reset() if sso is disabled', async () => {
       // Given
-      const enableSso = false;
+      configServiceMock.get.mockReset().mockReturnValueOnce({
+        enableSso: false,
+        allowedSsoAcrs: ['eidas3'],
+      });
       // When
-      await service['renewSession'](ctxMock, enableSso);
+      await service['renewSession'](ctxMock, spAcrMock);
+      // Then
+      expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.reset).toHaveBeenCalledWith(reqMock, resMock);
+    });
+
+    it('should call session.reset() if acr is authorized for sso', async () => {
+      // Given
+      configServiceMock.get.mockReset().mockReturnValueOnce({
+        enableSso: true,
+        allowedSsoAcrs: ['eidas2'],
+      });
+      // When
+      await service['renewSession'](ctxMock, spAcrMock);
       // Then
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.reset).toHaveBeenCalledWith(reqMock, resMock);
     });
 
     it('should check if session is SSO compliant with isSsoSession()', async () => {
-      // Given
-      const enableSso = true;
       // When
-      await service['renewSession'](ctxMock, enableSso);
+      await service['renewSession'](ctxMock, spAcrMock);
       // Then
       expect(service['isSsoSession']).toHaveBeenCalledTimes(1);
       expect(service['isSsoSession']).toHaveBeenCalledWith(ctxMock);
     });
 
-    it('should call sessionService.detach if sso is enabled and spIdentity is present', async () => {
+    it('should call sessionService.detach if sso is enabled, spIdentity is present and sso authorized for acr', async () => {
       // Given
-      const enableSso = true;
       sessionServiceMock.get.mockResolvedValueOnce(true);
       // When
-      await service['renewSession'](ctxMock, enableSso);
+      await service['renewSession'](ctxMock, spAcrMock);
       // Then
       expect(sessionServiceMock.detach).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.detach).toHaveBeenCalledWith(reqMock, resMock);
     });
 
-    it('should call sessionService.duplicate if sso is enabled and spIdentity is present', async () => {
+    it('should call sessionService.duplicate if sso is enabled, spIdentity is present and sso authorized for acr', async () => {
       // Given
-      const enableSso = true;
       sessionServiceMock.get.mockResolvedValueOnce(true);
       // When
-      await service['renewSession'](ctxMock, enableSso);
+      await service['renewSession'](ctxMock, spAcrMock);
       // Then
       expect(sessionServiceMock.duplicate).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.duplicate).toHaveBeenCalledWith(

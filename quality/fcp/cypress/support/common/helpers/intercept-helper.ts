@@ -1,5 +1,3 @@
-import { RouteMatcher } from 'cypress/types/net-stubbing';
-
 export const addInterceptHeaders = (
   headers: Record<string, string>,
   interceptName: string,
@@ -13,7 +11,7 @@ export const addInterceptHeaders = (
 };
 
 export const addInterceptParams = (
-  routeMatcher: RouteMatcher,
+  routeMatcher: string | RegExp,
   params: Record<string, string>,
   interceptName: string,
 ): void => {

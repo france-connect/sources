@@ -50,14 +50,18 @@ export class OidcProviderErrorService {
    *
    * @see https://github.com/panva/node-oidc-provider/tree/master/docs#rendererror
    */
-  renderError(ctx: KoaContextWithOIDC, _out: string, error: any) {
+  async renderError(ctx: KoaContextWithOIDC, _out: string, error: any) {
     // Instantiate our exception
     const exception = new OidcProviderRuntimeException(error);
     // Call our hacky "thrower"
-    this.throwError(ctx, exception);
+    await this.throwError(ctx, exception);
   }
 
-  triggerError(eventName: OidcProviderEvents, ctx: OidcCtx, error: Error) {
+  async triggerError(
+    eventName: OidcProviderEvents,
+    ctx: OidcCtx,
+    error: Error,
+  ) {
     let wrappedError: FcException;
 
     if (error instanceof FcException) {
@@ -76,7 +80,7 @@ export class OidcProviderErrorService {
     ctx.oidc['isError'] = true;
 
     if (wrappedError.redirect === true) {
-      this.throwError(ctx, wrappedError);
+      await this.throwError(ctx, wrappedError);
     }
   }
 
@@ -92,11 +96,25 @@ export class OidcProviderErrorService {
    * @param ctx Koa's `ctx` object
    * @param exception error to throw
    */
-  throwError(ctx, exception) {
+  async throwError(ctx, exception) {
     // Build fake ArgumentsHost host instance
     const host = FcExceptionFilter.ArgumentHostAdapter(ctx) as ArgumentsHost;
 
     // Finally call the exception filter
-    this.exceptionFilter.catch(exception, host);
+    await this.exceptionFilter.catch(exception, host);
+  }
+
+  handleRedirectableError(ctx: OidcCtx, exception: FcException) {
+    if (exception.redirect === true) {
+      const { res, oidc } = ctx;
+      const { redirect_uri: redirectUri } = oidc.params;
+      const {
+        oidc: { error, description },
+      } = exception;
+
+      res.redirect(
+        `${redirectUri}?error=${error}&error_description=${description}`,
+      );
+    }
   }
 }

@@ -210,7 +210,7 @@ export function basicSuccessScenario(params) {
     idpAcr: acrValues,
   });
 
-  cy.get('#consent').click();
+  cy.get('[data-testid="consent-continue"]').click();
 
   cy.hasBusinessLog({
     category: 'FRONT_CINEMATIC',
@@ -343,7 +343,7 @@ export function navigateToMire() {
 export function validateConsent() {
   cy.url().should('match', /\/api\/v2\/interaction\/[0-9a-z_-]+\/consent/i);
 
-  cy.get('#consent').click();
+  cy.get('[data-testid="consent-continue"]').click();
 }
 
 export function authenticateWithIdp(params = {}) {
@@ -459,7 +459,9 @@ export function getAuthorizeUrl(overrideParams = {}, removeParams = []) {
  *                     "IDP_INTERACTION_URL": "https://fip1-high.docker.dev-franceconnect.fr/interaction"
  *                   }
  */
-export function getIdentityProvider(idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18') {
+export function getIdentityProvider(
+  idpId = 'dedc7160-8811-4d0f-9dd7-c072c15f2f18',
+) {
   return Cypress.env('IDP_AVAILABLES').find(({ ID }) => ID === idpId);
 }
 

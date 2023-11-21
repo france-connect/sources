@@ -1,10 +1,11 @@
 #language: fr
-@eidasBridge @connexionFsEu @ci @ignoreLow @ignoreHigh
+@eidasBridge @connexionFsEu
 Fonctionnalité: Connexion eIDAS - FS Européen
   # En tant qu'usager,
   # je veux utiliser mon identité vérifiée par un fournisseur d'identité français
   # afin d'accéder à mon fournisseur de service européen
 
+  @ci
   Scénario: Connexion FS Européen - FS eidas-be
     Etant donné que j'utilise un compte usager "par défaut"
     Et que j'utilise le fournisseur de service "eidas-be"

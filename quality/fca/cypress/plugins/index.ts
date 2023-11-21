@@ -1,62 +1,58 @@
 /// <reference types="cypress" />
 
-import * as browserify from '@cypress/browserify-preprocessor';
-import cucumber from 'cypress-cucumber-preprocessor';
+import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor';
+import { createEsbuildPlugin } from '@badeball/cypress-cucumber-preprocessor/esbuild';
+import createBundler from '@bahmutov/cypress-esbuild-preprocessor';
 import { addMatchImageSnapshotPlugin } from 'cypress-image-snapshot/plugin';
-import * as processFixtureTemplate from 'cypress-template-fixtures';
-import * as resolve from 'resolve';
 
 import { log, table } from './console-log-plugin';
+import { createHexaHash } from './crypto-plugin';
 import { getFixturePath } from './fixture-plugin';
 import {
   clearBusinessLog,
   getBusinessLogs,
   hasBusinessLog,
 } from './log-plugin';
+import { getTotp } from './otp-plugin';
 
-const pluginConfig = (
+const pluginConfig = async (
   on: Cypress.PluginEvents,
   config: Cypress.PluginConfigOptions,
-): Cypress.PluginConfigOptions => {
-  processFixtureTemplate(on, config);
-  addMatchImageSnapshotPlugin(on, config);
-
-  const options = {
-    ...browserify.defaultOptions,
-    typescript: resolve.sync('typescript', { baseDir: config.projectRoot }),
-  };
+  isVisualTestConfig: boolean,
+): Promise<Cypress.PluginConfigOptions> => {
+  await addCucumberPreprocessorPlugin(on, config);
 
   on('task', {
     clearBusinessLog,
+    createHexaHash,
     getBusinessLogs,
     getFixturePath,
+    getTotp,
     hasBusinessLog,
     log,
     table,
   });
 
-  on('file:preprocessor', cucumber(options));
+  on(
+    'file:preprocessor',
+    createBundler({
+      plugins: [createEsbuildPlugin(config)],
+    }),
+  );
 
-  on('before:browser:launch', (browser, launchOptions) => {
-    if (browser.name === 'electron' && browser.isHeadless) {
+  if (isVisualTestConfig) {
+    addMatchImageSnapshotPlugin(on, config);
+
+    on('before:browser:launch', (_browser, launchOptions) => {
       // Use larger headless screen size to support all viewports
       launchOptions.preferences.width = 1440;
       launchOptions.preferences.height = 1200;
       launchOptions.preferences.webPreferences = {
         spellcheck: false,
       };
-    }
-    return launchOptions;
-  });
-
-  const { env: { TEST_ENV: testEnv = '', BASE_URLS: baseUrls = {} } = {} } =
-    config;
-  // Override the baseUrl if present in the config
-  if (baseUrls[testEnv]) {
-    config.baseUrl = baseUrls[testEnv];
+      return launchOptions;
+    });
   }
-
-  config.chromeWebSecurity = false;
 
   return config;
 };

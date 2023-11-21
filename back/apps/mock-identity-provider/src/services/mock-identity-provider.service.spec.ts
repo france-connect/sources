@@ -11,7 +11,12 @@ import {
 import { ServiceProviderAdapterEnvService } from '@fc/service-provider-adapter-env';
 import { ISessionBoundContext, SessionService } from '@fc/session';
 
-import { getFilesPathsFromDir, parseCsv } from '../helpers';
+import {
+  getFilesPathsFromDir,
+  parseCsv,
+  removeEmptyProperties,
+  transformColumnsIntoBoolean,
+} from '../helpers';
 import { MockIdentityProviderService } from './mock-identity-provider.service';
 
 jest.mock('../helpers');
@@ -52,6 +57,8 @@ describe('MockIdentityProviderService', () => {
   };
 
   const citizenDatabasePathMock = '/eur';
+  const csvBooleanColumnsMock = ['is_service_public'];
+
   const fastCsvOptsMock = {
     trim: true,
     ignoreEmpty: true,
@@ -140,6 +147,7 @@ describe('MockIdentityProviderService', () => {
     beforeEach(() => {
       configServiceMock.get.mockReturnValueOnce({
         citizenDatabasePath: citizenDatabasePathMock,
+        csvBooleanColumns: csvBooleanColumnsMock,
       });
       jest.mocked(getFilesPathsFromDir).mockResolvedValueOnce(pathsMock);
 
@@ -193,6 +201,12 @@ describe('MockIdentityProviderService', () => {
   });
 
   describe('loadDatabase()', () => {
+    beforeEach(() => {
+      configServiceMock.get.mockReturnValueOnce({
+        csvBooleanColumns: csvBooleanColumnsMock,
+      });
+    });
+
     const csvMock = [
       { property1: '1', property2: '2', property3: '3', property4: '4' },
       { property1: '5', property2: '6', property3: '7', property4: '8' },
@@ -214,23 +228,116 @@ describe('MockIdentityProviderService', () => {
       );
     });
 
-    it('should filter out the empty keys in CSV entry', async () => {
+    it('should filter out the empty keys in CSV entry with removeEmptyProperties', async () => {
       // Given
       const csvWithEmptyMock = [
-        { property1: '1', property2: '2', property3: '', property4: '4' },
-        { property1: '', property2: '6', property3: '7', property4: '8' },
+        {
+          property1: '1',
+          property2: '2',
+          property3: '',
+          property4: '4',
+        },
+        {
+          property1: '',
+          property2: '6',
+          property3: '7',
+          property4: '8',
+        },
       ];
-      const expected = [
+
+      const cleanedMock = [
         { property1: '1', property2: '2', property4: '4' },
         { property2: '6', property3: '7', property4: '8' },
       ];
+
       jest.mocked(parseCsv).mockResolvedValueOnce(csvWithEmptyMock);
+      jest.mocked(removeEmptyProperties).mockReturnValueOnce(cleanedMock);
+
+      // When
+      await service['loadDatabase'](pathMock);
+
+      // Then
+      expect(jest.mocked(parseCsv)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(removeEmptyProperties)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(removeEmptyProperties)).toHaveBeenCalledWith(
+        csvWithEmptyMock,
+      );
+    });
+
+    it('should transform the selected properties in boolean with transformColumnsIntoBoolean', async () => {
+      // Given
+      const csvWithEmptyMock = [
+        {
+          property1: '1',
+          property2: '2',
+          property3: '3',
+          isBoolean: 'true',
+        },
+        {
+          property1: '',
+          property2: '6',
+          property3: '7',
+          isBoolean: 'false',
+        },
+      ];
+
+      const cleanedMock = [
+        {
+          property1: '1',
+          property2: '2',
+          property3: '3',
+          // is_service_public is a moncomptepro variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          is_service_public: 'true',
+        },
+        {
+          property1: '6',
+          property2: '7',
+          property3: '8',
+          // is_service_public is a moncomptepro variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          is_service_public: 'false',
+        },
+      ];
+
+      const expectedMock = [
+        {
+          property1: '1',
+          property2: '2',
+          property3: '3',
+          // is_service_public is a moncomptepro variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          is_service_public: 'true',
+        },
+        {
+          property1: '6',
+          property2: '7',
+          property3: '8',
+          // is_service_public is a moncomptepro variable name
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          is_service_public: 'false',
+        },
+      ];
+
+      jest.mocked(parseCsv).mockResolvedValueOnce(csvWithEmptyMock);
+      jest.mocked(removeEmptyProperties).mockReturnValueOnce(cleanedMock);
+      jest
+        .mocked(transformColumnsIntoBoolean)
+        .mockReturnValueOnce(expectedMock);
 
       // When
       const database = await service['loadDatabase'](pathMock);
 
       // Then
-      expect(database).toStrictEqual(expected);
+      expect(jest.mocked(parseCsv)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(removeEmptyProperties)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(transformColumnsIntoBoolean)).toHaveBeenCalledTimes(1);
+      expect(jest.mocked(transformColumnsIntoBoolean)).toHaveBeenCalledWith(
+        expectedMock,
+        ['is_service_public'],
+      );
+
+      expect(database).toStrictEqual(expectedMock);
     });
 
     it('should log error when something turns bad', async () => {

@@ -292,13 +292,7 @@ const fsa = {
 };
 
 // -- SPs ----------
-print("Initializing client: fsa1-low - activated");
-db.client.update({ name: "fsa1-low" }, fsa["FSA1-LOW"], { upsert: true });
-print("Initializing client: fsa2-low - activated");
-db.client.update({ name: "fsa2-low" }, fsa["FSA2-LOW"], { upsert: true });
-print("Initializing client: fsa3-low - deactivated");
-db.client.update({ name: "fsa3-low" }, fsa["FSA3-LOW"], { upsert: true });
-print("Initializing client: fsa4-low - activated");
-db.client.update({ name: "fsa4-low" }, fsa["FSA4-LOW"], { upsert: true });
-print("Initializing client: fsa5-low - activated");
-db.client.update({ name: "fsa5-low" }, fsa["FSA5-LOW"], { upsert: true });
+Object.values(fsa).forEach((fs) => {
+  print(`${fs.name} > Initializing client: ${fs.name}`);
+  db.client.update({ name: fs.name }, fs, { upsert: true });
+});

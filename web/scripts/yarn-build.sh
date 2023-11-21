@@ -10,9 +10,13 @@ setup() {
 APP_NAME=$1
 [ -z "$APP_NAME" ] && print_error "L'argument app_name est manquant" && exit 1
 
-$(
-  setup $APP_NAME
-  cd "instances/$APP_NAME"
+INSTANCE_FOLDER="./instances/$APP_NAME"
+
+(
+  # Cleanup existing application
+  [ -d "$INSTANCE_FOLDER" ] && rm -rf "$INSTANCE_FOLDER"
+  setup "$APP_NAME"
+  cd "$INSTANCE_FOLDER"
   yarn build
 )
 

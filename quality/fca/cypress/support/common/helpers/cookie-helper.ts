@@ -30,16 +30,11 @@ export const forceSameSiteNone = (domains: { [key: string]: string }): void => {
   });
 };
 
-/**
- * Removes all cookies
- */
-export const clearAllCookies = (): void => {
-  /**
-   * @todo Unsupported way of clearing the cookies on all domains with Cypress
-   * @link https://github.com/cypress-io/cypress/issues/408
-   * author: Nicolas
-   * date: 31/05/2021
-   */
-  // @ts-expect-error: domain is not an official option for clearCookies
-  cy.clearCookies({ domain: null });
+export const getCookieFromUrl = (
+  cookieName: string,
+  cookieUrl: string,
+): Cypress.Chainable<Cypress.Cookie> => {
+  const url = new URL(cookieUrl);
+  const domain = url.hostname;
+  return cy.getCookie(cookieName, { domain });
 };

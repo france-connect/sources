@@ -1,69 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { IPaginationOptions } from '@fc/common';
-import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { LoggerService } from '@fc/logger-legacy';
 
-import {
-  CsmrTracksAccountService,
-  CsmrTracksElasticService,
-  CsmrTracksFormatterService,
-} from '../services';
+import { getLoggerMock } from '@mocks/logger-legacy';
+
+import { CsmrTracksService } from '../services';
 import { CsmrTracksController } from './csmr-tracks.controller';
 
 describe('CsmrTracksController', () => {
   let controller: CsmrTracksController;
 
-  const loggerMock = {
-    debug: jest.fn(),
-    trace: jest.fn(),
-    setContext: jest.fn(),
-    error: jest.fn(),
-  };
-
-  const accountMock = {
-    getIdsWithIdentityHash: jest.fn(),
-  };
-
-  const elasticMock = {
-    getTracks: jest.fn(),
-  };
-
+  const loggerMock = getLoggerMock();
   const tracksMock = {
-    formatTracks: jest.fn(),
+    getTracksForIdentity: jest.fn(),
   };
 
-  const identityMock = Symbol('identityValue');
-  const optionsMock: IPaginationOptions = {
-    offset: 12,
-    size: 42,
-  };
-  const payloadMock = {
-    identity: identityMock,
-    options: optionsMock,
-  };
-
-  const identityHashMock = Symbol('identityHashValue');
-  const groupIdsMock = ['idValue1', 'idValue2'];
-  const rawDataMock = {
-    meta: {
-      total: 2,
-      size: optionsMock.size,
-      offset: optionsMock.offset,
-    },
-    payload: ['rawTracks1', 'rawTracks2'],
-  };
-
-  const payloadTracksMock = ['tracks1', 'tracks2'];
-
-  const tracksDataMock = {
-    meta: rawDataMock.meta,
-    payload: payloadTracksMock,
-  };
-
-  const cryptographyFcpMock = {
-    computeIdentityHash: jest.fn(),
-  };
+  const tracksDataMock = Symbol('tracksDataMock');
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -71,23 +23,11 @@ describe('CsmrTracksController', () => {
 
     const app: TestingModule = await Test.createTestingModule({
       controllers: [CsmrTracksController],
-      providers: [
-        LoggerService,
-        CryptographyFcpService,
-        CsmrTracksAccountService,
-        CsmrTracksElasticService,
-        CsmrTracksFormatterService,
-      ],
+      providers: [LoggerService, CsmrTracksService],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerMock)
-      .overrideProvider(CryptographyFcpService)
-      .useValue(cryptographyFcpMock)
-      .overrideProvider(CsmrTracksAccountService)
-      .useValue(accountMock)
-      .overrideProvider(CsmrTracksElasticService)
-      .useValue(elasticMock)
-      .overrideProvider(CsmrTracksFormatterService)
+      .overrideProvider(CsmrTracksService)
       .useValue(tracksMock)
       .compile();
 
@@ -104,90 +44,45 @@ describe('CsmrTracksController', () => {
   });
 
   describe('aggregateTracks()', () => {
+    // Given
+    const identityMock = Symbol('identityMock');
+    const optionsMock = Symbol('optionsMock');
+    const payloadMock = {
+      identity: identityMock,
+      options: optionsMock,
+    };
+
     beforeEach(() => {
-      cryptographyFcpMock.computeIdentityHash.mockReturnValueOnce(
-        identityHashMock,
-      );
-      accountMock.getIdsWithIdentityHash.mockResolvedValueOnce(groupIdsMock);
-      elasticMock.getTracks.mockResolvedValueOnce(rawDataMock);
-      tracksMock.formatTracks.mockReturnValueOnce(payloadTracksMock);
+      tracksMock.getTracksForIdentity.mockReturnValueOnce(tracksDataMock);
     });
 
-    it('Should find identityHash from identity', async () => {
+    it('should call getTracksForIdentity() with identity and options from payload', async () => {
       // When
       await controller.aggregateTracks(payloadMock);
       // Then
-      expect(cryptographyFcpMock.computeIdentityHash).toHaveBeenCalledTimes(1);
-      expect(cryptographyFcpMock.computeIdentityHash).toHaveBeenCalledWith(
+      expect(tracksMock.getTracksForIdentity).toHaveBeenCalledTimes(1);
+      expect(tracksMock.getTracksForIdentity).toHaveBeenCalledWith(
         identityMock,
-      );
-    });
-
-    it('Should find account ids from identityHash', async () => {
-      // When
-      await controller.aggregateTracks(payloadMock);
-      // Then
-      expect(accountMock.getIdsWithIdentityHash).toHaveBeenCalledTimes(1);
-      expect(accountMock.getIdsWithIdentityHash).toHaveBeenCalledWith(
-        identityHashMock,
-      );
-    });
-
-    it('should get raw tracks from database with group of ids', async () => {
-      // When
-      await controller.aggregateTracks(payloadMock);
-      // Then
-      expect(elasticMock.getTracks).toHaveBeenCalledTimes(1);
-      expect(elasticMock.getTracks).toHaveBeenCalledWith(
-        groupIdsMock,
         optionsMock,
       );
     });
 
-    it('Should format raw data into valuable tracks', async () => {
-      // When
-      await controller.aggregateTracks(payloadMock);
-      // Then
-      expect(tracksMock.formatTracks).toHaveBeenCalledTimes(1);
-      expect(tracksMock.formatTracks).toHaveBeenCalledWith(rawDataMock.payload);
-    });
-
-    it('Should return tracks requested based on identity information', async () => {
+    it('should return result from trackService.getTracksForIdentity()', async () => {
       // When
       const result = await controller.aggregateTracks(payloadMock);
       // Then
-      expect(result).toStrictEqual(tracksDataMock);
+      expect(result).toBe(tracksDataMock);
     });
 
-    it('should return empty array if no account id was found', async () => {
-      // Given
-      accountMock.getIdsWithIdentityHash.mockReset().mockResolvedValueOnce([]);
-
-      const resultMock = {
-        meta: {
-          total: 0,
-          size: optionsMock.size,
-          offset: optionsMock.offset,
-        },
-        payload: [],
-      };
-      // When
-      const result = await controller.aggregateTracks(payloadMock);
-      // Then
-      expect(result).toStrictEqual(resultMock);
-    });
-
-    it("should return 'ERROR' if service failed", async () => {
-      // Given
-      accountMock.getIdsWithIdentityHash
+    it("should return 'ERROR' if getTracksForIdentity() throw an error", async () => {
+      const errorMock = new Error('errorMock');
+      tracksMock.getTracksForIdentity
         .mockReset()
-        .mockImplementationOnce(() => {
-          throw new Error('Unknown Error');
-        });
+        .mockRejectedValueOnce(errorMock);
       // When
       const result = await controller.aggregateTracks(payloadMock);
       // Then
-      expect(result).toStrictEqual('ERROR');
+      expect(result).toBe('ERROR');
     });
   });
 });

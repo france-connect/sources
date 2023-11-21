@@ -100,9 +100,8 @@ export class OidcClientController {
       prompt: OidcProviderPrompt.LOGIN,
     };
 
-    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl(
-      authorizeParams,
-    );
+    const authorizationUrl =
+      await this.oidcClient.utils.getAuthorizeUrl(authorizeParams);
 
     const { name: idpName, title: idpLabel } =
       await this.identityProvider.getById(idpId);

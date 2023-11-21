@@ -1,7 +1,7 @@
 import {
-    basicErrorScenario,
-    setFSAuthorizeAcr,
-    submitFSAuthorizeForm
+  basicErrorScenario,
+  setFSAuthorizeAcr,
+  submitFSAuthorizeForm,
 } from './mire.utils';
 
 describe('9.9 - Interaction steps discarding', () => {
@@ -63,7 +63,7 @@ describe('9.9 - Interaction steps discarding', () => {
       csrf[0].value = 'obviouslyBadCSRF';
     });
 
-    cy.get('#consent').click();
+    cy.get('[data-testid="consent-continue"]').click();
 
     cy.url().should('match', new RegExp(`\/login`));
     cy.hasError('Y190006');
@@ -81,7 +81,7 @@ describe('9.9 - Interaction steps discarding', () => {
       csrf[0].value = '';
     });
 
-    cy.get('#consent').click();
+    cy.get('[data-testid="consent-continue"]').click();
 
     cy.url().should('match', new RegExp(`\/login`));
     cy.hasError('Y190006');
@@ -120,7 +120,7 @@ describe('9.9 - Interaction steps discarding', () => {
       csrf[0].remove();
     });
 
-    cy.get('#consent').click();
+    cy.get('[data-testid="consent-continue"]').click();
 
     cy.url().should('match', new RegExp(`\/login`));
     cy.hasError('Y000400');

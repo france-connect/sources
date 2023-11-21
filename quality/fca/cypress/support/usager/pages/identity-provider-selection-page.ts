@@ -20,7 +20,7 @@ export default class IdentityProviderSelectionPage {
   }
 
   searchIdentityProvider(terms: string): void {
-    cy.get('#fi-search-term').clear().type(terms);
+    cy.get('#fi-search-term').clearThenType(terms);
   }
 
   getIdpButton(idpId: string): ChainableElement {
@@ -33,6 +33,15 @@ export default class IdentityProviderSelectionPage {
 
   checkIsNoResultMessageIsVisible(): void {
     cy.contains('Aucun fournisseur d’identité n’a été trouvé').should(
+      'be.visible',
+    );
+  }
+
+  checkIsNoResultMonCompteProMessageIsVisible(): void {
+    cy.contains('Nous ne trouvons pas votre administration').should(
+      'be.visible',
+    );
+    cy.contains('Vous pouvez continuer en utilisant MonComptePro').should(
       'be.visible',
     );
   }

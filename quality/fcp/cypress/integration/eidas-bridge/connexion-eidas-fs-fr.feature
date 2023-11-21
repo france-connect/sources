@@ -1,10 +1,11 @@
 #language: fr
-@eidasBridge @connexionEidasBridge @ci @ignoreLow @ignoreHigh
+@eidasBridge @connexionEidasBridge
 Fonctionnalité: Connexion eIDAS - FS français
   # En tant qu'usager,
   # je veux utiliser mon identité vérifiée par un fournisseur d'identité européen
   # afin d'accéder à mon fournisseur de service français
 
+  @ci
   Scénario: Connexion FS français - avec claim AMR eidas
     Etant donné que j'utilise un compte usager "pour les tests eidas-bridge"
     Et que le fournisseur de service requiert le claim "amr"

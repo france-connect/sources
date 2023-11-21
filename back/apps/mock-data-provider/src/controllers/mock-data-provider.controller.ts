@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { JSONWebKeySet } from 'jose';
 
-import { Controller, Get, Res } from '@nestjs/common';
+import { Controller, Get, Headers, Res } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import {
@@ -10,20 +10,29 @@ import {
 } from '@fc/data-provider-adapter-core';
 
 import { MockDataProviderRoutes } from '../enums';
+import { MockDataProviderService } from '../services';
 
 @Controller(MockDataProviderRoutes.BASE)
 export class MockDataProviderController {
   constructor(
-    private readonly dataProviderAdapterCoreService: DataProviderAdapterCoreService,
-    private readonly configService: ConfigService,
+    private readonly dataProviderAdapterCore: DataProviderAdapterCoreService,
+    private readonly config: ConfigService,
+    private readonly mockDataProvider: MockDataProviderService,
   ) {}
 
   @Get(MockDataProviderRoutes.DATA)
-  async data(@Res({ passthrough: true }) res: Response): Promise<any> {
+  async data(
+    @Res({ passthrough: true }) res: Response,
+    @Headers('authorization') authorization = '',
+  ): Promise<any> {
+    const encodedBearer = authorization.replace('Bearer ', '');
+    const bearer = Buffer.from(encodedBearer, 'base64').toString('utf-8');
+    const [accessToken, receivedSecret] = bearer.split(':');
+
     try {
-      const claims = await this.dataProviderAdapterCoreService.checktoken(
-        'unrevelent_mock_access_token',
-      );
+      this.mockDataProvider.authenticateServiceProvider(receivedSecret);
+
+      const claims = await this.dataProviderAdapterCore.checktoken(accessToken);
 
       return claims;
     } catch (exception) {
@@ -43,10 +52,9 @@ export class MockDataProviderController {
 
   @Get(MockDataProviderRoutes.JWKS)
   async jwks(): Promise<JSONWebKeySet> {
-    const { jwks } =
-      await this.configService.get<DataProviderAdapterCoreConfig>(
-        'DataProviderAdapterCore',
-      );
+    const { jwks } = await this.config.get<DataProviderAdapterCoreConfig>(
+      'DataProviderAdapterCore',
+    );
     return jwks;
   }
 }

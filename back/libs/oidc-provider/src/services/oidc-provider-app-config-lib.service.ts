@@ -100,21 +100,20 @@ export abstract class OidcProviderAppConfigLibService
 
       // Retrieve spId from panva context
       const spId = this.getServiceProviderIdFromCtx(ctx);
-      this.checkSpId(ctx, spId);
+      await this.checkSpId(ctx, spId);
 
-      const { spIdentity, subs }: OidcSession = await this.sessionService.get(
-        boundSessionContext,
-      );
+      const { spIdentity, subs }: OidcSession =
+        await this.sessionService.get(boundSessionContext);
 
       const subSp = spId && subs[spId];
-      this.checkSub(ctx, subSp);
+      await this.checkSub(ctx, subSp);
 
       const account = await this.formatAccount(sessionId, spIdentity, subSp);
 
       return account;
     } catch (error) {
       // Hacky throw from oidc-provider
-      this.errorService.throwError(ctx, error);
+      await this.errorService.throwError(ctx, error);
     }
   }
 
@@ -213,18 +212,27 @@ export abstract class OidcProviderAppConfigLibService
     return ctx.oidc?.entities?.Client?.clientId;
   }
 
-  protected checkSpId(ctx: KoaContextWithOIDC, spId: string): void {
+  protected async checkSpId(
+    ctx: KoaContextWithOIDC,
+    spId: string,
+  ): Promise<void> {
     if (!spId) {
-      this.errorService.throwError(
+      await this.errorService.throwError(
         ctx,
         new OidcProviderSpIdNotFoundException(),
       );
     }
   }
 
-  protected checkSub(ctx: KoaContextWithOIDC, sub: string): void {
+  protected async checkSub(
+    ctx: KoaContextWithOIDC,
+    sub: string,
+  ): Promise<void> {
     if (!sub) {
-      this.errorService.throwError(ctx, new SessionSubNotFoundException());
+      await this.errorService.throwError(
+        ctx,
+        new SessionSubNotFoundException(),
+      );
     }
   }
 

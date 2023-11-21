@@ -8,6 +8,16 @@ import {
   OidcProviderPrompt,
   OidcProviderRoutes,
 } from '@fc/oidc-provider';
+import {
+  cnam,
+  cnous,
+  dgfip,
+  fcpLow,
+  fcTracks,
+  mesri,
+  mi,
+  pe,
+} from '@fc/scopes';
 
 const env = new ConfigParser(process.env, 'OidcProvider');
 
@@ -81,47 +91,14 @@ export default {
     acrValues: ['eidas1'],
     scopes: ['openid'],
     claims: {
-      amr: ['amr'],
-      openid: ['sub'],
-      gender: ['gender'],
-      birthdate: ['birthdate'],
-      birthcountry: ['birthcountry'],
-      birthplace: ['birthplace'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      given_name: ['given_name', 'given_name_array'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      family_name: ['family_name'],
-      email: ['email'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      preferred_username: ['preferred_username'],
-      address: ['address'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      phone: ['phone_number'],
-      profile: [
-        'given_name',
-        'given_name_array',
-        'family_name',
-        'birthdate',
-        'gender',
-        'preferred_username',
-      ],
-      birth: ['birthplace', 'birthcountry'],
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      idp_birthdate: ['idp_birthdate'],
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      identite_pivot: [
-        'given_name',
-        'given_name_array',
-        'family_name',
-        'birthdate',
-        'gender',
-        'birthplace',
-        'birthcountry',
-      ],
+      ...fcpLow.scopes,
+      ...dgfip.scopes,
+      ...cnam.scopes,
+      ...cnous.scopes,
+      ...mesri.scopes,
+      ...mi.scopes,
+      ...pe.scopes,
+      ...fcTracks.scopes,
     },
     clientDefaults: {
       // node-oidc-provider defined key

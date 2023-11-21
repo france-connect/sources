@@ -2,97 +2,178 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 import { FilesName, Folder } from '../enums';
+import { createCSV, getCwdForDirectory, readCSV } from '../helpers';
 import {
-  createCSV,
-  getCwdForDirectory,
-  getParameterValue,
-  readCSV,
-} from '../helpers';
-import { InseeDbCityInterface } from '../interface';
+  InseeDbCityCurrentInterface,
+  InseeDbCitySince1943Interface,
+  PostalCodesDbCurrentInterface,
+  SearchDbCityInterface,
+} from '../interface';
 
-const MATCHING_COLUMN = '#Code_commune_INSEE';
+export const MATCHING_COLUMN = '#Code_commune_INSEE';
+export const EXCLUDE_TYPECOM = 'COMD';
 
 export class GenerateCity {
-  static async run(args): Promise<void> {
-    const csv1 = getParameterValue(args, 0);
-    const csv2 = getParameterValue(args, 1);
+  constructor() {}
 
-    if (!csv1) {
+  async run([inseeSince1943, postalCodes, inseeCurrent]: [
+    string?,
+    string?,
+    string?,
+  ]): Promise<void> {
+    if (!inseeSince1943) {
       console.log(
-        'Please provide the path to the 1st CSV file as an argument.',
+        'Please provide the path to the 1st CSV file as an argument (insee file since 1943).',
       );
-    } else if (!csv2) {
+      return;
+    } else if (!postalCodes) {
       console.log(
-        'Please provide the path to the 2nd CSV file as an argument.',
+        'Please provide the path to the 2nd CSV file as an argument (La poste file).',
       );
-    } else {
-      await GenerateCity.searchInTwoCSVFiles(csv1, csv2);
+      return;
+    } else if (!inseeCurrent) {
+      console.log(
+        'Please provide the path to the 3nd CSV file as an argument (insee current file).',
+      );
+      return;
     }
+
+    await this.mergeCsvFiles(inseeSince1943, postalCodes, inseeCurrent);
   }
 
-  static async searchInTwoCSVFiles(file1, file2): Promise<void> {
+  private async mergeCsvFiles(
+    inseeSince1943: string,
+    postalCodes: string,
+    inseeCurrent: string,
+  ): Promise<void> {
     try {
-      const searchResultFile1 = await readCSV(file1);
-      const searchResultFile2 = await readCSV(file2);
+      const searchResultInseeSince1943: InseeDbCitySince1943Interface[] =
+        await readCSV(inseeSince1943);
+      const searchResultPostalCodes: PostalCodesDbCurrentInterface[] =
+        await readCSV(postalCodes);
+      const searchResultInseeCurrent: InseeDbCityCurrentInterface[] =
+        await readCSV(inseeCurrent);
 
-      const data = [];
-      console.log(
-        `Matching values between ${file1} and ${file2} on ${MATCHING_COLUMN}`,
+      const dataBase = this.prepareDataBase(searchResultInseeCurrent);
+
+      const dataWithPostalCode = this.matchPostalCode(
+        dataBase,
+        searchResultPostalCodes,
       );
 
-      data.push(
-        ...searchResultFile1
-          .filter(({ TYPECOM }) => TYPECOM !== 'COMD') // filter on the field 'COMD' because more specific place present in the "La Poste" file
-          .flatMap((item) =>
-            GenerateCity.processCSVData(
-              item,
-              searchResultFile2,
-              MATCHING_COLUMN,
-            ),
-          ),
+      const rawSearchData = this.matchOldCog(
+        dataWithPostalCode,
+        searchResultInseeSince1943,
       );
 
-      const targetDirectory = getCwdForDirectory(Folder.TARGET_DIRECTORY);
-      const filenameCsv = FilesName.CITY;
-      const fileContent = createCSV(data);
+      const searchData = this.removeDuplicates(rawSearchData).sort(
+        (a: SearchDbCityInterface, b: SearchDbCityInterface) =>
+          a.name.localeCompare(b.name),
+      );
 
-      if (!existsSync(targetDirectory)) {
-        mkdirSync(targetDirectory, { recursive: true });
-        console.log(`Directory "${targetDirectory}" has been created`);
-      }
-
-      const filePath = join(targetDirectory, filenameCsv);
-
-      writeFileSync(filePath, fileContent);
-      console.log(`${filenameCsv} was created with success into ${filePath}`);
+      this.writeCsvFile(searchData);
     } catch (err) {
-      console.log('Error:', err);
+      console.error('Error:', err);
     }
   }
 
-  static processCSVData(
-    searchResultFile1,
-    searchResultFile2,
-    matchColumn,
-  ): InseeDbCityInterface[] | [] {
-    const { COM: cog, NCC: name, ARR: arr } = searchResultFile1;
-    const data = searchResultFile2
-      .filter((item) => item[matchColumn] === cog)
-      .map(
-        ({
-          Nom_de_la_commune: abr,
-          Code_postal: cp,
-          Ligne_5: specificPlace,
-        }) => ({
-          cog,
-          name,
-          arr,
-          abr,
-          cp,
-          specificPlace,
-        }),
-      );
+  private prepareDataBase(
+    searchResultInseeCurrent: InseeDbCityCurrentInterface[],
+  ): Partial<SearchDbCityInterface>[] {
+    return searchResultInseeCurrent
+      .filter(
+        ({ TYPECOM }: InseeDbCityCurrentInterface) =>
+          TYPECOM !== EXCLUDE_TYPECOM,
+      )
+      .map(({ COM: cog, NCC: name }: InseeDbCityCurrentInterface) => {
+        return { cog, name };
+      });
+  }
 
-    return data;
+  private matchPostalCode(
+    dataBase: Partial<SearchDbCityInterface>[],
+    searchResultPostalCodes: PostalCodesDbCurrentInterface[],
+  ): SearchDbCityInterface[] {
+    return dataBase.map(({ cog, name }: Partial<SearchDbCityInterface>) => {
+      const {
+        Nom_de_la_commune: abr,
+        Code_postal: cp,
+        Ligne_5: specificPlace,
+      } = searchResultPostalCodes.find(
+        // We only do simple matching so it's not unreasonable to use this nested callback
+        // eslint-disable-next-line max-nested-callbacks
+        (item: PostalCodesDbCurrentInterface) => item[MATCHING_COLUMN] === cog,
+      ) || {};
+
+      return { cog, name, abr, cp, specificPlace };
+    });
+  }
+
+  private matchOldCog(
+    dataWithPostalCode: SearchDbCityInterface[],
+    searchResultInseeSince1943: InseeDbCitySince1943Interface[],
+  ): SearchDbCityInterface[] {
+    return dataWithPostalCode.reduce(
+      (
+        acc: SearchDbCityInterface[],
+        { cog, name, abr, cp, specificPlace }: SearchDbCityInterface,
+      ) => {
+        acc.push({ cog, name, abr, cp, specificPlace });
+
+        searchResultInseeSince1943
+          .filter(
+            // We only do simple matching so it's not unreasonable to use this nested callback
+            // eslint-disable-next-line max-nested-callbacks
+            ({ COM, NCC }: InseeDbCitySince1943Interface) =>
+              NCC === name && cog !== COM,
+          )
+          // We only do simple formatting so it's not unreasonable to use this nested callback
+          // eslint-disable-next-line max-nested-callbacks
+          .forEach(({ COM, NCC }: InseeDbCitySince1943Interface) => {
+            acc.push({ cog: COM, name: NCC, abr, cp: 'N/A', specificPlace });
+          });
+
+        return acc;
+      },
+      [],
+    );
+  }
+
+  private removeDuplicates(
+    rawSearchData: SearchDbCityInterface[],
+  ): SearchDbCityInterface[] {
+    return rawSearchData.reduce(
+      (acc: SearchDbCityInterface[], item: SearchDbCityInterface) => {
+        const nbFound = acc.filter(
+          // We only do simple matching so it's not unreasonable to use this nested callback
+          // eslint-disable-next-line max-nested-callbacks
+          (a: SearchDbCityInterface) =>
+            a.cog === item.cog && a.name === item.name,
+        ).length;
+
+        if (nbFound === 0) {
+          acc.push(item);
+        }
+
+        return acc;
+      },
+      [],
+    );
+  }
+
+  private writeCsvFile(searchData: SearchDbCityInterface[]): void {
+    const targetDirectory = getCwdForDirectory(Folder.TARGET_DIRECTORY);
+    const filenameCsv = FilesName.CITY;
+    const fileContent = createCSV(searchData);
+
+    if (!existsSync(targetDirectory)) {
+      mkdirSync(targetDirectory, { recursive: true });
+      console.log(`Directory "${targetDirectory}" has been created`);
+    }
+
+    const filePath = join(targetDirectory, filenameCsv);
+
+    writeFileSync(filePath, fileContent);
+    console.log(`${filenameCsv} was created with success into ${filePath}`);
   }
 }

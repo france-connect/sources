@@ -1,0 +1,13 @@
+_data
+_includes
+content
+node_modules
+public
+
+.scalingo/node
+
+eleventy.config.*
+markdown-custom-containers.js
+package.json
+package-lock.json
+yarn.lock

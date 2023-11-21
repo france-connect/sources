@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { unique } from '@fc/common';
 
+import * as Data from '../data';
 import { IClaim, IRichClaim, IScope } from '../interfaces';
 import { ScopesIndexService } from './scopes-index.service';
 
@@ -36,5 +37,14 @@ export class ScopesService {
     const richClaims = this.getRichClaimsFromClaims(claims);
 
     return richClaims;
+  }
+
+  getScopesByDataProvider(dataProvider: string): IScope[] {
+    const provider = Object.values(Data).find(
+      ({ provider }) => provider.key === dataProvider,
+    );
+    const scopes = Object.keys(provider.scopes);
+
+    return scopes;
   }
 }

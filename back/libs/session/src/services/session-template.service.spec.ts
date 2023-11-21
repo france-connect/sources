@@ -21,10 +21,7 @@ const sessionServiceMock = {
 describe('SessionTemplateService', () => {
   let service: SessionTemplateService;
 
-  const extractSessionFromRequestMock = jest.mocked(
-    extractSessionFromRequest,
-    true,
-  );
+  const extractSessionFromRequestMock = jest.mocked(extractSessionFromRequest);
 
   const resMock = {
     locals: {

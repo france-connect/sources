@@ -1,13 +1,16 @@
 import { join } from 'path';
 
-export function getParameterValue(
-  args: string[],
-  index: number,
-): string | undefined {
-  return args.length > 0 && args[index] ? args[index] : undefined;
-}
-
 export function getCwdForDirectory(directory: string): string {
   const pathDirectory = join(process.cwd(), '..', directory);
   return pathDirectory;
+}
+
+export function replaceAllOccurrences(
+  input: string,
+  finds: string[] | string,
+  replace: string,
+): string {
+  const regexPattern = Array.isArray(finds) ? finds.join('|') : finds;
+  const search = new RegExp(regexPattern, 'g');
+  return input.replace(search, replace);
 }

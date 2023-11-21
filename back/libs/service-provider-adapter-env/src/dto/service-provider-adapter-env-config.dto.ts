@@ -6,6 +6,7 @@ import {
   IsArray,
   IsBoolean,
   IsIn,
+  IsOptional,
   IsString,
   IsUrl,
   MinLength,
@@ -70,10 +71,11 @@ export class ServiceProvider {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_encrypted_response_enc: string;
 
+  @IsOptional()
   @IsString()
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly userinfo_signed_response_alg: string;
+  readonly userinfo_signed_response_alg?: string;
 
   @IsString()
   // oidc defined variable name

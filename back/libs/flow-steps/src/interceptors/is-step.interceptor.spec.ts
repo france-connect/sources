@@ -7,11 +7,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger-legacy';
-import { SessionService } from '@fc/session';
-
-import { getSessionServiceMock } from '@mocks/session';
 
 import { IsStep } from '../decorators';
+import { FlowStepsService } from '../services';
 import { IsStepInterceptor } from './is-step.interceptor';
 
 jest.mock('@fc/session/helper', () => ({
@@ -29,8 +27,6 @@ jest.mock('rxjs', () => ({
 describe('IsStepInterceptor', () => {
   let interceptor: IsStepInterceptor;
 
-  const sessionServiceMock = getSessionServiceMock();
-
   const httpContextMock = {
     getRequest: jest.fn(),
   };
@@ -41,9 +37,6 @@ describe('IsStepInterceptor', () => {
     },
     sessionId: 'sessionIdValue',
   };
-
-  const SessionServiceMock = jest.mocked(SessionService);
-  SessionServiceMock.getBoundSession = jest.fn();
 
   const IsStepMock = jest.mocked(IsStep);
 
@@ -70,31 +63,34 @@ describe('IsStepInterceptor', () => {
     urlPrefix: '/a/prefix',
   };
 
-  const sessionMock = {
-    spId: 'mockSpId',
-    spName: 'mockSpName',
+  const flowStepMock = {
+    setStep: jest.fn(),
   };
 
   beforeEach(async () => {
     jest.resetAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [IsStepInterceptor, ConfigService, LoggerService, Reflector],
+      providers: [
+        IsStepInterceptor,
+        ConfigService,
+        LoggerService,
+        Reflector,
+        FlowStepsService,
+      ],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(SessionService)
-      .useValue(sessionServiceMock)
+      .overrideProvider(FlowStepsService)
+      .useValue(flowStepMock)
       .compile();
 
     interceptor = module.get<IsStepInterceptor>(IsStepInterceptor);
 
     configServiceMock.get.mockReturnValue(configMock);
     httpContextMock.getRequest.mockReturnValue(reqMock);
-    sessionServiceMock.get.mockResolvedValue(sessionMock);
-    SessionServiceMock.getBoundSession.mockReturnValue(sessionServiceMock);
   });
 
   it('should be defined', () => {
@@ -175,16 +171,17 @@ describe('IsStepInterceptor', () => {
   describe('setStep', () => {
     it('should not call extractSession if there is no active session', async () => {
       // Given
-      httpContextMock.getRequest.mockReturnValueOnce({
+      const reqMock = {
         sessionId: undefined,
         route: { path: '' },
-      });
+      };
+      httpContextMock.getRequest.mockReturnValueOnce(reqMock);
 
       // When
       await interceptor['setStep'](contextMock);
 
       // Then
-      expect(SessionServiceMock.getBoundSession).not.toHaveBeenCalled();
+      expect(flowStepMock.setStep).not.toHaveBeenCalled();
     });
 
     it('should set stepRoute in session', async () => {
@@ -192,9 +189,9 @@ describe('IsStepInterceptor', () => {
       await interceptor['setStep'](contextMock);
 
       // Then
-      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.set).toHaveBeenCalledWith(
-        'stepRoute',
+      expect(flowStepMock.setStep).toHaveBeenCalledTimes(1);
+      expect(flowStepMock.setStep).toHaveBeenCalledWith(
+        reqMock,
         '/and/some/uri',
       );
     });

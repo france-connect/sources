@@ -57,6 +57,7 @@ export class FcException extends Error {
   public originalError?: Error;
   public redirect = false;
   public httpStatusCode: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+  public oidc?: { error: string; description: string };
 
   constructor(input?: Error | string) {
     let arg: unknown = input;

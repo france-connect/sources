@@ -10,6 +10,7 @@ import {
   ServiceProviderNameComponent,
   UserHistoryComponent,
 } from '../../components';
+import { ExternalLinkComponent } from '../../components/link';
 import styles from './homepage.module.scss';
 
 export const HomePage = React.memo(() => {
@@ -40,6 +41,18 @@ export const HomePage = React.memo(() => {
             size={Sizes.LARGE}
           />
         </div>
+      </div>
+
+      <div>
+        <p className="text-center fr-mt-6w">
+          <ExternalLinkComponent
+            className={styles.link}
+            href="https://tally.so/r/w5jJVN"
+            icon="question-fill"
+            label="Que pensez-vous d'AgentConnect ?"
+            size={Sizes.LARGE}
+          />
+        </p>
       </div>
     </React.Fragment>
   );

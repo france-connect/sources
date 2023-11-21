@@ -1,4 +1,4 @@
-import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import {
   getIdentityProviderByDescription,
@@ -24,7 +24,9 @@ Given(
     navigateTo({ appId: 'ud-preferences', baseUrl: allAppsUrl });
     udPreferencesPage = new UdPreferencesPage(udRootUrl);
     udPreferencesPage.checkIsVisible();
-    cy.waitForNetworkIdle('/api', 500);
+    // Wait for the IDP settings loading
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500);
   },
 );
 
@@ -34,13 +36,15 @@ Given(
     const { udRootUrl }: Environment = this.env;
     udPreferencesPage = new UdPreferencesPage(udRootUrl);
     udPreferencesPage.checkIsVisible();
-    cy.waitForNetworkIdle('/api', 500);
+    // Wait for the IDP settings loading
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500);
   },
 );
 
 When(
   /^je décide (d'autoriser|de bloquer) le fournisseur d'identité$/,
-  function (text) {
+  function (text: string) {
     const isAuthorized = text === "d'autoriser";
     const { name } = this.identityProvider;
     const idpSetting = udPreferencesPage.getIdentityProviderSetting(name);
@@ -50,7 +54,7 @@ When(
 
 When(
   /^je décide (d'autoriser|de bloquer) (?:le|un) fournisseur d'identité "([^"]+)"$/,
-  function (text, idpDescription) {
+  function (text: string, idpDescription: string) {
     const isAuthorized = text === "d'autoriser";
     const { name } = getIdentityProviderByDescription(
       this.identityProviders,
@@ -63,7 +67,7 @@ When(
 
 When(
   /^je force le statut du fournisseur d'identité "([^"]+)" à l'état (autorisé|bloqué)$/,
-  function (idpDescription, text) {
+  function (idpDescription: string, text: string) {
     const isAuthorized = text === 'autorisé';
     const { name } = getIdentityProviderByDescription(
       this.identityProviders,
@@ -76,7 +80,7 @@ When(
 
 When(
   /^je décide (d'autoriser|de bloquer) tous les fournisseurs d'identité$/,
-  function (text) {
+  function (text: string) {
     const isAuthorized = text === "d'autoriser";
     udPreferencesPage.setAllIdpAuthorization(isAuthorized);
   },
@@ -84,7 +88,7 @@ When(
 
 When(
   /^je décide (d'autoriser|de bloquer) les futurs fournisseurs d'identité$/,
-  function (text) {
+  function (text: string) {
     const isAuthorized = text === "d'autoriser";
     udPreferencesPage.setFutureIdpAuthorization(isAuthorized);
   },
@@ -100,9 +104,13 @@ When(
         return;
       } else {
         cy.wrap($btn).click();
-        cy.waitForNetworkIdle('/api', 500);
+        // Wait for the IDP settings loading
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(500);
         cy.reload();
-        cy.waitForNetworkIdle('/api', 500);
+        // Wait for the IDP settings loading
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(500);
       }
     });
   },
@@ -110,7 +118,7 @@ When(
 
 Then(
   /^les fournisseurs d'identité existants sont (autorisés|bloqués)$/,
-  function (text) {
+  function (text: string) {
     const authorization = text === 'autorisés';
     udPreferencesPage.checkAllIdpAuthorization(authorization);
   },
@@ -118,7 +126,7 @@ Then(
 
 Then(
   /^le fournisseur d'identité "([^"]+)" (est|n'est pas) blocable$/,
-  function (idpDescription, text) {
+  function (idpDescription: string, text: string) {
     const isCheckboxEnabled = text === 'est';
     const { name } = getIdentityProviderByDescription(
       this.identityProviders,
@@ -134,7 +142,7 @@ Then(
 
 Then(
   /^le fournisseur d'identité "([^"]+)" est (autorisé|bloqué)$/,
-  function (idpDescription, text) {
+  function (idpDescription: string, text: string) {
     const isAuthorized = text === 'autorisé';
     const { name } = getIdentityProviderByDescription(
       this.identityProviders,
@@ -149,7 +157,7 @@ Then(
 
 Then(
   /^les futurs fournisseurs d'identité sont (autorisés|bloqués)$/,
-  function (text) {
+  function (text: string) {
     const status = text === 'autorisés';
     udPreferencesPage.checkFutureIdpAuthorization(status);
   },
@@ -157,7 +165,7 @@ Then(
 
 Then(
   /^le message d'erreur "au moins un FI doit être autorisé" (est|n'est pas) affiché$/,
-  function (text) {
+  function (text: string) {
     const isDisplayed = text === 'est';
     udPreferencesPage.checkIsAlertErrorDisplayed(isDisplayed);
   },
@@ -165,7 +173,7 @@ Then(
 
 Then(
   /^le message d'information "autorisation des futurs fournisseurs d'identité" (est|n'est pas) affiché$/,
-  function (text) {
+  function (text: string) {
     const isDisplayed = text === 'est';
     udPreferencesPage.checkIsFutureIdpAlertDisplayed(isDisplayed);
   },
@@ -190,7 +198,7 @@ Then(
 
 When(
   /^je décide (d'autoriser|de bloquer) les futurs fournisseurs d'identité par défaut$/,
-  function (text) {
+  function (text: string) {
     const isAuthorized = text === "d'autoriser";
     udPreferencesPage.setFutureIdpAuthorization(isAuthorized);
   },
@@ -214,7 +222,7 @@ Then(
 
 Then(
   /^le fournisseur d'identité "([^"]+)" (est|n'est pas) présent dans la liste$/,
-  function (description, state) {
+  function (description: string, state: string) {
     const exist = state === 'est';
     const { name } = getIdentityProviderByDescription(
       this.identityProviders,

@@ -14,6 +14,8 @@ import { getJwtServiceMock } from '@mocks/jwt';
 import { DataProviderAdapterCoreService } from './data-provider-adapter-core.service';
 import {
   ChecktokenHttpStatusException,
+  ChecktokenInvalidAlgorithmException,
+  ChecktokenInvalidEncodingException,
   ChecktokenTimeoutException,
   JwksFetchFailedException,
 } from './exceptions';
@@ -38,6 +40,25 @@ describe('DataProviderAdapterCoreService', () => {
   };
 
   const jwtServiceMock = getJwtServiceMock();
+
+  const axiosErrorMock = {
+    response: {
+      data: {
+        error: 'error',
+        // oidc compliant
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: 'error_description',
+      },
+    },
+  } as AxiosError<{
+    error: string;
+    // oidc compliant
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    error_description: string;
+  }>;
+
+  const encryptAlgorithm = 'ECDH-ES';
+  const encryptEncoding = 'A256GCM';
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -88,6 +109,11 @@ describe('DataProviderAdapterCoreService', () => {
       data: 'data',
     };
 
+    const configMock = {
+      checktokenEncryptedResponseAlg: encryptAlgorithm,
+      checktokenEncryptedResponseEnc: encryptEncoding,
+    };
+
     beforeEach(() => {
       service['fetchToken'] = jest.fn().mockResolvedValue(responseMock);
       service['getDecryptedAndVerifiedToken'] = jest
@@ -95,11 +121,14 @@ describe('DataProviderAdapterCoreService', () => {
         .mockResolvedValue(claimsMock);
 
       mocked(lastValueFrom).mockResolvedValue(responseMock);
+      service['checkEncryptAlgorithm'] = jest.fn();
+      service['checkEncryptEncoding'] = jest.fn();
+      configServiceMock.get.mockReturnValue(configMock);
     });
 
     it('should call checktokenHttpError if lastValueFrom throws', async () => {
       // Given
-      const errorMock = new ChecktokenHttpStatusException('error');
+      const errorMock = new ChecktokenHttpStatusException(axiosErrorMock);
       service['fetchToken'] = jest.fn().mockRejectedValueOnce(errorMock);
       service['checktokenHttpError'] = jest.fn().mockImplementation(() => {
         throw errorMock;
@@ -313,7 +342,13 @@ describe('DataProviderAdapterCoreService', () => {
     it('should throw ChecktokenTimeoutException', () => {
       const error = {
         code: 'ETIMEDOUT',
-      } as AxiosError;
+        ...axiosErrorMock,
+      } as AxiosError<{
+        error: string;
+        // oidc compliant
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: string;
+      }>;
 
       expect(() => service['checktokenHttpError'](error)).toThrowError(
         ChecktokenTimeoutException,
@@ -323,7 +358,13 @@ describe('DataProviderAdapterCoreService', () => {
     it('should throw ChecktokenTimeoutException', () => {
       const error = {
         code: 'ECONNABORTED',
-      } as AxiosError;
+        ...axiosErrorMock,
+      } as AxiosError<{
+        error: string;
+        // oidc compliant
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: string;
+      }>;
 
       expect(() => service['checktokenHttpError'](error)).toThrowError(
         ChecktokenTimeoutException,
@@ -333,7 +374,13 @@ describe('DataProviderAdapterCoreService', () => {
     it('should throw ChecktokenTimeoutException', () => {
       const error = {
         code: 'ECONNRESET',
-      } as AxiosError;
+        ...axiosErrorMock,
+      } as AxiosError<{
+        error: string;
+        // oidc compliant
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: string;
+      }>;
 
       expect(() => service['checktokenHttpError'](error)).toThrowError(
         ChecktokenTimeoutException,
@@ -343,11 +390,43 @@ describe('DataProviderAdapterCoreService', () => {
     it('should throw ChecktokenHttpStatusException', () => {
       const error = {
         code: 'SOME_CODE',
-      } as AxiosError;
+        ...axiosErrorMock,
+      } as AxiosError<{
+        error: string;
+        // oidc compliant
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: string;
+      }>;
 
       expect(() => service['checktokenHttpError'](error)).toThrowError(
         ChecktokenHttpStatusException,
       );
+    });
+  });
+
+  describe('checkEncryptAlgorithm', () => {
+    it('should check if encrypt algorithm receive are the same that we have in config', () => {
+      // Given
+      const jwt = 'foo';
+      jwtServiceMock.retrieveJwtHeaders.mockReturnValue({ alg: 'RSA-OAEP' });
+
+      // When / Then
+      expect(() =>
+        service['checkEncryptAlgorithm'](jwt, encryptAlgorithm),
+      ).toThrow(ChecktokenInvalidAlgorithmException);
+    });
+  });
+
+  describe('checkEncryptEncoding', () => {
+    it('should check if encrypt encoding receive are the same that we have in config', () => {
+      // Given
+      const jwt = 'foo';
+      jwtServiceMock.retrieveJwtHeaders.mockReturnValue({ enc: 'A128GCM' });
+
+      // When / Then
+      expect(() =>
+        service['checkEncryptEncoding'](jwt, encryptEncoding),
+      ).toThrow(ChecktokenInvalidEncodingException);
     });
   });
 });

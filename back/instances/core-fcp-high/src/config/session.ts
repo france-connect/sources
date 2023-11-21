@@ -6,8 +6,6 @@ import { OidcClientRoutes } from '@fc/oidc-client';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
 
-import app from './app';
-
 const env = new ConfigParser(process.env, 'Session');
 
 const cookieOptions: ISessionCookieOptions = {
@@ -27,13 +25,12 @@ export default {
   sessionCookieName: 'fc_session_id',
   lifetime: 600, // 10 minutes
   sessionIdLength: 64,
-  slidingExpiration: false,
+  slidingExpiration: env.boolean('FEATURE_SSO_SUBSTANTIAL'),
   excludedRoutes: [
-    `${app.urlPrefix}${OidcProviderRoutes.AUTHORIZATION}`,
-    `${app.urlPrefix}${OidcProviderRoutes.JWKS}`,
-    `${app.urlPrefix}${OidcProviderRoutes.OPENID_CONFIGURATION}`,
-    `${app.urlPrefix}${OidcProviderRoutes.END_SESSION_CONFIRMATION}`,
-    `${app.urlPrefix}${OidcClientRoutes.WELL_KNOWN_KEYS}`,
+    OidcProviderRoutes.JWKS,
+    OidcProviderRoutes.OPENID_CONFIGURATION,
+    OidcProviderRoutes.END_SESSION_CONFIRMATION,
+    OidcClientRoutes.WELL_KNOWN_KEYS,
   ],
   templateExposed: {
     OidcClient: { spId: true, spName: true, idpName: true, idpLabel: true },

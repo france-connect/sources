@@ -14,4 +14,5 @@ export const enum CsmrTracksErrorCode {
   UNKNOWN_ACTION = 4,
   TRANSFORM_TRACKS_FAILED = 5,
   ACCOUNT_ID_CSMR_FAILED = 6,
+  UNKNOWN_INSTANCE = 7,
 }

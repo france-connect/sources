@@ -20,7 +20,7 @@ export const LinkComponent: React.FC<LinkComponentProps> = React.memo(
       className={classnames(
         `fr-link fr-link--${size}`,
         {
-          [`fr-fi-${icon}`]: !!icon,
+          [`fr-icon-${icon}`]: !!icon,
           [`fr-link--icon-${iconPlacement}`]: !!icon,
         },
         className,

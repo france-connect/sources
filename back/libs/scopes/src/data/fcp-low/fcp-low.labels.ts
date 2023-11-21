@@ -26,4 +26,5 @@ export const labels: ILabelMapping<typeof claims> = {
   email: 'Adresse email',
   // eslint-disable-next-line @typescript-eslint/naming-convention
   idp_birthdate: null,
+  amr: null,
 };

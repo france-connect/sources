@@ -14,21 +14,21 @@ describe('8.0.0 - prompt', () => {
   it('should allow prompt=login', () => {
     const url = getAuthorizeUrl({ prompt: 'login' });
     cy.visit(url, { failOnStatusCode: false });
-    cy.get('#idp-list').should('exist');
+    cy.get('[data-testid="main-providers"]').should('exist');
   });
   it('should allow prompt=consent', () => {
     const url = getAuthorizeUrl({ prompt: 'consent' });
     cy.visit(url, { failOnStatusCode: false });
-    cy.get('#idp-list').should('exist');
+    cy.get('[data-testid="main-providers"]').should('exist');
   });
   it('should allow prompt=login consent', () => {
     const url = getAuthorizeUrl({ prompt: 'login consent' });
     cy.visit(url, { failOnStatusCode: false });
-    cy.get('#idp-list').should('exist');
+    cy.get('[data-testid="main-providers"]').should('exist');
   });
   it('should allow prompt=consent login', () => {
     const url = getAuthorizeUrl({ prompt: 'consent login' });
     cy.visit(url, { failOnStatusCode: false });
-    cy.get('#idp-list').should('exist');
+    cy.get('[data-testid="main-providers"]').should('exist');
   });
 });

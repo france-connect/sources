@@ -1,4 +1,4 @@
-import { Given, Then, When } from 'cypress-cucumber-preprocessor/steps';
+import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import {
   addInterceptHeaders,
@@ -100,7 +100,7 @@ When('je me déconnecte du fournisseur de service', function () {
 
 Then(
   /le fournisseur de service a accès aux informations (?:du|des) scopes? "([^"]+)"/,
-  function (type) {
+  function (type: string) {
     const allClaims: UserClaims = this.user.allClaims;
     if (this.serviceProvider.mocked === true) {
       const platform: string = Cypress.env('PLATFORM');
@@ -144,6 +144,14 @@ Given('je mémorise le sub envoyé au fournisseur de service', function () {
   serviceProviderPage.getMockSubText().as('spSub');
 });
 
+Given(
+  "je rentre l'id du fournisseur d'identité dans le champ idp_hint",
+  function () {
+    const { idpId } = this.identityProvider;
+    serviceProviderPage.setIdpHint(idpId);
+  },
+);
+
 Then(
   /^le sub transmis au fournisseur de service est (identique|différent) [ad]u sub mémorisé$/,
   function (text: string) {
@@ -168,12 +176,12 @@ Then('le fournisseur de service a accès aux traces FranceConnect', function () 
 
 Then(
   'la cinématique a utilisé le niveau de sécurité {string}',
-  function (acrValue) {
+  function (acrValue: string) {
     serviceProviderPage.checkMockAcrValue(acrValue);
   },
 );
 
-Then("la cinématique a renvoyé l'amr {string}", function (amrValue) {
+Then("la cinématique a renvoyé l'amr {string}", function (amrValue: string) {
   serviceProviderPage.checkMockAmrValue(amrValue);
 });
 
@@ -203,14 +211,14 @@ Then(
 
 Then(
   "le titre de l'erreur fournisseur de service est {string}",
-  function (errorCode) {
+  function (errorCode: string) {
     serviceProviderPage.checkMockErrorCode(errorCode);
   },
 );
 
 Then(
   "la description de l'erreur fournisseur de service est {string}",
-  function (errorDescription) {
+  function (errorDescription: string) {
     serviceProviderPage.checkMockErrorDescription(errorDescription);
   },
 );

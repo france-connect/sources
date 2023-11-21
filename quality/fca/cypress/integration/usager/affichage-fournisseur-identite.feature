@@ -1,5 +1,5 @@
 #language: fr
-@usager @affichageFournisseurIdentité @ci
+@usager @affichageFournisseurIdentité
 Fonctionnalité: Affichage Fournisseur Identité
   # En tant qu'agent,
   # je veux visualiser la liste des fournisseurs d'identité disponibles
@@ -21,6 +21,7 @@ Fonctionnalité: Affichage Fournisseur Identité
     Quand je cherche le fournisseur d'identité par son ministère
     Alors le fournisseur d'identité n'est pas affiché dans la liste
 
+  @ci
   Scénario: Affichage des FI lors de la recherche - FI actif sélectionnable
     Etant donné que j'utilise un fournisseur d'identité "actif"
     Et que je navigue sur la page fournisseur de service
@@ -49,6 +50,7 @@ Fonctionnalité: Affichage Fournisseur Identité
     Quand je cherche le fournisseur d'identité par son ministère
     Alors le fournisseur d'identité n'est pas affiché dans la liste
 
+  @ci
   Scénario: Affichage des FI lors de la recherche - seulement les FI de whitelist du FS
     Etant donné que j'utilise un fournisseur de service "avec une whitelist de FI"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "obligatoires"

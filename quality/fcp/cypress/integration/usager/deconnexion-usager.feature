@@ -48,7 +48,8 @@ Fonctionnalité: Deconnexion Usager
     Et l'événement "FC_REQUESTED_LOGOUT_FROM_IDP" est journalisé
     Et l'événement "FC_SESSION_TERMINATED" est journalisé
 
-  @ignoreDocker
+  # Aucun FI sans end session url en integ01
+  @ignoreDocker @ignoreInteg01
   Scénario: Déconnexion d'un usager (FI sans endSessionUrl)
     Etant donné que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
     Et que je navigue sur la page fournisseur de service

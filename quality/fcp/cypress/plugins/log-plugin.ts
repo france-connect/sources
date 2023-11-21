@@ -57,3 +57,14 @@ export const getBusinessLogs = async (
 
   return JSON.parse(stdout);
 };
+
+export const getAllBusinessLogs = async (
+  args: hasBusinessLogArgs,
+): Promise<Record<string, string>> => {
+  const { logFilePath } = args;
+  const command = `ts-node ${GET_BUSINESS_LOG_SCRIPT_PATH} '${logFilePath}'`;
+
+  const { stdout } = await asyncExec(command);
+
+  return JSON.parse(stdout);
+};

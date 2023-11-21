@@ -37,12 +37,14 @@ export class ServiceProviderAdapterMongoService
     this.logger.setContext(this.constructor.name);
   }
 
-  onModuleInit() {
+  async onModuleInit() {
     this.mongooseWatcher.watchWith<ServiceProvider>(
       this.serviceProviderModel,
       this.refreshCache.bind(this),
     );
     this.logger.debug('Initializing service-provider');
+    // Warm up cache and shows up excluded SpPs
+    await this.getList();
   }
 
   async refreshCache(): Promise<void> {

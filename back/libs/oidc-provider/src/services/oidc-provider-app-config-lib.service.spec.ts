@@ -413,7 +413,7 @@ describe('OidcProviderAppConfigLibService', () => {
   });
 
   describe('checkSpId()', () => {
-    it('should throw OidcProviderSpIdNotFoundException if sp id not defined on panva context', () => {
+    it('should throw OidcProviderSpIdNotFoundException if sp id not defined on panva context', async () => {
       // Given
       const spIdMock = undefined;
       const ctxMock = {
@@ -424,7 +424,7 @@ describe('OidcProviderAppConfigLibService', () => {
       } as unknown as KoaContextWithOIDC;
       const exception = new OidcProviderSpIdNotFoundException();
       // When
-      service['checkSpId'](ctxMock, spIdMock);
+      await service['checkSpId'](ctxMock, spIdMock);
       // Then
       expect(service['errorService']['throwError']).toHaveBeenCalledWith(
         ctxMock,
@@ -434,7 +434,7 @@ describe('OidcProviderAppConfigLibService', () => {
   });
 
   describe('checkSub()', () => {
-    it('should throw SessionSubNotFoundException if sub not found in session', () => {
+    it('should throw SessionSubNotFoundException if sub not found in session', async () => {
       // Given
       const subMock = undefined;
       const ctxMock = {
@@ -445,7 +445,7 @@ describe('OidcProviderAppConfigLibService', () => {
       } as unknown as KoaContextWithOIDC;
       const exception = new SessionSubNotFoundException();
       // When
-      service['checkSub'](ctxMock, subMock);
+      await service['checkSub'](ctxMock, subMock);
       // Then
       expect(service['errorService']['throwError']).toHaveBeenCalledWith(
         ctxMock,

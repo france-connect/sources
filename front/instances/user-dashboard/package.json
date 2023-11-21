@@ -11,12 +11,13 @@
     "@fc/oidc-client": "^0.1.0",
     "@fc/user-dashboard": "^0.1.0",
     "@fc/user-preferences": "^0.1.0",
-    "luxon": "^2.2.0",
+    "luxon": "^3.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.3.0"
+    "react-router-dom": "^6.15.0"
   },
   "scripts": {
+    "prestart": "../../scripts/yarn-dsfr",
     "start": "../../scripts/yarn-start user-dashboard",
     "build": "../../scripts/yarn-build user-dashboard"
   },

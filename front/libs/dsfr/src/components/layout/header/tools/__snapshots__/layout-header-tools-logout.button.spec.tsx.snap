@@ -3,7 +3,7 @@
 exports[`LayoutHeaderToolsLogoutButton should match the snapshot, when isMobile is false 1`] = `
 <div>
   <a
-    class="fr-btn fr-fi-logout-box-r-line"
+    class="fr-btn fr-icon-logout-box-r-line"
     data-testid="layout-header-tools-logout-button-desktop"
     href="Any"
     title="bouton permettant la déconnexion de votre compte"
@@ -18,7 +18,7 @@ exports[`LayoutHeaderToolsLogoutButton should match the snapshot, when isMobile 
 exports[`LayoutHeaderToolsLogoutButton should match the snapshot, when isMobile is true 1`] = `
 <div>
   <a
-    class="fr-btn fr-fi-logout-box-r-line"
+    class="fr-btn fr-icon-logout-box-r-line"
     data-testid="layout-header-tools-logout-button-mobile"
     href="Any"
     title="bouton permettant la déconnexion de votre compte"

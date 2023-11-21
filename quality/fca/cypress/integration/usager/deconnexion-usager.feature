@@ -1,5 +1,5 @@
 #language: fr
-@usager @deconnexionUsager
+@usager @deconnexionUsager @ci
 Fonctionnalité: Deconnexion Usager
   # En tant qu'usager d'un fournisseur de service,
   # je veux me déconnecter du fournisseur de service, d'agent connect et du fournisseur d'identité

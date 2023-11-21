@@ -23,7 +23,7 @@ import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { NotificationsService } from '@fc/notifications';
 import { OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
-import { OidcClientConfig, OidcClientSession } from '@fc/oidc-client';
+import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderConfig, OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { ISessionService, Session, SessionCsrfService } from '@fc/session';
@@ -98,10 +98,12 @@ export class CoreFcpController {
   ) {
     const { spName, stepRoute } = await sessionOidc.get();
 
-    const { params, uid } = await this.oidcProvider.getInteraction(req, res);
-    const { scope: spScope } = params;
-    const { scope: idpScope } = this.config.get<OidcClientConfig>('OidcClient');
-    const { acr_values: acrValues, client_id: clientId } = params;
+    const { params } = await this.oidcProvider.getInteraction(req, res);
+    const {
+      acr_values: acrValues,
+      client_id: clientId,
+      scope: spScope,
+    } = params;
 
     const {
       configuration: { acrValues: allowedAcrValues },
@@ -159,10 +161,8 @@ export class CoreFcpController {
       notification,
       params,
       providers: authorizedProviders,
-      idpScope,
-      spScope,
       spName,
-      uid,
+      spScope,
     };
 
     this.logger.trace({
@@ -231,9 +231,8 @@ export class CoreFcpController {
       isSuspicious,
     );
     if (isInsufficientAcrLevel) {
-      const url = await this.coreFcpVerify.handleInsufficientAcrLevel(
-        interactionId,
-      );
+      const url =
+        await this.coreFcpVerify.handleInsufficientAcrLevel(interactionId);
 
       /**
        * Suspect context redirects to idp choice,

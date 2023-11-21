@@ -4,7 +4,7 @@ exports[`ReturnButtonComponent should match the snapshot, when isMobileViewport 
 <div>
   <li>
     <a
-      class="button fr-btn  fr-fi-arrow-left-line"
+      class="button fr-btn  fr-icon-arrow-left-line"
       data-testid="service-provider-back-button"
       href="any-historyBackURL-mock"
       title="retourner à l’écran précédent"
@@ -24,7 +24,7 @@ exports[`ReturnButtonComponent should match the snapshot, when isMobileViewport 
     class="fr-mb-n8v fr-p-2w"
   >
     <a
-      class="button fr-btn  fr-fi-arrow-left-line fr-btn--icon-left fr-btn--md is-mobile-viewport text-center w100"
+      class="button fr-btn  fr-icon-arrow-left-line fr-btn--icon-left fr-btn--md is-mobile-viewport text-center w100"
       data-testid="service-provider-back-button"
       href="any-historyBackURL-mock"
       title="retourner à l’écran précédent"

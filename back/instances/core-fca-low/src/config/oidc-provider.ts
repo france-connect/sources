@@ -104,6 +104,9 @@ export default {
       // AgentConnect claims naming convention
       // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_acr: ['idp_acr'],
+      // MonComptePro claims naming convention
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      is_service_public: ['is_service_public'],
     },
     clientDefaults: {
       // node-oidc-provider defined key

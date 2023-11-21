@@ -4,10 +4,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { CryptographyService } from '@fc/cryptography';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata, IOidcIdentity } from '@fc/oidc';
 import {
+  OidcClientConfigService,
   OidcClientService,
   OidcClientSession,
   TokenParams,
@@ -24,6 +26,7 @@ import { getSessionServiceMock } from '@mocks/session';
 
 import { GetOidcCallbackSessionDto, OidcIdentityDto } from '../dto';
 import { CoreFcaInvalidIdentityException } from '../exceptions';
+import { CoreFcaAuthorizationUrlService, CoreFcaService } from '../services';
 import { OidcClientController } from './oidc-client.controller';
 
 jest.mock('querystring', () => ({
@@ -148,6 +151,22 @@ describe('OidcClient Controller', () => {
     },
   } as unknown as TrackingService;
 
+  const coreFcaAuthorizationUrlServiceMock = {
+    getAuthorizeUrl: jest.fn(),
+  };
+
+  const coreServiceMock = {
+    redirectToIdp: jest.fn(),
+  };
+
+  const oidcClientConfigServiceMock = {
+    get: jest.fn(),
+  };
+
+  const cryptographyMock = {
+    genRandomString: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -164,6 +183,10 @@ describe('OidcClient Controller', () => {
         IdentityProviderAdapterMongoService,
         OidcProviderService,
         TrackingService,
+        CoreFcaAuthorizationUrlService,
+        CoreFcaService,
+        OidcClientConfigService,
+        CryptographyService,
       ],
     })
       .overrideProvider(OidcClientService)
@@ -184,6 +207,14 @@ describe('OidcClient Controller', () => {
       .useValue(oidcProviderServiceMock)
       .overrideProvider(TrackingService)
       .useValue(trackingServiceMock)
+      .overrideProvider(CoreFcaAuthorizationUrlService)
+      .useValue(coreFcaAuthorizationUrlServiceMock)
+      .overrideProvider(CoreFcaService)
+      .useValue(coreServiceMock)
+      .overrideProvider(OidcClientConfigService)
+      .useValue(oidcClientConfigServiceMock)
+      .overrideProvider(CryptographyService)
+      .useValue(cryptographyMock)
       .compile();
 
     controller = module.get<OidcClientController>(OidcClientController);
@@ -232,25 +263,6 @@ describe('OidcClient Controller', () => {
   });
 
   describe('redirectToIdp()', () => {
-    beforeEach(() => {
-      controller['appendSpIdToAuthorizeUrl'] = jest.fn();
-    });
-
-    it('shoud call config.get to retrieve configured parameters', async () => {
-      // Given
-      const body = {
-        providerUid: providerIdMock,
-        csrfToken: 'csrfMockValue',
-      };
-
-      // When
-      await controller.redirectToIdp(req, res, body, sessionServiceMock);
-
-      // Then
-      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(configServiceMock.get).toHaveBeenCalledWith('OidcClient');
-    });
-
     it('should call oidcProviderService.getInteraction to retrieve dynamic parameters', async () => {
       // Given
       const body = {
@@ -269,285 +281,43 @@ describe('OidcClient Controller', () => {
       );
     });
 
-    it('should call oidc-client-service to retrieve authorize url', async () => {
-      // Given
-      const body = {
-        providerUid: providerIdMock,
-        csrfToken: 'csrfMockValue',
-      };
-
-      const authorizeUrlMock = 'https://my-authentication-openid-url.com';
-
-      oidcClientServiceMock.utils.getAuthorizeUrl.mockReturnValueOnce(
-        authorizeUrlMock,
-      );
-
-      const expectedGetAuthorizeCallParameter = {
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        acr_values: interactionDetailsResolved.params.acr_values,
-        claims: '{"id_token":{"amr":{"essential":true}}}',
-        nonce: 'nonceMock',
-        idpId: 'providerIdMockValue',
-        scope: configMock.scope,
-        state: 'stateMock',
-      };
-
-      // When
-      await controller.redirectToIdp(req, res, body, sessionServiceMock);
-
-      // Then
-      expect(oidcClientServiceMock.utils.getAuthorizeUrl).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(oidcClientServiceMock.utils.getAuthorizeUrl).toHaveBeenCalledWith(
-        expectedGetAuthorizeCallParameter,
-      );
-    });
-
-    it('should call appendSpIdToAuthorizeUrl with serviceProviderId and authorizationUrl from getAuthorizeUrl', async () => {
-      // Given
-      const body = {
-        providerUid: providerIdMock,
-        csrfToken: 'csrfMockValue',
-      };
-
-      const authorizeUrlMock = 'https://my-authentication-openid-url.com';
-
-      oidcClientServiceMock.utils.getAuthorizeUrl.mockReturnValueOnce(
-        authorizeUrlMock,
-      );
-
-      // When
-      await controller.redirectToIdp(req, res, body, sessionServiceMock);
-
-      // Then
-      expect(controller['appendSpIdToAuthorizeUrl']).toHaveBeenCalledTimes(1);
-      expect(controller['appendSpIdToAuthorizeUrl']).toHaveBeenCalledWith(
-        spIdMock,
-        authorizeUrlMock,
-      );
-    });
-
-    it('should call res.redirect() with the authorizeUrl and the spId as query parameter', async () => {
-      // Given
-      const body = {
-        providerUid: providerIdMock,
-        csrfToken: 'csrfMockValue',
-      };
-
-      const authorizeUrlMock = 'https://my-authentication-openid-url.com';
-      const authorizeUrlWithSpIdMock = `${authorizeUrlMock}&sp_id=${spIdMock}`;
-      controller['appendSpIdToAuthorizeUrl'] = jest
-        .fn()
-        .mockReturnValueOnce(authorizeUrlWithSpIdMock);
-
-      oidcClientServiceMock.utils.getAuthorizeUrl.mockReturnValueOnce(
-        authorizeUrlMock,
-      );
-
-      // When
-      await controller.redirectToIdp(req, res, body, sessionServiceMock);
-
-      // Then
-      expect(res.redirect).toHaveBeenCalledTimes(1);
-      expect(res.redirect).toHaveBeenCalledWith(authorizeUrlWithSpIdMock);
-    });
-
-    it('should store state and nonce in session', async () => {
-      // Given
-      const body = {
-        providerUid: providerIdMock,
-        csrfToken: 'csrfMockValue',
-      };
-
-      const authorizeUrlMock = 'https://my-authentication-openid-url.com';
-
-      oidcClientServiceMock.utils.getAuthorizeUrl.mockReturnValueOnce(
-        authorizeUrlMock,
-      );
-
-      // When
-      await controller.redirectToIdp(req, res, body, sessionServiceMock);
-
-      // Then
-      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.set).toHaveBeenCalledWith({
-        idpId: body.providerUid,
-        idpName: 'nameValue',
-        idpLabel: 'titleValue',
-        idpState: stateMock,
-        idpNonce: nonceMock,
-      });
-    });
-
-    it('should throw if no spId are fetchable', async () => {
-      // Given
-      const body = {
-        providerUid: providerIdMock,
-        csrfToken: 'csrfMockValue',
-      };
-      sessionServiceMock.get.mockImplementationOnce(() => {
-        throw new Error();
-      });
-
-      // When
-      await expect(
-        controller.redirectToIdp(req, res, body, sessionServiceMock),
-      ).rejects.toThrow();
-
-      // Then
-      expect(res.redirect).not.toHaveBeenCalled();
-    });
-
-    it('should throw an error because idp is blacklisted', async () => {
-      // Given
-      const body = {
-        providerUid: providerIdMock,
-        csrfToken: 'invalidCsrfMockValue',
-      };
-      sessionServiceMock.get.mockReturnValueOnce('spId');
-      sessionCsrfServiceMock.validate.mockReset().mockImplementation(() => {
-        throw new Error(
-          'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
-        );
-      });
-      // Then
-      await expect(
-        controller.redirectToIdp(req, res, body, sessionServiceMock),
-      ).rejects.toThrow(SessionInvalidCsrfSelectIdpException);
-    });
-
     it('should throw an error if the two CSRF tokens (provided in request and previously stored in session) are not the same.', async () => {
       // Given
       const body = {
         providerUid: providerIdMock,
         csrfToken: 'csrfMockValue',
       };
+      const error = new Error('New Error');
+      sessionCsrfServiceMock.validate.mockReset().mockImplementationOnce(() => {
+        throw error;
+      });
+
       sessionServiceMock.get.mockReturnValueOnce('spId');
+
+      // When / Then
+      await expect(() =>
+        controller.redirectToIdp(req, res, body, sessionServiceMock),
+      ).rejects.toThrow(SessionInvalidCsrfSelectIdpException);
+    });
+
+    it('should call coreService redirectToIdp', async () => {
+      // Given
+      const body = {
+        providerUid: providerIdMock,
+        csrfToken: 'csrfMockValue',
+      };
 
       // When
       await controller.redirectToIdp(req, res, body, sessionServiceMock);
 
       // Then
-      expect(sessionServiceMock.get).toHaveBeenLastCalledWith();
-      expect(res.redirect).toHaveBeenCalledTimes(1);
-    });
-
-    describe('Idp blacklisted scenario for redirect to idp', () => {
-      let isBlacklistedMock;
-      beforeEach(() => {
-        isBlacklistedMock = oidcClientServiceMock.utils.checkIdpBlacklisted =
-          jest.fn();
-      });
-
-      it('idp is blacklisted', async () => {
-        // Given
-        const body = {
-          scope: 'openid',
-          providerUid: providerIdMock,
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          acr_values: 'eidas3',
-          nonce: nonceMock,
-          claims: 'any_formatted_json_string',
-          csrfToken: 'csrfMockValue',
-        };
-        const errorMock = new Error('New Error');
-        sessionServiceMock.get.mockReturnValueOnce({
-          spId: 'spIdValue',
-        });
-        isBlacklistedMock.mockRejectedValueOnce(errorMock);
-
-        // Then
-        await expect(() =>
-          controller.redirectToIdp(req, res, body, sessionServiceMock),
-        ).rejects.toThrow(errorMock);
-        expect(sessionServiceMock.get).toHaveBeenLastCalledWith();
-      });
-
-      it('idp is not blacklisted', async () => {
-        // Given
-        const body = {
-          scope: 'openid',
-          providerUid: providerIdMock,
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          acr_values: 'eidas3',
-          nonce: nonceMock,
-          claims: 'any_formatted_json_string',
-          csrfToken: 'csrfMockValue',
-        };
-        sessionServiceMock.get.mockReturnValueOnce({
-          spId: 'spIdValue',
-        });
-        isBlacklistedMock.mockReturnValueOnce(false);
-
-        // When
-        await controller.redirectToIdp(req, res, body, sessionServiceMock);
-
-        // Then
-        expect(sessionServiceMock.get).toHaveBeenLastCalledWith();
-        expect(res.redirect).toHaveBeenCalledTimes(1);
-      });
-    });
-
-    describe('Idp disabled scenario for redirect to idp', () => {
-      let isDisabledMock;
-      beforeEach(() => {
-        isDisabledMock = oidcClientServiceMock.utils.checkIdpDisabled =
-          jest.fn();
-      });
-
-      it('idp is disabled', async () => {
-        // Given
-        const body = {
-          scope: 'openid',
-          providerUid: providerIdMock,
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          acr_values: 'eidas3',
-          nonce: nonceMock,
-          claims: 'any_formatted_json_string',
-          csrfToken: 'csrfMockValue',
-        };
-        const errorMock = new Error('New Error');
-        sessionServiceMock.get.mockReturnValueOnce({
-          spId: 'spIdValue',
-        });
-        isDisabledMock.mockRejectedValueOnce(errorMock);
-
-        // Then
-        await expect(() =>
-          controller.redirectToIdp(req, res, body, sessionServiceMock),
-        ).rejects.toThrow(errorMock);
-        expect(sessionServiceMock.get).toHaveBeenLastCalledWith();
-      });
-
-      it('idp is not disabled', async () => {
-        // Given
-        const body = {
-          scope: 'openid',
-          providerUid: providerIdMock,
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          acr_values: 'eidas3',
-          nonce: nonceMock,
-          claims: 'any_formatted_json_string',
-          csrfToken: 'csrfMockValue',
-        };
-        sessionServiceMock.get.mockReturnValueOnce({
-          spId: 'spIdValue',
-        });
-        isDisabledMock.mockReturnValueOnce(false);
-
-        // When
-        await controller.redirectToIdp(req, res, body, sessionServiceMock);
-
-        // Then
-        expect(sessionServiceMock.get).toHaveBeenLastCalledWith();
-        expect(res.redirect).toHaveBeenCalledTimes(1);
-      });
+      expect(coreServiceMock.redirectToIdp).toHaveBeenCalledTimes(1);
+      expect(coreServiceMock.redirectToIdp).toHaveBeenCalledWith(
+        res,
+        interactionDetailsResolved.params.acr_values,
+        providerIdMock,
+        sessionServiceMock,
+      );
     });
   });
 
@@ -569,6 +339,29 @@ describe('OidcClient Controller', () => {
       oidcClientServiceMock.getEndSessionUrlFromProvider.mockReturnValueOnce(
         endsessionurlMock,
       );
+
+      oidcClientConfigServiceMock.get.mockReturnValue({ stateLength: 32 });
+      cryptographyMock.genRandomString.mockReturnValueOnce(stateMock);
+    });
+
+    it('should call oidc config', async () => {
+      // When
+      await controller.logoutFromIdp(res, sessionServiceMock);
+
+      // Then
+      expect(oidcClientConfigServiceMock.get).toHaveBeenCalledTimes(1);
+    });
+
+    it('Should generate a random state of 32 characters', async () => {
+      // Given
+      const randSize = 32;
+
+      // When
+      await controller.logoutFromIdp(res, sessionServiceMock);
+
+      // Then
+      expect(cryptographyMock.genRandomString).toHaveBeenCalledTimes(1);
+      expect(cryptographyMock.genRandomString).toHaveBeenCalledWith(randSize);
     });
 
     it('should call sessionOidc getter', async () => {
@@ -635,23 +428,6 @@ describe('OidcClient Controller', () => {
     });
   });
 
-  describe('appendSpIdToAuthorizeUrl()', () => {
-    it('should return the auuthorize url with the query param sp_id', () => {
-      // Given
-      const authorizeUrlMock = 'https://my-authentication-openid-url.com';
-      const authorizeUrlWithSpIdMock = `${authorizeUrlMock}&sp_id=${spIdMock}`;
-
-      // When
-      const result = controller['appendSpIdToAuthorizeUrl'](
-        spIdMock,
-        authorizeUrlMock,
-      );
-
-      // Then
-      expect(result).toStrictEqual(authorizeUrlWithSpIdMock);
-    });
-  });
-
   describe('getLegacyOidcCallback', () => {
     it('should extract urlPrefix from app config', async () => {
       // When
@@ -669,7 +445,7 @@ describe('OidcClient Controller', () => {
       expect(queryStringEncodeMock).toHaveBeenCalledWith(req.query);
     });
 
-    it('should redrect to the built oidc callback url', async () => {
+    it('should redirect to the built oidc callback url', async () => {
       // Given
       const queryMock = 'first-query-param=first&second-query-param=second';
       queryStringEncodeMock.mockReturnValueOnce(queryMock);

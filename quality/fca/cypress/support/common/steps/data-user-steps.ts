@@ -1,8 +1,8 @@
-import { Given } from 'cypress-cucumber-preprocessor/steps';
+import { Given } from '@badeball/cypress-cucumber-preprocessor';
 
 import { getEnabledUserByIdpId, getUserByCriteria } from '../../common/helpers';
 
-Given("j'utilise un compte usager {string}", function (description) {
+Given("j'utilise un compte usager {string}", function (description: string) {
   this.user = getUserByCriteria(this.users, [description]);
 });
 

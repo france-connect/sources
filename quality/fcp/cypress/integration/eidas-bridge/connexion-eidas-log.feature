@@ -1,5 +1,5 @@
 #language: fr
-@eidasBridge @connexionEidasLog @ci
+@eidasBridge @connexionEidasLog
 Fonctionnalité: Connexion eIDAS - Log
   # En tant que PO,
   # je veux tracer les cinématiques via eidas-bridge
@@ -25,6 +25,7 @@ Fonctionnalité: Connexion eIDAS - Log
     Et je suis redirigé vers la page fournisseur de service eidas mock
     Et le fournisseur de service eidas mock a accès aux informations des scopes "eidas"
     Et le sub transmis au fournisseur de service eidas commence par "FR/BE"
+    Et la cohérence des événements de la cinématique FS "européen" est respectée
 
   Scénario: Connexion FS français - logs métiers
     Etant donné que j'utilise un compte usager "pour les tests eidas-bridge"
@@ -52,3 +53,4 @@ Fonctionnalité: Connexion eIDAS - Log
     Et la cinématique a utilisé le niveau de sécurité "eidas2"
     Et le fournisseur de service a accès aux informations des scopes "eidas"
     Et la cinématique a renvoyé l'amr "eidas"
+    Et la cohérence des événements de la cinématique FS "français" est respectée

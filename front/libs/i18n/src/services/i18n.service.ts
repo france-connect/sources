@@ -48,8 +48,10 @@ export class I18nService {
       return input;
     }
 
-    const count = values[input.term];
     const def = input.definition;
+    const value = values[input.term];
+
+    const count = typeof value === 'string' ? parseInt(value, 10) : value;
 
     if (count === 0) {
       return def.zero || def.other;

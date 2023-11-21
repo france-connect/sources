@@ -164,9 +164,8 @@ export class EuIdentityToFrController {
 
       const { params } = await this.oidcProvider.getInteraction(req, res);
 
-      const oidcError = await this.eidasToOidc.mapPartialResponseFailure(
-        eidasResponse,
-      );
+      const oidcError =
+        await this.eidasToOidc.mapPartialResponseFailure(eidasResponse);
 
       return res.redirect(this.buildRedirectUriErrorUrl(params, oidcError));
     }

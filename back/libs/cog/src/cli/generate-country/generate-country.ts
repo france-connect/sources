@@ -1,29 +1,31 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
+import { FIND_OCCURENCES, REPLACE_BY_SPACE } from '../constants';
 import { FilesName, Folder } from '../enums';
 import {
   createCSV,
   getCwdForDirectory,
-  getParameterValue,
   readCSV,
+  replaceAllOccurrences,
 } from '../helpers';
+import { SearchDbCountryInterface } from '../interface';
+import { InseeDbCountryCurrentInterface } from '../interface/insee-db-country-current.interface';
 
 export class GenerateCountry {
-  static async run(args): Promise<void> {
-    const csv1 = getParameterValue(args, 0);
-
-    if (!csv1) {
+  static async run([countryFile]: [string?]): Promise<void> {
+    if (!countryFile) {
       console.log('Please provide the path to the CSV file as an argument.');
     } else {
-      await GenerateCountry.searchInCSVFiles(csv1);
+      await GenerateCountry.searchInCSVFiles(countryFile);
     }
   }
 
-  static async searchInCSVFiles(file1): Promise<void> {
+  static async searchInCSVFiles(countryFile): Promise<void> {
     try {
-      const searchResultFile = await readCSV(file1);
-      const data = searchResultFile.map(
+      const searchResultFile: InseeDbCountryCurrentInterface[] =
+        await readCSV(countryFile);
+      const data: SearchDbCountryInterface[] = searchResultFile.map(
         ({
           COG: cog,
           CAPAY: oldGeographicCode,
@@ -34,8 +36,12 @@ export class GenerateCountry {
           cog,
           oldGeographicCode,
           geographicCode,
-          name,
-          oldName,
+          name: replaceAllOccurrences(name, FIND_OCCURENCES, REPLACE_BY_SPACE),
+          oldName: replaceAllOccurrences(
+            oldName,
+            FIND_OCCURENCES,
+            REPLACE_BY_SPACE,
+          ),
         }),
       );
 

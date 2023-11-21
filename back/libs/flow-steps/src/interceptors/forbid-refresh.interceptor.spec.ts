@@ -10,7 +10,10 @@ import { SessionService } from '@fc/session';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { ForbidRefresh } from '../decorators';
-import { UnexpectedNavigationException } from '../exceptions';
+import {
+  UndefinedStepRouteException,
+  UnexpectedNavigationException,
+} from '../exceptions';
 import { ForbidRefreshInterceptor } from './forbid-refresh.interceptor';
 
 jest.mock('@fc/session/helper', () => ({
@@ -207,6 +210,15 @@ describe('ForbidRefreshInterceptor', () => {
       // When / Then
       await expect(interceptor['checkRefresh'](contextMock)).rejects.toThrow(
         UnexpectedNavigationException,
+      );
+    });
+
+    it('should throw if no stepRoute found', async () => {
+      // Given
+      sessionServiceMock.get.mockReset().mockResolvedValue(null);
+      // When / Then
+      await expect(interceptor['checkRefresh'](contextMock)).rejects.toThrow(
+        UndefinedStepRouteException,
       );
     });
   });

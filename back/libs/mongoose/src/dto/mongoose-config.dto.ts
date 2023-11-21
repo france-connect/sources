@@ -21,7 +21,7 @@ export class MongooseConfigOptions {
 
   @IsBoolean()
   @IsOptional()
-  readonly tlsInsecure?: boolean;
+  readonly tlsAllowInvalidCertificates?: boolean;
 
   @IsString()
   @IsOptional()

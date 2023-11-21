@@ -4,18 +4,26 @@ import { JSONWebKeySet, JWTPayload } from 'jose';
 import { lastValueFrom } from 'rxjs';
 
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { Use } from '@fc/cryptography';
+import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import {
   DataProviderAdapterMongoService,
   DataProviderMetadata,
 } from '@fc/data-provider-adapter-mongo';
 import { JwtService } from '@fc/jwt';
 import { LoggerService } from '@fc/logger-legacy';
+import { AccessToken, atHashFromAccessToken, stringToArray } from '@fc/oidc';
+import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';
+import { OidcProviderRedisAdapter } from '@fc/oidc-provider/adapters';
+import { Redis, REDIS_CONNECTION_TOKEN } from '@fc/redis';
+import { RnippPivotIdentity } from '@fc/rnipp';
+import { ScopesService } from '@fc/scopes';
+import { ISessionService, SessionService } from '@fc/session';
 
 import { ChecktokenRequestDto } from '../dto';
 import {
@@ -25,6 +33,7 @@ import {
 
 @Injectable()
 export class DataProviderService {
+  // OidcProviderRedisAdapter
   // Rule override allowed for dependency injection
   // eslint-disable-next-line max-params
   constructor(
@@ -33,6 +42,10 @@ export class DataProviderService {
     private readonly dataProvider: DataProviderAdapterMongoService,
     private readonly http: HttpService,
     private readonly jwt: JwtService,
+    @Inject(REDIS_CONNECTION_TOKEN) private readonly redis: Redis,
+    private readonly session: SessionService,
+    private readonly cryptographyFcp: CryptographyFcpService,
+    private readonly scopes: ScopesService,
   ) {}
   /**
    * This function take the checkTokenRequest to validate it
@@ -69,6 +82,121 @@ export class DataProviderService {
     const jwe = await this.generateJwe(jws, dataProvider);
 
     return jwe;
+  }
+
+  async getSessionByAccessToken(accessToken: string): Promise<string> {
+    const atHash = atHashFromAccessToken({ jti: accessToken });
+
+    return await this.session.getAlias(atHash);
+  }
+
+  async generatePayload(
+    oidcSessionService: ISessionService<OidcClientSession>,
+    accessToken: string,
+    dpClientId: string,
+  ): Promise<JWTPayload> {
+    /**
+     * We can not use DI for this adapter since it was made to be instantiated by `oidc-provider`
+     * It requires a ServiceProviderAdapter that we won't use here
+     * and the `context` parameter which is a string, not a provider.
+     */
+    const adapter = new OidcProviderRedisAdapter(
+      this.logger,
+      this.redis,
+      undefined,
+      'AccessToken',
+    );
+
+    const { expire, payload: interaction } =
+      await adapter.getExpireAndPayload<AccessToken>(accessToken);
+
+    if (expire <= 0) {
+      return this.generateExpiredPayload(dpClientId);
+    }
+
+    return this.generateValidPayload(
+      dpClientId,
+      oidcSessionService,
+      interaction,
+    );
+  }
+
+  generateExpiredPayload(aud: string): JWTPayload {
+    return {
+      // OIDC defined var name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      token_introspection: {
+        active: false,
+      },
+      aud,
+    };
+  }
+
+  private async generateValidPayload(
+    dpClientId: string,
+    oidcSessionService: ISessionService<OidcClientSession>,
+    interaction: AccessToken,
+  ): Promise<JWTPayload> {
+    const {
+      claims: {
+        id_token: {
+          acr: { values: acr },
+        },
+      },
+      iat,
+      exp,
+      jti,
+      clientId: spClientId,
+    } = interaction;
+
+    const { rnippIdentity } = await oidcSessionService.get();
+    const dpSub = this.generateDataProviderSub(rnippIdentity, dpClientId);
+
+    const scope = await this.getDpRelatedScopes(dpClientId, interaction);
+
+    const payload = {
+      // OIDC defined var name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      token_introspection: {
+        active: true,
+        aud: spClientId,
+        sub: dpSub,
+        iat,
+        exp,
+        acr: acr.join(' '),
+        jti,
+        scope: scope.join(' '),
+        ...rnippIdentity,
+      },
+      aud: dpClientId,
+    };
+
+    return payload;
+  }
+
+  private async getDpRelatedScopes(
+    dpClientId: string,
+    interaction: AccessToken,
+  ): Promise<string[]> {
+    const { slug } = await this.dataProvider.getByClientId(dpClientId);
+
+    const { scope: interactionScopes } = interaction;
+
+    const dataProviderScope = this.scopes.getScopesByDataProvider(slug);
+
+    const dpRelatedScopes = stringToArray(interactionScopes).filter(
+      (scope: string) => dataProviderScope.includes(scope),
+    );
+
+    return dpRelatedScopes;
+  }
+
+  private generateDataProviderSub(
+    identity: RnippPivotIdentity,
+    clientId: string,
+  ): string {
+    const identityHash = this.cryptographyFcp.computeIdentityHash(identity);
+    return this.cryptographyFcp.computeSubV1(clientId, identityHash);
   }
 
   private async generateJws(

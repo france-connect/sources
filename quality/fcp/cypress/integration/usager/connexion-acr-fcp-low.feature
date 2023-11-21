@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionAcr @ci @fcpLow
+@usager @connexionAcr @fcpLow
 Fonctionnalité: Connexion ACR
   # En tant qu'usager d'un fournisseur de service,
   # je veux utiliser un niveau de sécurité spécifique lors de ma connexion
@@ -25,11 +25,15 @@ Fonctionnalité: Connexion ACR
     Et la cinématique a utilisé le niveau de sécurité "eidas1"
     Et le fournisseur de service a accès aux informations du scope "tous les scopes"
 
+    @ci
     Exemples:
       | acrValues            | method |
       | eidas1               | get    |
       | eidas1               | post   |
       | niveau_inconnu       | get    |
+
+    Exemples:
+      | acrValues            | method |
       | niveau_inconnu       | post   |
       | eidas1 eidas2 eidas3 | post   |
 
@@ -71,11 +75,15 @@ Fonctionnalité: Connexion ACR
     Et la cinématique a utilisé le niveau de sécurité "<actualAcr>"
     Et le fournisseur de service a accès aux informations du scope "tous les scopes"
 
+    @ci
+    Exemples:
+      | spAcr  | idpAcr | actualAcr |
+      | eidas1 | eidas3 | eidas1    |
+
     Exemples:
       | spAcr  | idpAcr | actualAcr |
       | eidas1 | eidas1 | eidas1    |
       | eidas1 | eidas2 | eidas1    |
-      | eidas1 | eidas3 | eidas1    |
 
   Plan du Scénario: Connexion ACR - FCP low - erreur FI retourne un niveau <idpAcr>
     Etant donné que j'utilise le fournisseur de service "par défaut"

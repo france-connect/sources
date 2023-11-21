@@ -3,7 +3,6 @@ import { createReadStream } from 'fs';
 import { createCSV, readCSV } from './csv.helper';
 
 jest.mock('fs');
-jest.mock('csv-parser');
 
 describe('readCSV', () => {
   const createReadStreamMock = jest.mocked(createReadStream);

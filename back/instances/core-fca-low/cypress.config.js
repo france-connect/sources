@@ -10,10 +10,12 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       return pluginConfig(on, config);
     },
-    specPattern: 'cypress/integration/**/*.js',
-    excludeSpecPattern: 'cypress/integration/**/*.utils.js',
+    specPattern: 'cypress/integration/**/*.spec.js',
+    excludeSpecPattern: '',
     supportFile: 'cypress/support/index.js',
     video: false,
+    experimentalRunAllSpecs: true,
+    experimentalMemoryManagement: true,
   },
   env: {
     APP_DOMAIN: 'core-fca-low.docker.dev-franceconnect.fr',
@@ -85,7 +87,6 @@ module.exports = defineConfig({
     WELL_KNOWN: '/api/v2/.well-known/openid-configuration',
   },
   chromeWebSecurity: false,
-  videoUploadOnPasses: false,
   viewportHeight: 1000,
   viewportWidth: 1400,
   pageLoadTimeout: 30000,

@@ -132,7 +132,7 @@ describe('OidcProviderController', () => {
     });
   });
 
-  describe('setEndSession()', () => {
+  describe('getEndSession()', () => {
     it('should call logout service', () => {
       // Given
       const next = jest.fn();

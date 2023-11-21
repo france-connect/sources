@@ -84,6 +84,9 @@ export class OidcClientUtilsService {
     nonce,
     claims,
     prompt,
+    // acr_values is an oidc defined variable name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    idp_hint,
   }: IGetAuthorizeUrlParams): Promise<string> {
     const client: Client = await this.issuer.getClient(idpId);
 
@@ -96,6 +99,9 @@ export class OidcClientUtilsService {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
       prompt,
+      // oidc defined variable name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      idp_hint,
     };
 
     this.logger.trace({ params });
@@ -290,30 +296,15 @@ export class OidcClientUtilsService {
     this.logger.trace({ check: { spId, idpId, isIdpExcluded } });
   }
 
-  /**
-   * Method to check if
-   * an identity provider is disabled.
-   *
-   * @param {string} spId service provider ID
-   * @param {string} idpId identity provider ID
-   * @returns {Promise<void>}
-   * @throws OidcClientFailedToFetchIdpActiveStatusException if the idp active status couldn't be fetched
-   * @throws OidcClientIdpDisabledException if the idp is disabled
-   */
-  async checkIdpDisabled(spId: string, idpId: string): Promise<void> {
-    let isIdpActive = true;
-    try {
-      isIdpActive = await this.identityProvider.isActiveById(idpId);
-    } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
+  async checkIdpDisabled(idpId: string): Promise<void> {
+    const idp = await this.identityProvider.getById(idpId);
+
+    if (!idp) {
       throw new OidcClientIdpNotFoundException();
     }
 
-    if (!isIdpActive) {
-      this.logger.trace({ isIdpActive }, LoggerLevelNames.WARN);
+    if (!idp.active) {
       throw new OidcClientIdpDisabledException();
     }
-
-    this.logger.trace({ check: { spId, idpId, isIdpActive } });
   }
 }

@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "resolveJsonModule": true,
-    "lib": ["ES2020", "dom"],
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "target": "ES2020",
+    "lib": ["ES2022", "dom"],
+    "module": "nodenext",
+    "target": "ES2022",
     "types": ["cypress", "cypress-axe", "cypress-xpath", "node"]
   },
   "include": ["**/*.ts"]

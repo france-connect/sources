@@ -7,8 +7,8 @@ import { CryptographyService } from '@fc/cryptography';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata } from '@fc/oidc';
-import { OidcClientService } from '@fc/oidc-client';
-import { SessionNotFoundException } from '@fc/session';
+import { OidcClientService, OidcClientSession } from '@fc/oidc-client';
+import { ISessionService, SessionNotFoundException } from '@fc/session';
 
 import { getSessionServiceMock } from '@mocks/session';
 
@@ -16,6 +16,7 @@ import {
   MockServiceProviderTokenRevocationException,
   MockServiceProviderUserinfoException,
 } from '../exceptions';
+import { MockServiceProviderService } from '../services';
 import { MockServiceProviderController } from './mock-service-provider.controller';
 
 jest.mock('querystring', () => ({
@@ -60,6 +61,7 @@ describe('MockServiceProviderController', () => {
   const idpNonceMock = 'idpNonceMockValue';
   const idpIdentityMock = 'idpIdentityValue';
   const idpIdTokenMock = 'idpIdTokenMockValue';
+  const idpAccessTokenMock = 'idpAccessTokenValue';
   const idpIdMock = 'idpIdMockValue';
 
   const sessionDataMock = {
@@ -67,17 +69,18 @@ describe('MockServiceProviderController', () => {
     idpState: idpStateMock,
     idpIdentity: idpIdentityMock,
     idpIdToken: idpIdTokenMock,
+    idpAccessToken: idpAccessTokenMock,
     idpId: idpIdMock,
   };
 
-  const configMock = {
+  const configServiceMock = {
     get: jest.fn(),
   };
   const scopeMock = 'openid profile';
   const acrMock = 'acrMock';
   const claimsMock = 'claimsMock';
 
-  const configMockValue = {
+  const configMock = {
     scope: scopeMock,
     acr: acrMock,
     claims: claimsMock,
@@ -89,6 +92,10 @@ describe('MockServiceProviderController', () => {
 
   const identityProviderMock = {
     getList: jest.fn(),
+  };
+
+  const mockServiceProviderServiceMock = {
+    getData: jest.fn(),
   };
 
   const identityProviderMinimum = {
@@ -186,16 +193,19 @@ describe('MockServiceProviderController', () => {
         CryptographyService,
         ConfigService,
         IdentityProviderAdapterEnvService,
+        MockServiceProviderService,
       ],
     })
       .overrideProvider(ConfigService)
-      .useValue(configMock)
+      .useValue(configServiceMock)
       .overrideProvider(OidcClientService)
       .useValue(oidcClientServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
       .overrideProvider(IdentityProviderAdapterEnvService)
       .useValue(identityProviderMock)
+      .overrideProvider(MockServiceProviderService)
+      .useValue(mockServiceProviderServiceMock)
       .compile();
 
     controller = module.get<MockServiceProviderController>(
@@ -229,7 +239,7 @@ describe('MockServiceProviderController', () => {
 
     sessionServiceMock.get.mockResolvedValue(sessionDataMock);
 
-    configMock.get.mockReturnValue(configMockValue);
+    configServiceMock.get.mockReturnValue(configMock);
     identityProviderMock.getList.mockResolvedValue(identityProviderList);
   });
 
@@ -301,9 +311,12 @@ describe('MockServiceProviderController', () => {
     it('Should return session data and hardcoded title', async () => {
       // When
       const result = await controller.getVerify(res, sessionServiceMock);
+
       // Then
       expect(result).toEqual({
         titleFront: 'Mock Service Provider - Login Callback',
+        accessToken: 'idpAccessTokenValue',
+        dataApiActive: false,
         ...sessionDataMock,
       });
     });
@@ -392,7 +405,7 @@ describe('MockServiceProviderController', () => {
 
   describe('revocationToken', () => {
     beforeEach(() => {
-      controller['getIdpId'] = jest.fn().mockReturnValue(configMockValue.idpId);
+      controller['getIdpId'] = jest.fn().mockReturnValue(configMock.idpId);
     });
 
     it('should get the idpId from the app config', async () => {
@@ -417,11 +430,12 @@ describe('MockServiceProviderController', () => {
       expect(oidcClientServiceMock.utils.revokeToken).toHaveBeenCalledTimes(1);
       expect(oidcClientServiceMock.utils.revokeToken).toHaveBeenCalledWith(
         body.accessToken,
-        configMockValue.idpId,
+        configMock.idpId,
       );
       expect(result).toEqual({
         accessToken: 'access_token',
         titleFront: 'Mock Service Provider - Token révoqué',
+        dataApiActive: false,
       });
     });
 
@@ -480,6 +494,7 @@ describe('MockServiceProviderController', () => {
           given_name: 'given_name',
         },
         idpIdToken: idpIdTokenMock,
+        dataApiActive: false,
       };
 
       // action
@@ -493,7 +508,7 @@ describe('MockServiceProviderController', () => {
       expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledTimes(1);
       expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledWith(
         body.accessToken,
-        configMockValue.idpId,
+        configMock.idpId,
       );
       expect(result).toEqual(expectedOutput);
     });
@@ -525,6 +540,159 @@ describe('MockServiceProviderController', () => {
     });
   });
 
+  describe('getAllData', () => {
+    const resMock = {
+      status: jest.fn(),
+      redirect: jest.fn(),
+      render: jest.fn(),
+    };
+
+    const sessionOidcMock = {
+      get: jest.fn(),
+    };
+
+    const dataApiMock = {
+      name: 'dataApiMock',
+      url: 'dataApiUrlMock',
+      secret: 'secretMock',
+    };
+    const dataApiMock2 = {
+      name: 'dataApiMock2',
+      url: 'dataApiUrlMock2',
+      secret: 'secretMock2',
+    };
+    const dataApiMock3 = {
+      name: 'dataApiMock3',
+      url: 'dataApiUrlMock3',
+      secret: 'secretMock3',
+    };
+    const dataApisMock = [dataApiMock, dataApiMock2, dataApiMock3];
+
+    beforeEach(() => {
+      sessionOidcMock.get.mockResolvedValue(sessionDataMock);
+
+      configServiceMock.get.mockReturnValue({
+        dataApis: dataApisMock,
+      });
+    });
+
+    it('should retrieve the App configuration', async () => {
+      // When
+      await controller.getAllData(
+        resMock,
+        sessionOidcMock as unknown as ISessionService<OidcClientSession>,
+      );
+
+      // Then
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('App');
+    });
+
+    it('should redirect to error if there is no api configured', async () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({});
+      const expectedErrorUriMock = `/error?error=no_data_provider&error_description=${encodeURIComponent(
+        'No data provider configured.',
+      )}`;
+
+      // When
+      await controller.getAllData(
+        resMock,
+        sessionOidcMock as unknown as ISessionService<OidcClientSession>,
+      );
+
+      // Then
+      expect(resMock.redirect).toHaveBeenCalledTimes(1);
+      expect(resMock.redirect).toHaveBeenCalledWith(expectedErrorUriMock);
+    });
+
+    it('should retrieve the access token from the session', async () => {
+      // When
+      await controller.getAllData(
+        resMock,
+        sessionOidcMock as unknown as ISessionService<OidcClientSession>,
+      );
+
+      // Then
+      expect(sessionOidcMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionOidcMock.get).toHaveBeenCalledWith();
+    });
+
+    it('should get data for each api', async () => {
+      // When
+      await controller.getAllData(
+        resMock,
+        sessionOidcMock as unknown as ISessionService<OidcClientSession>,
+      );
+
+      // Then
+      expect(mockServiceProviderServiceMock.getData).toHaveBeenCalledTimes(
+        dataApisMock.length,
+      );
+      expect(mockServiceProviderServiceMock.getData).toHaveBeenNthCalledWith(
+        1,
+        dataApiMock.url,
+        sessionDataMock.idpAccessToken,
+        dataApiMock.secret,
+      );
+      expect(mockServiceProviderServiceMock.getData).toHaveBeenNthCalledWith(
+        2,
+        dataApiMock2.url,
+        sessionDataMock.idpAccessToken,
+        dataApiMock2.secret,
+      );
+      expect(mockServiceProviderServiceMock.getData).toHaveBeenNthCalledWith(
+        3,
+        dataApiMock3.url,
+        sessionDataMock.idpAccessToken,
+        dataApiMock3.secret,
+      );
+    });
+
+    it('should render the data page with the data', async () => {
+      // Given
+      const dataMock = {
+        data: 'dataMock',
+      };
+      mockServiceProviderServiceMock.getData.mockResolvedValue(dataMock);
+      const expectedResponseMock = {
+        accessToken: 'idpAccessTokenValue',
+        data: [
+          {
+            name: 'dataApiMock',
+            response: {
+              data: 'dataMock',
+            },
+          },
+          {
+            name: 'dataApiMock2',
+            response: {
+              data: 'dataMock',
+            },
+          },
+          {
+            name: 'dataApiMock3',
+            response: {
+              data: 'dataMock',
+            },
+          },
+        ],
+        dataApiActive: true,
+        titleFront: 'Mock Service Provider - UserData',
+      };
+
+      // When
+      await controller.getAllData(
+        resMock,
+        sessionOidcMock as unknown as ISessionService<OidcClientSession>,
+      );
+
+      // Then
+      expect(resMock.render).toHaveBeenCalledTimes(1);
+      expect(resMock.render).toHaveBeenCalledWith('data', expectedResponseMock);
+    });
+  });
+
   describe('getInteractionParameters', () => {
     const provider = identityProviderFull as IdentityProviderMetadata;
     const urlMock = 'https://somewhere.com/foo';
@@ -538,21 +706,21 @@ describe('MockServiceProviderController', () => {
       // When
       await controller['getInteractionParameters'](provider);
       // Then
-      expect(configMock.get).toBeCalledTimes(2);
+      expect(configServiceMock.get).toBeCalledTimes(2);
     });
 
     it('should get OidcAcr config', async () => {
       // When
       await controller['getInteractionParameters'](provider);
       // Then
-      expect(configMock.get).toBeCalledWith('OidcAcr');
+      expect(configServiceMock.get).toBeCalledWith('OidcAcr');
     });
 
     it('should get OidcClient config', async () => {
       // When
       await controller['getInteractionParameters'](provider);
       // Then
-      expect(configMock.get).toBeCalledWith('OidcClient');
+      expect(configServiceMock.get).toBeCalledWith('OidcClient');
     });
 
     it('should call oidcClient.buildAuthorizeParameters', async () => {
@@ -767,7 +935,7 @@ describe('MockServiceProviderController', () => {
 
   describe('getIdpId()', () => {
     beforeEach(() => {
-      configMock.get.mockReturnValueOnce({
+      configServiceMock.get.mockReturnValueOnce({
         idpId: idpIdMock,
       });
     });
@@ -777,8 +945,8 @@ describe('MockServiceProviderController', () => {
       controller['getIdpId']();
 
       // Then
-      expect(configMock.get).toHaveBeenCalledTimes(1);
-      expect(configMock.get).toHaveBeenCalledWith('App');
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('App');
     });
 
     it('should return the idpId from the config', () => {
@@ -787,6 +955,60 @@ describe('MockServiceProviderController', () => {
 
       // Then
       expect(result).toBe(idpIdMock);
+    });
+  });
+
+  describe('getData', () => {
+    const dataApiMock = {
+      name: 'dataApiMock',
+      url: 'dataApiUrlMock',
+      secret: 'dataApiMock',
+    };
+    const dataMock = {
+      data: 'dataMock',
+    };
+
+    beforeEach(() => {
+      mockServiceProviderServiceMock.getData.mockResolvedValue(dataMock);
+    });
+
+    it('should call getData with the api url, the api secret and the access token', async () => {
+      // When
+      await controller['getData'](dataApiMock, sessionDataMock.idpAccessToken);
+
+      // Then
+      expect(mockServiceProviderServiceMock.getData).toHaveBeenCalledTimes(1);
+      expect(mockServiceProviderServiceMock.getData).toHaveBeenCalledWith(
+        dataApiMock.url,
+        sessionDataMock.idpAccessToken,
+        dataApiMock.secret,
+      );
+    });
+
+    it('should return the data', async () => {
+      // When
+      const result = await controller['getData'](
+        dataApiMock,
+        sessionDataMock.idpAccessToken,
+      );
+
+      // Then
+      expect(result).toStrictEqual(dataMock);
+    });
+
+    it('should return an error if the data api call fails', async () => {
+      // Given
+      const errorMock = new Error('error');
+      mockServiceProviderServiceMock.getData.mockRejectedValue(errorMock);
+
+      // When
+      const result = await controller['getData'](
+        dataApiMock,
+        sessionDataMock.idpAccessToken,
+      );
+
+      // Then
+      expect(result).toStrictEqual(errorMock);
     });
   });
 });

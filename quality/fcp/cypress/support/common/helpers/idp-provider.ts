@@ -8,6 +8,21 @@ type IdentityProviderAttributesFilter = {
   usable?: boolean;
 };
 
+export const getIdentityProviderNameByDescription = (
+  identityProviders: IdentityProvider[],
+  description: string,
+  shouldExist = true,
+): string | undefined => {
+  const { name: idpName } =
+    getIdentityProviderByDescription(
+      identityProviders,
+      description,
+      shouldExist,
+    ) ?? {};
+
+  return idpName;
+};
+
 export const getIdentityProviderByAttributes = (
   identityProviders: IdentityProvider[],
   filters: IdentityProviderAttributesFilter,
@@ -30,26 +45,36 @@ export const getIdentityProviderByAttributes = (
 export const getIdentityProviderByDescription = (
   identityProviders: IdentityProvider[],
   description: string,
-): IdentityProvider => {
+  shouldExist = true,
+): IdentityProvider | undefined => {
   const identityProvider: IdentityProvider = identityProviders.find(
     (identityProvider) => identityProvider.descriptions.includes(description),
   );
-  expect(
-    identityProvider,
-    `No identity provider matches the description '${description}'`,
-  ).to.exist;
+  if (shouldExist) {
+    expect(
+      identityProvider,
+      `No identity provider matches the description '${description}'`,
+    ).to.exist;
+  }
   return identityProvider;
 };
 
-export const getIdentityProviderByName = (
+export const getIdentityProviderByNameOrDescription = (
   identityProviders: IdentityProvider[],
-  idpName: string,
-): IdentityProvider => {
+  idpNameOrDescription: string,
+  shouldExist = true,
+): IdentityProvider | undefined => {
   const identityProvider: IdentityProvider = identityProviders.find(
-    (idp) => idp.name === idpName,
+    ({ descriptions, name }) =>
+      name === idpNameOrDescription ||
+      descriptions.includes(idpNameOrDescription),
   );
-  expect(identityProvider, `No identity provider matches the name '${idpName}'`)
-    .to.exist;
+  if (shouldExist) {
+    expect(
+      identityProvider,
+      `No identity provider matches the name or description '${idpNameOrDescription}'`,
+    ).to.exist;
+  }
   return identityProvider;
 };
 

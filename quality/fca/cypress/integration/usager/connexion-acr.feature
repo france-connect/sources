@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionAcr @ci
+@usager @connexionAcr
 Fonctionnalité: Connexion Usager - Acr
   # En tant qu'usager d'un fournisseur de service,
   # je veux me connecter en utilisant un fournisseur d'identité
@@ -23,11 +23,15 @@ Fonctionnalité: Connexion Usager - Acr
     Et la cinématique a utilisé le niveau de sécurité "<actualAcr>"
     Et le fournisseur de service a accès aux informations du scope "obligatoires"
 
+    @ci
     Exemples:
       | acrValues            | method | actualAcr |
       | eidas1               | get    | eidas1    |
       | eidas1               | post   | eidas1    |
       | niveau_inconnu       | get    | eidas1    |
+
+    Exemples:
+      | acrValues            | method | actualAcr |
       | niveau_inconnu       | post   | eidas1    |
       | eidas1 eidas2 eidas3 | post   | eidas1    |
 
@@ -67,10 +71,14 @@ Fonctionnalité: Connexion Usager - Acr
     Et le fournisseur de service a accès aux informations des scopes "obligatoires"
     Et la cinématique a utilisé le niveau de sécurité "<actualAcr>"
 
+    @ci
+    Exemples:
+      | idpAcr | actualAcr |
+      | eidas2 | eidas1    |
+
     Exemples:
       | idpAcr | actualAcr |
       | eidas1 | eidas1    |
-      | eidas2 | eidas1    |
       | eidas3 | eidas1    |
 
   Scénario: Connexion ACR - FI retourne un niveau inconnu

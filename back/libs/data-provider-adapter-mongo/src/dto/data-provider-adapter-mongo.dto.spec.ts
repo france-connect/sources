@@ -11,6 +11,7 @@ describe('Data Provider (Data Transfer Object)', () => {
     uid: '6f21b751-ed06-48b6-a59c-36e1300a368a',
     title: 'Fournisseur de données Mock - 1',
     active: true,
+    slug: 'MOCK_1',
     // OIDC fashion naming
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_id:

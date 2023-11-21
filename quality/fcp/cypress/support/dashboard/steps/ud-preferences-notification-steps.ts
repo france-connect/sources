@@ -1,4 +1,4 @@
-import { Then } from 'cypress-cucumber-preprocessor/steps';
+import { Then } from '@badeball/cypress-cucumber-preprocessor';
 
 import { User } from '../../common/helpers';
 import { IdentityProvider } from '../../common/types';

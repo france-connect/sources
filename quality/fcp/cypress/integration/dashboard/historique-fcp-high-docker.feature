@@ -1,5 +1,5 @@
 #language: fr
-@userDashboard @historiqueConnexion @ignoreInteg01 @ignoreHigh @ignoreLow
+@userDashboard @historiqueConnexion @ignoreInteg01
 Fonctionnalité: Historique Connexion FC+ (docker)
   # En tant qu'usager de FranceConnect,
   # je veux me connecter au user-dashboard

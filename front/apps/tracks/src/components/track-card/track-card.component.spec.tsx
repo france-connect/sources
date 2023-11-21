@@ -1,5 +1,4 @@
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { fireEvent, render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
 import { CinematicEvents, EidasToLabel } from '../../enums';
@@ -175,7 +174,7 @@ describe('TrackCardComponent', () => {
     const element = getByTestId(`${track.platform}-${track.trackId}`);
 
     // then
-    userEvent.click(element);
+    fireEvent.click(element);
     expect(element.getAttribute('aria-expanded')).toStrictEqual('true');
     expect(TrackCardHeaderComponent).toHaveBeenCalled();
     expect(TrackCardHeaderComponent).toHaveBeenCalledWith(
@@ -188,7 +187,7 @@ describe('TrackCardComponent', () => {
       {},
     );
 
-    userEvent.click(element);
+    fireEvent.click(element);
     expect(element.getAttribute('aria-expanded')).toStrictEqual('false');
     expect(TrackCardHeaderComponent).toHaveBeenCalled();
     expect(TrackCardHeaderComponent).toHaveBeenCalledWith(

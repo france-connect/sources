@@ -156,6 +156,7 @@ describe('LayoutHeaderComponent', () => {
     expect(LayoutHeaderMenuComponent).toHaveBeenCalledWith(
       {
         firstname: expect.any(String),
+        isMobile: expect.any(Boolean),
         lastname: expect.any(String),
         navigationItems: navigationItemsMock,
         onClose: expect.any(Function),

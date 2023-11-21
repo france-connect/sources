@@ -1,0 +1,44 @@
+<%
+const hasParams = !!locals.params
+const isOidcClientSession = !!(locals.session && locals.session.OidcClient);
+
+const label = hasParams
+  ? locals.spName
+  : isOidcClientSession && locals.session.OidcClient.spName || undefined;
+
+const urlBase = hasParams
+  ? locals.params.redirect_uri
+  : '/api/v2/redirect-to-sp-with-error';
+
+const error =  hasParams
+  ? 'access_denied'
+  : locals.code;
+
+const error_description = hasParams
+  ? encodeURIComponent("User auth aborted")
+  : locals.message;
+
+const state = hasParams
+  ? locals.params.state
+  : undefined;
+
+const params = {
+  error,
+  error_description,
+  state
+};
+
+const urlParams = Object.entries(params)
+  .filter(([,value]) => !!value)
+  .map(([key,value]) => `${key}=${value}`)
+  .join('&');
+%>
+<% if (!!label) { %>
+<a
+  data-testid="back-to-sp-link"
+  href="<%= urlBase %>?<%= urlParams %>"
+  class="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-left fr-icon-arrow-go-back-fill"
+>
+  Revenir sur <%= label %>
+</a>
+<% } %>

@@ -74,7 +74,7 @@ export default class ServiceProviderPage {
   }
 
   setMockRequestedAcr(acrValue: string): void {
-    cy.get('input[name="acr_values"]').clear().type(acrValue);
+    cy.get('input[name="acr_values"]').clearThenType(acrValue);
   }
 
   setMockRequestedAmr(isRequested: boolean): void {
@@ -83,6 +83,11 @@ export default class ServiceProviderPage {
     } else {
       cy.get('#claim_amr').uncheck();
     }
+  }
+
+  setIdpHint(idpHint: string): void {
+    cy.get('input[name="idp_hint"]').clear();
+    cy.get('input[name="idp_hint"]').type(idpHint);
   }
 
   getUserInfo(): Cypress.Chainable<unknown> {

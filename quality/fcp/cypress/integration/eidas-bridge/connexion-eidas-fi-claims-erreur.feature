@@ -1,5 +1,5 @@
 #language: fr
-@eidasBridge @connexionEidasFiClaimsErreur @ci @ignoreLow @ignoreHigh
+@eidasBridge @connexionEidasFiClaimsErreur
 Fonctionnalité: Connexion eIDAS - Validation des claims renvoyés par le fournisseur d'identité
   # En tant que Product Owner,
   # je veux m'assurer que les claims obligatoires sont correctement renvoyés par les FI

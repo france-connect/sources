@@ -34,6 +34,7 @@ describe('LayoutHeaderMenuComponent', () => {
     const { container } = render(
       <LayoutHeaderMenuComponent
         firstname="any-firstname-mock"
+        isMobile={false}
         lastname="any-lastname-mock"
         opened={false}
         onClose={onCloseMock}
@@ -53,6 +54,7 @@ describe('LayoutHeaderMenuComponent', () => {
       <LayoutHeaderMenuComponent
         opened
         firstname="any-firstname-mock"
+        isMobile={false}
         lastname="any-lastname-mock"
         onClose={onCloseMock}
       />,
@@ -71,6 +73,7 @@ describe('LayoutHeaderMenuComponent', () => {
       <LayoutHeaderMenuComponent
         opened
         firstname="any-firstname-mock"
+        isMobile={false}
         lastname="any-lastname-mock"
         onClose={onCloseMock}
       />,
@@ -97,6 +100,7 @@ describe('LayoutHeaderMenuComponent', () => {
       <LayoutHeaderMenuComponent
         opened
         firstname="any-firstname-mock"
+        isMobile={false}
         lastname="any-lastname-mock"
         navigationItems={navigationItemsMock}
         onClose={onCloseMock}
@@ -114,10 +118,11 @@ describe('LayoutHeaderMenuComponent', () => {
     // when
     render(
       <LayoutHeaderMenuComponent
-        opened
         firstname="any-firstname-mock"
+        isMobile={false}
         lastname="any-lastname-mock"
         navigationItems={navigationItemsMock}
+        opened={false}
         onClose={onCloseMock}
       />,
     );
@@ -126,6 +131,62 @@ describe('LayoutHeaderMenuComponent', () => {
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledTimes(1);
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledWith(
       {
+        navigationItems: navigationItemsMock,
+        onItemClick: onCloseMock,
+      },
+      {},
+    );
+  });
+
+  it('should call LayoutHeaderNavigationComponent with className when is mobile viewport', () => {
+    // given
+    const onCloseMock = jest.fn();
+
+    // when
+    render(
+      <LayoutHeaderMenuComponent
+        isMobile
+        firstname="any-firstname-mock"
+        lastname="any-lastname-mock"
+        navigationItems={navigationItemsMock}
+        opened={false}
+        onClose={onCloseMock}
+      />,
+    );
+
+    // then
+    expect(LayoutHeaderNavigationComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHeaderNavigationComponent).toHaveBeenCalledWith(
+      {
+        className: expect.any(String),
+        navigationItems: navigationItemsMock,
+        onItemClick: onCloseMock,
+      },
+      {},
+    );
+  });
+
+  it('should call LayoutHeaderNavigationComponent without className when is not mobile viewport', () => {
+    // given
+    const onCloseMock = jest.fn();
+
+    // when
+    render(
+      <LayoutHeaderMenuComponent
+        firstname="any-firstname-mock"
+        isMobile={false}
+        lastname="any-lastname-mock"
+        navigationItems={navigationItemsMock}
+        opened={false}
+        onClose={onCloseMock}
+      />,
+    );
+
+    // then
+    expect(LayoutHeaderNavigationComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHeaderNavigationComponent).toHaveBeenCalledWith(
+      {
+        className: undefined,
         navigationItems: navigationItemsMock,
         onItemClick: onCloseMock,
       },

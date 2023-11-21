@@ -21,13 +21,13 @@ import {
 import { AppConfig } from '@fc/app';
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { CryptographyService } from '@fc/cryptography';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
-import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import {
   GetOidcCallback,
-  OidcClientConfig,
+  OidcClientConfigService,
   OidcClientRoutes,
   OidcClientService,
   OidcClientSession,
@@ -50,6 +50,7 @@ import {
   OidcIdentityDto,
 } from '../dto';
 import { CoreFcaInvalidIdentityException } from '../exceptions';
+import { CoreFcaService } from '../services';
 
 @Controller()
 export class OidcClientController {
@@ -59,11 +60,13 @@ export class OidcClientController {
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
     private readonly oidcClient: OidcClientService,
-    private readonly identityProvider: IdentityProviderAdapterMongoService,
+    private readonly oidcClientConfig: OidcClientConfigService,
+    private readonly coreFca: CoreFcaService,
     private readonly csrfService: SessionCsrfService,
     private readonly oidcProvider: OidcProviderService,
     private readonly sessionService: SessionService,
     private readonly tracking: TrackingService,
+    private readonly crypto: CryptographyService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -91,17 +94,6 @@ export class OidcClientController {
   ): Promise<void> {
     const { providerUid: idpId, csrfToken } = body;
 
-    const { spId } = await sessionOidc.get();
-
-    const { scope } = this.config.get<OidcClientConfig>('OidcClient');
-    const { params } = await this.oidcProvider.getInteraction(req, res);
-
-    const {
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      acr_values,
-    } = params as Record<string, string>;
-
     // -- control if the CSRF provided is the same as the one previously saved in session.
     try {
       await this.csrfService.validate(sessionOidc, csrfToken);
@@ -110,68 +102,13 @@ export class OidcClientController {
       throw new SessionInvalidCsrfSelectIdpException(error);
     }
 
-    await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
-
-    await this.oidcClient.utils.checkIdpDisabled(spId, idpId);
-
-    const { state, nonce } =
-      await this.oidcClient.utils.buildAuthorizeParameters();
-
-    const authorizeParams = {
-      state,
-      scope,
-      idpId,
+    const {
       // acr_values is an oidc defined variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      acr_values,
-      nonce,
-      /**
-       * @todo #1021 Récupérer la vraie valeur du claims envoyé par le FS
-       * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1021
-       * @ticket FC-1021
-       */
-      claims: '{"id_token":{"amr":{"essential":true}}}',
-      // No prompt is sent to the identity provider voluntary
-    };
+      params: { acr_values: acr },
+    } = await this.oidcProvider.getInteraction(req, res);
 
-    const authorizationUrlRaw = await this.oidcClient.utils.getAuthorizeUrl(
-      authorizeParams,
-    );
-
-    let authorizationUrl = authorizationUrlRaw;
-    if (spId) {
-      authorizationUrl = this.appendSpIdToAuthorizeUrl(
-        spId,
-        authorizationUrlRaw,
-      );
-    }
-
-    const { name: idpName, title: idpLabel } =
-      await this.identityProvider.getById(idpId);
-    const session: OidcClientSession = {
-      idpId,
-      idpName,
-      idpLabel,
-      idpState: state,
-      idpNonce: nonce,
-      idpIdentity: undefined,
-      spIdentity: undefined,
-      accountId: undefined,
-    };
-
-    await sessionOidc.set(session);
-
-    this.logger.trace({
-      route: OidcClientRoutes.REDIRECT_TO_IDP,
-      method: 'POST',
-      name: 'OidcClientRoutes.REDIRECT_TO_IDP',
-      body,
-      res,
-      session,
-      redirect: authorizationUrl,
-    });
-
-    res.redirect(authorizationUrl);
+    await this.coreFca.redirectToIdp(res, acr, idpId, sessionOidc);
   }
 
   /**
@@ -203,7 +140,10 @@ export class OidcClientController {
       method: 'POST',
       name: 'OidcClientRoutes.DISCONNECT_FROM_IDP',
     });
-    const { idpIdToken, idpState, idpId } = await sessionOidc.get();
+    const { idpIdToken, idpId } = await sessionOidc.get();
+
+    const { stateLength } = await this.oidcClientConfig.get();
+    const idpState: string = this.crypto.genRandomString(stateLength);
 
     const endSessionUrl: string =
       await this.oidcClient.getEndSessionUrlFromProvider(
@@ -233,21 +173,6 @@ export class OidcClientController {
     await this.sessionService.destroy(req, res);
 
     return { oidcProviderLogoutForm };
-  }
-
-  /**
-   * Append the sp_id query param to the authorize url
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/475
-   *
-   * @param serviceProviderId The client_id of the SP
-   * @param authorizationUrl The authorization url built by the library oidc-client
-   * @returns The final url
-   */
-  private appendSpIdToAuthorizeUrl(
-    serviceProviderId: string,
-    authorizationUrl: string,
-  ): string {
-    return `${authorizationUrl}&sp_id=${serviceProviderId}`;
   }
 
   @Get(OidcClientRoutes.OIDC_CALLBACK_LEGACY)

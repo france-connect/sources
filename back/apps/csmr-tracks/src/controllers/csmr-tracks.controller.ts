@@ -1,27 +1,18 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
-import { IPaginationOptions } from '@fc/common';
-import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { TracksProtocol } from '@fc/microservices';
 import { TracksResults } from '@fc/tracks';
 
-import {
-  CsmrTracksAccountService,
-  CsmrTracksElasticService,
-  CsmrTracksFormatterService,
-} from '../services';
+import { CsmrTracksService } from '../services';
 
 @Controller()
 export class CsmrTracksController {
   // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
-    private readonly cryptographyFcp: CryptographyFcpService,
-    private readonly account: CsmrTracksAccountService,
-    private readonly elastic: CsmrTracksElasticService,
-    private readonly tracks: CsmrTracksFormatterService,
+    private readonly tracks: CsmrTracksService,
   ) {
     this.logger.setContext(this.constructor.name);
   }
@@ -74,38 +65,11 @@ export class CsmrTracksController {
     this.logger.trace({ payload });
 
     const { identity, options } = payload;
-    const identityHash = this.cryptographyFcp.computeIdentityHash(identity);
-
-    this.logger.trace({ identityHash });
 
     try {
-      const groupIds = await this.account.getIdsWithIdentityHash(identityHash);
+      const tracks = await this.tracks.getTracksForIdentity(identity, options);
 
-      if (!groupIds.length) {
-        this.logger.debug('No AccountId found');
-
-        const { size, offset } = options as IPaginationOptions;
-        const results: TracksResults = {
-          meta: {
-            total: 0,
-            size,
-            offset,
-          },
-          payload: [],
-        };
-        return results;
-      }
-
-      const { meta, payload: raw } = await this.elastic.getTracks(
-        groupIds,
-        options as IPaginationOptions,
-      );
-
-      const payload = this.tracks.formatTracks(raw);
-
-      const results: TracksResults = { meta, payload };
-
-      return results;
+      return tracks;
     } catch (error) {
       this.logger.error(JSON.stringify(error.stack));
       this.logger.trace({ error }, LoggerLevelNames.WARN);

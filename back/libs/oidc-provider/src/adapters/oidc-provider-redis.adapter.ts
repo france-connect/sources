@@ -296,4 +296,47 @@ export class OidcProviderRedisAdapter implements Adapter {
       Math.floor(Date.now() / 1000),
     );
   }
+
+  async getExpireAndPayload<T>(
+    id: string,
+  ): Promise<{ expire: number; payload: T }> {
+    const key = this.key(id);
+
+    const { ttl, value } = await this.fetchTtlAndValue(key);
+
+    if (ttl <= 0) {
+      return {
+        expire: -1,
+        payload: null,
+      };
+    }
+
+    const payload = this.parsedPayload(value);
+
+    /**
+     * Using floor to avoid amplifying rounding TTL errors between the time we get the TTL
+     * and the time we use it to generate the JWT.
+     */
+    const now = Math.floor(Date.now() / 1000);
+    const expire = now + ttl;
+
+    return {
+      expire,
+      payload,
+    };
+  }
+
+  private async fetchTtlAndValue(
+    key: string,
+  ): Promise<{ ttl: number; value: string }> {
+    const result = await this.redis.multi().ttl(key).get(key).exec();
+
+    const [[, ttl], [, value]] = result;
+
+    if (typeof ttl !== 'number' || typeof value !== 'string') {
+      return { ttl: -1, value: null };
+    }
+
+    return { ttl, value };
+  }
 }

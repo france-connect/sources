@@ -1,7 +1,5 @@
 #language: fr
-# On ignore les tests le temps que la deconnexion soit mis en place
-# @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1214
-@usager @connexionSub @ci @ignoreLow
+@usager @connexionSub @ci
 Fonctionnalité: Connexion Usager - Sub
   # En tant qu'usager,
   # je veux transmettre un sub unique au fournisseur de service

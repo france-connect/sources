@@ -9,6 +9,7 @@ import {
   jwtVerify,
   JWTVerifyResult,
   KeyLike,
+  ProtectedHeaderParameters,
   SignJWT,
 } from 'jose';
 
@@ -58,16 +59,10 @@ export class JwtService {
   }
 
   getKeyForToken(jwt: string, jwks: JSONWebKeySet, use: Use): JWK {
-    let alg: KekAlg;
-    let kid: string;
+    const headers = this.retrieveJwtHeaders(jwt);
 
-    try {
-      const headers = decodeProtectedHeader(jwt);
-      alg = headers.alg as KekAlg;
-      kid = headers.kid;
-    } catch (error) {
-      throw new CanNotDecodeProtectedHeaderException(error);
-    }
+    const alg = headers.alg as KekAlg;
+    const kid = headers.kid;
 
     const key = this.getFirstRelevantKey(jwks, alg, use, kid);
 
@@ -153,6 +148,15 @@ export class JwtService {
     }
 
     return data.payload;
+  }
+
+  retrieveJwtHeaders(jwt: string): ProtectedHeaderParameters {
+    try {
+      const headers = decodeProtectedHeader(jwt);
+      return headers;
+    } catch (error) {
+      throw new CanNotDecodeProtectedHeaderException(error);
+    }
   }
 
   private async importJwk(jwk: JWK): Promise<Uint8Array | KeyLike> {

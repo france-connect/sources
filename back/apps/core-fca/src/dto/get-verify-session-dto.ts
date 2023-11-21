@@ -6,10 +6,10 @@ import { IsIn, IsNotEmpty, IsObject, IsString } from 'class-validator';
 
 import { PartialExcept } from '@fc/common';
 import { CoreBaseOidcClientSessionDto } from '@fc/core';
-import { IOidcIdentity } from '@fc/oidc';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 
+import { IAgentConnectOidcIdentity } from '../interfaces';
 import { AppSession } from './app-session.dto';
 import { CoreSessionDto } from './core-session.dto';
 
@@ -41,7 +41,9 @@ export class GetVerifyOidcClientSessionDto extends CoreBaseOidcClientSessionDto 
   // Identity : We MUST have idpIdentity
   @IsObject()
   @Expose()
-  readonly idpIdentity: PartialExcept<IOidcIdentity, 'sub'> | IOidcIdentity;
+  readonly idpIdentity:
+    | PartialExcept<IAgentConnectOidcIdentity, 'sub'>
+    | IAgentConnectOidcIdentity;
 }
 
 export class GetVerifySessionDto {

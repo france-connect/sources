@@ -62,10 +62,10 @@ export class NotificationsService {
     if (refreshCache || !this.listCache) {
       const list = await this.findActiveNotifications();
       this.listCache = deepFreeze(list) as NotificationInterface[];
-      this.logger.trace({ notifications: this.listCache });
+      this.logger.trace({ step: 'REFRESH', list, listCache: this.listCache });
+    } else {
+      this.logger.trace({ step: 'CACHE', listCache: this.listCache });
     }
-
-    this.logger.trace({ notifications: this.listCache });
 
     return this.listCache;
   }
