@@ -33,8 +33,16 @@ services:
       - "fip4-low"
       - "fip8-low"
       - "fip9-low"
+      - "aidants-connect-mock"
+      # -- DP
+      - "dp1-low"
+      - "dp2-low"
       # --
       - "rnipp"
+      # -- Exploitation
+      - "fc-exploitation"
+      # -- Mailer
+      - "maildev"
 
   ####################
   # ALL FCP LOW
@@ -54,6 +62,7 @@ services:
       - "fip4-low"
       - "fip8-low"
       - "fip9-low"
+      - "aidants-connect-mock"
       # --
       - "maildev"
       - "dp1-low"

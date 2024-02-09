@@ -3,7 +3,9 @@ import * as globalAgent from 'global-agent';
 import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { HttpProxyService } from './http-proxy.service';
 
@@ -14,10 +16,7 @@ const globalAny: any = global;
 describe('HttpProxyService', () => {
   let service: HttpProxyService;
 
-  const loggerMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const httpMock = {
     axiosRef: {

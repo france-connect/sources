@@ -1,13 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
-import {
-  IsAlphanumeric,
-  IsAscii,
-  IsString,
-  Matches,
-  MinLength,
-} from 'class-validator';
+import { IsAscii, IsString, Matches, MinLength } from 'class-validator';
 
 const SAFE_STRING_REGEX = /^[^.*?{}()|[\]\s\\]*$/;
 
@@ -18,7 +12,6 @@ export class RevocationTokenParamsDTO {
   readonly token: string;
 
   @IsString()
-  @IsAlphanumeric()
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_id: string;

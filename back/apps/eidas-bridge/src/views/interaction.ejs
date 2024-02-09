@@ -1,37 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head role="banner">
-    <%- include('includes/head-v2') %>
+<html lang="fr" data-fr-scheme="light">
+  <head>
+    <%- include('includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/pages/interaction.css" />
     <title>Choose your country</title>
   </head>
+  <body id="fc-interaction-page">
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main>
+          <div class="fr-container fr-mt-5w fr-mt-md-8w">
+            <section class="fr-grid-row fr-grid-row--gutters">
+              <div class="fr-col-12 fr-col-md-10 fr-col-lg-10 fr-col-offset-lg-1 fc-text--left fc-text-lg--center">
+                <%- include('pages/interaction/interaction.welcome.ejs') %>
+              </div>
+            </section>
+          </div>
 
-  <body role="main">
-    <%- include('includes/menu-v2') %>
-    <div class="page-title-container">
-      <h1>From which country does your digital identity come ?</h1>
-    </div>
-    <div class="container-flags">
-      <% locals.countryList.forEach(({iso, icon, name}) => {%>
-      <div class="country">
-        <form action="/<%= locals.uid %>/login" method="POST">
-          <button id="country-<%= iso %>" type="submit" class="country-btn" name="country" value="<%= iso %>">
-            <img
-              src="<%= icon %>"
-              alt=""
-            />
-            <span><%= name %></span>
-          </button>
-        </form>
+          <div class="fr-container--fluid fr-mt-4w fr-mt-md-5w">
+            <section id="grid-main-providers" data-testid="country-flags">
+              <div
+                class="fc-grid--provider fr-my-n3v"
+                data-testid="main-providers">
+                <% locals.countryList.forEach(({iso, icon, name}) => {%>
+                    <form action="/<%= locals.uid %>/login" method="POST">
+                      <button
+                        role="link"
+                        id="country-<%= iso %>"
+                        data-testid="country-<%= iso %>"
+                        class="fr-btn fr-btn--tertiary fc-btn--provider"
+                        name="country"
+                        value="<%= iso %>"
+                        type="submit">
+                          <figure
+                            class="fr-content-media fr-ml-1w"
+                            role="group"
+                            aria-label="<%= name %>">
+                            <div class="fr-content-media__img">
+                              <img src="<%= icon %>" alt="" />
+                            </div>
+                          </figure>
+                          <figcaption class="fc-text fr-ml-2w" data-testid="country-name">
+                            <%= name %>
+                          </figcaption>
+                      </button>
+                    </form>
+                  <%});%>
+              </div>
+            </section>
+          </div>
+
+          <div class="fr-container">
+            <section class="fr-grid-row">
+              <div class="fr-col-12 fr-mt-4w fr-mt-md-5w fc-text--center">
+                <%- include('includes/back-button.ejs') %>
+              </div>
+            </section>
+            <section class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
+              <div class="fr-col-sm-12 fr-col-md-10 fr-col-lg-10 fr-col-xl-8">
+                <%- include('pages/interaction/interaction.tuto.ejs'); %>
+              </div>
+            </section>
+          </div>
+        </main>
       </div>
-      <%});%>
+      <%- include('includes/footer.ejs') %>
     </div>
-    <div class="ibid-container">
-      <p>
-        If your country is not on this list then the cross-border authentication
-        option might not be available yet.<br /><br />
-        <a href="https://ec.europa.eu/digital-single-market/en/learn-about-eidas">Learn more about the eIDAS regulation</a>
-      </p>
-    </div>
-    <%- include('includes/footer-v2') %>
   </body>
 </html>

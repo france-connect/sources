@@ -4,10 +4,10 @@
 import { Module } from '@nestjs/common';
 
 import { AccountModule } from '@fc/account';
+import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { ExceptionsModule } from '@fc/exceptions';
 import { IdentityProviderAdapterMongoModule } from '@fc/identity-provider-adapter-mongo';
-import { LoggerModule } from '@fc/logger-legacy';
 import { MongooseModule } from '@fc/mongoose';
 
 import { CsmrUserPreferencesController } from './controllers';
@@ -18,7 +18,7 @@ import { CsmrUserPreferencesService } from './services';
   imports: [
     ExceptionsModule.withoutTracking(),
     MongooseModule.forRoot(),
-    LoggerModule,
+    AsyncLocalStorageModule,
     AccountModule,
     CryptographyFcpModule,
     IdentityProviderAdapterMongoModule,

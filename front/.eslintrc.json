@@ -27,7 +27,6 @@
     "react-app/jest",
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
-    "plugin:storybook/recommended",
     "airbnb",
     "airbnb-typescript",
     "prettier"
@@ -107,13 +106,6 @@
         "react/jsx-props-no-spreading": 0,
         "react/button-has-type": 0,
         "react/jsx-sort-props": 0
-      }
-    },
-    {
-      "files": ["*.stories.tsx"],
-      "rules": {
-        "import/no-default-export": 0,
-        "react/jsx-props-no-spreading": 0
       }
     },
     {

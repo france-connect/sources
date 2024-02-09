@@ -84,3 +84,20 @@ Fonctionnalité: Validation Visuelle
       | tablet portrait  |
       | tablet landscape |
       | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Notification de Connexion sur <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page fournisseur de service
+    Quand je me connecte à FranceConnect
+    Alors je suis redirigé vers la page fournisseur de service
+    Et je suis connecté au fournisseur de service
+    Et le mail "notification de connexion" est envoyé
+    Et le message de notification de connexion à FranceConnect est correct
+    Et la copie d'écran "notificationConnectionUsager" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |

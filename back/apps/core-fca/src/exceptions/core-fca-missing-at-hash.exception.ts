@@ -15,6 +15,9 @@ export class CoreFcaMissingAtHashException extends CoreBaseException {
   code = ErrorCode.MISSING_AT_HASH;
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
 
+  static ERROR = 'invalid_request';
+  static ERROR_DESCRIPTION = 'Missing at_hash claim in id_token_hint';
+
   constructor() {
     super('Missing at_hash claim in id_token_hint');
   }

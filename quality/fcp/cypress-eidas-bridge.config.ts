@@ -42,7 +42,7 @@ export default defineConfig({
         ],
       },
       {
-        event: 'REDIRECT_TO_FC_AUTHORIZE',
+        event: 'REDIRECTED_TO_FC_AUTHORIZE',
         keys: [
           ...FLOW_CONSISTENCY_GLOBAL,
           'countryCodeSrc',
@@ -66,7 +66,7 @@ export default defineConfig({
         ],
       },
       {
-        event: 'REDIRECTING_TO_EIDAS_FR_NODE',
+        event: 'REDIRECTED_TO_EIDAS_FR_NODE',
         keys: [
           ...FLOW_CONSISTENCY_GLOBAL,
           'countryCodeSrc',
@@ -116,7 +116,7 @@ export default defineConfig({
         ],
       },
       {
-        event: 'REDIRECTING_TO_FR_NODE',
+        event: 'REDIRECTED_TO_FR_NODE',
         keys: [
           ...FLOW_CONSISTENCY_GLOBAL,
           'countryCodeSrc',
@@ -140,7 +140,7 @@ export default defineConfig({
         ],
       },
       {
-        event: 'REDIRECT_TO_FC',
+        event: 'REDIRECTED_TO_FC',
         keys: [
           ...FLOW_CONSISTENCY_GLOBAL,
           'countryCodeSrc',

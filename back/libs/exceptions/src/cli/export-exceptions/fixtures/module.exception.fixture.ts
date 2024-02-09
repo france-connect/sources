@@ -7,4 +7,6 @@ export class ImportFixture extends FcException {
   scope = 1;
   code = 2;
   message = 'any';
+  static ERROR = 'error';
+  static ERROR_DESCRIPTION = 'error description';
 }

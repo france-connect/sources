@@ -15,25 +15,30 @@ describe('prompt', () => {
 
   it('should allow prompt=login', () => {
     const url = getAuthorizeUrl({ prompt: 'login' });
-    cy.visit(url, { failOnStatusCode: false });
-    cy.get('#fi-search-term').should('exist');
+    cy.visit(url, { failOnStatusCode: false });+
+    cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
+    cy.get('#email-input').should('exist');
   });
 
   it('should allow prompt=consent', () => {
     const url = getAuthorizeUrl({ prompt: 'consent' });
     cy.visit(url, { failOnStatusCode: false });
-    cy.get('#fi-search-term').should('exist');
+    cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
+    cy.get('#email-input').should('exist');
+
   });
 
   it('should allow prompt=login consent', () => {
     const url = getAuthorizeUrl({ prompt: 'login consent' });
     cy.visit(url, { failOnStatusCode: false });
-    cy.get('#fi-search-term').should('exist');
+    cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
+    cy.get('#email-input').should('exist');
   });
 
   it('should allow prompt=consent login', () => {
     const url = getAuthorizeUrl({ prompt: 'consent login' });
     cy.visit(url, { failOnStatusCode: false });
-    cy.get('#fi-search-term').should('exist');
+    cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
+    cy.get('#email-input').should('exist');
   });
 });

@@ -18,4 +18,7 @@ export class RnippDeceasedException extends RnippBaseException {
   public readonly message =
     'Les identifiants utilisés correspondent à une identité qui ne permet plus la connexion.';
   public readonly httpStatusCode = HttpStatus.FORBIDDEN;
+
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'user authentication aborted';
 }

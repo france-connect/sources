@@ -11,7 +11,7 @@ import {
 } from '@nestjs/mongoose';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { MongooseConnectionConnectedHandler } from './handlers';
 import { MongooseCollectionOperationWatcherHelper } from './helpers';

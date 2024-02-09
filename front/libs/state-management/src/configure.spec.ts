@@ -84,7 +84,7 @@ describe('configure', () => {
     configure(mockPersistKey, mockStates, mockReducers, [expect.any(Function)], true);
 
     // then
-    expect(redux.createStore).toHaveBeenCalledTimes(1);
+    expect(redux.legacy_createStore).toHaveBeenCalledTimes(1);
   });
 
   it('should have called reduxPersist.persistStore method', () => {

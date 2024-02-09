@@ -4,8 +4,10 @@ import { Account, AccountNotFoundException, AccountService } from '@fc/account';
 import { ConfigService } from '@fc/config';
 import { CryptographyFcpService, IPivotIdentity } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata } from '@fc/oidc';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { CsmrUserPreferencesIdpNotFoundException } from '../exceptions';
 import { CsmrUserPreferencesService } from './csmr-user-preferences.service';
@@ -150,11 +152,7 @@ describe('CsmrUserPreferencesService', () => {
     get: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const accountServiceMock = {
     getAccountByIdentityHash: jest.fn(),

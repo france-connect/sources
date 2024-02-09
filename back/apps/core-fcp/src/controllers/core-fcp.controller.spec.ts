@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { CoreAcrService, CoreVerifyService } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { NotificationsService } from '@fc/notifications';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
@@ -15,6 +15,7 @@ import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter
 import { SessionCsrfService, SessionService } from '@fc/session';
 import { TrackedEventInterface, TrackingService } from '@fc/tracking';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { CoreFcpService, CoreFcpVerifyService } from '../services';
@@ -77,11 +78,7 @@ describe('CoreFcpController', () => {
     getInteraction: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const coreFcpServiceMock = {
     getClaimsForInteraction: jest.fn(),
@@ -303,6 +300,14 @@ describe('CoreFcpController', () => {
 
     const idpFilterExcludeMock = true;
 
+    const aidantsConnectProviderMock = {
+      maxAuthorizedAcr: 'eidas1',
+      name: 'idp-aidants-connect',
+      uid: 'idp-aidants-connect-uid',
+      active: true,
+      display: true,
+    };
+
     const idpFilterListMock = [
       {
         maxAuthorizedAcr: 'eidas1',
@@ -369,8 +374,7 @@ describe('CoreFcpController', () => {
         appSessionServiceMock,
       );
       // Then
-      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(configServiceMock.get).toHaveBeenCalledWith('OidcProvider');
+      expect(configServiceMock.get).toHaveBeenNthCalledWith(1, 'OidcProvider');
     });
 
     it('should call coreAcrService.rejectInvalidAcr() with interaction acrValues, authorizedAcrValues, req and res', async () => {
@@ -543,6 +547,117 @@ describe('CoreFcpController', () => {
       );
     });
 
+    it('should retrieve get the App config', async () => {
+      // When
+      await coreController.getInteraction(
+        req,
+        res,
+        params,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+      // Then
+      expect(configServiceMock.get).toHaveBeenNthCalledWith(2, 'App');
+    });
+
+    it('should return aidantsConnect as undefined in response if AidantsConnect provider is not deplayed', async () => {
+      // Given
+      aidantsConnectProviderMock.display = false;
+      aidantsConnectProviderMock.active = true;
+
+      identityProviderServiceMock.getFilteredList.mockResolvedValue([
+        aidantsConnectProviderMock,
+      ]);
+
+      // When
+      await coreController.getInteraction(
+        req,
+        res,
+        params,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+
+      // Then
+      expect(res.render).toHaveBeenCalledTimes(1);
+      expect(res.render).toHaveBeenCalledWith('interaction', {
+        csrfToken: csrfMock,
+        notification: notificationsMock,
+        params: interactionDetailsMock.params,
+        providers: [aidantsConnectProviderMock],
+        aidantsConnect: undefined,
+        spName: oidcSessionMock.spName,
+        spScope: interactionDetailsMock.params.scope,
+      });
+    });
+
+    it('should return aidantsConnect as undefined in response if AidantsConnect provider is not active', async () => {
+      // Given
+      aidantsConnectProviderMock.display = true;
+      aidantsConnectProviderMock.active = false;
+
+      identityProviderServiceMock.getFilteredList.mockResolvedValue([
+        aidantsConnectProviderMock,
+      ]);
+
+      // When
+      await coreController.getInteraction(
+        req,
+        res,
+        params,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+
+      // Then
+      expect(res.render).toHaveBeenCalledTimes(1);
+      expect(res.render).toHaveBeenCalledWith('interaction', {
+        csrfToken: csrfMock,
+        notification: notificationsMock,
+        params: interactionDetailsMock.params,
+        providers: [aidantsConnectProviderMock],
+        aidantsConnect: undefined,
+        spName: oidcSessionMock.spName,
+        spScope: interactionDetailsMock.params.scope,
+      });
+    });
+
+    it('should return aidantsConnect object if AidantsConnect is defined into the provider list', async () => {
+      // Given
+      aidantsConnectProviderMock.display = true;
+      aidantsConnectProviderMock.active = true;
+
+      configServiceMock.get.mockReturnValue({
+        ...appConfigMock,
+        aidantsConnectUid: 'idp-aidants-connect-uid',
+      });
+
+      identityProviderServiceMock.getFilteredList.mockResolvedValue([
+        aidantsConnectProviderMock,
+      ]);
+
+      // When
+      await coreController.getInteraction(
+        req,
+        res,
+        params,
+        oidcSessionServiceMock,
+        appSessionServiceMock,
+      );
+
+      // Then
+      expect(res.render).toHaveBeenCalledTimes(1);
+      expect(res.render).toHaveBeenCalledWith('interaction', {
+        csrfToken: csrfMock,
+        notification: notificationsMock,
+        params: interactionDetailsMock.params,
+        providers: [aidantsConnectProviderMock],
+        aidantsConnect: aidantsConnectProviderMock,
+        spName: oidcSessionMock.spName,
+        spScope: interactionDetailsMock.params.scope,
+      });
+    });
+
     it('should retrieve csrf', async () => {
       // When
       await coreController.getInteraction(
@@ -605,6 +720,7 @@ describe('CoreFcpController', () => {
         notification: notificationsMock,
         params: interactionDetailsMock.params,
         providers: idpFilterListMock,
+        aidantsConnect: undefined,
         spName: oidcSessionMock.spName,
         spScope: interactionDetailsMock.params.scope,
       };

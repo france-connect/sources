@@ -6,19 +6,16 @@ import {
   CoreFailedPersistenceException,
   CoreIdpBlockedForAccountException,
 } from '@fc/core';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { CoreAccountService } from './core-account.service';
 
 describe('CoreAccountService', () => {
   let service: CoreAccountService;
 
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    warn: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const accountServiceMock = {
     isBlocked: jest.fn(),
@@ -84,6 +81,28 @@ describe('CoreAccountService', () => {
       expect(service['buildFederation']).toHaveBeenCalledWith(
         entityIdMock,
         subSpMock,
+      );
+    });
+
+    it('should log alert with anonymized identityHash if persistence fails', async () => {
+      // Given
+      service['buildFederation'] = jest
+        .fn()
+        .mockReturnValueOnce(federationMock);
+      accountServiceMock.storeInteraction.mockRejectedValueOnce('fail!!!');
+
+      // When
+      try {
+        await service.computeFederation(computeSp);
+      } catch (error) {}
+
+      // Then
+      expect(loggerServiceMock.alert).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.alert).toHaveBeenCalledWith(
+        `Failed to store interaction for ${rnippidentityHashMock.replace(
+          /^(.{3}).*(.{3})$/,
+          '$1*****$2',
+        )}`,
       );
     });
 

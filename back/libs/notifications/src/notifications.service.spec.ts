@@ -1,7 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 
 import { NotificationInterface } from './interfaces';
@@ -60,13 +59,6 @@ describe('NotificationsService', () => {
     },
   ];
 
-  const loggerMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    warn: jest.fn(),
-  };
-
   const mongooseCollectionOperationWatcherHelperMock = {
     connectAllWatchers: jest.fn(),
     watchWith: jest.fn(),
@@ -87,12 +79,9 @@ describe('NotificationsService', () => {
           provide: serviceProviderModel,
           useValue: repositoryMock,
         },
-        LoggerService,
         MongooseCollectionOperationWatcherHelper,
       ],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerMock)
       .overrideProvider(MongooseCollectionOperationWatcherHelper)
       .useValue(mongooseCollectionOperationWatcherHelperMock)
       .compile();

@@ -6,7 +6,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { FcException } from '@fc/exceptions';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { Genders, RnippResponseCodes } from '../enums';
 import {
@@ -30,12 +29,6 @@ describe('RnippService', () => {
 
   const httpServiceMock = {
     get: jest.fn(),
-  };
-
-  const loggerMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
   };
 
   const configServiceMock = {
@@ -81,7 +74,6 @@ describe('RnippService', () => {
         RnippService,
         HttpService,
         ConfigService,
-        LoggerService,
         RnippResponseParserService,
       ],
     })
@@ -89,8 +81,6 @@ describe('RnippService', () => {
       .useValue(httpServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerMock)
       .overrideProvider(RnippResponseParserService)
       .useValue(rnippResponseParserServiceMock)
       .compile();
@@ -100,11 +90,6 @@ describe('RnippService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  it('should have set the logger context', () => {
-    expect(loggerMock.setContext).toHaveBeenCalledTimes(1);
-    expect(loggerMock.setContext).toHaveBeenCalledWith('RnippService');
   });
 
   describe('check', () => {

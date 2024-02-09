@@ -29,9 +29,11 @@ Fonctionnalité: Connexion Usager - SSO
     Et que j'utilise un fournisseur de service "par défaut"
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton AgentConnect
-    Alors je suis redirigé vers la page sélection du fournisseur d'identité
-    Et je cherche le fournisseur d'identité par son nom
-    Et le fournisseur d'identité n'est pas affiché dans la liste
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "test@fia8.fr"
+    Et que je clique sur le bouton de connexion
+    Alors je suis redirigé vers la page erreur technique
+    Et le code d'erreur est "Y020023"
 
   @ignoreInteg01
   Scénario: Connexion SSO - deuxième FS utilise un autre FI
@@ -44,10 +46,10 @@ Fonctionnalité: Connexion Usager - SSO
     Et que j'utilise un fournisseur de service "par défaut"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je suis redirigé vers la page interaction
     Et que j'utilise un fournisseur d'identité "par défaut"
-    Et que je cherche le fournisseur d'identité par son nom
-    Et que je clique sur le fournisseur d'identité
+    Et que j'entre l'email "test@fia1.fr"
+    Et que je clique sur le bouton de connexion
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page fournisseur de service
@@ -64,7 +66,7 @@ Fonctionnalité: Connexion Usager - SSO
     Et que j'utilise un fournisseur de service "sans accès au FI par défaut"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je suis redirigé vers la page interaction
     Et que j'utilise un fournisseur de service "avec accès au FI par défaut (deuxième FS)"
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton AgentConnect
@@ -91,7 +93,7 @@ Fonctionnalité: Connexion Usager - SSO
     Quand je me déconnecte du fournisseur de service
     Alors je suis déconnecté du fournisseur de service
     Et je clique sur le bouton AgentConnect
-    Et je suis redirigé vers la page sélection du fournisseur d'identité
+    Et je suis redirigé vers la page interaction
     Et j'utilise un fournisseur de service "avec accès au FI par défaut (deuxième FS)"
     Et je navigue sur la page fournisseur de service
     Et je suis connecté au fournisseur de service
@@ -123,7 +125,7 @@ Fonctionnalité: Connexion Usager - SSO
     Quand je me déconnecte du fournisseur de service
     Alors je suis déconnecté du fournisseur de service
     Et je clique sur le bouton AgentConnect
-    Et je suis redirigé vers la page sélection du fournisseur d'identité
+    Et je suis redirigé vers la page interaction
 
   Scénario: Connexion SSO - SSO désactivé pour le deuxième FS
     Etant donné que je désactive le SSO pour le fournisseur de service "avec accès au FI par défaut (premier FS)"
@@ -136,7 +138,7 @@ Fonctionnalité: Connexion Usager - SSO
     Et que j'utilise un fournisseur de service "avec accès au FI par défaut (premier FS)"
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton AgentConnect
-    Alors je suis redirigé vers la page sélection du fournisseur d'identité
+    Alors je suis redirigé vers la page interaction
 
   Scénario: Connexion SSO - SSO réactivé pour le deuxième FS
     Etant donné que j'active le SSO pour le fournisseur de service "avec accès au FI par défaut (premier FS)"

@@ -5,8 +5,7 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
   video: false,
   e2e: {
     baseUrl: 'https://docker.dev-franceconnect.fr',
-    specPattern:
-      'cypress/integration/{accessibilité,usager,exploitation}/*.feature',
+    specPattern: 'cypress/integration/**/*.feature',
     supportFile: 'cypress/support/index.ts',
     experimentalRunAllSpecs: true,
     experimentalMemoryManagement: true,
@@ -25,6 +24,11 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
     EXPLOIT_USER_TOTP: 'KVKFKRCPNZQUYMLXOVYDSQKJKZDTSRLD',
     FC_ACCESS_USER: '',
     FC_ACCESS_PASS: '',
+    // Maildev
+    MAILDEV_PROTOCOL: 'https',
+    MAILDEV_HOST: 'maildev.docker.dev-franceconnect.fr',
+    MAILDEV_SMTP_PORT: '1025',
+    MAILDEV_API_PORT: '443',
     // Other Configuration
     LOG_FILE_PATH: '../../docker/volumes/log/core-fcp-low.log',
   },

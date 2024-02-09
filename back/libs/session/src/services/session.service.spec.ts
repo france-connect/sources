@@ -1,10 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { AsyncLocalStorageService } from '@fc/async-local-storage';
 import { getTransformed, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
-import { REDIS_CONNECTION_TOKEN } from '@fc/redis';
+import { RedisService } from '@fc/redis';
+
+import { getAsyncLocalStorageMock } from '@mocks/async-local-storage';
+import { getConfigMock } from '@mocks/config';
+import { getRedisServiceMock } from '@mocks/redis';
 
 import {
   SessionBadAliasException,
@@ -19,16 +23,13 @@ import {
   ISessionRequest,
   ISessionResponse,
 } from '../interfaces';
-import { SESSION_TOKEN_OPTIONS } from '../tokens';
+import { SESSION_STORE_KEY } from '../tokens';
 import { DUPLICATE_OPTIONS, SessionService } from './session.service';
 import { SessionTemplateService } from './session-template.service';
 
 jest.mock('@fc/common');
 
 class SchemaMock {}
-const sessionOptions = {
-  schema: SchemaMock,
-};
 
 const cookieOptionsMock: ISessionCookieOptions = {
   domain: 'domainValue',
@@ -47,30 +48,15 @@ const configMock = {
   prefix: 'MOCK::SESS::',
   sessionCookieName: 'sessionCookieNameValue',
   sessionIdLength: 42,
+  schema: SchemaMock,
 };
 
-const configServiceMock = {
-  get: jest.fn(),
-};
+const configServiceMock = getConfigMock();
+const redisServiceMock = getRedisServiceMock();
+const asyncLocalStorageServiceMock = getAsyncLocalStorageMock();
 
 const cipherMock =
   'VGhlIGZpcnN0IHJlc2lkZW50IGNyZXcsIEV4cGVkaXRpb24gMSwgYXJyaXZlZCBpbiBOb3ZlbWJlciAyMDAwIG9uIFNveXV6IFRNLTMxLiBBdCB0aGUgZW5kIG9mIHRoZSBmaXJzdCBkYXkgb24gdGhlIHN0YXRpb24sIGFzdHJvbmF1dCBCaWxsIFNoZXBoZXJkIHJlcXVlc3RlZCB0aGUgdXNlIG9mIHRoZSByYWRpbyBjYWxsIHNpZ24gIkFscGhhIiwgd2hpY2ggaGUgYW5kIGNvc21vbmF1dCBLcmlrYWxldiBwcmVmZXJyZWQgdG8gdGhlIG1vcmUgY3VtYmVyc29tZSAiSW50ZXJuYXRpb25hbCBTcGFjZSBTdGF0aW9uIi4=';
-
-const loggerServiceMock = {
-  debug: jest.fn(),
-  setContext: jest.fn(),
-  trace: jest.fn(),
-  error: jest.fn(),
-};
-
-const redisServiceMock = {
-  del: jest.fn(),
-  exec: jest.fn(),
-  expire: jest.fn(),
-  get: jest.fn(),
-  multi: jest.fn(),
-  set: jest.fn(),
-};
 
 const cryptographyServiceMock = {
   decryptSymetric: jest.fn(),
@@ -133,7 +119,6 @@ const sessionTemplateServiceMock = {
   bindSessionToRes: jest.fn(),
 };
 
-const getFullSessionMock = jest.fn();
 const getSessionKeyMock = jest.fn();
 
 describe('SessionService', () => {
@@ -146,33 +131,28 @@ describe('SessionService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SessionService,
-        {
-          provide: SESSION_TOKEN_OPTIONS,
-          useValue: sessionOptions,
-        },
         ConfigService,
-        LoggerService,
-        {
-          provide: REDIS_CONNECTION_TOKEN,
-          useValue: redisServiceMock,
-        },
+        RedisService,
         CryptographyService,
         SessionTemplateService,
+        AsyncLocalStorageService,
       ],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
+      .overrideProvider(RedisService)
+      .useValue(redisServiceMock)
       .overrideProvider(CryptographyService)
       .useValue(cryptographyServiceMock)
       .overrideProvider(SessionTemplateService)
       .useValue(sessionTemplateServiceMock)
+      .overrideProvider(AsyncLocalStorageService)
+      .useValue(asyncLocalStorageServiceMock)
       .compile();
 
     service = module.get<SessionService>(SessionService);
 
-    redisServiceMock.multi.mockReturnValueOnce(redisServiceMock);
+    redisServiceMock.client.multi.mockReturnValue(redisServiceMock.client);
     configServiceMock.get.mockReturnValueOnce(configMock);
     cryptographyServiceMock.genRandomString.mockReturnValue(
       randomStringMockValue,
@@ -181,12 +161,6 @@ describe('SessionService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  it('should set the logger context', () => {
-    // expect
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
-    expect(loggerServiceMock.setContext).toHaveBeenCalledWith('SessionService');
   });
 
   describe('getBoundSession', () => {
@@ -237,6 +211,7 @@ describe('SessionService', () => {
     it('should return "get" and "set" functions (mocked as string for the test)', () => {
       // setup
       const boundServiceMock = {
+        commit: 'commit',
         get: 'get',
         set: 'set',
         setAlias: 'setAlias',
@@ -249,6 +224,9 @@ describe('SessionService', () => {
         sessionId: 'sessionId',
         sessionService: service,
       } as ISessionRequest;
+      reqMock.sessionService.commit.bind = jest
+        .fn()
+        .mockReturnValueOnce('commit');
       reqMock.sessionService.get.bind = jest.fn().mockReturnValueOnce('get');
       reqMock.sessionService.set.bind = jest.fn().mockReturnValueOnce('set');
       reqMock.sessionService.setAlias.bind = jest
@@ -266,13 +244,116 @@ describe('SessionService', () => {
     });
   });
 
+  describe('getSessionFromStore', () => {
+    beforeEach(() => {
+      service['getFullSession'] = jest.fn();
+    });
+
+    it('should retrieve the session from the store', async () => {
+      // setup
+      const sessionFromStoreMock = { sync: true, data: {} };
+      asyncLocalStorageServiceMock.get.mockReturnValueOnce(
+        sessionFromStoreMock,
+      );
+
+      // action
+      const result = await service['getSessionFromStore'](ctxMock);
+
+      // expect
+      expect(result).toStrictEqual(sessionFromStoreMock);
+    });
+
+    it('should return default object if sessionStore is falsy', async () => {
+      // setup
+      asyncLocalStorageServiceMock.get.mockReturnValueOnce(undefined);
+
+      // action
+      const result = await service['getSessionFromStore'](ctxMock);
+
+      // expect
+      expect(result).toStrictEqual({ sync: false, data: {}, id: null });
+    });
+
+    it('should get session from redis if sessionStore.data is falsy', async () => {
+      // setup
+      const sessionId = ctxMock.sessionId;
+      const sessionFromStoreMock = {
+        sync: true,
+        data: undefined,
+        id: sessionId,
+      };
+
+      asyncLocalStorageServiceMock.get.mockReturnValueOnce(
+        sessionFromStoreMock,
+      );
+
+      // action
+      await service['getSessionFromStore'](ctxMock);
+
+      // expect
+      expect(service['getFullSession']).toHaveBeenCalledTimes(1);
+      expect(service['getFullSession']).toHaveBeenCalledWith(ctxMock.sessionId);
+    });
+
+    it('should get session from redis if sessionStore.id does not match sessionId from context', async () => {
+      // setup
+      const sessionId = 'session id mok value';
+      const sessionFromStoreMock = { sync: true, data: {}, id: sessionId };
+
+      asyncLocalStorageServiceMock.get.mockReturnValueOnce(
+        sessionFromStoreMock,
+      );
+
+      // action
+      await service['getSessionFromStore'](ctxMock);
+
+      // expect
+      expect(service['getFullSession']).toHaveBeenCalledTimes(1);
+      expect(service['getFullSession']).toHaveBeenCalledWith(ctxMock.sessionId);
+    });
+
+    it('should NOT get session from redis if sessionStore.data is truthy and sessionStore.id matches sessionId from context', async () => {
+      // setup
+      const sessionId = ctxMock.sessionId;
+      const sessionFromStoreMock = { sync: true, data: {}, id: sessionId };
+
+      asyncLocalStorageServiceMock.get.mockReturnValueOnce(
+        sessionFromStoreMock,
+      );
+
+      // action
+      await service['getSessionFromStore'](ctxMock);
+
+      // expect
+      expect(service['getFullSession']).not.toHaveBeenCalled();
+    });
+
+    it('should return sessionStore from AsyncLocalStorage if sessionStore.data is truthy and sessionStore.id matches sessionId from context', async () => {
+      // setup
+      const sessionId = ctxMock.sessionId;
+      const sessionFromStoreMock = { sync: true, data: {}, id: sessionId };
+
+      asyncLocalStorageServiceMock.get.mockReturnValueOnce(
+        sessionFromStoreMock,
+      );
+
+      // action
+      const result = await service['getSessionFromStore'](ctxMock);
+
+      // expect
+      expect(result).toBe(sessionFromStoreMock);
+    });
+  });
+
   describe('get()', () => {
     const getByKeyMock = jest.fn();
     const getModuleMock = jest.fn();
+    const currentDataMock = Symbol('current Data Mock');
 
     beforeEach(() => {
-      service['getFullSession'] =
-        getFullSessionMock.mockResolvedValueOnce(fullSessionMock);
+      service['getSessionFromStore'] = jest
+        .fn()
+        .mockResolvedValueOnce({ data: currentDataMock });
       service['getByKey'] = getByKeyMock.mockReturnValueOnce(
         fullSessionMock.Columbus.science,
       );
@@ -286,8 +367,8 @@ describe('SessionService', () => {
       await service.get(ctxMock);
 
       // expect
-      expect(service['getFullSession']).toHaveBeenCalledTimes(1);
-      expect(service['getFullSession']).toHaveBeenCalledWith(ctxMock.sessionId);
+      expect(service['getSessionFromStore']).toHaveBeenCalledTimes(1);
+      expect(service['getSessionFromStore']).toHaveBeenCalledWith(ctxMock);
     });
 
     it('should call getByKey with the context, the full session and the key if the key argument is set', async () => {
@@ -301,7 +382,7 @@ describe('SessionService', () => {
       expect(service['getByKey']).toHaveBeenCalledTimes(1);
       expect(service['getByKey']).toHaveBeenCalledWith(
         ctxMock,
-        fullSessionMock,
+        currentDataMock,
         keyMock,
       );
     });
@@ -336,7 +417,7 @@ describe('SessionService', () => {
       expect(service['getModule']).toHaveBeenCalledTimes(1);
       expect(service['getModule']).toHaveBeenCalledWith(
         ctxMock,
-        fullSessionMock,
+        currentDataMock,
       );
     });
 
@@ -362,107 +443,148 @@ describe('SessionService', () => {
     const setModuleMock = jest.fn();
     const saveMock = jest.fn();
 
-    const sessionToSet = {
-      Columbus: {
-        science: 'ESA',
-      },
-    };
+    const currentDataMock = Symbol('current Data Mock');
+    const sessionFromStoreMock = { sync: true, data: currentDataMock };
 
     beforeEach(() => {
-      service['getFullSession'] =
-        getFullSessionMock.mockResolvedValueOnce(fullSessionMock);
+      service['getSessionFromStore'] = jest
+        .fn()
+        .mockResolvedValueOnce(sessionFromStoreMock);
       service['setByKey'] = setByKeyMock;
       service['setModule'] = setModuleMock;
       service['save'] = saveMock;
     });
 
-    it('should get the full session object by calling getFullSession', async () => {
+    it('should get the session from the store', async () => {
       // action
-      await service.set(ctxMock, sessionToSet);
+      await service.set(ctxMock, fullSessionMock);
 
       // expect
-      expect(service['getFullSession']).toHaveBeenCalledTimes(1);
-      expect(service['getFullSession']).toHaveBeenCalledWith(ctxMock.sessionId);
+      expect(service['getSessionFromStore']).toHaveBeenCalledTimes(1);
+      expect(service['getSessionFromStore']).toHaveBeenCalledWith(ctxMock);
     });
 
-    it('should call setByKey with the context, the full session, the key to set and the data to set', async () => {
+    it('should call setByKey rather than setModule if keyOrData is a string', async () => {
+      // setup
+      const keyMock = 'key mock';
+      const valueMock = 'value mock';
+
       // action
-      await service.set(ctxMock, 'science', sessionToSet.Columbus.science);
+      await service.set(ctxMock, keyMock, valueMock);
 
       // expect
       expect(service['setByKey']).toHaveBeenCalledTimes(1);
       expect(service['setByKey']).toHaveBeenCalledWith(
         ctxMock,
-        fullSessionMock,
-        'science',
-        sessionToSet.Columbus.science,
+        currentDataMock,
+        keyMock,
+        valueMock,
       );
+      expect(service['setModule']).not.toHaveBeenCalled();
     });
 
-    it('should call setModule with the context, the full session and the data to set', async () => {
+    it('should call setModule rather than setByKey if keyOrData is an object', async () => {
+      // setup
+      const dataMock = { foo: 'foo value' };
+
       // action
-      await service.set(ctxMock, sessionToSet.Columbus);
+      await service.set(ctxMock, dataMock);
 
       // expect
       expect(service['setModule']).toHaveBeenCalledTimes(1);
       expect(service['setModule']).toHaveBeenCalledWith(
         ctxMock,
-        fullSessionMock,
-        sessionToSet.Columbus,
+        currentDataMock,
+        dataMock,
       );
+      expect(service['setByKey']).not.toHaveBeenCalled();
     });
 
-    it('should not call setByKey or setModule if keyOrData is neither a string or an object', async () => {
-      // action
-      await service.set(ctxMock, undefined);
-
-      // expect
-      expect(service['setByKey']).toHaveBeenCalledTimes(0);
-      expect(service['setModule']).toHaveBeenCalledTimes(0);
-    });
-
-    it('should save the session if the key is set', async () => {
-      // action
-      await service.set(ctxMock, 'science', sessionToSet.Columbus.science);
-
-      // expect
-      expect(service['save']).toHaveBeenCalledTimes(1);
-      expect(service['save']).toHaveBeenCalledWith(
-        ctxMock.sessionId,
-        fullSessionMock,
-      );
-    });
-
-    it('should save the session if the key is not set', async () => {
-      // action
-      await service.set(ctxMock, sessionToSet.Columbus);
-
-      // expect
-      expect(service['save']).toHaveBeenCalledTimes(1);
-      expect(service['save']).toHaveBeenCalledWith(
-        ctxMock.sessionId,
-        fullSessionMock,
-      );
-    });
-
-    it('should return the result of the save call', async () => {
+    it('should set session.sync to false', async () => {
       // setup
-      const saveResultMock = false;
-      saveMock.mockResolvedValueOnce(saveResultMock);
+      const dataMock = { foo: 'foo value' };
 
       // action
-      const result = await service.set(ctxMock, sessionToSet.Columbus);
+      await service.set(ctxMock, dataMock);
 
       // expect
-      expect(result).toStrictEqual(saveResultMock);
+      expect(sessionFromStoreMock.sync).toBe(false);
+    });
+  });
+
+  describe('commit', () => {
+    const storeMock = { sync: true, data: {} };
+
+    beforeEach(() => {
+      service['getSessionFromStore'] = jest
+        .fn()
+        .mockResolvedValueOnce(storeMock);
+
+      service['save'] = jest.fn();
+    });
+
+    it('should get the session from the store', async () => {
+      // action
+      await service.commit(ctxMock);
+
+      // expect
+      expect(service['getSessionFromStore']).toHaveBeenCalledTimes(1);
+      expect(service['getSessionFromStore']).toHaveBeenCalledWith(ctxMock);
+    });
+
+    it('should NOT call service.save() is sync flag is truthy', async () => {
+      // action
+      await service.commit(ctxMock);
+
+      // expect
+      expect(service['save']).not.toHaveBeenCalled();
+    });
+
+    it('should call service.save() is sync flag is falsy', async () => {
+      // setup
+      const deSyncStoreMock = { sync: false, data: {} };
+      service['getSessionFromStore'] = jest
+        .fn()
+        .mockResolvedValueOnce(deSyncStoreMock);
+
+      // action
+      await service.commit(ctxMock);
+
+      // expect
+      expect(service['save']).toHaveBeenCalledTimes(1);
+      expect(service['save']).toHaveBeenCalledWith(
+        ctxMock.sessionId,
+        storeMock.data,
+      );
+    });
+
+    it('should set session.sync to result of service.save()', async () => {
+      // setup
+      const saveResultMock = Symbol('saveResultMockReturn');
+      service['save'] = jest.fn().mockResolvedValueOnce(saveResultMock);
+      const deSyncStoreMock = { sync: false, data: {} };
+      service['getSessionFromStore'] = jest
+        .fn()
+        .mockResolvedValueOnce(deSyncStoreMock);
+
+      // action
+      await service.commit(ctxMock);
+
+      // expect
+      expect(deSyncStoreMock.sync).toBe(saveResultMock);
     });
   });
 
   describe('refresh()', () => {
+    const sessionId = 'sessionId value';
     beforeEach(() => {
       service['getSessionKey'] = getSessionKeyMock;
       service['setCookies'] = jest.fn();
       service['getSessionIdFromCookie'] = jest.fn();
+      service['bindToRequest'] = jest.fn();
+      service['getSessionIdFromCookie'] = jest
+        .fn()
+        .mockReturnValueOnce(sessionId);
     });
 
     it('should call config.get', async () => {
@@ -480,7 +602,7 @@ describe('SessionService', () => {
 
       // expect
       expect(getSessionKeyMock).toHaveBeenCalledTimes(1);
-      expect(getSessionKeyMock).toHaveBeenCalledWith(reqMock.sessionId);
+      expect(getSessionKeyMock).toHaveBeenCalledWith(sessionId);
     });
 
     it('should call expire from redis service with the session key and the session lifetime', async () => {
@@ -491,8 +613,8 @@ describe('SessionService', () => {
       await service.refresh(reqMock, resMock);
 
       // expect
-      expect(redisServiceMock.expire).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.expire).toHaveBeenCalledWith(
+      expect(redisServiceMock.client.expire).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.expire).toHaveBeenCalledWith(
         sessionKeyMock,
         configMock.lifetime,
       );
@@ -504,21 +626,18 @@ describe('SessionService', () => {
 
       // expect
       expect(service['setCookies']).toHaveBeenCalledTimes(1);
-      expect(service['setCookies']).toHaveBeenCalledWith(
-        resMock,
-        reqMock.sessionId,
-      );
+      expect(service['setCookies']).toHaveBeenCalledWith(resMock, sessionId);
     });
 
     it('should return the status of the expire call as boolean', async () => {
       // setup
-      redisServiceMock.expire.mockResolvedValueOnce(1);
+      redisServiceMock.client.expire.mockResolvedValueOnce(1);
 
       // action
       const result = await service.refresh(reqMock, resMock);
 
       // expect
-      expect(result).toStrictEqual(reqMock.sessionId);
+      expect(result).toStrictEqual(sessionId);
     });
   });
 
@@ -545,7 +664,7 @@ describe('SessionService', () => {
     it('should throw specific error if redis service failed', async () => {
       // setup
       const errorMock = new Error('redis error mock');
-      redisServiceMock.get.mockRejectedValueOnce(errorMock);
+      redisServiceMock.client.get.mockRejectedValueOnce(errorMock);
 
       // expect
       await expect(() => service['getFullSession'](sessionId)).rejects.toThrow(
@@ -561,8 +680,8 @@ describe('SessionService', () => {
       await service['getFullSession'](sessionId);
 
       // expect
-      expect(redisServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.get).toHaveBeenCalledWith(sessionKeyMock);
+      expect(redisServiceMock.client.get).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.get).toHaveBeenCalledWith(sessionKeyMock);
     });
 
     it('should return an empty object if no data was returned by redis', async () => {
@@ -577,7 +696,7 @@ describe('SessionService', () => {
       // setup
       const cipherMock =
         'VGhlIElTUyBpcyBtYWRlIHVwIG9mIDE2IHByZXNzdXJpemVkIG1vZHVsZXM6IGZvdXIgUnVzc2lhbiBtb2R1bGVzIChQaXJzLCBadmV6ZGEsIFBvaXNrIGFuZCBSYXNzdmV0KSwgbmluZSBVUyBtb2R1bGVzIChaYXJ5YSxbNl0gQkVBTSxbN10gTGVvbmFyZG8sIEhhcm1vbnksIFF1ZXN0LCBUcmFucXVpbGl0eSwgVW5pdHksIEN1cG9sYSwgYW5kIERlc3RpbnkpLCB0d28gSmFwYW5lc2UgbW9kdWxlcyAodGhlIEpFTS1FTE0tUFMgYW5kIEpFTS1QTSkgYW5kIG9uZSBFdXJvcGVhbiBtb2R1bGUgKENvbHVtYnVzKS4g';
-      redisServiceMock.get.mockResolvedValueOnce(cipherMock);
+      redisServiceMock.client.get.mockResolvedValueOnce(cipherMock);
 
       // action
       await service['getFullSession'](sessionId);
@@ -591,7 +710,7 @@ describe('SessionService', () => {
       // setup
       const cipherMock =
         'VGhlIElTUyBpcyBtYWRlIHVwIG9mIDE2IHByZXNzdXJpemVkIG1vZHVsZXM6IGZvdXIgUnVzc2lhbiBtb2R1bGVzIChQaXJzLCBadmV6ZGEsIFBvaXNrIGFuZCBSYXNzdmV0KSwgbmluZSBVUyBtb2R1bGVzIChaYXJ5YSxbNl0gQkVBTSxbN10gTGVvbmFyZG8sIEhhcm1vbnksIFF1ZXN0LCBUcmFucXVpbGl0eSwgVW5pdHksIEN1cG9sYSwgYW5kIERlc3RpbnkpLCB0d28gSmFwYW5lc2UgbW9kdWxlcyAodGhlIEpFTS1FTE0tUFMgYW5kIEpFTS1QTSkgYW5kIG9uZSBFdXJvcGVhbiBtb2R1bGUgKENvbHVtYnVzKS4g';
-      redisServiceMock.get.mockResolvedValueOnce(cipherMock);
+      redisServiceMock.client.get.mockResolvedValueOnce(cipherMock);
       unserializeMock.mockReturnValueOnce(fullSessionMock);
 
       // action
@@ -606,7 +725,7 @@ describe('SessionService', () => {
       // setup
       const cipherMock =
         'VGhlIElTUyBpcyBtYWRlIHVwIG9mIDE2IHByZXNzdXJpemVkIG1vZHVsZXM6IGZvdXIgUnVzc2lhbiBtb2R1bGVzIChQaXJzLCBadmV6ZGEsIFBvaXNrIGFuZCBSYXNzdmV0KSwgbmluZSBVUyBtb2R1bGVzIChaYXJ5YSxbNl0gQkVBTSxbN10gTGVvbmFyZG8sIEhhcm1vbnksIFF1ZXN0LCBUcmFucXVpbGl0eSwgVW5pdHksIEN1cG9sYSwgYW5kIERlc3RpbnkpLCB0d28gSmFwYW5lc2UgbW9kdWxlcyAodGhlIEpFTS1FTE0tUFMgYW5kIEpFTS1QTSkgYW5kIG9uZSBFdXJvcGVhbiBtb2R1bGUgKENvbHVtYnVzKS4g';
-      redisServiceMock.get.mockResolvedValueOnce(cipherMock);
+      redisServiceMock.client.get.mockResolvedValueOnce(cipherMock);
       unserializeMock.mockReturnValueOnce(fullSessionMock);
       validateMock.mockResolvedValueOnce(true);
 
@@ -621,7 +740,7 @@ describe('SessionService', () => {
       // setup
       const cipherMock =
         'VGhlIElTUyBpcyBtYWRlIHVwIG9mIDE2IHByZXNzdXJpemVkIG1vZHVsZXM6IGZvdXIgUnVzc2lhbiBtb2R1bGVzIChQaXJzLCBadmV6ZGEsIFBvaXNrIGFuZCBSYXNzdmV0KSwgbmluZSBVUyBtb2R1bGVzIChaYXJ5YSxbNl0gQkVBTSxbN10gTGVvbmFyZG8sIEhhcm1vbnksIFF1ZXN0LCBUcmFucXVpbGl0eSwgVW5pdHksIEN1cG9sYSwgYW5kIERlc3RpbnkpLCB0d28gSmFwYW5lc2UgbW9kdWxlcyAodGhlIEpFTS1FTE0tUFMgYW5kIEpFTS1QTSkgYW5kIG9uZSBFdXJvcGVhbiBtb2R1bGUgKENvbHVtYnVzKS4g';
-      redisServiceMock.get.mockResolvedValueOnce(cipherMock);
+      redisServiceMock.client.get.mockResolvedValueOnce(cipherMock);
       unserializeMock.mockReturnValueOnce(fullSessionMock);
       const errorMock = new Error('Invalid session');
       validateMock.mockImplementationOnce(() => {
@@ -832,8 +951,8 @@ describe('SessionService', () => {
       await service['save'](sessionIdMock, fullSessionMock);
 
       // expect
-      expect(redisServiceMock.multi).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.multi).toHaveBeenCalledWith();
+      expect(redisServiceMock.client.multi).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.multi).toHaveBeenCalledWith();
     });
 
     it('should initialize a redis set operation within the bulk with the session key and the serialiazed data', async () => {
@@ -847,8 +966,8 @@ describe('SessionService', () => {
       await service['save'](sessionIdMock, fullSessionMock);
 
       // expect
-      expect(redisServiceMock.set).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.set).toHaveBeenCalledWith(
+      expect(redisServiceMock.client.set).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.set).toHaveBeenCalledWith(
         sessionKeyMock,
         mockSerializedData,
       );
@@ -862,8 +981,8 @@ describe('SessionService', () => {
       await service['save'](sessionIdMock, fullSessionMock);
 
       // expect
-      expect(redisServiceMock.expire).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.expire).toHaveBeenCalledWith(
+      expect(redisServiceMock.client.expire).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.expire).toHaveBeenCalledWith(
         sessionKeyMock,
         configMock.lifetime,
       );
@@ -874,13 +993,13 @@ describe('SessionService', () => {
       await service['save'](sessionIdMock, fullSessionMock);
 
       // expect
-      expect(redisServiceMock.exec).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.exec).toHaveBeenCalledWith();
+      expect(redisServiceMock.client.exec).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.exec).toHaveBeenCalledWith();
     });
 
     it('should return the boolean casted result of the bulk operation execution', async () => {
       // setup
-      redisServiceMock.exec.mockResolvedValueOnce(1);
+      redisServiceMock.client.exec.mockResolvedValueOnce(1);
 
       // action
       const result = await service['save'](sessionIdMock, fullSessionMock);
@@ -940,7 +1059,6 @@ describe('SessionService', () => {
         () => service['serialize'](errorMock),
         // expect
       ).toThrow(SessionBadStringifyException);
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
       expect(cryptographyServiceMock.encryptSymetric).toHaveBeenCalledTimes(0);
     });
 
@@ -954,7 +1072,6 @@ describe('SessionService', () => {
         () => service['serialize'](errorMock),
         // expect
       ).toThrow(SessionBadStringifyException);
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
       expect(cryptographyServiceMock.encryptSymetric).toHaveBeenCalledTimes(0);
     });
   });
@@ -1060,26 +1177,28 @@ describe('SessionService', () => {
       // Given
       const ctxMock = { sessionId: 'sessionIdMock' } as ISessionBoundContext;
       const aliasMock = 'aliasMock';
-      service['redis'].multi = jest.fn().mockReturnValue(redisServiceMock);
+      redisServiceMock.client.multi = jest
+        .fn()
+        .mockReturnValue(redisServiceMock.client);
 
       // When
       const result = await service['setAlias'](ctxMock, aliasMock);
 
       // Then
-      expect(redisServiceMock.set).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.set).toHaveBeenCalledWith(
+      expect(redisServiceMock.client.set).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.set).toHaveBeenCalledWith(
         aliasMock,
         ctxMock.sessionId,
       );
 
-      expect(redisServiceMock.expire).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.expire).toHaveBeenCalledWith(
+      expect(redisServiceMock.client.expire).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.expire).toHaveBeenCalledWith(
         aliasMock,
         configMock.lifetime,
       );
 
-      expect(redisServiceMock.exec).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.exec).toHaveBeenCalledWith();
+      expect(redisServiceMock.client.exec).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.exec).toHaveBeenCalledWith();
 
       expect(result).toStrictEqual(undefined);
     });
@@ -1090,8 +1209,10 @@ describe('SessionService', () => {
       // Given
       const keyMock = 'keyValue';
       const valueMock = 'valueMock';
-      service['redis'].multi = jest.fn().mockReturnValue(redisServiceMock);
-      redisServiceMock.exec.mockResolvedValue([
+      redisServiceMock.client.multi = jest
+        .fn()
+        .mockReturnValue(redisServiceMock.client);
+      redisServiceMock.client.exec.mockResolvedValue([
         [new Error('should never appear'), valueMock],
       ]);
 
@@ -1099,11 +1220,11 @@ describe('SessionService', () => {
       const result = await service['getAlias'](keyMock);
 
       // Then
-      expect(redisServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.get).toHaveBeenCalledWith(keyMock);
+      expect(redisServiceMock.client.get).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.get).toHaveBeenCalledWith(keyMock);
 
-      expect(redisServiceMock.exec).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.exec).toHaveBeenCalledWith();
+      expect(redisServiceMock.client.exec).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.exec).toHaveBeenCalledWith();
 
       expect(result).toStrictEqual(valueMock);
     });
@@ -1121,6 +1242,11 @@ describe('SessionService', () => {
   });
 
   describe('init()', () => {
+    beforeEach(() => {
+      service['setCookies'] = jest.fn();
+      service['bindToRequest'] = jest.fn();
+    });
+
     it('should call cryptoGenRandomString', () => {
       // Given
       configServiceMock.get.mockReturnValueOnce(configMock);
@@ -1145,8 +1271,6 @@ describe('SessionService', () => {
     });
 
     it('should call setCookies 1 time', () => {
-      // Given
-      service['setCookies'] = jest.fn();
       // When
       service.init(reqMock, resMock);
 
@@ -1154,7 +1278,7 @@ describe('SessionService', () => {
       expect(service['setCookies']).toHaveBeenCalledTimes(1);
       expect(service['setCookies']).toHaveBeenCalledWith(
         resMock,
-        reqMock.sessionId,
+        randomStringMockValue,
       );
     });
   });
@@ -1166,14 +1290,6 @@ describe('SessionService', () => {
         .mockReturnValue(reqMock.sessionId);
       service['getSessionKey'] = jest.fn().mockReturnValueOnce(sessionKeyMock);
       service['init'] = jest.fn().mockResolvedValue(randomStringMockValue);
-    });
-
-    it('should call getSessionIdFromCookie', async () => {
-      // When
-      await service.reset(reqMock, resMock);
-      // Then
-      expect(service['getSessionIdFromCookie']).toHaveBeenCalledTimes(1);
-      expect(service['getSessionIdFromCookie']).toHaveBeenCalledWith(reqMock);
     });
 
     it('should call getSessionKey', async () => {
@@ -1188,8 +1304,8 @@ describe('SessionService', () => {
       // When
       await service.reset(reqMock, resMock);
       // Then
-      expect(redisServiceMock.del).toBeCalledTimes(1);
-      expect(redisServiceMock.del).toBeCalledWith(sessionKeyMock);
+      expect(redisServiceMock.client.del).toBeCalledTimes(1);
+      expect(redisServiceMock.client.del).toBeCalledWith(sessionKeyMock);
     });
 
     it('should call this.init', async () => {
@@ -1215,14 +1331,6 @@ describe('SessionService', () => {
         .mockReturnValue(reqMock.sessionId);
       service['getSessionKey'] = jest.fn().mockReturnValueOnce(sessionKeyMock);
       service['init'] = jest.fn().mockResolvedValue(randomStringMockValue);
-    });
-
-    it('should call getSessionIdFromCookie', async () => {
-      // When
-      await service.destroy(reqMock, resMock);
-      // Then
-      expect(service['getSessionIdFromCookie']).toHaveBeenCalledTimes(1);
-      expect(service['getSessionIdFromCookie']).toHaveBeenCalledWith(reqMock);
     });
 
     it('should call getSessionKey', async () => {
@@ -1255,8 +1363,8 @@ describe('SessionService', () => {
       // When
       await service.destroy(reqMock, resMock);
       // Then
-      expect(redisServiceMock.del).toBeCalledTimes(1);
-      expect(redisServiceMock.del).toBeCalledWith(sessionKeyMock);
+      expect(redisServiceMock.client.del).toBeCalledTimes(1);
+      expect(redisServiceMock.client.del).toBeCalledWith(sessionKeyMock);
     });
   });
 
@@ -1274,6 +1382,32 @@ describe('SessionService', () => {
       const result = service['getSessionIdFromCookie'](reqMock);
       // Then
       expect(result).toBe(ctxMock.sessionId);
+    });
+  });
+
+  describe('bindToRequest()', () => {
+    // Given
+    const sessionIdMock = 'SessionId Mock value';
+    let reqMockBindToRequest: ISessionRequest;
+
+    beforeEach(() => {
+      reqMockBindToRequest = {} as unknown as ISessionRequest;
+    });
+
+    it('should set req.sessionId to sessionId argument', () => {
+      // When
+      service.bindToRequest(reqMockBindToRequest, sessionIdMock);
+
+      // Then
+      expect(reqMockBindToRequest.sessionId).toBe(sessionIdMock);
+    });
+
+    it('should set req.sessionService to current instance of sessionService', () => {
+      // When
+      service.bindToRequest(reqMockBindToRequest, sessionIdMock);
+
+      // Then
+      expect(reqMockBindToRequest.sessionService).toBe(service);
     });
   });
 
@@ -1314,11 +1448,22 @@ describe('SessionService', () => {
 
     beforeEach(() => {
       service['init'] = jest.fn().mockReturnValueOnce(newSessionId);
-      service['save'] = jest.fn();
-      service['getFullSession'] = jest
+      service['commit'] = jest.fn();
+      service['getSessionFromStore'] = jest
         .fn()
-        .mockResolvedValueOnce(currentDataMock);
+        .mockResolvedValueOnce({ data: currentDataMock });
       getTransformedMock.mockReturnValueOnce(cleanedData);
+    });
+
+    it('should call session.commit() with original sessionId', async () => {
+      // When
+      await service.duplicate(reqMock, resMock, SchemaMock);
+      // Then
+      expect(service['commit']).toHaveBeenCalledTimes(1);
+      expect(service['commit']).toHaveBeenCalledWith({
+        sessionId: reqMock.sessionId,
+        moduleName: null,
+      });
     });
 
     it('should call getTransformed with data from session', async () => {
@@ -1340,12 +1485,19 @@ describe('SessionService', () => {
       expect(service['init']).toHaveBeenCalledTimes(1);
     });
 
-    it('should call session.save() with sessionId returned by session.init() and data returned by getTransformed()', async () => {
+    it('should call asyncLocalStorage.set() with sessionId returned by session.init() and data returned by getTransformed()', async () => {
       // When
       await service.duplicate(reqMock, resMock, SchemaMock);
       // Then
-      expect(service['save']).toHaveBeenCalledTimes(1);
-      expect(service['save']).toHaveBeenCalledWith(newSessionId, cleanedData);
+      expect(asyncLocalStorageServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(asyncLocalStorageServiceMock.set).toHaveBeenCalledWith(
+        SESSION_STORE_KEY,
+        {
+          id: newSessionId,
+          data: cleanedData,
+          sync: false,
+        },
+      );
     });
 
     it('should return cleanedData', async () => {
@@ -1384,8 +1536,8 @@ describe('SessionService', () => {
       // When
       await service.detach(reqMock, resMock, ttlMock);
       // Then
-      expect(redisServiceMock.expire).toHaveBeenCalledTimes(1);
-      expect(redisServiceMock.expire).toHaveBeenCalledWith(
+      expect(redisServiceMock.client.expire).toHaveBeenCalledTimes(1);
+      expect(redisServiceMock.client.expire).toHaveBeenCalledWith(
         sessionKeyMock,
         ttlMock,
       );
@@ -1395,7 +1547,7 @@ describe('SessionService', () => {
       // When
       await service.detach(reqMock, resMock);
       // Then
-      expect(redisServiceMock.expire).not.toHaveBeenCalled();
+      expect(redisServiceMock.client.expire).not.toHaveBeenCalled();
     });
 
     it('should call service.clearCookie()', async () => {
@@ -1450,6 +1602,7 @@ describe('SessionService', () => {
       );
     });
   });
+
   describe('clearCookie', () => {
     it('should get name and options from config', () => {
       // When

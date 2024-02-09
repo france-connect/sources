@@ -3,8 +3,11 @@ import { ArgumentsHost, HttpStatus } from '@nestjs/common';
 import { ApiErrorMessage, ApiErrorParams } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { Loggable, Trackable } from '@fc/exceptions';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { TrackingService } from '@fc/tracking';
+import { ViewTemplateService } from '@fc/view-templates';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { FcException } from '../exceptions';
 import { FcExceptionFilter } from './fc.exception-filter';
@@ -14,16 +17,11 @@ jest.mock('@fc/exceptions/decorator/trackable.decorator');
 describe('FcExceptionFilter', () => {
   let exceptionFilter: FcExceptionFilter;
 
-  const loggerServiceMock = {
-    trace: jest.fn(),
-    debug: jest.fn(),
-    warn: jest.fn(),
-    setContext: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const trackingServiceMock = {
     trackExceptionIfNeeded: jest.fn(),
-  } as unknown as TrackingService;
+  };
 
   const resMock: any = {};
   resMock.render = jest.fn().mockReturnValue(resMock);
@@ -49,14 +47,20 @@ describe('FcExceptionFilter', () => {
     get: jest.fn(),
   };
 
+  const exception = new Error('mock exception');
+  const ViewTemplateServiceMock = {
+    bindMethodsToResponse: jest.fn(),
+  };
+
   beforeEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
     exceptionFilter = new FcExceptionFilter(
       configServiceMock as unknown as ConfigService,
-      loggerServiceMock,
-      trackingServiceMock,
+      loggerServiceMock as unknown as LoggerService,
+      ViewTemplateServiceMock as unknown as ViewTemplateService,
+      trackingServiceMock as unknown as TrackingService,
     );
 
     configServiceMock.get.mockReturnValue({
@@ -120,41 +124,6 @@ describe('FcExceptionFilter', () => {
     const STUB_ERROR_SCOPE = 2;
     const STUB_ERROR_CODE = 3;
 
-    it('should log a warning by default', async () => {
-      // Given
-      const exception = new FcException('message text');
-      exception.scope = STUB_ERROR_SCOPE;
-      exception.code = STUB_ERROR_CODE;
-      // When
-      await exceptionFilter.catch(exception, argumentHostMock);
-      // Then
-      expect(loggerServiceMock.warn).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'FcException',
-          code: 'Y020003',
-          message: 'message text',
-        }),
-      );
-    });
-
-    it('should concat stack trace from original error', async () => {
-      // Given
-      const exception = new FcException();
-      exception.scope = STUB_ERROR_SCOPE;
-      exception.code = STUB_ERROR_CODE;
-      exception.originalError = new Error('foo bar');
-      // When
-      await exceptionFilter.catch(exception, argumentHostMock);
-      // Then
-      expect(loggerServiceMock.warn).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'FcException',
-          code: 'Y020003',
-          stackTrace: expect.any(Array),
-        }),
-      );
-    });
-
     it('should render error template', async () => {
       // Given
       const exception = new FcException('message text');
@@ -166,8 +135,12 @@ describe('FcExceptionFilter', () => {
       expect(resMock.render).toHaveBeenCalledWith(
         'error',
         expect.objectContaining({
-          code: 'Y020003',
-          message: 'message text',
+          exception,
+          error: {
+            code: 'Y020003',
+            message: 'message text',
+            id: expect.any(String),
+          },
         }),
       );
     });
@@ -282,6 +255,7 @@ describe('FcExceptionFilter', () => {
         apiOutputContentType: 'json',
       });
       const exceptionParam: ApiErrorParams = {
+        exception,
         res: resMock,
         error: errorValueMock,
         httpResponseCode: HttpStatus.BAD_REQUEST,
@@ -300,14 +274,18 @@ describe('FcExceptionFilter', () => {
     it('should return an error through `res.render` if the `apiOutputContentType` value is set to `html`', () => {
       // Given
       const exceptionParam: ApiErrorParams = {
+        exception,
         res: resMock,
         error: errorValueMock,
         httpResponseCode: HttpStatus.BAD_REQUEST,
       };
-      const errorValueReturnedMock: ApiErrorMessage = {
-        code: 'codeValueMock',
-        id: 'idValueMock',
-        message: 'messageValueMock',
+      const errorValueReturnedMock = {
+        exception,
+        error: {
+          code: 'codeValueMock',
+          id: 'idValueMock',
+          message: 'messageValueMock',
+        },
       };
       // When
       exceptionFilter['errorOutput'](exceptionParam);
@@ -319,9 +297,29 @@ describe('FcExceptionFilter', () => {
       );
     });
 
+    it('should call `viewTemplate.bindMethodsToResponse()`', () => {
+      // Given
+      const exceptionParam: ApiErrorParams = {
+        exception,
+        res: resMock,
+        error: errorValueMock,
+        httpResponseCode: HttpStatus.BAD_REQUEST,
+      };
+      // When
+      exceptionFilter['errorOutput'](exceptionParam);
+      // Then
+      expect(
+        ViewTemplateServiceMock.bindMethodsToResponse,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        ViewTemplateServiceMock.bindMethodsToResponse,
+      ).toHaveBeenCalledWith(resMock);
+    });
+
     it('should send an HTTP code corresponding to `httpResponseCode` given in `errorParam`', () => {
       // Given
       const exceptionParam: ApiErrorParams = {
+        exception,
         res: resMock,
         error: errorValueMock,
         httpResponseCode: HttpStatus.BAD_REQUEST,

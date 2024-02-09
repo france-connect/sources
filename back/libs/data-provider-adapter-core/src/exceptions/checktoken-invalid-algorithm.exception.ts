@@ -11,4 +11,8 @@ export class ChecktokenInvalidAlgorithmException extends ChecktokenBaseException
   public readonly code = ErrorCode.CHECKTOKEN_INVALID_ALGORYTHM;
   message =
     'The encryption algorithm for the configured checktoken does not match the one received.';
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

@@ -8,7 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { asyncFilter, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 import { IDataProviderAdapter } from '@fc/oidc-client';
 
@@ -43,7 +43,6 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
       this.dataProviderModel,
       this.refreshCache.bind(this),
     );
-    this.logger.debug('Initializing data-provider');
     // Warm up cache and shows up excluded DPs
     await this.getList();
   }
@@ -64,9 +63,6 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
           return listItem;
         }),
       ) as DataProviderMetadata[];
-      this.logger.trace({ step: 'REFRESH', list, listCache: this.listCache });
-    } else {
-      this.logger.trace({ list: this.listCache, step: 'CACHE' });
     }
     return this.listCache;
   }
@@ -100,10 +96,9 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
         const errors = await validateDto(doc, dto, validationOptions);
 
         if (errors.length > 0) {
-          this.logger.warn(
+          this.logger.warning(
             `"${doc.uid}" was excluded from the result at DTO validation.`,
           );
-          this.logger.trace({ errors });
         }
 
         return errors.length === 0;
@@ -121,8 +116,6 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
 
     const provider = providers.find(({ uid }) => uid === id);
 
-    this.logger.trace({ provider });
-
     return provider;
   }
 
@@ -135,15 +128,13 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const provider = providers.find(({ client_id }) => client_id === clientId);
 
-    this.logger.trace({ provider });
-
     return provider;
   }
 
-  async checkAuthentication(
+  async getAuthenticatedDataProvider(
     clientId: string,
     clientSecret: string,
-  ): Promise<void> {
+  ): Promise<DataProviderMetadata> {
     const dataProvider: DataProviderMetadata =
       await this.getByClientId(clientId);
 
@@ -156,5 +147,7 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
     if (dataProvider.client_secret !== clientSecret) {
       throw new DataProviderInvalidCredentialsException();
     }
+
+    return dataProvider;
   }
 }

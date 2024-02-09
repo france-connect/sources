@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { GeoipMaxmindService } from '@fc/geoip-maxmind';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
-import { getLoggerMock } from '@mocks/logger-legacy';
+import { getLoggerMock } from '@mocks/logger';
 
 import { ICsmrTracksData, ICsmrTracksV2FieldsData } from '../interfaces';
 import { CsmrTracksGeoService } from './csmr-tracks-geo.service';
@@ -46,10 +46,19 @@ describe('CsmrTracksGeoService', () => {
     it('should return country and city from geopoint data', () => {
       // Given
       const sourceMock = {
-        ip: '172.16.156.25',
-        'source.geo.city_name': 'Paris',
-        'source.geo.country_iso_code': 'FR',
-        'source.geo.region_name': 'Ile-de-France',
+        source: {
+          geo: {
+            // Input data
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            city_name: 'Paris',
+            // Input data
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            country_iso_code: 'FR',
+            // Input data
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            region_name: 'Ile-de-France',
+          },
+        },
       } as unknown as ICsmrTracksData;
 
       const resultMock = {
@@ -68,9 +77,19 @@ describe('CsmrTracksGeoService', () => {
       // Given
       const sourceMock = {
         ip: '172.16.156.25',
-        'source.geo.city_name': undefined,
-        'source.geo.country_iso_code': 'FR',
-        'source.geo.region_name': 'Ile-de-France',
+        source: {
+          geo: {
+            // Input data
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            city_name: undefined,
+            // Input data
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            country_iso_code: 'FR',
+            // Input data
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            region_name: 'Ile-de-France',
+          },
+        },
       } as unknown as ICsmrTracksData;
 
       const resultMock = {

@@ -4,11 +4,11 @@ import { Inject } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { ScopesService } from '@fc/scopes';
 
 import { getConfigMock } from '@mocks/config';
-import { getLoggerMock } from '@mocks/logger-legacy';
+import { getLoggerMock } from '@mocks/logger';
 
 import { IdpMappings } from '../dto';
 import { CoreInstance, Platform } from '../enums';
@@ -88,11 +88,6 @@ describe('CsmrTracksV2DataService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  it('should set logger context', () => {
-    expect(loggerMock.setContext).toHaveBeenCalledTimes(1);
-    expect(loggerMock.setContext).toHaveBeenCalledWith('TestService');
   });
 
   describe('getClaimsGroups()', () => {
@@ -177,9 +172,19 @@ describe('CsmrTracksV2DataService', () => {
     const sourceMock = {
       _id: 'idValue',
       _source: {
-        'source.geo.city_name': 'Paris',
-        'source.geo.country_iso_code': 'FR',
-        'source.geo.region_name': 'Ile-de-France',
+        source: {
+          geo: {
+            // Input data
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            city_name: undefined,
+            // Input data
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            country_iso_code: 'FR',
+            // Input data
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            region_name: 'Ile-de-France',
+          },
+        },
         idpId: 'idpIdValue',
         idpAcr: 'idpAcrValue',
         idpLabel: 'idpLabelValue',

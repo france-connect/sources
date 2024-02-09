@@ -15,7 +15,7 @@ import {
 
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import {
@@ -49,9 +49,7 @@ export class MockServiceProviderController {
     private readonly logger: LoggerService,
     private readonly identityProvider: IdentityProviderAdapterEnvService,
     private readonly mockServiceProvider: MockServiceProviderService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   @Get()
   @Render('index')
@@ -85,12 +83,6 @@ export class MockServiceProviderController {
       defaultAcrValue,
     };
 
-    this.logger.trace({
-      route: '/',
-      method: 'GET',
-      response,
-    });
-
     return response;
   }
 
@@ -122,13 +114,6 @@ export class MockServiceProviderController {
       dataApiActive: dataApis?.length > 0,
     };
 
-    this.logger.trace({
-      route: MockServiceProviderRoutes.VERIFY,
-      method: 'GET',
-      name: 'MockServiceProviderRoutes.VERIFY',
-      response,
-    });
-
     return response;
   }
 
@@ -153,13 +138,6 @@ export class MockServiceProviderController {
       idpIdToken,
       postLogoutRedirectUri,
     );
-
-    this.logger.trace({
-      route: MockServiceProviderRoutes.LOGOUT,
-      method: 'GET',
-      name: 'MockServiceProviderRoutes.LOGOUT',
-      redirect: endSessionUrl,
-    });
 
     res.redirect(endSessionUrl);
   }
@@ -191,7 +169,7 @@ export class MockServiceProviderController {
         dataApiActive: dataApis?.length > 0,
       };
     } catch (e) {
-      this.logger.trace({ e }, LoggerLevelNames.WARN);
+      this.logger.err(e);
       /**
        * @params e.error : error return by panva lib
        * @params e.error_description : error description return by panva lib
@@ -202,19 +180,10 @@ export class MockServiceProviderController {
       if (e.error && e.error_description) {
         const redirect = `/error?error=${e.error}&error_description=${e.error_description}`;
 
-        this.logger.trace({ redirect }, LoggerLevelNames.WARN);
-
         return res.redirect(redirect);
       }
       throw new MockServiceProviderTokenRevocationException();
     }
-
-    this.logger.trace({
-      route: MockServiceProviderRoutes.REVOCATION,
-      method: 'POST',
-      name: 'MockServiceProviderRoutes.REVOCATION',
-      response,
-    });
 
     return response;
   }
@@ -249,8 +218,6 @@ export class MockServiceProviderController {
      */
     if (query.error) {
       const errorUri = `/error?${encode(query)}`;
-
-      this.logger.trace({ query, errorUri }, LoggerLevelNames.WARN);
 
       return res.redirect(errorUri);
     }
@@ -300,14 +267,6 @@ export class MockServiceProviderController {
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const url = `${urlPrefix}/interaction/verify`;
 
-    this.logger.trace({
-      route: OidcClientRoutes.OIDC_CALLBACK,
-      method: 'GET',
-      name: 'OidcClientRoutes.OIDC_CALLBACK',
-      identityExchange,
-      redirect: url,
-    });
-
     res.redirect(url);
   }
 
@@ -346,7 +305,7 @@ export class MockServiceProviderController {
         dataApiActive: dataApis?.length > 0,
       };
     } catch (e) {
-      this.logger.trace({ e }, LoggerLevelNames.WARN);
+      this.logger.err(e);
       /**
        * @params e.error : error return by panva lib
        * @params e.error_description : error description return by panva lib
@@ -357,19 +316,10 @@ export class MockServiceProviderController {
       if (e.error && e.error_description) {
         const redirect = `/error?error=${e.error}&error_description=${e.error_description}`;
 
-        this.logger.trace({ redirect }, LoggerLevelNames.WARN);
-
         return res.redirect(redirect);
       }
       throw new MockServiceProviderUserinfoException();
     }
-
-    this.logger.trace({
-      route: MockServiceProviderRoutes.USERINFO,
-      method: 'POST',
-      name: 'MockServiceProviderRoutes.USERINFO',
-      response,
-    });
 
     return response;
   }
@@ -418,13 +368,6 @@ export class MockServiceProviderController {
       titleFront: "Mock service provider - Erreur lors de l'authentification",
       ...query,
     };
-
-    this.logger.trace({
-      route: MockServiceProviderRoutes.ERROR,
-      method: 'GET',
-      name: 'MockServiceProviderRoutes.ERROR',
-      response,
-    });
 
     return response;
   }
@@ -494,13 +437,6 @@ export class MockServiceProviderController {
         idpAccessToken,
         secret,
       );
-
-      this.logger.trace({
-        route: MockServiceProviderRoutes.DATA,
-        method: 'GET',
-        name: 'MockServiceProviderRoutes.DATA',
-        data,
-      });
 
       return data;
     } catch (e) {

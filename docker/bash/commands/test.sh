@@ -35,10 +35,3 @@ _e2e() {
   fi
   cd ${FC_ROOT}/${directory} && npx cypress ${command}
 }
-
-_storybook() {
-  cd ${WORKING_DIR}
-  $DOCKER_COMPOSE up storybook
-  $DOCKER_COMPOSE exec ${NO_TTY} storybook "/opt/scripts/install.sh"
-  $DOCKER_COMPOSE exec ${NO_TTY} storybook "/opt/scripts/start.sh"
-}

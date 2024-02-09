@@ -14,7 +14,6 @@ import {
   LightRequestService,
   LightResponseService,
 } from '@fc/eidas-light-protocol';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { EidasClientService } from './eidas-client.service';
 import {
@@ -27,11 +26,6 @@ describe('EidasClientService', () => {
 
   const configServiceMock = {
     get: jest.fn(),
-  };
-
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
   };
 
   const apacheIgniteServiceMock = {
@@ -69,7 +63,6 @@ describe('EidasClientService', () => {
       providers: [
         EidasClientService,
         ConfigService,
-        LoggerService,
         ApacheIgniteService,
         CryptographyService,
         LightRequestService,
@@ -78,8 +71,6 @@ describe('EidasClientService', () => {
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(ApacheIgniteService)
       .useValue(apacheIgniteServiceMock)
       .overrideProvider(CryptographyService)
@@ -98,13 +89,6 @@ describe('EidasClientService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  it('should set the logger context', () => {
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
-    expect(loggerServiceMock.setContext).toHaveBeenCalledWith(
-      'EidasClientService',
-    );
   });
 
   describe('onModuleInit', () => {

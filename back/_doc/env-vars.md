@@ -14,20 +14,15 @@
 8. [csmr-tracks](#csmr-tracks)
 9. [csmr-user-preferences-high](#csmr-user-preferences-high)
 10. [eidas-bridge](#eidas-bridge)
-11. [exploit-fca-low](#exploit-fca-low)
-12. [exploit-fcp-high](#exploit-fcp-high)
-13. [mock-data-provider](#mock-data-provider)
-14. [mock-identity-provider-fca-low](#mock-identity-provider-fca-low)
-15. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
-16. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
-17. [mock-rnipp](#mock-rnipp)
-18. [mock-service-provider-fca-low](#mock-service-provider-fca-low)
-19. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
-20. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
-21. [partners-fca](#partners-fca)
-22. [partners-fcp](#partners-fcp)
-23. [tracks-data-provider](#tracks-data-provider)
-24. [user-dashboard](#user-dashboard)
+11. [mock-data-provider](#mock-data-provider)
+12. [mock-identity-provider-fca-low](#mock-identity-provider-fca-low)
+13. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
+14. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
+15. [mock-rnipp](#mock-rnipp)
+16. [mock-service-provider-fca-low](#mock-service-provider-fca-low)
+17. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
+18. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
+19. [user-dashboard](#user-dashboard)
 
 ## Variables
 
@@ -41,9 +36,9 @@
 | App_HTTPS_SERVER_KEY | file |
 | Broker_QUEUE | string |
 | Broker_URLS | json |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | REQUEST_TIMEOUT | string |
 
 ### core-fca-low
@@ -54,7 +49,10 @@
 | AdapterMongo_DECRYPT_CLIENT_SECRET_FEATURE | boolean |
 | AdapterMongo_DISABLE_IDP_VALIDATION_ON_LEGACY | boolean |
 | App_API_OUTPUT_CONTENT_TYPE | string |
+| App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
+| App_DEFAULT_IDP_UID | string |
+| App_DSFR_ASSETS_PATHS | json |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
 | App_VIEWS_PATHS | json |
@@ -62,8 +60,10 @@
 | CryptographyFca_CRYPTO_HASH_SECRET | string |
 | CryptographyFca_CRYPTO_SUB_SECRET | string |
 | FQDN | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
+| LoggerLegacy_FILE | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | Mongoose_DATABASE | string |
 | Mongoose_HOSTS | string |
 | Mongoose_PASSWORD | string |
@@ -72,7 +72,6 @@
 | Mongoose_TLS_CA_FILE | string |
 | Mongoose_TLS_INSECURE | boolean |
 | Mongoose_USER | string |
-| NODE_ENV | string |
 | OidcClient_CRYPTO_ENC_LOCALE_PRIV_KEYS | json |
 | OidcClient_FAPI | boolean |
 | OidcClient_SCOPE | string |
@@ -101,6 +100,7 @@
 | App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
+| App_DSFR_ASSETS_PATHS | json |
 | App_EIDAS_BRIDGE_UID | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
@@ -113,8 +113,10 @@
 | Cryptography_CRYPTO_SUB_SECRET | string |
 | FQDN | string |
 | GLOBAL_AGENT_HTTPS_PROXY | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
+| LoggerLegacy_FILE | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | Mailer_FROM_EMAIL | string |
 | Mailer_FROM_NAME | string |
 | Mailer_HOST | string |
@@ -130,7 +132,6 @@
 | Mongoose_TLS_CA_FILE | string |
 | Mongoose_TLS_INSECURE | boolean |
 | Mongoose_USER | string |
-| NODE_ENV | string |
 | OidcClient_CRYPTO_ENC_LOCALE_PRIV_KEYS | json |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
@@ -155,7 +156,6 @@
 | Rnipp_HOSTNAME | string |
 | Rnipp_PROTOCOL | string |
 | Session_COOKIE_SECRETS | json |
-| Session_FEATURE_SSO_SUBSTANTIAL | boolean |
 | Session_USERINFO_CRYPT_KEY | string |
 | UD_FQDN | string |
 
@@ -167,9 +167,11 @@
 | AdapterMongo_DECRYPT_CLIENT_SECRET_FEATURE | boolean |
 | AdapterMongo_DISABLE_IDP_VALIDATION_ON_LEGACY | boolean |
 | AdapterMongo_PLATFORM | string |
+| App_AIDANTS_CONNECT_UID | string |
 | App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
+| App_DSFR_ASSETS_PATHS | json |
 | App_EIDAS_BRIDGE_UID | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
@@ -179,8 +181,10 @@
 | Cryptography_SUB_SECRET | string |
 | FQDN | string |
 | GLOBAL_AGENT_HTTPS_PROXY | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
+| LoggerLegacy_FILE | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | Mailer_FROM_EMAIL | string |
 | Mailer_FROM_NAME | string |
 | Mailer_HOST | string |
@@ -196,7 +200,6 @@
 | Mongoose_TLS_CA_FILE | string |
 | Mongoose_TLS_INSECURE | boolean |
 | Mongoose_USER | string |
-| NODE_ENV | string |
 | OidcClient_CRYPTO_ENC_LOCALE_PRIV_KEYS | json |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
@@ -231,8 +234,9 @@
 |---|---|
 | AccountBroker_QUEUE | string |
 | AccountBroker_URLS | json |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | Mongoose_DATABASE | string |
 | Mongoose_HOSTS | string |
 | Mongoose_PASSWORD | string |
@@ -241,7 +245,6 @@
 | Mongoose_TLS_CA_FILE | string |
 | Mongoose_TLS_INSECURE | boolean |
 | Mongoose_USER | string |
-| NODE_ENV | string |
 | REQUEST_TIMEOUT | string |
 
 ### csmr-hsm-high
@@ -254,18 +257,19 @@
 | Hsm_PIN | string |
 | Hsm_SIG_HSM_PUB_KEY_CKA_LABEL | string |
 | Hsm_VIRTUAL_HSM_SLOT | number |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| LoggerLegacy_FILE | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | REQUEST_TIMEOUT | string |
 
 ### csmr-rie
 
 | Var Name | Inferred type |
 |---|---|
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | REQUEST_TIMEOUT | string |
 | RieBroker_QUEUE | string |
 | RieBroker_URLS | json |
@@ -284,9 +288,9 @@
 | Elasticsearch_USERNAME | string |
 | GeoIpMaxmind_DATABASE_PATH | string |
 | Idp_MAPPINGS | json |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | REQUEST_TIMEOUT | string |
 | TracksBroker_QUEUE | string |
 | TracksBroker_URLS | json |
@@ -301,8 +305,9 @@
 | App_AIDANTS_CONNECT_UID | string |
 | Broker_QUEUE | string |
 | Broker_URLS | json |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | Mongoose_DATABASE | string |
 | Mongoose_HOSTS | string |
 | Mongoose_PASSWORD | string |
@@ -311,7 +316,6 @@
 | Mongoose_TLS_CA_FILE | string |
 | Mongoose_TLS_INSECURE | boolean |
 | Mongoose_USER | string |
-| NODE_ENV | string |
 | REQUEST_TIMEOUT | string |
 
 ### eidas-bridge
@@ -329,8 +333,10 @@
 | ApacheIgnite_USERNAME | string |
 | ApacheIgnite_USE_TLS | boolean |
 | App_API_OUTPUT_CONTENT_TYPE | string |
+| App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
 | App_AVAILABLE_COUNTRIES | json |
+| App_DSFR_ASSETS_PATHS | json |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
 | App_IDP_ID | string |
@@ -371,9 +377,10 @@
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ALG | string |
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| LoggerLegacy_FILE | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
 | OidcClient_HTTPS_CLIENT_KEY | file |
@@ -417,98 +424,6 @@
 | Session_COOKIE_SECRETS | json |
 | Session_USERINFO_CRYPT_KEY | string |
 
-### exploit-fca-low
-
-| Var Name | Inferred type |
-|---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
-| App_ASSETS_PATHS | json |
-| App_HTTPS_SERVER_CERT | file |
-| App_HTTPS_SERVER_KEY | file |
-| App_IDP_ID | string |
-| App_VIEWS_PATHS | json |
-| FQDN | string |
-| IdentityProviderAdapterEnv_CLIENT_ID | string |
-| IdentityProviderAdapterEnv_CLIENT_SECRET | string |
-| IdentityProviderAdapterEnv_CLIENT_SECRET_CIPHER_PASS | string |
-| IdentityProviderAdapterEnv_DISCOVERY | boolean |
-| IdentityProviderAdapterEnv_DISCOVERY_URL | string |
-| IdentityProviderAdapterEnv_ID_TOKEN_ENCRYPTED_RESPONSE_ALG | string |
-| IdentityProviderAdapterEnv_ID_TOKEN_ENCRYPTED_RESPONSE_ENC | string |
-| IdentityProviderAdapterEnv_ID_TOKEN_SIGNED_RESPONSE_ALG | string |
-| IdentityProviderAdapterEnv_JWKS_URI | string |
-| IdentityProviderAdapterEnv_NAME | string |
-| IdentityProviderAdapterEnv_REVOCATION_ENDPOINT_AUTH_METHOD | string |
-| IdentityProviderAdapterEnv_TITLE | string |
-| IdentityProviderAdapterEnv_TOKEN_ENDPOINT_AUTH_METHOD | string |
-| IdentityProviderAdapterEnv_UID | string |
-| IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ALG | string |
-| IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
-| IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
-| JWKS | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
-| OidcClient_FAPI | boolean |
-| OidcClient_HTTPS_CLIENT_CERT | file |
-| OidcClient_HTTPS_CLIENT_KEY | file |
-| OidcClient_POST_LOGOUT_REDIRECT_URI | string |
-| OidcClient_REDIRECT_URI | string |
-| OidcClient_SCOPE | string |
-| REQUEST_TIMEOUT | string |
-| Redis_DB | number |
-| Redis_HOST | string |
-| Redis_PASSWORD | string |
-| Redis_PORT | number |
-| Session_COOKIE_SECRETS | json |
-| Session_USERINFO_CRYPT_KEY | string |
-
-### exploit-fcp-high
-
-| Var Name | Inferred type |
-|---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
-| App_ASSETS_PATHS | json |
-| App_HTTPS_SERVER_CERT | file |
-| App_HTTPS_SERVER_KEY | file |
-| App_IDP_ID | string |
-| App_VIEWS_PATHS | json |
-| FQDN | string |
-| IdentityProviderAdapterEnv_CLIENT_ID | string |
-| IdentityProviderAdapterEnv_CLIENT_SECRET | string |
-| IdentityProviderAdapterEnv_CLIENT_SECRET_CIPHER_PASS | string |
-| IdentityProviderAdapterEnv_DISCOVERY | boolean |
-| IdentityProviderAdapterEnv_DISCOVERY_URL | string |
-| IdentityProviderAdapterEnv_ID_TOKEN_ENCRYPTED_RESPONSE_ALG | string |
-| IdentityProviderAdapterEnv_ID_TOKEN_ENCRYPTED_RESPONSE_ENC | string |
-| IdentityProviderAdapterEnv_ID_TOKEN_SIGNED_RESPONSE_ALG | string |
-| IdentityProviderAdapterEnv_JWKS_URI | string |
-| IdentityProviderAdapterEnv_NAME | string |
-| IdentityProviderAdapterEnv_REVOCATION_ENDPOINT_AUTH_METHOD | string |
-| IdentityProviderAdapterEnv_TITLE | string |
-| IdentityProviderAdapterEnv_TOKEN_ENDPOINT_AUTH_METHOD | string |
-| IdentityProviderAdapterEnv_UID | string |
-| IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ALG | string |
-| IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
-| IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
-| JWKS | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
-| OidcClient_FAPI | boolean |
-| OidcClient_HTTPS_CLIENT_CERT | file |
-| OidcClient_HTTPS_CLIENT_KEY | file |
-| OidcClient_POST_LOGOUT_REDIRECT_URI | string |
-| OidcClient_REDIRECT_URI | string |
-| OidcClient_SCOPE | string |
-| REQUEST_TIMEOUT | string |
-| Redis_DB | number |
-| Redis_HOST | string |
-| Redis_PASSWORD | string |
-| Redis_PORT | number |
-| Session_COOKIE_SECRETS | json |
-| Session_USERINFO_CRYPT_KEY | string |
-
 ### mock-data-provider
 
 | Var Name | Inferred type |
@@ -527,24 +442,27 @@
 | DataProviderAdapterCore_ISSUER | string |
 | DataProviderAdapterCore_JWKS | json |
 | DataProviderAdapterCore_JWKS_ENDPOINT | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 
 ### mock-identity-provider-fca-low
 
 | Var Name | Inferred type |
 |---|---|
+| App_ALLOW_CUSTOM_IDENTITY | boolean |
 | App_API_OUTPUT_CONTENT_TYPE | string |
+| App_ASSETS_PATHS | json |
 | App_CITIZEN_DATABASE_PATH | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
 | App_PASSWORD_VERIFICATION | boolean |
 | App_SCENARIOS_DATABASE_PATH | string |
+| App_VIEWS_PATHS | json |
 | FQDN | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_CRYPTO_SIG_RS256_PRIV_KEYS | json |
@@ -577,18 +495,20 @@
 | Var Name | Inferred type |
 |---|---|
 | APP_NAME | string |
+| App_ALLOW_CUSTOM_IDENTITY | boolean |
 | App_API_OUTPUT_CONTENT_TYPE | string |
+| App_ASSETS_PATHS | json |
 | App_CITIZEN_DATABASE_PATH | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
 | App_PASSWORD_VERIFICATION | boolean |
 | App_SCENARIOS_DATABASE_PATH | string |
+| App_VIEWS_PATHS | json |
 | FQDN | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | OidcProvider_COOKIES_KEYS | json |
-| OidcProvider_COOKIE_MAX_AGE | number |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_CRYPTO_SIG_RS256_PRIV_KEYS | json |
 | OidcProvider_PREFIX | string |
@@ -620,18 +540,20 @@
 | Var Name | Inferred type |
 |---|---|
 | APP_NAME | string |
+| App_ALLOW_CUSTOM_IDENTITY | boolean |
 | App_API_OUTPUT_CONTENT_TYPE | string |
+| App_ASSETS_PATHS | json |
 | App_CITIZEN_DATABASE_PATH | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
 | App_PASSWORD_VERIFICATION | boolean |
 | App_SCENARIOS_DATABASE_PATH | string |
+| App_VIEWS_PATHS | json |
 | FQDN | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | OidcProvider_COOKIES_KEYS | json |
-| OidcProvider_COOKIE_MAX_AGE | number |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_CRYPTO_SIG_RS256_PRIV_KEYS | json |
 | OidcProvider_PREFIX | string |
@@ -667,9 +589,9 @@
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
 | App_VIEWS_PATHS | json |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 
 ### mock-service-provider-fca-low
 
@@ -700,9 +622,9 @@
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
 | JWKS | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
 | OidcClient_HTTPS_CLIENT_KEY | file |
@@ -750,9 +672,9 @@
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
 | JWKS | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
 | OidcClient_HTTPS_CLIENT_KEY | file |
@@ -798,9 +720,9 @@
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ALG | string |
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
 | OidcClient_HTTPS_CLIENT_KEY | file |
@@ -816,74 +738,6 @@
 | Redis_PORT | number |
 | Session_COOKIE_SECRETS | json |
 | Session_USERINFO_CRYPT_KEY | string |
-
-### partners-fca
-
-| Var Name | Inferred type |
-|---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
-| App_HTTPS_SERVER_CERT | file |
-| App_HTTPS_SERVER_KEY | file |
-| FQDN | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
-| Postgres_DATABASE | string |
-| Postgres_HOST | string |
-| Postgres_PASSWORD | string |
-| Postgres_PORT | number |
-| Postgres_TYPE | string |
-| Postgres_USER | string |
-| Redis_CACERT | file |
-| Redis_DB | number |
-| Redis_ENABLE_TLS_FOR_SENTINEL_MODE | boolean |
-| Redis_HOST | string |
-| Redis_PASSWORD | string |
-| Redis_PORT | number |
-| Session_COOKIE_SECRETS | json |
-| Session_USERINFO_CRYPT_KEY | string |
-
-### partners-fcp
-
-| Var Name | Inferred type |
-|---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
-| App_HTTPS_SERVER_CERT | file |
-| App_HTTPS_SERVER_KEY | file |
-| FQDN | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
-| Postgres_DATABASE | string |
-| Postgres_HOST | string |
-| Postgres_PASSWORD | string |
-| Postgres_PORT | number |
-| Postgres_TYPE | string |
-| Postgres_USER | string |
-| Redis_CACERT | file |
-| Redis_DB | number |
-| Redis_ENABLE_TLS_FOR_SENTINEL_MODE | boolean |
-| Redis_HOST | string |
-| Redis_PASSWORD | string |
-| Redis_PORT | number |
-| Session_COOKIE_SECRETS | json |
-| Session_USERINFO_CRYPT_KEY | string |
-
-### tracks-data-provider
-
-| Var Name | Inferred type |
-|---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
-| App_HTTPS_SERVER_CERT | file |
-| App_HTTPS_SERVER_KEY | file |
-| App_PREFIX | string |
-| DataProviderCoreAuth_TOKEN_ENDPOINT | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
-| NODE_ENV | string |
-| REQUEST_TIMEOUT | string |
-| TracksBroker_QUEUE | string |
-| TracksBroker_URLS | json |
 
 ### user-dashboard
 
@@ -908,8 +762,10 @@
 | IdentityProviderAdapterEnv_TOKEN_ENDPOINT_AUTH_METHOD | string |
 | IdentityProviderAdapterEnv_UID | string |
 | IdentityProviderAdapterEnv_USERINFO_ENDPOINT | string |
-| Logger_FILE | string |
-| Logger_LEVEL | string |
+| LoggerLegacy_FILE | string |
+| Logger_STDERR_LEVELS | json |
+| Logger_STDOUT_LEVELS | json |
+| Logger_THRESHOLD | string |
 | Mailer_FROM_EMAIL | string |
 | Mailer_FROM_NAME | string |
 | Mailer_HOST | string |
@@ -917,7 +773,6 @@
 | Mailer_SECURE | boolean |
 | Mailer_TEMPLATES_PATHS | json |
 | Mailer_TRANSPORT | string |
-| NODE_ENV | string |
 | OidcClient_HTTPS_CLIENT_CERT | file |
 | OidcClient_HTTPS_CLIENT_KEY | file |
 | OidcClient_JWKS | json |

@@ -11,7 +11,6 @@ import {
 } from '@fc/eidas';
 import { EidasCountryService, IEidasCountryElement } from '@fc/eidas-country';
 import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
-import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { TrackingService } from '@fc/tracking';
@@ -63,12 +62,6 @@ describe('EuIdentityToFrController', () => {
     getInteraction: jest.fn(),
     finishInteraction: jest.fn(),
   };
-
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    warn: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
 
   const sessionServiceOidcMock = getSessionServiceMock();
 
@@ -123,7 +116,6 @@ describe('EuIdentityToFrController', () => {
       controllers: [EuIdentityToFrController],
       providers: [
         ConfigService,
-        LoggerService,
         OidcProviderService,
         OidcToEidasService,
         EidasToOidcService,
@@ -133,8 +125,6 @@ describe('EuIdentityToFrController', () => {
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(OidcProviderService)
       .useValue(oidcProviderServiceMock)
       .overrideProvider(OidcToEidasService)

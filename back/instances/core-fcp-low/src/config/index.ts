@@ -11,6 +11,7 @@ import CryptographyFcp from './cryptography-fcp';
 import DataProviderAdapterMongo from './data-provider-adapter-mongo';
 import IdentityProviderAdapterMongo from './identity-provider-adapter-mongo';
 import Logger from './logger';
+import LoggerLegacy from './logger-legacy';
 import Mailer from './mailer';
 import Mongoose from './mongoose';
 import OidcAcr from './oidc-acr';
@@ -30,6 +31,7 @@ export default {
   Core,
   DataProviderAdapterMongo,
   Logger,
+  LoggerLegacy,
   OidcAcr,
   OidcProvider,
   OidcClient,

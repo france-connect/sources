@@ -2,7 +2,8 @@ import { Global, Inject, Injectable, Scope, Type } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { FcException } from '@fc/exceptions';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+import { LoggerService as LoggerLegacyService } from '@fc/logger-legacy';
 
 import { TrackingConfig } from '../dto';
 import {
@@ -22,9 +23,8 @@ export class TrackingService {
     private readonly appTrackingService: AppTrackingServiceAbstract,
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+    private readonly loggerLegacy: LoggerLegacyService,
+  ) {}
 
   onModuleInit() {
     const { eventsMap } = this.config.get<TrackingConfig>('Tracking');
@@ -40,8 +40,8 @@ export class TrackingService {
       context,
     );
 
-    this.logger.trace({ [message.event]: message });
-    this.logger.businessEvent(message);
+    this.logger.debug({ [message.event]: message });
+    this.loggerLegacy.businessEvent(message);
   }
 
   private findEventForException(

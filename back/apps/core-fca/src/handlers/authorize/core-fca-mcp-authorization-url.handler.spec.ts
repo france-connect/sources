@@ -1,19 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcClientService } from '@fc/oidc-client';
 
-import { CoreFcaMcpAuthorizationHandler } from './core-fca-mcp-authorization-url.handler';
+import { getLoggerMock } from '@mocks/logger';
+
+import { CoreFcaMcpAuthorizationHandler } from './';
 
 describe('CoreFcaMcpAuthorizationHandler', () => {
   let service: CoreFcaMcpAuthorizationHandler;
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    warn: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const oidClientMock = {
     utils: {
@@ -23,16 +20,10 @@ describe('CoreFcaMcpAuthorizationHandler', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        CoreFcaMcpAuthorizationHandler,
-        LoggerService,
-        OidcClientService,
-      ],
+      providers: [CoreFcaMcpAuthorizationHandler, LoggerService],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(OidcClientService)
-      .useValue(oidClientMock)
       .compile();
 
     service = module.get<CoreFcaMcpAuthorizationHandler>(

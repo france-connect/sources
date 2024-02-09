@@ -22,6 +22,7 @@ export class RpcExceptionFilter
     const id = ExceptionsService.generateErrorId();
 
     this.logException(code, id, exception);
+
     return throwError(exception.getError());
   }
 }

@@ -2,7 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { RabbitmqConfig } from './dto';
 
@@ -69,8 +69,6 @@ export class RabbitmqModule {
       provide: clientName,
       useFactory: (logger: LoggerService, config: ConfigService) => {
         const options = config.get<RabbitmqConfig>(clientName);
-
-        logger.trace({ clientName, options });
 
         return ClientProxyFactory.create({
           transport: Transport.RMQ,

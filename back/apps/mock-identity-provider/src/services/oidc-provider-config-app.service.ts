@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { ConfigService } from '@fc/config';
+import { LoggerService } from '@fc/logger';
 import {
   OidcProviderAppConfigLibService,
   OidcProviderErrorService,
@@ -20,9 +21,10 @@ export class OidcProviderConfigAppService extends OidcProviderAppConfigLibServic
     protected readonly sessionService: SessionService,
     protected readonly errorService: OidcProviderErrorService,
     protected readonly grantService: OidcProviderGrantService,
+    protected readonly config: ConfigService,
     private readonly scenarios: ScenariosService,
   ) {
-    super(logger, sessionService, errorService, grantService);
+    super(logger, sessionService, errorService, grantService, config);
   }
 
   protected async formatAccount(sessionId, spIdentity, subSp) {

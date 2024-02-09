@@ -4,12 +4,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { CoreVerifyService } from '@fc/core';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { ISessionService, SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { CoreFcaVerifyService } from './core-fca-verify.service';
@@ -17,11 +18,7 @@ import { CoreFcaVerifyService } from './core-fca-verify.service';
 describe('CoreFcaVerifyService', () => {
   let service: CoreFcaVerifyService;
 
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const coreVerifyServiceMock = {
     verify: jest.fn(),

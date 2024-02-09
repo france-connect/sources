@@ -4,9 +4,12 @@ import * as OidcProvider from 'oidc-provider';
 import { HttpAdapterHost } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
-import { REDIS_CONNECTION_TOKEN } from '@fc/redis';
+import { RedisService } from '@fc/redis';
+
+import { getLoggerMock } from '@mocks/logger';
+import { getRedisServiceMock } from '@mocks/redis';
 
 import {
   OidcProviderMiddlewarePattern,
@@ -25,6 +28,8 @@ import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
 
 describe('OidcProviderService', () => {
   let service: OidcProviderService;
+
+  const loggerMock = getLoggerMock();
 
   const httpAdapterHostMock = {
     httpAdapter: {
@@ -63,14 +68,6 @@ describe('OidcProviderService', () => {
     },
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    verbose: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-    businessEvent: jest.fn(),
-  } as unknown as LoggerService;
-
   const serviceProviderListMock = [{ name: 'my SP' }];
   const serviceProviderServiceMock = {
     getList: jest.fn(),
@@ -90,15 +87,7 @@ describe('OidcProviderService', () => {
     interactionFinished: jest.fn(),
   };
 
-  const redisMock = {
-    hgetall: jest.fn(),
-    get: jest.fn(),
-    multi: jest.fn(),
-    hset: jest.fn(),
-    ttl: jest.fn(),
-    lrange: jest.fn(),
-    del: jest.fn(),
-  };
+  const redisMock = getRedisServiceMock();
 
   const oidcProviderErrorServiceMock = {
     catchErrorEvents: jest.fn(),
@@ -118,13 +107,10 @@ describe('OidcProviderService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
+        LoggerService,
         OidcProviderService,
         HttpAdapterHost,
-        LoggerService,
-        {
-          provide: REDIS_CONNECTION_TOKEN,
-          useValue: redisMock,
-        },
+        RedisService,
         OidcProviderErrorService,
         OidcProviderConfigService,
         {
@@ -133,17 +119,17 @@ describe('OidcProviderService', () => {
         },
       ],
     })
+      .overrideProvider(LoggerService)
+      .useValue(loggerMock)
+      .overrideProvider(RedisService)
+      .useValue(redisMock)
       .overrideProvider(HttpAdapterHost)
       .useValue(httpAdapterHostMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(OidcProviderErrorService)
       .useValue(oidcProviderErrorServiceMock)
       .overrideProvider(OidcProviderConfigService)
       .useValue(oidcProviderConfigServiceMock)
       .compile();
-
-    module.useLogger(loggerServiceMock);
 
     service = module.get<OidcProviderService>(OidcProviderService);
     jest.resetAllMocks();
@@ -152,12 +138,6 @@ describe('OidcProviderService', () => {
       switch (module) {
         case 'OidcProvider':
           return configOidcProviderMock;
-        case 'Logger':
-          return {
-            path: '/dev/null',
-            level: LoggerLevelNames.TRACE,
-            isDevelopment: false,
-          };
       }
     });
 

@@ -4,6 +4,7 @@
 import { ConfigParser } from '@fc/config';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
+import { UserDashboardSession } from '@fc/user-dashboard';
 
 const env = new ConfigParser(process.env, 'Session');
 
@@ -26,4 +27,5 @@ export default {
   sessionIdLength: 64,
   slidingExpiration: true,
   excludedRoutes: [OidcClientRoutes.WELL_KNOWN_KEYS],
+  schema: UserDashboardSession,
 } as SessionConfig;

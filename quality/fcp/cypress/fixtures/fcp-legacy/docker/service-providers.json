@@ -124,7 +124,7 @@
     "descriptions": ["user-dashboard"],
     "mocked": false,
     "url": "https://ud.docker.dev-franceconnect.fr",
-    "redirectUri": "https://ud.docker.dev-franceconnect.fr/api/oidc-callback/envIssuer",
+    "redirectUri": "https://ud.docker.dev-franceconnect.fr/api/oidc-callback",
     "acrValue": "eidas1",
     "claims": [],
     "scopes": [],

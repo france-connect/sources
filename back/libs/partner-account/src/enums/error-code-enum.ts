@@ -1,4 +1,0 @@
-export enum ErrorCode {
-  POSTGRES_CONNECTION_FAILURE = 1,
-  ACCOUNT_NOT_FOUND = 2,
-}

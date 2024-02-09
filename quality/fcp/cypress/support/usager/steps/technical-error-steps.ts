@@ -1,21 +1,20 @@
-import { Then } from '@badeball/cypress-cucumber-preprocessor';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import TechnicalErrorPage from '../pages/technical-error-page';
 
-const { checkErrorCode, checkErrorMessage, checkErrorTitle, checkIsVisible } =
-  new TechnicalErrorPage();
+const technicalErrorPage = new TechnicalErrorPage();
 
 Then(
   'je suis redirigé vers la page erreur technique FranceConnect',
   function () {
-    checkIsVisible();
+    technicalErrorPage.checkIsVisible();
   },
 );
 
 Then(
   "le code d'erreur FranceConnect est {string}",
   function (errorCode: string) {
-    checkErrorCode(errorCode);
+    technicalErrorPage.checkErrorCode(errorCode);
   },
 );
 
@@ -25,9 +24,23 @@ Then(
     // TODO: Delete this once FC Legacy page design is made consistent with the others
     const platform: string = Cypress.env('PLATFORM');
     if (platform === 'fcp-legacy') {
-      checkErrorTitle(message);
+      technicalErrorPage.checkErrorTitle(message);
       return;
     }
-    checkErrorMessage(message);
+    technicalErrorPage.checkErrorMessage(message);
   },
 );
+
+Then(
+  /^le lien retour vers le FS (est|n'est pas) affiché dans la page erreur technique$/,
+  function (text: string) {
+    const isVisible = text === 'est';
+    technicalErrorPage
+      .getBackToSPLink()
+      .should(isVisible ? 'be.visible' : 'not.exist');
+  },
+);
+
+When('je clique sur le lien retour vers le FS après une erreur', function () {
+  technicalErrorPage.getBackToSPLink().click();
+});

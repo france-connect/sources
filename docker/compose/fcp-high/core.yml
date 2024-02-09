@@ -32,6 +32,6 @@ services:
       - 9235:9235
     tty: true
     networks:
-      - fc
+      - public
       - data
     command: "pm2 logs"

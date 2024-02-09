@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import {
   OidcClientRoutes,
   OidcClientService,
@@ -32,9 +32,7 @@ export class OidcClientController {
     private readonly oidcClient: OidcClientService,
     private readonly identityProvider: IdentityProviderAdapterEnvService,
     private readonly csrfService: SessionCsrfService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * @todo #242 get configured parameters (scope and acr)
@@ -67,7 +65,7 @@ export class OidcClientController {
       const { spId } = await sessionOidc.get();
       serviceProviderId = spId;
     } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
+      this.logger.err(error);
       serviceProviderId = null;
     }
 
@@ -75,7 +73,6 @@ export class OidcClientController {
     try {
       await this.csrfService.validate(sessionOidc, csrfToken);
     } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
       throw new SessionInvalidCsrfSelectIdpException(error);
     }
 
@@ -115,16 +112,6 @@ export class OidcClientController {
 
     await sessionOidc.set(session);
 
-    this.logger.trace({
-      route: OidcClientRoutes.REDIRECT_TO_IDP,
-      method: 'POST',
-      name: 'OidcClientRoutes.REDIRECT_TO_IDP',
-      body,
-      res,
-      session,
-      redirect: authorizationUrl,
-    });
-
     res.redirect(authorizationUrl);
   }
 
@@ -137,11 +124,6 @@ export class OidcClientController {
   @Get(OidcClientRoutes.WELL_KNOWN_KEYS)
   @Header('cache-control', 'public, max-age=600')
   async getWellKnownKeys() {
-    this.logger.trace({
-      route: OidcClientRoutes.WELL_KNOWN_KEYS,
-      method: 'GET',
-      name: 'OidcClientRoutes.WELL_KNOWN_KEYS',
-    });
     return await this.oidcClient.utils.wellKnownKeys();
   }
 }

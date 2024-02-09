@@ -4,6 +4,8 @@ import {
   Transport,
 } from '@nestjs/microservices';
 
+import { getLoggerMock } from '@mocks/logger';
+
 import { RabbitmqModule } from './rabbitmq.module';
 
 describe('RabbitmqModule', () => {
@@ -11,9 +13,7 @@ describe('RabbitmqModule', () => {
     get: jest.fn(),
   };
 
-  const loggerMock = {
-    trace: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const configServiceReturnValue = Symbol('configServiceReturnValue');
 

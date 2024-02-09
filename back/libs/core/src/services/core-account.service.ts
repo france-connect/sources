@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { Account, AccountBlockedException, AccountService } from '@fc/account';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import {
   CoreFailedPersistenceException,
@@ -14,9 +14,7 @@ export class CoreAccountService {
   constructor(
     protected readonly logger: LoggerService,
     private readonly account: AccountService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Check if an account exists and is blocked
@@ -62,13 +60,17 @@ export class CoreAccountService {
       spFederation,
     };
 
-    this.logger.trace(interaction);
-
     try {
       const accountId = await this.account.storeInteraction(interaction);
 
       return accountId;
     } catch (error) {
+      this.logger.alert(
+        `Failed to store interaction for ${identityHash.replace(
+          /^(.{3}).*(.{3})$/,
+          '$1*****$2',
+        )}`,
+      );
       throw new CoreFailedPersistenceException(error);
     }
   }

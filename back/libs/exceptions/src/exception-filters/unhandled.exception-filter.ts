@@ -15,7 +15,7 @@ import {
   AppConfig,
 } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { ExceptionsService } from '../exceptions.service';
 
@@ -29,7 +29,6 @@ export class UnhandledExceptionFilter
     private readonly logger: LoggerService,
   ) {
     super();
-    this.logger.setContext(this.constructor.name);
   }
 
   catch(exception: Error, host: ArgumentsHost) {
@@ -42,7 +41,7 @@ export class UnhandledExceptionFilter
     const { name, message, stack } = exception;
     const stackTrace: string[] = stack.split('\n');
 
-    this.logger.error({
+    this.logger.err({
       type: name,
       code,
       id,
@@ -53,6 +52,7 @@ export class UnhandledExceptionFilter
     const httpErrorCode: number = HttpStatus.INTERNAL_SERVER_ERROR;
     const errorMessage: ApiErrorMessage = { code, id, message };
     const exceptionParam: ApiErrorParams = {
+      exception,
       res,
       error: errorMessage,
       httpResponseCode: httpErrorCode,
@@ -65,7 +65,7 @@ export class UnhandledExceptionFilter
     const { error, httpResponseCode, res } = errorParam;
     const { apiOutputContentType } = this.config.get<AppConfig>('App');
 
-    this.logger.trace(error, LoggerLevelNames.ERROR);
+    this.logger.err(error);
 
     /**
      * @todo #139 allow the exception to set the HTTP response code
@@ -75,20 +75,23 @@ export class UnhandledExceptionFilter
 
     switch (apiOutputContentType) {
       case ApiContentType.HTML:
-        this.getApiOutputHtml(res, error);
+        this.getApiOutputHtml(errorParam);
         break;
 
       case ApiContentType.JSON:
-        this.getApiOutputJson(res, error);
+        this.getApiOutputJson(errorParam);
         break;
     }
   }
 
-  private getApiOutputHtml(res: Response, error: ApiErrorMessage): void {
-    res.render('error', error);
+  private getApiOutputHtml(errorParam: ApiErrorParams): void {
+    const { res, ...params } = errorParam;
+    res.render('error', params);
   }
 
-  private getApiOutputJson(res: Response, error: ApiErrorMessage): void {
+  private getApiOutputJson(errorParam: ApiErrorParams): void {
+    const { res, error } = errorParam;
+
     res.json(error);
   }
 }

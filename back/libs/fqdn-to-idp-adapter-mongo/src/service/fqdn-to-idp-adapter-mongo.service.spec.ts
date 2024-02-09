@@ -2,8 +2,10 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { FqdnToIdentityProvider } from '../schemas';
 import { FqdnToIdpAdapterMongoService } from './fqdn-to-idp-adapter-mongo.service';
@@ -15,7 +17,7 @@ jest.mock('@fc/common', () => ({
 
 const fqdnToIdps = [
   {
-    domain: 'default-domain.fr',
+    fqdn: 'default-fqdn.fr',
     identityProvider: 'default provider',
   },
 ];
@@ -30,12 +32,7 @@ describe('FqdnToIdpAdapterMongoService', () => {
     watch: jest.fn(),
   };
 
-  const loggerMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    warn: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const mongooseCollectionOperationWatcherHelperMock = {
     connectAllWatchers: jest.fn(),
@@ -119,7 +116,7 @@ describe('FqdnToIdpAdapterMongoService', () => {
     });
   });
 
-  describe('getIdpsByDomain', () => {
+  describe('getIdpsByFqdn', () => {
     beforeEach(() => {
       const getAllfqdnToIdpsMock = jest.fn();
       getAllfqdnToIdpsMock.mockReturnValueOnce(fqdnToIdps);
@@ -127,14 +124,12 @@ describe('FqdnToIdpAdapterMongoService', () => {
     });
 
     it('should return a list of FqdnToIdentityProvider', async () => {
-      const idpByDomain = await service.getIdpsByDomain('default-domain.fr');
-      expect(idpByDomain).toStrictEqual(fqdnToIdps);
+      const idpByFqdn = await service.getIdpsByFqdn('default-fqdn.fr');
+      expect(idpByFqdn).toStrictEqual(fqdnToIdps);
     });
 
-    it('should return an empty array if no corresponding FI is found for a domain', async () => {
-      const fqdnToIdps = await service.getIdpsByDomain(
-        'non-existing-domain.fr',
-      );
+    it('should return an empty array if no corresponding FI is found for a fqdn', async () => {
+      const fqdnToIdps = await service.getIdpsByFqdn('non-existing-fqdn.fr');
       expect(fqdnToIdps).toStrictEqual([]);
     });
   });
@@ -173,7 +168,7 @@ describe('FqdnToIdpAdapterMongoService', () => {
       expect(service['fetchFqdnToIdps']).toHaveBeenCalledTimes(0);
     });
 
-    it('should return the list of idps by domain when cache is refreshed', async () => {
+    it('should return the list of idps by fqdn when cache is refreshed', async () => {
       // When
       const response = await service.getList(true);
 
@@ -181,7 +176,7 @@ describe('FqdnToIdpAdapterMongoService', () => {
       expect(response).toStrictEqual(fqdnToIdps);
     });
 
-    it('should return the list of idps by domain when cache is not refreshed', async () => {
+    it('should return the list of idps by fqdn when cache is not refreshed', async () => {
       // When
       service['fqdnToIdpCache'] = fqdnToIdps as FqdnToIdentityProvider[];
       const response = await service.getList(false);
@@ -244,15 +239,15 @@ describe('FqdnToIdpAdapterMongoService', () => {
       await service['fetchFqdnToIdps']();
 
       // Then
-      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
     });
 
-    it('should filter out any entry exluded by the DTO', async () => {
+    it('should filter out any entry excluded by the DTO', async () => {
       // Given
       const invalidFqdnToIdp = { notAValidField: 'unused' };
       const validFqdnToIdp = {
         identityProvider: 'validIdp',
-        domain: 'validDomain',
+        fqdn: 'validFqdn',
       };
       const fqdnToIdpProviderWithInvalidListMock = [
         validFqdnToIdp,

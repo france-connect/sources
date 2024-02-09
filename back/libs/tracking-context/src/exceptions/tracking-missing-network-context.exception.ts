@@ -13,6 +13,10 @@ import { TrackingBaseException } from './tracking-base.exception';
 )
 export class TrackingMissingNetworkContextException extends TrackingBaseException {
   public readonly message = 'Missing network context (headers)';
-  public readonly httpStatusCode: HttpStatus.BAD_REQUEST;
+  public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
   public readonly code = ErrorCode.MISSING_HEADERS;
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

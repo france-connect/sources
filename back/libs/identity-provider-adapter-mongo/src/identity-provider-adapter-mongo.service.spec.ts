@@ -5,9 +5,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
-import { IdentityProviderMetadata } from '@fc/oidc';
+import { Amr, IdentityProviderMetadata } from '@fc/oidc';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import {
   DiscoveryIdpAdapterMongoDTO,
@@ -30,6 +32,7 @@ describe('IdentityProviderAdapterMongoService', () => {
     authzURL:
       'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/authorize',
     clientID: 'clientID',
+    amr: [Amr.MAIL, Amr.PWD],
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_secret: '7vhnwzo1yUVOJT9GJ91gD5oid56effu1',
@@ -89,6 +92,7 @@ describe('IdentityProviderAdapterMongoService', () => {
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_id: 'clientID',
+    amr: [Amr.MAIL, Amr.PWD],
     // oidc param name
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_secret: '7vhnwzo1yUVOJT9GJ91gD5oid56effu1',
@@ -185,6 +189,7 @@ describe('IdentityProviderAdapterMongoService', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_signed_response_alg: 'HS256',
     },
+    amr: [Amr.MAIL, Amr.PWD],
     discovery: false,
     display: false,
     maxAuthorizedAcr: 'eidas2',
@@ -228,12 +233,7 @@ describe('IdentityProviderAdapterMongoService', () => {
 
   const identityProviderListMock = [legacyIdentityProviderMock];
 
-  const loggerMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    warn: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const cryptographyMock = {
     decrypt: jest.fn(),
@@ -452,7 +452,7 @@ describe('IdentityProviderAdapterMongoService', () => {
       expect(validateDtoMock).toHaveBeenCalledTimes(0);
     });
 
-    it('should log a warning if an entry is excluded by the DTO', async () => {
+    it('should log an alert if an entry is excluded by the DTO', async () => {
       // setup
       const invalidIdentityProviderListMock = [
         legacyIdentityProviderMock,
@@ -470,7 +470,10 @@ describe('IdentityProviderAdapterMongoService', () => {
       await service['findAllIdentityProvider']();
 
       // expect
-      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
+      expect(loggerMock.alert).toHaveBeenCalledTimes(1);
+      expect(loggerMock.alert).toHaveBeenCalledWith(
+        `Identity provider "${invalidIdentityProviderMock.uid}" is not valid.`,
+      );
     });
 
     it('should filter out any entry exluded by the DTO', async () => {

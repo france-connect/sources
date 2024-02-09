@@ -4,6 +4,7 @@ import { join } from 'path';
 import { FilesName } from '../enums';
 import { createCSV, getCwdForDirectory, readCSV } from '../helpers';
 import {
+  InseeDbCityComerInterface,
   InseeDbCityCurrentInterface,
   InseeDbCitySince1943Interface,
   PostalCodesDbCurrentInterface,
@@ -56,7 +57,7 @@ describe('GenerateCity', () => {
 
     it('should log an error if the 3rd CSV file is missing', async () => {
       // When
-      await service.run(['file1.csv', 'file3.csv']);
+      await service.run(['file1.csv', 'file2.csv']);
 
       // Then
       expect(console.log).toHaveBeenCalledTimes(1);
@@ -65,9 +66,20 @@ describe('GenerateCity', () => {
       );
     });
 
+    it('should log an error if the 4th CSV file is missing', async () => {
+      // When
+      await service.run(['file1.csv', 'file32.csv', 'file3.csv']);
+
+      // Then
+      expect(console.log).toHaveBeenCalledTimes(1);
+      expect(console.log).toHaveBeenCalledWith(
+        'Please provide the path to the 4th CSV file as an argument (insee comer file).',
+      );
+    });
+
     it('should call mergeCsvFiles with the correct arguments when both CSV files are provided', async () => {
       // When
-      await service.run(['file1.csv', 'file2.csv', 'file3.csv']);
+      await service.run(['file1.csv', 'file2.csv', 'file3.csv', 'file4.csv']);
 
       // Then
       expect(service['mergeCsvFiles']).toHaveBeenCalledTimes(1);
@@ -75,6 +87,7 @@ describe('GenerateCity', () => {
         'file1.csv',
         'file2.csv',
         'file3.csv',
+        'file4.csv',
       );
     });
   });
@@ -83,8 +96,12 @@ describe('GenerateCity', () => {
     const inseeDbCitySince1943Mock = Symbol('inseeDbCitySince1943Mock');
     const postalCodesDbCurrentMock = Symbol('postalCodesDbCurrentMock');
     const inseeDbCityCurrentMock = Symbol('inseeDbCityCurrentMock');
+    const inseeDbCityComerMock = Symbol('inseeDbCityComerMock');
 
     const prepareDataBaseResultMock = [Symbol('prepareDataBaseResultMock')];
+    const addComerToDataBaseResultMock = [
+      Symbol('addComerToDataBaseResultMock'),
+    ];
     const matchPostalCodeResultMock = [Symbol('matchPostalCodeResultMock')];
     const matchOldCogResultMock = [Symbol('matchOldCogResultMock')];
     const removeDuplicatesResultMock = [Symbol('removeDuplicatesResultMock')];
@@ -94,11 +111,15 @@ describe('GenerateCity', () => {
         .mocked(readCSV)
         .mockResolvedValueOnce(inseeDbCitySince1943Mock)
         .mockResolvedValueOnce(postalCodesDbCurrentMock)
-        .mockResolvedValueOnce(inseeDbCityCurrentMock);
+        .mockResolvedValueOnce(inseeDbCityCurrentMock)
+        .mockResolvedValueOnce(inseeDbCityComerMock);
 
       service['prepareDataBase'] = jest
         .fn()
         .mockReturnValue(prepareDataBaseResultMock);
+      service['addComerToDatabase'] = jest
+        .fn()
+        .mockReturnValue(addComerToDataBaseResultMock);
       service['matchPostalCode'] = jest
         .fn()
         .mockReturnValue(matchPostalCodeResultMock);
@@ -111,18 +132,29 @@ describe('GenerateCity', () => {
 
     it('should read all CSV files', async () => {
       // When
-      await service['mergeCsvFiles']('file1.csv', 'file2.csv', 'file3.csv');
+      await service['mergeCsvFiles'](
+        'file1.csv',
+        'file2.csv',
+        'file3.csv',
+        'file4.csv',
+      );
 
       // Then
-      expect(readCSV).toHaveBeenCalledTimes(3);
+      expect(readCSV).toHaveBeenCalledTimes(4);
       expect(readCSV).toHaveBeenNthCalledWith(1, 'file1.csv');
       expect(readCSV).toHaveBeenNthCalledWith(2, 'file2.csv');
       expect(readCSV).toHaveBeenNthCalledWith(3, 'file3.csv');
+      expect(readCSV).toHaveBeenNthCalledWith(4, 'file4.csv');
     });
 
     it('should call prepareDataBase with the correct arguments', async () => {
       // When
-      await service['mergeCsvFiles']('file1.csv', 'file2.csv', 'file3.csv');
+      await service['mergeCsvFiles'](
+        'file1.csv',
+        'file2.csv',
+        'file3.csv',
+        'file4.csv',
+      );
 
       // Then
       expect(service['prepareDataBase']).toHaveBeenCalledTimes(1);
@@ -131,21 +163,48 @@ describe('GenerateCity', () => {
       );
     });
 
+    it('should call addComerToDatabase with the correct arguments', async () => {
+      // When
+      await service['mergeCsvFiles'](
+        'file1.csv',
+        'file2.csv',
+        'file3.csv',
+        'file4.csv',
+      );
+
+      // Then
+      expect(service['addComerToDatabase']).toHaveBeenCalledTimes(1);
+      expect(service['addComerToDatabase']).toHaveBeenCalledWith(
+        prepareDataBaseResultMock,
+        inseeDbCityComerMock,
+      );
+    });
+
     it('should call matchPostalCode with the correct arguments', async () => {
       // When
-      await service['mergeCsvFiles']('file1.csv', 'file2.csv', 'file3.csv');
+      await service['mergeCsvFiles'](
+        'file1.csv',
+        'file2.csv',
+        'file3.csv',
+        'file4.csv',
+      );
 
       // Then
       expect(service['matchPostalCode']).toHaveBeenCalledTimes(1);
       expect(service['matchPostalCode']).toHaveBeenCalledWith(
-        prepareDataBaseResultMock,
+        addComerToDataBaseResultMock,
         postalCodesDbCurrentMock,
       );
     });
 
     it('should call matchOldCog with the correct arguments', async () => {
       // When
-      await service['mergeCsvFiles']('file1.csv', 'file2.csv', 'file3.csv');
+      await service['mergeCsvFiles'](
+        'file1.csv',
+        'file2.csv',
+        'file3.csv',
+        'file4.csv',
+      );
 
       // Then
       expect(service['matchOldCog']).toHaveBeenCalledTimes(1);
@@ -157,7 +216,12 @@ describe('GenerateCity', () => {
 
     it('should call removeDuplicates with the correct arguments', async () => {
       // When
-      await service['mergeCsvFiles']('file1.csv', 'file2.csv', 'file3.csv');
+      await service['mergeCsvFiles'](
+        'file1.csv',
+        'file2.csv',
+        'file3.csv',
+        'file4.csv',
+      );
 
       // Then
       expect(service['removeDuplicates']).toHaveBeenCalledTimes(1);
@@ -183,7 +247,12 @@ describe('GenerateCity', () => {
         .mockReturnValueOnce(unsortedResults);
 
       // When
-      await service['mergeCsvFiles']('file1.csv', 'file2.csv', 'file3.csv');
+      await service['mergeCsvFiles'](
+        'file1.csv',
+        'file2.csv',
+        'file3.csv',
+        'file4.csv',
+      );
 
       // Then
       expect(service['writeCsvFile']).toHaveBeenCalledTimes(1);
@@ -196,7 +265,12 @@ describe('GenerateCity', () => {
       jest.spyOn(console, 'error').mockImplementation();
 
       // When
-      await service['mergeCsvFiles']('file1.csv', 'file2.csv', 'file3.csv');
+      await service['mergeCsvFiles'](
+        'file1.csv',
+        'file2.csv',
+        'file3.csv',
+        'file4.csv',
+      );
 
       // Then
       expect(console.error).toHaveBeenCalledTimes(1);
@@ -236,6 +310,60 @@ describe('GenerateCity', () => {
     it('should filter out COMD TYPECOM and format all cities', () => {
       // When
       const result = service['prepareDataBase'](searchResultInseeCurrentMock);
+
+      // Then
+      expect(result).toStrictEqual(expectedResult);
+    });
+  });
+
+  describe('addComerToDatabase()', () => {
+    const searchResultInseeComerMock = [
+      {
+        COM_COMER: '45678',
+        NCC: 'City Comer 1',
+        LIBELLE: 'CITY COMER 1',
+      },
+      {
+        COM_COMER: '56789',
+        NCC: 'City Comer 2',
+        LIBELLE: 'CITY COMER 2',
+      },
+    ] as InseeDbCityComerInterface[];
+    const searchResultInseeCurrentMock = [
+      {
+        cog: '12345',
+        name: 'City 1',
+      },
+      {
+        cog: '12347',
+        name: 'City 3',
+      },
+    ] as Partial<SearchDbCityInterface>[];
+    const expectedResult = [
+      {
+        cog: '12345',
+        name: 'City 1',
+      },
+      {
+        cog: '12347',
+        name: 'City 3',
+      },
+      {
+        cog: '45678',
+        name: 'City Comer 1',
+      },
+      {
+        cog: '56789',
+        name: 'City Comer 2',
+      },
+    ] as Partial<SearchDbCityInterface>[];
+
+    it('should format cities comer and add it into database city', () => {
+      // When
+      const result = service['addComerToDatabase'](
+        searchResultInseeCurrentMock,
+        searchResultInseeComerMock,
+      );
 
       // Then
       expect(result).toStrictEqual(expectedResult);

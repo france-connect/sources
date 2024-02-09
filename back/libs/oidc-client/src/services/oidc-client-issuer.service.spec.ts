@@ -3,8 +3,6 @@ import { Client, custom, Issuer } from 'openid-client';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
-
 import {
   OidcClientIdpDisabledException,
   OidcClientIdpNotFoundException,
@@ -20,13 +18,6 @@ describe('OidcClientIssuerService', () => {
   const customMock = jest.mocked(custom);
 
   customMock.setHttpOptionsDefaults = jest.fn();
-
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    debug: jest.fn(),
-    businessEvent: jest.fn(),
-  } as unknown as LoggerService;
 
   const oidcClientConfigServiceMock = {
     get: jest.fn(),
@@ -123,16 +114,10 @@ describe('OidcClientIssuerService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        OidcClientIssuerService,
-        LoggerService,
-        OidcClientConfigService,
-      ],
+      providers: [OidcClientIssuerService, OidcClientConfigService],
     })
       .overrideProvider(OidcClientConfigService)
       .useValue(oidcClientConfigServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .compile();
 
     service = module.get<OidcClientIssuerService>(OidcClientIssuerService);
@@ -158,17 +143,6 @@ describe('OidcClientIssuerService', () => {
       expect(customMock.setHttpOptionsDefaults).toHaveBeenCalledTimes(1);
       expect(customMock.setHttpOptionsDefaults).toHaveBeenCalledWith(
         idpMetadataMock.httpOptions,
-      );
-    });
-
-    it('should log', async () => {
-      // When
-      await service.onModuleInit();
-
-      // Then
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledWith(
-        'Initializing oidc-client',
       );
     });
   });

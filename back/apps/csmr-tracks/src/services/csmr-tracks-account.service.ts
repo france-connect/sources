@@ -5,7 +5,6 @@ import { ClientProxy } from '@nestjs/microservices';
 
 import { FSA } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 import { AccountProtocol } from '@fc/microservices';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
@@ -14,15 +13,12 @@ import { CsmrTracksAccountResponseException } from '../exceptions';
 @Injectable()
 export class CsmrTracksAccountService {
   constructor(
-    private readonly logger: LoggerService,
     private readonly config: ConfigService,
     @Inject('AccountHighBroker')
     private readonly accountHighBroker: ClientProxy,
     @Inject('AccountLegacyBroker')
     private readonly accountLegacyBroker: ClientProxy,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async getIdsWithIdentityHash(identityHash: string): Promise<string[]> {
     const accountIdLegacy = await this.getAccountId(
@@ -35,7 +31,6 @@ export class CsmrTracksAccountService {
     );
 
     const groupIds = [accountIdLegacy, accountIdHigh].filter(Boolean);
-    this.logger.trace({ groupIds });
 
     return groupIds;
   }
@@ -60,8 +55,6 @@ export class CsmrTracksAccountService {
         order,
       );
 
-      this.logger.trace({ identityHash, result });
-
       if (result === 'ERROR') {
         throw new Error('Received ERROR from consumer');
       }
@@ -70,7 +63,6 @@ export class CsmrTracksAccountService {
 
       return id;
     } catch (error) {
-      this.logger.trace(error, 'Error Response from RabbitMQ');
       throw new CsmrTracksAccountResponseException(error);
     }
   }

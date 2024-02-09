@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 
 import { IDENTITY_PROVIDER_SERVICE } from '../tokens';
 import { OidcClientConfigService } from './oidc-client-config.service';
@@ -14,18 +13,12 @@ describe('OidcClientConfigService', () => {
     get: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-  } as unknown as LoggerService;
-
   const IdentityProviderServiceMock = { getList: jest.fn() };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ConfigService,
-        LoggerService,
         CryptographyService,
         OidcClientConfigService,
         {
@@ -36,8 +29,6 @@ describe('OidcClientConfigService', () => {
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .compile();
 
     service = module.get<OidcClientConfigService>(OidcClientConfigService);
@@ -55,12 +46,6 @@ describe('OidcClientConfigService', () => {
             issuer: 'http://foo.bar',
             configuration: {},
             jwks: { keys: [] },
-          };
-        case 'Logger':
-          return {
-            path: '/dev/null',
-            level: LoggerLevelNames.TRACE,
-            isDevelopment: false,
           };
       }
     });

@@ -16,4 +16,8 @@ export class OidcClientMissingStateException extends OidcClientBaseException {
   message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
+
+  static ERROR = 'invalid_request';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

@@ -50,6 +50,7 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
       key={cardA11YId}
       aria-controls={cardA11YId}
       aria-expanded={opened}
+      aria-label="Voir les détails"
       className={classnames(
         'is-full-width text-left is-block is-relative is-blue-shadow fr-mb-4w fr-px-5v fr-py-2w',
       )}

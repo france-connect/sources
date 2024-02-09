@@ -12,6 +12,7 @@ export default {
   platform: 'FranceConnect',
   urlPrefix: '/api/v2',
   assetsPaths: env.json('ASSETS_PATHS'),
+  assetsDsfrPaths: env.json('DSFR_ASSETS_PATHS'),
   assetsCacheTtl: env.number('ASSETS_CACHE_TTL'),
   viewsPaths: env.json('VIEWS_PATHS'),
   httpsOptions: {
@@ -23,4 +24,17 @@ export default {
   udFqdn: process.env.UD_FQDN,
   minAcrForContextRequest: 'eidas2',
   eidasBridgeUid: env.string('EIDAS_BRIDGE_UID'),
+  aidantsConnectUid: env.string('AIDANTS_CONNECT_UID'),
+  sortedClaims: [
+    'family_name',
+    'preferred_username',
+    'given_name',
+    'gender',
+    'birthdate',
+    'birthplace',
+    'birthcountry',
+    'address',
+    'email',
+    'phone_number',
+  ],
 } as AppConfig;

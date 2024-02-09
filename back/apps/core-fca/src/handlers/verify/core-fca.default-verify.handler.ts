@@ -7,7 +7,8 @@ import {
 } from '@fc/core';
 import { CryptographyFcaService, IAgentIdentity } from '@fc/cryptography-fca';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger-legacy';
+import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
+import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService } from '@fc/session';
@@ -15,14 +16,15 @@ import { ISessionService } from '@fc/session';
 @Injectable()
 @FeatureHandler('core-fca-default-verify')
 export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
+  // Dependency injection can require more than 4 parameters
+  /* eslint-disable-next-line max-params */
   constructor(
     protected readonly logger: LoggerService,
     protected readonly coreAccount: CoreAccountService,
     protected readonly coreAcr: CoreAcrService,
     protected readonly cryptographyFca: CryptographyFcaService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+    protected readonly identityProvider: IdentityProviderAdapterMongoService,
+  ) {}
 
   /**
    * Main business manipulations occurs in this method
@@ -41,7 +43,9 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
     const { idpId, idpIdentity, idpAcr, spId, spAcr } = await sessionOidc.get();
 
     // Acr check
-    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr);
+    const { maxAuthorizedAcr } = await this.identityProvider.getById(idpId);
+
+    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr, maxAuthorizedAcr);
 
     // todo: we will need to add a proper way to check and transform sessionOidc into IAgentIdentity
     const agentIdentity = idpIdentity as IAgentIdentity;
@@ -127,8 +131,6 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
       accountId,
       subs: { ...subs, [spId]: sub },
     };
-
-    this.logger.trace({ session });
 
     await sessionOidc.set(session);
   }

@@ -1,10 +1,10 @@
 :root {
-  --fc-fi-height: 90px;
+  --fc-fi-height: 110px;
   --fc-fi-width: 226px;
   --fc-fi-margin: 12px;
   --fc-fi-grid-row-max: 3;
   --fc-fi-img-width: 156px;
-  --fc-fi-img-height: 156px;
+  --fc-fi-img-height: 44px;
 }
 
 #fc-interaction-page #grid-main-providers {
@@ -31,8 +31,12 @@
   width: var(--fc-fi-width);
   min-width: var(--fc-fi-width);
   max-width: var(--fc-fi-width);
-  margin: var(--fc-fi-margin);
+
   height: var(--fc-fi-height);
+  min-height: var(--fc-fi-height);
+  max-height: var(--fc-fi-height);
+
+  margin: var(--fc-fi-margin);
   overflow: hidden;
   border-radius: 4px;
   display: flex;
@@ -41,23 +45,48 @@
   position: relative;
 }
 
-#fc-interaction-page .fc-grid--provider .fc-btn--provider .fr-badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
+#fc-interaction-page .fc-grid--provider .fc-btn--provider .fr-content-media {
+  line-height: 0;
+  justify-content: space-between;
 }
 
-#fc-interaction-page .fc-grid--provider .fc-btn--provider img {
-  height: auto;
+#fc-interaction-page
+  .fc-grid--provider
+  .fc-btn--provider
+  .fr-content-media__img {
+  flex: 1;
+  max-height: var(--fc-fi-img-height);
+}
+
+#fc-interaction-page
+  .fc-grid--provider
+  .fc-btn--provider
+  .fr-content-media__img
+  img {
+  vertical-align: middle;
+  height: var(--fc-fi-img-height);
   max-width: var(--fc-fi-img-width);
   max-height: var(--fc-fi-img-height);
 }
 
-#fc-interaction-page .fc-grid--provider .fc-btn--provider .fc-container-image {
-  max-width: var(--fc-fi-img-width);
-  width: 100%;
-  display: flex;
-  justify-content: center;
+#fc-interaction-page
+  .fc-grid--provider
+  .fc-btn--provider
+  .fr-content-media__caption {
+  color: var(--text-title-grey);
+}
+
+#fc-interaction-page
+  .fc-grid--provider
+  .fc-btn--provider:disabled
+  .fr-content-media__caption {
+  color: var(--text-mention-grey);
+}
+
+#fc-interaction-page .fc-grid--provider .fc-btn--provider .fr-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
 }
 
 /* -----------------------------------------------------------------
@@ -78,15 +107,11 @@
 ----------------------------------------------------------------- */
 
 #fc-interaction-page .fc-grid--provider .fc-btn--provider:disabled {
+  border: 0;
   box-shadow: none;
   font-weight: bold;
-  color: var(--text-disabled-grey);
-  background-color: var(--background-disabled-grey);
-  justify-content: flex-end;
-}
-
-#fc-interaction-page .fc-grid--provider .fc-btn--provider:disabled span {
-  font-weight: bold;
+  color: var(--text-mention-grey);
+  background-color: var(--background-alt-grey);
 }
 
 #fc-interaction-page .fc-grid--provider .fc-btn--provider:disabled .fr-badge {

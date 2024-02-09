@@ -1,18 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { OidcAcrConfig } from './dto';
 
 @Injectable()
 export class OidcAcrService {
-  constructor(
-    private readonly logger: LoggerService,
-    private readonly config: ConfigService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor(private readonly config: ConfigService) {}
 
   getKnownAcrValues(): string[] {
     const { acrLevels } = this.config.get<OidcAcrConfig>('OidcAcr');

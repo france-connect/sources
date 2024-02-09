@@ -15,7 +15,6 @@ import {
   LightRequestService,
   LightResponseService,
 } from '@fc/eidas-light-protocol';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { EidasClientConfig } from './dto';
 import {
@@ -32,14 +31,11 @@ export class EidasClientService {
   /* eslint-disable-next-line max-params */
   constructor(
     private readonly config: ConfigService,
-    private readonly logger: LoggerService,
     private readonly apacheIgnite: ApacheIgniteService,
     private readonly crypto: CryptographyService,
     private readonly lightRequest: LightRequestService,
     private readonly lightResponse: LightResponseService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Retrieve the ignite caches for the connector:
@@ -49,10 +45,6 @@ export class EidasClientService {
   onModuleInit(): void {
     const { connectorRequestCache, connectorResponseCache } =
       this.config.get<EidasClientConfig>('EidasClient');
-
-    this.logger.debug(
-      `Accessing caches ${connectorRequestCache} and ${connectorResponseCache}...`,
-    );
 
     /**
      * Cache can be prepared even if not connected to apache-ignite

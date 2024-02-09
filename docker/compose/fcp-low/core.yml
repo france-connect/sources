@@ -31,12 +31,8 @@ services:
     tty: true
     networks:
       - public
-      - public-fcp-low
       - data
     command: "pm2 logs"
     environment:
       # Mailer
       - 'Mailer_TEMPLATES_PATHS=["/var/www/app/apps/core-fcp/src/mails", "/var/www/app/instances/core-fcp-low/src/mails"]'
-
-networks:
-  public-fcp-low:

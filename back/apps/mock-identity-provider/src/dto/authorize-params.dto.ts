@@ -72,4 +72,10 @@ export class AuthorizeParamsDto {
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly sp_id?: string;
+
+  @IsUrl()
+  @IsOptional()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly login_hint?: string;
 }

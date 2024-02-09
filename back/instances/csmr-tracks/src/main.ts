@@ -6,6 +6,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 import { ConfigService } from '@fc/config';
 import { CsmrTracksConfig } from '@fc/csmr-tracks';
+import { NestLoggerService } from '@fc/logger';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
 import { AppModule } from './app.module';
@@ -30,8 +31,13 @@ async function bootstrap() {
     {
       transport: Transport.RMQ,
       options,
+      bufferLogs: true,
     },
   );
+
+  const logger = await consumer.resolve(NestLoggerService);
+
+  consumer.useLogger(logger);
 
   // Launch consumer
   await consumer.listen();

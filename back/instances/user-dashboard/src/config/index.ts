@@ -6,6 +6,7 @@ import { UserDashboardConfig } from '@fc/user-dashboard';
 import App from './app';
 import IdentityProviderAdapterEnv from './identity-provider-adapter-env';
 import Logger from './logger';
+import LoggerLegacy from './logger-legacy';
 import Mailer from './mailer';
 import OidcAcr from './oidc-acr';
 import OidcClient from './oidc-client';
@@ -19,6 +20,7 @@ export default {
   App,
   IdentityProviderAdapterEnv,
   Logger,
+  LoggerLegacy,
   OidcAcr,
   OidcClient,
   Redis,

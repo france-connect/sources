@@ -212,6 +212,11 @@ class Features {
    * @see https://github.com/panva/node-oidc-provider/blob/v6.x/docs/README.md#featuresrpinitiatedlogout
    */
   readonly rpInitiatedLogout?: LogoutSourceFeatureSetting;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => FeatureSetting)
+  readonly resourceIndicators?: FeatureSetting;
 }
 
 class Ttl {

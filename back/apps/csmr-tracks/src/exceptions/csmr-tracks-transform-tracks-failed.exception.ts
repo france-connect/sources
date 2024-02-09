@@ -13,4 +13,8 @@ import { CsmrTracksBaseException } from './csmr-tracks-base.exception';
 export class CsmrTracksTransformTracksFailedException extends CsmrTracksBaseException {
   public readonly code = CsmrTracksErrorCode.TRANSFORM_TRACKS_FAILED;
   public readonly message = 'Impossible to transform tracks';
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

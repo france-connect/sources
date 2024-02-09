@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { MailerConfig } from '../dto';
 import { TemplateNotFoundException } from '../exceptions';
@@ -19,9 +19,7 @@ export class MailerService {
     private readonly logger: LoggerService,
     private readonly template: TemplateService,
     private readonly smtp: SmtpService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   onModuleInit() {
     const { transport } = this.config.get<MailerConfig>('Mailer');
@@ -42,7 +40,7 @@ export class MailerService {
     try {
       return await this.transport.send(params);
     } catch (e) {
-      this.logger.error(e);
+      this.logger.err(e);
     }
   }
 

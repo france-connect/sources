@@ -10,7 +10,7 @@ import { CallbackExtras, Client, TokenSet } from 'openid-client';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import {
   IOidcIdentity,
   IServiceProviderAdapter,
@@ -51,9 +51,7 @@ export class OidcClientUtilsService {
     private readonly serviceProvider: IServiceProviderAdapter,
     @Inject(IDENTITY_PROVIDER_SERVICE)
     private readonly identityProvider: IIdentityProviderAdapter,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async buildAuthorizeParameters() {
     const { stateLength } = await this.oidcClientConfig.get();
@@ -68,8 +66,6 @@ export class OidcClientUtilsService {
       state,
       nonce,
     };
-
-    this.logger.trace({ params });
 
     return params;
   }
@@ -103,8 +99,6 @@ export class OidcClientUtilsService {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_hint,
     };
-
-    this.logger.trace({ params });
 
     return client.authorizationUrl(params);
   }
@@ -161,7 +155,6 @@ export class OidcClientUtilsService {
     params: TokenParams,
     extraParams?: ExtraTokenParams,
   ): Promise<TokenSet> {
-    this.logger.debug('getTokenSet');
     const client = await this.issuer.getClient(ipdId);
     const { state } = params;
     const receivedParams = await this.extractParams(req, client, state);
@@ -182,20 +175,15 @@ export class OidcClientUtilsService {
         this.buildExtraParameters(extraParams),
       );
     } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
+      this.logger.debug(error);
       throw new OidcClientTokenFailedException();
     }
-
-    this.logger.trace({ tokenSet });
 
     return tokenSet;
   }
 
   async revokeToken(accessToken: string, idpId: string): Promise<void> {
-    this.logger.debug('revokeToken');
     const client = await this.issuer.getClient(idpId);
-
-    this.logger.trace({ accessToken, idpId });
 
     await client.revoke(accessToken);
   }
@@ -204,12 +192,9 @@ export class OidcClientUtilsService {
     accessToken: string,
     idpId: string,
   ): Promise<IOidcIdentity> {
-    this.logger.debug('getUserInfo');
     const client = await this.issuer.getClient(idpId);
 
     const userInfo = (await client.userinfo(accessToken)) as IOidcIdentity;
-
-    this.logger.trace({ accessToken, idpId, userInfo });
 
     return userInfo;
   }
@@ -229,7 +214,6 @@ export class OidcClientUtilsService {
     idTokenHint?: TokenSet | string,
     postLogoutRedirectUri?: string,
   ): Promise<string> {
-    this.logger.debug('getEndSessionUrl');
     const client = await this.issuer.getClient(idpId);
 
     let endSessionUrl;
@@ -245,17 +229,26 @@ export class OidcClientUtilsService {
         state: stateFromSession,
       });
     } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
       throw new OidcClientGetEndSessionUrlException();
     }
 
-    this.logger.trace({ idpId, endSessionUrl });
+    /**
+     * Temporary remove client_id from endSessionUrl since parameter was not provided in previous version of openid-client
+     * This might break the logout with our Idps
+     * @todo #1449 Enable client_id in endSessionUrl
+     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1449
+     *
+     */
 
-    return endSessionUrl;
+    const temporaryWorkAroundUrl = endSessionUrl.replace(
+      /(&|\?)client_id=[^&]+/,
+      '',
+    );
+
+    return temporaryWorkAroundUrl;
   }
 
   async hasEndSessionUrl(idpId: string): Promise<boolean> {
-    this.logger.debug('hasEndSessionUrl');
     const client = await this.issuer.getClient(idpId);
 
     let endSessionUrl;
@@ -264,7 +257,7 @@ export class OidcClientUtilsService {
       endSessionUrl = client.endSessionUrl();
       return isURL(endSessionUrl, { protocols: ['http', 'https'] });
     } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
+      this.logger.err({ error });
       return false;
     }
   }
@@ -284,16 +277,12 @@ export class OidcClientUtilsService {
     try {
       isIdpExcluded = await this.serviceProvider.shouldExcludeIdp(spId, idpId);
     } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
       throw new OidcClientFailedToFetchBlacklist();
     }
 
     if (isIdpExcluded) {
-      this.logger.trace({ isIdpExcluded }, LoggerLevelNames.WARN);
       throw new OidcClientIdpBlacklistedException();
     }
-
-    this.logger.trace({ check: { spId, idpId, isIdpExcluded } });
   }
 
   async checkIdpDisabled(idpId: string): Promise<void> {

@@ -8,7 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { asyncFilter, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 import {
   ClientMetadata,
@@ -62,9 +62,7 @@ export class IdentityProviderAdapterMongoService
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
     private readonly mongooseWatcher: MongooseCollectionOperationWatcherHelper,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async onModuleInit() {
     this.mongooseWatcher.watchWith<IdentityProvider>(
@@ -87,6 +85,7 @@ export class IdentityProviderAdapterMongoService
         {},
         {
           _id: false,
+          amr: true,
           active: true,
           isBeta: true,
           authzURL: true,
@@ -155,7 +154,7 @@ export class IdentityProviderAdapterMongoService
          * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/902
          */
         if (disableIdpValidationOnLegacy) {
-          this.logger.warn(
+          this.logger.warning(
             `"${doc.uid}": Skipping DTO validation due to legacy IdP mode.`,
           );
           return true;
@@ -165,17 +164,13 @@ export class IdentityProviderAdapterMongoService
         const errors = await validateDto(doc, dto, validationOptions);
 
         if (errors.length > 0) {
-          this.logger.warn(
-            `"${doc.uid}" was excluded from the result at DTO validation.`,
-          );
-          this.logger.trace({ errors });
+          this.logger.alert(`Identity provider "${doc.uid}" is not valid.`);
+          this.logger.debug(errors);
         }
 
         return errors.length === 0;
       },
     );
-
-    this.logger.trace({ identityProviders });
 
     return identityProviders;
   }
@@ -190,9 +185,6 @@ export class IdentityProviderAdapterMongoService
       this.listCache = deepFreeze(
         list.map(this.legacyToOpenIdPropertyName.bind(this)),
       ) as IdentityProviderMetadata[];
-      this.logger.trace({ step: 'REFRESH', list, listCache: this.listCache });
-    } else {
-      this.logger.trace({ list: this.listCache, step: 'CACHE' });
     }
 
     return this.listCache;
@@ -202,7 +194,7 @@ export class IdentityProviderAdapterMongoService
    * Method triggered when you want to filter identity providers
    * from service providers's whitelist/blacklist
    * @param idpList  list of identity providers's clientID
-   * @param isBlackListed  boolean false = blacklist true = whitelist
+   * @param blacklist  boolean false = blacklist true = whitelist
    */
   async getFilteredList(
     options: FilteringOptions,
@@ -229,8 +221,6 @@ export class IdentityProviderAdapterMongoService
     const providers = cloneDeep(await this.getList(refreshCache));
 
     const provider = providers.find(({ uid }) => uid === id);
-
-    this.logger.trace({ provider });
 
     return provider;
   }

@@ -4,12 +4,16 @@ import { TokenSet } from 'openid-client';
 import { Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
 import { TrackedEventContextInterface } from '@fc/tracking';
 
 import { MinIdentityDto, TokenResultDto } from '../dto';
-import { OidcClientUserinfosFailedException } from '../exceptions';
+import {
+  OidcClientMissingIdentitySubException,
+  OidcClientTokenResultFailedException,
+  OidcClientUserinfosFailedException,
+} from '../exceptions';
 import {
   ExtraTokenParams,
   TokenParams,
@@ -26,11 +30,9 @@ const DTO_OPTIONS: ValidatorOptions = {
 @Injectable()
 export class OidcClientService {
   constructor(
-    private readonly logger: LoggerService,
     public readonly utils: OidcClientUtilsService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+    private readonly logger: LoggerService,
+  ) {}
 
   async getTokenFromProvider(
     idpId: string,
@@ -54,7 +56,7 @@ export class OidcClientService {
     );
 
     const { access_token: accessToken, id_token: idToken } = tokenSet;
-    const { acr, amr } = tokenSet.claims();
+    const { acr, amr = [] } = tokenSet.claims();
 
     const tokenResult = {
       acr,
@@ -70,41 +72,22 @@ export class OidcClientService {
     );
 
     if (errorsOutputs.length) {
-      throw new Error(
-        `"${JSON.stringify(
-          tokenResult,
-        )}" input was wrong from the result at DTO validation: ${JSON.stringify(
-          errorsOutputs,
-        )}`,
-      );
+      this.logger.debug(errorsOutputs);
+      throw new OidcClientTokenResultFailedException();
     }
-
-    this.logger.trace({
-      search: {
-        context,
-        idpId,
-        params,
-        acr,
-        amr,
-        accessToken,
-        tokenResult,
-        idToken,
-      },
-    });
 
     return tokenResult;
   }
 
   async getUserInfosFromProvider(
     { accessToken, idpId }: UserInfosParams,
-    context: TrackedEventContextInterface,
+    _context: TrackedEventContextInterface,
   ): Promise<IOidcIdentity> {
     // OIDC: call idp's /userinfo endpoint
     let identity: IOidcIdentity;
     try {
       identity = await this.utils.getUserInfo(accessToken, idpId);
     } catch (error) {
-      this.logger.error(error, 'getUserInfo');
       /**
        * @todo #587 Add the error to the exception, then add "@Loggable()" decorator
        * to the exception.
@@ -114,15 +97,6 @@ export class OidcClientService {
        */
       throw new OidcClientUserinfosFailedException();
     }
-
-    this.logger.trace({
-      search: {
-        context,
-        idpId,
-        accessToken,
-        identity,
-      },
-    });
 
     const errors = await validateDto(
       identity,
@@ -136,11 +110,8 @@ export class OidcClientService {
     );
 
     if (errors.length) {
-      throw new Error(
-        `"${idpId}" doesn't provide a minimum identity information: ${JSON.stringify(
-          errors,
-        )}`,
-      );
+      this.logger.debug(errors);
+      throw new OidcClientMissingIdentitySubException();
     }
 
     return identity;

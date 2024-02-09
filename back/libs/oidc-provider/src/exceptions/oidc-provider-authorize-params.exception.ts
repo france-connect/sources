@@ -15,6 +15,9 @@ export class OidcProviderAuthorizeParamsException extends OidcProviderBaseExcept
   public readonly code = ErrorCode.AUTHORIZATION_ERROR;
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
 
+  static ERROR = 'invalid_request';
+  static ERROR_DESCRIPTION = 'invalid parameter';
+
   constructor() {
     super(
       'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',

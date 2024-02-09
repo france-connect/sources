@@ -9,17 +9,14 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
 import { OidcProviderRoutes } from '@fc/oidc-provider/enums';
 import { ISessionService, Session } from '@fc/session';
 
-import { AppSession, AuthorizeParamsDto, LogoutParamsDto } from '../dto';
+import { AppSession, AuthorizeParamsDto } from '../dto';
 
 @Controller()
 export class OidcProviderController {
-  constructor(private readonly logger: LoggerService) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor() {}
 
   /**
    * Authorize route via HTTP GET
@@ -42,19 +39,6 @@ export class OidcProviderController {
     @Query() query: AuthorizeParamsDto,
     @Session('App') appSession: ISessionService<AppSession>,
   ) {
-    // OIDC inspired variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { sp_id = '' } = query;
-    const msg = JSON.stringify(['/authorize', 'sp_id', sp_id]);
-    this.logger.trace({ msg });
-
-    this.logger.trace({
-      route: OidcProviderRoutes.AUTHORIZATION,
-      method: 'GET',
-      name: 'OidcProviderRoutes.AUTHORIZATION',
-      query,
-    });
-
     await appSession.set('finalSpId', query.sp_id);
 
     // Pass the query to oidc-provider
@@ -77,19 +61,7 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
-  postAuthorize(@Next() next, @Body() body: AuthorizeParamsDto) {
-    // OIDC inspired variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { sp_id = '' } = body;
-    const msg = JSON.stringify(['/authorize', 'sp_id', sp_id]);
-    this.logger.trace({ msg });
-
-    this.logger.trace({
-      route: OidcProviderRoutes.AUTHORIZATION,
-      method: 'POST',
-      name: 'OidcProviderRoutes.AUTHORIZATION',
-      body,
-    });
+  postAuthorize(@Next() next, @Body() _body: AuthorizeParamsDto) {
     // Pass the query to oidc-provider
     return next();
   }
@@ -101,26 +73,7 @@ export class OidcProviderController {
    * It then forward the request to `next` controller, in this case `oidc-provider`.
    */
   @Post(OidcProviderRoutes.TOKEN)
-  postToken(@Next() next, @Body() body) {
-    // OIDC inspired variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { sp_id = '' } = body;
-    const msg = JSON.stringify(['/token', 'sp_id', sp_id]);
-    this.logger.trace({ msg });
-
-    return next();
-  }
-
-  @Get(OidcProviderRoutes.END_SESSION)
-  @UsePipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-    }),
-  )
-  getEndSession(@Next() next, @Query() _query: LogoutParamsDto) {
-    // Pass the query to oidc-provider
+  postToken(@Next() next, @Body() _body) {
     return next();
   }
 }

@@ -27,6 +27,5 @@ services:
       - "aidants-connect-mock"
       # -- DP
       - "fdp1"
-      - "tracks-data-provider"
       # -- UD
       - "ud"

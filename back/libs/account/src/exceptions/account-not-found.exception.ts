@@ -13,4 +13,8 @@ export class AccountNotFoundException extends AccountBaseException {
   public readonly code = ErrorCode.ACCOUNT_NOT_FOUND;
   public readonly message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

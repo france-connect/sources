@@ -6,7 +6,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { IsStep } from '../decorators';
 import { FlowStepsService } from '../services';
@@ -50,11 +49,6 @@ describe('IsStepInterceptor', () => {
     handle: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  };
-
   const configServiceMock = {
     get: jest.fn(),
   };
@@ -74,15 +68,12 @@ describe('IsStepInterceptor', () => {
       providers: [
         IsStepInterceptor,
         ConfigService,
-        LoggerService,
         Reflector,
         FlowStepsService,
       ],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(FlowStepsService)
       .useValue(flowStepMock)
       .compile();
@@ -95,7 +86,6 @@ describe('IsStepInterceptor', () => {
 
   it('should be defined', () => {
     expect(interceptor).toBeDefined();
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
   });
 
   describe('intercept', () => {

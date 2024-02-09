@@ -8,6 +8,7 @@ import Core from './core';
 import CryptographyFca from './cryptography-fca';
 import IdentityProviderAdapterMongo from './identity-provider-adapter-mongo';
 import Logger from './logger';
+import LoggerLegacy from './logger-legacy';
 import Mongoose from './mongoose';
 import OidcAcr from './oidc-acr';
 import OidcClient from './oidc-client';
@@ -22,6 +23,7 @@ export default {
   App,
   Core,
   Logger,
+  LoggerLegacy,
   OidcAcr,
   OidcProvider,
   OidcClient,

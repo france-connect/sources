@@ -8,6 +8,7 @@ import {
   DataProviderAdapterCoreConfig,
   DataProviderAdapterCoreService,
 } from '@fc/data-provider-adapter-core';
+import { LoggerService } from '@fc/logger';
 
 import { MockDataProviderRoutes } from '../enums';
 import { MockDataProviderService } from '../services';
@@ -17,6 +18,7 @@ export class MockDataProviderController {
   constructor(
     private readonly dataProviderAdapterCore: DataProviderAdapterCoreService,
     private readonly config: ConfigService,
+    private readonly logger: LoggerService,
     private readonly mockDataProvider: MockDataProviderService,
   ) {}
 
@@ -36,6 +38,8 @@ export class MockDataProviderController {
 
       return claims;
     } catch (exception) {
+      this.logger.err(exception);
+
       const { error, message, httpStatusCode } = exception;
 
       const result = {

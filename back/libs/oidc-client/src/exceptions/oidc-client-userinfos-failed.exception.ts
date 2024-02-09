@@ -16,4 +16,8 @@ export class OidcClientUserinfosFailedException extends OidcClientBaseException 
   message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
   public readonly httpStatusCode = HttpStatus.BAD_GATEWAY;
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

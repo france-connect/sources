@@ -143,25 +143,10 @@ docker-stack up min-eidas-high
 docker-stack start-all
 ```
 
-### Running Partners-fcp
-
-```bash
-docker-stack up partners-fcp
-docker-stack start-all
-```
-
-### Running Partners-fca
-
-```bash
-docker-stack up partners-fca
-docker-stack start-all
-```
-
 ### Running AgentConnect
 
 ```bash
 docker-stack up min-fca-low
-docker-stack fca-low-front
 docker-stack start-all
 ```
 

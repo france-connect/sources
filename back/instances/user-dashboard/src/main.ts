@@ -10,7 +10,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { NestLoggerService } from '@fc/logger';
 import { SessionConfig } from '@fc/session';
 import { UserDashboardConfig } from '@fc/user-dashboard';
 
@@ -46,7 +46,12 @@ async function bootstrap() {
      */
     bodyParser: false,
     httpsOptions,
+    bufferLogs: true,
   });
+
+  const logger = await app.resolve(NestLoggerService);
+
+  app.useLogger(logger);
 
   /**
    * @see https://expressjs.com/fr/api.html#app.set
@@ -94,9 +99,6 @@ async function bootstrap() {
    * @see body-parser.md in the project doc folder for further informations.
    */
   app.use(urlencoded({ extended: false }));
-
-  const logger = await app.resolve(LoggerService);
-  app.useLogger(logger);
 
   const { cookieSecrets } = configService.get<SessionConfig>('Session');
   app.use(CookieParser(cookieSecrets));

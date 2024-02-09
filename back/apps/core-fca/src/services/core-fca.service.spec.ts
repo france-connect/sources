@@ -3,13 +3,14 @@ import { Response } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
+import { FqdnToIdpAdapterMongoService } from '@fc/fqdn-to-idp-adapter-mongo';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcClientService, OidcClientSession } from '@fc/oidc-client';
 import { ISessionService } from '@fc/session';
 
 import { getConfigMock } from '@mocks/config';
-import { getLoggerMock } from '@mocks/logger-legacy';
+import { getLoggerMock } from '@mocks/logger';
 
 import { CoreFcaService } from './core-fca.service';
 import { CoreFcaAuthorizationUrlService } from './core-fca-authorization-url.service';
@@ -17,8 +18,9 @@ import { CoreFcaAuthorizationUrlService } from './core-fca-authorization-url.ser
 describe('CoreFcaService', () => {
   let service: CoreFcaService;
 
-  const loggerServiceMock = getLoggerMock();
   const configServiceMock = getConfigMock();
+
+  const loggerMock = getLoggerMock();
 
   const sessionServiceMock = {
     get: jest.fn(),
@@ -63,6 +65,12 @@ describe('CoreFcaService', () => {
 
   const authorizeUrlMock = Symbol('authorizeUrlMockValue');
 
+  const fqdnToIdpAdapterMongoServiceMock = {
+    getIdpsByFqdn: jest.fn(),
+    refreshCache: jest.fn(),
+    getList: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -70,23 +78,26 @@ describe('CoreFcaService', () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
         CoreFcaService,
-        LoggerService,
         ConfigService,
         OidcClientService,
         IdentityProviderAdapterMongoService,
         CoreFcaAuthorizationUrlService,
+        FqdnToIdpAdapterMongoService,
+        LoggerService,
       ],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerMock)
       .overrideProvider(OidcClientService)
       .useValue(oidcMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
       .useValue(identityProviderMock)
       .overrideProvider(CoreFcaAuthorizationUrlService)
       .useValue(coreFcaAuthorizationUrlServiceMock)
+      .overrideProvider(FqdnToIdpAdapterMongoService)
+      .useValue(fqdnToIdpAdapterMongoServiceMock)
       .compile();
 
     service = app.get<CoreFcaService>(CoreFcaService);
@@ -119,9 +130,14 @@ describe('CoreFcaService', () => {
       // When
       await service.redirectToIdp(
         resMock,
-        acrMock,
         idpIdMock,
         sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        {
+          acr: acrMock,
+          // oidc parameter
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          login_hint: 'example@email.com',
+        },
       );
 
       // Then
@@ -133,9 +149,14 @@ describe('CoreFcaService', () => {
       // When
       await service.redirectToIdp(
         resMock,
-        acrMock,
         idpIdMock,
         sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        {
+          acr: acrMock,
+          // oidc parameter
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          login_hint: 'example@email.com',
+        },
       );
       // Then
       expect(oidcMock.utils.checkIdpBlacklisted).toHaveBeenCalledTimes(1);
@@ -149,9 +170,14 @@ describe('CoreFcaService', () => {
       // When
       await service.redirectToIdp(
         resMock,
-        acrMock,
         idpIdMock,
         sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        {
+          acr: acrMock,
+          // oidc parameter
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          login_hint: 'example@email.com',
+        },
       );
       // Then
       expect(oidcMock.utils.checkIdpDisabled).toHaveBeenCalledTimes(1);
@@ -162,9 +188,14 @@ describe('CoreFcaService', () => {
       // When
       await service.redirectToIdp(
         resMock,
-        acrMock,
         idpIdMock,
         sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        {
+          acr: acrMock,
+          // oidc parameter
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          login_hint: 'example@email.com',
+        },
       );
       // Then
       expect(oidcMock.utils.buildAuthorizeParameters).toHaveBeenCalledTimes(1);
@@ -174,9 +205,14 @@ describe('CoreFcaService', () => {
       // When
       await service.redirectToIdp(
         resMock,
-        acrMock,
         idpIdMock,
         sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        {
+          acr: acrMock,
+          // oidc parameter
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          login_hint: 'example@email.com',
+        },
       );
       // Then
       expect(identityProviderMock.getById).toHaveBeenCalledTimes(1);
@@ -187,9 +223,14 @@ describe('CoreFcaService', () => {
       // When
       await service.redirectToIdp(
         resMock,
-        acrMock,
         idpIdMock,
         sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        {
+          acr: acrMock,
+          // oidc parameter
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          login_hint: 'example@email.com',
+        },
       );
       // Then
       expect(
@@ -208,6 +249,9 @@ describe('CoreFcaService', () => {
         acr_values: acrMock,
         nonce: nonceMock,
         spId: spIdMock,
+        // oidc parameter
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        login_hint: 'example@email.com',
       });
     });
 
@@ -215,9 +259,14 @@ describe('CoreFcaService', () => {
       // When
       await service.redirectToIdp(
         resMock,
-        acrMock,
         idpIdMock,
         sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        {
+          acr: acrMock,
+          // oidc parameter
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          login_hint: 'example@email.com',
+        },
       );
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
@@ -230,6 +279,9 @@ describe('CoreFcaService', () => {
         idpIdentity: undefined,
         spIdentity: undefined,
         accountId: undefined,
+        // oidc parameter
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        login_hint: 'example@email.com',
       });
     });
 
@@ -237,13 +289,94 @@ describe('CoreFcaService', () => {
       // When
       await service.redirectToIdp(
         resMock,
-        acrMock,
         idpIdMock,
         sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        {
+          acr: acrMock,
+          // oidc parameter
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          login_hint: 'example@email.com',
+        },
       );
       // Then
       expect(resMock.redirect).toHaveBeenCalledTimes(1);
       expect(resMock.redirect).toHaveBeenCalledWith(authorizeUrlMock);
+    });
+  });
+
+  describe('getIdpIdForEmail', () => {
+    it('should return the default uuid of idp when no idp is found', async () => {
+      // When
+      const result = await service.getIdpIdForEmail('dobby@unknown.person');
+
+      // Then
+      expect(result).toBe(process.env.DEFAULT_IDP_UID);
+    });
+
+    it('should call fqdnToIdpAdapterMongoService getIdpsByFqdn', async () => {
+      // When
+      await service.getIdpIdForEmail('voldemort@bad.person');
+
+      // Then
+      expect(
+        fqdnToIdpAdapterMongoServiceMock.getIdpsByFqdn,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        fqdnToIdpAdapterMongoServiceMock.getIdpsByFqdn,
+      ).toHaveBeenCalledWith('bad.person');
+    });
+
+    it('should get return the first corresponding idp for fqdn', async () => {
+      // Given
+      fqdnToIdpAdapterMongoServiceMock.getIdpsByFqdn.mockResolvedValueOnce([
+        { fqdn: 'bad.person', identityProvider: 'snapeIdp' },
+        { fqdn: 'bad.person', identityProvider: 'luciusIdp' },
+        { fqdn: 'bad.person', identityProvider: 'dobbyIdp' },
+      ]);
+
+      // When
+      const result = await service.getIdpIdForEmail('voldemort@bad.person');
+
+      // Then
+      expect(result).toBe('snapeIdp');
+    });
+
+    it('should log a warning when there more than one idp for fqdn', async () => {
+      // Given
+      fqdnToIdpAdapterMongoServiceMock.getIdpsByFqdn.mockResolvedValueOnce([
+        { fqdn: 'bad.person', identityProvider: 'snapeIdp' },
+        { fqdn: 'bad.person', identityProvider: 'luciusIdp' },
+        { fqdn: 'bad.person', identityProvider: 'dobbyIdp' },
+      ]);
+
+      // When
+      await service.getIdpIdForEmail('voldemort@bad.person');
+
+      // Then
+      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warning).toHaveBeenCalledWith(
+        'More than one IdP exists',
+      );
+    });
+  });
+
+  describe('getFqdnFromEmail', () => {
+    it('should only return the full qualified domain name from an email address', () => {
+      // When
+      const fqdn = service['getFqdnFromEmail']('hermione.granger@hogwards.uk');
+
+      // Then
+      expect(fqdn).toBe('hogwards.uk');
+    });
+
+    it('should only return the full qualified domain name from an email address with numbers', () => {
+      // When
+      const fqdn = service['getFqdnFromEmail'](
+        'hermione.grangerhogwards4321@hogwards1234.uk',
+      );
+
+      // Then
+      expect(fqdn).toBe('hogwards1234.uk');
     });
   });
 });

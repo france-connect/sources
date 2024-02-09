@@ -13,9 +13,12 @@ export class CoreFcaAgentNotFromPublicServiceException extends CoreBaseException
   code = ErrorCode.AGENT_NOT_FOUND;
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
 
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'authentication aborted due to invalid identity';
+
   constructor() {
     super(
-      'Seuls les agents de la fonction publique sont autorisés à se connecter via AgentConnect.',
+      'Seuls les agents et agentes de la fonction publique sont autorisées à se connecter via AgentConnect.',
     );
   }
 }

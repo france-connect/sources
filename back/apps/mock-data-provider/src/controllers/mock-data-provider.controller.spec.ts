@@ -4,12 +4,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { DataProviderAdapterCoreService } from '@fc/data-provider-adapter-core';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { MockDataProviderService } from '../services';
 import { MockDataProviderController } from './mock-data-provider.controller';
 
 describe('MockDataProviderController', () => {
   let mockDataProviderController: MockDataProviderController;
+
+  const loggerServiceMock = getLoggerMock();
 
   const resMock = {
     status: jest.fn(),
@@ -35,6 +40,7 @@ describe('MockDataProviderController', () => {
       providers: [
         DataProviderAdapterCoreService,
         ConfigService,
+        LoggerService,
         MockDataProviderService,
       ],
     })
@@ -44,6 +50,8 @@ describe('MockDataProviderController', () => {
       .useValue(configServiceMock)
       .overrideProvider(DataProviderAdapterCoreService)
       .useValue(dataProviderAdapterCoreServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerServiceMock)
       .overrideProvider(MockDataProviderService)
       .useValue(mockDataProviderServiceMock)
       .compile();

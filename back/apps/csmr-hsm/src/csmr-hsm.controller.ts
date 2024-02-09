@@ -4,7 +4,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 import { ConfigService } from '@fc/config';
 import { ValidationException } from '@fc/exceptions';
 import { HsmService } from '@fc/hsm';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { CryptoProtocol } from '@fc/microservices';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
@@ -19,9 +19,7 @@ export class CsmrHsmController {
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly hsm: HsmService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   @MessagePattern(CryptoProtocol.Commands.SIGN)
   @UsePipes(
@@ -43,8 +41,7 @@ export class CsmrHsmController {
       const signed = signedBuffer.toString(payloadEncoding);
       return signed;
     } catch (error) {
-      this.logger.error(JSON.stringify(error.stack));
-      this.logger.error(new CsmrHsmSignException());
+      this.logger.err(new CsmrHsmSignException());
       return 'ERROR';
     }
   }
@@ -64,8 +61,7 @@ export class CsmrHsmController {
     try {
       return this.hsm.genRandom(length, encoding);
     } catch (error) {
-      this.logger.error(JSON.stringify(error.stack));
-      this.logger.error(new CsmrHsmRandomException());
+      this.logger.err(new CsmrHsmRandomException());
       return 'ERROR';
     }
   }

@@ -2,7 +2,7 @@
 @usager @connexionIdpHint @ci
 Fonctionnalité: Connexion Usager - idp_hint
   # En tant que FS,
-  # je souhaite forcer l'usager à utilier un FI donné
+  # je souhaite forcer l'usager à utiliser un FI donné
 
   @ignoreInteg01
   Scénario: Connexion initiale + SSO avec idp_hint valide

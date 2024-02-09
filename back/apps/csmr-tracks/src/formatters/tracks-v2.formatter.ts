@@ -3,7 +3,7 @@ import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IRichClaim, ScopesService } from '@fc/scopes';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
@@ -26,9 +26,7 @@ export class TracksV2Formatter implements TracksFormatterInterface {
     protected readonly geoip: CsmrTracksGeoService,
     protected readonly scopes: ScopesService,
     private readonly platform: Platform,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Get formated tracks reduced to their strict elements.
@@ -59,11 +57,8 @@ export class TracksV2Formatter implements TracksFormatterInterface {
         platform: this.platform,
       };
 
-      this.logger.trace({ rawTrack, output });
-
       return output;
     } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
       throw new CsmrTracksTransformTracksFailedException(error);
     }
   }
@@ -74,8 +69,6 @@ export class TracksV2Formatter implements TracksFormatterInterface {
     }
 
     const richClaims = this.scopes.getRichClaimsFromClaims(claims.split(' '));
-
-    this.logger.trace({ claims, richClaims });
 
     return richClaims;
   }

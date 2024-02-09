@@ -1,17 +1,14 @@
 import { ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { AppInterceptor } from './app.interceptor';
 
 describe('AppInterceptor', () => {
   let interceptor: AppInterceptor;
-
-  const loggerMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-  };
 
   const httpContextMock = {
     getRequest: jest.fn(),
@@ -30,6 +27,8 @@ describe('AppInterceptor', () => {
     handle: jest.fn(),
     pipe: jest.fn(),
   };
+
+  const loggerMock = getLoggerMock();
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -51,11 +50,13 @@ describe('AppInterceptor', () => {
   });
 
   describe('intercept', () => {
-    it('should not call log until next', () => {
-      // Given
-      interceptor['log'] = jest.fn();
+    it('should log debug when call is intercepted', () => {
       // When
       interceptor.intercept(contextMock, nextMock);
+
+      // Then
+      expect(loggerMock.debug).toHaveBeenCalledTimes(1);
+      expect(loggerMock.debug).toHaveBeenCalledWith('AppInterceptor');
     });
   });
 });

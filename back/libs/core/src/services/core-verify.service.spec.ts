@@ -6,7 +6,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PartialExcept } from '@fc/common';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
 import { TrackingService } from '@fc/tracking';
 
@@ -19,13 +18,6 @@ import { CoreVerifyService } from './core-verify.service';
 
 describe('CoreVerifyService', () => {
   let service: CoreVerifyService;
-
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    warn: jest.fn(),
-    trace: jest.fn(),
-  };
 
   const sessionServiceMock = getSessionServiceMock();
 
@@ -101,13 +93,10 @@ describe('CoreVerifyService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CoreVerifyService,
-        LoggerService,
         IdentityProviderAdapterMongoService,
         TrackingService,
       ],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
       .useValue(IdentityProviderMock)
       .overrideProvider(ModuleRef)
@@ -186,20 +175,6 @@ describe('CoreVerifyService', () => {
       );
       // Then
       expect(result).toStrictEqual(featureHandlerServiceMock);
-    });
-
-    it('should have called log when feature is required', async () => {
-      // When
-      const result = await service.getFeature<IVerifyFeatureHandler>(
-        sessionDataMock.idpId,
-        ProcessCore.ID_CHECK,
-      );
-      // Then
-      expect(result).toBeDefined();
-      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.debug).toHaveBeenCalledWith(
-        `getFeature idpIdentityCheck for provider: 42`,
-      );
     });
 
     it('should have search idp when feature is required', async () => {

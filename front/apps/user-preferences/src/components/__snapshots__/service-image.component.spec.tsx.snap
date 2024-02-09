@@ -9,7 +9,7 @@ exports[`ServiceImageComponent should be in a disabled state 1`] = `
       alt="fournisseur d'identité title-mock"
       class="is-block is-absolute"
       height="auto"
-      src="/images/image.mock"
+      src="/images/fi/image.mock"
       width="auto"
     />
   </div>
@@ -53,7 +53,7 @@ exports[`ServiceImageComponent should show an image 1`] = `
       alt="fournisseur d'identité title-mock"
       class="is-block is-absolute"
       height="auto"
-      src="/images/image.mock"
+      src="/images/fi/image.mock"
       width="auto"
     />
   </div>

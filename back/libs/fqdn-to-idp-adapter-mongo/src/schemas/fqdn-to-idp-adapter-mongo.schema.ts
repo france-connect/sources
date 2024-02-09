@@ -11,7 +11,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 })
 export class FqdnToIdentityProvider extends Document {
   @Prop({ index: true, type: String })
-  domain: string;
+  fqdn: string;
 
   @Prop({ type: String })
   identityProvider: string;

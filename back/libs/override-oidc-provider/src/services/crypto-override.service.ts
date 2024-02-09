@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
 import { ConfigService } from '@fc/config';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { CryptoProtocol } from '@fc/microservices';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
@@ -20,9 +20,7 @@ export class CryptoOverrideService {
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
     @Inject('CryptographyBroker') private broker: ClientProxy,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async onModuleInit() {
     /**
@@ -40,6 +38,7 @@ export class CryptoOverrideService {
   }
 
   private registerOverride(name) {
+    this.logger.notice(`Registering function override for "${name}".`);
     OverrideCode.override(name, this[name].bind(this));
   }
 
@@ -47,9 +46,6 @@ export class CryptoOverrideService {
    * Use our own sign library
    */
   private ['crypto.sign'](nodeAlg: string, payload: Uint8Array, key: unknown) {
-    this.logger.debug('Run override for crypto.sign');
-    this.logger.trace({ nodeAlg, payload, key });
-
     if (!(payload instanceof Uint8Array)) {
       throw new CryptographyInvalidPayloadFormatException();
     }
@@ -87,9 +83,6 @@ export class CryptoOverrideService {
       const { payloadEncoding, requestTimeout } =
         this.config.get<RabbitmqConfig>('CryptographyBroker');
 
-      this.logger.debug('CryptoOverrideService.sign()');
-      this.logger.trace({ sign: { payloadEncoding, requestTimeout } });
-
       try {
         // Build message
         const payload = {
@@ -99,8 +92,7 @@ export class CryptoOverrideService {
 
         // Build callbacks
         const next = this.signSuccess.bind(this, resolve, reject);
-        const error = (error: Error): void => {
-          this.logger.trace({ error }, LoggerLevelNames.WARN);
+        const error = (): void => {
           reject(new CryptographyGatewayException());
         };
 
@@ -113,7 +105,6 @@ export class CryptoOverrideService {
             error,
           });
       } catch (error) {
-        this.logger.trace({ error }, LoggerLevelNames.WARN);
         return reject(new CryptographyGatewayException());
       }
     });
@@ -121,7 +112,6 @@ export class CryptoOverrideService {
 
   // Handle successful call
   private signSuccess(resolve: Function, reject: Function, data: string): void {
-    this.logger.debug('CryptoOverrideService.signSuccess');
     const { payloadEncoding } =
       this.config.get<RabbitmqConfig>('CryptographyBroker');
     /**
@@ -129,14 +119,8 @@ export class CryptoOverrideService {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/146
      */
     if (data === 'ERROR') {
-      this.logger.trace(
-        { error: { data, payloadEncoding } },
-        LoggerLevelNames.WARN,
-      );
       reject(new CryptographyGatewayException());
     }
-
-    this.logger.trace({ data, payloadEncoding });
 
     resolve(Buffer.from(data, payloadEncoding));
   }

@@ -1,7 +1,7 @@
 import { Inject, Injectable, Type } from '@nestjs/common';
 
 import { filteredByDto } from '@fc/common';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { CsvParsingException } from '../exceptions/csv-parsing.exception';
 import { parseCsv } from '../helpers';
@@ -21,9 +21,7 @@ export class CsvService<T> implements RepositoryInterface<T> {
     private readonly logger: LoggerService,
     @Inject(CSV_VALIDATOR)
     private readonly validator: Type<T>,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   private async pickData(rawRows: Csv[]): Promise<T[]> {
     this.logger.debug('pickData()');
@@ -35,7 +33,7 @@ export class CsvService<T> implements RepositoryInterface<T> {
       );
       if (errors.length) {
         const message = JSON.stringify(errors, null, 2);
-        this.logger.warn(
+        this.logger.warning(
           `"row n°${
             i + 1
           }" was excluded from the result at DTO validation :${message}`,
@@ -68,10 +66,8 @@ export class CsvService<T> implements RepositoryInterface<T> {
       });
 
       const data = await this.pickData(rawRows);
-      this.logger.trace({ data, path });
       this.collection = data;
     } catch (error) {
-      this.logger.trace({ error, path }, LoggerLevelNames.ERROR);
       throw new CsvParsingException();
     }
   }

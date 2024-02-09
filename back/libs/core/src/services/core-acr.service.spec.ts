@@ -1,21 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcProviderService } from '@fc/oidc-provider';
 
-import { CoreInvalidAcrException, CoreLowAcrException } from '../exceptions';
+import { getLoggerMock } from '@mocks/logger';
+
+import {
+  CoreHighAcrException,
+  CoreInvalidAcrException,
+  CoreLowAcrException,
+} from '../exceptions';
 import { CoreAcrService } from './core-acr.service';
 
 describe('CoreAcrService', () => {
   let service: CoreAcrService;
 
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    warn: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const oidcAcrServiceMock = {
     isAcrValid: jest.fn(),
@@ -54,26 +55,32 @@ describe('CoreAcrService', () => {
 
   describe('checkIfAcrIsValid()', () => {
     beforeEach(() => {
-      oidcAcrServiceMock.isAcrValid.mockReturnValueOnce(true);
+      oidcAcrServiceMock.isAcrValid.mockReturnValue(true);
     });
 
     it('should succeed if acr value is accepted', () => {
       // Given
       const received = 'eidas3';
       const requested = 'eidas3';
+      const maxAcr = 'eidas3';
+
       // When
-      const call = () => service.checkIfAcrIsValid(received, requested);
+      const call = () => service.checkIfAcrIsValid(received, requested, maxAcr);
+
       // Then
       expect(call).not.toThrow();
-      expect(loggerServiceMock.trace).not.toHaveBeenCalled();
     });
 
     it('should throw if requested is empty', () => {
       // Given
       const received = 'eidas3';
       const requested = '';
+      const maxAcr = 'eidas3';
+
       // When
-      const call = () => service['checkIfAcrIsValid'](received, requested);
+      const call = () =>
+        service['checkIfAcrIsValid'](received, requested, maxAcr);
+
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
       expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(0);
@@ -83,11 +90,14 @@ describe('CoreAcrService', () => {
       // Given
       const received = '';
       const requested = 'eidas2';
+      const maxAcr = 'eidas3';
+
       // When
-      const call = () => service['checkIfAcrIsValid'](received, requested);
+      const call = () =>
+        service['checkIfAcrIsValid'](received, requested, maxAcr);
+
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
-
       expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(0);
     });
 
@@ -95,11 +105,14 @@ describe('CoreAcrService', () => {
       // Given
       const received = 'eidas3';
       const requested = undefined;
+      const maxAcr = 'eidas3';
+
       // When
-      const call = () => service['checkIfAcrIsValid'](received, requested);
+      const call = () =>
+        service['checkIfAcrIsValid'](received, requested, maxAcr);
+
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
-
       expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(0);
     });
 
@@ -107,11 +120,14 @@ describe('CoreAcrService', () => {
       // Given
       const received = undefined;
       const requested = 'eidas2';
+      const maxAcr = 'eidas3';
+
       // When
-      const call = () => service['checkIfAcrIsValid'](received, requested);
+      const call = () =>
+        service['checkIfAcrIsValid'](received, requested, maxAcr);
+
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
-
       expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(0);
     });
 
@@ -119,11 +135,14 @@ describe('CoreAcrService', () => {
       // Given
       const received = 'eidas3';
       const requested = null;
+      const maxAcr = 'eidas3';
+
       // When
-      const call = () => service['checkIfAcrIsValid'](received, requested);
+      const call = () =>
+        service['checkIfAcrIsValid'](received, requested, maxAcr);
+
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
-
       expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(0);
     });
 
@@ -131,26 +150,52 @@ describe('CoreAcrService', () => {
       // Given
       const received = null;
       const requested = 'eidas2';
+      const maxAcr = 'eidas3';
+
       // When
-      const call = () => service['checkIfAcrIsValid'](received, requested);
+      const call = () =>
+        service['checkIfAcrIsValid'](received, requested, maxAcr);
+
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
-
       expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(0);
     });
 
-    it('should throw if acr is not valid', () => {
+    it('should throw if acr is too low', () => {
       // Given
       oidcAcrServiceMock.isAcrValid.mockReset().mockReturnValueOnce(false);
 
       const received = 'eidas1';
       const requested = 'eidas2';
+      const maxAcr = 'eidas3';
+
       // When
-      const call = () => service['checkIfAcrIsValid'](received, requested);
+      const call = () =>
+        service['checkIfAcrIsValid'](received, requested, maxAcr);
+
       // Then
       expect(call).toThrow(CoreLowAcrException);
       expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw if acr is too high', () => {
+      // Given
+      oidcAcrServiceMock.isAcrValid
+        .mockReset()
+        .mockReturnValueOnce(true)
+        .mockReturnValueOnce(false);
+
+      const received = 'eidas3';
+      const requested = 'eidas2';
+      const maxAcr = 'eidas2';
+
+      // When
+      const call = () =>
+        service['checkIfAcrIsValid'](received, requested, maxAcr);
+
+      // Then
+      expect(call).toThrow(CoreHighAcrException);
+      expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -162,6 +207,7 @@ describe('CoreAcrService', () => {
         ['any_eidas_level'],
         { res: {}, req: {} },
       );
+
       // then
       expect(result).toBeFalsy();
     });
@@ -173,11 +219,13 @@ describe('CoreAcrService', () => {
         ['any_eidas_level1', 'any_eidas_level2'],
         { res: {}, req: {} },
       );
+
       // then
       expect(result).toBeTruthy();
     });
 
     it('should should have called oidcProvider.abortInteraction() with params', async () => {
+      // Given
       const res = Symbol('ctx.res');
       const req = Symbol('ctx.res');
       const currentAcrValue = 'acr_value_not_contained';
@@ -194,6 +242,7 @@ describe('CoreAcrService', () => {
         ['any_eidas_level1', 'any_eidas_level2'],
         { res, req },
       );
+
       // then
       expect(oidcProviderServiceMock.abortInteraction).toHaveBeenCalledTimes(1);
       expect(oidcProviderServiceMock.abortInteraction).toHaveBeenCalledWith(

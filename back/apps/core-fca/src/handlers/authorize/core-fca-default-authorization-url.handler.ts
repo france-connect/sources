@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 
-import { IAuthorizationUrlFeatureHandlerHandleArgument } from '@fc/core-fca/interfaces';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { AuthorizeParamsKeys } from '../../enums';
+import { IAuthorizationUrlArgument } from '../../interfaces';
 
 @Injectable()
 @FeatureHandler('core-fca-default-authorization-url')
 export class CoreFcaDefaultAuthorizationHandler implements IFeatureHandler {
-  constructor(protected readonly logger: LoggerService) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor(protected readonly logger: LoggerService) {}
 
   async handle({
     oidcClient,
@@ -21,12 +21,15 @@ export class CoreFcaDefaultAuthorizationHandler implements IFeatureHandler {
     acr_values,
     nonce,
     spId,
-  }: IAuthorizationUrlFeatureHandlerHandleArgument): Promise<string> {
+    // login_hint is an oidc defined variable name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    login_hint,
+  }: IAuthorizationUrlArgument): Promise<string> {
     this.logger.debug(
       'getAuthorizeParams service: ##### core-fca-default-authorize',
     );
 
-    const authorizationUrlRaw = await oidcClient.utils.getAuthorizeUrl(
+    let authorizationUrl = await oidcClient.utils.getAuthorizeUrl(
       this.getAuthorizeParams({
         state,
         scope,
@@ -35,33 +38,51 @@ export class CoreFcaDefaultAuthorizationHandler implements IFeatureHandler {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
+        // login_hint is an oidc defined variable name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        login_hint,
       }),
     );
 
-    let authorizationUrl = authorizationUrlRaw;
     if (spId) {
-      authorizationUrl = this.appendSpIdToAuthorizeUrl(
+      this.logger.debug(`Found "${spId}" to append to authorize url`);
+      /**
+       * Append the sp_id query param to the authorize url
+       * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/475
+       *
+       * @param serviceProviderId The client_id of the SP
+       * @param authorizationUrl The authorization url built by the library oidc-client
+       * @returns The computed url with sp
+       */
+      authorizationUrl = this.appendParamToAuthorizeUrl(
+        AuthorizeParamsKeys.SP_ID,
         spId,
-        authorizationUrlRaw,
+        authorizationUrl,
+      );
+    }
+
+    // login_hint is an oidc defined variable name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    if (login_hint) {
+      this.logger.debug(`Found "${login_hint}" to append to authorize url`);
+      authorizationUrl = this.appendParamToAuthorizeUrl(
+        AuthorizeParamsKeys.LOGIN_HINT,
+        // login_hint is an oidc defined variable name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        login_hint,
+        authorizationUrl,
       );
     }
 
     return authorizationUrl;
   }
 
-  /**
-   * Append the sp_id query param to the authorize url
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/475
-   *
-   * @param serviceProviderId The client_id of the SP
-   * @param authorizationUrl The authorization url built by the library oidc-client
-   * @returns The final url
-   */
-  protected appendSpIdToAuthorizeUrl(
-    serviceProviderId: string,
+  protected appendParamToAuthorizeUrl(
+    paramKey: AuthorizeParamsKeys,
+    paramValue: string,
     authorizationUrl: string,
   ): string {
-    return `${authorizationUrl}&sp_id=${serviceProviderId}`;
+    return `${authorizationUrl}&${paramKey}=${encodeURIComponent(paramValue)}`;
   }
 
   protected getAuthorizeParams(config: {
@@ -72,6 +93,9 @@ export class CoreFcaDefaultAuthorizationHandler implements IFeatureHandler {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     acr_values: string;
     nonce: string;
+    // login_hint is an oidc defined variable name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    login_hint?: string;
   }): {
     state: string;
     scope: string;
@@ -81,6 +105,9 @@ export class CoreFcaDefaultAuthorizationHandler implements IFeatureHandler {
     acr_values: string;
     nonce: string;
     claims: string;
+    // login_hint is an oidc defined variable name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    login_hint?: string;
   } {
     return {
       state: config.state,
@@ -96,6 +123,9 @@ export class CoreFcaDefaultAuthorizationHandler implements IFeatureHandler {
        * @ticket FC-1021
        */
       claims: '{"id_token":{"amr":{"essential":true}}}',
+      // login_hint is an oidc defined variable name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      login_hint: config.login_hint,
     };
   }
 }

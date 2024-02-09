@@ -3,12 +3,12 @@
 // Declarative code
 
 import { CoreInstance } from '../enums';
-import { ICsmrTracksGeoData } from './csmr-tracks-geo.interface';
+import { ISource } from './csmr-tracks-geo.interface';
 
 /**
  * Piece of data specific to core-high from ElasticSearch source
  */
-export type ICsmrTracksV2Data = {
+export type ICsmrTracksV2FieldsData = {
   idpName: string;
   idpId: string;
   event: string;
@@ -23,11 +23,5 @@ export type ICsmrTracksV2Data = {
   spAcr: string;
   claims?: string;
   time: number;
+  source: ISource;
 };
-
-/**
- * data specific to core-high from ElasticSearch source with geo and script generated data
- */
-export type ICsmrTracksV2FieldsData = Readonly<
-  ICsmrTracksV2Data & ICsmrTracksGeoData
->;

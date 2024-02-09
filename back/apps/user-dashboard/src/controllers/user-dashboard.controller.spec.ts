@@ -5,7 +5,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { IPaginationResult } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 import {
   SessionCsrfService,
   SessionInvalidCsrfSelectIdpException,
@@ -44,12 +43,6 @@ describe('UserDashboardController', () => {
   };
 
   const uuidMockedValue = 'uuid-v4-Mocked-Value';
-
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
 
   const sessionServiceMock = getSessionServiceMock();
   const randomStringMock = 'randomStringMockValue';
@@ -129,7 +122,6 @@ describe('UserDashboardController', () => {
       controllers: [UserDashboardController],
       providers: [
         ConfigService,
-        LoggerService,
         SessionCsrfService,
         TracksService,
         TrackingService,
@@ -139,8 +131,6 @@ describe('UserDashboardController', () => {
     })
       .overrideProvider(ConfigService)
       .useValue(configMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(SessionCsrfService)
       .useValue(sessionGenericCsrfServiceMock)
       .overrideProvider(TracksService)

@@ -4,7 +4,6 @@ import { validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger-legacy';
 import {
   ConnectNotificationEmailParameters,
   MailerConfig,
@@ -27,12 +26,10 @@ export class CoreFcpSendEmailHandler
   private configMailer;
 
   constructor(
-    private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly mailer: MailerService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
   ) {
-    this.logger.setContext(this.constructor.name);
     this.configMailer = this.config.get<MailerConfig>('Mailer');
   }
 
@@ -122,8 +119,6 @@ export class CoreFcpSendEmailHandler
 
     // -- email body
     const body = await this.getConnectNotificationEmailBodyContent(session);
-
-    this.logger.trace({ from, to });
 
     // -- send
     await this.mailer.send({

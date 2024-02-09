@@ -4,7 +4,7 @@
 import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
-import { LoggerConfig } from '@fc/logger-legacy';
+import { LoggerConfig } from '@fc/logger';
 import { MongooseConfig } from '@fc/mongoose';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 

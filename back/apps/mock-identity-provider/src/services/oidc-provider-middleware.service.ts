@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
 import {
   OidcCtx,
   OidcProviderMiddlewarePattern,
@@ -19,12 +18,9 @@ export class OidcProviderMiddlewareService {
   // Dependency injection can require more than 4 parameters
   // eslint-disable-next-line max-params
   constructor(
-    private readonly logger: LoggerService,
     private readonly oidcProvider: OidcProviderService,
     private readonly scenarios: ScenariosService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   onModuleInit() {
     this.registerMiddleware(
@@ -70,8 +66,6 @@ export class OidcProviderMiddlewareService {
       req: ctx.req,
       sessionId,
     };
-
-    this.logger.trace(eventContext);
 
     return eventContext;
   }

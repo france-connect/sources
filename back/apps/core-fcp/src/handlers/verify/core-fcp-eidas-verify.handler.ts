@@ -3,7 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { CoreAccountService, CoreAcrService } from '@fc/core';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
 import { FeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger-legacy';
+import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
+import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 
@@ -23,9 +24,8 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     private readonly coreAcr: CoreAcrService,
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
     private readonly cryptographyEidas: CryptographyEidasService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+    private readonly identityProvider: IdentityProviderAdapterMongoService,
+  ) {}
 
   async handle({
     sessionOidc,
@@ -33,11 +33,14 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     this.logger.debug('getConsent service: ##### core-fcp-eidas-verify ');
 
     // Grab informations on interaction and identity
-    const { idpIdentity, idpAcr, spId, spAcr, subs } = await sessionOidc.get();
+    const { idpId, idpIdentity, idpAcr, spId, spAcr, subs } =
+      await sessionOidc.get();
     const { entityId } = await this.serviceProvider.getById(spId);
 
     // Acr check
-    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr);
+    const { maxAuthorizedAcr } = await this.identityProvider.getById(idpId);
+
+    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr, maxAuthorizedAcr);
 
     const identityHash = this.cryptographyEidas.computeIdentityHash(
       idpIdentity as IOidcIdentity,
@@ -63,7 +66,6 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     const idpIdentityCleaned = { sub: idpIdentity.sub };
 
     await sessionOidc.set({
-      amr: ['eidas'],
       idpIdentity: idpIdentityCleaned,
       spIdentity: spIdentityCleaned,
       accountId,

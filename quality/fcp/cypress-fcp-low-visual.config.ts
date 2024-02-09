@@ -1,3 +1,9 @@
+/* ------------------------------------------------------------------
+ *
+ * Looking for updating the "identity providers selection as-in production" screen ?
+ * Take a look into the README.md file
+ *
+ ------------------------------------------------------------------ */
 import { defineConfig } from 'cypress';
 
 import pluginConfig from './cypress/plugins';

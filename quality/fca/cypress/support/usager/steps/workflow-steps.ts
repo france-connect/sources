@@ -10,7 +10,7 @@ import {
 } from '../../common/types';
 import { getDefaultScope } from '../helpers';
 import IdentityProviderPage from '../pages/identity-provider-page';
-import IdentityProviderSelectionPage from '../pages/identity-provider-selection-page';
+import InteractionPage from '../pages/interaction-page';
 import ServiceProviderPage from '../pages/service-provider-page';
 import TechnicalErrorPage from '../pages/technical-error-page';
 
@@ -19,6 +19,7 @@ class ConnectionWorkflow {
   serviceProvider: ServiceProvider;
   identityProvider: IdentityProvider;
   serviceProviderPage: ServiceProviderPage;
+  email: string;
 
   constructor({ allAppsUrl }: Environment, serviceProvider: ServiceProvider) {
     this.allAppsUrl = allAppsUrl;
@@ -62,14 +63,11 @@ class ConnectionWorkflow {
    * @param identityProvider the identity provider to select
    * @returns the current ConnectionWorkflow instance
    */
-  selectIdentityProvider(identityProvider: IdentityProvider): this {
-    this.identityProvider = identityProvider;
-    const identityProviderSelectionPage = new IdentityProviderSelectionPage();
-    identityProviderSelectionPage.checkIsVisible();
-    identityProviderSelectionPage.searchIdentityProvider(
-      this.identityProvider.title,
-    );
-    identityProviderSelectionPage.getIdpButton(identityProvider.idpId).click();
+  redirectToIdp(email: string): this {
+    const interactionPage = new InteractionPage();
+    interactionPage.checkIsVisible();
+    interactionPage.getEmail().clearThenType(email);
+    interactionPage.getConnectionButton().click();
     return this;
   }
 
@@ -78,7 +76,9 @@ class ConnectionWorkflow {
    * @param user user with its credentials
    * @returns the current ConnectionWorkflow instance
    */
-  login(user: User): this {
+  login(user: User, identityProvider: IdentityProvider): this {
+    this.identityProvider = identityProvider;
+
     const identityProviderPage = new IdentityProviderPage(
       this.identityProvider,
     );
@@ -113,11 +113,13 @@ When(/^je me connecte à AgentConnect$/, function () {
   expect(this.identityProvider).to.exist;
   expect(this.user).to.exist;
   const scopes = this.requestedScope || getDefaultScope(this.scopes);
+  const email = `default@${this.identityProvider.fqdn}`;
+
   new ConnectionWorkflow(this.env, this.serviceProvider)
     .init()
     .withScope(scopes)
     .start()
-    .selectIdentityProvider(this.identityProvider)
-    .login(this.user)
+    .redirectToIdp(email)
+    .login(this.user, this.identityProvider)
     .checkIsConnected();
 });

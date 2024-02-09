@@ -2,8 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { TemplateNotFoundException } from '../exceptions';
 import { StdoutTransport } from '../transports';
@@ -38,12 +40,7 @@ describe('MailerService', () => {
   };
 
   const configServiceMock = { get: jest.fn() };
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
   const templateServiceMock = {
     readFile: jest.fn(),
     render: jest.fn(),
@@ -83,15 +80,6 @@ describe('MailerService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  it('should set the logger context', () => {
-    // setup
-    const constructorName = 'MailerService';
-
-    // expect
-    expect(loggerServiceMock.setContext).toBeCalledTimes(1);
-    expect(loggerServiceMock.setContext).toBeCalledWith(constructorName);
   });
 
   describe('onModuleInit', () => {
@@ -181,7 +169,7 @@ describe('MailerService', () => {
       await service.send(emailParamsMock);
 
       // expect
-      expect(loggerServiceMock.error).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
     });
   });
 

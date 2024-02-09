@@ -15,6 +15,9 @@ export class SessionNoSessionIdException extends SessionBaseException {
   public readonly code = ErrorCode.NO_SESSION_ID;
   public readonly httpStatusCode = HttpStatus.UNAUTHORIZED;
 
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'user authentication aborted';
+
   /* eslint-disable @typescript-eslint/no-unused-vars */
   constructor() {
     super(

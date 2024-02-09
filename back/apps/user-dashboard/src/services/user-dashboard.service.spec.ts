@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 import {
   MailerNotificationConnectException,
   MailerService,
@@ -19,13 +18,6 @@ describe('UserDashboardService', () => {
   const configMock = {
     get: jest.fn(),
   };
-
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-    error: jest.fn(),
-  } as unknown as LoggerService;
 
   const mailerServiceMock = {
     send: jest.fn(),
@@ -85,15 +77,8 @@ describe('UserDashboardService', () => {
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        LoggerService,
-        ConfigService,
-        MailerService,
-        UserDashboardService,
-      ],
+      providers: [ConfigService, MailerService, UserDashboardService],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
       .overrideProvider(MailerService)
@@ -142,7 +127,6 @@ describe('UserDashboardService', () => {
           idpConfiguration,
         ),
       ).rejects.toThrow(errorMock);
-      expect(loggerServiceMock.error).toHaveBeenCalledTimes(1);
     });
 
     it('should call mailToSend with futureIdpChoice =!idpConfiguration.allowFutureIdp', async () => {
@@ -237,7 +221,6 @@ describe('UserDashboardService', () => {
       await expect(
         service.sendMail(userInfo, idpConfiguration),
       ).rejects.toThrow(errorMock);
-      expect(loggerServiceMock.error).toHaveBeenCalledTimes(1);
     });
 
     it('should throw an Error if the TO email is not valid', async () => {
@@ -254,7 +237,6 @@ describe('UserDashboardService', () => {
       await expect(
         service.sendMail(badUserInfoData, idpConfiguration),
       ).rejects.toThrow(errorMock);
-      expect(loggerServiceMock.error).toHaveBeenCalledTimes(1);
     });
 
     it('should call getIdpConfigUpdateEmailBodyContent', async () => {

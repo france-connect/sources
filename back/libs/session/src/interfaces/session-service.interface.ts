@@ -35,4 +35,6 @@ export interface ISessionService<T> {
   set(value: Partial<T>): Promise<boolean>;
 
   setAlias(value: string): Promise<RedisQueryResult[]>;
+
+  commit(): Promise<boolean>;
 }

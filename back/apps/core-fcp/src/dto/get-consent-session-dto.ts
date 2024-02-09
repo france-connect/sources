@@ -21,7 +21,7 @@ import { CoreSessionDto } from './core-session.dto';
 export class GetConsentOidcClientSessionDto extends CoreBaseOidcClientSessionDto {
   // Metadata: We MUST restrict the routes we can come from
   @IsString()
-  @IsIn([CoreRoutes.INTERACTION_VERIFY])
+  @IsIn([CoreRoutes.INTERACTION_VERIFY, CoreRoutes.INTERACTION_CONSENT])
   @Expose()
   readonly stepRoute: string;
 

@@ -4,9 +4,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 import { ServiceProviderMetadata } from '@fc/oidc';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { platform } from './enums';
 import { ServiceProvider } from './schemas';
@@ -67,12 +69,7 @@ describe('ServiceProviderAdapterMongoService', () => {
 
   const serviceProviderListMock = [validServiceProviderMock];
 
-  const loggerMock = {
-    setContext: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const cryptographyMock = {
     decrypt: jest.fn(),
@@ -338,7 +335,7 @@ describe('ServiceProviderAdapterMongoService', () => {
       await service['findAllServiceProvider']();
 
       // expect
-      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
     });
 
     it('should filter out any entry excluded by the DTO', async () => {

@@ -1,4 +1,4 @@
-/*istanbul ignore file*/
+/* istanbul ignore file */
 
 // Declarative code
 export * from './apache-ignite.module';

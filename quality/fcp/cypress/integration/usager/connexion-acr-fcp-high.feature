@@ -27,10 +27,10 @@ Fonctionnalité: Connexion ACR
 
     @ci
     Exemples:
-      | acrValues             | method | actualAcr |
-      | eidas2                | get    | eidas2    |
-      | eidas3                | post   | eidas3    |
-      | niveau_inconnu        | post   | eidas3    |
+      | acrValues      | method | actualAcr |
+      | eidas2         | get    | eidas2    |
+      | eidas3         | post   | eidas3    |
+      | niveau_inconnu | post   | eidas3    |
 
     Exemples:
       | acrValues             | method | actualAcr |
@@ -83,7 +83,7 @@ Fonctionnalité: Connexion ACR
     Exemples:
       | spAcr  | idpAcr | actualAcr |
       | eidas2 | eidas2 | eidas2    |
-      | eidas2 | eidas3 | eidas2    |
+      | eidas2 | eidas3 | eidas3    |
       | eidas3 | eidas3 | eidas3    |
 
   Plan du Scénario: Connexion ACR - FCP high - erreur FI retourne un niveau <idpAcr> inférieur à <spAcr>
@@ -108,3 +108,22 @@ Fonctionnalité: Connexion ACR
       | eidas3 | eidas1  |
       | eidas3 | eidas2  |
       | eidas2 | inconnu |
+
+
+  # Waiting for an "eidas2" IdP to be available on Integ01
+  @ignoreInteg01
+  Scénario: Connexion ACR - FCP high - erreur FI retourne un acr supérieur à son maximum autorisé
+    Etant donné que j'utilise le fournisseur de service "par défaut"
+    Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
+    Et que le fournisseur de service requiert un niveau de sécurité "eidas2"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2"
+    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Et que le fournisseur d'identité garantit un niveau de sécurité "eidas3"
+    Quand je m'authentifie avec succès
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y020018"
+    Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."

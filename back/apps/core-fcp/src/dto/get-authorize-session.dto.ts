@@ -2,11 +2,11 @@
 
 // Declarative file
 import { Expose, Type } from 'class-transformer';
-import { IsJWT, IsNotEmpty, IsObject, IsString } from 'class-validator';
+import { IsEnum, IsJWT, IsNotEmpty, IsObject, IsString } from 'class-validator';
 
 import { PartialExcept } from '@fc/common';
 import { CoreBaseOidcClientSessionDto } from '@fc/core';
-import { IOidcIdentity, OidcIdentityDto } from '@fc/oidc';
+import { Amr, IOidcIdentity, OidcIdentityDto } from '@fc/oidc';
 import { RnippPivotIdentity } from '@fc/rnipp';
 
 import { AppSession } from './app-session.dto';
@@ -47,6 +47,12 @@ export class GetAuthorizeOidcClientSsoSession extends CoreBaseOidcClientSessionD
   @IsNotEmpty()
   @Expose()
   readonly idpAcr: string;
+
+  // Identity Provider: We MUST have amr (SSO)
+  @IsEnum(Amr, { each: true })
+  @IsNotEmpty()
+  @Expose()
+  readonly amr: string[];
 
   // Identity Provider: We MUST have an idpToken (SSO)
   @IsString()

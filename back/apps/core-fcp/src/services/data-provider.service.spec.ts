@@ -11,23 +11,26 @@ import {
   DataProviderAdapterMongoService,
   DataProviderMetadata,
 } from '@fc/data-provider-adapter-mongo';
-import { JwtService } from '@fc/jwt';
-import { LoggerService } from '@fc/logger-legacy';
+import { CustomJwtPayload, JwtService } from '@fc/jwt';
+import { LoggerService } from '@fc/logger';
 import { AccessToken, atHashFromAccessToken, stringToArray } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderRedisAdapter } from '@fc/oidc-provider/adapters';
-import { REDIS_CONNECTION_TOKEN } from '@fc/redis';
+import { RedisService } from '@fc/redis';
 import { RnippPivotIdentity } from '@fc/rnipp';
 import { ScopesService } from '@fc/scopes';
 import { ISessionService, SessionService } from '@fc/session';
 
 import { getJwtServiceMock } from '@mocks/jwt';
+import { getLoggerMock } from '@mocks/logger';
+import { getRedisServiceMock } from '@mocks/redis';
 
 import { ChecktokenRequestDto } from '../dto';
 import {
-  CoreFcpFetchDataProviderJwksFailed,
+  CoreFcpFetchDataProviderJwksFailedException,
   InvalidChecktokenRequestException,
 } from '../exceptions';
+import { DpJwtPayloadInterface } from '../interfaces';
 import { DataProviderService } from './data-provider.service';
 
 jest.mock('rxjs');
@@ -44,10 +47,7 @@ const configServiceMock = {
   get: jest.fn(),
 };
 
-const logggerServiceMock = {
-  trace: jest.fn(),
-};
-
+const loggerServiceMock = getLoggerMock();
 const dataProviderMock = {
   getByClientId: jest.fn(),
 };
@@ -84,9 +84,7 @@ const sessionServiceMock = {
   get: jest.fn(),
 };
 
-const redisMock = {
-  ttl: jest.fn(),
-};
+const redisMock = getRedisServiceMock();
 
 const scopesMock = {
   getScopesByDataProvider: jest.fn(),
@@ -94,11 +92,6 @@ const scopesMock = {
 
 describe('DataProviderService', () => {
   let service: DataProviderService;
-
-  const RedisProviderMock = {
-    provide: REDIS_CONNECTION_TOKEN,
-    useValue: redisMock,
-  };
 
   const cryptographyFcpMock = {
     computeIdentityHash: jest.fn(),
@@ -116,14 +109,14 @@ describe('DataProviderService', () => {
         DataProviderAdapterMongoService,
         HttpService,
         JwtService,
-        RedisProviderMock,
+        RedisService,
         SessionService,
         CryptographyFcpService,
         ScopesService,
       ],
     })
       .overrideProvider(LoggerService)
-      .useValue(logggerServiceMock)
+      .useValue(loggerServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .overrideProvider(DataProviderAdapterMongoService)
@@ -132,6 +125,8 @@ describe('DataProviderService', () => {
       .useValue(httpServiceMock)
       .overrideProvider(JwtService)
       .useValue(jwtServiceMock)
+      .overrideProvider(RedisService)
+      .useValue(redisMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
       .overrideProvider(CryptographyFcpService)
@@ -201,7 +196,7 @@ describe('DataProviderService', () => {
   });
 
   describe('generateJwt', () => {
-    const payload = {};
+    const payload = {} as unknown as CustomJwtPayload<DpJwtPayloadInterface>;
     const dataProviderId = 'client_id';
     const jwsMock = Symbol('jws');
     const jweMock = Symbol('jwe');
@@ -400,7 +395,6 @@ describe('DataProviderService', () => {
       // Then
       expect(adapterMocked).toHaveBeenCalledTimes(1);
       expect(adapterMocked).toHaveBeenCalledWith(
-        logggerServiceMock,
         redisMock,
         undefined,
         'AccessToken',
@@ -549,7 +543,7 @@ describe('DataProviderService', () => {
 
   describe('generateJws', () => {
     // Given
-    const payload = {};
+    const payload = {} as unknown as CustomJwtPayload<DpJwtPayloadInterface>;
     const jwsMock = Symbol('jws');
 
     beforeEach(() => {
@@ -606,7 +600,7 @@ describe('DataProviderService', () => {
 
   describe('generateJwe', () => {
     // Given
-    const payload = {};
+    const payload = {} as unknown as CustomJwtPayload<DpJwtPayloadInterface>;
     const dataProviderJwksMock = {};
     const dataProviderId = 'client_id';
     const jwsMock = Symbol('jws') as unknown as string;
@@ -694,7 +688,7 @@ describe('DataProviderService', () => {
       // When / Then
       await expect(
         service['fetchEncryptionKeys'](urlMock),
-      ).rejects.toThrowError(CoreFcpFetchDataProviderJwksFailed);
+      ).rejects.toThrowError(CoreFcpFetchDataProviderJwksFailedException);
     });
 
     it('should return the response data', async () => {
@@ -708,6 +702,66 @@ describe('DataProviderService', () => {
 
       // Then
       expect(result).toStrictEqual(responseMock.data);
+    });
+  });
+
+  describe('generateErrorMessage', () => {
+    const errorMock = 'foo_bar';
+    const messageMock = 'Error message description';
+
+    it('should send message retrieve through params if http status code is 400', () => {
+      // Given
+      const httpStatusCodeMock = 400;
+      // When
+      const result = service['generateErrorMessage'](
+        httpStatusCodeMock,
+        messageMock,
+        errorMock,
+      );
+      // Then
+      expect(result).toEqual({
+        error: 'foo_bar',
+        // oidc compliant
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: 'Error message description',
+      });
+    });
+
+    it('should send message retrieve through params if http status code is 401', () => {
+      // Given
+      const httpStatusCodeMock = 401;
+      // When
+      const result = service['generateErrorMessage'](
+        httpStatusCodeMock,
+        messageMock,
+        errorMock,
+      );
+      // Then
+      expect(result).toEqual({
+        error: 'foo_bar',
+        // oidc compliant
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: 'Error message description',
+      });
+    });
+
+    it('should send predifined message if http status code is 500', () => {
+      // Given
+      const httpStatusCodeMock = 500;
+      // When
+      const result = service['generateErrorMessage'](
+        httpStatusCodeMock,
+        messageMock,
+        errorMock,
+      );
+      // Then
+      expect(result).toEqual({
+        error: 'server_error',
+        // oidc compliant
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description:
+          'The authorization server encountered an unexpected condition that prevented it from fulfilling the request.',
+      });
     });
   });
 });

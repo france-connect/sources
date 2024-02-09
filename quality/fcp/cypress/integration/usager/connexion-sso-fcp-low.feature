@@ -83,7 +83,7 @@ Fonctionnalité: Connexion Usager - SSO - FCP Low
     Et que j'utilise un fournisseur de service "sans accès au FI par défaut"
     Et que j'utilise un fournisseur d'identité "disponible que pour un FS"
     Et que je navigue sur la page fournisseur de service
-    Et que je me connecte au fournisseur d'identité
+    Et que je me connecte au fournisseur d'identité via FranceConnect
     Et que je suis redirigé vers la page confirmation de connexion
     Et que j'utilise un fournisseur de service "avec accès au FI par défaut (deuxième FS)"
     Et que j'utilise le fournisseur d'identité "par défaut"

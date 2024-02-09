@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 import {
   IdpConfigUpdateEmailParameters,
   MailerConfig,
@@ -24,18 +23,14 @@ import { IdpSettingsChangesInterface } from '../interfaces';
 @Injectable()
 export class UserDashboardService {
   constructor(
-    private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly mailer: MailerService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async sendMail(userInfo, idpConfiguration): Promise<void> {
     const { from } = this.config.get<MailerConfig>('Mailer');
     let errors = await validateDto(from, MailFrom, validationOptions);
     if (errors.length > 0) {
-      this.logger.error(errors);
       throw new NoEmailException();
     }
 
@@ -49,7 +44,6 @@ export class UserDashboardService {
     const to: MailTo[] = [mailTo];
     errors = await validateDto(mailTo, MailTo, validationOptions);
     if (errors.length > 0) {
-      this.logger.error(errors);
       throw new NoEmailException();
     }
 
@@ -58,8 +52,6 @@ export class UserDashboardService {
       userInfo,
       idpConfiguration,
     );
-
-    this.logger.trace({ from, to });
 
     await this.mailer.send({
       from,
@@ -122,7 +114,6 @@ export class UserDashboardService {
       hasAllowFutureIdpChanged,
       formattedUpdateDate,
     };
-    this.logger.trace({ idpConfigUpdateEmail });
 
     const dtoValidationErrors = await validateDto(
       idpConfigUpdateEmail,
@@ -131,7 +122,6 @@ export class UserDashboardService {
     );
 
     if (dtoValidationErrors.length > 0) {
-      this.logger.error(dtoValidationErrors);
       throw new MailerNotificationConnectException();
     }
 

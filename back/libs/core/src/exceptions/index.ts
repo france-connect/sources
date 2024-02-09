@@ -4,6 +4,7 @@
 export * from './core-base.exception';
 export * from './core-claim-amr.exception';
 export * from './core-failed-persistence-exception';
+export * from './core-high-acr.exception';
 export * from './core-identity-provider-not-found.exception';
 export * from './core-idp-blocked-for-account.exception';
 export * from './core-idp-hint.exception';

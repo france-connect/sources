@@ -6,7 +6,9 @@ import {
   BridgeResponse,
   MessageType,
 } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { BridgePayloadDto } from '../dto';
 import { CsmrHttpProxyService } from '../services';
@@ -15,12 +17,7 @@ import { CsmrHttpProxyController } from './csmr-http-proxy.controller';
 describe('CsmrHttpProxyController', () => {
   let csmrHttpProxyController: CsmrHttpProxyController;
 
-  const loggerMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const csmrHttpProxyMock = {
     forwardRequest: jest.fn(),
@@ -51,16 +48,6 @@ describe('CsmrHttpProxyController', () => {
       // Action
       // Assert
       expect(csmrHttpProxyController).toBeDefined();
-    });
-
-    it('should call logger at init', () => {
-      // Arrange
-      // Action
-      // Assert
-      expect(loggerMock.setContext).toHaveBeenCalledTimes(1);
-      expect(loggerMock.setContext).toHaveBeenCalledWith(
-        'CsmrHttpProxyController',
-      );
     });
 
     describe('proxyRequest()', () => {
@@ -173,50 +160,7 @@ describe('CsmrHttpProxyController', () => {
         // Assert
         expect(result).toStrictEqual(resultMock);
 
-        expect(loggerMock.error).toHaveBeenCalledTimes(1);
-      });
-
-      it('should trace and debug request and debug on response', async () => {
-        // Arrange
-        const payload: BridgePayloadDto = {
-          ...baseBridgePayloadMock,
-        };
-
-        const dataMock = {
-          status: 200,
-          data: null,
-          statusText: 'Success',
-          headers: {
-            'content-type': 'text/html; charset=UTF-8',
-          },
-        };
-
-        const resultMock: BridgeProtocol<BridgeResponse> = {
-          data: {
-            data: null,
-            headers: { 'content-type': 'text/html; charset=UTF-8' },
-            status: 200,
-            statusText: 'Success',
-          },
-          type: MessageType.DATA,
-        };
-        csmrHttpProxyMock.forwardRequest.mockResolvedValueOnce(dataMock);
-
-        // Action
-        await csmrHttpProxyController.proxyRequest(payload);
-        // Assert
-        expect(loggerMock.debug).toHaveBeenCalledTimes(1);
-        expect(loggerMock.debug).toHaveBeenCalledWith(
-          'received new HTTP_PROXY command',
-        );
-
-        expect(loggerMock.trace).toHaveBeenNthCalledWith(1, {
-          payload,
-        });
-
-        expect(loggerMock.trace).toHaveBeenNthCalledWith(2, {
-          response: resultMock,
-        });
+        expect(loggerMock.err).toHaveBeenCalledTimes(1);
       });
     });
   });

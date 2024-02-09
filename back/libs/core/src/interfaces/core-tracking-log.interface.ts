@@ -17,5 +17,11 @@ export class ICoreTrackingLog extends TrackingLogInterface {
   readonly idpName?: string;
   readonly idpLabel?: string;
 
+  /** Data Provider informations */
+  readonly dpId?: string;
+  readonly dpTitle?: string;
+  readonly dpClientId?: string;
+
   readonly claims?: string;
+  readonly scope?: string;
 }

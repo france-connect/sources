@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 
 import { asyncFilter, validateDto, wait } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
 
 import { AppConfig, ScenarioDto } from '../dto';
@@ -19,9 +19,7 @@ export class ScenariosService {
   constructor(
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async onModuleInit() {
     const { scenariosDatabasePath } = this.config.get<AppConfig>('App');
@@ -40,7 +38,7 @@ export class ScenariosService {
         );
 
         if (error) {
-          this.logger.warn(`Invalid scenario found: ${scenario?.name}`);
+          this.logger.warning(`Invalid scenario found: ${scenario?.name}`);
         }
 
         return !error;

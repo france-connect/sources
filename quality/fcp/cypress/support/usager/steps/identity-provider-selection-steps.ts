@@ -36,6 +36,26 @@ Then(
 );
 
 Given(
+  "je paramètre un intercepteur pour l'appel authorize au fournisseur d'identité",
+  function () {
+    const { url }: IdentityProvider = this.identityProvider;
+    cy.intercept(`${url}/authorize*`).as('FI:Authorize');
+  },
+);
+
+Given(
+  'je mets le state fourni par FC dans le paramètre "state" de la requête',
+  function () {
+    cy.wait('@FI:Authorize')
+      .its('request.query.state')
+      .should('exist')
+      .then((value: string) => {
+        this.requestOptions.qs['state'] = value;
+      });
+  },
+);
+
+Given(
   "je paramètre un intercepteur pour retirer le scope {string} au prochain appel au fournisseur d'identité",
   function (scopeToRemove) {
     const { idpId, url }: IdentityProvider = this.identityProvider;
@@ -82,12 +102,9 @@ When("je clique sur le fournisseur d'identité", function () {
     .click({ force: true });
 });
 
-When(
-  'je clique sur le lien retour vers le fournisseur de service',
-  function () {
-    identityProviderSelectionPage.getBackToServiceProviderLink().click();
-  },
-);
+When('je clique sur le lien retour vers le FS sous la mire', function () {
+  identityProviderSelectionPage.getBackToServiceProviderLink().click();
+});
 
 When("je force l'utilisation du fournisseur d'identité", function () {
   expect(this.identityProvider).to.exist;
@@ -98,6 +115,30 @@ When("je force l'utilisation du fournisseur d'identité", function () {
     .click({ force: true });
 });
 
+When(
+  "je force l'utilisation d'un fournisseur d'identité inexistant",
+  function () {
+    expect(this.identityProvider).to.exist;
+    identityProviderSelectionPage.modifyProviderUidOfIdpButton(
+      this.identityProvider,
+      'unknown-idp-uid',
+    );
+    identityProviderSelectionPage.getIdpButton(this.identityProvider).click();
+  },
+);
+
+When(
+  "je force l'utilisation d'un fournisseur d'identité avec un csrf non valide",
+  function () {
+    expect(this.identityProvider).to.exist;
+    identityProviderSelectionPage.modifyCsrfOfIdpButton(
+      this.identityProvider,
+      'invalid-csrf',
+    );
+    identityProviderSelectionPage.getIdpButton(this.identityProvider).click();
+  },
+);
+
 Then(
   /^le fournisseur d'identité (est|n'est pas) désactivé dans la liste$/,
   function (text) {
@@ -107,3 +148,17 @@ Then(
       .should(isDisabled ? 'be.disabled' : 'be.enabled');
   },
 );
+
+Then(
+  /^le lien Aidants Connect (est|n'est pas) affiché dans le footer$/,
+  function (text: string) {
+    const isVisible = text === 'est';
+    identityProviderSelectionPage
+      .getAidantsConnectLink()
+      .should(isVisible ? 'be.visible' : 'not.exist');
+  },
+);
+
+When('je clique sur le lien Aidants Connect', function () {
+  identityProviderSelectionPage.getAidantsConnectLink().click();
+});

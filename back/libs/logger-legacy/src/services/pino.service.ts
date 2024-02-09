@@ -4,7 +4,7 @@ import { Injectable, ShutdownSignal } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 
-import { LoggerConfig } from '../dto';
+import { LoggerConfig as LoggerLegacyConfig } from '../dto';
 import { LoggerLevelCodes } from '../enum';
 import { pinoLevelsMap } from '../log-maps.map';
 
@@ -16,15 +16,17 @@ export function formatLevel(label: string, _number: number): { level: string } {
   return { level: label };
 }
 
+const PINO_LEVEL_BUSINESS = 'info';
+
 @Injectable()
 export class PinoService {
   public readonly transport: Logger;
   public readonly level: LoggerLevelCodes;
 
   constructor(private readonly config: ConfigService) {
-    const { level, path } = this.config.get<LoggerConfig>('Logger');
+    const { path } = this.config.get<LoggerLegacyConfig>('LoggerLegacy');
 
-    this.level = pinoLevelsMap[level];
+    this.level = pinoLevelsMap[PINO_LEVEL_BUSINESS];
 
     const stream = this.getDestinationForLog(path);
     this.transport = pino(
@@ -32,7 +34,7 @@ export class PinoService {
         formatters: {
           level: formatLevel,
         },
-        level,
+        level: PINO_LEVEL_BUSINESS,
       },
       stream,
     );

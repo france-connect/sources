@@ -1,57 +1,6 @@
 <%
-// Hard coded claims order for identity claims
-const sortedNames = [
-  'family_name',
-  'preferred_username',
-  'given_name',
-  'gender',
-  'birthdate',
-  'birthplace',
-  'birthcountry',
-  'address',
-  'email',
-  'phone_number',
-];
 
-const isIdentityClaim = (claim) =>
-  ['FCP_LOW', 'FCP_HIGH'].includes(claim.provider.key);
-
-const dataProviderOrder = (a, b) => {
-  // FC Must Come First
-  if (isIdentityClaim(a[0])) {
-    return -1;
-  }
-
-  if (isIdentityClaim(b[0])) {
-    return 1;
-  }
-
-  // Normal sort
-  return a[0].provider.label < b[0].provider.label ? -1 : 1;
-}
-
-const claimOrder = (a, b) => {
-  if (isIdentityClaim(a)) { // Sort is hard coded for identity claims
-    return sortedNames.indexOf(a.identifier) - sortedNames.indexOf(b.identifier);
-  }
-
-  return a.label < b.label ? -1 : 1;
-}
-
-const regroup = (groups, claim) => {
-   if (!groups[claim.provider.key]) {
-      groups[claim.provider.key] = [];
-    }
-
-    groups[claim.provider.key].push(claim);
-}
-
-const hasLabel = ({ label }) => label;
-
-const claimsGroups = {};
-locals.claims
-  .filter(hasLabel) // Omit claims with falsy label (sub, amr...)
-  .forEach(regroup.bind(null, claimsGroups));
+const claimsGroups = $groupByDataProvider(claims);
 
 %>
 <div class="fr-accordion">
@@ -67,12 +16,13 @@ locals.claims
   <div class="fr-collapse" id="accordion-consent">
 
     <div>
-    <% Object.values(claimsGroups).sort(dataProviderOrder).forEach((group) => { %>
+    <% Object.values(claimsGroups).forEach((group) => { %>
 
          <p class="fr-mb-0"><strong>Informations récupérées depuis <%= group[0].provider.label%></strong></p>
 
          <ul data-testid="consent-detail">
-         <% group.sort(claimOrder).forEach((claim) => { %>
+          <%# last minute sort to avoid unnecessary loops %>
+         <% group.sort($claimOrder).forEach((claim) => { %>
             <li>
               <%= claim.label %>
             </li>

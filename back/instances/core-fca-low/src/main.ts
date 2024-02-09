@@ -15,7 +15,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { CoreFcaConfig } from '@fc/core-fca';
-import { LoggerService } from '@fc/logger-legacy';
+import { NestLoggerService } from '@fc/logger';
 import { SessionConfig } from '@fc/session';
 
 import { AppModule } from './app.module';
@@ -30,6 +30,8 @@ async function bootstrap() {
     urlPrefix,
     assetsPaths,
     viewsPaths,
+    assetsDsfrPaths,
+    assetsCacheTtl,
     httpsOptions: { key, cert },
   } = configService.get<AppConfig>('App');
 
@@ -52,7 +54,12 @@ async function bootstrap() {
      */
     bodyParser: false,
     httpsOptions,
+    bufferLogs: true,
   });
+
+  const logger = await app.resolve(NestLoggerService);
+
+  app.useLogger(logger);
 
   /**
    * @see https://expressjs.com/fr/api.html#app.set
@@ -100,19 +107,30 @@ async function bootstrap() {
    */
   app.use(urlencoded({ extended: false }));
 
-  const logger = await app.resolve(LoggerService);
-
-  app.useLogger(logger);
   app.engine('ejs', renderFile);
+  app.setViewEngine('ejs');
   app.set(
     'views',
     viewsPaths.map((viewsPath) => {
       return join(__dirname, viewsPath, 'views');
     }),
   );
-  app.setViewEngine('ejs');
+
+  /**
+   * @TODO #1203 All below useStaticAssets functions need to be removed (until line 146) when webpack has been configured to load assets from @gouvfr/dsfr package
+   * @ticket FC-1203
+   */
+  assetsDsfrPaths.forEach(({ assetPath, prefix }) => {
+    app.useStaticAssets(join(__dirname, assetPath), {
+      maxAge: assetsCacheTtl * 1000,
+      prefix,
+    });
+  });
+
   assetsPaths.forEach((assetsPath) => {
-    app.useStaticAssets(join(__dirname, assetsPath, 'public'));
+    app.useStaticAssets(join(__dirname, assetsPath, 'public'), {
+      maxAge: assetsCacheTtl * 1000,
+    });
   });
 
   const { cookieSecrets } = configService.get<SessionConfig>('Session');

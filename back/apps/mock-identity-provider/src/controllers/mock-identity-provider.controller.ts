@@ -1,45 +1,43 @@
+import { Request, Response } from 'express';
+
 import {
   Body,
   Controller,
   Get,
-  Next,
   Post,
   Render,
   Req,
   Res,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { getDtoInputWithErrors, getTransformed, validateDto } from '@fc/common';
+import { ConfigService } from '@fc/config';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { ISessionService, Session } from '@fc/session';
 
-import { AppSession, SignInDTO } from '../dto';
+import { AppConfig, AppSession, SignInDTO } from '../dto';
 import { MockIdentityProviderRoutes } from '../enums';
+import { CustomIdentityGuard } from '../guards';
+import { MinimalCustomIdentityInterface } from '../interfaces';
 import { MockIdentityProviderService } from '../services';
+
+const DEFAULT_USER_LOGIN = 'test';
 
 @Controller()
 export class MockIdentityProviderController {
   constructor(
-    private readonly logger: LoggerService,
+    private readonly config: ConfigService,
     private readonly oidcProvider: OidcProviderService,
     private readonly mockIdentityProviderService: MockIdentityProviderService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   @Get(MockIdentityProviderRoutes.INDEX)
   index() {
     const response = { status: 'ok' };
-
-    this.logger.trace({
-      route: MockIdentityProviderRoutes.INDEX,
-      method: 'GET',
-      name: 'MockIdentityProviderRoutes.INDEX',
-      response,
-    });
 
     return response;
   }
@@ -71,21 +69,18 @@ export class MockIdentityProviderController {
       params,
       spName,
       finalSpId,
+      login: params.login_hint || DEFAULT_USER_LOGIN,
     };
-
-    this.logger.trace({
-      route: MockIdentityProviderRoutes.INTERACTION,
-      method: 'GET',
-      name: 'MockIdentityProviderRoutes.INTERACTION',
-      response,
-    });
 
     return response;
   }
 
+  // More than 4 parameters authorized for dependency injection
+  // eslint-disable-next-line max-params
   @Post(MockIdentityProviderRoutes.INTERACTION_LOGIN)
   async getLogin(
-    @Next() next,
+    @Req() req: Request,
+    @Res() res: Response,
     @Body() body: SignInDTO,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
@@ -127,13 +122,64 @@ export class MockIdentityProviderController {
       subs: { [spId]: sub },
     });
 
-    this.logger.trace({
-      route: MockIdentityProviderRoutes.INTERACTION_LOGIN,
-      method: 'POST',
-      name: 'MockIdentityProviderRoutes.INTERACTION_LOGIN',
-      spIdentity,
-    });
+    const session = await sessionOidc.get();
 
-    return next();
+    return this.oidcProvider.finishInteraction(req, res, session);
+  }
+
+  @Get(MockIdentityProviderRoutes.INTERACTION_LOGIN_CUSTOM)
+  @Render('interaction-login-custom')
+  @UseGuards(CustomIdentityGuard)
+  getLoginCustom() {
+    const { identityForm } = this.config.get<AppConfig>('App');
+    const data = {};
+
+    return { identityForm, data };
+  }
+
+  @Post(MockIdentityProviderRoutes.INTERACTION_LOGIN_CUSTOM)
+  @UseGuards(CustomIdentityGuard)
+  async postLoginCustom(
+    @Body() identity: MinimalCustomIdentityInterface,
+    @Req() req: Request,
+    @Res() res: Response,
+    @Session('OidcClient')
+    sessionOidc: ISessionService<OidcClientSession>,
+  ) {
+    const { identityDto } = this.config.get<AppConfig>('App');
+    const options = { whitelist: true };
+    const errors = await validateDto(identity, identityDto, options);
+
+    if (errors.length > 0) {
+      const { identityForm } = this.config.get<AppConfig>('App');
+
+      const data = getDtoInputWithErrors(errors);
+
+      return res.render('interaction-login-custom', { identityForm, data });
+    }
+
+    const transformedIdentity = getTransformed(identity, identityDto);
+
+    await this.prepareIdentity(transformedIdentity, sessionOidc);
+
+    const session = await sessionOidc.get();
+
+    return this.oidcProvider.finishInteraction(req, res, session);
+  }
+
+  private async prepareIdentity(
+    identity: MinimalCustomIdentityInterface,
+    sessionOidc: ISessionService<OidcClientSession>,
+  ): Promise<void> {
+    const { acr, ...spIdentityCleaned } = identity;
+    const { spId } = await sessionOidc.get();
+    const sub = this.mockIdentityProviderService.getSub(spIdentityCleaned);
+
+    await sessionOidc.set({
+      spAcr: acr,
+      spIdentity: spIdentityCleaned,
+      amr: ['pwd'],
+      subs: { [spId]: sub },
+    });
   }
 }

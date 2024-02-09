@@ -30,10 +30,11 @@ Fonctionnalité: Connexion avec chiffrement
       | eidas3    |                  | RS256     |
 
     Exemples:
-      | acrValues | encoding         | signature |
-      | eidas2    |                  | ES256     |
-      | eidas3    | RSA-OAEP,A256GCM | RS256     |
-      | eidas3    | ECDH-ES,A256GCM  | ES256     |
+      | acrValues | encoding             | signature |
+      | eidas2    |                      | ES256     |
+      | eidas3    | RSA-OAEP-256,A256GCM | ES256     |
+      | eidas3    | RSA-OAEP,A256GCM     | RS256     |
+      | eidas3    | ECDH-ES,A256GCM      | ES256     |
 
   @ignoreInteg01 @ci
   Scénario: Connexion - FCP high - Le HSM est utilisé pour signer les réponses aux FS

@@ -10,4 +10,8 @@ import { JwtBaseException } from './jwt-base.exception';
 export class CanNotSignJwtException extends JwtBaseException {
   code = ErrorCode.CAN_NOT_SIGN_JWT;
   message = 'Can not sign JWT';
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

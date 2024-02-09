@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
-import { CoreFcaDefaultAuthorizationHandler } from './core-fca-default-authorization-url.handler';
+import { CoreFcaDefaultAuthorizationHandler } from './';
 
 export const PUBLICNESS_SCOPE_NAME = 'is_service_public';
 
@@ -48,8 +48,13 @@ export class CoreFcaMcpAuthorizationHandler
    */
   private handleScopePublicness(scope: string): string {
     const scopeList = scope.split(' ');
-    if (scopeList.includes(PUBLICNESS_SCOPE_NAME)) return scope;
+    if (scopeList.includes(PUBLICNESS_SCOPE_NAME)) {
+      return scope;
+    }
+
     scopeList.push(PUBLICNESS_SCOPE_NAME);
+
+    this.logger.debug(`Add scope "${PUBLICNESS_SCOPE_NAME}" to scope list`);
     return scopeList.join(' ');
   }
 }

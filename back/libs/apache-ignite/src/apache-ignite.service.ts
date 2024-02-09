@@ -4,7 +4,7 @@ import { operation, OperationOptions, RetryOperation } from 'retry';
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { ApacheIgniteConfig } from './dto';
 import { ApacheIgniteInvalidSocketException } from './exceptions';
@@ -26,8 +26,6 @@ export class ApacheIgniteService {
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
   ) {
-    this.logger.setContext(this.constructor.name);
-
     this.igniteClient = new ApacheIgniteService.IgniteClientProxy(
       this.onStateChanged.bind(this),
     );
@@ -111,7 +109,7 @@ export class ApacheIgniteService {
     try {
       await this.connectIgnite();
     } catch (err) {
-      this.logger.error(err);
+      this.logger.err(err);
     }
   }
 

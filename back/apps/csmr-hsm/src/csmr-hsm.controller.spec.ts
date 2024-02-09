@@ -2,9 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { HsmService, SignatureDigest } from '@fc/hsm';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { CsmrHsmController } from './csmr-hsm.controller';
+import { CsmrHsmRandomException, CsmrHsmSignException } from './exceptions';
 
 describe('CsmrHsmController', () => {
   let csmrHsmController: CsmrHsmController;
@@ -19,11 +22,7 @@ describe('CsmrHsmController', () => {
     genRandom: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const configServiceMock = {
     get: jest.fn(),
@@ -66,6 +65,7 @@ describe('CsmrHsmController', () => {
         payloadMock.digest,
       );
     });
+
     it('should resolve to stringified hsm.sign response', async () => {
       const base64result = Buffer.from(signResolvedValue).toString('base64');
       // When
@@ -73,7 +73,23 @@ describe('CsmrHsmController', () => {
       // Then
       expect(result).toBe(base64result);
     });
-    it('should resolve to "ERROR" if execution throwed', async () => {
+
+    it('should log an error if execution threw', async () => {
+      // Given
+      const errorMock = new Error();
+      signMock.mockImplementationOnce(() => {
+        throw errorMock;
+      });
+      // When
+      await csmrHsmController.sign(payloadMock);
+      // Then
+      expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.err).toHaveBeenCalledWith(
+        new CsmrHsmSignException(),
+      );
+    });
+
+    it('should resolve to "ERROR" if execution threw', async () => {
       hsmServiceMock.sign.mockRejectedValueOnce(Error('something not good'));
       // When
       const result = await csmrHsmController.sign(payloadMock);
@@ -98,6 +114,21 @@ describe('CsmrHsmController', () => {
       const result = csmrHsmController.random(payload);
       // Then
       expect(result).toBe(randomString);
+    });
+
+    it('should log an error if execution throwed', () => {
+      // Given
+      const errorMock = new Error();
+      hsmServiceMock.genRandom.mockImplementationOnce(() => {
+        throw errorMock;
+      });
+      // When
+      csmrHsmController.random(payload);
+      // Then
+      expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.err).toHaveBeenCalledWith(
+        new CsmrHsmRandomException(),
+      );
     });
 
     it('should return "ERROR" if execution throwed', () => {

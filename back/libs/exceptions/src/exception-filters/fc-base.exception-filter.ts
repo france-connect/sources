@@ -1,25 +1,19 @@
-import { Response } from 'express';
-
 import { Catch } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 
-import {
-  ApiContentType,
-  ApiErrorMessage,
-  ApiErrorParams,
-  AppConfig,
-} from '@fc/app';
+import { ApiContentType, ApiErrorParams, AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+import { ViewTemplateService } from '@fc/view-templates';
 
 @Catch()
 export abstract class FcBaseExceptionFilter extends BaseExceptionFilter {
   constructor(
     protected readonly config: ConfigService,
     protected readonly logger: LoggerService,
+    protected readonly viewTemplate: ViewTemplateService,
   ) {
     super();
-    this.logger.setContext(this.constructor.name);
   }
 
   protected getStackTraceArray(exception: any) {
@@ -46,38 +40,43 @@ export abstract class FcBaseExceptionFilter extends BaseExceptionFilter {
       type: exception.constructor.name,
       code,
       id,
-      message,
       stackTrace,
       redirect,
     };
-    this.logger.warn(exceptionObject);
-    this.logger.trace(exceptionObject, LoggerLevelNames.WARN);
+    this.logger.err(exceptionObject, message);
   }
 
   protected errorOutput(errorParam: ApiErrorParams): void {
-    const { error, httpResponseCode, res } = errorParam;
+    const { httpResponseCode, res } = errorParam;
     const { apiOutputContentType } = this.config.get<AppConfig>('App');
 
-    this.logger.trace(error, LoggerLevelNames.ERROR);
+    /**
+     * Interceptors are not run in case of route not handled by our app (404)
+     * So we need to manually bind template helpers.
+     */
+    this.viewTemplate.bindMethodsToResponse(res);
 
     res.status(httpResponseCode);
 
     switch (apiOutputContentType) {
       case ApiContentType.HTML:
-        this.getApiOutputHtml(res, error);
+        this.getApiOutputHtml(errorParam);
         break;
 
       case ApiContentType.JSON:
-        this.getApiOutputJson(res, error);
+        this.getApiOutputJson(errorParam);
         break;
     }
   }
 
-  private getApiOutputHtml(res: Response, error: ApiErrorMessage): void {
-    res.render('error', error);
+  private getApiOutputHtml(errorParam: ApiErrorParams): void {
+    const { res, ...params } = errorParam;
+    res.render('error', params);
   }
 
-  private getApiOutputJson(res: Response, error: ApiErrorMessage): void {
+  private getApiOutputJson(errorParam: ApiErrorParams): void {
+    const { res, error } = errorParam;
+
     res.json(error);
   }
 }

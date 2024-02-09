@@ -15,6 +15,9 @@ export class SessionNotFoundException extends SessionBaseException {
   public readonly code = ErrorCode.NOT_FOUND;
   public readonly httpStatusCode = HttpStatus.UNAUTHORIZED;
 
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'user authentication aborted';
+
   /* eslint-disable @typescript-eslint/no-unused-vars */
   constructor(param: string) {
     // param désactivé car pas utilisé dans le message usager.

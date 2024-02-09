@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { SetIdpSettingsPayloadDto } from '../dto';
 import { IPivotIdentity } from '../interfaces';
@@ -17,12 +19,7 @@ describe('CsmrUserPreferencesController', () => {
   let csmrUserPreferencesController: CsmrUserPreferencesController;
   let validationDtoMock;
 
-  const loggerMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const csmrUserPreferencesServiceMock = {
     getIdpSettings: jest.fn(),
@@ -114,6 +111,22 @@ describe('CsmrUserPreferencesController', () => {
       expect(result).toEqual(formatUserIdpSettingsListResultMock);
     });
 
+    it('should log error if error on csmrUserPreferencesService.getIdpSettings() occurs', async () => {
+      // Given
+      validationDtoMock.mockResolvedValueOnce([]);
+      const errorMock = new Error('unknown error');
+      csmrUserPreferencesServiceMock.getIdpSettings.mockRejectedValueOnce(
+        errorMock,
+      );
+      // When
+      await csmrUserPreferencesController.getIdpSettings(
+        getIdpSettingsPayloadMock,
+      );
+      // Then
+      expect(loggerMock.err).toHaveBeenCalledTimes(1);
+      expect(loggerMock.err).toHaveBeenCalledWith(errorMock);
+    });
+
     it('should return `ERROR` if error on csmrUserPreferencesService.getIdpSettings() occurs', async () => {
       // Given
       validationDtoMock.mockResolvedValueOnce([]);
@@ -197,6 +210,21 @@ describe('CsmrUserPreferencesController', () => {
       );
       // Then
       expect(result).toStrictEqual(expectedResult);
+    });
+
+    it('should log error if error on csmrUserPreferencesService.setIdpSettings() occurs', async () => {
+      // Given
+      const errorMock = new Error('unknown error');
+      csmrUserPreferencesServiceMock.setIdpSettings.mockRejectedValueOnce(
+        errorMock,
+      );
+      // When
+      await csmrUserPreferencesController.setIdpSettings(
+        setIdpSettingsPayloadMock,
+      );
+      // Then
+      expect(loggerMock.err).toHaveBeenCalledTimes(1);
+      expect(loggerMock.err).toHaveBeenCalledWith(errorMock);
     });
 
     it('should return `ERROR` if an error on csmrUserPreferencesService.setIdpSettings() occurs', async () => {

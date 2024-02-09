@@ -11,6 +11,8 @@ export default {
   name: 'EIDAS_BRIDGE',
   urlPrefix: '',
   assetsPaths: env.json('ASSETS_PATHS'),
+  assetsDsfrPaths: env.json('DSFR_ASSETS_PATHS'),
+  assetsCacheTtl: env.number('ASSETS_CACHE_TTL'),
   viewsPaths: env.json('VIEWS_PATHS'),
   countryIsoList: env.json('AVAILABLE_COUNTRIES'),
   httpsOptions: {

@@ -4,7 +4,6 @@ import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { BridgePayload, BridgeResponse } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { CsmrHttpProxyService } from './csmr-http-proxy.service';
 
@@ -12,12 +11,6 @@ jest.mock('rxjs');
 
 describe('CsmrHttpProxyService', () => {
   let service: CsmrHttpProxyService;
-
-  const loggerService = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-  };
 
   const httpService = {
     get: jest.fn(),
@@ -33,10 +26,8 @@ describe('CsmrHttpProxyService', () => {
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [LoggerService, HttpService, CsmrHttpProxyService],
+      providers: [HttpService, CsmrHttpProxyService],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerService)
       .overrideProvider(HttpService)
       .useValue(httpService)
       .compile();
@@ -49,16 +40,6 @@ describe('CsmrHttpProxyService', () => {
     // When
     // Then
     expect(service).toBeDefined();
-  });
-
-  it('should call logger at init', () => {
-    // Given
-    // When
-    // Then
-    expect(loggerService.setContext).toHaveBeenCalledTimes(1);
-    expect(loggerService.setContext).toHaveBeenCalledWith(
-      service.constructor.name,
-    );
   });
 
   describe('forwardRequest()', () => {

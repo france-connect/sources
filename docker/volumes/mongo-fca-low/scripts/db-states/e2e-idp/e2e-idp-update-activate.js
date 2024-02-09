@@ -1,5 +1,5 @@
 db.provider.update(
-  { uid: "ebe0026f-d6e3-4807-bfa2-c65c8ae46d07" },
+  { uid: "0e7c099f-fe86-49a0-b7d1-19df45397212" },
   {
     $set: {
       title: "Idp test Updated, activated",

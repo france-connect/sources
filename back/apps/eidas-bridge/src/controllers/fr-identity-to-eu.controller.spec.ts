@@ -13,7 +13,7 @@ import {
   EidasToOidcService,
   OidcToEidasService,
 } from '@fc/eidas-oidc-mapper';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import {
   OidcClientConfigService,
   OidcClientService,
@@ -22,6 +22,7 @@ import {
 import { SessionNotFoundException, SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { EidasBridgeIdentityDto } from '../dto';
@@ -52,11 +53,7 @@ describe('FrIdentityToEuController', () => {
     get: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const eidasToOidcServiceMock = {
     mapPartialRequest: jest.fn(),
@@ -430,6 +427,23 @@ describe('FrIdentityToEuController', () => {
     describe('query contains an oidc error', () => {
       const query = { ...oidcErrorMock };
 
+      it('should log the error', async () => {
+        // action
+        await frIdentityToEuController.redirectToEidasResponseProxy(
+          req,
+          query,
+          sessionServiceEidasMock,
+          sessionServiceOidcMock,
+        );
+
+        // expect
+        expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
+        expect(loggerServiceMock.err).toHaveBeenCalledWith(
+          { error: query.error },
+          query.error_description,
+        );
+      });
+
       it('should call mapPartialResponseFailure', async () => {
         // action
         await frIdentityToEuController.redirectToEidasResponseProxy(
@@ -523,6 +537,26 @@ describe('FrIdentityToEuController', () => {
           'validateIdentity',
         );
         validateIdentityMock.mockResolvedValueOnce();
+      });
+
+      it('should log an error if the oidc call rejects', async () => {
+        // setup
+        const errorMock = new Error('oops');
+        oidcClientServiceMock.getUserInfosFromProvider.mockRejectedValueOnce(
+          errorMock,
+        );
+
+        // action
+        await frIdentityToEuController.redirectToEidasResponseProxy(
+          req,
+          query,
+          sessionServiceEidasMock,
+          sessionServiceOidcMock,
+        );
+
+        // expect
+        expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
+        expect(loggerServiceMock.err).toHaveBeenCalledWith(errorMock);
       });
 
       it('should set the session with the eidas partial failure reponse if an oidc call rejects', async () => {

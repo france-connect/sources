@@ -5,7 +5,7 @@ import { Type } from 'class-transformer';
 import { IsObject, IsUrl, ValidateNested } from 'class-validator';
 
 import { AppConfig } from '@fc/app';
-import { LoggerConfig } from '@fc/logger-legacy';
+import { LoggerConfig } from '@fc/logger';
 
 export class Core {
   @IsUrl()

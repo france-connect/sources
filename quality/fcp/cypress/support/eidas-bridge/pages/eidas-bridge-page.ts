@@ -6,7 +6,7 @@ export default class EidasBridgePage {
   }
 
   getCountryGrid(): ChainableElement {
-    return cy.get('.container-flags');
+    return cy.get('[data-testid="country-flags"]');
   }
 
   getCountryButton(country: string): ChainableElement {

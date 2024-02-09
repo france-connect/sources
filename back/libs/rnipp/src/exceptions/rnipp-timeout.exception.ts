@@ -16,4 +16,8 @@ export class RnippTimeoutException extends RnippBaseException {
   public readonly message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
   public readonly httpStatusCode = HttpStatus.GATEWAY_TIMEOUT;
+
+  static ERROR = 'temporarily_unavailable';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

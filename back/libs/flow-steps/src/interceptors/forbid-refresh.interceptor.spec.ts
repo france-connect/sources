@@ -4,7 +4,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 import { SessionService } from '@fc/session';
 
 import { getSessionServiceMock } from '@mocks/session';
@@ -53,11 +52,6 @@ describe('ForbidRefreshInterceptor', () => {
     handle: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  };
-
   const configServiceMock = {
     get: jest.fn(),
   };
@@ -74,17 +68,10 @@ describe('ForbidRefreshInterceptor', () => {
     jest.resetAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ForbidRefreshInterceptor,
-        ConfigService,
-        LoggerService,
-        Reflector,
-      ],
+      providers: [ForbidRefreshInterceptor, ConfigService, Reflector],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
       .compile();
@@ -101,7 +88,6 @@ describe('ForbidRefreshInterceptor', () => {
 
   it('should be defined', () => {
     expect(interceptor).toBeDefined();
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
   });
 
   describe('intercept', () => {

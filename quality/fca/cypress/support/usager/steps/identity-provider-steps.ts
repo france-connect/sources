@@ -8,7 +8,7 @@ let identityProviderPage: IdentityProviderPage;
 
 Then(
   /^je (suis|ne suis pas) redirigé vers la page login du fournisseur d'identité$/,
-  function (text) {
+  function (text: string) {
     const expectVisible = text === 'suis';
     identityProviderPage = new IdentityProviderPage(this.identityProvider);
     if (expectVisible) {
@@ -34,4 +34,16 @@ When("je m'authentifie avec succès", function () {
   const userCredentials: UserCredentials = currentUser.getCredentials(idpId);
   expect(userCredentials).to.exist;
   identityProviderPage.login(userCredentials);
+});
+
+When("je saisi manuellement l'identité de l'utilisateur", function () {
+  expect(this.user).to.exist;
+
+  const currentUser: User = this.user;
+
+  identityProviderPage.useCustomIdentity(currentUser);
+});
+
+Then('le champ identifiant correspond à {string}', function (login: string) {
+  identityProviderPage.getLogin().invoke('val').should('be.equal', login);
 });

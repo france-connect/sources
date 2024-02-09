@@ -8,6 +8,8 @@ export * from './oidc-client-idp-failed-to-fetch-blacklist.exception';
 export * from './oidc-client-idp-not-found.exception';
 export * from './oidc-client-invalid-state.exception';
 export * from './oidc-client-missing-code.exception';
+export * from './oidc-client-missing-identity-sub.exception';
 export * from './oidc-client-missing-state.exception';
 export * from './oidc-client-token-failed.exception';
+export * from './oidc-client-token-result-failed.exception';
 export * from './oidc-client-userinfos-failed.exception';

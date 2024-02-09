@@ -2,8 +2,10 @@ import { EventBus } from '@nestjs/cqrs';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { MinistriesService } from './ministries.service';
 
@@ -58,11 +60,7 @@ describe('MinistriesService', () => {
     validMinistryMock3,
   ];
 
-  const loggerMock = {
-    setContext: jest.fn(),
-    warn: jest.fn(),
-    debug: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const repositoryMock = {
     find: jest.fn(),
@@ -185,7 +183,7 @@ describe('MinistriesService', () => {
       // action
       await service['findAllMinistries']();
       // expect
-      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
     });
 
     it('should filter out any entry exluded by the DTO', async () => {

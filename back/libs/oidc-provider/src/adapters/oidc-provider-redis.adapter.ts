@@ -1,11 +1,8 @@
 import { isEmpty } from 'lodash';
 import { Adapter, AdapterConstructor } from 'oidc-provider';
 
-import { Inject } from '@nestjs/common';
-
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { IServiceProviderAdapter } from '@fc/oidc';
-import { Redis, REDIS_CONNECTION_TOKEN } from '@fc/redis';
+import { RedisService } from '@fc/redis';
 
 import {
   OidcProviderParseRedisResponseException,
@@ -45,8 +42,7 @@ export class OidcProviderRedisAdapter implements Adapter {
     /**
      * Bound arguments
      */
-    private readonly logger: LoggerService,
-    @Inject(REDIS_CONNECTION_TOKEN) private readonly redis: Redis,
+    private readonly redis: RedisService,
     private readonly serviceProvider: IServiceProviderAdapter,
     /**
      * Instantiation time argument,
@@ -71,7 +67,6 @@ export class OidcProviderRedisAdapter implements Adapter {
      */
     const boundConstructor = OidcProviderRedisAdapter.bind(
       null,
-      oidcProviderService.logger,
       oidcProviderService.redis,
       serviceProviderService,
     );
@@ -160,7 +155,7 @@ export class OidcProviderRedisAdapter implements Adapter {
     multi.rpush(grantKey, key);
     // if you're seeing grant key lists growing out of acceptable proportions consider using LTRIM
     // here to trim the list to an appropriate length
-    const ttl = await this.redis.ttl(grantKey);
+    const ttl = await this.redis.client.ttl(grantKey);
     if (expiresIn > ttl) {
       multi.expire(grantKey, expiresIn);
     }
@@ -179,10 +174,7 @@ export class OidcProviderRedisAdapter implements Adapter {
   }
 
   async upsert(id: string, payload: any, expiresIn: number) {
-    this.logger.debug('Upsert');
-
     const key = this.key(id);
-    this.logger.trace({ upsert: { id, payload, expiresIn, key } });
 
     if (expiresIn && isNaN(expiresIn)) {
       throw new TypeError(
@@ -190,7 +182,7 @@ export class OidcProviderRedisAdapter implements Adapter {
       );
     }
 
-    const multi = this.redis.multi();
+    const multi = this.redis.client.multi();
 
     this.saveKey(multi, key, payload);
 
@@ -213,7 +205,6 @@ export class OidcProviderRedisAdapter implements Adapter {
   private async findServiceProvider(spId: string) {
     const sp = await this.serviceProvider.getById(spId);
 
-    this.logger.trace({ spId, sp });
     return sp;
   }
 
@@ -221,14 +212,11 @@ export class OidcProviderRedisAdapter implements Adapter {
     const key = this.key(id);
 
     const command = consumable.has(this.contextName) ? 'hgetall' : 'get';
-    const data = await this.redis[command](key);
+    const data = await this.redis.client[command](key);
 
     if (isEmpty(data)) {
-      this.logger.trace({ find: { id, key, data } }, LoggerLevelNames.WARN);
       return void 0;
     }
-
-    this.logger.trace({ find: { id, key, data } });
 
     const wrappedData = typeof data === 'string' ? { payload: data } : data;
     const { payload, ...rest } = wrappedData;
@@ -242,8 +230,6 @@ export class OidcProviderRedisAdapter implements Adapter {
   }
 
   async find(id: string) {
-    this.logger.debug('Find');
-
     if (this.contextName === 'Client') {
       return await this.findServiceProvider(id);
     }
@@ -252,34 +238,27 @@ export class OidcProviderRedisAdapter implements Adapter {
   }
 
   async findByUid(uid: string) {
-    const id = await this.redis.get(this.uidKeyFor(uid));
+    const id = await this.redis.client.get(this.uidKeyFor(uid));
     return this.find(id);
   }
 
   async findByUserCode(userCode: string) {
-    const id = await this.redis.get(this.userCodeKeyFor(userCode));
+    const id = await this.redis.client.get(this.userCodeKeyFor(userCode));
     return this.find(id);
   }
 
   async destroy(id: string) {
-    this.logger.debug('Destroy');
-    this.logger.trace({ destroy: { id, key: this.key(id) } });
-
     const key = this.key(id);
-    await this.redis.del(key);
+    await this.redis.client.del(key);
   }
 
   async revokeByGrantId(grantId: string) {
-    this.logger.debug('RevokeByGrantId');
-    this.logger.trace({
-      revoke: {
-        grantId,
-        grantKey: this.grantKeyFor(grantId),
-      },
-    });
-
-    const multi = this.redis.multi();
-    const tokens = await this.redis.lrange(this.grantKeyFor(grantId), 0, -1);
+    const multi = this.redis.client.multi();
+    const tokens = await this.redis.client.lrange(
+      this.grantKeyFor(grantId),
+      0,
+      -1,
+    );
     tokens.forEach((token: string) => multi.del(token));
     multi.del(this.grantKeyFor(grantId));
 
@@ -287,10 +266,7 @@ export class OidcProviderRedisAdapter implements Adapter {
   }
 
   async consume(id: string) {
-    this.logger.debug('Consume');
-    this.logger.trace({ consume: { id, key: this.key(id) } });
-
-    await this.redis.hset(
+    await this.redis.client.hset(
       this.key(id),
       'consumed',
       Math.floor(Date.now() / 1000),
@@ -329,7 +305,7 @@ export class OidcProviderRedisAdapter implements Adapter {
   private async fetchTtlAndValue(
     key: string,
   ): Promise<{ ttl: number; value: string }> {
-    const result = await this.redis.multi().ttl(key).get(key).exec();
+    const result = await this.redis.client.multi().ttl(key).get(key).exec();
 
     const [[, ttl], [, value]] = result;
 

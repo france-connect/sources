@@ -5,7 +5,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 import { UserPreferencesProtocol } from '@fc/microservices';
 import { IOidcIdentity } from '@fc/oidc';
 import { RabbitmqConfig } from '@fc/rabbitmq';
@@ -21,12 +20,9 @@ import {
 @Injectable()
 export class UserPreferencesService {
   constructor(
-    private readonly logger: LoggerService,
     private readonly config: ConfigService,
     @Inject('UserPreferencesBroker') private readonly broker: ClientProxy,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async getUserPreferencesList(
     identity: Partial<IOidcIdentity>,
@@ -45,14 +41,10 @@ export class UserPreferencesService {
 
       data = await lastValueFrom(order);
     } catch (error) {
-      this.logger.trace(error, 'Error Response from RabbitMQ');
       throw new GetUserPreferencesResponseException(error);
     }
 
     if (data === 'ERROR') {
-      this.logger.trace(
-        'Consumer has returned an ERROR while trying to get identity provider list (GET). Check consumer logs.',
-      );
       throw new GetUserPreferencesConsumerErrorException();
     }
     return data;
@@ -66,7 +58,6 @@ export class UserPreferencesService {
     const { requestTimeout } = this.config.get<RabbitmqConfig>(
       'UserPreferencesBroker',
     );
-    this.logger.trace({ idpSettings });
 
     try {
       const order = this.broker
@@ -78,14 +69,10 @@ export class UserPreferencesService {
 
       data = await lastValueFrom(order);
     } catch (error) {
-      this.logger.trace(error, 'Error Response from RabbitMQ');
       throw new SetUserPreferencesResponseException(error);
     }
 
     if (data === 'ERROR') {
-      this.logger.trace(
-        'Consumer has returned an ERROR while trying to update identity provider list (SET). Check consumer logs.',
-      );
       throw new SetUserPreferencesConsumerErrorException();
     }
 

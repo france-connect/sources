@@ -61,6 +61,12 @@
       "@fc/logger/*": [
         "libs/logger/src/*"
       ],
+      "@mocks/logger": [
+        "libs/logger/.mocks"
+      ],
+      "@mocks/logger/*": [
+        "libs/logger/.mocks/*"
+      ],
       "@fc/oidc-provider": [
         "libs/oidc-provider/src"
       ],
@@ -133,12 +139,6 @@
       "@fc/csmr-tracks/*": [
         "apps/csmr-tracks/src/*"
       ],
-      "@fc/exploitation": [
-        "apps/exploitation/src"
-      ],
-      "@fc/exploitation/*": [
-        "apps/exploitation/src/*"
-      ],
       "@fc/common": [
         "libs/common/src"
       ],
@@ -180,6 +180,12 @@
       ],
       "@fc/redis/*": [
         "libs/redis/src/*"
+      ],
+      "@mocks/redis": [
+        "libs/redis/.mocks"
+      ],
+      "@mocks/redis/*": [
+        "libs/redis/.mocks/*"
       ],
       "@fc/rabbitmq": [
         "libs/rabbitmq/src"
@@ -385,12 +391,6 @@
       "@fc/csmr-user-preferences/*": [
         "apps/csmr-user-preferences/src/*"
       ],
-      "@fc/tracks-data-provider": [
-        "apps/tracks-data-provider/src"
-      ],
-      "@fc/tracks-data-provider/*": [
-        "apps/tracks-data-provider/src/*"
-      ],
       "@fc/data-provider-core-auth": [
         "libs/data-provider-core-auth/src"
       ],
@@ -415,12 +415,6 @@
       "@fc/user-preferences/*": [
         "libs/user-preferences/src/*"
       ],
-      "@fc/partners": [
-        "apps/partners/src"
-      ],
-      "@fc/partners/*": [
-        "apps/partners/src/*"
-      ],
       "@fc/geoip-maxmind": [
         "libs/geoip-maxmind/src"
       ],
@@ -435,57 +429,15 @@
       ],
       "@mocks/jwt": [
         "libs/jwt/.mocks"
-      ],      
+      ],
       "@mocks/jwt/*": [
         "libs/jwt/.mocks/*"
-      ],
-      "@fc/postgres": [
-        "libs/postgres/src"
-      ],
-      "@fc/postgres/*": [
-        "libs/postgres/src/*"
       ],
       "@fc/csmr-account": [
         "apps/csmr-account/src"
       ],
       "@fc/csmr-account/*": [
         "apps/csmr-account/src/*"
-      ],
-      "@fc/partner-account": [
-        "libs/partner-account/src"
-      ],
-      "@fc/partner-account/*": [
-        "libs/partner-account/src/*"
-      ],
-      "@fc/partner-datapass": [
-        "libs/partner-datapass/src"
-      ],
-      "@fc/partner-datapass/*": [
-        "libs/partner-datapass/src/*"
-      ],
-      "@fc/partner-organisation": [
-        "libs/partner-organisation/src"
-      ],
-      "@fc/partner-organisation/*": [
-        "libs/partner-organisation/src/*"
-      ],
-      "@fc/partner-service-provider": [
-        "libs/partner-service-provider/src"
-      ],
-      "@fc/partner-service-provider/*": [
-        "libs/partner-service-provider/src/*"
-      ],
-      "@fc/access-control": [
-        "libs/access-control/src"
-      ],
-      "@fc/access-control/*": [
-        "libs/access-control/src/*"
-      ],
-      "@fc/partner-service-provider-configuration": [
-        "libs/partner-service-provider-configuration/src"
-      ],
-      "@fc/partner-service-provider-configuration/*": [
-        "libs/partner-service-provider-configuration/src/*"
       ],
       "@fc/mock-rnipp": [
         "apps/mock-rnipp/src"
@@ -519,7 +471,7 @@
       ],
       "@mocks/session": [
         "libs/session/.mocks"
-      ],      
+      ],
       "@mocks/session/*": [
         "libs/session/.mocks/*"
       ],
@@ -529,6 +481,24 @@
       "@fc/fqdn-to-idp-adapter-mongo/*": [
         "libs/fqdn-to-idp-adapter-mongo/src/*"
       ],
+      "@fc/async-local-storage": [
+        "libs/async-local-storage/src"
+      ],
+      "@fc/async-local-storage/*": [
+        "libs/async-local-storage/src/*"
+      ],
+      "@mocks/async-local-storage": [
+        "libs/async-local-storage/.mocks"
+      ],
+      "@mocks/async-local-storage/*": [
+        "libs/async-local-storage/.mocks/*"
+      ],
+      "@fc/view-templates": [
+        "libs/view-templates/src"
+      ],
+      "@fc/view-templates/*": [
+        "libs/view-templates/src/*"
+      ]
     }
   },
   "files": [
@@ -539,9 +509,7 @@
     "*.ts",
     "libs/**/*.ts",
     "apps/**/*.ts",
-    "instances/**/*.ts",
-    "entities/**/*.ts",
-    "migrations/**/*.ts"
+    "instances/**/*.ts"
   ],
   "exclude": [
     "node_modules",

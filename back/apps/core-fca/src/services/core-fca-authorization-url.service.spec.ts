@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientService } from '@fc/oidc-client';
 
 import {
@@ -11,12 +10,6 @@ import { CoreFcaAuthorizationUrlService } from './core-fca-authorization-url.ser
 
 describe('CoreFcaAuthorizationUrlService', () => {
   let service: CoreFcaAuthorizationUrlService;
-
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
 
   const defaultHandlerMock = {
     handle: jest.fn(),
@@ -32,13 +25,10 @@ describe('CoreFcaAuthorizationUrlService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CoreFcaAuthorizationUrlService,
-        LoggerService,
         CoreFcaDefaultAuthorizationHandler,
         CoreFcaMcpAuthorizationHandler,
       ],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(CoreFcaDefaultAuthorizationHandler)
       .useValue(defaultHandlerMock)
       .overrideProvider(CoreFcaMcpAuthorizationHandler)

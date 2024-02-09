@@ -1,6 +1,7 @@
 import {
   isHttpHeaders,
   ValidateHttpHeadersConstraint,
+  validateSetCookie,
 } from './http-headers.validator';
 
 describe('isHttpHeaders()', () => {
@@ -171,5 +172,31 @@ describe('ValidateHttpHeadersConstraint', () => {
       // expect
       expect(result).toStrictEqual('Please check the HTTP headers values');
     });
+  });
+});
+
+describe('validateSetCookie', () => {
+  describe('should validate a string', () => {
+    // When
+    const result = validateSetCookie('an acceptable string');
+
+    // Then
+    expect(result).toStrictEqual(true);
+  });
+
+  describe('should validate an array', () => {
+    // When
+    const result = validateSetCookie(['an acceptable string', 'in array']);
+
+    // Then
+    expect(result).toStrictEqual(true);
+  });
+
+  describe('should return false if it is non-ascii', () => {
+    // When
+    const result = validateSetCookie('£');
+
+    // Then
+    expect(result).toStrictEqual(false);
   });
 });

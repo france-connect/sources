@@ -1,14 +1,9 @@
-import { IsBoolean, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+/* istanbul ignore file */
 
-import { LoggerLevelNames } from '../enum';
+// declarative code
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class LoggerConfig {
-  @IsEnum(LoggerLevelNames)
-  readonly level: LoggerLevelNames;
-
-  @IsBoolean()
-  readonly isDevelopment: boolean;
-
   @IsString()
   @IsNotEmpty()
   readonly path: string;

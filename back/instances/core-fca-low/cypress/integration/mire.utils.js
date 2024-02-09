@@ -173,13 +173,15 @@ export function checkInStringifiedJson(key, value, selector = '#json') {
 }
 
 export function chooseIdpOnCore(idpId) {
-  const { ID, MINISTRY_NAME } = getIdentityProvider(idpId);
+  const { EMAIL } = getIdentityProvider(idpId);
   cy.url().should(
     'include',
     `${Cypress.env('FC_ROOT_URL')}/api/v2/interaction`,
   );
-  cy.get('#fi-search-term').type(MINISTRY_NAME);
-  cy.get(`#idp-${ID}-button`).click();
+
+  cy.get('#email-input').clear();
+  cy.get('#email-input').type(EMAIL);
+  cy.get('[data-testid="interaction-connection-button"]').click();
 }
 
 /**

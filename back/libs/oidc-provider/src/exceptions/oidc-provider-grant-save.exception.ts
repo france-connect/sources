@@ -11,4 +11,8 @@ export class OidcProviderGrantSaveException extends OidcProviderBaseException {
   public readonly code = ErrorCode.GRANT_NOT_SAVED;
   public readonly message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

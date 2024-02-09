@@ -4,18 +4,15 @@ import { Document, Model } from 'mongoose';
 import { CqrsModule, EventBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { MongooseCollectionOperationWatcherHelper } from './mongoose-collection-update-watcher.helper';
 
 describe('MongooseCollectionOperationWatcherHelper', () => {
   let service: MongooseCollectionOperationWatcherHelper;
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    warn: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const eventBusMock = {
     publish: jest.fn(),
@@ -106,6 +103,24 @@ describe('MongooseCollectionOperationWatcherHelper', () => {
         callbackMock,
       );
     });
+
+    it('should log a notice when watch is called', () => {
+      // Given
+      const callbackMock = jest.fn();
+      const bindReturnValue = Symbol();
+      const streamMock = { on: jest.fn() };
+      modelMock.watch.mockReturnValueOnce(streamMock);
+      service['operationTypeWatcher'].bind = jest
+        .fn()
+        .mockReturnValue(bindReturnValue);
+      // When
+      service['watch'](modelMock as unknown as Model<Document>, callbackMock);
+      // Then
+      expect(loggerServiceMock.notice).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.notice).toHaveBeenCalledWith(
+        `Database OperationType watcher initialization for "${modelMock.modelName}".`,
+      );
+    });
   });
   describe('connectAllWatchers', () => {
     it('should call watch function', () => {
@@ -142,8 +157,23 @@ describe('MongooseCollectionOperationWatcherHelper', () => {
       // When
       service['operationTypeWatcher'](modelNameMock, callbackMock, streamMock);
       // Then
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
       expect(callbackMock).toHaveBeenCalled();
+    });
+
+    it('should log a notice when operationTypeWatcher is called', () => {
+      // Given
+      const callbackMock = jest.fn();
+      const modelNameMock = 'modelMockedName';
+      const streamMock = {
+        operationType: 'insert',
+      } as unknown as ChangeStreamDocument;
+      // When
+      service['operationTypeWatcher'](modelNameMock, callbackMock, streamMock);
+      // Then
+      expect(loggerServiceMock.notice).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.notice).toHaveBeenCalledWith(
+        `Detected "${streamMock.operationType}" on "${modelNameMock}", calling handler.`,
+      );
     });
 
     it('should not call eventBus.publish with a bad operationType', () => {
@@ -156,8 +186,20 @@ describe('MongooseCollectionOperationWatcherHelper', () => {
       // When
       service['operationTypeWatcher'](modelNameMock, callbackMock, streamMock);
       // Then
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
       expect(callbackMock).not.toHaveBeenCalled();
+    });
+
+    it('should not log a notice when operationTypeWatcher is called with a bad operationType', () => {
+      // Given
+      const callbackMock = jest.fn();
+      const modelNameMock = 'modelMockedName';
+      const streamMock = {
+        operationType: 'wrong',
+      } as unknown as ChangeStreamDocument;
+      // When
+      service['operationTypeWatcher'](modelNameMock, callbackMock, streamMock);
+      // Then
+      expect(loggerServiceMock.notice).not.toHaveBeenCalled();
     });
   });
 });

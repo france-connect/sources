@@ -8,6 +8,10 @@ import { MailerBaseException } from './mailer-base.exception';
 export class MailerNotificationConnectException extends MailerBaseException {
   code = 2;
 
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
+
   constructor() {
     super('Une erreur technique est survenue, veuillez contacter le support.');
   }

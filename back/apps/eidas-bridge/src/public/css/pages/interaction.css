@@ -1,0 +1,116 @@
+:root {
+  --fc-fi-height: 80px;
+  --fc-fi-width: 213px;
+  --fc-fi-margin: 12px;
+  --fc-fi-grid-row-max: 4;
+  --fc-fi-img-width: 52px;
+  --fc-fi-img-height: 39px;
+}
+
+#fc-interaction-page #grid-main-providers {
+  --fc-fi-outer-margin: calc(var(--fc-fi-margin) * 2);
+  --fc-fi-outer-width: calc(var(--fc-fi-width) + var(--fc-fi-outer-margin));
+
+  max-width: calc(var(--fc-fi-outer-width) * var(--fc-fi-grid-row-max));
+  margin: 0 auto;
+}
+
+#fc-interaction-page .fc-grid--provider {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* -----------------------------------------------------------------
+
+  BUTTON
+
+----------------------------------------------------------------- */
+
+#fc-interaction-page 
+  .fc-grid--provider
+  .fc-btn--provider {
+  width: var(--fc-fi-width);
+  min-width: var(--fc-fi-width);
+  max-width: var(--fc-fi-width);
+
+  height: var(--fc-fi-height);
+  min-height: var(--fc-fi-height);
+  max-height: var(--fc-fi-height);
+
+  margin: var(--fc-fi-margin);
+  overflow: hidden;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  text-align: left;
+  align-items: center;
+}
+
+#fc-interaction-page
+  .fc-grid--provider
+  .fc-btn--provider
+  .fr-content-media__img {
+  flex: 1;
+  max-height: var(--fc-fi-img-height);
+}
+
+#fc-interaction-page
+  .fc-grid--provider
+  .fc-btn--provider
+  .fr-content-media__img
+  img {
+  vertical-align: middle;
+  height: var(--fc-fi-img-height);
+  max-width: var(--fc-fi-img-width);
+  max-height: var(--fc-fi-img-height);
+}
+
+#fc-interaction-page
+  .fc-grid--provider
+  .fc-btn--provider
+  .fr-content-media {
+    align-items: start;
+    margin: 0;
+    width: auto;
+  }
+
+#fc-interaction-page
+  .fc-grid--provider
+  .fc-btn--provider
+  .fc-text {
+  color: var(--text-title-grey);
+}
+
+#fc-interaction-page
+  .fc-grid--provider
+  .fc-btn--provider:disabled
+  .fc-text {
+  color: var(--text-mention-grey);
+}
+
+/* -----------------------------------------------------------------
+
+  BUTTON : HOVER
+
+----------------------------------------------------------------- */
+
+#fc-interaction-page .fc-grid--provider .fc-btn--provider:hover {
+  box-shadow: inset 0 0 0 2px var(--text-action-high-blue-france);
+  background-color: var(--background-alt-blue-france);
+}
+
+/* -----------------------------------------------------------------
+
+  BUTTON : DISABLED
+
+----------------------------------------------------------------- */
+
+#fc-interaction-page .fc-grid--provider .fc-btn--provider:disabled {
+  border: 0;
+  box-shadow: none;
+  font-weight: bold;
+  color: var(--text-mention-grey);
+  background-color: var(--background-alt-grey);
+}

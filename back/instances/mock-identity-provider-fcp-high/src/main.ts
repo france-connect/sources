@@ -14,7 +14,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { NestLoggerService } from '@fc/logger';
 import { MockIdentityProviderConfig } from '@fc/mock-identity-provider';
 import { SessionConfig } from '@fc/session';
 
@@ -28,6 +28,7 @@ async function bootstrap() {
   });
   const {
     httpsOptions: { key, cert },
+    viewsPaths,
   } = configService.get<AppConfig>('App');
 
   const httpsOptions = key && cert ? { key, cert } : null;
@@ -49,7 +50,12 @@ async function bootstrap() {
      */
     bodyParser: false,
     httpsOptions,
+    bufferLogs: true,
   });
+
+  const logger = await app.resolve(NestLoggerService);
+
+  app.useLogger(logger);
 
   /**
    * @see https://expressjs.com/fr/api.html#app.set
@@ -96,11 +102,13 @@ async function bootstrap() {
    */
   app.use(urlencoded({ extended: false }));
 
-  const logger = await app.resolve(LoggerService);
-  app.useLogger(logger);
-
   app.engine('ejs', renderFile);
-  app.set('views', [join(__dirname, 'views')]);
+  app.set(
+    'views',
+    viewsPaths.map((viewsPath) => {
+      return join(__dirname, viewsPath, 'views');
+    }),
+  );
   app.setViewEngine('ejs');
   app.useStaticAssets(join(__dirname, 'public'));
 

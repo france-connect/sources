@@ -16,4 +16,7 @@ export class EidasBridgeInvalidFRIdentityException extends EidasBridgeBaseExcept
   message =
     "Un problème lié à vos données d'identité empêche la connexion d'aboutir. Nous vous invitons à nous contacter pour corriger le problème.";
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
+
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'user authentication aborted';
 }

@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { TracksProtocol } from '@fc/microservices';
 import { TracksResults } from '@fc/tracks';
 
@@ -13,9 +13,7 @@ export class CsmrTracksController {
   constructor(
     private readonly logger: LoggerService,
     private readonly tracks: CsmrTracksService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * The payload is received by RabbitMQ, the application is sync with RabbitMQ
@@ -62,8 +60,6 @@ export class CsmrTracksController {
       `New message received with pattern "${TracksProtocol.Commands.GET}"`,
     );
 
-    this.logger.trace({ payload });
-
     const { identity, options } = payload;
 
     try {
@@ -71,8 +67,7 @@ export class CsmrTracksController {
 
       return tracks;
     } catch (error) {
-      this.logger.error(JSON.stringify(error.stack));
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
+      this.logger.err(error);
       /**
        * @todo #825 implement Error protocol
        *

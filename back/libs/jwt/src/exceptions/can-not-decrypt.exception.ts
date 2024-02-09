@@ -10,4 +10,8 @@ import { JwtBaseException } from './jwt-base.exception';
 export class CanNotDecryptException extends JwtBaseException {
   code = ErrorCode.CAN_NOT_DECRYPT;
   message = 'Can not decrypt';
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

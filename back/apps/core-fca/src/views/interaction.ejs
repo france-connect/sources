@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr" data-fr-scheme="light">
+  <head>
+    <%- include('includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/pages/interaction.css" />
+    <title>Connexion - choix du compte</title>
+  </head>
+  <body id="fc-interaction-page">
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main>
+          <div class="fr-container fr-mt-5w fr-mt-md-8w">
+            <section class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
+              <div class="fr-col-lg-5 fr-col-md-6 fr-col-sm-9 fr-col-xs-12">
+              <div class="fr-notice fr-notice--info fr-mb-2w">
+                <div class="fr-container">
+                    <div class="fr-notice__body">
+                        <p class="fr-notice__title">AgentConnect évolue : c'est encore plus simple avec la connexion par email.</p>
+                    </div>
+                </div>
+              </div>
+              <div class="fc-text--left">
+                <%- include('pages/interaction/interaction.anonymous.ejs') %>
+                <%- include('pages/interaction/interaction.welcome.ejs') %>
+                <%- include('pages/interaction/interaction.email.ejs') %>
+                <p class="fr-mt-md-2w"><a href="https://tally.so/r/w5jJVN" target="_blank"  rel="noreferrer noopener">Que pensez-vous d'AgentConnect?</a></p>
+              </div>
+            </div>
+            </section>
+          </div>
+        </main>
+      </div>
+      <%- include('includes/footer.ejs') %>
+    </div>
+    <%- include('includes/scripts.ejs') %>
+    <script type="text/javascript" src="/js/email-fca.js" defer></script>
+  </body>
+</html>

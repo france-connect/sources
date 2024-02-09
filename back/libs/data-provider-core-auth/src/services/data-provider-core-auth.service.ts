@@ -5,7 +5,6 @@ import { Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 import { OidcIdentityDto } from '@fc/oidc';
 
 import { CheckTokenResponseDto, DataProviderCoreAuthConfig } from '../dto';
@@ -23,11 +22,8 @@ const VALIDATION_OPTIONS = {
 export class DataProviderCoreAuthService {
   constructor(
     private readonly config: ConfigService,
-    private readonly logger: LoggerService,
     private readonly http: HttpService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async getIdentity(token: string): Promise<OidcIdentityDto> {
     const response = await this.checkToken(token);
@@ -38,7 +34,6 @@ export class DataProviderCoreAuthService {
       VALIDATION_OPTIONS,
     );
     if (errors.length > 0) {
-      this.logger.trace(errors);
       throw new InvalidIdentityException();
     }
 

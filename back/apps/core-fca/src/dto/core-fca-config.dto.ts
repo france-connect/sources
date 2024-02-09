@@ -4,11 +4,11 @@
 import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
-import { AppConfig } from '@fc/app';
 import { CoreConfig } from '@fc/core';
 import { CryptographyFcaConfig } from '@fc/cryptography-fca';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
-import { LoggerConfig } from '@fc/logger-legacy';
+import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
 import { MongooseConfig } from '@fc/mongoose';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
@@ -18,6 +18,8 @@ import { RedisConfig } from '@fc/redis';
 import { ServiceProviderAdapterMongoConfig } from '@fc/service-provider-adapter-mongo';
 import { SessionConfig } from '@fc/session';
 import { TrackingConfig } from '@fc/tracking';
+
+import { AppConfig } from './app-config.dto';
 
 export class CoreFcaConfig {
   @IsObject()
@@ -34,6 +36,11 @@ export class CoreFcaConfig {
   @ValidateNested()
   @Type(() => LoggerConfig)
   readonly Logger: LoggerConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => LoggerLegacyConfig)
+  readonly LoggerLegacy: LoggerLegacyConfig;
 
   @IsObject()
   @ValidateNested()

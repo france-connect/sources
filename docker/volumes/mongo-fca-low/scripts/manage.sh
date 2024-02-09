@@ -13,6 +13,10 @@ usage() {
 }
 
 drop_database() {
+  eval "$MONGO $SCRIPTS_DIR/drop-db.js";
+}
+
+reset_database() {
   eval "$MONGO $SCRIPTS_DIR/mongo-reset.js";
 }
 
@@ -25,7 +29,7 @@ reset_state() {
 
   SCRIPT_TO_EXEC="$SCRIPTS_DIR/$STATE/index.js";
 
-  drop_database;
+  reset_database;
 
   if [ ! -f $SCRIPT_TO_EXEC ]; then
     echo "The state $STATE does not exists in $SCRIPT_TO_EXEC !";

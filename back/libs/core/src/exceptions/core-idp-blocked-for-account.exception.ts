@@ -14,6 +14,9 @@ export class CoreIdpBlockedForAccountException extends CoreBaseException {
 
   public readonly httpStatusCode = HttpStatus.FORBIDDEN;
 
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'user authentication aborted';
+
   constructor() {
     super(
       "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser.",

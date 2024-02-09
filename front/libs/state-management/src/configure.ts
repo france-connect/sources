@@ -1,4 +1,4 @@
-import { createStore, Middleware, Reducer, ReducersMapObject, Store } from 'redux';
+import { legacy_createStore, Middleware, Reducer, ReducersMapObject, Store } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
@@ -25,7 +25,11 @@ export const configure = <S extends GlobalState>(
   const persistedReducers: Reducer = persistReducer<S>(persistConfig, createRootReducers);
 
   const bindedMiddlewares = bindMiddlewares(middlewares as Middleware[], shouldUseStoreDebug);
-  const store: Store<S, FSA> = createStore(persistedReducers, initialState, bindedMiddlewares);
+  const store: Store<S, FSA> = legacy_createStore(
+    persistedReducers,
+    initialState,
+    bindedMiddlewares,
+  );
   const persistor = persistStore(store);
   return { persistor, store };
 };

@@ -23,6 +23,7 @@ export interface IdpFCMetadata {
     [key: string]: string;
   };
   maxAuthorizedAcr: string;
+  amr: string[];
 }
 
 export type IdentityProviderMetadata = IdpFCMetadata & {

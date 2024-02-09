@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService } from '@fc/session';
@@ -22,9 +22,7 @@ export class SessionCsrfService {
   constructor(
     private readonly logger: LoggerService,
     private readonly cryptography: CryptographyService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * @TODO #203
@@ -34,7 +32,6 @@ export class SessionCsrfService {
     const csrfTokenLength = 32;
     const csrfToken: string =
       this.cryptography.genRandomString(csrfTokenLength);
-    this.logger.trace({ csrfToken });
     return csrfToken;
   }
 
@@ -42,7 +39,6 @@ export class SessionCsrfService {
     sessionOidc: ISessionService<OidcClientSession>,
     csrfToken: string,
   ): Promise<boolean> {
-    this.logger.trace({ csrfToken });
     return await sessionOidc.set({ csrfToken });
   }
 
@@ -54,13 +50,11 @@ export class SessionCsrfService {
       await sessionOidc.get();
 
     if (csrfToken !== csrfTokenSession) {
-      this.logger.trace({ csrfToken, csrfTokenSession }, LoggerLevelNames.WARN);
+      this.logger.err({ csrfToken, csrfTokenSession }, 'Invalid CSRF token');
       throw new Error(
         'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
       );
     }
-
-    this.logger.trace({ check: { csrfToken, csrfTokenSession } });
 
     return true;
   }

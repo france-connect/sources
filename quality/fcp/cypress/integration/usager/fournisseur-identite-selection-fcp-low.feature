@@ -67,12 +67,24 @@ Fonctionnalité: Fournisseur Identité - Sélection - fcp-low
     Et le code d'erreur FranceConnect est "Y020017"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."
 
-  @ci
-  Scénario: Connexion d'un usager - erreur connexion abandonnée
+  Scénario: Connexion d'un usager - erreur si on force la connexion vers un FI inexistant
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Quand je clique sur le lien retour vers le fournisseur de service
-    Alors je suis redirigé vers la page erreur du fournisseur de service
-    Et le titre de l'erreur fournisseur de service est "access_denied"
-    Et la description de l'erreur fournisseur de service est "User auth aborted"
+    Et que j'utilise un fournisseur d'identité "par défaut"
+    Et que le fournisseur d'identité est actif dans la mire
+    Quand je force l'utilisation d'un fournisseur d'identité inexistant
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y020019"
+    Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."
+
+  Scénario: Connexion d'un usager - erreur si on force la connexion via un FI avec un csrf invalide
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que j'utilise un fournisseur d'identité "par défaut"
+    Et que le fournisseur d'identité est actif dans la mire
+    Quand je force l'utilisation d'un fournisseur d'identité avec un csrf non valide
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y190007"
+    Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."

@@ -1,5 +1,4 @@
-import { IProviderMappings } from '@fc/scopes/interfaces';
-
+import { IProviderMappings } from '../../interfaces';
 import { claims } from './cnam.claims';
 import { labels } from './cnam.labels';
 import { provider } from './cnam.provider';

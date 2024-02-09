@@ -16,4 +16,7 @@ export class DataProviderInvalidCredentialsException extends DataProviderAdapter
   message = 'Client authentication failed.';
   public readonly httpStatusCode = HttpStatus.UNAUTHORIZED;
   public readonly error = 'invalid_client';
+
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'user authentication aborted';
 }

@@ -27,10 +27,10 @@ Fonctionnalité: Connexion ACR
 
     @ci
     Exemples:
-      | acrValues            | method |
-      | eidas1               | get    |
-      | eidas1               | post   |
-      | niveau_inconnu       | get    |
+      | acrValues      | method |
+      | eidas1         | get    |
+      | eidas1         | post   |
+      | niveau_inconnu | get    |
 
     Exemples:
       | acrValues            | method |
@@ -55,6 +55,7 @@ Fonctionnalité: Connexion ACR
       | eidas2 eidas3  | post   | eidas2    |
       | inconnu eidas3 | get    | eidas3    |
 
+  @ci
   Plan du Scénario: Connexion ACR - FCP low - cinématique "<spAcr>" avec FI retournant niveau "<idpAcr>"
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
@@ -62,7 +63,7 @@ Fonctionnalité: Connexion ACR
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Et que j'utilise un fournisseur d'identité avec niveau de sécurité "eidas1"
+    Et que j'utilise un fournisseur d'identité avec niveau de sécurité "eidas2"
     Et que je clique sur le fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que le fournisseur d'identité garantit un niveau de sécurité "<idpAcr>"
@@ -75,32 +76,38 @@ Fonctionnalité: Connexion ACR
     Et la cinématique a utilisé le niveau de sécurité "<actualAcr>"
     Et le fournisseur de service a accès aux informations du scope "tous les scopes"
 
-    @ci
-    Exemples:
-      | spAcr  | idpAcr | actualAcr |
-      | eidas1 | eidas3 | eidas1    |
-
     Exemples:
       | spAcr  | idpAcr | actualAcr |
       | eidas1 | eidas1 | eidas1    |
       | eidas1 | eidas2 | eidas1    |
 
-  Plan du Scénario: Connexion ACR - FCP low - erreur FI retourne un niveau <idpAcr>
+  Scénario: Connexion ACR - FCP low - erreur FI retourne un niveau inconnu
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
-    Et que le fournisseur de service requiert un niveau de sécurité "<spAcr>"
+    Et que le fournisseur de service requiert un niveau de sécurité "eidas1"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Et que le fournisseur d'identité garantit un niveau de sécurité "inconnu"
+    Quand je m'authentifie avec succès
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y020001"
+    Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
+
+  Scénario: Connexion ACR - FCP low - erreur FI retourne un niveau eidas2
+    Etant donné que j'utilise le fournisseur de service "par défaut"
+    Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
+    Et que le fournisseur de service requiert un niveau de sécurité "eidas1"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
     Et que j'utilise un fournisseur d'identité avec niveau de sécurité "eidas1"
     Et que je clique sur le fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
-    Et que le fournisseur d'identité garantit un niveau de sécurité "<idpAcr>"
+    Et que le fournisseur d'identité garantit un niveau de sécurité "eidas2"
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y020001"
+    Et le code d'erreur FranceConnect est "Y020018"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
-
-    Exemples:
-      | spAcr  | idpAcr  |
-      | eidas1 | inconnu |

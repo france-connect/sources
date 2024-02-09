@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { FeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { EidasIdentityDto } from '../../dto';
 import { IIdentityCheckFeatureHandler } from '../../interfaces';
@@ -15,9 +15,7 @@ import { IIdentityCheckFeatureHandler } from '../../interfaces';
 export class CoreFcpEidasIdentityCheckHandler
   implements IIdentityCheckFeatureHandler
 {
-  constructor(private readonly logger: LoggerService) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor(private readonly logger: LoggerService) {}
 
   async handle(
     identity: Partial<EidasIdentityDto>,

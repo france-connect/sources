@@ -18,5 +18,14 @@ export type ExceptionClass = {
 
 export type PathAndInstantiatedException = {
   path: string;
-  error: FcException;
+  errorInstance: FcException;
+  error: { ERROR: string; ERROR_DESCRIPTION: string };
+};
+
+export type ValidExceptionParams = {
+  hasValidScope: boolean;
+  hasValidCode: boolean;
+  hasValidHttpStatusCode: boolean;
+  hasValidError: boolean;
+  hasValidErrorDescription: boolean;
 };

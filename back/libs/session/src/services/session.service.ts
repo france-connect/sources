@@ -1,12 +1,12 @@
 import { ClassTransformOptions } from 'class-transformer';
 
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
+import { AsyncLocalStorageService } from '@fc/async-local-storage';
 import { getTransformed, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
-import { Redis, REDIS_CONNECTION_TOKEN } from '@fc/redis';
+import { RedisService } from '@fc/redis';
 
 import { SessionConfig } from '../dto';
 import {
@@ -18,12 +18,13 @@ import {
 } from '../exceptions';
 import {
   ISessionBoundContext,
-  ISessionOptions,
   ISessionRequest,
   ISessionResponse,
   ISessionService,
+  SessionStoreContentInterface,
+  SessionStoreInterface,
 } from '../interfaces';
-import { SESSION_TOKEN_OPTIONS } from '../tokens';
+import { SESSION_STORE_KEY } from '../tokens';
 import { SessionTemplateService } from './session-template.service';
 
 export type RedisQueryResult = [Error | null, any];
@@ -37,17 +38,12 @@ export class SessionService {
   // Dependency injection can require more than 4 parameters
   /* eslint-disable-next-line max-params */
   constructor(
-    @Inject(SESSION_TOKEN_OPTIONS)
-    private readonly sessionOptions: ISessionOptions,
     private readonly config: ConfigService,
-    private readonly logger: LoggerService,
-    @Inject(REDIS_CONNECTION_TOKEN)
-    private readonly redis: Redis,
+    private readonly redis: RedisService,
     private readonly cryptography: CryptographyService,
     private readonly sessionTemplate: SessionTemplateService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+    private readonly asyncLocalStorage: AsyncLocalStorageService<SessionStoreInterface>,
+  ) {}
 
   static getBoundSession<T = unknown>(
     req: ISessionRequest,
@@ -75,7 +71,29 @@ export class SessionService {
         sessionService,
         boundSessionContext,
       ),
+      commit: sessionService.commit.bind(sessionService, boundSessionContext),
     };
+  }
+
+  private async getSessionFromStore(
+    ctx: ISessionBoundContext,
+  ): Promise<SessionStoreContentInterface> {
+    const { sessionId } = ctx;
+
+    const session = this.asyncLocalStorage.get(SESSION_STORE_KEY);
+
+    if (!session) {
+      return { data: {}, sync: false, id: null };
+    }
+
+    if (!session.data || session.id !== sessionId) {
+      const data = await this.getFullSession(sessionId);
+      session.data = data;
+      session.id = sessionId;
+      session.sync = true;
+    }
+
+    return session;
   }
 
   /**
@@ -89,13 +107,13 @@ export class SessionService {
     ctx: ISessionBoundContext,
     key?: string,
   ): Promise<unknown | undefined> {
-    const session = await this.getFullSession(ctx.sessionId);
+    const session = await this.getSessionFromStore(ctx);
 
     if (key) {
-      return this.getByKey(ctx, session, key);
+      return this.getByKey(ctx, session.data, key);
     }
 
-    return this.getModule(ctx, session);
+    return this.getModule(ctx, session.data);
   }
 
   /**
@@ -110,20 +128,29 @@ export class SessionService {
     ctx: ISessionBoundContext,
     keyOrData: string | object,
     data?: unknown,
-  ): Promise<boolean> {
-    this.logger.debug('store session in redis');
-
-    const { sessionId } = ctx;
-
-    const session = await this.getFullSession(sessionId);
+  ): Promise<void> {
+    const session = await this.getSessionFromStore(ctx);
 
     if (typeof keyOrData === 'string') {
-      this.setByKey(ctx, session, keyOrData, data);
+      this.setByKey(ctx, session.data, keyOrData, data);
     } else if (typeof keyOrData === 'object') {
-      this.setModule(ctx, session, keyOrData);
+      this.setModule(ctx, session.data, keyOrData);
     }
 
-    return this.save(sessionId, session);
+    session.sync = false;
+  }
+
+  public async commit(ctx: ISessionBoundContext): Promise<boolean> {
+    const session = await this.getSessionFromStore(ctx);
+
+    if (!session.sync) {
+      const status = await this.save(ctx.sessionId, session.data);
+      session.sync = status;
+
+      return status;
+    }
+
+    return true;
   }
 
   /**
@@ -138,7 +165,7 @@ export class SessionService {
     const sessionId: string = this.getSessionIdFromCookie(req);
 
     const sessionKey: string = this.getSessionKey(sessionId);
-    await this.redis.expire(sessionKey, lifetime);
+    await this.redis.client.expire(sessionKey, lifetime);
 
     this.setCookies(res, sessionId);
 
@@ -159,7 +186,7 @@ export class SessionService {
 
     let dataCipher: string;
     try {
-      dataCipher = await this.redis.get(sessionKey);
+      dataCipher = await this.redis.client.get(sessionKey);
     } catch (error) {
       throw new SessionStorageException();
     }
@@ -173,8 +200,6 @@ export class SessionService {
 
     const data = this.unserialize(dataCipher);
     await this.validate(data);
-
-    this.logger.trace({ sessionId, data });
 
     return data;
   }
@@ -263,7 +288,7 @@ export class SessionService {
 
     const serialized = this.serialize(data);
 
-    const multi = this.redis.multi();
+    const multi = this.redis.client.multi();
 
     multi.set(key, serialized);
     multi.expire(key, lifetime);
@@ -285,31 +310,45 @@ export class SessionService {
   }
 
   async reset(req: ISessionRequest, res: ISessionResponse): Promise<string> {
-    const sessionId = this.getSessionIdFromCookie(req);
+    const { sessionId } = req;
     const sessionKey = this.getSessionKey(sessionId);
 
     res.locals.session = {};
 
-    await this.redis.del(sessionKey);
+    await this.redis.client.del(sessionKey);
+
+    this.asyncLocalStorage.set(SESSION_STORE_KEY, {
+      data: {},
+      id: sessionId,
+      sync: true,
+    });
 
     return this.init(req, res);
   }
 
   async destroy(req: ISessionRequest, res: ISessionResponse) {
-    const sessionId = this.getSessionIdFromCookie(req);
+    const { sessionId } = req;
     const sessionKey = this.getSessionKey(sessionId);
 
     res.locals.session = {};
     this.clearCookie(res);
 
-    return await this.redis.del(sessionKey);
+    return await this.redis.client.del(sessionKey);
   }
 
   async duplicate(req: ISessionRequest, res: ISessionResponse, schema) {
     const { sessionId } = req;
 
+    const context = {
+      sessionId,
+      moduleName: null,
+    };
+
+    // Commit any pending changes
+    await this.commit(context);
+
     // Fetch current session data
-    const currentData = await this.getFullSession(sessionId);
+    const { data: currentData } = await this.getSessionFromStore(context);
 
     // Keep only data in schema
     const cleanData = getTransformed(currentData, schema, DUPLICATE_OPTIONS);
@@ -317,10 +356,14 @@ export class SessionService {
     // // Init new session
     const newSessionId = this.init(req, res);
 
+    this.asyncLocalStorage.set(SESSION_STORE_KEY, {
+      data: cleanData,
+      id: newSessionId,
+      sync: false,
+    });
+
     // Bind the session to Response
     res.locals.session = cleanData;
-
-    await this.save(newSessionId, cleanData);
 
     return cleanData;
   }
@@ -333,10 +376,21 @@ export class SessionService {
     // Reset value bound to Response
     res.locals.session = {};
 
-    // Expire value stored in redis
+    const context = {
+      sessionId: req.sessionId,
+      moduleName: null,
+    };
+
+    await this.set(context, {});
+
+    /**
+     * Expire value stored in redis
+     * @info this code is not currently used
+     * @todo #1512 Handle backend session data expiration
+     */
     if (backendLifetime) {
       const sessionKey = this.getSessionKey(req.sessionId);
-      await this.redis.expire(sessionKey, backendLifetime);
+      await this.redis.client.expire(sessionKey, backendLifetime);
     }
 
     // Reset sessionId stored in browser
@@ -416,7 +470,6 @@ export class SessionService {
     try {
       dataString = JSON.stringify(data);
     } catch (error) {
-      this.logger.trace(error, LoggerLevelNames.ERROR);
       throw new SessionBadStringifyException();
     }
     const dataCipher = this.cryptography.encryptSymetric(
@@ -464,7 +517,9 @@ export class SessionService {
      * @todo #416 Add specific error code
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/416
      */
-    await validateDto(session, this.sessionOptions.schema, validationOptions);
+    const { schema } = this.config.get<SessionConfig>('Session');
+
+    await validateDto(session, schema, validationOptions);
   }
 
   /**
@@ -492,7 +547,7 @@ export class SessionService {
     key: string,
   ): Promise<RedisQueryResult[]> {
     const { lifetime } = this.config.get<SessionConfig>('Session');
-    const multi = this.redis.multi();
+    const multi = this.redis.client.multi();
 
     multi.set(key, ctx.sessionId);
     multi.expire(key, lifetime);
@@ -512,7 +567,7 @@ export class SessionService {
     if (!key) {
       throw new SessionBadAliasException();
     }
-    const multi = this.redis.multi();
+    const multi = this.redis.client.multi();
 
     multi.get(key);
 

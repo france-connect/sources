@@ -1,7 +1,9 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { AccountNotFoundException } from '../exceptions';
 import { IInteraction } from '../interfaces';
@@ -11,11 +13,7 @@ import { AccountService } from './account.service';
 describe('AccountService', () => {
   let service: AccountService;
 
-  const loggerMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const accountModel = getModelToken('Account');
 

@@ -30,8 +30,7 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "^@fc/tests-utils(|/.*)$": ["../../tests-utils/src/*"],
-      "^@fc/storybook-config(|/.*)$": ["./.storybook/*"]
+      "^@fc/tests-utils(|/.*)$": ["../../tests-utils/src/*"]
     }
   },
   "files": ["global.d.ts"]

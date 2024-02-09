@@ -1,14 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialExcept } from '@fc/common';
-import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc/tokens';
 import { OidcProviderService } from '@fc/oidc-provider';
 
 import { getSessionServiceMock } from '@mocks/session';
 
-import { RevocationTokenParamsDTO } from './dto';
+import { LogoutParamsDto, RevocationTokenParamsDTO } from './dto';
 import { OidcProviderController } from './oidc-provider.controller';
 import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
 
@@ -46,14 +45,6 @@ describe('OidcProviderController', () => {
 
   const sessionServiceMock = getSessionServiceMock();
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    verbose: jest.fn(),
-    businessEvent: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
-
   const oidcProviderConfigAppMock = {
     finishInteraction: jest.fn(),
   };
@@ -63,7 +54,6 @@ describe('OidcProviderController', () => {
       controllers: [OidcProviderController],
       providers: [
         OidcProviderService,
-        LoggerService,
         {
           provide: SERVICE_PROVIDER_SERVICE_TOKEN,
           useValue: serviceProviderServiceMock,
@@ -76,8 +66,6 @@ describe('OidcProviderController', () => {
     })
       .overrideProvider(OidcProviderService)
       .useValue(oidcProviderServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .compile();
 
     oidcProviderController = await app.get<OidcProviderController>(
@@ -97,7 +85,7 @@ describe('OidcProviderController', () => {
       // When
       oidcProviderController.getUserInfo(next);
       // Then
-      expect(next).toBeCalledTimes(1);
+      expect(next).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -128,7 +116,7 @@ describe('OidcProviderController', () => {
       // When
       oidcProviderController.postToken(next);
       // Then
-      expect(next).toBeCalledTimes(1);
+      expect(next).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -136,11 +124,12 @@ describe('OidcProviderController', () => {
     it('should call logout service', () => {
       // Given
       const next = jest.fn();
+      const queryMock = {} as LogoutParamsDto;
 
       // When
-      oidcProviderController.getEndSession(next);
+      oidcProviderController.getEndSession(next, queryMock);
       // Then
-      expect(next).toBeCalledTimes(1);
+      expect(next).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -152,7 +141,7 @@ describe('OidcProviderController', () => {
       // When
       oidcProviderController.revokeToken(next, bodyMock);
       // Then
-      expect(next).toBeCalledTimes(1);
+      expect(next).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -163,7 +152,7 @@ describe('OidcProviderController', () => {
       // When
       oidcProviderController.getJwks(next);
       // Then
-      expect(next).toBeCalledTimes(1);
+      expect(next).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -174,7 +163,7 @@ describe('OidcProviderController', () => {
       // When
       oidcProviderController.getOpenidConfiguration(next);
       // Then
-      expect(next).toBeCalledTimes(1);
+      expect(next).toHaveBeenCalledTimes(1);
     });
   });
 });

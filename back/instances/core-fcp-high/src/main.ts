@@ -21,7 +21,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { ConfigService } from '@fc/config';
 import { AppConfig } from '@fc/core-fcp';
-import { LoggerService } from '@fc/logger-legacy';
+import { NestLoggerService } from '@fc/logger/services/nest-logger.service';
 import { SessionConfig } from '@fc/session';
 
 import { AppModule } from './app.module';
@@ -36,6 +36,7 @@ async function bootstrap() {
   const {
     urlPrefix,
     assetsPaths,
+    assetsDsfrPaths,
     assetsCacheTtl,
     viewsPaths,
     httpsOptions: { key, cert },
@@ -60,7 +61,12 @@ async function bootstrap() {
      */
     bodyParser: false,
     httpsOptions,
+    bufferLogs: true,
   });
+
+  const logger = await app.resolve(NestLoggerService);
+
+  app.useLogger(logger);
 
   /**
    * @see https://expressjs.com/fr/api.html#app.set
@@ -108,10 +114,6 @@ async function bootstrap() {
    */
   app.use(urlencoded({ extended: false }));
 
-  const logger = await app.resolve(LoggerService);
-
-  app.useLogger(logger);
-
   app.setViewEngine('ejs');
   app.engine('ejs', renderFile);
   app.set(
@@ -125,33 +127,13 @@ async function bootstrap() {
    * @TODO #1203 All below useStaticAssets functions need to be removed (until line 146) when webpack has been configured to load assets from @gouvfr/dsfr package
    * @ticket FC-1203
    */
-  app.useStaticAssets(
-    join(__dirname, '../../../node_modules/@gouvfr/dsfr/dist/dsfr'),
-    {
-      prefix: '/dsfr',
-    },
-  );
+  assetsDsfrPaths.forEach(({ assetPath, prefix }) => {
+    app.useStaticAssets(join(__dirname, assetPath), {
+      maxAge: assetsCacheTtl * 1000,
+      prefix,
+    });
+  });
 
-  app.useStaticAssets(
-    join(__dirname, '../../../node_modules/@gouvfr/dsfr/dist/fonts'),
-    {
-      prefix: '/fonts',
-    },
-  );
-
-  app.useStaticAssets(
-    join(__dirname, '../../../node_modules/@gouvfr/dsfr/dist/icons'),
-    {
-      prefix: '/icons',
-    },
-  );
-
-  app.useStaticAssets(
-    join(__dirname, '../../../node_modules/@gouvfr/dsfr/dist/utility/icons'),
-    {
-      prefix: '/utility',
-    },
-  );
   assetsPaths.forEach((assetsPath) => {
     app.useStaticAssets(join(__dirname, assetsPath, 'public'), {
       maxAge: assetsCacheTtl * 1000,

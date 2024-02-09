@@ -64,7 +64,8 @@ body {
   margin-bottom: 0.5em;
 }
 
-#container .inner form label input {
+#container .inner form label input,
+#container .inner form label select  {
   width: 100%;
   outline: none;
   padding: 8px 14px;
@@ -76,6 +77,12 @@ body {
   background: #fff;
   vertical-align: middle;
   position: relative;
+}
+
+#container .inner form label input.error-input,
+#container .inner form label select.error-input {
+  color:  #eb4646;
+  border-color: #eb4646;
 }
 
 #container .inner form label input:focus {
@@ -100,4 +107,28 @@ body {
 
 #container .inner form button:hover {
   background: #0053b3;
+}
+
+#container .navigate {
+  display: block;
+  margin: 10px 0;
+  color: #502de5;
+}
+
+
+#container .error-alert {
+  background-color: #edb7b3;
+  padding: 16px;
+  color: #230911; 
+}
+
+#container p {
+  text-align: left;
+}
+
+#container .error-message {
+  color: #eb4646;
+  font-size: .8em;
+  font-style: italic;
+  text-align: left;
 }

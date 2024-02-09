@@ -15,7 +15,7 @@ import {
   OidcToEidasService,
 } from '@fc/eidas-oidc-mapper';
 import { EidasProviderSession } from '@fc/eidas-provider';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import {
   OidcClientConfigService,
   OidcClientService,
@@ -50,9 +50,7 @@ export class FrIdentityToEuController {
     private readonly eidasToOidc: EidasToOidcService,
     private readonly oidcToEidas: OidcToEidasService,
     private readonly tracking: TrackingService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   @Get(EidasBridgeRoutes.INIT_SESSION)
   @Redirect()
@@ -77,13 +75,6 @@ export class FrIdentityToEuController {
       statusCode: 302,
       url: `${EidasBridgeRoutes.BASE}${EidasBridgeRoutes.REDIRECT_TO_FC_AUTHORIZE}`,
     };
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'EidasBridgeRoutes.INIT_SESSION',
-      response,
-      route: EidasBridgeRoutes.INIT_SESSION,
-    });
 
     return response;
   }
@@ -129,13 +120,6 @@ export class FrIdentityToEuController {
 
     const response = { statusCode: 302, url: authorizationUrl };
 
-    this.logger.trace({
-      method: 'GET',
-      name: 'EidasBridgeRoutes.REDIRECT_TO_FC_AUTHORIZE',
-      response,
-      route: EidasBridgeRoutes.REDIRECT_TO_FC_AUTHORIZE,
-    });
-
     return response;
   }
 
@@ -169,7 +153,7 @@ export class FrIdentityToEuController {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { error, error_description } = query;
     if (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
+      this.logger.err({ error }, error_description);
       await this.tracking.track(RECEIVED_FC_AUTH_ERROR, trackingContext);
 
       partialEidasResponse = this.oidcToEidas.mapPartialResponseFailure({
@@ -188,7 +172,7 @@ export class FrIdentityToEuController {
           sessionEidasProvider,
         );
       } catch (error) {
-        this.logger.trace({ error }, LoggerLevelNames.WARN);
+        this.logger.err(error);
         await this.tracking.trackExceptionIfNeeded(error, trackingContext);
 
         partialEidasResponse =
@@ -205,13 +189,6 @@ export class FrIdentityToEuController {
       statusCode: 302,
       url: '/eidas-provider/response-proxy',
     };
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'EidasBridgeRoutes.REDIRECT_TO_EIDAS_RESPONSE_PROXY',
-      response,
-      route: EidasBridgeRoutes.REDIRECT_TO_EIDAS_RESPONSE_PROXY,
-    });
 
     return response;
   }
@@ -302,10 +279,9 @@ export class FrIdentityToEuController {
    */
   private computePairwisedSub(idpSub: string, spCountryCode: string): string {
     this.logger.debug(
-      `Format new Sub based on country ${spCountryCode} and sub ${idpSub}`,
+      `Format new Sub based on country "${spCountryCode}" and sub "${idpSub}"`,
     );
     const pairwisedSub = this.cryptoEidas.computeSubV1(spCountryCode, idpSub);
-    this.logger.trace({ spCountryCode, pairwisedSub });
     return pairwisedSub;
   }
 

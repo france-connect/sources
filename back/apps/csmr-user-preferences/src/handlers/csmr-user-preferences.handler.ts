@@ -4,7 +4,6 @@
 import { Injectable } from '@nestjs/common';
 
 import { FeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger-legacy';
 
 /**
  * @todo #FC-858
@@ -21,9 +20,7 @@ import { LoggerService } from '@fc/logger-legacy';
 @FeatureHandler('core-fcp-send-email')
 @FeatureHandler('core-fcp-default-identity-check')
 export class CsmrUserPreferenceHandler {
-  constructor(private readonly logger: LoggerService) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor() {}
 
   // Async needed for the handler signature
   // eslint-disable-next-line require-await

@@ -1,5 +1,6 @@
 import { Description } from '@fc/exceptions';
 
+import { ErrorCode } from '../enums';
 import { CsmrHsmBaseException } from './csmr-hsm-base.exception';
 
 /**
@@ -18,7 +19,11 @@ import { CsmrHsmBaseException } from './csmr-hsm-base.exception';
   "Une erreur s'est produite lors de la génération d'un aléa par le HSM. Contacter le support N3. Cette erreur n'est normalement pas remontée aux utilisateurs",
 )
 export class CsmrHsmRandomException extends CsmrHsmBaseException {
-  code = 2;
+  code = ErrorCode.HSM_RANDOM_GENERATE;
   message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

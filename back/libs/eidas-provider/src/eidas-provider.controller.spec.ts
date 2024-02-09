@@ -3,10 +3,11 @@ import { Request } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { ISessionRequest, ISessionResponse, SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { EidasProviderController } from './eidas-provider.controller';
@@ -25,11 +26,7 @@ describe('EidasProviderController', () => {
     get: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const eidasProviderServiceMock = {
     completeFcFailureResponse: jest.fn(),
@@ -64,17 +61,17 @@ describe('EidasProviderController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [EidasProviderController],
       providers: [
-        LoggerService,
         ConfigService,
+        LoggerService,
         EidasProviderService,
         TrackingService,
         SessionService,
       ],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerMock)
       .overrideProvider(EidasProviderService)
       .useValue(eidasProviderServiceMock)
       .overrideProvider(TrackingService)
@@ -90,7 +87,6 @@ describe('EidasProviderController', () => {
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
   });
 
   /**

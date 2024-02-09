@@ -12,7 +12,7 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { IPaginationOptions } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { ElasticsearchConfig, formatMultiMatchGroup } from '@fc/elasticsearch';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { EVENT_MAPPING, NOW, SIX_MONTHS_AGO } from '../constants';
 import {
@@ -53,9 +53,7 @@ export class CsmrTracksElasticService {
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly elasticsearch: ElasticsearchService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   onModuleInit() {
     this.eventsQuery = this.createEventsQuery();
@@ -65,13 +63,9 @@ export class CsmrTracksElasticService {
     groupIds: string[],
     options: IPaginationOptions,
   ): Promise<ICsmrTracksElasticResults> {
-    this.logger.trace({ groupIds });
-
     const rawTracks = await this.getElasticLogs(groupIds, options);
 
     const { total, hits: payload } = rawTracks.hits;
-
-    this.logger.trace({ payload });
 
     const { size, offset } = options;
 
@@ -149,13 +143,9 @@ export class CsmrTracksElasticService {
       },
     };
 
-    this.logger.trace({ query });
-
     const response: SearchResponseTracks = await this.elasticsearch.search(
       query as unknown as SearchRequest,
     );
-
-    this.logger.trace({ response });
 
     return response;
   }

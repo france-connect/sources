@@ -3,7 +3,6 @@ import * as deepFreeze from 'deep-freeze';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { LoggerService } from '@fc/logger-legacy';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 
 import { NotificationInterface } from './interfaces';
@@ -15,19 +14,14 @@ export class NotificationsService {
   constructor(
     @InjectModel('Notifications')
     private readonly notificationsModel,
-    private readonly logger: LoggerService,
     private readonly mongooseWatcher: MongooseCollectionOperationWatcherHelper,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async onModuleInit() {
     this.mongooseWatcher.watchWith(
       this.notificationsModel,
       this.refreshCache.bind(this),
     );
-    this.logger.debug('Initializing notifications');
-
     await this.getList();
   }
 
@@ -54,7 +48,6 @@ export class NotificationsService {
       .sort({ _id: 'desc' })
       .lean();
 
-    this.logger.trace({ result });
     return result;
   }
 
@@ -62,9 +55,6 @@ export class NotificationsService {
     if (refreshCache || !this.listCache) {
       const list = await this.findActiveNotifications();
       this.listCache = deepFreeze(list) as NotificationInterface[];
-      this.logger.trace({ step: 'REFRESH', list, listCache: this.listCache });
-    } else {
-      this.logger.trace({ step: 'CACHE', listCache: this.listCache });
     }
 
     return this.listCache;

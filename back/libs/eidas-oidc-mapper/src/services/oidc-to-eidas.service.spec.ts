@@ -7,8 +7,10 @@ import {
   EidasStatusCodes,
   EidasSubStatusCodes,
 } from '@fc/eidas';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcError } from '@fc/oidc';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { AcrValues } from '../enums';
 import { OidcToEidasService } from './oidc-to-eidas.service';
@@ -16,12 +18,7 @@ import { OidcToEidasService } from './oidc-to-eidas.service';
 describe('OidcToEidasService', () => {
   let service: OidcToEidasService;
 
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    error: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const eidasCogServiceMock = {
     injectLabelsForCogs: jest.fn(),
@@ -89,14 +86,6 @@ describe('OidcToEidasService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  it('should set the logger context', () => {
-    // expect
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
-    expect(loggerServiceMock.setContext).toHaveBeenCalledWith(
-      'OidcToEidasService',
-    );
   });
 
   describe('mapPartialRequest', () => {
@@ -219,8 +208,14 @@ describe('OidcToEidasService', () => {
       service.mapPartialResponseFailure(error);
 
       // expect
-      expect(loggerServiceMock.error).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.error).toHaveBeenCalledWith(error);
+      expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.err).toHaveBeenCalledWith({
+        error: 'internal_error',
+        // oidc parameter
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description:
+          'FranceConnect encountered an unexpected error, please contact the support (Code Y000000).',
+      });
     });
 
     it('should return a partial response with an "internal_error" with code Y000000 if error is an instance of Error', () => {

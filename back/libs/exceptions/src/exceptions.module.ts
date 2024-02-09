@@ -1,10 +1,11 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 
 import { TrackingService } from '@fc/tracking';
+import { ViewTemplatesModule } from '@fc/view-templates';
 
 import {
   FcExceptionFilter,
@@ -44,10 +45,10 @@ const exceptionFiltersProviders = [
 
 @Module({})
 export class ExceptionsModule {
-  static withTracking(trackingModule: any) {
+  static withTracking(trackingModule: DynamicModule) {
     return {
       module: ExceptionsModule,
-      imports: [trackingModule],
+      imports: [trackingModule, ViewTemplatesModule],
       providers: [
         ...exceptionFiltersProviders,
         ExceptionsService,
@@ -64,6 +65,7 @@ export class ExceptionsModule {
     };
     return {
       module: ExceptionsModule,
+      imports: [ViewTemplatesModule],
       providers: [...exceptionFiltersProviders, ExceptionsService, provider],
       exports: [provider],
     };

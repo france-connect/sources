@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <%- include("includes/head") %>
+  <body>
+    <div id="mire">
+      <%- include("includes/header") %>
+
+      <div id="container">
+        <div class="inner">
+          <h3 class="title"><%= $config('App.title') %></h3>
+
+          <h4>Utiliser une identité spécifique</h4>
+
+          <p>
+            Vous pouvez saisir une identité spécifique
+            <strong>fictive</strong> à utiliser pour cette connexion. Cette
+            identité sera transmise au fournisseur de service.
+          </p>
+
+          <% 
+          const hasError = Object.values(data).some( ({ errors }) => errors.length > 0 );
+          %>
+
+          <% if (hasError) { %>
+            <p class="error-alert">
+              L'identité saisie n'est pas valide
+            </p>
+          <% } %>
+
+          <form action="/login/with-custom-identity" method="post">
+            <% locals.identityForm.forEach((input) => { %>
+
+            <label for="<%= input.name %>">
+              <span><%= input.label %> <%= input.mandatory ? '*' : '' %></span>
+
+              <%if (input.type === 'select') { %>
+                <%- include('form/input-select', { input, data }) %>
+              <% } else { %>
+                <%- include('form/input-text', { input, data }) %>
+              <% } %>
+            </label>
+            <% }) %>
+
+            <button type="submit">Envoyer</button>
+          </form>
+        </div>
+        <a 
+        id="standard-login-link"
+        class="navigate" href="/interaction/whatever"
+          >Revenir à la connexion par Identifiant / Mot de passe</a
+        >
+      </div>
+    </div>
+    <%- include('includes/footer') %>
+  </body>
+</html>

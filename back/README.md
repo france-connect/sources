@@ -51,15 +51,9 @@ Le document compile les remontées de checkmarx (outil actuel) ainsi que les con
 Run the tests from a terminal
 ```
 yarn test:e2e:core-fca-low
-yarn test:e2e:core-fcp-low
-yarn test:e2e:core-fcp-high
-yarn test:e2e:eidas-bridge
 ```
 
 Open Cypress UI
 ```
 yarn test:e2e:core-fca-low:open
-yarn test:e2e:core-fcp-low:open
-yarn test:e2e:core-fcp-high:open
-yarn test:e2e:eidas-bridge:open
 ```

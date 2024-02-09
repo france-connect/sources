@@ -4,7 +4,6 @@ import { ClientProxy } from '@nestjs/microservices';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 import { AccountProtocol } from '@fc/microservices';
 
 import { CsmrTracksAccountResponseException } from '../exceptions';
@@ -16,11 +15,6 @@ describe('CsmrTracksAccountService', () => {
   let service: CsmrTracksAccountService;
 
   const lastValueFromMock = jest.mocked(lastValueFrom);
-
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  };
 
   const configDataMock = {
     requestTimeout: 200,
@@ -60,7 +54,6 @@ describe('CsmrTracksAccountService', () => {
       providers: [
         CsmrTracksAccountService,
         ConfigService,
-        LoggerService,
         {
           provide: 'AccountHighBroker',
           useValue: brokerMockHigh,
@@ -71,8 +64,6 @@ describe('CsmrTracksAccountService', () => {
         },
       ],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
       .compile();
@@ -90,10 +81,6 @@ describe('CsmrTracksAccountService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  it('should set the logger context', () => {
-    expect(loggerServiceMock).toBeDefined();
   });
 
   describe('getIdsWithIdentityHash', () => {

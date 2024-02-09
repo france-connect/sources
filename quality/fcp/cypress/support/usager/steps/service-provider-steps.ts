@@ -202,23 +202,31 @@ Then(
   },
 );
 
-Then(
-  'je suis redirigé vers la page erreur du fournisseur de service',
+When('je révoque le token FranceConnect', function () {
+  serviceProviderPage.getRevokeTokenButton().click();
+});
+
+Then('le token FranceConnect est révoqué', function () {
+  serviceProviderPage.getTokenRevokationConfirmation().should('be.visible');
+});
+
+When(
+  "le fournisseur de service demande l'accès aux données au fournisseur de données",
   function () {
-    serviceProviderPage.checkMockErrorCallback();
+    serviceProviderPage.getDataButton().click();
   },
 );
 
 Then(
-  "le titre de l'erreur fournisseur de service est {string}",
-  function (errorCode: string) {
-    serviceProviderPage.checkMockErrorCode(errorCode);
-  },
-);
-
-Then(
-  "la description de l'erreur fournisseur de service est {string}",
-  function (errorDescription: string) {
-    serviceProviderPage.checkMockErrorDescription(errorDescription);
+  "le fournisseur de données vérifie l'access token fourni par le fournisseur de service",
+  function () {
+    serviceProviderPage.checkIsMockDataPageVisible();
+    serviceProviderPage
+      .getMockIntrospectionTokenText()
+      .should('be.ok')
+      .then((tokenText) => {
+        const token = JSON.parse(tokenText);
+        cy.wrap(token).as('tokenIntrospection');
+      });
   },
 );

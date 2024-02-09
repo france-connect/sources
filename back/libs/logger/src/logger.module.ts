@@ -3,7 +3,7 @@
 // Declarative code
 import { Global, Module } from '@nestjs/common';
 
-import { LoggerService } from './logger.service';
+import { LoggerService, NestLoggerService } from './services';
 
 @Global()
 @Module({
@@ -12,7 +12,11 @@ import { LoggerService } from './logger.service';
       provide: LoggerService,
       useClass: LoggerService,
     },
+    {
+      provide: NestLoggerService,
+      useClass: NestLoggerService,
+    },
   ],
-  exports: [LoggerService],
+  exports: [LoggerService, NestLoggerService],
 })
 export class LoggerModule {}

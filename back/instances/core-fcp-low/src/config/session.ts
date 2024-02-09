@@ -2,6 +2,7 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
+import { CoreFcpSession } from '@fc/core-fcp';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
@@ -35,4 +36,5 @@ export default {
   templateExposed: {
     OidcClient: { spId: true, spName: true, idpName: true, idpLabel: true },
   },
+  schema: CoreFcpSession,
 } as SessionConfig;

@@ -3,7 +3,7 @@ import { Document, Model } from 'mongoose';
 
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 const DEFAULT_OPERATIONS = ['insert', 'update', 'delete', 'rename', 'replace'];
 
@@ -11,9 +11,7 @@ const DEFAULT_OPERATIONS = ['insert', 'update', 'delete', 'rename', 'replace'];
 export class MongooseCollectionOperationWatcherHelper {
   private static listeners = [];
 
-  constructor(private readonly logger: LoggerService) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor(private readonly logger: LoggerService) {}
 
   watchWith<T extends Document>(model: Model<T>, callback: Function): void {
     MongooseCollectionOperationWatcherHelper.listeners.push({
@@ -25,8 +23,8 @@ export class MongooseCollectionOperationWatcherHelper {
 
   private watch<T extends Document>(model: Model<T>, callback: Function): void {
     const watch = model.watch();
-    this.logger.debug(
-      `database OperationType watcher initialization for ${model.modelName}`,
+    this.logger.notice(
+      `Database OperationType watcher initialization for "${model.modelName}".`,
     );
 
     watch.on(
@@ -46,14 +44,20 @@ export class MongooseCollectionOperationWatcherHelper {
     callback: Function,
     stream: ChangeStreamDocument,
   ): void {
-    this.logger.trace(`Mongo watcher triggered for ${modelName}`);
-
     const isListenedOperation = DEFAULT_OPERATIONS.includes(
       stream.operationType,
     );
 
     if (isListenedOperation) {
+      this.logger.notice(
+        `Detected "${stream.operationType}" on "${modelName}", calling handler.`,
+      );
       callback();
+      return;
     }
+
+    this.logger.info(
+      `Detected "${stream.operationType}" on "${modelName}", Ignoring.`,
+    );
   }
 }

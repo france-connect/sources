@@ -7,18 +7,16 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 @Injectable()
 export class AppInterceptor implements NestInterceptor {
-  constructor(private readonly logger: LoggerService) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor(private readonly logger: LoggerService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    const req = context.switchToHttp().getRequest();
+    context.switchToHttp().getRequest();
 
-    this.logger.debug(`${req.method}/ ${req.path}`);
+    this.logger.debug('AppInterceptor');
 
     return next.handle();
   }

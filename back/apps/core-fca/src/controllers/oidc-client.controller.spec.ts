@@ -1,12 +1,10 @@
-import { encode } from 'querystring';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata, IOidcIdentity } from '@fc/oidc';
 import {
   OidcClientConfigService,
@@ -22,6 +20,7 @@ import {
 } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { GetOidcCallbackSessionDto, OidcIdentityDto } from '../dto';
@@ -57,13 +56,7 @@ describe('OidcClient Controller', () => {
     getUserInfosFromProvider: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    verbose: jest.fn(),
-    debug: jest.fn(),
-    businessEvent: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const spIdMock = 'spIdMock';
   const idpIdMock = 'idpIdMock';
@@ -90,6 +83,7 @@ describe('OidcClient Controller', () => {
 
   const identityProviderServiceMock = {
     getById: jest.fn(),
+    isActiveById: jest.fn(),
   };
 
   const trackingMock = {
@@ -121,7 +115,6 @@ describe('OidcClient Controller', () => {
   };
 
   const providerIdMock = 'providerIdMockValue';
-  const queryStringEncodeMock = jest.mocked(encode);
 
   const identityMock = {
     // oidc spec defined property
@@ -157,6 +150,7 @@ describe('OidcClient Controller', () => {
 
   const coreServiceMock = {
     redirectToIdp: jest.fn(),
+    getIdpIdForEmail: jest.fn(),
   };
 
   const oidcClientConfigServiceMock = {
@@ -268,7 +262,10 @@ describe('OidcClient Controller', () => {
       const body = {
         providerUid: providerIdMock,
         csrfToken: 'csrfMockValue',
+        email: 'harry.potter@hogwarts.uk',
       };
+
+      identityProviderServiceMock.isActiveById.mockReturnValueOnce(true);
 
       // When
       await controller.redirectToIdp(req, res, body, sessionServiceMock);
@@ -286,6 +283,7 @@ describe('OidcClient Controller', () => {
       const body = {
         providerUid: providerIdMock,
         csrfToken: 'csrfMockValue',
+        email: 'harry.potter@hogwarts.uk',
       };
       const error = new Error('New Error');
       sessionCsrfServiceMock.validate.mockReset().mockImplementationOnce(() => {
@@ -302,10 +300,14 @@ describe('OidcClient Controller', () => {
 
     it('should call coreService redirectToIdp', async () => {
       // Given
+      const email = 'harry.potter@hogwarts.uk';
       const body = {
         providerUid: providerIdMock,
         csrfToken: 'csrfMockValue',
+        email,
       };
+
+      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce(providerIdMock);
 
       // When
       await controller.redirectToIdp(req, res, body, sessionServiceMock);
@@ -314,9 +316,34 @@ describe('OidcClient Controller', () => {
       expect(coreServiceMock.redirectToIdp).toHaveBeenCalledTimes(1);
       expect(coreServiceMock.redirectToIdp).toHaveBeenCalledWith(
         res,
-        interactionDetailsResolved.params.acr_values,
         providerIdMock,
         sessionServiceMock,
+        {
+          acr: interactionDetailsResolved.params.acr_values,
+          // oidc spec defined property
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          login_hint: email,
+        },
+      );
+    });
+
+    it('should call coreServiceMock getIdpIdForEmail', async () => {
+      // Given
+      const body = {
+        providerUid: providerIdMock,
+        csrfToken: 'csrfMockValue',
+        email: 'ginny.potter@hogwarts.uk',
+      };
+
+      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce(providerIdMock);
+
+      // When
+      await controller.redirectToIdp(req, res, body, sessionServiceMock);
+
+      // Then
+      expect(coreServiceMock.getIdpIdForEmail).toHaveBeenCalledTimes(1);
+      expect(coreServiceMock.getIdpIdForEmail).toHaveBeenCalledWith(
+        'ginny.potter@hogwarts.uk',
       );
     });
   });
@@ -428,41 +455,6 @@ describe('OidcClient Controller', () => {
     });
   });
 
-  describe('getLegacyOidcCallback', () => {
-    it('should extract urlPrefix from app config', async () => {
-      // When
-      await controller.getLegacyOidcCallback(req.query, req.params);
-      // Then
-      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(configServiceMock.get).toHaveBeenCalledWith('App');
-    });
-
-    it('should build redirect url with encode from querystring', async () => {
-      // When
-      await controller.getLegacyOidcCallback(req.query, req.params);
-      // Then
-      expect(queryStringEncodeMock).toHaveBeenCalledTimes(1);
-      expect(queryStringEncodeMock).toHaveBeenCalledWith(req.query);
-    });
-
-    it('should redirect to the built oidc callback url', async () => {
-      // Given
-      const queryMock = 'first-query-param=first&second-query-param=second';
-      queryStringEncodeMock.mockReturnValueOnce(queryMock);
-      const redirectOidcCallbackUrl = `${configMock.urlPrefix}/oidc-callback?${queryMock}`;
-      // When
-      const result = await controller.getLegacyOidcCallback(
-        req.query,
-        req.params,
-      );
-      // Then
-      expect(result).toEqual({
-        statusCode: 302,
-        url: redirectOidcCallbackUrl,
-      });
-    });
-  });
-
   describe('getOidcCallback()', () => {
     const accessTokenMock = Symbol('accesToken');
     const acrMock = Symbol('acr');
@@ -514,14 +506,6 @@ describe('OidcClient Controller', () => {
       oidcClientServiceMock.utils.checkIdpBlacklisted.mockResolvedValueOnce(
         false,
       );
-    });
-
-    it('should detach current session', async () => {
-      // When
-      await controller.getOidcCallback(req, res, sessionServiceMock);
-      // Then
-      expect(sessionServiceMock.detach).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.detach).toHaveBeenCalledWith(req, res);
     });
 
     it('should duplicate current session', async () => {

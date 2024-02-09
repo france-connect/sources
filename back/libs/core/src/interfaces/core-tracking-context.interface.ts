@@ -8,4 +8,9 @@ export interface ICoreTrackingContext {
   readonly sessionId: string;
   readonly interactionId: string;
   readonly claims?: string[];
+  readonly scope?: string;
+
+  readonly dpId?: string;
+  readonly dpTitle?: string;
+  readonly dpClientId?: string;
 }

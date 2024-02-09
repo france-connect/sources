@@ -6,7 +6,6 @@ import {
   EidasResponse,
   EidasResponseAttributes,
 } from '@fc/eidas';
-import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity, OidcError } from '@fc/oidc';
 
 import {
@@ -17,9 +16,7 @@ import {
 
 @Injectable()
 export class EidasToOidcService {
-  constructor(private readonly logger: LoggerService) {
-    logger.setContext(this.constructor.name);
-  }
+  constructor() {}
   /**
    * Takes eIDAS requested attributes and level of assurance to return oidc
    * scope and acr_values
@@ -35,7 +32,6 @@ export class EidasToOidcService {
     const scopeSet = this.mapRequestedAttributesToScopes(requestedAttributes);
     const scope = Array.from(scopeSet);
 
-    this.logger.trace({ requestedAttributes, scope });
     return {
       // oidc claim
       // eslint-disable-next-line @typescript-eslint/naming-convention

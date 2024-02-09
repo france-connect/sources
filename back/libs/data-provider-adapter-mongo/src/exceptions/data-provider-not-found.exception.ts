@@ -14,4 +14,7 @@ export class DataProviderNotFoundException extends DataProviderAdapterMongoBaseE
   public readonly httpStatusCode = HttpStatus.UNAUTHORIZED;
   public readonly error = 'invalid_client';
   message = 'Unknown client.';
+
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'user authentication aborted';
 }

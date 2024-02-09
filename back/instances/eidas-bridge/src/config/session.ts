@@ -2,6 +2,7 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
+import { EidasBridgeSession } from '@fc/eidas-bridge';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
@@ -10,7 +11,7 @@ const env = new ConfigParser(process.env, 'Session');
 
 const cookieOptions: ISessionCookieOptions = {
   signed: true,
-  sameSite: 'Strict',
+  sameSite: 'Lax',
   httpOnly: true,
   secure: true,
   maxAge: 600000, // 10 minutes
@@ -31,4 +32,5 @@ export default {
     OidcProviderRoutes.OPENID_CONFIGURATION,
     OidcClientRoutes.WELL_KNOWN_KEYS,
   ],
+  schema: EidasBridgeSession,
 } as SessionConfig;

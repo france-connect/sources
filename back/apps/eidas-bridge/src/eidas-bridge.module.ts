@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 
-import { ConfigService } from '@fc/config';
+import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CryptographyModule } from '@fc/cryptography';
 import { CryptographyEidasModule } from '@fc/cryptography-eidas';
 import { EidasClientController, EidasClientModule } from '@fc/eidas-client';
@@ -28,7 +28,7 @@ import {
   ServiceProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
 } from '@fc/service-provider-adapter-env';
-import { SessionConfig, SessionMiddleware, SessionModule } from '@fc/session';
+import { SessionModule } from '@fc/session';
 import { TrackingModule } from '@fc/tracking';
 
 import {
@@ -37,7 +37,6 @@ import {
   OidcClientController,
   OidcProviderController,
 } from './controllers';
-import { EidasBridgeSession } from './dto';
 import {
   EidasBridgeTrackingService,
   OidcMiddlewareService,
@@ -65,11 +64,10 @@ const oidcProviderModule = OidcProviderModule.register(
 @Module({
   imports: [
     exceptionModule,
+    AsyncLocalStorageModule,
+    SessionModule,
     EidasClientModule,
     EidasProviderModule,
-    SessionModule.forRoot({
-      schema: EidasBridgeSession,
-    }),
     IdentityProviderAdapterEnvModule,
     HttpProxyModule,
     ServiceProviderAdapterEnvModule,
@@ -96,15 +94,4 @@ const oidcProviderModule = OidcProviderModule.register(
   ],
   exports: [OidcProviderConfigAppService],
 })
-export class EidasBridgeModule {
-  constructor(private readonly config: ConfigService) {}
-
-  configure(consumer: MiddlewareConsumer) {
-    const { excludedRoutes } = this.config.get<SessionConfig>('Session');
-
-    consumer
-      .apply(SessionMiddleware)
-      .exclude(...excludedRoutes)
-      .forRoutes('*');
-  }
-}
+export class EidasBridgeModule {}

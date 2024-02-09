@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="50px" height="30px" viewBox="0 0 50 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>flag/finland@</title>
-    <g id="FranceConnect+" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="flag/finland" fill-rule="nonzero">
-            <rect id="Rectangle" fill="#FFFFFF" x="5.75973684e-15" y="0" width="49.7411111" height="30"></rect>
-            <rect id="Rectangle" fill="#003580" x="5.75973684e-15" y="10.91" width="49.7411111" height="8.18"></rect>
-            <rect id="Rectangle" fill="#003580" x="13.8158495" y="0" width="8.28849642" height="30"></rect>
-        </g>
-    </g>
+<svg width="52" height="39" viewBox="0 0 52 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_608_13116)">
+<path d="M0 0H52V39H0V0Z" fill="white"/>
+<path d="M0 14.1777H52V24.8215H0V14.1777Z" fill="#003580"/>
+<path d="M14.2593 0H24.895V39H14.2512L14.2593 0Z" fill="#003580"/>
+</g>
+<rect x="0.25" y="0.25" width="51.5" height="38.5" stroke="#D0D0D0" stroke-width="0.5"/>
+<defs>
+<clipPath id="clip0_608_13116">
+<rect width="52" height="39" fill="white"/>
+</clipPath>
+</defs>
 </svg>

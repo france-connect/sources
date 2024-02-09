@@ -5,16 +5,10 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
 import { BridgePayload, BridgeResponse } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger-legacy';
 
 @Injectable()
 export class CsmrHttpProxyService {
-  constructor(
-    private logger: LoggerService,
-    private http: HttpService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor(private http: HttpService) {}
 
   /**
    * get the data from FI based on Bridge request params
@@ -22,9 +16,6 @@ export class CsmrHttpProxyService {
    * @returns {Promise<HttpProxyResponse>}
    */
   async forwardRequest(commands: BridgePayload): Promise<BridgeResponse> {
-    this.logger.debug('forwardRequest()');
-    this.logger.trace({ commands });
-
     const {
       url,
       method,
@@ -48,8 +39,6 @@ export class CsmrHttpProxyService {
       statusText,
       headers,
     };
-
-    this.logger.trace({ response });
 
     return response;
   }

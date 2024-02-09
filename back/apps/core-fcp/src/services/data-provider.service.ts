@@ -1,10 +1,10 @@
 import { AxiosResponse } from 'axios';
 import { ValidatorOptions } from 'class-validator';
-import { JSONWebKeySet, JWTPayload } from 'jose';
+import { JSONWebKeySet } from 'jose';
 import { lastValueFrom } from 'rxjs';
 
 import { HttpService } from '@nestjs/axios';
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
@@ -14,22 +14,22 @@ import {
   DataProviderAdapterMongoService,
   DataProviderMetadata,
 } from '@fc/data-provider-adapter-mongo';
-import { JwtService } from '@fc/jwt';
-import { LoggerService } from '@fc/logger-legacy';
+import { CustomJwtPayload, JwtService } from '@fc/jwt';
 import { AccessToken, atHashFromAccessToken, stringToArray } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { OidcProviderRedisAdapter } from '@fc/oidc-provider/adapters';
-import { Redis, REDIS_CONNECTION_TOKEN } from '@fc/redis';
+import { RedisService } from '@fc/redis';
 import { RnippPivotIdentity } from '@fc/rnipp';
 import { ScopesService } from '@fc/scopes';
 import { ISessionService, SessionService } from '@fc/session';
 
-import { ChecktokenRequestDto } from '../dto';
+import { ChecktokenRequestDto, ErrorParamsDto } from '../dto';
 import {
-  CoreFcpFetchDataProviderJwksFailed,
+  CoreFcpFetchDataProviderJwksFailedException,
   InvalidChecktokenRequestException,
 } from '../exceptions';
+import { DpJwtPayloadInterface } from '../interfaces';
 
 @Injectable()
 export class DataProviderService {
@@ -37,12 +37,11 @@ export class DataProviderService {
   // Rule override allowed for dependency injection
   // eslint-disable-next-line max-params
   constructor(
-    private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly dataProvider: DataProviderAdapterMongoService,
     private readonly http: HttpService,
     private readonly jwt: JwtService,
-    @Inject(REDIS_CONNECTION_TOKEN) private readonly redis: Redis,
+    private readonly redis: RedisService,
     private readonly session: SessionService,
     private readonly cryptographyFcp: CryptographyFcpService,
     private readonly scopes: ScopesService,
@@ -73,7 +72,7 @@ export class DataProviderService {
   }
 
   async generateJwt(
-    payload: JWTPayload,
+    payload: CustomJwtPayload<DpJwtPayloadInterface>,
     dataProviderId: string,
   ): Promise<string> {
     const dataProvider = await this.dataProvider.getByClientId(dataProviderId);
@@ -94,14 +93,13 @@ export class DataProviderService {
     oidcSessionService: ISessionService<OidcClientSession>,
     accessToken: string,
     dpClientId: string,
-  ): Promise<JWTPayload> {
+  ): Promise<CustomJwtPayload<DpJwtPayloadInterface>> {
     /**
      * We can not use DI for this adapter since it was made to be instantiated by `oidc-provider`
      * It requires a ServiceProviderAdapter that we won't use here
      * and the `context` parameter which is a string, not a provider.
      */
     const adapter = new OidcProviderRedisAdapter(
-      this.logger,
       this.redis,
       undefined,
       'AccessToken',
@@ -121,7 +119,7 @@ export class DataProviderService {
     );
   }
 
-  generateExpiredPayload(aud: string): JWTPayload {
+  generateExpiredPayload(aud: string): CustomJwtPayload<DpJwtPayloadInterface> {
     return {
       // OIDC defined var name
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -132,11 +130,34 @@ export class DataProviderService {
     };
   }
 
+  generateErrorMessage(
+    httpStatusCode: number,
+    message: string,
+    error: string,
+  ): ErrorParamsDto {
+    if (httpStatusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
+      return {
+        error: 'server_error',
+        // oidc compliant
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description:
+          'The authorization server encountered an unexpected condition that prevented it from fulfilling the request.',
+      };
+    }
+
+    return {
+      error,
+      // oidc compliant
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      error_description: message,
+    };
+  }
+
   private async generateValidPayload(
     dpClientId: string,
     oidcSessionService: ISessionService<OidcClientSession>,
     interaction: AccessToken,
-  ): Promise<JWTPayload> {
+  ): Promise<CustomJwtPayload<DpJwtPayloadInterface>> {
     const {
       claims: {
         id_token: {
@@ -200,7 +221,7 @@ export class DataProviderService {
   }
 
   private async generateJws(
-    payload: JWTPayload,
+    payload: CustomJwtPayload<DpJwtPayloadInterface>,
     dataProvider: DataProviderMetadata,
   ): Promise<string> {
     const { checktoken_endpoint_auth_signing_alg: signAlgorithm } =
@@ -250,10 +271,8 @@ export class DataProviderService {
     try {
       response = await lastValueFrom(this.http.get(url));
     } catch (error) {
-      throw new CoreFcpFetchDataProviderJwksFailed(error);
+      throw new CoreFcpFetchDataProviderJwksFailedException(error);
     }
-
-    this.logger.trace({ response });
 
     return response.data as JSONWebKeySet;
   }

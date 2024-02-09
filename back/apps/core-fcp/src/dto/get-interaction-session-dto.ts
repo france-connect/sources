@@ -36,6 +36,7 @@ export class GetInteractionOidcClientSessionDto extends CoreBaseOidcClientSessio
     OidcClientRoutes.OIDC_CALLBACK, // Back on error
     CoreRoutes.INTERACTION_VERIFY, // Back on error
     CoreRoutes.INTERACTION_CONSENT, // Back on error
+    OidcClientRoutes.REDIRECT_TO_IDP, // Browser back button
   ])
   @Expose()
   readonly stepRoute: string;

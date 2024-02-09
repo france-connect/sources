@@ -5,7 +5,8 @@ import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
-import { LoggerConfig } from '@fc/logger-legacy';
+import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
 import { MailerConfig } from '@fc/mailer';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
@@ -31,6 +32,11 @@ export class UserDashboardConfig {
   @ValidateNested()
   @Type(() => LoggerConfig)
   readonly Logger: LoggerConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => LoggerLegacyConfig)
+  readonly LoggerLegacy: LoggerLegacyConfig;
 
   @IsObject()
   @ValidateNested()

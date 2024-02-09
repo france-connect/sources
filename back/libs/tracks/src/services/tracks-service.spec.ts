@@ -4,9 +4,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { IPaginationOptions, validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { TracksProtocol } from '@fc/microservices';
 import { IOidcIdentity } from '@fc/oidc';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { TrackDto } from '../dto';
 import { TracksResponseException } from '../exceptions';
@@ -20,11 +22,7 @@ describe('TracksService', () => {
 
   const lastValueFromMock = jest.mocked(lastValueFrom);
 
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const identityMock = {} as IOidcIdentity;
 
@@ -154,6 +152,7 @@ describe('TracksService', () => {
         service.getList(identityMock, optionsMock),
         // Then
       ).rejects.toThrow(TracksResponseException);
+      expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
     });
   });
 

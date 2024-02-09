@@ -3,12 +3,12 @@
 // Declarative code
 import { Module } from '@nestjs/common';
 
+import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CryptographyService } from '@fc/cryptography';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { ElasticsearchModule } from '@fc/elasticsearch';
 import { ExceptionsModule } from '@fc/exceptions';
 import { GeoipMaxmindModule } from '@fc/geoip-maxmind';
-import { LoggerModule } from '@fc/logger-legacy';
 import { RabbitmqModule } from '@fc/rabbitmq';
 import { ScopesModule } from '@fc/scopes';
 
@@ -29,7 +29,7 @@ import {
 @Module({
   imports: [
     ExceptionsModule.withoutTracking(),
-    LoggerModule,
+    AsyncLocalStorageModule,
     CryptographyFcpModule,
     ScopesModule.forConfig('FcpHigh'),
     ScopesModule.forConfig('FcpLow'),

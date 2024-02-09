@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="50px" height="30px" viewBox="0 0 50 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>flag/denmark@</title>
-    <g id="FranceConnect+" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="flag/denmark" fill-rule="nonzero">
-            <rect id="Rectangle" fill="#D00C33" x="9.93766064e-15" y="0.0199667221" width="49.9475524" height="29.9500832"></rect>
-            <polygon id="Path" fill="#FFFFFF" points="21.2096241 0.0449251248 21.2096241 29.9950083 16.2146183 29.9950083 16.2146183 0.0449251248"></polygon>
-            <polygon id="Path" fill="#FFFFFF" points="49.9475524 12.8557163 49.9475524 17.1343003 1.06001713e-13 17.1343003 1.06001713e-13 12.8557163"></polygon>
-        </g>
-    </g>
+<svg width="52" height="39" viewBox="0 0 52 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_608_13104)">
+<path d="M0 0H52.0081V39H0V0Z" fill="#C8102E"/>
+<path d="M16.7131 0H22.2869V39H16.7131V0Z" fill="white"/>
+<path d="M0 16.7129H52.0081V22.2866H0V16.7129Z" fill="white"/>
+</g>
+<rect x="0.25" y="0.25" width="51.5" height="38.5" stroke="#D0D0D0" stroke-width="0.5"/>
+<defs>
+<clipPath id="clip0_608_13104">
+<rect width="52" height="39" fill="white"/>
+</clipPath>
+</defs>
 </svg>

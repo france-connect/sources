@@ -23,6 +23,9 @@ export class SessionInvalidSessionException extends SessionBaseException {
   public readonly code = ErrorCode.INVALID_SESSION;
   public readonly httpStatusCode = HttpStatus.CONFLICT;
 
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'user authentication aborted';
+
   constructor() {
     super(
       'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',

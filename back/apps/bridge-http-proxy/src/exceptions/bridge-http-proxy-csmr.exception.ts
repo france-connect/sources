@@ -16,6 +16,10 @@ export class BridgeHttpProxyCsmrException extends BrigdeHttpProxyBaseException {
   name: string;
   reason: string;
 
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
+
   constructor(error: BridgeError) {
     super(
       'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',

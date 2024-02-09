@@ -1,5 +1,7 @@
 <%
-const hasParams = !!locals.params
+const hasParams = !!locals.params;
+const isError = !!locals.exception;
+
 const isOidcClientSession = !!(locals.session && locals.session.OidcClient);
 
 const label = hasParams
@@ -10,13 +12,15 @@ const urlBase = hasParams
   ? locals.params.redirect_uri
   : '/api/v2/redirect-to-sp-with-error';
 
-const error =  hasParams
-  ? 'access_denied'
-  : locals.code;
 
-const error_description = hasParams
-  ? encodeURIComponent("User auth aborted")
-  : locals.message;
+let error = 'access_denied';
+let error_description = encodeURIComponent("User auth aborted");
+
+if (isError && locals.exception?.constructor) {
+  error = locals.exception.constructor.ERROR;
+  error_description = locals.exception.constructor.ERROR_DESCRIPTION;
+}
+
 
 const state = hasParams
   ? locals.params.state
@@ -34,6 +38,7 @@ const urlParams = Object.entries(params)
   .join('&');
 %>
 <% if (!!label) { %>
+
 <a
   data-testid="back-to-sp-link"
   href="<%= urlBase %>?<%= urlParams %>"

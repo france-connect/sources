@@ -1,11 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialExcept, validateDto } from '@fc/common';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
-import { OidcClientUserinfosFailedException } from '../exceptions';
+import { getLoggerMock } from '@mocks/logger';
+
+import {
+  OidcClientMissingIdentitySubException,
+  OidcClientTokenResultFailedException,
+  OidcClientUserinfosFailedException,
+} from '../exceptions';
 import { ExtraTokenParams, TokenParams, UserInfosParams } from '../interfaces';
 import { OidcClientService } from './oidc-client.service';
 import { OidcClientUtilsService } from './oidc-client-utils.service';
@@ -33,13 +39,7 @@ describe('OidcClientService', () => {
     hello: 'world',
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-    businessEvent: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const trackingServiceMock = {
     track: jest.fn(),
@@ -96,10 +96,10 @@ describe('OidcClientService', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        LoggerService,
         TrackingService,
         OidcClientUtilsService,
         OidcClientService,
+        LoggerService,
       ],
     })
       .overrideProvider(OidcClientUtilsService)
@@ -190,9 +190,6 @@ describe('OidcClientService', () => {
 
     it('should failed if the token is wrong and DTO blocked', async () => {
       // arrange
-      const expectedError = new Error(
-        '"{"acr":"acrMockValue","amr":["amrMockValue"],"accessToken":"accessTokenMockValue","idToken":"idTokenMockValue"}" input was wrong from the result at DTO validation: [{}]',
-      );
       validateDtoMock.mockReset().mockReturnValueOnce([errorMock]);
 
       // action
@@ -200,8 +197,10 @@ describe('OidcClientService', () => {
         () =>
           service.getTokenFromProvider(idpIdMock, tokenParamsMock, contextMock),
         // assert
-      ).rejects.toThrow(expectedError);
+      ).rejects.toThrow(OidcClientTokenResultFailedException);
       expect(oidcClientUtilsServiceMock.getTokenSet).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.debug).toHaveBeenCalledWith([errorMock]);
     });
 
     it('should get claims from token', async () => {
@@ -215,6 +214,20 @@ describe('OidcClientService', () => {
       // assert
       expect(claimsMock).toHaveBeenCalledTimes(1);
       expect(acr).toStrictEqual(acrMock);
+    });
+
+    it('should get an empty array as amr if amr claims is empty', async () => {
+      // arrange
+      claimsMock.mockReset().mockReturnValueOnce({});
+      // action
+      const { amr } = await service.getTokenFromProvider(
+        idpIdMock,
+        tokenParamsMock,
+        contextMock,
+      );
+      // assert
+      expect(claimsMock).toHaveBeenCalledTimes(1);
+      expect(amr).toStrictEqual([]);
     });
   });
 
@@ -274,10 +287,10 @@ describe('OidcClientService', () => {
         () =>
           service.getUserInfosFromProvider(userInfosParamsMock, contextMock),
         // assert
-      ).rejects.toThrow(
-        '"idpIdMockValue" doesn\'t provide a minimum identity information: [{}]',
-      );
+      ).rejects.toThrow(OidcClientMissingIdentitySubException);
       expect(oidcClientUtilsServiceMock.getUserInfo).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.debug).toHaveBeenCalledWith([errorMock]);
     });
   });
 

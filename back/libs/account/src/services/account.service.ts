@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { AccountNotFoundException } from '../exceptions';
 import { IInteraction } from '../interfaces';
@@ -14,9 +14,7 @@ export class AccountService {
   constructor(
     private readonly logger: LoggerService,
     @InjectModel('Account') private model: Model<Account>,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Check in database if an account is registered and blocked
@@ -40,8 +38,6 @@ export class AccountService {
    * @returns {Promise<void>}
    */
   async storeInteraction(interaction: IInteraction): Promise<string> {
-    this.logger.debug('Save interaction to database');
-
     const account = await this.getAccountWithInteraction(interaction);
 
     await account.save();
@@ -93,9 +89,7 @@ export class AccountService {
    * @returns {Promise<Account>}
    */
   async getAccountByIdentityHash(identityHash: string): Promise<Account> {
-    this.logger.debug(`Recherche d'un compte avec via son hash`);
     const account: Account = await this.model.findOne({ identityHash });
-    this.logger.trace({ account });
 
     return account || ({ id: null } as Account);
   }
@@ -132,15 +126,6 @@ export class AccountService {
     if (!accountBeforeUpdate) {
       throw new AccountNotFoundException();
     }
-
-    this.logger.trace({
-      id: accountBeforeUpdate.id,
-      IdpSettingsBeforeUpdate: accountBeforeUpdate.preferences?.idpSettings,
-      newPreferences: {
-        identityProviderList,
-        isExcludeList,
-      },
-    });
 
     const { id, preferences } = accountBeforeUpdate;
     return { id, preferences, updatedAt };

@@ -12,4 +12,8 @@ import { ChecktokenBaseException } from './checktoken-base.exception';
 export class JwksFetchFailedException extends ChecktokenBaseException {
   message = 'Can not fetch jwks';
   code = ErrorCode.JWKS_FETCH_FAILED_EXCEPTION;
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

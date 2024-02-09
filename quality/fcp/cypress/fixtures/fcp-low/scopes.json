@@ -62,10 +62,6 @@
     "scopes": ["openid", "profile", "inconnu"]
   },
   {
-    "type": "profile sans openid",
-    "scopes": ["profile"]
-  },
-  {
     "type": "identite_pivot",
     "scopes": ["openid", "identite_pivot"]
   },
@@ -74,8 +70,17 @@
     "scopes": ["openid"]
   },
   {
-    "type": "vide",
+    "type": "tous les scopes data",
     "scopes": [
+      "openid",
+      "dgfip_rfr",
+      "dgfip_aft",
+      "droits_assurance_maladie",
+      "cnam_caisse"
     ]
+  },
+  {
+    "type": "CNAM",
+    "scopes": ["openid", "droits_assurance_maladie", "cnam_caisse"]
   }
 ]

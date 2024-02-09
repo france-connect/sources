@@ -12,6 +12,7 @@ import EidasLightProtocol from './eidas-light-protocol';
 import EidasProvider from './eidas-provider';
 import IdentityProviderAdapterEnv from './identity-provider-adapter-env';
 import Logger from './logger';
+import LoggerLegacy from './logger-legacy';
 import OidcAcr from './oidc-acr';
 import OidcClient from './oidc-client';
 import OidcProvider from './oidc-provider';
@@ -38,6 +39,7 @@ export default {
   EidasProvider,
   IdentityProviderAdapterEnv,
   Logger,
+  LoggerLegacy,
   OidcAcr,
   OidcClient,
   OidcProvider,

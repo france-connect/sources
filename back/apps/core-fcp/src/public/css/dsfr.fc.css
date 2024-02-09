@@ -30,6 +30,16 @@ DSFR Breakpoints :
 
 /* -----------------------------------------------------------------
 
+  Display
+
+----------------------------------------------------------------- */
+
+.fc-display--inline {
+  display: inline;
+}
+
+/* -----------------------------------------------------------------
+
   TEXT ALIGN
 
 ----------------------------------------------------------------- */
@@ -93,4 +103,28 @@ DSFR Breakpoints :
 .fc-footer .fr-container .fr-footer__bottom {
   /* CL-349 : remove border hack */
   box-shadow: inherit;
+}
+
+button.fc-btn--as-link {
+  padding-left: 0;
+  padding-right: 0;
+  display: inline;
+  line-height: normal;
+}
+
+button.fc-btn--as-link:not(:disabled):hover {
+  background-color: transparent;
+  --underline-hover-width: var(--underline-max-width);
+}
+
+button.fc-btn--as-link {
+  background-image: var(--underline-img), var(--underline-img);
+  background-position:
+    var(--underline-x) 100%,
+    var(--underline-x) calc(100% - var(--underline-thickness));
+  background-repeat: no-repeat, no-repeat;
+  background-size:
+    var(--underline-hover-width) calc(var(--underline-thickness) * 2),
+    var(--underline-idle-width) var(--underline-thickness);
+  transition: background-size 0s;
 }

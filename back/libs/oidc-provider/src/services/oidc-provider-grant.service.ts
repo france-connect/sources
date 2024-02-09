@@ -2,16 +2,12 @@ import { Provider } from 'oidc-provider';
 
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
-
 import { OidcProviderGrantSaveException } from '../exceptions/oidc-provider-grant-save.exception';
 import { InteractionParams } from '../interfaces';
 
 @Injectable()
 export class OidcProviderGrantService {
-  constructor(private readonly logger: LoggerService) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor() {}
   /*
    * oidc-provider do not export the Grant type so we need
    * to use Promise<any> for the return type

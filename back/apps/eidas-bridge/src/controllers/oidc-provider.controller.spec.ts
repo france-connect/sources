@@ -1,16 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { ISessionRequest, ISessionResponse, SessionService } from '@fc/session';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { AuthorizeParamsDto } from '../dto';
 import { OidcProviderController } from './oidc-provider.controller';
 
-const loggerServiceMock = {
-  setContext: jest.fn(),
-  warn: jest.fn(),
-  trace: jest.fn(),
-} as unknown as LoggerService;
+const loggerServiceMock = getLoggerMock();
 
 const sessionServiceMock = {
   reset: jest.fn(),

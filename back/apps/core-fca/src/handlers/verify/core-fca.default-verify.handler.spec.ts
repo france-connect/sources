@@ -3,9 +3,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AccountBlockedException } from '@fc/account';
 import { CoreAccountService, CoreAcrService } from '@fc/core';
 import { CryptographyFcaService } from '@fc/cryptography-fca';
-import { LoggerService } from '@fc/logger-legacy';
+import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
+import { LoggerService } from '@fc/logger';
 import { SessionService } from '@fc/session';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { CoreFcaDefaultVerifyHandler } from './core-fca.default-verify.handler';
@@ -13,12 +15,7 @@ import { CoreFcaDefaultVerifyHandler } from './core-fca.default-verify.handler';
 describe('CoreFcaDefaultVerifyHandler', () => {
   let service: CoreFcaDefaultVerifyHandler;
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    warn: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const accountIdMock = 'accountIdMock value';
 
@@ -76,6 +73,10 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     computeIdentityHash: jest.fn(),
   };
 
+  const identityProviderAdapterMock = {
+    getById: jest.fn(),
+  };
+
   const agentHashMock = 'spIdentityHash';
 
   beforeEach(async () => {
@@ -87,6 +88,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
         CoreAccountService,
         CoreAcrService,
         CryptographyFcaService,
+        IdentityProviderAdapterMongoService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -99,6 +101,8 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       .useValue(coreAcrServiceMock)
       .overrideProvider(CryptographyFcaService)
       .useValue(cryptographyFcaServiceMock)
+      .overrideProvider(IdentityProviderAdapterMongoService)
+      .useValue(identityProviderAdapterMock)
       .compile();
 
     service = module.get<CoreFcaDefaultVerifyHandler>(
@@ -116,6 +120,10 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       'computedSubSp',
     );
     coreAccountServiceMock.computeFederation.mockResolvedValue(accountIdMock);
+
+    identityProviderAdapterMock.getById.mockResolvedValue({
+      maxAuthorizedAcr: 'maxAuthorizedAcr value',
+    });
   });
 
   it('should be defined', () => {

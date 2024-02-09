@@ -19,7 +19,7 @@ import {
 } from '@fc/core';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { NotificationsService } from '@fc/notifications';
 import { OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
@@ -57,21 +57,12 @@ export class CoreFcpController {
     private readonly coreVerify: CoreVerifyService,
     private readonly coreFcpVerify: CoreFcpVerifyService,
     private readonly tracking: TrackingService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   @Get(CoreRoutes.DEFAULT)
   @Header('cache-control', 'no-store')
   getDefault(@Res() res) {
     const { defaultRedirectUri } = this.config.get<CoreConfig>('Core');
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'CoreRoutes.DEFAULT',
-      redirect: defaultRedirectUri,
-      route: CoreRoutes.DEFAULT,
-    });
 
     res.redirect(301, defaultRedirectUri);
   }
@@ -116,10 +107,6 @@ export class CoreFcpController {
     );
 
     if (rejected) {
-      this.logger.trace(
-        { acrValues, allowedAcrValues, rejected },
-        LoggerLevelNames.WARN,
-      );
       return;
     }
 
@@ -151,6 +138,12 @@ export class CoreFcpController {
       return provider;
     });
 
+    const { aidantsConnectUid } = this.config.get<AppConfig>('App');
+    const aidantsConnect = authorizedProviders.find((provider) => {
+      const isAidantsConnect = provider.uid === aidantsConnectUid;
+      return isAidantsConnect && provider.active && provider.display;
+    });
+
     // -- generate and store in session the CSRF token
     const csrfToken = this.csrf.get();
     await this.csrf.save(sessionOidc, csrfToken);
@@ -161,16 +154,10 @@ export class CoreFcpController {
       notification,
       params,
       providers: authorizedProviders,
+      aidantsConnect: aidantsConnect,
       spName,
       spScope,
     };
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'CoreRoutes.INTERACTION',
-      response,
-      route: CoreRoutes.INTERACTION,
-    });
 
     const isRefresh = stepRoute === CoreRoutes.INTERACTION;
 
@@ -240,6 +227,9 @@ export class CoreFcpController {
        * so we update isSso flag in session.
        */
       await sessionOidc.set('isSso', false);
+      this.logger.info(
+        `Disabling SSO since idP ACR is insufficient: ${idpAcr}`,
+      );
 
       const trackingContext: TrackedEventContextInterface = { req };
       const { FC_IDP_INSUFFICIENT_ACR } = this.tracking.TrackedEventsMap;
@@ -298,13 +288,6 @@ export class CoreFcpController {
       scopes,
       spName,
     };
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'CoreRoutes.INTERACTION_CONSENT',
-      response,
-      route: CoreRoutes.INTERACTION_CONSENT,
-    });
 
     const isRefresh = stepRoute === CoreRoutes.INTERACTION_CONSENT;
 

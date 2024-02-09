@@ -1,10 +1,8 @@
 {
-  "extends": ["stylelint-config-standard-scss", "stylelint-config-prettier"],
+  "extends": ["stylelint-config-standard-scss"],
   "plugins": ["stylelint-order"],
   "rules": {
-    "color-hex-case": "lower",
     "color-hex-length": "long",
-    "declaration-colon-newline-after": "always-multi-line",
     "order/order": ["custom-properties", "declarations"],
     "order/properties-alphabetical-order": true,
     "rule-empty-line-before": ["always-multi-line", { "except": ["first-nested"] }],

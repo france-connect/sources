@@ -16,6 +16,10 @@ export class CoreClaimAmrException extends CoreBaseException {
   code = ErrorCode.CLAIM_AMR;
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
 
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
+
   constructor() {
     super(
       'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous',

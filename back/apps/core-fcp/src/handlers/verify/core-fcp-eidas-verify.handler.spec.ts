@@ -3,11 +3,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { CoreAccountService, CoreAcrService } from '@fc/core';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
-import { LoggerService } from '@fc/logger-legacy';
+import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
+import { LoggerService } from '@fc/logger';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { CoreFcpEidasVerifyHandler } from './core-fcp-eidas-verify.handler';
@@ -15,11 +17,7 @@ import { CoreFcpEidasVerifyHandler } from './core-fcp-eidas-verify.handler';
 describe('CoreFcpEidasVerifyHandler', () => {
   let service: CoreFcpEidasVerifyHandler;
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    warn: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const uidMock = '42';
 
@@ -90,6 +88,10 @@ describe('CoreFcpEidasVerifyHandler', () => {
     computeIdentityHash: jest.fn(),
   };
 
+  const identityProviderAdapterMock = {
+    getById: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -101,6 +103,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
         SessionService,
         TrackingService,
         ServiceProviderAdapterMongoService,
+        IdentityProviderAdapterMongoService,
         CryptographyEidasService,
       ],
     })
@@ -120,6 +123,8 @@ describe('CoreFcpEidasVerifyHandler', () => {
       .useValue(serviceProviderMock)
       .overrideProvider(CryptographyEidasService)
       .useValue(cryptographyEidasServiceMock)
+      .overrideProvider(IdentityProviderAdapterMongoService)
+      .useValue(identityProviderAdapterMock)
       .compile();
 
     service = module.get<CoreFcpEidasVerifyHandler>(CoreFcpEidasVerifyHandler);
@@ -136,6 +141,10 @@ describe('CoreFcpEidasVerifyHandler', () => {
     );
 
     coreAccountServiceMock.computeFederation.mockResolvedValue(accountIdMock);
+
+    identityProviderAdapterMock.getById.mockResolvedValue({
+      maxAuthorizedAcr: 'maxAuthorizedAcr value',
+    });
   });
 
   it('should be defined', () => {
@@ -189,24 +198,6 @@ describe('CoreFcpEidasVerifyHandler', () => {
       sessionServiceMock.set.mockRejectedValueOnce(errorMock);
       // Then
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
-    });
-
-    it('Should call session set with amr parameter', async () => {
-      // When
-      await service.handle(handleArgument);
-      // Then
-      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.set).toHaveBeenCalledWith({
-        accountId: accountIdMock,
-        amr: ['eidas'],
-        idpIdentity: { sub: 'sub' },
-        spIdentity: { email: 'some@email.com' },
-        subs: {
-          // FranceConnect claims naming convention
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          sp_id: 'computedSubSp',
-        },
-      });
     });
 
     it('Should call computeFederation()', async () => {

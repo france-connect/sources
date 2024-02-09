@@ -18,4 +18,8 @@ export class CoreLowAcrException extends CoreBaseException {
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
   // should not happen as we display only valid identity providers on user's ip choice page
   public readonly httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

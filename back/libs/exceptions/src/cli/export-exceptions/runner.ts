@@ -16,6 +16,7 @@ import {
   ExceptionClass,
   PathAndException,
   PathAndInstantiatedException,
+  ValidExceptionParams,
 } from '../../types';
 import MarkdownGenerator from './markdown-generator';
 
@@ -36,8 +37,17 @@ export default class Runner {
     return { path: args.path, Exception };
   }
 
-  static hasValidParam(param: number): boolean {
+  static hasValidNumber(param: number): boolean {
     return typeof param === 'number' && param >= 0;
+  }
+
+  static hasValidString(param: string): boolean {
+    return (
+      typeof param === 'string' &&
+      param !== null &&
+      param !== undefined &&
+      param.trim() !== ''
+    );
   }
 
   static hasValidHttpStatusCode(param: number): boolean {
@@ -46,24 +56,64 @@ export default class Runner {
     );
   }
 
+  // eslint-disable-next-line complexity
+  static hasValidException({
+    hasValidScope,
+    hasValidCode,
+    hasValidHttpStatusCode,
+    hasValidError,
+    hasValidErrorDescription,
+  }: ValidExceptionParams): boolean {
+    return (
+      hasValidScope &&
+      hasValidCode &&
+      hasValidHttpStatusCode &&
+      hasValidError &&
+      hasValidErrorDescription
+    );
+  }
+
   static inflateException({
     path,
     Exception,
-  }: PathAndException): PathAndInstantiatedException {
-    const error = new Exception(new Error());
-    const { scope, code, httpStatusCode } = error;
-    const hasValidScope = Runner.hasValidParam(scope);
-    const hasValidCode = Runner.hasValidParam(code);
+  }: PathAndException): PathAndInstantiatedException | null {
+    const errorInstance = new Exception(new Error());
+    const { scope, code, httpStatusCode } = errorInstance;
+
+    // Retrieve static error and error description props
+    const errorCustom = Exception['ERROR'];
+    const errorDescriptionCustom = Exception['ERROR_DESCRIPTION'];
+
+    const hasValidScope = Runner.hasValidNumber(scope);
+    const hasValidCode = Runner.hasValidNumber(code);
     const hasValidHttpStatusCode =
       Runner.hasValidHttpStatusCode(httpStatusCode);
-    const isException = hasValidScope && hasValidCode && hasValidHttpStatusCode;
+    const hasValidError = Runner.hasValidString(errorCustom);
+    const hasValidErrorDescription = Runner.hasValidString(
+      errorDescriptionCustom,
+    );
+
+    const isException = Runner.hasValidException({
+      hasValidScope,
+      hasValidCode,
+      hasValidHttpStatusCode,
+      hasValidError,
+      hasValidErrorDescription,
+    });
+
     if (!isException) return null;
-    return { path, error };
+
+    return {
+      path,
+      errorInstance,
+      error: { ERROR: errorCustom, ERROR_DESCRIPTION: errorDescriptionCustom },
+    };
   }
 
   static buildException({
     path,
     error,
+    errorInstance,
   }: PathAndInstantiatedException): IExceptionDocumentation {
     const {
       scope,
@@ -71,11 +121,14 @@ export default class Runner {
       httpStatusCode,
       message,
       constructor: { name: exception },
-    } = error;
+    } = errorInstance;
+
+    const { ERROR, ERROR_DESCRIPTION } = error;
+
     const errorCode = ExceptionsService.getCode(scope, code);
-    const loggable = Loggable.isLoggable(error);
-    const trackable = Trackable.isTrackable(error);
-    const description = Description.getDescription(error);
+    const loggable = Loggable.isLoggable(errorInstance);
+    const trackable = Trackable.isTrackable(errorInstance);
+    const description = Description.getDescription(errorInstance);
 
     const data = {
       scope,
@@ -88,6 +141,8 @@ export default class Runner {
       description,
       path,
       exception,
+      ERROR,
+      ERROR_DESCRIPTION,
     };
 
     return data;

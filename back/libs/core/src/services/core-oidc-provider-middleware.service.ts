@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { FlowStepsService } from '@fc/flow-steps';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { atHashFromAccessToken, IOidcClaims, OidcSession } from '@fc/oidc';
 import { OidcAcrConfig, OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientRoutes, OidcClientSession } from '@fc/oidc-client';
@@ -43,9 +43,7 @@ export class CoreOidcProviderMiddlewareService {
     @Inject(CORE_SERVICE)
     protected readonly core: CoreServiceInterface,
     protected readonly flowSteps: FlowStepsService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   protected registerMiddleware(
     step: OidcProviderMiddlewareStep,
@@ -66,23 +64,27 @@ export class CoreOidcProviderMiddlewareService {
   }
 
   protected overrideAuthorizeAcrValues(ctx: OidcCtx): void {
+    if (!['POST', 'GET'].includes(ctx.method)) {
+      this.logger.warning(`Unsupported method "${ctx.method}".`);
+      return;
+    }
+
     const { defaultAcrValue } = this.config.get<OidcAcrConfig>('OidcAcr');
     const knownAcrValues = this.oidcAcr.getKnownAcrValues();
-    this.logger.trace({ ctx, knownAcrValues });
 
-    if (['POST', 'GET'].includes(ctx.method)) {
-      const isPostMethod = ctx.method === 'POST';
-      const data = isPostMethod ? ctx.req.body : ctx.query;
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { acr_values: dataAcrValues } = data as { acr_values: string };
-      const acrValues = dataAcrValues.split(/\s+/);
-      data.acr_values = pickAcr(knownAcrValues, acrValues, defaultAcrValue);
-    } else {
-      this.logger.warn(
-        `Unsupported method "${ctx.method} on /authorize endpoint". This should not happen`,
-      );
-    }
+    const isPostMethod = ctx.method === 'POST';
+    const data = isPostMethod ? ctx.req.body : ctx.query;
+    // oidc parameter
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { acr_values: dataAcrValues } = data as { acr_values: string };
+    const acrValues = dataAcrValues.split(/\s+/);
+    data.acr_values = pickAcr(knownAcrValues, acrValues, defaultAcrValue);
+
+    this.logger.info(`Overriding "acr_values" with "${data.acr_values}"`);
+    this.logger.debug({
+      originalAcrValues: dataAcrValues,
+      overriddenAcrValues: data.acr_values,
+    });
   }
 
   /**
@@ -99,28 +101,30 @@ export class CoreOidcProviderMiddlewareService {
    * @param overrideValue
    */
   protected overrideAuthorizePrompt(ctx: OidcCtx): void {
+    if (!['POST', 'GET'].includes(ctx.method)) {
+      this.logger.warning(`Unsupported method "${ctx.method}".`);
+      return;
+    }
+
     const { forcedPrompt } =
       this.config.get<OidcProviderConfig>('OidcProvider');
     const overrideValue = forcedPrompt.join(' ');
-    this.logger.trace({ ctx, overrideValue });
 
     /**
      * Support both methods
      * @TODO #137 check what needs to be done if we implement pushedAuthorizationRequests
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/137
      */
-    switch (ctx.method) {
-      case 'GET':
-        ctx.query.prompt = overrideValue;
-        break;
-      case 'POST':
-        ctx.req.body.prompt = overrideValue;
-        break;
-      default:
-        this.logger.warn(
-          `Unsupported method "${ctx.method} on /authorize endpoint". This should not happen`,
-        );
-    }
+    const isPostMethod = ctx.method === 'POST';
+    const data = isPostMethod ? ctx.req.body : ctx.query;
+    const { prompt: dataPrompt } = data as { prompt: string };
+    data.prompt = overrideValue;
+
+    this.logger.info(`Overriding "prompt" with "${data.prompt}"`);
+    this.logger.debug({
+      originalPrompt: dataPrompt,
+      overriddenPrompt: data.prompt,
+    });
   }
 
   protected getEventContext(ctx): TrackedEventContextInterface {
@@ -136,8 +140,6 @@ export class CoreOidcProviderMiddlewareService {
       req: ctx.req,
       sessionId,
     };
-
-    this.logger.trace(eventContext);
 
     return eventContext;
   }
@@ -250,6 +252,19 @@ export class CoreOidcProviderMiddlewareService {
     }
   }
 
+  private shouldAbortIdpHint(ctx: OidcCtx) {
+    const { req } = ctx;
+    const idpHint = req.query.idp_hint as string;
+
+    return ctx.oidc['isError'] === true || ctx.isSso || !idpHint;
+  }
+
+  private trackRedirectToIdp(ctx: OidcCtx) {
+    const eventContext = this.getEventContext(ctx);
+    const { FC_REDIRECTED_TO_HINTED_IDP } = this.tracking.TrackedEventsMap;
+    return this.tracking.track(FC_REDIRECTED_TO_HINTED_IDP, eventContext);
+  }
+
   protected async redirectToHintedIdpMiddleware(ctx: OidcCtx) {
     const { req, res } = ctx;
     const idpHint = req.query.idp_hint as string;
@@ -260,7 +275,7 @@ export class CoreOidcProviderMiddlewareService {
       'OidcClient',
     );
 
-    if (ctx.isSso || !idpHint) {
+    if (this.shouldAbortIdpHint(ctx)) {
       return;
     }
 
@@ -271,11 +286,13 @@ export class CoreOidcProviderMiddlewareService {
 
     await this.flowSteps.setStep(req, OidcClientRoutes.REDIRECT_TO_IDP);
 
-    await this.core.redirectToIdp(res, acr, idpHint, session);
-
-    const eventContext = this.getEventContext(ctx);
-    const { FC_REDIRECTED_TO_HINTED_IDP } = this.tracking.TrackedEventsMap;
-    await this.tracking.track(FC_REDIRECTED_TO_HINTED_IDP, eventContext);
+    try {
+      await this.core.redirectToIdp(res, idpHint, session, { acr });
+      await session.commit();
+      await this.trackRedirectToIdp(ctx);
+    } catch (error) {
+      await this.oidcErrorService.throwError(ctx, error);
+    }
   }
 
   protected async isSsoAvailable(
@@ -323,7 +340,7 @@ export class CoreOidcProviderMiddlewareService {
 
   protected async checkRedirectToSso(ctx: OidcCtx): Promise<void> {
     if (ctx.isSso) {
-      this.logger.trace('ssoMiddleware');
+      this.logger.info('SSO detected, skipping IdP authentication.');
       await this.redirectToSso(ctx);
     }
   }

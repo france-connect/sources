@@ -6,7 +6,8 @@ import {
 
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { ConfigService } from '@fc/config';
+import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import {
@@ -16,6 +17,7 @@ import {
   SessionSubNotFoundException,
 } from '@fc/session';
 
+import { OidcProviderConfig } from '../dto';
 import {
   OidcProviderRuntimeException,
   OidcProviderSpIdNotFoundException,
@@ -33,14 +35,15 @@ export abstract class OidcProviderAppConfigLibService
 {
   protected provider: Provider;
 
+  // Dependency injection can require more than 4 parameters
+  // eslint-disable-next-line max-params
   constructor(
-    protected readonly logger: LoggerService,
+    protected readonly _logger: LoggerService,
     protected readonly sessionService: SessionService,
     protected readonly errorService: OidcProviderErrorService,
     protected readonly grantService: OidcProviderGrantService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+    protected readonly config: ConfigService,
+  ) {}
 
   /**
    * More documentation can be found in oidc-provider repo
@@ -132,7 +135,8 @@ export abstract class OidcProviderAppConfigLibService
    * @param {OidcSession} session Object that contains the session info
    */
   async finishInteraction(req: any, res: any, session: OidcSession) {
-    const { spAcr: acr, amr }: OidcClientSession = session;
+    const { amr }: OidcClientSession = session;
+    const acr = this.getInteractionAcr(session);
     /**
      * Build Interaction results
      * For all available options, refer to `oidc-provider` documentation:
@@ -177,6 +181,20 @@ export abstract class OidcProviderAppConfigLibService
     }
   }
 
+  private getInteractionAcr(session: OidcSession): string {
+    const { spAcr, idpAcr }: OidcClientSession = session;
+
+    const {
+      configuration: { acrValues },
+    } = this.config.get<OidcProviderConfig>('OidcProvider');
+
+    if (acrValues.includes(idpAcr)) {
+      return idpAcr;
+    }
+
+    return spAcr;
+  }
+
   /**
    * Set provider implementation from OidcProviderService
    * @param provider
@@ -192,6 +210,7 @@ export abstract class OidcProviderAppConfigLibService
     { method, uri, title }: LogoutFormParamsInterface,
   ): Promise<void> {
     await session.set('oidcProviderLogoutForm', form);
+    await session.commit();
 
     ctx.body = `<!DOCTYPE html>
       <head>

@@ -16,7 +16,6 @@ import {
 import { Injectable } from '@nestjs/common';
 
 import { DekAlg, KekAlg, Use } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
 
 import {
   CanNotDecodePlaintextException,
@@ -32,9 +31,7 @@ import { MultipleRelevantKeysException } from '../exceptions/multiple-relevant-k
 
 @Injectable()
 export class JwtService {
-  constructor(private readonly logger: LoggerService) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor() {}
 
   getFirstRelevantKey(
     jwks: JSONWebKeySet,

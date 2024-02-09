@@ -7,7 +7,7 @@ import { ClientProxy } from '@nestjs/microservices';
 
 import { IPaginationOptions, IPaginationResult, validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { TracksProtocol } from '@fc/microservices';
 import { IOidcIdentity } from '@fc/oidc';
 import { RabbitmqConfig } from '@fc/rabbitmq';
@@ -28,17 +28,13 @@ export class TracksService {
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
     @Inject('TracksBroker') private readonly broker: ClientProxy,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async getList(
     identity: Partial<IOidcIdentity>,
     options: IPaginationOptions,
   ): Promise<{ meta: IPaginationResult; payload: TrackDto[] }> {
     const { requestTimeout } = this.config.get<RabbitmqConfig>('TracksBroker');
-
-    this.logger.debug('UserTracksController.getList()');
 
     try {
       const order = this.broker
@@ -47,12 +43,10 @@ export class TracksService {
 
       const { meta, payload } = await lastValueFrom(order);
 
-      this.logger.trace({ payload });
-
       const errors = await this.checkTracks(payload);
 
       if (errors) {
-        this.logger.trace({ errors });
+        this.logger.err({ errors });
         throw new Error('Invalid Tracks format');
       }
 
@@ -61,7 +55,6 @@ export class TracksService {
         meta,
       };
     } catch (error) {
-      this.logger.trace(error, 'Error Response from RabbitMQ');
       throw new TracksResponseException(error);
     }
   }

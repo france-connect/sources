@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcProviderService } from '@fc/oidc-provider';
 
 import { OverrideOidcProviderConfig } from '../dto';
@@ -18,9 +18,7 @@ export class OverrideOidcProviderService {
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
     private readonly moduleRef: ModuleRef,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   onApplicationBootstrap() {
     this.overrideJwksResponse();
@@ -44,6 +42,8 @@ export class OverrideOidcProviderService {
    * To give more context, we prefixed the name in this module.
    */
   private overrideJwksResponse() {
+    this.logger.notice('Overriding JwksResponse of "oidc-provider".');
+
     /** Grab HSM public sig key from configuration */
     const { sigHsmPubKeys } = this.config.get<OverrideOidcProviderConfig>(
       'OverrideOidcProvider',

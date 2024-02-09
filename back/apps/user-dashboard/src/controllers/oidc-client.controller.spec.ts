@@ -1,11 +1,8 @@
-import { encode } from 'querystring';
-
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialDeep } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
-import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata } from '@fc/oidc';
 import { OidcClientService } from '@fc/oidc-client';
 import {
@@ -55,14 +52,6 @@ describe('OidcClient Controller', () => {
     error_description: 'error_description',
   };
 
-  const loggerServiceMock = {
-    businessEvent: jest.fn(),
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    verbose: jest.fn(),
-  } as unknown as LoggerService;
-
   const sessionServiceMock = getSessionServiceMock();
 
   const sessionCsrfServiceMock = {
@@ -91,8 +80,6 @@ describe('OidcClient Controller', () => {
     get: jest.fn(),
   };
 
-  const queryStringEncodeMock = jest.mocked(encode);
-
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -101,7 +88,6 @@ describe('OidcClient Controller', () => {
       controllers: [OidcClientController],
       providers: [
         OidcClientService,
-        LoggerService,
         SessionService,
         SessionCsrfService,
         TrackingService,
@@ -111,8 +97,6 @@ describe('OidcClient Controller', () => {
     })
       .overrideProvider(OidcClientService)
       .useValue(oidcClientServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
       .overrideProvider(TrackingService)
@@ -325,38 +309,6 @@ describe('OidcClient Controller', () => {
       // assert
       expect(res.redirect).toHaveBeenCalledTimes(1);
       expect(res.redirect).toHaveBeenCalledWith('/');
-    });
-  });
-
-  describe('getLegacyOidcCallback', () => {
-    it('should extract urlPrefix from app config', () => {
-      // When
-      controller.getLegacyOidcCallback(req.query, req.params);
-      // Then
-      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(configServiceMock.get).toHaveBeenCalledWith('App');
-    });
-
-    it('should build redirect url with encode from querystring', () => {
-      // When
-      controller.getLegacyOidcCallback(req.query, req.params);
-      // Then
-      expect(queryStringEncodeMock).toHaveBeenCalledTimes(1);
-      expect(queryStringEncodeMock).toHaveBeenCalledWith(req.query);
-    });
-
-    it('should redrect to the built oidc callback url', () => {
-      // Given
-      const queryMock = 'first-query-param=first&second-query-param=second';
-      queryStringEncodeMock.mockReturnValueOnce(queryMock);
-      const redirectOidcCallbackUrl = `${configMock.urlPrefix}/oidc-callback?${queryMock}`;
-      // When
-      const result = controller.getLegacyOidcCallback(req.query, req.params);
-      // Then
-      expect(result).toEqual({
-        statusCode: 302,
-        url: redirectOidcCallbackUrl,
-      });
     });
   });
 

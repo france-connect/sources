@@ -18,4 +18,5 @@ export interface IdentityProvider extends IdentityProviderBase {
   mocked: boolean;
   title: string;
   ministry: string;
+  fqdn: string;
 }

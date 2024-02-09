@@ -1,6 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { HttpStatus } from '@nestjs/common';
+
 import { Description } from '@fc/exceptions';
 
 import { ErrorCode } from '../enum';
@@ -13,4 +15,10 @@ export class ReadLightResponseFromCacheException extends EidasClientBaseExceptio
   public readonly code = ErrorCode.READ_LIGHT_RESPONSE_FROM_CACHE;
   public readonly message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
+
+  public readonly httpStatusCode = HttpStatus.GATEWAY_TIMEOUT;
+
+  static ERROR = 'temporarily_unavailable';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

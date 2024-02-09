@@ -3,9 +3,14 @@ import { lastValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
+import { LoggerService } from '@fc/logger';
+
 @Injectable()
 export class MockServiceProviderService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly logger: LoggerService,
+  ) {}
 
   async getData(
     apiUrl: string,
@@ -23,11 +28,13 @@ export class MockServiceProviderService {
           headers: {
             Authorization: `Bearer ${bearer}`,
           },
+          proxy: false,
         }),
       );
 
       return response.data;
     } catch (exception) {
+      this.logger.err(exception);
       throw exception.response.data;
     }
   }

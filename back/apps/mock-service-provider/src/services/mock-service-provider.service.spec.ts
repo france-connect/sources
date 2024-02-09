@@ -3,6 +3,10 @@ import { lastValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
+
 import { MockServiceProviderService } from './mock-service-provider.service';
 
 jest.mock('rxjs');
@@ -14,15 +18,19 @@ describe('MockServiceProviderService', () => {
     get: jest.fn(),
   };
 
+  const loggerServiceMock = getLoggerMock();
+
   beforeEach(async () => {
     jest.clearAllMocks();
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MockServiceProviderService, HttpService],
+      providers: [MockServiceProviderService, HttpService, LoggerService],
     })
       .overrideProvider(HttpService)
       .useValue(httpServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerServiceMock)
       .compile();
 
     service = module.get<MockServiceProviderService>(
@@ -62,6 +70,7 @@ describe('MockServiceProviderService', () => {
         headers: {
           Authorization: authorizationMock,
         },
+        proxy: false,
       });
     });
 

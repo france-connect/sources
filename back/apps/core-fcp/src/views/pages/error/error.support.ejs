@@ -1,5 +1,5 @@
 <%
-const showSupportButton = locals.config?.Core?.supportFormCodes?.includes(locals.code);
+const showSupportButton = $config('Core.supportFormCodes')?.includes(locals.error.code);
 const offsetLgClass = showSupportButton
   ? 'fr-col-offset-lg-0'
   : 'fr-col-offset-lg-1';
@@ -12,11 +12,11 @@ const sp_name = OidcClient?.spName || locals.spName;
 const idp_name = OidcClient?.idpLabel || OidcClient?.idpName;
 
 const params = {
-  platform: locals.config.App?.name,
-  error_code: locals.code,
+  platform: $config('App.name'),
+  error_code: locals.error.code,
   sp_name,
   idp_name,
-  error_id: locals.id,
+  error_id: locals.error.id,
 };
 
 const queryString = Object.entries(params).reduce((acc, [key, value]) => {
@@ -24,7 +24,7 @@ const queryString = Object.entries(params).reduce((acc, [key, value]) => {
   return value ? `${acc}${separator}${key}=${encodeURIComponent(value)}` : acc;
 }, '');
 
-const href = `${locals.config.Core.supportFormUrl}${queryString}`;
+const href = `${$config('Core.supportFormUrl')}${queryString}`;
 %>
 <section
   data-testid="error-support"

@@ -1,17 +1,19 @@
+import { throwError } from 'rxjs';
+
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+import { ViewTemplateService } from '@fc/view-templates';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { RpcException } from '../exceptions';
 import { RpcExceptionFilter } from './rpc.exception-filter';
 
+jest.mock('rxjs');
+
 describe('RpcExceptionFilter', () => {
   let exceptionFilter: RpcExceptionFilter;
-  const loggerMock = {
-    debug: jest.fn(),
-    warn: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerMock = getLoggerMock();
 
   const apiOutputContentTypeValueMock = 'html';
   const configServiceMock = {} as unknown as ConfigService;
@@ -23,25 +25,47 @@ describe('RpcExceptionFilter', () => {
   resMock.render = jest.fn().mockReturnValue(resMock);
   resMock.status = jest.fn().mockReturnValue(resMock);
 
+  const viewTemplateServiceMock = {
+    bindMethodsToResponse: jest.fn(),
+  };
+
   beforeEach(() => {
-    exceptionFilter = new RpcExceptionFilter(configServiceMock, loggerMock);
+    exceptionFilter = new RpcExceptionFilter(
+      configServiceMock,
+      loggerMock as unknown as LoggerService,
+      viewTemplateServiceMock as unknown as ViewTemplateService,
+    );
     jest.resetAllMocks();
   });
 
   describe('catch', () => {
-    it('should log an error', () => {
+    it('should call logException with error code, error id and exception', () => {
       // Given
-      const exception = new RpcException('message text');
+      const exception = new RpcException('Exception from RpcException');
+      exceptionFilter['logException'] = jest.fn();
+
       // When
       exceptionFilter.catch(exception);
+
       // Then
-      expect(loggerMock.warn).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'RpcException',
-          code: 'Y000000',
-          message: 'message text',
-        }),
+      expect(exceptionFilter['logException']).toHaveBeenCalledWith(
+        'Y000000',
+        expect.any(String),
+        exception,
       );
+    });
+
+    it('should call throwError from rxjs', () => {
+      // Given
+      const exception = new RpcException('Exception from RpcException');
+      exceptionFilter['logException'] = jest.fn();
+      const throwErrorMock = jest.mocked(throwError);
+
+      // When
+      exceptionFilter.catch(exception);
+
+      // Then
+      expect(throwErrorMock).toHaveBeenCalledWith(exception.getError());
     });
   });
 });

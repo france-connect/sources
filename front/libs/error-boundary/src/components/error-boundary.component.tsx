@@ -6,7 +6,7 @@ export interface ErrorBoundaryComponentState {
 
 export interface ErrorBoundaryComponentProps {
   // eslint-disable-next-line react/require-default-props
-  onError?: (error: Error, info: { componentStack: string }) => void;
+  onError?: (error: Error, info: React.ErrorInfo) => void;
   children: ReactNode;
 }
 

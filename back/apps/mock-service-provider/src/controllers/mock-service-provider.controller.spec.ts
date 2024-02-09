@@ -5,11 +5,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata } from '@fc/oidc';
 import { OidcClientService, OidcClientSession } from '@fc/oidc-client';
 import { ISessionService, SessionNotFoundException } from '@fc/session';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import {
@@ -43,10 +44,7 @@ describe('MockServiceProviderController', () => {
     getEndSessionUrlFromProvider: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const oidcErrorMock = {
     error: 'error',

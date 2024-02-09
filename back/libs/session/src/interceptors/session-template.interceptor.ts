@@ -7,25 +7,16 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
-
 import { SessionTemplateService } from '../services/session-template.service';
 
 @Injectable()
 export class SessionTemplateInterceptor implements NestInterceptor {
-  constructor(
-    private readonly logger: LoggerService,
-    private readonly sessionTemplate: SessionTemplateService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor(private readonly sessionTemplate: SessionTemplateService) {}
 
   async intercept(
     context: ExecutionContext,
     next: CallHandler,
   ): Promise<Observable<any>> {
-    this.logger.trace('SessionTemplateInterceptor');
-
     const res = context.switchToHttp().getResponse();
     const req = context.switchToHttp().getRequest();
 

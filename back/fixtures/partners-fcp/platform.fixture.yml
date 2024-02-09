@@ -1,6 +1,0 @@
-entity: Platform
-items:
-  france-connect-low:
-    name: 'FRANCE_CONNECT_LOW'
-  france-connect-high:
-    name: 'FRANCE_CONNECT_HIGH'

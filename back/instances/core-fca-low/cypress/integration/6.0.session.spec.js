@@ -34,15 +34,12 @@ describe('Session', () => {
   it('should trigger error Y190001 if FC session cookie not set', () => {
     const authorizeUrl = getAuthorizeUrl();
     cy.visit(authorizeUrl);
-
-    cy.get('#fi-search-term').should('be.visible');
     cy.url().should('match', new RegExp(`\/interaction\/[^/]+$`));
 
     cy.url().then((interactionUrl) => {
       cy.clearCookie('fc_session_id');
       cy.visit(interactionUrl, { failOnStatusCode: false });
       cy.hasError('Y190001');
-      cy.url().should('match', new RegExp(`\/api\/v2\/error$`));
     });
   });
 

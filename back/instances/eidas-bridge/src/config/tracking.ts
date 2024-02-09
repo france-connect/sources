@@ -46,10 +46,10 @@ export default {
         ReadLightRequestFromCacheException,
       ],
     },
-    REDIRECT_TO_FC_AUTHORIZE: {
+    REDIRECTED_TO_FC_AUTHORIZE: {
       step: '2.0.0',
       category: EventsCategoriesEnum.EU_REQUEST,
-      event: 'REDIRECT_TO_FC_AUTHORIZE',
+      event: 'REDIRECTED_TO_FC_AUTHORIZE',
       countryCodeDst: COUNTRY_CODE_FR,
       interceptRoutes: [
         {
@@ -91,10 +91,10 @@ export default {
       countryCodeDst: COUNTRY_CODE_FR,
       exceptions: [EidasBridgeInvalidFRIdentityException],
     },
-    REDIRECTING_TO_EIDAS_FR_NODE: {
+    REDIRECTED_TO_EIDAS_FR_NODE: {
       step: '4.0.0',
       category: EventsCategoriesEnum.EU_REQUEST,
-      event: 'REDIRECTING_TO_EIDAS_FR_NODE',
+      event: 'REDIRECTED_TO_EIDAS_FR_NODE',
       countryCodeDst: COUNTRY_CODE_FR,
     },
 
@@ -135,10 +135,10 @@ export default {
       event: 'SELECTED_CITIZEN_COUNTRY',
       countryCodeSrc: COUNTRY_CODE_FR,
     },
-    REDIRECTING_TO_FR_NODE: {
+    REDIRECTED_TO_FR_NODE: {
       step: '2.0.0',
       category: EventsCategoriesEnum.FR_REQUEST,
-      event: 'REDIRECTING_TO_FR_NODE',
+      event: 'REDIRECTED_TO_FR_NODE',
       countryCodeSrc: COUNTRY_CODE_FR,
       interceptRoutes: [
         {
@@ -166,10 +166,10 @@ export default {
       countryCodeSrc: COUNTRY_CODE_FR,
       exceptions: [EidasBridgeInvalidEUIdentityException],
     },
-    REDIRECT_TO_FC: {
+    REDIRECTED_TO_FC: {
       step: '4.0.0',
       category: EventsCategoriesEnum.FR_REQUEST,
-      event: 'REDIRECT_TO_FC',
+      event: 'REDIRECTED_TO_FC',
       countryCodeSrc: COUNTRY_CODE_FR,
     },
     RECEIVED_CALL_ON_TOKEN: {

@@ -63,8 +63,9 @@ export default {
         enabled: env.boolean('USE_ENCRYPTION'),
       },
       jwtUserinfo: { enabled: true },
-      backchannelLogout: { enabled: true },
+      backchannelLogout: { enabled: false },
       revocation: { enabled: true },
+      resourceIndicators: { enabled: false },
     },
     acceptQueryParamAccessTokens: true,
     ttl: {
@@ -72,8 +73,8 @@ export default {
       AuthorizationCode: 30, // 30 seconds
       Grant: 30, // 30 seconds
       IdToken: 60, // 1 minute
-      Interaction: env.number('COOKIE_MAX_AGE'), // 20 minutes
-      Session: env.number('COOKIE_MAX_AGE'), // 20 minutes
+      Interaction: 600, // 10 minutes
+      Session: 600, // 10 minutes
     },
     acrValues: ['eidas2', 'eidas3'],
     scopes: ['openid'],
@@ -138,7 +139,7 @@ export default {
       authorizationEncryptionEncValues: ['A256GCM'],
       authorizationSigningAlgValues: ['ES256', 'RS256', 'HS256'],
       dPoPSigningAlgValues: ['ES256', 'RS256'],
-      idTokenEncryptionAlgValues: ['ECDH-ES', 'RSA-OAEP'],
+      idTokenEncryptionAlgValues: ['ECDH-ES', 'RSA-OAEP', 'RSA-OAEP-256'],
       idTokenEncryptionEncValues: ['A256GCM'],
       idTokenSigningAlgValues: ['ES256', 'RS256', 'HS256'],
       introspectionEncryptionAlgValues: ['ECDH-ES', 'RSA-OAEP'],
@@ -150,7 +151,7 @@ export default {
       requestObjectSigningAlgValues: ['ES256', 'RS256', 'HS256'],
       revocationEndpointAuthSigningAlgValues: ['ES256', 'RS256'],
       tokenEndpointAuthSigningAlgValues: ['ES256', 'RS256'],
-      userinfoEncryptionAlgValues: ['ECDH-ES', 'RSA-OAEP'],
+      userinfoEncryptionAlgValues: ['ECDH-ES', 'RSA-OAEP', 'RSA-OAEP-256'],
       userinfoEncryptionEncValues: ['A256GCM'],
       userinfoSigningAlgValues: ['ES256', 'RS256', 'HS256'],
     },

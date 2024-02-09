@@ -8,7 +8,7 @@ import {
   LightRequestService,
   LightResponseService,
 } from '@fc/eidas-light-protocol';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { EidasProviderConfig } from './dto';
 import {
@@ -30,9 +30,7 @@ export class EidasProviderService {
     private readonly apacheIgnite: ApacheIgniteService,
     private readonly lightRequest: LightRequestService,
     private readonly lightResponse: LightResponseService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Retrieve the ignite caches for the proxy service:

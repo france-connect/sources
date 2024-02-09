@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
-import { getLoggerMock } from '@mocks/logger-legacy';
+import { getLoggerMock } from '@mocks/logger';
 
 import { CsmrTracksService } from '../services';
 import { CsmrTracksController } from './csmr-tracks.controller';
@@ -38,11 +38,6 @@ describe('CsmrTracksController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should set logger context', () => {
-    expect(loggerMock.setContext).toHaveBeenCalledTimes(1);
-    expect(loggerMock.setContext).toHaveBeenCalledWith('CsmrTracksController');
-  });
-
   describe('aggregateTracks()', () => {
     // Given
     const identityMock = Symbol('identityMock');
@@ -72,6 +67,18 @@ describe('CsmrTracksController', () => {
       const result = await controller.aggregateTracks(payloadMock);
       // Then
       expect(result).toBe(tracksDataMock);
+    });
+
+    it('should log an error if getTracksForIdentity() throw an error', async () => {
+      const errorMock = new Error('errorMock');
+      tracksMock.getTracksForIdentity
+        .mockReset()
+        .mockRejectedValueOnce(errorMock);
+      // When
+      await controller.aggregateTracks(payloadMock);
+      // Then
+      expect(loggerMock.err).toHaveBeenCalledTimes(1);
+      expect(loggerMock.err).toHaveBeenCalledWith(errorMock);
     });
 
     it("should return 'ERROR' if getTracksForIdentity() throw an error", async () => {

@@ -57,11 +57,5 @@ export interface IIdentityProviderAdapterEnv {
     // openid defined property names
     // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_encrypted_response_enc?: string;
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    redirect_uris?: string;
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    post_logout_redirect_uris?: string;
   };
 }

@@ -15,6 +15,9 @@ export class SessionInvalidCsrfConsentException extends SessionBaseException {
   public readonly code = ErrorCode.INVALID_CSRF_CONSENT;
   public readonly httpStatusCode = HttpStatus.UNAUTHORIZED;
 
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'user authentication aborted';
+
   constructor(error?: Error) {
     super(error);
     this.message =

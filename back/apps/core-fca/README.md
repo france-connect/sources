@@ -1,6 +1,6 @@
 # FC Core
 
-Application "core" de FranceConnect, il s'agit de l'application proposée au grand public pour se connecter à un fournisseur de service (SP) partenaire grâce à un fournisseur d'identité (IdP) partenaire.
+Application "core" d'AgentConnect, il s'agit de l'application proposée aux agents de l'Etat pour se connecter à un fournisseur de service (SP) partenaire grâce à un fournisseur d'identité (IdP) partenaire.
 
 ## Gestion des subject identifiers ou "sub"
 

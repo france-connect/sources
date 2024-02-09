@@ -3,12 +3,12 @@
 // Declarative code
 
 import { CoreInstance } from '../enums';
-import { ICsmrTracksGeoData } from './csmr-tracks-geo.interface';
+import { ISource } from './csmr-tracks-geo.interface';
 
 /**
  * Piece of data specific to legacy from ElasticSearch source
  */
-export type ICsmrTracksLegacyData = {
+export type ICsmrTracksLegacyFieldsData = {
   name: string;
   fiId: string;
   fiSub: string;
@@ -27,11 +27,5 @@ export type ICsmrTracksLegacyData = {
   eidas: string;
   time: string;
   service: CoreInstance;
+  source: ISource;
 };
-
-/**
- * data specific to legacy from ElasticSearch source with geo and script generated data
- */
-export type ICsmrTracksLegacyFieldsData = Readonly<
-  ICsmrTracksLegacyData & ICsmrTracksGeoData
->;

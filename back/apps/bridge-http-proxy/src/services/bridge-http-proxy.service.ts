@@ -6,7 +6,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { BridgePayload, BridgeProtocol } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { HttpProxyProtocol } from '@fc/microservices';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
@@ -22,9 +22,7 @@ export class BridgeHttpProxyService {
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
     @Inject('BridgeProxyBroker') private readonly broker: ClientProxy,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Retrieve informations from RIE through broker
@@ -46,8 +44,6 @@ export class BridgeHttpProxyService {
     const { requestTimeout } =
       this.config.get<RabbitmqConfig>('BridgeProxyBroker');
 
-    this.logger.debug('BrokerProxyController.proxyRequest()');
-
     const order = this.broker
       .send(HttpProxyProtocol.Commands.HTTP_PROXY, message)
       .pipe(timeout(requestTimeout));
@@ -55,7 +51,7 @@ export class BridgeHttpProxyService {
     try {
       idpResponse = await lastValueFrom(order);
     } catch (error) {
-      this.logger.trace({ error });
+      this.logger.debug(error);
       throw new BridgeHttpProxyRabbitmqException();
     }
 
@@ -66,7 +62,6 @@ export class BridgeHttpProxyService {
     );
 
     if (dtoProtocolErrors.length) {
-      this.logger.trace({ dtoProtocolErrors });
       throw new BridgeHttpProxyMissingVariableException();
     }
 

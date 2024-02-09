@@ -17,7 +17,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { RouteInfo } from '@nestjs/common/interfaces';
+import { RouteInfo, Type as Class } from '@nestjs/common/interfaces';
 
 import { IsStringOrRegExp } from '@fc/common';
 
@@ -38,8 +38,8 @@ export class CookieOptions {
   readonly secure: boolean;
 
   @IsNumber()
-  @IsPositive()
-  readonly maxAge: number;
+  @IsOptional()
+  readonly maxAge?: number;
 
   @IsString()
   readonly domain: string;
@@ -87,4 +87,7 @@ export class SessionConfig {
 
   @IsBoolean()
   readonly slidingExpiration: boolean;
+
+  @IsObject()
+  readonly schema: Class<unknown>;
 }

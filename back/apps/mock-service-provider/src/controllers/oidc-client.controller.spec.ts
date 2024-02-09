@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata } from '@fc/oidc';
 import { OidcClientService } from '@fc/oidc-client';
 import {
@@ -12,6 +12,7 @@ import {
 } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { OidcClientController } from './oidc-client.controller';
@@ -30,13 +31,7 @@ describe('OidcClient Controller', () => {
     },
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    verbose: jest.fn(),
-    debug: jest.fn(),
-    businessEvent: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const sessionServiceMock = getSessionServiceMock();
 
@@ -258,7 +253,30 @@ describe('OidcClient Controller', () => {
       expect(res.redirect).toHaveBeenCalledTimes(1);
     });
 
-    it('should throw an error because idp is blacklisted', async () => {
+    it('should log error if session service threw', async () => {
+      // setup
+      const body = {
+        scope: 'openid',
+        providerUid: providerIdMock,
+        // oidc param
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        acr_values: 'eidas3',
+        nonce: nonceMock,
+        claims: 'any_formatted_json_string',
+        csrfToken: 'csrfMockValue',
+      };
+      const errorMock = new Error('error');
+      sessionServiceMock.get.mockRejectedValueOnce(errorMock);
+
+      // action
+      await controller.redirectToIdp(res, body, sessionServiceMock);
+
+      // assert
+      expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.err).toHaveBeenCalledWith(errorMock);
+    });
+
+    it('should throw an error because csrf is invalid', async () => {
       // Given
       const csrfTokenBody = 'invalidCsrfMockValue';
       const body = {

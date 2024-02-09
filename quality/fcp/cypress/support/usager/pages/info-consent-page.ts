@@ -11,6 +11,10 @@ export default class InfoConsentPage {
     return cy.get('[data-testid="label-consent"]');
   }
 
+  getConsentCsrfInput(): ChainableElement {
+    return cy.get('input[name="_csrf"]');
+  }
+
   getConsentButton(): ChainableElement {
     return cy.get('[data-testid="consent-continue"]');
   }

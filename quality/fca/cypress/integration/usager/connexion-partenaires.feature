@@ -10,11 +10,11 @@ Fonctionnalité: Connexion Partenaires
     Etant donné que j'utilise le fournisseur de service "osmose"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je suis redirigé vers la page interaction
     Et que j'utilise le fournisseur d'identité "par défaut"
-    Quand je cherche le fournisseur d'identité par son ministère
-    Et je clique sur le fournisseur d'identité
-    Et je suis redirigé vers la page login du fournisseur d'identité
-    Et je m'authentifie avec succès
+    Et que j'entre l'email "test@fia1.fr"
+    Quand je clique sur le bouton de connexion
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Et que je m'authentifie avec succès
     Alors je suis redirigé vers la page fournisseur de service
     Et je suis connecté au fournisseur de service

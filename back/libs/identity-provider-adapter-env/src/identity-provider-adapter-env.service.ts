@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { asyncFilter, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata } from '@fc/oidc';
 import { IIdentityProviderAdapter } from '@fc/oidc-client';
 
@@ -27,9 +27,7 @@ export class IdentityProviderAdapterEnvService
     private readonly cryptography: CryptographyService,
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   private async findAllIdentityProvider(): Promise<
     IIdentityProviderAdapterEnv[]
@@ -51,7 +49,7 @@ export class IdentityProviderAdapterEnvService
         );
 
         if (errors.length > 0) {
-          this.logger.warn(
+          this.logger.warning(
             `"${configuration.uid}" was excluded from the result at DTO validation`,
             JSON.stringify(errors),
           );

@@ -3,7 +3,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { MessageType } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import {
   BridgeHttpProxyCsmrException,
@@ -22,11 +24,7 @@ describe('BrokerProxyController', () => {
     setHeaders: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    debug: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const reqMock = {
     originalUrl: '/fizz',
@@ -72,10 +70,6 @@ describe('BrokerProxyController', () => {
       await controller.get(reqMock, headersMock, resMock);
 
       // Then
-      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.debug).toHaveBeenCalledWith(
-        'GET https://url.com/fizz',
-      );
       expect(controller['allRequest']).toHaveBeenCalledTimes(1);
       expect(controller['allRequest']).toHaveBeenCalledWith(
         reqMock,
@@ -86,17 +80,19 @@ describe('BrokerProxyController', () => {
   });
 
   describe('post()', () => {
-    it('should log URL idp called', async () => {
+    it('should log URL idp called and call allRequest private method', async () => {
       // Given
       controller['allRequest'] = jest.fn();
 
       // When
-      await controller.post(reqMock, headersMock, resMock, bodyMock);
+      await controller.get(reqMock, headersMock, resMock);
 
       // Then
-      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.debug).toHaveBeenCalledWith(
-        'POST https://url.com/fizz',
+      expect(controller['allRequest']).toHaveBeenCalledTimes(1);
+      expect(controller['allRequest']).toHaveBeenCalledWith(
+        reqMock,
+        headersMock,
+        resMock,
       );
     });
   });
@@ -117,6 +113,33 @@ describe('BrokerProxyController', () => {
       );
       handleErrorMock.mockResolvedValueOnce();
     });
+
+    it('should log URL idp called', async () => {
+      // Given
+      reqMock.method = 'GET';
+      bridgeHttpProxyServiceMock.proxyRequest.mockResolvedValueOnce({
+        type: MessageType.DATA,
+        data: {
+          headers: {
+            fizz: 'bud',
+          },
+          status: 200,
+          data: {
+            foo: 'bar',
+          },
+        },
+      });
+
+      // When
+      await controller['allRequest'](reqMock, headersMock, resMock);
+
+      // Then
+      expect(loggerServiceMock.info).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.info).toHaveBeenCalledWith(
+        'GET https://url.com/fizz',
+      );
+    });
+
     it('should call broker proxy service without body', async () => {
       // Given
       reqMock.method = 'GET';

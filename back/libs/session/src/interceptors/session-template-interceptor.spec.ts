@@ -1,19 +1,12 @@
 import { CallHandler, ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
-
 import { SessionTemplateService } from '../services';
 import { SessionTemplateInterceptor } from './session-template.interceptor';
 
 jest.mock('../helper', () => ({
   extractSessionFromRequest: jest.fn(),
 }));
-
-const loggerServiceMock = {
-  setContext: jest.fn(),
-  trace: jest.fn(),
-};
 
 describe('SessionTemplateInterceptor', () => {
   let interceptor: SessionTemplateInterceptor;
@@ -52,14 +45,8 @@ describe('SessionTemplateInterceptor', () => {
     jest.resetAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        SessionTemplateInterceptor,
-        LoggerService,
-        SessionTemplateService,
-      ],
+      providers: [SessionTemplateInterceptor, SessionTemplateService],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(SessionTemplateService)
       .useValue(sessionTemplateServiceMock)
       .compile();
@@ -74,7 +61,6 @@ describe('SessionTemplateInterceptor', () => {
 
   it('should be defined', () => {
     expect(interceptor).toBeDefined();
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
   });
 
   describe('intercept', () => {
@@ -88,10 +74,6 @@ describe('SessionTemplateInterceptor', () => {
       await interceptor.intercept(contextMock, nextMock);
 
       // Then
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledWith(
-        'SessionTemplateInterceptor',
-      );
       expect(sessionTemplateServiceMock.bindSessionToRes).toHaveBeenCalledTimes(
         0,
       );
@@ -103,10 +85,6 @@ describe('SessionTemplateInterceptor', () => {
       await interceptor.intercept(contextMock, nextMock);
 
       // Then
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledWith(
-        'SessionTemplateInterceptor',
-      );
       expect(sessionTemplateServiceMock.bindSessionToRes).toHaveBeenCalledTimes(
         1,
       );

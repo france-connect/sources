@@ -4,9 +4,11 @@ import { AccountBlockedException } from '@fc/account';
 import { CoreAccountService, CoreAcrService } from '@fc/core';
 import { CoreFcaAgentNotFromPublicServiceException } from '@fc/core-fca/exceptions';
 import { CryptographyFcaService } from '@fc/cryptography-fca';
-import { LoggerService } from '@fc/logger-legacy';
+import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
+import { LoggerService } from '@fc/logger';
 import { SessionService } from '@fc/session';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { CoreFcaMcpVerifyHandler } from './core-fca.mcp-verify.handler';
@@ -14,12 +16,7 @@ import { CoreFcaMcpVerifyHandler } from './core-fca.mcp-verify.handler';
 describe('CoreFcaMcpVerifyHandler', () => {
   let service: CoreFcaMcpVerifyHandler;
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    warn: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const accountIdMock = 'accountIdMock value';
 
@@ -75,6 +72,10 @@ describe('CoreFcaMcpVerifyHandler', () => {
       computeIdentityHash: jest.fn(),
     };
 
+    const identityProviderAdapterMock = {
+      getById: jest.fn(),
+    };
+
     const { sub: _sub, ...idpIdentityMockCleaned } = idpIdentityMock;
 
     beforeEach(async () => {
@@ -86,6 +87,7 @@ describe('CoreFcaMcpVerifyHandler', () => {
           CoreAccountService,
           CoreAcrService,
           CryptographyFcaService,
+          IdentityProviderAdapterMongoService,
         ],
       })
         .overrideProvider(LoggerService)
@@ -98,6 +100,8 @@ describe('CoreFcaMcpVerifyHandler', () => {
         .useValue(coreAcrServiceMock)
         .overrideProvider(CryptographyFcaService)
         .useValue(cryptographyFcaServiceMock)
+        .overrideProvider(IdentityProviderAdapterMongoService)
+        .useValue(identityProviderAdapterMock)
         .compile();
 
       service = module.get<CoreFcaMcpVerifyHandler>(CoreFcaMcpVerifyHandler);
@@ -113,6 +117,10 @@ describe('CoreFcaMcpVerifyHandler', () => {
         'computedSubSp',
       );
       coreAccountServiceMock.computeFederation.mockResolvedValue(accountIdMock);
+
+      identityProviderAdapterMock.getById.mockResolvedValue({
+        maxAuthorizedAcr: 'maxAuthorizedAcr value',
+      });
     });
 
     it('should be defined', () => {
@@ -306,6 +314,10 @@ describe('CoreFcaMcpVerifyHandler', () => {
       sessionOidc: sessionServiceMock,
     };
 
+    const identityProviderAdapterMock = {
+      getById: jest.fn(),
+    };
+
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: [
@@ -315,6 +327,7 @@ describe('CoreFcaMcpVerifyHandler', () => {
           CoreAccountService,
           CoreAcrService,
           CryptographyFcaService,
+          IdentityProviderAdapterMongoService,
         ],
       })
         .overrideProvider(LoggerService)
@@ -327,6 +340,8 @@ describe('CoreFcaMcpVerifyHandler', () => {
         .useValue(coreAcrServiceMock)
         .overrideProvider(CryptographyFcaService)
         .useValue(cryptographyFcaServiceMock)
+        .overrideProvider(IdentityProviderAdapterMongoService)
+        .useValue(identityProviderAdapterMock)
         .compile();
 
       service = module.get<CoreFcaMcpVerifyHandler>(CoreFcaMcpVerifyHandler);
@@ -342,6 +357,10 @@ describe('CoreFcaMcpVerifyHandler', () => {
         'computedSubSp',
       );
       coreAccountServiceMock.computeFederation.mockResolvedValue(accountIdMock);
+
+      identityProviderAdapterMock.getById.mockResolvedValue({
+        maxAuthorizedAcr: 'maxAuthorizedAcr value',
+      });
     });
 
     it('should be defined', () => {
@@ -386,6 +405,10 @@ describe('CoreFcaMcpVerifyHandler', () => {
       sessionOidc: sessionServiceMock,
     };
 
+    const identityProviderAdapterMock = {
+      getById: jest.fn(),
+    };
+
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: [
@@ -395,6 +418,7 @@ describe('CoreFcaMcpVerifyHandler', () => {
           CoreAccountService,
           CoreAcrService,
           CryptographyFcaService,
+          IdentityProviderAdapterMongoService,
         ],
       })
         .overrideProvider(LoggerService)
@@ -407,6 +431,8 @@ describe('CoreFcaMcpVerifyHandler', () => {
         .useValue(coreAcrServiceMock)
         .overrideProvider(CryptographyFcaService)
         .useValue(cryptographyFcaServiceMock)
+        .overrideProvider(IdentityProviderAdapterMongoService)
+        .useValue(identityProviderAdapterMock)
         .compile();
 
       service = module.get<CoreFcaMcpVerifyHandler>(CoreFcaMcpVerifyHandler);
@@ -422,6 +448,10 @@ describe('CoreFcaMcpVerifyHandler', () => {
         'computedSubSp',
       );
       coreAccountServiceMock.computeFederation.mockResolvedValue(accountIdMock);
+
+      identityProviderAdapterMock.getById.mockResolvedValue({
+        maxAuthorizedAcr: 'maxAuthorizedAcr value',
+      });
     });
 
     it('should be defined', () => {

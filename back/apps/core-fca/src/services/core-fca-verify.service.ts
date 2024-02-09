@@ -3,7 +3,7 @@ import { Request } from 'express';
 import { Injectable } from '@nestjs/common';
 
 import { CoreRoutes, CoreVerifyService } from '@fc/core';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
@@ -15,9 +15,7 @@ export class CoreFcaVerifyService {
     private readonly logger: LoggerService,
     private readonly coreVerify: CoreVerifyService,
     private readonly tracking: TrackingService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async handleVerifyIdentity(
     req: Request,
@@ -39,6 +37,7 @@ export class CoreFcaVerifyService {
   }
 
   private async trackSsoDisabled(eventContext: TrackedEventContextInterface) {
+    this.logger.info('SSO was disabled');
     const { SP_DISABLED_SSO } = this.tracking.TrackedEventsMap;
     await this.tracking.track(SP_DISABLED_SSO, eventContext);
   }

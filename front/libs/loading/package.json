@@ -1,7 +1,0 @@
-{
-  "name": "@fc/loading",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {},
-  "main": "src/index.ts"
-}

@@ -1,4 +1,5 @@
 import { validateDto } from '@fc/common';
+import { Amr } from '@fc/oidc';
 
 import {
   DiscoveryIdpAdapterMongoDTO,
@@ -14,6 +15,7 @@ describe('Identity Provider (Data Transfer Object)', () => {
   const metaDataIdPAdapterMongoMock = {
     active: true,
     clientID: 'clientID',
+    amr: [Amr.MAIL, Amr.PWD],
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_secret: '7vhnwzo1yUVOJT9GJ91gD5oid56effu1',
     discovery: false,
@@ -31,14 +33,6 @@ describe('Identity Provider (Data Transfer Object)', () => {
     id_token_signed_response_alg: 'RS512',
     image: 'provider1.png',
     name: 'provider1',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    post_logout_redirect_uris: [
-      'https://corev2.docker.dev-franceconnect.fr/api/v2/logout-from-provider',
-    ],
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    redirect_uris: [
-      'https://corev2.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip1v2',
-    ],
     // eslint-disable-next-line @typescript-eslint/naming-convention
     response_types: ['code'],
     // eslint-disable-next-line @typescript-eslint/naming-convention

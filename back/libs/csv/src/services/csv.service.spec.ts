@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { filteredByDto } from '@fc/common';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { CsvParsingException } from '../exceptions';
 import { parseCsv } from '../helpers';
@@ -22,13 +24,7 @@ describe('CsvService', () => {
   let service: CsvService<MockInterface>;
 
   class DtoMock {}
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    fatal: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    warn: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -53,7 +49,6 @@ describe('CsvService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
   });
 
   describe('pickData()', () => {
@@ -123,8 +118,8 @@ describe('CsvService', () => {
         DtoMock,
         VALIDATOR_OPTIONS,
       );
-      expect(loggerServiceMock.warn).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.warn).toHaveBeenCalledWith(
+      expect(loggerServiceMock.warning).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.warning).toHaveBeenCalledWith(
         '"row n°1" was excluded from the result at DTO validation :[\n  {}\n]',
       );
     });
@@ -137,7 +132,7 @@ describe('CsvService', () => {
         service['pickData']([inputMock]),
         // Assert
       ).rejects.toThrow(errorMock);
-      expect(loggerServiceMock.warn).toHaveBeenCalledTimes(0);
+      expect(loggerServiceMock.warning).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -229,11 +224,6 @@ describe('CsvService', () => {
       expect(loggerServiceMock.debug).toHaveBeenCalledWith(
         `Loading collection...`,
       );
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledWith({
-        data: csvMock,
-        path: fileMock,
-      });
     });
 
     it('should fail to validate data from csv', async () => {
@@ -262,11 +252,6 @@ describe('CsvService', () => {
       );
 
       // Assert
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledWith(
-        { error: errorMock, path: fileMock },
-        LoggerLevelNames.ERROR,
-      );
       expect(pickDataMock).toHaveBeenCalledTimes(0);
     });
   });

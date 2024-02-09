@@ -2,7 +2,7 @@ import { IsString } from 'class-validator';
 
 export class GetFqdnToIdentityProviderMongoDto {
   @IsString()
-  readonly domain: string;
+  readonly fqdn: string;
 
   @IsString()
   readonly identityProvider: string;

@@ -38,12 +38,24 @@ export default class ServiceProviderPage {
     return cy.get(this.fcButtonSelector);
   }
 
+  getRevokeTokenButton(): ChainableElement {
+    return cy.get('#revoke-token');
+  }
+
+  getTokenRevokationConfirmation(): ChainableElement {
+    return cy.contains('h1', 'Le token a été révoqué');
+  }
+
   getLogoutButton(): ChainableElement {
     return cy.get(this.logoutButtonSelector);
   }
 
   getUserInfoButton(): ChainableElement {
     return cy.get('#reload-userinfo');
+  }
+
+  getDataButton(): ChainableElement {
+    return cy.get('[data-testid="get-data-link"]');
   }
 
   checkIsVisible(): void {
@@ -259,31 +271,23 @@ export default class ServiceProviderPage {
   }
 
   checkMockAmrValue(amrValue: string): void {
-    cy.get('[id="info-amr"] strong').contains(amrValue);
+    const amrArray = amrValue.split(' ');
+    cy.get('[id="info-amr"] strong')
+      .invoke('text')
+      .then((value) => value.trim().split(' '))
+      .should('have.members', amrArray);
   }
 
   getMockIdTokenText(): Cypress.Chainable<string> {
     return cy.get('[id="info-id-token"]').invoke('text');
   }
 
-  checkMockErrorCallback(): void {
-    const errorCallbackURL = `${this.originUrl}/error`;
-    cy.url().should('include', errorCallbackURL);
+  checkIsMockDataPageVisible(): void {
+    const dataPageURL = `${this.originUrl}/data`;
+    cy.url().should('include', dataPageURL);
   }
 
-  checkMockErrorCode(errorCode: string): void {
-    const encodedError = encodeURIComponent(errorCode);
-    cy.url().should(
-      'match',
-      new RegExp(`(?<=[&|?])error=${encodedError}(?=&|$)`),
-    );
-  }
-
-  checkMockErrorDescription(errorDescription: string): void {
-    const encodedDescription = encodeURIComponent(errorDescription);
-    cy.url().should(
-      'match',
-      new RegExp(`(?<=[&|?])error_description=${encodedDescription}(?=&|$)`),
-    );
+  getMockIntrospectionTokenText(): Cypress.Chainable<string> {
+    return cy.get('#json').first().invoke('text');
   }
 }

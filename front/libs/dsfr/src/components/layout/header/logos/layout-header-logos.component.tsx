@@ -18,12 +18,7 @@ export const LayoutHeaderLogosComponent: React.FC<LayoutHeaderLogosComponentProp
       </div>
       {ApplicationLogo && (
         <div className="fr-header__operator">
-          <img
-            alt={title}
-            className="fr-responsive-img"
-            src={ApplicationLogo}
-            style={{ height: 54, maxHeight: 54 }}
-          />
+          <img alt={title} className="fr-responsive-img" src={ApplicationLogo} />
         </div>
       )}
     </React.Fragment>

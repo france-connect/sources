@@ -16,4 +16,7 @@ export class RnippRejectedBadRequestException extends RnippBaseException {
   public readonly message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
   public readonly httpStatusCode = HttpStatus.FORBIDDEN;
+
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'user authentication aborted';
 }

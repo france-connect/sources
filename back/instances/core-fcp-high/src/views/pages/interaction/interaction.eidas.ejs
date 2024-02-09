@@ -1,6 +1,6 @@
 <%
 const eidasBridgeProvider = locals.providers
-  .find((p) => p.uid === locals.config.App.eidasBridgeUid && p.display && p.active)
+  .find((p) => p.uid === $config('App.eidasBridgeUid') && p.display && p.active)
 %>
 <% if (eidasBridgeProvider) { %>
 <form

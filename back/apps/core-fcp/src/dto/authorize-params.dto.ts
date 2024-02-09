@@ -18,6 +18,7 @@ import { IsValidPrompt } from '@fc/oidc-provider';
  */
 export class AuthorizeParamsDto {
   @IsString()
+  @MinLength(1)
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_id: string;

@@ -4,7 +4,7 @@
 import { RequestMethod } from '@nestjs/common';
 
 import { CoreRoutes } from '@fc/core';
-import { EventsCategories } from '@fc/core-fcp';
+import { EventsCategories } from '@fc/core-fca';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { TrackingConfig } from '@fc/tracking';
 

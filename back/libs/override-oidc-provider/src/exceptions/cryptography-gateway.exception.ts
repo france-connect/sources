@@ -16,4 +16,8 @@ export class CryptographyGatewayException extends CryptographyBaseException {
   public readonly message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
   public readonly httpStatusCode = HttpStatus.BAD_GATEWAY;
+
+  static ERROR = 'temporarily_unavailable';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

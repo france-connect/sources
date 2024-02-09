@@ -1,20 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AccountService } from '@fc/account';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { AccountProtocol } from '@fc/microservices';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { CsmrAccountController } from './csmr-account.controller';
 
 describe('CsmrAccountController', () => {
   let controller: CsmrAccountController;
 
-  const loggerMock = {
-    debug: jest.fn(),
-    error: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const accountServiceMock = {
     getAccountByIdentityHash: jest.fn(),
@@ -80,7 +77,7 @@ describe('CsmrAccountController', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    it('should call logger.error', async () => {
+    it('should call logger.err', async () => {
       // Given
       const payloadMock = {
         identityHash: 'identityHashValue',
@@ -95,7 +92,7 @@ describe('CsmrAccountController', () => {
       await controller.getAccountId(payloadMock);
 
       // Then
-      expect(loggerMock.error).toHaveBeenCalledTimes(1);
+      expect(loggerMock.err).toHaveBeenCalledTimes(1);
     });
 
     it('should return the `ERROR` token', async () => {

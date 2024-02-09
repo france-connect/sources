@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import {
   OidcProviderMiddlewareStep,
@@ -10,6 +10,9 @@ import {
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterEnvService } from '@fc/service-provider-adapter-env';
 import { ISessionBoundContext, SessionService } from '@fc/session';
+
+import { getLoggerMock } from '@mocks/logger';
+import { getSessionServiceMock } from '@mocks/session';
 
 import {
   getFilesPathsFromDir,
@@ -24,17 +27,9 @@ jest.mock('../helpers');
 describe('MockIdentityProviderService', () => {
   let service: MockIdentityProviderService;
 
-  const loggerMock = {
-    debug: jest.fn(),
-    fatal: jest.fn(),
-    setContext: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
-  const sessionServiceMock = {
-    set: {
-      bind: jest.fn(),
-    },
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const serviceProviderEnvServiceMock = {
     getList: jest.fn(),
@@ -198,6 +193,20 @@ describe('MockIdentityProviderService', () => {
       // Then
       expect(service['database']).toStrictEqual(databaseMock);
     });
+
+    it('should notice that all databases are loaded', async () => {
+      // Given
+      service['database'] = null;
+      const databaseMock = [...csvMock1, ...csvMock2, ...csvMock3];
+      // When
+      await service['loadDatabases']();
+
+      // Then
+      expect(loggerMock.notice).toHaveBeenCalledTimes(1);
+      expect(loggerMock.notice).toHaveBeenCalledWith(
+        `Database loaded (${databaseMock.length} entries found)`,
+      );
+    });
   });
 
   describe('loadDatabase()', () => {
@@ -350,6 +359,22 @@ describe('MockIdentityProviderService', () => {
         errorMock,
       );
     });
+
+    it("should log emerg if database can't be logged", async () => {
+      // Given
+      const errorMock = new Error();
+      jest.mocked(parseCsv).mockRejectedValueOnce(errorMock);
+
+      // When / Then
+      await expect(service['loadDatabase'](pathMock)).rejects.toThrow(
+        errorMock,
+      );
+
+      expect(loggerMock.emerg).toHaveBeenCalledTimes(1);
+      expect(loggerMock.emerg).toHaveBeenCalledWith(
+        `Failed to load CSV database, path was: ${pathMock}`,
+      );
+    });
   });
 
   describe('shouldAbortMiddleware', () => {
@@ -434,7 +459,7 @@ describe('MockIdentityProviderService', () => {
       ).toHaveBeenCalledTimes(0);
       expect(serviceProviderEnvServiceMock.getById).toHaveBeenCalledTimes(0);
 
-      expect(sessionServiceMock.set.bind).toHaveBeenCalledTimes(0);
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(0);
     });
 
     it('should call session.set()', async () => {
@@ -448,9 +473,6 @@ describe('MockIdentityProviderService', () => {
       serviceProviderEnvServiceMock.getById.mockReturnValueOnce({
         name: spNameMock,
       });
-
-      const bindedSessionService = jest.fn().mockResolvedValueOnce(undefined);
-      sessionServiceMock.set.bind.mockReturnValueOnce(bindedSessionService);
 
       const boundSessionContextMock: ISessionBoundContext = {
         sessionId: sessionIdValueMock,
@@ -469,29 +491,38 @@ describe('MockIdentityProviderService', () => {
       await service['authorizationMiddleware'](ctxMock);
 
       // Then
-      expect(sessionServiceMock.set.bind).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.set.bind).toHaveBeenCalledWith(
-        sessionServiceMock,
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.set).toHaveBeenCalledWith(
         boundSessionContextMock,
+        sessionMock,
       );
-
-      expect(bindedSessionService).toHaveBeenCalledTimes(1);
-      expect(bindedSessionService).toHaveBeenCalledWith(sessionMock);
     });
 
-    it('should throw if the session initialization fails', async () => {
+    it('should call session.commit()', async () => {
       // Given
       shouldAbortMock.mockReturnValueOnce(false);
 
       oidcProviderServiceMock.getInteractionIdFromCtx.mockReturnValue(
         interactionIdValueMock,
       );
-      sessionServiceMock.set.bind.mockRejectedValueOnce(new Error('test'));
+
+      serviceProviderEnvServiceMock.getById.mockReturnValueOnce({
+        name: spNameMock,
+      });
+
+      const boundSessionContextMock: ISessionBoundContext = {
+        sessionId: sessionIdValueMock,
+        moduleName: 'OidcClient',
+      };
+
+      // When
+      await service['authorizationMiddleware'](ctxMock);
 
       // Then
-      await expect(
-        service['authorizationMiddleware'](ctxMock),
-      ).rejects.toThrow();
+      expect(sessionServiceMock.commit).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.commit).toHaveBeenCalledWith(
+        boundSessionContextMock,
+      );
     });
   });
 
@@ -576,6 +607,57 @@ describe('MockIdentityProviderService', () => {
 
       // Then
       expect(result).toBe(true);
+    });
+  });
+
+  describe('getSub', () => {
+    it('should return the sha256 hash of the login if present', () => {
+      // Given
+      const identity = {
+        login: 'loginValue',
+      };
+      const expected =
+        'e7cec19454756aed994df34eee995d8b021ca55ef8ac97e7f7d834091a419c15';
+
+      // When
+      const result = service['getSub'](identity);
+
+      // Then
+      expect(result).toBe(expected);
+    });
+
+    it('should return the sha256 hash of the uid if present and login is not present', () => {
+      // Given
+      const identity = {
+        uid: 'uidValue',
+      };
+      const expected =
+        'dd0f586454d3f739e70ef2e969b4f9acada1420063da97826c61a7fd4329eeef';
+
+      // When
+      const result = service['getSub'](identity);
+
+      // Then
+      expect(result).toBe(expected);
+    });
+
+    it('should return the sha256 hash of the concatenation of given_name, family_name and birthdate if present and login or uid are not present', () => {
+      // Given
+      const identity = {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        given_name: 'given_name value',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        family_name: 'family_name value',
+        birthdate: 'birthdate value',
+      };
+      const expected =
+        '5e6d2965a89806acff6abb3ed295c5f1f0e467860e5da34b872346631a935a58';
+
+      // When
+      const result = service['getSub'](identity);
+
+      // Then
+      expect(result).toBe(expected);
     });
   });
 

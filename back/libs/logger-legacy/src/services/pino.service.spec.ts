@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 
-import { LoggerConfig } from '../dto';
+import { LoggerConfig as LoggerLegacyConfig } from '../dto';
 import { LoggerLevelCodes, LoggerLevelNames } from '../enum';
 import { formatLevel, PinoService } from './pino.service';
 
@@ -27,10 +27,8 @@ describe('PinoAdapterService', () => {
   let service: PinoService;
   let getDestinationMock: jest.SpyInstance;
 
-  const configDataMock: Partial<LoggerConfig> = {
-    level: LoggerLevelNames.ERROR,
+  const configDataMock: Partial<LoggerLegacyConfig> = {
     path: '/dev/null',
-    isDevelopment: true,
   };
 
   const configServiceMock = {
@@ -83,7 +81,7 @@ describe('PinoAdapterService', () => {
     // Given
     service = await compileService();
     // Then
-    expect(service.level).toEqual(LoggerLevelCodes.ERROR);
+    expect(service.level).toEqual(LoggerLevelCodes.INFO);
   });
 
   it('should defined stream pipe', async () => {
@@ -105,7 +103,7 @@ describe('PinoAdapterService', () => {
         formatters: {
           level: formatLevel,
         },
-        level: LoggerLevelNames.ERROR,
+        level: LoggerLevelNames.INFO,
       },
       streamMock,
     );

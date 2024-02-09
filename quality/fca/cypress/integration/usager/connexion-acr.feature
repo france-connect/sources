@@ -7,17 +7,17 @@ Fonctionnalité: Connexion Usager - Acr
 
   Plan du Scénario: Connexion ACR - identification niveau "<acrValues>" (méthode <method>) utilise eidas1
     Etant donné que j'utilise le fournisseur de service "par défaut"
+    Et que j'utilise le fournisseur d'identité "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "obligatoires"
     Et que le fournisseur de service requiert un niveau de sécurité "<acrValues>"
     Et que le fournisseur de service se connecte à AgentConnect via la méthode "<method>"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Et que j'utilise un fournisseur d'identité "actif"
-    Et que je cherche le fournisseur d'identité par son ministère
-    Et que je clique sur le fournisseur d'identité
-    Et que je suis redirigé vers la page login du fournisseur d'identité
-    Quand je m'authentifie avec succès
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "test@fia1.fr"
+    Quand je clique sur le bouton de connexion
+    Et je suis redirigé vers la page login du fournisseur d'identité
+    Et je m'authentifie avec succès
     Alors je suis redirigé vers la page fournisseur de service
     Et je suis connecté au fournisseur de service
     Et la cinématique a utilisé le niveau de sécurité "<actualAcr>"
@@ -59,10 +59,9 @@ Fonctionnalité: Connexion Usager - Acr
     Et que le fournisseur de service requiert l'accès aux informations des scopes "obligatoires"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Et que j'utilise un fournisseur d'identité "actif"
-    Et que je cherche le fournisseur d'identité par son ministère
-    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "test@fia1.fr"
+    Et que je clique sur le bouton de connexion
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que le fournisseur d'identité garantit un niveau de sécurité "<idpAcr>"
     Quand je m'authentifie avec succès
@@ -71,15 +70,9 @@ Fonctionnalité: Connexion Usager - Acr
     Et le fournisseur de service a accès aux informations des scopes "obligatoires"
     Et la cinématique a utilisé le niveau de sécurité "<actualAcr>"
 
-    @ci
-    Exemples:
-      | idpAcr | actualAcr |
-      | eidas2 | eidas1    |
-
     Exemples:
       | idpAcr | actualAcr |
       | eidas1 | eidas1    |
-      | eidas3 | eidas1    |
 
   Scénario: Connexion ACR - FI retourne un niveau inconnu
     Etant donné que j'utilise le fournisseur de service "par défaut"
@@ -87,13 +80,26 @@ Fonctionnalité: Connexion Usager - Acr
     Et que le fournisseur de service requiert l'accès aux informations des scopes "obligatoires"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Et que j'utilise un fournisseur d'identité "actif"
-    Et que je cherche le fournisseur d'identité par son ministère
-    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "test@fia1.fr"
+    Et que je clique sur le bouton de connexion
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que le fournisseur d'identité garantit un niveau de sécurité "inconnu"
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique
     Et le code d'erreur est "Y020001"
-    #Et le message d'erreur est "Le niveau de sécurité utilisé pour vous authentifier ne correspondant pas au niveau exigé pour votre démarche."
+
+  Scénario: Connexion ACR - FI retourne un niveau trop élevé
+    Etant donné que j'utilise le fournisseur de service "par défaut"
+    Et que j'utilise le fournisseur d'identité "par défaut"
+    Et que le fournisseur de service requiert l'accès aux informations des scopes "obligatoires"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton AgentConnect
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "test@fia1.fr"
+    Et que je clique sur le bouton de connexion
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Et que le fournisseur d'identité garantit un niveau de sécurité "eidas2"
+    Quand je m'authentifie avec succès
+    Alors je suis redirigé vers la page erreur technique
+    Et le code d'erreur est "Y020018"

@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="50px" height="30px" viewBox="0 0 50 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>flag/sweden@</title>
-    <g id="FranceConnect+" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="flag/sweden" fill-rule="nonzero">
-            <rect id="Rectangle" fill="#005293" x="0" y="0" width="50" height="30"></rect>
-            <rect id="Rectangle" fill="#FECB00" x="15.625" y="0" width="6.25" height="30"></rect>
-            <rect id="Rectangle" fill="#FECB00" x="0" y="12" width="50" height="6"></rect>
-        </g>
-    </g>
+<svg width="52" height="39" viewBox="0 0 52 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_608_13947)">
+<path d="M0 0H52V39H0V0Z" fill="#066AA7"/>
+<path d="M0 15.5996H52V23.3996H0V15.5996Z" fill="#FECC00"/>
+<path d="M14.3 0H22.1V39H14.3V0Z" fill="#FECC00"/>
+</g>
+<rect x="0.25" y="0.25" width="51.5" height="38.5" stroke="#D0D0D0" stroke-width="0.5"/>
+<defs>
+<clipPath id="clip0_608_13947">
+<rect width="52" height="39" fill="white"/>
+</clipPath>
+</defs>
 </svg>

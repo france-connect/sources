@@ -2,18 +2,15 @@ import { ArgumentsHost } from '@nestjs/common';
 
 import { ApiErrorMessage, ApiErrorParams } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { UnhandledExceptionFilter } from './unhandled.exception-filter';
 
 describe(' UnhandledExceptionFilter', () => {
   let exceptionFilter: UnhandledExceptionFilter;
-  const loggerMock = {
-    debug: jest.fn(),
-    error: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerMock = getLoggerMock();
 
   const resMock: any = {};
   resMock.render = jest.fn().mockReturnValue(resMock);
@@ -36,13 +33,15 @@ describe(' UnhandledExceptionFilter', () => {
     message: 'messageValueMock',
   };
 
+  const exception = new Error('mock exception');
+
   beforeEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
     exceptionFilter = new UnhandledExceptionFilter(
       configServiceMock as unknown as ConfigService,
-      loggerMock,
+      loggerMock as unknown as LoggerService,
     );
 
     configServiceMock.get.mockReturnValue({
@@ -57,7 +56,7 @@ describe(' UnhandledExceptionFilter', () => {
       // When
       exceptionFilter.catch(exception, argumentHostMock);
       // Then
-      expect(loggerMock.error).toHaveBeenCalledWith(
+      expect(loggerMock.err).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'Error',
           code: 'Y000000',
@@ -75,8 +74,12 @@ describe(' UnhandledExceptionFilter', () => {
       expect(resMock.render).toHaveBeenCalledWith(
         'error',
         expect.objectContaining({
-          code: 'Y000000',
-          message: 'message text',
+          exception,
+          error: {
+            code: 'Y000000',
+            message: 'message text',
+            id: expect.any(String),
+          },
         }),
       );
     });
@@ -90,6 +93,7 @@ describe(' UnhandledExceptionFilter', () => {
       });
       const httpErrorCodeValueMock = 500;
       const exceptionParam: ApiErrorParams = {
+        exception,
         res: resMock,
         error: errorValueMock,
         httpResponseCode: httpErrorCodeValueMock,
@@ -109,14 +113,15 @@ describe(' UnhandledExceptionFilter', () => {
       // Given
       const httpErrorCodeValueMock = 500;
       const exceptionParam: ApiErrorParams = {
+        exception,
         res: resMock,
         error: errorValueMock,
         httpResponseCode: httpErrorCodeValueMock,
       };
-      const errorValueReturnedMock: ApiErrorMessage = {
-        code: 'codeValueMock',
-        id: 'idValueMock',
-        message: 'messageValueMock',
+      const errorValueReturnedMock = {
+        exception,
+        error: errorValueMock,
+        httpResponseCode: httpErrorCodeValueMock,
       };
       // When
       exceptionFilter['errorOutput'](exceptionParam);

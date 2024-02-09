@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { Providers } from '../enum';
 import { IClaimIndex, IProviderMappings, IRichClaim } from '../interfaces';
@@ -11,11 +13,7 @@ import { ScopesIndexService } from './scopes-index.service';
 describe('ScopesIndexService', () => {
   let service: ScopesIndexService;
 
-  const loggerMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    warn: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const mappingMock: IProviderMappings[] = [
     {
@@ -210,21 +208,21 @@ describe('ScopesIndexService', () => {
     const existingKey = 'foo';
     const nonExistingKey = 'wizz';
 
-    it('should call logger.warn if key does not exists', () => {
+    it('should call logger.warning if key does not exists', () => {
       // When
       service['indexGetter'](indexMock, indexNameMock, nonExistingKey);
       // Then
-      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
-      expect(loggerMock.warn).toHaveBeenCalledWith(
+      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warning).toHaveBeenCalledWith(
         `Entry not found in ${indexNameMock} index for key ${nonExistingKey}`,
       );
     });
 
-    it('should not call logger.warn if key does exists', () => {
+    it('should not call logger.warning if key does exists', () => {
       // When
       service['indexGetter'](indexMock, indexNameMock, existingKey);
       // Then
-      expect(loggerMock.warn).not.toHaveBeenCalled();
+      expect(loggerMock.warning).not.toHaveBeenCalled();
     });
 
     it('should return undefined if key does not exists', () => {

@@ -1,9 +1,5 @@
 {
-  "name": "@fc/user-preferences",
-  "version": "0.1.0",
-  "private": true,
   "dependencies": {
-    "@fc/backoffice": "^0.1.0",
     "@fc/http-client": "^0.1.0",
     "classnames": "^2.3.1",
     "final-form": "^4.20.10",
@@ -11,5 +7,8 @@
     "react-final-form": "^6.5.7",
     "react-final-form-listeners": "^1.0.3"
   },
-  "main": "src/index.ts"
+  "main": "src/index.ts",
+  "name": "@fc/user-preferences",
+  "private": true,
+  "version": "0.1.0"
 }

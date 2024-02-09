@@ -1,23 +1,28 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 
+import { AsyncLocalStorageService } from '@fc/async-local-storage';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { SessionConfig } from '../dto';
-import { ISessionRequest } from '../interfaces';
+import { ISessionRequest, SessionStoreInterface } from '../interfaces';
 import { SessionService } from '../services';
+import { SESSION_STORE_KEY } from '../tokens';
 
 @Injectable()
 export class SessionMiddleware implements NestMiddleware {
   constructor(
-    private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly sessionService: SessionService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+    private readonly asyncLocalStorage: AsyncLocalStorageService<SessionStoreInterface>,
+  ) {}
 
   async use(req: ISessionRequest, res: Response, next: () => void) {
+    this.asyncLocalStorage.set(SESSION_STORE_KEY, {
+      data: null,
+      sync: false,
+      id: null,
+    });
+
     await this.handleSession(req, res);
 
     next();
@@ -27,12 +32,10 @@ export class SessionMiddleware implements NestMiddleware {
     const cookieSessionId = this.sessionService.getSessionIdFromCookie(req);
     const { slidingExpiration } = this.config.get<SessionConfig>('Session');
 
-    if (slidingExpiration) {
-      if (!cookieSessionId) {
-        await this.sessionService.init(req, res);
-      } else {
-        await this.sessionService.refresh(req, res);
-      }
+    if (slidingExpiration && cookieSessionId) {
+      await this.sessionService.refresh(req, res);
+    } else if (!cookieSessionId) {
+      this.sessionService.init(req, res);
     } else {
       this.sessionService.bindToRequest(req, cookieSessionId);
     }

@@ -8,7 +8,7 @@ import {
   BridgeResponse,
   MessageType,
 } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { BridgeHttpProxyErrorDto, BridgeHttpProxyResponseDto } from '../dto';
 import { BridgeHttpProxyRoutes } from '../enums';
@@ -23,9 +23,7 @@ export class BridgeHttpProxyController {
   constructor(
     private readonly logger: LoggerService,
     private readonly broker: BridgeHttpProxyService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Catch all 'GET' routes needed for a cinematic
@@ -40,11 +38,6 @@ export class BridgeHttpProxyController {
    */
   @Get(BridgeHttpProxyRoutes.WILDCARD)
   async get(@Req() req, @Headers() headers, @Res() res): Promise<void> {
-    const { originalUrl } = req;
-    const { host, 'x-forwarded-proto': xForwardedProto } = headers;
-
-    this.logger.debug(`GET ${xForwardedProto}://${host}${originalUrl}`);
-
     await this.allRequest(req, headers, res);
   }
 
@@ -64,16 +57,14 @@ export class BridgeHttpProxyController {
     @Res() res,
     @Body() body: string,
   ): Promise<void> {
-    const { originalUrl } = req;
-    const { host, 'x-forwarded-proto': xForwardedProto } = headers;
-
-    this.logger.debug(`POST ${xForwardedProto}://${host}${originalUrl}`);
-
     await this.allRequest(req, headers, res, body);
   }
 
   private async allRequest(req, headers, res, body?: string): Promise<void> {
     const { originalUrl, method } = req;
+    const { host, 'x-forwarded-proto': xForwardedProto } = headers;
+
+    this.logger.info(`${method} ${xForwardedProto}://${host}${originalUrl}`);
 
     const response: BridgeProtocol<object> = await this.broker.proxyRequest(
       originalUrl,
@@ -98,7 +89,6 @@ export class BridgeHttpProxyController {
       validationOptions,
     );
     if (dtoProtocolErrors.length) {
-      this.logger.trace({ dtoProtocolErrors });
       throw new BridgeHttpProxyMissingVariableException();
     }
 
@@ -117,7 +107,6 @@ export class BridgeHttpProxyController {
       validationOptions,
     );
     if (dtoProtocolErrors.length) {
-      this.logger.trace({ dtoProtocolErrors });
       throw new BridgeHttpProxyMissingVariableException();
     }
 

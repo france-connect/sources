@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { FcException } from '@fc/exceptions';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+import { LoggerService as LoggerLegacyService } from '@fc/logger-legacy';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { TrackedEventContextInterface } from '../interfaces';
 import { APP_TRACKING_SERVICE } from '../tokens';
@@ -16,10 +19,10 @@ describe('TrackingService', () => {
     TrackedEventsMap: {},
   };
 
-  const loggerMock = {
-    setContext: jest.fn(),
+  const loggerMock = getLoggerMock();
+
+  const loggerLegacyMock = {
     businessEvent: jest.fn(),
-    trace: jest.fn(),
   };
 
   class ExceptionClass extends FcException {}
@@ -51,6 +54,7 @@ describe('TrackingService', () => {
         TrackingService,
         ConfigService,
         LoggerService,
+        LoggerLegacyService,
         {
           provide: APP_TRACKING_SERVICE,
           useValue: appTrackingMock,
@@ -59,6 +63,8 @@ describe('TrackingService', () => {
     })
       .overrideProvider(LoggerService)
       .useValue(loggerMock)
+      .overrideProvider(LoggerLegacyService)
+      .useValue(loggerLegacyMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
       .compile();
@@ -115,8 +121,8 @@ describe('TrackingService', () => {
       // When
       await service.track(EventMock, context);
       // Then
-      expect(loggerMock.businessEvent).toHaveBeenCalledTimes(1);
-      expect(loggerMock.businessEvent).toHaveBeenCalledWith(
+      expect(loggerLegacyMock.businessEvent).toHaveBeenCalledTimes(1);
+      expect(loggerLegacyMock.businessEvent).toHaveBeenCalledWith(
         buildLogResponseMock,
       );
     });

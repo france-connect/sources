@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import {
   CryptographyGatewayException,
@@ -17,11 +19,7 @@ describe('CryptoOverrideService', () => {
     get: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const messageMock = {
     pipe: jest.fn(),
@@ -54,7 +52,7 @@ describe('CryptoOverrideService', () => {
       ],
     })
       .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
+      .useValue(loggerMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .compile();
@@ -129,6 +127,30 @@ describe('CryptoOverrideService', () => {
     });
   });
 
+  describe('registerOverride', () => {
+    const name = 'crypto.sign';
+
+    it('should call OverrideCode.override', () => {
+      // When
+      service['registerOverride'](name);
+
+      // Then
+      expect(OverrideCodeSpy).toHaveBeenCalledTimes(1);
+      expect(OverrideCodeSpy).toHaveBeenCalledWith(name, expect.any(Function));
+    });
+
+    it('should log a notice when an override is registered', () => {
+      // When
+      service['registerOverride'](name);
+
+      // Then
+      expect(loggerMock.notice).toHaveBeenCalledTimes(1);
+      expect(loggerMock.notice).toHaveBeenCalledWith(
+        `Registering function override for "${name}".`,
+      );
+    });
+  });
+
   describe('sign', () => {
     // Given
     const keyMock = 'key';
@@ -177,7 +199,6 @@ describe('CryptoOverrideService', () => {
         CryptographyGatewayException,
       );
 
-      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(2);
       expect(signSuccessMock).toHaveBeenCalledTimes(1);
     });
 

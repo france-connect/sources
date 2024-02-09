@@ -228,7 +228,6 @@ $RECYCLE.BIN/
 
 ## FranceConnect specific
 
-storybook-static
 cypress/snapshots
 cypress/screenshots
 instances/**/build

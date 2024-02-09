@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import { OidcClientService } from '@fc/oidc-client';
 import {
@@ -12,6 +12,7 @@ import {
 import { ISessionService, SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { CoreFcpMissingAtHashException } from '../exceptions';
@@ -42,10 +43,7 @@ describe('OidcProviderConfigAppService', () => {
   const atHashMock = 'at_hash Mock value';
   const sessionId = 'sessionIdMock value';
 
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const reqMock = { sessionId };
   const resMock = {};

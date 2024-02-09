@@ -15,6 +15,9 @@ export class OidcClientInvalidStateException extends OidcClientBaseException {
   code = ErrorCode.INVALID_STATE;
   public readonly httpStatusCode = HttpStatus.FORBIDDEN;
 
+  static ERROR = 'invalid_request';
+  static ERROR_DESCRIPTION = 'invalid state parameter';
+
   constructor() {
     super(
       'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',

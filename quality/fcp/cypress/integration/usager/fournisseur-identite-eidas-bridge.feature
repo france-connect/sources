@@ -5,6 +5,7 @@ Fonctionnalité: Fournisseur Identité - Eidas Bridge
   # je veux que le bouton eIDAS bridge ne soit visible que si disponible
   # afin d'accéder à mon service
 
+  @ci
   Plan du Scénario: FI Eidas Bridge - <display> <active>
     Etant donné que je configure le fournisseur d'identité "eidas-bridge" <display> et <active> sur le site d'exploitation
     Et que je navigue sur la page fournisseur de service
@@ -13,15 +14,11 @@ Fonctionnalité: Fournisseur Identité - Eidas Bridge
     Et j'utilise le fournisseur d'identité "eidas-bridge"
     Et le fournisseur d'identité <result> dans la mire
 
-    @ci
-    Exemples:
-      | display   | active    | result            |
-      | invisible | actif     | n'est pas affiché |
-      | invisible | désactivé | n'est pas affiché |
-
     Exemples:
       | display   | active    | result            |
       | visible   | désactivé | n'est pas affiché |
+      | invisible | actif     | n'est pas affiché |
+      | invisible | désactivé | n'est pas affiché |
       | visible   | actif     | est affiché       |
 
   Scénario: FI Eidas Bridge - Invisible si blacklisté

@@ -9,7 +9,6 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@fc/config';
 import { DekAlg, KekAlg } from '@fc/cryptography';
 import { JwtService } from '@fc/jwt';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { DataProviderAdapterCoreConfig } from './dto';
 import {
@@ -24,20 +23,15 @@ import {
 export class DataProviderAdapterCoreService {
   constructor(
     private readonly config: ConfigService,
-    private readonly logger: LoggerService,
     private readonly http: HttpService,
     private readonly jwt: JwtService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async checktoken(accessToken: string): Promise<JWTPayload> {
     let cryptedToken: any;
 
     try {
       ({ data: cryptedToken } = await this.fetchToken(accessToken));
-
-      this.logger.trace({ cryptedToken });
     } catch (error) {
       this.checktokenHttpError(error);
     }
@@ -77,6 +71,7 @@ export class DataProviderAdapterCoreService {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
+        proxy: false,
       }),
     );
 
@@ -110,7 +105,11 @@ export class DataProviderAdapterCoreService {
     let response: AxiosResponse<JSONWebKeySet>;
 
     try {
-      response = await lastValueFrom(this.http.get(url));
+      response = await lastValueFrom(
+        this.http.get(url, {
+          proxy: false,
+        }),
+      );
     } catch (error) {
       throw new JwksFetchFailedException(error);
     }

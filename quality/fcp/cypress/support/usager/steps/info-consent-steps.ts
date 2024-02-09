@@ -59,6 +59,14 @@ Then(
   },
 );
 
+When('je mets {string} dans le csrf de consentement', function (csrf: string) {
+  infoConsentPage.getConsentCsrfInput().invoke('attr', 'value', csrf);
+});
+
+When('je retire le csrf de consentement', function () {
+  infoConsentPage.getConsentCsrfInput().invoke('remove');
+});
+
 When('je continue sur le fournisseur de service', function () {
   infoConsentPage.getConsentButton().click();
 });

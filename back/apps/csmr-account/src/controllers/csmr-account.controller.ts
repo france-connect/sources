@@ -3,7 +3,7 @@ import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { AccountService } from '@fc/account';
 import { FSA } from '@fc/common';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { AccountProtocol } from '@fc/microservices';
 
 import { GetAccountIdPayloadDto } from '../dto';
@@ -13,9 +13,7 @@ export class CsmrAccountController {
   constructor(
     private readonly logger: LoggerService,
     private readonly account: AccountService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   @MessagePattern(AccountProtocol.Commands.GET_ACCOUNT_ID)
   @UsePipes(
@@ -38,8 +36,6 @@ export class CsmrAccountController {
       `New message received with pattern "${AccountProtocol.Commands.GET_ACCOUNT_ID}"`,
     );
 
-    this.logger.trace({ payload });
-
     const { identityHash } = payload;
 
     try {
@@ -50,7 +46,7 @@ export class CsmrAccountController {
 
       return { type, payload };
     } catch (error) {
-      this.logger.error(JSON.stringify(error.stack));
+      this.logger.err(JSON.stringify(error.stack));
       /**
        * @todo #825 implement Error protocol
        */

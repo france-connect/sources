@@ -12,7 +12,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcProviderRoutes } from '@fc/oidc-provider/enums';
 import { ISessionRequest, ISessionResponse, SessionService } from '@fc/session';
 
@@ -23,9 +23,7 @@ export class OidcProviderController {
   constructor(
     private readonly logger: LoggerService,
     private readonly session: SessionService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Authorize route via HTTP GET
@@ -48,16 +46,11 @@ export class OidcProviderController {
     @Req() req: ISessionRequest,
     @Res() res: ISessionResponse,
     @Next() next,
-    @Query() query: AuthorizeParamsDto,
+    @Query() _query: AuthorizeParamsDto,
   ) {
     await this.session.reset(req, res);
+    this.logger.info('Session was reset');
 
-    this.logger.trace({
-      route: OidcProviderRoutes.AUTHORIZATION,
-      method: 'GET',
-      name: 'OidcProviderRoutes.AUTHORIZATION',
-      query,
-    });
     // Pass the query to oidc-provider
     return next();
   }
@@ -79,13 +72,7 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
-  postAuthorize(@Next() next, @Body() body: AuthorizeParamsDto) {
-    this.logger.trace({
-      route: OidcProviderRoutes.AUTHORIZATION,
-      method: 'POST',
-      name: 'OidcProviderRoutes.AUTHORIZATION',
-      body,
-    });
+  postAuthorize(@Next() next, @Body() _body: AuthorizeParamsDto) {
     // Pass the query to oidc-provider
     return next();
   }

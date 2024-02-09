@@ -10,7 +10,7 @@ Fonctionnalité: Connexion Usager - session fca-low (avec SSO)
     Et que j'utilise le fournisseur d'identité "par défaut"
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton AgentConnect
-    Alors je suis redirigé vers la page sélection du fournisseur d'identité
+    Alors je suis redirigé vers la page interaction
     Et le cookie "fc_session_id" est présent
     Et l'événement "FC_AUTHORIZE_INITIATED" est journalisé avec "browsingSessionId" "non null" et "sessionId" "non null" et "isSso" "false"
 
@@ -52,6 +52,7 @@ Fonctionnalité: Connexion Usager - session fca-low (avec SSO)
     Et la valeur "sessionId" est identique dans l'événement "SP_REQUESTED_FC_USERINFO"
     Et la valeur "accountId" est identique dans l'événement "SP_REQUESTED_FC_USERINFO"
 
+
   Scénario: Session avec SSO activé - Nouvelle session après retour du FI si FI non disponible
     Etant donné que j'utilise un compte usager "par défaut"
     Et que j'utilise un fournisseur de service "avec accès exclusif à un FI"
@@ -71,7 +72,7 @@ Fonctionnalité: Connexion Usager - session fca-low (avec SSO)
     Et que j'utilise un fournisseur de service "par défaut"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je suis redirigé vers la page interaction
     Et que le cookie "fc_session_id" est présent
     Et que la valeur du cookie "fc_session_id" est différente
     Et que je mémorise la valeur du cookie "fc_session_id"
@@ -82,8 +83,8 @@ Fonctionnalité: Connexion Usager - session fca-low (avec SSO)
     Et que la valeur "accountId" est identique dans l'événement "FC_AUTHORIZE_INITIATED"
     Et que je mémorise la valeur "sessionId" de l'événement "FC_AUTHORIZE_INITIATED"
     Quand j'utilise un fournisseur d'identité "par défaut"
-    Et je cherche le fournisseur d'identité par son nom
-    Et je clique sur le fournisseur d'identité
+    Et j'entre l'email "test@fia1.fr"
+    Et je clique sur le bouton de connexion
     Et je suis redirigé vers la page login du fournisseur d'identité
     # FC_IDP_BLACKLISTED: l'attribut isSso devient false
     Et l'événement "FC_IDP_BLACKLISTED" est journalisé avec "isSso" "false"

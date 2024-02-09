@@ -4,19 +4,22 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { FlowStepsService } from '@fc/flow-steps';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { atHashFromAccessToken } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import {
   OidcCtx,
   OidcProviderErrorService,
+  OidcProviderMiddlewarePattern,
+  OidcProviderMiddlewareStep,
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { CoreClaimAmrException, CoreIdpHintException } from '../exceptions';
@@ -31,11 +34,7 @@ jest.mock('@fc/oidc');
 describe('CoreOidcProviderMiddlewareService', () => {
   let service: CoreOidcProviderMiddlewareService;
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    warn: jest.fn(),
-    trace: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const sessionServiceMock = getSessionServiceMock();
 
@@ -168,6 +167,31 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('registerMiddleware', () => {
+    const stepMock = Symbol(
+      'stepMock',
+    ) as unknown as OidcProviderMiddlewareStep;
+    const patternMock = Symbol(
+      'middlewareMock',
+    ) as unknown as OidcProviderMiddlewarePattern;
+    const middlewareMock = function test() {};
+
+    it('should call oidcProviderService.registerMiddleware()', () => {
+      // When
+      service['registerMiddleware'](stepMock, patternMock, middlewareMock);
+
+      // Then
+      expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledWith(
+        stepMock,
+        patternMock,
+        expect.any(Function),
+      );
+    });
   });
 
   describe('getEventContext', () => {
@@ -624,19 +648,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       expect(ctxMock.query).toBeUndefined();
     });
 
-    it('should not do anything but log if there is no method declared', () => {
-      // Given
-      const ctxMock = {} as OidcCtx;
-      configServiceMock.get.mockReturnValue({
-        forcedPrompt: ['login'],
-      });
-      // When
-      service['overrideAuthorizePrompt'](ctxMock);
-      // Then
-      expect(ctxMock).toEqual({});
-      expect(loggerServiceMock.warn).toHaveBeenCalledTimes(1);
-    });
-
     it('should not do anything but log if method is not handled', () => {
       // Given
       const ctxMock = { method: 'DELETE' } as OidcCtx;
@@ -647,7 +658,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       service['overrideAuthorizePrompt'](ctxMock);
       // Then
       expect(ctxMock).toEqual({ method: 'DELETE' });
-      expect(loggerServiceMock.warn).toHaveBeenCalledTimes(1);
+      expect(pickAcr).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -697,16 +708,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       expect(ctxMock.query).toBeUndefined();
     });
 
-    it('should not do anything but log if there is no method declared', () => {
-      // Given
-      const ctxMock = {} as OidcCtx;
-      // When
-      service['overrideAuthorizeAcrValues'](ctxMock);
-      // Then
-      expect(ctxMock).toEqual({});
-      expect(loggerServiceMock.warn).toHaveBeenCalledTimes(1);
-    });
-
     it('should not do anything but log if method is not handled', () => {
       // Given
       const ctxMock = { method: 'DELETE' } as OidcCtx;
@@ -714,7 +715,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       service['overrideAuthorizeAcrValues'](ctxMock);
       // Then
       expect(ctxMock).toEqual({ method: 'DELETE' });
-      expect(loggerServiceMock.warn).toHaveBeenCalledTimes(1);
+      expect(pickAcr).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -1158,6 +1159,71 @@ describe('CoreOidcProviderMiddlewareService', () => {
     });
   });
 
+  describe('shouldAbortIdpHint', () => {
+    it('should return true if idpHint is not defined', () => {
+      // Given
+      const ctxMock = { oidc: {}, req: { query: {} } } as unknown as OidcCtx;
+
+      // When
+      const result = service['shouldAbortIdpHint'](ctxMock);
+
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return true if oidc.isError is true', () => {
+      // Given
+      const ctxMock = {
+        oidc: { isError: true },
+        // OIDC fashion variable name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        req: { query: { idp_hint: 'foo' } },
+      } as unknown as OidcCtx;
+
+      // When
+      const result = service['shouldAbortIdpHint'](ctxMock);
+
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should reuturn true if ctx.isSso is true', () => {
+      // Given
+      const ctxMock = {
+        oidc: {},
+        // OIDC fashion variable name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        req: { query: { idp_hint: 'foo' } },
+        isSso: true,
+      } as unknown as OidcCtx;
+
+      // When
+      const result = service['shouldAbortIdpHint'](ctxMock);
+
+      // Then
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('trackRedirectToIdp', () => {
+    it('should call tracking.track()', async () => {
+      // Given
+      const ctxMock = {} as unknown as OidcCtx;
+      const eventContextMock = {};
+      service['getEventContext'] = jest
+        .fn()
+        .mockReturnValueOnce(eventContextMock);
+      // When
+      await service['trackRedirectToIdp'](ctxMock);
+      // Then
+      expect(service['tracking'].track).toHaveBeenCalledTimes(1);
+      expect(service['tracking'].track).toHaveBeenCalledWith(
+        trackingMock.TrackedEventsMap.FC_REDIRECTED_TO_HINTED_IDP,
+        eventContextMock,
+      );
+    });
+  });
+
   describe('redirectToHintedIdpMiddleware', () => {
     // Given
     const idpHintMock = Symbol('idpHintMock');
@@ -1184,6 +1250,8 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
     beforeEach(() => {
       configServiceMock.get.mockReturnValue(idpHintConfigMock);
+      service['shouldAbortIdpHint'] = jest.fn();
+      service['trackRedirectToIdp'] = jest.fn().mockResolvedValue({});
     });
 
     it('should call oidcErrorService.handleRedirectableError if an idp hint was provided but is NOT valid', async () => {
@@ -1226,7 +1294,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       );
     });
 
-    it('should call tracking.track() if a valid idp_hint was provided', async () => {
+    it('should call trackRedirectToIdp() if a valid idp_hint was provided', async () => {
       // Given
       service['getEventContext'] = jest
         .fn()
@@ -1236,11 +1304,8 @@ describe('CoreOidcProviderMiddlewareService', () => {
       await service['redirectToHintedIdpMiddleware'](ctxMock);
 
       // Then
-      expect(trackingMock.track).toHaveBeenCalledTimes(1);
-      expect(trackingMock.track).toHaveBeenCalledWith(
-        trackingMock.TrackedEventsMap.FC_REDIRECTED_TO_HINTED_IDP,
-        eventContextMock,
-      );
+      expect(service['trackRedirectToIdp']).toHaveBeenCalledTimes(1);
+      expect(service['trackRedirectToIdp']).toHaveBeenCalledWith(ctxMock);
     });
 
     it('should call core.redirectToIdp() if a valid idp_hint was provided', async () => {
@@ -1251,17 +1316,47 @@ describe('CoreOidcProviderMiddlewareService', () => {
       expect(coreServiceMock.redirectToIdp).toHaveBeenCalledTimes(1);
       expect(coreServiceMock.redirectToIdp).toHaveBeenCalledWith(
         ctxMock.res,
-        ctxMock.oidc.params.acr_values,
         idpHintMock,
         sessionServiceMock,
+        { acr: ctxMock.oidc.params.acr_values },
       );
     });
 
-    it('should not do anything if no idp_hint was provided', async () => {
+    it('should call session.commit() if a valid idp_hint was provided', async () => {
+      // When
+      await service['redirectToHintedIdpMiddleware'](ctxMock);
+
+      // Then
+      expect(sessionServiceMock.commit).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call shouldAbortIdpHint', async () => {
       // Given
+      service['shouldAbortIdpHint'] = jest.fn().mockReturnValueOnce(true);
+
       const noIdpHintCtx = {
         ...ctxMock,
-        req: { query: {} },
+        // OIDC fashion variable name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        req: { query: { idp_hint: 'foo' } },
+      } as unknown as OidcCtx;
+
+      // When
+      await service['redirectToHintedIdpMiddleware'](noIdpHintCtx);
+
+      // Then
+      expect(service['shouldAbortIdpHint']).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not do anything if shouldAbortIdpHint() returned true', async () => {
+      // Given
+      service['shouldAbortIdpHint'] = jest.fn().mockReturnValueOnce(true);
+
+      const noIdpHintCtx = {
+        ...ctxMock,
+        // OIDC fashion variable name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        req: { query: { idp_hint: 'foo' } },
       } as unknown as OidcCtx;
 
       // When
@@ -1276,23 +1371,32 @@ describe('CoreOidcProviderMiddlewareService', () => {
       expect(coreServiceMock.redirectToIdp).not.toHaveBeenCalled();
     });
 
-    it('should not do anything if ctx.isSso is true', async () => {
+    it('should call oidcErrorService.throwError() if core.redirectToIdp() throws', async () => {
       // Given
-      const noIdpHintCtx = {
-        ...ctxMock,
-        isSso: true,
-      } as unknown as OidcCtx;
-
+      const errorMock = new Error('unknownError');
+      coreServiceMock.redirectToIdp.mockImplementationOnce(() => {
+        throw errorMock;
+      });
       // When
-      await service['redirectToHintedIdpMiddleware'](noIdpHintCtx);
-
+      await service['redirectToHintedIdpMiddleware'](ctxMock);
       // Then
-      expect(
-        oidcProviderErrorServiceMock.handleRedirectableError,
-      ).not.toHaveBeenCalled();
-      expect(flowStepsMock.setStep).not.toHaveBeenCalled();
-      expect(trackingMock.track).not.toHaveBeenCalled();
-      expect(coreServiceMock.redirectToIdp).not.toHaveBeenCalled();
+      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
+      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledWith(
+        ctxMock,
+        errorMock,
+      );
+    });
+
+    it('should not track if core.redirectToIdp() throws', async () => {
+      // Given
+      const errorMock = new Error('unknownError');
+      coreServiceMock.redirectToIdp.mockImplementationOnce(() => {
+        throw errorMock;
+      });
+      // When
+      await service['redirectToHintedIdpMiddleware'](ctxMock);
+      // Then
+      expect(service['trackRedirectToIdp']).not.toHaveBeenCalled();
     });
   });
 

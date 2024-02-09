@@ -1,4 +1,4 @@
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { MailOptions, Transport } from '../interfaces';
 
@@ -8,14 +8,7 @@ export class StdoutTransport implements Transport {
   // Actually return a promise
   // eslint-disable-next-line require-await
   async send(params: MailOptions): Promise<unknown> {
-    this.logger.debug(
-      `Printing mail to console: ${JSON.stringify(params, null, 2)}`,
-    );
-
-    this.logger.trace({
-      text: 'Printing mail to console',
-      params,
-    });
+    this.logger.info(params, 'Printing mail to console');
 
     return Promise.resolve(true);
   }

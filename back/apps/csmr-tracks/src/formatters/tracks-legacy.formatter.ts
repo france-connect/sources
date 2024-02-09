@@ -4,7 +4,7 @@ import { isString } from 'class-validator';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IRichClaim, ScopesService } from '@fc/scopes';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
@@ -29,9 +29,7 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
     private readonly geoip: CsmrTracksGeoService,
     private readonly config: ConfigService,
     @Inject('ScopesFcLegacy') private readonly scopes: ScopesService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   formatTrack(
     rawTrack: SearchHit<ICsmrTracksLegacyFieldsData>,
@@ -66,11 +64,8 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
         trackId,
       };
 
-      this.logger.trace({ rawTrack, output });
-
       return output;
     } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
       throw new CsmrTracksTransformTracksFailedException(error);
     }
   }
@@ -98,7 +93,6 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
       scopes.split(LEGACY_SCOPES_SEPARATOR),
     );
 
-    this.logger.trace({ scopes, richClaims });
     return richClaims;
   }
 

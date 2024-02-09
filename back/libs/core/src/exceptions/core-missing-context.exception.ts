@@ -15,6 +15,9 @@ export class CoreMissingContextException extends CoreBaseException {
   code = ErrorCode.MISSING_CONTEXT;
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
 
+  static ERROR = 'invalid_request';
+  static ERROR_DESCRIPTION = 'mandatory parameter missing';
+
   /* eslint-disable @typescript-eslint/no-unused-vars */
   constructor(param: string) {
     // param désactivé car pas utilisé dans le message usager.

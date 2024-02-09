@@ -32,7 +32,7 @@ export const ServiceImageComponent: React.FC<ServiceImageComponentProps> = React
             alt={`fournisseur d'identité ${title}`}
             className="is-block is-absolute"
             height="auto"
-            src={`/images/${image}`}
+            src={`/images/fi/${image}`}
             width="auto"
           />
         )}

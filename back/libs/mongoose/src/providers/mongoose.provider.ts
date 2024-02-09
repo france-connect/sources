@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MongooseModuleOptions } from '@nestjs/mongoose';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { MongooseConfig } from '../dto';
 import {
@@ -40,9 +40,7 @@ export class MongooseProvider {
 
     connection.$initialConnection = connection.$initialConnection.catch(
       (error) => {
-        logger.error('Invalid Mongodb Connection');
-        logger.error(JSON.stringify(error, null, 2));
-        logger.error('Exiting app');
+        logger.emerg(error, 'Invalid Mongodb Connection, exiting app');
         process.exit(1);
       },
     );

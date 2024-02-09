@@ -6,7 +6,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { CheckTokenResponseDto } from '../dto';
 import {
@@ -49,11 +48,6 @@ describe('DataProviderCoreAuthService', () => {
     scope: 'configuredScopeMockValue',
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  };
-
   const httpServiceMock = {
     post: jest.fn(),
   };
@@ -62,17 +56,10 @@ describe('DataProviderCoreAuthService', () => {
     jest.resetAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        DataProviderCoreAuthService,
-        ConfigService,
-        LoggerService,
-        HttpService,
-      ],
+      providers: [DataProviderCoreAuthService, ConfigService, HttpService],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(HttpService)
       .useValue(httpServiceMock)
       .compile();

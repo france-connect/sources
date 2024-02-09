@@ -16,4 +16,7 @@ export class AccountBlockedException extends AccountBaseException {
   message =
     'Votre accès a été désactivé. Pour le réactiver merci de nous contacter.';
   public readonly httpStatusCode = HttpStatus.FORBIDDEN;
+
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION = 'user authentication aborted';
 }

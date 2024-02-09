@@ -13,4 +13,8 @@ export class SetUserPreferencesConsumerErrorException extends UserPreferencesBas
   code = ErrorCode.SET_USER_PREFERENCES_CONSUMER_ERROR;
   message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

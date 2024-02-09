@@ -9,6 +9,8 @@ import { validate, ValidationError, ValidatorOptions } from 'class-validator';
 
 import { Type } from '@nestjs/common';
 
+import { InputWithErrorsInterface } from '../interfaces';
+
 /**
  * @todo #428  Supprimer les Type<> et créer un InstanceOf<> identique mais
  * indépendant de NestJS
@@ -129,4 +131,26 @@ export function getDtoErrors(
   }
 
   return new Error(errors.join('\n'));
+}
+
+export function getDtoInputWithErrors(
+  validationErrors: ValidationError[],
+): Record<string, InputWithErrorsInterface> | null {
+  if (validationErrors.length === 0) {
+    return null;
+  }
+
+  const properties = validationErrors[0].target;
+
+  const input = {};
+
+  Object.entries(properties).forEach(([key, value]) => {
+    input[key] = { value, errors: [] };
+  });
+
+  validationErrors.forEach(({ constraints, property }) => {
+    input[property].errors = Object.values(constraints);
+  });
+
+  return input;
 }

@@ -61,10 +61,11 @@ export default {
       devInteractions: { enabled: false },
       encryption: { enabled: false },
       jwtUserinfo: { enabled: true },
-      backchannelLogout: { enabled: true },
+      backchannelLogout: { enabled: false },
       revocation: { enabled: true },
       rpInitiatedLogout: { enabled: true },
       claimsParameter: { enabled: true },
+      resourceIndicators: { enabled: false },
     },
     acceptQueryParamAccessTokens: true,
     ttl: {

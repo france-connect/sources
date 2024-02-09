@@ -6,7 +6,7 @@ import { IsObject, ValidateNested } from 'class-validator';
 
 import { ElasticsearchConfig } from '@fc/elasticsearch';
 import { GeoipMaxmindConfig } from '@fc/geoip-maxmind';
-import { LoggerConfig } from '@fc/logger-legacy';
+import { LoggerConfig } from '@fc/logger';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 import { ScopesConfig } from '@fc/scopes';
 

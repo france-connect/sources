@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { CryptographyFcpService } from './cryptography-fcp.service';
 import { IPivotIdentity } from './interfaces';
@@ -12,12 +11,6 @@ describe('CryptographyFcpService', () => {
 
   const configMock = {
     get: jest.fn(),
-  };
-
-  const loggerMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
   };
 
   const mockEncryptKey = 'p@ss p@rt0ut';
@@ -54,15 +47,8 @@ describe('CryptographyFcpService', () => {
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        LoggerService,
-        CryptographyService,
-        ConfigService,
-        CryptographyFcpService,
-      ],
+      providers: [CryptographyService, ConfigService, CryptographyFcpService],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
       .overrideProvider(CryptographyService)

@@ -1,1 +1,0 @@
-# PARTNERS FCP

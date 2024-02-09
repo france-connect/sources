@@ -5,7 +5,6 @@ import { ModuleRef } from '@nestjs/core';
 
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
@@ -17,20 +16,15 @@ import { IVerifyFeatureHandler } from '../interfaces';
 @Injectable()
 export class CoreVerifyService {
   constructor(
-    private readonly logger: LoggerService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
     public readonly moduleRef: ModuleRef,
     private readonly tracking: TrackingService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async getFeature<T extends IFeatureHandler>(
     idpId: string,
     process: ProcessCore,
   ): Promise<T> {
-    this.logger.debug(`getFeature ${process} for provider: ${idpId}`);
-
     const idp = await this.identityProvider.getById(idpId);
 
     if (!idp) {
@@ -38,8 +32,6 @@ export class CoreVerifyService {
     }
 
     const idClass = idp.featureHandlers[process];
-
-    this.logger.trace({ idp, idClass });
 
     return FeatureHandler.get<T>(idClass, this);
   }

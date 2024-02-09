@@ -8,7 +8,7 @@ import {
   BridgeResponse,
   MessageType,
 } from '@fc/hybridge-http-proxy';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { HttpProxyProtocol } from '@fc/microservices';
 
 import { BridgePayloadDto } from '../dto';
@@ -19,9 +19,7 @@ export class CsmrHttpProxyController {
   constructor(
     private readonly logger: LoggerService,
     private readonly proxy: CsmrHttpProxyService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   @MessagePattern(HttpProxyProtocol.Commands.HTTP_PROXY)
   @UsePipes(
@@ -39,8 +37,6 @@ export class CsmrHttpProxyController {
       `received new ${HttpProxyProtocol.Commands.HTTP_PROXY} command`,
     );
 
-    this.logger.trace({ payload });
-
     let response;
     try {
       const data = await this.proxy.forwardRequest(payload);
@@ -50,11 +46,9 @@ export class CsmrHttpProxyController {
         data,
       };
     } catch (error) {
-      this.logger.error(JSON.stringify(error.stack));
+      this.logger.err(JSON.stringify(error.stack));
       response = this.formatError(error);
     }
-
-    this.logger.trace({ response });
 
     return response;
   }

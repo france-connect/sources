@@ -7,6 +7,7 @@ Fonctionnalité: Connexion avec Claims
 
   Scénario: Connexion avec claims - avec claim AMR fc
     Etant donné que le fournisseur de service requiert le claim "amr"
+    Et que j'utilise un fournisseur d'identité "par défaut avec amr 'fc pwd mail mfa'"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
@@ -17,7 +18,7 @@ Fonctionnalité: Connexion avec Claims
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page fournisseur de service
     Et je suis connecté au fournisseur de service
-    Et la cinématique a renvoyé l'amr "fc"
+    Et la cinématique a renvoyé l'amr "fc pwd mail mfa"
 
   Scénario: Connexion avec claims - claim AMR absent si non demandé
     Etant donné que le fournisseur de service ne requiert pas le claim "amr"
@@ -32,6 +33,23 @@ Fonctionnalité: Connexion avec Claims
     Alors je suis redirigé vers la page fournisseur de service
     Et je suis connecté au fournisseur de service
     Et la cinématique n'a pas renvoyé d'amr
+
+  Scénario: Connexion SSO - le premier FS ne demande pas l'amr
+    Etant donné que j'utilise un fournisseur de service "avec accès au FI par défaut (deuxième FS)"
+    Et que le fournisseur de service ne requiert pas le claim "amr"
+    Et que le fournisseur de service requiert l'accès aux informations des scopes "profile sans alias"
+    Et que j'utilise un fournisseur d'identité "par défaut avec amr 'fc pwd mail mfa'"
+    Et que je navigue sur la page fournisseur de service
+    Et que je me connecte à FranceConnect
+    Et que je suis redirigé vers la page fournisseur de service
+    Et que je suis connecté au fournisseur de service
+    Et que la cinématique n'a pas renvoyé d'amr
+    Quand j'utilise un fournisseur de service "avec accès au FI par défaut (premier FS)"
+    Et le fournisseur de service requiert le claim "amr"
+    Et je navigue sur la page fournisseur de service
+    Et je me connecte à FranceConnect en SSO
+    Alors je suis connecté au fournisseur de service
+    Et la cinématique a renvoyé l'amr "fc pwd mail mfa"
 
   @ignoreInteg01
   Scénario: Connexion avec claims - erreur FS non habilité pour amr

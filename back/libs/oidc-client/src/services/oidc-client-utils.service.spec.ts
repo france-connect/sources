@@ -9,8 +9,10 @@ import { JWK } from 'jose-openid-client';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import {
   OidcClientGetEndSessionUrlException,
@@ -43,12 +45,7 @@ describe('OidcClientUtilsService', () => {
   const idTokenMock = 'idTokenMockValue';
   const endSessionUrlWithParamsMock = `https://endSessionUrlMockMock?id_token_hint=${idTokenMock}&post_logout_redirect_uri=${postLogoutRedirectUriMock}&state=${stateMock}`;
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    debug: jest.fn(),
-    businessEvent: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const IdentityProviderServiceMock = { getList: jest.fn() };
 
@@ -408,6 +405,8 @@ describe('OidcClientUtilsService', () => {
       await expect(
         service.getTokenSet(req, providerId, params),
       ).rejects.toThrow(OidcClientTokenFailedException);
+      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.debug).toHaveBeenCalledWith(errorMock);
     });
   });
 
@@ -577,11 +576,6 @@ describe('OidcClientUtilsService', () => {
       serviceProviderServiceMock.shouldExcludeIdp.mockReturnValueOnce(false);
       // When
       await service.checkIdpBlacklisted('spId', 'idpId');
-      // Then
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledWith({
-        check: { spId: 'spId', idpId: 'idpId', isIdpExcluded: false },
-      });
     });
   });
 

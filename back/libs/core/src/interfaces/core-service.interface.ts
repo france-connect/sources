@@ -9,8 +9,12 @@ import { ISessionService } from '@fc/session';
 export interface CoreServiceInterface {
   redirectToIdp: (
     res: Response,
-    acr: string,
     idpId: string,
     session: ISessionService<OidcClientSession>,
+    authorizeParams: CoreAuthorizeParamsInterface,
   ) => Promise<void>;
+}
+
+export interface CoreAuthorizeParamsInterface {
+  acr: string;
 }

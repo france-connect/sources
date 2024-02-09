@@ -6,11 +6,9 @@
     name="consent"
     aria-label="consent"
   />
-  <label
-    class="fr-label"
-    data-testid="label-consent"
-    for="consent">
-    J’accepte que <%= locals.config.App.platform %> transmette mes données au service pour me connecter
+  <label class="fr-label" data-testid="label-consent" for="consent">
+    J’accepte que <%= $config('App.platform') %> transmette mes données au
+    service pour me connecter
   </label>
   <p id="checkbox-error-desc-error" class="fr-error-text" hidden>
     Veuillez cocher la case pour accepter le transfert des données

@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { render } from '@testing-library/react';
-import { combineReducers, createStore } from 'redux';
+import { combineReducers, legacy_createStore } from 'redux';
 import { persistStore } from 'redux-persist';
 import { PersistGateProps } from 'redux-persist/integration/react';
 
@@ -18,7 +18,7 @@ jest.mock('redux-persist/integration/react', () => ({
 const mockReducer = (v = null) => v;
 const mockStates = { mockReducer: { blacklist: true, defaultValue: null } };
 const mockReducers = { mockReducer };
-const mockStore = createStore(combineReducers(mockReducers));
+const mockStore = legacy_createStore(combineReducers(mockReducers));
 const mockPersistor = persistStore(mockStore);
 const MockChildren = () => <div>Hello World !</div>;
 

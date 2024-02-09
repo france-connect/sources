@@ -5,7 +5,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
 import { CsmrHttpProxyModule } from '@fc/csmr-http-proxy';
-import { LoggerModule } from '@fc/logger-legacy';
+import { LoggerModule } from '@fc/logger';
 
 @Module({})
 export class AppModule {

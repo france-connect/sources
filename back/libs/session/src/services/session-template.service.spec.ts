@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 
+import { getSessionServiceMock } from '@mocks/session';
+
 import { SessionConfig } from '../dto';
 import { extractSessionFromRequest } from '../helper';
 import { ISessionRequest } from '../interfaces';
@@ -11,12 +13,7 @@ jest.mock('../helper', () => ({
   extractSessionFromRequest: jest.fn(),
 }));
 
-const sessionServiceMock = {
-  get: jest.fn(),
-  set: jest.fn(),
-  getAlias: jest.fn(),
-  setAlias: jest.fn(),
-};
+const sessionServiceMock = getSessionServiceMock();
 
 describe('SessionTemplateService', () => {
   let service: SessionTemplateService;

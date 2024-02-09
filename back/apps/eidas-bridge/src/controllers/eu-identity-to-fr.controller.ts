@@ -20,7 +20,6 @@ import { ConfigService } from '@fc/config';
 import { EidasClientRoutes, EidasClientSession } from '@fc/eidas-client';
 import { EidasCountryService } from '@fc/eidas-country';
 import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity, OidcError } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
@@ -45,15 +44,12 @@ export class EuIdentityToFrController {
   /* eslint-disable-next-line max-params */
   constructor(
     private readonly config: ConfigService,
-    private readonly logger: LoggerService,
     private readonly oidcProvider: OidcProviderService,
     private readonly oidcToEidas: OidcToEidasService,
     private readonly eidasToOidc: EidasToOidcService,
     private readonly eidasCountry: EidasCountryService,
     private readonly tracking: TrackingService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * @TODO #291
@@ -96,13 +92,6 @@ export class EuIdentityToFrController {
       spName,
     };
 
-    this.logger.trace({
-      route: EidasBridgeRoutes.INTERACTION,
-      method: 'GET',
-      name: 'EidasBridgeRoutes.INTERACTION',
-      response,
-    });
-
     return response;
   }
 
@@ -129,13 +118,6 @@ export class EuIdentityToFrController {
 
     await this.tracking.track(SELECTED_CITIZEN_COUNTRY, trackingContext);
 
-    this.logger.trace({
-      route: EidasBridgeRoutes.INTERACTION_LOGIN,
-      method: 'POST',
-      name: 'EidasBridgeRoutes.INTERACTION_LOGIN',
-      response,
-    });
-
     return response;
   }
 
@@ -153,7 +135,7 @@ export class EuIdentityToFrController {
     @Session('EidasClient')
     sessionEidas: ISessionService<EidasClientSession>,
   ) {
-    const { REDIRECT_TO_FC, EIDAS_RESPONSE_ERROR } =
+    const { REDIRECTED_TO_FC, EIDAS_RESPONSE_ERROR } =
       this.tracking.TrackedEventsMap;
     const trackingContext = { req };
 
@@ -197,14 +179,7 @@ export class EuIdentityToFrController {
 
     const sessionClient: OidcClientSession = await sessionOidc.get();
 
-    this.logger.trace({
-      route: EidasBridgeRoutes.FINISH_FC_INTERACTION,
-      method: 'GET',
-      name: 'EidasBridgeRoutes.FINISH_FC_INTERACTION',
-      session,
-    });
-
-    await this.tracking.track(REDIRECT_TO_FC, trackingContext);
+    await this.tracking.track(REDIRECTED_TO_FC, trackingContext);
 
     return this.oidcProvider.finishInteraction(req, res, sessionClient);
   }
@@ -231,7 +206,6 @@ export class EuIdentityToFrController {
     );
 
     if (errors.length) {
-      this.logger.trace({ errors }, LoggerLevelNames.WARN);
       throw new EidasBridgeInvalidEUIdentityException();
     }
   }

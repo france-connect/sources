@@ -16,4 +16,8 @@ export class OidcClientIdpBlacklistedException extends OidcClientBaseException {
   message =
     'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
   public readonly httpStatusCode = HttpStatus.FORBIDDEN;
+
+  static ERROR = 'access_denied';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

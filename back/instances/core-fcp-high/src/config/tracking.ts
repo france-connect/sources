@@ -215,12 +215,22 @@ export default {
       event: 'SP_REQUESTED_FC_USERINFO',
     },
 
-    // Not implemented yet
-    DP_REQUESTED_FC_CHECKTOKEN: {
+    DP_VERIFIED_FC_CHECKTOKEN: {
       step: '7.4.0',
       category: EventsCategories.BACK_CINEMATIC,
-      event: 'DP_REQUESTED_FC_CHECKTOKEN',
-      interceptRoutes: [{ method: RequestMethod.ALL, path: '/checktoken' }],
+      event: 'DP_VERIFIED_FC_CHECKTOKEN',
+    },
+
+    DP_USED_INVALID_CREDENTIAL: {
+      step: '7.4.1',
+      category: EventsCategories.BACK_CINEMATIC,
+      event: 'DP_USED_INVALID_CREDENTIAL',
+    },
+
+    DP_USED_INVALID_ACCESS_TOKEN: {
+      step: '7.4.2',
+      category: EventsCategories.BACK_CINEMATIC,
+      event: 'DP_USED_INVALID_ACCESS_TOKEN',
     },
 
     SP_REQUESTED_LOGOUT: {

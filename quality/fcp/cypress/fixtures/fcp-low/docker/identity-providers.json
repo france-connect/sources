@@ -2,8 +2,13 @@
   {
     "idpId": "8dfc4080-c90d-4234-969b-f6c961de3e90",
     "name": "fip1-no-discovery",
-    "title": "IDP1 - NO DISCOVERY",
-    "descriptions": ["par défaut", "actif", "autorisé pour idp_hint"],
+    "title": "FIP1-LOW - eIDAS LOW - NO DISCOVERY",
+    "descriptions": [
+      "par défaut",
+      "actif",
+      "autorisé pour idp_hint",
+      "par défaut avec amr 'fc pwd mail mfa'"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip1-low.docker.dev-franceconnect.fr",
@@ -20,7 +25,7 @@
   {
     "idpId": "07e573f2-3312-4bb9-bc48-6fcec737e497",
     "name": "fip1-low",
-    "title": "IDP1 - LOW",
+    "title": "FIP1-LOW - eIDAS LOW",
     "descriptions": ["actif"],
     "mocked": true,
     "usable": true,
@@ -38,7 +43,7 @@
   {
     "idpId": "454833e7-4ba6-4e2f-931a-84c83553d0ce",
     "name": "fip1-wrong-signature",
-    "title": "IDP1 - WRONG SIGNATURE",
+    "title": "FIP1-LOW - WRONG SIGNATURE",
     "descriptions": ["mauvais protocole de signature"],
     "mocked": true,
     "usable": true,
@@ -56,7 +61,7 @@
   {
     "idpId": "71146cf0-ee50-49a9-bac2-8c09c4ba5439",
     "name": "fip1-no-signature-error",
-    "title": "IDP1 - NO SIGNATURE ERROR",
+    "title": "FIP1-LOW - NO SIGNATURE",
     "descriptions": ["ne devrait pas signer userinfo"],
     "mocked": true,
     "usable": true,
@@ -74,7 +79,7 @@
   {
     "idpId": "b5e9539a-599a-4ed2-9b4f-8f4bfc5fbb64",
     "name": "fip2-low",
-    "title": "IDP2 - LOW",
+    "title": "FIP2-LOW - eIDAS SUBSTANTIAL - NO DISCOVERY",
     "descriptions": ["actif", "non autorisé pour idp_hint"],
     "mocked": true,
     "usable": true,
@@ -92,7 +97,7 @@
   {
     "idpId": "0adf04be-536e-4986-b639-73ea8d38493e",
     "name": "fip3-low",
-    "title": "IDP3 - LOW",
+    "title": "FIP3-LOW - eIDAS HIGH - NO DISCOVERY",
     "descriptions": ["actif", "whitelisté", "blacklisté"],
     "mocked": true,
     "usable": true,
@@ -110,7 +115,7 @@
   {
     "idpId": "ed9e1fdb-f2df-4d8d-85ca-fc72510e9ec8",
     "name": "fip4-low",
-    "title": "IDP4 - ES256",
+    "title": "FIP4-LOW - eIDAS LOW - NO DISCOVERY - ES256",
     "descriptions": ["actif", "non whitelisté", "non blacklisté"],
     "mocked": true,
     "usable": true,
@@ -200,7 +205,7 @@
   {
     "idpId": "720a5453-1964-4c71-a8fa-00bfb880fe9f",
     "name": "fip9-low",
-    "title": "IDP9 - LOW",
+    "title": "IDP9 - LOW - no endSessionUrl",
     "descriptions": ["sans endSessionUrl"],
     "mocked": true,
     "usable": true,
@@ -213,6 +218,23 @@
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
+    }
+  },
+  {
+    "idpId": "3189d655-0c78-4ff7-9758-f3a3ac36dd7e",
+    "name": "aidants-connect-mock",
+    "descriptions": ["Aidants Connect"],
+    "mocked": true,
+    "usable": true,
+    "url": "https://aidants-connect-mock.docker.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "HS256",
+    "selectors": {
+      "idpButton": "[data-testid='footer-aidants-connect-link']",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
     }
   }
 ]

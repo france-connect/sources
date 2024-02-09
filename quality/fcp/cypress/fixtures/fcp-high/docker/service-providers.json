@@ -4,7 +4,8 @@
     "descriptions": [
       "par défaut",
       "public",
-      "avec un entityId"
+      "avec un entityId",
+      "avec accès au FI par défaut (premier FS)"
     ],
     "mocked": true,
     "url": "https://fsp1-high.docker.dev-franceconnect.fr",
@@ -29,7 +30,8 @@
       "habilité à demander le scope identite_pivot",
       "avec une blacklist de FI",
       "avec le même entityId",
-      "avec accès au FI par défaut (deuxième FS)"
+      "avec accès au FI par défaut (deuxième FS)",
+      "sans post_logout_redirect_uri"
     ],
     "mocked": true,
     "url": "https://fsp2-high.docker.dev-franceconnect.fr",

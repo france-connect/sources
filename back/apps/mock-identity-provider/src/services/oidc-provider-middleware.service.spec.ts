@@ -1,6 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
 import {
   OidcCtx,
   OidcProviderMiddlewareStep,
@@ -16,12 +15,6 @@ import { ScenariosService } from './scenarios.service';
 
 describe('OidcProviderConfigAppService', () => {
   let service: OidcProviderMiddlewareService;
-
-  const loggerMock = {
-    setContext: jest.fn(),
-    warn: jest.fn(),
-    trace: jest.fn(),
-  };
 
   const oidcProviderMock = {
     registerMiddleware: jest.fn(),
@@ -41,13 +34,10 @@ describe('OidcProviderConfigAppService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OidcProviderMiddlewareService,
-        LoggerService,
         OidcProviderService,
         ScenariosService,
       ],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerMock)
       .overrideProvider(OidcProviderService)
       .useValue(oidcProviderMock)
       .overrideProvider(ScenariosService)

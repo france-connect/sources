@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { asyncFilter, validateDto } from '@fc/common';
 import { validationOptions } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 
 import { GetFqdnToIdentityProviderMongoDto } from '../dto/fqdn-to-idp-mongo.dto';
@@ -24,9 +24,7 @@ export class FqdnToIdpAdapterMongoService
     private readonly FqdnToIdentityProviderModel: Model<FqdnToIdentityProvider>,
     private readonly logger: LoggerService,
     private readonly mongooseWatcher: MongooseCollectionOperationWatcherHelper,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async onModuleInit() {
     this.mongooseWatcher.watchWith<FqdnToIdentityProvider>(
@@ -43,10 +41,10 @@ export class FqdnToIdpAdapterMongoService
    * Return a list of fqdnToIdp
    * for a specific domain
    */
-  async getIdpsByDomain(domain: string): Promise<FqdnToIdentityProvider[]> {
+  async getIdpsByFqdn(fqdn: string): Promise<FqdnToIdentityProvider[]> {
     const allfqdnToProvider = await this.getList();
     const fqdnToProviders = allfqdnToProvider.filter(
-      (row) => row.domain === domain,
+      (row) => row.fqdn === fqdn,
     );
 
     return fqdnToProviders;
@@ -68,12 +66,12 @@ export class FqdnToIdpAdapterMongoService
         await this.fetchFqdnToIdps(),
       ) as FqdnToIdentityProvider[];
 
-      this.logger.trace({
+      this.logger.debug({
         message: 'fqdnToIdpCache has been refreshed.',
         step: 'REFRESH',
       });
     } else {
-      this.logger.trace({
+      this.logger.debug({
         message: 'fqdnToIdpCache has been used.',
         step: 'CACHE',
       });
@@ -89,8 +87,16 @@ export class FqdnToIdpAdapterMongoService
    * and eventually returns only validated rows
    */
   private async fetchFqdnToIdps(): Promise<FqdnToIdentityProvider[]> {
-    const fqdnToProviderRaw =
-      await this.FqdnToIdentityProviderModel.find().lean();
+    const fqdnToProviderRaw = await this.FqdnToIdentityProviderModel.find(
+      {},
+      {
+        _id: false,
+        fqdn: true,
+        identityProvider: true,
+      },
+    )
+      .sort({ fqdn: 1, identityProvider: 1 })
+      .lean();
 
     const fqdnToProvider = await asyncFilter<FqdnToIdentityProvider[]>(
       // because fqdnToProvidr entity == fqdnToProvider dto
@@ -104,17 +110,16 @@ export class FqdnToIdpAdapterMongoService
         );
 
         if (errors.length > 0) {
-          this.logger.warn(
-            `fqdnToProvider with domain "${doc.domain}" and provider uuid "${doc.identityProvider}" was excluded from the result at DTO validation.`,
+          this.logger.warning(
+            `fqdnToProvider with domain "${doc.fqdn}" and provider uuid "${doc.identityProvider}" was excluded from the result at DTO validation.`,
           );
-          this.logger.trace({ errors });
+          this.logger.err({ errors });
         }
 
         return errors.length === 0;
       },
     );
 
-    this.logger.trace({ fqdnToProvider });
     return fqdnToProvider;
   }
 }

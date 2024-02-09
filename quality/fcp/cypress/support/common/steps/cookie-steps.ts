@@ -1,6 +1,10 @@
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
-import { getCookieFromUrl } from '../helpers';
+import {
+  checkCookieExists,
+  getCookieFromUrl,
+  setUnknowSessionIdInSessionCookie,
+} from '../helpers';
 import { Environment } from '../types';
 
 Then(
@@ -38,6 +42,46 @@ Then(
     });
   },
 );
+
+Then('les cookies FranceConnect sont présents', function () {
+  const platform: string = Cypress.env('PLATFORM');
+  const { fcRootUrl, name }: Environment = this.env;
+  const url = new URL(fcRootUrl);
+  const domain = url.hostname;
+
+  // FC uses session cookies only on fcp-high
+  const isSessionCookie = platform === 'fcp-high';
+  checkCookieExists('fc_session_id', domain, isSessionCookie);
+  checkCookieExists('duplicate-cookie-name', domain, isSessionCookie);
+
+  cy.getCookies({ domain })
+    .should('have.length', 6)
+    .then((cookies: Cypress.Cookie[]) => {
+      // FC cookies are intercepted by Cypress on integ01.
+      // We force sameSite=none to test cross-domain.
+      // The sameSite check can only be done on the docker environment.
+      if (name === 'docker') {
+        cookies.forEach((cookie) =>
+          expect(cookie).to.have.property('sameSite', 'lax'),
+        );
+      }
+    });
+});
+
+When(
+  'je force un sessionId inexistant dans le cookie de session FranceConnect',
+  function () {
+    const { fcRootUrl }: Environment = this.env;
+    setUnknowSessionIdInSessionCookie(fcRootUrl);
+  },
+);
+
+Given('je supprime les cookies FranceConnect', function () {
+  const { fcRootUrl }: Environment = this.env;
+  const url = new URL(fcRootUrl);
+  const domain = url.hostname;
+  cy.clearCookies({ domain });
+});
 
 Given('je supprime tous les cookies', function () {
   cy.clearAllCookies();

@@ -12,7 +12,7 @@ import {
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import {
   InterceptRouteInterface,
@@ -24,22 +24,19 @@ import { TrackingService } from '../services';
 @Injectable()
 export class TrackingInterceptor implements NestInterceptor {
   constructor(
-    private readonly logger: LoggerService,
     private readonly tracking: TrackingService,
     private readonly config: ConfigService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+    private readonly logger: LoggerService,
+  ) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const req = context.switchToHttp().getRequest();
-    this.logger.trace({
-      path: req.url,
-      route: req.route.path,
-      handler: context.getHandler(),
-    });
 
     const { urlPrefix } = this.config.get<AppConfig>('App');
+
+    this.logger.debug({
+      handler: context.getHandler(),
+    });
 
     return next.handle().pipe(tap(this.log.bind(this, req, urlPrefix)));
   }

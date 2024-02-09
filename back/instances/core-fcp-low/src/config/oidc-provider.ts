@@ -74,10 +74,11 @@ export default {
         enabled: parseBoolean(process.env.OidcProvider_USE_ENCRYPTION),
       },
       jwtUserinfo: { enabled: true },
-      backchannelLogout: { enabled: true },
+      backchannelLogout: { enabled: false },
       revocation: { enabled: true },
       claimsParameter: { enabled: true },
       rpInitiatedLogout: { enabled: true },
+      resourceIndicators: { enabled: false },
     },
     acceptQueryParamAccessTokens: true,
     ttl: {

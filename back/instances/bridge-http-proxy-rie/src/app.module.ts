@@ -5,7 +5,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { BridgeHttpProxyModule } from '@fc/bridge-http-proxy';
 import { ConfigModule, ConfigService } from '@fc/config';
-import { LoggerModule } from '@fc/logger-legacy';
+import { LoggerModule } from '@fc/logger';
 
 @Module({})
 export class AppModule {

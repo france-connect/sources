@@ -2,6 +2,7 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
+import { CoreFcaSession } from '@fc/core-fca';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
@@ -13,7 +14,7 @@ const cookieOptions: ISessionCookieOptions = {
   sameSite: 'Lax',
   httpOnly: true,
   secure: true,
-  maxAge: 7200000, // 2h
+  maxAge: 43200000, // 12h
   domain: process.env.FQDN,
 };
 
@@ -23,13 +24,14 @@ export default {
   cookieOptions,
   cookieSecrets: env.json('COOKIE_SECRETS'),
   sessionCookieName: 'fc_session_id',
-  lifetime: 7200, // 2h
+  lifetime: 43200, // 12h
   sessionIdLength: 64,
-  slidingExpiration: true,
+  slidingExpiration: false,
   excludedRoutes: [
     OidcProviderRoutes.JWKS,
     OidcProviderRoutes.OPENID_CONFIGURATION,
     OidcProviderRoutes.END_SESSION_CONFIRMATION,
     OidcClientRoutes.WELL_KNOWN_KEYS,
   ],
+  schema: CoreFcaSession,
 } as SessionConfig;

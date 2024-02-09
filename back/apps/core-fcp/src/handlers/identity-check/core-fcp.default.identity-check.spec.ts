@@ -2,7 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { OidcIdentityDto } from '@fc/core-fcp/dto';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { CoreFcpDefaultIdentityCheckHandler } from './core-fcp.default.identity-check';
 
@@ -14,10 +16,7 @@ jest.mock('@fc/common', () => ({
 describe('CoreFcpDefaultIdentityCheckHandler', () => {
   let service: CoreFcpDefaultIdentityCheckHandler;
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const identityMock = {
     sub: '1',
@@ -52,7 +51,6 @@ describe('CoreFcpDefaultIdentityCheckHandler', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
   });
 
   it('should log when check identity', async () => {

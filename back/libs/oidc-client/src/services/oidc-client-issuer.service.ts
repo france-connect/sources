@@ -3,7 +3,6 @@ import { Client, custom, Issuer } from 'openid-client';
 
 import { Injectable, OnModuleInit } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
 import { IdentityProviderMetadata } from '@fc/oidc';
 
 import { OidcClientClass } from '../enums';
@@ -17,17 +16,10 @@ import { OidcClientConfigService } from './oidc-client-config.service';
 export class OidcClientIssuerService implements OnModuleInit {
   private IssuerProxy = Issuer;
 
-  constructor(
-    private readonly logger: LoggerService,
-    private readonly config: OidcClientConfigService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor(private readonly config: OidcClientConfigService) {}
 
   async onModuleInit() {
     const { httpOptions } = await this.config.get();
-
-    this.logger.trace('Initializing oidc-client');
 
     custom.setHttpOptionsDefaults(httpOptions);
   }

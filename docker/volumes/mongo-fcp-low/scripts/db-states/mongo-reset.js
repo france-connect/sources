@@ -1,10 +1,10 @@
 db = db.getSiblingDB("core-fcp-low");
 
-const collections = ["client", "provider", "scopes", "claims"];
+const collections = db.getCollectionNames();
 
 collections.forEach((collection) => {
-  print(`Reseting ${collection} collection...`);
+  print(`Resetting ${collection} collection...`);
   db[collection].remove({});
   db[collection].dropIndex({});
 });
-print("All collections reseted!");
+print("All collections reset!");

@@ -1,32 +1,37 @@
 /* istanbul ignore file */
 
 // Declarative code
-export interface IGeo {
-  country: string;
-  city: string;
+
+export interface ISource {
+  readonly geo: ICsmrTracksGeoData;
+  readonly address: string[];
+  readonly port: string;
+  // Input data
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly original_addresses: string;
 }
 
-/**
- * Note: here is the ElasticSearch geo pipeline result
-  export interface ISource {
-    readonly geo: {
-      region_name?: string;
-      region_iso_code?: string;
-      city_name?: string;
-      country_iso_code?: string;
-      country_name?: string;
-      continent_name?: string;
-      location: {
-        lon: number;
-        lat: number;
-      };
-    };
-  }
- * 
- */
-
 export type ICsmrTracksGeoData = {
-  'source.geo.city_name': string;
-  'source.geo.country_iso_code': string;
-  'source.geo.region_name': string;
+  // Input data
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  region_name?: string;
+  // Input data
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  region_iso_code?: string;
+  // Input data
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  city_name?: string;
+  // Input data
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  country_iso_code?: string;
+  // Input data
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  country_name?: string;
+  // Input data
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  continent_name?: string;
+  location: {
+    lon: number;
+    lat: number;
+  };
 };

@@ -5,6 +5,7 @@ import * as ClassValidator from 'class-validator';
 import {
   filteredByDto,
   getDtoErrors,
+  getDtoInputWithErrors,
   getTransformed,
   validateDto,
 } from './dto-validation';
@@ -437,6 +438,75 @@ describe('DtoValidation', () => {
 
       // expect
       expect(error).toBe(null);
+    });
+  });
+
+  describe('getDtoInputWithErrors', () => {
+    it('should return structured inputs with errors if any', () => {
+      // Given
+      const errors = [
+        {
+          target: {
+            sexe: 'F',
+            birthdate: 'some not date string',
+            birthplace: 'some place ok',
+            email: 'not an email string',
+          },
+          value: 'some not date string',
+          property: 'birthdate',
+          children: [],
+          constraints: {
+            matches:
+              'birthdate must match /^\\d{4}-\\d{2}-\\d{2}$/ regular expression',
+          },
+        },
+        {
+          target: {
+            sexe: 'F',
+            birthdate: 'some not date string',
+            birthplace: 'some place ok',
+            email: 'not an email string',
+          },
+          value: 'not an email string',
+          property: 'email',
+          children: [],
+          constraints: {
+            isEmail: 'email must be an email',
+          },
+        },
+      ];
+      // When
+      const result = getDtoInputWithErrors(errors);
+
+      // Then
+      expect(result).toEqual({
+        sexe: {
+          value: 'F',
+          errors: [],
+        },
+        birthdate: {
+          value: 'some not date string',
+          errors: [
+            'birthdate must match /^\\d{4}-\\d{2}-\\d{2}$/ regular expression',
+          ],
+        },
+        birthplace: {
+          value: 'some place ok',
+          errors: [],
+        },
+        email: {
+          value: 'not an email string',
+          errors: ['email must be an email'],
+        },
+      });
+    });
+
+    it('should return null if there are no errors', () => {
+      // When
+      const result = getDtoInputWithErrors([]);
+
+      // Then
+      expect(result).toBe(null);
     });
   });
 });

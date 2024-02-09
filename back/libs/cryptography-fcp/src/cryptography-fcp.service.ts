@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { CryptographyFcpConfig } from './dto/cryptography-fcp-config';
 import { IPivotIdentity } from './interfaces/pivot-identity.interface';
@@ -10,12 +9,9 @@ import { IPivotIdentity } from './interfaces/pivot-identity.interface';
 @Injectable()
 export class CryptographyFcpService {
   constructor(
-    private readonly logger: LoggerService,
     private readonly crypto: CryptographyService,
     private readonly config: ConfigService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Compute the identity hash
@@ -42,8 +38,6 @@ export class CryptographyFcpService {
       pivotIdentity.birthplace +
       pivotIdentity.birthcountry;
 
-    this.logger.trace({ pivotIdentity });
-
     return this.crypto.hash(serial, 'binary', 'sha256', 'base64');
   }
 
@@ -61,8 +55,6 @@ export class CryptographyFcpService {
     const data = [providerRef, identityHash, subSecretKey];
 
     const sub = `${this.crypto.hash(data.join(''))}v1`;
-
-    this.logger.trace({ providerRef, identityHash, data, sub });
 
     return sub;
   }

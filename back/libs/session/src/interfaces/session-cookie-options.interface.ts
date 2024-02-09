@@ -12,7 +12,7 @@ export interface ISessionCookieOptions {
   signed: boolean;
   httpOnly: boolean;
   secure: boolean;
-  maxAge: number;
+  maxAge?: number;
   domain: string;
   sameSite: 'Strict' | 'Lax' | 'None' | boolean;
 }

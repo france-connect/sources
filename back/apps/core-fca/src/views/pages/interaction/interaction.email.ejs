@@ -1,0 +1,38 @@
+<form
+  action="/api/v2/redirect-to-idp"
+  method="POST"
+  class="interaction-main-content-form"
+  name="email-check"
+>
+  <label class="fr-label fr-mt-1v" for="text-input-text">
+    Votre adresse email professionnelle
+    <span class="fr-hint-text"
+      >C'est l'adresse que vous utilisez sur votre compte professionnel.</span
+    >
+  </label>
+
+  <input
+    class="fr-input fr-bx-1v"
+    type="email"
+    id="email-input"
+    spellcheck="off"
+    autocomplete="email"
+    name="email"
+    required
+  />
+  <div class="fr-btns-group">
+    <button
+      id="email-submit-button"
+      onclick=""
+      type="submit"
+      class="fr-mt-2v fr-btn"
+      data-testid="interaction-connection-button"
+    >
+      Se connecter
+    </button>
+  </div>
+
+  <input type="hidden" name="acr_values" value="<%= params.acr_values %>" />
+  <input type="hidden" name="scope" value="<%= locals.idpScope %>" />
+  <input type="hidden" name="csrfToken" value="<%= locals.csrfToken %>" />
+</form>

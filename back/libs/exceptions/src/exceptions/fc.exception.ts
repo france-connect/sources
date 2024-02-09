@@ -35,8 +35,6 @@ export class FcException extends Error {
    * - 27: Mailer
    * - 28: csmr-tracks
    * - 30: Rie Proxy Broker
-   * - 31: Partner account
-   * - 32: Partner service
    * - 40: GeoIp Maxmind
    * - 41: Tracking
    * - 42: Flow-steps

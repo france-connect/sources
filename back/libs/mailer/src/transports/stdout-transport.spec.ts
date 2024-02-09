@@ -1,4 +1,6 @@
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { StdoutTransport } from './stdout-transport';
 
@@ -21,10 +23,7 @@ const emailParamsMock = {
   ],
 };
 
-const loggerServiceMock = {
-  debug: jest.fn(),
-  trace: jest.fn(),
-};
+const loggerServiceMock = getLoggerMock();
 
 describe('StdoutTransport', () => {
   let service;
@@ -61,19 +60,15 @@ describe('StdoutTransport', () => {
     });
 
     it('should call the logger with the mails params', async () => {
-      // setup
-      const log = `Printing mail to console: ${JSON.stringify(
-        emailParamsMock,
-        null,
-        2,
-      )}`;
-
       // action
       await service.send(emailParamsMock);
 
       // expect
-      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.debug).toHaveBeenCalledWith(log);
+      expect(loggerServiceMock.info).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.info).toHaveBeenCalledWith(
+        emailParamsMock,
+        'Printing mail to console',
+      );
     });
   });
 });

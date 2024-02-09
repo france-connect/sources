@@ -1,0 +1,17 @@
+version: "2.4"
+
+services:
+  ####################
+  # Documentation partenaires
+  ####################
+
+  doc-partners:
+    extends:
+      service: web-base
+      file: "${COMPOSE_DIR}/web/base.yml"
+    hostname: doc-partners
+    depends_on:
+      - "rp-all"
+    environment:
+      - "PM2_SCRIPT=yarn start doc-partners"
+      - "VIRTUAL_HOST=doc-partners.docker.dev-franceconnect.fr"

@@ -2,6 +2,7 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
+import { MockServiceProviderSession } from '@fc/mock-service-provider';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
 
@@ -26,4 +27,5 @@ export default {
   sessionIdLength: 64,
   slidingExpiration: true,
   excludedRoutes: [OidcClientRoutes.WELL_KNOWN_KEYS],
+  schema: MockServiceProviderSession,
 } as SessionConfig;

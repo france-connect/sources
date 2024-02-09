@@ -63,10 +63,11 @@ export default {
         enabled: env.boolean('USE_ENCRYPTION'),
       },
       jwtUserinfo: { enabled: true },
-      backchannelLogout: { enabled: true },
+      backchannelLogout: { enabled: false },
       revocation: { enabled: true },
       rpInitiatedLogout: { enabled: true },
       claimsParameter: { enabled: true },
+      resourceIndicators: { enabled: false },
     },
     acceptQueryParamAccessTokens: true,
     ttl: {

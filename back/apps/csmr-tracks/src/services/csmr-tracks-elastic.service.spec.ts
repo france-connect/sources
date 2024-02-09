@@ -6,7 +6,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { IPaginationOptions } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { ElasticsearchConfig } from '@fc/elasticsearch';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import {
   ICsmrTracksData,
@@ -77,11 +79,7 @@ describe('buildQuery()', () => {
 describe('CsmrTracksElasticService', () => {
   let service: CsmrTracksElasticService;
 
-  const loggerMock = {
-    debug: jest.fn(),
-    trace: jest.fn(),
-    setContext: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const configMock = {
     get: jest.fn(),

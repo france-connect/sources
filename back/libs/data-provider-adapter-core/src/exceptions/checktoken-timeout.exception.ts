@@ -17,4 +17,8 @@ export class ChecktokenTimeoutException extends ChecktokenBaseException {
   public readonly error = 'temporary_unavailable';
   message =
     'The authorization server is currently unable to handle the request.';
+
+  static ERROR = 'temporarily_unavailable';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

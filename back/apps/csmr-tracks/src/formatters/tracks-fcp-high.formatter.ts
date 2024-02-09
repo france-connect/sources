@@ -4,7 +4,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { ScopesService } from '@fc/scopes';
 
 import { Platform } from '../enums';

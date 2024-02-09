@@ -1,0 +1,15 @@
+<select
+  name="<%= input.name %>"
+  id="<%= input.name %>" 
+  class="<%= data[input.name]?.errors.length > 0 ? 'error-input' : 'input' %>"
+>
+  <% input.values.forEach((item) => { %>
+  <option
+    value="<%= item.value %>"
+    <%= data[input.name]?.value === item.value ? 'selected' : '' %>
+  ><%= item.label %></option>
+  <% }) %>
+</select>
+<% if(data[input.name]?.errors.length > 0) { %>
+  <span class="error-message"><%= data[input.name].errors.join(", ") %></span>
+<% } %>

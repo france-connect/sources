@@ -4,7 +4,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { BridgeHttpProxyProtocolDto } from '../dto';
 import {
@@ -19,11 +21,7 @@ jest.mock('@fc/common');
 describe('BridgeHttpProxyService', () => {
   let service: BridgeHttpProxyService;
 
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const configMock = {
     get: jest.fn(),
@@ -135,17 +133,6 @@ describe('BridgeHttpProxyService', () => {
         );
       });
 
-      it('should log method proxyRequest() called', async () => {
-        // When
-        await service.proxyRequest(originalUrlMock, method, headersMock);
-
-        // Then
-        expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
-        expect(loggerServiceMock.debug).toHaveBeenCalledWith(
-          'BrokerProxyController.proxyRequest()',
-        );
-      });
-
       it('should validate the format of the identity received from broker thanks to the dto', async () => {
         // When
         await service.proxyRequest(originalUrlMock, method, headersMock);
@@ -195,10 +182,6 @@ describe('BridgeHttpProxyService', () => {
       await expect(
         service.proxyRequest(originalUrlMock, method, headersMock),
       ).rejects.toThrow(BridgeHttpProxyMissingVariableException);
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledWith({
-        dtoProtocolErrors: [{ property: 'invalid param' }],
-      });
     });
 
     it('should throw an exception if an error occurs when calling the broker', async () => {
@@ -215,10 +198,6 @@ describe('BridgeHttpProxyService', () => {
       await expect(
         service.proxyRequest(originalUrlMock, method, headersMock),
       ).rejects.toThrow(BridgeHttpProxyRabbitmqException);
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledWith({
-        error: { message: 'error message', status: 400 },
-      });
     });
   });
 

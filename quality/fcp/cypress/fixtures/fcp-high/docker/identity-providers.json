@@ -9,13 +9,14 @@
       "whitelisté",
       "non blacklisté",
       "français",
-      "autorisé pour idp_hint"
+      "autorisé pour idp_hint",
+      "par défaut avec amr 'fc pwd mail mfa'"
     ],
     "mocked": true,
     "usable": true,
     "url": "https://fip1-high.docker.dev-franceconnect.fr",
     "acrValue": "eidas3",
-    "encryption": "RSA-OAEP,A256GCM",
+    "encryption": "RSA-OAEP-256,A256GCM",
     "signature": "ES256",
     "selectors": {
       "idpButton": "#idp-dedc7160-8811-4d0f-9dd7-c072c15f2f18",

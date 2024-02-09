@@ -5,7 +5,7 @@ import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
 import { DataProviderAdapterCoreConfig } from '@fc/data-provider-adapter-core';
-import { LoggerConfig } from '@fc/logger-legacy';
+import { LoggerConfig } from '@fc/logger';
 
 import { AppConfig } from '../dto';
 

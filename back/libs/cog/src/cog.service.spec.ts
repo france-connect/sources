@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { CogService } from './cog.service';
 import { CityInterface, CountryInterface } from './interfaces';
@@ -9,12 +8,6 @@ import { COG_CITY, COG_COUNTRY } from './tokens';
 
 describe('CogService', () => {
   let service: CogService;
-
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  };
 
   const configServiceMock = {
     get: jest.fn(),
@@ -37,7 +30,6 @@ describe('CogService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CogService,
-        LoggerService,
         ConfigService,
         {
           provide: COG_CITY,
@@ -49,8 +41,6 @@ describe('CogService', () => {
         },
       ],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .compile();
@@ -60,7 +50,6 @@ describe('CogService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
   });
 
   describe('onModuleInit', () => {
@@ -153,13 +142,6 @@ describe('CogService', () => {
 
       expect(countryRepositoryMock.find).toHaveBeenCalledTimes(1);
       expect(countryRepositoryMock.find).toHaveBeenCalledWith(filterSearch);
-    });
-
-    it('should trace label based on cog', async () => {
-      const trace = { isFrance: true, label: labelFrMock };
-      await service.getLabelFromCog(franceCog);
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledWith(trace);
     });
 
     it('should fail if the City repository failed', async () => {

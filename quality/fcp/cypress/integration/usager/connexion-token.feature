@@ -35,8 +35,7 @@ Fonctionnalité: Connexion Usager - Token
     Alors le fournisseur de service a accès aux informations des scopes "identite_pivot"
 
   # TODO: Investiguer pourquoi ce scénario ne fonctionne pas avec Cypress sur integ01
-  # TODO: A réactiver quand le #1418 sera fait
-  @fcpHigh @ignoreInteg01 @ignoreHigh
+  @fcpHigh @ignoreInteg01
   Scénario: FCP HIGH - Token encore valide après nouvelle cinématique
     # Première cinématique
     Etant donné que j'utilise un compte usager "par défaut"
@@ -62,3 +61,19 @@ Fonctionnalité: Connexion Usager - Token
     Et je navigue sur la page fournisseur de service
     Et je redemande les informations de l'usager
     Alors le fournisseur de service a accès aux informations des scopes "identite_pivot"
+
+  Scénario: Token non valide après révocation
+    Etant donné que j'utilise un compte usager "par défaut"
+    Et que j'utilise un fournisseur de service "public"
+    Et que le fournisseur de service requiert l'accès aux informations du scope "identite_pivot"
+    Et que je navigue sur la page fournisseur de service
+    Et que je me connecte à FranceConnect
+    Et que je suis redirigé vers la page fournisseur de service
+    Et que je suis connecté au fournisseur de service
+    Et que le fournisseur de service a accès aux informations des scopes "identite_pivot"
+    Quand je révoque le token FranceConnect
+    Alors le token FranceConnect est révoqué
+    Et je redemande les informations de l'usager
+    Et je suis redirigé vers la page erreur du fournisseur de service
+    Et le titre de l'erreur fournisseur de service est "invalid_token"
+    Et la description de l'erreur fournisseur de service est "invalid token provided"

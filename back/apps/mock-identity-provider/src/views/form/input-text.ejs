@@ -1,0 +1,11 @@
+<input 
+  type="text" 
+  name="<%= input.name %>" 
+  id="<%= input.name %>" 
+  <%= input.mandatory ? 'required' : '' %>
+  value="<%= data[input.name] ? data[input.name].value : '' %>"
+  class="<%= data[input.name]?.errors.length > 0 ? 'error-input' : '' %>"
+/>
+<% if(data[input.name]?.errors.length > 0) { %>
+  <span class="error-message"><%= data[input.name].errors.join(", ") %></span>
+<% } %>

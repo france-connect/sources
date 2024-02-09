@@ -1,9 +1,11 @@
 import { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
-import { LoggerService } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { FcExceptionFilter } from '@fc/exceptions';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { OidcProviderEvents } from '../enums';
 import {
@@ -16,13 +18,7 @@ import { OidcProviderErrorService } from './oidc-provider-error.service';
 describe('OidcProviderErrorService', () => {
   let service: OidcProviderErrorService;
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    verbose: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-    businessEvent: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   const exceptionFilterMock = {
     catch: jest.fn(),
@@ -30,13 +26,13 @@ describe('OidcProviderErrorService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FcExceptionFilter, OidcProviderErrorService],
+      providers: [FcExceptionFilter, OidcProviderErrorService, LoggerService],
     })
+      .overrideProvider(LoggerService)
+      .useValue(loggerServiceMock)
       .overrideProvider(FcExceptionFilter)
       .useValue(exceptionFilterMock)
       .compile();
-
-    module.useLogger(loggerServiceMock);
 
     service = module.get<OidcProviderErrorService>(OidcProviderErrorService);
     jest.resetAllMocks();

@@ -4,7 +4,7 @@
 import {
   IsArray,
   IsBoolean,
-  IsIn,
+  IsEnum,
   IsNumber,
   IsOptional,
   IsString,
@@ -18,7 +18,7 @@ import {
   IFeatureHandlerDatabase,
   IsRegisteredHandler,
 } from '@fc/feature-handler';
-import { ResponseTypes } from '@fc/oidc';
+import { Amr, ResponseTypes } from '@fc/oidc';
 
 import { JwksUriValidator } from './jwksuri.validator';
 
@@ -49,6 +49,10 @@ export class MetadataIdpAdapterMongoDTO {
   @IsBoolean()
   readonly isBeta: boolean;
 
+  @IsEnum(Amr, { each: true })
+  @IsOptional()
+  readonly amr?: Amr[];
+
   @IsRegisteredHandler()
   readonly featureHandlers: IFeatureHandlerDatabase;
 
@@ -62,8 +66,7 @@ export class MetadataIdpAdapterMongoDTO {
   readonly clientID: string;
 
   @IsArray()
-  @IsIn(Object.values(ResponseTypes), { each: true })
-  @IsString({ each: true })
+  @IsEnum(ResponseTypes, { each: true })
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly response_types: ResponseTypes[];

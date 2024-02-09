@@ -45,7 +45,7 @@ Fonctionnalité: Connexion Usager - SSO - FCP High
     Alors je suis redirigé vers la page d'information
     Et je continue sur le fournisseur de service
     Et je suis connecté au fournisseur de service
-    Et la cinématique a utilisé le niveau de sécurité "eidas2"
+    Et la cinématique a utilisé le niveau de sécurité "eidas3"
 
   Scénario: Connexion SSO - FCP High - 1er FS demande de l'élevé et 2ème FS demande du subtantiel - identité élevé renvoyée par FI
     Etant donné que j'utilise un fournisseur de service "privé avec consentement obligatoire"
@@ -69,7 +69,7 @@ Fonctionnalité: Connexion Usager - SSO - FCP High
     Alors je suis redirigé vers la page d'information
     Et je continue sur le fournisseur de service
     Et je suis connecté au fournisseur de service
-    Et la cinématique a utilisé le niveau de sécurité "eidas2"
+    Et la cinématique a utilisé le niveau de sécurité "eidas3"
 
   Scénario: Connexion SSO - FCP High - déconnexion d'un FS seulement et SSO terminé
     Etant donné que j'utilise un fournisseur de service "par défaut"

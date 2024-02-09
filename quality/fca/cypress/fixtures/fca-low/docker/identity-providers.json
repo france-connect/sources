@@ -1,11 +1,31 @@
 [
   {
+    "idpId": "71144ab3-ee1a-4401-b7b3-79b44f7daeeb",
+    "descriptions": [
+      "moncomptepro"
+    ],
+    "ministry": "MOCK - MonComptePro",
+    "title": "MonComptePro - eIDAS faible - ES256",
+    "mocked": true,
+    "usable": true,
+    "url": "https://moncomptepro.docker.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "encryption": "",
+    "signature": "ES256",
+    "selectors": {
+      "idpButton": "#idp-71144ab3-ee1a-4401-b7b3-79b44f7daeeb",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "button[type='submit']"
+    },
+    "fqdn": "moncomptepro.fr"
+  },
+  {
     "idpId": "9c716f61-b8a1-435c-a407-ef4d677ec270",
     "descriptions": [
       "par défaut",
+      "FI eidas1 avec signature RS256",
       "actif",
-      "rattaché à un ministère avec plusieurs FI",
-      "rattaché à plusieurs ministères",
       "autorisé pour idp_hint"
     ],
     "ministry": "MOCK - Ministère de la transition écologique - ALL FIS - SORT 2",
@@ -21,7 +41,8 @@
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
-    }
+    },
+    "fqdn": "fia1.fr"
   },
   {
     "idpId": "0e7c099f-fe86-49a0-b7d1-19df45397212",
@@ -43,11 +64,12 @@
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
-    }
+    },
+    "fqdn": "fia2.fr"
   },
   {
     "idpId": "405d3839-9182-415f-9926-597489d11509",
-    "descriptions": ["désactivé et visible"],
+    "descriptions": ["fia3", "désactivé et visible"],
     "ministry": "MOCK - Ministère de la transition écologique - ALL FIS - SORT 2",
     "title": "Identity Provider 3 (désactivé)- eIDAS faible",
     "mocked": true,
@@ -58,7 +80,8 @@
     "signature": "ES256",
     "selectors": {
       "idpButton": "#idp-405d3839-9182-415f-9926-597489d11509"
-    }
+    },
+    "fqdn": "fia3.fr"
   },
   {
     "idpId": "87762a76-7da0-442d-8243-5785f859b88b",
@@ -80,7 +103,8 @@
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
-    }
+    },
+    "fqdn": "fia4.fr"
   },
   {
     "idpId": "46f5d9f9-881d-46b1-bdcc-0548913ea443",
@@ -98,7 +122,8 @@
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
-    }
+    },
+    "fqdn": "fia5.fr"
   },
   {
     "idpId": "ccae1186-3695-4ae2-8b38-d3a9926d92c4",
@@ -113,7 +138,8 @@
     "signature": "ES256",
     "selectors": {
       "idpButton": "#idp-ccae1186-3695-4ae2-8b38-d3a9926d92c4"
-    }
+    },
+    "fqdn": "fia6.fr"
   },
   {
     "idpId": "b61f31b8-c131-40d0-9eca-109219249db6",
@@ -128,7 +154,8 @@
     "signature": "ES256",
     "selectors": {
       "idpButton": "#idp-b61f31b8-c131-40d0-9eca-109219249db6"
-    }
+    },
+    "fqdn": "fia7.fr"
   },
   {
     "idpId": "56c5831b-7749-4206-b961-11f840bc566b",
@@ -146,6 +173,7 @@
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "button[type='submit']"
-    }
+    },
+    "fqdn": "fia8.fr"
   }
 ]

@@ -23,7 +23,7 @@ import {
   DataTransfertType,
 } from '@fc/core';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import {
@@ -33,8 +33,11 @@ import {
 import { OidcProviderRoutes } from '@fc/oidc-provider/enums';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import {
+  ISessionRequest,
+  ISessionResponse,
   ISessionService,
   Session,
+  SessionConfig,
   SessionCsrfService,
   SessionInvalidCsrfConsentException,
   SessionService,
@@ -78,9 +81,7 @@ export class OidcProviderController {
     private readonly tracking: TrackingService,
     private readonly csrfService: SessionCsrfService,
     private readonly config: ConfigService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Authorize route via HTTP GET
@@ -99,13 +100,6 @@ export class OidcProviderController {
     @Next() next,
     @Query() query: AuthorizeParamsDto,
   ) {
-    this.logger.trace({
-      method: 'GET',
-      name: 'OidcProviderRoutes.AUTHORIZATION',
-      query,
-      route: OidcProviderRoutes.AUTHORIZATION,
-    });
-
     const { enableSso } = this.config.get<CoreConfig>('Core');
     if (!enableSso) {
       /**
@@ -125,7 +119,6 @@ export class OidcProviderController {
     );
 
     if (errors.length) {
-      this.logger.trace({ errors }, LoggerLevelNames.WARN);
       throw new OidcProviderAuthorizeParamsException();
     }
 
@@ -161,13 +154,6 @@ export class OidcProviderController {
     @Next() next,
     @Body() body: AuthorizeParamsDto,
   ) {
-    this.logger.trace({
-      body,
-      method: 'POST',
-      name: 'OidcProviderRoutes.AUTHORIZATION',
-      route: OidcProviderRoutes.AUTHORIZATION,
-    });
-
     const { enableSso } = this.config.get<CoreConfig>('Core');
     if (!enableSso) {
       /**
@@ -187,7 +173,6 @@ export class OidcProviderController {
     );
 
     if (errors.length) {
-      this.logger.trace({ errors }, LoggerLevelNames.WARN);
       throw new OidcProviderAuthorizeParamsException();
     }
 
@@ -287,8 +272,8 @@ export class OidcProviderController {
   @IsStep()
   @ForbidRefresh()
   async getLogin(
-    @Req() req,
-    @Res() res,
+    @Req() req: ISessionRequest,
+    @Res() res: ISessionResponse,
     @Body() body: CsrfToken,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
@@ -308,16 +293,13 @@ export class OidcProviderController {
     try {
       await this.csrfService.validate(sessionOidc, csrfToken);
     } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
+      this.logger.debug(error);
       throw new SessionInvalidCsrfConsentException(error);
     }
 
     if (!spIdentity) {
-      this.logger.trace({ spIdentity }, LoggerLevelNames.WARN);
       throw new CoreMissingIdentityException();
     }
-
-    this.logger.trace({ csrfToken, spIdentity });
 
     const interaction = await this.oidcProvider.getInteraction(req, res);
     const trackingContext: TrackedEventContextInterface = { req };
@@ -326,18 +308,34 @@ export class OidcProviderController {
     // send the notification mail to the final user
     await this.core.sendAuthenticationMail(session, sessionCore);
 
-    this.logger.trace({
-      data: { req, res, session },
-      method: 'POST',
-      name: 'CoreRoutes.INTERACTION_LOGIN',
-      route: CoreRoutes.INTERACTION_LOGIN,
-    });
-
-    const { enableSso } = this.config.get<CoreConfig>('Core');
-    if (!enableSso) {
-      await this.sessionService.detach(req, res);
-    }
+    await this.handleSessionLife(req, res);
 
     return this.oidcProvider.finishInteraction(req, res, session);
+  }
+
+  private async handleSessionLife(
+    req: ISessionRequest,
+    res: ISessionResponse,
+  ): Promise<void> {
+    if (this.shouldExtendSessionLifeTime()) {
+      await this.sessionService.refresh(req, res);
+      this.logger.debug('Session has been refreshed to be used later for SSO');
+    }
+
+    const { enableSso } = this.config.get<CoreConfig>('Core');
+
+    if (!enableSso) {
+      await this.sessionService.detach(req, res);
+      this.logger.debug(
+        'Session has been detached because SSO is disabled on this platform',
+      );
+    }
+  }
+
+  private shouldExtendSessionLifeTime() {
+    const { enableSso } = this.config.get<CoreConfig>('Core');
+    const { slidingExpiration } = this.config.get<SessionConfig>('Session');
+
+    return enableSso && !slidingExpiration;
   }
 }

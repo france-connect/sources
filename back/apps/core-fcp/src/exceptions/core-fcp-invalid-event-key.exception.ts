@@ -17,4 +17,8 @@ export class CoreFcpInvalidEventKeyException extends CoreBaseException {
   code = ErrorCode.INVALID_CONSENT_PROCESS;
   message =
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

@@ -3,7 +3,9 @@ import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { IdpMappings } from '../dto';
 import { Platform } from '../enums';
@@ -18,11 +20,7 @@ import { TracksLegacyFormatter } from './tracks-legacy.formatter';
 describe('TracksLegacyFormatter', () => {
   let service: TracksLegacyFormatter;
 
-  const loggerMock = {
-    debug: jest.fn(),
-    trace: jest.fn(),
-    setContext: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const configMock = {
     get: jest.fn(),
@@ -80,11 +78,6 @@ describe('TracksLegacyFormatter', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-  });
-
-  it('should set logger context', () => {
-    expect(loggerMock.setContext).toHaveBeenCalledTimes(1);
-    expect(loggerMock.setContext).toHaveBeenCalledWith('TracksLegacyFormatter');
   });
 
   describe('formatTrack()', () => {

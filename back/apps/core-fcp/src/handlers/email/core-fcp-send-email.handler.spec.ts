@@ -3,7 +3,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PartialExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger-legacy';
 import {
   MailerNotificationConnectException,
   MailerService,
@@ -332,13 +331,6 @@ describe('CoreFcpSendEmailHandler', () => {
     udFqdn: 'my-ud-instance-domain',
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-    warn: jest.fn(),
-  };
-
   const sessionServiceMock = {
     get: jest.fn(),
     set: jest.fn(),
@@ -419,7 +411,6 @@ describe('CoreFcpSendEmailHandler', () => {
       providers: [
         ConfigService,
         CoreFcpSendEmailHandler,
-        LoggerService,
         SessionService,
         MailerService,
         IdentityProviderAdapterMongoService,
@@ -427,8 +418,6 @@ describe('CoreFcpSendEmailHandler', () => {
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
       .overrideProvider(MailerService)

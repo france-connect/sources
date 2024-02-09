@@ -1,15 +1,11 @@
 import { Request, Response } from 'express';
-import { encode } from 'querystring';
 
 import {
   Body,
   Controller,
   Get,
   Header,
-  Param,
   Post,
-  Query,
-  Redirect,
   Render,
   Req,
   Res,
@@ -21,10 +17,10 @@ import { ConfigService } from '@fc/config';
 import { CoreVerifyService, ProcessCore } from '@fc/core';
 import { CryptographyService } from '@fc/cryptography';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
+import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import {
-  GetOidcCallback,
   OidcClientConfigService,
   OidcClientRoutes,
   OidcClientService,
@@ -68,9 +64,8 @@ export class OidcClientController {
     private readonly tracking: TrackingService,
     private readonly sessionService: SessionService,
     private readonly crypto: CryptographyService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+    private readonly identityProvider: IdentityProviderAdapterMongoService,
+  ) {}
 
   /**
    * @todo #242 get configured parameters (scope and acr)
@@ -98,7 +93,7 @@ export class OidcClientController {
     try {
       await this.csrfService.validate(sessionOidc, csrfToken);
     } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
+      this.logger.debug(error);
       throw new SessionInvalidCsrfSelectIdpException(error);
     }
 
@@ -108,7 +103,7 @@ export class OidcClientController {
       params: { acr_values: acr },
     } = await this.oidcProvider.getInteraction(req, res);
 
-    await this.coreFcp.redirectToIdp(res, acr, idpId, sessionOidc);
+    await this.coreFcp.redirectToIdp(res, idpId, sessionOidc, { acr });
   }
 
   /**
@@ -120,34 +115,7 @@ export class OidcClientController {
   @Get(OidcClientRoutes.WELL_KNOWN_KEYS)
   @Header('cache-control', 'public, max-age=600')
   async getWellKnownKeys() {
-    this.logger.trace({
-      method: 'GET',
-      name: 'OidcClientRoutes.WELL_KNOWN_KEYS',
-      route: OidcClientRoutes.WELL_KNOWN_KEYS,
-    });
     return await this.oidcClient.utils.wellKnownKeys();
-  }
-
-  @Get(OidcClientRoutes.OIDC_CALLBACK_LEGACY)
-  @Header('cache-control', 'no-store')
-  @UsePipes(new ValidationPipe({ whitelist: true }))
-  @Redirect()
-  getLegacyOidcCallback(@Query() query, @Param() params: GetOidcCallback) {
-    const { urlPrefix } = this.config.get<AppConfig>('App');
-    const queryParams = encode(query);
-
-    const response = {
-      statusCode: 302,
-      url: `${urlPrefix}${OidcClientRoutes.OIDC_CALLBACK}?${queryParams}`,
-    };
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'OidcClientRoutes.OIDC_CALLBACK_LEGACY',
-      providerUid: params.providerUid,
-    });
-
-    return response;
   }
 
   /**
@@ -169,8 +137,8 @@ export class OidcClientController {
     @Session('OidcClient', GetOidcCallbackOidcClientSessionDto)
     _sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    await this.sessionService.detach(req, res);
     await this.sessionService.duplicate(req, res, GetOidcCallbackSessionDto);
+    this.logger.debug('Session has been detached and duplicated');
 
     const newSessionOidc = SessionService.getBoundSession<OidcClientSession>(
       req,
@@ -189,7 +157,7 @@ export class OidcClientController {
       nonce: idpNonce,
     };
 
-    const { accessToken, idToken, acr, amr } =
+    const { accessToken, idToken, acr } =
       await this.oidcClient.getTokenFromProvider(idpId, tokenParams, req);
 
     await this.tracking.track(
@@ -198,6 +166,8 @@ export class OidcClientController {
         req,
       },
     );
+
+    const { amr } = await this.identityProvider.getById(idpId);
 
     const userInfoParams = {
       accessToken,
@@ -232,13 +202,6 @@ export class OidcClientController {
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const url = `${urlPrefix}/interaction/${interactionId}/verify`;
 
-    this.logger.trace({
-      method: 'GET',
-      name: 'OidcClientRoutes.OIDC_CALLBACK',
-      redirect: url,
-      route: OidcClientRoutes.OIDC_CALLBACK,
-    });
-
     res.redirect(url);
   }
 
@@ -249,11 +212,6 @@ export class OidcClientController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    this.logger.trace({
-      route: OidcClientRoutes.DISCONNECT_FROM_IDP,
-      method: 'POST',
-      name: 'OidcClientRoutes.DISCONNECT_FROM_IDP',
-    });
     const { idpIdToken, idpId } = await sessionOidc.get();
 
     const { stateLength } = await this.oidcClientConfig.get();
@@ -298,7 +256,7 @@ export class OidcClientController {
 
     const errors = await identityCheckHandler.handle(identity);
     if (errors.length) {
-      this.logger.trace({ errors }, LoggerLevelNames.WARN);
+      this.logger.debug(errors, `Identity from "${idpId}" is invalid`);
       throw new CoreFcpInvalidIdentityException();
     }
   }

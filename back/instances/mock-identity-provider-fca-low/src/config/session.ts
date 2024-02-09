@@ -2,6 +2,7 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
+import { MockIdentityProviderSession } from '@fc/mock-identity-provider';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
 
@@ -29,4 +30,5 @@ export default {
     OidcProviderRoutes.JWKS,
     OidcProviderRoutes.OPENID_CONFIGURATION,
   ],
+  schema: MockIdentityProviderSession,
 } as SessionConfig;

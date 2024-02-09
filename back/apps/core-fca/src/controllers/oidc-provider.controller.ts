@@ -14,7 +14,6 @@ import {
 
 import { CoreMissingIdentityException, CoreRoutes } from '@fc/core';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderRoutes, OidcProviderService } from '@fc/oidc-provider';
 import { ISessionService, Session } from '@fc/session';
@@ -23,12 +22,7 @@ import { AuthorizeParamsDto, GetLoginOidcClientSessionDto } from '../dto';
 
 @Controller()
 export class OidcProviderController {
-  constructor(
-    private readonly logger: LoggerService,
-    private readonly oidcProvider: OidcProviderService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor(private readonly oidcProvider: OidcProviderService) {}
 
   /**
    * Authorize route via HTTP GET
@@ -48,13 +42,7 @@ export class OidcProviderController {
     }),
   )
   @IsStep()
-  getAuthorize(@Next() next, @Query() query: AuthorizeParamsDto) {
-    this.logger.trace({
-      route: OidcProviderRoutes.AUTHORIZATION,
-      method: 'GET',
-      name: 'OidcProviderRoutes.AUTHORIZATION',
-      query,
-    });
+  getAuthorize(@Next() next, @Query() _query: AuthorizeParamsDto) {
     // Pass the query to oidc-provider
     return next();
   }
@@ -77,13 +65,7 @@ export class OidcProviderController {
     }),
   )
   @IsStep()
-  postAuthorize(@Next() next, @Body() body: AuthorizeParamsDto) {
-    this.logger.trace({
-      route: OidcProviderRoutes.AUTHORIZATION,
-      method: 'POST',
-      name: 'OidcProviderRoutes.AUTHORIZATION',
-      body,
-    });
+  postAuthorize(@Next() next, @Body() _body: AuthorizeParamsDto) {
     // Pass the query to oidc-provider
     return next();
   }
@@ -109,19 +91,8 @@ export class OidcProviderController {
   ) {
     const { spIdentity } = await sessionOidc.get();
     if (!spIdentity) {
-      this.logger.trace(
-        { route: CoreRoutes.INTERACTION_LOGIN },
-        LoggerLevelNames.WARN,
-      );
       throw new CoreMissingIdentityException();
     }
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'CoreRoutes.INTERACTION_LOGIN',
-      route: CoreRoutes.INTERACTION_LOGIN,
-      spIdentity,
-    });
 
     const session: OidcClientSession = await sessionOidc.get();
     return this.oidcProvider.finishInteraction(req, res, session);

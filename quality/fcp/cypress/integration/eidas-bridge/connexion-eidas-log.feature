@@ -13,7 +13,7 @@ Fonctionnalité: Connexion eIDAS - Log
     Et que je configure un fournisseur de service sur eidas mock
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
     Et que l'événement eIDAS "INCOMING_EIDAS_REQUEST" est journalisé avec "category" "EU_REQUEST" et "pays destination" "FR"
-    Et que l'événement eIDAS "REDIRECT_TO_FC_AUTHORIZE" est journalisé avec "niveau eIDAS demandé" "substantial" et "pays source" "BE"
+    Et que l'événement eIDAS "REDIRECTED_TO_FC_AUTHORIZE" est journalisé avec "niveau eIDAS demandé" "substantial" et "pays source" "BE"
     Et que j'utilise un fournisseur d'identité "français"
     Et que je clique sur le fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
@@ -21,7 +21,7 @@ Fonctionnalité: Connexion eIDAS - Log
     Et je suis redirigé vers la page confirmation de connexion
     Et je continue sur le fournisseur de service
     Alors l'événement eIDAS "RECEIVED_FC_AUTH_CODE" est journalisé
-    Et l'événement eIDAS "REDIRECTING_TO_EIDAS_FR_NODE" est journalisé avec "niveau eIDAS reçu" "substantial" et "sub du FI" "transmis par FC" et "sub du FS" "transmis par FC"
+    Et l'événement eIDAS "REDIRECTED_TO_EIDAS_FR_NODE" est journalisé avec "niveau eIDAS reçu" "substantial" et "sub du FI" "transmis par FC" et "sub du FS" "transmis par FC"
     Et je suis redirigé vers la page fournisseur de service eidas mock
     Et le fournisseur de service eidas mock a accès aux informations des scopes "eidas"
     Et le sub transmis au fournisseur de service eidas commence par "FR/BE"
@@ -40,10 +40,10 @@ Fonctionnalité: Connexion eIDAS - Log
     Et que l'événement eIDAS "DISPLAYING_CITIZEN_COUNTRY_CHOICE" est journalisé avec "niveau eIDAS demandé" "substantial"
     Et que je clique sur le pays "Mock Node"
     Et que l'événement eIDAS "SELECTED_CITIZEN_COUNTRY" est journalisé avec "pays destination" "CB"
-    Et l'événement eIDAS "REDIRECTING_TO_FR_NODE" est journalisé
+    Et l'événement eIDAS "REDIRECTED_TO_FR_NODE" est journalisé
     Quand je m'authentifie avec succès sur le fournisseur d'identité étranger
     Et l'événement eIDAS "INCOMING_EIDAS_RESPONSE" est journalisé
-    Et l'événement eIDAS "REDIRECT_TO_FC" est journalisé avec "niveau eIDAS reçu" "substantial" et "sub du FI" "transmis par eIDAS" et "sub du FS" "transmis par eIDAS"
+    Et l'événement eIDAS "REDIRECTED_TO_FC" est journalisé avec "niveau eIDAS reçu" "substantial" et "sub du FI" "transmis par eIDAS" et "sub du FS" "transmis par eIDAS"
     Et je suis redirigé vers la page confirmation de connexion
     Et l'événement eIDAS "RECEIVED_CALL_ON_TOKEN" est journalisé
     Et l'événement eIDAS "RECEIVED_CALL_ON_USERINFO" est journalisé

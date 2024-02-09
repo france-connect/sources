@@ -7,7 +7,6 @@ services:
     image: alpine
     depends_on:
       - "core-fca-low"
-      - "fca-low-front"
       - "fsa1-low"
       - "fia1-low"
 
@@ -15,7 +14,6 @@ services:
     image: alpine
     depends_on:
       - "core-fca-low"
-      - "fca-low-front"
       - "exploitation-fca-low"
       # -- SP
       - "fsa1-low"
@@ -30,17 +28,10 @@ services:
       - "fia8-low"
       - "moncomptepro"
 
-  exploit-fca-low:
-    image: alpine
-    depends_on:
-      - "exploit-fca-low-back"
-      - "exploit-fca-low-front"
-
   all-fca-low:
     image: alpine
     depends_on:
       - "core-fca-low"
-      - "fca-low-front"
       - "fsa1-low"
       - "fsa2-low"
       - "fsa3-low"
@@ -53,9 +44,6 @@ services:
       - "fia8-low"
       - "moncomptepro"
       - "exploitation-fca-low"
-      - "pg-exploit-fca-low"
-      - "exploit-fca-low-back"
-      - "exploit-fca-low-front"
       ### Hybridge
       - "lemon-ldap"
       - "rp-bridge-proxy"

@@ -425,19 +425,6 @@
   {
     "enabled": true,
     "criteria": [
-      "avec un COG invalide"
-    ],
-    "credentials": [
-      {
-        "idpId": "default",
-        "username": "test_INVALID_COG",
-        "password": "123"
-      }
-    ]
-  },
-  {
-    "enabled": true,
-    "criteria": [
       "pour les tests eidas-bridge"
     ],
     "credentials": [
@@ -562,6 +549,29 @@
         "Louis"
       ],
       "rnipp_family_name": "DUBOIS"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "personnalisé"
+    ],
+    "claims": {
+      "given_name": "Augusta Ada",
+      "family_name": "Byron",
+      "birthdate": "1815-12-10",
+      "gender": "female",
+      "preferred_username": "King, Countess of Lovelace",
+      "birthcountry": "99132",
+      "birthplace": "",
+      "email": "ada@babbage.co.uk",
+      "rnipp_given_name": "Augusta Ada",
+      "rnipp_given_name_array": [
+        "Augusta",
+        "Ada"
+      ],
+      "rnipp_family_name": "Byron",
+      "acr": "eidas2"
     }
   }
 ]

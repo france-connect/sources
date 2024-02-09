@@ -1,5 +1,7 @@
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { MongooseConfig, MongooseConfigOptions } from '../dto';
 import { NestJsConnection } from '../interfaces';
@@ -10,12 +12,7 @@ describe('MongooseService', () => {
     get: jest.fn(),
   } as unknown as ConfigService;
 
-  const loggerMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerMock = getLoggerMock() as unknown as LoggerService;
 
   const eventBusMock = {
     publish: jest.fn(),
@@ -87,6 +84,7 @@ describe('MongooseService', () => {
 
     it('should exit the app if connection failing happened', () => {
       // Given
+      const error = new Error('error');
       const processExit = jest
         .spyOn(process, 'exit')
         .mockImplementation((code) => code as never);
@@ -100,17 +98,15 @@ describe('MongooseService', () => {
       // When
       const [catchFn] = (connection.$initialConnection.catch as jest.Mock).mock
         .calls[0];
-      catchFn(new Error('Unknow Error'));
+      catchFn(error);
 
       // Then
-      expect(processExit).toHaveBeenCalledTimes(1);
-      expect(loggerMock.error).toHaveBeenCalledTimes(3);
-      expect(loggerMock.error).toHaveBeenNthCalledWith(
-        1,
-        'Invalid Mongodb Connection',
+      expect(loggerMock.emerg).toHaveBeenCalledTimes(1);
+      expect(loggerMock.emerg).toHaveBeenCalledWith(
+        error,
+        'Invalid Mongodb Connection, exiting app',
       );
-      expect(loggerMock.error).toHaveBeenNthCalledWith(2, '{}');
-      expect(loggerMock.error).toHaveBeenNthCalledWith(3, 'Exiting app');
+      expect(processExit).toHaveBeenCalledTimes(1);
     });
   });
 

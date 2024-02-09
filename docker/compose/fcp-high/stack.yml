@@ -38,14 +38,11 @@ services:
       - "fip18-high"
       - "fip19-high"
       - "fip20-high"
+      # -- DP
+      - "dp1-high"
+      - "dp2-high"
       # -- Mailer
       - "maildev"
-
-  exploit-fcp-high:
-    image: alpine
-    depends_on:
-      - "exploit-fcp-high-back"
-      - "exploit-fcp-high-front"
 
   all-fcp-high:
     image: alpine
@@ -73,8 +70,6 @@ services:
       # --
       - "rnipp"
       - "csmr-hsm"
-      - "exploit-fcp-high-back"
-      - "exploit-fcp-high-front"
       # --
       - "maildev"
       - "dp1-high"

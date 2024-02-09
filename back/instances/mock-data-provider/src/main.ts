@@ -9,7 +9,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { NestLoggerService } from '@fc/logger';
 import { MockDataProviderConfig } from '@fc/mock-data-provider';
 
 import { AppModule } from './app.module';
@@ -44,7 +44,12 @@ async function bootstrap() {
      */
     bodyParser: false,
     httpsOptions,
+    bufferLogs: true,
   });
+
+  const logger = await app.resolve(NestLoggerService);
+
+  app.useLogger(logger);
 
   /**
    * @see https://expressjs.com/fr/api.html#app.set
@@ -93,8 +98,6 @@ async function bootstrap() {
    */
   app.use(urlencoded({ extended: false }));
 
-  const logger = await app.resolve(LoggerService);
-  app.useLogger(logger);
   await app.listen(3000);
 }
 

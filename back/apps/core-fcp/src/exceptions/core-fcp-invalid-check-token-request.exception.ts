@@ -14,4 +14,7 @@ export class InvalidChecktokenRequestException extends CoreBaseException {
   message = 'Required parameter missing or invalid.';
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
   public readonly error = 'invalid_request';
+
+  static ERROR = 'invalid_request';
+  static ERROR_DESCRIPTION = 'required parameter missing or invalid';
 }

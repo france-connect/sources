@@ -1,7 +1,7 @@
 import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { UserPreferencesProtocol } from '@fc/microservices';
 
 import { GetIdpSettingsPayloadDto, SetIdpSettingsPayloadDto } from '../dto';
@@ -13,9 +13,7 @@ export class CsmrUserPreferencesController {
   constructor(
     private readonly logger: LoggerService,
     private readonly userPreferencesCsmr: CsmrUserPreferencesService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Get the account idpSettings
@@ -41,17 +39,9 @@ export class CsmrUserPreferencesController {
     try {
       idpSettings = await this.userPreferencesCsmr.getIdpSettings(identity);
     } catch (error) {
-      this.logger.error(JSON.stringify(error.stack));
-      this.logger.trace({ error, payload });
+      this.logger.err(error);
       return 'ERROR';
     }
-
-    this.logger.trace({
-      input: { payload },
-      name: 'UserPreferencesProtocol.Commands.GET_IDP_SETTINGS',
-      output: idpSettings,
-      pattern: UserPreferencesProtocol.Commands.GET_IDP_SETTINGS,
-    });
 
     return idpSettings;
   }
@@ -99,18 +89,10 @@ export class CsmrUserPreferencesController {
         updatedAt,
       };
     } catch (error) {
-      this.logger.error(JSON.stringify(error.stack));
+      this.logger.err(error);
       this.logger.debug(idpSettings);
-      this.logger.trace({ error });
       return 'ERROR';
     }
-
-    this.logger.trace({
-      pattern: UserPreferencesProtocol.Commands.SET_IDP_SETTINGS,
-      name: 'UserPreferencesProtocol.Commands.SET_IDP_SETTINGS',
-      input: { payload },
-      output: { updatedIdpSettings },
-    });
 
     return updatedIdpSettings;
   }

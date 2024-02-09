@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { ScopesConfig } from '../dto';
 import {
@@ -30,9 +30,7 @@ export class ScopesIndexService {
     @Inject(CONFIG_NAME) private readonly configName,
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Initialize an in memory index to have a fast querying system on requests
@@ -42,11 +40,6 @@ export class ScopesIndexService {
 
     this.claimIndex = this.prepareClaimIndex(mapping);
     this.scopeIndex = this.prepareScopeIndex(mapping);
-
-    this.logger.trace({
-      claimIndex: this.claimIndex,
-      scopeIndex: this.scopeIndex,
-    });
   }
 
   getClaim(key: string): IRichClaim {
@@ -71,7 +64,9 @@ export class ScopesIndexService {
     key: string,
   ): Value {
     if (!index.has(key)) {
-      this.logger.warn(`Entry not found in ${indexName} index for key ${key}`);
+      this.logger.warning(
+        `Entry not found in ${indexName} index for key ${key}`,
+      );
     }
 
     return index.get(key);

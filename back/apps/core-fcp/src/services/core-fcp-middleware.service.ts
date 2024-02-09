@@ -10,7 +10,7 @@ import {
   CoreOidcProviderMiddlewareService,
 } from '@fc/core';
 import { FlowStepsService } from '@fc/flow-steps';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { stringToArray } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientSession } from '@fc/oidc-client';
@@ -62,7 +62,6 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
       core,
       flowSteps,
     );
-    this.logger.setContext(this.constructor.name);
   }
 
   onModuleInit() {
@@ -115,7 +114,7 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     );
   }
 
-  private async isSsoSession(ctx: OidcCtx) {
+  private async isFinishedInteractionSession(ctx: OidcCtx): Promise<boolean> {
     const { req } = ctx;
     const oidcSession = SessionService.getBoundSession<OidcClientSession>(
       req,
@@ -124,35 +123,56 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
 
     const data = await oidcSession.get();
 
+    if (!data) {
+      return false;
+    }
+
     const validationErrors = await validateDto(
       data,
       GetAuthorizeOidcClientSsoSession,
       { forbidNonWhitelisted: true },
     );
 
-    this.logger.trace({ data, validationErrors });
+    this.logger.debug({ data, validationErrors });
 
     return validationErrors.length === 0;
   }
 
   private async renewSession(ctx: OidcCtx, spAcr: string): Promise<void> {
+    const isFinishedInteractionSession =
+      await this.isFinishedInteractionSession(ctx);
+
+    await this.detachSessionIfNeeded(isFinishedInteractionSession, ctx);
+
+    await this.resetSessionIfNeeded(isFinishedInteractionSession, ctx, spAcr);
+  }
+
+  private async detachSessionIfNeeded(
+    isFinishedInteractionSession: boolean,
+    ctx: OidcCtx,
+  ): Promise<void> {
     const { req, res } = ctx;
 
-    const { allowedSsoAcrs, enableSso } = this.config.get<CoreConfig>('Core');
-    const sessionSsoCompatible = await this.isSsoSession(ctx);
-
-    const hasAuthorizedAcr = allowedSsoAcrs.includes(spAcr);
-
-    if (enableSso && sessionSsoCompatible && hasAuthorizedAcr) {
-      await this.sessionService.detach(req, res);
+    if (isFinishedInteractionSession) {
       await this.sessionService.duplicate(req, res, GetAuthorizeSessionDto);
-    } else {
-      /**
-       * @TODO #1418 Je ne veux pas supprimer ma première session si je passe d'un FS substantiel à élevé
-       * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1418
-       * @ticket FC-1418
-       */
+      this.logger.debug('Session has been detached and duplicated');
+    }
+  }
+
+  private async resetSessionIfNeeded(
+    isFinishedInteractionSession: boolean,
+    ctx: OidcCtx,
+    spAcr: string,
+  ): Promise<void> {
+    const { req, res } = ctx;
+    const { allowedSsoAcrs, enableSso } = this.config.get<CoreConfig>('Core');
+    const hasAuthorizedAcr = allowedSsoAcrs.includes(spAcr);
+    const isSsoSession =
+      enableSso && hasAuthorizedAcr && isFinishedInteractionSession;
+
+    if (!isSsoSession) {
       await this.sessionService.reset(req, res);
+      this.logger.debug('Session has been reset');
     }
   }
 
@@ -218,6 +238,7 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     const sentNotificationsForSpRes = sentNotificationsForSp ?? [];
 
     await coreSession.set('sentNotificationsForSp', sentNotificationsForSpRes);
+    await coreSession.commit();
 
     const { interactionId: _interactionId, ...sessionWithoutInteractionId } =
       sessionProperties;

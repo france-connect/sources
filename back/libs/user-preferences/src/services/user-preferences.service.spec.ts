@@ -3,7 +3,6 @@ import { lastValueFrom } from 'rxjs';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 import { UserPreferencesProtocol } from '@fc/microservices';
 import { IOidcIdentity } from '@fc/oidc';
 
@@ -22,12 +21,6 @@ describe('UserPreferencesService', () => {
   let service: UserPreferencesService;
 
   const lastValueFromMock = jest.mocked(lastValueFrom);
-
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
 
   const identityMock = {} as IOidcIdentity;
 
@@ -60,7 +53,6 @@ describe('UserPreferencesService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserPreferencesService,
-        LoggerService,
         ConfigService,
         {
           provide: 'UserPreferencesBroker',
@@ -70,8 +62,6 @@ describe('UserPreferencesService', () => {
     })
       .overrideProvider(ConfigService)
       .useValue(configMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .compile();
 
     service = module.get<UserPreferencesService>(UserPreferencesService);

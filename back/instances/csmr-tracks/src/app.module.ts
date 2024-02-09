@@ -6,7 +6,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
 import { CsmrTracksModule } from '@fc/csmr-tracks';
-import { LoggerModule } from '@fc/logger-legacy';
+import { LoggerModule } from '@fc/logger';
 
 @Module({})
 export class AppModule {

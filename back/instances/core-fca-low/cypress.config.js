@@ -11,7 +11,7 @@ module.exports = defineConfig({
       return pluginConfig(on, config);
     },
     specPattern: 'cypress/integration/**/*.spec.js',
-    excludeSpecPattern: '',
+    excludeSpecPattern: 'cypress/integration/**/*.utils.js',
     supportFile: 'cypress/support/index.js',
     video: false,
     experimentalRunAllSpecs: true,
@@ -36,6 +36,7 @@ module.exports = defineConfig({
         MINISTRY_NAME:
           'MOCK - Ministère de la transition écologique - ALL FIS - SORT 2',
         TITLE: 'Identity Provider 1 - eIDAS faible - ES256',
+        EMAIL: 'test@fia1.fr',
       },
       {
         ID: '0e7c099f-fe86-49a0-b7d1-19df45397212',
@@ -45,6 +46,7 @@ module.exports = defineConfig({
         MINISTRY_NAME:
           'MOCK - Ministère de la transition écologique - ALL FIS - SORT 2',
         TITLE: 'Identity Provider 2 - eIDAS faible - RS256',
+        EMAIL: 'test@fia2.fr',
       },
       {
         ID: '87762a76-7da0-442d-8243-5785f859b88b',
@@ -53,6 +55,7 @@ module.exports = defineConfig({
           'https://fia4-low.docker.dev-franceconnect.fr/interaction',
         MINISTRY_NAME: 'MOCK - Ministère de la mer - E2E - SORT 4',
         TITLE: 'Identity Provider 4 - eIDAS faible - HS256',
+        EMAIL: 'test@fia4.fr',
       },
       {
         ID: '46f5d9f9-881d-46b1-bdcc-0548913ea443',
@@ -61,6 +64,7 @@ module.exports = defineConfig({
           'https://fia5-low.docker.dev-franceconnect.fr/interaction',
         MINISTRY_NAME: 'MOCK - Ministère de la mer - E2E - SORT',
         TITLE: 'Identity Provider 5 - eIDAS faible - RS256',
+        EMAIL: 'test@fia5.fr',
       },
     ],
     SP_NAME: 'fsa',

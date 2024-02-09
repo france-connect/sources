@@ -11,15 +11,13 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     volumes:
-      - "${VOLUMES_DIR}/src/fc/web:/var/www/app"
+      - "${VOLUMES_DIR}/src/fc-web:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
       - "${VOLUMES_DIR}/log/:/var/log/app"
       - "${VOLUMES_DIR}/.home:/home"
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
-    ports:
-      - 8080:3000
     networks:
       - public
     tty: true

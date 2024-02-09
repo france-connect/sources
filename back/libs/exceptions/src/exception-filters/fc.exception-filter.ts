@@ -3,8 +3,9 @@ import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { ApiErrorMessage, ApiErrorParams } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { Loggable } from '@fc/exceptions';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
+import { ViewTemplateService } from '@fc/view-templates';
 
 import { FcException } from '../exceptions';
 import { ExceptionsService } from '../exceptions.service';
@@ -18,10 +19,10 @@ export class FcExceptionFilter
   constructor(
     protected readonly config: ConfigService,
     protected readonly logger: LoggerService,
+    protected readonly viewTemplate: ViewTemplateService,
     protected readonly tracking: TrackingService,
   ) {
-    super(config, logger);
-    this.logger.setContext(this.constructor.name);
+    super(config, logger, viewTemplate);
   }
 
   async catch(exception: FcException, host: ArgumentsHost) {
@@ -57,10 +58,9 @@ export class FcExceptionFilter
       return;
     }
 
-    this.logger.trace({ exception }, LoggerLevelNames.ERROR);
-
     const errorMessage: ApiErrorMessage = { code, id, message };
     const exceptionParam: ApiErrorParams = {
+      exception,
       res,
       error: errorMessage,
       httpResponseCode: exception.httpStatusCode,

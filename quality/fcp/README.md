@@ -50,15 +50,16 @@ In order to run tests with Cypress,
 The BDD tests are run at different moments of the continuous integration:
 
 ### 1. on the merge request
-  Before being able to merge a branch to `staging` branch, the BDD scenarios tagged with `@ci` are run. They represent the critical scenarios to pass in order to prevent system regression. When a new feature is implemented most of its scenarios should be tagged `@ci`. Then overtime, once the feature is more stable, only key scenarios remain tagged `@ci`.
+
+Before being able to merge a branch to `staging` branch, the BDD scenarios tagged with `@ci` are run. They represent the critical scenarios to pass in order to prevent system regression. When a new feature is implemented most of its scenarios should be tagged `@ci`. Then overtime, once the feature is more stable, only key scenarios remain tagged `@ci`.
 
 ### 2. overnight build of the `staging` branch
 
-  Overnight build of the `staging` branch are executed. Those build run all the BDD tests. As no developpers are using Gitlab, we can run all the tests and not only the critical ones (tagged `@ci`).
+Overnight build of the `staging` branch are executed. Those build run all the BDD tests. As no developpers are using Gitlab, we can run all the tests and not only the critical ones (tagged `@ci`).
 
 ### 3. after deployment to integ01 environment
 
-  Most BDD tests are designed to be executed on both the local stack and the integ01 environment. We run all the scenarios available and not tagged `@ignoreInteg01`.
+Most BDD tests are designed to be executed on both the local stack and the integ01 environment. We run all the scenarios available and not tagged `@ignoreInteg01`.
 
 ## Scripts
 
@@ -237,6 +238,8 @@ The visual validations are done on Electron 94 headless in the terminal.
 
 ### Run the snapshot tests
 
+#### In a development environment
+
 - FCP-HIGH
 
 ```shell
@@ -255,7 +258,33 @@ yarn test:low:snapshot
 yarn test:ud:snapshot
 ```
 
+- eIDAS
+
+```shell
+yarn test:eidas:snapshot
+```
+
+#### As in a production environment
+
+> :warning: Don't forget to reset the database afterward, if you want to run tests against the development environment
+
+- FCP-HIGH
+
+```shell
+docker-stack reset-mongo-as-prod mongo-fcp-high
+yarn test:high:snapshot --env 'TAGS=@fcpHigh and @validationVisuelleProduction and not @ignore'
+```
+
+- FCP-LOW
+
+```shell
+docker-stack reset-mongo-as-prod mongo-fcp-low
+yarn test:low:snapshot --env 'TAGS=@fcpLow and @validationVisuelleProduction and not @ignore'
+```
+
 ### Update the base image files for all of your tests
+
+#### In a development environment
 
 - FCP-HIGH
 
@@ -273,6 +302,30 @@ yarn test:low:snapshot --env updateSnapshots=true
 
 ```shell
 yarn test:ud:snapshot --env updateSnapshots=true
+```
+
+- eIDAS
+
+```shell
+yarn test:eidas:snapshot --env updateSnapshots=true
+```
+
+#### As in a production environment
+
+> :warning: Don't forget to reset the database afterward, if you want to run tests against the development environment
+
+- FCP-HIGH
+
+```shell
+docker-stack reset-mongo-as-prod mongo-fcp-high
+yarn test:high:snapshot --env 'TAGS=@fcpHigh and @validationVisuelleProduction and not @ignore,updateSnapshots=true'
+```
+
+- FCP-LOW
+
+```shell
+docker-stack reset-mongo-as-prod mongo-fcp-low
+yarn test:low:snapshot --env 'TAGS=@fcpLow and @validationVisuelleProduction and not @ignore,updateSnapshots=true'
 ```
 
 ### Prevent test failures when an image diff does not pass
@@ -295,6 +348,12 @@ yarn test:low:snapshot --env failOnSnapshotDiff=false
 yarn test:ud:snapshot --env failOnSnapshotDiff=false
 ```
 
+- eIDAS
+
+```shell
+yarn test:eidas:snapshot --env failOnSnapshotDiff=false
+```
+
 ## Gitlab test pipeline
 
 You can create a test pipeline in Gitlab from a merge request or from the staging branch
@@ -315,8 +374,8 @@ You can create a test pipeline in Gitlab from a merge request or from the stagin
 | BDD_TAGS_FCA_LOW     | tags for the fca-low BDD tests        | by default '@ci and not @ignore'                               |
 | BDD_TAGS_EIDAS       | tags for the eidas-bridge BDD tests   | by default '@ci and not @ignore'                               |
 | BDD_TAGS_UD          | tags for the user-dashboard BDD tests | by default '@ci and not @ignore'                               |
-| RUN_E2E_FCP_HIGH     | 0 (skip end-to-end tests) or 1                                | by default 0 on MR and 1 on staging branch                     |
-| RUN_E2E_FCA_LOW      | 0 (skip end-to-end tests) or 1                                | by default 0 on MR and 1 on staging branch                     |
+| RUN_E2E_FCP_HIGH     | 0 (skip end-to-end tests) or 1        | by default 0 on MR and 1 on staging branch                     |
+| RUN_E2E_FCA_LOW      | 0 (skip end-to-end tests) or 1        | by default 0 on MR and 1 on staging branch                     |
 
 ## Plugins VSCode
 

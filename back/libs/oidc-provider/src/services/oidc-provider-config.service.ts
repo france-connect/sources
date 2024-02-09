@@ -3,7 +3,6 @@ import { ClientMetadata, KoaContextWithOIDC } from 'oidc-provider';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 import {
   IServiceProviderAdapter,
   SERVICE_PROVIDER_SERVICE_TOKEN,
@@ -21,16 +20,13 @@ export class OidcProviderConfigService {
   // Dependency injection can require more than 4 parameters
   // eslint-disable-next-line max-params
   constructor(
-    private readonly logger: LoggerService,
     private readonly config: ConfigService,
     @Inject(OIDC_PROVIDER_CONFIG_APP_TOKEN)
     private readonly oidcProviderConfigApp: IOidcProviderConfigAppService,
     private readonly errorService: OidcProviderErrorService,
     @Inject(SERVICE_PROVIDER_SERVICE_TOKEN)
     private readonly serviceProvider: IServiceProviderAdapter,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Compose full config by merging static parameters from:
@@ -120,8 +116,6 @@ export class OidcProviderConfigService {
         },
       },
     };
-
-    this.logger.trace({ oidcProviderConfig });
 
     return oidcProviderConfig;
   }

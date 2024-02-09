@@ -4,6 +4,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 
+import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import {
   DataProviderAdapterCoreModule,
   DataProviderAdapterCoreService,
@@ -14,7 +15,12 @@ import { MockDataProviderController } from './controllers/mock-data-provider.con
 import { MockDataProviderService } from './services';
 
 @Module({
-  imports: [DataProviderAdapterCoreModule, HttpModule, JwtModule],
+  imports: [
+    DataProviderAdapterCoreModule,
+    HttpModule,
+    JwtModule,
+    AsyncLocalStorageModule,
+  ],
   controllers: [MockDataProviderController],
   providers: [MockDataProviderService, DataProviderAdapterCoreService],
 })

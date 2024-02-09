@@ -24,11 +24,13 @@ process.on('unhandledRejection', (err: unknown) => {
  * and justs causes a lot of noise in tests output
  */
 const consoleWarnOriginal = console.warn;
-const OIDC_PROVIDER_UNSUPPORTED_RUNTIME_WARNING =
-  'oidc-provider WARNING: Unsupported Node.js runtime version. Use ^12.19.0, ^14.15.0, or ^16.13.0';
+const OIDC_PROVIDER_UNSUPPORTED_RUNTIME_WARNING = [
+  'oidc-provider WARNING: Unsupported Node.js runtime version. Use ^12.19.0, ^14.15.0, or ^16.13.0',
+  '\x1B[31;1moidc-provider WARNING: Unsupported Node.js runtime version. Use ^12.19.0, ^14.15.0, or ^16.13.0\x1B[0m',
+];
 
 console.warn = function warn(...args) {
-  if (args[0] !== OIDC_PROVIDER_UNSUPPORTED_RUNTIME_WARNING) {
+  if (!OIDC_PROVIDER_UNSUPPORTED_RUNTIME_WARNING.includes(args[0])) {
     consoleWarnOriginal(...args);
   }
 };

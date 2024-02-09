@@ -22,6 +22,9 @@ export class CoreIdpHintException extends CoreBaseException {
 
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
 
+  static ERROR = 'invalid_request';
+  static ERROR_DESCRIPTION = 'invalid idp_hint parameter';
+
   constructor() {
     super(
       'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous',

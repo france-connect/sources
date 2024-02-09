@@ -5,8 +5,10 @@ import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcProviderService } from '@fc/oidc-provider';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { OverrideOidcProviderService } from './override-oidc-provider.service';
 
@@ -19,10 +21,7 @@ describe('OverrideOidcProviderService', () => {
     get: jest.fn(),
   };
 
-  const loggerMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerMock = getLoggerMock();
 
   const providerMock = {};
   const oidcProviderMock = {
@@ -86,6 +85,17 @@ describe('OverrideOidcProviderService', () => {
       service['getOidcProviderService'] = jest
         .fn()
         .mockReturnValueOnce(oidcProviderMock);
+    });
+
+    it('should log notice', () => {
+      // When
+      service['overrideJwksResponse']();
+
+      // Then
+      expect(loggerMock.notice).toHaveBeenCalledTimes(1);
+      expect(loggerMock.notice).toHaveBeenCalledWith(
+        'Overriding JwksResponse of "oidc-provider".',
+      );
     });
 
     it('should create a Key object from config key', () => {

@@ -2,7 +2,9 @@ import { ExecutionContext, RequestMethod } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { TrackedEventMapType } from '../interfaces';
 import { TrackingService } from '../services';
@@ -13,12 +15,6 @@ describe('TrackingInterceptor', () => {
 
   const trackingMock = {
     track: jest.fn(),
-  };
-
-  const loggerMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
   };
 
   const httpContextMock = {
@@ -59,21 +55,23 @@ describe('TrackingInterceptor', () => {
     urlPrefix: urlPrefixMock,
   };
 
+  const loggerMock = getLoggerMock();
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TrackingInterceptor,
         TrackingService,
-        LoggerService,
         ConfigService,
+        LoggerService,
       ],
     })
       .overrideProvider(TrackingService)
       .useValue(trackingMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerMock)
       .compile();
 
     interceptor = module.get<TrackingInterceptor>(TrackingInterceptor);
@@ -96,6 +94,16 @@ describe('TrackingInterceptor', () => {
       await interceptor.intercept(contextMock, nextMock);
       // Then
       expect(interceptor['log']).toHaveBeenCalledTimes(0);
+    });
+
+    it('should log a debug when intercepting', async () => {
+      // When
+      await interceptor.intercept(contextMock, nextMock);
+      // Then
+      expect(loggerMock.debug).toHaveBeenCalledTimes(1);
+      expect(loggerMock.debug).toHaveBeenCalledWith({
+        handler: contextMock.getHandler(),
+      });
     });
   });
 

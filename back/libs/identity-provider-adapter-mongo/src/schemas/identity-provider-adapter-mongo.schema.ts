@@ -26,16 +26,6 @@ export class IdentityProvider extends Document {
   @Prop({ type: [String] })
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  redirect_uris: string[];
-
-  @Prop({ type: [String] })
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  post_logout_redirect_uris: string[];
-
-  @Prop({ type: [String] })
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   response_types: string[];
 
   @Prop({ type: String })

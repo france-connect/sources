@@ -1,16 +1,13 @@
 import { ClassTransformOptions } from 'class-transformer';
 import { ValidatorOptions } from 'class-validator';
-import { encode } from 'querystring';
+import { Response } from 'express';
 
 import {
   Body,
   Controller,
   Get,
   Header,
-  Param,
   Post,
-  Query,
-  Redirect,
   Render,
   Req,
   Res,
@@ -23,15 +20,13 @@ import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import {
-  GetOidcCallback,
   OidcClientConfigService,
   OidcClientRoutes,
   OidcClientService,
   OidcClientSession,
-  RedirectToIdp,
 } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import {
@@ -49,6 +44,7 @@ import {
   GetRedirectToIdpOidcClientSessionDto,
   OidcIdentityDto,
 } from '../dto';
+import { RedirectToIdp } from '../dto/redirect-to-idp.dto';
 import { CoreFcaInvalidIdentityException } from '../exceptions';
 import { CoreFcaService } from '../services';
 
@@ -67,9 +63,7 @@ export class OidcClientController {
     private readonly sessionService: SessionService,
     private readonly tracking: TrackingService,
     private readonly crypto: CryptographyService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * @todo #242 get configured parameters (scope and acr)
@@ -82,7 +76,7 @@ export class OidcClientController {
   // eslint-disable-next-line complexity
   async redirectToIdp(
     @Req() req,
-    @Res() res,
+    @Res() res: Response,
     @Body() body: RedirectToIdp,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
@@ -92,15 +86,16 @@ export class OidcClientController {
     @Session('OidcClient', GetRedirectToIdpOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
-    const { providerUid: idpId, csrfToken } = body;
-
-    // -- control if the CSRF provided is the same as the one previously saved in session.
+    const { csrfToken, email } = body;
+    // control if the CSRF provided is the same as the one previously saved in session.
     try {
       await this.csrfService.validate(sessionOidc, csrfToken);
     } catch (error) {
-      this.logger.trace({ error }, LoggerLevelNames.WARN);
+      this.logger.debug(error);
       throw new SessionInvalidCsrfSelectIdpException(error);
     }
+
+    const idpId = await this.coreFca.getIdpIdForEmail(email);
 
     const {
       // acr_values is an oidc defined variable name
@@ -108,7 +103,14 @@ export class OidcClientController {
       params: { acr_values: acr },
     } = await this.oidcProvider.getInteraction(req, res);
 
-    await this.coreFca.redirectToIdp(res, acr, idpId, sessionOidc);
+    const authorizeParams = {
+      acr,
+      // login_hint is an oidc defined variable name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      login_hint: email,
+    };
+
+    await this.coreFca.redirectToIdp(res, idpId, sessionOidc, authorizeParams);
   }
 
   /**
@@ -120,11 +122,6 @@ export class OidcClientController {
   @Get(OidcClientRoutes.WELL_KNOWN_KEYS)
   @Header('cache-control', 'public, max-age=600')
   async getWellKnownKeys() {
-    this.logger.trace({
-      route: OidcClientRoutes.WELL_KNOWN_KEYS,
-      method: 'GET',
-      name: 'OidcClientRoutes.WELL_KNOWN_KEYS',
-    });
     return await this.oidcClient.utils.wellKnownKeys();
   }
 
@@ -135,11 +132,6 @@ export class OidcClientController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    this.logger.trace({
-      route: OidcClientRoutes.DISCONNECT_FROM_IDP,
-      method: 'POST',
-      name: 'OidcClientRoutes.DISCONNECT_FROM_IDP',
-    });
     const { idpIdToken, idpId } = await sessionOidc.get();
 
     const { stateLength } = await this.oidcClientConfig.get();
@@ -175,27 +167,6 @@ export class OidcClientController {
     return { oidcProviderLogoutForm };
   }
 
-  @Get(OidcClientRoutes.OIDC_CALLBACK_LEGACY)
-  @UsePipes(new ValidationPipe({ whitelist: true }))
-  @Header('cache-control', 'no-store')
-  @Redirect()
-  getLegacyOidcCallback(@Query() query, @Param() params: GetOidcCallback) {
-    const { urlPrefix } = this.config.get<AppConfig>('App');
-
-    const response = {
-      statusCode: 302,
-      url: `${urlPrefix}${OidcClientRoutes.OIDC_CALLBACK}?${encode(query)}`,
-    };
-
-    this.logger.trace({
-      method: 'GET',
-      name: 'OidcClientRoutes.OIDC_CALLBACK_LEGACY',
-      providerUid: params.providerUid,
-    });
-
-    return response;
-  }
-
   /**
    * @TODO #308 ETQ DEV je veux éviter que deux appels Http soient réalisés au lieu d'un à la discovery Url dans le cadre d'oidc client
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/308
@@ -216,8 +187,8 @@ export class OidcClientController {
     @Session('OidcClient', GetOidcCallbackOidcClientSessionDto)
     _sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    await this.sessionService.detach(req, res);
     await this.sessionService.duplicate(req, res, GetOidcCallbackSessionDto);
+    this.logger.debug('Session has been detached and duplicated');
 
     const newSessionOidc = SessionService.getBoundSession<OidcClientSession>(
       req,
@@ -280,14 +251,6 @@ export class OidcClientController {
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const url = `${urlPrefix}/interaction/${interactionId}/verify`;
 
-    this.logger.trace({
-      method: 'GET',
-      name: 'OidcClientRoutes.OIDC_CALLBACK',
-      redirect: url,
-      route: OidcClientRoutes.OIDC_CALLBACK,
-      identityExchange,
-    });
-
     res.redirect(url);
   }
 
@@ -312,11 +275,10 @@ export class OidcClientController {
     );
 
     if (errors.length) {
-      this.logger.trace({ errors }, LoggerLevelNames.WARN);
+      this.logger.debug(errors, `Identity from "${idpId}" is invalid`);
       throw new CoreFcaInvalidIdentityException();
     }
 
-    this.logger.trace({ validate: { identity, idpId } });
     return true;
   }
 }

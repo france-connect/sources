@@ -8,7 +8,8 @@ import {
 import { CoreFcaAgentNotFromPublicServiceException } from '@fc/core-fca/exceptions';
 import { CryptographyFcaService } from '@fc/cryptography-fca';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger-legacy';
+import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
+import { LoggerService } from '@fc/logger';
 
 import { IAgentConnectOidcIdentity } from '../../interfaces';
 import { CoreFcaDefaultVerifyHandler } from './core-fca.default-verify.handler';
@@ -19,13 +20,16 @@ export class CoreFcaMcpVerifyHandler
   extends CoreFcaDefaultVerifyHandler
   implements IFeatureHandler
 {
+  // Dependency injection can require more than 4 parameters
+  // eslint-disable-next-line max-params
   constructor(
     protected readonly logger: LoggerService,
     protected readonly coreAccount: CoreAccountService,
     protected readonly coreAcr: CoreAcrService,
     protected readonly cryptographyFca: CryptographyFcaService,
+    protected readonly identityProvider: IdentityProviderAdapterMongoService,
   ) {
-    super(logger, coreAccount, coreAcr, cryptographyFca);
+    super(logger, coreAccount, coreAcr, cryptographyFca, identityProvider);
   }
 
   /**
@@ -51,7 +55,9 @@ export class CoreFcaMcpVerifyHandler
     }
 
     // Acr check
-    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr);
+    const { maxAuthorizedAcr } = await this.identityProvider.getById(idpId);
+
+    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr, maxAuthorizedAcr);
 
     const agentHash = this.getAgentHash(
       idpId,

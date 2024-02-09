@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { IPaginationOptions } from '@fc/common';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
 
-import { getLoggerMock } from '@mocks/logger-legacy';
+import { getLoggerMock } from '@mocks/logger';
 
 import { CsmrTracksService } from './csmr-tracks.service';
 import { CsmrTracksAccountService } from './csmr-tracks-account.service';

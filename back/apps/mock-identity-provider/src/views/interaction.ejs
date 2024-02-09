@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <%- include("includes/head") %>
+  <body>
+    <div id="mire">
+      <%- include("includes/header") %>
+
+      <div id="container">
+        <div class="inner">
+          <h3 class="title"><%= $config('App.title') %></h3>
+          <form method="POST" action="/login">
+            <input
+              type="hidden"
+              name="interactionId"
+              id="interactionId"
+              value="<%= locals.uid %>"
+            />
+            <label for="login">
+              <span>Identifiant</span>
+              <input type="text" name="login" id="login" value="<%= locals.login %>" />
+            </label>
+            <label for="password">
+              <span>Mot de passe</span>
+              <input type="password" name="password" id="password" value="" />
+            </label>
+            <label for="acr">
+              <span>Niveau de sécurité (acr_values)</span>
+              <input
+                type="text"
+                name="acr"
+                id="acr"
+                value="<%= locals.params.acr_values %>"
+              />
+            </label>
+            <button type="submit">Envoyer</button>
+          </form>
+        </div>
+        <% if($config('App.allowCustomIdentity')) { %> 
+          <a
+          class="navigate"
+          id="custom-identity-link"
+          href="/login/with-custom-identity"
+          >Je souhaite utiliser une identité spécifique à mon service</a
+          >
+        <% } %>
+      </div>
+      <%- include("includes/login-footer") %>
+    </div>
+    <%- include("includes/footer") %>
+  </body>
+</html>

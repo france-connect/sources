@@ -71,21 +71,12 @@
     "scopes": ["openid", "profile", "inconnu"]
   },
   {
-    "type": "profile sans openid",
-    "scopes": ["profile"]
-  },
-  {
     "type": "identite_pivot",
     "scopes": ["openid", "identite_pivot"]
   },
   {
     "type": "anonyme",
     "scopes": ["openid"]
-  },
-  {
-    "type": "vide",
-    "scopes": [
-    ]
   },
   {
     "type": "eidas",
@@ -150,6 +141,24 @@
       "rnipp_given_name",
       "rnipp_given_name_array",
       "rnipp_family_name"
+    ]
+  },
+  {
+    "type": "tous les scopes data",
+    "scopes": [
+      "openid",
+      "dgfip_rfr",
+      "dgfip_aft",
+      "droits_assurance_maladie",
+      "cnam_caisse"
+    ]
+  },
+  {
+    "type": "CNAM",
+    "scopes": [
+      "openid",
+      "droits_assurance_maladie",
+      "cnam_caisse"
     ]
   }
 ]

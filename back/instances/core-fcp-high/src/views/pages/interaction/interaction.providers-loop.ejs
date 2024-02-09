@@ -1,6 +1,6 @@
 <%
 locals.providers
-  .filter(p => p.display).filter(p => p.uid !== locals.config.App.eidasBridgeUid)
+  .filter(p => p.display).filter(p => p.uid !== $config('App.eidasBridgeUid'))
   .forEach(provider => {
 %>
   <form

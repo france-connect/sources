@@ -15,6 +15,10 @@ export class CoreFcpMissingAtHashException extends CoreBaseException {
   code = ErrorCode.MISSING_AT_HASH;
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
 
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
+
   constructor() {
     super('Missing at_hash claim in id_token_hint');
   }

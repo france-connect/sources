@@ -11,7 +11,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppConfig } from '@fc/app';
 import { BridgeHttpProxyConfig } from '@fc/bridge-http-proxy';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { NestLoggerService } from '@fc/logger';
 
 import { AppModule } from './app.module';
 import config from './config';
@@ -45,7 +45,12 @@ async function bootstrap() {
      */
     bodyParser: false,
     httpsOptions,
+    bufferLogs: true,
   });
+
+  const logger = await app.resolve(NestLoggerService);
+
+  app.useLogger(logger);
 
   /**
    * @see https://expressjs.com/fr/api.html#app.set
@@ -92,10 +97,6 @@ async function bootstrap() {
    * @see body-parser.md in the project doc folder for further informations.
    */
   app.use(text({ type: 'application/x-www-form-urlencoded' }));
-
-  const logger = await app.resolve(LoggerService);
-
-  app.useLogger(logger);
 
   /**
    * Tell the module "class-validator" to use NestJS dependency injection

@@ -7,6 +7,18 @@ import {
 
 export const VALIDATE_HTTP_HEADERS = 'ValidateHttpHeaders';
 
+export function validateSetCookie(setCookie: string | Array<string>): boolean {
+  if (typeof setCookie === 'string') {
+    return isAscii(setCookie);
+  }
+
+  if (Array.isArray(setCookie)) {
+    return setCookie.every((value) => isAscii(value));
+  }
+
+  return false;
+}
+
 export function isHttpHeaders(values: object): boolean {
   const params = Object.entries(values).filter(([key]) => key != 'set-cookie');
   let check = params.every(([key, value]) => isAscii(key) && isAscii(value));
@@ -14,8 +26,9 @@ export function isHttpHeaders(values: object): boolean {
   // Special handler in Headers for set-cookie
   const cookie = values['set-cookie'];
   if (cookie) {
-    check &&= Array.isArray(cookie) && cookie.every((value) => isAscii(value));
+    check &&= validateSetCookie(cookie);
   }
+
   return check;
 }
 export class ValidateHttpHeadersConstraint {

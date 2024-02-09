@@ -12,6 +12,10 @@ import { OidcProviderBaseException } from './oidc-provider-base.exception';
 export class OidcProviderParseRedisResponseException extends OidcProviderBaseException {
   public readonly code = ErrorCode.PARSE_REDIS_RESPONSE;
 
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
+
   constructor() {
     super(
       'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',

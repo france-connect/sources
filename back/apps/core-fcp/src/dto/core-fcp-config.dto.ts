@@ -16,7 +16,8 @@ import { CryptographyEidasConfig } from '@fc/cryptography-eidas';
 import { CryptographyFcpConfig } from '@fc/cryptography-fcp';
 import { DataProviderAdapterMongoConfig } from '@fc/data-provider-adapter-mongo';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
-import { LoggerConfig } from '@fc/logger-legacy';
+import { LoggerConfig } from '@fc/logger';
+import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
 import { MailerConfig } from '@fc/mailer';
 import { MongooseConfig } from '@fc/mongoose';
 import { OidcAcrConfig } from '@fc/oidc-acr';
@@ -64,6 +65,11 @@ export class CoreFcpConfig {
   @ValidateNested()
   @Type(() => LoggerConfig)
   readonly Logger: LoggerConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => LoggerLegacyConfig)
+  readonly LoggerLegacy: LoggerLegacyConfig;
 
   @IsObject()
   @ValidateNested()

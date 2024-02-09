@@ -7,12 +7,12 @@ Fonctionnalité: Connexion Usager - Scope
 
   Plan du Scénario: Connexion d'un usager - scope <scopeType>
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "<scopeType>"
+    Et que j'utilise un fournisseur d'identité "actif"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Et que j'utilise un fournisseur d'identité "actif"
-    Et que je cherche le fournisseur d'identité par son ministère
-    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "test@fia1.fr"
+    Et que je clique sur le bouton de connexion
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page fournisseur de service
@@ -38,12 +38,12 @@ Fonctionnalité: Connexion Usager - Scope
   @ci
   Scénario: Connexion d'un usager - scope anonyme
     Etant donné que le fournisseur de service requiert l'accès aux informations du scope "anonyme"
+    Et que j'utilise un fournisseur d'identité "actif"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Et que j'utilise un fournisseur d'identité "actif"
-    Et que je cherche le fournisseur d'identité par son ministère
-    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "test@fia1.fr"
+    Et que je clique sur le bouton de connexion
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page fournisseur de service
@@ -53,12 +53,12 @@ Fonctionnalité: Connexion Usager - Scope
   @ci
   Scénario: Connexion d'un usager - attribut scope inconnu ignoré
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "email avec scope inconnu"
+    Et que j'utilise un fournisseur d'identité "actif"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Et que j'utilise un fournisseur d'identité "actif"
-    Et que je cherche le fournisseur d'identité par son ministère
-    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "test@fia1.fr"
+    Et que je clique sur le bouton de connexion
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page fournisseur de service

@@ -5,8 +5,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import {
   DataProviderInvalidCredentialsException,
@@ -42,12 +44,7 @@ describe('DataProviderAdapterMongoService', () => {
 
   const dataProviderListMock = [dataProviderMock];
 
-  const loggerMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    warn: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const cryptographyMock = {
     decryptSymetric: jest.fn(),
@@ -206,7 +203,7 @@ describe('DataProviderAdapterMongoService', () => {
       await service['findAllDataProvider']();
 
       // Then
-      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
     });
 
     it('should filter out any entry exluded by the DTO', async () => {
@@ -438,8 +435,8 @@ describe('DataProviderAdapterMongoService', () => {
     });
   });
 
-  describe('checkAuthentication', () => {
-    it('should not throw error when client_id and client_secret are same as data provider', async () => {
+  describe('getAuthenticatedDataProvider', () => {
+    it('should return data provider when client_id and client_secret are same as data provider', async () => {
       // Given
       const dpMock =
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -447,10 +444,15 @@ describe('DataProviderAdapterMongoService', () => {
       const clientId = 'client_id_1';
       const clientSecret = 'client_secret_1';
       service['getByClientId'] = jest.fn().mockReturnValue(dpMock);
-      // When / Then
-      await expect(
-        service.checkAuthentication(clientId, clientSecret),
-      ).resolves.not.toThrow();
+
+      // When
+      const result = await service.getAuthenticatedDataProvider(
+        clientId,
+        clientSecret,
+      );
+
+      // Then
+      expect(result).toBe(dpMock);
     });
     it('should throw an error when client_id and client_secret are differents of data provider', async () => {
       // Given
@@ -461,9 +463,10 @@ describe('DataProviderAdapterMongoService', () => {
       const clientId = 'client_id_1';
       const clientSecret = 'client_secret_1';
       service['getByClientId'] = jest.fn().mockReturnValue(dpMock);
+
       // When
       const call = async () =>
-        await service.checkAuthentication(clientId, clientSecret);
+        await service.getAuthenticatedDataProvider(clientId, clientSecret);
 
       // Then
       await expect(call).rejects.toThrow(errorMock);
@@ -475,9 +478,10 @@ describe('DataProviderAdapterMongoService', () => {
       const clientId = 'client_id_1';
       const clientSecret = 'client_secret_1';
       service['getByClientId'] = jest.fn().mockReturnValue(undefined);
+
       // When
       const call = async () =>
-        await service.checkAuthentication(clientId, clientSecret);
+        await service.getAuthenticatedDataProvider(clientId, clientSecret);
 
       // Then
       await expect(call).rejects.toThrow(errorMock);

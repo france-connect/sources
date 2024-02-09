@@ -10,7 +10,6 @@ import { Reflector } from '@nestjs/core';
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 import { OidcSession } from '@fc/oidc';
 import { SessionService } from '@fc/session';
 
@@ -23,12 +22,9 @@ import {
 @Injectable()
 export class ForbidRefreshInterceptor implements NestInterceptor {
   constructor(
-    private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly reflector: Reflector,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async intercept(
     context: ExecutionContext,

@@ -1,20 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { OidcAcrService } from './oidc-acr.service';
 
 describe('OidcAcrService', () => {
   let service: OidcAcrService;
-
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    verbose: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-    businessEvent: jest.fn(),
-  } as unknown as LoggerService;
 
   const configServiceMock = {
     get: jest.fn(),
@@ -28,10 +19,8 @@ describe('OidcAcrService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [OidcAcrService, LoggerService, ConfigService],
+      providers: [OidcAcrService, ConfigService],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .compile();

@@ -11,6 +11,10 @@ import { MailerBaseException } from './mailer-base.exception';
 export class NoEmailException extends MailerBaseException {
   code = 1;
 
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
+
   constructor() {
     super(
       'Les informations sur votre identité sont incomplètes et ne permettent pas de vous connecter à votre service. Veuillez contacter le support.',

@@ -132,7 +132,7 @@ export default [
   {
     name: 'Portugal',
     iso: 'PT',
-    icon: '/img/flags/portuguese.svg',
+    icon: '/img/flags/portugal.svg',
   },
   {
     name: 'Romania',

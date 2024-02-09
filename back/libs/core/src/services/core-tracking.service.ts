@@ -23,8 +23,16 @@ export class CoreTrackingService {
     trackedEvent: TrackedEventInterface,
     context: TrackedEventContextInterface,
   ): Promise<ICoreTrackingLog> {
-    const { source, sessionId, interactionId, claims }: ICoreTrackingContext =
-      this.extractContext(context);
+    const {
+      source,
+      sessionId,
+      interactionId,
+      claims,
+      scope,
+      dpId,
+      dpClientId,
+      dpTitle,
+    }: ICoreTrackingContext = this.extractContext(context);
 
     const { step, category, event } = trackedEvent;
 
@@ -39,7 +47,11 @@ export class CoreTrackingService {
       event,
       ip: source.address,
       claims: claims?.join(' '),
+      scope,
       source,
+      dpId,
+      dpClientId,
+      dpTitle,
       ...data,
     };
   }
@@ -58,7 +70,7 @@ export class CoreTrackingService {
     }
 
     const { sessionId } = req;
-    const { claims, interactionId } = ctx;
+    const { claims, interactionId, scope, dpId, dpClientId, dpTitle } = ctx;
     const source = extractNetworkInfoFromHeaders(ctx);
 
     return {
@@ -66,6 +78,10 @@ export class CoreTrackingService {
       sessionId,
       interactionId,
       claims,
+      scope,
+      dpId,
+      dpClientId,
+      dpTitle,
     };
   }
 

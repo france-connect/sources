@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { CoreRoutes, CoreVerifyService } from '@fc/core';
-import { LoggerService } from '@fc/logger-legacy';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService } from '@fc/session';
 import { TrackedEventContextInterface } from '@fc/tracking';
@@ -14,12 +13,9 @@ import { AppConfig } from '../dto';
 @Injectable()
 export class CoreFcpVerifyService {
   constructor(
-    private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly coreVerify: CoreVerifyService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async handleVerifyIdentity(
     req: Request,

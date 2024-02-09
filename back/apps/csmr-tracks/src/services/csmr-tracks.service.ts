@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { IPaginationOptions } from '@fc/common';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
 import { TracksResults } from '@fc/tracks';
 
@@ -20,9 +20,7 @@ export class CsmrTracksService {
     private readonly elastic: CsmrTracksElasticService,
     private readonly formatter: CsmrTracksFormatterService,
     private readonly cryptographyFcp: CryptographyFcpService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
   async getTracksForIdentity(
     identity: IOidcIdentity,
     options: IPaginationOptions,

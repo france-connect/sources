@@ -23,85 +23,269 @@ describe('Runner', () => {
   const path = '/my/file/is/here.exception.ts';
   describe('extractException', () => {
     it('Should return the path of the exception and the Class extending FcException from a module', () => {
-      // Setup
+      // Given
       const MockAbstractFunction = jest.fn();
       class MockException extends FcException {}
       const module = { MockException, MockAbstractFunction };
-      // Actions
+      // When
       const result = Runner.extractException({ path, module });
-      // Expect
+      // Then
       expect(result).toStrictEqual({ path, Exception: MockException });
     });
   });
 
-  describe('hasValidParam', () => {
+  describe('hasValidString', () => {
+    it('Should return true if param is a valid string', () => {
+      // Given
+      const paramMock = 'foo bar';
+
+      // When
+      const result = Runner.hasValidString(paramMock);
+
+      // Then
+      expect(result).toStrictEqual(true);
+    });
+
+    it('Should return false if param is a null', () => {
+      // Given
+      const paramMock = null;
+
+      // When
+      const result = Runner.hasValidString(paramMock);
+
+      // Then
+      expect(result).toStrictEqual(false);
+    });
+
+    it('Should return false if param is undefined', () => {
+      // Given
+      const paramMock = undefined;
+
+      // When
+      const result = Runner.hasValidString(paramMock);
+
+      // Then
+      expect(result).toStrictEqual(false);
+    });
+
+    it('Should return false if param is an emtpy string', () => {
+      // Given
+      const paramMock = ' ';
+
+      // When
+      const result = Runner.hasValidString(paramMock);
+
+      // Then
+      expect(result).toStrictEqual(false);
+    });
+  });
+
+  describe('hasValidException', () => {
     it('Should return true if param is positive number', () => {
-      // Setup
+      // Given
+      const paramMock = {
+        hasValidScope: true,
+        hasValidCode: true,
+        hasValidHttpStatusCode: true,
+        hasValidError: true,
+        hasValidErrorDescription: true,
+      };
+
+      // When
+      const result = Runner.hasValidException(paramMock);
+
+      // Then
+      expect(result).toStrictEqual(true);
+    });
+
+    it('Should return false if hasValidScope is false', () => {
+      // Given
+      const paramMock = {
+        hasValidScope: false,
+        hasValidCode: true,
+        hasValidHttpStatusCode: true,
+        hasValidError: true,
+        hasValidErrorDescription: true,
+      };
+
+      // When
+      const result = Runner.hasValidException(paramMock);
+
+      // Then
+      expect(result).toStrictEqual(false);
+    });
+
+    it('Should return false if hasValidCode is false', () => {
+      // Given
+      const paramMock = {
+        hasValidScope: true,
+        hasValidCode: false,
+        hasValidHttpStatusCode: true,
+        hasValidError: true,
+        hasValidErrorDescription: true,
+      };
+
+      // When
+      const result = Runner.hasValidException(paramMock);
+
+      // Then
+      expect(result).toStrictEqual(false);
+    });
+
+    it('Should return false if hasValidHttpStatusCode is false', () => {
+      // Given
+      const paramMock = {
+        hasValidScope: true,
+        hasValidCode: true,
+        hasValidHttpStatusCode: false,
+        hasValidError: true,
+        hasValidErrorDescription: true,
+      };
+
+      // When
+      const result = Runner.hasValidException(paramMock);
+
+      // Then
+      expect(result).toStrictEqual(false);
+    });
+
+    it('Should return false if hasValidError is false', () => {
+      // Given
+      const paramMock = {
+        hasValidScope: true,
+        hasValidCode: true,
+        hasValidHttpStatusCode: true,
+        hasValidError: false,
+        hasValidErrorDescription: true,
+      };
+
+      // When
+      const result = Runner.hasValidException(paramMock);
+
+      // Then
+      expect(result).toStrictEqual(false);
+    });
+
+    it('Should return false if hasValidErrorDescription is false', () => {
+      // Given
+      const paramMock = {
+        hasValidScope: true,
+        hasValidCode: true,
+        hasValidHttpStatusCode: true,
+        hasValidError: true,
+        hasValidErrorDescription: false,
+      };
+
+      // When
+      const result = Runner.hasValidException(paramMock);
+
+      // Then
+      expect(result).toStrictEqual(false);
+    });
+  });
+
+  describe('hasValidNumber', () => {
+    it('Should return true if param is positive number', () => {
+      // Given
       const paramMock = 2;
 
-      // Action
-      const result = Runner.hasValidParam(paramMock);
+      // When
+      const result = Runner.hasValidNumber(paramMock);
 
-      // Expect
+      // Then
       expect(result).toStrictEqual(true);
     });
     it('Should return false if param is a negative number', () => {
-      // Setup
+      // Given
       const paramMock = -1;
 
-      // Action
-      const result = Runner.hasValidParam(paramMock);
+      // When
+      const result = Runner.hasValidNumber(paramMock);
 
-      // Expect
+      // Then
       expect(result).toStrictEqual(false);
     });
   });
 
   describe('inflateException', () => {
     it('should return null if Exception has invalid scope and/or code', () => {
-      // Setup
+      // Given
       const expected = null;
-      // Actions
+      // When
       class MockException extends FcException {}
       const result = Runner.inflateException({
         path,
         Exception: MockException,
       });
-      // Expect
+      // Then
       expect(result).toStrictEqual(expected);
     });
 
-    it('should return the path of the error and an instance of Error if Exception has valid scope and code', () => {
-      // Actions
+    it('should return null if Exception has invalid error and/or error_description', () => {
+      // Given
       class MockException extends FcException {
         public code = 1;
         public scope = 1;
       }
+      const expected = null;
+      // When
       const result = Runner.inflateException({
         path,
         Exception: MockException,
       });
-      // Expect
-      expect(result).toStrictEqual({ path, error: expect.any(FcException) });
+      // Then
+      expect(result).toStrictEqual(expected);
     });
 
-    it('should return the path of the error and an instance of Error if Exception has valid scope = 0 and code = 0', () => {
-      // Actions
+    it('should return the path of the error, the instance of Error and error message if Exception has valid scope code, error and error description', () => {
+      // When
       class MockException extends FcException {
-        public code = 0;
-        public scope = 0;
+        public code = 1;
+        public scope = 1;
+        static ERROR = 'error';
+        static ERROR_DESCRIPTION = 'error description';
       }
       const result = Runner.inflateException({
         path,
         Exception: MockException,
       });
-      // Expect
-      expect(result).toStrictEqual({ path, error: expect.any(FcException) });
+      // Then
+      expect(result).toStrictEqual({
+        path,
+        errorInstance: expect.any(FcException),
+        error: {
+          ERROR: MockException['ERROR'],
+          ERROR_DESCRIPTION: MockException['ERROR_DESCRIPTION'],
+        },
+      });
+    });
+
+    it('should return the path, the instance of Error and error message even if scope = 0 and code = 0', () => {
+      // When
+      class MockException extends FcException {
+        public code = 0;
+        public scope = 0;
+        static ERROR = 'error';
+        static ERROR_DESCRIPTION = 'error description';
+      }
+      const result = Runner.inflateException({
+        path,
+        Exception: MockException,
+      });
+      // Then
+      expect(result).toStrictEqual({
+        path,
+        errorInstance: expect.any(FcException),
+        error: {
+          ERROR: MockException['ERROR'],
+          ERROR_DESCRIPTION: MockException['ERROR_DESCRIPTION'],
+        },
+      });
     });
   });
 
   describe('renderFile', () => {
-    // Setup
+    // Given
     const file = 'none.file';
     const dataMock = [];
     const renderFileResult = [Symbol('renderFileResult')];
@@ -119,35 +303,35 @@ describe('Runner', () => {
     ) => callback(null, renderFileResult);
 
     it('Should reject the promise caused by invalid params', async () => {
-      // Setup
+      // Given
       jest
         .spyOn(ejs, 'renderFile')
         .mockImplementationOnce(renderFileMockErrorImplementation);
-      // Expect
+      // Then
       await expect(Runner.renderFile(file, dataMock)).rejects.toEqual('error');
     });
     it('Should return result from ejs renderFile', async () => {
-      // Setup
+      // Given
       jest
         .spyOn(ejs, 'renderFile')
         .mockImplementationOnce(renderFileMockSuccesImplementation);
-      // Action
+      // When
       const result = await Runner.renderFile(file, dataMock);
-      // Expect
+      // Then
       expect(result).toEqual(renderFileResult);
     });
   });
 
   describe('loadExceptions', () => {
     it('Should return an array of instances of IExceptionDocumentation', async () => {
-      // Setup
+      // Given
       const paths = [
         './fixtures/module.exception.fixture',
         './fixtures/module-2.exception.fixture',
       ];
-      // Actions
+      // When
       const result = await Runner.loadExceptions(paths);
-      // Expect
+      // Then
       expect(result).toStrictEqual([
         {
           scope: 1,
@@ -160,6 +344,8 @@ describe('Runner', () => {
           description: 'N/A',
           path: paths[0],
           exception: 'ImportFixture',
+          ERROR: 'error',
+          ERROR_DESCRIPTION: 'error description',
         },
         {
           scope: 2,
@@ -172,6 +358,8 @@ describe('Runner', () => {
           description: 'N/A',
           path: paths[1],
           exception: 'ImportFixture',
+          ERROR: 'error',
+          ERROR_DESCRIPTION: 'error description',
         },
       ]);
     });
@@ -179,31 +367,31 @@ describe('Runner', () => {
 
   describe('getExceptionsFilesPath', () => {
     it('Should call glob.sync', () => {
-      // Setup
+      // Given
       jest.spyOn(glob, 'sync').mockImplementation();
       const basePath = 'foobar';
       const pattern = '/**/*.exception.ts';
       const filePaths = `${basePath}${pattern}`;
-      // Actions
+      // When
       Runner.getExceptionsFilesPath(basePath, pattern);
-      // Expect
+      // Then
       expect(glob.sync).toHaveBeenCalledTimes(1);
       expect(glob.sync).toHaveBeenCalledWith(filePaths);
     });
 
     it('Should return result of glob.sync', () => {
-      // Setup
+      // Given
       const globSyncResult = ['globSyncResult'];
       jest.spyOn(glob, 'sync').mockImplementation(() => globSyncResult);
-      // Actions
+      // When
       const result = Runner.getExceptionsFilesPath();
-      // Expect
+      // Then
       expect(result).toBe(globSyncResult);
     });
   });
 
   describe('run', () => {
-    // Setup
+    // Given
     const getExceptionsFilesPathResult = [];
     const loadExceptionsResult = [];
     const markdownGenerateResult = [];
@@ -227,9 +415,9 @@ describe('Runner', () => {
     });
 
     it('Should call loadExceptions with getExceptionsFilesPath result', async () => {
-      // Actions
+      // When
       await Runner.run();
-      // Expect
+      // Then
       expect(Runner.loadExceptions).toHaveBeenCalledTimes(1);
       expect(Runner.loadExceptions).toHaveBeenCalledWith(
         getExceptionsFilesPathResult,
@@ -237,19 +425,19 @@ describe('Runner', () => {
     });
 
     it('Should call generate with loadExceptions result', async () => {
-      // Actions
+      // When
       await Runner.run();
-      // Expect
+      // Then
       expect(generatorSpy).toHaveBeenCalledTimes(1);
       expect(generatorSpy).toHaveBeenCalledWith(loadExceptionsResult);
     });
 
     it('Should call renderFile with generate result', async () => {
-      // Setup
+      // Given
       const projectRootPath = '../';
-      // Actions
+      // When
       await Runner.run();
-      // Expect
+      // Then
       expect(Runner.renderFile).toHaveBeenCalledTimes(1);
       expect(Runner.renderFile).toHaveBeenCalledWith(expect.any(String), {
         markdown: markdownGenerateResult,
@@ -258,9 +446,9 @@ describe('Runner', () => {
     });
 
     it('Should call fs.writeFileSync with renderFile result', async () => {
-      // Actions
+      // When
       await Runner.run();
-      // Expect
+      // Then
       expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         '_doc/erreurs.md',

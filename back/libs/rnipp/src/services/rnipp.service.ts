@@ -8,7 +8,6 @@ import { Injectable } from '@nestjs/common';
 
 import { getDtoErrors, RequiredExcept, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { CitizenStatus, RnippConfig } from '../dto';
 import { Genders, RnippResponseCodes } from '../enums';
@@ -31,42 +30,30 @@ export class RnippService {
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    private readonly logger: LoggerService,
     private readonly rnippResponseParserService: RnippResponseParserService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async check(identity: object) {
-    this.logger.debug('Construct RNIPP request url');
     const requestUrl = this.buildRequestUrl(identity as IPivotIdentity);
 
-    this.logger.debug('Dialing RNIPP endpoint');
     const rnippResponse = await this.callRnipp(requestUrl);
 
-    this.logger.debug('Parsing RNIPP response');
     const citizenStatus = await this.rnippResponseParserService.parseRnippData(
       rnippResponse.data,
     );
 
-    this.logger.debug('Validate RNIPP response');
     const errors = await validateDto(
       citizenStatus,
       CitizenStatus,
       validationOptions,
     );
 
-    this.logger.debug('Check citizen status for error');
     this.checkCitizenStatusError(errors);
 
     const { identity: rnippIdentity, deceased, rnippCode } = citizenStatus;
 
-    this.logger.debug('Check RNIPP rectification error');
     this.checkRnippRectificationError(rnippCode, deceased);
 
-    this.logger.debug('Return RNIPP identity');
-
-    this.logger.trace({ rnipp: { citizenStatus, errors } });
     return rnippIdentity;
   }
 
@@ -92,8 +79,6 @@ export class RnippService {
     };
 
     const url = `${protocol}://${hostname}${baseUrl}?${stringify(params)}`;
-
-    this.logger.trace({ params, url });
 
     return url;
   }

@@ -3,7 +3,6 @@ import { ClientMetadata, KoaContextWithOIDC } from 'oidc-provider';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc';
 
 import { OidcProviderRedisAdapter } from '../adapters';
@@ -14,14 +13,6 @@ import { OidcProviderErrorService } from './oidc-provider-error.service';
 
 describe('OidcProviderConfigService', () => {
   let service: OidcProviderConfigService;
-
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    verbose: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-    businessEvent: jest.fn(),
-  } as unknown as LoggerService;
 
   const configServiceMock = {
     get: jest.fn(),
@@ -65,7 +56,6 @@ describe('OidcProviderConfigService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OidcProviderConfigService,
-        LoggerService,
         ConfigService,
         OidcProviderErrorService,
         {
@@ -78,15 +68,11 @@ describe('OidcProviderConfigService', () => {
         },
       ],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .overrideProvider(OidcProviderErrorService)
       .useValue(errorServiceMock)
       .compile();
-
-    module.useLogger(loggerServiceMock);
 
     service = module.get<OidcProviderConfigService>(OidcProviderConfigService);
     jest.resetAllMocks();
@@ -95,12 +81,6 @@ describe('OidcProviderConfigService', () => {
       switch (module) {
         case 'OidcProvider':
           return configOidcProviderMock;
-        case 'Logger':
-          return {
-            path: '/dev/null',
-            level: LoggerLevelNames.TRACE,
-            isDevelopment: false,
-          };
       }
     });
   });

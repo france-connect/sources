@@ -8,4 +8,6 @@ export interface IExceptionDocumentation {
   description: string;
   path: string;
   exception: string;
+  ERROR?: string;
+  ERROR_DESCRIPTION?: string;
 }

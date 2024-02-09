@@ -6,8 +6,7 @@
   "workspaces": {
     "packages": [
       "fca",
-      "fcp",
-      "partners"
+      "fcp"
     ]
   },
   "keywords": [
@@ -27,10 +26,13 @@
     "@types/luxon": "^3.3.2",
     "@types/node": "^18.18.1",
     "axe-core": "^4.8.2",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "cypress": "12.17.4",
     "cypress-axe": "^1.5.0",
     "cypress-image-snapshot": "^4.0.1",
     "cypress-maildev": "^1.3.1",
+    "cypress-plugin-api": "^2.11.1",
     "cypress-xpath": "^2.0.1",
     "ejs": "^3.1.9",
     "jose": "^4.14.6",

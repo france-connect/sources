@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { asyncFilter, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 import { IServiceProviderAdapter, ServiceProviderMetadata } from '@fc/oidc';
 
@@ -33,16 +33,13 @@ export class ServiceProviderAdapterMongoService
     private readonly config: ConfigService,
     private readonly logger: LoggerService,
     private readonly mongooseWatcher: MongooseCollectionOperationWatcherHelper,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async onModuleInit() {
     this.mongooseWatcher.watchWith<ServiceProvider>(
       this.serviceProviderModel,
       this.refreshCache.bind(this),
     );
-    this.logger.debug('Initializing service-provider');
     // Warm up cache and shows up excluded SpPs
     await this.getList();
   }
@@ -125,13 +122,9 @@ export class ServiceProviderAdapterMongoService
         );
 
         if (errors.length > 0) {
-          this.logger.trace({ errors }, LoggerLevelNames.WARN);
-          this.logger.warn(
-            `"${name}" was excluded from the result at DTO validation :${JSON.stringify(
-              errors,
-              null,
-              2,
-            )}`,
+          this.logger.warning(
+            `"${name}" was excluded from the result at DTO validation`,
+            { errors },
           );
         }
 
@@ -151,10 +144,6 @@ export class ServiceProviderAdapterMongoService
 
       const list = await this.findAllServiceProvider();
       this.listCache = list.map(this.legacyToOpenIdPropertyName.bind(this));
-
-      this.logger.trace({ step: 'REFRESH', list, listCache: this.listCache });
-    } else {
-      this.logger.trace({ step: 'CACHE', listCache: this.listCache });
     }
 
     return this.listCache;
@@ -170,8 +159,6 @@ export class ServiceProviderAdapterMongoService
     const serviceProvider: ServiceProviderMetadata = list.find(
       ({ client_id: dbId }) => dbId === spId,
     );
-
-    this.logger.trace({ spId, refreshCache, serviceProvider });
 
     return serviceProvider;
   }

@@ -1,7 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger-legacy';
-
 import { OidcProviderGrantSaveException } from '../exceptions';
 import { OidcProviderGrantService } from './oidc-provider-grant.service';
 
@@ -10,10 +8,6 @@ describe('OidcProviderGrantService', () => {
 
   const interactionIdMock = 'interactionIdMockValue';
   const clientIdMock = 'clientIdMockValue';
-
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-  } as unknown as LoggerService;
 
   const reqMock = Symbol('req');
   const resMock = Symbol('res');
@@ -25,11 +19,8 @@ describe('OidcProviderGrantService', () => {
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [LoggerService, OidcProviderGrantService],
-    })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
-      .compile();
+      providers: [OidcProviderGrantService],
+    }).compile();
 
     service = module.get<OidcProviderGrantService>(OidcProviderGrantService);
   });
@@ -65,7 +56,6 @@ describe('OidcProviderGrantService', () => {
 
     it('should be defined', () => {
       expect(service).toBeDefined();
-      expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
     });
 
     it('should call interactionDetail once with req and res', async () => {

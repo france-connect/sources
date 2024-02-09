@@ -1,8 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailerService } from '@nestjs-modules/mailer';
 
-import { LoggerService } from '@fc/logger-legacy';
-
 import { SmtpService } from './smtp.service';
 
 describe('SmtpService', () => {
@@ -10,13 +8,6 @@ describe('SmtpService', () => {
 
   const mailerServiceMock = {
     sendMail: jest.fn(),
-  };
-
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-    trace: jest.fn(),
   };
 
   const paramsMock = {
@@ -39,12 +30,10 @@ describe('SmtpService', () => {
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [MailerService, SmtpService, LoggerService],
+      providers: [MailerService, SmtpService],
     })
       .overrideProvider(MailerService)
       .useValue(mailerServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .compile();
 
     service = module.get<SmtpService>(SmtpService);
@@ -76,8 +65,6 @@ describe('SmtpService', () => {
       await service.send(paramsMock);
 
       // Then
-      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledTimes(2);
       expect(mailerServiceMock.sendMail).toHaveBeenCalledTimes(1);
       expect(mailerServiceMock.sendMail).toHaveBeenCalledWith(expected);
     });

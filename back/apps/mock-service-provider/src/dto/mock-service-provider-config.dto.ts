@@ -5,7 +5,7 @@ import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
-import { LoggerConfig } from '@fc/logger-legacy';
+import { LoggerConfig } from '@fc/logger';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import { RedisConfig } from '@fc/redis';
 import { SessionConfig } from '@fc/session';

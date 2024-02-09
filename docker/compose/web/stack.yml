@@ -9,3 +9,4 @@ services:
     image: alpine
     depends_on:
       - doc-example
+      - doc-partners

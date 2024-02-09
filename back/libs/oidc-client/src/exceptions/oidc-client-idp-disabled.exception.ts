@@ -17,4 +17,8 @@ export class OidcClientIdpDisabledException extends OidcClientBaseException {
     'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
   // should not happen as we display only valid identity providers on user's ip choice page
   public readonly httpStatusCode = HttpStatus.INTERNAL_SERVER_ERROR;
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

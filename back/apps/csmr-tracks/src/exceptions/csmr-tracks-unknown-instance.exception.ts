@@ -12,4 +12,8 @@ import { CsmrTracksBaseException } from './csmr-tracks-base.exception';
 export class CsmrTracksUnknownInstanceException extends CsmrTracksBaseException {
   public readonly code = CsmrTracksErrorCode.UNKNOWN_INSTANCE;
   public readonly message = 'Found unknown instance (service) in track';
+
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
 }

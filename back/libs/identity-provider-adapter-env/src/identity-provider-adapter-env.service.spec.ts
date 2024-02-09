@@ -4,8 +4,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata } from '@fc/oidc';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { IdentityProviderAdapter } from './dto';
 import { IdentityProviderAdapterEnvService } from './identity-provider-adapter-env.service';
@@ -184,10 +186,7 @@ describe('IdentityProviderAdapterEnvService', () => {
 
   const identityProviderListMock = [validIdentityProviderMock];
 
-  const loggerMock = {
-    setContext: jest.fn(),
-    warn: jest.fn(),
-  };
+  const loggerMock = getLoggerMock();
 
   const cryptographyMock = {
     decrypt: jest.fn(),
@@ -276,7 +275,7 @@ describe('IdentityProviderAdapterEnvService', () => {
       await service['findAllIdentityProvider']();
 
       // expect
-      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
     });
 
     it('should log a warning if an entry is exluded by the DTO', async () => {
@@ -297,7 +296,7 @@ describe('IdentityProviderAdapterEnvService', () => {
       await service['findAllIdentityProvider']();
 
       // expect
-      expect(loggerMock.warn).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
     });
   });
 

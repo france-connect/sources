@@ -10,10 +10,10 @@ Fonctionnalité: Deconnexion Usager
     Etant donné que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je suis redirigé vers la page interaction
     Et que j'utilise un fournisseur d'identité "actif"
-    Et que je cherche le fournisseur d'identité par son ministère
-    Et que je clique sur le fournisseur d'identité
+    Et que j'entre l'email "test@fia1.fr"
+    Et que je clique sur le bouton de connexion
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que je m'authentifie avec succès
     Et que je suis redirigé vers la page fournisseur de service
@@ -30,10 +30,10 @@ Fonctionnalité: Deconnexion Usager
     Etant donné que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je suis redirigé vers la page interaction
     Et que j'utilise un fournisseur d'identité "actif"
-    Et que je cherche le fournisseur d'identité par son ministère
-    Et que je clique sur le fournisseur d'identité
+    Et que j'entre l'email "test@fia1.fr"
+    Et que je clique sur le bouton de connexion
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que je m'authentifie avec succès
     Et que je suis redirigé vers la page fournisseur de service

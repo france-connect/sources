@@ -109,11 +109,14 @@ export const getClaims = (scopeContext: ScopeContext): string[] => {
   return [...new Set(claims)];
 };
 
-export const getRnippClaims = (userClaims: UserClaims): UserClaims => {
+export const getRnippClaims = (
+  userClaims: UserClaims,
+  prefix = 'rnipp_',
+): UserClaims => {
   const userRnippClaims = {};
   Object.entries(rnippClaims).forEach(([rnippClaimName, claimName]) => {
     // Use the "rnipp_" claim if present otherwise use the default user claim
-    userRnippClaims[rnippClaimName] =
+    userRnippClaims[`${prefix}${claimName}`] =
       rnippClaimName in userClaims
         ? userClaims[rnippClaimName]
         : userClaims[claimName];

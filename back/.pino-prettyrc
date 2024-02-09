@@ -1,0 +1,6 @@
+{
+  "colorize": true,
+  "useOnlyCustomProperties": true,
+  "customLevels": "business:100,emerg:80,alert:70,crit:60,err:50,warning:40,notice:30,info:20,debug:10",
+  "customColors": "business:whiteBright,emerg:magenta,alert:magentaBright,crit:red,err:redBright,warning:yellow,notice:cyan,info:green,debug:gray"
+}

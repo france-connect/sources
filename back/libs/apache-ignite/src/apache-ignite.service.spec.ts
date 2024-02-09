@@ -5,7 +5,9 @@ import { operation, RetryOperation } from 'retry';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { ApacheIgniteService } from './apache-ignite.service';
 import { ApacheIgniteConfig } from './dto';
@@ -23,11 +25,7 @@ describe('ApacheIgniteService', () => {
     get: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    error: jest.fn(),
-    setContext: jest.fn(),
-  };
+  const loggerServiceMock = getLoggerMock();
 
   const igniteClientMock = {
     _socket: {
@@ -121,13 +119,6 @@ describe('ApacheIgniteService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should set the logger context with the service name', () => {
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
-    expect(loggerServiceMock.setContext).toHaveBeenCalledWith(
-      'ApacheIgniteService',
-    );
-  });
-
   describe('onModuleInit', () => {
     let retryApacheIgniteMock;
     let triggerIgniteMock;
@@ -198,8 +189,8 @@ describe('ApacheIgniteService', () => {
 
       // then
       expect(connectIgniteMock).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.error).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.error).toHaveBeenCalledWith(errorMock);
+      expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.err).toHaveBeenCalledWith(errorMock);
     });
   });
 

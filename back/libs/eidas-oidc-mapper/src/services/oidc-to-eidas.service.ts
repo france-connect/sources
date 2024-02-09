@@ -11,7 +11,7 @@ import {
   EidasStatusCodes,
   EidasSubStatusCodes,
 } from '@fc/eidas';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { OidcError } from '@fc/oidc';
 
 import { AcrValues } from '../enums';
@@ -27,22 +27,17 @@ export class OidcToEidasService {
   constructor(
     private readonly logger: LoggerService,
     private readonly eidasCog: CogService,
-  ) {
-    logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   mapPartialRequest(
     requestedScopes: string,
     acr: AcrValues,
   ): EidasPartialRequest {
-    this.logger.debug('mapPartialRequest()');
-
     const scopes = requestedScopes.split(' ');
     const requestedAttributesSet: Set<EidasAttributes> =
       this.mapScopesToRequestedAttributes(scopes);
     const requestedAttributes = Array.from(requestedAttributesSet);
 
-    this.logger.trace({ requestedAttributes, requestedScopes });
     return {
       levelOfAssurance: AcrValuesToLevelOfAssurancesMap[acr],
       requestedAttributes,
@@ -62,7 +57,6 @@ export class OidcToEidasService {
     acr: AcrValues,
     requestedAttributes: EidasAttributes[],
   ): Promise<Partial<EidasResponse>> {
-    this.logger.debug('mapPartialResponseSuccess()');
     const attributes = this.mapRequestedAttributesFromClaims(
       claims,
       requestedAttributes,
@@ -77,8 +71,6 @@ export class OidcToEidasService {
 
     const subject = claims.sub;
     const levelOfAssurance = AcrValuesToLevelOfAssurancesMap[acr];
-
-    this.logger.trace({ attributes, levelOfAssurance, subject });
 
     return {
       attributes,
@@ -114,10 +106,10 @@ export class OidcToEidasService {
         error_description:
           'FranceConnect encountered an unexpected error, please contact the support (Code Y000000).',
       };
-      this.logger.error(error);
     } else {
       errorToReturn = error;
     }
+    this.logger.err(errorToReturn);
 
     return {
       status: {

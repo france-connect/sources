@@ -22,7 +22,8 @@
       "belonging_population": "agent",
       "phone_number": "+331-12-44-45-23",
       "chorusdt:matricule": "USER_AGC",
-      "chorusdt:societe": "CHT"
+      "chorusdt:societe": "CHT",
+      "is_service_public": "true"
     }
   },
   {
@@ -48,7 +49,27 @@
       "belonging_population": "agent",
       "phone_number": "+331-12-44-45-23",
       "chorusdt:matricule": "123457",
-      "chorusdt:societe": "MinistèreIntérieur"
+      "chorusdt:societe": "MinistèreIntérieur",
+      "is_service_public": "false"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "personnalisé"
+    ],
+    "claims": {
+      "uid": "42",
+      "given_name": "Augusta Ada",
+      "usual_name": "King, Countess of Lovelace",
+      "email": "ada@babbage.co.uk",
+      "siren": "343293775",
+      "siret": "34329377500037",
+      "organizational_unit": "comptabilite",
+      "belonging_population": "agent",
+      "phone_number": "+331-12-44-45-23",
+      "is_service_public": "false",
+      "acr": "eidas1"
     }
   }
 ]

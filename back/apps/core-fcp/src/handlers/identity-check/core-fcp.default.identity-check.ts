@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { FeatureHandler } from '@fc/feature-handler';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { OidcIdentityDto } from '../../dto';
 import { IIdentityCheckFeatureHandler } from '../../interfaces';
@@ -15,9 +15,7 @@ import { IIdentityCheckFeatureHandler } from '../../interfaces';
 export class CoreFcpDefaultIdentityCheckHandler
   implements IIdentityCheckFeatureHandler
 {
-  constructor(public readonly logger: LoggerService) {
-    this.logger.setContext(this.constructor.name);
-  }
+  constructor(public readonly logger: LoggerService) {}
 
   async handle(identity: Partial<OidcIdentityDto>): Promise<ValidationError[]> {
     this.logger.debug('Identity Check: ##### core-fcp-default-identity-check');

@@ -16,7 +16,6 @@ import {
 } from '@nestjs/common';
 
 import { FSA, PartialExcept } from '@fc/common';
-import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import {
@@ -46,22 +45,18 @@ import { UserDashboardService } from '../services';
 export class UserDashboardController {
   // eslint-disable-next-line max-params
   constructor(
-    private readonly logger: LoggerService,
     private readonly csrfService: SessionCsrfService,
     private readonly tracking: TrackingService,
     private readonly tracks: TracksService,
     private readonly userPreferences: UserPreferencesService,
     private readonly userDashboard: UserDashboardService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   @Get(UserDashboardBackRoutes.CSRF_TOKEN)
   async getCsrfToken(
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<{ csrfToken: string }> {
-    this.logger.debug('getCsrfToken()');
     const csrfToken = this.csrfService.get();
     await this.csrfService.save(sessionOidc, csrfToken);
 
@@ -77,7 +72,6 @@ export class UserDashboardController {
     sessionOidc: ISessionService<OidcClientSession>,
     @Query() query: GetUserTracesQueryDto,
   ): Promise<FSA | HttpErrorResponse> {
-    this.logger.debug(`getUserTraces() with ${query}`);
     const idpIdentity = await sessionOidc.get('idpIdentity');
     if (!idpIdentity) {
       return res.status(HttpStatus.UNAUTHORIZED).send({
@@ -93,9 +87,7 @@ export class UserDashboardController {
       },
     );
 
-    this.logger.trace({ idpIdentity });
     const tracks = await this.tracks.getList(idpIdentity, query);
-    this.logger.trace({ tracks });
 
     return res.json({
       type: 'TRACKS_DATA',
@@ -109,7 +101,6 @@ export class UserDashboardController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<UserInfosInterface | HttpErrorResponse> {
-    this.logger.debug('getUserInfos()');
     /**
      * @Todo find better way to define interface
      * Author: Emmanuel Maravilha
@@ -135,7 +126,6 @@ export class UserDashboardController {
       idpId,
     };
 
-    this.logger.trace({ userInfos });
     return res.json(userInfos);
   }
 
@@ -218,8 +208,6 @@ export class UserDashboardController {
     try {
       await this.csrfService.validate(sessionOidc, csrfToken);
     } catch (error) {
-      this.logger.trace({ error });
-
       throw new SessionInvalidCsrfSelectIdpException(error);
     }
 

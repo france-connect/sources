@@ -7,7 +7,6 @@ import {
   EidasStatusCodes,
   EidasSubStatusCodes,
 } from '@fc/eidas';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { AcrValues } from '../enums';
 import { EidasToOidcService } from './eidas-to-oidc.service';
@@ -43,29 +42,19 @@ describe('EidasToOidcService', () => {
     [EidasAttributes.CURRENT_GIVEN_NAME]: ['Jean'],
   };
 
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  };
-
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [EidasToOidcService, LoggerService],
-    })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
-      .compile();
+      providers: [EidasToOidcService],
+    }).compile();
 
     service = module.get<EidasToOidcService>(EidasToOidcService);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
-    expect(loggerServiceMock.setContext).toHaveBeenCalledTimes(1);
   });
 
   describe('mapPartialRequest', () => {

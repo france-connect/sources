@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { RepositoryInterface } from '@fc/csv/interfaces';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { CogConfig } from './dto';
 import { CityInterface, CountryInterface } from './interfaces';
@@ -11,15 +10,12 @@ import { COG_CITY, COG_COUNTRY } from './tokens';
 @Injectable()
 export class CogService {
   constructor(
-    private readonly logger: LoggerService,
     private readonly config: ConfigService,
     @Inject(COG_CITY)
     private readonly cityManager: RepositoryInterface<CityInterface>,
     @Inject(COG_COUNTRY)
     private readonly countryManager: RepositoryInterface<CountryInterface>,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async onModuleInit() {
     const { [COG_CITY]: city, [COG_COUNTRY]: country } =
@@ -42,7 +38,6 @@ export class CogService {
       const { codeiso2, libcog } = await this.countryManager.find({ cog });
       label = `${libcog} (${codeiso2})`;
     }
-    this.logger.trace({ isFrance, label });
     return label;
   }
 
@@ -52,7 +47,6 @@ export class CogService {
    * @returns {string[]} labels
    */
   async injectLabelsForCogs(cogs: string[]): Promise<string[]> {
-    this.logger.debug('injectLabelsForCogs()');
     const labels = await Promise.all(
       cogs.map((cog) => this.getLabelFromCog(cog)),
     );

@@ -20,6 +20,10 @@ export class ChecktokenHttpStatusException extends ChecktokenBaseException {
   public readonly message: string =
     'The authorization server encountered an unexpected condition that prevented it from fulfilling the request.';
 
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
+
   // eslint-disable-next-line @typescript-eslint/naming-convention
   constructor(error: AxiosError<{ error: string; error_description: string }>) {
     super(error);

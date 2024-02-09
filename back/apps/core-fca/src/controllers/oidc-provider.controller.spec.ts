@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CoreMissingIdentityException } from '@fc/core';
-import { LoggerService } from '@fc/logger-legacy';
 import { IOidcIdentity } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
@@ -14,12 +13,6 @@ import { OidcProviderController } from './oidc-provider.controller';
 
 describe('OidcProviderController', () => {
   let oidcProviderController: OidcProviderController;
-
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    debug: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
 
   const sessionServiceMock = getSessionServiceMock();
 
@@ -67,10 +60,8 @@ describe('OidcProviderController', () => {
 
     const app: TestingModule = await Test.createTestingModule({
       controllers: [OidcProviderController],
-      providers: [LoggerService, OidcProviderService, SessionService],
+      providers: [OidcProviderService, SessionService],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
       .overrideProvider(OidcProviderService)

@@ -15,7 +15,26 @@
       "sourceRoot": "instances/core-fca-low/src",
       "compilerOptions": {
         "tsConfigPath": "instances/core-fca-low/tsconfig.app.json",
-        "assets": ["../../../apps/core-fca/**/*.ejs"]
+        "assets": [
+          "../../../apps/core-fca/**/*.ejs",
+          "../../../apps/core-fca/**/*.css",
+          "../../../apps/core-fca/**/*.js",
+          "../../../apps/core-fca/**/*.svg",
+          "../../../apps/core-fca/**/*.png",
+          "../../../apps/core-fca/**/*.ico",
+          "../../../apps/core-fca/**/*.woff2",
+          "../../../apps/core-fca/**/*.webmanifest",
+          "../../../apps/core-fca/**/robots.txt",
+          "../../../instances/core-fca-low/src/**/*.js",
+          "../../../instances/core-fca-low/src/**/*.css",
+          "../../../instances/core-fca-low/src/**/*.ejs",
+          "../../../instances/core-fca-low/src/**/*.ico",
+          "../../../instances/core-fca-low/src/**/*.svg",
+          "../../../instances/core-fca-low/src/**/*.png",
+          "../../../instances/core-fca-low/src/**/*.woff2",
+          "../../../instances/core-fca-low/src/**/*.webmanifest",
+          "../../../instances/core-fca-low/src/**/robots.txt"
+        ]
       }
     },
     "eidas-bridge-instance": {
@@ -30,7 +49,11 @@
           "../../../apps/eidas-bridge/**/*.css",
           "../../../apps/eidas-bridge/**/*.js",
           "../../../apps/eidas-bridge/**/*.svg",
+          "../../../apps/eidas-bridge/**/*.png",
+          "../../../apps/eidas-bridge/**/*.ico",
           "../../../apps/eidas-bridge/**/*.woff2",
+          "../../../apps/eidas-bridge/**/*.webmanifest",
+          "../../../apps/eidas-bridge/**/robots.txt",
           "../../../libs/eidas-country/src/public/**/*.svg"
         ]
       }
@@ -47,14 +70,20 @@
           "../../../apps/core-fcp/**/*.css",
           "../../../apps/core-fcp/**/*.js",
           "../../../apps/core-fcp/**/*.svg",
+          "../../../apps/core-fcp/**/*.png",
+          "../../../apps/core-fcp/**/*.ico",
           "../../../apps/core-fcp/**/*.woff2",
+          "../../../apps/core-fcp/**/*.webmanifest",
+          "../../../apps/core-fcp/**/robots.txt",
           "../../../instances/core-fcp-low/src/**/*.js",
           "../../../instances/core-fcp-low/src/**/*.css",
           "../../../instances/core-fcp-low/src/**/*.ejs",
           "../../../instances/core-fcp-low/src/**/*.ico",
           "../../../instances/core-fcp-low/src/**/*.svg",
           "../../../instances/core-fcp-low/src/**/*.png",
-          "../../../instances/core-fcp-low/src/**/*.woff2"
+          "../../../instances/core-fcp-low/src/**/*.woff2",
+          "../../../instances/core-fcp-low/src/**/*.webmanifest",
+          "../../../instances/core-fcp-low/src/**/robots.txt"
         ]
       }
     },
@@ -70,14 +99,20 @@
           "../../../apps/core-fcp/**/*.css",
           "../../../apps/core-fcp/**/*.js",
           "../../../apps/core-fcp/**/*.svg",
+          "../../../apps/core-fcp/**/*.png",
+          "../../../apps/core-fcp/**/*.ico",
           "../../../apps/core-fcp/**/*.woff2",
+          "../../../apps/core-fcp/**/*.webmanifest",
+          "../../../apps/core-fcp/**/robots.txt",
           "../../../instances/core-fcp-high/src/**/*.js",
           "../../../instances/core-fcp-high/src/**/*.css",
           "../../../instances/core-fcp-high/src/**/*.ejs",
           "../../../instances/core-fcp-high/src/**/*.ico",
           "../../../instances/core-fcp-high/src/**/*.svg",
           "../../../instances/core-fcp-high/src/**/*.png",
-          "../../../instances/core-fcp-high/src/**/*.woff2"
+          "../../../instances/core-fcp-high/src/**/*.woff2",
+          "../../../instances/core-fcp-high/src/**/*.webmanifest",
+          "../../../instances/core-fcp-high/src/**/robots.txt"
         ]
       }
     },
@@ -238,44 +273,6 @@
         ]
       }
     },
-    "exploit-fcp-high-instance": {
-      "type": "application",
-      "root": "instances/exploit-fcp-high",
-      "entryFile": "main",
-      "sourceRoot": "instances/exploit-fcp-high/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/exploit-fcp-high/tsconfig.app.json",
-        "assets": [
-          "../../../apps/exploitation/**/*.ejs",
-          "../../../apps/exploitation/**/*.css",
-          "../../../apps/exploitation/**/*.svg",
-          "../../../apps/exploitation/**/*.png",
-          "../../../instances/exploit-fcp-high/**/*.ejs",
-          "../../../instances/exploit-fcp-high/**/*.css",
-          "../../../instances/exploit-fcp-high/**/*.svg",
-          "../../../instances/exploit-fcp-high/**/*.png"
-        ]
-      }
-    },
-    "exploit-fca-low-instance": {
-      "type": "application",
-      "root": "instances/exploit-fca-low",
-      "entryFile": "main",
-      "sourceRoot": "instances/exploit-fca-low/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/exploit-fca-low/tsconfig.app.json",
-        "assets": [
-          "../../../apps/exploitation/**/*.ejs",
-          "../../../apps/exploitation/**/*.css",
-          "../../../apps/exploitation/**/*.svg",
-          "../../../apps/exploitation/**/*.png",
-          "../../../instances/exploit-fca-low/**/*.ejs",
-          "../../../instances/exploit-fca-low/**/*.css",
-          "../../../instances/exploit-fca-low/**/*.svg",
-          "../../../instances/exploit-fca-low/**/*.png"
-        ]
-      }
-    },
     "bridge-http-proxy-rie-instance": {
       "type": "application",
       "root": "instances/bridge-http-proxy-rie",
@@ -292,16 +289,9 @@
       "sourceRoot": "instances/csmr-user-preferences-high/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
-        "assets": ["../../../instances/csmr-user-preferences-high/**/*.ejs"]
-      }
-    },
-    "tracks-data-provider-instance": {
-      "type": "application",
-      "root": "instances/tracks-data-provider",
-      "entryFile": "main",
-      "sourceRoot": "instances/tracks-data-provider/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/tracks-data-provider/tsconfig.app.json"
+        "assets": [
+          "../../../instances/csmr-user-preferences-high/**/*.ejs"
+        ]
       }
     },
     "csmr-account-instance": {
@@ -466,24 +456,6 @@
         "tsConfigPath": "apps/user-dashboard/tsconfig.lib.json"
       }
     },
-    "exploit-fcp": {
-      "type": "library",
-      "root": "apps/exploitation",
-      "entryFile": "index",
-      "sourceRoot": "apps/exploitation/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/exploitation/tsconfig.lib.json"
-      }
-    },
-    "exploit-fca": {
-      "type": "library",
-      "root": "apps/exploitation",
-      "entryFile": "index",
-      "sourceRoot": "apps/exploitation/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/exploitation/tsconfig.lib.json"
-      }
-    },
     "csmr-hsm": {
       "type": "library",
       "root": "apps/csmr-hsm",
@@ -500,15 +472,6 @@
       "sourceRoot": "apps/csmr-tracks/src",
       "compilerOptions": {
         "tsConfigPath": "apps/csmr-tracks/tsconfig.lib.json"
-      }
-    },
-    "tracks-data-provider": {
-      "type": "library",
-      "root": "apps/tracks-data-provider",
-      "entryFile": "index",
-      "sourceRoot": "apps/tracks-data-provider/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/tracks-data-provider/tsconfig.app.json"
       }
     },
     "common": {
@@ -898,33 +861,6 @@
         "tsConfigPath": "instances/csmr-tracks/tsconfig.app.json"
       }
     },
-    "partners": {
-      "type": "library",
-      "root": "apps/partners",
-      "entryFile": "index",
-      "sourceRoot": "apps/partners/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/partners/tsconfig.lib.json"
-      }
-    },
-    "partners-fcp": {
-      "type": "application",
-      "root": "instances/partners-fcp",
-      "entryFile": "main",
-      "sourceRoot": "instances/partners-fcp/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/partners-fcp/tsconfig.app.json"
-      }
-    },
-    "partners-fca": {
-      "type": "application",
-      "root": "instances/partners-fca",
-      "entryFile": "main",
-      "sourceRoot": "instances/partners-fca/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/partners-fca/tsconfig.app.json"
-      }
-    },
     "geoip-maxmind": {
       "type": "library",
       "root": "libs/geoip-maxmind",
@@ -934,15 +870,6 @@
         "tsConfigPath": "libs/geoip-maxmind/tsconfig.lib.json"
       }
     },
-    "postgres": {
-      "type": "library",
-      "root": "libs/postgres",
-      "entryFile": "index",
-      "sourceRoot": "libs/postgres/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/postgres/tsconfig.lib.json"
-      }
-    },
     "csmr-account": {
       "type": "library",
       "root": "apps/csmr-account",
@@ -950,51 +877,6 @@
       "sourceRoot": "apps/csmr-account/src",
       "compilerOptions": {
         "tsConfigPath": "apps/csmr-account/tsconfig.lib.json"
-      }
-    },
-    "partner-account": {
-      "type": "library",
-      "root": "libs/partner-account",
-      "entryFile": "index",
-      "sourceRoot": "libs/partner-account/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/partner-account/tsconfig.lib.json"
-      }
-    },
-    "partner-organisation": {
-      "type": "library",
-      "root": "libs/partner-organisation",
-      "entryFile": "index",
-      "sourceRoot": "libs/partner-organisation/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/partner-organisation/tsconfig.lib.json"
-      }
-    },
-    "partner-datapass": {
-      "type": "library",
-      "root": "libs/partner-datapass",
-      "entryFile": "index",
-      "sourceRoot": "libs/partner-datapass/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/partner-datapass/tsconfig.lib.json"
-      }
-    },
-    "partner-service-provider": {
-      "type": "library",
-      "root": "libs/partner-service-provider",
-      "entryFile": "index",
-      "sourceRoot": "libs/partner-service-provider/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/partner-service-provider/tsconfig.lib.json"
-      }
-    },
-    "partner-service-provider-configuration": {
-      "type": "library",
-      "root": "libs/partner-service-provider-configuration",
-      "entryFile": "index",
-      "sourceRoot": "libs/partner-service-provider-configuration/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/partner-service-provider-configuration/tsconfig.lib.json"
       }
     },
     "roles": {
@@ -1067,6 +949,24 @@
       "sourceRoot": "libs/fqdn-to-idp-adapter-mongo/src",
       "compilerOptions": {
         "tsConfigPath": "libs/fqdn-to-idp-adapter-mongo/tsconfig.lib.json"
+      }
+    },
+    "async-local-storage": {
+      "type": "library",
+      "root": "libs/async-local-storage",
+      "entryFile": "index",
+      "sourceRoot": "libs/async-local-storage/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/async-local-storage/tsconfig.lib.json"
+      }
+    },
+    "view-templates": {
+      "type": "library",
+      "root": "libs/view-templates",
+      "entryFile": "index",
+      "sourceRoot": "libs/view-templates/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/view-templates/tsconfig.lib.json"
       }
     }
   }

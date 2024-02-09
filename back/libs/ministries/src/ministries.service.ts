@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { asyncFilter, validateDto } from '@fc/common';
 import { validationOptions } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { MongooseCollectionOperationWatcherHelper } from '@fc/mongoose';
 
 import { MinistriesDTO } from './dto';
@@ -17,9 +17,7 @@ export class MinistriesService {
     private readonly ministriesModel,
     private readonly logger: LoggerService,
     private readonly mongooseWatcher: MongooseCollectionOperationWatcherHelper,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   onModuleInit() {
     this.mongooseWatcher.watchWith(
@@ -53,7 +51,7 @@ export class MinistriesService {
       if (hasValidationErrors) {
         const errorStack = JSON.stringify(errors);
         const reason = 'was excluded from the result at DTO validation';
-        this.logger.warn(`"${_doc.id}" ${reason} ${errorStack}`);
+        this.logger.warning(`"${_doc.id}" ${reason} ${errorStack}`);
       }
       return !hasValidationErrors;
     });

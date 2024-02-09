@@ -15,7 +15,6 @@ import {
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { DekAlg, KekAlg, Use } from '@fc/cryptography';
-import { LoggerService } from '@fc/logger-legacy';
 
 import {
   CanNotDecodePlaintextException,
@@ -33,22 +32,14 @@ import { JwtService } from './jwt.service';
 jest.mock('jose');
 
 describe('JwtService', () => {
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  };
-
   let service: JwtService;
 
   beforeEach(async () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [JwtService, LoggerService],
-    })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
-      .compile();
+      providers: [JwtService],
+    }).compile();
 
     service = module.get<JwtService>(JwtService);
   });

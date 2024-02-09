@@ -4,7 +4,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { CoreVerifyService } from '@fc/core';
-import { LoggerService } from '@fc/logger-legacy';
 
 import { getSessionServiceMock } from '@mocks/session';
 
@@ -12,12 +11,6 @@ import { CoreFcpVerifyService } from './core-fcp-verify.service';
 
 describe('CoreFcpVerifyService', () => {
   let service: CoreFcpVerifyService;
-
-  const loggerServiceMock = {
-    debug: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
 
   const configServiceMock = {
     get: jest.fn(),
@@ -53,15 +46,8 @@ describe('CoreFcpVerifyService', () => {
     jest.restoreAllMocks();
 
     const app: TestingModule = await Test.createTestingModule({
-      providers: [
-        CoreFcpVerifyService,
-        LoggerService,
-        ConfigService,
-        CoreVerifyService,
-      ],
+      providers: [CoreFcpVerifyService, ConfigService, CoreVerifyService],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .overrideProvider(CoreVerifyService)

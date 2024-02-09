@@ -3,16 +3,14 @@ import { bootstrap } from 'global-agent';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 @Injectable()
 export class HttpProxyService {
   constructor(
     private readonly logger: LoggerService,
     private readonly httpService: HttpService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   /**
    * Set up `global-agent`
@@ -27,7 +25,7 @@ export class HttpProxyService {
 
     void bootstrap();
 
-    this.logger.debug(
+    this.logger.notice(
       `Set up HTTPS proxy to: ${globalThis['GLOBAL_AGENT'].HTTPS_PROXY}`,
     );
 

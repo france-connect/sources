@@ -4,6 +4,7 @@ import { join } from 'path';
 import { FilesName, Folder } from '../enums';
 import { createCSV, getCwdForDirectory, readCSV } from '../helpers';
 import {
+  InseeDbCityComerInterface,
   InseeDbCityCurrentInterface,
   InseeDbCitySince1943Interface,
   PostalCodesDbCurrentInterface,
@@ -16,7 +17,10 @@ export const EXCLUDE_TYPECOM = 'COMD';
 export class GenerateCity {
   constructor() {}
 
-  async run([inseeSince1943, postalCodes, inseeCurrent]: [
+  // we must to check we receive 4 files
+  // eslint-disable-next-line complexity
+  async run([inseeSince1943, postalCodes, inseeCurrent, inseeComer]: [
+    string?,
     string?,
     string?,
     string?,
@@ -36,15 +40,26 @@ export class GenerateCity {
         'Please provide the path to the 3nd CSV file as an argument (insee current file).',
       );
       return;
+    } else if (!inseeComer) {
+      console.log(
+        'Please provide the path to the 4th CSV file as an argument (insee comer file).',
+      );
+      return;
     }
 
-    await this.mergeCsvFiles(inseeSince1943, postalCodes, inseeCurrent);
+    await this.mergeCsvFiles(
+      inseeSince1943,
+      postalCodes,
+      inseeCurrent,
+      inseeComer,
+    );
   }
 
   private async mergeCsvFiles(
     inseeSince1943: string,
     postalCodes: string,
     inseeCurrent: string,
+    inseeComer: string,
   ): Promise<void> {
     try {
       const searchResultInseeSince1943: InseeDbCitySince1943Interface[] =
@@ -53,11 +68,18 @@ export class GenerateCity {
         await readCSV(postalCodes);
       const searchResultInseeCurrent: InseeDbCityCurrentInterface[] =
         await readCSV(inseeCurrent);
+      const searchResultInseeComer: InseeDbCityComerInterface[] =
+        await readCSV(inseeComer);
 
       const dataBase = this.prepareDataBase(searchResultInseeCurrent);
 
-      const dataWithPostalCode = this.matchPostalCode(
+      const databaseWithComer = this.addComerToDatabase(
         dataBase,
+        searchResultInseeComer,
+      );
+
+      const dataWithPostalCode = this.matchPostalCode(
+        databaseWithComer,
         searchResultPostalCodes,
       );
 
@@ -88,6 +110,19 @@ export class GenerateCity {
       .map(({ COM: cog, NCC: name }: InseeDbCityCurrentInterface) => {
         return { cog, name };
       });
+  }
+
+  private addComerToDatabase(
+    dataBase: Partial<SearchDbCityInterface>[],
+    searchResultInseeComer: InseeDbCityComerInterface[],
+  ): Partial<SearchDbCityInterface>[] {
+    const databaseComer = searchResultInseeComer.map(
+      ({ COM_COMER: cog, NCC: name }: InseeDbCityComerInterface) => {
+        return { cog, name };
+      },
+    );
+    dataBase.push(...databaseComer);
+    return dataBase;
   }
 
   private matchPostalCode(

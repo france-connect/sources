@@ -3,7 +3,9 @@ import { City, Reader, ReaderModel } from '@maxmind/geoip2-node';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { GeoipMaxmindNotFoundException } from './exceptions';
 import { GeoipMaxmindService } from './geoip-maxmind.service';
@@ -21,11 +23,7 @@ describe('GeoipMaxmindService', () => {
     get: jest.fn(),
   };
 
-  const loggerServiceMock = {
-    setContext: jest.fn(),
-    trace: jest.fn(),
-    debug: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerServiceMock = getLoggerMock();
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -75,7 +73,7 @@ describe('GeoipMaxmindService', () => {
 
       // Then
       expect(readerMock.open).toBeCalledTimes(1);
-      expect(loggerServiceMock.trace).toBeCalledTimes(0);
+      expect(loggerServiceMock.err).toBeCalledTimes(0);
       expect(readerMock.open).toHaveBeenCalledWith('/foo');
     });
 
@@ -89,8 +87,8 @@ describe('GeoipMaxmindService', () => {
         GeoipMaxmindNotFoundException,
       );
       expect(readerMock.open).toBeCalledTimes(1);
-      expect(loggerServiceMock.trace).toBeCalledTimes(1);
-      expect(loggerServiceMock.trace).toHaveBeenCalledWith('An error occured');
+      expect(loggerServiceMock.err).toBeCalledTimes(1);
+      expect(loggerServiceMock.err).toHaveBeenCalledWith('An error occured');
     });
   });
 
@@ -143,7 +141,7 @@ describe('GeoipMaxmindService', () => {
 
       // Then
       expect(result).toStrictEqual(undefined);
-      expect(loggerServiceMock.trace).toBeCalledTimes(1);
+      expect(loggerServiceMock.err).toBeCalledTimes(1);
     });
   });
 
@@ -182,7 +180,7 @@ describe('GeoipMaxmindService', () => {
 
       // Then
       expect(result).toStrictEqual(undefined);
-      expect(loggerServiceMock.trace).toBeCalledTimes(1);
+      expect(loggerServiceMock.err).toBeCalledTimes(1);
     });
   });
 });

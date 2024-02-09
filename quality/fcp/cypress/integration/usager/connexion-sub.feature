@@ -16,6 +16,16 @@ Fonctionnalité: Connexion Usager - Sub
     Et je suis connecté au fournisseur de service
     Et le sub transmis au fournisseur de service est "fff725a2ab2971fa9e5329b2ac30d0fb3a063db332b9ffd69d7f186deacffa63v1"
 
+  @ignoreInteg01
+  Scénario: Connexion Usager - Sub calculé pour un usager avec caractères spéciaux
+    Etant donné que j'utilise un fournisseur de service "par défaut"
+    Et que je navigue sur la page fournisseur de service
+    Et que j'utilise un compte usager "avec des caractères spéciaux"
+    Quand je me connecte à FranceConnect
+    Alors je suis redirigé vers la page fournisseur de service
+    Et je suis connecté au fournisseur de service
+    Et le sub transmis au fournisseur de service est "34f4e38b510841db1a83716b981f7298badec51dc52e91af245903b56e2d72bbv1"
+
   # fsp1v2 et fsp2v2 ont des entityId différents
   @ignoreInteg01
   Scénario: Connexion Usager - Sub identique pour 2 fs avec le même entityId

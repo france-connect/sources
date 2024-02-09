@@ -99,3 +99,30 @@ _prune_all() {
   cd $FC_ROOT
   find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
 }
+
+_prune_ci() {
+  local fcContainers=$(docker ps -aq --filter name=^fc)
+  local fcNetworks=$(docker network ls | grep -oE 'fc_[^ ]+' | grep -v "fc_public")
+  echo "${fcContainers}"
+  echo "${fcNetworks}"
+
+  # docker network inspect fc_public
+  # ${DOCKER_COMPOSE} down --remove-orphans
+
+  docker ps
+  for container in ${fcContainers}; do
+    docker container rm -f "${container}"
+  done
+
+  for network in ${fcNetworks}; do
+    docker network rm "${network}"
+  done
+
+  docker volume prune -f
+}
+
+_switch() {
+  _prune
+  _up "${@}"
+  _start_all
+}

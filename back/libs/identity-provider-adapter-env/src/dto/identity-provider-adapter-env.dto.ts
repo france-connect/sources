@@ -111,18 +111,6 @@ class ClientMetadataDto {
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly revocation_endpoint_auth_method: string;
-
-  @IsUrl()
-  @IsOptional()
-  // oidc param name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly redirect_uris?: string;
-
-  @IsUrl()
-  @IsOptional()
-  // oidc param name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly post_logout_redirect_uris?: string;
 }
 
 export class IdentityProviderAdapterEnvDTO {

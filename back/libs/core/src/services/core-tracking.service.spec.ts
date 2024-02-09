@@ -71,6 +71,10 @@ describe('CoreTrackingService', () => {
     sessionId: sessionIdMock,
     interactionId: interactionIdMock,
     claims: ['foo', 'bar'],
+    scope: 'fizz buzz',
+    dpId: 'dp_uid',
+    dpClientId: 'dp_client_id',
+    dpTitle: 'dp_title',
   };
 
   const sessionDataMock: OidcSession = {
@@ -152,6 +156,10 @@ describe('CoreTrackingService', () => {
           original_addresses: xForwardedForOriginalMock,
         },
         claims: 'foo bar',
+        scope: 'fizz buzz',
+        dpId: 'dp_uid',
+        dpClientId: 'dp_client_id',
+        dpTitle: 'dp_title',
       };
       // When
       const result = await service.buildLog(eventMock, contextMock);
@@ -217,12 +225,52 @@ describe('CoreTrackingService', () => {
           sessionId: sessionIdMock,
         },
         claims: ['foo', 'bar'],
+        scope: 'fizz buzz',
+        dpId: 'dp_uid',
+        dpClientId: 'dp_client_id',
+        dpTitle: 'dp_title',
         interactionId: interactionIdMock,
       };
       // When
       const result = service['extractContext'](contextMock);
       // Then
       expect(result).toEqual(extractedValueMock);
+    });
+
+    it('should return informations from context with null for data provider information', () => {
+      // Given
+      const extractedValueWithNoDpMock: ICoreTrackingContext = {
+        source: {
+          address: ipMock,
+          port: sourcePortMock,
+          // logs filter and analyses need this format
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          original_addresses: xForwardedForOriginalMock,
+        },
+        sessionId: sessionIdMock,
+        interactionId: interactionIdMock,
+        claims: ['foo', 'bar'],
+        scope: 'fizz buzz',
+        dpId: undefined,
+        dpClientId: undefined,
+        dpTitle: undefined,
+      };
+
+      const contextMock = {
+        req: {
+          cookies: {
+            _interaction: interactionIdMock,
+          },
+          sessionId: sessionIdMock,
+        },
+        claims: ['foo', 'bar'],
+        scope: 'fizz buzz',
+        interactionId: interactionIdMock,
+      };
+      // When
+      const result = service['extractContext'](contextMock);
+      // Then
+      expect(result).toEqual(extractedValueWithNoDpMock);
     });
 
     it('should throw if req is missing', () => {

@@ -1,19 +1,17 @@
 import { ArgumentsHost, HttpStatus } from '@nestjs/common';
 
 import { ApiErrorMessage, ApiErrorParams } from '@fc/app';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
+import { ViewTemplateService } from '@fc/view-templates';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import { HttpException } from '../exceptions';
 import { HttpExceptionFilter } from './http.exception-filter';
 
 describe('HttpExceptionFilter', () => {
   let exceptionFilter: HttpExceptionFilter;
-  const loggerMock = {
-    debug: jest.fn(),
-    warn: jest.fn(),
-    setContext: jest.fn(),
-    trace: jest.fn(),
-  } as unknown as LoggerService;
+  const loggerMock = getLoggerMock();
 
   const resMock: any = {};
   resMock.render = jest.fn().mockReturnValue(resMock);
@@ -34,8 +32,13 @@ describe('HttpExceptionFilter', () => {
     id: idValueMock,
     message: messageValueMock,
   };
+  const exception = new Error('mock exception');
 
   let configServiceMock;
+
+  const viewTemplateServiceMock = {
+    bindMethodsToResponse: jest.fn(),
+  };
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -49,39 +52,55 @@ describe('HttpExceptionFilter', () => {
       apiOutputContentType: 'html',
     });
 
-    exceptionFilter = new HttpExceptionFilter(configServiceMock, loggerMock);
+    exceptionFilter = new HttpExceptionFilter(
+      configServiceMock,
+      loggerMock as unknown as LoggerService,
+      viewTemplateServiceMock as unknown as ViewTemplateService,
+    );
   });
 
   describe('catch()', () => {
-    it('should log an error', () => {
+    it('should call logException with error code, error id and exception', () => {
       // Given
-      const exception = new HttpException('message text', 400);
+      const codeMock = 400;
+      const exception = new HttpException(
+        'Exception from HttpException',
+        codeMock,
+      );
+      exceptionFilter['logException'] = jest.fn();
+
       // When
       exceptionFilter.catch(exception, argumentHostMock);
+
       // Then
-      expect(loggerMock.warn).toHaveBeenCalledWith(
-        expect.objectContaining({
-          type: 'HttpException',
-          code: 'Y000400',
-          message: 'message text',
-        }),
+      expect(exceptionFilter['logException']).toHaveBeenCalledWith(
+        `Y000${codeMock}`,
+        expect.any(String),
+        exception,
       );
     });
 
     it('should render error template', () => {
       // Given
-      const exception = new HttpException('message text', 403);
+      const codeMock = 403;
+      const exception = new HttpException('message text', codeMock);
       exception.getResponse = jest
         .fn()
         .mockReturnValue({ message: 'some other text' });
+
       // When
       exceptionFilter.catch(exception, argumentHostMock);
+
       // Then
       expect(resMock.render).toHaveBeenCalledWith(
         'error',
         expect.objectContaining({
-          code: 'Y000403',
-          message: 'some other text',
+          exception,
+          error: {
+            code: `Y000${codeMock}`,
+            message: 'some other text',
+            id: expect.any(String),
+          },
         }),
       );
     });
@@ -94,6 +113,7 @@ describe('HttpExceptionFilter', () => {
         apiOutputContentType: 'json',
       });
       const exceptionParam: ApiErrorParams = {
+        exception,
         res: resMock,
         error: errorValueMock,
         httpResponseCode: HttpStatus.BAD_REQUEST,
@@ -112,14 +132,18 @@ describe('HttpExceptionFilter', () => {
     it('should return an error through `res.render` if the `apiOutputContentType` value is set to `html`', () => {
       // Given
       const exceptionParam: ApiErrorParams = {
+        exception,
         res: resMock,
         error: errorValueMock,
         httpResponseCode: HttpStatus.BAD_REQUEST,
       };
-      const errorValueReturnedMock: ApiErrorMessage = {
-        code: 'codeValueMock',
-        id: 'idValueMock',
-        message: 'messageValueMock',
+      const errorValueReturnedMock = {
+        exception,
+        error: {
+          code: 'codeValueMock',
+          id: 'idValueMock',
+          message: 'messageValueMock',
+        },
       };
       // When
       exceptionFilter['errorOutput'](exceptionParam);
@@ -134,6 +158,7 @@ describe('HttpExceptionFilter', () => {
     it('should send an HTTP code corresponding to `httpResponseCode` given in `errorParam`', () => {
       // Given
       const exceptionParam: ApiErrorParams = {
+        exception,
         res: resMock,
         error: errorValueMock,
         httpResponseCode: HttpStatus.BAD_REQUEST,

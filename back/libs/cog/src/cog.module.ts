@@ -4,7 +4,7 @@
 import { Module } from '@nestjs/common';
 
 import { CsvService } from '@fc/csv/services';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { CogService } from './cog.service';
 import { CityDto, CountryDto } from './dto';

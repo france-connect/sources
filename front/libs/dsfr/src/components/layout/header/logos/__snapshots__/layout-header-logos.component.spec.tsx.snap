@@ -21,7 +21,6 @@ exports[`LayoutHeaderLogosComponent should match snapshot when application logo 
       alt="any-title-mock"
       class="fr-responsive-img"
       src="Any"
-      style="height: 54px; max-height: 54px;"
     />
   </div>
 </div>

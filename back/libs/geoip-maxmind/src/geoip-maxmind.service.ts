@@ -3,7 +3,7 @@ import { Reader, ReaderModel } from '@maxmind/geoip2-node';
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 
 import { GeoipMaxmindConfig } from './dto';
 import { GeoipMaxmindNotFoundException } from './exceptions';
@@ -15,9 +15,7 @@ export class GeoipMaxmindService {
   constructor(
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   async onModuleInit() {
     await this.loadDatabase();
@@ -29,7 +27,7 @@ export class GeoipMaxmindService {
         this.config.get<GeoipMaxmindConfig>('GeoipMaxmind');
       this.db = await Reader.open(localDBPath);
     } catch (e) {
-      this.logger.trace(e);
+      this.logger.err(e);
       throw new GeoipMaxmindNotFoundException();
     }
   }
@@ -39,7 +37,7 @@ export class GeoipMaxmindService {
       const dataGeoip = this.db.city(ip);
       return dataGeoip.city.names.fr || dataGeoip.city.names.en;
     } catch (error) {
-      this.logger.trace({ error });
+      this.logger.err({ error });
       return void 0;
     }
   }
@@ -49,7 +47,7 @@ export class GeoipMaxmindService {
       const dataGeoip = this.db.city(ip);
       return dataGeoip.country.isoCode;
     } catch (e) {
-      this.logger.trace(e);
+      this.logger.err(e);
       return void 0;
     }
   }

@@ -14,6 +14,10 @@ import { OidcProviderBaseException } from './oidc-provider-base.exception';
 export class OidcProviderInteractionNotFoundException extends OidcProviderBaseException {
   public readonly code = ErrorCode.INTERACTION_NOT_FOUND;
 
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION =
+    'authentication aborted due to a technical error on the authorization server';
+
   constructor() {
     super(
       'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',

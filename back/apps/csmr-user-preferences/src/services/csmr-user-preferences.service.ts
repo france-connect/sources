@@ -9,7 +9,7 @@ import { PartialExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerLevelNames, LoggerService } from '@fc/logger-legacy';
+import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata } from '@fc/oidc';
 
 import { AppConfig } from '../dto';
@@ -32,9 +32,7 @@ export class CsmrUserPreferencesService {
     private readonly account: AccountService,
     private readonly cryptographyFcp: CryptographyFcpService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
-  ) {
-    this.logger.setContext(this.constructor.name);
-  }
+  ) {}
 
   formatUserIdpSettingsList(
     identityProvidersMetadata: IdentityProviderMetadata[],
@@ -106,10 +104,6 @@ export class CsmrUserPreferencesService {
       await this.account.getAccountByIdentityHash(identityHash);
 
     if (!id) {
-      this.logger.trace(
-        { error: 'No account found', identityHash },
-        LoggerLevelNames.WARN,
-      );
       throw new AccountNotFoundException();
     }
 
@@ -119,14 +113,6 @@ export class CsmrUserPreferencesService {
       idpList,
       preferences.idpSettings,
     );
-
-    this.logger.trace({
-      accountId: id,
-      preferences,
-      identity,
-      identityHash,
-      formattedIdpSettings,
-    });
 
     return formattedIdpSettings;
   }
@@ -148,9 +134,6 @@ export class CsmrUserPreferencesService {
       throw new CsmrUserPreferencesIdpNotFoundException();
     }
 
-    this.logger.debug(
-      `inputIdpList received : ${inputIdpList}, inputIsExcludeList: ${inputIsExcludeList}`,
-    );
     const identityHash = this.cryptographyFcp.computeIdentityHash(identity);
     const { list, isExcludeList } = this.createAccountPreferencesIdpSettings(
       inputIdpList,
@@ -158,11 +141,8 @@ export class CsmrUserPreferencesService {
       idpUids,
     );
 
-    const {
-      id,
-      updatedAt,
-      preferences: idpSettingsBeforeUpdate,
-    } = await this.account.updatePreferences(identityHash, list, isExcludeList);
+    const { updatedAt, preferences: idpSettingsBeforeUpdate } =
+      await this.account.updatePreferences(identityHash, list, isExcludeList);
 
     const idpListBeforeUpdate = idpSettingsBeforeUpdate?.idpSettings.list ?? [];
     const isExcludeListBeforeUpdate =
@@ -187,16 +167,6 @@ export class CsmrUserPreferencesService {
 
     const hasAllowFutureIdpChanged =
       isExcludeList !== isExcludeListBeforeUpdate;
-
-    this.logger.trace({
-      accountId: id,
-      identity,
-      identityHash,
-      inputIdpList,
-      inputIsExcludeList,
-      formattedIdpSettingsList,
-      updatedIdpSettingsList,
-    });
 
     return {
       formattedIdpSettingsList,
