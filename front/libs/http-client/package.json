@@ -2,11 +2,5 @@
   "name": "@fc/http-client",
   "version": "0.1.0",
   "main": "src/index.ts",
-  "private": true,
-  "dependencies": {
-    "@fc/config": "^0.1.0",
-    "@types/lodash.omit": "^4.5.7",
-    "axios": "^1.5.0",
-    "lodash.omit": "^4.5.0"
-  }
+  "private": true
 }

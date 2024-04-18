@@ -6,7 +6,7 @@ describe('ucfirst', () => {
     const result = ucfirst('ANY WORD');
 
     // then
-    expect(result).toEqual('ANY WORD');
+    expect(result).toBe('ANY WORD');
   });
 
   it('should return first letter uppercase, others unchanged (caps)', () => {
@@ -14,7 +14,7 @@ describe('ucfirst', () => {
     const result = ucfirst('tHiS Is MoRe SuItAbLe');
 
     // then
-    expect(result).toEqual('THiS Is MoRe SuItAbLe');
+    expect(result).toBe('THiS Is MoRe SuItAbLe');
   });
 
   it('should return first letter uppercase, others unchanged (all low)', () => {
@@ -22,6 +22,6 @@ describe('ucfirst', () => {
     const result = ucfirst('any word');
 
     // then
-    expect(result).toEqual('Any word');
+    expect(result).toBe('Any word');
   });
 });

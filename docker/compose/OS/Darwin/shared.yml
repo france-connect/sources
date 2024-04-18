@@ -1,0 +1,13 @@
+version: "2.4"
+
+services:
+  docker-gen:
+    extends:
+      file: ${COMPOSE_DIR}/shared/shared.yml
+      service: docker-gen
+
+    # Ignore files permissions when mounting the Docker socket on MacOS
+    # to solve a regression related to the version of Docker Engine in use
+    # @see: https://github.com/docker/for-mac/issues/6823
+    cap_add:
+      - CAP_DAC_OVERRIDE

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { FieldInputProps } from 'react-final-form';
+import type { FieldInputProps } from 'react-final-form';
 
 import { ToggleInputComponent } from './toggle-input.component';
 

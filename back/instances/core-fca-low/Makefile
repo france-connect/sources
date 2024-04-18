@@ -9,6 +9,9 @@ reset-db:
 start s:
 	$(DKS_PATH) prune && $(DKS_PATH) up bdd-fca-low && $(DKS_PATH) start-all
 
+start-min sm:
+	$(DKS_PATH) prune && $(DKS_PATH) up min-fca && $(DKS_PATH) start-all
+
 restart r:
 	$(DKS_PATH) start-all
 
@@ -23,6 +26,11 @@ bash b:
 
 prepare p:
 	$(DKS_PATH) exec core-fca-low yarn lint --fix && $(DKS_PATH) exec core-fca-low yarn prettier --write
+
+prepare-full pf:
+	$(DKS_PATH) exec core-fca-low yarn lint --fix &&\
+	$(DKS_PATH) exec core-fca-low yarn prettier --write &&\
+	cd $(FC_ROOT)/fc/quality/fca && yarn lint --fix && yarn prettier --write
 
 doc:
 	$(DKS_PATH) exec core-fca-low yarn doc
@@ -50,3 +58,17 @@ ci:
 
 test-legacy tl:
 	cd $(FC_ROOT)/fc/back  && yarn run test:e2e:core-fca-low
+
+halt:
+	$(DKS_PATH) halt
+
+## FC Exploitation
+
+start-exploitation se:
+	$(DKS_PATH) start exploitation-fca-low
+
+log-exploitation le:
+	$(DKS_PATH) log exploitation-fca-low
+
+test-exploitation te:
+	$(DKS_PATH) exec exploitation-fca-low yarn test	

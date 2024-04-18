@@ -9,7 +9,8 @@ import {
 const identityProviderId = '9c716f61-b8a1-435c-a407-ef4d677ec270';
 
 describe('Idp activation & visibility', () => {
-  const { ID, IDP_INTERACTION_URL, TITLE } = getIdentityProvider(identityProviderId);
+  const { ID, IDP_INTERACTION_URL, TITLE } =
+    getIdentityProvider(identityProviderId);
 
   const mireUrl = new RegExp('/interaction/[^/]+');
 
@@ -23,16 +24,20 @@ describe('Idp activation & visibility', () => {
     cy.url().should('include', IDP_INTERACTION_URL);
   });
 
-  it('should trigger error Y190007 if the CSRF token is not valid', () => {
+  it('should trigger error Y470001 if the CSRF token is not valid', () => {
     // Given
     cy.visit(getAuthorizeUrl());
     cy.url().should('match', mireUrl);
-    cy.get('input[name="csrfToken"]').invoke('attr', 'value', 'INVALID-CSRF-VALUE');
+    cy.get('input[name="csrfToken"]').invoke(
+      'attr',
+      'value',
+      'INVALID-CSRF-VALUE',
+    );
     // When
     basicSuccessScenario(identityProviderId);
     // Then
     cy.url().should('contain', '/api/v2/redirect-to-idp');
-    cy.hasError('Y190007');
+    cy.hasError('Y470001');
   });
 
   describe('No app restart needed', () => {
@@ -54,10 +59,7 @@ describe('Idp activation & visibility', () => {
       const { IDP_INTERACTION_URL } = getIdentityProvider(idpId);
       cy.url().should('include', IDP_INTERACTION_URL);
 
-      cy.get('.title').should(
-        'not.contain',
-        'Idp test Updated, activated',
-      );
+      cy.get('.title').should('not.contain', 'Idp test Updated, activated');
 
       cy.visit(SP_ROOT_URL);
       submitFSAuthorizeForm();
@@ -65,7 +67,7 @@ describe('Idp activation & visibility', () => {
       cy.e2e('fca_idp_update_desactivate');
       cy.wait(500);
       cy.reload();
-      
+
       basicSuccessScenario(idpId);
 
       // should redirect to error page because idp is desactivated
@@ -73,7 +75,7 @@ describe('Idp activation & visibility', () => {
 
       cy.get('[data-testid=error-section]').should(
         'contain',
-        'Code d’erreur : Y020017',
+        'code erreur : Y020017',
       );
     });
 

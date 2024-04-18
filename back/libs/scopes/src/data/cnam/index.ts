@@ -1,12 +1,10 @@
-import { IProviderMappings } from '../../interfaces';
+import { ProviderMappingsInterface } from '../../interfaces';
 import { claims } from './cnam.claims';
-import { labels } from './cnam.labels';
 import { provider } from './cnam.provider';
 import { scopes } from './cnam.scopes';
 
-export const cnam: IProviderMappings = {
+export const cnam: ProviderMappingsInterface = {
   provider,
   claims,
-  labels,
   scopes,
 };

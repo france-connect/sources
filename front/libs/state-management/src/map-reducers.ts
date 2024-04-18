@@ -1,8 +1,8 @@
-import { ReducersMapObject } from 'redux';
+import type { ReducersMapObject } from 'redux';
 
-import { FSA } from '@fc/common';
+import type { FSA } from '@fc/common';
 
-import { InitialState } from './interfaces';
+import type { InitialState } from './interfaces';
 
 export function mapReducers<S extends InitialState>(reducers: ReducersMapObject) {
   return (state: S, action: FSA): S => {

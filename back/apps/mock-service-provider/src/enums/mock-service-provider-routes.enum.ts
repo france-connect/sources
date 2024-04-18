@@ -1,4 +1,5 @@
 export enum MockServiceProviderRoutes {
+  INDEX = '/',
   LOGIN = '/login',
   LOGIN_CALLBACK = '/login-callback',
   LOGOUT = '/logout',

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import { AppContext } from '@fc/state-management';
 
-import { NavigationLink } from '../../../interfaces';
+import type { NavigationLink } from '../../../interfaces';
 import { LogoRepubliqueFrancaiseComponent } from '../../logos';
 import { LayoutHomepageLinkComponent } from '../homepage-link';
 import { LayoutFooterBottomLinksComponent } from './layout-footer-bottom-links.component';

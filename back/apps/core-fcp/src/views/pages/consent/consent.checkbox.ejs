@@ -7,11 +7,10 @@
     aria-label="consent"
   />
   <label class="fr-label" data-testid="label-consent" for="consent">
-    J’accepte que <%= $config('App.platform') %> transmette mes données au
-    service pour me connecter
+    <%= $translate('consent.data_transfer_consent', { platform: $config('App.platform') }) %>
   </label>
   <p id="checkbox-error-desc-error" class="fr-error-text" hidden>
-    Veuillez cocher la case pour accepter le transfert des données
+    <%= $translate('consent.consent_checkbox') %>
   </p>
 </div>
 <%# hidden input to prove that the user accepted consent %>

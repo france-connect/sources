@@ -1,4 +1,15 @@
 // == FI
+const BASE_DEV_IDP_HIGH = {
+  modal: {
+    active: false,
+    title: "",
+    body: "",
+    continueText: "",
+    moreInfoLabel: "",
+    moreInfoUrl: "",
+  },
+};
+
 const fip = {
   // -- FIP - FIP1-HIGH - Activated - Discovery true
   "FIP1-HIGH": {
@@ -17,6 +28,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip1-high",
@@ -61,6 +73,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip2-high",
@@ -107,6 +120,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip3-high",
@@ -154,6 +168,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip4-high",
@@ -201,6 +216,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip5-high",
@@ -248,6 +264,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip6-high",
@@ -296,6 +313,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip7-high",
@@ -343,6 +361,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip8-high",
@@ -388,6 +407,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip9-high",
@@ -433,6 +453,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip10-high",
@@ -463,6 +484,7 @@ const fip = {
   },
   // -- FIP - FIP11-HIGH
   // use fip1 urls to avoid the generation of a container
+  // use a user confirm modal
   "FIP11-HIGH": {
     uid: "a437f8aa-10b5-48bd-8931-78f2d055e3df",
     name: "fip11-high",
@@ -470,16 +492,17 @@ const fip = {
     display: true,
     isBeta: false,
     title:
-      "IDP11 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt",
+      "IDP11 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt - modal",
     image: "",
     imageFocus: "",
-    alt: "IDP11 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt",
+    alt: "IDP11 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt - modal",
     trustedIdentity: false,
     eidas: 3,
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip11-high",
@@ -499,15 +522,23 @@ const fip = {
     createdAt: new Date("2022-02-23 17:09:17"),
     updatedAt: new Date("2023-03-10 17:09:17"),
     updatedBy: "admin",
-    id_token_signed_response_alg: "RS256",
+    id_token_signed_response_alg: "ES256",
     token_endpoint_auth_method: "client_secret_post",
     revocation_endpoint_auth_method: "client_secret_post",
-    id_token_encrypted_response_alg: "RSA-OAE256",
+    id_token_encrypted_response_alg: "RSA-OAEP-256",
     id_token_encrypted_response_enc: "A256GCM",
-    userinfo_signed_response_alg: "RS256",
+    userinfo_signed_response_alg: "ES256",
     userinfo_encrypted_response_alg: "RSA-OAEP-256",
     userinfo_encrypted_response_enc: "A256GCM",
     amr: ["fc", "pwd"],
+    modal: {
+      active: true,
+      title: "Votre compte France Identité est-il certifié en mairie ?",
+      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at metus porttitor felis sollicitudin congue eget eu nulla. Pellentesque nec sem ac urna varius tempor cursus et diam. Aliquam mauris nulla, gravida ut bibendum ac, convallis eu magna. Nullam lobortis turpis nibh, pellentesque hendrerit velit ornare tincidunt. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      continueText: "Oui, mon compte est certifié",
+      moreInfoLabel: "En savoir plus",
+      moreInfoUrl: "https://docs.fc.gouv.fr",
+    },
   },
   // -- FIP - IDP12-HIGH - Identity Provider not respecting the DTO
   // use fip1 urls to avoid the generation of a container
@@ -528,6 +559,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip12-high",
@@ -576,6 +608,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip13-high",
@@ -623,6 +656,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip13-high",
@@ -661,6 +695,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip14-high",
@@ -709,6 +744,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip15-high",
@@ -758,6 +794,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip16-high",
@@ -806,6 +843,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip17-high",
@@ -854,6 +892,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip18-high",
@@ -902,6 +941,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip19-high",
@@ -950,6 +990,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip20-high",
@@ -995,6 +1036,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     mailto: "",
     specificText: "specific text fip21-high",
@@ -1039,6 +1081,7 @@ const fip = {
       coreVerify: "core-fcp-eidas-verify",
       authenticationEmail: null,
       idpIdentityCheck: "core-fcp-eidas-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     clientID: "myclientidforeidas-bridge-high",
     client_secret:
@@ -1081,5 +1124,9 @@ const fip = {
 
 Object.values(fip).forEach((fi) => {
   print(`FIP > Initializing provider: ${fi.name} - Activated`);
-  db.provider.update({ uid: fi.uid }, fi, { upsert: true });
+  db.provider.update(
+    { uid: fi.uid },
+    { ...BASE_DEV_IDP_HIGH, ...fi },
+    { upsert: true },
+  );
 });

@@ -2,7 +2,7 @@ import { ChainableElement } from '../../common/types';
 
 export default class InteractionPage {
   checkIsVisible(): void {
-    cy.url().should('include', '/api/v2/interaction');
+    this.getConnectionButton().should('be.visible');
   }
 
   getEmail(): ChainableElement {

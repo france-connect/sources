@@ -53,7 +53,7 @@ export class CoreFcaVerifyService {
     const eventContext = { req };
     const { interactionId, sessionOidc, urlPrefix } = params;
 
-    await sessionOidc.set('isSso', false);
+    sessionOidc.set('isSso', false);
 
     const url = `${urlPrefix}${CoreRoutes.INTERACTION.replace(
       ':uid',

@@ -5,7 +5,7 @@ import UdErrorPage from '../pages/ud-error-page';
 const udErrorPage = new UdErrorPage();
 
 Then(
-  /^je suis (redirigé vers|sur) la page d'erreur du dashboard usager$/,
+  /^je suis (redirigé vers|sur) la page d'erreur du tableau de bord usager$/,
   function () {
     udErrorPage.checkIsVisible();
   },

@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
-export type IClaim = string;
+export type ClaimInterface = string;
 
-export interface IClaims {
-  readonly [key: IClaim]: IClaim;
+export interface ClaimsInterface {
+  readonly [key: ClaimInterface]: ClaimInterface;
 }

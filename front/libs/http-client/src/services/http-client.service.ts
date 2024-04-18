@@ -3,14 +3,15 @@
  * https://axios-http.com/docs/req_config
  *
  */
-import axios, { AxiosResponse, Method } from 'axios';
+import type { AxiosResponse, Method } from 'axios';
+import axios from 'axios';
 
 import { objectToFormData } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
 import { Methods, Options } from '../enums';
 import { AxiosException } from '../errors';
-import {
+import type {
   GetCsrfTokenResponse,
   HttpClientConfig,
   HttpClientData,

@@ -60,7 +60,7 @@ describe('MockDataProviderController', () => {
       MockDataProviderController,
     );
 
-    configServiceMock.get.mockResolvedValueOnce({
+    configServiceMock.get.mockReturnValueOnce({
       jwks: { keys: 'some keys' },
     });
   });
@@ -183,9 +183,9 @@ describe('MockDataProviderController', () => {
   });
 
   describe('jwks', () => {
-    it('Should return some status object', async () => {
+    it('Should return some status object', () => {
       // When
-      const result = await mockDataProviderController.jwks();
+      const result = mockDataProviderController.jwks();
 
       // assert
       expect(result).toEqual({ keys: 'some keys' });

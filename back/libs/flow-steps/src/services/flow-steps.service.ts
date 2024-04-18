@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
 
-import { OidcSession } from '@fc/oidc';
-import { ISessionRequest, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 
 @Injectable()
 export class FlowStepsService {
-  async setStep(req: ISessionRequest, stepRoute: string): Promise<void> {
-    const session = SessionService.getBoundSession<OidcSession>(
-      req,
-      'OidcClient',
-    );
+  constructor(private readonly session: SessionService) {}
 
-    await session.set('stepRoute', stepRoute);
+  setStep(stepRoute: string): void {
+    this.session.set('OidcClient', 'stepRoute', stepRoute);
   }
 }

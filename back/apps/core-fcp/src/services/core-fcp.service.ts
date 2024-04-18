@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 
 import { ConfigService } from '@fc/config';
+import { CoreAuthorizationService } from '@fc/core';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { OidcSession, stringToArray } from '@fc/oidc';
@@ -14,16 +15,16 @@ import {
   OidcClientSession,
 } from '@fc/oidc-client';
 import { OidcProviderPrompt } from '@fc/oidc-provider';
-import { IClaim, IRichClaim, ScopesService } from '@fc/scopes';
+import { ClaimInterface, RichClaimInterface, ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { ISessionService } from '@fc/session';
+import { ISessionService, SessionService } from '@fc/session';
 
-import { AppConfig, CoreSessionDto } from '../dto';
+import { AppConfig, CoreSession } from '../dto';
 import { CoreFcpSendEmailHandler } from '../handlers';
 import {
-  CoreFcpAuthorizeParamsInterface,
+  CoreFcpAuthorizationParametersInterface,
   CoreFcpServiceInterface,
-} from '../interfaces/core-fcp-service.interface';
+} from '../interfaces';
 
 @Injectable()
 export class CoreFcpService implements CoreFcpServiceInterface {
@@ -37,6 +38,8 @@ export class CoreFcpService implements CoreFcpServiceInterface {
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
     private readonly oidcAcr: OidcAcrService,
     private readonly oidcClient: OidcClientService,
+    private readonly coreAuthorization: CoreAuthorizationService,
+    private readonly session: SessionService,
   ) {}
 
   /**
@@ -47,9 +50,9 @@ export class CoreFcpService implements CoreFcpServiceInterface {
    */
   async sendAuthenticationMail(
     session: OidcSession,
-    sessionCore: ISessionService<CoreSessionDto>,
+    sessionCore: ISessionService<CoreSession>,
   ): Promise<void> {
-    const { sentNotificationsForSp } = await sessionCore.get();
+    let { sentNotificationsForSp } = sessionCore.get() || {};
     const { idpId, spId } = session;
     const idp = await this.identityProvider.getById(idpId);
 
@@ -59,6 +62,10 @@ export class CoreFcpService implements CoreFcpServiceInterface {
       this,
     );
 
+    if (!sentNotificationsForSp) {
+      sentNotificationsForSp = [];
+    }
+
     // notification already sent for this service provider during this session
     if (sentNotificationsForSp.includes(spId)) {
       return;
@@ -66,7 +73,7 @@ export class CoreFcpService implements CoreFcpServiceInterface {
 
     // update the session to take into account the notification for this service provider
     sentNotificationsForSp.push(spId);
-    await sessionCore.set('sentNotificationsForSp', sentNotificationsForSp);
+    sessionCore.set('sentNotificationsForSp', sentNotificationsForSp);
 
     await handler.handle(session);
   }
@@ -85,11 +92,11 @@ export class CoreFcpService implements CoreFcpServiceInterface {
   async redirectToIdp(
     res: Response,
     idpId: string,
-    session: ISessionService<OidcClientSession>,
-    { acr }: CoreFcpAuthorizeParamsInterface,
+    // acr_values is an oidc defined variable name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    { acr_values }: Pick<CoreFcpAuthorizationParametersInterface, 'acr_values'>,
   ): Promise<void> {
-    const { spId } = await session.get();
-
+    const { spId } = this.session.get<OidcSession>('OidcClient');
     const { scope } = this.config.get<OidcClientConfig>('OidcClient');
 
     await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
@@ -98,12 +105,11 @@ export class CoreFcpService implements CoreFcpServiceInterface {
     const { nonce, state } =
       await this.oidcClient.utils.buildAuthorizeParameters();
 
-    const authorizeParams = {
+    const authorizeParams: CoreFcpAuthorizationParametersInterface = {
       // acr_values is an oidc defined variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      acr_values: acr,
+      acr_values,
       nonce,
-      idpId,
       scope,
       state,
       // Prompt for the identity provider is forced here
@@ -111,8 +117,10 @@ export class CoreFcpService implements CoreFcpServiceInterface {
       prompt: OidcProviderPrompt.LOGIN,
     };
 
-    const authorizationUrl =
-      await this.oidcClient.utils.getAuthorizeUrl(authorizeParams);
+    const authorizationUrl = await this.coreAuthorization.getAuthorizeUrl(
+      idpId,
+      authorizeParams,
+    );
 
     const { name: idpName, title: idpLabel } =
       await this.identityProvider.getById(idpId);
@@ -128,7 +136,7 @@ export class CoreFcpService implements CoreFcpServiceInterface {
       accountId: undefined,
     };
 
-    await session.set(sessionPayload);
+    this.session.set('OidcClient', sessionPayload);
 
     res.redirect(authorizationUrl);
   }
@@ -149,7 +157,7 @@ export class CoreFcpService implements CoreFcpServiceInterface {
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1023
    * @ticket #FC-1023
    */
-  getClaimsLabelsForInteraction(interaction: any): IRichClaim[] {
+  getClaimsLabelsForInteraction(interaction: any): RichClaimInterface[] {
     const scopes = this.getScopesForInteraction(interaction);
 
     const claims = this.scopes.getRichClaimsFromScopes(scopes);
@@ -162,7 +170,7 @@ export class CoreFcpService implements CoreFcpServiceInterface {
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1023
    * @ticket #FC-1023
    */
-  getClaimsForInteraction(interaction: any): IClaim[] {
+  getClaimsForInteraction(interaction: any): ClaimInterface[] {
     const scopes = this.getScopesForInteraction(interaction);
 
     const claims = this.scopes.getRawClaimsFromScopes(scopes);

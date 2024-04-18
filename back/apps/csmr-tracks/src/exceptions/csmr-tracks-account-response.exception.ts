@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { CsmrTracksErrorCode } from '../enums';
 import { CsmrTracksBaseException } from './csmr-tracks-base.exception';

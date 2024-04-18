@@ -73,17 +73,17 @@ export class EuIdentityToFrController {
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
     const { uid, params } = await this.oidcProvider.getInteraction(req, res);
-    const { countryIsoList } = await this.config.get<AppConfig>('App');
-    const { spName } = await sessionOidc.get();
+    const { countryIsoList } = this.config.get<AppConfig>('App');
+    const { spName } = sessionOidc.get();
 
     const eidasPartialRequest = this.oidcToEidas.mapPartialRequest(
       params.scope,
       params.acr_values,
     );
 
-    await sessionEidas.set('eidasPartialRequest', eidasPartialRequest);
+    sessionEidas.set('eidasPartialRequest', eidasPartialRequest);
 
-    const countryList = await this.eidasCountry.getListByIso(countryIsoList);
+    const countryList = this.eidasCountry.getListByIso(countryIsoList);
 
     const response = {
       countryList,
@@ -139,7 +139,7 @@ export class EuIdentityToFrController {
       this.tracking.TrackedEventsMap;
     const trackingContext = { req };
 
-    const { eidasResponse } = await sessionEidas.get();
+    const { eidasResponse } = sessionEidas.get();
 
     if (eidasResponse.status.failure) {
       await this.tracking.track(EIDAS_RESPONSE_ERROR, trackingContext);
@@ -147,7 +147,7 @@ export class EuIdentityToFrController {
       const { params } = await this.oidcProvider.getInteraction(req, res);
 
       const oidcError =
-        await this.eidasToOidc.mapPartialResponseFailure(eidasResponse);
+        this.eidasToOidc.mapPartialResponseFailure(eidasResponse);
 
       return res.redirect(this.buildRedirectUriErrorUrl(params, oidcError));
     }
@@ -164,7 +164,7 @@ export class EuIdentityToFrController {
       sub: idpIdentity.sub,
     };
 
-    const { spId, subs }: OidcClientSession = await sessionOidc.get();
+    const { spId, subs }: OidcClientSession = sessionOidc.get();
     const session = {
       // Save idp identity.
       idpIdentity: idpIdentityReset,
@@ -175,9 +175,9 @@ export class EuIdentityToFrController {
     };
 
     // Store the changes in session
-    await sessionOidc.set(session);
+    sessionOidc.set(session);
 
-    const sessionClient: OidcClientSession = await sessionOidc.get();
+    const sessionClient: OidcClientSession = sessionOidc.get();
 
     await this.tracking.track(REDIRECTED_TO_FC, trackingContext);
 

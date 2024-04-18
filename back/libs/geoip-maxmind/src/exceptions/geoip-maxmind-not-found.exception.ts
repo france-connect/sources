@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { GeoipMaxmindBaseException } from './geoip-maxmind-base.exception';

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { FcException } from '@fc/exceptions';
+import { FcException } from '@fc/exceptions-deprecated';
 import { LoggerService } from '@fc/logger';
 import { LoggerService as LoggerLegacyService } from '@fc/logger-legacy';
 

@@ -22,4 +22,5 @@ export enum ErrorCode {
   AGENT_NOT_FOUND = 15,
   INVALID_IDP_HINT = 16,
   HIGH_ACR = 18,
+  MISSING_AT_HASH = 19,
 }

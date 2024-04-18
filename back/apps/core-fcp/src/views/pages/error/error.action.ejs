@@ -1,6 +1,6 @@
 <% if (locals.error.message) { %>
 <h2 class="fr-h6 fr-mb-2w" data-testid="action">
-  Que faire ?
+  <%= $translate('error.what_to_do') %>
 </h2>
 <p class="fr-text--md fr-mb-0" data-testid="error-message">
   <%= locals.error.message %>

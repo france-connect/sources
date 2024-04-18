@@ -72,4 +72,10 @@ export class CustomIdentityDto implements MinimalCustomIdentityInterface {
   @IsString()
   @IsNotEmpty()
   readonly acr: string;
+
+  @IsOptional()
+  @IsString()
+  // oidc like name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly rep_scope?: string;
 }

@@ -4,6 +4,7 @@
 import { Module } from '@nestjs/common';
 
 import { ApacheIgniteModule } from '@fc/apache-ignite';
+import { CryptographyModule } from '@fc/cryptography';
 /**
  * Import from `/services` to avoid circular dependency
  * (this module is imported in @fc/eidas-bridge)
@@ -18,7 +19,12 @@ import { EidasClientService } from './eidas-client.service';
 const trackingModule = TrackingModule.forRoot(EidasBridgeTrackingService);
 
 @Module({
-  imports: [ApacheIgniteModule, EidasLightProtocolModule, trackingModule],
+  imports: [
+    ApacheIgniteModule,
+    CryptographyModule,
+    EidasLightProtocolModule,
+    trackingModule,
+  ],
   providers: [EidasClientService],
   exports: [EidasClientService],
   controllers: [EidasClientController],

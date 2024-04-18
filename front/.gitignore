@@ -1,6 +1,12 @@
+### dotenv ###
+.env
 
-# Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,node,react
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,node,react
+### Gatsby ###
+node_modules/
+
+.cache/
+
+src/gatsby-types.d.ts
 
 ### Linux ###
 *~
@@ -46,15 +52,50 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+### macOS Patch ###
+# iCloud generated files
+*.icloud
+
+### NextJS ###
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
 ### Node ###
 # Logs
 logs
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 lerna-debug.log*
-.pnpm-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
@@ -88,20 +129,21 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 
 # TypeScript cache
-*.tsbuildinfo
 
 # Optional npm cache directory
 .npm
 
 # Optional eslint cache
 .eslintcache
+
+# Optional stylelint cache
+.stylelintcache
 
 # Microbundle cache
 .rpt2_cache/
@@ -118,10 +160,11 @@ web_modules/
 # Yarn Integrity file
 .yarn-integrity
 
-# dotenv environment variables file
-.env
-.env.test
-.env.production
+# dotenv environment variable files
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -136,13 +179,18 @@ out
 dist
 
 # Gatsby files
-.cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
 
 # vuepress build output
 .vuepress/dist
+
+# vuepress v2.x temp and cache directory
+.temp
+
+# Docusaurus cache and generated files
+.docusaurus
 
 # Serverless directories
 .serverless/
@@ -166,18 +214,63 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+### Node Patch ###
+# Serverless Webpack directories
+.webpack/
+
+# Optional stylelint cache
+
+# SvelteKit build / generate output
+.svelte-kit
+
+### NuxtJS ###
+# Generated dirs
+.nuxt-*
+.output
+.gen
+
+# Node dependencies
+node_modules
+
+# System files
+
 ### react ###
 .DS_*
 **/*.backup.*
 **/*.back.*
 
-node_modules
 
 *.sublime*
 
 psd
 thumb
 sketch
+
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide
+
+### Vuejs ###
+# Recommended template: Node.gitignore
+
+dist/
+npm-debug.log
+yarn-error.log
 
 ### Windows ###
 # Windows thumbnail cache files
@@ -205,38 +298,52 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,node,react
+### yarn ###
+# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
 
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.yarn/*
+!.yarn/releases
+!.yarn/patches
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
 
-# dependencies
-/.pnp
-.pnp.js
+# if you are NOT using Zero-installs, then:
+# comment the following lines
+!.yarn/cache
 
-# testing
-/coverage
+# and uncomment the following lines
+# .pnp.*
 
-# production
-/build
+################################################
+#
+# FranceConnect specific
+#
+################################################
 
-# misc
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+tmp/
+temp/
+**/tmp.*
+**/temp.*
+**/*.tmp.*
+**/*.temp.*
 
-## FranceConnect specific
+**/*.css.d.ts
+**/*.scss.d.ts
 
-cypress/snapshots
-cypress/screenshots
+instances/**/dist
 instances/**/build
+instances/**/public/fc
 instances/**/public/dsfr
 instances/**/public/*.mock.json
 
-# ignore all (apps|instances)/yarn.lock
+# YARN
+apps/**/*.yarn.lock
 instances/**/*.yarn.lock
+libs/**/*.yarn.lock
 
-# history local files extension vscode
-.history/**/*
-
+# TSProject
+tsconfig.json
+tsconfig.app.json
+tsconfig.jest.json
+!**/src/**/tsconfig.json

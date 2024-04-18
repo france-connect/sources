@@ -229,9 +229,9 @@ describe('EidasClientService', () => {
     };
     const countryMock = EidasCountries.BELGIUM;
 
-    it('should generate a 64 bytes random for the request id', async () => {
+    it('should generate a 64 bytes random for the request id', () => {
       // action
-      await service.completeEidasRequest(partialRequestJson, countryMock);
+      service.completeEidasRequest(partialRequestJson, countryMock);
 
       // expect
       expect(cryptographyServiceMock.genRandomString).toHaveBeenCalledTimes(2);
@@ -241,9 +241,9 @@ describe('EidasClientService', () => {
       );
     });
 
-    it('should generate a 32 bytes random for the request relay state', async () => {
+    it('should generate a 32 bytes random for the request relay state', () => {
       // action
-      await service.completeEidasRequest(partialRequestJson, countryMock);
+      service.completeEidasRequest(partialRequestJson, countryMock);
 
       // expect
       expect(cryptographyServiceMock.genRandomString).toHaveBeenCalledTimes(2);
@@ -253,14 +253,14 @@ describe('EidasClientService', () => {
       );
     });
 
-    it('should return the complete eidas request', async () => {
+    it('should return the complete eidas request', () => {
       // setup
       cryptographyServiceMock.genRandomString
         .mockReturnValueOnce(requestJson.id)
         .mockReturnValueOnce(requestJson.relayState);
 
       // action
-      const result = await service.completeEidasRequest(
+      const result = service.completeEidasRequest(
         partialRequestJson,
         countryMock,
       );

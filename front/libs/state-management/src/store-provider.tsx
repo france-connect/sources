@@ -1,12 +1,11 @@
 /* istanbul ignore file */
 
 // declarative file
-import React from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { configure } from './configure';
-import { GlobalState, StoreProviderProps } from './interfaces';
+import type { GlobalState, StoreProviderProps } from './interfaces';
 
 function getStoreProvider<S extends GlobalState = GlobalState<unknown>>({
   children,

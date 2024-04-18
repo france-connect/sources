@@ -1,24 +1,35 @@
-<footer class="fr-footer fc-footer fr-pt-0 fr-mt-8w fc-sticky-footer" role="contentinfo">
+<footer
+  class="fr-footer fc-footer fr-pt-0 fr-mt-8w fc-sticky-footer"
+  role="contentinfo"
+>
   <div class="fr-container">
     <div class="fr-footer__bottom fr-mt-0">
       <ul class="fr-footer__bottom-list">
         <li class="fr-footer__bottom-item">
-          <a class="fr-footer__bottom-link" href="https://franceconnect.gouv.fr/accessibilite">
-            Accessibilité&nbsp;:&nbsp;non&nbsp;conforme
+          <a
+            class="fr-footer__bottom-link"
+            href="https://franceconnect.gouv.fr/accessibilite"
+          >
+            <%= $translate('footer.a11y_conformity') %>
           </a>
         </li>
         <%- include('includes/footer/footer.learn-more.ejs') %>
         <li class="fr-footer__bottom-item">
-          <a class="fr-footer__bottom-link" href="https://franceconnect.gouv.fr/cgu">
-            CGU
+          <a
+            class="fr-footer__bottom-link"
+            href="https://franceconnect.gouv.fr/cgu"
+          >
+            <%= $translate('footer.tos') %>
           </a>
         </li>
         <li class="fr-footer__bottom-item">
-          <a class="fr-footer__bottom-link" href="https://franceconnect.gouv.fr/faq">
-            Foire&nbsp;aux&nbsp;questions
+          <a
+            class="fr-footer__bottom-link"
+            href="https://franceconnect.gouv.fr/faq"
+          >
+            <%= $translate('footer.faq') %>
           </a>
         </li>
-        <%- include('includes/footer/footer.aidants-connect.ejs') %>
       </ul>
     </div>
   </div>

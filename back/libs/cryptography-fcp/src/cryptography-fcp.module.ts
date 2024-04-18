@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 
-import { CryptographyService } from '@fc/cryptography';
+import { CryptographyModule, CryptographyService } from '@fc/cryptography';
 
 import { CryptographyFcpService } from './cryptography-fcp.service';
 
 @Module({
-  imports: [],
+  imports: [CryptographyModule],
   providers: [CryptographyFcpService, CryptographyService],
   exports: [CryptographyFcpService],
 })

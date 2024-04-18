@@ -50,10 +50,16 @@ _exec() {
 _list_services() {
   local search=$1
 
+  DOCKER_COMPOSE_SERVICES_CMD="${DOCKER_COMPOSE} ps"
+
+  if $DOCKER_COMPOSE version | grep -iq 'docker compose version v2' ; then
+    DOCKER_COMPOSE_SERVICES_CMD="${DOCKER_COMPOSE} config"
+  fi
+
   if [ -z ${search} ]; then
-    $DOCKER_COMPOSE ps --services | sort
+    $DOCKER_COMPOSE_SERVICES_CMD --services | sort
   else
-    $DOCKER_COMPOSE ps --services | grep "${search}" | sort
+    $DOCKER_COMPOSE_SERVICES_CMD --services | grep "${search}" | sort
   fi
 }
 

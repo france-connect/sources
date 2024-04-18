@@ -5,7 +5,7 @@ import { Module } from '@nestjs/common';
 
 import { AccountModule } from '@fc/account';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
-import { ExceptionsModule } from '@fc/exceptions';
+import { ExceptionsModule } from '@fc/exceptions-deprecated';
 import { MongooseModule } from '@fc/mongoose';
 import { RabbitmqModule } from '@fc/rabbitmq';
 

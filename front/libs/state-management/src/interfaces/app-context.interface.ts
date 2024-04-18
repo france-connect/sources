@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // declarative file
-import { ConfigInterface } from './config.interface';
-import { UserInterface } from './user.interface';
+import type { ConfigInterface } from './config.interface';
+import type { UserInterface } from './user.interface';
 
 export interface AppContextStateInterface {
   config: ConfigInterface;

@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 import {
   Body,
@@ -13,13 +13,7 @@ import {
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
-import {
-  ISessionRequest,
-  ISessionResponse,
-  ISessionService,
-  Session,
-  SessionService,
-} from '@fc/session';
+import { ISessionService, Session, SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import {
@@ -51,23 +45,13 @@ export class EidasProviderController {
   @Post(EidasProviderRoutes.REQUEST_HANDLER)
   @Redirect()
   async requestHandler(
-    @Req() req: ISessionRequest,
-    @Res() res: ISessionResponse,
+    @Req() req: Request,
+    @Res() res: Response,
     @Body()
     body: RequestHandlerDTO,
   ) {
-    await this.session.reset(req, res);
+    await this.session.reset(res);
     this.logger.info('Session was reset');
-
-    /**
-     * We need to bind the session after the reset to prevent using
-     * the previous session, so we can't use the decorator.
-     */
-    const sessionEidasProvider =
-      SessionService.getBoundSession<EidasProviderSession>(
-        req,
-        'EidasProvider',
-      );
 
     const { token } = body;
     const { INCOMING_EIDAS_REQUEST } = this.tracking.TrackedEventsMap;
@@ -88,7 +72,7 @@ export class EidasProviderController {
      * Date: 12/10/2022
      */
 
-    await sessionEidasProvider.set('eidasRequest', request);
+    this.session.set('EidasProvider', 'eidasRequest', request);
 
     const { redirectAfterRequestHandlingUrl } =
       this.config.get<EidasProviderConfig>('EidasProvider');
@@ -122,11 +106,11 @@ export class EidasProviderController {
     return { proxyServiceResponseCacheUrl, token };
   }
 
-  private async getEidasResponse(
+  private getEidasResponse(
     sessionEidas: ISessionService<EidasProviderSession>,
   ) {
     const { eidasRequest, partialEidasResponse }: EidasProviderSession =
-      await sessionEidas.get();
+      sessionEidas.get();
 
     let eidasReponse;
     if (!partialEidasResponse.status.failure) {

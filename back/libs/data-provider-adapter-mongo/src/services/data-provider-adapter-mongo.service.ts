@@ -94,11 +94,14 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
       async (doc: DataProviderMetadata) => {
         const dto = DataProviderAdapterMongoDTO;
         const errors = await validateDto(doc, dto, validationOptions);
+        const { uid } = doc;
 
         if (errors.length > 0) {
-          this.logger.warning(
-            `"${doc.uid}" was excluded from the result at DTO validation.`,
+          this.logger.alert(
+            `Data provider "${uid}" was excluded at DTO validation`,
           );
+
+          this.logger.debug({ errors });
         }
 
         return errors.length === 0;

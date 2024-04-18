@@ -5,7 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { FcException } from '@fc/exceptions';
+import { FcException } from '@fc/exceptions-deprecated';
 
 import { Genders, RnippResponseCodes } from '../enums';
 import {

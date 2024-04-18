@@ -68,9 +68,20 @@ Fonctionnalité: Fournisseur Données
     Exemples:
       | userType                           |
       | avec un prénom contenant un espace |
-    # @todo #1480 Ne pas renvoyer le claim birthplace si vide
-    # see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1480
-    # | né en Algérie                      |
+      # @todo #1480 Ne pas renvoyer le claim birthplace si vide
+      # see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1480
+      # | né en Algérie                      |
       | né en Corse                        |
       | présumé né jour                    |
       | présumé né jour et mois            |
+
+  @ignoreInteg01
+  Plan du Scénario: Checktoken - Vérification log métier access token valide
+    Etant donné que j'utilise un compte usager "par défaut"
+    Et que je navigue sur la page fournisseur de service
+    Et que je me connecte à FranceConnect
+    Et que je suis redirigé vers la page fournisseur de service
+    Et que je suis connecté au fournisseur de service
+    Et que l'événement "DP_VERIFIED_FC_CHECKTOKEN" n'est pas journalisé
+    Quand le fournisseur de service demande l'accès aux données au fournisseur de données
+    Alors l'événement "DP_VERIFIED_FC_CHECKTOKEN" est journalisé avec "dpId" "non null" et "dpTitle" "non null" et "accountId" "non null"

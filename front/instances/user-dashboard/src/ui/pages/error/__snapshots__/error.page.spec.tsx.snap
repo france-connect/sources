@@ -2,9 +2,11 @@
 
 exports[`ErrorPage should match the snapshot 1`] = `
 <div>
-  <div>
+  <div
+    data-mockid="Helmet"
+  >
     <div>
-      React Helmet
+      React Helmet Async
     </div>
   </div>
   <div
@@ -15,7 +17,9 @@ exports[`ErrorPage should match the snapshot 1`] = `
       ReactRouterDom Outlet Component
     </div>
     <p>
-      <span>
+      <span
+        data-mockid="Link"
+      >
         Revenir à l’accueil
       </span>
     </p>
@@ -25,9 +29,11 @@ exports[`ErrorPage should match the snapshot 1`] = `
 
 exports[`ErrorPage should match the snapshot, in a mobile viewport 1`] = `
 <div>
-  <div>
+  <div
+    data-mockid="Helmet"
+  >
     <div>
-      React Helmet
+      React Helmet Async
     </div>
   </div>
   <div
@@ -38,7 +44,9 @@ exports[`ErrorPage should match the snapshot, in a mobile viewport 1`] = `
       ReactRouterDom Outlet Component
     </div>
     <p>
-      <span>
+      <span
+        data-mockid="Link"
+      >
         Revenir à l’accueil
       </span>
     </p>

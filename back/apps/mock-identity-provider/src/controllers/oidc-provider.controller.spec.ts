@@ -18,7 +18,7 @@ describe('OidcProviderController', () => {
       providers: [],
     }).compile();
 
-    oidcProviderController = await app.get<OidcProviderController>(
+    oidcProviderController = app.get<OidcProviderController>(
       OidcProviderController,
     );
 

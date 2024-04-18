@@ -8,6 +8,14 @@ import { ClientMetadata, IssuerMetadata } from '../dto';
  * @todo #429 améliorer le typage pour affiner l'ajout de données (FeatureHandler...)
  * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/429
  */
+export interface IdpFCModal {
+  active: boolean;
+  title: string;
+  body: string;
+  continueText: string;
+  moreInfoLabel?: string;
+  moreInfoUrl?: string;
+}
 
 export interface IdpFCMetadata {
   uid: string;
@@ -24,6 +32,7 @@ export interface IdpFCMetadata {
   };
   maxAuthorizedAcr: string;
   amr: string[];
+  modal?: IdpFCModal;
 }
 
 export type IdentityProviderMetadata = IdpFCMetadata & {

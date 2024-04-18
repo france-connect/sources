@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-import { AccountConfig } from '@fc/account';
+import type { AccountConfig } from '@fc/account';
 
 export const Account: AccountConfig = {
   endpoints: {

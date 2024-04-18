@@ -2,7 +2,8 @@ import classnames from 'classnames';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
-import { AppContext, AppContextInterface } from '@fc/state-management';
+import type { AppContextInterface } from '@fc/state-management';
+import { AppContext } from '@fc/state-management';
 
 interface LayoutHomepageLinkComponentProps {
   children: React.ReactNode;

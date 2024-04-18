@@ -104,7 +104,7 @@ describe('EidasClientController', () => {
         connectorRequestCacheUrl,
       });
 
-      sessionServiceEidasMock.get.mockResolvedValueOnce({
+      sessionServiceEidasMock.get.mockReturnValueOnce({
         eidasPartialRequest: partialRequestJson,
       });
       eidasClientServiceMock.completeEidasRequest.mockReturnValueOnce(

@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // declarative file
-import { HeaderService } from './header-service.interface';
-import { NavigationLink } from './navigation-link.interface';
+import type { HeaderService } from './header-service.interface';
+import type { NavigationLink } from './navigation-link.interface';
 
 export interface LayoutConfig {
   // @TODO should update/refacto exploit apps

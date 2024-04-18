@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { EidasClientSession } from '@fc/eidas-client';
 import { EidasProviderSession } from '@fc/eidas-provider';
+import { OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { SessionService } from '@fc/session';
 import {
@@ -18,14 +19,16 @@ import {
 
 @Injectable()
 export class EidasBridgeTrackingService implements AppTrackingServiceAbstract {
-  async buildLog(
+  constructor(private readonly session: SessionService) {}
+
+  buildLog(
     trackedEvent: EidasBridgeTrackedEventInterface,
     ctx: TrackedEventContextInterface,
   ): Promise<EidasBridgeTrackingLogInterface> {
     const { step, event, category, countryCodeSrc, countryCodeDst } =
       trackedEvent;
 
-    const context = await this.extractContext(trackedEvent, ctx);
+    const context = this.extractContext(trackedEvent, ctx);
 
     return {
       event,
@@ -37,13 +40,12 @@ export class EidasBridgeTrackingService implements AppTrackingServiceAbstract {
     };
   }
 
-  private async extractContext(
+  private extractContext(
     trackedEvent: EidasBridgeTrackedEventInterface,
     ctx: TrackedEventContextInterface,
   ) {
     const { category } = trackedEvent;
-    const { req } = ctx;
-    const { sessionId } = req;
+    const sessionId = this.session.getId();
 
     const source = extractNetworkInfoFromHeaders(ctx);
 
@@ -56,10 +58,10 @@ export class EidasBridgeTrackingService implements AppTrackingServiceAbstract {
 
     switch (category) {
       case EventsCategoriesEnum.EU_REQUEST:
-        requestContext = await this.extractContextFromEuRequest(ctx);
+        requestContext = this.extractContextFromEuRequest();
         break;
       case EventsCategoriesEnum.FR_REQUEST:
-        requestContext = await this.extractContextFromFrRequest(ctx);
+        requestContext = this.extractContextFromFrRequest(ctx);
         break;
     }
 
@@ -68,19 +70,10 @@ export class EidasBridgeTrackingService implements AppTrackingServiceAbstract {
     return context;
   }
 
-  private async extractContextFromEuRequest(ctx: TrackedEventContextInterface) {
-    const { req } = ctx;
-
-    const sessionOidc = await SessionService.getBoundSession<OidcClientSession>(
-      req,
-      'OidcClient',
-    ).get();
-
+  private extractContextFromEuRequest() {
+    const sessionOidc = this.session.get<OidcSession>('OidcClient');
     const sessionEidas =
-      await SessionService.getBoundSession<EidasProviderSession>(
-        req,
-        'EidasProvider',
-      ).get();
+      this.session.get<EidasProviderSession>('EidasProvider');
 
     const context = {
       eidasLevelRequested: sessionEidas?.eidasRequest?.levelOfAssurance,
@@ -93,19 +86,11 @@ export class EidasBridgeTrackingService implements AppTrackingServiceAbstract {
     return context;
   }
 
-  private async extractContextFromFrRequest(ctx: TrackedEventContextInterface) {
-    const { req, countryCodeDst } = ctx;
+  private extractContextFromFrRequest(ctx: TrackedEventContextInterface) {
+    const { countryCodeDst } = ctx;
 
-    const sessionOidc = await SessionService.getBoundSession<OidcClientSession>(
-      req,
-      'OidcClient',
-    ).get();
-
-    const sessionEidas =
-      await SessionService.getBoundSession<EidasClientSession>(
-        req,
-        'EidasClient',
-      ).get();
+    const sessionOidc = this.session.get<OidcClientSession>('OidcClient');
+    const sessionEidas = this.session.get<EidasClientSession>('EidasClient');
 
     const { idpIdentity, spId, subs } = sessionOidc || {};
 

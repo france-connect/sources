@@ -1,12 +1,10 @@
-import { IProviderMappings } from '../../interfaces';
+import { ProviderMappingsInterface } from '../../interfaces';
 import { claims } from './fc-tracks.claims';
-import { labels } from './fc-tracks.labels';
 import { provider } from './fc-tracks.provider';
 import { scopes } from './fc-tracks.scopes';
 
-export const fcTracks: IProviderMappings = {
+export const fcTracks: ProviderMappingsInterface = {
   provider,
   claims,
-  labels,
   scopes,
 };

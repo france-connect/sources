@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 import { BridgeError } from '@fc/hybridge-http-proxy';
 
 import { ErrorCode } from '../enums';

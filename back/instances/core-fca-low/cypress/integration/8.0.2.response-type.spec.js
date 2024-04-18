@@ -13,7 +13,7 @@ describe('Response type', () => {
     cy.request({ url, followRedirect: false }).then((resp) => {
       expect(resp.status).to.eq(303);
       expect(resp.redirectedToUrl).to.equals(
-        `${SP_ROOT_URL}/oidc-callback#error=unsupported_response_type&error_description=unsupported%20response_type%20requested&state=stateTraces`,
+        `${SP_ROOT_URL}/oidc-callback#error=unsupported_response_type&error_description=unsupported%20response_type%20requested&state=stateTraces&iss=https%3A%2F%2Fcore-fca-low.docker.dev-franceconnect.fr%2Fapi%2Fv2`,
       );
     });
   });
@@ -28,7 +28,7 @@ describe('Response type', () => {
     cy.request({ url, followRedirect: false }).then((resp) => {
       expect(resp.status).to.eq(303);
       expect(resp.redirectedToUrl).to.equals(
-        `${SP_ROOT_URL}/oidc-callback#error=unsupported_response_type&error_description=unsupported%20response_type%20requested&state=stateTraces`,
+        `${SP_ROOT_URL}/oidc-callback#error=unsupported_response_type&error_description=unsupported%20response_type%20requested&state=stateTraces&iss=https%3A%2F%2Fcore-fca-low.docker.dev-franceconnect.fr%2Fapi%2Fv2`,
       );
     });
   });
@@ -43,7 +43,7 @@ describe('Response type', () => {
     cy.request({ url, followRedirect: false }).then((resp) => {
       expect(resp.status).to.eq(303);
       expect(resp.redirectedToUrl).to.equals(
-        `${SP_ROOT_URL}/oidc-callback#error=unsupported_response_type&error_description=unsupported%20response_type%20requested&state=stateTraces`,
+        `${SP_ROOT_URL}/oidc-callback#error=unsupported_response_type&error_description=unsupported%20response_type%20requested&state=stateTraces&iss=https%3A%2F%2Fcore-fca-low.docker.dev-franceconnect.fr%2Fapi%2Fv2`,
       );
     });
   });
@@ -58,7 +58,7 @@ describe('Response type', () => {
     cy.request({ url, followRedirect: false }).then((resp) => {
       expect(resp.status).to.eq(303);
       expect(resp.redirectedToUrl).to.equals(
-        `${SP_ROOT_URL}/oidc-callback#error=unsupported_response_type&error_description=unsupported%20response_type%20requested&state=stateTraces`,
+        `${SP_ROOT_URL}/oidc-callback#error=unsupported_response_type&error_description=unsupported%20response_type%20requested&state=stateTraces&iss=https%3A%2F%2Fcore-fca-low.docker.dev-franceconnect.fr%2Fapi%2Fv2`,
       );
     });
   });
@@ -73,7 +73,7 @@ describe('Response type', () => {
     cy.request({ url, followRedirect: false }).then((resp) => {
       expect(resp.status).to.eq(303);
       expect(resp.redirectedToUrl).to.equals(
-        `${SP_ROOT_URL}/oidc-callback#error=unsupported_response_type&error_description=unsupported%20response_type%20requested&state=stateTraces`,
+        `${SP_ROOT_URL}/oidc-callback#error=unsupported_response_type&error_description=unsupported%20response_type%20requested&state=stateTraces&iss=https%3A%2F%2Fcore-fca-low.docker.dev-franceconnect.fr%2Fapi%2Fv2`,
       );
     });
   });
@@ -82,7 +82,7 @@ describe('Response type', () => {
    * @TODO #197 Implement tests once feature is implemented in `oidc-client`
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/197
    */
-  it.skip('should return to the SP with an "unsupported_response_type" error if the query contains a non registered "response_type" (what the fuck)', () => {
+  it.skip('should return to the SP with an "unsupported_response_type" error if the query contains a non registered "response_type"', () => {
     const url = getAuthorizeUrl({
       // oidc param
       // eslint-disable-next-line @typescript-eslint/naming-convention

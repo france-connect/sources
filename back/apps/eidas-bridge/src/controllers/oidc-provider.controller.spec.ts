@@ -1,7 +1,9 @@
+import { Response } from 'express';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { LoggerService } from '@fc/logger';
-import { ISessionRequest, ISessionResponse, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 
 import { getLoggerMock } from '@mocks/logger';
 
@@ -28,7 +30,7 @@ describe('OidcProviderController', () => {
       .useValue(sessionServiceMock)
       .compile();
 
-    oidcProviderController = await app.get<OidcProviderController>(
+    oidcProviderController = app.get<OidcProviderController>(
       OidcProviderController,
     );
 
@@ -36,33 +38,22 @@ describe('OidcProviderController', () => {
   });
 
   describe('getAuthorize()', () => {
-    const reqMock = {} as ISessionRequest;
-    const resMock = {} as ISessionResponse;
+    const resMock = {} as Response;
     const queryMock = {} as AuthorizeParamsDto;
     const nextMock = jest.fn();
 
     it('should reset session', async () => {
       // When
-      await oidcProviderController.getAuthorize(
-        reqMock,
-        resMock,
-        nextMock,
-        queryMock,
-      );
+      await oidcProviderController.getAuthorize(resMock, nextMock, queryMock);
 
       // Then
       expect(sessionServiceMock.reset).toHaveReturnedTimes(1);
-      expect(sessionServiceMock.reset).toHaveBeenCalledWith(reqMock, resMock);
+      expect(sessionServiceMock.reset).toHaveBeenCalledWith(resMock);
     });
 
     it('should call next', async () => {
       // When
-      await oidcProviderController.getAuthorize(
-        reqMock,
-        resMock,
-        nextMock,
-        queryMock,
-      );
+      await oidcProviderController.getAuthorize(resMock, nextMock, queryMock);
       // Then
       expect(nextMock).toHaveReturnedTimes(1);
     });

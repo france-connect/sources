@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { DataProviderCoreAuthBaseException } from './data-provider-core-auth-base.exception';

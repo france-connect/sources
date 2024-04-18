@@ -61,7 +61,7 @@ describe('TrackCardHeaderComponent', () => {
     // then
     const elements = container.getElementsByTagName('title');
     expect(elements).toHaveLength(1);
-    expect(elements[0].innerHTML).toStrictEqual('Icone plus');
+    expect(elements[0].innerHTML).toBe('Icone plus');
   });
 
   it('should render an accessible minus icon if card is opened', () => {
@@ -77,6 +77,6 @@ describe('TrackCardHeaderComponent', () => {
     // then
     const elements = container.getElementsByTagName('title');
     expect(elements).toHaveLength(1);
-    expect(elements[0].innerHTML).toStrictEqual('Icone moins');
+    expect(elements[0].innerHTML).toBe('Icone moins');
   });
 });

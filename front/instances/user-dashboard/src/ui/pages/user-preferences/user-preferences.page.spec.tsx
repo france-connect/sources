@@ -37,7 +37,7 @@ describe('UserPreferencesPage', () => {
     render(<UserPreferencesPage />);
 
     // then
-    expect(UserPreferencesComponent).toHaveBeenCalledTimes(1);
+    expect(UserPreferencesComponent).toHaveBeenCalledOnce();
     expect(UserPreferencesComponent).toHaveBeenCalledWith(
       { options: AppConfig.UserPreferences },
       {},

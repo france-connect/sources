@@ -4,12 +4,13 @@ import {
   Get,
   Header,
   Post,
-  Req,
   Res,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 
+import { CsrfTokenGuard } from '@fc/csrf';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { LoggerService } from '@fc/logger';
 import {
@@ -18,13 +19,7 @@ import {
   OidcClientSession,
   RedirectToIdp,
 } from '@fc/oidc-client';
-import {
-  ISessionService,
-  Session,
-  SessionCsrfService,
-  SessionInvalidCsrfSelectIdpException,
-  SessionService,
-} from '@fc/session';
+import { ISessionService, Session, SessionService } from '@fc/session';
 
 @Controller()
 export class OidcClientController {
@@ -34,7 +29,6 @@ export class OidcClientController {
     private readonly logger: LoggerService,
     private readonly oidcClient: OidcClientService,
     private readonly identityProvider: IdentityProviderAdapterEnvService,
-    private readonly csrfService: SessionCsrfService,
     private readonly session: SessionService,
   ) {}
 
@@ -43,6 +37,7 @@ export class OidcClientController {
    */
   @Post(OidcClientRoutes.REDIRECT_TO_IDP)
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @UseGuards(CsrfTokenGuard)
   async redirectToIdp(
     @Res() res,
     @Body() body: RedirectToIdp,
@@ -61,7 +56,6 @@ export class OidcClientController {
       // acr_values is an oidc defined variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
-      csrfToken,
       // acr_values is an oidc defined variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_hint,
@@ -69,18 +63,11 @@ export class OidcClientController {
 
     let serviceProviderId: string | null;
     try {
-      const { spId } = await sessionOidc.get();
+      const { spId } = sessionOidc.get();
       serviceProviderId = spId;
     } catch (error) {
       this.logger.err(error);
       serviceProviderId = null;
-    }
-
-    // -- control if the CSRF provided is the same as the one previously saved in session.
-    try {
-      await this.csrfService.validate(sessionOidc, csrfToken);
-    } catch (error) {
-      throw new SessionInvalidCsrfSelectIdpException(error);
     }
 
     if (serviceProviderId) {
@@ -90,19 +77,21 @@ export class OidcClientController {
     const { state, nonce } =
       await this.oidcClient.utils.buildAuthorizeParameters();
 
-    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl({
-      state,
-      scope,
+    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl(
       idpId,
-      // acr_values is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      acr_values,
-      nonce,
-      claims,
-      // acr_values is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      idp_hint,
-    });
+      {
+        state,
+        scope,
+        // acr_values is an oidc defined variable name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        acr_values,
+        nonce,
+        claims,
+        // acr_values is an oidc defined variable name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        idp_hint,
+      },
+    );
 
     const { name: idpName, title: idpLabel } =
       await this.identityProvider.getById(idpId);
@@ -114,14 +103,14 @@ export class OidcClientController {
       idpNonce: nonce,
     };
 
-    await sessionOidc.set(session);
+    sessionOidc.set(session);
 
     res.redirect(authorizationUrl);
   }
 
   @Get(OidcClientRoutes.CLIENT_LOGOUT_CALLBACK)
-  async logoutCallback(@Req() req, @Res() res) {
-    await this.session.destroy(req, res);
+  async logoutCallback(@Res() res) {
+    await this.session.destroy(res);
 
     return res.redirect('/');
   }

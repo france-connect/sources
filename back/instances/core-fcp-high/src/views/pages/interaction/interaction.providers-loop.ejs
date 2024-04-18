@@ -9,7 +9,7 @@ locals.providers
     class="interaction-main-content-form"
     name="fs-request"
     data-testid="fs-request-<%= provider.uid %>">
-    <%- include('pages/interaction/interaction.provider.ejs', { provider }); %>
-    <%- include('pages/interaction/interaction.provider-inputs.ejs', { provider }) %>
+    <%- include('pages/interaction/provider/interaction.provider.ejs', { provider }); %>
+    <%- include('pages/interaction/provider/interaction.provider-inputs.ejs', { provider }) %>
   </form>
 <% }) %>

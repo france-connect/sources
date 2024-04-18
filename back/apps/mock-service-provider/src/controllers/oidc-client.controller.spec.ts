@@ -1,15 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
+import { CsrfTokenGuard } from '@fc/csrf';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata } from '@fc/oidc';
 import { OidcClientService } from '@fc/oidc-client';
-import {
-  SessionCsrfService,
-  SessionInvalidCsrfSelectIdpException,
-  SessionService,
-} from '@fc/session';
+import { SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -17,7 +14,7 @@ import { getSessionServiceMock } from '@mocks/session';
 
 import { OidcClientController } from './oidc-client.controller';
 
-describe('OidcClient Controller', () => {
+describe('OidcClientController', () => {
   let controller: OidcClientController;
   let res;
 
@@ -34,12 +31,6 @@ describe('OidcClient Controller', () => {
   const loggerServiceMock = getLoggerMock();
 
   const sessionServiceMock = getSessionServiceMock();
-
-  const sessionCsrfServiceMock = {
-    get: jest.fn(),
-    save: jest.fn(),
-    validate: jest.fn(),
-  };
 
   const identityProviderServiceMock = {
     getById: jest.fn(),
@@ -62,6 +53,8 @@ describe('OidcClient Controller', () => {
 
   const providerIdMock = 'providerIdMockValue';
 
+  const guardMock = { canActivate: () => true };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -72,12 +65,13 @@ describe('OidcClient Controller', () => {
         OidcClientService,
         LoggerService,
         SessionService,
-        SessionCsrfService,
         TrackingService,
         ConfigService,
         IdentityProviderAdapterEnvService,
       ],
     })
+      .overrideGuard(CsrfTokenGuard)
+      .useValue(guardMock)
       .overrideProvider(OidcClientService)
       .useValue(oidcClientServiceMock)
       .overrideProvider(LoggerService)
@@ -88,8 +82,6 @@ describe('OidcClient Controller', () => {
       .useValue(trackingMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(SessionCsrfService)
-      .useValue(sessionCsrfServiceMock)
       .overrideProvider(IdentityProviderAdapterEnvService)
       .useValue(identityProviderServiceMock)
       .compile();
@@ -119,8 +111,6 @@ describe('OidcClient Controller', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'acrMock',
     });
-
-    sessionCsrfServiceMock.save.mockResolvedValueOnce(true);
   });
 
   it('should be defined', () => {
@@ -153,7 +143,6 @@ describe('OidcClient Controller', () => {
         acr_values: 'eidas3',
         claims: 'json_stringified',
         nonce: 'nonceMock',
-        idpId: 'providerIdMockValue',
         scope: 'openid',
         state: 'stateMock',
       };
@@ -166,6 +155,7 @@ describe('OidcClient Controller', () => {
         1,
       );
       expect(oidcClientServiceMock.utils.getAuthorizeUrl).toHaveBeenCalledWith(
+        providerIdMock,
         expectedGetAuthorizeCallParameter,
       );
     });
@@ -266,7 +256,9 @@ describe('OidcClient Controller', () => {
         csrfToken: 'csrfMockValue',
       };
       const errorMock = new Error('error');
-      sessionServiceMock.get.mockRejectedValueOnce(errorMock);
+      sessionServiceMock.get.mockImplementationOnce(() => {
+        throw errorMock;
+      });
 
       // action
       await controller.redirectToIdp(res, body, sessionServiceMock);
@@ -274,31 +266,6 @@ describe('OidcClient Controller', () => {
       // assert
       expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
       expect(loggerServiceMock.err).toHaveBeenCalledWith(errorMock);
-    });
-
-    it('should throw an error because csrf is invalid', async () => {
-      // Given
-      const csrfTokenBody = 'invalidCsrfMockValue';
-      const body = {
-        scope: 'openid',
-        providerUid: providerIdMock,
-        // oidc param
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        acr_values: 'eidas3',
-        nonce: nonceMock,
-        claims: 'any_formatted_json_string',
-        csrfToken: csrfTokenBody,
-      };
-      sessionServiceMock.get.mockReturnValueOnce('spId');
-      sessionCsrfServiceMock.validate.mockReset().mockImplementation(() => {
-        throw new Error(
-          'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
-        );
-      });
-      // When/Then
-      await expect(
-        controller.redirectToIdp(res, body, sessionServiceMock),
-      ).rejects.toThrow(SessionInvalidCsrfSelectIdpException);
     });
 
     it('should throw an error if the two CSRF tokens (provided in request and previously stored in session) are not the same.', async () => {
@@ -383,19 +350,18 @@ describe('OidcClient Controller', () => {
   });
 
   describe('logoutCallback', () => {
-    const reqMock = Symbol('reqMock');
     it('should destroy the client session', async () => {
       // action
-      await controller.logoutCallback(reqMock, res);
+      await controller.logoutCallback(res);
 
       // assert
       expect(sessionServiceMock.destroy).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.destroy).toHaveBeenCalledWith(reqMock, res);
+      expect(sessionServiceMock.destroy).toHaveBeenCalledWith(res);
     });
 
     it('should redirect to the home page', async () => {
       // action
-      await controller.logoutCallback(reqMock, res);
+      await controller.logoutCallback(res);
 
       // assert
       expect(res.redirect).toHaveBeenCalledTimes(1);

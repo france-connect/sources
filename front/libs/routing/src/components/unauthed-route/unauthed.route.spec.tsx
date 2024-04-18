@@ -20,7 +20,7 @@ describe('UnauthedRoute', () => {
     render(<UnauthedRoute fallbackPath="/any-authed-path" />);
 
     // then
-    expect(useContextMock).toHaveBeenCalledTimes(1);
+    expect(useContextMock).toHaveBeenCalledOnce();
     expect(useContextMock).toHaveBeenCalledWith(AccountContext);
   });
 
@@ -29,7 +29,7 @@ describe('UnauthedRoute', () => {
     render(<UnauthedRoute fallbackPath="/any-authed-path" />);
 
     // then
-    expect(useLocationMock).toHaveBeenCalledTimes(1);
+    expect(useLocationMock).toHaveBeenCalledOnce();
   });
 
   it('should render loader element if not ready', () => {
@@ -60,7 +60,7 @@ describe('UnauthedRoute', () => {
     render(<UnauthedRoute replace fallbackPath="/any-authed-path" />);
 
     // then
-    expect(navigateMock).toHaveBeenCalledTimes(1);
+    expect(navigateMock).toHaveBeenCalledOnce();
     expect(navigateMock).toHaveBeenCalledWith(
       { replace: true, state: { from: '/any-pathname' }, to: '/any-authed-path' },
       {},
@@ -75,7 +75,7 @@ describe('UnauthedRoute', () => {
     render(<UnauthedRoute fallbackPath="/any-authed-path" />);
 
     // then
-    expect(navigateMock).toHaveBeenCalledTimes(1);
+    expect(navigateMock).toHaveBeenCalledOnce();
     expect(navigateMock).toHaveBeenCalledWith(
       { replace: false, state: { from: expect.any(String) }, to: '/any-authed-path' },
       {},
@@ -90,6 +90,6 @@ describe('UnauthedRoute', () => {
     render(<UnauthedRoute fallbackPath="/any-authed-path" />);
 
     // then
-    expect(outletMock).toHaveBeenCalledTimes(1);
+    expect(outletMock).toHaveBeenCalledOnce();
   });
 });

@@ -13,7 +13,7 @@ import {
   EidasProviderController,
   EidasProviderModule,
 } from '@fc/eidas-provider';
-import { ExceptionsModule } from '@fc/exceptions';
+import { ExceptionsModule } from '@fc/exceptions-deprecated';
 import { HttpProxyModule } from '@fc/http-proxy';
 import {
   IdentityProviderAdapterEnvModule,

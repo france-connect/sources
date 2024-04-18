@@ -46,7 +46,9 @@ export default {
       ),
       // oidc param name
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      userinfo_signed_response_alg: env.string('USERINFO_SIGNED_RESPONSE_ALG'),
+      userinfo_signed_response_alg: env.string('USERINFO_SIGNED_RESPONSE_ALG', {
+        undefinedIfEmpty: true,
+      }),
       // oidc param name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_encrypted_response_alg: env.string(

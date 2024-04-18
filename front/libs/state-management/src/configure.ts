@@ -1,12 +1,13 @@
-import { legacy_createStore, Middleware, Reducer, ReducersMapObject, Store } from 'redux';
+import type { Middleware, Reducer, ReducersMapObject, Store } from 'redux';
+import { legacy_createStore } from 'redux';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import { FSA } from '@fc/common';
+import type { FSA } from '@fc/common';
 
 import { bindMiddlewares } from './bind-middlewares';
 import { getInitialState } from './get-initial-state';
-import { ConfigureReturn, GlobalState } from './interfaces';
+import type { ConfigureReturn, GlobalState } from './interfaces';
 import { mapReducers } from './map-reducers';
 import { getPersistLists } from './middlewares';
 

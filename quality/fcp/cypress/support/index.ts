@@ -16,7 +16,6 @@
 import 'cypress-axe';
 import 'cypress-maildev';
 import 'cypress-plugin-api';
-import 'cypress-xpath';
 
 import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';
 

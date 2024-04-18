@@ -6,7 +6,7 @@ describe('isValidProtocol', () => {
     const result = isValidProtocol('http://any-url-mock.com');
 
     // then
-    expect(result).toBe(true);
+    expect(result).toBeTrue();
   });
 
   it('should return true, when starts with https', () => {
@@ -14,7 +14,7 @@ describe('isValidProtocol', () => {
     const result = isValidProtocol('https://any-url-mock.com');
 
     // then
-    expect(result).toBe(true);
+    expect(result).toBeTrue();
   });
 
   it('should return true, when starts with ssh', () => {
@@ -22,7 +22,7 @@ describe('isValidProtocol', () => {
     const result = isValidProtocol('ssh://any-url-mock.com');
 
     // then
-    expect(result).toBe(true);
+    expect(result).toBeTrue();
   });
 
   it('should return true, when starts with ftp', () => {
@@ -30,7 +30,7 @@ describe('isValidProtocol', () => {
     const result = isValidProtocol('ftp://any-url-mock.com');
 
     // then
-    expect(result).toBe(true);
+    expect(result).toBeTrue();
   });
 
   it('should return false, when url starts with git://', () => {
@@ -38,7 +38,7 @@ describe('isValidProtocol', () => {
     const result = isValidProtocol('git://any-url-mock.com');
 
     // then
-    expect(result).toBe(false);
+    expect(result).toBeFalse();
   });
 
   it('should return false, when url starts with file://', () => {
@@ -46,7 +46,7 @@ describe('isValidProtocol', () => {
     const result = isValidProtocol('git://any-url-mock.com');
 
     // then
-    expect(result).toBe(false);
+    expect(result).toBeFalse();
   });
 
   it('should return false, when url starts with ://', () => {
@@ -54,7 +54,7 @@ describe('isValidProtocol', () => {
     const result = isValidProtocol('://any-url-mock.com');
 
     // then
-    expect(result).toBe(false);
+    expect(result).toBeFalse();
   });
 
   it('should return false, when url starts with //', () => {
@@ -62,7 +62,7 @@ describe('isValidProtocol', () => {
     const result = isValidProtocol('//any-url-mock.com');
 
     // then
-    expect(result).toBe(false);
+    expect(result).toBeFalse();
   });
 
   it('should return false, when url is an empty string', () => {
@@ -70,6 +70,6 @@ describe('isValidProtocol', () => {
     const result = isValidProtocol('');
 
     // then
-    expect(result).toBe(false);
+    expect(result).toBeFalse();
   });
 });

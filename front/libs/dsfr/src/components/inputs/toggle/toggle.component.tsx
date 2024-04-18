@@ -1,8 +1,8 @@
 import classnames from 'classnames';
 import React from 'react';
-import { FieldInputProps } from 'react-final-form';
+import type { FieldInputProps } from 'react-final-form';
 
-import { CheckableLegend } from '../../../interfaces';
+import type { CheckableLegend } from '../../../interfaces';
 import { ToggleInputComponent } from './toggle-input.component';
 import { ToggleLabelComponent } from './toggle-label.component';
 

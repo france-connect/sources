@@ -3,14 +3,13 @@ import React from 'react';
 import { t } from '@fc/i18n';
 
 import { DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION, DEFAULT_USE_ELLIPSIS } from '../../enums';
-import { Pagination } from '../../interfaces';
+import type { Pagination } from '../../interfaces';
 import { usePagination } from './use-pagination.hook';
 
 export interface PaginationComponentProps {
   onPageClick: (nextOffset: number) => void;
   pagination: Pagination;
-  // eslint-disable-next-line react/require-default-props
-  numberOfPagesShownIntoNavigation: number;
+  numberOfPagesShownIntoNavigation?: number;
   useEdgeArrows?: boolean;
   useEllipsis?: boolean;
   useNavArrows?: boolean;
@@ -18,12 +17,12 @@ export interface PaginationComponentProps {
 
 export const PaginationComponent: React.FC<PaginationComponentProps> = React.memo(
   ({
-    numberOfPagesShownIntoNavigation,
+    numberOfPagesShownIntoNavigation = DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION,
     onPageClick,
     pagination,
-    useEdgeArrows,
-    useEllipsis,
-    useNavArrows,
+    useEdgeArrows = false,
+    useEllipsis = DEFAULT_USE_ELLIPSIS,
+    useNavArrows = true,
   }: PaginationComponentProps) => {
     const {
       currentPage,
@@ -139,13 +138,5 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
     );
   },
 );
-
-PaginationComponent.defaultProps = {
-  // eslint-disable-next-line react/default-props-match-prop-types
-  numberOfPagesShownIntoNavigation: DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION,
-  useEdgeArrows: false,
-  useEllipsis: DEFAULT_USE_ELLIPSIS,
-  useNavArrows: true,
-};
 
 PaginationComponent.displayName = 'PaginationComponent';

@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-import { TracksConfig } from '@fc/tracks';
+import type { TracksConfig } from '@fc/tracks';
 
 // API URLs
 export const API_BASE_URL = `/api`;

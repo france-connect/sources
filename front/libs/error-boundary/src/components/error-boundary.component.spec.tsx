@@ -60,6 +60,6 @@ describe('ErrorBoundaryComponent', () => {
     );
 
     // then
-    expect(onErrorMock).toHaveBeenCalledTimes(1);
+    expect(onErrorMock).toHaveBeenCalledOnce();
   });
 });

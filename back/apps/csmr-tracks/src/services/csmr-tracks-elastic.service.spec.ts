@@ -5,7 +5,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { IPaginationOptions } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { ElasticsearchConfig } from '@fc/elasticsearch';
+import {
+  ElasticsearchConfig,
+  formatMultiMatchGroup,
+  formatV2Query,
+} from '@fc/elasticsearch';
 import { LoggerService } from '@fc/logger';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -17,6 +21,8 @@ import {
 } from '../interfaces';
 import * as helper from './csmr-tracks-elastic.service';
 import { CsmrTracksElasticService } from './csmr-tracks-elastic.service';
+
+jest.mock('@fc/elasticsearch');
 
 jest.mock('../constants', () => ({
   FIELDS_FCP_HIGH: ['fieldHighValue1', 'fieldHighValue2'],
@@ -31,6 +37,48 @@ jest.mock('../constants', () => ({
 
 describe('buildQuery()', () => {
   it('should build ES terms based on event and action data', () => {
+    // Given
+    const formatV2QueryResponse = {
+      bool: {
+        must: [
+          {
+            term: {
+              event: 'eventValue1',
+            },
+          },
+        ],
+      },
+    };
+    const formatV2QueryMock = jest.mocked(formatV2Query);
+    formatV2QueryMock.mockReturnValue(formatV2QueryResponse);
+
+    const formatMultiMatchGroupResponse = {
+      bool: {
+        must: [
+          {
+            bool: {
+              must: [
+                {
+                  term: {
+                    action: 'actionValue',
+                  },
+                },
+                {
+                  term: {
+                    // Legacy Tracks Params
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
+                    type_action: 'typeActionValue',
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    };
+    const formatMultiMatchGroupMock = jest.mocked(formatMultiMatchGroup);
+    formatMultiMatchGroupMock.mockReturnValue(formatMultiMatchGroupResponse);
+
     const data: [string, string] = [
       'actionValue/typeActionValue',
       'eventValue1',
@@ -39,8 +87,14 @@ describe('buildQuery()', () => {
       bool: {
         should: [
           {
-            term: {
-              event: 'eventValue1',
+            bool: {
+              must: [
+                {
+                  term: {
+                    event: 'eventValue1',
+                  },
+                },
+              ],
             },
           },
           {
@@ -70,8 +124,11 @@ describe('buildQuery()', () => {
         ],
       },
     };
+
+    // When
     const result = helper.buildQuery(data);
 
+    // Then
     expect(result).toStrictEqual(resultMock);
   });
 });

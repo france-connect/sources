@@ -203,7 +203,7 @@ describe('DataProviderAdapterMongoService', () => {
       await service['findAllDataProvider']();
 
       // Then
-      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
+      expect(loggerMock.alert).toHaveBeenCalledTimes(1);
     });
 
     it('should filter out any entry exluded by the DTO', async () => {

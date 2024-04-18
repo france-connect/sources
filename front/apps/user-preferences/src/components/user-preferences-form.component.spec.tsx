@@ -170,7 +170,7 @@ describe('UserPreferencesFormComponent', () => {
     );
 
     // then
-    expect(ServicesListComponent).toHaveBeenCalledTimes(1);
+    expect(ServicesListComponent).toHaveBeenCalledOnce();
     expect(ServicesListComponent).toHaveBeenCalledWith(
       { identityProviders: userPreferencesMock.idpList },
       {},
@@ -194,7 +194,7 @@ describe('UserPreferencesFormComponent', () => {
     );
 
     // then
-    expect(ToggleInput).toHaveBeenCalledTimes(1);
+    expect(ToggleInput).toHaveBeenCalledOnce();
     expect(ToggleInput).toHaveBeenCalledWith(
       expect.objectContaining({
         initialValue: false,
@@ -226,7 +226,7 @@ describe('UserPreferencesFormComponent', () => {
     );
 
     // then
-    expect(AllowFutureIdpSwitchLabelComponent).toHaveBeenCalledTimes(1);
+    expect(AllowFutureIdpSwitchLabelComponent).toHaveBeenCalledOnce();
     expect(AllowFutureIdpSwitchLabelComponent).toHaveBeenCalledWith(
       { checked: toggleInputValue },
       {},
@@ -254,7 +254,7 @@ describe('UserPreferencesFormComponent', () => {
     );
 
     // then
-    expect(AlertComponent).toHaveBeenCalledTimes(1);
+    expect(AlertComponent).toHaveBeenCalledOnce();
     expect(AlertComponent).toHaveBeenCalledWith(expectedProps, {});
   });
 
@@ -288,7 +288,7 @@ describe('UserPreferencesFormComponent', () => {
     fireEvent.click(button);
 
     // then
-    expect(useUserPreferencesForm).toHaveBeenCalledTimes(1);
+    expect(useUserPreferencesForm).toHaveBeenCalledOnce();
     expect(useUserPreferencesForm).toHaveBeenCalledWith(expectedArgs);
   });
 
@@ -329,7 +329,7 @@ describe('UserPreferencesFormComponent', () => {
     );
 
     // then
-    expect(SimpleButton).toHaveBeenCalledTimes(1);
+    expect(SimpleButton).toHaveBeenCalledOnce();
     expect(SimpleButton).toHaveBeenCalledWith(
       expect.objectContaining({
         disabled: true,
@@ -357,7 +357,7 @@ describe('UserPreferencesFormComponent', () => {
     );
 
     // then
-    expect(SimpleButton).toHaveBeenCalledTimes(1);
+    expect(SimpleButton).toHaveBeenCalledOnce();
     expect(SimpleButton).toHaveBeenCalledWith(
       expect.objectContaining({
         disabled: false,

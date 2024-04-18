@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldInputProps } from 'react-final-form';
+import type { FieldInputProps } from 'react-final-form';
 
 export interface CheckboxComponentProps {
   // @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/217251933/Case+cocher+-+Checkbox
@@ -15,9 +15,6 @@ export const CheckboxComponent: React.FC<CheckboxComponentProps> = React.memo(
   ({ disabled, hint, input, label }: CheckboxComponentProps) => (
     <div className="fr-checkbox-group">
       <input
-        // @NOTE on autorise la destructuration des proprietes car
-        // les propprietes fournies par react-final-form sont issues d'un contexte contrôlé
-        // eslint-disable-next-line react/jsx-props-no-spreading
         {...input}
         data-testid="field-checkbox-input"
         disabled={disabled}

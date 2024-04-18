@@ -33,18 +33,18 @@ Fonctionnalité: Préférences FI - Support
   @ci
   Scénario: Préférences FI - Support - préférences FI d'un présumé né jour et mois
     Etant donné que j'utilise un compte usager "présumé né jour et mois"
-    Et que je navigue sur la page d'accueil du dashboard usager
-    Et que je me connecte au dashboard usager
-    Et que je suis redirigé vers la page historique du dashboard usager
-    Et que je clique sur le lien vers la page gestion des accès du dashboard usager
-    Et que je suis sur la page gestion des accès du dashboard usager
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Et que je me connecte au tableau de bord usager
+    Et que je suis redirigé vers la page historique du tableau de bord usager
+    Et que je clique sur le lien vers la page gestion des accès du tableau de bord usager
+    Et que je suis sur la page gestion des accès du tableau de bord usager
     Et que je réinitialise les préférences de la configuration par défaut
     Et que je décide de bloquer le fournisseur d'identité "pour le test de préférences FI"
     Et que je confirme le message "autorisation des futurs fournisseurs d'identité"
     Et que j'enregistre mes réglages d'accès
     Et que je décide d'autoriser le fournisseur d'identité "pour le test de préférences FI"
     Et que j'enregistre mes réglages d'accès
-    Et que je me déconnecte du dashboard usager
+    Et que je me déconnecte du tableau de bord usager
     Et que je navigue sur la page login du support
     Et que je me connecte au support en tant que "support"
     Et que je navigue vers la page redressement RNIPP
@@ -58,18 +58,18 @@ Fonctionnalité: Préférences FI - Support
 
   Scénario: Préférences FI - Support - préférences FI d'un présumé né jour
     Etant donné que j'utilise un compte usager "présumé né jour"
-    Et que je navigue sur la page d'accueil du dashboard usager
-    Et que je me connecte au dashboard usager
-    Et que je suis redirigé vers la page historique du dashboard usager
-    Et que je clique sur le lien vers la page gestion des accès du dashboard usager
-    Et que je suis sur la page gestion des accès du dashboard usager
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Et que je me connecte au tableau de bord usager
+    Et que je suis redirigé vers la page historique du tableau de bord usager
+    Et que je clique sur le lien vers la page gestion des accès du tableau de bord usager
+    Et que je suis sur la page gestion des accès du tableau de bord usager
     Et que je réinitialise les préférences de la configuration par défaut
     Et que je décide de bloquer le fournisseur d'identité "pour le test de préférences FI"
     Et que je confirme le message "autorisation des futurs fournisseurs d'identité"
     Et que j'enregistre mes réglages d'accès
     Et que je décide d'autoriser le fournisseur d'identité "pour le test de préférences FI"
     Et que j'enregistre mes réglages d'accès
-    Et que je me déconnecte du dashboard usager
+    Et que je me déconnecte du tableau de bord usager
     Et que je navigue sur la page login du support
     Et que je me connecte au support en tant que "support"
     Et que je navigue vers la page redressement RNIPP
@@ -83,18 +83,18 @@ Fonctionnalité: Préférences FI - Support
 
   Scénario: Préférences FI - Support - FI bloqué - futur FI autorisé
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
-    Et que je navigue sur la page d'accueil du dashboard usager
-    Et que je me connecte au dashboard usager
-    Et que je suis redirigé vers la page historique du dashboard usager
-    Et que je clique sur le lien vers la page gestion des accès du dashboard usager
-    Et que je suis sur la page gestion des accès du dashboard usager
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Et que je me connecte au tableau de bord usager
+    Et que je suis redirigé vers la page historique du tableau de bord usager
+    Et que je clique sur le lien vers la page gestion des accès du tableau de bord usager
+    Et que je suis sur la page gestion des accès du tableau de bord usager
     Et que je réinitialise les préférences de la configuration par défaut
     Et que j'utilise le fournisseur d'identité "pour le test de préférences FI"
     Et que je décide de bloquer le fournisseur d'identité
     Et que je décide d'autoriser les futurs fournisseurs d'identité par défaut
     Et que je confirme le message "autorisation des futurs fournisseurs d'identité"
     Et que j'enregistre mes réglages d'accès
-    Et que je me déconnecte du dashboard usager
+    Et que je me déconnecte du tableau de bord usager
     Et que je navigue sur la page login du support
     Et que je me connecte au support en tant que "support"
     Et que je navigue vers la page redressement RNIPP
@@ -108,16 +108,16 @@ Fonctionnalité: Préférences FI - Support
 
   Scénario: Préférences FI - Support - FI autorisé - futur FI bloqué
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
-    Et que je navigue sur la page d'accueil du dashboard usager
-    Et que je me connecte au dashboard usager
-    Et que je suis redirigé vers la page historique du dashboard usager
-    Et que je clique sur le lien vers la page gestion des accès du dashboard usager
-    Et que je suis sur la page gestion des accès du dashboard usager
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Et que je me connecte au tableau de bord usager
+    Et que je suis redirigé vers la page historique du tableau de bord usager
+    Et que je clique sur le lien vers la page gestion des accès du tableau de bord usager
+    Et que je suis sur la page gestion des accès du tableau de bord usager
     Et que j'utilise le fournisseur d'identité "pour le test de préférences FI"
     Et que je décide d'autoriser le fournisseur d'identité
     Et que je décide de bloquer les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
-    Et que je me déconnecte du dashboard usager
+    Et que je me déconnecte du tableau de bord usager
     Et que je navigue sur la page login du support
     Et que je me connecte au support en tant que "support"
     Et que je navigue vers la page redressement RNIPP
@@ -131,16 +131,16 @@ Fonctionnalité: Préférences FI - Support
 
   Scénario: Préférences FI - Support - FI autorisé - futur FI autorisé
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
-    Et que je navigue sur la page d'accueil du dashboard usager
-    Et que je me connecte au dashboard usager
-    Et que je suis redirigé vers la page historique du dashboard usager
-    Et que je clique sur le lien vers la page gestion des accès du dashboard usager
-    Et que je suis sur la page gestion des accès du dashboard usager
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Et que je me connecte au tableau de bord usager
+    Et que je suis redirigé vers la page historique du tableau de bord usager
+    Et que je clique sur le lien vers la page gestion des accès du tableau de bord usager
+    Et que je suis sur la page gestion des accès du tableau de bord usager
     Et que j'utilise le fournisseur d'identité "pour le test de préférences FI"
     Et que je décide d'autoriser le fournisseur d'identité
     Et que je décide d'autoriser les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
-    Et que je me déconnecte du dashboard usager
+    Et que je me déconnecte du tableau de bord usager
     Et que je navigue sur la page login du support
     Et que je me connecte au support en tant que "support"
     Et que je navigue vers la page redressement RNIPP

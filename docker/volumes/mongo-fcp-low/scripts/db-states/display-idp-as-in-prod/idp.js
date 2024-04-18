@@ -9,6 +9,7 @@ const BASE_PRODUCTION_IPD_LOW = {
     coreVerify: "core-fcp-default-verify",
     authenticationEmail: "core-fcp-send-email",
     idpIdentityCheck: "core-fcp-default-identity-check",
+    coreAuthorization: "core-fcp-default-authorization",
   },
   discovery: false,
   url: "https://fip1-low.docker.dev-franceconnect.fr",
@@ -69,7 +70,6 @@ const PRODUCTION_IDPS_LOW = {
   },
   FRANCE_IDENTITE: {
     order: 6,
-    isBeta: true,
     uid: "0b2d3258-0ef4-42d8-981f-083175368c92",
     title: "France Identité",
     image: "fi-france-identite.svg",

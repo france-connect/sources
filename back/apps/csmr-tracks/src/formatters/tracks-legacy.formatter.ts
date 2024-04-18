@@ -5,7 +5,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
-import { IRichClaim, ScopesService } from '@fc/scopes';
+import { RichClaimInterface, ScopesService } from '@fc/scopes';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import { EVENT_MAPPING, LEGACY_SCOPES_SEPARATOR } from '../constants';
@@ -84,7 +84,7 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
 
   private getClaimsGroups({
     scopes,
-  }: ICsmrTracksLegacyFieldsData): IRichClaim[] {
+  }: ICsmrTracksLegacyFieldsData): RichClaimInterface[] {
     if (!scopes) {
       return [];
     }

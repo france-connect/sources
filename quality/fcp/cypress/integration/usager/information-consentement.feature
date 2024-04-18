@@ -100,7 +100,7 @@ Fonctionnalité: Information Consentement
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "anonyme"
 
-  Scénario: Information - erreur Y190006 si consentement avec csrf vide
+  Scénario: Information - erreur Y470002 si consentement avec csrf vide
     Etant donné que j'utilise un fournisseur de service "public"
     Et que le fournisseur de service requiert l'accès aux informations du scope "identite_pivot sans alias"
     Et que je me connecte au fournisseur d'identité via FranceConnect
@@ -108,8 +108,8 @@ Fonctionnalité: Information Consentement
     Quand je mets "" dans le csrf de consentement
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y190006"
-    Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."
+    Et le code d'erreur FranceConnect est "Y470002"
+    Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
     Et le lien retour vers le FS est affiché dans la page erreur technique
 
   Scénario: Consentement - erreur Y190006 si consentement avec mauvais csrf
@@ -121,11 +121,11 @@ Fonctionnalité: Information Consentement
     Et je consens à transmettre mes informations au fournisseur de service
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y190006"
-    Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."
+    Et le code d'erreur FranceConnect est "Y470001"
+    Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
     Et le lien retour vers le FS est affiché dans la page erreur technique
 
-  Scénario: Information - erreur Y000400 si consentement sans csrf
+  Scénario: Information - erreur Y470002 si consentement sans csrf
     Etant donné que j'utilise un fournisseur de service "public"
     Et que le fournisseur de service requiert l'accès aux informations du scope "identite_pivot sans alias"
     Et que je me connecte au fournisseur d'identité via FranceConnect
@@ -133,6 +133,6 @@ Fonctionnalité: Information Consentement
     Quand je retire le csrf de consentement
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y000400"
-    Et le message d'erreur FranceConnect est "_csrf must be a string"
+    Et le code d'erreur FranceConnect est "Y470002"
+    Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
     Et le lien retour vers le FS est affiché dans la page erreur technique

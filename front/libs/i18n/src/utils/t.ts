@@ -1,4 +1,4 @@
-import { TranslationsReplacement } from '../interfaces';
+import type { TranslationsReplacement } from '../interfaces';
 import { I18nService } from '../services';
 
 /**

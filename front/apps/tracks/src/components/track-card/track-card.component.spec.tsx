@@ -1,8 +1,8 @@
 import { fireEvent, render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
-import { CinematicEvents, EidasToLabel } from '../../enums';
-import { EnhancedTrack, IRichClaim } from '../../interfaces';
+import type { CinematicEvents, EidasToLabel } from '../../enums';
+import type { EnhancedTrack, IRichClaim } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';
@@ -73,10 +73,10 @@ describe('TrackCardComponent', () => {
 
       // then
       expect(element).toBeInTheDocument();
-      expect(element.tagName).toStrictEqual('BUTTON');
-      expect(element.getAttribute('type')).toStrictEqual('button');
-      expect(element.getAttribute('aria-expanded')).toStrictEqual('false');
-      expect(element.getAttribute('aria-controls')).toStrictEqual(`card::a11y::${track.trackId}`);
+      expect(element.tagName).toBe('BUTTON');
+      expect(element.getAttribute('type')).toBe('button');
+      expect(element.getAttribute('aria-expanded')).toBe('false');
+      expect(element.getAttribute('aria-controls')).toBe(`card::a11y::${track.trackId}`);
     });
 
     it('should have called card badge component', () => {
@@ -84,7 +84,6 @@ describe('TrackCardComponent', () => {
       render(<TrackCardComponent options={options} track={track} />);
 
       // then
-      expect(TrackCardBadgeComponent).toHaveBeenCalled();
       expect(TrackCardBadgeComponent).toHaveBeenCalledWith(
         { fromFcPlus: false, type: track.event },
         {},
@@ -96,7 +95,6 @@ describe('TrackCardComponent', () => {
       render(<TrackCardComponent options={options} track={track} />);
 
       // then
-      expect(TrackCardHeaderComponent).toHaveBeenCalled();
       expect(TrackCardHeaderComponent).toHaveBeenCalledWith(
         {
           datetime: track.datetime,
@@ -113,7 +111,6 @@ describe('TrackCardComponent', () => {
       render(<TrackCardComponent options={options} track={track} />);
 
       // then
-      expect(TrackCardContentComponent).toHaveBeenCalled();
       expect(TrackCardContentComponent).toHaveBeenCalledWith(
         {
           accessibleId: `card::a11y::${track.trackId}`,
@@ -153,7 +150,6 @@ describe('TrackCardComponent', () => {
       render(<TrackCardComponent options={options} track={track} />);
 
       // then
-      expect(TrackCardHeaderComponent).toHaveBeenCalled();
       expect(TrackCardHeaderComponent).toHaveBeenCalledWith(
         {
           datetime: track.datetime,
@@ -175,26 +171,22 @@ describe('TrackCardComponent', () => {
 
     // then
     fireEvent.click(element);
-    expect(element.getAttribute('aria-expanded')).toStrictEqual('true');
-    expect(TrackCardHeaderComponent).toHaveBeenCalled();
+    expect(element.getAttribute('aria-expanded')).toBe('true');
     expect(TrackCardHeaderComponent).toHaveBeenCalledWith(
       expect.objectContaining({ opened: true }),
       {},
     );
-    expect(TrackCardContentComponent).toHaveBeenCalled();
     expect(TrackCardContentComponent).toHaveBeenCalledWith(
       expect.objectContaining({ opened: true }),
       {},
     );
 
     fireEvent.click(element);
-    expect(element.getAttribute('aria-expanded')).toStrictEqual('false');
-    expect(TrackCardHeaderComponent).toHaveBeenCalled();
+    expect(element.getAttribute('aria-expanded')).toBe('false');
     expect(TrackCardHeaderComponent).toHaveBeenCalledWith(
       expect.objectContaining({ opened: false }),
       {},
     );
-    expect(TrackCardContentComponent).toHaveBeenCalled();
     expect(TrackCardContentComponent).toHaveBeenCalledWith(
       expect.objectContaining({ opened: false }),
       {},

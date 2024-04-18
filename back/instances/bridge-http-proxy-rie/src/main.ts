@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 
 // Not to be tested
-import { useContainer } from 'class-validator';
 import { text } from 'express';
 import helmet from 'helmet';
 
@@ -10,6 +9,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppConfig } from '@fc/app';
 import { BridgeHttpProxyConfig } from '@fc/bridge-http-proxy';
+import { NestJsDependencyInjectionWrapper } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { NestLoggerService } from '@fc/logger';
 
@@ -98,13 +98,7 @@ async function bootstrap() {
    */
   app.use(text({ type: 'application/x-www-form-urlencoded' }));
 
-  /**
-   * Tell the module "class-validator" to use NestJS dependency injection
-   * @see https://github.com/typestack/class-validator#using-service-container
-   * @see https://github.com/nestjs/nest/issues/528#issuecomment-382330137
-   * @see https://github.com/nestjs/nest/issues/528#issuecomment-403212561
-   */
-  useContainer(app.select(appModule), { fallbackOnErrors: true });
+  NestJsDependencyInjectionWrapper.use(app.select(appModule));
 
   await app.listen(3000);
 }

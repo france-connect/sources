@@ -2,4 +2,3 @@
 
 // Declarative file
 export * from './session-commit.interceptor';
-export * from './session-template.interceptor';

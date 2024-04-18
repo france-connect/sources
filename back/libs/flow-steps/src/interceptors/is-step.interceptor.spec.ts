@@ -159,31 +159,13 @@ describe('IsStepInterceptor', () => {
   });
 
   describe('setStep', () => {
-    it('should not call extractSession if there is no active session', async () => {
-      // Given
-      const reqMock = {
-        sessionId: undefined,
-        route: { path: '' },
-      };
-      httpContextMock.getRequest.mockReturnValueOnce(reqMock);
-
+    it('should set stepRoute in session', () => {
       // When
-      await interceptor['setStep'](contextMock);
-
-      // Then
-      expect(flowStepMock.setStep).not.toHaveBeenCalled();
-    });
-
-    it('should set stepRoute in session', async () => {
-      // When
-      await interceptor['setStep'](contextMock);
+      interceptor['setStep'](contextMock);
 
       // Then
       expect(flowStepMock.setStep).toHaveBeenCalledTimes(1);
-      expect(flowStepMock.setStep).toHaveBeenCalledWith(
-        reqMock,
-        '/and/some/uri',
-      );
+      expect(flowStepMock.setStep).toHaveBeenCalledWith('/and/some/uri');
     });
   });
 });

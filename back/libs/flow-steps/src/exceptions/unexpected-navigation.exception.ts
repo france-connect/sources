@@ -4,7 +4,7 @@
 
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { FlowStepsBaseException } from './flow-steps-base.exception';

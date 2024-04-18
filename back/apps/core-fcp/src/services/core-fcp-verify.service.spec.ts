@@ -4,6 +4,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { CoreVerifyService } from '@fc/core';
+import { OidcProviderService } from '@fc/oidc-provider';
+import { TrackingService } from '@fc/tracking';
 
 import { getSessionServiceMock } from '@mocks/session';
 
@@ -41,20 +43,39 @@ describe('CoreFcpVerifyService', () => {
     sessionOidc: sessionServiceMock,
   };
 
+  const trackingMock = {
+    track: jest.fn(),
+    TrackedEventsMap: { IDP_CALLEDBACK_WITH_ERROR: {} },
+  };
+
+  const oidcProviderServiceMock = {
+    abortInteraction: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
     const app: TestingModule = await Test.createTestingModule({
-      providers: [CoreFcpVerifyService, ConfigService, CoreVerifyService],
+      providers: [
+        CoreFcpVerifyService,
+        ConfigService,
+        CoreVerifyService,
+        OidcProviderService,
+        TrackingService,
+      ],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .overrideProvider(CoreVerifyService)
       .useValue(coreVerifyServiceMock)
+      .overrideProvider(TrackingService)
+      .useValue(trackingMock)
+      .overrideProvider(OidcProviderService)
+      .useValue(oidcProviderServiceMock)
       .compile();
 
-    service = await app.get<CoreFcpVerifyService>(CoreFcpVerifyService);
+    service = app.get<CoreFcpVerifyService>(CoreFcpVerifyService);
   });
 
   it('should be defined', () => {
@@ -117,6 +138,44 @@ describe('CoreFcpVerifyService', () => {
       const result = service['handleInsufficientAcrLevel'](interactionIdMock);
       // Then
       expect(result).toBe(expected);
+    });
+  });
+
+  describe('handleIdpError()', () => {
+    // Given
+    const errorMock = {
+      error: 'error',
+      // oidc naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      error_description: 'error description',
+    };
+
+    const resMock = {} as unknown as Response;
+
+    it('should call tracking service method', async () => {
+      // When
+      await service.handleIdpError(req, resMock, errorMock);
+
+      // Then
+      expect(trackingMock.track).toHaveBeenCalledTimes(1);
+      expect(trackingMock.track).toHaveBeenCalledWith(
+        trackingMock.TrackedEventsMap.IDP_CALLEDBACK_WITH_ERROR,
+        expect.any(Object),
+      );
+    });
+
+    it('should call abortInteraction method', async () => {
+      // When
+      await service.handleIdpError(req, resMock, errorMock);
+
+      // Then
+      expect(oidcProviderServiceMock.abortInteraction).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.abortInteraction).toHaveBeenCalledWith(
+        req,
+        resMock,
+        errorMock,
+        true,
+      );
     });
   });
 });

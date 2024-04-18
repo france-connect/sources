@@ -1,5 +1,9 @@
 import { User } from '../../common/helpers';
-import { IdentityProviderBase, UserCredentials } from '../../common/types';
+import {
+  ChainableElement,
+  IdentityProviderBase,
+  UserCredentials,
+} from '../../common/types';
 
 export default class IdentityProviderPage {
   usernameSelector: string;
@@ -68,5 +72,9 @@ export default class IdentityProviderPage {
     cy.get('select#gender').select(user.claims.gender);
 
     cy.get(this.loginButtonSelector).click();
+  }
+
+  getBackToFCLink(): ChainableElement {
+    return cy.get("[data-testid='back-to-fc-link']");
   }
 }

@@ -4,6 +4,7 @@
 import { UserDashboardConfig } from '@fc/user-dashboard';
 
 import App from './app';
+import I18n from './i18n';
 import IdentityProviderAdapterEnv from './identity-provider-adapter-env';
 import Logger from './logger';
 import LoggerLegacy from './logger-legacy';
@@ -29,4 +30,5 @@ export default {
   UserPreferencesBroker,
   Mailer,
   Tracking,
+  I18n,
 } as UserDashboardConfig;

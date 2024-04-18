@@ -492,13 +492,13 @@
         "tsConfigPath": "libs/config/tsconfig.lib.json"
       }
     },
-    "exceptions": {
+    "exceptions-deprecated": {
       "type": "library",
-      "root": "libs/exceptions",
+      "root": "libs/exceptions-deprecated",
       "entryFile": "index",
-      "sourceRoot": "libs/exceptions/src",
+      "sourceRoot": "libs/exceptions-deprecated/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/exceptions/tsconfig.lib.json"
+        "tsConfigPath": "libs/exceptions-deprecated/tsconfig.lib.json"
       }
     },
     "mongoose": {
@@ -967,6 +967,24 @@
       "sourceRoot": "libs/view-templates/src",
       "compilerOptions": {
         "tsConfigPath": "libs/view-templates/tsconfig.lib.json"
+      }
+    },
+    "csrf": {
+      "type": "library",
+      "root": "libs/csrf",
+      "entryFile": "index",
+      "sourceRoot": "libs/csrf/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csrf/tsconfig.lib.json"
+      }
+    },
+    "i18n": {
+      "type": "library",
+      "root": "libs/i18n",
+      "entryFile": "index",
+      "sourceRoot": "libs/i18n/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/i18n/tsconfig.lib.json"
       }
     }
   }

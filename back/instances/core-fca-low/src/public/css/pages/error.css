@@ -1,0 +1,9 @@
+@media (width <= 767px) {
+  .error-aside {
+    display: none;
+  }
+}
+
+.error-contact {
+  border-top: 1px solid lightgrey;
+}

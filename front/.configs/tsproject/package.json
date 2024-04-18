@@ -1,0 +1,7 @@
+{
+  "name": "@fc/tsproject",
+  "description": "CLI to create tsconfig files from a tsproject config file",
+  "version": "0.1.0",
+  "private": true,
+  "bin": "./bin/tsproject"
+}

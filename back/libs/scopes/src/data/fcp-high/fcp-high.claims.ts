@@ -1,6 +1,6 @@
-import { IClaims } from '../../interfaces';
+import { ClaimsInterface } from '../../interfaces';
 
-export const claims: IClaims = {
+export const claims: ClaimsInterface = {
   sub: 'sub',
   gender: 'gender',
   // OIDC fashion naming

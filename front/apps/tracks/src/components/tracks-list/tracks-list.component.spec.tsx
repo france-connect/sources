@@ -5,7 +5,7 @@ import * as ReactRouterDom from 'react-router-dom';
 
 import { PaginationComponent } from '@fc/dsfr';
 
-import { Track } from '../../interfaces';
+import type { Track } from '../../interfaces';
 import { orderGroupByKeyAsc, transformTrackToEnhanced } from '../../utils';
 import { TracksGroupComponent } from './tracks-group';
 import { TracksListComponent } from './tracks-list.component';
@@ -120,7 +120,7 @@ describe('TracksListComponent', () => {
     render(<TracksListComponent options={options} />);
 
     // then
-    expect(usePaginatedTracksMock).toHaveBeenCalled();
+    expect(usePaginatedTracksMock).toHaveBeenCalledOnce();
   });
 
   it('should filter out nullish entries', () => {
@@ -158,7 +158,6 @@ describe('TracksListComponent', () => {
     render(<TracksListComponent options={options} />);
 
     // then
-    expect(transformTrackToEnhanced).toHaveBeenCalled();
     expect(transformTrackToEnhanced).toHaveBeenNthCalledWith(1, payloadMock[0], 0, payloadMock);
     expect(transformTrackToEnhanced).toHaveBeenNthCalledWith(2, payloadMock[1], 1, payloadMock);
   });
@@ -168,7 +167,7 @@ describe('TracksListComponent', () => {
     render(<TracksListComponent options={options} />);
 
     // then
-    expect(orderGroupByKeyAsc).toHaveBeenCalled();
+    expect(orderGroupByKeyAsc).toHaveBeenCalledOnce();
   });
 
   it('should have called TracksGroupComponent', () => {
@@ -176,7 +175,6 @@ describe('TracksListComponent', () => {
     render(<TracksListComponent options={options} />);
 
     // then
-    expect(TracksGroupComponent).toHaveBeenCalled();
     expect(TracksGroupComponent).toHaveBeenNthCalledWith(
       1,
       {
@@ -233,6 +231,6 @@ describe('TracksListComponent', () => {
     });
 
     // then
-    expect(navigateFuncMock).toHaveBeenCalled();
+    expect(navigateFuncMock).toHaveBeenCalledOnce();
   });
 });

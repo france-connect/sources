@@ -8,10 +8,10 @@
  */
 import { IsArray, IsObject } from 'class-validator';
 
-import { IProviderMappings } from '../interfaces';
+import { ProviderMappingsInterface } from '../interfaces';
 
 export class ScopesConfig {
   @IsArray()
   @IsObject({ each: true })
-  mapping: IProviderMappings[];
+  mapping: ProviderMappingsInterface[];
 }

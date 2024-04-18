@@ -8,7 +8,7 @@ import { addMatchImageSnapshotPlugin } from 'cypress-image-snapshot/plugin';
 import { log, table } from './console-log-plugin';
 import { createHexaHash } from './crypto-plugin';
 import { getFixturePath } from './fixture-plugin';
-import { isJwsValid } from './is-jws-valid.plugin';
+import { getJwtContent, isJwsValid } from './jwt-plugin';
 import {
   clearBusinessLog,
   getAllBusinessLogs,
@@ -31,6 +31,7 @@ const pluginConfig = async (
     getAllBusinessLogs,
     getBusinessLogs,
     getFixturePath,
+    getJwtContent,
     getTotp,
     hasBusinessLog,
     isJwsValid,

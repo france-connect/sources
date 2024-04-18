@@ -3,7 +3,6 @@
 // Not to be tested
 import { join } from 'path';
 
-import { useContainer } from 'class-validator';
 import * as CookieParser from 'cookie-parser';
 import { renderFile } from 'ejs';
 import { urlencoded } from 'express';
@@ -12,6 +11,7 @@ import helmet from 'helmet';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
+import { NestJsDependencyInjectionWrapper } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { NestLoggerService } from '@fc/logger';
 import {
@@ -117,13 +117,7 @@ async function bootstrap() {
   const { cookieSecrets } = configService.get<SessionConfig>('Session');
   app.use(CookieParser(cookieSecrets));
 
-  /**
-   * Tell the module "class-validator" to use NestJS dependency injection
-   * @see https://github.com/typestack/class-validator#using-service-container
-   * @see https://github.com/nestjs/nest/issues/528#issuecomment-382330137
-   * @see https://github.com/nestjs/nest/issues/528#issuecomment-403212561
-   */
-  useContainer(app.select(appModule), { fallbackOnErrors: true });
+  NestJsDependencyInjectionWrapper.use(app.select(appModule));
 
   await app.listen(3000);
 }

@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
-import { IRichClaim, ScopesService } from '@fc/scopes';
+import { RichClaimInterface, ScopesService } from '@fc/scopes';
 import { ICsmrTracksOutputTrack } from '@fc/tracks';
 
 import { IdpMappings } from '../dto';
@@ -63,12 +63,24 @@ export class TracksV2Formatter implements TracksFormatterInterface {
     }
   }
 
-  private getClaimsGroups({ claims }: ICsmrTracksV2FieldsData): IRichClaim[] {
-    if (!claims) {
+  // eslint-disable-next-line complexity
+  private getClaimsGroups({
+    claims,
+    scope,
+  }: ICsmrTracksV2FieldsData): RichClaimInterface[] {
+    if (!claims && !scope) {
       return [];
     }
 
-    const richClaims = this.scopes.getRichClaimsFromClaims(claims.split(' '));
+    let richClaims: RichClaimInterface[];
+
+    if (claims) {
+      richClaims = this.scopes.getRichClaimsFromClaims(claims.split(' '));
+    }
+
+    if (scope) {
+      richClaims = this.scopes.getRichClaimsFromScopes(scope.split(' '));
+    }
 
     return richClaims;
   }

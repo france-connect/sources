@@ -11,7 +11,7 @@ import { Injectable } from '@nestjs/common';
  * but need to specify the full path to the helper
  */
 import { AppHelper } from '@fc/app/helpers/app-helper';
-import { getDtoErrors } from '@fc/common';
+import { getDtoErrors } from '@fc/common/helpers/dto-validation';
 
 import { UnknownConfigurationNameError } from './errors';
 import { IConfigOptions } from './interfaces';

@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsAscii,
@@ -10,8 +11,8 @@ import {
   IsOptional,
   IsString,
   IsUUID,
-  MaxLength,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
 
 import { PartialExcept } from '@fc/common';
@@ -37,12 +38,6 @@ export class OidcSession {
   @IsAscii()
   @MinLength(1)
   readonly interactionId?: string;
-
-  @IsOptional()
-  @IsString()
-  @MinLength(32)
-  @MaxLength(32)
-  readonly csrfToken?: string;
 
   @IsOptional()
   @IsArray()
@@ -94,8 +89,9 @@ export class OidcSession {
   readonly idpIdentity?: PartialExcept<IOidcIdentity, 'sub'> | IOidcIdentity;
 
   @IsOptional()
-  @IsString()
-  @MinLength(1)
+  @IsObject()
+  @ValidateNested()
+  @Type(() => RnippPivotIdentity)
   readonly rnippIdentity?: RnippPivotIdentity;
 
   @IsOptional()
@@ -168,4 +164,10 @@ export class OidcSession {
   @IsString()
   @IsOptional()
   readonly stepRoute?: string;
+
+  @IsString()
+  @IsOptional()
+  // OIDC parameter name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly login_hint?: string;
 }

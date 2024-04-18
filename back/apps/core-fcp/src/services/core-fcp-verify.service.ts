@@ -1,12 +1,14 @@
 import { Request } from 'express';
+import { InteractionResults } from 'oidc-provider';
 
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { CoreRoutes, CoreVerifyService } from '@fc/core';
 import { OidcClientSession } from '@fc/oidc-client';
+import { OidcProviderService } from '@fc/oidc-provider';
 import { ISessionService } from '@fc/session';
-import { TrackedEventContextInterface } from '@fc/tracking';
+import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import { AppConfig } from '../dto';
 
@@ -15,6 +17,8 @@ export class CoreFcpVerifyService {
   constructor(
     private readonly config: ConfigService,
     private readonly coreVerify: CoreVerifyService,
+    private readonly oidcProvider: OidcProviderService,
+    private readonly tracking: TrackingService,
   ) {}
 
   async handleVerifyIdentity(
@@ -46,5 +50,22 @@ export class CoreFcpVerifyService {
       ':uid',
       interactionId,
     )}`;
+  }
+
+  async handleIdpError(
+    req: Request,
+    res: Response,
+    errorParams: InteractionResults,
+  ): Promise<void> {
+    const trackingContext = { req, ...errorParams };
+    const { IDP_CALLEDBACK_WITH_ERROR } = this.tracking.TrackedEventsMap;
+    await this.tracking.track(IDP_CALLEDBACK_WITH_ERROR, trackingContext);
+
+    return await this.oidcProvider.abortInteraction(
+      req,
+      res,
+      errorParams,
+      true,
+    );
   }
 }

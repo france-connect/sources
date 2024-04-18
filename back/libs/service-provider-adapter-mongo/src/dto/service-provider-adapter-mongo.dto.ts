@@ -1,17 +1,17 @@
 import {
   IsArray,
   IsBoolean,
-  IsEnum,
   IsIn,
   IsOptional,
   IsString,
-  IsUrl,
   MinLength,
 } from 'class-validator';
 
+// Creates a cyclic dependency
+import { IsEqualToConfig, IsUrlRequiredTldFromConfig } from '@fc/common';
 import { SUPPORTED_SIG_ALG } from '@fc/cryptography';
 
-import { platform } from '../enums';
+import { ServiceProviderAdapterMongoConfig } from './service-provider-adapter-mongo-config.dto';
 
 export class ServiceProviderAdapterMongoDTO {
   @IsBoolean()
@@ -37,13 +37,13 @@ export class ServiceProviderAdapterMongoDTO {
   readonly client_secret: string;
 
   @IsArray()
-  @IsUrl({}, { each: true })
+  @IsUrlRequiredTldFromConfig({ each: true })
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly redirect_uris: string[];
 
   @IsArray()
-  @IsUrl({}, { each: true })
+  @IsUrlRequiredTldFromConfig({ each: true })
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly post_logout_redirect_uris: string[];
@@ -87,10 +87,11 @@ export class ServiceProviderAdapterMongoDTO {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_encrypted_response_enc: string;
 
-  @IsUrl()
+  @IsOptional()
+  @IsUrlRequiredTldFromConfig()
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly jwks_uri: string;
+  readonly jwks_uri?: string;
 
   @IsBoolean()
   idpFilterExclude: boolean;
@@ -112,6 +113,10 @@ export class ServiceProviderAdapterMongoDTO {
   readonly ssoDisabled: boolean;
 
   @IsOptional()
-  @IsEnum(platform)
-  readonly platform?: platform;
+  @IsEqualToConfig<ServiceProviderAdapterMongoConfig>(
+    'ServiceProviderAdapterMongo',
+    'platform',
+  )
+  @IsString()
+  readonly platform?: string;
 }

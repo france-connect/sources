@@ -2,8 +2,5 @@
   "name": "@fc/error-boundary",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "react": "^18.2.0"
-  },
   "main": "src/index.ts"
 }

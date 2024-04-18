@@ -32,7 +32,7 @@ export class OidcProviderController {
   @Post(OidcProviderRoutes.REDIRECT_TO_SP)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @ForbidRefresh()
-  async getLogin(
+  getLogin(
     @Req() req,
     @Res() res,
     /**
@@ -43,7 +43,7 @@ export class OidcProviderController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
-    const session: OidcClientSession = await sessionOidc.get();
+    const session: OidcClientSession = sessionOidc.get();
 
     return this.oidcProviderConfigApp.finishInteraction(req, res, session);
   }

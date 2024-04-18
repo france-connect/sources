@@ -8,5 +8,6 @@ export * from './pagination-result.type';
 export * from './partial-deep.type';
 export * from './partial-except.type';
 export * from './required-except.type';
+export * from './type-or-token.type';
 export * from './uuid.type';
 export * from './valueToArray.type';

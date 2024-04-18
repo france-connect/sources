@@ -20,7 +20,7 @@ describe('bindMiddlewares', () => {
       bindMiddlewares(mockMiddlewares, mockIsDevelopment);
 
       // then
-      expect(mockApplyMiddleWares).toHaveBeenCalledTimes(1);
+      expect(mockApplyMiddleWares).toHaveBeenCalledOnce();
       expect(mockApplyMiddleWares).toHaveBeenCalledWith(...mockMiddlewares);
     });
 
@@ -50,7 +50,7 @@ describe('bindMiddlewares', () => {
       bindMiddlewares(mockMiddlewares, mockIsDevelopment);
 
       // then
-      expect(mockComposeWithDevTools).toHaveBeenCalledTimes(1);
+      expect(mockComposeWithDevTools).toHaveBeenCalledOnce();
       expect(mockComposeWithDevTools).toHaveBeenCalledWith({ trace: true });
     });
   });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field } from 'react-final-form';
 
-import { CheckableLegend } from '../../../interfaces';
+import type { CheckableLegend } from '../../../interfaces';
 import { ToggleComponent } from './toggle.component';
 
 interface ToggleInputProps {

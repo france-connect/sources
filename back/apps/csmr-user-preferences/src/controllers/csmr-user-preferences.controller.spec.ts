@@ -54,7 +54,7 @@ describe('CsmrUserPreferencesController', () => {
     },
   };
 
-  const formatUserIdpSettingsListResultMock = [
+  const formatIdpSettingsResultMock = [
     {
       uid: 'foo',
       title: 'foo Title',
@@ -101,14 +101,14 @@ describe('CsmrUserPreferencesController', () => {
       // Given
       validationDtoMock.mockResolvedValueOnce([]);
       csmrUserPreferencesServiceMock.getIdpSettings.mockResolvedValueOnce(
-        formatUserIdpSettingsListResultMock,
+        formatIdpSettingsResultMock,
       );
       // When
       const result = await csmrUserPreferencesController.getIdpSettings(
         getIdpSettingsPayloadMock,
       );
       // Then
-      expect(result).toEqual(formatUserIdpSettingsListResultMock);
+      expect(result).toEqual(formatIdpSettingsResultMock);
     });
 
     it('should log error if error on csmrUserPreferencesService.getIdpSettings() occurs', async () => {
@@ -143,7 +143,7 @@ describe('CsmrUserPreferencesController', () => {
   });
 
   describe('setIdpSettings', () => {
-    const updatedIdpIdpSettingsFormattedMock = [
+    const updatedIdpSettingsFormattedMock = [
       {
         uid: 'bar',
         title: 'bar Title',
@@ -156,8 +156,8 @@ describe('CsmrUserPreferencesController', () => {
     const hasAllowFutureIdpChangedMock = true;
     const updatedAtMock = expect.any(Date);
     const expectedResultCsmrUserPreferencesServiceMockSetIdpSettings = {
-      formattedIdpSettingsList: formatUserIdpSettingsListResultMock,
-      updatedIdpSettingsList: updatedIdpIdpSettingsFormattedMock,
+      formattedIdpSettingsList: formatIdpSettingsResultMock,
+      updatedIdpSettingsList: updatedIdpSettingsFormattedMock,
       hasAllowFutureIdpChanged: hasAllowFutureIdpChangedMock,
       updatedAt: updatedAtMock,
     };
@@ -199,7 +199,7 @@ describe('CsmrUserPreferencesController', () => {
         allowFutureIdp: setIdpSettingsPayloadMock.idpSettings.allowFutureIdp,
         idpList:
           expectedResultCsmrUserPreferencesServiceMockSetIdpSettings.formattedIdpSettingsList,
-        updatedIdpSettingsList: updatedIdpIdpSettingsFormattedMock,
+        updatedIdpSettingsList: updatedIdpSettingsFormattedMock,
         hasAllowFutureIdpChanged: true,
         updatedAt: expect.any(Date),
       };

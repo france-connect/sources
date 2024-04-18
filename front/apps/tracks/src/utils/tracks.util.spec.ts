@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 
-import { CinematicEvents, EidasToLabel } from '../enums';
-import { EnhancedTrack, IRichClaim, TrackList, TracksConfig } from '../interfaces';
+import type { CinematicEvents, EidasToLabel } from '../enums';
+import type { EnhancedTrack, IRichClaim, TrackList, TracksConfig } from '../interfaces';
 import {
   groupByDataProvider,
   groupByDataProviderReducer,
@@ -89,7 +89,7 @@ describe('groupTracksByMonth', () => {
     expect(results).toHaveLength(1);
     expect(results[0][1].tracks).toHaveLength(1);
     expect(results[0][1].tracks[0]).toStrictEqual(track1);
-    expect(results[0][1].label).toStrictEqual('octobre 2011');
+    expect(results[0][1].label).toBe('octobre 2011');
   });
 
   it('doit retourner deux tracks dans un seul groupe', () => {
@@ -104,7 +104,7 @@ describe('groupTracksByMonth', () => {
     expect(results[0][1].tracks).toHaveLength(2);
     expect(results[0][1].tracks[0]).toStrictEqual(track1);
     expect(results[0][1].tracks[1]).toStrictEqual(track2);
-    expect(results[0][1].label).toStrictEqual('octobre 2011');
+    expect(results[0][1].label).toBe('octobre 2011');
   });
 
   it('doit retourner trois tracks dans deux groupes (2|1)', () => {
@@ -120,11 +120,11 @@ describe('groupTracksByMonth', () => {
     expect(results[0][1].tracks).toHaveLength(2);
     expect(results[0][1].tracks[0]).toStrictEqual(track1);
     expect(results[0][1].tracks[1]).toStrictEqual(track2);
-    expect(results[0][1].label).toStrictEqual('octobre 2011');
+    expect(results[0][1].label).toBe('octobre 2011');
     // seconds group
     expect(results[1][1].tracks).toHaveLength(1);
     expect(results[1][1].tracks[0]).toStrictEqual(track3);
-    expect(results[1][1].label).toStrictEqual('octobre 2012');
+    expect(results[1][1].label).toBe('octobre 2012');
   });
 });
 
@@ -212,13 +212,13 @@ describe('groupByDataProvider', () => {
   it('should call reduce with groupByDataProviderReducer', () => {
     // Given
     const claimsMock = [] as IRichClaim[];
-    claimsMock.reduce = jest.fn();
+    jest.spyOn(claimsMock, 'reduce').mockImplementation();
 
     // When
     groupByDataProvider(claimsMock);
 
     // Then
-    expect(claimsMock.reduce).toHaveBeenCalledTimes(1);
+    expect(claimsMock.reduce).toHaveBeenCalledOnce();
     expect(claimsMock.reduce).toHaveBeenCalledWith(groupByDataProviderReducer, expect.any(Object));
   });
 
@@ -226,7 +226,7 @@ describe('groupByDataProvider', () => {
     // Given
     const claimsMock = [] as IRichClaim[];
     const claimsReduceMockedReturn = Symbol('claimsReduceMockedReturnValue');
-    claimsMock.reduce = jest.fn().mockReturnValue(claimsReduceMockedReturn);
+    jest.spyOn(claimsMock, 'reduce').mockImplementation().mockReturnValue(claimsReduceMockedReturn);
 
     // When
     const result = groupByDataProvider(claimsMock);

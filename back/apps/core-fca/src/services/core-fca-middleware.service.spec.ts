@@ -18,7 +18,7 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { ISessionService, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -181,7 +181,7 @@ describe('CoreFcaMiddlewareService', () => {
 
     service = module.get<CoreFcaMiddlewareService>(CoreFcaMiddlewareService);
 
-    sessionServiceMock.get.mockResolvedValue(sessionDataMock);
+    sessionServiceMock.get.mockReturnValue(sessionDataMock);
   });
 
   it('should be defined', () => {
@@ -250,8 +250,6 @@ describe('CoreFcaMiddlewareService', () => {
       } as unknown as OidcCtx;
     };
 
-    const getBoundSessionMock = jest.spyOn(SessionService, 'getBoundSession');
-
     const sessionPropertiesMock = {
       interactionId: interactionIdValueMock,
       spAcr: spAcrMock,
@@ -268,9 +266,6 @@ describe('CoreFcaMiddlewareService', () => {
       service['checkRedirectToSso'] = jest.fn();
       service['getEventContext'] = jest.fn();
       service['renewSession'] = jest.fn();
-      getBoundSessionMock.mockReturnValue(
-        sessionServiceMock as unknown as ISessionService<unknown>,
-      );
     });
 
     it('should abort middleware execution if the request is flagged with an error', async () => {
@@ -281,7 +276,6 @@ describe('CoreFcaMiddlewareService', () => {
       // Then
       expect(service['getEventContext']).toHaveBeenCalledTimes(0);
       expect(configServiceMock.get).toHaveBeenCalledTimes(0);
-      expect(getBoundSessionMock).toHaveBeenCalledTimes(0);
       expect(service['isSsoAvailable']).toHaveBeenCalledTimes(0);
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(0);
       expect(service['isSsoAvailable']).toHaveBeenCalledTimes(0);
@@ -318,7 +312,6 @@ describe('CoreFcaMiddlewareService', () => {
       // Then
       expect(service['isSsoAvailable']).toHaveBeenCalledTimes(1);
       expect(service['isSsoAvailable']).toHaveBeenCalledWith(
-        sessionServiceMock,
         ctxMock.oidc.params.acr_values,
       );
     });
@@ -385,7 +378,7 @@ describe('CoreFcaMiddlewareService', () => {
       configServiceMock.get
         .mockReset()
         .mockReturnValueOnce({ enableSso: true });
-      service['isSsoAvailable'] = jest.fn().mockResolvedValue(true);
+      service['isSsoAvailable'] = jest.fn().mockReturnValueOnce(true);
       service['getEventContext'] = jest.fn().mockReturnValueOnce(eventCtxMock);
       service['buildSessionWithNewInteraction'] = jest
         .fn()
@@ -402,7 +395,7 @@ describe('CoreFcaMiddlewareService', () => {
       // Given
       const ctxMock = getCtxMock(false);
       const isSsoMock = false;
-      service['isSsoAvailable'] = jest.fn().mockResolvedValueOnce(false);
+      service['isSsoAvailable'] = jest.fn().mockReturnValueOnce(false);
       service['getEventContext'] = jest.fn().mockReturnValueOnce(eventCtxMock);
       service['buildSessionWithNewInteraction'] = jest
         .fn()
@@ -434,12 +427,6 @@ describe('CoreFcaMiddlewareService', () => {
 
   describe('isSsoSession', () => {
     // Given
-    const ctxMock = {
-      oidc: {},
-      req: reqMock,
-      res: resMock,
-    } as unknown as OidcCtx;
-
     const validateDtoMock = jest.mocked(validateDto);
     const validationWithErrorsMock = [
       Symbol('error'),
@@ -449,26 +436,22 @@ describe('CoreFcaMiddlewareService', () => {
       Symbol('error'),
     ] as unknown as ValidationError[];
     beforeEach(() => {
-      jest
-        .spyOn(SessionService, 'getBoundSession')
-        .mockReturnValue(sessionServiceMock);
-
       validateDtoMock.mockResolvedValueOnce(validationWithoutErrorsMock);
     });
 
     it('should call session.get() with the sessionService', async () => {
       // When
-      await service['isSsoSession'](ctxMock);
+      await service['isSsoSession']();
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
     });
 
     it('should skip DTO validation if sessionService returns undefined', async () => {
       // Given
-      sessionServiceMock.get.mockReset().mockResolvedValueOnce(undefined);
+      sessionServiceMock.get.mockReset().mockReturnValueOnce(undefined);
 
       // When
-      await service['isSsoSession'](ctxMock);
+      await service['isSsoSession']();
 
       // Then
       expect(validateDtoMock).not.toHaveBeenCalled();
@@ -476,10 +459,10 @@ describe('CoreFcaMiddlewareService', () => {
 
     it('should return false if sessionService returns undefined', async () => {
       // Given
-      sessionServiceMock.get.mockReset().mockResolvedValueOnce(undefined);
+      sessionServiceMock.get.mockReset().mockReturnValueOnce(undefined);
 
       // When
-      const result = await service['isSsoSession'](ctxMock);
+      const result = await service['isSsoSession']();
 
       // Then
       expect(result).toBe(false);
@@ -490,7 +473,7 @@ describe('CoreFcaMiddlewareService', () => {
       const sessionDataMock = Symbol('sessionData');
       sessionServiceMock.get.mockReturnValueOnce(sessionDataMock);
       // When
-      await service['isSsoSession'](ctxMock);
+      await service['isSsoSession']();
       // Then
       expect(validateDtoMock).toHaveBeenCalledTimes(1);
       expect(validateDtoMock).toHaveBeenCalledWith(
@@ -507,7 +490,7 @@ describe('CoreFcaMiddlewareService', () => {
         .mockResolvedValueOnce(validationWithErrorsMock);
 
       // When
-      const result = await service['isSsoSession'](ctxMock);
+      const result = await service['isSsoSession']();
       // Then
       expect(result).toBe(false);
     });
@@ -517,7 +500,7 @@ describe('CoreFcaMiddlewareService', () => {
       const validationErrorsMock = [] as unknown as ValidationError[];
       validateDtoMock.mockReset().mockResolvedValueOnce(validationErrorsMock);
       // When
-      const result = await service['isSsoSession'](ctxMock);
+      const result = await service['isSsoSession']();
       // Then
       expect(result).toBe(true);
     });
@@ -536,9 +519,6 @@ describe('CoreFcaMiddlewareService', () => {
     } as unknown as OidcCtx;
 
     beforeEach(() => {
-      SessionService.getBoundSession = jest
-        .fn()
-        .mockReturnValue(sessionServiceMock);
       service['isSsoSession'] = jest.fn().mockReturnValue(true);
 
       configServiceMock.get.mockReturnValueOnce({ enableSso: true });
@@ -553,7 +533,7 @@ describe('CoreFcaMiddlewareService', () => {
       await service['renewSession'](ctxMock);
       // Then
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.reset).toHaveBeenCalledWith(reqMock, resMock);
+      expect(sessionServiceMock.reset).toHaveBeenCalledWith(resMock);
     });
 
     it('should check if session is SSO compliant with isSsoSession()', async () => {
@@ -561,18 +541,17 @@ describe('CoreFcaMiddlewareService', () => {
       await service['renewSession'](ctxMock);
       // Then
       expect(service['isSsoSession']).toHaveBeenCalledTimes(1);
-      expect(service['isSsoSession']).toHaveBeenCalledWith(ctxMock);
+      expect(service['isSsoSession']).toHaveBeenCalledWith();
     });
 
     it('should call sessionService.duplicate if sso is enabled and spIdentity is present', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce(true);
+      sessionServiceMock.get.mockReturnValueOnce(true);
       // When
       await service['renewSession'](ctxMock);
       // Then
       expect(sessionServiceMock.duplicate).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.duplicate).toHaveBeenCalledWith(
-        reqMock,
         resMock,
         GetAuthorizeSessionDto,
       );
@@ -580,23 +559,23 @@ describe('CoreFcaMiddlewareService', () => {
   });
 
   describe('getBrowsingSessionId', () => {
-    it('should return browsingSessionId from session if it exists', async () => {
+    it('should return browsingSessionId from session if it exists', () => {
       // Given
       const sessionBrowsingSessionId = Symbol('sessionBrowsingSessionId');
-      sessionServiceMock.get.mockResolvedValueOnce(sessionBrowsingSessionId);
+      sessionServiceMock.get.mockReturnValueOnce(sessionBrowsingSessionId);
       // When
-      const result = await service['getBrowsingSessionId'](sessionServiceMock);
+      const result = service['getBrowsingSessionId']();
       // Then
       expect(result).toBe(sessionBrowsingSessionId);
     });
 
-    it('should return new browsingSessionId from uuid execution if it does not exists in session', async () => {
+    it('should return new browsingSessionId from uuid execution if it does not exists in session', () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce(undefined);
+      sessionServiceMock.get.mockReturnValueOnce(undefined);
       const newBrowsingSessionId = Symbol('newBrowsingSessionId');
       uuidMock.mockReturnValueOnce(newBrowsingSessionId);
       // When
-      const result = await service['getBrowsingSessionId'](sessionServiceMock);
+      const result = service['getBrowsingSessionId']();
       // Then
       expect(result).toBe(newBrowsingSessionId);
     });

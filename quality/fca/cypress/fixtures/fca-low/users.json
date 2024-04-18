@@ -1,9 +1,25 @@
 [
   {
     "enabled": true,
-    "criteria": [
-      "par défaut"
+    "criteria": ["pour moncomptepro"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "user@yopmail.com",
+        "password": "user@yopmail.com"
+      }
     ],
+    "claims": {
+      "uid": "1",
+      "given_name": "Jean",
+      "usual_name": "User",
+      "email": "user@yopmail.com",
+      "siret": "21920023500014"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["par défaut"],
     "credentials": [
       {
         "idpId": "default",
@@ -26,11 +42,10 @@
       "is_service_public": "true"
     }
   },
+
   {
     "enabled": true,
-    "criteria": [
-      "différent"
-    ],
+    "criteria": ["différent", "privé"],
     "credentials": [
       {
         "idpId": "default",
@@ -55,9 +70,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "personnalisé"
-    ],
+    "criteria": ["personnalisé"],
     "claims": {
       "uid": "42",
       "given_name": "Augusta Ada",

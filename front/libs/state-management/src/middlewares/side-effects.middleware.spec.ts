@@ -1,4 +1,4 @@
-import { FSA } from '@fc/common';
+import type { FSA } from '@fc/common';
 
 import { initSideEffectsMiddleware } from './side-effects.middleware';
 
@@ -52,7 +52,7 @@ describe('SideEffectsMiddleware', () => {
     actionHandler(fsaMock);
 
     // then
-    expect(sideEffectMapMock[ExistingHandlerType]).toHaveBeenCalledTimes(1);
+    expect(sideEffectMapMock[ExistingHandlerType]).toHaveBeenCalledOnce();
     expect(sideEffectMapMock[ExistingHandlerType]).toHaveBeenCalledWith(
       fsaMock,
       storeApiMock.dispatch,
@@ -117,7 +117,7 @@ describe('SideEffectsMiddleware', () => {
     actionHandler(fsaMock);
 
     // then
-    expect(nextMock).toHaveBeenCalledTimes(1);
+    expect(nextMock).toHaveBeenCalledOnce();
     expect(nextMock).toHaveBeenCalledWith(fsaMock);
   });
 });

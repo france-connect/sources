@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
-import { AccountContext, AccountInterface } from '@fc/account';
+import type { AccountInterface } from '@fc/account';
+import { AccountContext } from '@fc/account';
 
-import { AuthRouteProps } from '../../interfaces';
+import type { AuthRouteProps } from '../../interfaces';
 
 export const UnauthedRoute = React.memo(({ fallbackPath, replace }: AuthRouteProps) => {
   const { pathname } = useLocation();

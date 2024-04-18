@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative file
-import { Description } from '@fc/exceptions/decorator';
+import { Description } from '@fc/exceptions-deprecated/decorator';
 
 import { ErrorCode } from '../enums';
 import { ViewTemplateBaseException } from './view-template-base.exception';

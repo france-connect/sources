@@ -1,7 +1,7 @@
 import { Providers } from '../../enum';
-import { IProvider } from '../../interfaces';
+import { ProviderInterface } from '../../interfaces';
 
-export const provider: IProvider = {
+export const provider: ProviderInterface = {
   key: Providers.MESRI,
   label:
     'Ministère de l’Enseignement supérieur, de la Recherche et de l’Innovation',

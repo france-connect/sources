@@ -1,6 +1,7 @@
 import { ClassTransformOptions } from 'class-transformer';
 import { ValidatorOptions } from 'class-validator';
 import { Response } from 'express';
+import { cloneDeep } from 'lodash';
 
 import {
   Body,
@@ -11,6 +12,7 @@ import {
   Render,
   Req,
   Res,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -19,6 +21,7 @@ import { AppConfig } from '@fc/app';
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
+import { CsrfTokenGuard } from '@fc/csrf';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
@@ -29,13 +32,7 @@ import {
   OidcClientSession,
 } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
-import {
-  ISessionService,
-  Session,
-  SessionCsrfService,
-  SessionInvalidCsrfSelectIdpException,
-  SessionService,
-} from '@fc/session';
+import { ISessionService, Session, SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import {
@@ -58,7 +55,6 @@ export class OidcClientController {
     private readonly oidcClient: OidcClientService,
     private readonly oidcClientConfig: OidcClientConfigService,
     private readonly coreFca: CoreFcaService,
-    private readonly csrfService: SessionCsrfService,
     private readonly oidcProvider: OidcProviderService,
     private readonly sessionService: SessionService,
     private readonly tracking: TrackingService,
@@ -73,6 +69,7 @@ export class OidcClientController {
   @Header('cache-control', 'no-store')
   @IsStep()
   @ForbidRefresh()
+  @UseGuards(CsrfTokenGuard)
   // eslint-disable-next-line complexity
   async redirectToIdp(
     @Req() req,
@@ -84,33 +81,28 @@ export class OidcClientController {
      * @ticket FC-1020
      */
     @Session('OidcClient', GetRedirectToIdpOidcClientSessionDto)
-    sessionOidc: ISessionService<OidcClientSession>,
+    _sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
-    const { csrfToken, email } = body;
-    // control if the CSRF provided is the same as the one previously saved in session.
-    try {
-      await this.csrfService.validate(sessionOidc, csrfToken);
-    } catch (error) {
-      this.logger.debug(error);
-      throw new SessionInvalidCsrfSelectIdpException(error);
-    }
+    const { email } = body;
 
     const idpId = await this.coreFca.getIdpIdForEmail(email);
 
     const {
       // acr_values is an oidc defined variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      params: { acr_values: acr },
+      params: { acr_values },
     } = await this.oidcProvider.getInteraction(req, res);
 
     const authorizeParams = {
-      acr,
+      // acr_values is an oidc defined variable name
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      acr_values,
       // login_hint is an oidc defined variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       login_hint: email,
     };
 
-    await this.coreFca.redirectToIdp(res, idpId, sessionOidc, authorizeParams);
+    await this.coreFca.redirectToIdp(res, idpId, authorizeParams);
   }
 
   /**
@@ -132,7 +124,7 @@ export class OidcClientController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const { idpIdToken, idpId } = await sessionOidc.get();
+    const { idpIdToken, idpId } = sessionOidc.get();
 
     const { stateLength } = await this.oidcClientConfig.get();
     const idpState: string = this.crypto.genRandomString(stateLength);
@@ -156,13 +148,13 @@ export class OidcClientController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const { oidcProviderLogoutForm } = await sessionOidc.get();
+    const { oidcProviderLogoutForm } = sessionOidc.get();
 
     const trackingContext: TrackedEventContextInterface = { req };
     const { FC_SESSION_TERMINATED } = this.tracking.TrackedEventsMap;
     await this.tracking.track(FC_SESSION_TERMINATED, trackingContext);
 
-    await this.sessionService.destroy(req, res);
+    await this.sessionService.destroy(res);
 
     return { oidcProviderLogoutForm };
   }
@@ -185,21 +177,16 @@ export class OidcClientController {
      * @ticket FC-1020
      */
     @Session('OidcClient', GetOidcCallbackOidcClientSessionDto)
-    _sessionOidc: ISessionService<OidcClientSession>,
+    sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    await this.sessionService.duplicate(req, res, GetOidcCallbackSessionDto);
+    await this.sessionService.duplicate(res, GetOidcCallbackSessionDto);
     this.logger.debug('Session has been detached and duplicated');
-
-    const newSessionOidc = SessionService.getBoundSession<OidcClientSession>(
-      req,
-      'OidcClient',
-    );
 
     const { IDP_CALLEDBACK } = this.tracking.TrackedEventsMap;
     await this.tracking.track(IDP_CALLEDBACK, { req });
 
     const { idpId, idpNonce, idpState, interactionId, spId } =
-      await newSessionOidc.get();
+      sessionOidc.get();
 
     const tokenParams = {
       state: idpState,
@@ -238,14 +225,14 @@ export class OidcClientController {
 
     await this.validateIdentity(idpId, identity);
 
-    const identityExchange: OidcSession = {
+    const identityExchange: OidcSession = cloneDeep({
       amr,
       idpAccessToken: accessToken,
       idpIdToken: idToken,
       idpAcr: acr,
       idpIdentity: identity,
-    };
-    await newSessionOidc.set({ ...identityExchange });
+    });
+    sessionOidc.set(identityExchange);
 
     // BUSINESS: Redirect to business page
     const { urlPrefix } = this.config.get<AppConfig>('App');

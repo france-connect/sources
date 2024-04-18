@@ -472,7 +472,7 @@ describe('IdentityProviderAdapterMongoService', () => {
       // expect
       expect(loggerMock.alert).toHaveBeenCalledTimes(1);
       expect(loggerMock.alert).toHaveBeenCalledWith(
-        `Identity provider "${invalidIdentityProviderMock.uid}" is not valid.`,
+        `Identity provider "${invalidIdentityProviderMock.name}" (${invalidIdentityProviderMock.uid}) was excluded at DTO validation`,
       );
     });
 

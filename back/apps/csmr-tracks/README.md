@@ -115,8 +115,7 @@ Tracked events:
 
 - FC_VERIFIED : the user has been authenticated and arrived on the consent/information page of FranceConnect
 - FC_DATATRANSFER_CONSENT_IDENTITY : the user has given his consent to share its identity with a private service provider
-- FC_DATATRANSFER_CONSENT_DATA : the user has given his consent to share some data from a data provider with a private service provider
-- DP_REQUESTED_FC_CHECKTOKEN : the data provider has requested the validation of a token before providing its data to the private service provider
+- DP_VERIFIED_FC_CHECKTOKEN : Token verified by FC and the authorization for FD to communicate the requested scopes provided.
 
 event format:
 

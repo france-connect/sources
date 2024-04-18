@@ -68,7 +68,7 @@ describe('OidcProviderController', () => {
       .useValue(oidcProviderServiceMock)
       .compile();
 
-    oidcProviderController = await app.get<OidcProviderController>(
+    oidcProviderController = app.get<OidcProviderController>(
       OidcProviderController,
     );
 
@@ -94,7 +94,7 @@ describe('OidcProviderController', () => {
       // Given
       const req = {};
       const res = {};
-      sessionServiceMock.get.mockResolvedValueOnce(oidcSessionDataMock);
+      sessionServiceMock.get.mockReturnValueOnce(oidcSessionDataMock);
       // When
       await oidcProviderController.getLogin(req, res, sessionServiceMock);
       // Then

@@ -1,5 +1,5 @@
 import { I18nServiceNotInitializedExceptions, I18nTranslationNotFound } from '../exceptions';
-import { TranslationMap, TranslationsReplacement, TranslationValue } from '../interfaces';
+import type { TranslationMap, TranslationsReplacement, TranslationValue } from '../interfaces';
 
 let INSTANCE: I18nService | null = null;
 

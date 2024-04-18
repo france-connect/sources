@@ -63,7 +63,7 @@
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "footer li:nth-child(5) a",
+      "idpButton": "[data-testid='interaction-aidants-connect-button']",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "[type='submit']"

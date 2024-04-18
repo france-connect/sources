@@ -1,0 +1,11 @@
+<%# In the meantime, while waiting to have other message display mechanisms, we also condition it with the FI name. %>
+<% if (locals.errorContext.hasError && locals.errorContext.idpLabel) { %>
+  <div class="fr-col-12 fr-col-lg-10 fr-col-offset-lg-1">
+    <section class="fr-alert fr-alert--error" role="alert">
+      <p data-testid="interaction-error-message">
+       <%# This translation contains HTML markup so we use the unsafe ejs echo tag %> 
+       <%- $translate('interaction.idp_connexion_failed', { idpName: locals.errorContext.idpLabel }, { escapeVariables: true }) %>
+      </p>
+    </section>
+  </div>
+<% } %>

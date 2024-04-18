@@ -4,6 +4,7 @@
 import {
   IsArray,
   IsEnum,
+  IsObject,
   IsOptional,
   IsString,
   MinLength,
@@ -59,4 +60,8 @@ export class EidasRequest {
   @IsString()
   @IsEnum(EidasCountries)
   spCountryCode: EidasCountries;
+
+  @IsOptional()
+  @IsObject()
+  _attributes?: unknown;
 }

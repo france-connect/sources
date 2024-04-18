@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet-async';
 import { useMediaQuery } from 'react-responsive';
 import { Link, Outlet } from 'react-router-dom';
 
@@ -25,12 +25,12 @@ describe('ErrorPage', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should call react-helmet', () => {
+  it('should call react-helmet-async', () => {
     // when
     render(<ErrorPage />);
 
     // expect
-    expect(Helmet).toHaveBeenCalledTimes(1);
+    expect(Helmet).toHaveBeenCalledOnce();
   });
 
   it('should call react-router-dom Outlet', () => {
@@ -38,7 +38,7 @@ describe('ErrorPage', () => {
     render(<ErrorPage />);
 
     // expect
-    expect(Outlet).toHaveBeenCalledTimes(1);
+    expect(Outlet).toHaveBeenCalledOnce();
   });
 
   it('should call react-router-dom Link with params', () => {
@@ -47,7 +47,7 @@ describe('ErrorPage', () => {
     const element = getByText('Revenir à l’accueil');
 
     // expect
-    expect(Link).toHaveBeenCalledTimes(1);
+    expect(Link).toHaveBeenCalledOnce();
     expect(Link).toHaveBeenCalledWith(
       expect.objectContaining({ className: 'fr-btn fr-btn--secondary', to: '/' }),
       {},

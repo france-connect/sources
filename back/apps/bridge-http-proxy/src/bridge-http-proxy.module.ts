@@ -4,7 +4,7 @@
 import { Global, Module } from '@nestjs/common';
 
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
-import { ExceptionsModule } from '@fc/exceptions';
+import { ExceptionsModule } from '@fc/exceptions-deprecated';
 import { RabbitmqModule } from '@fc/rabbitmq';
 
 import { BridgeHttpProxyController } from './controllers';

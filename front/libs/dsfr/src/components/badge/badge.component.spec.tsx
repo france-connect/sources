@@ -75,7 +75,7 @@ describe('BadgeComponent', () => {
     render(<BadgeComponent icon={UserIcon} label="label" />);
 
     // then
-    expect(UserIcon).toHaveBeenCalledTimes(1);
+    expect(UserIcon).toHaveBeenCalledOnce();
   });
 
   it('should not have element <Icon /> even if we define a custom icon with noIcon value at true', () => {

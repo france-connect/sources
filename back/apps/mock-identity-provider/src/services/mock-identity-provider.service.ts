@@ -13,7 +13,7 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterEnvService } from '@fc/service-provider-adapter-env';
-import { ISessionBoundContext, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 
 import { AppConfig } from '../dto';
 import {
@@ -65,7 +65,6 @@ export class MockIdentityProviderService {
       return;
     }
 
-    const { sessionId } = ctx.req;
     const interactionId = this.oidcProvider.getInteractionIdFromCtx(ctx);
 
     // oidc defined variable name
@@ -80,13 +79,8 @@ export class MockIdentityProviderService {
       spName,
     };
 
-    const boundSessionContext: ISessionBoundContext = {
-      sessionId,
-      moduleName: 'OidcClient',
-    };
-
-    await this.sessionService.set(boundSessionContext, sessionProperties);
-    await this.sessionService.commit(boundSessionContext);
+    this.sessionService.set('OidcClient', sessionProperties);
+    await this.sessionService.commit();
   }
 
   private async loadDatabases(): Promise<void> {
@@ -148,7 +142,14 @@ export class MockIdentityProviderService {
       return true;
     }
 
-    return password === inputPassword;
+    return (
+      // Crypto timing safe equal wants buffers with the same length
+      password.length === inputPassword.length &&
+      crypto.timingSafeEqual(
+        Buffer.from(inputPassword, 'utf-8'),
+        Buffer.from(password, 'utf-8'),
+      )
+    );
   }
 
   getSub(identity: Csv | CsvParsed): string {

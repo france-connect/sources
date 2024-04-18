@@ -83,6 +83,42 @@ When(
   },
 );
 
+Given(
+  "je paramètre un intercepteur pour l'appel à la redirect_uri du fournisseur de service",
+  function () {
+    const { url }: ServiceProvider = this.serviceProvider;
+    cy.intercept(`${url}/oidc-callback*`, (req) => {
+      req.reply({
+        body: '<h1>Intercepted request</h1>',
+      });
+    }).as('FS:OidcCallback');
+  },
+);
+
+Given(
+  'je mets le code renvoyé par FC au FS dans la propriété "code" du corps de la requête',
+  function () {
+    cy.wait('@FS:OidcCallback')
+      .its('request.query.code')
+      .should('exist')
+      .then((value: string) => {
+        this.requestOptions.body['code'] = value;
+      });
+  },
+);
+
+Given(
+  'je mets l\'access token fourni par FC dans le paramètre "authorization" de l\'entête de la requête',
+  function () {
+    cy.get('@apiResponse')
+      .its('body.access_token')
+      .should('exist')
+      .then((accessToken: string) => {
+        this.requestOptions.headers['authorization'] = `Bearer ${accessToken}`;
+      });
+  },
+);
+
 Then('je suis redirigé vers la page fournisseur de service', function () {
   serviceProviderPage.checkIsVisible();
 });
@@ -228,5 +264,15 @@ Then(
         const token = JSON.parse(tokenText);
         cy.wrap(token).as('tokenIntrospection');
       });
+  },
+);
+
+Then(
+  /^le message d'erreur (est|n'est pas) présent sur la mire$/,
+  function (state: string) {
+    const exist = state === 'est';
+    serviceProviderPage
+      .getInteractionErrorMessage()
+      .should(exist ? 'be.visible' : 'not.exist');
   },
 );

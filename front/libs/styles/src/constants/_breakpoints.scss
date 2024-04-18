@@ -1,0 +1,13 @@
+// https://www.systeme-de-design.gouv.fr/elements-d-interface/fondamentaux-techniques/grille-et-points-de-rupture
+$breakpoints: (
+  // Mobile Small
+  xs: 320px,
+  // Mobile
+  sm: 576px,
+  // Tablet
+  md: 768px,
+  // Desktop
+  lg: 992px,
+  // Desktop Extra Large
+  xl: 1440px
+);

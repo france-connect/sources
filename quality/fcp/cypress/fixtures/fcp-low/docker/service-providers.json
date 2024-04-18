@@ -11,12 +11,8 @@
     "url": "https://fsp1-low.docker.dev-franceconnect.fr",
     "clientId": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
     "acrValue": "eidas1",
-    "claims": [
-      "amr"
-    ],
-    "scopes": [
-      "tous les scopes"
-    ],
+    "claims": ["amr"],
+    "scopes": ["tous les scopes"],
     "explicitConsent": false,
     "selectors": {
       "fcButton": "#call-authorize-button",
@@ -30,16 +26,15 @@
       "non habilité à demander le claim amr",
       "avec une whitelist de FI",
       "avec le même entityId",
-      "avec accès au FI par défaut (deuxième FS)"
+      "avec accès au FI par défaut (deuxième FS)",
+      "sans accès au FI Aidants Connect"
     ],
     "mocked": true,
     "url": "https://fsp2-low.docker.dev-franceconnect.fr",
     "clientId": "7a79e45107f9ccc6a3a5971d501220dc4fd9e87bb5e3fc62ce4104c756e22775",
     "acrValue": "eidas1",
     "claims": [],
-    "scopes": [
-      "tous les scopes"
-    ],
+    "scopes": ["tous les scopes"],
     "explicitConsent": false,
     "selectors": {
       "fcButton": "#call-authorize-button",
@@ -60,9 +55,7 @@
     "clientId": "5a6e58c6e0cf3cb21de192c567335a8ec121a3f96d0fd48cf58c1f1c48235b63",
     "acrValue": "eidas1",
     "claims": [],
-    "scopes": [
-      "tous les scopes"
-    ],
+    "scopes": ["tous les scopes"],
     "explicitConsent": true,
     "selectors": {
       "fcButton": "#call-authorize-button",
@@ -81,9 +74,7 @@
     "clientId": "6925fb7843c76eded44d32b40c0cb1gyu065f7f003de52712b78985704f39950",
     "acrValue": "eidas1",
     "claims": [],
-    "scopes": [
-      "tous les scopes"
-    ],
+    "scopes": ["tous les scopes"],
     "explicitConsent": false,
     "selectors": {
       "fcButton": "#call-authorize-button",

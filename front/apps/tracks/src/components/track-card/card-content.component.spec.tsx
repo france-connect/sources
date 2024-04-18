@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
 import { CinematicEvents } from '../../enums';
-import { IRichClaim } from '../../interfaces';
+import type { IRichClaim } from '../../interfaces';
 import { TrackCardContentComponent } from './card-content.component';
 import { ClaimsComponent } from './claims.component';
 import { ConnectionComponent } from './connection.component';
@@ -75,7 +75,7 @@ describe('TrackCardContentComponent', () => {
         claims={claimsMock}
         country="countryMock"
         datetime={date}
-        eventType={CinematicEvents.DP_REQUESTED_FC_CHECKTOKEN}
+        eventType={CinematicEvents.DP_VERIFIED_FC_CHECKTOKEN}
         idpLabel="idpLabelValue"
         opened={false}
         options={options}
@@ -108,7 +108,7 @@ describe('TrackCardContentComponent', () => {
     );
 
     // Then
-    expect(ConnectionComponent).toHaveBeenCalledTimes(1);
+    expect(ConnectionComponent).toHaveBeenCalledOnce();
 
     expect(ConnectionComponent).toHaveBeenCalledWith(
       {
@@ -144,7 +144,7 @@ describe('TrackCardContentComponent', () => {
     );
 
     // Then
-    expect(ClaimsComponent).toHaveBeenCalledTimes(1);
+    expect(ClaimsComponent).toHaveBeenCalledOnce();
 
     expect(ClaimsComponent).toHaveBeenCalledWith(
       {

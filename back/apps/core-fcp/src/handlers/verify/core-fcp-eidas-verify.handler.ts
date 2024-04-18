@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { CoreAccountService, CoreAcrService } from '@fc/core';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
 import { FeatureHandler } from '@fc/feature-handler';
+import { I18nService } from '@fc/i18n';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
@@ -25,6 +26,7 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
     private readonly cryptographyEidas: CryptographyEidasService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
+    private readonly i18n: I18nService,
   ) {}
 
   async handle({
@@ -33,8 +35,7 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     this.logger.debug('getConsent service: ##### core-fcp-eidas-verify ');
 
     // Grab informations on interaction and identity
-    const { idpId, idpIdentity, idpAcr, spId, spAcr, subs } =
-      await sessionOidc.get();
+    const { idpId, idpIdentity, idpAcr, spId, spAcr, subs } = sessionOidc.get();
     const { entityId } = await this.serviceProvider.getById(spId);
 
     // Acr check
@@ -64,12 +65,27 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
 
     // Delete idp identity from volatile memory but keep the sub for the business logs.
     const idpIdentityCleaned = { sub: idpIdentity.sub };
+    const technicalClaims = this.getTechnicalClaims(idpId);
 
-    await sessionOidc.set({
+    sessionOidc.set({
       idpIdentity: idpIdentityCleaned,
-      spIdentity: spIdentityCleaned,
+      spIdentity: {
+        ...spIdentityCleaned,
+        ...technicalClaims,
+      },
       accountId,
       subs: { ...subs, [spId]: sub },
     });
+
+    // Force language to be en-GB when coming from eIDAS bridge
+    this.i18n.setSessionLanguage('en-GB');
+  }
+
+  private getTechnicalClaims(idpId: string): Record<string, unknown> {
+    return {
+      // OIDC fashion naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      idp_id: idpId,
+    };
   }
 }

@@ -7,6 +7,8 @@ import {
   AsyncLocalStorageService,
 } from '@fc/async-local-storage';
 import { ConfigService } from '@fc/config';
+import { SessionStoreInterface } from '@fc/session/interfaces';
+import { SESSION_STORE_KEY } from '@fc/session/tokens';
 
 import { LoggerConfig } from '../dto';
 import { LogLevels } from '../enums';
@@ -26,15 +28,13 @@ export class LoggerService {
     [LogLevels.INFO]: 20,
     [LogLevels.DEBUG]: 10,
   };
-  private pino: Logger<{
-    level: LogLevels;
-    customLevels: CustomLogLevels;
-    useOnlyCustomLevels: boolean;
-  }>;
+  private pino: Logger<keyof CustomLogLevels>;
 
   constructor(
     private readonly config: ConfigService,
-    private readonly asyncLocalStorage: AsyncLocalStorageService<AsyncLocalStorageRequestInterface>,
+    private readonly asyncLocalStorage: AsyncLocalStorageService<
+      AsyncLocalStorageRequestInterface & SessionStoreInterface
+    >,
   ) {
     this.configure();
   }
@@ -107,16 +107,19 @@ export class LoggerService {
 
   private getRequestContext(): LogContextInterface | undefined {
     const req = this.asyncLocalStorage.get('request');
+    const sessionStore = this.asyncLocalStorage.get(SESSION_STORE_KEY);
 
     if (!req) {
       return;
     }
 
-    const { headers, method, baseUrl, path, sessionId } = req;
+    const sessionId = sessionStore?.id;
+
+    const { headers, method, baseUrl, path } = req;
     const context: Partial<LogContextInterface> = {
-      sessionId,
       method,
       path: `${baseUrl}${path}`,
+      sessionId,
     };
 
     if (headers['x-request-id']) {

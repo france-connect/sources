@@ -10,7 +10,7 @@ const claimsGroups = $groupByDataProvider(claims);
       class="fr-accordion__btn"
       aria-expanded="<%= !!locals.consentRequired %>"
       aria-controls="accordion-consent">
-      Données transmises
+      <%= $translate('consent.transmitted_data') %>
     </button>
   </h3>
   <div class="fr-collapse" id="accordion-consent">
@@ -18,7 +18,7 @@ const claimsGroups = $groupByDataProvider(claims);
     <div>
     <% Object.values(claimsGroups).forEach((group) => { %>
 
-         <p class="fr-mb-0"><strong>Informations récupérées depuis <%= group[0].provider.label%></strong></p>
+         <p class="fr-mb-0"><strong><%= $translate('consent.data_fetched_from', { dpName: group[0].provider.label }) %></strong></p>
 
          <ul data-testid="consent-detail">
           <%# last minute sort to avoid unnecessary loops %>

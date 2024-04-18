@@ -7,7 +7,7 @@ import { IsIn, IsString } from 'class-validator';
 import { CoreBaseOidcClientSessionDto, CoreRoutes } from '@fc/core';
 
 import { AppSession } from './app-session.dto';
-import { CoreSessionDto } from './core-session.dto';
+import { CoreSession } from './core-session.dto';
 
 export class GetRedirectToIdpOidcClientSessionDto extends CoreBaseOidcClientSessionDto {
   // Metadata: We MUST restrict the routes we can come from
@@ -27,6 +27,6 @@ export class GetRedirectToIdpSessionDto {
   readonly OidcClient: GetRedirectToIdpOidcClientSessionDto;
 
   @Expose()
-  @Type(() => CoreSessionDto)
-  readonly Core: CoreSessionDto;
+  @Type(() => CoreSession)
+  readonly Core: CoreSession;
 }

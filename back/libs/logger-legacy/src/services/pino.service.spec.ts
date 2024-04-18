@@ -66,7 +66,9 @@ describe('PinoAdapterService', () => {
     );
     getDestinationMock.mockReturnValueOnce(streamMock);
 
-    jest.mocked(pino).mockReturnValueOnce(pinoMock as unknown as Logger);
+    jest
+      .mocked(pino)
+      .mockReturnValueOnce(pinoMock as unknown as Logger<string>);
   });
 
   it('should be defined', async () => {

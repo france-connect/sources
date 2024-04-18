@@ -1,6 +1,6 @@
-import { IClaims } from '../../interfaces';
+import { ClaimsInterface } from '../../interfaces';
 
-export const claims: IClaims = {
+export const claims: ClaimsInterface = {
   sub: 'sub',
   gender: 'gender',
   // OIDC fashion naming
@@ -22,7 +22,11 @@ export const claims: IClaims = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   phone_number: 'phone_number',
   email: 'email',
+  // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
   idp_birthdate: 'idp_birthdate',
   amr: 'amr',
+  // OIDC fashion naming
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  idp_id: 'idp_id',
 };

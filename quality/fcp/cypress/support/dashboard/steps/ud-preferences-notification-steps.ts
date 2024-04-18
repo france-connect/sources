@@ -12,6 +12,9 @@ Then(/^le mail "modification de préférences FI" est envoyé$/, function () {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(1000);
   updateMessage.visitLastUpdateMessage(user.email);
+  // Wait for all the mail images to load
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(300);
 });
 
 Then(

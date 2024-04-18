@@ -8,19 +8,14 @@ import {
 import { useMediaQuery } from 'react-responsive';
 
 import { CinematicEvents } from '../../enums';
-import { Badges } from '../../interfaces';
+import type { Badges } from '../../interfaces';
 import styles from './card-badge.module.scss';
 
 const TYPE_CONFIG = {
-  [CinematicEvents.DP_REQUESTED_FC_CHECKTOKEN]: {
+  [CinematicEvents.DP_VERIFIED_FC_CHECKTOKEN]: {
     Icon: ArrowsIcon,
     colorName: 'pink-macaron',
     label: 'Échange de Données',
-  },
-  [CinematicEvents.FC_DATATRANSFER_CONSENT_DATA]: {
-    Icon: CheckIcon,
-    colorName: 'green-emeraude',
-    label: 'Autorisation',
   },
   [CinematicEvents.FC_DATATRANSFER_CONSENT_IDENTITY]: {
     Icon: CheckIcon,

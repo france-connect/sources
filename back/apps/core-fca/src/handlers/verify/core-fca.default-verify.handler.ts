@@ -40,7 +40,7 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
   }: IVerifyFeatureHandlerHandleArgument): Promise<void> {
     this.logger.debug('verifyIdentity service: ##### core-fca-default-verify');
 
-    const { idpId, idpIdentity, idpAcr, spId, spAcr } = await sessionOidc.get();
+    const { idpId, idpIdentity, idpAcr, spId, spAcr } = sessionOidc.get();
 
     // Acr check
     const { maxAuthorizedAcr } = await this.identityProvider.getById(idpId);
@@ -63,7 +63,7 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
     // get sp's sub to avoid double computation
     const spIdentity = this.getSpSub(agentIdentity, idpId, idpAcr);
 
-    await this.storeIdentityWithSessionService(
+    this.storeIdentityWithSessionService(
       sessionOidc,
       sub,
       spIdentity,
@@ -114,15 +114,15 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
     };
   }
 
-  protected async storeIdentityWithSessionService(
+  protected storeIdentityWithSessionService(
     sessionOidc: ISessionService<OidcClientSession>,
     sub: string,
     // AgentConnect claims naming convention
     // eslint-disable-next-line @typescript-eslint/naming-convention
     spIdentity: Partial<Omit<IOidcIdentity, 'sub'>>,
     accountId: string,
-  ): Promise<void> {
-    const { idpIdentity, spId, amr, subs } = await sessionOidc.get();
+  ): void {
+    const { idpIdentity, spId, amr, subs } = sessionOidc.get();
 
     const session: OidcClientSession = {
       amr,
@@ -132,6 +132,6 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
       subs: { ...subs, [spId]: sub },
     };
 
-    await sessionOidc.set(session);
+    sessionOidc.set(session);
   }
 }

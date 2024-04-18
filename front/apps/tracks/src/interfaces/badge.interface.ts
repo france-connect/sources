@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-import { IconType } from 'react-icons';
+import type { IconType } from 'react-icons';
 
 export interface Badge {
   colorName: string;

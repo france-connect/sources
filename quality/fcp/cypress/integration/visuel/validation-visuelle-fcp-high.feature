@@ -122,3 +122,42 @@ Fonctionnalité: Validation Visuelle
       | tablet portrait  |
       | tablet landscape |
       | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Message d'erreur sur MIRE retour FI <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Quand je clique sur le lien retour vers FC depuis un FI
+    Alors je suis redirigé vers la page sélection du fournisseur d'identité
+    Et le message d'erreur est présent sur la mire
+    Et la copie d'écran "messageErreurMireUsager" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |
+
+  # TODO: Investigate flaky visual test
+  @ignore
+  Plan du Scénario: Validation Visuelle - avec modale de sélection FI <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que j'attends le chargement de la page 500ms
+    Et que j'utilise le fournisseur d'identité "avec modale de sélection FI"
+    Quand je clique sur le fournisseur d'identité
+    Et que la modale "sélection FI" est présente sur la mire
+    Et que la copie d'écran "modalSelectionFI" correspond à l'élément web "[aria-modal='true']" sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |

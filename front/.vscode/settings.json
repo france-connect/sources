@@ -1,6 +1,11 @@
 {
   "editor.formatOnSave": true,
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
@@ -22,5 +27,7 @@
     "vue-postcss",
     "xml",
     "xsl"
-  ]
+  ],
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true
 }

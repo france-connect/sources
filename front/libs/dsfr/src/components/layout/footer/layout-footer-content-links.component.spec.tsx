@@ -1,4 +1,3 @@
-// @see _doc/jest.md
 import { render } from '@testing-library/react';
 
 import { LayoutFooterContentLinksComponent } from './layout-footer-content-links.component';

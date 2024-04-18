@@ -9,6 +9,7 @@ import Core from './core';
 import CryptographyEidas from './cryptography-eidas';
 import CryptographyFcp from './cryptography-fcp';
 import DataProviderAdapterMongo from './data-provider-adapter-mongo';
+import I18n from './i18n';
 import IdentityProviderAdapterMongo from './identity-provider-adapter-mongo';
 import Logger from './logger';
 import LoggerLegacy from './logger-legacy';
@@ -47,4 +48,5 @@ export default {
   IdentityProviderAdapterMongo,
   Scopes,
   Tracking,
+  I18n,
 } as CoreFcpConfig;

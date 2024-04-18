@@ -135,6 +135,7 @@ export class IdentityProviderAdapterMongoService
           // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: true,
           endSessionURL: true,
+          modal: true,
         },
       )
       .sort({ order: 'asc', createdAt: 'asc' })
@@ -162,10 +163,14 @@ export class IdentityProviderAdapterMongoService
 
         const dto = this.getIdentityProviderDTO(doc.discovery);
         const errors = await validateDto(doc, dto, validationOptions);
+        const { name, uid } = doc;
 
         if (errors.length > 0) {
-          this.logger.alert(`Identity provider "${doc.uid}" is not valid.`);
-          this.logger.debug(errors);
+          this.logger.alert(
+            `Identity provider "${name}" (${uid}) was excluded at DTO validation`,
+          );
+
+          this.logger.debug({ errors });
         }
 
         return errors.length === 0;

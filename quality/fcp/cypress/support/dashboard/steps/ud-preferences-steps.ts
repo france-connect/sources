@@ -10,7 +10,7 @@ import UdPreferencesPage from '../pages/ud-preferences-page';
 let udPreferencesPage: UdPreferencesPage;
 
 Given(
-  'je navigue directement vers la page gestion des accès du dashboard usager',
+  'je navigue directement vers la page gestion des accès du tableau de bord usager',
   function () {
     const { allAppsUrl }: Environment = this.env;
     navigateTo({ appId: 'ud-preferences', baseUrl: allAppsUrl });
@@ -18,7 +18,7 @@ Given(
 );
 
 Given(
-  'je navigue vers la page gestion des accès du dashboard usager',
+  'je navigue vers la page gestion des accès du tableau de bord usager',
   function () {
     const { allAppsUrl, udRootUrl }: Environment = this.env;
     navigateTo({ appId: 'ud-preferences', baseUrl: allAppsUrl });
@@ -31,7 +31,7 @@ Given(
 );
 
 Given(
-  /^je suis (redirigé vers|sur) la page gestion des accès du dashboard usager$/,
+  /^je suis (redirigé vers|sur) la page gestion des accès du tableau de bord usager$/,
   function () {
     const { udRootUrl }: Environment = this.env;
     udPreferencesPage = new UdPreferencesPage(udRootUrl);

@@ -42,7 +42,7 @@ describe('LayoutFooterComponent', () => {
 
     // then
     expect(container).toMatchSnapshot();
-    expect(LayoutHomepageLinkComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHomepageLinkComponent).toHaveBeenCalledOnce();
     expect(LayoutHomepageLinkComponent).toHaveBeenCalledWith(
       expect.objectContaining({
         isFooter: true,
@@ -80,7 +80,7 @@ describe('LayoutFooterComponent', () => {
     );
 
     // then
-    expect(LayoutFooterContentLinksComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutFooterContentLinksComponent).toHaveBeenCalledOnce();
   });
 
   it('should render the footerLinkTitle', () => {
@@ -133,7 +133,7 @@ describe('LayoutFooterComponent', () => {
 
     // then
     expect(container).toMatchSnapshot();
-    expect(LayoutFooterBottomLinksComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutFooterBottomLinksComponent).toHaveBeenCalledOnce();
     expect(LayoutFooterBottomLinksComponent).toHaveBeenCalledWith({ items: bottomLinksMock }, {});
   });
 
@@ -149,7 +149,7 @@ describe('LayoutFooterComponent', () => {
     );
 
     // then
-    expect(LayoutFooterLicenceComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutFooterLicenceComponent).toHaveBeenCalledOnce();
   });
 
   it('should not render .fr-footer__bottom element when bottomLinks and showLicence are falsy', () => {

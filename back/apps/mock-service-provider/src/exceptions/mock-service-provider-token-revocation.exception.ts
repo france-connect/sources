@@ -1,4 +1,4 @@
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { MockServiceProviderBaseException } from './mock-service-provider-base.exception';

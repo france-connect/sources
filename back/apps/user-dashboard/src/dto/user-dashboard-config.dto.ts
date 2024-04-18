@@ -4,6 +4,7 @@
 import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
+import { I18nConfig } from '@fc/i18n';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
 import { LoggerConfig } from '@fc/logger';
 import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
@@ -77,4 +78,9 @@ export class UserDashboardConfig {
   @ValidateNested()
   @Type(() => TrackingConfig)
   readonly Tracking: TrackingConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => I18nConfig)
+  readonly I18n: I18nConfig;
 }

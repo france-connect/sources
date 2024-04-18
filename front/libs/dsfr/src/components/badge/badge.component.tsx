@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React from 'react';
-import { IconType } from 'react-icons';
+import type { IconType } from 'react-icons';
 
 import { Sizes } from '../../enums';
 import styles from './badge.module.scss';

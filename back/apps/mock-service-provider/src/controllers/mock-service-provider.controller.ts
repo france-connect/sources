@@ -51,7 +51,7 @@ export class MockServiceProviderController {
     private readonly mockServiceProvider: MockServiceProviderService,
   ) {}
 
-  @Get()
+  @Get(MockServiceProviderRoutes.INDEX)
   @Render('index')
   async index(
     /**
@@ -70,7 +70,7 @@ export class MockServiceProviderController {
     const { authorizationUrl, params } =
       await this.getInteractionParameters(provider);
 
-    await sessionOidc.set({
+    sessionOidc.set({
       idpId: provider.uid,
       idpState: params.state,
       idpNonce: params.nonce,
@@ -88,7 +88,7 @@ export class MockServiceProviderController {
 
   @Get(MockServiceProviderRoutes.VERIFY)
   @Render('login-callback')
-  async getVerify(
+  getVerify(
     @Res() res,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
@@ -98,7 +98,7 @@ export class MockServiceProviderController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const session = await sessionOidc.get();
+    const session = sessionOidc.get();
 
     // Redirect to the home page if no idpIdentity present in the session
     if (!session?.idpIdentity) {
@@ -130,7 +130,7 @@ export class MockServiceProviderController {
     @Query('post_logout_redirect_uri')
     postLogoutRedirectUri?: string,
   ) {
-    const { idpIdToken, idpState, idpId } = await sessionOidc.get();
+    const { idpIdToken, idpState, idpId } = sessionOidc.get();
 
     const endSessionUrl = await this.oidcClient.getEndSessionUrlFromProvider(
       idpId,
@@ -222,7 +222,7 @@ export class MockServiceProviderController {
       return res.redirect(errorUri);
     }
 
-    const session: OidcSession = await sessionOidc.get();
+    const session: OidcSession = sessionOidc.get();
 
     if (!session) {
       throw new SessionNotFoundException('OidcClient');
@@ -261,7 +261,7 @@ export class MockServiceProviderController {
       idpIdToken: idToken,
     };
 
-    await sessionOidc.set({ ...identityExchange });
+    sessionOidc.set({ ...identityExchange });
 
     // BUSINESS: Redirect to business page
     const { urlPrefix } = this.config.get<AppConfig>('App');
@@ -293,7 +293,7 @@ export class MockServiceProviderController {
         providerUid,
       );
 
-      const idpIdToken = await sessionOidc.get('idpIdToken');
+      const idpIdToken = sessionOidc.get('idpIdToken');
 
       const { dataApis } = this.config.get<AppConfig>('App');
 
@@ -339,7 +339,7 @@ export class MockServiceProviderController {
       return res.redirect(redirect);
     }
 
-    const { idpAccessToken } = await sessionOidc.get();
+    const { idpAccessToken } = sessionOidc.get();
 
     const data = await Promise.all(
       dataApis.map(async (dataApi) => {
@@ -385,7 +385,6 @@ export class MockServiceProviderController {
     const authorizeParams = {
       state,
       scope,
-      idpId: provider.uid,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: defaultAcrValue,
       nonce,
@@ -394,7 +393,10 @@ export class MockServiceProviderController {
     };
 
     const authorizationUrl: string =
-      await this.oidcClient.utils.getAuthorizeUrl(authorizeParams);
+      await this.oidcClient.utils.getAuthorizeUrl(
+        provider.uid,
+        authorizeParams,
+      );
 
     const url = new URL(authorizationUrl);
 

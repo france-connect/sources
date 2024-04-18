@@ -49,7 +49,7 @@ describe('EidasCountryService', () => {
       const [firstCountry] = mockCountryList;
       service = await getServiceMock();
       // When
-      const result = await service.getListByIso(['iso1Value']);
+      const result = service.getListByIso(['iso1Value']);
       // Then
       expect(result).toStrictEqual([firstCountry]);
     });
@@ -60,7 +60,7 @@ describe('EidasCountryService', () => {
 
       service = await getServiceMock();
       // When
-      const result = await service.getListByIso(['iso1Value']);
+      const result = service.getListByIso(['iso1Value']);
       // Then
       expect(result).toStrictEqual([]);
     });

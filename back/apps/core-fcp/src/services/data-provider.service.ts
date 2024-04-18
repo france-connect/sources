@@ -16,15 +16,14 @@ import {
 } from '@fc/data-provider-adapter-mongo';
 import { CustomJwtPayload, JwtService } from '@fc/jwt';
 import { AccessToken, atHashFromAccessToken, stringToArray } from '@fc/oidc';
-import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { OidcProviderRedisAdapter } from '@fc/oidc-provider/adapters';
 import { RedisService } from '@fc/redis';
 import { RnippPivotIdentity } from '@fc/rnipp';
 import { ScopesService } from '@fc/scopes';
-import { ISessionService, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 
-import { ChecktokenRequestDto, ErrorParamsDto } from '../dto';
+import { ChecktokenRequestDto, CoreFcpSession, ErrorParamsDto } from '../dto';
 import {
   CoreFcpFetchDataProviderJwksFailedException,
   InvalidChecktokenRequestException,
@@ -90,7 +89,7 @@ export class DataProviderService {
   }
 
   async generatePayload(
-    oidcSessionService: ISessionService<OidcClientSession>,
+    userSession: CoreFcpSession,
     accessToken: string,
     dpClientId: string,
   ): Promise<CustomJwtPayload<DpJwtPayloadInterface>> {
@@ -112,11 +111,7 @@ export class DataProviderService {
       return this.generateExpiredPayload(dpClientId);
     }
 
-    return this.generateValidPayload(
-      dpClientId,
-      oidcSessionService,
-      interaction,
-    );
+    return this.generateValidPayload(dpClientId, userSession, interaction);
   }
 
   generateExpiredPayload(aud: string): CustomJwtPayload<DpJwtPayloadInterface> {
@@ -155,7 +150,7 @@ export class DataProviderService {
 
   private async generateValidPayload(
     dpClientId: string,
-    oidcSessionService: ISessionService<OidcClientSession>,
+    userSession: CoreFcpSession,
     interaction: AccessToken,
   ): Promise<CustomJwtPayload<DpJwtPayloadInterface>> {
     const {
@@ -170,7 +165,10 @@ export class DataProviderService {
       clientId: spClientId,
     } = interaction;
 
-    const { rnippIdentity } = await oidcSessionService.get();
+    const {
+      OidcClient: { rnippIdentity },
+    } = userSession;
+
     const dpSub = this.generateDataProviderSub(rnippIdentity, dpClientId);
 
     const scope = await this.getDpRelatedScopes(dpClientId, interaction);

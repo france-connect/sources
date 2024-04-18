@@ -78,6 +78,7 @@
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_CRYPTO_SIG_RS256_PRIV_KEYS | json |
+| OidcProvider_IS_LOCALHOST_ALLOWED | boolean |
 | OidcProvider_PREFIX | string |
 | OverrideOidcProvider_CRYPTO_SIG_HSM_PUB_KEYS | json |
 | REQUEST_TIMEOUT | string |
@@ -140,6 +141,7 @@
 | OidcClient_SCOPE | string |
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_FAKE_PRIV_KEYS | json |
+| OidcProvider_IS_LOCALHOST_ALLOWED | boolean |
 | OidcProvider_PREFIX | string |
 | OverrideOidcProvider_CRYPTO_SIG_HSM_PUB_KEYS | json |
 | REQUEST_TIMEOUT | string |
@@ -208,6 +210,7 @@
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_CRYPTO_SIG_RS256_PRIV_KEYS | json |
+| OidcProvider_IS_LOCALHOST_ALLOWED | boolean |
 | OidcProvider_PREFIX | string |
 | OidcProvider_USE_ENCRYPTION | string |
 | OverrideOidcProvider_CRYPTO_SIG_HSM_PUB_KEYS | json |

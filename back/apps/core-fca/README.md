@@ -1,4 +1,4 @@
-# FC Core
+# AgentConnect Core
 
 Application "core" d'AgentConnect, il s'agit de l'application proposée aux agents de l'Etat pour se connecter à un fournisseur de service (SP) partenaire grâce à un fournisseur d'identité (IdP) partenaire.
 
@@ -30,3 +30,23 @@ La vérification à cet endroit permet de s'assurer dans tous les cas que le bus
 Pour des raisons UX, certaines vérifications métiers peuvent avoir été faites plus tôt, mais c'est cet appel qui reste le "dernier rempart" et qui fait donc foi.
 
 Si le FI utilisé n'est pas compatible avec le FS (blacklist/whitelist), alors l'utilisateur est renvoyé vers la page de sélection du FI (`/interaction`).
+
+## Architecture globale
+
+```mermaid
+sequenceDiagram
+  FS->>OidcProviderController: getAuthorize
+  OidcProviderController ->> CoreOidcProviderMiddlewareService: afterAuthorizeMiddleware
+  CoreOidcProviderMiddlewareService ->> CoreFcaController: getInteraction
+
+  CoreFcaController ->> CoreOidcProviderMiddlewareService: beforeAuthorizeMiddleware
+  CoreOidcProviderMiddlewareService ->> CoreOidcProviderMiddlewareService: overrideAuthorizeAcrValues
+  CoreOidcProviderMiddlewareService ->> CoreOidcProviderMiddlewareService: overrideAuthorizePrompt
+  CoreOidcProviderMiddlewareService ->> OidcClientController: redirectToIdp
+  OidcClientController ->> FI: (using CoreFcaService redirectToIdp)
+
+  OidcProviderController ->> OidcClientController: getOidcCallback
+  OidcClientController ->> CoreFcaController: getVerify
+  CoreFcaController ->> OidcProviderController : getLogin
+  OidcProviderController ->> FS: via 303
+```

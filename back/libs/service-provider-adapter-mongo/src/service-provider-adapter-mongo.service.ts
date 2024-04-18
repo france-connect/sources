@@ -113,7 +113,7 @@ export class ServiceProviderAdapterMongoService
     const serviceProviders = await asyncFilter<ServiceProviderMetadata[]>(
       rawResult,
       async (doc: ServiceProviderMetadata) => {
-        const { name } = doc;
+        const { name, uid } = doc;
 
         const errors = await validateDto(
           doc,
@@ -122,10 +122,11 @@ export class ServiceProviderAdapterMongoService
         );
 
         if (errors.length > 0) {
-          this.logger.warning(
-            `"${name}" was excluded from the result at DTO validation`,
-            { errors },
+          this.logger.alert(
+            `Service provider "${name}" (${uid}) was excluded at DTO validation`,
           );
+
+          this.logger.debug({ errors });
         }
 
         return errors.length === 0;

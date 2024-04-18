@@ -1,0 +1,31 @@
+<% if (locals.aidantsConnect) { %>
+<div class="fr-my-6w fr-mt-md-12w fr-mt-md-4w fc-text--center">
+  <% if (locals.aidantsConnect.active) { %>
+  <form
+    action="/api/v2/redirect-to-idp"
+    method="POST"
+    id="form-aidants-connect"
+    name="fs-request">
+    <%-
+    include('pages/interaction/provider/interaction.provider-inputs.ejs', {
+      provider: locals.aidantsConnect
+    })
+    %>
+  </form>
+  <% } %>
+  <div class="fc-text--center fr-mb-2w">
+    <span>
+      <%= $translate('interaction.ac.introduction') %>
+    </span>
+  </div>
+  <button
+    type="submit"
+    class="fr-btn fr-btn--tertiary"
+    data-testid="interaction-aidants-connect-button"
+    <%= locals.aidantsConnect.active ? '' : 'disabled' %>
+    <% if(locals.aidantsConnect.active) { %>form="form-aidants-connect"<% } %>
+  >
+    <%= $translate('interaction.ac.redirect_to_ac') %>
+  </button>
+</div>
+<% } %>

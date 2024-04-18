@@ -31,9 +31,9 @@ export class CoreVerifyService {
       throw new CoreIdentityProviderNotFoundException();
     }
 
-    const idClass = idp.featureHandlers[process];
+    const handlerClassName = idp.featureHandlers[process];
 
-    return FeatureHandler.get<T>(idClass, this);
+    return FeatureHandler.get<T>(handlerClassName, this);
   }
 
   /**
@@ -45,7 +45,7 @@ export class CoreVerifyService {
     sessionOidc: ISessionService<OidcClientSession>,
     trackingContext: TrackedEventContextInterface,
   ): Promise<void> {
-    const { idpId } = await sessionOidc.get();
+    const { idpId } = sessionOidc.get();
 
     const verifyHandler = await this.getFeature<IVerifyFeatureHandler>(
       idpId,
@@ -76,7 +76,7 @@ export class CoreVerifyService {
      * thus we are no longer in an "sso" interaction,
      * so we update isSso flag in session.
      */
-    await sessionOidc.set('isSso', false);
+    sessionOidc.set('isSso', false);
 
     if (idpDisabled) {
       await this.trackIdpDisabled(req);

@@ -8,7 +8,7 @@ import { Test, TestingModule } from '@nestjs/testing';
  * but need to specify the full path to the helper
  */
 import { AppHelper } from '@fc/app/helpers/app-helper';
-import { getDtoErrors } from '@fc/common';
+import { getDtoErrors } from '@fc/common/helpers/dto-validation';
 
 import { ConfigService } from './config.service';
 import { UnknownConfigurationNameError } from './errors';
@@ -21,7 +21,7 @@ class Schema {
   readonly I: any;
 }
 jest.mock('@fc/app/helpers/app-helper');
-jest.mock('@fc/common', () => ({
+jest.mock('@fc/common/helpers/dto-validation', () => ({
   getDtoErrors: jest.fn(),
 }));
 

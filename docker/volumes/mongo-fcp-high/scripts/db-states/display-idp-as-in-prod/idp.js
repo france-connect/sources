@@ -12,6 +12,7 @@ const BASE_PRODUCTION_IDP_HIGH = {
     coreVerify: "core-fcp-default-verify",
     authenticationEmail: "core-fcp-send-email",
     idpIdentityCheck: "core-fcp-default-identity-check",
+    coreAuthorization : "core-fcp-default-authorization",
   },
   clientID: "09a1a257648c1742c74d6a3d84b31943",
   client_secret:

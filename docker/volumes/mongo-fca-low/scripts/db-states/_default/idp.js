@@ -17,7 +17,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
-      fcaAuthorizationUrl: "core-fca-default-authorization-url",
+      coreAuthorization : "core-fca-default-authorization",
     },
     specificText: "specific text fia1-low",
     url: "https://fia1-low.docker.dev-franceconnect.fr/",
@@ -67,7 +67,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
-      fcaAuthorizationUrl: "core-fca-default-authorization-url",
+      coreAuthorization : "core-fca-default-authorization",
     },
     specificText: "specific text fia2-low",
     url: "https://fia2-low.docker.dev-franceconnect.fr/",
@@ -117,7 +117,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
-      fcaAuthorizationUrl: "core-fca-default-authorization-url",
+      coreAuthorization : "core-fca-default-authorization",
     },
     specificText: "specific text fia3-low",
     url: "https://fia3-low.docker.dev-franceconnect.fr/",
@@ -166,7 +166,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
-      fcaAuthorizationUrl: "core-fca-default-authorization-url",
+      coreAuthorization : "core-fca-default-authorization",
     },
     mailto: "",
     specificText: "specific text fia4-low",
@@ -216,7 +216,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
-      fcaAuthorizationUrl: "core-fca-default-authorization-url",
+      coreAuthorization : "core-fca-default-authorization",
     },
     mailto: "",
     specificText: "specific text fia5-low",
@@ -267,7 +267,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
-      fcaAuthorizationUrl: "core-fca-default-authorization-url",
+      coreAuthorization : "core-fca-default-authorization",
     },
     specificText: "specific text fia6-low",
     url: "https://fia6-low.docker.dev-franceconnect.fr/",
@@ -317,7 +317,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
-      fcaAuthorizationUrl: "core-fca-default-authorization-url",
+      coreAuthorization : "core-fca-default-authorization",
     },
     specificText: "specific text fia7-low",
     url: "https://fia7-low.docker.dev-franceconnect.fr/",
@@ -367,7 +367,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
-      fcaAuthorizationUrl: "core-fca-default-authorization-url",
+      coreAuthorization : "core-fca-default-authorization",
     },
     specificText: "specific text fia1-low",
     url: "https://fia8-low.docker.dev-franceconnect.fr/",
@@ -417,7 +417,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-mcp-verify",
       authenticationEmail: null,
-      fcaAuthorizationUrl: "core-fca-mcp-authorization-url",
+      coreAuthorization :"core-fca-mcp-authorization",
     },
     specificText: "specific text MonComptePro",
     url: "https://moncomptepro.docker.dev-franceconnect.fr",
@@ -467,7 +467,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
-      fcaAuthorizationUrl: "core-fca-default-authorization-url",
+      coreAuthorization : "core-fca-default-authorization",
     },
     specificText: "specific text fia-rie-low",
     url: "https://fia-rie-low.docker.dev-franceconnect.fr/",
@@ -516,7 +516,7 @@ const fia = {
     featureHandlers: {
       coreVerify: "core-fca-default-verify",
       authenticationEmail: null,
-      fcaAuthorizationUrl: "core-fca-default-authorization-url",
+      coreAuthorization : "core-fca-default-authorization",
     },
     mailto: "",
     specificText: "specific text llng",

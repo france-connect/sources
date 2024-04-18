@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { PaginationComponent } from '@fc/dsfr';
 
-import { IPaginationResult, TrackList, TracksConfig } from '../../interfaces';
+import type { IPaginationResult, TrackList, TracksConfig } from '../../interfaces';
 import { groupTracksByMonth, orderGroupByKeyAsc, transformTrackToEnhanced } from '../../utils';
 import { TracksGroupComponent } from './tracks-group';
 import { usePaginatedTracks } from './use-paginated-tracks.hook';

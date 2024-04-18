@@ -156,8 +156,8 @@ export default {
         ...env.json('CRYPTO_SIG_RS256_PRIV_KEYS'),
       ],
     },
-
     // Global request timeout used for any outgoing app requests.
     timeout: parseInt(process.env.REQUEST_TIMEOUT, 10),
   },
+  isLocalhostAllowed: env.boolean('IS_LOCALHOST_ALLOWED'),
 } as OidcProviderConfig;

@@ -20,14 +20,14 @@ import {
   CoreVerifyService,
   Interaction,
 } from '@fc/core';
+import { CsrfToken } from '@fc/csrf';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { NotificationsService } from '@fc/notifications';
-import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderConfig, OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { ISessionService, Session, SessionCsrfService } from '@fc/session';
+import { ISessionService, Session } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import {
@@ -46,8 +46,6 @@ export class CoreFcaController {
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
     private readonly config: ConfigService,
     private readonly notifications: NotificationsService,
-    private readonly csrfService: SessionCsrfService,
-    private readonly oidcAcr: OidcAcrService,
     private readonly coreAcr: CoreAcrService,
     private readonly coreFcaVerify: CoreFcaVerifyService,
     private readonly coreVerify: CoreVerifyService,
@@ -61,6 +59,7 @@ export class CoreFcaController {
     res.redirect(301, defaultRedirectUri);
   }
 
+  // eslint-disable-next-line max-params
   @Get(CoreRoutes.INTERACTION)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -69,6 +68,7 @@ export class CoreFcaController {
     @Req() req,
     @Res() res: Response,
     @Param() _params: Interaction,
+    @CsrfToken() csrfToken: string,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
@@ -77,14 +77,10 @@ export class CoreFcaController {
     @Session('OidcClient', GetInteractionOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
-    const { spName, stepRoute } = await sessionOidc.get();
+    const { spName, stepRoute } = sessionOidc.get();
 
     const { params } = await this.oidcProvider.getInteraction(req, res);
-    const {
-      acr_values: acrValues,
-      client_id: clientId,
-      scope: spScope,
-    } = params;
+    const { acr_values: acrValues, scope: spScope } = params;
 
     const {
       configuration: { acrValues: allowedAcrValues },
@@ -100,37 +96,12 @@ export class CoreFcaController {
       return;
     }
 
-    const { idpFilterExclude, idpFilterList } =
-      await this.serviceProvider.getById(clientId);
-
-    const providers = await this.identityProvider.getFilteredList({
-      blacklist: idpFilterExclude,
-      idpList: idpFilterList,
-    });
-
-    const authorizedProviders = providers.map((provider) => {
-      const isAcrValid = this.oidcAcr.isAcrValid(
-        provider.maxAuthorizedAcr,
-        acrValues,
-      );
-
-      if (!isAcrValid) {
-        provider.active = false;
-      }
-
-      return provider;
-    });
-
-    // -- generate and store in session the CSRF token
-    const csrfToken = this.csrfService.get();
-    await this.csrfService.save(sessionOidc, csrfToken);
     const notification = await this.notifications.getNotificationToDisplay();
 
     const response = {
       csrfToken,
       notification,
       params,
-      providers: authorizedProviders,
       spName,
       spScope,
     };
@@ -165,7 +136,7 @@ export class CoreFcaController {
     @Session('OidcClient', GetVerifyOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const { idpId, interactionId, spId, isSso } = await sessionOidc.get();
+    const { idpId, interactionId, spId, isSso } = sessionOidc.get();
 
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const params = { urlPrefix, interactionId, sessionOidc };

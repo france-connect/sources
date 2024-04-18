@@ -1,9 +1,10 @@
 import classnames from 'classnames';
 import React from 'react';
 
-import { SelectedItemsHook, useSelectedItems } from '@fc/common';
+import type { SelectedItemsHook } from '@fc/common';
+import { useSelectedItems } from '@fc/common';
 
-import { AccordionGroupItemInterface } from '../../../interfaces';
+import type { AccordionGroupItemInterface } from '../../../interfaces';
 import { AccordionComponent } from '../accordion/accordion.component';
 
 interface AccordionGroupComponentProps {

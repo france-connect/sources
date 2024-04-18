@@ -41,7 +41,10 @@ export default class ServiceProviderErrorPage {
     url: string,
     errorDescription: string,
   ): void {
-    const encodedDescription = encodeURIComponent(errorDescription);
+    const encodedDescription = encodeURIComponent(errorDescription).replace(
+      /'/g,
+      '%27',
+    );
     const match = url.match(ERROR_URL_REGEXP);
     expect(match.length).to.equal(4);
     expect(match[ERROR_DESCRIPTION_GROUP]).to.equal(encodedDescription);

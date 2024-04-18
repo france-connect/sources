@@ -2,8 +2,10 @@ import classnames from 'classnames';
 import React, { useCallback, useContext, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 
-import { AccountContext, AccountInterface } from '@fc/account';
-import { AppContext, AppContextInterface } from '@fc/state-management';
+import type { AccountInterface } from '@fc/account';
+import { AccountContext } from '@fc/account';
+import type { AppContextInterface } from '@fc/state-management';
+import { AppContext } from '@fc/state-management';
 
 import styles from './layout-header.module.scss';
 import { LayoutHeaderLogosComponent } from './logos';

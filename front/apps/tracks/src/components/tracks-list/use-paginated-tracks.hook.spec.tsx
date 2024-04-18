@@ -1,8 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import { Location, useLocation } from 'react-router-dom';
+import type { Location } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
-import { TracksConfig } from '../../interfaces';
+import type { TracksConfig } from '../../interfaces';
 import { DEFAULT_OFFSET, DEFAULT_SIZE, usePaginatedTracks } from './use-paginated-tracks.hook';
 
 jest.mock('axios');
@@ -26,7 +27,7 @@ describe('usePaginatedTracks', () => {
         submitErrors: undefined,
         tracks: tracksMock,
       });
-      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get).toHaveBeenCalledOnce();
       expect(axios.get).toHaveBeenCalledWith(
         `${options.API_ROUTE_TRACKS}?offset=${DEFAULT_OFFSET}&size=${DEFAULT_SIZE}`,
       );

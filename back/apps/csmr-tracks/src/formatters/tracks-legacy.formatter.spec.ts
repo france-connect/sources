@@ -178,7 +178,7 @@ describe('TracksLegacyFormatter', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         type_action: 'verification',
       } as unknown as ICsmrTracksLegacyFieldsData;
-      const resultMock = 'DP_REQUESTED_FC_CHECKTOKEN';
+      const resultMock = 'DP_VERIFIED_FC_CHECKTOKEN';
       // When
       const event = service['getEventFromAction'](sourceMock);
       // Then

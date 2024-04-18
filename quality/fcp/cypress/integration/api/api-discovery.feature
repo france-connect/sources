@@ -8,7 +8,7 @@ Fonctionnalité: API - discovery
     Quand je lance la requête
     Alors le statut de la réponse est 200
     Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
-    Et l'entête de la réponse n'a pas une propriété "set-cookie"
+    Et l'entête de la réponse n'a pas de propriété "set-cookie"
     Et le corps de la réponse contient une configuration openid "sans chiffrement"
     Et "acr_values_supported" contient uniquement "eidas1" dans la configuration openid
     Et "scopes_supported" contient "openid profile preferred_username idp_birthdate" dans la configuration openid
@@ -29,7 +29,7 @@ Fonctionnalité: API - discovery
     Quand je lance la requête
     Alors le statut de la réponse est 200
     Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
-    Et l'entête de la réponse n'a pas une propriété "set-cookie"
+    Et l'entête de la réponse n'a pas de propriété "set-cookie"
     Et le corps de la réponse contient une configuration openid "avec chiffrement"
     Et "acr_values_supported" contient uniquement "eidas2 eidas3" dans la configuration openid
     Et "acr_values_supported" ne contient pas "eidas1" dans la configuration openid

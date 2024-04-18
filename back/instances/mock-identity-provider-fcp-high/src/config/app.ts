@@ -25,6 +25,7 @@ export default {
   logo: '/img/logo-fc-plus.svg',
   title: "Fournisseur d'identité de démonstration - FCP-HIGH",
   allowCustomIdentity: env.boolean('ALLOW_CUSTOM_IDENTITY'),
+  allowBackButton: true,
   identityDto: CustomIdentityDto,
   identityForm: [
     {

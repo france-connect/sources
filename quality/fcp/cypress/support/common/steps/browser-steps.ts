@@ -8,10 +8,20 @@ When(/^je rafraîchis la page$/, function () {
   cy.wait(500);
 });
 
+When("j'attends le chargement de la page {int}ms", (ms: number) => cy.wait(ms));
+
 When('je reviens en arrière', () => cy.go('back'));
 
 Then('le haut de la page est affiché', function () {
   cy.window().then(($window) => {
     expect($window.scrollY).to.be.closeTo(0, 0);
   });
+});
+
+Then('la page est en {string}', function (lang: string) {
+  const langMap = {
+    anglais: 'en',
+    français: 'fr',
+  };
+  cy.get('html').should('have.attr', 'lang', langMap[lang]);
 });

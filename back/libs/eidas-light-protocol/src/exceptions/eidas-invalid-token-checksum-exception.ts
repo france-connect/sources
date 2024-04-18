@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative code
-import { Description, FcException } from '@fc/exceptions';
+import { Description, FcException } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 

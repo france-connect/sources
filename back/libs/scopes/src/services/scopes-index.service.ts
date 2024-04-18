@@ -5,12 +5,12 @@ import { LoggerService } from '@fc/logger';
 
 import { ScopesConfig } from '../dto';
 import {
-  IClaim,
-  IClaimIndex,
-  IProviderMappings,
-  IRichClaim,
-  IRichClaims,
-  IScopeIndex,
+  ClaimIndexInterface,
+  ClaimInterface,
+  ProviderMappingsInterface,
+  RichClaimInterface,
+  RichClaimsInterface,
+  ScopeIndexInterface,
 } from '../interfaces';
 import { CONFIG_NAME } from '../tokens';
 
@@ -23,8 +23,8 @@ import { CONFIG_NAME } from '../tokens';
  */
 @Injectable()
 export class ScopesIndexService {
-  private claimIndex: IClaimIndex;
-  private scopeIndex: IScopeIndex;
+  private claimIndex: ClaimIndexInterface;
+  private scopeIndex: ScopeIndexInterface;
 
   constructor(
     @Inject(CONFIG_NAME) private readonly configName,
@@ -42,16 +42,16 @@ export class ScopesIndexService {
     this.scopeIndex = this.prepareScopeIndex(mapping);
   }
 
-  getClaim(key: string): IRichClaim {
-    return this.indexGetter<IClaimIndex, IRichClaim>(
+  getClaim(key: string): RichClaimInterface {
+    return this.indexGetter<ClaimIndexInterface, RichClaimInterface>(
       this.claimIndex,
       'claim',
       key,
     );
   }
 
-  getScope(key: string): IClaim[] {
-    return this.indexGetter<IScopeIndex, IClaim[]>(
+  getScope(key: string): ClaimInterface[] {
+    return this.indexGetter<ScopeIndexInterface, ClaimInterface[]>(
       this.scopeIndex,
       'scope',
       key,
@@ -72,7 +72,9 @@ export class ScopesIndexService {
     return index.get(key);
   }
 
-  private prepareClaimIndex(globalMapping: IProviderMappings[]): IClaimIndex {
+  private prepareClaimIndex(
+    globalMapping: ProviderMappingsInterface[],
+  ): ClaimIndexInterface {
     const index = {};
 
     globalMapping.forEach((mapping) => {
@@ -84,7 +86,9 @@ export class ScopesIndexService {
     return new Map(Object.entries(index));
   }
 
-  private prepareScopeIndex(mappings: IProviderMappings[]): IScopeIndex {
+  private prepareScopeIndex(
+    mappings: ProviderMappingsInterface[],
+  ): ScopeIndexInterface {
     const index = {};
     mappings.forEach(({ scopes }) => {
       Object.assign(index, scopes);
@@ -94,14 +98,14 @@ export class ScopesIndexService {
   }
 
   private getRichClaimsForDataProvider(
-    mappings: IProviderMappings,
-  ): IRichClaims {
-    const { claims, provider, labels } = mappings;
+    mappings: ProviderMappingsInterface,
+  ): RichClaimsInterface {
+    const { claims, provider } = mappings;
     const claimList = Object.values(claims);
 
     const data = claimList.map((identifier) => [
       identifier,
-      { identifier, label: labels[identifier], provider },
+      { identifier, provider },
     ]);
 
     return Object.fromEntries(data);

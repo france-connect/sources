@@ -26,4 +26,7 @@ export interface IOidcIdentity {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   preferred_username?: string;
   email: string;
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  rep_scope?: string;
 }

@@ -4,7 +4,7 @@
 import { HttpStatus } from '@nestjs/common';
 
 import { CoreBaseException, ErrorCode } from '@fc/core';
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 @Description(
   "L'utilisateur renseigné n'est pas reconnu comme dépendant du service public",

@@ -56,6 +56,11 @@ export class GetDiscoveryDto {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly jwks_uri: string;
 
+  @IsBoolean()
+  // oidc defined variable name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly authorization_response_iss_parameter_supported: boolean;
+
   @IsString({ each: true })
   @IsArray()
   // oidc defined variable name

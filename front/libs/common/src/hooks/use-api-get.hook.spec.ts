@@ -32,9 +32,9 @@ describe('useApiGet', () => {
 
     // then
     await waitFor(() => {
-      expect(axios.get).toHaveBeenCalledTimes(1);
+      expect(axios.get).toHaveBeenCalledOnce();
       expect(axios.get).toHaveBeenCalledWith('any-url');
-      expect(result.current).toStrictEqual('any-data-response');
+      expect(result.current).toBe('any-data-response');
     });
   });
 
@@ -47,7 +47,7 @@ describe('useApiGet', () => {
 
     // then
     await waitFor(() => {
-      expect(callbackMock).toHaveBeenCalledTimes(1);
+      expect(callbackMock).toHaveBeenCalledOnce();
       expect(callbackMock).toHaveBeenCalledWith('any-data-response');
     });
   });

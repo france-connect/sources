@@ -81,6 +81,30 @@ describe('PaginationComponent', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('should match the snapshot with default props values', () => {
+    // given
+    jest.mocked(usePagination).mockReturnValue({
+      ...usePaginationMock,
+    });
+
+    // when
+    const { container } = render(
+      <PaginationComponent
+        useEllipsis
+        pagination={expect.any(Object)}
+        onPageClick={expect.any(Function)}
+      />,
+    );
+
+    // then
+    expect(container).toMatchSnapshot();
+    expect(usePagination).toHaveBeenCalledWith({
+      numberOfPagesShownIntoNavigation: DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION,
+      onPageClick: expect.any(Function),
+      pagination: expect.any(Object),
+    });
+  });
+
   it('should match the snapshot with custom props values', () => {
     // given
     jest.mocked(usePagination).mockReturnValue({
@@ -138,7 +162,7 @@ describe('PaginationComponent', () => {
     );
 
     // then
-    expect(usePagination).toHaveBeenCalledTimes(1);
+    expect(usePagination).toHaveBeenCalledOnce();
     expect(usePagination).toHaveBeenCalledWith({
       numberOfPagesShownIntoNavigation: DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION,
       onPageClick: expect.any(Function),
@@ -160,7 +184,7 @@ describe('PaginationComponent', () => {
       fireEvent.click(button);
 
       // then
-      expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+      expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
       expect(onPageClickCallbackMock).toHaveBeenCalledWith(3);
     });
 
@@ -182,7 +206,7 @@ describe('PaginationComponent', () => {
         fireEvent.click(button);
 
         // then
-        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
         expect(onPageClickCallbackMock).toHaveBeenCalledWith(0);
       });
     });
@@ -205,7 +229,7 @@ describe('PaginationComponent', () => {
         fireEvent.click(button);
 
         // then
-        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
         expect(onPageClickCallbackMock).toHaveBeenCalledWith(1);
       });
 
@@ -248,7 +272,7 @@ describe('PaginationComponent', () => {
         fireEvent.click(button);
 
         // then
-        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
         expect(onPageClickCallbackMock).toHaveBeenCalledWith(3);
       });
 
@@ -315,7 +339,7 @@ describe('PaginationComponent', () => {
         fireEvent.click(button);
 
         // then
-        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
         expect(onPageClickCallbackMock).toHaveBeenCalledWith(3);
       });
     });
@@ -353,7 +377,7 @@ describe('PaginationComponent', () => {
         // then
         expect(container).toMatchSnapshot();
         expect(firstEllipsis).toBeInTheDocument();
-        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
         expect(onPageClickCallbackMock).toHaveBeenCalledWith(1);
       });
     });
@@ -392,7 +416,7 @@ describe('PaginationComponent', () => {
         // then
         expect(container).toMatchSnapshot();
         expect(lastEllipsis).toBeInTheDocument();
-        expect(onPageClickCallbackMock).toHaveBeenCalledTimes(1);
+        expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
         expect(onPageClickCallbackMock).toHaveBeenCalledWith(0);
       });
     });

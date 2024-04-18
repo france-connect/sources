@@ -11,9 +11,9 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que j'utilise le fournisseur de service "par défaut"
     Et que j'ai fait une cinématique FranceConnect
     Et que les traces sont récupérées dans elasticsearch
-    Et que je navigue sur la page d'accueil du dashboard usager
-    Quand je me connecte au dashboard usager
-    Alors je suis redirigé vers la page historique du dashboard usager
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Quand je me connecte au tableau de bord usager
+    Alors je suis redirigé vers la page historique du tableau de bord usager
     Et 1 évènement "FranceConnect" est affiché
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Service Provider Example"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -31,9 +31,9 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que le fournisseur de service requiert l'accès aux informations des scopes "dgfip et cnam"
     Et que j'ai fait une cinématique FranceConnect
     Et que les traces sont récupérées dans elasticsearch
-    Et que je navigue sur la page d'accueil du dashboard usager
-    Quand je me connecte au dashboard usager
-    Alors je suis redirigé vers la page historique du dashboard usager
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Quand je me connecte au tableau de bord usager
+    Alors je suis redirigé vers la page historique du tableau de bord usager
     Et 2 évènements "FranceConnect" sont affichés
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Service Provider Example"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -54,7 +54,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et l'évènement concerne 5 données "DGFIP"
     Et les données "DGFIP" de l'évènement contiennent "Revenu fiscal de référence"
     Et les données "DGFIP" de l'évènement contiennent "Nombre de parts du foyer fiscal"
-    Et les données "DGFIP" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf divorcé)"
+    Et les données "DGFIP" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf, divorcé)"
     Et les données "DGFIP" de l'évènement contiennent "Détail des personnes à charge et rattachées"
     Et les données "DGFIP" de l'évènement contiennent "Adresse déclarée au 1er Janvier"
     Et l'évènement concerne 1 donnée "CNAM"
@@ -66,9 +66,9 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que le fournisseur de service requiert l'accès aux informations des scopes "profile sans preferred_username"
     Et que j'ai fait une cinématique FranceConnect
     Et que les traces sont récupérées dans elasticsearch
-    Et que je navigue sur la page d'accueil du dashboard usager
-    Quand je me connecte au dashboard usager
-    Alors je suis redirigé vers la page historique du dashboard usager
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Quand je me connecte au tableau de bord usager
+    Alors je suis redirigé vers la page historique du tableau de bord usager
     Et 2 évènements "FranceConnect" sont affichés
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -99,9 +99,9 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que le fournisseur de service requiert l'accès aux informations des scopes "dgfip et cnam"
     Et que j'ai fait une cinématique FranceConnect
     Et que les traces sont récupérées dans elasticsearch
-    Et que je navigue sur la page d'accueil du dashboard usager
-    Quand je me connecte au dashboard usager
-    Alors je suis redirigé vers la page historique du dashboard usager
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Quand je me connecte au tableau de bord usager
+    Alors je suis redirigé vers la page historique du tableau de bord usager
     Et 3 évènements "FranceConnect" sont affichés
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -122,7 +122,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et l'évènement concerne 5 données "DGFIP"
     Et les données "DGFIP" de l'évènement contiennent "Revenu fiscal de référence"
     Et les données "DGFIP" de l'évènement contiennent "Nombre de parts du foyer fiscal"
-    Et les données "DGFIP" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf divorcé)"
+    Et les données "DGFIP" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf, divorcé)"
     Et les données "DGFIP" de l'évènement contiennent "Détail des personnes à charge et rattachées"
     Et les données "DGFIP" de l'évènement contiennent "Adresse déclarée au 1er Janvier"
     Et l'évènement concerne 1 donnée "CNAM"
@@ -137,7 +137,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et l'évènement concerne 5 données "DGFIP"
     Et les données "DGFIP" de l'évènement contiennent "Revenu fiscal de référence"
     Et les données "DGFIP" de l'évènement contiennent "Nombre de parts du foyer fiscal"
-    Et les données "DGFIP" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf divorcé)"
+    Et les données "DGFIP" de l'évènement contiennent "Situation de famille (marié, pacsé, célibataire, veuf, divorcé)"
     Et les données "DGFIP" de l'évènement contiennent "Détail des personnes à charge et rattachées"
     Et les données "DGFIP" de l'évènement contiennent "Adresse déclarée au 1er Janvier"
     Et l'évènement concerne 1 donnée "CNAM"
@@ -149,9 +149,9 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que le fournisseur de service requiert l'accès aux informations des scopes "scopes de tous les FD"
     Et que j'ai fait une cinématique FranceConnect
     Et que les traces sont récupérées dans elasticsearch
-    Et que je navigue sur la page d'accueil du dashboard usager
-    Quand je me connecte au dashboard usager
-    Alors je suis redirigé vers la page historique du dashboard usager
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Quand je me connecte au tableau de bord usager
+    Alors je suis redirigé vers la page historique du tableau de bord usager
     Et 4 évènements "FranceConnect" sont affichés
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"
@@ -220,9 +220,9 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et que le fournisseur de service requiert l'accès aux informations du scope "anonyme"
     Et que j'ai fait une cinématique FranceConnect
     Et que les traces sont récupérées dans elasticsearch
-    Et que je navigue sur la page d'accueil du dashboard usager
-    Quand je me connecte au dashboard usager
-    Alors je suis redirigé vers la page historique du dashboard usager
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Quand je me connecte au tableau de bord usager
+    Alors je suis redirigé vers la page historique du tableau de bord usager
     Et 1 évènement "FranceConnect" est affiché
     Et j'affiche le détail du dernier évènement "Connexion" sur "FranceConnect" du fournisseur de service "Virtual Private Service Provider for Consent"
     Et la plateforme de l'évènement est "FranceConnect"

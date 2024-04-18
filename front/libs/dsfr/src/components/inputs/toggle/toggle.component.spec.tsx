@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
-import { FieldInputProps } from 'react-final-form';
+import type { FieldInputProps } from 'react-final-form';
 
-import { CheckableLegend } from '../../../interfaces';
+import type { CheckableLegend } from '../../../interfaces';
 import { ToggleComponent } from './toggle.component';
 
 jest.mock('./toggle-input.component');

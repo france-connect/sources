@@ -1,4 +1,4 @@
-import { renderWithFinalForm } from '@fc/tests-utils';
+import { renderWithFinalForm } from '@fc/testing-library';
 
 import { CheckboxInput } from './checkbox.input';
 
@@ -7,10 +7,9 @@ jest.mock('./checkbox.component');
 describe('CheckboxInput', () => {
   it('should match the snapshot', () => {
     // when
-    const { container } = renderWithFinalForm(CheckboxInput, {
-      label: 'any-label-mock',
-      name: 'any-name-mock',
-    });
+    const { container } = renderWithFinalForm(
+      <CheckboxInput label="any-label-mock" name="any-name-mock" />,
+    );
 
     // then
     expect(container).toMatchSnapshot();

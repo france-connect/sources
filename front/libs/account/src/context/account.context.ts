@@ -3,7 +3,7 @@
 // declarative file
 import React from 'react';
 
-import { AccountInterface } from '../interfaces';
+import type { AccountInterface } from '../interfaces';
 
 export const DEFAULT_CONTEXT_STATE: AccountInterface = {
   connected: false,

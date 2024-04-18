@@ -1,0 +1,7 @@
+{
+  "name": "@fc/react-app",
+  "description": "FC React/Front project base",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module"
+}

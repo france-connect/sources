@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { Form } from 'react-final-form';
 
 import { useUserPreferencesApi } from '../hooks';
-import { UserPreferencesData } from '../interfaces';
+import type { UserPreferencesData } from '../interfaces';
 import { UserPreferencesComponent } from './user-preferences.component';
 
 jest.mock('react-final-form');
@@ -107,7 +107,7 @@ describe('UserPreferencesComponent', () => {
     render(<UserPreferencesComponent options={optionsMock} />);
 
     // then
-    expect(useUserPreferencesApi).toHaveBeenCalledTimes(1);
+    expect(useUserPreferencesApi).toHaveBeenCalledOnce();
     expect(useUserPreferencesApi).toHaveBeenCalledWith(optionsMock);
   });
 });

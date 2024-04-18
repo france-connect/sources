@@ -4,7 +4,7 @@
 import { HttpStatus } from '@nestjs/common';
 
 import { CoreBaseException, ErrorCode } from '@fc/core';
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 @Description(
   "La requête reçue pour vérifier le token n'est pas valide. Des paramètres obligatoires sont manquants ou au mauvais format.",

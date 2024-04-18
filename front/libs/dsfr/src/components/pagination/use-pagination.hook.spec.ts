@@ -55,7 +55,7 @@ describe('usePagination', () => {
       result.current.paginationChangeHandler(1);
 
       // then
-      expect(onPageClickMock).toHaveBeenCalledTimes(1);
+      expect(onPageClickMock).toHaveBeenCalledOnce();
       expect(onPageClickMock).toHaveBeenCalledWith(10);
     });
 
@@ -72,7 +72,7 @@ describe('usePagination', () => {
       result.current.paginationChangeHandler(5);
 
       // then
-      expect(onPageClickMock).toHaveBeenCalledTimes(1);
+      expect(onPageClickMock).toHaveBeenCalledOnce();
       expect(onPageClickMock).toHaveBeenCalledWith(50);
     });
 
@@ -90,7 +90,7 @@ describe('usePagination', () => {
       });
 
       // then
-      expect(scrollToTopMock).toHaveBeenCalledTimes(1);
+      expect(scrollToTopMock).toHaveBeenCalledOnce();
     });
   });
 
@@ -106,7 +106,7 @@ describe('usePagination', () => {
       );
 
       // then
-      expect(getPagesCount).toHaveBeenCalledTimes(1);
+      expect(getPagesCount).toHaveBeenCalledOnce();
       expect(getPagesCount).toHaveBeenCalledWith({ itemsPerPage: 10, totalItems: 100 });
     });
   });
@@ -123,7 +123,7 @@ describe('usePagination', () => {
       );
 
       // then
-      expect(getCurrentPage).toHaveBeenCalledTimes(1);
+      expect(getCurrentPage).toHaveBeenCalledOnce();
       expect(getCurrentPage).toHaveBeenCalledWith({
         currentElementIndexIntoTheList: 0,
         itemsPerPage: 10,
@@ -143,7 +143,7 @@ describe('usePagination', () => {
       );
 
       // then
-      expect(getNavigationNumbers).toHaveBeenCalledTimes(1);
+      expect(getNavigationNumbers).toHaveBeenCalledOnce();
       expect(getNavigationNumbers).toHaveBeenCalledWith({
         currentPage: 1,
         numberOfPagesShownIntoNavigation: 5,
@@ -165,7 +165,7 @@ describe('usePagination', () => {
       );
 
       // then
-      expect(getMobileNavigationNumbers).toHaveBeenCalledTimes(1);
+      expect(getMobileNavigationNumbers).toHaveBeenCalledOnce();
       expect(getMobileNavigationNumbers).toHaveBeenCalledWith({ currentPage: 1, pagesCount: 10 });
     });
   });
@@ -182,7 +182,7 @@ describe('usePagination', () => {
       );
 
       // then
-      expect(getDisplayParameters).toHaveBeenCalledTimes(1);
+      expect(getDisplayParameters).toHaveBeenCalledOnce();
       expect(getDisplayParameters).toHaveBeenCalledWith({
         currentPage: 1,
         isMobile: false,

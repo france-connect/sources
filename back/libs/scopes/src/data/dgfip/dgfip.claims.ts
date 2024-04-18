@@ -1,6 +1,6 @@
-import { IClaims } from '../../interfaces';
+import { ClaimsInterface } from '../../interfaces';
 
-export const claims: IClaims = {
+export const claims: ClaimsInterface = {
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
   dgfip_rfr: 'dgfip_rfr',

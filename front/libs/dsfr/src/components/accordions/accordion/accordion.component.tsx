@@ -4,7 +4,7 @@ import React, { useCallback, useId } from 'react';
 
 import { HeadingTag, useContentHeight } from '@fc/common';
 
-import { AccordionGroupItemInterface } from '../../../interfaces';
+import type { AccordionGroupItemInterface } from '../../../interfaces';
 
 interface AccordionComponentProps extends Omit<AccordionGroupItemInterface, 'id' | 'element'> {
   children?: React.ReactNode;

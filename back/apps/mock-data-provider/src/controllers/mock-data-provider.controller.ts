@@ -55,8 +55,8 @@ export class MockDataProviderController {
   }
 
   @Get(MockDataProviderRoutes.JWKS)
-  async jwks(): Promise<JSONWebKeySet> {
-    const { jwks } = await this.config.get<DataProviderAdapterCoreConfig>(
+  jwks(): JSONWebKeySet {
+    const { jwks } = this.config.get<DataProviderAdapterCoreConfig>(
       'DataProviderAdapterCore',
     );
     return jwks;

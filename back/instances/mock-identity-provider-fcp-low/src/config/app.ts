@@ -25,6 +25,7 @@ export default {
   logo: '/img/fc-logo.svg',
   title: "Fournisseur d'identité de démonstration - FCP-LOW",
   allowCustomIdentity: env.boolean('ALLOW_CUSTOM_IDENTITY'),
+  allowBackButton: true,
   identityDto: CustomIdentityDto,
   identityForm: [
     {
@@ -83,6 +84,12 @@ export default {
       name: 'acr',
       label: 'Niveau de sécurité (acr_values)',
       mandatory: true,
+      type: 'text',
+    },
+    {
+      name: 'rep_scope',
+      label: 'Périmètres du mandat Aidants Connect à renvoyer',
+      mandatory: false,
       type: 'text',
     },
   ],

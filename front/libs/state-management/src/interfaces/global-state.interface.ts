@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-import { ConfigStates } from './config-state.interface';
+import type { ConfigStates } from './config-state.interface';
 
 /**
  * Since we don't know what the state will be in this library but

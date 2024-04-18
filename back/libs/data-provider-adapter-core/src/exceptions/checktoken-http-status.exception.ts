@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { ChecktokenBaseException } from './checktoken-base.exception';

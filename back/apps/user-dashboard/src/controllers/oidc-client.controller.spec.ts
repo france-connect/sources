@@ -1,23 +1,27 @@
+import { cloneDeep } from 'lodash';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialDeep } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { CsrfTokenGuard } from '@fc/csrf';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { IdentityProviderMetadata } from '@fc/oidc';
 import { OidcClientService } from '@fc/oidc-client';
-import {
-  SessionCsrfService,
-  SessionInvalidCsrfSelectIdpException,
-  SessionNotFoundException,
-  SessionService,
-} from '@fc/session';
+import { SessionNotFoundException, SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getConfigMock } from '@mocks/config';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { UserDashboardFrontRoutes } from '../enums';
 import { UserDashboardTokenRevocationException } from '../exceptions';
 import { OidcClientController } from './oidc-client.controller';
+
+jest.mock('lodash', () => ({
+  ...jest.requireActual('lodash'),
+  cloneDeep: jest.fn(),
+}));
 
 jest.mock('querystring', () => ({
   encode: jest.fn(),
@@ -54,12 +58,6 @@ describe('OidcClient Controller', () => {
 
   const sessionServiceMock = getSessionServiceMock();
 
-  const sessionCsrfServiceMock = {
-    get: jest.fn(),
-    save: jest.fn(),
-    validate: jest.fn(),
-  };
-
   const identityProviderServiceMock = {
     getById: jest.fn(),
   };
@@ -76,9 +74,9 @@ describe('OidcClient Controller', () => {
     idpId: idpIdMock,
   };
 
-  const configServiceMock = {
-    get: jest.fn(),
-  };
+  const configServiceMock = getConfigMock();
+
+  const guardMock = { canActivate: jest.fn() };
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -89,12 +87,13 @@ describe('OidcClient Controller', () => {
       providers: [
         OidcClientService,
         SessionService,
-        SessionCsrfService,
         TrackingService,
         ConfigService,
         IdentityProviderAdapterEnvService,
       ],
     })
+      .overrideGuard(CsrfTokenGuard)
+      .useValue(guardMock)
       .overrideProvider(OidcClientService)
       .useValue(oidcClientServiceMock)
       .overrideProvider(SessionService)
@@ -103,8 +102,6 @@ describe('OidcClient Controller', () => {
       .useValue(trackingMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(SessionCsrfService)
-      .useValue(sessionCsrfServiceMock)
       .overrideProvider(IdentityProviderAdapterEnvService)
       .useValue(identityProviderServiceMock)
       .compile();
@@ -133,7 +130,7 @@ describe('OidcClient Controller', () => {
 
     identityProviderServiceMock.getById.mockReturnValue(idpMock);
 
-    sessionServiceMock.get.mockResolvedValue({
+    sessionServiceMock.get.mockReturnValue({
       idpNonce: idpNonceMock,
       idpState: idpStateMock,
       idpId: idpIdMock,
@@ -148,8 +145,6 @@ describe('OidcClient Controller', () => {
       scope: 'scopeMock',
       state: idpStateMock,
     });
-
-    sessionCsrfServiceMock.save.mockResolvedValueOnce(true);
   });
 
   it('should be defined', () => {
@@ -178,7 +173,6 @@ describe('OidcClient Controller', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         nonce: idpNonceMock,
-        idpId: configMock.idpId,
         scope: 'openid',
         state: idpStateMock,
         prompt: 'login',
@@ -192,6 +186,7 @@ describe('OidcClient Controller', () => {
         1,
       );
       expect(oidcClientServiceMock.utils.getAuthorizeUrl).toHaveBeenCalledWith(
+        configMock.idpId,
         expectedGetAuthorizeCallParameter,
       );
     });
@@ -263,30 +258,6 @@ describe('OidcClient Controller', () => {
 
       // assert
       expect(res.redirect).toHaveBeenCalledTimes(1);
-    });
-
-    it('should throw an error if the two CSRF tokens (provided in request and previously stored in session) are not the same.', async () => {
-      // setup
-      const body = {
-        // oidc param
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        acr_values: 'eidas3',
-        claims: 'any_formatted_json_string',
-        csrfToken: 'csrfMockValue',
-        nonce: idpNonceMock,
-        providerUid: configMock.idpId,
-        scope: 'openid',
-      };
-      sessionServiceMock.get.mockReturnValueOnce('spId');
-      sessionCsrfServiceMock.validate.mockReset().mockImplementation(() => {
-        throw new Error(
-          'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
-        );
-      });
-      // action / assert
-      await expect(
-        controller.redirectToIdp(res, body, sessionServiceMock),
-      ).rejects.toThrow(SessionInvalidCsrfSelectIdpException);
     });
   });
 
@@ -360,7 +331,7 @@ describe('OidcClient Controller', () => {
 
     it('should throw an error if the session is not found', async () => {
       // setup
-      sessionServiceMock.get.mockReset().mockResolvedValueOnce(undefined);
+      sessionServiceMock.get.mockReset().mockReturnValueOnce(undefined);
 
       // action/assertion
       await expect(
@@ -398,13 +369,29 @@ describe('OidcClient Controller', () => {
       ).toHaveBeenCalledWith(userInfoParamsMock, req);
     });
 
+    it('should create an object with cloned values', async () => {
+      // Given
+      const cloneDeepMock = jest.mocked(cloneDeep);
+
+      // When
+      await controller.getOidcCallback(req, res, sessionServiceMock);
+
+      // Then
+      expect(cloneDeepMock).toHaveBeenCalledTimes(1);
+      expect(cloneDeepMock).toHaveBeenLastCalledWith(identityExchangeMock);
+    });
+
     it('should set session with identity result.', async () => {
+      // setup
+      const clonedIdentityMock = Symbol();
+      jest.mocked(cloneDeep).mockReturnValueOnce(clonedIdentityMock);
+
       // action
       await controller.getOidcCallback(req, res, sessionServiceMock);
 
       // assert
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.set).toHaveBeenCalledWith(identityExchangeMock);
+      expect(sessionServiceMock.set).toHaveBeenCalledWith(clonedIdentityMock);
     });
 
     it('should redirect user after token and userinfo received and saved', async () => {

@@ -105,6 +105,11 @@ DSFR Breakpoints :
   box-shadow: inherit;
 }
 
+
+.fr-footer__bottom-link {
+  white-space: nowrap;
+}
+
 button.fc-btn--as-link {
   padding-left: 0;
   padding-right: 0;

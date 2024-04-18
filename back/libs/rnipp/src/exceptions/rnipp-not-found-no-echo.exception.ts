@@ -3,7 +3,7 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description, Loggable, Trackable } from '@fc/exceptions';
+import { Description, Loggable, Trackable } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { RnippBaseException } from './';

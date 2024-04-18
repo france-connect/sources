@@ -6,7 +6,11 @@ import { LoggerService } from '@fc/logger';
 import { getLoggerMock } from '@mocks/logger';
 
 import { Providers } from '../enum';
-import { IClaimIndex, IProviderMappings, IRichClaim } from '../interfaces';
+import {
+  ClaimIndexInterface,
+  ProviderMappingsInterface,
+  RichClaimInterface,
+} from '../interfaces';
 import { CONFIG_NAME } from '../tokens';
 import { ScopesIndexService } from './scopes-index.service';
 
@@ -15,7 +19,7 @@ describe('ScopesIndexService', () => {
 
   const loggerMock = getLoggerMock();
 
-  const mappingMock: IProviderMappings[] = [
+  const mappingMock: ProviderMappingsInterface[] = [
     {
       provider: {
         key: Providers.CNAM,
@@ -23,9 +27,6 @@ describe('ScopesIndexService', () => {
       },
       claims: {
         wizzClaim: 'wizzClaim',
-      },
-      labels: {
-        wizzClaim: 'Label for wizzClaim',
       },
       scopes: {
         wizzScope: ['wizzClaim'],
@@ -42,12 +43,6 @@ describe('ScopesIndexService', () => {
         barClaim: 'barClaim',
         fizzClaim: 'fizzClaim',
         buzzClaim: 'buzzClaim',
-      },
-      labels: {
-        fooClaim: 'Label for fooClaim',
-        barClaim: 'Label for barClaim',
-        fizzClaim: 'Label for fizzClaim',
-        buzzClaim: 'Label for buzzClaim',
       },
       scopes: {
         fooScope: ['fooClaim', 'barClaim'],
@@ -202,7 +197,7 @@ describe('ScopesIndexService', () => {
       Object.entries({
         foo: entryMock,
       }),
-    ) as unknown as IClaimIndex;
+    ) as unknown as ClaimIndexInterface;
     const indexNameMock = 'indexNameMockValue';
 
     const existingKey = 'foo';
@@ -251,10 +246,9 @@ describe('ScopesIndexService', () => {
   describe('getRichClaimsForDataProvider', () => {
     it('should return claims for one to one scopes', () => {
       // Given
-      const expected: { [key: string]: IRichClaim } = {
+      const expected: { [key: string]: RichClaimInterface } = {
         wizzClaim: {
           identifier: 'wizzClaim',
-          label: 'Label for wizzClaim',
           provider: {
             key: 'CNAM',
             label: 'Data Provider 1 Mock Label',
@@ -276,7 +270,6 @@ describe('ScopesIndexService', () => {
       expect(result).toEqual({
         fooClaim: {
           identifier: 'fooClaim',
-          label: 'Label for fooClaim',
           provider: {
             key: 'PE',
             label: 'Data Provider 2 Mock Label',
@@ -284,7 +277,6 @@ describe('ScopesIndexService', () => {
         },
         barClaim: {
           identifier: 'barClaim',
-          label: 'Label for barClaim',
           provider: {
             key: 'PE',
             label: 'Data Provider 2 Mock Label',
@@ -292,7 +284,6 @@ describe('ScopesIndexService', () => {
         },
         fizzClaim: {
           identifier: 'fizzClaim',
-          label: 'Label for fizzClaim',
           provider: {
             key: 'PE',
             label: 'Data Provider 2 Mock Label',
@@ -300,7 +291,6 @@ describe('ScopesIndexService', () => {
         },
         buzzClaim: {
           identifier: 'buzzClaim',
-          label: 'Label for buzzClaim',
           provider: {
             key: 'PE',
             label: 'Data Provider 2 Mock Label',

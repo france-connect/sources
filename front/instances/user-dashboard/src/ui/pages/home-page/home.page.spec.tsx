@@ -158,7 +158,7 @@ describe('HomePage', () => {
       </AxiosErrorCatcherContext.Provider>,
     );
     // then
-    expect(AlertComponent).toHaveBeenCalledTimes(1);
+    expect(AlertComponent).toHaveBeenCalledOnce();
     expect(AlertComponent).toHaveBeenCalledWith(
       {
         children: expect.anything(),

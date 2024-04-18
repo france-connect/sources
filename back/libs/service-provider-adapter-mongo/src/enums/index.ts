@@ -1,2 +1,4 @@
-export * from './platform';
+/* istanbul ignore file */
+
+// Declarative code
 export * from './types';

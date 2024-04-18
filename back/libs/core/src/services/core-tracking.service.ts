@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
+import { overrideWithSourceIfNotNull } from '@fc/common';
 import { OidcSession } from '@fc/oidc';
-import { ISessionBoundContext, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 import {
   TrackedEventContextInterface,
   TrackedEventInterface,
 } from '@fc/tracking';
 import { extractNetworkInfoFromHeaders } from '@fc/tracking-context';
 
-import { CoreMissingContextException } from '../exceptions';
 import {
   ICoreTrackingContext,
   ICoreTrackingLog,
@@ -19,40 +19,38 @@ import {
 export class CoreTrackingService {
   constructor(private readonly sessionService: SessionService) {}
 
+  // BuildLog can be async as per @fc/tracking library
+  // eslint-disable-next-line require-await
   async buildLog(
     trackedEvent: TrackedEventInterface,
     context: TrackedEventContextInterface,
   ): Promise<ICoreTrackingLog> {
+    const extractedFromContext = this.extractContext(context);
     const {
-      source,
-      sessionId,
-      interactionId,
       claims,
-      scope,
-      dpId,
-      dpClientId,
-      dpTitle,
-    }: ICoreTrackingContext = this.extractContext(context);
+      source: { address: ip },
+    } = extractedFromContext;
 
     const { step, category, event } = trackedEvent;
 
+    const sessionId = context.sessionId || this.sessionService.getId();
+
     // Authorization route
-    const data = await this.getDataFromSession(sessionId);
+    const extractedFromSession = this.getDataFromSession(sessionId);
+
+    const ctxMergedWithSession = overrideWithSourceIfNotNull(
+      extractedFromContext,
+      extractedFromSession,
+    );
 
     return {
-      interactionId,
+      ...ctxMergedWithSession,
       sessionId,
       step,
       category,
       event,
-      ip: source.address,
+      ip,
       claims: claims?.join(' '),
-      scope,
-      source,
-      dpId,
-      dpClientId,
-      dpTitle,
-      ...data,
     };
   }
 
@@ -64,13 +62,27 @@ export class CoreTrackingService {
      *
      * This should never happen and is a *real* exception, not a business one.
      */
-    const { req } = ctx;
-    if (!req) {
-      throw new CoreMissingContextException('req');
-    }
 
-    const { sessionId } = req;
-    const { claims, interactionId, scope, dpId, dpClientId, dpTitle } = ctx;
+    const {
+      sessionId,
+      claims,
+      interactionId,
+      scope,
+      dpId,
+      dpClientId,
+      dpTitle,
+      accountId,
+      browsingSessionId,
+      isSso,
+      spId,
+      spAcr,
+      spName,
+      idpId,
+      idpAcr,
+      idpName,
+      idpLabel,
+      idpIdentity,
+    } = ctx;
     const source = extractNetworkInfoFromHeaders(ctx);
 
     return {
@@ -82,23 +94,23 @@ export class CoreTrackingService {
       dpId,
       dpClientId,
       dpTitle,
+      accountId,
+      browsingSessionId,
+      isSso,
+      spId,
+      spAcr,
+      spName,
+      idpId,
+      idpAcr,
+      idpName,
+      idpLabel,
+      idpIdentity,
     };
   }
 
-  private async getDataFromSession(
-    sessionId: string,
-  ): Promise<ICoreTrackingProviders> {
-    const boundSessionContext: ISessionBoundContext = {
-      sessionId,
-      moduleName: 'OidcClient',
-    };
-
-    const boundSessionServiceGet = this.sessionService.get.bind(
-      this.sessionService,
-      boundSessionContext,
-    );
-
-    const sessionData: OidcSession = (await boundSessionServiceGet()) || {};
+  private getDataFromSession(sessionId: string): ICoreTrackingProviders {
+    const sessionData =
+      this.sessionService.get<OidcSession>('OidcClient') || {};
 
     const {
       browsingSessionId = null,

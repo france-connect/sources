@@ -2,7 +2,7 @@
 
 // Declarative code
 
-import { Description, Loggable } from '@fc/exceptions';
+import { Description, Loggable } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { CsvBaseException } from './csv-base.exception';

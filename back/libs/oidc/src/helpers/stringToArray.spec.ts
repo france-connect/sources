@@ -21,4 +21,11 @@ describe('stringToArray', () => {
     const expected = ['apple', 'banana', 'orange'];
     expect(result).toEqual(expected);
   });
+
+  it('should return empty array if receive empty string', () => {
+    const input = '';
+    const result = stringToArray(input);
+    const expected = [];
+    expect(result).toEqual(expected);
+  });
 });

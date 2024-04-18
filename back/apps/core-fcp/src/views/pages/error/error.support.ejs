@@ -7,9 +7,8 @@ const offsetLgClass = showSupportButton
 
 <% if (showSupportButton) { %>
 <%
-const { OidcClient } = locals.session;
-const sp_name = OidcClient?.spName || locals.spName;
-const idp_name = OidcClient?.idpLabel || OidcClient?.idpName;
+const sp_name = $session('OidcClient.spName') || locals.spName;
+const idp_name = $session('OidcClient.idpLabel') || $session('OidcClient.idpName');
 
 const params = {
   platform: $config('App.name'),
@@ -36,7 +35,7 @@ const href = `${$config('Core.supportFormUrl')}${queryString}`;
     class="fr-btn fr-btn--lg fc-btn--full-width fc-text--center"
     title="Naviguer vers le formulaire d’aide"
   >
-    Contactez-nous
+    <%= $translate('error.contact_us') %>
   </a>
 </section>
 <% } %>

@@ -5,6 +5,7 @@
  */
 import { isURL } from 'class-validator';
 import { JWK } from 'jose-openid-client';
+import { CallbackParamsType } from 'openid-client';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -185,10 +186,9 @@ describe('OidcClientUtilsService', () => {
       const acr_values = 'eidas1';
       service['createOidcClient'] = createOidcClientMock;
       // When
-      await service.getAuthorizeUrl({
+      await service.getAuthorizeUrl(providerId, {
         state,
         scope,
-        idpId: providerId,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
@@ -209,10 +209,10 @@ describe('OidcClientUtilsService', () => {
       const prompt = 'login';
       service['createOidcClient'] = createOidcClientMock;
       // When
-      await service.getAuthorizeUrl({
+      await service.getAuthorizeUrl(providerId, {
         state,
         scope,
-        idpId: providerId,
+        // oidc defined variable name
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
@@ -223,6 +223,7 @@ describe('OidcClientUtilsService', () => {
         prompt,
         state,
         scope,
+        // oidc defined variable name
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
@@ -243,10 +244,10 @@ describe('OidcClientUtilsService', () => {
       const prompt = 'login';
       service['createOidcClient'] = createOidcClientMock;
       // When
-      await service.getAuthorizeUrl({
+      await service.getAuthorizeUrl(providerId, {
         state,
         scope,
-        idpId: providerId,
+        // oidc defined variable name
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
@@ -277,10 +278,10 @@ describe('OidcClientUtilsService', () => {
       service['createOidcClient'] = createOidcClientMock;
 
       // When
-      const url = await service.getAuthorizeUrl({
+      const url = await service.getAuthorizeUrl(providerId, {
         state,
         scope,
-        idpId: providerId,
+        // oidc defined variable name
         // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
@@ -362,6 +363,14 @@ describe('OidcClientUtilsService', () => {
       state: 'callbackParamsState',
       nonce: 'callbackParamsNonce',
     };
+    const callbackParams: CallbackParamsType = {
+      state: 'callbackParamsState',
+      code: 'callbackParamsCode',
+    };
+
+    beforeEach(() => {
+      service['extractParams'] = jest.fn().mockReturnValue(callbackParams);
+    });
 
     it('should call extractParams with callbackParams', async () => {
       // Given
@@ -399,51 +408,65 @@ describe('OidcClientUtilsService', () => {
 
     it('should throw if something unexpected goes wrong in extractParams', async () => {
       // Given
-      const errorMock = new Error('lol');
-      callbackMock.mockRejectedValueOnce(errorMock);
+      const errorMessage = 'a custom error message';
+      callbackMock.mockRejectedValueOnce(errorMessage);
       // Then
       await expect(
         service.getTokenSet(req, providerId, params),
       ).rejects.toThrow(OidcClientTokenFailedException);
       expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.debug).toHaveBeenCalledWith(errorMock);
+      expect(loggerServiceMock.debug).toHaveBeenCalledWith(
+        JSON.stringify(errorMessage),
+      );
     });
   });
 
   describe('extractParams()', () => {
-    const req = { session: { codeVerifier: 'codeVerifierValue' } };
-    const state = 'callbackParamsState';
+    const params = {
+      state: Symbol('state'),
+      code: Symbol('code'),
+    } as unknown as CallbackParamsType;
+    const state = params.state;
 
-    it('should throw if code is not provided in url', async () => {
-      callbackParamsMock.mockResolvedValueOnce({
-        state: 'callbackParamsState',
-      });
+    it('should throw if code is not provided in url', () => {
+      const missingCodeParams = {
+        state: params.state,
+      };
       // Then
-      await expect(
-        service['extractParams'](req, clientMock, state),
-      ).rejects.toThrow(OidcClientMissingCodeException);
+      expect(() => service['extractParams'](missingCodeParams, state)).toThrow(
+        OidcClientMissingCodeException,
+      );
     });
-    it('should throw if state is not provided in url', async () => {
+
+    it('should throw if state is not provided in url', () => {
       // Given
-      callbackParamsMock.mockResolvedValueOnce({
-        code: 'callbackParamsCode',
-      });
+      const missingStateParams = {
+        code: params.code,
+      };
       // Then
-      await expect(
-        service['extractParams'](req, clientMock, state),
-      ).rejects.toThrow(OidcClientMissingStateException);
+      expect(() => service['extractParams'](missingStateParams, state)).toThrow(
+        OidcClientMissingStateException,
+      );
     });
-    it('should throw if state in url does not match state in session', async () => {
+
+    it('should throw if state in url does not match state in session', () => {
       // Given
-      callbackParamsMock.mockResolvedValueOnce({
-        state: 'callbackParamsState',
-        code: 'callbackParamsCode',
-      });
-      const invalidState = 'notTheSameStateAsInRequest';
+      const wrongStateParams = {
+        code: params.code,
+        state: 'wrongState',
+      };
       // Then
-      await expect(
-        service['extractParams'](req, clientMock, invalidState),
-      ).rejects.toThrow(OidcClientInvalidStateException);
+      expect(() => service['extractParams'](wrongStateParams, state)).toThrow(
+        OidcClientInvalidStateException,
+      );
+    });
+
+    it('should return given params', () => {
+      // When
+      const result = service['extractParams'](params, state);
+
+      // Then
+      expect(result).toBe(params);
     });
   });
 
@@ -602,14 +625,14 @@ describe('OidcClientUtilsService', () => {
       );
     });
 
-    it('should not do anything because identity provider exists and is not disabled', async () => {
+    it('should not do anything because identity provider exists and is not disabled', () => {
       // Given
       identityProviderServiceMock.getById.mockResolvedValueOnce({
         active: true,
       });
 
       // When / Then
-      await expect(() => service.checkIdpDisabled('idpId')).not.toThrow();
+      expect(() => service.checkIdpDisabled('idpId')).not.toThrow();
     });
   });
 

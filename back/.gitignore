@@ -38,8 +38,5 @@ lerna-debug.log*
 !.vscode/extensions.json
 .editorconfig
 
-# stryker temp files
-.stryker-tmp
-
 #### Local History files, extension vscode
-.history/**/* 
+.history/**/*

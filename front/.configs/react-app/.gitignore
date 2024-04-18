@@ -1,0 +1,5 @@
+# @NOTE will be ignored by project .gitignore main file
+# react-app should be node_modules library
+!.template
+!tsconfig.json
+!tsconfig.node.json

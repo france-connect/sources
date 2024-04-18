@@ -95,6 +95,18 @@ Given(
   },
 );
 
+Given(
+  "je paramètre un intercepteur pour forcer un mauvais client_id au prochain appel au fournisseur d'identité",
+  function () {
+    const { url }: IdentityProvider = this.identityProvider;
+    addInterceptParams(
+      `${url}/authorize*`,
+      { client_id: 'wrong_client_id' },
+      'FI:ClientIdModified',
+    );
+  },
+);
+
 When("je clique sur le fournisseur d'identité", function () {
   expect(this.identityProvider).to.exist;
   identityProviderSelectionPage
@@ -150,15 +162,67 @@ Then(
 );
 
 Then(
-  /^le lien Aidants Connect (est|n'est pas) affiché dans le footer$/,
+  /^le bouton Aidants Connect (est|n'est pas) affiché sous la mire$/,
   function (text: string) {
     const isVisible = text === 'est';
     identityProviderSelectionPage
-      .getAidantsConnectLink()
+      .getAidantsConnectButton()
       .should(isVisible ? 'be.visible' : 'not.exist');
   },
 );
 
-When('je clique sur le lien Aidants Connect', function () {
-  identityProviderSelectionPage.getAidantsConnectLink().click();
+Then(
+  /^le bouton Aidants Connect (est|n'est pas) actif$/,
+  function (text: string) {
+    const isEnabled = text === 'est';
+    identityProviderSelectionPage
+      .getAidantsConnectButton()
+      .should(isEnabled ? 'be.enabled' : 'be.disabled');
+  },
+);
+
+When('je clique sur le bouton Aidants Connect', function () {
+  identityProviderSelectionPage.getAidantsConnectButton().click();
+});
+
+Then(
+  /^la modale "sélection FI" (est|n'est pas) présente sur la mire$/,
+  function (text: string) {
+    const isVisible = text === 'est';
+    const { idpId } = this.identityProvider;
+    identityProviderSelectionPage
+      .getIdpSelectionModal(idpId)
+      .getModal()
+      .should(isVisible ? 'be.visible' : 'not.be.visible');
+  },
+);
+
+When(
+  'je clique sur le bouton continuer de la modale "sélection FI"',
+  function () {
+    const { idpId } = this.identityProvider;
+    identityProviderSelectionPage
+      .getIdpSelectionModal(idpId)
+      .getContinueButton()
+      .click();
+  },
+);
+
+When(
+  'je clique sur le bouton annuler de la modale "sélection FI"',
+  function () {
+    const { idpId } = this.identityProvider;
+    identityProviderSelectionPage
+      .getIdpSelectionModal(idpId)
+      .getCancelButton()
+      .click();
+  },
+);
+
+When('je clique sur le bouton fermer de la modale "sélection FI"', function () {
+  const { idpId } = this.identityProvider;
+  identityProviderSelectionPage
+    .getIdpSelectionModal(idpId)
+    .getCloseButton()
+    .click();
 });

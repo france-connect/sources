@@ -15,6 +15,7 @@ import { CoreConfig as CoreLibConfig } from '@fc/core';
 import { CryptographyEidasConfig } from '@fc/cryptography-eidas';
 import { CryptographyFcpConfig } from '@fc/cryptography-fcp';
 import { DataProviderAdapterMongoConfig } from '@fc/data-provider-adapter-mongo';
+import { I18nConfig } from '@fc/i18n';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
 import { LoggerConfig } from '@fc/logger';
 import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
@@ -150,4 +151,9 @@ export class CoreFcpConfig {
   @ValidateNested()
   @Type(() => TrackingConfig)
   readonly Tracking: TrackingConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => I18nConfig)
+  readonly I18n: I18nConfig;
 }

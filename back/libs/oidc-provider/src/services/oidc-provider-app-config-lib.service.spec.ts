@@ -163,11 +163,13 @@ describe('OidcProviderAppConfigLibService', () => {
       service['getServiceProviderIdFromCtx'] = jest
         .fn()
         .mockReturnValue('clientId');
+
+      sessionServiceMock.initCache.mockResolvedValue(true);
     });
 
     it('Should return an object with accountID', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce({
+      sessionServiceMock.get.mockReturnValueOnce({
         spIdentity: identityMock,
         subs: { clientId: 'sub client id' },
       });
@@ -192,7 +194,7 @@ describe('OidcProviderAppConfigLibService', () => {
 
     it('Should return an object with a claims function that returns identity', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce({
+      sessionServiceMock.get.mockReturnValueOnce({
         spIdentity: identityMock,
         subs: { clientId: 'sub client id' },
       });
@@ -211,7 +213,7 @@ describe('OidcProviderAppConfigLibService', () => {
 
     it('Should return an object with a claims function that returns identity (even with several subs)', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce({
+      sessionServiceMock.get.mockReturnValueOnce({
         spIdentity: identityMock,
         subs: {
           clientId: 'sub client id',
@@ -231,17 +233,18 @@ describe('OidcProviderAppConfigLibService', () => {
       });
     });
 
-    it('Should call throwError if an exception is catched', async () => {
+    it('Should call throwError if an exception is caught', async () => {
       // Given
-      const exception = new Error('foo');
-      sessionServiceMock.get.mockRejectedValueOnce(exception);
+      const errorMock = new Error('error');
+      sessionServiceMock.initCache.mockRejectedValueOnce(errorMock);
       service['throwError'] = jest.fn();
       // When
       await service['findAccount'](contextMock, interactionIdMock);
       // Then
+      expect(service['errorService']['throwError']).toHaveBeenCalledTimes(1);
       expect(service['errorService']['throwError']).toHaveBeenCalledWith(
         contextMock,
-        exception,
+        errorMock,
       );
       expect(contextMock).toEqual({
         not: 'altered',
@@ -250,7 +253,7 @@ describe('OidcProviderAppConfigLibService', () => {
 
     it('should call checkSpId with ctx and spId found', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce({
+      sessionServiceMock.get.mockReturnValueOnce({
         spIdentity: identityMock,
         subs: { clientId: 'sub client id' },
       });
@@ -267,7 +270,7 @@ describe('OidcProviderAppConfigLibService', () => {
 
     it('should call checkSub with ctx and sub found', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce({
+      sessionServiceMock.get.mockReturnValueOnce({
         spIdentity: identityMock,
         subs: { clientId: 'sub client id' },
       });
@@ -300,13 +303,15 @@ describe('OidcProviderAppConfigLibService', () => {
     // Given
     const reqMock = {
       fc: { interactionId: 'interactiondMockValue' },
-      sessionId: 'sessionIdMockedValue',
     };
     const resMock = {};
     const acrMock = Symbol('acrMock');
 
+    const sessionIdMock = 'sessionId';
+
     beforeEach(() => {
       service['getInteractionAcr'] = jest.fn().mockReturnValue(acrMock);
+      sessionServiceMock.getId.mockReturnValue(sessionIdMock);
     });
 
     it('should return the result of oidc-provider.interactionFinished()', async () => {
@@ -318,7 +323,7 @@ describe('OidcProviderAppConfigLibService', () => {
         spAcr: 'spAcrValue',
         spIdentity: {},
       };
-      sessionServiceMock.get.mockResolvedValueOnce(sessionDataMock);
+      sessionServiceMock.get.mockReturnValueOnce(sessionDataMock);
       // When
       const result = await service.finishInteraction(
         reqMock,
@@ -344,7 +349,7 @@ describe('OidcProviderAppConfigLibService', () => {
         interactionId: interactionIdMock,
         spIdentity: spIdentityMock,
       };
-      sessionServiceMock.get.mockResolvedValueOnce(sessionDataMock);
+      sessionServiceMock.get.mockReturnValueOnce(sessionDataMock);
 
       const grantMock = Symbol('grant');
       const grantIdMock = Symbol('grantIdMock');
@@ -358,7 +363,7 @@ describe('OidcProviderAppConfigLibService', () => {
           grantId: grantIdMock,
         },
         login: {
-          accountId: reqMock.sessionId,
+          accountId: sessionIdMock,
           acr: acrMock,
           amr: amrValueMock,
           ts: expect.any(Number),
@@ -377,7 +382,7 @@ describe('OidcProviderAppConfigLibService', () => {
         providerMock,
         reqMock,
         resMock,
-        reqMock.sessionId,
+        sessionIdMock,
       );
       expect(oidcProviderGrantServiceMock.saveGrant).toHaveBeenCalledTimes(1);
       expect(oidcProviderGrantServiceMock.saveGrant).toHaveBeenCalledWith(
@@ -400,7 +405,7 @@ describe('OidcProviderAppConfigLibService', () => {
         spAcr: 'spAcrValue',
         spIdentity: {},
       };
-      sessionServiceMock.get.mockResolvedValueOnce(sessionDataMock);
+      sessionServiceMock.get.mockReturnValueOnce(sessionDataMock);
       // Then
       await expect(
         service.finishInteraction(reqMock, resMock, sessionDataMock),
@@ -506,15 +511,11 @@ describe('OidcProviderAppConfigLibService', () => {
       // Given
       const logoutFormProperty = 'oidcProviderLogoutForm';
       // When
-      await service.logoutFormSessionDestroy(
-        ctx,
-        form,
-        sessionServiceMock,
-        params,
-      );
+      await service.logoutFormSessionDestroy(ctx, form, params);
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith(
+        'OidcClient',
         logoutFormProperty,
         form,
       );
@@ -523,12 +524,7 @@ describe('OidcProviderAppConfigLibService', () => {
 
     it('should commit changes to session', async () => {
       // When
-      await service.logoutFormSessionDestroy(
-        ctx,
-        form,
-        sessionServiceMock,
-        params,
-      );
+      await service.logoutFormSessionDestroy(ctx, form, params);
       // Then
       expect(sessionServiceMock.commit).toHaveBeenCalledTimes(1);
     });
@@ -549,12 +545,7 @@ describe('OidcProviderAppConfigLibService', () => {
       </body>
     </html>`;
       // When
-      await service.logoutFormSessionDestroy(
-        ctx,
-        form,
-        sessionServiceMock,
-        params,
-      );
+      await service.logoutFormSessionDestroy(ctx, form, params);
       // Then
       expect(ctx).toHaveProperty('body', htmlDisconnectFromFi);
     });

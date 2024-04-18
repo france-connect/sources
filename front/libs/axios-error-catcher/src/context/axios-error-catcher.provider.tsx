@@ -1,10 +1,12 @@
-import axios, { AxiosError } from 'axios';
-import { ReactElement, useContext, useEffect, useState } from 'react';
+import type { AxiosError } from 'axios';
+import axios from 'axios';
+import type { ReactElement } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { AccountContext } from '@fc/account';
 import { HttpStatusCode } from '@fc/common';
 
-import { AxiosErrorCatcher } from '../inferfaces';
+import type { AxiosErrorCatcher } from '../inferfaces';
 import { AxiosErrorCatcherContext } from './axios-error-catcher.context';
 
 export interface AxiosErrorCatcherProviderProps {

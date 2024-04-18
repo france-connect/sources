@@ -1,6 +1,10 @@
 import { ChainableElement } from '../../common/types';
 
 export default class TechnicalErrorPage {
+  checkEidasErrorPageIsVisible(): void {
+    cy.get('[data-testid="eidas-error-section"]').should('be.visible');
+  }
+
   checkIsVisible(): void {
     cy.get('[data-testid="error-section"]').should('be.visible');
   }

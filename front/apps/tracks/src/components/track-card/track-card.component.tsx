@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import React, { useCallback, useState } from 'react';
 
-import { EnhancedTrack, TracksConfig } from '../../interfaces';
+import type { EnhancedTrack, TracksConfig } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';

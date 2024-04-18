@@ -1,3 +1,5 @@
+import { IFormattedIdpList } from '@fc/csmr-user-preferences/interfaces';
+
 export const currentUserPreferences = [
   {
     uid: 'first_idp',
@@ -47,7 +49,7 @@ export const currentUserPreferences = [
     uid: 'twelfth_idp',
     isChecked: true,
   },
-];
+] as IFormattedIdpList[];
 
 export const previousUserPreferences = [
   {
@@ -98,7 +100,7 @@ export const previousUserPreferences = [
     uid: 'twelfth_idp',
     isChecked: false,
   },
-];
+] as IFormattedIdpList[];
 
 export const expectedChangedUserPreferences = [
   {
@@ -125,4 +127,4 @@ export const expectedChangedUserPreferences = [
     uid: 'twelfth_idp',
     isChecked: true,
   },
-];
+] as IFormattedIdpList[];

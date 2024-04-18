@@ -6,7 +6,7 @@ import { Module } from '@nestjs/common';
 import { AccountModule } from '@fc/account';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
-import { ExceptionsModule } from '@fc/exceptions';
+import { ExceptionsModule } from '@fc/exceptions-deprecated';
 import { IdentityProviderAdapterMongoModule } from '@fc/identity-provider-adapter-mongo';
 import { MongooseModule } from '@fc/mongoose';
 

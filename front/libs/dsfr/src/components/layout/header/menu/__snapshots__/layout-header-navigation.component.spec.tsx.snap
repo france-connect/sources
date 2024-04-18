@@ -14,14 +14,18 @@ exports[`LayoutHeaderNavigationComponent should match the snapshot, with classNa
       <li
         class="fr-nav__item"
       >
-        <span>
+        <span
+          data-mockid="Link"
+        >
           any-label-mock-1
         </span>
       </li>
       <li
         class="fr-nav__item"
       >
-        <span>
+        <span
+          data-mockid="Link"
+        >
           any-label-mock-2
         </span>
       </li>
@@ -59,14 +63,18 @@ exports[`LayoutHeaderNavigationComponent should match the snapshot, with navigat
       <li
         class="fr-nav__item"
       >
-        <span>
+        <span
+          data-mockid="Link"
+        >
           any-label-mock-1
         </span>
       </li>
       <li
         class="fr-nav__item"
       >
-        <span>
+        <span
+          data-mockid="Link"
+        >
           any-label-mock-2
         </span>
       </li>

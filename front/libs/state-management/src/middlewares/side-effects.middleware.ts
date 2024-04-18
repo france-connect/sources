@@ -1,6 +1,6 @@
-import { FSA } from '@fc/common';
+import type { FSA } from '@fc/common';
 
-import { GlobalState, SideEffectMap } from '../interfaces';
+import type { GlobalState, SideEffectMap } from '../interfaces';
 
 export interface SideEffectsMiddlewareOptions {
   dispatch: Function;

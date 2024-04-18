@@ -2,28 +2,12 @@
   "name": "@fc/user-dashboard-instance",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@fc/common": "^0.1.0",
-    "@fc/dsfr": "^0.1.0",
-    "@fc/routing": "^0.1.0",
-    "@fc/tracks": "^0.1.0",
-    "@fc/state-management": "^0.1.0",
-    "@fc/oidc-client": "^0.1.0",
-    "@fc/user-dashboard": "^0.1.0",
-    "@fc/user-preferences": "^0.1.0",
-    "luxon": "^3.4.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.15.0"
-  },
+  "type": "module",
   "scripts": {
-    "prestart": "../../scripts/yarn-dsfr",
-    "start": "../../scripts/yarn-start user-dashboard",
-    "build": "../../scripts/yarn-build user-dashboard"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not op_mini all"
-  ]
+    "start": "vite dev --host",
+    "build": "tsc && vite build",
+    "preview": "vite preview --port=3000 --host",
+    "start:debug": "yarn vite dev --host --force --debug",
+    "tsc": "tsc --noEmit --showConfig --project ./tsconfig.json"
+  }
 }

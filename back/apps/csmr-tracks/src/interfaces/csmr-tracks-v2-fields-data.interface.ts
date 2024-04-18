@@ -24,4 +24,5 @@ export type ICsmrTracksV2FieldsData = {
   claims?: string;
   time: number;
   source: ISource;
+  scope?: string;
 };

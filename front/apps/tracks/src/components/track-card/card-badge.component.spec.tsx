@@ -73,23 +73,10 @@ describe('TrackCardBadgeComponent', () => {
     expect(element).toBeInTheDocument();
   });
 
-  it('should render the FC_DATATRANSFER_CONSENT_DATA badge', () => {
+  it('should render the DP_VERIFIED_FC_CHECKTOKEN badge', () => {
     // given
     const { getByText } = render(
-      <TrackCardBadgeComponent fromFcPlus type={CinematicEvents.FC_DATATRANSFER_CONSENT_DATA} />,
-    );
-
-    // when
-    const element = getByText('Autorisation');
-
-    // then
-    expect(element).toBeInTheDocument();
-  });
-
-  it('should render the DP_REQUESTED_FC_CHECKTOKEN badge', () => {
-    // given
-    const { getByText } = render(
-      <TrackCardBadgeComponent fromFcPlus type={CinematicEvents.DP_REQUESTED_FC_CHECKTOKEN} />,
+      <TrackCardBadgeComponent fromFcPlus type={CinematicEvents.DP_VERIFIED_FC_CHECKTOKEN} />,
     );
 
     // when

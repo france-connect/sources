@@ -1642,11 +1642,6 @@ cypress-plugin-api@^2.11.1:
     set-cookie-parser "^2.5.1"
     vue "^3.2.41"
 
-cypress-xpath@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/cypress-xpath/-/cypress-xpath-2.0.1.tgz#052db5d18b4f5c03434cba7dcf1fe0b69d292308"
-  integrity sha512-qMagjvinBppNJdMAkucWESP9aP4rDTs7c96m0vwMuZTVx3NqP2E3z/hkoRf8Ea9soL8yTvUuuyF1cg/Sb1Yhbg==
-
 cypress@12.17.4:
   version "12.17.4"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-12.17.4.tgz#b4dadf41673058493fa0d2362faa3da1f6ae2e6c"

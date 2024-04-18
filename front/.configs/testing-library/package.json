@@ -1,0 +1,6 @@
+{
+  "name": "@fc/testing-library",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts"
+}

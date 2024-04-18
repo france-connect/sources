@@ -1,6 +1,7 @@
-import axios, { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
+import axios from 'axios';
 
-import { AccountInterface } from '../interfaces';
+import type { AccountInterface } from '../interfaces';
 // @TODO remplacer par une api plus consistante
 // import { AccountException } from './account.exception';
 

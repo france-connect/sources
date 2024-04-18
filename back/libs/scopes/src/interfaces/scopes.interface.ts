@@ -1,10 +1,10 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { IClaim } from './claims.interface';
+import { ClaimInterface } from './claims.interface';
 
-export type IScope = string;
+export type ScopeInterface = string;
 
-export interface IScopes {
-  readonly [key: IScope]: readonly IClaim[];
+export interface ScopesInterface {
+  readonly [key: ScopeInterface]: readonly ClaimInterface[];
 }

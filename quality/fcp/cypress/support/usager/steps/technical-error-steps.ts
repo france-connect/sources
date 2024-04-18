@@ -12,6 +12,13 @@ Then(
 );
 
 Then(
+  'je suis redirigé vers la page erreur technique eidas-bridge',
+  function () {
+    technicalErrorPage.checkEidasErrorPageIsVisible();
+  },
+);
+
+Then(
   "le code d'erreur FranceConnect est {string}",
   function (errorCode: string) {
     technicalErrorPage.checkErrorCode(errorCode);

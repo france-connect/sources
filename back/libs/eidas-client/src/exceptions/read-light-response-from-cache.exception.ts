@@ -3,7 +3,7 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enum';
 import { EidasClientBaseException } from './eidas-client-base.exception';

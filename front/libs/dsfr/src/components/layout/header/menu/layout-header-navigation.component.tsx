@@ -1,8 +1,9 @@
 import classnames from 'classnames';
-import React, { MouseEventHandler } from 'react';
+import type { MouseEventHandler } from 'react';
+import React from 'react';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 
-import { NavigationLink } from '../../../../interfaces';
+import type { NavigationLink } from '../../../../interfaces';
 
 export interface LayoutHeaderNavigationComponentProps {
   navigationItems?: NavigationLink[];

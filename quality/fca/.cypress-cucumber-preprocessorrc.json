@@ -2,6 +2,7 @@
   "filterSpecs": true,
   "omitFiltered": true,
   "stepDefinitions": [
+    "cypress/support/api/steps/*.ts",
     "cypress/support/common/steps/*.ts",
     "cypress/support/exploitation/steps/*.ts",
     "cypress/support/usager/steps/*.ts"

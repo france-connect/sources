@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 
-import { SelectedItemsHook, useSelectedItems } from '@fc/common';
+import type { SelectedItemsHook } from '@fc/common';
+import { useSelectedItems } from '@fc/common';
 
 import { AccordionComponent } from '../accordion/accordion.component';
 import { AccordionGroupComponent } from './accordion-group.component';
@@ -57,7 +58,7 @@ describe('AccordionGroupComponent', () => {
     render(<AccordionGroupComponent items={accordionItemsMock} />);
 
     // then
-    expect(useSelectedItems).toHaveBeenCalledTimes(1);
+    expect(useSelectedItems).toHaveBeenCalledOnce();
   });
 
   it('should call useSelectedItems hook with options props', () => {
@@ -68,7 +69,7 @@ describe('AccordionGroupComponent', () => {
     render(<AccordionGroupComponent items={accordionItemsMock} options={options} />);
 
     // then
-    expect(useSelectedItems).toHaveBeenCalledTimes(1);
+    expect(useSelectedItems).toHaveBeenCalledOnce();
     expect(useSelectedItems).toHaveBeenCalledWith(options);
   });
 

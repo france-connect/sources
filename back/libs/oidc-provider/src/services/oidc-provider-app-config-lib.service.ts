@@ -8,14 +8,9 @@ import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
-import { OidcSession } from '@fc/oidc';
+import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
-import {
-  ISessionBoundContext,
-  ISessionService,
-  SessionService,
-  SessionSubNotFoundException,
-} from '@fc/session';
+import { SessionService, SessionSubNotFoundException } from '@fc/session';
 
 import { OidcProviderConfig } from '../dto';
 import {
@@ -94,19 +89,21 @@ export abstract class OidcProviderAppConfigLibService
    * More documentation can be found in oidc-provider repo.
    * @see https://github.com/panva/node-oidc-provider/blob/master/docs/README.md#accounts
    */
-  async findAccount(ctx: KoaContextWithOIDC, sessionId: string) {
+  async findAccount(
+    ctx: KoaContextWithOIDC,
+    sessionId: string,
+  ): Promise<{ accountId: string; claims: Function }> {
     try {
-      const boundSessionContext: ISessionBoundContext = {
-        sessionId,
-        moduleName: 'OidcClient',
-      };
+      // Use the user session from the service provider request
+      await this.sessionService.initCache(sessionId);
 
       // Retrieve spId from panva context
       const spId = this.getServiceProviderIdFromCtx(ctx);
+
       await this.checkSpId(ctx, spId);
 
-      const { spIdentity, subs }: OidcSession =
-        await this.sessionService.get(boundSessionContext);
+      const { spIdentity, subs } =
+        this.sessionService.get<OidcSession>('OidcClient');
 
       const subSp = spId && subs[spId];
       await this.checkSub(ctx, subSp);
@@ -137,6 +134,8 @@ export abstract class OidcProviderAppConfigLibService
   async finishInteraction(req: any, res: any, session: OidcSession) {
     const { amr }: OidcClientSession = session;
     const acr = this.getInteractionAcr(session);
+    const sessionId = this.sessionService.getId();
+
     /**
      * Build Interaction results
      * For all available options, refer to `oidc-provider` documentation:
@@ -147,7 +146,7 @@ export abstract class OidcProviderAppConfigLibService
       this.provider,
       req,
       res,
-      req.sessionId,
+      sessionId,
     );
 
     const grantId = await this.grantService.saveGrant(grant);
@@ -160,7 +159,7 @@ export abstract class OidcProviderAppConfigLibService
       login: {
         amr,
         acr,
-        accountId: req.sessionId,
+        accountId: sessionId,
         ts: Math.floor(Date.now() / 1000),
         remember: false,
       },
@@ -206,11 +205,10 @@ export abstract class OidcProviderAppConfigLibService
   async logoutFormSessionDestroy(
     ctx: KoaContextWithOIDC,
     form: any,
-    session: ISessionService<OidcClientSession>,
     { method, uri, title }: LogoutFormParamsInterface,
   ): Promise<void> {
-    await session.set('oidcProviderLogoutForm', form);
-    await session.commit();
+    this.sessionService.set('OidcClient', 'oidcProviderLogoutForm', form);
+    await this.sessionService.commit();
 
     ctx.body = `<!DOCTYPE html>
       <head>
@@ -257,7 +255,11 @@ export abstract class OidcProviderAppConfigLibService
 
   // Needed for consistent typing
   // eslint-disable-next-line require-await
-  protected async formatAccount(sessionId, spIdentity, subSp) {
+  protected async formatAccount(
+    sessionId: string,
+    spIdentity: Partial<Omit<IOidcIdentity, 'sub'>>,
+    subSp: string,
+  ): Promise<{ accountId: string; claims: Function }> {
     return {
       /**
        * We used the `sessionId` as `accountId` identifier when building the grant

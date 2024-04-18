@@ -7,7 +7,7 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterEnvService } from '@fc/service-provider-adapter-env';
-import { ISessionBoundContext, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -185,18 +185,13 @@ describe('MockIdentityProviderFcaService', () => {
         spName: spNameMock,
       };
 
-      const boundSessionContextMock: ISessionBoundContext = {
-        sessionId: sessionIdValueMock,
-        moduleName: 'OidcClient',
-      };
-
       // When
       await service['afterAuthorizeMiddleware'](ctxMock);
 
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith(
-        boundSessionContextMock,
+        'OidcClient',
         sessionMock,
       );
     });
@@ -212,19 +207,11 @@ describe('MockIdentityProviderFcaService', () => {
         name: spNameMock,
       });
 
-      const boundSessionContextMock: ISessionBoundContext = {
-        sessionId: sessionIdValueMock,
-        moduleName: 'OidcClient',
-      };
-
       // When
       await service['afterAuthorizeMiddleware'](ctxMock);
 
       // Then
       expect(sessionServiceMock.commit).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.commit).toHaveBeenCalledWith(
-        boundSessionContextMock,
-      );
     });
   });
 

@@ -9,11 +9,13 @@ import {
   CORE_SERVICE,
   CoreAccountService,
   CoreAcrService,
+  CoreAuthorizationService,
   CoreTrackingService,
   CoreVerifyService,
 } from '@fc/core';
 import { CryptographyFcaModule } from '@fc/cryptography-fca';
-import { ExceptionsModule } from '@fc/exceptions';
+import { CsrfModule } from '@fc/csrf';
+import { ExceptionsModule } from '@fc/exceptions-deprecated';
 import { FeatureHandlerModule } from '@fc/feature-handler';
 import { FlowStepsModule } from '@fc/flow-steps';
 import { FqdnToIdpAdapterMongoModule } from '@fc/fqdn-to-idp-adapter-mongo';
@@ -49,7 +51,6 @@ import {
 } from './handlers/authorize';
 import { CoreFcaMcpVerifyHandler } from './handlers/verify';
 import {
-  CoreFcaAuthorizationUrlService,
   CoreFcaMiddlewareService,
   CoreFcaService,
   CoreFcaVerifyService,
@@ -90,6 +91,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     trackingModule,
     NotificationsModule,
     FeatureHandlerModule,
+    CsrfModule,
   ],
   controllers: [
     CoreFcaController,
@@ -102,12 +104,12 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     CoreFcaService,
     CoreVerifyService,
     CoreFcaMiddlewareService,
+    CoreAuthorizationService,
     CoreTrackingService,
     OidcProviderConfigAppService,
     CoreFcaDefaultVerifyHandler,
     CoreFcaVerifyService,
     OidcProviderGrantService,
-    CoreFcaAuthorizationUrlService,
     CoreFcaMcpVerifyHandler,
     CoreFcaDefaultAuthorizationHandler,
     CoreFcaMcpAuthorizationHandler,

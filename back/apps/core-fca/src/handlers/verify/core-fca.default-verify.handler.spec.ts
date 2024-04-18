@@ -112,7 +112,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
-    sessionServiceMock.get.mockResolvedValue(sessionDataMock);
+    sessionServiceMock.get.mockReturnValue(sessionDataMock);
     cryptographyFcaServiceMock.computeIdentityHash.mockReturnValueOnce(
       'spIdentityHash',
     );
@@ -216,8 +216,8 @@ describe('CoreFcaDefaultVerifyHandler', () => {
   });
 
   describe('storeIdentityWithSessionService()', () => {
-    it('should set the Oidc session', async () => {
-      await service['storeIdentityWithSessionService'](
+    it('should set the Oidc session', () => {
+      service['storeIdentityWithSessionService'](
         sessionServiceMock,
         idpIdentityMock.sub,
         spIdentityMock,
@@ -259,7 +259,9 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     it('Should throw if identity provider is not usable', async () => {
       // Given
       const errorMock = new Error('my error');
-      sessionServiceMock.get.mockRejectedValueOnce(errorMock);
+      sessionServiceMock.get.mockImplementationOnce(() => {
+        throw errorMock;
+      });
       // Then
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
@@ -377,7 +379,9 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     it('Should throw if identity storage for service provider fails', async () => {
       // Given
       const errorMock = new Error('my error');
-      sessionServiceMock.set.mockRejectedValueOnce(errorMock);
+      sessionServiceMock.set.mockImplementationOnce(() => {
+        throw errorMock;
+      });
 
       // Then
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);

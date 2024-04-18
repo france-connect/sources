@@ -78,7 +78,7 @@ export class OidcProviderController {
   @Header('cache-control', 'no-store')
   @IsStep()
   @ForbidRefresh()
-  async getLogin(
+  getLogin(
     @Req() req,
     @Res() res,
     /**
@@ -89,12 +89,12 @@ export class OidcProviderController {
     @Session('OidcClient', GetLoginOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const { spIdentity } = await sessionOidc.get();
+    const { spIdentity } = sessionOidc.get();
     if (!spIdentity) {
       throw new CoreMissingIdentityException();
     }
 
-    const session: OidcClientSession = await sessionOidc.get();
+    const session: OidcClientSession = sessionOidc.get();
     return this.oidcProvider.finishInteraction(req, res, session);
   }
 }

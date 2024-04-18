@@ -1,6 +1,6 @@
 import { ucfirst } from '@fc/common';
 
-import { EnhancedTrack, TracksConfig } from '../../interfaces';
+import type { EnhancedTrack, TracksConfig } from '../../interfaces';
 import { orderTracksByDateDesc } from '../../utils';
 import { TrackCardComponent } from '../track-card/track-card.component';
 

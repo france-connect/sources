@@ -60,7 +60,7 @@ export class RnippService {
   private buildRequestUrl(
     identity: RequiredExcept<
       IPivotIdentity,
-      'sub' | 'email' | 'preferred_username'
+      'sub' | 'email' | 'preferred_username' | 'rep_scope'
     >,
   ): string {
     const { protocol, hostname, baseUrl } =

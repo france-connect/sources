@@ -11,8 +11,8 @@ import {
 } from '@fc/core';
 import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger';
+import { OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
-import { OidcClientSession } from '@fc/oidc-client';
 import {
   OidcCtx,
   OidcProviderErrorService,
@@ -21,7 +21,7 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { ISessionService, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
 import {
@@ -123,41 +123,32 @@ export class CoreFcaMiddlewareService extends CoreOidcProviderMiddlewareService 
     }
 
     const eventContext = this.getEventContext(ctx);
-    const { req } = ctx;
-
     await this.renewSession(ctx);
-
-    const oidcSession = SessionService.getBoundSession<OidcClientSession>(
-      req,
-      'OidcClient',
-    );
 
     // We force string casting because if it's undefined SSO will not be enable
     const spAcr = ctx?.oidc?.params?.acr_values as string;
-    ctx.isSso = await this.isSsoAvailable(oidcSession, spAcr);
+    ctx.isSso = this.isSsoAvailable(spAcr);
 
     const sessionProperties = await this.buildSessionWithNewInteraction(
       ctx,
       eventContext,
     );
 
-    const browsingSessionId = await this.getBrowsingSessionId(oidcSession);
-    await oidcSession.set({ ...sessionProperties, browsingSessionId });
-    await oidcSession.commit();
+    const browsingSessionId = this.getBrowsingSessionId();
+
+    this.sessionService.set('OidcClient', {
+      ...sessionProperties,
+      browsingSessionId,
+    });
+    await this.sessionService.commit();
 
     await this.trackAuthorize(eventContext);
 
     await this.checkRedirectToSso(ctx);
   }
 
-  private async isSsoSession(ctx: OidcCtx) {
-    const { req } = ctx;
-    const oidcSession = SessionService.getBoundSession<OidcClientSession>(
-      req,
-      'OidcClient',
-    );
-
-    const data = await oidcSession.get();
+  private async isSsoSession() {
+    const data = this.sessionService.get<OidcSession>('OidcClient');
 
     if (!data) {
       return false;
@@ -175,23 +166,21 @@ export class CoreFcaMiddlewareService extends CoreOidcProviderMiddlewareService 
   }
 
   private async renewSession(ctx: OidcCtx): Promise<void> {
-    const { req, res } = ctx;
+    const { res } = ctx;
 
     const { enableSso } = this.config.get<CoreConfig>('Core');
-    const isSsoSession = await this.isSsoSession(ctx);
+    const isSsoSession = await this.isSsoSession();
 
     if (enableSso && isSsoSession) {
-      await this.sessionService.duplicate(req, res, GetAuthorizeSessionDto);
+      await this.sessionService.duplicate(res, GetAuthorizeSessionDto);
       this.logger.debug('Session has been detached and duplicated');
     } else {
-      await this.sessionService.reset(req, res);
+      await this.sessionService.reset(res);
       this.logger.debug('Session has been reset');
     }
   }
 
-  private async getBrowsingSessionId(
-    session: ISessionService<OidcClientSession>,
-  ): Promise<string> {
-    return (await session.get('browsingSessionId')) || uuid();
+  private getBrowsingSessionId(): string {
+    return this.sessionService.get('OidcClient', 'browsingSessionId') || uuid();
   }
 }

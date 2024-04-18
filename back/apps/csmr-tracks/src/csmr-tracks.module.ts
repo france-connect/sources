@@ -7,7 +7,7 @@ import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CryptographyService } from '@fc/cryptography';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { ElasticsearchModule } from '@fc/elasticsearch';
-import { ExceptionsModule } from '@fc/exceptions';
+import { ExceptionsModule } from '@fc/exceptions-deprecated';
 import { GeoipMaxmindModule } from '@fc/geoip-maxmind';
 import { RabbitmqModule } from '@fc/rabbitmq';
 import { ScopesModule } from '@fc/scopes';

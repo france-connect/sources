@@ -1,8 +1,9 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
+import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
-import { TracksConfig, UserDashboardTracks } from '../../interfaces';
+import type { TracksConfig, UserDashboardTracks } from '../../interfaces';
 
 export const DEFAULT_SIZE = '10';
 export const DEFAULT_OFFSET = '0';

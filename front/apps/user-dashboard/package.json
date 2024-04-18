@@ -2,8 +2,5 @@
   "name": "@fc/user-dashboard",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@fc/account": "0.1.0"
-  },
   "main": "src/index.ts"
 }

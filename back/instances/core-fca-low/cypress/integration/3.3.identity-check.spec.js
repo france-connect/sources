@@ -25,7 +25,6 @@ describe('Identity Check', () => {
     cy.proxyURLWasActivated();
 
     cy.hasError('Y000006');
-    cy.contains(`Une erreur est survenue`);
     // only one error
     cy.contains(/(?:"constraints"){1}.*?(constraints)/).should('not.exist');
   });

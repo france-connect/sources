@@ -116,9 +116,9 @@ describe('MinistriesService', () => {
   });
 
   describe('onModuleInit', () => {
-    it('should call watchWith from mongooseHelper', async () => {
+    it('should call watchWith from mongooseHelper', () => {
       // When
-      await service.onModuleInit();
+      service.onModuleInit();
       // Then
       expect(
         mongooseCollectionOperationWatcherHelperMock.watchWith,

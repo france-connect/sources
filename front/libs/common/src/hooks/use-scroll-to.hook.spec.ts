@@ -12,7 +12,7 @@ describe('useScrollTo', () => {
     result.current.scrollToTop();
 
     // Then
-    expect(window.scrollTo).toHaveBeenCalledTimes(1);
+    expect(window.scrollTo).toHaveBeenCalledOnce();
     expect(window.scrollTo).toHaveBeenCalledWith(0, 0);
   });
 });

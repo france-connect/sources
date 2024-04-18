@@ -1,4 +1,4 @@
-import { UserPreferencesData } from '../interfaces';
+import type { UserPreferencesData } from '../interfaces';
 
 export const checkHasDefaultConfiguration = (
   userPreferences: UserPreferencesData | undefined,

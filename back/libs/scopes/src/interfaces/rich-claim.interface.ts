@@ -1,15 +1,15 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { IClaim } from './claims.interface';
-import { IProvider } from './provider-mapping.interface';
+import { ClaimInterface } from './claims.interface';
+import { ProviderInterface } from './provider-mapping.interface';
 
-export interface IRichClaim {
-  identifier: IClaim;
-  label: string;
-  provider: IProvider;
+export interface RichClaimInterface {
+  identifier: ClaimInterface;
+  label?: string;
+  provider: ProviderInterface;
 }
 
-export interface IRichClaims {
-  readonly [key: IClaim]: IRichClaim;
+export interface RichClaimsInterface {
+  readonly [key: ClaimInterface]: RichClaimInterface;
 }

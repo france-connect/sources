@@ -2,12 +2,12 @@
 <h1
   class="fr-h5 fr-mb-0 fc-text--left fc-text-lg--center"
   data-testid="anonymous-title">
-  Vous allez vous connecter de façon anonyme
+  <%= $translate('consent.login_anonymously')%>
 </h1>
 
 <% } else { %>
 <h1 class="fr-h4 fr-mb-3w fc-text--left fc-text-lg--center">
-  Vous allez vous connecter en tant que&nbsp;:
+  <%= $translate('consent.login_as') %>
 </h1>
 <h2
   class="fr-h1 fr-mb-0 fc-text--left fc-text-lg--center fc-text--title-blue-france"

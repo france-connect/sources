@@ -1,11 +1,11 @@
 /* istanbul ignore file */
 
 // declarative file
-import { DateTime } from 'luxon';
+import type { DateTime } from 'luxon';
 
-import { FSA } from '@fc/common';
+import type { FSA } from '@fc/common';
 
-import { CinematicEvents, EidasToLabel } from '../enums';
+import type { CinematicEvents, EidasToLabel } from '../enums';
 
 export interface IProvider {
   key: string;

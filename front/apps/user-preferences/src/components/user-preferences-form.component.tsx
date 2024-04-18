@@ -1,12 +1,13 @@
 import classnames from 'classnames';
-import React, { FormEventHandler, useCallback } from 'react';
+import type { FormEventHandler } from 'react';
+import React, { useCallback } from 'react';
 import { OnChange } from 'react-final-form-listeners';
 import { useMediaQuery } from 'react-responsive';
 
 import { AlertComponent, AlertTypes, SimpleButton, Sizes, ToggleInput } from '@fc/dsfr';
 
 import { useUserPreferencesForm } from '../hooks';
-import { UserPreferencesData } from '../interfaces';
+import type { UserPreferencesData } from '../interfaces';
 import { AllowFutureIdpSwitchLabelComponent } from './allow-future-idp-switch-label.component';
 import { ServicesListComponent } from './services-list.component';
 import styles from './user-preferences-form.module.scss';

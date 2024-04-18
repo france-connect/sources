@@ -1,118 +1,58 @@
 {
-  "root": true,
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
-  "env": {
-    "browser": true,
-    "es6": true,
-    "node": true,
-    "jest": true
-  },
-  "plugins": [
-    "simple-import-sort",
-    "import",
-    "sort-destructure-keys",
-    "sort-keys-fix",
-    "jest-extended",
-    "jsx-a11y"
-  ],
-  "extends": [
-    "react-app/jest",
-    "plugin:react-hooks/recommended",
-    "plugin:jsx-a11y/recommended",
-    "airbnb",
-    "airbnb-typescript",
-    "prettier"
-  ],
-  "rules": {
-    "@typescript-eslint/naming-convention": [
-      2,
-      {
-        "format": ["camelCase", "PascalCase", "UPPER_CASE"],
-        "leadingUnderscore": "allow",
-        "selector": "variableLike"
-      },
-      {
-        "format": ["camelCase", "PascalCase", "UPPER_CASE"],
-        "leadingUnderscore": "allow",
-        "selector": "memberLike"
-      }
-    ],
-    "@typescript-eslint/no-explicit-any": 2,
-    "import/no-extraneous-dependencies": 0,
-    "import/no-default-export": 2,
-    "import/prefer-default-export": 0,
-    "simple-import-sort/exports": 2,
-    "simple-import-sort/imports": [
-      2,
-      {
-        "groups": [
-          ["^\\u0000"],
-          ["^fs$", "^path$", "^crypto$"],
-          ["^@?\\w"],
-          ["^@nestjs"],
-          ["^@fc/"],
-          ["^"],
-          ["^\\."]
-        ]
-      }
-    ],
-    "jsx-a11y/label-has-associated-control": [1, { "assert": "htmlFor" }],
-    "react/react-in-jsx-scope": 0,
-    "react/jsx-closing-bracket-location": [2, { "nonEmpty": "after-props", "selfClosing": false }],
-    "react/jsx-fragments": [2, "element"],
-    "react/jsx-key": 2,
-    "react/jsx-indent": [2, 2, { "checkAttributes": false, "indentLogicalExpressions": true }],
-    "react/display-name": [2, { "ignoreTranspilerName": false }],
-    "react/jsx-props-no-spreading": 1,
-    "react/button-has-type": 0,
-    "react/jsx-sort-props": [
-      2,
-      {
-        "noSortAlphabetically": false,
-        "ignoreCase": true,
-        "callbacksLast": true,
-        "shorthandFirst": true,
-        "reservedFirst": true
-      }
-    ],
-    "sort-keys-fix/sort-keys-fix": 2,
-    "sort-destructure-keys/sort-destructure-keys": 2,
-    "sort-keys": [2, "asc", { "caseSensitive": true, "natural": false, "minKeys": 2 }],
-    "testing-library/prefer-screen-queries": 0,
-    "testing-library/no-node-access": 0,
-    "testing-library/no-wait-for-multiple-assertions": 0,
-    "testing-library/no-container": 0,
-    "react/function-component-definition": 0,
-    "react/jsx-no-constructed-context-values": 0
-  },
+  "extends": ["@fc/eslint-config-react-app"],
   "overrides": [
     {
-      "files": ["**/*.ts", "**/*.js"],
+      "files": ["**/*.spec.ts", "**/*.spec.tsx"],
       "rules": {
-        "jsx-a11y/label-has-associated-control": 0,
-        "react/react-in-jsx-scope": 0,
-        "react/jsx-closing-bracket-location": 0,
-        "react/jsx-fragments": 0,
-        "react/jsx-indent": 0,
-        "react/display-name": 0,
-        "react/jsx-props-no-spreading": 0,
-        "react/button-has-type": 0,
-        "react/jsx-sort-props": 0
+        "@typescript-eslint/no-confusing-void-expression": 0,
+        "@typescript-eslint/no-floating-promises": 0,
+        "@typescript-eslint/no-invalid-void-type": 0,
+        "@typescript-eslint/no-non-null-assertion": 0,
+        "@typescript-eslint/no-unnecessary-type-arguments": 0,
+        "@typescript-eslint/no-unnecessary-type-assertion": 0,
+        "@typescript-eslint/no-unsafe-argument": 0,
+        "@typescript-eslint/no-unsafe-assignment": 0,
+        "@typescript-eslint/no-unsafe-call": 0,
+        "@typescript-eslint/no-unsafe-member-access": 0,
+        "@typescript-eslint/no-unsafe-return": 0,
+        "@typescript-eslint/unbound-method": 0,
+        "jest/max-expects": 0,
+        "jest/no-disabled-tests": 0,
+        "jest/no-hooks": 0,
+        "jest/no-untyped-mock-factory": 0,
+        "jest/prefer-called-with": 0,
+        "jest/prefer-strict-equal": 0,
+        "jest/require-hook": 0,
+        "jest/require-to-throw-message": 0,
+        "jest/unbound-method": 0,
+        "testing-library/no-container": 0,
+        "testing-library/no-node-access": 0,
+        "testing-library/no-wait-for-multiple-assertions": 0
       }
     },
     {
-      "files": ["**/*.spec.ts"],
+      "files": ["**/*.ts", "**/*.tsx"],
       "rules": {
-        "@typescript-eslint/dot-notation": 0
+        "@typescript-eslint/no-extraneous-class": 0,
+        "@typescript-eslint/no-floating-promises": 0,
+        "@typescript-eslint/no-invalid-void-type": 0,
+        "@typescript-eslint/no-misused-promises": 0,
+        "@typescript-eslint/no-mixed-enums": 0,
+        "@typescript-eslint/no-non-null-assertion": 0,
+        "@typescript-eslint/no-redundant-type-constituents": 0,
+        "@typescript-eslint/no-unnecessary-condition": 0,
+        "@typescript-eslint/no-unnecessary-type-arguments": 0,
+        "@typescript-eslint/no-unsafe-argument": 0,
+        "@typescript-eslint/no-unsafe-assignment": 0,
+        "@typescript-eslint/no-unsafe-call": 0,
+        "@typescript-eslint/no-unsafe-enum-comparison": 0,
+        "@typescript-eslint/no-unsafe-member-access": 0,
+        "@typescript-eslint/no-unsafe-return": 0,
+        "@typescript-eslint/prefer-reduce-type-parameter": 0,
+        "@typescript-eslint/require-await": 0,
+        "@typescript-eslint/restrict-template-expressions": 0
       }
     }
-  ]
+  ],
+  "root": true
 }

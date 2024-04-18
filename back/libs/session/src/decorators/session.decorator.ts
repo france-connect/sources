@@ -1,10 +1,12 @@
 import { Class } from 'type-fest';
 
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { createParamDecorator } from '@nestjs/common';
 
-import { checkSession, extractSessionFromContext } from '../helper';
+import { NestJsDependencyInjectionWrapper } from '@fc/common';
+
+import { checkSession } from '../helper';
 import { ISessionService } from '../interfaces';
-
+import { SessionService } from '../services';
 /**
  *
  * @param {string} moduleName  The session part we want our session service to be bound to
@@ -28,21 +30,33 @@ export function Session(moduleName: string, dto?: Class<unknown>) {
   /**
    * @param _arg `moduleName` and `_arg` are the same variable (first argument of the decorator)
    */
-  const decorator = async function (
-    _arg: string,
-    ctx: ExecutionContext,
-  ): Promise<ISessionService<unknown>> {
-    const sessionService = extractSessionFromContext(moduleName, ctx);
+  const decorator = async function (): Promise<ISessionService<unknown>> {
+    const sessionService =
+      NestJsDependencyInjectionWrapper.get<SessionService>(SessionService);
+
+    const boundSessionService = getBoundSession(sessionService, moduleName);
 
     if (dto) {
-      const sessionData = await sessionService.get();
+      const sessionData = await boundSessionService.get();
       await checkSession(sessionData, moduleName, dto);
     }
 
-    return sessionService;
+    return boundSessionService;
   };
 
   const paramDecoratorFactory = createParamDecorator(decorator);
 
   return paramDecoratorFactory();
+}
+
+export function getBoundSession<T = unknown>(
+  sessionService: SessionService,
+  moduleName: string,
+): ISessionService<T> {
+  return {
+    get: sessionService.get.bind(sessionService, moduleName),
+    set: sessionService.set.bind(sessionService, moduleName),
+    setAlias: sessionService.setAlias.bind(sessionService),
+    commit: sessionService.commit.bind(sessionService, moduleName),
+  };
 }

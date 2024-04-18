@@ -3,25 +3,33 @@
 exports[`ApplicationLayout should match snapshot 1`] = `
 <div>
   <div
-    class="sticky-body"
+    data-mockid="HelmetProvider"
   >
-    <div
-      class="sticky-content"
-    >
-      <div>
+    <div>
+      <div
+        class="sticky-body"
+      >
+        <div
+          class="sticky-content"
+        >
+          <div
+            data-mockid="Helmet"
+          >
+            <div>
+              React Helmet Async
+            </div>
+          </div>
+          <div>
+            LayoutHeaderComponent
+          </div>
+          <div>
+            ReactRouterDom Outlet Component
+          </div>
+        </div>
         <div>
-          React Helmet
+          LayoutFooterComponent
         </div>
       </div>
-      <div>
-        LayoutHeaderComponent
-      </div>
-      <div>
-        ReactRouterDom Outlet Component
-      </div>
-    </div>
-    <div>
-      LayoutFooterComponent
     </div>
   </div>
 </div>

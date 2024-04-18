@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
-import { CinematicEvents, EidasToLabel } from '../../enums';
-import { EnhancedTrack } from '../../interfaces';
+import type { CinematicEvents, EidasToLabel } from '../../enums';
+import type { EnhancedTrack } from '../../interfaces';
 import * as TrackUtils from '../../utils/tracks.util';
 import { TrackCardComponent } from '../track-card/track-card.component';
 import { TracksGroupComponent } from './tracks-group';
@@ -65,7 +65,7 @@ describe('tracksGroupComponent', () => {
       <TracksGroupComponent label="Any Label" options={options} tracks={allTracks} />,
     );
     // then
-    expect(sortFunctionSpy).toHaveBeenCalled();
+    expect(sortFunctionSpy).toHaveBeenCalledOnce();
     unmount();
   });
 

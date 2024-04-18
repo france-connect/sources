@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description } from '@fc/exceptions/decorator/description.decorator';
+import { Description } from '@fc/exceptions-deprecated/decorator/description.decorator';
 
 import { ErrorCode } from '../enum';
 import { AsyncLocalStorageBaseException } from './async-local-storage-base.exception';

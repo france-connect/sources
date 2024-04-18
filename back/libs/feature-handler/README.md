@@ -37,10 +37,10 @@ Then when you want to use the Feature :
 const idp = await this.identityProvider.getById<TypeOfProcess>(idpId);
 
 // The FeatureHandlers are stored in the database
-const idClass = idp.featureHandlers['MyProcessStep'];
+const handlerClassName = idp.featureHandlers['MyProcessStep'];
 
 // get the class previously defined
-const handler = await FeatureHandler.get<string>(idClass, this);
+const handler = await FeatureHandler.get<string>(handlerClassName, this);
 
 // Apply the process of the class with a generic call of the function 'handle'
 const myData = await handler.handle('What My Class is waiting for');

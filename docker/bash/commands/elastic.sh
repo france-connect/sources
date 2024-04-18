@@ -50,6 +50,14 @@ _create_es_alias() {
   $DOCKER_COMPOSE exec $NO_TTY elasticsearch curl -u docker-stack:docker-stack -k -XPOST -H 'Content-Type:application/json' https://elasticsearch:9200/$CEA_TARGET/_alias/$CEA_ALIAS
 }
 
+_create_es_alias_v2() {
+  _create_es_alias "fc_tracks" "tracks"
+}
+
+_create_es_alias_legacy() {
+  _create_es_alias "franceconnect" "tracks"
+}
+
 _generate_legacy_traces() {
   echo "Generate traces for test_TRACE_USER"
   docker exec fc_fc-core_1 bash -c "cd cypress/support/script && node traces.js generate test_TRACE_USER"

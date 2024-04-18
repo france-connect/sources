@@ -1,4 +1,4 @@
-import { FormValues, UserPreferencesData } from '../interfaces';
+import type { FormValues, UserPreferencesData } from '../interfaces';
 
 export interface UserPreferencesServiceInterface {
   allowFutureIdp: boolean;

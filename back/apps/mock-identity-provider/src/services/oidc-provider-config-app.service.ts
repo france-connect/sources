@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
+import { IOidcIdentity, stringToArray } from '@fc/oidc';
 import {
   OidcProviderAppConfigLibService,
   OidcProviderErrorService,
   OidcProviderGrantService,
 } from '@fc/oidc-provider';
-import { ISessionRequest, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 
 import { AppSession } from '../dto';
 import { ScenariosService } from './scenarios.service';
@@ -27,17 +28,29 @@ export class OidcProviderConfigAppService extends OidcProviderAppConfigLibServic
     super(logger, sessionService, errorService, grantService, config);
   }
 
-  protected async formatAccount(sessionId, spIdentity, subSp) {
-    const req = {
-      sessionId,
-      sessionService: this.sessionService,
-    } as ISessionRequest;
-
-    const appSession = SessionService.getBoundSession<AppSession>(req, 'App');
-
-    const userLogin = await appSession.get('userLogin');
+  // Needed for consistent typing
+  // eslint-disable-next-line require-await
+  protected async formatAccount(
+    sessionId: string,
+    spIdentity: Partial<IOidcIdentity>,
+    subSp: string,
+  ): Promise<{ accountId: string; claims: Function }> {
+    const { userLogin } = this.sessionService.get<AppSession>('App');
 
     const claims = this.scenarios.deleteClaims(userLogin, spIdentity, subSp);
+
+    // openid like property names
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const { rep_scope = '' } = claims;
+    const repScopeArray = stringToArray(rep_scope);
+
+    if (repScopeArray.length > 0) {
+      // openid like property names
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      Object.assign(claims, { rep_scope: repScopeArray });
+    } else {
+      delete claims.rep_scope;
+    }
 
     return {
       /**

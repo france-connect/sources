@@ -1,12 +1,10 @@
-import { IProviderMappings } from '../../interfaces';
+import { ProviderMappingsInterface } from '../../interfaces';
 import { claims } from './pe.claims';
-import { labels } from './pe.labels';
 import { provider } from './pe.provider';
 import { scopes } from './pe.scopes';
 
-export const pe: IProviderMappings = {
+export const pe: ProviderMappingsInterface = {
   provider,
   claims,
-  labels,
   scopes,
 };

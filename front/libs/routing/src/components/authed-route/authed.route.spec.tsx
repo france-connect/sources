@@ -39,7 +39,7 @@ describe('AuthedRoute', () => {
     render(<AuthedRoute fallbackPath="/any-authed-path" />);
 
     // then
-    expect(useLocationMock).toHaveBeenCalledTimes(1);
+    expect(useLocationMock).toHaveBeenCalledOnce();
   });
 
   it('should render loader element if not ready', () => {
@@ -70,7 +70,7 @@ describe('AuthedRoute', () => {
     render(<AuthedRoute replace fallbackPath="/any-authed-path" />);
 
     // then
-    expect(navigateMock).toHaveBeenCalledTimes(1);
+    expect(navigateMock).toHaveBeenCalledOnce();
     expect(navigateMock).toHaveBeenCalledWith(
       { replace: true, state: { from: '/any-pathname' }, to: '/any-authed-path' },
       {},
@@ -85,7 +85,7 @@ describe('AuthedRoute', () => {
     render(<AuthedRoute fallbackPath="/any-authed-path" />);
 
     // then
-    expect(navigateMock).toHaveBeenCalledTimes(1);
+    expect(navigateMock).toHaveBeenCalledOnce();
     expect(navigateMock).toHaveBeenCalledWith(
       { replace: false, state: { from: expect.any(String) }, to: '/any-authed-path' },
       {},
@@ -100,7 +100,7 @@ describe('AuthedRoute', () => {
     render(<AuthedRoute fallbackPath="/any-authed-path" />);
 
     // then
-    expect(outletMock).toHaveBeenCalledTimes(1);
+    expect(outletMock).toHaveBeenCalledOnce();
   });
 
   it('should reset account data if 401 error', () => {
@@ -115,7 +115,7 @@ describe('AuthedRoute', () => {
     // when
     render(<AuthedRoute fallbackPath="/any-authed-path" />);
     // then
-    expect(updateAccountMock).toHaveBeenCalledTimes(1);
+    expect(updateAccountMock).toHaveBeenCalledOnce();
     expect(updateAccountMock).toHaveBeenCalledWith({
       connected: false,
       ready: true,

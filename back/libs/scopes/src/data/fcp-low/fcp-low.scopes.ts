@@ -1,7 +1,7 @@
-import { IScopes } from '../../interfaces';
+import { ScopesInterface } from '../../interfaces';
 import { claims } from './fcp-low.claims';
 
-export const scopes: IScopes = {
+export const scopes: ScopesInterface = {
   profile: [
     claims.given_name,
     claims.given_name_array,
@@ -39,7 +39,11 @@ export const scopes: IScopes = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   preferred_username: [claims.preferred_username],
   address: [claims.address],
+  // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
   idp_birthdate: [claims.idp_birthdate],
   amr: [claims.amr],
+  // OIDC fashion naming
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  idp_id: [claims.idp_id],
 };

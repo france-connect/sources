@@ -1,3 +1,5 @@
+import { EVENT_MAPPING } from '@fc/csmr-tracks/constants';
+
 /**
  * add 'AND' logic to params for ES Query
  * @param {Array<Object>} list list of params to format
@@ -18,14 +20,22 @@ export const or = (list: unknown[]) => ({
   },
 });
 
-type andCriteria = {
+type orCriteria = {
   bool: {
     should: unknown[];
   };
 };
-type orCriteria = {
+type andCriteria = {
   bool: {
     must: unknown[];
+  };
+};
+type andNotCriteria = {
+  bool: {
+    must: unknown[];
+    // es naming convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    must_not?: unknown[];
   };
 };
 export type multiMatchEsCriteria = andCriteria | orCriteria;
@@ -54,4 +64,14 @@ export function formatMultiMatchGroup(
     );
 
   return mandatory ? and(results) : or(results);
+}
+
+export function formatV2Query(event: string): andNotCriteria {
+  const query: andNotCriteria = { bool: { must: [{ term: { event } }] } };
+  if (event === EVENT_MAPPING['checkedToken/verification']) {
+    // es naming convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    query.bool.must_not = [{ term: { scope: '' } }];
+  }
+  return query;
 }

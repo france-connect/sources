@@ -28,7 +28,7 @@ describe('mapReducers', () => {
     combineReducersHandler(stateMock, actionMock);
 
     // expect
-    expect(reducersMock.action1).toHaveBeenCalledTimes(1);
+    expect(reducersMock.action1).toHaveBeenCalledOnce();
     expect(reducersMock.action1).toHaveBeenCalledWith(stateMock, actionMock);
   });
 
@@ -48,7 +48,7 @@ describe('mapReducers', () => {
     const result = combineReducersHandler(stateMock, actionMock);
 
     // expect
-    expect(result).toStrictEqual('You won :) !')!;
+    expect(result).toBe('You won :) !')!;
   });
 
   it('should return the state if there is no existing handler', () => {

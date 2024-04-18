@@ -11,7 +11,7 @@ let currentEventCard: UdEventCard;
 const udPagination = new UdPagination();
 
 Given(
-  'je navigue directement vers la page historique du dashboard usager',
+  'je navigue directement vers la page historique du tableau de bord usager',
   function () {
     const { allAppsUrl }: Environment = this.env;
     navigateTo({ appId: 'ud-history', baseUrl: allAppsUrl });
@@ -21,18 +21,21 @@ Given(
   },
 );
 
-Given('je navigue vers la page historique du dashboard usager', function () {
-  const { allAppsUrl, udRootUrl }: Environment = this.env;
-  navigateTo({ appId: 'ud-history', baseUrl: allAppsUrl });
-  udHistoryPage = new UdHistoryPage(udRootUrl);
-  udHistoryPage.checkIsVisible();
-  // Wait for the connection history loading
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(500);
-});
+Given(
+  'je navigue vers la page historique du tableau de bord usager',
+  function () {
+    const { allAppsUrl, udRootUrl }: Environment = this.env;
+    navigateTo({ appId: 'ud-history', baseUrl: allAppsUrl });
+    udHistoryPage = new UdHistoryPage(udRootUrl);
+    udHistoryPage.checkIsVisible();
+    // Wait for the connection history loading
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(500);
+  },
+);
 
 Given(
-  /^je suis (redirigé vers|sur) la page historique du dashboard usager$/,
+  /^je suis (redirigé vers|sur) la page historique du tableau de bord usager$/,
   function () {
     const { udRootUrl }: Environment = this.env;
     udHistoryPage = new UdHistoryPage(udRootUrl);

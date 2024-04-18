@@ -33,4 +33,5 @@ export enum ErrorCode {
   INTERACTION_NOT_FOUND = 25,
   GRANT_NOT_SAVED = 26,
   SP_ID_NOT_FOUND = 27,
+  PARSE_JSON_CLAIMS = 28,
 }

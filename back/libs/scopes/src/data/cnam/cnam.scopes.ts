@@ -1,8 +1,8 @@
 import { oneToOneScopeFromClaims } from '../../helpers';
-import { IScopes } from '../../interfaces';
+import { ScopesInterface } from '../../interfaces';
 import { claims } from './cnam.claims';
 
-export const scopes: IScopes = {
+export const scopes: ScopesInterface = {
   // Automatically create a one-to-one scope for each claim
   ...oneToOneScopeFromClaims(claims),
 };

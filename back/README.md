@@ -12,7 +12,7 @@ Core & backoffice applications
 - [@fc/eidas-light-protocol](libs/eidas-light-protocol/README.md)
 - [@fc/eidas-oidc-mapper](libs/eidas-oidc-mapper/README.md)
 - [@fc/eidas-provider](libs/eidas-provider/README.md)
-- [@fc/exceptions](libs/exceptions/README.md)
+- [@fc/exceptions-deprecated](libs/exceptions-deprecated/README.md)
 - [@fc/http-proxy](libs/http-proxy/README.md)
 - [@fc/oidc-client](libs/oidc-client/README.md)
 - [@fc/oidc-provider](libs/oidc-provider/README.md)
@@ -49,11 +49,13 @@ Le document compile les remontées de checkmarx (outil actuel) ainsi que les con
 ## Run the Cypress E2E tests
 
 Run the tests from a terminal
+
 ```
 yarn test:e2e:core-fca-low
 ```
 
 Open Cypress UI
+
 ```
 yarn test:e2e:core-fca-low:open
 ```

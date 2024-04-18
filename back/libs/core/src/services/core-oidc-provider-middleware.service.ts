@@ -6,7 +6,7 @@ import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger';
 import { atHashFromAccessToken, IOidcClaims, OidcSession } from '@fc/oidc';
 import { OidcAcrConfig, OidcAcrService } from '@fc/oidc-acr';
-import { OidcClientRoutes, OidcClientSession } from '@fc/oidc-client';
+import { OidcClientRoutes } from '@fc/oidc-client';
 import {
   OidcCtx,
   OidcProviderConfig,
@@ -17,7 +17,7 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { ISessionService, SessionService } from '@fc/session';
+import { SessionNoSessionIdException, SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import { CoreConfig } from '../dto';
@@ -219,19 +219,16 @@ export class CoreOidcProviderMiddlewareService {
 
   protected async tokenMiddleware(ctx: OidcCtx) {
     try {
-      this.bindSessionId(ctx);
-
-      const sessionOidc = SessionService.getBoundSession<OidcClientSession>(
-        ctx.req,
-        'OidcClient',
-      );
+      const sessionId = this.getSessionId(ctx);
+      await this.sessionService.initCache(sessionId);
 
       const { AccessToken } = ctx.oidc.entities;
       const atHash = atHashFromAccessToken(AccessToken);
 
-      await sessionOidc.setAlias(atHash);
+      await this.sessionService.setAlias(atHash, sessionId);
 
       const eventContext = this.getEventContext(ctx);
+
       const { SP_REQUESTED_FC_TOKEN } = this.tracking.TrackedEventsMap;
       await this.tracking.track(SP_REQUESTED_FC_TOKEN, eventContext);
     } catch (exception) {
@@ -242,8 +239,11 @@ export class CoreOidcProviderMiddlewareService {
 
   protected async userinfoMiddleware(ctx) {
     try {
-      this.bindSessionId(ctx);
+      const sessionId = this.getSessionId(ctx);
+      await this.sessionService.initCache(sessionId);
+
       const eventContext = this.getEventContext(ctx);
+
       const { SP_REQUESTED_FC_USERINFO } = this.tracking.TrackedEventsMap;
       await this.tracking.track(SP_REQUESTED_FC_USERINFO, eventContext);
     } catch (exception) {
@@ -269,11 +269,9 @@ export class CoreOidcProviderMiddlewareService {
     const { req, res } = ctx;
     const idpHint = req.query.idp_hint as string;
     const { allowedIdpHints } = this.config.get<CoreConfig>('Core');
-    const acr = ctx.oidc.params.acr_values as string;
-    const session = SessionService.getBoundSession<OidcClientSession>(
-      req,
-      'OidcClient',
-    );
+    // oidc parameter
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const acr_values = ctx.oidc.params.acr_values as string;
 
     if (this.shouldAbortIdpHint(ctx)) {
       return;
@@ -284,23 +282,23 @@ export class CoreOidcProviderMiddlewareService {
       return this.oidcErrorService.handleRedirectableError(ctx, exception);
     }
 
-    await this.flowSteps.setStep(req, OidcClientRoutes.REDIRECT_TO_IDP);
+    this.flowSteps.setStep(OidcClientRoutes.REDIRECT_TO_IDP);
 
     try {
-      await this.core.redirectToIdp(res, idpHint, session, { acr });
-      await session.commit();
+      // oidc parameter
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      await this.core.redirectToIdp(res, idpHint, { acr_values });
+      await this.sessionService.commit();
       await this.trackRedirectToIdp(ctx);
     } catch (error) {
       await this.oidcErrorService.throwError(ctx, error);
     }
   }
 
-  protected async isSsoAvailable(
-    session: ISessionService<OidcSession>,
-    spAcr: string,
-  ): Promise<boolean> {
+  protected isSsoAvailable(spAcr: string): boolean {
     const { allowedSsoAcrs, enableSso } = this.config.get<CoreConfig>('Core');
-    const { spIdentity, idpAcr } = (await session.get()) || {};
+    const { spIdentity, idpAcr } =
+      this.sessionService.get<OidcSession>('OidcClient') || {};
 
     const hasSpIdentity = Boolean(spIdentity);
     const hasSufficientAcr = this.oidcAcr.isAcrValid(idpAcr, spAcr);
@@ -345,10 +343,14 @@ export class CoreOidcProviderMiddlewareService {
     }
   }
 
-  private bindSessionId(ctx: OidcCtx): void {
-    const context = this.getEventContext(ctx);
+  private getSessionId(ctx: OidcCtx): string {
+    const { sessionId } = this.getEventContext(ctx);
 
-    ctx.req.sessionId = context.sessionId;
+    if (!sessionId) {
+      throw new SessionNoSessionIdException();
+    }
+
+    return sessionId;
   }
 
   private ssoCanBeUsed(

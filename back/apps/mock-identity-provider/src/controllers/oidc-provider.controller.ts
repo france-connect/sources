@@ -34,12 +34,12 @@ export class OidcProviderController {
       forbidNonWhitelisted: true,
     }),
   )
-  async getAuthorize(
+  getAuthorize(
     @Next() next,
     @Query() query: AuthorizeParamsDto,
     @Session('App') appSession: ISessionService<AppSession>,
   ) {
-    await appSession.set('finalSpId', query.sp_id);
+    appSession.set('finalSpId', query.sp_id);
 
     // Pass the query to oidc-provider
     return next();

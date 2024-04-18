@@ -1,7 +1,7 @@
 import { Providers } from '../../enum';
-import { IProvider } from '../../interfaces';
+import { ProviderInterface } from '../../interfaces';
 
-export const provider: IProvider = {
+export const provider: ProviderInterface = {
   key: Providers.MI,
   label: 'Ministère de l’Intérieur',
 };

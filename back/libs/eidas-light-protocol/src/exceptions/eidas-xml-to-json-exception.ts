@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative code
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { EidasBaseException } from './eidas-base-exception';

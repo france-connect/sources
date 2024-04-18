@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { NavigationLink } from '../../../interfaces';
+import type { NavigationLink } from '../../../interfaces';
 
 export interface LayoutFooterBottomLinksComponentProps {
   items: NavigationLink[];

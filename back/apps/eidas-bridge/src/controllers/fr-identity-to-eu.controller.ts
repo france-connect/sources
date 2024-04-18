@@ -66,7 +66,7 @@ export class FrIdentityToEuController {
     const { stateLength } = await this.oidcClientConfig.get();
     const idpState: string = this.crypto.genRandomString(stateLength);
 
-    await sessionOidc.set({
+    sessionOidc.set({
       idpState,
       idpId: this.getIdpId(),
     });
@@ -97,23 +97,25 @@ export class FrIdentityToEuController {
     @Session('EidasProvider')
     sessionEidasProvider: ISessionService<EidasProviderSession>,
   ) {
-    const { eidasRequest } = await sessionEidasProvider.get();
+    const { eidasRequest } = sessionEidasProvider.get();
     const oidcRequest = this.eidasToOidc.mapPartialRequest(eidasRequest);
 
     const { nonce, state } =
       await this.oidcClient.utils.buildAuthorizeParameters();
 
-    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl({
-      // acr_values is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      acr_values: oidcRequest.acr_values,
-      nonce,
-      idpId: this.getIdpId(),
-      scope: oidcRequest.scope.join(' '),
-      state,
-    });
+    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl(
+      this.getIdpId(),
+      {
+        // acr_values is an oidc defined variable name
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        acr_values: oidcRequest.acr_values,
+        nonce,
+        scope: oidcRequest.scope.join(' '),
+        state,
+      },
+    );
 
-    await sessionOidc.set({
+    sessionOidc.set({
       idpNonce: nonce,
       idpState: state,
     });
@@ -180,10 +182,7 @@ export class FrIdentityToEuController {
       }
     }
 
-    await sessionEidasProvider.set(
-      'partialEidasResponse',
-      partialEidasResponse,
-    );
+    sessionEidasProvider.set('partialEidasResponse', partialEidasResponse);
 
     const response = {
       statusCode: 302,
@@ -198,7 +197,7 @@ export class FrIdentityToEuController {
     sessionOidc: ISessionService<OidcClientSession>,
     sessionEidasProvider: ISessionService<EidasProviderSession>,
   ): Promise<Partial<EidasResponse>> {
-    const session = await sessionOidc.get();
+    const session = sessionOidc.get();
 
     if (!session) {
       throw new SessionNotFoundException('OidcClient');
@@ -223,14 +222,14 @@ export class FrIdentityToEuController {
     };
 
     const { requestedAttributes, spCountryCode } =
-      await sessionEidasProvider.get('eidasRequest');
+      sessionEidasProvider.get('eidasRequest');
 
     const identity = await this.oidcClient.getUserInfosFromProvider(
       userInfoParams,
       req,
     );
 
-    await sessionOidc.set('idpIdentity', identity);
+    sessionOidc.set('idpIdentity', identity);
 
     await this.validateIdentity(identity);
 

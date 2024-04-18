@@ -39,6 +39,6 @@ describe('LayoutHeaderMobileBurgerButton', () => {
     fireEvent.click(element);
 
     // then
-    expect(onOpenMock).toHaveBeenCalledTimes(1);
+    expect(onOpenMock).toHaveBeenCalledOnce();
   });
 });

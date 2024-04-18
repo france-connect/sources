@@ -12,6 +12,7 @@ import { TrackingModule } from '@fc/tracking';
 
 import {
   CoreAccountService,
+  CoreOidcProviderConfigAppService,
   CoreOidcProviderMiddlewareService,
   CoreTrackingService,
   CoreVerifyService,
@@ -33,6 +34,7 @@ const trackingModule = TrackingModule.forRoot(CoreTrackingService);
   providers: [
     CoreAccountService,
     CoreTrackingService,
+    CoreOidcProviderConfigAppService,
     CoreOidcProviderMiddlewareService,
     CoreAcrService,
     CoreVerifyService,

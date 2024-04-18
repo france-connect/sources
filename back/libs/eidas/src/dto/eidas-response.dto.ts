@@ -125,7 +125,8 @@ export class EidasResponseAttributes {
 
 export class EidasResponseStatus {
   @IsBoolean()
-  failure: boolean;
+  @IsOptional()
+  failure?: boolean;
 
   @IsOptional()
   @IsString()
@@ -180,6 +181,14 @@ export class EidasResponseContext {
   @IsString()
   @IsEnum(EidasLevelOfAssurances)
   levelOfAssurance?: EidasLevelOfAssurances;
+
+  @IsOptional()
+  @IsObject()
+  _attributes?: unknown;
+
+  @IsOptional()
+  @IsString()
+  consent?: string;
 }
 
 export class EidasResponse extends EidasResponseContext {

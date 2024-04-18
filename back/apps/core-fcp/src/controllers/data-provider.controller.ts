@@ -1,15 +1,14 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 import { Body, Controller, HttpStatus, Post, Req, Res } from '@nestjs/common';
 
 import { DataProviderAdapterMongoService } from '@fc/data-provider-adapter-mongo';
 import { CustomJwtPayload } from '@fc/jwt';
 import { LoggerService } from '@fc/logger';
-import { OidcClientSession } from '@fc/oidc-client';
-import { ISessionRequest, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
-import { ChecktokenRequestDto } from '../dto';
+import { ChecktokenRequestDto, CoreFcpSession } from '../dto';
 import { DataProviderRoutes } from '../enums';
 import { DpJwtPayloadInterface } from '../interfaces';
 import { DataProviderService } from '../services';
@@ -28,7 +27,7 @@ export class DataProviderController {
 
   @Post(DataProviderRoutes.CHECKTOKEN)
   async checktoken(
-    @Req() req: ISessionRequest,
+    @Req() req: Request,
     @Res() res: Response,
     @Body() bodyChecktokenRequest: ChecktokenRequestDto,
   ) {
@@ -63,13 +62,37 @@ export class DataProviderController {
       if (!sessionId) {
         payload = this.dataProvider.generateExpiredPayload(clientId);
       } else {
-        req.sessionId = sessionId;
-        req.sessionService = this.session;
-        const oidcSessionService =
-          SessionService.getBoundSession<OidcClientSession>(req, 'OidcClient');
+        const userSession =
+          await this.session.getDataFromBackend<CoreFcpSession>(sessionId);
+
+        const {
+          OidcClient: {
+            accountId,
+            browsingSessionId,
+            idpId,
+            idpName,
+            idpLabel,
+            idpAcr,
+            spId,
+            spName,
+            spAcr,
+          },
+        } = userSession;
+        trackingContext = {
+          ...trackingContext,
+          accountId,
+          browsingSessionId,
+          idpId,
+          idpName,
+          idpLabel,
+          idpAcr,
+          spId,
+          spName,
+          spAcr,
+        };
 
         payload = await this.dataProvider.generatePayload(
-          oidcSessionService,
+          userSession,
           accessToken,
           clientId,
         );

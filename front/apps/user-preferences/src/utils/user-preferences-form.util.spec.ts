@@ -1,4 +1,4 @@
-import { Service, UserPreferencesData } from '../interfaces';
+import type { Service, UserPreferencesData } from '../interfaces';
 import {
   checkHasDefaultConfiguration,
   checkSomeIdpHasBeenChangedSinceLoading,
@@ -14,7 +14,7 @@ describe('user-preferences-form.util', () => {
       const result = checkHasDefaultConfiguration(userPreferences);
 
       // Then
-      expect(result).toBe(false);
+      expect(result).toBeFalse();
     });
 
     it('should return "false" if idpList is undefined', () => {
@@ -28,7 +28,7 @@ describe('user-preferences-form.util', () => {
       const result = checkHasDefaultConfiguration(userPreferences);
 
       // Then
-      expect(result).toBe(false);
+      expect(result).toBeFalse();
     });
 
     it('should return "false" if allowFutureIdp is false', () => {
@@ -42,7 +42,7 @@ describe('user-preferences-form.util', () => {
       const result = checkHasDefaultConfiguration(userPreferences);
 
       // Then
-      expect(result).toBe(false);
+      expect(result).toBeFalse();
     });
 
     it('should return "true" if some idp in idpList not in default configuration and future idp are allowed', () => {
@@ -56,7 +56,7 @@ describe('user-preferences-form.util', () => {
       const result = checkHasDefaultConfiguration(userPreferences);
 
       // Then
-      expect(result).toBe(true);
+      expect(result).toBeTrue();
     });
 
     it('should return "false" if some idp in idpList not in default configuration and future idp are not allowed', () => {
@@ -70,7 +70,7 @@ describe('user-preferences-form.util', () => {
       const result = checkHasDefaultConfiguration(userPreferences);
 
       // Then
-      expect(result).toBe(false);
+      expect(result).toBeFalse();
     });
   });
 
@@ -83,7 +83,7 @@ describe('user-preferences-form.util', () => {
       const result = checkSomeIdpHasBeenChangedSinceLoading(dirtyFields);
 
       // Then
-      expect(result).toBe(false);
+      expect(result).toBeFalse();
     });
 
     it('should return "true" if some idp is dirty', () => {
@@ -98,7 +98,7 @@ describe('user-preferences-form.util', () => {
       const result = checkSomeIdpHasBeenChangedSinceLoading(dirtyFields);
 
       // Then
-      expect(result).toBe(true);
+      expect(result).toBeTrue();
     });
   });
 });

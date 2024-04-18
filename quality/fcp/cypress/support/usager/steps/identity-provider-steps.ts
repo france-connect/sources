@@ -47,3 +47,7 @@ When("je saisi manuellement l'identité de l'utilisateur", function () {
 
   identityProviderPage.useCustomIdentity(currentUser);
 });
+
+When('je clique sur le lien retour vers FC depuis un FI', function () {
+  identityProviderPage.getBackToFCLink().click();
+});

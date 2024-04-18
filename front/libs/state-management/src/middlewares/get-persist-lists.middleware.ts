@@ -1,4 +1,4 @@
-import { GlobalState, PersistList } from '../interfaces';
+import type { GlobalState, PersistList } from '../interfaces';
 
 export const getPersistLists = <S extends GlobalState>(states: S): PersistList => {
   const keys = Object.keys(states);

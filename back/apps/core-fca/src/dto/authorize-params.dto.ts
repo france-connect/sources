@@ -1,14 +1,12 @@
 import {
   IsArray,
   IsAscii,
-  IsEmail,
   IsOptional,
   IsString,
-  IsUrl,
   Length,
 } from 'class-validator';
 
-import { Split } from '@fc/common';
+import { IsUrlRequiredTldFromConfig, Split } from '@fc/common';
 import { IsValidPrompt } from '@fc/oidc-provider';
 
 /**
@@ -45,7 +43,7 @@ export class AuthorizeParamsDto {
   @IsString()
   readonly state: string;
 
-  @IsUrl()
+  @IsUrlRequiredTldFromConfig()
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly redirect_uri: string;
@@ -73,10 +71,4 @@ export class AuthorizeParamsDto {
   // openid inspired property name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly idp_hint?: string;
-
-  @IsOptional()
-  @IsEmail()
-  // openid inspired property name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly login_hint?: string;
 }

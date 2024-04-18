@@ -16,7 +16,7 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { SessionService } from '@fc/session';
+import { SessionNoSessionIdException, SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -67,6 +67,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
     fc: {
       interactionId: interactionIdValueMock,
     },
+    sessionId: 'session-id-mock',
   };
   const oidcProviderErrorServiceMock = {
     throwError: jest.fn(),
@@ -96,7 +97,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       'x-forwarded-for-original': xForwardedForOriginalMock,
     },
     sessionId: sessionIdMock,
-    // oidc param
+    // oidc parameter
     // eslint-disable-next-line @typescript-eslint/naming-convention
     query: { acr_values: spAcrMock, client_id: spIdMock },
   };
@@ -160,9 +161,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
     atHashFromAccessTokenMock.mockReturnValue(atHashMock);
 
-    SessionService.getBoundSession = jest
-      .fn()
-      .mockReturnValue(sessionServiceMock);
+    sessionServiceMock.initCache.mockResolvedValue(true);
   });
 
   it('should be defined', () => {
@@ -747,7 +746,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
     } as unknown as OidcCtx;
 
     beforeEach(() => {
-      service['bindSessionId'] = jest.fn();
+      service['getSessionId'] = jest.fn().mockReturnValue(sessionIdMock);
     });
 
     it('should create a session alias based on at_hash', async () => {
@@ -765,7 +764,10 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
       // Then
       expect(sessionServiceMock.setAlias).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.setAlias).toHaveBeenCalledWith(atHashMock);
+      expect(sessionServiceMock.setAlias).toHaveBeenCalledWith(
+        atHashMock,
+        sessionIdMock,
+      );
     });
 
     it('should publish a token event', async () => {
@@ -831,9 +833,10 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
   describe('userinfoMiddleware()', () => {
     beforeEach(() => {
-      service['bindSessionId'] = jest.fn();
+      service['getEventContext'] = jest.fn().mockReturnValue(eventContextMock);
     });
-    it('should publish a token event', async () => {
+
+    it('should publish a userinfo event', async () => {
       // Given
       const ctxMock = {
         req: {
@@ -844,23 +847,14 @@ describe('CoreOidcProviderMiddlewareService', () => {
         },
         res: {},
       };
-      service['getEventContext'] = jest.fn().mockReturnValueOnce({
-        fc: {
-          interactionId: '42',
-        },
-        headers: {
-          'x-forwarded-for': '123.123.123.123',
-          'x-forwarded-source-port': '443',
-          'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
-        },
-      });
+
       // When
       await service['userinfoMiddleware'](ctxMock);
       // Then
       expect(trackingMock.track).toHaveBeenCalledTimes(1);
       expect(trackingMock.track).toHaveBeenCalledWith(
         trackingMock.TrackedEventsMap.SP_REQUESTED_FC_USERINFO,
-        expect.any(Object),
+        eventContextMock,
       );
     });
 
@@ -912,8 +906,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       await service['userinfoMiddleware'](ctxMock);
       // Then
       expect(service['getEventContext']).toHaveBeenCalledTimes(1);
-      expect(service['oidcErrorService']['throwError']).toHaveBeenNthCalledWith(
-        1,
+      expect(service['oidcErrorService']['throwError']).toHaveBeenCalledWith(
         ctxMock,
         errorMock,
       );
@@ -932,20 +925,17 @@ describe('CoreOidcProviderMiddlewareService', () => {
           },
         },
       };
-
-      service['getEventContext'] = jest.fn();
-
       const errorMock = new Error('Unknown Error');
 
       trackingMock.track.mockImplementationOnce(() => {
         throw errorMock;
       });
+
       // When
       await service['userinfoMiddleware'](ctxMock);
+
       // Then
-      expect(service['getEventContext']).toHaveBeenCalledTimes(1);
-      expect(service['oidcErrorService']['throwError']).toHaveBeenNthCalledWith(
-        1,
+      expect(service['oidcErrorService']['throwError']).toHaveBeenCalledWith(
         ctxMock,
         errorMock,
       );
@@ -961,21 +951,37 @@ describe('CoreOidcProviderMiddlewareService', () => {
         enableSso: true,
       });
 
-      sessionServiceMock.get.mockResolvedValueOnce({
+      sessionServiceMock.get.mockReturnValue({
         idpAcr: idpAcrMock,
         spIdentity: 'mockSpIdentity',
       });
     });
-    it('should call session.get()', async () => {
+
+    it('should call session.get()', () => {
       // When
-      await service['isSsoAvailable'](sessionServiceMock, spAcrMock);
+      service['isSsoAvailable'](spAcrMock);
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
     });
 
-    it('should call isAcrValid', async () => {
+    it('should use an empty object if there is no session', () => {
+      // Given
+      sessionServiceMock.get.mockReturnValueOnce(null);
+
       // When
-      await service['isSsoAvailable'](sessionServiceMock, spAcrMock);
+      service['isSsoAvailable'](spAcrMock);
+
+      // Then
+      expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(1);
+      expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledWith(
+        undefined,
+        spAcrMock,
+      );
+    });
+
+    it('should call isAcrValid', () => {
+      // When
+      service['isSsoAvailable'](spAcrMock);
       // Then
       expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(1);
       expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledWith(
@@ -984,13 +990,13 @@ describe('CoreOidcProviderMiddlewareService', () => {
       );
     });
 
-    it('should call ssoCanBeUsed', async () => {
+    it('should call ssoCanBeUsed', () => {
       // Given
       service['ssoCanBeUsed'] = jest.fn();
 
       oidcAcrServiceMock.isAcrValid.mockReturnValue(true);
       // When
-      await service['isSsoAvailable'](sessionServiceMock, spAcrMock);
+      service['isSsoAvailable'](spAcrMock);
       // Then
       expect(service['ssoCanBeUsed']).toHaveBeenCalledTimes(1);
       expect(service['ssoCanBeUsed']).toHaveBeenCalledWith(
@@ -1001,14 +1007,14 @@ describe('CoreOidcProviderMiddlewareService', () => {
       );
     });
 
-    it('should defined spIdentity and idpAcr to undefined if destructure method is impossible', async () => {
+    it('should defined spIdentity and idpAcr to undefined if destructure method is impossible', () => {
       // Given
       service['ssoCanBeUsed'] = jest.fn();
 
       sessionServiceMock.get.mockReset().mockResolvedValueOnce(null);
       oidcAcrServiceMock.isAcrValid.mockReturnValue(false);
       // When
-      await service['isSsoAvailable'](sessionServiceMock, spAcrMock);
+      service['isSsoAvailable'](spAcrMock);
       // Then
       expect(service['ssoCanBeUsed']).toHaveBeenCalledTimes(1);
       expect(service['ssoCanBeUsed']).toHaveBeenCalledWith(
@@ -1019,26 +1025,20 @@ describe('CoreOidcProviderMiddlewareService', () => {
       );
     });
 
-    it('should return `true` if ssoCanBeUsed return true', async () => {
+    it('should return `true` if ssoCanBeUsed return true', () => {
       // Given
       service['ssoCanBeUsed'] = jest.fn().mockReturnValue(true);
       // When
-      const result = await service['isSsoAvailable'](
-        sessionServiceMock,
-        spAcrMock,
-      );
+      const result = service['isSsoAvailable'](spAcrMock);
       // Then
       expect(result).toBe(true);
     });
 
-    it('should return `false` if ssoCanBeUsed return false', async () => {
+    it('should return `false` if ssoCanBeUsed return false', () => {
       // Given
       service['ssoCanBeUsed'] = jest.fn().mockReturnValue(false);
       // When
-      const result = await service['isSsoAvailable'](
-        sessionServiceMock,
-        spAcrMock,
-      );
+      const result = service['isSsoAvailable'](spAcrMock);
       // Then
       expect(result).toBe(false);
     });
@@ -1136,26 +1136,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
       // Then
       expect(service['redirectToSso']).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('bindSessionId', () => {
-    it('should affect sessionId from service.getEventContext() to req', () => {
-      // Given
-      const ctxMock = {
-        req: {},
-      } as unknown as OidcCtx;
-
-      const eventContextMock = {
-        sessionId: 'sessionIdValue',
-      };
-
-      service['getEventContext'] = jest.fn().mockReturnValue(eventContextMock);
-      // When
-      service['bindSessionId'](ctxMock);
-      // Then
-      expect(ctxMock.req['sessionId']).toBeDefined();
-      expect(ctxMock.req['sessionId']).toBe(eventContextMock.sessionId);
     });
   });
 
@@ -1289,7 +1269,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Then
       expect(flowStepsMock.setStep).toHaveBeenCalledTimes(1);
       expect(flowStepsMock.setStep).toHaveBeenCalledWith(
-        ctxMock.req,
         OidcClientRoutes.REDIRECT_TO_IDP,
       );
     });
@@ -1317,8 +1296,9 @@ describe('CoreOidcProviderMiddlewareService', () => {
       expect(coreServiceMock.redirectToIdp).toHaveBeenCalledWith(
         ctxMock.res,
         idpHintMock,
-        sessionServiceMock,
-        { acr: ctxMock.oidc.params.acr_values },
+        // oidc param
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        { acr_values: ctxMock.oidc.params.acr_values },
       );
     });
 
@@ -1397,6 +1377,32 @@ describe('CoreOidcProviderMiddlewareService', () => {
       await service['redirectToHintedIdpMiddleware'](ctxMock);
       // Then
       expect(service['trackRedirectToIdp']).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getSessionId()  ', () => {
+    beforeEach(() => {
+      service['getEventContext'] = jest.fn().mockReturnValue(eventContextMock);
+    });
+
+    it('should return the session id', () => {
+      // Given
+      const ctxMock = {} as unknown as OidcCtx;
+      // When
+      const result = service['getSessionId'](ctxMock);
+      // Then
+      expect(result).toBe(eventContextMock.sessionId);
+    });
+
+    it('should throw an error if session is not defined', () => {
+      // Given
+      const ctxMock = {} as unknown as OidcCtx;
+      service['getEventContext'] = jest.fn().mockReturnValueOnce(ctxMock);
+
+      // Then / When
+      expect(() => service['getSessionId'](ctxMock)).toThrow(
+        SessionNoSessionIdException,
+      );
     });
   });
 

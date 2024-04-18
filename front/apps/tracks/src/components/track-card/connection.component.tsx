@@ -1,8 +1,8 @@
-import { DateTime } from 'luxon';
+import type { DateTime } from 'luxon';
 import React from 'react';
 
 import { EidasToLabel } from '../../enums';
-import { TracksConfig } from '../../interfaces';
+import type { TracksConfig } from '../../interfaces';
 
 type TrackCardConnectionProps = {
   city: string | undefined;

@@ -952,6 +952,78 @@ exports[`PaginationComponent should match the snapshot with custom props values 
 </div>
 `;
 
+exports[`PaginationComponent should match the snapshot with default props values 1`] = `
+<div>
+  <nav
+    aria-label="Pagination"
+    class="fr-pagination"
+    role="navigation"
+  >
+    <ul
+      class="fr-pagination__list"
+    >
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-previous-page-button"
+        >
+          TracksPage.previousPage
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-2-button"
+        >
+          2
+        </button>
+      </li>
+      <li>
+        <button
+          aria-current="page"
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-3-button"
+        >
+          3
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-4-button"
+        >
+          4
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-5-button"
+        >
+          5
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link"
+          data-testid="PaginationComponent-page-6-button"
+        >
+          6
+        </button>
+      </li>
+      <li>
+        <button
+          class="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
+          data-testid="PaginationComponent-next-page-button"
+        >
+          TracksPage.nextPage
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
 exports[`PaginationComponent should match the snapshot with ellipsis 1`] = `
 <div>
   <nav

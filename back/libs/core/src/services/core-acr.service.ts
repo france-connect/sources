@@ -38,7 +38,12 @@ export class CoreAcrService {
       `Aborting interaction with error = "${error}" and error_description = "${errorDescription}"`,
     );
 
-    await this.oidcProvider.abortInteraction(req, res, error, errorDescription);
+    await this.oidcProvider.abortInteraction(req, res, {
+      error,
+      // oidc naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      error_description: errorDescription,
+    });
 
     return true;
   }

@@ -3,7 +3,7 @@
 // Declarative file
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { TrackingBaseException } from './tracking-base.exception';

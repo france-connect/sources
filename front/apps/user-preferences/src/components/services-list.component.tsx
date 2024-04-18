@@ -2,10 +2,11 @@ import './user-preferences.scss';
 
 import React, { useContext } from 'react';
 
-import { AccountContext, AccountInterface } from '@fc/account';
-import { UserInfosInterface } from '@fc/user-dashboard';
+import type { AccountInterface } from '@fc/account';
+import { AccountContext } from '@fc/account';
+import type { UserInfosInterface } from '@fc/user-dashboard';
 
-import { Service } from '../interfaces';
+import type { Service } from '../interfaces';
 import { ServiceComponent } from './service.component';
 
 interface ServicesListComponentProps {

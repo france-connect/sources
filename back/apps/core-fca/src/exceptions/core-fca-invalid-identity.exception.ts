@@ -4,7 +4,7 @@
 import { HttpStatus } from '@nestjs/common';
 
 import { CoreBaseException, ErrorCode } from '@fc/core';
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 @Description(
   "La session de l'utilisateur ne contient pas les informations attendes sur l'usager au retour du fournisseur d'identité. L'utilisateur doit redémarrer sa cinématique. Si cela persiste, contacter le support N3",

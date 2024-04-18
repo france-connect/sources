@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 
 import {
   OidcCtx,
+  OidcProviderErrorService,
   OidcProviderMiddlewarePattern,
   OidcProviderMiddlewareStep,
   OidcProviderRoutes,
   OidcProviderService,
 } from '@fc/oidc-provider';
-import { SessionService } from '@fc/session';
+import { SessionNotFoundException, SessionService } from '@fc/session';
 import { TrackedEventContextInterface } from '@fc/tracking';
 
 import { AppSession } from '../dto';
@@ -20,6 +21,8 @@ export class OidcProviderMiddlewareService {
   constructor(
     private readonly oidcProvider: OidcProviderService,
     private readonly scenarios: ScenariosService,
+    private readonly session: SessionService,
+    private readonly oidcErrorService: OidcProviderErrorService,
   ) {}
 
   onModuleInit() {
@@ -39,13 +42,23 @@ export class OidcProviderMiddlewareService {
   }
 
   protected async userinfoMiddleware(ctx: OidcCtx) {
-    this.bindSessionId(ctx);
+    const sessionId = ctx.oidc.entities.Account.accountId;
+    let session: { App: AppSession };
 
-    const appSessionService = SessionService.getBoundSession<AppSession>(
-      ctx.req,
-      'App',
-    );
-    const userLogin = await appSessionService.get('userLogin');
+    try {
+      session = await this.session.getDataFromBackend<{ App: AppSession }>(
+        sessionId,
+      );
+    } catch (error) {
+      return await this.oidcErrorService.throwError(
+        ctx,
+        new SessionNotFoundException('App'),
+      );
+    }
+
+    const {
+      App: { userLogin },
+    } = session;
 
     await this.scenarios.alterServerResponse(userLogin, ctx);
   }
@@ -59,7 +72,7 @@ export class OidcProviderMiddlewareService {
 
     // Retrieve the sessionId from the oidc context (stored in accountId) or from the request
     const sessionId =
-      ctx.oidc?.entities?.Account?.accountId || ctx.req.sessionId;
+      ctx.oidc?.entities?.Account?.accountId || this.session.getId();
 
     const eventContext: TrackedEventContextInterface = {
       fc: { interactionId },
@@ -68,11 +81,5 @@ export class OidcProviderMiddlewareService {
     };
 
     return eventContext;
-  }
-
-  private bindSessionId(ctx: OidcCtx): void {
-    const context = this.getEventContext(ctx);
-
-    ctx.req.sessionId = context.sessionId;
   }
 }

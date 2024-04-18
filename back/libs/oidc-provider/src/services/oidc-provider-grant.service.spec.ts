@@ -1,7 +1,16 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { OidcProviderGrantSaveException } from '../exceptions';
+import { safelyParseJson } from '@fc/common';
+import { stringToArray } from '@fc/oidc';
+
+import {
+  OidcProviderGrantSaveException,
+  OidcProviderParseJsonClaimsException,
+} from '../exceptions';
 import { OidcProviderGrantService } from './oidc-provider-grant.service';
+
+jest.mock('@fc/common');
+jest.mock('@fc/oidc');
 
 describe('OidcProviderGrantService', () => {
   let service: OidcProviderGrantService;
@@ -27,12 +36,15 @@ describe('OidcProviderGrantService', () => {
 
   describe('generateGrant', () => {
     let providerMock;
+    let stringToArrayMock;
 
     const interactionDetailsMock = {
       params: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: clientIdMock,
         scope: 'nautilus u571',
+        claims:
+          '{"id_token":{"rep_scope":{"essential":true,"values":"["foo","bar"]"}}}',
       },
     };
 
@@ -41,6 +53,7 @@ describe('OidcProviderGrantService', () => {
         accountId: '',
         clientId: '',
         addOIDCScope: jest.fn(),
+        addOIDCClaims: jest.fn(),
       };
 
       providerMock = {
@@ -52,6 +65,10 @@ describe('OidcProviderGrantService', () => {
           .fn()
           .mockReturnValueOnce(interactionDetailsMock),
       };
+
+      service['isRepScopeRequested'] = jest.fn();
+      stringToArrayMock = jest.mocked(stringToArray);
+      stringToArrayMock.mockReturnValue([]);
     });
 
     it('should be defined', () => {
@@ -95,9 +112,28 @@ describe('OidcProviderGrantService', () => {
       expect(grantMock.clientId).toEqual(clientIdMock);
     });
 
+    it('should call isRepScopeRequested', async () => {
+      // Given
+
+      // When
+      await service.generateGrant(
+        providerMock,
+        reqMock,
+        resMock,
+        interactionIdMock,
+      );
+
+      // Then
+      expect(service['isRepScopeRequested']).toHaveBeenCalledTimes(1);
+      expect(service['isRepScopeRequested']).toHaveBeenCalledWith(
+        interactionDetailsMock.params.claims,
+      );
+    });
+
     it('should call grant.addOidcScope for each scope', async () => {
       // Given
       const scopesMock = ['nautilus', 'u571'];
+      stringToArrayMock.mockReturnValue(scopesMock);
       // When
       await service.generateGrant(
         providerMock,
@@ -108,6 +144,37 @@ describe('OidcProviderGrantService', () => {
       // Then
       expect(grantMock.addOIDCScope).toHaveBeenNthCalledWith(1, scopesMock[0]);
       expect(grantMock.addOIDCScope).toHaveBeenNthCalledWith(2, scopesMock[1]);
+    });
+
+    it("should don't call grant.addOIDCClaims if isRepScopeRequested return false", async () => {
+      // Given
+      service['isRepScopeRequested'] = jest.fn().mockReturnValue(false);
+
+      // When
+      await service.generateGrant(
+        providerMock,
+        reqMock,
+        resMock,
+        interactionIdMock,
+      );
+      // Then
+      expect(grantMock.addOIDCClaims).toHaveBeenCalledTimes(0);
+    });
+
+    it('should call grant.addOIDCClaims if isRepScopeRequested return true', async () => {
+      // Given
+      service['isRepScopeRequested'] = jest.fn().mockReturnValue(true);
+
+      // When
+      await service.generateGrant(
+        providerMock,
+        reqMock,
+        resMock,
+        interactionIdMock,
+      );
+      // Then
+      expect(grantMock.addOIDCClaims).toHaveBeenCalledTimes(1);
+      expect(grantMock.addOIDCClaims).toHaveBeenCalledWith(['rep_scope']);
     });
   });
 
@@ -137,6 +204,50 @@ describe('OidcProviderGrantService', () => {
       await expect(service.saveGrant(grantMock)).rejects.toThrow(
         OidcProviderGrantSaveException,
       );
+    });
+  });
+
+  describe('isRepScopeRequested()', () => {
+    it('should returns false when claims are empty', () => {
+      // When
+      const result = service['isRepScopeRequested']('');
+
+      // Then
+      expect(result).toEqual(false);
+    });
+
+    it('should throws exception when claims are not JSON parsable', () => {
+      // Given
+      const invalidClaims = 'not a valid JSON string';
+
+      const safelyParseJsonMock = jest.mocked(safelyParseJson);
+      safelyParseJsonMock.mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+      // When / Then
+      expect(() => {
+        service['isRepScopeRequested'](invalidClaims);
+      }).toThrow(OidcProviderParseJsonClaimsException);
+    });
+
+    it('should returns false when rep_scope is not essential', () => {
+      // Given
+      const claimsMock = '{"id_token":{"rep_scope":{"essential":false}}}';
+      const claimsMockParsed = {
+        // oidc naming convention
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        id_token: { rep_scope: { essential: false } },
+      };
+
+      const safelyParseJsonMock = jest.mocked(safelyParseJson);
+      safelyParseJsonMock.mockReturnValue(claimsMockParsed);
+
+      // When
+      const result = service['isRepScopeRequested'](claimsMock);
+
+      // Then
+      expect(result).toEqual(false);
     });
   });
 });

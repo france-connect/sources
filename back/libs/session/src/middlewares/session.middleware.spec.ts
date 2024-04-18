@@ -1,42 +1,29 @@
+import { Request, Response } from 'express';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { AsyncLocalStorageService } from '@fc/async-local-storage';
 import { ConfigService } from '@fc/config';
 
-import { getAsyncLocalStorageMock } from '@mocks/async-local-storage';
 import { getConfigMock } from '@mocks/config';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { SessionConfig } from '../dto';
-import { ISessionRequest } from '../interfaces';
 import { SessionService } from '../services';
-import { SESSION_STORE_KEY } from '../tokens';
 import { SessionMiddleware } from './session.middleware';
 
-describe('session.middleware', () => {
+describe('SessionMiddleware', () => {
   let middleware: SessionMiddleware;
 
   const configServiceMock = getConfigMock();
   const sessionServiceMock = getSessionServiceMock();
-  const asyncLocalStorageServiceMock = getAsyncLocalStorageMock();
 
   const configMock: Partial<SessionConfig> = {
-    sessionCookieName: 'sessionCookieName',
-    sessionIdLength: 64,
     slidingExpiration: true,
   };
 
-  const reqMock = {
-    signedCookies: {
-      [configMock.sessionCookieName]: 'sessionIdValue',
-    },
-    sessionId: 'sessionId',
-    sessionService: sessionServiceMock,
-  } as unknown as ISessionRequest;
+  const reqMock = {} as Request;
 
-  const resMock = {
-    locals: {},
-  } as unknown as Response;
+  const resMock = {} as Response;
 
   const nextMock = jest.fn();
 
@@ -45,19 +32,12 @@ describe('session.middleware', () => {
     jest.resetAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        SessionMiddleware,
-        ConfigService,
-        AsyncLocalStorageService,
-        SessionService,
-      ],
+      providers: [SessionMiddleware, ConfigService, SessionService],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
-      .overrideProvider(AsyncLocalStorageService)
-      .useValue(asyncLocalStorageServiceMock)
       .compile();
 
     middleware = module.get<SessionMiddleware>(SessionMiddleware);
@@ -70,23 +50,7 @@ describe('session.middleware', () => {
   });
 
   describe('use()', () => {
-    it('should initialize asyncLocalStorage', async () => {
-      // When
-      await middleware.use(reqMock, resMock, nextMock);
-
-      // Then
-      expect(asyncLocalStorageServiceMock.set).toHaveBeenCalledTimes(1);
-      expect(asyncLocalStorageServiceMock.set).toHaveBeenCalledWith(
-        SESSION_STORE_KEY,
-        {
-          data: null,
-          sync: false,
-          id: null,
-        },
-      );
-    });
-
-    it('should call handleSession', async () => {
+    it('should call handleSession()', async () => {
       // Given
       middleware['handleSession'] = jest.fn();
 
@@ -95,72 +59,142 @@ describe('session.middleware', () => {
 
       // Then
       expect(middleware['handleSession']).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call next', async () => {
-      // When
-      await middleware.use(reqMock, resMock, nextMock);
-
-      // Then
-      expect(nextMock).toHaveBeenCalledTimes(1);
+      expect(middleware['handleSession']).toHaveBeenCalledWith(
+        reqMock,
+        resMock,
+      );
     });
   });
 
   describe('handleSession()', () => {
     beforeEach(() => {
-      configServiceMock.get.mockReturnValueOnce(configMock);
+      sessionServiceMock.getSessionIdFromCookie.mockReturnValue('sessionId');
     });
 
-    it('should call `sessionService.init()` if slidingExpiration is true and no session cookie has been found in request signed cookies', async () => {
-      // Given
-      const cookieSessionIdMock = undefined;
-      sessionServiceMock.getSessionIdFromCookie.mockReturnValue(
-        cookieSessionIdMock,
-      );
+    it('should call config.get()', async () => {
       // When
       await middleware['handleSession'](reqMock, resMock);
+
       // Then
-      expect(sessionServiceMock.refresh).toHaveBeenCalledTimes(0);
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('Session');
+    });
+
+    it('should call session.getSessionIdFromCookie()', async () => {
+      // When
+      await middleware['handleSession'](reqMock, resMock);
+
+      // Then
+      expect(sessionServiceMock.getSessionIdFromCookie).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(sessionServiceMock.getSessionIdFromCookie).toHaveBeenCalledWith(
+        reqMock,
+      );
+    });
+
+    it('should call session.init() if sessionId from cookie is falsy', async () => {
+      // Given
+      sessionServiceMock.getSessionIdFromCookie.mockReturnValueOnce(null);
+
+      // When
+      await middleware['handleSession'](reqMock, resMock);
+
+      // Then
       expect(sessionServiceMock.init).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.init).toHaveBeenCalledWith(reqMock, resMock);
+      expect(sessionServiceMock.init).toHaveBeenCalledWith(resMock);
     });
 
-    it('should call `sessionService.refresh()` if slidingExpiration is true and a session cookie has been found in request signed cookies', async () => {
+    it('should return the result of call to session.init() if sessionId from cookie is falsy', async () => {
       // Given
-      const cookieSessionIdMock = 'cookieSession';
+      const initResult = Symbol('init');
+      sessionServiceMock.getSessionIdFromCookie.mockReturnValue(null);
+      sessionServiceMock.init.mockReturnValue(initResult);
+
+      // When
+      const result = await middleware['handleSession'](reqMock, resMock);
+
+      // Then
+      expect(result).toEqual(initResult);
+    });
+
+    it('should call session.initCache() if sessionId from cookie is truthy', async () => {
+      // Given
+      const getSessionIdFromCookieResult = Symbol('sessionId');
       sessionServiceMock.getSessionIdFromCookie.mockReturnValue(
-        cookieSessionIdMock,
+        getSessionIdFromCookieResult,
       );
+
       // When
       await middleware['handleSession'](reqMock, resMock);
+
       // Then
-      expect(sessionServiceMock.init).toHaveBeenCalledTimes(0);
+      expect(sessionServiceMock.initCache).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.initCache).toHaveBeenCalledWith(
+        getSessionIdFromCookieResult,
+      );
+    });
+
+    it('should call session.init() if initCache fails', async () => {
+      // Given
+      const errorMock = new Error('initCache error');
+      sessionServiceMock.initCache.mockRejectedValue(errorMock);
+
+      // When
+      await middleware['handleSession'](reqMock, resMock);
+
+      // Then
+      expect(sessionServiceMock.init).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.init).toHaveBeenCalledWith(resMock);
+    });
+
+    it('should return the result of call to session.init() if session is not valid', async () => {
+      // Given
+      const errorMock = new Error('initCache error');
+      sessionServiceMock.initCache.mockRejectedValue(errorMock);
+      const initResult = Symbol('init');
+      sessionServiceMock.init.mockReturnValue(initResult);
+
+      // When
+      const result = await middleware['handleSession'](reqMock, resMock);
+
+      // Then
+      expect(result).toEqual(initResult);
+    });
+
+    it('should call session.refresh() if session is valid and slidingExpiration is true', async () => {
+      // Given
+      sessionServiceMock.initCache.mockReturnValueOnce(true);
+
+      // When
+      await middleware['handleSession'](reqMock, resMock);
+
+      // Then
       expect(sessionServiceMock.refresh).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.refresh).toHaveBeenCalledWith(reqMock, resMock);
     });
 
-    it('should call bindToRequest if slidingExpiration is false and a session cookie has been found in request signed cookies', async () => {
+    it('should NOT call session.init() if session is valid and slidingExpiration is true', async () => {
       // Given
-      const cookieSessionIdMock = 'cookieSession';
-      const noSlidingExpiration = {
-        slidingExpiration: false,
-      };
-      sessionServiceMock.getSessionIdFromCookie.mockReturnValue(
-        cookieSessionIdMock,
-      );
-      configServiceMock.get
-        .mockReset()
-        .mockReturnValueOnce(noSlidingExpiration);
+      sessionServiceMock.initCache.mockReturnValue(true);
+
       // When
       await middleware['handleSession'](reqMock, resMock);
+
       // Then
-      expect(sessionServiceMock.init).toHaveBeenCalledTimes(0);
-      expect(sessionServiceMock.refresh).toHaveBeenCalledTimes(0);
-      expect(sessionServiceMock.bindToRequest).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.bindToRequest).toHaveBeenCalledWith(
-        reqMock,
-        cookieSessionIdMock,
-      );
+      expect(sessionServiceMock.init).not.toHaveBeenCalled();
+    });
+
+    it('should NOT call session.refresh() if session is valid and slidingExpiration is false', async () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({ slidingExpiration: false });
+      sessionServiceMock.initCache.mockReturnValueOnce(true);
+
+      // When
+      await middleware['handleSession'](reqMock, resMock);
+
+      // Then
+      expect(sessionServiceMock.refresh).not.toHaveBeenCalled();
     });
   });
 });

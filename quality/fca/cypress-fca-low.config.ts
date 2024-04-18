@@ -11,6 +11,6 @@ export default defineConfig({
       return await pluginConfig(on, config, false);
     },
     specPattern:
-      'cypress/integration/{accessibilité,exploitation,usager}/*.feature',
+      'cypress/integration/{accessibilité,api,exploitation,usager}/*.feature',
   },
 });

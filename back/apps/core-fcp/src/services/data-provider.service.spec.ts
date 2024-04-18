@@ -14,18 +14,18 @@ import {
 import { CustomJwtPayload, JwtService } from '@fc/jwt';
 import { LoggerService } from '@fc/logger';
 import { AccessToken, atHashFromAccessToken, stringToArray } from '@fc/oidc';
-import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderRedisAdapter } from '@fc/oidc-provider/adapters';
 import { RedisService } from '@fc/redis';
 import { RnippPivotIdentity } from '@fc/rnipp';
 import { ScopesService } from '@fc/scopes';
-import { ISessionService, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 
 import { getJwtServiceMock } from '@mocks/jwt';
 import { getLoggerMock } from '@mocks/logger';
 import { getRedisServiceMock } from '@mocks/redis';
+import { getSessionServiceMock } from '@mocks/session';
 
-import { ChecktokenRequestDto } from '../dto';
+import { ChecktokenRequestDto, CoreFcpSession } from '../dto';
 import {
   CoreFcpFetchDataProviderJwksFailedException,
   InvalidChecktokenRequestException,
@@ -79,9 +79,12 @@ const configDataMock = {
   configuration: { jwks: {} },
 };
 
-const sessionServiceMock = {
-  getAlias: jest.fn(),
-  get: jest.fn(),
+const sessionServiceMock = getSessionServiceMock();
+
+const sessionDataMock = {
+  OidcClient: {
+    rnippIdentity: { mockedRnippProperty: Symbol('mockedRnippProperty') },
+  },
 };
 
 const redisMock = getRedisServiceMock();
@@ -299,8 +302,6 @@ describe('DataProviderService', () => {
 
   describe('generateValidPayload', () => {
     const dpClientIdMock = 'dataProvider ClientId';
-    // sessionServiceMock
-
     const acrMock = ['acr', 'values'];
     const iatMock = 33;
     const expMock = 42;
@@ -329,7 +330,7 @@ describe('DataProviderService', () => {
     };
 
     beforeEach(() => {
-      sessionServiceMock.get.mockResolvedValueOnce(sessionMock);
+      sessionServiceMock.get.mockReturnValueOnce(sessionMock);
       service['generateDataProviderSub'] = jest.fn().mockReturnValue(dpSubMock);
       service['getDpRelatedScopes'] = jest.fn().mockResolvedValue(['space']);
     });
@@ -338,7 +339,7 @@ describe('DataProviderService', () => {
       // When
       const result = await service['generateValidPayload'](
         dpClientIdMock,
-        sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        sessionDataMock as unknown as CoreFcpSession,
         interactionMock,
       );
 
@@ -355,9 +356,43 @@ describe('DataProviderService', () => {
           jti: 'jtiValue',
           scope: 'space',
           sub: 'dpSubMock value',
+          mockedRnippProperty:
+            sessionDataMock.OidcClient.rnippIdentity.mockedRnippProperty,
         },
         aud: 'dataProvider ClientId',
       });
+    });
+
+    it('should call generateDataProviderSub() with rnippIdentity from session and dpClientId from interaction (accessToken)', async () => {
+      // When
+      await service['generateValidPayload'](
+        dpClientIdMock,
+        sessionDataMock as unknown as CoreFcpSession,
+        interactionMock,
+      );
+
+      // Then
+      expect(service['generateDataProviderSub']).toHaveBeenCalledTimes(1);
+      expect(service['generateDataProviderSub']).toHaveBeenCalledWith(
+        sessionDataMock.OidcClient.rnippIdentity,
+        dpClientIdMock,
+      );
+    });
+
+    it('should call getDpRelatedScopes() with dpClientId and interaction', async () => {
+      // When
+      await service['generateValidPayload'](
+        dpClientIdMock,
+        sessionDataMock as unknown as CoreFcpSession,
+        interactionMock,
+      );
+
+      // Then
+      expect(service['getDpRelatedScopes']).toHaveBeenCalledTimes(1);
+      expect(service['getDpRelatedScopes']).toHaveBeenCalledWith(
+        dpClientIdMock,
+        interactionMock,
+      );
     });
   });
 
@@ -387,7 +422,7 @@ describe('DataProviderService', () => {
     it('should call adapterMock', async () => {
       // When
       await service['generatePayload'](
-        sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        sessionDataMock as unknown as CoreFcpSession,
         accessTokenMock,
         'dpClientId',
       );
@@ -414,7 +449,7 @@ describe('DataProviderService', () => {
       });
       // When
       const result = await service['generatePayload'](
-        sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        sessionDataMock as unknown as CoreFcpSession,
         accessTokenMock,
         'dpClientId',
       );
@@ -435,7 +470,7 @@ describe('DataProviderService', () => {
       });
       // When
       const result = await service['generatePayload'](
-        sessionServiceMock as unknown as ISessionService<OidcClientSession>,
+        sessionDataMock as unknown as CoreFcpSession,
         accessTokenMock,
         'dpClientId',
       );

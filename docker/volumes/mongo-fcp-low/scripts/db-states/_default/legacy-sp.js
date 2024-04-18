@@ -49,6 +49,7 @@ const spLegacy = {
     trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
+    rep_scope: []
   },
 
   fsp2: {
@@ -98,6 +99,12 @@ const spLegacy = {
     trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
+    rep_scope: [
+      "Papier-Citoyenneté-Elections",
+      "Famille-Scolarité",
+      "Social-Santé",
+      "Travail-Formation"
+    ],
   },
 
   fsp3: {
@@ -154,6 +161,7 @@ const spLegacy = {
     trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
+    rep_scope: [],
   },
 
   deprecatedTraces: {
@@ -193,6 +201,7 @@ const spLegacy = {
     trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
+    rep_scope: [],
   },
 
   "FS désactivé": {
@@ -232,6 +241,7 @@ const spLegacy = {
     trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
+    rep_scope: [],
   },
 
   fsStats: {
@@ -282,6 +292,7 @@ const spLegacy = {
     production_key:
       "28e9ed103d6b075d371303a8bc5a66446f0cd4c0ce7ec237773276c247d28a68",
     whitelistByServiceProviderActivated: false,
+    rep_scope: [],
   },
 
   "user dashboard": {
@@ -324,6 +335,7 @@ const spLegacy = {
     trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
+    rep_scope: [],
   },
 
   MarieDeHem: {
@@ -369,6 +381,7 @@ const spLegacy = {
     eidas: 1,
     platform: "CORE_LEGACY",
     __v: 0,
+    rep_scope: [],
   },
 
   // new service pour tester les scopes
@@ -400,6 +413,7 @@ const spLegacy = {
     eidas: 1,
     platform: "CORE_LEGACY",
     __v: 0,
+    rep_scope: [],
   },
 };
 

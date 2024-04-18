@@ -5,8 +5,10 @@ import { Module } from '@nestjs/common';
 
 import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
-import { ExceptionsModule } from '@fc/exceptions';
+import { CsrfModule } from '@fc/csrf';
+import { ExceptionsModule } from '@fc/exceptions-deprecated';
 import { HttpProxyModule } from '@fc/http-proxy';
+import { I18nModule } from '@fc/i18n';
 import {
   IdentityProviderAdapterEnvModule,
   IdentityProviderAdapterEnvService,
@@ -46,6 +48,8 @@ const oidcClientModule = OidcClientModule.register(
     TracksModule,
     UserPreferencesModule,
     MailerModule,
+    CsrfModule,
+    I18nModule,
   ],
   providers: [UserDashboardService],
 })

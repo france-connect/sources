@@ -3,7 +3,7 @@
 // declarative file
 import React from 'react';
 
-import { AxiosErrorCatcher } from '../inferfaces';
+import type { AxiosErrorCatcher } from '../inferfaces';
 
 export const DEFAULT_CONTEXT_STATE: AxiosErrorCatcher = {
   codeError: undefined,

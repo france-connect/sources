@@ -1,4 +1,6 @@
-import { IsNotEmpty, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+
+import { IsUrlRequiredTldFromConfig } from '@fc/common';
 
 /**
  * Control parameters on the authentication request.
@@ -11,7 +13,7 @@ export class LogoutParamsDto {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_hint: string;
 
-  @IsUrl()
+  @IsUrlRequiredTldFromConfig()
   @IsOptional()
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" data-fr-scheme="light">
+<html lang="<%= $translate('meta.lang') %>" data-fr-scheme="light">
 <head>
   <%- include('includes/head.ejs') %>
   <link rel="stylesheet" href="/css/pages/consent.css">
@@ -29,7 +29,7 @@
                 disabled: showConsentBox
               });
               %>
-              <input type="hidden" name="_csrf" value="<%= locals.csrfToken %>" />
+              <input type="hidden" name="csrfToken" value="<%= locals.csrfToken %>" />
             </form>
           </section>
 

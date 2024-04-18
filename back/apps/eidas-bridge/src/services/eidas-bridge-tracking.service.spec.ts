@@ -36,23 +36,30 @@ describe('EidasBridgeTrackingService', () => {
     req: { sessionId: sessionIdMock },
   };
 
+  const sessionServiceMock = getSessionServiceMock();
+
   beforeEach(async () => {
     jest.resetAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [EidasBridgeTrackingService],
-    }).compile();
+      providers: [EidasBridgeTrackingService, SessionService],
+    })
+      .overrideProvider(SessionService)
+      .useValue(sessionServiceMock)
+      .compile();
 
     service = module.get<EidasBridgeTrackingService>(
       EidasBridgeTrackingService,
     );
+
+    sessionServiceMock.getId.mockReturnValue(sessionIdMock);
   });
 
   describe('buildLog', () => {
     beforeEach(() => {
       service['extractContext'] = jest
         .fn()
-        .mockResolvedValueOnce(extractedContextMock);
+        .mockReturnValueOnce(extractedContextMock);
     });
 
     it('should call extractContext()', async () => {
@@ -113,9 +120,6 @@ describe('EidasBridgeTrackingService', () => {
       await service['extractContext'](eventMock, eventContextMock);
       // Then
       expect(service['extractContextFromFrRequest']).toHaveBeenCalledTimes(1);
-      expect(service['extractContextFromFrRequest']).toHaveBeenCalledWith(
-        eventContextMock,
-      );
     });
 
     it('should call extractContextFromEuRequest()', async () => {
@@ -128,9 +132,6 @@ describe('EidasBridgeTrackingService', () => {
       await service['extractContext'](eventMock, eventContextMock);
       // Then
       expect(service['extractContextFromEuRequest']).toHaveBeenCalledTimes(1);
-      expect(service['extractContextFromEuRequest']).toHaveBeenCalledWith(
-        eventContextMock,
-      );
     });
 
     it('should return extracted context', async () => {
@@ -142,7 +143,7 @@ describe('EidasBridgeTrackingService', () => {
       const euContextMock = { EuRequestKey: 'EuRequestValue' };
       service['extractContextFromEuRequest'] = jest
         .fn()
-        .mockResolvedValueOnce(euContextMock);
+        .mockReturnValueOnce(euContextMock);
       // When
       const result = await service['extractContext'](
         eventMock,
@@ -158,44 +159,24 @@ describe('EidasBridgeTrackingService', () => {
   });
 
   describe('extractContextFromEuRequest', () => {
-    const getBoundSessionMock = getSessionServiceMock();
-
-    beforeEach(() => {
-      jest
-        .spyOn(SessionService, 'getBoundSession')
-        .mockReturnValue(getBoundSessionMock);
+    it('should retrieve OidcClient session', () => {
+      // When
+      service['extractContextFromEuRequest']();
+      // Then
+      expect(sessionServiceMock.get).toHaveBeenNthCalledWith(1, 'OidcClient');
     });
 
-    it('should call SessionService.getBoundSession', async () => {
+    it('should retrieve EidasProvider session', () => {
       // When
-      await service['extractContextFromEuRequest'](eventContextMock);
+      service['extractContextFromEuRequest']();
       // Then
-      expect(SessionService.getBoundSession).toHaveBeenCalledTimes(2);
-    });
-
-    it('should retrieve OidcClient session', async () => {
-      // When
-      await service['extractContextFromEuRequest'](eventContextMock);
-      // Then
-      expect(SessionService.getBoundSession).toHaveBeenNthCalledWith(
-        1,
-        eventContextMock.req,
-        'OidcClient',
-      );
-    });
-
-    it('should retrieve EidasProvider session', async () => {
-      // When
-      await service['extractContextFromEuRequest'](eventContextMock);
-      // Then
-      expect(SessionService.getBoundSession).toHaveBeenNthCalledWith(
+      expect(sessionServiceMock.get).toHaveBeenNthCalledWith(
         2,
-        eventContextMock.req,
         'EidasProvider',
       );
     });
 
-    it('should return an object containing properties extracted from session', async () => {
+    it('should return an object containing properties extracted from session', () => {
       // Given
       const oidcClientSessionMock = { idpIdentity: { sub: 'subMockValue' } };
       const eidasProviderSessionMock = {
@@ -208,12 +189,12 @@ describe('EidasBridgeTrackingService', () => {
           subject: 'subjectValue',
         },
       };
-      getBoundSessionMock.get
-        .mockResolvedValueOnce(oidcClientSessionMock)
-        .mockResolvedValueOnce(eidasProviderSessionMock);
+      sessionServiceMock.get
+        .mockReturnValueOnce(oidcClientSessionMock)
+        .mockReturnValueOnce(eidasProviderSessionMock);
+
       // When
-      const result =
-        await service['extractContextFromEuRequest'](eventContextMock);
+      const result = service['extractContextFromEuRequest']();
       // Then
       expect(result).toEqual({
         eidasLevelRequested:
@@ -226,10 +207,9 @@ describe('EidasBridgeTrackingService', () => {
       });
     });
 
-    it('should return undefined values for properties that are not available', async () => {
+    it('should return undefined values for properties that are not available', () => {
       // When
-      const result =
-        await service['extractContextFromEuRequest'](eventContextMock);
+      const result = service['extractContextFromEuRequest']();
       // Then
       expect(result).toEqual({
         eidasLevelRequested: undefined,
@@ -242,44 +222,21 @@ describe('EidasBridgeTrackingService', () => {
   });
 
   describe('extractContextFromFrRequest', () => {
-    const getBoundSessionMock = getSessionServiceMock();
-
-    beforeEach(() => {
-      jest
-        .spyOn(SessionService, 'getBoundSession')
-        .mockReturnValue(getBoundSessionMock);
-    });
-
-    it('should call SessionService.getBoundSession', async () => {
+    it('should retrieve OidcClient session', () => {
       // When
-      await service['extractContextFromFrRequest'](eventContextMock);
+      service['extractContextFromFrRequest'](eventContextMock);
       // Then
-      expect(SessionService.getBoundSession).toHaveBeenCalledTimes(2);
+      expect(sessionServiceMock.get).toHaveBeenNthCalledWith(1, 'OidcClient');
     });
 
-    it('should retrieve OidcClient session', async () => {
+    it('should retrieve EidasClient session', () => {
       // When
-      await service['extractContextFromFrRequest'](eventContextMock);
+      service['extractContextFromFrRequest'](eventContextMock);
       // Then
-      expect(SessionService.getBoundSession).toHaveBeenNthCalledWith(
-        1,
-        eventContextMock.req,
-        'OidcClient',
-      );
+      expect(sessionServiceMock.get).toHaveBeenNthCalledWith(2, 'EidasClient');
     });
 
-    it('should retrieve EidasClient session', async () => {
-      // When
-      await service['extractContextFromFrRequest'](eventContextMock);
-      // Then
-      expect(SessionService.getBoundSession).toHaveBeenNthCalledWith(
-        2,
-        eventContextMock.req,
-        'EidasClient',
-      );
-    });
-
-    it('should return an object containing properties extracted from session', async () => {
+    it('should return an object containing properties extracted from session', () => {
       // Given
       const oidcClientSessionMock = {
         idpIdentity: { sub: 'subMockValue (idp)' },
@@ -297,13 +254,12 @@ describe('EidasBridgeTrackingService', () => {
           levelOfAssurance: 'levelOfAssuranceValue (response)',
         },
       };
-      getBoundSessionMock.get
-        .mockResolvedValueOnce(oidcClientSessionMock)
-        .mockResolvedValueOnce(eidasClientSessionMock);
+      sessionServiceMock.get
+        .mockReturnValueOnce(oidcClientSessionMock)
+        .mockReturnValueOnce(eidasClientSessionMock);
 
       // When
-      const result =
-        await service['extractContextFromFrRequest'](eventContextMock);
+      const result = service['extractContextFromFrRequest'](eventContextMock);
       // Then
       expect(result).toEqual({
         eidasLevelRequested:
@@ -316,10 +272,9 @@ describe('EidasBridgeTrackingService', () => {
       });
     });
 
-    it('should return undefined values for properties that are not available', async () => {
+    it('should return undefined values for properties that are not available', () => {
       // When
-      const result =
-        await service['extractContextFromFrRequest'](eventContextMock);
+      const result = service['extractContextFromFrRequest'](eventContextMock);
       // Then
       expect(result).toEqual({
         eidasLevelRequested: undefined,
@@ -330,7 +285,7 @@ describe('EidasBridgeTrackingService', () => {
       });
     });
 
-    it('should return countryCodeDst from context if available', async () => {
+    it('should return countryCodeDst from context if available', () => {
       // Given
       const countryCodeDstMock = 'countryCodeDstFromContext';
       const contextMock = {
@@ -338,7 +293,7 @@ describe('EidasBridgeTrackingService', () => {
         countryCodeDst: countryCodeDstMock,
       };
       // When
-      const result = await service['extractContextFromFrRequest'](contextMock);
+      const result = service['extractContextFromFrRequest'](contextMock);
       // Then
       expect(result).toEqual({
         eidasLevelRequested: undefined,

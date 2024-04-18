@@ -1,28 +1,34 @@
+import { get } from 'lodash';
+
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
+import { TemplateMethod } from '@fc/view-templates';
 
 import { SessionConfig } from '../dto';
-import { extractSessionFromRequest } from '../helper';
-import { ISessionRequest, ISessionResponse } from '../interfaces';
 import { TemplateExposedType } from '../types';
+import { SessionService } from './session.service';
 
 @Injectable()
 export class SessionTemplateService {
-  constructor(private readonly config: ConfigService) {}
+  constructor(
+    private readonly config: ConfigService,
+    private readonly session: SessionService,
+  ) {}
 
-  async bindSessionToRes(req: ISessionRequest, res: ISessionResponse) {
+  @TemplateMethod('session')
+  get(key: string): unknown {
     const { templateExposed } = this.config.get<SessionConfig>('Session');
 
     if (templateExposed) {
-      const sessionParts = await this.getSessionParts(templateExposed, req);
-      res.locals.session = sessionParts;
+      const sessionParts = this.getSessionParts(templateExposed);
+      return get(sessionParts, key);
     }
   }
 
-  async getSessionParts(parts: TemplateExposedType, req: ISessionRequest) {
+  getSessionParts(parts: TemplateExposedType) {
     const moduleNames = Object.keys(parts);
-    const data = await this.exposedDataForModules(moduleNames, req);
+    const data = this.exposedDataForModules(moduleNames);
 
     const sessions = moduleNames
       .map((moduleName, i) => [moduleName, data[i]]) // group module and data
@@ -53,16 +59,11 @@ export class SessionTemplateService {
     return exportData;
   }
 
-  private async exposedDataForModules(
-    moduleNames: string[],
-    req: ISessionRequest,
-  ) {
-    const extractSession = moduleNames
-      .map((moduleName) => extractSessionFromRequest(moduleName, req))
-      .map(async (sessionService) => await sessionService.get());
+  private exposedDataForModules(moduleNames: string[]) {
+    const extractSession = moduleNames.map((moduleName) =>
+      this.session.get(moduleName),
+    );
 
-    const data = await Promise.all(extractSession);
-
-    return data;
+    return extractSession;
   }
 }

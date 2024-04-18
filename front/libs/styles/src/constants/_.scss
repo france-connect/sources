@@ -1,0 +1,17 @@
+@import 'zindex';
+// https://www.systeme-de-design.gouv.fr/elements-d-interface/fondamentaux-techniques/grille-et-points-de-rupture
+@import 'breakpoints';
+
+/**
+ * Create all :root variables
+ * Defined in _zindex.scss, _breakpoints.scss
+ */
+:root {
+  @each $zindex-name, $zindex-value in $zindex {
+    --zindex-#{$zindex-name}: #{$zindex-value} !default;
+  }
+
+  @each $breakpoint-name, $breakpoint-value in $breakpoints {
+    --breakpoint-#{$breakpoint-name}: #{$breakpoint-value} !default;
+  }
+}

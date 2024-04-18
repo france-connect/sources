@@ -10,16 +10,19 @@ import {
   CORE_SERVICE,
   CoreAccountService,
   CoreAcrService,
+  CoreAuthorizationService,
   CoreTrackingService,
   CoreVerifyService,
 } from '@fc/core';
 import { CryptographyEidasModule } from '@fc/cryptography-eidas';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
+import { CsrfModule, CsrfService } from '@fc/csrf';
 import { DataProviderAdapterMongoModule } from '@fc/data-provider-adapter-mongo';
-import { ExceptionsModule } from '@fc/exceptions';
+import { ExceptionsModule } from '@fc/exceptions-deprecated';
 import { FeatureHandlerModule } from '@fc/feature-handler';
 import { FlowStepsModule } from '@fc/flow-steps';
 import { HttpProxyModule } from '@fc/http-proxy';
+import { I18nModule } from '@fc/i18n';
 import {
   IdentityProviderAdapterMongoModule,
   IdentityProviderAdapterMongoService,
@@ -51,6 +54,7 @@ import {
   OidcProviderController,
 } from './controllers';
 import {
+  CoreFcpDefaultAuthorizationHandler,
   CoreFcpDefaultIdentityCheckHandler,
   CoreFcpDefaultVerifyHandler,
   CoreFcpEidasIdentityCheckHandler,
@@ -107,6 +111,8 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     AppModule,
     DataProviderAdapterMongoModule,
     ViewTemplatesModule,
+    CsrfModule,
+    I18nModule,
   ],
   controllers: [
     CoreFcpController,
@@ -122,12 +128,15 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     CoreVerifyService,
     CoreFcpVerifyService,
     CoreFcpMiddlewareService,
+    CoreAuthorizationService,
     OidcProviderConfigAppService,
     CoreFcpDefaultVerifyHandler,
     CoreFcpEidasVerifyHandler,
     CoreFcpSendEmailHandler,
     CoreFcpDefaultIdentityCheckHandler,
     CoreFcpEidasIdentityCheckHandler,
+    CoreFcpDefaultAuthorizationHandler,
+    CsrfService,
     {
       provide: CORE_SERVICE,
       useClass: CoreFcpService,

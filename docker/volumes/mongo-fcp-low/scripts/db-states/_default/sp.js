@@ -46,6 +46,7 @@ const fsp = {
       "dgfip_nbpac",
       "droits_assurance_maladie",
       "cnam_caisse",
+      "idp_id",
     ],
     claims: ["amr"],
     id_token_signed_response_alg: "HS256",
@@ -54,8 +55,6 @@ const fsp = {
     userinfo_signed_response_alg: "HS256",
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
-    jwks_uri:
-      "https://fsp1-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: true,
     idpFilterList: ["77fe5e8c-364c-440e-909f-5ef4f494e170"],
     identityConsent: false,
@@ -113,8 +112,6 @@ const fsp = {
     userinfo_signed_response_alg: "HS256",
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
-    jwks_uri:
-      "https://fsp1-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: false,
     idpFilterList: [
       "8dfc4080-c90d-4234-969b-f6c961de3e90",
@@ -176,8 +173,6 @@ const fsp = {
     userinfo_signed_response_alg: "HS256",
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
-    jwks_uri:
-      "https://fsp3-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: true,
     idpFilterList: ["0adf04be-536e-4986-b639-73ea8d38493e"],
     identityConsent: true,
@@ -235,8 +230,6 @@ const fsp = {
     userinfo_signed_response_alg: "HS256",
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
-    jwks_uri:
-      "https://fsp4-low.docker.dev-franceconnect.fr/client/.well-known/keys",
     idpFilterExclude: false,
     idpFilterList: ["77fe5e8c-364c-440e-909f-5ef4f494e170"],
     identityConsent: false,

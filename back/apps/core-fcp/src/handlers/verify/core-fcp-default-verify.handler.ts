@@ -59,7 +59,7 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
 
     // Grab informations on interaction and identity
     const { idpAcr, idpId, idpIdentity, spAcr, spId, isSso, subs } =
-      await sessionOidc.get();
+      sessionOidc.get();
 
     /**
      * @todo #410 - le DTO est permissif et devrait forcer les données
@@ -107,16 +107,28 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     });
 
     const spIdentity = this.buildSpIdentity(idpIdentity, rnippIdentity);
+    const technicalClaims = this.getTechnicalClaims(idpId);
 
     const session: OidcClientSession = {
       idpIdentity,
       rnippIdentity,
-      spIdentity,
+      spIdentity: {
+        ...spIdentity,
+        ...technicalClaims,
+      },
       accountId,
       subs: { ...subs, [spId]: sub },
     };
 
-    await sessionOidc.set(session);
+    sessionOidc.set(session);
+  }
+
+  private getTechnicalClaims(idpId: string): Record<string, unknown> {
+    return {
+      // OIDC fashion naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      idp_id: idpId,
+    };
   }
 
   private checkAccountBlocked(account: Account): void {
@@ -152,7 +164,7 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
   private async rnippCheck(
     idpIdentity: RequiredExcept<
       IOidcIdentity,
-      'sub' | 'email' | 'preferred_username'
+      'sub' | 'email' | 'preferred_username' | 'rep_scope'
     >,
     trackingContext: any,
   ): Promise<RnippPivotIdentity> {
@@ -248,7 +260,7 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     let rnippIdentity: RnippPivotIdentity;
 
     if (isSso) {
-      rnippIdentity = await sessionOidc.get('rnippIdentity');
+      rnippIdentity = sessionOidc.get('rnippIdentity');
     } else {
       // Identity check and normalization
       rnippIdentity = await this.rnippCheck(idpIdentity, trackingContext);

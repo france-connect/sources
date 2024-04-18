@@ -1,6 +1,6 @@
-import { IClaims } from '../../interfaces';
+import { ClaimsInterface } from '../../interfaces';
 
-export const claims: IClaims = {
+export const claims: ClaimsInterface = {
   // OIDC fashion variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   ensagri_releve_note: 'ensagri_releve_note',

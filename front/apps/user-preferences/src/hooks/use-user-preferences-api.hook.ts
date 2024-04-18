@@ -1,12 +1,14 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
+import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { HttpStatusCode, useApiGet } from '@fc/common';
-import { GetCsrfTokenResponse } from '@fc/http-client';
+import type { GetCsrfTokenResponse } from '@fc/http-client';
 
-import { FormValues, UserPreferencesConfig, UserPreferencesData } from '../interfaces';
-import { UserPreferencesService, UserPreferencesServiceInterface } from '../services';
+import type { FormValues, UserPreferencesConfig, UserPreferencesData } from '../interfaces';
+import type { UserPreferencesServiceInterface } from '../services';
+import { UserPreferencesService } from '../services';
 
 export const validateHandlerCallback = ({ idpList }: Pick<FormValues, 'idpList'>) => {
   const isDefinedPreferences = idpList && Object.values(idpList);

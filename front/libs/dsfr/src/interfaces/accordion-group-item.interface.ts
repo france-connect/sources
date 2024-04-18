@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-import { HeadingTag } from '@fc/common';
+import type { HeadingTag } from '@fc/common';
 
 export interface AccordionGroupItemInterface {
   id: string;

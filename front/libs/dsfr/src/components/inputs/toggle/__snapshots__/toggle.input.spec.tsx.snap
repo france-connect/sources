@@ -2,7 +2,9 @@
 
 exports[`ToggleInput should match the snapshot 1`] = `
 <div>
-  <form>
+  <form
+    data-testid="form-wrapper"
+  >
     <div
       class="fr-toggle"
     >

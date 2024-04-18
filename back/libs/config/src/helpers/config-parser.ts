@@ -2,7 +2,10 @@ import { existsSync, readFileSync } from 'fs';
 
 import { parseBoolean, parseJsonProperty } from '@fc/common';
 
-import { IConfigParserFileOptions } from '../interfaces';
+import {
+  ConfigParserFileOptionsInterface,
+  ConfigParserStringOptionsInterface,
+} from '../interfaces';
 
 export class ConfigParser {
   constructor(
@@ -33,9 +36,17 @@ export class ConfigParser {
     return parseJsonProperty(this.source, fullPath);
   }
 
-  string(path: string): string {
+  string(
+    path: string,
+    options: ConfigParserStringOptionsInterface = {},
+  ): string | undefined {
     const fullPath = this.getFullPath(path);
-    return this.source[fullPath];
+    const { undefinedIfEmpty } = options;
+    const value = this.source[fullPath];
+    if (undefinedIfEmpty && value === '') {
+      return undefined;
+    }
+    return value;
   }
 
   number(path: string): number {
@@ -43,7 +54,7 @@ export class ConfigParser {
     return parseInt(this.source[fullPath], 10);
   }
 
-  file(path: string, options: IConfigParserFileOptions = {}): string {
+  file(path: string, options: ConfigParserFileOptionsInterface = {}): string {
     const { optional } = options;
 
     const fullPath = this.getFullPath(path);

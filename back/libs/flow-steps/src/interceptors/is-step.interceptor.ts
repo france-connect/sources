@@ -37,16 +37,12 @@ export class IsStepInterceptor implements NestInterceptor {
     );
   }
 
-  private async setStep(context: ExecutionContext): Promise<void> {
+  private setStep(context: ExecutionContext): void {
     const req = context.switchToHttp().getRequest();
-
-    if (!req.sessionId) {
-      return;
-    }
 
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const stepRoute = req.route.path.replace(urlPrefix, '');
 
-    await this.flowStep.setStep(req, stepRoute);
+    this.flowStep.setStep(stepRoute);
   }
 }

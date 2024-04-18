@@ -49,14 +49,14 @@ export class EidasClientController {
     @Session('EidasClient')
     sessionEidas: ISessionService<EidasClientSession>,
   ) {
-    const { eidasPartialRequest } = await sessionEidas.get();
+    const { eidasPartialRequest } = sessionEidas.get();
 
     const eidasRequest = this.eidasClient.completeEidasRequest(
       eidasPartialRequest,
       query.country,
     );
 
-    await sessionEidas.set('eidasRequest', eidasRequest);
+    sessionEidas.set('eidasRequest', eidasRequest);
 
     const { token, lightRequest } =
       this.eidasClient.prepareLightRequest(eidasRequest);
@@ -98,7 +98,7 @@ export class EidasClientController {
 
     const eidasResponse = this.eidasClient.parseLightResponse(lightResponse);
 
-    await sessionEidas.set('eidasResponse', eidasResponse);
+    sessionEidas.set('eidasResponse', eidasResponse);
 
     const { redirectAfterResponseHandlingUrl } =
       this.config.get<EidasClientConfig>('EidasClient');

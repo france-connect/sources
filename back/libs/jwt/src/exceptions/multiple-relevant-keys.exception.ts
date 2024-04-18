@@ -2,7 +2,7 @@
 
 // Declarative file
 import { KekAlg, Use } from '@fc/cryptography';
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enum';
 import { JwtBaseException } from './jwt-base.exception';

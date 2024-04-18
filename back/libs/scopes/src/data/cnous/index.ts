@@ -1,12 +1,10 @@
-import { IProviderMappings } from '../../interfaces';
+import { ProviderMappingsInterface } from '../../interfaces';
 import { claims } from './cnous.claims';
-import { labels } from './cnous.labels';
 import { provider } from './cnous.provider';
 import { scopes } from './cnous.scopes';
 
-export const cnous: IProviderMappings = {
+export const cnous: ProviderMappingsInterface = {
   provider,
   claims,
-  labels,
   scopes,
 };

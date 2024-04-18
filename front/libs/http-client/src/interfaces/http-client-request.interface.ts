@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 
 // declarative file
-import { Method } from 'axios';
+import type { Method } from 'axios';
 
-import { HttpClientData } from './http-client-data.interface';
+import type { HttpClientData } from './http-client-data.interface';
 
 export interface HttpClientRequest {
   url: string;

@@ -1,4 +1,5 @@
-import { applyMiddleware, Middleware, StoreEnhancer } from 'redux';
+import type { Middleware, StoreEnhancer } from 'redux';
+import { applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 export const bindMiddlewares = (

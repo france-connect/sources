@@ -1,13 +1,19 @@
 import { When } from '@badeball/cypress-cucumber-preprocessor';
 
+import { Environment } from '../../common/types';
 import { EidasAssuranceLevelEnum, EuIdpLoginCancelStepEnum } from '../enums';
 import IdpEidasMockPage from '../pages/idp-eidas-mock-page';
 
 const idpEidasMockPage = new IdpEidasMockPage();
 
+const interceptOidcCallback = (fcRootUrl) =>
+  cy.intercept(`${fcRootUrl}/api/v2/oidc-callback*`).as('fc:oidcCallback');
+
 When(
   "je m'authentifie avec succès sur le fournisseur d'identité étranger",
   function () {
+    const { fcRootUrl }: Environment = this.env;
+    interceptOidcCallback(fcRootUrl);
     idpEidasMockPage.authenticateToEUIdp();
   },
 );
@@ -19,6 +25,8 @@ When(
       EidasAssuranceLevelEnum[assuranceLevel];
     expect(loa, `The level of assurance '${assuranceLevel}' doesn't exist`).to
       .exist;
+    const { fcRootUrl }: Environment = this.env;
+    interceptOidcCallback(fcRootUrl);
     idpEidasMockPage.authenticateToEUIdp({ loa });
   },
 );
@@ -35,6 +43,8 @@ When(
     };
     const cancel: EuIdpLoginCancelStepEnum = cancelStepMap[cancelStep];
     expect(cancel, `The cancel step '${cancelStep}' doesn't exist`).to.exist;
+    const { fcRootUrl }: Environment = this.env;
+    interceptOidcCallback(fcRootUrl);
     idpEidasMockPage.authenticateToEUIdp({ cancel });
   },
 );

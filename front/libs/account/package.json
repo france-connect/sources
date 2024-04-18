@@ -2,10 +2,5 @@
   "name": "@fc/account",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@fc/common": "^0.1.0",
-    "@fc/state-management": "^0.1.0",
-    "react": "^18.2.0"
-  },
   "main": "src/index.ts"
 }

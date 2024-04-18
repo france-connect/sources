@@ -7,7 +7,7 @@ describe('slashifyPath', () => {
     const result = slashifyPath('http://any-url.mock');
 
     // then
-    expect(result).toEqual('http://any-url.mock');
+    expect(result).toBe('http://any-url.mock');
   });
 
   it('should return a baseURL, when endpoint is empty', () => {
@@ -15,7 +15,7 @@ describe('slashifyPath', () => {
     const result = slashifyPath('', 'http://any-url.mock');
 
     // then
-    expect(result).toEqual('http://any-url.mock/');
+    expect(result).toBe('http://any-url.mock/');
   });
 
   it('should return a joined url, when none have leading or trailing slashes', () => {
@@ -23,7 +23,7 @@ describe('slashifyPath', () => {
     const result = slashifyPath('any-endpoint', 'http://any-url.mock');
 
     // then
-    expect(result).toEqual('http://any-url.mock/any-endpoint');
+    expect(result).toBe('http://any-url.mock/any-endpoint');
   });
 
   it('should return a joined url, when both have leading or trailing slashes', () => {
@@ -31,7 +31,7 @@ describe('slashifyPath', () => {
     const result = slashifyPath('/any-endpoint', 'http://any-url.mock/');
 
     // then
-    expect(result).toEqual('http://any-url.mock/any-endpoint');
+    expect(result).toBe('http://any-url.mock/any-endpoint');
   });
 
   it('should return a joined url, when endpoint has a leading slash', () => {
@@ -39,7 +39,7 @@ describe('slashifyPath', () => {
     const result = slashifyPath('/any-endpoint', 'http://any-url.mock');
 
     // then
-    expect(result).toEqual('http://any-url.mock/any-endpoint');
+    expect(result).toBe('http://any-url.mock/any-endpoint');
   });
 
   it('should return a joined url, when baseURL has a trailing slash', () => {
@@ -47,7 +47,7 @@ describe('slashifyPath', () => {
     const result = slashifyPath('any-endpoint', 'http://any-url.mock/');
 
     // then
-    expect(result).toEqual('http://any-url.mock/any-endpoint');
+    expect(result).toBe('http://any-url.mock/any-endpoint');
   });
 
   it('should return a https url', () => {
@@ -55,7 +55,7 @@ describe('slashifyPath', () => {
     const result = slashifyPath('any-endpoint', 'https://any-url.mock/');
 
     // then
-    expect(result).toEqual('https://any-url.mock/any-endpoint');
+    expect(result).toBe('https://any-url.mock/any-endpoint');
   });
 
   it('should return a ssh url', () => {
@@ -63,7 +63,7 @@ describe('slashifyPath', () => {
     const result = slashifyPath('any-endpoint', 'ssh://any-url.mock/');
 
     // then
-    expect(result).toEqual('ssh://any-url.mock/any-endpoint');
+    expect(result).toBe('ssh://any-url.mock/any-endpoint');
   });
 
   it('should return a ftp url', () => {
@@ -71,7 +71,7 @@ describe('slashifyPath', () => {
     const result = slashifyPath('any-endpoint', 'ftp://any-url.mock/');
 
     // then
-    expect(result).toEqual('ftp://any-url.mock/any-endpoint');
+    expect(result).toBe('ftp://any-url.mock/any-endpoint');
   });
 
   it('should throw an InvalidProtocol exception when baseURL has not a valid protocol', () => {
@@ -85,7 +85,7 @@ describe('slashifyPath', () => {
     const result = slashifyPath('http://any-endpoint-url.mock/any-endpoint', 'http://any-url.mock');
 
     // then
-    expect(result).toEqual('http://any-endpoint-url.mock/any-endpoint');
+    expect(result).toBe('http://any-endpoint-url.mock/any-endpoint');
   });
 
   it('should return the endpoint, when baseURL is empty', () => {
@@ -93,7 +93,7 @@ describe('slashifyPath', () => {
     const result = slashifyPath('http://any-url.mock');
 
     // then
-    expect(result).toEqual('http://any-url.mock');
+    expect(result).toBe('http://any-url.mock');
   });
 
   it('should return the endpoint, when baseURL is undefined', () => {
@@ -101,6 +101,6 @@ describe('slashifyPath', () => {
     const result = slashifyPath('http://any-url.mock', undefined);
 
     // then
-    expect(result).toEqual('http://any-url.mock');
+    expect(result).toBe('http://any-url.mock');
   });
 });

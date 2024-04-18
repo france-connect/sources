@@ -10,7 +10,7 @@ const eidasBridgeProvider = locals.providers
   name="fs-request">
   <div class="fc-text--center fr-mt-4w fr-mt-md-5w fr-mb-2w">
     <span lang="en">
-    or
+    <%= $translate('eidas.or', null, { language: 'en-GB'}) %>
     </span>
   </div>
   <button
@@ -21,11 +21,12 @@ const eidasBridgeProvider = locals.providers
       class="fr-mr-6v"
       alt="Logo de <%= eidasBridgeProvider.name %>" />
     <span lang="en">
-      Sign in with <strong>a digital identity from another European country</strong>
+      <%# This translation contains HTML markup so we use the unsafe ejs echo tag %>
+      <%- $translate('eidas.sign_in_with_bridge', null, { language: 'en-GB'} ) %>
     </span>
   </button>
   <%-
-  include('pages/interaction/interaction.provider-inputs.ejs', {
+  include('pages/interaction/provider/interaction.provider-inputs.ejs', {
     provider: eidasBridgeProvider
   })
   %>

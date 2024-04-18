@@ -1,6 +1,7 @@
-import { ReactElement, useCallback, useEffect, useRef, useState } from 'react';
+import type { ReactElement } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { AccountConfig, AccountInterface } from '../interfaces';
+import type { AccountConfig, AccountInterface } from '../interfaces';
 import { AccountService } from '../services';
 import { AccountContext } from './account.context';
 

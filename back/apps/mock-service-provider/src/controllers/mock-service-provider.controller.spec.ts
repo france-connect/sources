@@ -7,8 +7,8 @@ import { CryptographyService } from '@fc/cryptography';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata } from '@fc/oidc';
-import { OidcClientService, OidcClientSession } from '@fc/oidc-client';
-import { ISessionService, SessionNotFoundException } from '@fc/session';
+import { OidcClientService } from '@fc/oidc-client';
+import { SessionNotFoundException } from '@fc/session';
 
 import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
@@ -235,7 +235,7 @@ describe('MockServiceProviderController', () => {
       claims: 'claimsMock',
     });
 
-    sessionServiceMock.get.mockResolvedValue(sessionDataMock);
+    sessionServiceMock.get.mockReturnValue(sessionDataMock);
 
     configServiceMock.get.mockReturnValue(configMock);
     identityProviderMock.getList.mockResolvedValue(identityProviderList);
@@ -254,7 +254,9 @@ describe('MockServiceProviderController', () => {
 
     it("Should throw if the session can't be initialized", async () => {
       // setup
-      sessionServiceMock.set.mockRejectedValueOnce(new Error('test'));
+      sessionServiceMock.set.mockImplementationOnce(() => {
+        throw new Error('test');
+      });
 
       // expect
       await expect(controller.index(sessionServiceMock)).rejects.toThrow();
@@ -288,27 +290,27 @@ describe('MockServiceProviderController', () => {
   });
 
   describe('verify', () => {
-    it('Should call session.get', async () => {
+    it('Should call session.get', () => {
       // When
-      await controller.getVerify(res, sessionServiceMock);
+      controller.getVerify(res, sessionServiceMock);
       // Then
       expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.get).toHaveBeenCalledWith();
     });
 
-    it('Should redirect to the home page if empty session', async () => {
+    it('Should redirect to the home page if empty session', () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce({});
+      sessionServiceMock.get.mockReturnValueOnce({});
       // When
-      await controller.getVerify(res, sessionServiceMock);
+      controller.getVerify(res, sessionServiceMock);
       // Then
       expect(res.redirect).toHaveBeenCalledTimes(1);
       expect(res.redirect).toHaveBeenCalledWith('/');
     });
 
-    it('Should return session data and hardcoded title', async () => {
+    it('Should return session data and hardcoded title', () => {
       // When
-      const result = await controller.getVerify(res, sessionServiceMock);
+      const result = controller.getVerify(res, sessionServiceMock);
 
       // Then
       expect(result).toEqual({
@@ -470,7 +472,7 @@ describe('MockServiceProviderController', () => {
       'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikhlcm1hbiIsImZpcnN0X25hbWUiOiJTdMOpcGhhbmUiLCJpYXQiOjE1MTYyMzkwMjJ9.EWgP3XF8uccp5uokOJV9MFgOwGzcXOW1PlNnAoo1D1ScMB6rv352kFdWORzllA2oJqrpvlY4yI_NpyI5FDQzyQ';
 
     beforeEach(() => {
-      sessionServiceMock.get.mockResolvedValueOnce(idpIdTokenMock);
+      sessionServiceMock.get.mockReturnValueOnce(idpIdTokenMock);
     });
 
     it('should retrieve and display userinfo as well as cinematic information on userinfo page', async () => {
@@ -545,10 +547,6 @@ describe('MockServiceProviderController', () => {
       render: jest.fn(),
     };
 
-    const sessionOidcMock = {
-      get: jest.fn(),
-    };
-
     const dataApiMock = {
       name: 'dataApiMock',
       url: 'dataApiUrlMock',
@@ -567,8 +565,6 @@ describe('MockServiceProviderController', () => {
     const dataApisMock = [dataApiMock, dataApiMock2, dataApiMock3];
 
     beforeEach(() => {
-      sessionOidcMock.get.mockResolvedValue(sessionDataMock);
-
       configServiceMock.get.mockReturnValue({
         dataApis: dataApisMock,
       });
@@ -576,10 +572,7 @@ describe('MockServiceProviderController', () => {
 
     it('should retrieve the App configuration', async () => {
       // When
-      await controller.getAllData(
-        resMock,
-        sessionOidcMock as unknown as ISessionService<OidcClientSession>,
-      );
+      await controller.getAllData(resMock, sessionServiceMock);
 
       // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
@@ -594,10 +587,7 @@ describe('MockServiceProviderController', () => {
       )}`;
 
       // When
-      await controller.getAllData(
-        resMock,
-        sessionOidcMock as unknown as ISessionService<OidcClientSession>,
-      );
+      await controller.getAllData(resMock, sessionServiceMock);
 
       // Then
       expect(resMock.redirect).toHaveBeenCalledTimes(1);
@@ -606,22 +596,16 @@ describe('MockServiceProviderController', () => {
 
     it('should retrieve the access token from the session', async () => {
       // When
-      await controller.getAllData(
-        resMock,
-        sessionOidcMock as unknown as ISessionService<OidcClientSession>,
-      );
+      await controller.getAllData(resMock, sessionServiceMock);
 
       // Then
-      expect(sessionOidcMock.get).toHaveBeenCalledTimes(1);
-      expect(sessionOidcMock.get).toHaveBeenCalledWith();
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.get).toHaveBeenCalledWith();
     });
 
     it('should get data for each api', async () => {
       // When
-      await controller.getAllData(
-        resMock,
-        sessionOidcMock as unknown as ISessionService<OidcClientSession>,
-      );
+      await controller.getAllData(resMock, sessionServiceMock);
 
       // Then
       expect(mockServiceProviderServiceMock.getData).toHaveBeenCalledTimes(
@@ -680,10 +664,7 @@ describe('MockServiceProviderController', () => {
       };
 
       // When
-      await controller.getAllData(
-        resMock,
-        sessionOidcMock as unknown as ISessionService<OidcClientSession>,
-      );
+      await controller.getAllData(resMock, sessionServiceMock);
 
       // Then
       expect(resMock.render).toHaveBeenCalledTimes(1);
@@ -694,6 +675,7 @@ describe('MockServiceProviderController', () => {
   describe('getInteractionParameters', () => {
     const provider = identityProviderFull as IdentityProviderMetadata;
     const urlMock = 'https://somewhere.com/foo';
+    const providerUidMock = 'providerUidMock';
 
     beforeEach(() => {
       // Given
@@ -704,21 +686,21 @@ describe('MockServiceProviderController', () => {
       // When
       await controller['getInteractionParameters'](provider);
       // Then
-      expect(configServiceMock.get).toBeCalledTimes(2);
+      expect(configServiceMock.get).toHaveBeenCalledTimes(2);
     });
 
     it('should get OidcAcr config', async () => {
       // When
       await controller['getInteractionParameters'](provider);
       // Then
-      expect(configServiceMock.get).toBeCalledWith('OidcAcr');
+      expect(configServiceMock.get).toHaveBeenCalledWith('OidcAcr');
     });
 
     it('should get OidcClient config', async () => {
       // When
       await controller['getInteractionParameters'](provider);
       // Then
-      expect(configServiceMock.get).toBeCalledWith('OidcClient');
+      expect(configServiceMock.get).toHaveBeenCalledWith('OidcClient');
     });
 
     it('should call oidcClient.buildAuthorizeParameters', async () => {
@@ -727,24 +709,28 @@ describe('MockServiceProviderController', () => {
       // Then
       expect(
         oidcClientServiceMock.utils.buildAuthorizeParameters,
-      ).toBeCalledTimes(1);
+      ).toHaveBeenCalledTimes(1);
     });
 
     it('should call oidcClient.getAuthorizeUrl', async () => {
       // When
       await controller['getInteractionParameters'](provider);
       // Then
-      expect(oidcClientServiceMock.utils.getAuthorizeUrl).toBeCalledTimes(1);
-      expect(oidcClientServiceMock.utils.getAuthorizeUrl).toBeCalledWith({
-        state: idpStateMock,
-        prompt: 'login consent',
-        scope: scopeMock,
-        idpId: 'providerUidMock',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        acr_values: 'eidas2',
-        nonce: nonceMock,
-        claims: 'claimsMock',
-      });
+      expect(oidcClientServiceMock.utils.getAuthorizeUrl).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(oidcClientServiceMock.utils.getAuthorizeUrl).toHaveBeenCalledWith(
+        providerUidMock,
+        {
+          state: idpStateMock,
+          prompt: 'login consent',
+          scope: scopeMock,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          acr_values: 'eidas2',
+          nonce: nonceMock,
+          claims: 'claimsMock',
+        },
+      );
     });
 
     it('should return object containing results from various calls', async () => {
@@ -856,7 +842,7 @@ describe('MockServiceProviderController', () => {
 
     it('should throw an error if the session is not found', async () => {
       // setup
-      sessionServiceMock.get.mockReset().mockResolvedValueOnce(undefined);
+      sessionServiceMock.get.mockReset().mockReturnValueOnce(undefined);
 
       // action/assertion
       await expect(

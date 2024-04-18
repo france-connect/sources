@@ -54,10 +54,24 @@ Fonctionnalité: Connexion Usager - Redirection vers FI avec email
     Quand je clique sur le bouton de connexion
     Et j'utilise le fournisseur d'identité "moncomptepro"
     Et je suis redirigé vers la page login du fournisseur d'identité
-    Et j'utilise un compte usager "différent"
+    Et j'utilise un compte usager "privé"
     Et je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique
     Et le code d'erreur est "Y000015"
+
+  @ignoreInteg01
+  Scénario: Connexion d'un usager - fqdn non reconnu et non service public mais FS acceptant le privé
+    Etant donné que j'utilise le fournisseur de service "acceptant le privé"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton AgentConnect
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "albus.dumbledore@hogwarts.uk"
+    Quand je clique sur le bouton de connexion
+    Et j'utilise le fournisseur d'identité "moncomptepro"
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Et j'utilise un compte usager "privé"
+    Et je m'authentifie avec succès
+    Alors je suis redirigé vers la page fournisseur de service
 
   @ignoreInteg01
   Scénario: Connexion d'un usager - fqdn lié à plusieurs fi retourne le premier fi

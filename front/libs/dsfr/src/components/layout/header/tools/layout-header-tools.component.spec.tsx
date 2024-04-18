@@ -177,7 +177,7 @@ describe('LayoutHeaderToolsComponent', () => {
     );
 
     // then
-    expect(LayoutHeaderToolsLogoutButton).toHaveBeenCalledTimes(1);
+    expect(LayoutHeaderToolsLogoutButton).toHaveBeenCalledOnce();
     expect(LayoutHeaderToolsLogoutButton).toHaveBeenCalledWith(
       {
         endSessionUrl: 'any-endSessionUrl-mock',
@@ -213,7 +213,7 @@ describe('LayoutHeaderToolsComponent', () => {
     );
 
     // then
-    expect(LayoutHeaderToolsLogoutButton).toHaveBeenCalledTimes(1);
+    expect(LayoutHeaderToolsLogoutButton).toHaveBeenCalledOnce();
     expect(LayoutHeaderToolsLogoutButton).toHaveBeenCalledWith(
       {
         endSessionUrl: 'any-endSessionUrl-mock',
@@ -267,7 +267,7 @@ describe('LayoutHeaderToolsComponent', () => {
     );
 
     // then
-    expect(LayoutHeaderToolsAccountComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHeaderToolsAccountComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderToolsAccountComponent).toHaveBeenCalledWith(
       {
         firstname: 'any-firstname-mock',
@@ -299,7 +299,7 @@ describe('LayoutHeaderToolsComponent', () => {
     );
 
     // then
-    expect(LayoutHeaderToolsAccountComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHeaderToolsAccountComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderToolsAccountComponent).toHaveBeenCalledWith(
       {
         firstname: 'any-firstname-mock',
@@ -329,7 +329,7 @@ describe('LayoutHeaderToolsComponent', () => {
     );
 
     // then
-    expect(ReturnButtonComponent).toHaveBeenCalledTimes(1);
+    expect(ReturnButtonComponent).toHaveBeenCalledOnce();
     expect(ReturnButtonComponent).toHaveBeenCalledWith({ url: 'any-returnButtonUrl-mock' }, {});
   });
 

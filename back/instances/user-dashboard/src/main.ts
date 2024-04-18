@@ -9,6 +9,7 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppConfig } from '@fc/app';
+import { NestJsDependencyInjectionWrapper } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { NestLoggerService } from '@fc/logger';
 import { SessionConfig } from '@fc/session';
@@ -102,6 +103,8 @@ async function bootstrap() {
 
   const { cookieSecrets } = configService.get<SessionConfig>('Session');
   app.use(CookieParser(cookieSecrets));
+
+  NestJsDependencyInjectionWrapper.use(app.select(appModule));
 
   await app.listen(3000);
 }

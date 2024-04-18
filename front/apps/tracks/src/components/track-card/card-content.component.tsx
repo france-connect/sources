@@ -1,9 +1,10 @@
 import classnames from 'classnames';
-import { DateTime } from 'luxon';
+import type { DateTime } from 'luxon';
 import React from 'react';
 
-import { CinematicEvents, EidasToLabel } from '../../enums';
-import { IRichClaim, TracksConfig } from '../../interfaces';
+import type { EidasToLabel } from '../../enums';
+import { CinematicEvents } from '../../enums';
+import type { IRichClaim, TracksConfig } from '../../interfaces';
 import { ClaimsComponent } from './claims.component';
 import { ConnectionComponent } from './connection.component';
 
@@ -37,9 +38,8 @@ export const TrackCardContentComponent = React.memo(
       claims &&
       claims.length > 0 &&
       [
-        CinematicEvents.DP_REQUESTED_FC_CHECKTOKEN,
+        CinematicEvents.DP_VERIFIED_FC_CHECKTOKEN,
         CinematicEvents.FC_DATATRANSFER_CONSENT_IDENTITY,
-        CinematicEvents.FC_DATATRANSFER_CONSENT_DATA,
       ].includes(eventType);
 
     const shouldDisplayConnexion = eventType === CinematicEvents.FC_VERIFIED;

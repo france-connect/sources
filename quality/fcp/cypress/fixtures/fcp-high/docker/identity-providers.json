@@ -31,7 +31,8 @@
     "title": "IDP2 - Identity Provider - eIDAS élevé - nodiscov - nocrypt",
     "descriptions": [
       "eidas 3 - nodiscov - crypted (none) - signed (RS256)",
-      "sans endSessionUrl"
+      "sans endSessionUrl",
+      "différent"
     ],
     "mocked": true,
     "usable": true,
@@ -50,7 +51,10 @@
     "idpId": "621c3c17-5f49-4ca5-b8ef-a4b1cecaf7c2",
     "name": "fip3-desactive-visible",
     "title": "FIP3 - FI désactivé mais visible",
-    "descriptions": ["désactivé et visible", "non autorisé pour idp_hint"],
+    "descriptions": [
+      "désactivé et visible",
+      "non autorisé pour idp_hint"
+    ],
     "mocked": true,
     "usable": false,
     "url": "https://fip3-high.docker.dev-franceconnect.fr",
@@ -68,7 +72,9 @@
     "idpId": "ce0f6c4d-d70e-411e-a8a0-2a66afa7bd90",
     "name": "fip4-desactive-invisible",
     "title": "FIP4 - FI désactivé et invisible",
-    "descriptions": ["désactivé et non visible"],
+    "descriptions": [
+      "désactivé et non visible"
+    ],
     "mocked": true,
     "usable": false,
     "url": "https://fip1-high.docker.dev-franceconnect.fr",
@@ -86,7 +92,9 @@
     "idpId": "3ae390ce-c9b8-4090-926f-3db90f85fe6a",
     "name": "fip5-active-invisible",
     "title": "FIP5 - FI activé et invisible",
-    "descriptions": ["actif et non visible"],
+    "descriptions": [
+      "actif et non visible"
+    ],
     "mocked": true,
     "usable": false,
     "url": "https://fip1-high.docker.dev-franceconnect.fr",
@@ -104,7 +112,10 @@
     "idpId": "0cbdf732-aaea-4566-a99e-4430f388ff18",
     "name": "fip8-high",
     "title": "IDP8 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
-    "descriptions": ["non whitelisté", "blacklisté"],
+    "descriptions": [
+      "non whitelisté",
+      "blacklisté"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip1-high.docker.dev-franceconnect.fr",
@@ -119,10 +130,34 @@
     }
   },
   {
+    "idpId": "a437f8aa-10b5-48bd-8931-78f2d055e3df",
+    "name": "fip11-high",
+    "title": "IDP11 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt - modal",
+    "descriptions": [
+      "actif",
+      "whitelisté",
+      "avec modale de sélection FI"
+    ],
+    "mocked": true,
+    "usable": true,
+    "url": "https://fip1-high.docker.dev-franceconnect.fr",
+    "acrValue": "eidas3",
+    "encryption": "RSA-OAEP-256,A256GCM",
+    "signature": "ES256",
+    "selectors": {
+      "idpButton": "#idp-a437f8aa-10b5-48bd-8931-78f2d055e3df",
+      "username": "input[name='login']",
+      "password": "input[name='password']",
+      "loginButton": "[type='submit']"
+    }
+  },
+  {
     "idpId": "8456c460-f89b-4744-93cf-e0b6ac694075",
     "name": "fip13-high",
     "title": "IDP13 - Identity Provider - eIDAS élevé - crypted (ECDH-ES + A256GCM) - signed (ES256)",
-    "descriptions": ["eidas 3 - crypted (ECDH-ES + A256GCM) - signed (ES256)"],
+    "descriptions": [
+      "eidas 3 - crypted (ECDH-ES + A256GCM) - signed (ES256)"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip13-high.docker.dev-franceconnect.fr",
@@ -140,7 +175,9 @@
     "idpId": "81e3c37a-e7ea-43be-aa7a-0ed28a1a6e47",
     "name": "fip14-high",
     "title": "IDP14 - Identity Provider - eIDAS élevé - crypted (RSA-OAEP + A256GCM) - signed (RS256)",
-    "descriptions": ["eidas 3 - crypted (RSA-OAEP + A256GCM) - signed (RS256)"],
+    "descriptions": [
+      "eidas 3 - crypted (RSA-OAEP + A256GCM) - signed (RS256)"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip14-high.docker.dev-franceconnect.fr",
@@ -158,7 +195,9 @@
     "idpId": "4c3e8c0d-12e3-46c2-bef8-5cb7b0702c9d",
     "name": "fip15-high",
     "title": "IDP15 - Identity Provider - eIDAS substantiel - crypted (RSA-OAEP + A256GCM) - signed (ES256)",
-    "descriptions": ["eidas 2 - crypted (RSA-OAEP + A256GCM) - signed (ES256)"],
+    "descriptions": [
+      "eidas 2 - crypted (RSA-OAEP + A256GCM) - signed (ES256)"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip15-high.docker.dev-franceconnect.fr",
@@ -176,7 +215,9 @@
     "idpId": "f403044b-fcd3-46f2-a87b-30e65f8e7bfe",
     "name": "fip16-high",
     "title": "IDP16 - Identity Provider - eIDAS substantiel - crypted (ECDH-ES + A256GCM) - signed (RS256)",
-    "descriptions": ["eidas 2 - crypted (ECDH-ES + A256GCM) - signed (RS256)"],
+    "descriptions": [
+      "eidas 2 - crypted (ECDH-ES + A256GCM) - signed (RS256)"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip16-high.docker.dev-franceconnect.fr",
@@ -194,7 +235,9 @@
     "idpId": "913ef56e-0997-4e25-bc55-19a20d6e0532",
     "name": "fip17-high",
     "title": "IDP17 - Identity Provider - eIDAS substantiel - crypted (none) - signed (ES256)",
-    "descriptions": ["eidas 2 - crypted (none) - signed (ES256)"],
+    "descriptions": [
+      "eidas 2 - crypted (none) - signed (ES256)"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip17-high.docker.dev-franceconnect.fr",
@@ -212,7 +255,9 @@
     "idpId": "8aa849db-8402-4f2e-bad9-7471dd21ff94",
     "name": "eidas-bridge",
     "title": "Sign in with a digital identity from another European country",
-    "descriptions": ["eidas-bridge"],
+    "descriptions": [
+      "eidas-bridge"
+    ],
     "mocked": false,
     "usable": true,
     "url": "https://eidas-bridge.docker.dev-franceconnect.fr",

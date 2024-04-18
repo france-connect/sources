@@ -113,7 +113,7 @@ describe('CryptoOverrideService', () => {
       expect(service.sign).toHaveBeenCalledWith(key, Buffer.from(payload), alg);
     });
 
-    it('should throw a CryptographyInvalidPayloadFormatException if the payload is not a Uint8Array', async () => {
+    it('should throw a CryptographyInvalidPayloadFormatException if the payload is not a Uint8Array', () => {
       // Given
       const alg = 'alg';
       const payload = '1, 2, 3, 4, 5';
@@ -121,7 +121,7 @@ describe('CryptoOverrideService', () => {
       service.sign = jest.fn();
 
       // When / Then
-      await expect(() =>
+      expect(() =>
         service['crypto.sign'](alg, payload as unknown as Uint8Array, key),
       ).toThrow(CryptographyInvalidPayloadFormatException);
     });

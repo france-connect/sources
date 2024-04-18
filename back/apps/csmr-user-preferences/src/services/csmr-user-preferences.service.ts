@@ -34,9 +34,8 @@ export class CsmrUserPreferencesService {
     private readonly identityProvider: IdentityProviderAdapterMongoService,
   ) {}
 
-  formatUserIdpSettingsList(
-    identityProvidersMetadata: IdentityProviderMetadata[],
-    settings: IIdpSettings = {
+  private getDefaultIdpSettings(): IIdpSettings {
+    return {
       /**
        * By default we want to authorize all future idp,
        * therefore exclude all those who would be present in the list (equivalent to a blacklist)
@@ -45,7 +44,12 @@ export class CsmrUserPreferencesService {
        **/
       isExcludeList: true,
       list: [],
-    },
+    };
+  }
+
+  private formatIdpSettings(
+    identityProvidersMetadata: IdentityProviderMetadata[],
+    settings: Pick<IIdpSettings, 'isExcludeList' | 'list'>,
   ): IFormattedIdpSettings {
     const { list, isExcludeList } = settings;
 
@@ -75,11 +79,11 @@ export class CsmrUserPreferencesService {
     };
   }
 
-  createAccountPreferencesIdpSettings(
+  private createIdpSettings(
     inputIdpList: string[],
     isExcludeList: boolean,
     idpList: string[],
-  ): IIdpSettings {
+  ): Pick<IIdpSettings, 'isExcludeList' | 'list'> {
     let list = [...inputIdpList];
 
     if (isExcludeList) {
@@ -100,7 +104,7 @@ export class CsmrUserPreferencesService {
     const identityHash = this.cryptographyFcp.computeIdentityHash(
       identity as IPivotIdentity,
     );
-    const { id, preferences = {} } =
+    const { id, preferences } =
       await this.account.getAccountByIdentityHash(identityHash);
 
     if (!id) {
@@ -108,11 +112,10 @@ export class CsmrUserPreferencesService {
     }
 
     const idpList = await this.getIdentityProviderList();
+    const idpSettings =
+      preferences?.idpSettings ?? this.getDefaultIdpSettings();
 
-    const formattedIdpSettings = this.formatUserIdpSettingsList(
-      idpList,
-      preferences.idpSettings,
-    );
+    const formattedIdpSettings = this.formatIdpSettings(idpList, idpSettings);
 
     return formattedIdpSettings;
   }
@@ -135,29 +138,28 @@ export class CsmrUserPreferencesService {
     }
 
     const identityHash = this.cryptographyFcp.computeIdentityHash(identity);
-    const { list, isExcludeList } = this.createAccountPreferencesIdpSettings(
+    const currentSettings = this.createIdpSettings(
       inputIdpList,
       inputIsExcludeList,
       idpUids,
     );
 
-    const { updatedAt, preferences: idpSettingsBeforeUpdate } =
-      await this.account.updatePreferences(identityHash, list, isExcludeList);
+    const { updatedAt, preferences } = await this.account.updatePreferences(
+      identityHash,
+      currentSettings.list,
+      currentSettings.isExcludeList,
+    );
 
-    const idpListBeforeUpdate = idpSettingsBeforeUpdate?.idpSettings.list ?? [];
-    const isExcludeListBeforeUpdate =
-      !!idpSettingsBeforeUpdate?.idpSettings.isExcludeList;
+    let previousSettings = preferences?.idpSettings;
+    if (!previousSettings) {
+      previousSettings = this.getDefaultIdpSettings();
+    }
+
     const { formattedIdpSettingsList, formattedPreviousIdpSettingsList } =
-      this.getFormattedUserIdpSettingsLists({
+      this.getFormattedIdpSettingsLists({
         idpList,
-        newPreferences: {
-          list,
-          isExcludeList,
-        },
-        preferencesBeforeUpdate: {
-          list: idpListBeforeUpdate,
-          isExcludeList: isExcludeListBeforeUpdate,
-        },
+        currentSettings,
+        previousSettings,
       });
 
     const updatedIdpSettingsList = this.updatedIdpSettings(
@@ -166,7 +168,7 @@ export class CsmrUserPreferencesService {
     );
 
     const hasAllowFutureIdpChanged =
-      isExcludeList !== isExcludeListBeforeUpdate;
+      currentSettings.isExcludeList !== previousSettings.isExcludeList;
 
     return {
       formattedIdpSettingsList,
@@ -176,19 +178,23 @@ export class CsmrUserPreferencesService {
     };
   }
 
-  private getFormattedUserIdpSettingsLists({
+  private getFormattedIdpSettingsLists({
     idpList,
-    newPreferences,
-    preferencesBeforeUpdate,
+    currentSettings,
+    previousSettings,
+  }: {
+    idpList: IdentityProviderMetadata[];
+    currentSettings: Pick<IIdpSettings, 'isExcludeList' | 'list'>;
+    previousSettings: Pick<IIdpSettings, 'isExcludeList' | 'list'>;
   }): IFormattedUserIdpSettingsLists {
-    const formattedIdpSettings = this.formatUserIdpSettingsList(
+    const formattedIdpSettings = this.formatIdpSettings(
       idpList,
-      newPreferences,
+      currentSettings,
     );
 
-    const formattedPreviousIdpSettings = this.formatUserIdpSettingsList(
+    const formattedPreviousIdpSettings = this.formatIdpSettings(
       idpList,
-      preferencesBeforeUpdate,
+      previousSettings,
     );
 
     return {
@@ -197,7 +203,10 @@ export class CsmrUserPreferencesService {
     };
   }
 
-  private updatedIdpSettings(current, previous): IFormattedIdpList[] {
+  private updatedIdpSettings(
+    current: IFormattedIdpList[],
+    previous: IFormattedIdpList[],
+  ): IFormattedIdpList[] {
     const previousMap = {};
     previous.forEach((elem) => (previousMap[elem.uid] = elem.isChecked));
     const result = current.filter(

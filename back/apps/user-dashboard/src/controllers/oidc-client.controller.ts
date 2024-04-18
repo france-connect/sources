@@ -1,3 +1,5 @@
+import { cloneDeep } from 'lodash';
+
 import {
   Body,
   Controller,
@@ -7,11 +9,13 @@ import {
   Render,
   Req,
   Res,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
+import { CsrfTokenGuard } from '@fc/csrf';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { OidcSession } from '@fc/oidc';
 import { OidcAcrConfig } from '@fc/oidc-acr';
@@ -26,8 +30,6 @@ import { OidcProviderPrompt } from '@fc/oidc-provider';
 import {
   ISessionService,
   Session,
-  SessionCsrfService,
-  SessionInvalidCsrfSelectIdpException,
   SessionNotFoundException,
   SessionService,
 } from '@fc/session';
@@ -42,7 +44,6 @@ export class OidcClientController {
   constructor(
     private readonly oidcClient: OidcClientService,
     private readonly identityProvider: IdentityProviderAdapterEnvService,
-    private readonly csrfService: SessionCsrfService,
     private readonly config: ConfigService,
     private readonly sessionService: SessionService,
   ) {}
@@ -52,6 +53,7 @@ export class OidcClientController {
    */
   @Post(OidcClientRoutes.REDIRECT_TO_IDP)
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @UseGuards(CsrfTokenGuard)
   async redirectToIdp(
     @Res() res,
     @Body() body: CrsfToken,
@@ -69,16 +71,8 @@ export class OidcClientController {
       this.config.get<OidcAcrConfig>('OidcAcr');
 
     const { scope } = this.config.get<OidcClientConfig>('OidcClient');
-    const { csrfToken } = body;
 
     const idpId = this.getIdpId();
-
-    // -- control if the CSRF provided is the same as the one previously saved in session.
-    try {
-      await this.csrfService.validate(sessionOidc, csrfToken);
-    } catch (error) {
-      throw new SessionInvalidCsrfSelectIdpException(error);
-    }
 
     const { nonce, state } =
       await this.oidcClient.utils.buildAuthorizeParameters();
@@ -90,14 +84,15 @@ export class OidcClientController {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
       nonce,
-      idpId,
       scope,
       state,
       prompt,
     };
 
-    const authorizationUrl =
-      await this.oidcClient.utils.getAuthorizeUrl(authorizeParams);
+    const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl(
+      idpId,
+      authorizeParams,
+    );
 
     const { name: idpName, title: idpLabel } =
       await this.identityProvider.getById(idpId);
@@ -109,7 +104,7 @@ export class OidcClientController {
       idpState: state,
     };
 
-    await sessionOidc.set(session);
+    sessionOidc.set(session);
 
     res.redirect(authorizationUrl);
   }
@@ -132,7 +127,7 @@ export class OidcClientController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const session: OidcSession = await sessionOidc.get();
+    const session: OidcSession = sessionOidc.get();
 
     if (!session?.idpIdToken) {
       // BUSINESS: Redirect to business page
@@ -160,7 +155,7 @@ export class OidcClientController {
   @Get(UserDashboardBackRoutes.LOGOUT_CALLBACK)
   async logoutCallback(@Req() req, @Res() res) {
     // delete oidc session
-    await this.sessionService.reset(req, res);
+    await this.sessionService.reset(res);
 
     // BUSINESS: Redirect to business page
     const redirect = '/';
@@ -219,7 +214,7 @@ export class OidcClientController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const session: OidcSession = await sessionOidc.get();
+    const session: OidcSession = sessionOidc.get();
 
     if (!session) {
       throw new SessionNotFoundException('OidcClient');
@@ -253,14 +248,14 @@ export class OidcClientController {
      *    action: Check the data returns from FC
      */
 
-    const identityExchange: OidcSession = {
+    const identityExchange: OidcSession = cloneDeep({
       idpAccessToken: accessToken,
       idpAcr: acr,
       idpIdentity: identity,
       idpIdToken: idToken,
-    };
+    });
 
-    await sessionOidc.set({ ...identityExchange });
+    sessionOidc.set(identityExchange);
 
     res.redirect(UserDashboardFrontRoutes.MES_TRACES);
   }

@@ -248,8 +248,9 @@ describe('CoreAcrService', () => {
       expect(oidcProviderServiceMock.abortInteraction).toHaveBeenCalledWith(
         req,
         res,
-        error,
-        errorDescription,
+        // oidc naming
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        { error, error_description: errorDescription },
       );
     });
   });

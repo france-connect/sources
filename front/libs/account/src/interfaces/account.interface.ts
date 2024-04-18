@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-import { AccountData } from './account-data.interface';
+import type { AccountData } from './account-data.interface';
 
 export interface AccountInterface<U = AccountData> {
   connected: boolean;

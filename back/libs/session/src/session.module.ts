@@ -10,16 +10,13 @@ import { CryptographyModule } from '@fc/cryptography';
 import { RedisModule } from '@fc/redis';
 
 import { SessionConfig } from './dto';
-import {
-  SessionCommitInterceptor,
-  SessionTemplateInterceptor,
-} from './interceptors';
+import { SessionCommitInterceptor } from './interceptors';
 import { SessionMiddleware } from './middlewares';
-import {
-  SessionCsrfService,
-  SessionService,
-  SessionTemplateService,
-} from './services';
+import { SessionService, SessionTemplateService } from './services';
+import { SessionBackendStorageService } from './services/session-backend-storage.service';
+import { SessionCookiesService } from './services/session-cookies.service';
+import { SessionLifecycleService } from './services/session-lifecycle.service';
+import { SessionLocalStorageService } from './services/session-local-storage.service';
 
 @Global()
 @Module({
@@ -27,33 +24,34 @@ import {
   providers: [
     {
       provide: APP_INTERCEPTOR,
-      useClass: SessionTemplateInterceptor,
-    },
-    {
-      provide: APP_INTERCEPTOR,
       useClass: SessionCommitInterceptor,
     },
     SessionService,
-    SessionCsrfService,
     SessionTemplateService,
+    SessionBackendStorageService,
+    SessionLocalStorageService,
+    SessionCookiesService,
+    SessionLifecycleService,
   ],
   exports: [
     SessionService,
     SessionTemplateService,
-    SessionCsrfService,
-    RedisModule,
-    CryptographyModule,
+    SessionLocalStorageService,
+    SessionBackendStorageService,
+    SessionCookiesService,
+    SessionLifecycleService,
   ],
 })
 export class SessionModule {
   constructor(private readonly config: ConfigService) {}
 
   configure(consumer: MiddlewareConsumer) {
-    const { excludedRoutes } = this.config.get<SessionConfig>('Session');
+    const { middlewareExcludedRoutes, middlewareIncludedRoutes } =
+      this.config.get<SessionConfig>('Session');
 
     consumer
       .apply(SessionMiddleware)
-      .exclude(...excludedRoutes)
-      .forRoutes('*');
+      .exclude(...middlewareExcludedRoutes)
+      .forRoutes(...middlewareIncludedRoutes);
   }
 }

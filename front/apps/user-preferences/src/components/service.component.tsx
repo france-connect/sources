@@ -5,7 +5,7 @@ import { useMediaQuery } from 'react-responsive';
 
 import { ToggleInput } from '@fc/dsfr';
 
-import { Service } from '../interfaces';
+import type { Service } from '../interfaces';
 import { ServiceImageComponent } from './service-image.component';
 import { ServiceSwitchLabelComponent } from './service-switch-label.component';
 

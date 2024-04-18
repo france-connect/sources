@@ -5,7 +5,13 @@
  */
 import { isURL } from 'class-validator';
 import { JWK } from 'jose-openid-client';
-import { CallbackExtras, Client, TokenSet } from 'openid-client';
+import {
+  AuthorizationParameters,
+  CallbackExtras,
+  CallbackParamsType,
+  Client,
+  TokenSet,
+} from 'openid-client';
 
 import { Inject, Injectable } from '@nestjs/common';
 
@@ -30,7 +36,6 @@ import {
 } from '../exceptions';
 import {
   ExtraTokenParams,
-  IGetAuthorizeUrlParams,
   IIdentityProviderAdapter,
   TokenParams,
 } from '../interfaces';
@@ -70,37 +75,13 @@ export class OidcClientUtilsService {
     return params;
   }
 
-  async getAuthorizeUrl({
-    state,
-    scope,
-    idpId,
-    // acr_values is an oidc defined variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    acr_values,
-    nonce,
-    claims,
-    prompt,
-    // acr_values is an oidc defined variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    idp_hint,
-  }: IGetAuthorizeUrlParams): Promise<string> {
+  async getAuthorizeUrl(
+    idpId: string,
+    authorizationParams: AuthorizationParameters,
+  ): Promise<string> {
     const client: Client = await this.issuer.getClient(idpId);
 
-    const params = {
-      scope,
-      state,
-      nonce,
-      claims,
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      acr_values,
-      prompt,
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      idp_hint,
-    };
-
-    return client.authorizationUrl(params);
+    return client.authorizationUrl(authorizationParams);
   }
 
   async wellKnownKeys() {
@@ -119,26 +100,30 @@ export class OidcClientUtilsService {
     return { keys: publicKeys };
   }
 
-  private async extractParams(req, client, stateFromSession: string) {
-    /**
-     * Although it is not noted as async
-     * openidClient.callbackParams is and should be awaited
-     */
-    const receivedParams = await client.callbackParams(req);
-
-    if (!receivedParams.code) {
-      throw new OidcClientMissingCodeException();
-    }
-
-    if (!receivedParams.state) {
+  checkState(callbackParams, stateFromSession: string): void {
+    if (!callbackParams.state) {
       throw new OidcClientMissingStateException();
     }
 
-    if (receivedParams.state !== stateFromSession) {
+    if (callbackParams.state !== stateFromSession) {
       throw new OidcClientInvalidStateException();
     }
+  }
 
-    return receivedParams;
+  private checkCode(callbackParams): void {
+    if (!callbackParams.code) {
+      throw new OidcClientMissingCodeException();
+    }
+  }
+
+  private extractParams(
+    callbackParams: CallbackParamsType,
+    stateFromSession: string,
+  ): any {
+    this.checkCode(callbackParams);
+    this.checkState(callbackParams, stateFromSession);
+
+    return callbackParams;
   }
 
   private buildExtraParameters(extraParams: ExtraTokenParams): CallbackExtras {
@@ -157,7 +142,9 @@ export class OidcClientUtilsService {
   ): Promise<TokenSet> {
     const client = await this.issuer.getClient(ipdId);
     const { state } = params;
-    const receivedParams = await this.extractParams(req, client, state);
+
+    const callbackParams = client.callbackParams(req);
+    const receivedParams = this.extractParams(callbackParams, state);
 
     let tokenSet: TokenSet;
 
@@ -175,7 +162,7 @@ export class OidcClientUtilsService {
         this.buildExtraParameters(extraParams),
       );
     } catch (error) {
-      this.logger.debug(error);
+      this.logger.debug(JSON.stringify(error));
       throw new OidcClientTokenFailedException();
     }
 

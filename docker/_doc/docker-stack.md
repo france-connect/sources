@@ -19,7 +19,8 @@ This directory contains everything to run a local FranceConnect or AgentConnect 
 - A linux working environment (The stack is used on ubuntu LTS 20.04 on a daily basis)
 - [Yarn package manager](https://yarnpkg.com/getting-started/install). You may need to uninstall [cmdtest](https://stackoverflow.com/questions/46013544/yarn-install-command-error-no-such-file-or-directory-install).
 - [Docker >= 20.04](https://docs.docker.com/engine/install/ubuntu). Don't forget to do `sudo usermod -aG docker $USER` disconnect and reconnect your current user.
-- [docker-compose = 1.21.2](https://docs.docker.com/compose/install).
+- [docker-compose ~1.21.2 | ~2](https://docs.docker.com/compose/install).
+- Bash >= 5
 - Installing the build-essential package. `sudo apt install build-essential`.
 - ~~[Binding the container root user to the current host user](https://docs.docker.com/engine/security/userns-remap).~~
 
@@ -29,6 +30,16 @@ This directory contains everything to run a local FranceConnect or AgentConnect 
 echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 cat /proc/sys/fs/inotify/max_user_watches # check output -> 524288
 ```
+
+### Under OS X
+
+```bash
+brew install bash
+brew install coreutils
+```
+
+Install the latest version of bash.
+Install coreutils gives you access to the timeout function.
 
 ## Setup the working environment
 

@@ -1,6 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { Account, AccountNotFoundException, AccountService } from '@fc/account';
+import {
+  Account,
+  AccountNotFoundException,
+  AccountService,
+  IIdpSettings,
+} from '@fc/account';
 import { ConfigService } from '@fc/config';
 import { CryptographyFcpService, IPivotIdentity } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
@@ -10,6 +15,7 @@ import { IdentityProviderMetadata } from '@fc/oidc';
 import { getLoggerMock } from '@mocks/logger';
 
 import { CsmrUserPreferencesIdpNotFoundException } from '../exceptions';
+import { IFormattedIdpList } from '../interfaces';
 import { CsmrUserPreferencesService } from './csmr-user-preferences.service';
 import {
   currentUserPreferences,
@@ -19,7 +25,7 @@ import {
 
 describe('CsmrUserPreferencesService', () => {
   let service: CsmrUserPreferencesService;
-  let preferencesMock;
+  let preferencesMock: IIdpSettings;
 
   const identityMock = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -80,8 +86,11 @@ describe('CsmrUserPreferencesService', () => {
       },
     },
   } as Account;
+  const accountWithoutPreferencesMock = {
+    id: '43',
+  } as Account;
 
-  const formattedUserIdpSettingsListMock = [
+  const formattedIdpSettingsListMock: IFormattedIdpList[] = [
     {
       uid: 'foo',
       title: 'foo Title',
@@ -99,12 +108,15 @@ describe('CsmrUserPreferencesService', () => {
       isChecked: true,
     },
   ];
-  const createAccountPreferencesIdpSettingsResultMock = {
+  const createIdpSettingsResultMock: Pick<
+    IIdpSettings,
+    'isExcludeList' | 'list'
+  > = {
     isExcludeList: allowFutureIdpNewValue,
     list: idpListMock,
   };
 
-  const formattedBeforeUpdatePreferencesIdpListMock = [
+  const formattedPreviousIdpSettingsListMock: IFormattedIdpList[] = [
     {
       uid: 'foo',
       title: 'foo Title',
@@ -115,7 +127,7 @@ describe('CsmrUserPreferencesService', () => {
     },
   ];
 
-  const updatedIdpIdpSettingListMock = [
+  const updatedIdpIdpSettingListMock: IFormattedIdpList[] = [
     {
       uid: 'bar',
       title: 'bar Title',
@@ -126,10 +138,9 @@ describe('CsmrUserPreferencesService', () => {
     },
   ];
 
-  const getFormattedUserIdpSettingsListsMock = {
-    formattedIdpSettingsList: formattedUserIdpSettingsListMock,
-    formattedPreviousIdpSettingsList:
-      formattedBeforeUpdatePreferencesIdpListMock,
+  const getFormattedIdpSettingsListsMock = {
+    formattedIdpSettingsList: formattedIdpSettingsListMock,
+    formattedPreviousIdpSettingsList: formattedPreviousIdpSettingsListMock,
   };
 
   const accountBeforeUpdate = {
@@ -142,11 +153,6 @@ describe('CsmrUserPreferencesService', () => {
       },
     },
   } as Account;
-
-  const IdpSettingsBeforeUpdateMock = {
-    list: idpListBeforeUpdate,
-    isExcludeList: true,
-  };
 
   const configMock = {
     get: jest.fn(),
@@ -198,7 +204,7 @@ describe('CsmrUserPreferencesService', () => {
     );
   });
 
-  describe('formatUserIdpSettingsList', () => {
+  describe('formatIdpSettings', () => {
     it('should return a formatted identity provider list with isCheck field', () => {
       // Given
       preferencesMock = {
@@ -229,7 +235,7 @@ describe('CsmrUserPreferencesService', () => {
       };
 
       // When
-      const idpSettingsList = service.formatUserIdpSettingsList(
+      const idpSettingsList = service['formatIdpSettings'](
         identityProviderMetadataMock,
         preferencesMock,
       );
@@ -268,7 +274,7 @@ describe('CsmrUserPreferencesService', () => {
       ] as IdentityProviderMetadata[];
 
       // When
-      const idpSettingsList = service.formatUserIdpSettingsList(
+      const idpSettingsList = service['formatIdpSettings'](
         metadataMock,
         preferencesMock,
       );
@@ -307,42 +313,7 @@ describe('CsmrUserPreferencesService', () => {
       };
 
       // When
-      const idpSettingsList = service.formatUserIdpSettingsList(
-        identityProviderMetadataMock,
-        preferencesMock,
-      );
-
-      // Then
-      expect(idpSettingsList).toStrictEqual(resolvedUserPreferencesMock);
-    });
-
-    it('should return an identity provider list with isCheck set to true if preferences have not been set by user', () => {
-      // Given
-      preferencesMock = undefined;
-      const resolvedUserPreferencesMock = {
-        idpList: [
-          {
-            uid: 'foo',
-            title: 'foo Title',
-            name: 'Foo',
-            image: 'foo.png',
-            active: true,
-            isChecked: true,
-          },
-          {
-            uid: 'bar',
-            title: 'bar Title',
-            name: 'Bar',
-            image: 'bar.png',
-            active: true,
-            isChecked: true,
-          },
-        ],
-        allowFutureIdp: true,
-      };
-
-      // When
-      const idpSettingsList = service.formatUserIdpSettingsList(
+      const idpSettingsList = service['formatIdpSettings'](
         identityProviderMetadataMock,
         preferencesMock,
       );
@@ -381,7 +352,7 @@ describe('CsmrUserPreferencesService', () => {
       };
 
       // When
-      const idpSettingsList = service.formatUserIdpSettingsList(
+      const idpSettingsList = service['formatIdpSettings'](
         identityProviderMetadataMock,
         preferencesMock,
       );
@@ -420,7 +391,7 @@ describe('CsmrUserPreferencesService', () => {
       };
 
       // When
-      const idpSettingsList = service.formatUserIdpSettingsList(
+      const idpSettingsList = service['formatIdpSettings'](
         identityProviderMetadataMock,
         preferencesMock,
       );
@@ -442,7 +413,7 @@ describe('CsmrUserPreferencesService', () => {
           uid: 'second_idp',
           isChecked: true,
         },
-      ];
+      ] as IFormattedIdpList[];
 
       const previous = [
         {
@@ -453,7 +424,7 @@ describe('CsmrUserPreferencesService', () => {
           uid: 'second_idp',
           isChecked: true,
         },
-      ];
+      ] as IFormattedIdpList[];
 
       const expected = [current[0]];
 
@@ -480,14 +451,14 @@ describe('CsmrUserPreferencesService', () => {
     });
   });
 
-  describe('createAccountPreferencesIdpSettings', () => {
+  describe('createIdpSettings', () => {
     it('should return an inclusive idp list if future idp are disabled', () => {
       // Given
       const idpUids = ['one', 'two', 'three', 'four'];
       const idpList = ['one', 'two'];
 
       // When
-      const idpPreferences = service.createAccountPreferencesIdpSettings(
+      const idpPreferences = service['createIdpSettings'](
         idpList,
         false,
         idpUids,
@@ -506,7 +477,7 @@ describe('CsmrUserPreferencesService', () => {
       const idpList = ['one', 'two'];
 
       // When
-      const idpPreferences = service.createAccountPreferencesIdpSettings(
+      const idpPreferences = service['createIdpSettings'](
         idpList,
         true,
         idpUids,
@@ -531,9 +502,9 @@ describe('CsmrUserPreferencesService', () => {
       service['getIdentityProviderList'] = jest
         .fn()
         .mockResolvedValueOnce(identityProviderMetadataMock);
-      service.formatUserIdpSettingsList = jest
+      service['formatIdpSettings'] = jest
         .fn()
-        .mockReturnValueOnce(formattedUserIdpSettingsListMock);
+        .mockReturnValueOnce(formattedIdpSettingsListMock);
     });
 
     it('should return identity provider metadatas data', async () => {
@@ -541,7 +512,7 @@ describe('CsmrUserPreferencesService', () => {
       const idpSettings = await service.getIdpSettings(identityMock);
 
       // Then
-      expect(idpSettings).toEqual(formattedUserIdpSettingsListMock);
+      expect(idpSettings).toEqual(formattedIdpSettingsListMock);
     });
 
     it('should compute the identityHash from the identity', async () => {
@@ -592,13 +563,31 @@ describe('CsmrUserPreferencesService', () => {
       expect(service['getIdentityProviderList']).toHaveBeenCalledWith();
     });
 
+    it('should call formatIdpSettings with default idpSettings values if the user has no preferences', async () => {
+      // Given
+      accountServiceMock.getAccountByIdentityHash.mockReset();
+      accountServiceMock.getAccountByIdentityHash.mockResolvedValueOnce(
+        accountWithoutPreferencesMock,
+      );
+
+      // When
+      await service.getIdpSettings(identityMock);
+
+      // Then
+      expect(service['formatIdpSettings']).toHaveBeenCalledTimes(1);
+      expect(service['formatIdpSettings']).toHaveBeenCalledWith(
+        identityProviderMetadataMock,
+        { isExcludeList: true, list: [] },
+      );
+    });
+
     it('should format metadata in order to clean data and add a "isCheck" property', async () => {
       // When
       await service.getIdpSettings(identityMock);
 
       // Then
-      expect(service.formatUserIdpSettingsList).toHaveBeenCalledTimes(1);
-      expect(service.formatUserIdpSettingsList).toHaveBeenCalledWith(
+      expect(service['formatIdpSettings']).toHaveBeenCalledTimes(1);
+      expect(service['formatIdpSettings']).toHaveBeenCalledWith(
         identityProviderMetadataMock,
         accountMock.preferences.idpSettings,
       );
@@ -617,20 +606,20 @@ describe('CsmrUserPreferencesService', () => {
       service['getIdentityProviderList'] = jest
         .fn()
         .mockResolvedValueOnce(identityProviderMetadataMock);
-      service['getFormattedUserIdpSettingsLists'] = jest
+      service['getFormattedIdpSettingsLists'] = jest
         .fn()
-        .mockReturnValueOnce(getFormattedUserIdpSettingsListsMock);
+        .mockReturnValueOnce(getFormattedIdpSettingsListsMock);
 
-      service.createAccountPreferencesIdpSettings = jest
+      service['createIdpSettings'] = jest
         .fn()
-        .mockReturnValueOnce(createAccountPreferencesIdpSettingsResultMock);
+        .mockReturnValueOnce(createIdpSettingsResultMock);
 
       service['updatedIdpSettings'] = jest
         .fn()
         .mockReturnValueOnce(updatedIdpIdpSettingListMock);
     });
 
-    it('Should get the metadata idp list', async () => {
+    it('should get the metadata idp list', async () => {
       // When
       await service.setIdpSettings(identityMock, idpListMock, allowFutureIdp);
 
@@ -673,17 +662,15 @@ describe('CsmrUserPreferencesService', () => {
         inputIsExcludeList,
       );
       // Then
-      expect(service.createAccountPreferencesIdpSettings).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(service.createAccountPreferencesIdpSettings).toBeCalledWith(
+      expect(service['createIdpSettings']).toHaveBeenCalledTimes(1);
+      expect(service['createIdpSettings']).toBeCalledWith(
         idpListMock,
         inputIsExcludeList,
         idpUids,
       );
     });
 
-    it('Should update the user account and get back the id and user preferences before update', async () => {
+    it('should update the user account and get back the id and user preferences before update', async () => {
       // When
       await service.setIdpSettings(identityMock, idpListMock, allowFutureIdp);
 
@@ -691,27 +678,25 @@ describe('CsmrUserPreferencesService', () => {
       expect(accountServiceMock.updatePreferences).toHaveBeenCalledTimes(1);
       expect(accountServiceMock.updatePreferences).toBeCalledWith(
         identityHashMock,
-        createAccountPreferencesIdpSettingsResultMock.list,
-        createAccountPreferencesIdpSettingsResultMock.isExcludeList,
+        createIdpSettingsResultMock.list,
+        createIdpSettingsResultMock.isExcludeList,
       );
     });
 
-    it('should format metadata in order to clean data and add a "isCheck" property', async () => {
+    it('should format the current and previous idpSettings lists', async () => {
       // When
       await service.setIdpSettings(identityMock, idpListMock, allowFutureIdp);
 
       // Then
-      expect(service['getFormattedUserIdpSettingsLists']).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(service['getFormattedUserIdpSettingsLists']).toHaveBeenCalledWith({
+      expect(service['getFormattedIdpSettingsLists']).toHaveBeenCalledTimes(1);
+      expect(service['getFormattedIdpSettingsLists']).toHaveBeenCalledWith({
         idpList: identityProviderMetadataMock,
-        newPreferences: createAccountPreferencesIdpSettingsResultMock,
-        preferencesBeforeUpdate: IdpSettingsBeforeUpdateMock,
+        currentSettings: createIdpSettingsResultMock,
+        previousSettings: accountBeforeUpdate.preferences.idpSettings,
       });
     });
 
-    it('should format metadata in order to clean data and add a "isCheck" property on first user update', async () => {
+    it('should format the current and previous idpSettings lists on first user update', async () => {
       // Given
       accountServiceMock.updatePreferences.mockReset();
       accountServiceMock.updatePreferences.mockResolvedValueOnce({});
@@ -720,15 +705,13 @@ describe('CsmrUserPreferencesService', () => {
       await service.setIdpSettings(identityMock, idpListMock, allowFutureIdp);
 
       // Then
-      expect(service['getFormattedUserIdpSettingsLists']).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(service['getFormattedUserIdpSettingsLists']).toHaveBeenCalledWith({
+      expect(service['getFormattedIdpSettingsLists']).toHaveBeenCalledTimes(1);
+      expect(service['getFormattedIdpSettingsLists']).toHaveBeenCalledWith({
         idpList: identityProviderMetadataMock,
-        newPreferences: createAccountPreferencesIdpSettingsResultMock,
-        preferencesBeforeUpdate: {
+        currentSettings: createIdpSettingsResultMock,
+        previousSettings: {
           list: [],
-          isExcludeList: false,
+          isExcludeList: true,
         },
       });
     });
@@ -740,12 +723,12 @@ describe('CsmrUserPreferencesService', () => {
       // THEN
       expect(service['updatedIdpSettings']).toHaveBeenCalledTimes(1);
       expect(service['updatedIdpSettings']).toHaveBeenCalledWith(
-        getFormattedUserIdpSettingsListsMock.formattedIdpSettingsList,
-        getFormattedUserIdpSettingsListsMock.formattedPreviousIdpSettingsList,
+        getFormattedIdpSettingsListsMock.formattedIdpSettingsList,
+        getFormattedIdpSettingsListsMock.formattedPreviousIdpSettingsList,
       );
     });
 
-    it('Should return identity provider metadata with updated data', async () => {
+    it('should return identity provider metadata with updated data', async () => {
       // When
       const updatedIdpSettings = await service.setIdpSettings(
         identityMock,
@@ -755,16 +738,18 @@ describe('CsmrUserPreferencesService', () => {
 
       // Then
       expect(updatedIdpSettings).toEqual({
-        formattedIdpSettingsList: formattedUserIdpSettingsListMock,
+        formattedIdpSettingsList: formattedIdpSettingsListMock,
         updatedIdpSettingsList: updatedIdpIdpSettingListMock,
         hasAllowFutureIdpChanged: true,
       });
     });
 
-    it('Should return identity provider metadata with updated data on first user update', async () => {
+    it('should return identity provider metadata with updated data on first user update', async () => {
       // Given
       accountServiceMock.updatePreferences.mockReset();
-      accountServiceMock.updatePreferences.mockResolvedValueOnce({});
+      accountServiceMock.updatePreferences.mockResolvedValueOnce({
+        updatedAt: new Date('2024-02-01'),
+      });
 
       // When
       const updatedIdpSettings = await service.setIdpSettings(
@@ -775,48 +760,48 @@ describe('CsmrUserPreferencesService', () => {
 
       // Then
       expect(updatedIdpSettings).toEqual({
-        formattedIdpSettingsList: formattedUserIdpSettingsListMock,
+        formattedIdpSettingsList: formattedIdpSettingsListMock,
         updatedIdpSettingsList: updatedIdpIdpSettingListMock,
-        hasAllowFutureIdpChanged: false,
+        hasAllowFutureIdpChanged: true,
+        updatedAt: new Date('2024-02-01'),
       });
     });
   });
 
-  describe('getFormattedUserIdpSettingsLists', () => {
+  describe('getFormattedIdpSettingsLists', () => {
     beforeEach(() => {
-      service.formatUserIdpSettingsList = jest
+      service['formatIdpSettings'] = jest
         .fn()
         .mockReturnValueOnce({
-          idpList: formattedUserIdpSettingsListMock,
+          idpList: formattedIdpSettingsListMock,
           allowFutureIdp: false,
         })
         .mockReturnValueOnce({
-          idpList: formattedBeforeUpdatePreferencesIdpListMock,
+          idpList: formattedPreviousIdpSettingsListMock,
           allowFutureIdp: false,
         });
     });
-    it('should call formatUserIdpSettingsList twice', () => {
+    it('should call formatIdpSettings twice', () => {
       // WHEN
-      const result = service['getFormattedUserIdpSettingsLists']({
+      const result = service['getFormattedIdpSettingsLists']({
         idpList: identityProviderMetadataMock,
-        newPreferences: createAccountPreferencesIdpSettingsResultMock,
-        preferencesBeforeUpdate: IdpSettingsBeforeUpdateMock,
+        currentSettings: createIdpSettingsResultMock,
+        previousSettings: accountBeforeUpdate.preferences.idpSettings,
       });
 
       // THEN
-      expect(service.formatUserIdpSettingsList).toHaveBeenCalledTimes(2);
-      expect(service.formatUserIdpSettingsList).toHaveBeenCalledWith(
+      expect(service['formatIdpSettings']).toHaveBeenCalledTimes(2);
+      expect(service['formatIdpSettings']).toHaveBeenCalledWith(
         identityProviderMetadataMock,
-        createAccountPreferencesIdpSettingsResultMock,
+        createIdpSettingsResultMock,
       );
-      expect(service.formatUserIdpSettingsList).toHaveBeenCalledWith(
+      expect(service['formatIdpSettings']).toHaveBeenCalledWith(
         identityProviderMetadataMock,
-        IdpSettingsBeforeUpdateMock,
+        accountBeforeUpdate.preferences.idpSettings,
       );
       expect(result).toEqual({
-        formattedIdpSettingsList: formattedUserIdpSettingsListMock,
-        formattedPreviousIdpSettingsList:
-          formattedBeforeUpdatePreferencesIdpListMock,
+        formattedIdpSettingsList: formattedIdpSettingsListMock,
+        formattedPreviousIdpSettingsList: formattedPreviousIdpSettingsListMock,
       });
     });
   });

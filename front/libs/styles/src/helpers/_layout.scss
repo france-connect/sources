@@ -1,0 +1,17 @@
+@use 'sass-rem' as rem;
+
+/* MOBILE FIRST */
+
+.sticky-body {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  min-height: 100vh;
+
+  .sticky-content {
+    margin-bottom: rem.convert(64px);
+  }
+
+  .sticky-footer {
+    grid-row: 2 / 3;
+  }
+}

@@ -117,7 +117,7 @@ describe('MockIdentityProviderController', () => {
     });
 
     oidcProviderServiceMock.getInteraction.mockResolvedValue(interactionMock);
-    oidcClientSessionServiceMock.get.mockResolvedValue(spNameMock);
+    oidcClientSessionServiceMock.get.mockReturnValue(spNameMock);
   });
 
   it('should be defined', () => {
@@ -138,7 +138,7 @@ describe('MockIdentityProviderController', () => {
     const finalSpIdMock = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
     beforeEach(() => {
-      appSessionServiceMock.get.mockResolvedValueOnce(finalSpIdMock);
+      appSessionServiceMock.get.mockReturnValueOnce(finalSpIdMock);
     });
 
     it('should call oidcProvider.getInteraction', async () => {
@@ -150,8 +150,11 @@ describe('MockIdentityProviderController', () => {
         appSessionServiceMock,
       );
       // Then
-      expect(oidcProviderServiceMock.getInteraction).toBeCalledTimes(1);
-      expect(oidcProviderServiceMock.getInteraction).toBeCalledWith(req, res);
+      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledTimes(1);
+      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledWith(
+        req,
+        res,
+      );
     });
 
     it('should call oidcClientSessionServiceMock.get with spName', async () => {
@@ -163,8 +166,8 @@ describe('MockIdentityProviderController', () => {
         appSessionServiceMock,
       );
       // Then
-      expect(oidcClientSessionServiceMock.get).toBeCalledTimes(1);
-      expect(oidcClientSessionServiceMock.get).toBeCalledWith('spName');
+      expect(oidcClientSessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(oidcClientSessionServiceMock.get).toHaveBeenCalledWith('spName');
     });
 
     it('should call appSessionServiceMock.get with finalspId', async () => {
@@ -176,8 +179,8 @@ describe('MockIdentityProviderController', () => {
         appSessionServiceMock,
       );
       // Then
-      expect(appSessionServiceMock.get).toBeCalledTimes(1);
-      expect(appSessionServiceMock.get).toBeCalledWith('finalSpId');
+      expect(appSessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(appSessionServiceMock.get).toHaveBeenCalledWith('finalSpId');
     });
 
     it('should return an object with data from session and oidcProvider interaction', async () => {
@@ -212,14 +215,14 @@ describe('MockIdentityProviderController', () => {
       mockIdentityProviderServiceMock.isPasswordValid.mockReturnValue(true);
     });
 
-    it('should call service.getIdentity() to retrieve sp identity', async () => {
+    it('should call service.getIdentity() to retrieve sp identity', () => {
       // Given
       const identityMock = {};
       mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
         identityMock,
       );
       // When
-      await controller.getLogin(
+      controller.getLogin(
         req,
         res,
         body,
@@ -235,9 +238,9 @@ describe('MockIdentityProviderController', () => {
       );
     });
 
-    it('should throw an error and not call oidcProvider.finishInteraction() if the identity is not found', async () => {
+    it('should throw an error and not call oidcProvider.finishInteraction() if the identity is not found', () => {
       // Given
-      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(undefined);
+      mockIdentityProviderServiceMock.getIdentity.mockReturnValue(undefined);
       const interactionId: string = interactionIdMock;
       const body = {
         interactionId,
@@ -248,7 +251,7 @@ describe('MockIdentityProviderController', () => {
       const expectedError = new Error('Identity not found in database');
 
       // When / Then
-      await expect(() =>
+      expect(() =>
         controller.getLogin(
           req,
           res,
@@ -256,20 +259,18 @@ describe('MockIdentityProviderController', () => {
           oidcClientSessionServiceMock,
           appSessionServiceMock,
         ),
-      ).rejects.toThrow(expectedError);
+      ).toThrow(expectedError);
       expect(oidcProviderServiceMock.finishInteraction).toHaveBeenCalledTimes(
         0,
       );
     });
 
-    it('should check if password is valid', async () => {
+    it('should check if password is valid', () => {
       // Given
       const identityMock = {
         password: passwordMockValue,
       };
-      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
-        identityMock,
-      );
+      mockIdentityProviderServiceMock.getIdentity.mockReturnValue(identityMock);
       const interactionId: string = interactionIdMock;
       const body = {
         interactionId,
@@ -279,7 +280,7 @@ describe('MockIdentityProviderController', () => {
       };
 
       // When
-      await controller.getLogin(
+      controller.getLogin(
         req,
         res,
         body,
@@ -296,7 +297,7 @@ describe('MockIdentityProviderController', () => {
       ).toHaveBeenCalledWith(passwordMockValue, body.password);
     });
 
-    it('should throw an error and not call "next" if the password is not valid', async () => {
+    it('should throw an error and not call "next" if the password is not valid', () => {
       // Given
       mockIdentityProviderServiceMock.isPasswordValid.mockReturnValueOnce(
         false,
@@ -304,9 +305,7 @@ describe('MockIdentityProviderController', () => {
       const identityMock = {
         password: passwordMockValue,
       };
-      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
-        identityMock,
-      );
+      mockIdentityProviderServiceMock.getIdentity.mockReturnValue(identityMock);
       const interactionId: string = interactionIdMock;
       const body = {
         interactionId,
@@ -317,7 +316,7 @@ describe('MockIdentityProviderController', () => {
       const expectedError = new Error('Password is invalid');
 
       // When / Then
-      await expect(() =>
+      expect(() =>
         controller.getLogin(
           req,
           res,
@@ -325,17 +324,15 @@ describe('MockIdentityProviderController', () => {
           oidcClientSessionServiceMock,
           appSessionServiceMock,
         ),
-      ).rejects.toThrow(expectedError);
+      ).toThrow(expectedError);
     });
 
-    it('should save the login in app session', async () => {
+    it('should save the login in app session', () => {
       // Given
       const identityMock = {};
-      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
-        identityMock,
-      );
+      mockIdentityProviderServiceMock.getIdentity.mockReturnValue(identityMock);
       // When
-      await controller.getLogin(
+      controller.getLogin(
         req,
         res,
         body,
@@ -350,14 +347,12 @@ describe('MockIdentityProviderController', () => {
       );
     });
 
-    it('should get the spId from oidcSession', async () => {
+    it('should get the spId from oidcSession', () => {
       // Given
       const identityMock = {};
-      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
-        identityMock,
-      );
+      mockIdentityProviderServiceMock.getIdentity.mockReturnValue(identityMock);
       // When
-      await controller.getLogin(
+      controller.getLogin(
         req,
         res,
         body,
@@ -373,15 +368,13 @@ describe('MockIdentityProviderController', () => {
       expect(oidcClientSessionServiceMock.get).toHaveBeenNthCalledWith(2);
     });
 
-    it('should store identity and acr in session', async () => {
+    it('should store identity and acr in session', () => {
       // Given
       const identityMock = { sub: 'sub' };
-      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
-        identityMock,
-      );
+      mockIdentityProviderServiceMock.getIdentity.mockReturnValue(identityMock);
       oidcClientSessionServiceMock.get.mockReturnValueOnce('spId');
       // When
-      await controller.getLogin(
+      controller.getLogin(
         req,
         res,
         body,
@@ -398,12 +391,10 @@ describe('MockIdentityProviderController', () => {
       });
     });
 
-    it('should call next if the identity is found', async () => {
+    it('should call next if the identity is found', () => {
       // Given
       const accountMock = {};
-      mockIdentityProviderServiceMock.getIdentity.mockResolvedValue(
-        accountMock,
-      );
+      mockIdentityProviderServiceMock.getIdentity.mockReturnValue(accountMock);
       const interactionId: string = interactionIdMock;
       const body = {
         interactionId,
@@ -412,7 +403,7 @@ describe('MockIdentityProviderController', () => {
         acr: acrMock,
       };
       // When
-      await controller.getLogin(
+      controller.getLogin(
         req,
         res,
         body,
@@ -432,17 +423,14 @@ describe('MockIdentityProviderController', () => {
       oidcClientSessionServiceMock.get.mockReturnValue({ spId: 'spId' });
     });
 
-    it('should set acr to value given in identity', async () => {
+    it('should set acr to value given in identity', () => {
       // Given
       const identityMock = {
         acr: 'acrValue',
       } as unknown as MinimalCustomIdentityInterface;
 
       // When
-      await controller['prepareIdentity'](
-        identityMock,
-        oidcClientSessionServiceMock,
-      );
+      controller['prepareIdentity'](identityMock, oidcClientSessionServiceMock);
 
       // Then
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledTimes(1);
@@ -453,15 +441,12 @@ describe('MockIdentityProviderController', () => {
       );
     });
 
-    it('should set sub to an object with the spId from session as key and the result of call to mockIdentityProviderServiceMock.getSub() as value', async () => {
+    it('should set sub to an object with the spId from session as key and the result of call to mockIdentityProviderServiceMock.getSub() as value', () => {
       // Given
       const identityMock = {} as unknown as MinimalCustomIdentityInterface;
 
       // When
-      await controller['prepareIdentity'](
-        identityMock,
-        oidcClientSessionServiceMock,
-      );
+      controller['prepareIdentity'](identityMock, oidcClientSessionServiceMock);
 
       // Then
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledTimes(1);
@@ -474,15 +459,12 @@ describe('MockIdentityProviderController', () => {
       );
     });
 
-    it('should set amr value to pwd', async () => {
+    it('should set amr value to pwd', () => {
       // Given
       const identityMock = {} as unknown as MinimalCustomIdentityInterface;
 
       // When
-      await controller['prepareIdentity'](
-        identityMock,
-        oidcClientSessionServiceMock,
-      );
+      controller['prepareIdentity'](identityMock, oidcClientSessionServiceMock);
 
       // Then
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledTimes(1);
@@ -677,7 +659,7 @@ describe('MockIdentityProviderController', () => {
       validateDtoMock.mockResolvedValueOnce(errors);
 
       const sessionMock = Symbol('sessionMock');
-      oidcClientSessionServiceMock.get.mockResolvedValueOnce(sessionMock);
+      oidcClientSessionServiceMock.get.mockReturnValueOnce(sessionMock);
       // When
       await controller['postLoginCustom'](
         identityMock,

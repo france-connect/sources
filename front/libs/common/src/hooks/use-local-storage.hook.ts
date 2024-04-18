@@ -1,7 +1,7 @@
 import lget from 'lodash.get';
 import { useCallback } from 'react';
 
-import { LocalStorageInterface } from '../interfaces';
+import type { LocalStorageInterface } from '../interfaces';
 
 export const useLocalStorage = (key: string) => {
   const get = useCallback(

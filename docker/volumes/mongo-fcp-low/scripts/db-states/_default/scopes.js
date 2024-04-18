@@ -161,7 +161,7 @@ db.scopes.update(
     scope: "dgfip_sitfam",
     fd: "DGFIP",
     label:
-      "Situation de famille (marié, pacsé, célibataire, veuf divorcé) (Direction générale des Finances publiques)",
+      "Situation de famille (marié, pacsé, célibataire, veuf, divorcé) (Direction générale des Finances publiques)",
     __v: 0,
   },
   { upsert: true },

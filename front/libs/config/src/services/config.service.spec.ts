@@ -14,14 +14,14 @@ describe('ConfigService', () => {
         // when
         ConfigService.initialize({ key: 'current config' });
         // then
-        expect(ConfigService.get('key')).toStrictEqual('current config');
+        expect(ConfigService.get('key')).toBe('current config');
       });
 
       it('should not override appConfig', () => {
         // when
         ConfigService.initialize({ key: 'will not override current config' });
         // then
-        expect(ConfigService.get('key')).toStrictEqual('current config');
+        expect(ConfigService.get('key')).toBe('current config');
       });
     });
 
@@ -140,7 +140,7 @@ describe('ConfigService', () => {
         const result = ConfigService.get('foo');
 
         // then
-        expect(result).toEqual('');
+        expect(result).toBe('');
       });
 
       it('should return false', () => {
@@ -151,7 +151,7 @@ describe('ConfigService', () => {
         const result = ConfigService.get('foo');
 
         // then
-        expect(result).toBe(false);
+        expect(result).toBeFalse();
       });
 
       it('should return the value', () => {

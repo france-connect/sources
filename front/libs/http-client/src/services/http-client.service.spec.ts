@@ -1,4 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
+import axios from 'axios';
 
 import { objectToFormData } from '@fc/common';
 import { ConfigService } from '@fc/config';
@@ -38,7 +39,7 @@ describe('HttpClientService', () => {
       await HttpClientService.makeRequest(method, endpoint, data);
 
       // then
-      expect(getRequestOptionsMock).toHaveBeenCalledTimes(1);
+      expect(getRequestOptionsMock).toHaveBeenCalledOnce();
       expect(getRequestOptionsMock).toHaveBeenCalledWith(requestTarget, {});
     });
 
@@ -51,7 +52,7 @@ describe('HttpClientService', () => {
       HttpClientService.makeRequest(method, endpoint, dataUrlParams);
 
       // then
-      expect(getRequestOptionsMock).toHaveBeenCalledTimes(1);
+      expect(getRequestOptionsMock).toHaveBeenCalledOnce();
       expect(getRequestOptionsMock).toHaveBeenCalledWith(requestWithUrlParams, {});
     });
 
@@ -63,7 +64,7 @@ describe('HttpClientService', () => {
       HttpClientService.makeRequest(method, endpoint);
 
       // then
-      expect(getRequestOptionsMock).toHaveBeenCalledTimes(1);
+      expect(getRequestOptionsMock).toHaveBeenCalledOnce();
       expect(getRequestOptionsMock).toHaveBeenCalledWith(requestWithoutData, {});
     });
 
@@ -72,7 +73,7 @@ describe('HttpClientService', () => {
       await HttpClientService.makeRequest(method, endpoint, data, axiosOptions);
 
       // then
-      expect(getRequestOptionsMock).toHaveBeenCalledTimes(1);
+      expect(getRequestOptionsMock).toHaveBeenCalledOnce();
       expect(getRequestOptionsMock).toHaveBeenCalledWith(requestTarget, axiosOptions);
     });
 
@@ -84,7 +85,7 @@ describe('HttpClientService', () => {
       await HttpClientService.makeRequest(method, endpoint, data);
 
       // then
-      expect(axiosRequestMock).toHaveBeenCalledTimes(1);
+      expect(axiosRequestMock).toHaveBeenCalledOnce();
       expect(axiosRequestMock).toHaveBeenCalledWith(requestOptionsMock);
     });
   });
@@ -113,7 +114,7 @@ describe('HttpClientService', () => {
         await HttpClientService.getCSRF();
 
         // then
-        expect(getConfigMock).toHaveBeenCalledTimes(1);
+        expect(getConfigMock).toHaveBeenCalledOnce();
         expect(getConfigMock).toHaveBeenCalledWith(Options.CONFIG_NAME);
       });
 
@@ -125,7 +126,7 @@ describe('HttpClientService', () => {
         await HttpClientService.getCSRF();
 
         // then
-        expect(HttpClientService.makeRequest).toHaveBeenCalledTimes(1);
+        expect(HttpClientService.makeRequest).toHaveBeenCalledOnce();
         expect(HttpClientService.makeRequest).toHaveBeenCalledWith(
           'get',
           '/any-csrf-token-endpoint',
@@ -154,7 +155,7 @@ describe('HttpClientService', () => {
         await HttpClientService.get(endpoint, data, axiosOptions);
 
         // then
-        expect(HttpClientService.makeRequest).toHaveBeenCalledTimes(1);
+        expect(HttpClientService.makeRequest).toHaveBeenCalledOnce();
         expect(HttpClientService.makeRequest).toHaveBeenCalledWith(
           'get',
           endpoint,
@@ -192,7 +193,7 @@ describe('HttpClientService', () => {
         await HttpClientService.post(endpoint, data, axiosOptions);
 
         // then
-        expect(HttpClientService.getCSRF).toHaveBeenCalledTimes(1);
+        expect(HttpClientService.getCSRF).toHaveBeenCalledOnce();
       });
 
       it('should call makeRequest with parameters', async () => {
@@ -206,7 +207,7 @@ describe('HttpClientService', () => {
         await HttpClientService.post(endpoint, data, axiosOptions);
 
         // then
-        expect(HttpClientService.makeRequest).toHaveBeenCalledTimes(1);
+        expect(HttpClientService.makeRequest).toHaveBeenCalledOnce();
         expect(HttpClientService.makeRequest).toHaveBeenCalledWith(
           'post',
           endpoint,

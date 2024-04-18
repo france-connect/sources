@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
-import { IRichClaim } from '../../interfaces';
+import type { IRichClaim } from '../../interfaces';
 import { ClaimsComponent } from './claims.component';
 
 describe('ConnexionComponent', () => {
@@ -81,7 +81,7 @@ describe('ConnexionComponent', () => {
       <ClaimsComponent
         claims={claimsMock}
         datetime={date}
-        eventType="DP_REQUESTED_FC_CHECKTOKEN"
+        eventType="DP_VERIFIED_FC_CHECKTOKEN"
         options={options}
       />,
     );
@@ -119,7 +119,7 @@ describe('ConnexionComponent', () => {
       <ClaimsComponent
         claims={claimsMock}
         datetime={date}
-        eventType="DP_REQUESTED_FC_CHECKTOKEN"
+        eventType="DP_VERIFIED_FC_CHECKTOKEN"
         options={options}
       />,
     );

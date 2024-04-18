@@ -1,8 +1,11 @@
+import { Request, Response } from 'express';
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CoreMissingIdentityException } from '@fc/core';
+import { CsrfTokenGuard } from '@fc/csrf';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import {
@@ -10,13 +13,7 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import {
-  ISessionRequest,
-  ISessionResponse,
-  SessionCsrfService,
-  SessionInvalidCsrfConsentException,
-  SessionService,
-} from '@fc/session';
+import { SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -91,7 +88,7 @@ const coreServiceMock = {
 const res = {
   redirect: jest.fn(),
   render: jest.fn(),
-} as unknown as ISessionResponse;
+} as unknown as Response;
 
 const configServiceMock = {
   get: jest.fn(),
@@ -104,7 +101,6 @@ const spIdMock = 'spIdMockValue';
 const idpStateMock = 'idpStateMockValue';
 const idpNonceMock = 'idpNonceMock';
 const idpIdMock = 'idpIdMockValue';
-const csrfMock = 'csrfMockValue';
 const randomStringMock = 'randomStringMockValue';
 const scopesMock = ['toto', 'titi'];
 const claimsMock = ['foo', 'bar'];
@@ -121,15 +117,9 @@ const req = {
   params: {
     providerUid: 'secretProviderUid',
   },
-} as unknown as ISessionRequest;
+} as unknown as Request;
 
-const sessionCsrfServiceMock = {
-  get: jest.fn(),
-  save: jest.fn(),
-  validate: jest.fn(),
-};
 const sessionDataMock: OidcSession = {
-  csrfToken: randomStringMock,
   idpId: idpIdMock,
   idpNonce: idpNonceMock,
   idpState: idpStateMock,
@@ -147,6 +137,10 @@ const interactionDetailsResolved = {
   },
   prompt: Symbol('prompt'),
   uid: Symbol('uid'),
+};
+
+const csrfGuardMock = {
+  canActivate: jest.fn(),
 };
 
 describe('OidcProviderController', () => {
@@ -169,10 +163,11 @@ describe('OidcProviderController', () => {
         ServiceProviderAdapterMongoService,
         CoreFcpService,
         TrackingService,
-        SessionCsrfService,
         ConfigService,
       ],
     })
+      .overrideGuard(CsrfTokenGuard)
+      .useValue(csrfGuardMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
       .overrideProvider(OidcProviderService)
@@ -185,13 +180,11 @@ describe('OidcProviderController', () => {
       .useValue(coreServiceMock)
       .overrideProvider(TrackingService)
       .useValue(trackingServiceMock)
-      .overrideProvider(SessionCsrfService)
-      .useValue(sessionCsrfServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .compile();
 
-    oidcProviderController = await app.get<OidcProviderController>(
+    oidcProviderController = app.get<OidcProviderController>(
       OidcProviderController,
     );
 
@@ -213,13 +206,10 @@ describe('OidcProviderController', () => {
     );
 
     sessionServiceMock.reset.mockResolvedValueOnce(sessionIdMock);
-    sessionServiceMock.get.mockResolvedValueOnce(sessionDataMock);
-    sessionServiceMock.set.mockResolvedValueOnce(undefined);
+    sessionServiceMock.get.mockReturnValueOnce(sessionDataMock);
+    sessionServiceMock.set.mockReturnValueOnce(undefined);
 
-    coreSessionServiceMock.get.mockResolvedValue([]);
-
-    sessionCsrfServiceMock.get.mockReturnValueOnce(csrfMock);
-    sessionCsrfServiceMock.save.mockResolvedValueOnce(true);
+    coreSessionServiceMock.get.mockReturnValueOnce([]);
 
     configServiceMock.get.mockReturnValueOnce({
       enableSso: false,
@@ -234,12 +224,7 @@ describe('OidcProviderController', () => {
       validateDtoMock.mockResolvedValueOnce([]);
 
       // When
-      await oidcProviderController.getAuthorize(
-        reqMock,
-        resMock,
-        nextMock,
-        queryMock,
-      );
+      await oidcProviderController.getAuthorize(resMock, nextMock, queryMock);
 
       // Then
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
@@ -260,12 +245,7 @@ describe('OidcProviderController', () => {
       });
 
       // When
-      await oidcProviderController.getAuthorize(
-        reqMock,
-        resMock,
-        nextMock,
-        queryMock,
-      );
+      await oidcProviderController.getAuthorize(resMock, nextMock, queryMock);
 
       // Then
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(0);
@@ -283,12 +263,7 @@ describe('OidcProviderController', () => {
       validateDtoMock.mockResolvedValueOnce([]);
 
       // When
-      await oidcProviderController.getAuthorize(
-        reqMock,
-        resMock,
-        nextMock,
-        queryMock,
-      );
+      await oidcProviderController.getAuthorize(resMock, nextMock, queryMock);
 
       // Then
       expect(resMock.locals).toHaveProperty('spName');
@@ -300,12 +275,7 @@ describe('OidcProviderController', () => {
       validateDtoMock.mockResolvedValueOnce([{ property: 'invalid param' }]);
       // Then
       await expect(
-        oidcProviderController.getAuthorize(
-          reqMock,
-          resMock,
-          nextMock,
-          queryMock,
-        ),
+        oidcProviderController.getAuthorize(resMock, nextMock, queryMock),
       ).rejects.toThrow(OidcProviderAuthorizeParamsException);
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
       expect(validateDtoMock).toHaveBeenCalledTimes(1);
@@ -324,12 +294,7 @@ describe('OidcProviderController', () => {
       validateDtoMock.mockResolvedValueOnce([]);
 
       // When
-      await oidcProviderController.postAuthorize(
-        reqMock,
-        resMock,
-        nextMock,
-        bodyMock,
-      );
+      await oidcProviderController.postAuthorize(resMock, nextMock, bodyMock);
 
       // Then
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
@@ -347,12 +312,7 @@ describe('OidcProviderController', () => {
       validateDtoMock.mockResolvedValueOnce([]);
 
       // When
-      await oidcProviderController.getAuthorize(
-        reqMock,
-        resMock,
-        nextMock,
-        queryMock,
-      );
+      await oidcProviderController.getAuthorize(resMock, nextMock, queryMock);
 
       // Then
       expect(resMock.locals).toHaveProperty('spName');
@@ -365,12 +325,7 @@ describe('OidcProviderController', () => {
 
       // Then
       await expect(
-        oidcProviderController.postAuthorize(
-          reqMock,
-          resMock,
-          nextMock,
-          bodyMock,
-        ),
+        oidcProviderController.postAuthorize(resMock, nextMock, bodyMock),
       ).rejects.toThrow(OidcProviderAuthorizeParamsException);
       expect(sessionServiceMock.reset).toHaveBeenCalledTimes(1);
       expect(validateDtoMock).toHaveBeenCalledTimes(1);
@@ -396,8 +351,9 @@ describe('OidcProviderController', () => {
       expect(oidcProviderServiceMock.abortInteraction).toHaveBeenCalledWith(
         reqMock,
         resMock,
-        'error',
-        'errorDescription',
+        // oidc naming
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        { error: 'error', error_description: 'errorDescription' },
       );
     });
 
@@ -707,8 +663,7 @@ describe('OidcProviderController', () => {
 
     it('should throw an exception if no identity in session', async () => {
       // Given
-      const body = { _csrf: randomStringMock };
-      sessionServiceMock.get.mockReset().mockResolvedValue({
+      sessionServiceMock.get.mockReset().mockReturnValueOnce({
         csrfToken: randomStringMock,
         interactionId: interactionIdMock,
         spAcr: acrMock,
@@ -720,49 +675,17 @@ describe('OidcProviderController', () => {
         oidcProviderController.getLogin(
           req,
           res,
-          body,
           sessionServiceMock,
           coreSessionServiceMock,
         ),
       ).rejects.toThrow(CoreMissingIdentityException);
     });
 
-    it('should throw an exception `SessionInvalidCsrfConsentException` if the CSRF token is not valid', async () => {
-      // Given
-      const csrfTokenBodyMock = 'invalidCsrfTokenValue';
-      const csrfTokenSessionMock = randomStringMock;
-      const body = { _csrf: csrfTokenBodyMock };
-      sessionServiceMock.get.mockReset().mockResolvedValue({
-        csrfToken: csrfTokenSessionMock,
-        interactionId: interactionIdMock,
-        spAcr: acrMock,
-        spName: spNameMock,
-      });
-      sessionCsrfServiceMock.validate.mockReset().mockImplementation(() => {
-        throw new Error(
-          'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
-        );
-      });
-      // Then
-      await expect(
-        oidcProviderController.getLogin(
-          req,
-          res,
-          body,
-          sessionServiceMock,
-          coreSessionServiceMock,
-        ),
-      ).rejects.toThrow(SessionInvalidCsrfConsentException);
-    });
-
     it('should send an email notification to the end user by calling core.sendAuthenticationMail', async () => {
-      // Given
-      const body = { _csrf: randomStringMock };
       // When
       await oidcProviderController.getLogin(
         req,
         res,
-        body,
         sessionServiceMock,
         coreSessionServiceMock,
       );
@@ -775,13 +698,10 @@ describe('OidcProviderController', () => {
     });
 
     it('should call handleSessionLife()', async () => {
-      // Given
-      const body = { _csrf: randomStringMock };
       // When
       await oidcProviderController.getLogin(
         req,
         res,
-        body,
         sessionServiceMock,
         coreSessionServiceMock,
       );
@@ -796,13 +716,10 @@ describe('OidcProviderController', () => {
     });
 
     it('should call oidcProvider.interactionFinish', async () => {
-      // Given
-      const body = { _csrf: randomStringMock };
       // When
       await oidcProviderController.getLogin(
         req,
         res,
-        body,
         sessionServiceMock,
         coreSessionServiceMock,
       );
@@ -859,7 +776,7 @@ describe('OidcProviderController', () => {
 
       // Then
       expect(sessionServiceMock.detach).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.detach).toHaveBeenCalledWith(req, res);
+      expect(sessionServiceMock.detach).toHaveBeenCalledWith(res);
     });
 
     it('should not detach session if sso is enabled', async () => {

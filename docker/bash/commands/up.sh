@@ -44,9 +44,9 @@ _check_for_unknown_services() {
   local available=$(_list_services)
 
   for service in $asked; do
-    match=$(echo "$available" | grep "^$service$" | wc -l)
+   declare -i match=$(echo "$available" | grep "^$service$" | wc -l)
 
-    if [ "$match" != "1" ]; then
+    if [ $match -eq 0 ]; then
       echo "Service / Stack Not Found: $service"
       exit 1
     fi

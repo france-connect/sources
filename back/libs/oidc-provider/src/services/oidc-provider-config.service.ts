@@ -64,7 +64,7 @@ export class OidcProviderConfigService {
     /**
      * Get data from config file
      */
-    const { prefix, issuer, configuration, forcedPrompt } =
+    const { prefix, issuer, configuration, forcedPrompt, isLocalhostAllowed } =
       this.config.get<OidcProviderConfig>('OidcProvider');
 
     /**
@@ -115,6 +115,7 @@ export class OidcProviderConfigService {
           required: () => false,
         },
       },
+      isLocalhostAllowed: Boolean(isLocalhostAllowed),
     };
 
     return oidcProviderConfig;

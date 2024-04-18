@@ -1,10 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { IProvider, IRichClaim } from '@fc/scopes';
+import { I18nService } from '@fc/i18n';
+import { ProviderInterface, RichClaimInterface } from '@fc/scopes';
 import { Providers } from '@fc/scopes/enum';
 
 import { getConfigMock } from '@mocks/config';
+import { getI18nServiceMock } from '@mocks/i18n';
 
 import { ScopesHelper } from './scopes.helper';
 
@@ -12,23 +14,32 @@ describe('ScopesHelpers', () => {
   let helper: ScopesHelper;
 
   const configMock = getConfigMock();
+  const i18nMock = getI18nServiceMock();
 
   const configDataMock = {
     sortedClaims: ['y', 'z', 'x'],
   };
 
   beforeEach(async () => {
+    jest.resetAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ScopesHelper, ConfigService],
+      providers: [ScopesHelper, ConfigService, I18nService],
     })
 
       .overrideProvider(ConfigService)
       .useValue(configMock)
+      .overrideProvider(I18nService)
+      .useValue(i18nMock)
       .compile();
 
     helper = module.get<ScopesHelper>(ScopesHelper);
 
     configMock.get.mockReturnValue(configDataMock);
+    /**
+     *  @note Dirty yet simple workaround to remove hardcoded translation prefix in code
+     */
+    i18nMock.translate.mockImplementation((key) => key.replace('claim.', ''));
   });
 
   it('should be defined', () => {
@@ -44,19 +55,19 @@ describe('ScopesHelpers', () => {
       // Given
       helper['isIdentityClaim'] = jest.fn().mockReturnValue(true);
 
-      const claimsMock: IRichClaim[] = [
+      const claimsMock: RichClaimInterface[] = [
         {
-          provider: {} as unknown as IProvider,
+          provider: {} as unknown as ProviderInterface,
           identifier: 'x',
           label: 'x',
         },
         {
-          provider: {} as unknown as IProvider,
+          provider: {} as unknown as ProviderInterface,
           identifier: 'y',
           label: 'y',
         },
         {
-          provider: {} as unknown as IProvider,
+          provider: {} as unknown as ProviderInterface,
           identifier: 'z',
           label: 'z',
         },
@@ -73,19 +84,19 @@ describe('ScopesHelpers', () => {
 
     it('should sort non identity claims alphabetically', () => {
       // Given
-      const claimsMock: IRichClaim[] = [
+      const claimsMock: RichClaimInterface[] = [
         {
-          provider: {} as unknown as IProvider,
+          provider: {} as unknown as ProviderInterface,
           identifier: 'c',
           label: 'c',
         },
         {
-          provider: {} as unknown as IProvider,
+          provider: {} as unknown as ProviderInterface,
           identifier: 'a',
           label: 'a',
         },
         {
-          provider: {} as unknown as IProvider,
+          provider: {} as unknown as ProviderInterface,
           identifier: 'b',
           label: 'b',
         },
@@ -104,19 +115,19 @@ describe('ScopesHelpers', () => {
       // Given
       helper['isIdentityClaim'] = jest.fn().mockReturnValue(true);
 
-      const claimsMock: IRichClaim[] = [
+      const claimsMock: RichClaimInterface[] = [
         {
-          provider: {} as unknown as IProvider,
+          provider: {} as unknown as ProviderInterface,
           identifier: 'z',
           label: 'Z',
         },
         {
-          provider: {} as unknown as IProvider,
+          provider: {} as unknown as ProviderInterface,
           identifier: 'a',
           label: 'A',
         },
         {
-          provider: {} as unknown as IProvider,
+          provider: {} as unknown as ProviderInterface,
           identifier: 'y',
           label: 'Y',
         },
@@ -134,12 +145,12 @@ describe('ScopesHelpers', () => {
 
   describe('groupByDataProvider()', () => {
     // Given
-    const claimsMock: IRichClaim[] = [
+    const claimsMock: RichClaimInterface[] = [
       {
         provider: {
           key: 'b',
           label: 'b',
-        } as unknown as IProvider,
+        } as unknown as ProviderInterface,
         identifier: 'b',
         label: 'b',
       },
@@ -147,7 +158,7 @@ describe('ScopesHelpers', () => {
         provider: {
           key: Providers.FCP_HIGH,
           label: 'x',
-        } as unknown as IProvider,
+        } as unknown as ProviderInterface,
         identifier: 'x',
         label: 'x',
       },
@@ -155,7 +166,7 @@ describe('ScopesHelpers', () => {
         provider: {
           key: 'a',
           label: 'a',
-        } as unknown as IProvider,
+        } as unknown as ProviderInterface,
         identifier: 'a',
         label: 'a',
       },
@@ -163,7 +174,7 @@ describe('ScopesHelpers', () => {
         provider: {
           key: 'a',
           label: 'a',
-        } as unknown as IProvider,
+        } as unknown as ProviderInterface,
         identifier: 'c',
         label: 'c',
       },
@@ -171,7 +182,7 @@ describe('ScopesHelpers', () => {
         provider: {
           key: Providers.FCP_HIGH,
           label: 'x',
-        } as unknown as IProvider,
+        } as unknown as ProviderInterface,
         identifier: 'z',
         label: 'z',
       },
@@ -183,7 +194,7 @@ describe('ScopesHelpers', () => {
           provider: {
             key: Providers.FCP_HIGH,
             label: 'x',
-          } as unknown as IProvider,
+          } as unknown as ProviderInterface,
           identifier: 'x',
           label: 'x',
         },
@@ -191,7 +202,7 @@ describe('ScopesHelpers', () => {
           provider: {
             key: Providers.FCP_HIGH,
             label: 'x',
-          } as unknown as IProvider,
+          } as unknown as ProviderInterface,
           identifier: 'z',
           label: 'z',
         },
@@ -201,7 +212,7 @@ describe('ScopesHelpers', () => {
           provider: {
             key: 'a',
             label: 'a',
-          } as unknown as IProvider,
+          } as unknown as ProviderInterface,
           identifier: 'a',
           label: 'a',
         },
@@ -209,7 +220,7 @@ describe('ScopesHelpers', () => {
           provider: {
             key: 'a',
             label: 'a',
-          } as unknown as IProvider,
+          } as unknown as ProviderInterface,
           identifier: 'c',
           label: 'c',
         },
@@ -219,7 +230,7 @@ describe('ScopesHelpers', () => {
           provider: {
             key: 'b',
             label: 'b',
-          } as unknown as IProvider,
+          } as unknown as ProviderInterface,
           identifier: 'b',
           label: 'b',
         },
@@ -235,18 +246,56 @@ describe('ScopesHelpers', () => {
     });
   });
 
+  describe('addLabel()', () => {
+    // Given
+    const claimMock = {
+      identifier: 'a',
+      provider: Symbol('provider'),
+    } as unknown as RichClaimInterface;
+
+    const translateResult = Symbol('translateResult');
+
+    it('should call translate with a key prefix and claim.identifier', () => {
+      // Given
+      i18nMock.translate.mockReturnValueOnce(translateResult);
+
+      // When
+      helper['addLabel'](claimMock);
+
+      // Then
+      expect(i18nMock.translate).toHaveBeenCalledTimes(1);
+      expect(i18nMock.translate).toHaveBeenCalledWith(
+        `claim.${claimMock.identifier}`,
+      );
+    });
+
+    it('should add label from i18n.translate() to claim', () => {
+      // Given
+      i18nMock.translate.mockReturnValueOnce(translateResult);
+
+      // When
+      const result = helper['addLabel'](claimMock);
+
+      // Then
+      expect(result).toStrictEqual({
+        ...claimMock,
+        label: translateResult,
+      });
+    });
+  });
+
   describe('dataProviderOrder', () => {
     const claimsMockA = [
       {
         provider: { label: 'a' },
       },
-    ] as IRichClaim[];
+    ] as RichClaimInterface[];
 
-    const claimsMockB: IRichClaim[] = [
+    const claimsMockB: RichClaimInterface[] = [
       {
         provider: { label: 'b' },
       },
-    ] as IRichClaim[];
+    ] as RichClaimInterface[];
 
     it('should return -1 if a is identity claim', () => {
       // Given

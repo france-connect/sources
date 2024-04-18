@@ -129,7 +129,9 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     <div>
       ServicesListComponent
     </div>
-    <div>
+    <div
+      data-mockid="AlertComponent"
+    >
       <div>
         AlertComponent
       </div>
@@ -300,7 +302,9 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     <div>
       ServicesListComponent
     </div>
-    <div>
+    <div
+      data-mockid="AlertComponent"
+    >
       <div>
         AlertComponent
       </div>

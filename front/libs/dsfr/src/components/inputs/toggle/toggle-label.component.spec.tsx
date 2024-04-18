@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
-import { FieldInputProps } from 'react-final-form';
+import type { FieldInputProps } from 'react-final-form';
 
-import { CheckableLegend } from '../../../interfaces';
+import type { CheckableLegend } from '../../../interfaces';
 import { ToggleLabelComponent } from './toggle-label.component';
 
 describe('ToggleLabelComponent', () => {
@@ -48,7 +48,7 @@ describe('ToggleLabelComponent', () => {
     );
 
     // Then
-    expect(labelMock).toHaveBeenCalledTimes(1);
+    expect(labelMock).toHaveBeenCalledOnce();
     expect(labelMock).toHaveBeenCalledWith(fieldInputPropsMock.checked);
   });
 });

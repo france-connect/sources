@@ -1,6 +1,10 @@
 import { Response } from 'express';
 import { get } from 'lodash';
-import { KoaContextWithOIDC, Provider } from 'oidc-provider';
+import {
+  InteractionResults,
+  KoaContextWithOIDC,
+  Provider,
+} from 'oidc-provider';
 import { HttpOptions } from 'openid-client';
 
 import { Global, Inject, Injectable } from '@nestjs/common';
@@ -64,9 +68,10 @@ export class OidcProviderService {
    * @see https://docs.nestjs.com/faq/http-adapter
    * @see https://docs.nestjs.com/fundamentals/lifecycle-events
    */
-  async onModuleInit() {
+
+  onModuleInit() {
     const { prefix, issuer, configuration } =
-      await this.configService.getConfig(this);
+      this.configService.getConfig(this);
     this.configuration = configuration;
 
     try {
@@ -161,12 +166,13 @@ export class OidcProviderService {
   async abortInteraction(
     req: any,
     res: any,
-    error: string,
-    errorDescription: string,
+    // oidc naming convention
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    errorParams: InteractionResults,
+    retry: boolean = false,
   ): Promise<any> {
     try {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const result = { error, error_description: errorDescription };
+      const result = retry ? {} : errorParams;
       const finished = await this.provider.interactionFinished(
         req,
         res,

@@ -48,7 +48,7 @@ describe('AccountProvider', () => {
     rerender(theProvider);
 
     // then
-    expect(AccountService.fetchData).toHaveBeenCalledTimes(1);
+    expect(AccountService.fetchData).toHaveBeenCalledOnce();
     expect(AccountService.fetchData).toHaveBeenCalledWith('/me/endpoint', expect.any(Function));
   });
 
@@ -66,7 +66,7 @@ describe('AccountProvider', () => {
     );
 
     // then
-    expect(AccountService.fetchData).toHaveBeenCalledTimes(1);
+    expect(AccountService.fetchData).toHaveBeenCalledOnce();
     expect(AccountService.fetchData).toHaveBeenCalledWith('/me/endpoint', expect.any(Function));
   });
 
@@ -91,7 +91,7 @@ describe('AccountProvider', () => {
     rerender(theProvider);
 
     // then
-    expect(AccountService.fetchData).toHaveBeenCalledTimes(1);
+    expect(AccountService.fetchData).toHaveBeenCalledOnce();
     expect(AccountService.fetchData).toHaveBeenCalledWith('/me/endpoint', useCallbackMock);
   });
 
@@ -121,7 +121,7 @@ describe('AccountProvider', () => {
     fireEvent.click(theButton);
 
     // then
-    expect(useCallbackMock).toHaveBeenCalledTimes(1);
+    expect(useCallbackMock).toHaveBeenCalledOnce();
     expect(useCallbackMock).toHaveBeenCalledWith(theUpdateMock);
   });
 
@@ -152,7 +152,7 @@ describe('AccountProvider', () => {
     fireEvent.click(theButton);
 
     // then
-    expect(setStateMock).toHaveBeenCalledTimes(1);
+    expect(setStateMock).toHaveBeenCalledOnce();
     expect(setStateMock).toHaveBeenCalledWith({ ...stateMock, ...theUpdateMock });
   });
 });

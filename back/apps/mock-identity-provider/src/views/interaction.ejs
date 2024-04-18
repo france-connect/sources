@@ -32,7 +32,18 @@
                 value="<%= locals.params.acr_values %>"
               />
             </label>
-            <button type="submit">Envoyer</button>
+            <div class="btn-section">
+              <button type="submit">Valider</button>
+              <% if($config('App.allowBackButton')) { %> 
+              <a
+                data-testid="back-to-fc-link"
+                role="button"
+                class="btn-outline"
+                href="<%= locals.params.redirect_uri %>?error=access_denied&error_description=user+authentication+aborted&state=<%= params.state %>"
+                >Retour
+              </a>
+              <% } %> 
+          </div>
           </form>
         </div>
         <% if($config('App.allowCustomIdentity')) { %> 

@@ -2,18 +2,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import {
   OidcCtx,
+  OidcProviderErrorService,
   OidcProviderMiddlewareStep,
   OidcProviderRoutes,
   OidcProviderService,
 } from '@fc/oidc-provider';
-import { SessionService } from '@fc/session';
+import { SessionNotFoundException, SessionService } from '@fc/session';
 
 import { getSessionServiceMock } from '@mocks/session';
 
 import { OidcProviderMiddlewareService } from './oidc-provider-middleware.service';
 import { ScenariosService } from './scenarios.service';
 
-describe('OidcProviderConfigAppService', () => {
+describe('OidcProviderMiddlewareService', () => {
   let service: OidcProviderMiddlewareService;
 
   const oidcProviderMock = {
@@ -24,8 +25,20 @@ describe('OidcProviderConfigAppService', () => {
   const scenariosMock = {
     alterServerResponse: jest.fn(),
   };
+  const userLoginMock = 'Malcolm';
 
   const appSessionMock = getSessionServiceMock();
+  const sessionDataMock = {
+    App: {
+      userLogin: userLoginMock,
+    },
+  };
+
+  const sessionIdMock = 'sessionIdMockValue';
+
+  const oidcErrorServiceMock = {
+    throwError: jest.fn(),
+  };
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -36,12 +49,18 @@ describe('OidcProviderConfigAppService', () => {
         OidcProviderMiddlewareService,
         OidcProviderService,
         ScenariosService,
+        SessionService,
+        OidcProviderErrorService,
       ],
     })
       .overrideProvider(OidcProviderService)
       .useValue(oidcProviderMock)
       .overrideProvider(ScenariosService)
       .useValue(scenariosMock)
+      .overrideProvider(SessionService)
+      .useValue(appSessionMock)
+      .overrideProvider(OidcProviderErrorService)
+      .useValue(oidcErrorServiceMock)
       .compile();
 
     service = module.get<OidcProviderMiddlewareService>(
@@ -106,37 +125,33 @@ describe('OidcProviderConfigAppService', () => {
       req: {
         ip: '192.168.1.42',
       },
+      oidc: {
+        entities: {
+          Account: {
+            accountId: sessionIdMock,
+          },
+        },
+      },
     } as unknown as OidcCtx;
-    const userLoginMock = 'Malcolm';
 
     beforeEach(() => {
-      service['bindSessionId'] = jest.fn();
-
-      jest
-        .spyOn(SessionService, 'getBoundSession')
-        .mockReturnValue(appSessionMock);
-
-      appSessionMock.get.mockResolvedValue(userLoginMock);
+      appSessionMock.getDataFromBackend.mockResolvedValue(sessionDataMock);
     });
 
-    it('should bind the session id to the given context', async () => {
+    it('should call oidcErrorService.throwError() if session.getDataFromBackend() throws', async () => {
+      // Given
+      const errorMock = new Error('Session not found');
+      appSessionMock.getDataFromBackend
+        .mockReset()
+        .mockRejectedValue(errorMock);
+
       // When
       await service['userinfoMiddleware'](ctxMock);
 
-      // Then
-      expect(service['bindSessionId']).toHaveBeenCalledTimes(1);
-      expect(service['bindSessionId']).toHaveBeenCalledWith(ctxMock);
-    });
-
-    it('should get the app session service', async () => {
-      // When
-      await service['userinfoMiddleware'](ctxMock);
-
-      // Then
-      expect(SessionService.getBoundSession).toHaveBeenCalledTimes(1);
-      expect(SessionService.getBoundSession).toHaveBeenCalledWith(
-        ctxMock.req,
-        'App',
+      expect(oidcErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
+      expect(oidcErrorServiceMock.throwError).toHaveBeenCalledWith(
+        ctxMock,
+        expect.any(SessionNotFoundException),
       );
     });
 
@@ -145,8 +160,10 @@ describe('OidcProviderConfigAppService', () => {
       await service['userinfoMiddleware'](ctxMock);
 
       // Then
-      expect(appSessionMock.get).toHaveBeenCalledTimes(1);
-      expect(appSessionMock.get).toHaveBeenCalledWith('userLogin');
+      expect(appSessionMock.getDataFromBackend).toHaveBeenCalledTimes(1);
+      expect(appSessionMock.getDataFromBackend).toHaveBeenCalledWith(
+        sessionIdMock,
+      );
     });
 
     it('should alter the server response', async () => {
@@ -179,37 +196,14 @@ describe('OidcProviderConfigAppService', () => {
         .mockReturnValueOnce(netWorkInfoMock);
     });
 
-    it('should return context object with sessionId from `req` if no oidc accountId', () => {
-      // Given
-      const ctxMock: OidcCtx = {
-        req: {
-          sessionId: 'sessionIdValue',
-        },
-      } as OidcCtx;
-
-      // When
-      const result = service['getEventContext'](ctxMock);
-
-      // Then
-      expect(result).toEqual({
-        fc: {
-          interactionId: interactionIdMock,
-        },
-        req: ctxMock.req,
-        sessionId: ctxMock.req.sessionId,
-      });
-    });
-
     it('should return context object with sessionId from `oidc` object', () => {
       // Given
       const ctxMock: OidcCtx = {
-        req: {
-          sessionId: 'sessionIdValue',
-        },
+        req: {},
         oidc: {
           entities: {
             Account: {
-              accountId: 'accountIdMock',
+              accountId: sessionIdMock,
             },
           },
         },
@@ -224,20 +218,19 @@ describe('OidcProviderConfigAppService', () => {
           interactionId: interactionIdMock,
         },
         req: ctxMock.req,
-        sessionId: ctxMock.oidc.entities.Account.accountId,
+        sessionId: sessionIdMock,
       });
     });
 
-    it('should return context object with sessionId from ̀`req` if `oidc` object is incomplete', () => {
+    it('should return context object with sessionId from sessionService.getId()', () => {
       // Given
-      const ctxMock = {
-        req: {
-          sessionId: 'sessionIdValue',
-        },
-        oidc: {
-          entities: {},
-        },
+      const ctxMock: OidcCtx = {
+        req: {},
       } as OidcCtx;
+
+      const sessionServiceIdMock = 'sessionServiceIdMockValue';
+
+      appSessionMock.getId.mockReturnValueOnce(sessionServiceIdMock);
 
       // When
       const result = service['getEventContext'](ctxMock);
@@ -248,27 +241,8 @@ describe('OidcProviderConfigAppService', () => {
           interactionId: interactionIdMock,
         },
         req: ctxMock.req,
-        sessionId: ctxMock.req.sessionId,
+        sessionId: sessionServiceIdMock,
       });
-    });
-  });
-
-  describe('bindSessionId', () => {
-    const ctxMock = {
-      req: {},
-    } as OidcCtx;
-
-    beforeEach(() => {
-      service['getEventContext'] = jest.fn().mockReturnValueOnce({});
-    });
-
-    it('should get the event context from the given context', () => {
-      // When
-      service['bindSessionId'](ctxMock);
-
-      // Then
-      expect(service['getEventContext']).toHaveBeenCalledTimes(1);
-      expect(service['getEventContext']).toHaveBeenCalledWith(ctxMock);
     });
   });
 });

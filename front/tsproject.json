@@ -1,0 +1,39 @@
+{
+  "options": {
+    "extends": "@fc/react-app/tsconfig.json",
+    "exclude": [
+      "./libs/styles/src/**/*",
+      "**/.template",
+      "**/tmp",
+      "**/temp",
+      "**/dist",
+      "**/build",
+      "**/public",
+      "**/scripts",
+      "**/coverage",
+      "**/node_modules",
+      "**/__fixtures__",
+      "**/__snapshots__"
+    ],
+    "files": [".configs/react-app/globals.d.ts", "jest.setup.ts"]
+  },
+  "projects": {
+    "main": {
+      "include": ["**/__mocks__", "**/src/**/*", "**/vite.config.js"]
+    },
+    "jest": {
+      "compilerOptions": {
+        "esModuleInterop": true
+      },
+      "include": [
+        "**/src/**/*.d.ts",
+        "**/src/**/*.spec.ts",
+        "**/src/**/*.spec.tsx"
+      ]
+    },
+    "app": {
+      "include": ["**/src/**/*.d.ts", "**/instances/**/src"],
+      "exclude": ["**/*.spec.ts", "**/*.spec.tsx"]
+    }
+  }
+}

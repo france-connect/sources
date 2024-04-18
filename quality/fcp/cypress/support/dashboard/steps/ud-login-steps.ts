@@ -11,15 +11,18 @@ import UdLoginPage from '../pages/ud-login-page';
 
 let udLoginPage: UdLoginPage;
 
-Given("je navigue sur la page d'accueil du dashboard usager", function () {
-  const { allAppsUrl, udAppId, udRootUrl }: Environment = this.env;
-  navigateTo({ appId: udAppId, baseUrl: allAppsUrl });
-  udLoginPage = new UdLoginPage(udRootUrl);
-  udLoginPage.checkIsVisible();
-});
+Given(
+  "je navigue sur la page d'accueil du tableau de bord usager",
+  function () {
+    const { allAppsUrl, udAppId, udRootUrl }: Environment = this.env;
+    navigateTo({ appId: udAppId, baseUrl: allAppsUrl });
+    udLoginPage = new UdLoginPage(udRootUrl);
+    udLoginPage.checkIsVisible();
+  },
+);
 
 Then(
-  /^je suis (redirigé vers|sur) la page d'accueil du dashboard usager$/,
+  /^je suis (redirigé vers|sur) la page d'accueil du tableau de bord usager$/,
   function () {
     const { udRootUrl }: Environment = this.env;
     udLoginPage = new UdLoginPage(udRootUrl);
@@ -35,11 +38,14 @@ Then(
   },
 );
 
-When('je clique sur le bouton FranceConnect du dashboard usager', function () {
-  udLoginPage.getAuthorizeButton().click();
-});
+When(
+  'je clique sur le bouton FranceConnect du tableau de bord usager',
+  function () {
+    udLoginPage.getAuthorizeButton().click();
+  },
+);
 
-When('je me connecte au dashboard usager', function () {
+When('je me connecte au tableau de bord usager', function () {
   const serviceProvider = getServiceProviderByDescription(
     this.serviceProviders,
     'user-dashboard',
@@ -54,7 +60,7 @@ When('je me connecte au dashboard usager', function () {
 });
 
 Then(
-  'je ne suis plus connecté au dashboard usager avec FranceConnect',
+  'je ne suis plus connecté au tableau de bord usager avec FranceConnect',
   function () {
     const serviceProvider = getServiceProviderByDescription(
       this.serviceProviders,

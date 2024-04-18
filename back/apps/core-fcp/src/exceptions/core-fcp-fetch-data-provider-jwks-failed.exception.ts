@@ -2,7 +2,7 @@
 
 // Declarative file
 import { CoreBaseException } from '@fc/core';
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 

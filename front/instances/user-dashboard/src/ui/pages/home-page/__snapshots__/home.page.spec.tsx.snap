@@ -6,7 +6,9 @@ exports[`HomePage should match snapshot when session is expired 1`] = `
     class="large-container fr-m-auto fr-px-2w fr-mt-3w text-center"
     id="page-container"
   >
-    <div>
+    <div
+      data-mockid="AlertComponent"
+    >
       <div>
         AlertComponent
       </div>

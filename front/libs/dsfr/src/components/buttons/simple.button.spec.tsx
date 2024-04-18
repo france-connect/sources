@@ -90,7 +90,7 @@ describe('SimpleButton', () => {
     fireEvent.click(element);
 
     // then
-    expect(onClickMock).toHaveBeenCalledTimes(1);
+    expect(onClickMock).toHaveBeenCalledOnce();
   });
 
   it('should have the classname when priority is equal to Priorities.SECONDARY', () => {

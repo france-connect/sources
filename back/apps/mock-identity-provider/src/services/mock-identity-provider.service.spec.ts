@@ -9,7 +9,7 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterEnvService } from '@fc/service-provider-adapter-env';
-import { ISessionBoundContext, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 
 import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
@@ -474,11 +474,6 @@ describe('MockIdentityProviderService', () => {
         name: spNameMock,
       });
 
-      const boundSessionContextMock: ISessionBoundContext = {
-        sessionId: sessionIdValueMock,
-        moduleName: 'OidcClient',
-      };
-
       const sessionMock: OidcSession = {
         /** The first time, the client id comes from the authorize request not the session */
         spId: clientIdMock,
@@ -493,7 +488,7 @@ describe('MockIdentityProviderService', () => {
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith(
-        boundSessionContextMock,
+        'OidcClient',
         sessionMock,
       );
     });
@@ -509,20 +504,11 @@ describe('MockIdentityProviderService', () => {
       serviceProviderEnvServiceMock.getById.mockReturnValueOnce({
         name: spNameMock,
       });
-
-      const boundSessionContextMock: ISessionBoundContext = {
-        sessionId: sessionIdValueMock,
-        moduleName: 'OidcClient',
-      };
-
       // When
       await service['authorizationMiddleware'](ctxMock);
 
       // Then
       expect(sessionServiceMock.commit).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.commit).toHaveBeenCalledWith(
-        boundSessionContextMock,
-      );
     });
   });
 
@@ -586,6 +572,19 @@ describe('MockIdentityProviderService', () => {
       configServiceMock.get.mockReturnValueOnce({ passwordVerification: true });
       const password = 'password';
       const inputPassword = 'foo';
+
+      // When
+      const result = service.isPasswordValid(password, inputPassword);
+
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should return false if password check is enabled and password is invalid with same length', () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({ passwordVerification: true });
+      const password = 'password';
+      const inputPassword = 'foosword';
 
       // When
       const result = service.isPasswordValid(password, inputPassword);

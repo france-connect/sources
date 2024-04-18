@@ -1,12 +1,15 @@
+import { Request } from 'express';
+
 import { ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
+import { LoggerService } from '@fc/logger';
 
 import { getConfigMock } from '@mocks/config';
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
-import { ISessionRequest } from '../interfaces';
 import { SessionService } from '../services';
 import { SessionCommitInterceptor } from './session-commit.interceptor';
 
@@ -42,17 +45,25 @@ describe('SessionCommitInterceptor', () => {
 
   const sessionServiceMock = getSessionServiceMock();
   const configServiceMock = getConfigMock();
+  const loggerMock = getLoggerMock();
 
   beforeEach(async () => {
     jest.resetAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [SessionCommitInterceptor, SessionService, ConfigService],
+      providers: [
+        SessionCommitInterceptor,
+        SessionService,
+        ConfigService,
+        LoggerService,
+      ],
     })
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerMock)
       .compile();
 
     interceptor = module.get<SessionCommitInterceptor>(
@@ -69,11 +80,11 @@ describe('SessionCommitInterceptor', () => {
   });
 
   describe('intercept', () => {
-    it('should call next.handle', async () => {
+    it('should call next.handle', () => {
       // Given
 
       // When
-      await interceptor.intercept(contextMock, nextMock);
+      interceptor.intercept(contextMock, nextMock);
 
       // Then
       expect(nextMock.handle).toHaveBeenCalledTimes(1);
@@ -82,8 +93,10 @@ describe('SessionCommitInterceptor', () => {
   });
 
   describe('commit', () => {
-    it('should call sessionService.commit', async () => {
-      // Given
+    const routes = ['/some/route', '/some/other/route'];
+
+    beforeEach(() => {
+      interceptor['getCleanedUpRoutes'] = jest.fn().mockReturnValue(routes);
       configServiceMock.get
         .mockReturnValueOnce({
           urlPrefix: '/prefix',
@@ -91,33 +104,54 @@ describe('SessionCommitInterceptor', () => {
         .mockReturnValueOnce({
           excludedRoutes: [],
         });
+    });
 
+    it('should call sessionService.commit', async () => {
       // When
-      await interceptor['commit'](reqMock as unknown as ISessionRequest);
+      await interceptor['commit'](reqMock as unknown as Request);
 
       // Then
       expect(sessionServiceMock.commit).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.commit).toHaveBeenCalledWith({
-        sessionId: reqMock.sessionId,
-        moduleName: null,
-      });
     });
 
-    it('should not call sessionService.commit if route is excluded', async () => {
+    it('should not call sessionService.commit if route is not included', async () => {
       // Given
-      configServiceMock.get
-        .mockReturnValueOnce({
-          urlPrefix: '/prefix',
-        })
-        .mockReturnValueOnce({
-          excludedRoutes: ['/some/route'],
-        });
+      interceptor['getCleanedUpRoutes'] = jest
+        .fn()
+        .mockReturnValueOnce(['/not/that/route']);
 
       // When
-      await interceptor['commit'](reqMock as unknown as ISessionRequest);
+      await interceptor['commit'](reqMock as unknown as Request);
 
       // Then
       expect(sessionServiceMock.commit).not.toHaveBeenCalled();
+    });
+
+    it('should catch and log error on commit ', async () => {
+      // Given
+      const error = new Error('commit error');
+      sessionServiceMock.commit.mockRejectedValueOnce(error);
+
+      // When
+      await interceptor['commit'](reqMock as unknown as Request);
+
+      // Then
+      expect(loggerMock.info).toHaveBeenCalledWith(
+        'Could not commit session from interceptor',
+      );
+    });
+  });
+
+  describe('getCleanedUpRoutes', () => {
+    it('should return an array of strings with $ removed', () => {
+      // Given
+      const routes = ['/some/route$', '/some/other/$route'];
+
+      // When
+      const result = interceptor['getCleanedUpRoutes'](routes);
+
+      // Then
+      expect(result).toEqual(['/some/route', '/some/other/route']);
     });
   });
 });

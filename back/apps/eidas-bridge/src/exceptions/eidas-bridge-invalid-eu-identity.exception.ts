@@ -4,7 +4,7 @@
 import { HttpStatus } from '@nestjs/common';
 
 import { ErrorCode } from '@fc/core';
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { EidasBridgeBaseException } from './eidas-bridge-base.exception';
 

@@ -5,7 +5,7 @@ import { timeout } from 'rxjs/operators';
 import { Inject, Injectable, ValidationError } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
-import { IPaginationOptions, IPaginationResult, validateDto } from '@fc/common';
+import { IPaginationOptions, validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { TracksProtocol } from '@fc/microservices';
@@ -33,7 +33,7 @@ export class TracksService {
   async getList(
     identity: Partial<IOidcIdentity>,
     options: IPaginationOptions,
-  ): Promise<{ meta: IPaginationResult; payload: TrackDto[] }> {
+  ): Promise<TracksResults> {
     const { requestTimeout } = this.config.get<RabbitmqConfig>('TracksBroker');
 
     try {

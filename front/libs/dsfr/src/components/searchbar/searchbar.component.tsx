@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React from 'react';
-import { FieldInputProps } from 'react-final-form';
+import type { FieldInputProps } from 'react-final-form';
 
 export interface SearchBarComponentProps {
   size?: 'md' | 'lg';
@@ -28,12 +28,9 @@ export const SearchBarComponent: React.FC<SearchBarComponentProps> = React.memo(
         {inputLabel}
       </label>
       <input
-        // @NOTE on autorise la destructuration des proprietes car
-        // les propprietes fournies par react-final-form sont issues d'un contexte contrôlé
-        // eslint-disable-next-line react/jsx-props-no-spreading
+        id={input.name}
         {...input}
         className="fr-input"
-        id={input.name}
         name={input.name}
         placeholder={placeholder}
         type="search"

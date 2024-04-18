@@ -27,7 +27,7 @@ describe('LayoutHomepageLinkComponent', () => {
     );
 
     // then
-    expect(Link).toHaveBeenCalledTimes(1);
+    expect(Link).toHaveBeenCalledOnce();
     expect(Link).toHaveBeenLastCalledWith(
       expect.objectContaining({
         title: 'Retour à l’accueil du site - any-title',
@@ -48,7 +48,7 @@ describe('LayoutHomepageLinkComponent', () => {
     );
 
     // then
-    expect(Link).toHaveBeenCalledTimes(1);
+    expect(Link).toHaveBeenCalledOnce();
     expect(Link).toHaveBeenLastCalledWith(
       expect.objectContaining({
         title: 'Accueil - any-title',

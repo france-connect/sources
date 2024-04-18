@@ -1,10 +1,8 @@
-import { render } from '@testing-library/react';
-import React from 'react';
-import { Form } from 'react-final-form';
 import { OnChange } from 'react-final-form-listeners';
 import { useMediaQuery } from 'react-responsive';
 
 import { ToggleInput } from '@fc/dsfr';
+import { renderWithFinalForm } from '@fc/testing-library';
 
 import { ServiceComponent } from './service.component';
 import { ServiceImageComponent } from './service-image.component';
@@ -14,16 +12,6 @@ jest.mock('react-responsive');
 jest.mock('react-final-form-listeners');
 jest.mock('./service-image.component');
 jest.mock('./service-switch-label.component');
-
-const Wrapper = ({ children }: { children: React.ReactElement }) => (
-  <Form onSubmit={jest.fn()}>
-    {({ handleSubmit }) => (
-      <form data-testid="form-wrapper" onSubmit={handleSubmit}>
-        {children}
-      </form>
-    )}
-  </Form>
-);
 
 describe('ServiceComponent', () => {
   // given
@@ -41,9 +29,7 @@ describe('ServiceComponent', () => {
     jest.mocked(useMediaQuery).mockReturnValueOnce(true);
     jest.mocked(useMediaQuery).mockReturnValueOnce(true);
     // when
-    const { container } = render(<ServiceComponent service={serviceMock} />, {
-      wrapper: Wrapper,
-    });
+    const { container } = renderWithFinalForm(<ServiceComponent service={serviceMock} />);
 
     // then
     expect(container.firstChild).toMatchSnapshot();
@@ -54,9 +40,7 @@ describe('ServiceComponent', () => {
     jest.mocked(useMediaQuery).mockReturnValueOnce(false);
     jest.mocked(useMediaQuery).mockReturnValueOnce(false);
     // when
-    const { container } = render(<ServiceComponent service={serviceMock} />, {
-      wrapper: Wrapper,
-    });
+    const { container } = renderWithFinalForm(<ServiceComponent service={serviceMock} />);
 
     // then
     expect(container.firstChild).toMatchSnapshot();
@@ -64,12 +48,10 @@ describe('ServiceComponent', () => {
 
   it('should call ServiceImageComponent with service param', () => {
     // when
-    render(<ServiceComponent service={serviceMock} />, {
-      wrapper: Wrapper,
-    });
+    renderWithFinalForm(<ServiceComponent service={serviceMock} />);
 
     // then
-    expect(ServiceImageComponent).toHaveBeenCalledTimes(1);
+    expect(ServiceImageComponent).toHaveBeenCalledOnce();
     expect(ServiceImageComponent).toHaveBeenCalledWith(
       expect.objectContaining({ service: serviceMock }),
       {},
@@ -78,14 +60,12 @@ describe('ServiceComponent', () => {
 
   it('should call ServiceImageComponent with disabled as true and element should have the disabled class when service is not checked,', () => {
     // when
-    const { getByTestId } = render(<ServiceComponent service={serviceMock} />, {
-      wrapper: Wrapper,
-    });
+    const { getByTestId } = renderWithFinalForm(<ServiceComponent service={serviceMock} />);
     const element = getByTestId('form-wrapper').firstChild;
 
     // then
     expect(element).toHaveClass('disabled');
-    expect(ServiceImageComponent).toHaveBeenCalledTimes(1);
+    expect(ServiceImageComponent).toHaveBeenCalledOnce();
     expect(ServiceImageComponent).toHaveBeenCalledWith(
       expect.objectContaining({ disabled: true }),
       {},
@@ -94,15 +74,14 @@ describe('ServiceComponent', () => {
 
   it('should call ServiceImageComponent with disabled as false and element should not have the disable class when service is not checked,', () => {
     // when
-    const { getByTestId } = render(
+    const { getByTestId } = renderWithFinalForm(
       <ServiceComponent service={{ ...serviceMock, isChecked: true }} />,
-      { wrapper: Wrapper },
     );
     const element = getByTestId('form-wrapper').firstChild;
 
     // then
     expect(element).not.toHaveClass('disabled');
-    expect(ServiceImageComponent).toHaveBeenCalledTimes(1);
+    expect(ServiceImageComponent).toHaveBeenCalledOnce();
     expect(ServiceImageComponent).toHaveBeenCalledWith(
       expect.objectContaining({ disabled: false }),
       {},
@@ -111,12 +90,10 @@ describe('ServiceComponent', () => {
 
   it('should call ToggleInput with default params', () => {
     // when
-    render(<ServiceComponent service={serviceMock} />, {
-      wrapper: Wrapper,
-    });
+    renderWithFinalForm(<ServiceComponent service={serviceMock} />);
 
     // then
-    expect(ToggleInput).toHaveBeenCalledTimes(1);
+    expect(ToggleInput).toHaveBeenCalledOnce();
     expect(ToggleInput).toHaveBeenCalledWith(
       expect.objectContaining({
         disabled: false,
@@ -131,12 +108,10 @@ describe('ServiceComponent', () => {
 
   it('should call OnChange from react-final-form-listener with name param', () => {
     // when
-    render(<ServiceComponent service={serviceMock} />, {
-      wrapper: Wrapper,
-    });
+    renderWithFinalForm(<ServiceComponent service={serviceMock} />);
 
     // then
-    expect(OnChange).toHaveBeenCalledTimes(1);
+    expect(OnChange).toHaveBeenCalledOnce();
     expect(OnChange).toHaveBeenCalledWith(
       { children: expect.any(Function), name: 'idpList.any-uid' },
       {},
@@ -146,11 +121,8 @@ describe('ServiceComponent', () => {
   describe('when is not allowed to be updated', () => {
     it('should set the disabled class on the service component', () => {
       // when
-      const { getByTestId } = render(
+      const { getByTestId } = renderWithFinalForm(
         <ServiceComponent allowToBeUpdated={false} service={serviceMock} />,
-        {
-          wrapper: Wrapper,
-        },
       );
       const element = getByTestId(`service-component-${serviceMock.name}`);
 
@@ -160,12 +132,10 @@ describe('ServiceComponent', () => {
 
     it('should call ServiceImageComponent with disabled as true', () => {
       // when
-      render(<ServiceComponent allowToBeUpdated={false} service={serviceMock} />, {
-        wrapper: Wrapper,
-      });
+      renderWithFinalForm(<ServiceComponent allowToBeUpdated={false} service={serviceMock} />);
 
       // then
-      expect(ServiceImageComponent).toHaveBeenCalledTimes(1);
+      expect(ServiceImageComponent).toHaveBeenCalledOnce();
       expect(ServiceImageComponent).toHaveBeenCalledWith(
         expect.objectContaining({ disabled: true }),
         {},
@@ -174,12 +144,10 @@ describe('ServiceComponent', () => {
 
     it('should call ToggleInput with disabled as true', () => {
       // when
-      render(<ServiceComponent allowToBeUpdated={false} service={serviceMock} />, {
-        wrapper: Wrapper,
-      });
+      renderWithFinalForm(<ServiceComponent allowToBeUpdated={false} service={serviceMock} />);
 
       // then
-      expect(ToggleInput).toHaveBeenCalledTimes(1);
+      expect(ToggleInput).toHaveBeenCalledOnce();
       expect(ToggleInput).toHaveBeenCalledWith(
         expect.objectContaining({
           disabled: true,
@@ -190,9 +158,7 @@ describe('ServiceComponent', () => {
 
     it('should not call OnChange from react-final-form-listener', () => {
       // when
-      render(<ServiceComponent allowToBeUpdated={false} service={serviceMock} />, {
-        wrapper: Wrapper,
-      });
+      renderWithFinalForm(<ServiceComponent allowToBeUpdated={false} service={serviceMock} />);
 
       // then
       expect(OnChange).not.toHaveBeenCalled();

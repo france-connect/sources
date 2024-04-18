@@ -3,13 +3,13 @@
  * https://axios-http.com/docs/req_config
  *
  */
-import { AxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 import lodashOmit from 'lodash.omit';
 
 import { ConfigService } from '@fc/config';
 
 import { Options } from '../enums';
-import { HttpClientConfig, HttpClientOptions, HttpClientRequest } from '../interfaces';
+import type { HttpClientConfig, HttpClientOptions, HttpClientRequest } from '../interfaces';
 import { slashifyPath } from './slashify-path';
 
 export const getTimeout = (requestOptions: HttpClientOptions) => {

@@ -43,15 +43,15 @@ describe('Session', () => {
     });
   });
 
-  it('should have two cookies stored for SP with the property `sameSite` value set to `lax`', () => {
+  it('should have one cookie stored for SP with the property `sameSite` value set to `lax`', () => {
     const { SP_ROOT_URL } = getServiceProvider(
       `${Cypress.env('SP_NAME')}1-low`,
     );
     cy.visit(SP_ROOT_URL);
     cy.getCookies()
-      .should('have.length', 2)
+      .should('have.length', 1)
       .then((cookies) => {
-        expect(cookies[1]).to.have.property('sameSite', 'lax');
+        expect(cookies[0]).to.have.property('sameSite', 'lax');
       });
   });
 

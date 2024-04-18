@@ -38,6 +38,7 @@ Before(function () {
   setFixtureContext('service-providers.json', pathArray, 'serviceProviders');
   setFixtureContext('service-provider-configs.json', pathArray, 'spConfigs');
   setFixtureContext('identity-providers.json', pathArray, 'identityProviders');
+  setFixtureContext('identity-provider-configs.json', pathArray, 'idpConfigs');
   setFixtureContext('scopes.json', pathArray, 'scopes');
   setFixtureContext('users.json', pathArray, 'users');
 

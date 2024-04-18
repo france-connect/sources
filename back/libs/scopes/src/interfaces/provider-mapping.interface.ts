@@ -1,16 +1,14 @@
-import { IClaims } from './claims.interface';
-import { ILabelMapping } from './label-mapping.interface';
-import { IScopes } from './scopes.interface';
+import { ClaimsInterface } from './claims.interface';
+import { ScopesInterface } from './scopes.interface';
 
-export interface IProvider {
+export interface ProviderInterface {
   /* @todo typer çà */
   key: string;
   label: string;
 }
 
-export interface IProviderMappings {
-  provider: IProvider;
-  claims: IClaims;
-  labels: ILabelMapping<IClaims>;
-  scopes: IScopes;
+export interface ProviderMappingsInterface {
+  provider: ProviderInterface;
+  claims: ClaimsInterface;
+  scopes: ScopesInterface;
 }

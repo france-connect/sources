@@ -1,7 +1,7 @@
 import React from 'react';
-import { FieldInputProps } from 'react-final-form';
+import type { FieldInputProps } from 'react-final-form';
 
-import { CheckableLegend } from '../../../interfaces';
+import type { CheckableLegend } from '../../../interfaces';
 
 export interface ToggleLabelComponentProps {
   // @NOTE la regle est desactivée car le type provient de la librairie react-final-form

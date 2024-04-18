@@ -2,7 +2,7 @@ import { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { FcExceptionFilter } from '@fc/exceptions';
+import { FcExceptionFilter } from '@fc/exceptions-deprecated';
 import { LoggerService } from '@fc/logger';
 
 import { getLoggerMock } from '@mocks/logger';

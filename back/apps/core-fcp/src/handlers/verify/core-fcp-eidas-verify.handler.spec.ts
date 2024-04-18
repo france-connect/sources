@@ -3,12 +3,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { CoreAccountService, CoreAcrService } from '@fc/core';
 import { CryptographyEidasService } from '@fc/cryptography-eidas';
+import { I18nService } from '@fc/i18n';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
+import { getI18nServiceMock } from '@mocks/i18n';
 import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
@@ -18,6 +19,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
   let service: CoreFcpEidasVerifyHandler;
 
   const loggerServiceMock = getLoggerMock();
+  const i18nMock = getI18nServiceMock();
 
   const uidMock = '42';
 
@@ -100,7 +102,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
         CoreAcrService,
         CoreFcpEidasVerifyHandler,
         LoggerService,
-        SessionService,
+        I18nService,
         TrackingService,
         ServiceProviderAdapterMongoService,
         IdentityProviderAdapterMongoService,
@@ -115,8 +117,8 @@ describe('CoreFcpEidasVerifyHandler', () => {
       .useValue(coreAcrServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(SessionService)
-      .useValue(sessionServiceMock)
+      .overrideProvider(I18nService)
+      .useValue(i18nMock)
       .overrideProvider(TrackingService)
       .useValue(trackingMock)
       .overrideProvider(ServiceProviderAdapterMongoService)
@@ -132,7 +134,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
     jest.resetAllMocks();
 
     getInteractionMock.mockResolvedValue(getInteractionResultMock);
-    sessionServiceMock.get.mockResolvedValue(sessionDataMock);
+    sessionServiceMock.get.mockReturnValue(sessionDataMock);
     cryptographyEidasServiceMock.computeIdentityHash.mockReturnValueOnce(
       'spIdentityHash',
     );
@@ -187,7 +189,9 @@ describe('CoreFcpEidasVerifyHandler', () => {
     it('Should throw if identity provider is not usable', async () => {
       // Given
       const errorMock = new Error('my error');
-      sessionServiceMock.get.mockRejectedValueOnce(errorMock);
+      sessionServiceMock.get.mockImplementationOnce(() => {
+        throw errorMock;
+      });
       // Then
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
@@ -195,7 +199,9 @@ describe('CoreFcpEidasVerifyHandler', () => {
     it('Should throw if identity storage for service provider fails', async () => {
       // Given
       const errorMock = new Error('my error');
-      sessionServiceMock.set.mockRejectedValueOnce(errorMock);
+      sessionServiceMock.set.mockImplementationOnce(() => {
+        throw errorMock;
+      });
       // Then
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
@@ -249,6 +255,56 @@ describe('CoreFcpEidasVerifyHandler', () => {
         spMock.entityId,
         'spIdentityHash',
       );
+    });
+
+    it('should set language to en-GB in session', async () => {
+      // When
+      await service.handle(handleArgument);
+
+      // Then
+      expect(i18nMock.setSessionLanguage).toHaveBeenCalledExactlyOnceWith(
+        'en-GB',
+      );
+    });
+
+    it('Should save to session ', async () => {
+      // Given
+      const technicalClaims = { tech: 'claims' };
+
+      service['getTechnicalClaims'] = jest
+        .fn()
+        .mockReturnValueOnce(technicalClaims);
+      // When
+      await service.handle(handleArgument);
+      // Then
+      expect(sessionServiceMock.set).toHaveBeenCalledExactlyOnceWith({
+        idpIdentity: { sub: idpIdentityMock.sub },
+        spIdentity: {
+          email: idpIdentityMock.email,
+          ...technicalClaims,
+        },
+        accountId: accountIdMock,
+        subs: {
+          // FranceConnect claims naming convention
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          sp_id: 'computedSubSp',
+        },
+      });
+    });
+  });
+
+  describe('getTechnicalClaims', () => {
+    it('should return technical claims', () => {
+      // Given
+      const idpId = Symbol('idpId') as unknown as string;
+      // When
+      const result = service['getTechnicalClaims'](idpId);
+      // Then
+      expect(result).toEqual({
+        // OIDC fashion naming
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        idp_id: idpId,
+      });
     });
   });
 });

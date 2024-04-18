@@ -80,7 +80,7 @@ describe('LayoutHeaderMenuComponent', () => {
     );
 
     // then
-    expect(LayoutHeaderToolsComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHeaderToolsComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith(
       {
         firstname: 'any-firstname-mock',
@@ -128,7 +128,7 @@ describe('LayoutHeaderMenuComponent', () => {
     );
 
     // then
-    expect(LayoutHeaderNavigationComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHeaderNavigationComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledWith(
       {
         navigationItems: navigationItemsMock,
@@ -155,7 +155,7 @@ describe('LayoutHeaderMenuComponent', () => {
     );
 
     // then
-    expect(LayoutHeaderNavigationComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHeaderNavigationComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledWith(
       {
         className: expect.any(String),
@@ -183,7 +183,7 @@ describe('LayoutHeaderMenuComponent', () => {
     );
 
     // then
-    expect(LayoutHeaderNavigationComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHeaderNavigationComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledWith(
       {
         className: undefined,

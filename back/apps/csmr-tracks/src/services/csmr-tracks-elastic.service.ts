@@ -11,7 +11,11 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 import { IPaginationOptions } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { ElasticsearchConfig, formatMultiMatchGroup } from '@fc/elasticsearch';
+import {
+  ElasticsearchConfig,
+  formatMultiMatchGroup,
+  formatV2Query,
+} from '@fc/elasticsearch';
 import { LoggerService } from '@fc/logger';
 
 import { EVENT_MAPPING, NOW, SIX_MONTHS_AGO } from '../constants';
@@ -38,7 +42,7 @@ export const buildQuery = ([legacy, event]: [
   const terms = [{ action, type_action }];
   const query = {
     bool: {
-      should: [{ term: { event } }, formatMultiMatchGroup(terms, true)],
+      should: [formatV2Query(event), formatMultiMatchGroup(terms, true)],
     },
   };
   return query;

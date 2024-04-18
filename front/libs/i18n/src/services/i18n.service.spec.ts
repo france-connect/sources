@@ -1,3 +1,6 @@
+/* eslint jest/prefer-strict-equal: 0, jest-extended/prefer-to-have-been-called-once: 0, @typescript-eslint/dot-notation: 0, jest/prefer-spy-on: 0, jest/prefer-strict-equal: 0 */
+// @TODO fix later
+// This file got to many eslint/jest issues to be fixed
 import { I18nServiceNotInitializedExceptions, I18nTranslationNotFound } from '../exceptions';
 import { I18nService } from './i18n.service';
 
@@ -87,7 +90,7 @@ describe('I18nService', () => {
       const result = I18nService.instance().translate(keyMock);
 
       // Then
-      expect(result).toEqual('keyWithString translation');
+      expect(result).toBe('keyWithString translation');
     });
 
     it('should call handlePlural()', () => {
@@ -473,7 +476,7 @@ describe('I18nService', () => {
       const result = service['handleSubstitution'](inputMock, valuesMock);
 
       // Then
-      expect(result).toEqual('inputMockValue var1Value more text');
+      expect(result).toBe('inputMockValue var1Value more text');
     });
 
     it('should return the input with several substitutions', () => {
@@ -485,7 +488,7 @@ describe('I18nService', () => {
       const result = service['handleSubstitution'](inputMock, valuesMock);
 
       // Then
-      expect(result).toEqual('inputMockValue var1Value more text var2Value and even more text');
+      expect(result).toBe('inputMockValue var1Value more text var2Value and even more text');
     });
 
     it('should return the input with several substitutions for the same var and discard unused vars', () => {
@@ -497,7 +500,7 @@ describe('I18nService', () => {
       const result = service['handleSubstitution'](inputMock, valuesMock);
 
       // Then
-      expect(result).toEqual('inputMockValue var1Value more text var1Value and even more text');
+      expect(result).toBe('inputMockValue var1Value more text var1Value and even more text');
     });
   });
 });

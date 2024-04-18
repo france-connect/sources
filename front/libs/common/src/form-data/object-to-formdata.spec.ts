@@ -26,6 +26,8 @@ describe('objectToFormData', () => {
 
   it('should throw if argument is null', () => {
     // given
+    // @NOTE Disabled for testing purpose
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const object = null as unknown as {};
 
     // then
@@ -36,6 +38,8 @@ describe('objectToFormData', () => {
 
   it('should throw if argument is undefined', () => {
     // given
+    // @NOTE Disabled for testing purpose
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const object = undefined as unknown as {};
 
     // then
@@ -46,6 +50,8 @@ describe('objectToFormData', () => {
 
   it('should throw if argument is not an array', () => {
     // given
+    // @NOTE Disabled for testing purpose
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const object = [] as unknown as {};
 
     // then
@@ -84,7 +90,7 @@ describe('objectToFormData', () => {
     objectToFormData(objectMock);
 
     // then
-    expect(URLSearchParamsMock).toHaveBeenCalledTimes(1);
+    expect(URLSearchParamsMock).toHaveBeenCalledOnce();
     expect(appendMock).toHaveBeenCalledTimes(5);
   });
 });

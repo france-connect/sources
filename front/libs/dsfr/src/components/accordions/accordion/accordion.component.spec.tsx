@@ -86,7 +86,7 @@ describe('AccordionComponent', () => {
     const button = getByRole('button');
     fireEvent.click(button);
     // Then
-    expect(onAccordionClickMock).toHaveBeenCalledTimes(1);
+    expect(onAccordionClickMock).toHaveBeenCalledOnce();
   });
 
   it('should add classname on section element if it is in props', () => {

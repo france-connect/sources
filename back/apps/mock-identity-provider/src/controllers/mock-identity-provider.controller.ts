@@ -61,8 +61,8 @@ export class MockIdentityProviderController {
   ) {
     const { uid, params } = await this.oidcProvider.getInteraction(req, res);
 
-    const spName = await sessionOidc.get('spName');
-    const finalSpId = await appSession.get('finalSpId');
+    const spName = sessionOidc.get('spName');
+    const finalSpId = appSession.get('finalSpId');
 
     const response = {
       uid,
@@ -78,7 +78,7 @@ export class MockIdentityProviderController {
   // More than 4 parameters authorized for dependency injection
   // eslint-disable-next-line max-params
   @Post(MockIdentityProviderRoutes.INTERACTION_LOGIN)
-  async getLogin(
+  getLogin(
     @Req() req: Request,
     @Res() res: Response,
     @Body() body: SignInDTO,
@@ -91,10 +91,9 @@ export class MockIdentityProviderController {
     sessionOidc: ISessionService<OidcClientSession>,
     @Session('App')
     sessionApp: ISessionService<AppSession>,
-  ): Promise<void> {
+  ): void {
     const { login, password, acr } = body;
-    const spIdentity =
-      await this.mockIdentityProviderService.getIdentity(login);
+    const spIdentity = this.mockIdentityProviderService.getIdentity(login);
 
     if (!spIdentity) {
       throw new Error('Identity not found in database');
@@ -109,20 +108,20 @@ export class MockIdentityProviderController {
       throw new Error('Password is invalid');
     }
 
-    await sessionApp.set('userLogin', login);
+    sessionApp.set('userLogin', login);
 
-    const spId = await sessionOidc.get('spId');
+    const spId = sessionOidc.get('spId');
     const { sub, ...spIdentityCleaned } = spIdentity;
     const spAcr = acr;
 
-    await sessionOidc.set({
+    sessionOidc.set({
       spAcr,
       spIdentity: spIdentityCleaned,
       amr: ['pwd'],
       subs: { [spId]: sub },
     });
 
-    const session = await sessionOidc.get();
+    const session = sessionOidc.get();
 
     return this.oidcProvider.finishInteraction(req, res, session);
   }
@@ -160,22 +159,22 @@ export class MockIdentityProviderController {
 
     const transformedIdentity = getTransformed(identity, identityDto);
 
-    await this.prepareIdentity(transformedIdentity, sessionOidc);
+    this.prepareIdentity(transformedIdentity, sessionOidc);
 
-    const session = await sessionOidc.get();
+    const session = sessionOidc.get();
 
     return this.oidcProvider.finishInteraction(req, res, session);
   }
 
-  private async prepareIdentity(
+  private prepareIdentity(
     identity: MinimalCustomIdentityInterface,
     sessionOidc: ISessionService<OidcClientSession>,
-  ): Promise<void> {
+  ): void {
     const { acr, ...spIdentityCleaned } = identity;
-    const { spId } = await sessionOidc.get();
+    const { spId } = sessionOidc.get();
     const sub = this.mockIdentityProviderService.getSub(spIdentityCleaned);
 
-    await sessionOidc.set({
+    sessionOidc.set({
       spAcr: acr,
       spIdentity: spIdentityCleaned,
       amr: ['pwd'],

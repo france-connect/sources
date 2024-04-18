@@ -15,10 +15,6 @@ import {
 } from '../exceptions';
 import { ForbidRefreshInterceptor } from './forbid-refresh.interceptor';
 
-jest.mock('@fc/session/helper', () => ({
-  SessionService: jest.fn(),
-}));
-
 jest.mock('../decorators', () => ({
   ForbidRefresh: jest.fn(),
 }));
@@ -38,9 +34,6 @@ describe('ForbidRefreshInterceptor', () => {
     },
     sessionId: 'sessionIdValue',
   };
-
-  const SessionServiceMock = jest.mocked(SessionService);
-  SessionServiceMock.getBoundSession = jest.fn();
 
   const ForbidRefreshMock = jest.mocked(ForbidRefresh);
 
@@ -64,14 +57,23 @@ describe('ForbidRefreshInterceptor', () => {
     stepRoute: '/and/some/uri',
   };
 
+  const reflectorMock = {};
+
   beforeEach(async () => {
     jest.resetAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [ForbidRefreshInterceptor, ConfigService, Reflector],
+      providers: [
+        ForbidRefreshInterceptor,
+        ConfigService,
+        Reflector,
+        SessionService,
+      ],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
+      .overrideProvider(Reflector)
+      .useValue(reflectorMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
       .compile();
@@ -82,8 +84,7 @@ describe('ForbidRefreshInterceptor', () => {
 
     configServiceMock.get.mockReturnValue(configMock);
     httpContextMock.getRequest.mockReturnValue(reqMock);
-    sessionServiceMock.get.mockResolvedValue(sessionMock);
-    SessionServiceMock.getBoundSession.mockReturnValue(sessionServiceMock);
+    sessionServiceMock.get.mockReturnValue(sessionMock);
   });
 
   it('should be defined', () => {
@@ -95,12 +96,12 @@ describe('ForbidRefreshInterceptor', () => {
       interceptor['checkRefresh'] = jest.fn();
     });
 
-    it('should retrieve flag from ForbidRefresh decorator', async () => {
+    it('should retrieve flag from ForbidRefresh decorator', () => {
       // Given
       ForbidRefreshMock.get = jest.fn().mockReturnValueOnce(false);
 
       // When
-      await interceptor.intercept(contextMock, nextMock);
+      interceptor.intercept(contextMock, nextMock);
 
       // Then
       expect(ForbidRefreshMock.get).toHaveBeenCalledTimes(1);
@@ -111,25 +112,25 @@ describe('ForbidRefreshInterceptor', () => {
         ForbidRefreshMock.get = jest.fn().mockReturnValueOnce(false);
       });
 
-      it('should return result from next.handle()', async () => {
+      it('should return result from next.handle()', () => {
         // Given
         const handleResultMock = Symbol('handleResultMock');
         nextMock.handle.mockReturnValueOnce(handleResultMock);
 
         // When
-        const result = await interceptor.intercept(contextMock, nextMock);
+        const result = interceptor.intercept(contextMock, nextMock);
 
         // Then
         expect(result).toBe(handleResultMock);
       });
 
-      it('should not call interceptor.checkRefresh()', async () => {
+      it('should not call interceptor.checkRefresh()', () => {
         // Given
         const handleResultMock = { pipe: jest.fn() };
         nextMock.handle.mockReturnValueOnce(handleResultMock);
 
         // When
-        await interceptor.intercept(contextMock, nextMock);
+        interceptor.intercept(contextMock, nextMock);
 
         // Then
         expect(interceptor['checkRefresh']).not.toHaveBeenCalled();
@@ -137,7 +138,7 @@ describe('ForbidRefreshInterceptor', () => {
     });
 
     describe('if flag is set', () => {
-      it('should call checkRefresh', async () => {
+      it('should call checkRefresh', () => {
         // Given
         const handleResultMock = { pipe: jest.fn() };
 
@@ -145,7 +146,7 @@ describe('ForbidRefreshInterceptor', () => {
         ForbidRefreshMock.get = jest.fn().mockReturnValueOnce(true);
 
         // When
-        await interceptor.intercept(contextMock, nextMock);
+        interceptor.intercept(contextMock, nextMock);
 
         // Then
         expect(interceptor['checkRefresh']).toHaveBeenCalledTimes(1);
@@ -155,55 +156,28 @@ describe('ForbidRefreshInterceptor', () => {
   });
 
   describe('checkRefresh', () => {
-    it('should not throw if there is no active session', async () => {
+    it('should not throw if it is not a refresh', () => {
       // Given
-      httpContextMock.getRequest.mockReturnValueOnce({
-        req: { sessionId: undefined },
-      });
-      // When / Then
-      await expect(
-        interceptor['checkRefresh'](contextMock),
-      ).resolves.not.toThrow();
-    });
-
-    it('should not call extractSession if there is no active session', async () => {
-      // Given
-      httpContextMock.getRequest.mockReturnValueOnce({
-        sessionId: undefined,
-        route: { path: '' },
-      });
-
-      // When
-      await interceptor['checkRefresh'](contextMock);
-
-      // Then
-      expect(SessionServiceMock.getBoundSession).not.toHaveBeenCalled();
-    });
-
-    it('should not throw if it is not a refresh', async () => {
-      // Given
-      sessionServiceMock.get.mockResolvedValueOnce({
+      sessionServiceMock.get.mockReturnValueOnce({
         stepRoute: '/not/current/route',
       });
 
       // When
-      await expect(
-        interceptor['checkRefresh'](contextMock),
-      ).resolves.not.toThrow();
+      expect(() => interceptor['checkRefresh'](contextMock)).not.toThrow();
     });
 
-    it('should throw if it is a refresh', async () => {
+    it('should throw if it is a refresh', () => {
       // When / Then
-      await expect(interceptor['checkRefresh'](contextMock)).rejects.toThrow(
+      expect(() => interceptor['checkRefresh'](contextMock)).toThrow(
         UnexpectedNavigationException,
       );
     });
 
-    it('should throw if no stepRoute found', async () => {
+    it('should throw if no stepRoute found', () => {
       // Given
-      sessionServiceMock.get.mockReset().mockResolvedValue(null);
+      sessionServiceMock.get.mockReturnValueOnce(null);
       // When / Then
-      await expect(interceptor['checkRefresh'](contextMock)).rejects.toThrow(
+      expect(() => interceptor['checkRefresh'](contextMock)).toThrow(
         UndefinedStepRouteException,
       );
     });

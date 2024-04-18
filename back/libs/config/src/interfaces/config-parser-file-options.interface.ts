@@ -2,6 +2,6 @@
 
 // Declarative code
 
-export interface IConfigParserFileOptions {
+export interface ConfigParserFileOptionsInterface {
   optional?: boolean;
 }

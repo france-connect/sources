@@ -29,7 +29,7 @@ describe('ServiceImageComponent', () => {
     // then
     expect(container).toMatchSnapshot();
     expect(element).toBeInTheDocument();
-    expect(element.tagName).toStrictEqual('B');
+    expect(element.tagName).toBe('B');
   });
 
   it('should show an image', () => {
@@ -45,7 +45,7 @@ describe('ServiceImageComponent', () => {
     // then
     expect(container).toMatchSnapshot();
     expect(element).toBeInTheDocument();
-    expect(element.tagName).toStrictEqual('IMG');
+    expect(element.tagName).toBe('IMG');
   });
 
   it('should be in a disabled state', () => {

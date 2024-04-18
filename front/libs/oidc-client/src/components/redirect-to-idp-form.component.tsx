@@ -1,6 +1,8 @@
-import { ReactNode, useContext } from 'react';
+import type { ReactNode } from 'react';
+import { useContext } from 'react';
 
-import { AppContext, AppContextInterface } from '@fc/state-management';
+import type { AppContextInterface } from '@fc/state-management';
+import { AppContext } from '@fc/state-management';
 
 export type RedirectToIdpFormProps = {
   children: ReactNode;

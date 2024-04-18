@@ -43,6 +43,7 @@ const fspLegacyPartners = {
     platform: "CORE_LEGACY",
     eidas: 1,
     __v: 0,
+    rep_scope: [],
   },
 
   fsStats: {
@@ -94,6 +95,7 @@ const fspLegacyPartners = {
     production_key:
       "28e9ed103d6b075d371303a8bc5a66446f0cd4c0ce7ec237773276c247d28a68",
     whitelistByServiceProviderActivated: false,
+    rep_scope: [],
   },
 };
 

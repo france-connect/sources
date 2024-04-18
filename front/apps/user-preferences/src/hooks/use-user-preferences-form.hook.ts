@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { UserPreferencesData } from '../interfaces';
+import type { UserPreferencesData } from '../interfaces';
 import { checkHasDefaultConfiguration, checkSomeIdpHasBeenChangedSinceLoading } from '../utils';
 
 export interface useUserPreferencesFormProps {

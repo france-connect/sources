@@ -3,7 +3,7 @@ import { useMediaQuery } from 'react-responsive';
 
 import { useScrollTo } from '@fc/common';
 
-import { IUsePaginationHook, Pagination } from '../../interfaces';
+import type { IUsePaginationHook, Pagination } from '../../interfaces';
 import {
   getCurrentPage,
   getDisplayParameters,

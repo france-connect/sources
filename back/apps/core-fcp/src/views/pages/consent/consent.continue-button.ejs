@@ -4,5 +4,5 @@
   data-testid="consent-continue"
   aria-disabled="<%= disabled ? 'true' : 'false' %>"
   <%= disabled ? 'disabled' : '' %>>
-  Continuer sur <%= locals.spName %>
+  <%= $translate('consent.continue_to_sp', { spName }) %>
 </button>

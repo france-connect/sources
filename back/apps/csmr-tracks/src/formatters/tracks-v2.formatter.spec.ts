@@ -31,6 +31,7 @@ describe('CsmrTracksV2DataService', () => {
 
   const scopesMock = {
     getRichClaimsFromClaims: jest.fn(),
+    getRichClaimsFromScopes: jest.fn(),
   };
 
   const geoIpMock = {
@@ -120,6 +121,26 @@ describe('CsmrTracksV2DataService', () => {
 
       // Then
       expect(claims).toBe(getRichClaimsFromClaimsMockReturnedValue);
+    });
+
+    it('should return the return of scopesService.getRichClaimsFromScopes()', () => {
+      // Given
+      const sourceMock = {
+        scope: 'gender family_name birthdate birthplace',
+      } as unknown as ICsmrTracksV2FieldsData;
+
+      const getRichClaimsFromScopesMockReturnedValue = Symbol(
+        'getRichClaimsFromScopeMockReturnedValue',
+      );
+      scopesMock.getRichClaimsFromScopes.mockReturnValueOnce(
+        getRichClaimsFromScopesMockReturnedValue,
+      );
+
+      // When
+      const claims = service['getClaimsGroups'](sourceMock);
+
+      // Then
+      expect(claims).toBe(getRichClaimsFromScopesMockReturnedValue);
     });
   });
 

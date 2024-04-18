@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 
 // declarative file
-import { ReducersMapObject } from 'redux';
+import type { ReducersMapObject } from 'redux';
 
-import { GlobalState } from './global-state.interface';
+import type { GlobalState } from './global-state.interface';
 
 export interface StoreProviderProps<S extends GlobalState> {
   children: JSX.Element;

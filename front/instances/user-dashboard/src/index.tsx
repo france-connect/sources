@@ -12,6 +12,10 @@ const container = document.getElementById('root');
  * @see https://reactjs.org/blog/2022/03/08/react-18-upgrade-guide.html#updates-to-client-rendering-apis
  */
 const root = createRoot(container!);
+// @NOTE
+// The jest/require-hook rule seems to be a false positive
+// despite the filter by extension in the eslint configuration
+// eslint-disable-next-line jest/require-hook
 root.render(
   <React.StrictMode>
     <Application />

@@ -167,18 +167,18 @@ describe('OidcProviderService', () => {
       service['catchErrorEvents'] = jest.fn();
     });
 
-    it('Should create oidc-provider instance', async () => {
+    it('Should create oidc-provider instance', () => {
       // When
-      await service.onModuleInit();
+      service.onModuleInit();
       // Then
       expect(service).toBeDefined();
       // Access to private property via []
       expect(service['provider']).toBeInstanceOf(OidcProvider.Provider);
     });
 
-    it('should mount oidc-provider in express', async () => {
+    it('should mount oidc-provider in express', () => {
       // When
-      await service.onModuleInit();
+      service.onModuleInit();
       // Then
       expect(httpAdapterHostMock.httpAdapter.use).toHaveBeenCalledTimes(1);
       /**
@@ -187,43 +187,43 @@ describe('OidcProviderService', () => {
        */
     });
 
-    it('should throw if provider can not be instantied', async () => {
+    it('should throw if provider can not be instantied', () => {
       // Given
       service['ProviderProxy'] = BadProviderProxyMock;
       // Then
-      await expect(service.onModuleInit()).rejects.toThrow(
+      expect(() => service.onModuleInit()).toThrow(
         OidcProviderInitialisationException,
       );
     });
 
-    it('should throw if provider can not be mounted to server', async () => {
+    it('should throw if provider can not be mounted to server', () => {
       // Given
       service['ProviderProxy'] = ProviderProxyMock;
       httpAdapterHostMock.httpAdapter.use.mockImplementation(() => {
         throw Error('not working');
       });
       // Then
-      await expect(service.onModuleInit()).rejects.toThrow(
+      expect(() => service.onModuleInit()).toThrow(
         OidcProviderBindingException,
       );
     });
 
-    it('should call several internal initializers', async () => {
+    it('should call several internal initializers', () => {
       // Given
       service['ProviderProxy'] = ProviderProxyMock;
       // When
-      await service.onModuleInit();
+      service.onModuleInit();
       // Then
       expect(service['errorService']['catchErrorEvents']).toHaveBeenCalledTimes(
         1,
       );
     });
 
-    it('should call setProvider to allow oidcProviderConfigApp to retrieve this.provider ', async () => {
+    it('should call setProvider to allow oidcProviderConfigApp to retrieve this.provider ', () => {
       // Given
       service['ProviderProxy'] = ProviderProxyMock;
       // When
-      await service.onModuleInit();
+      service.onModuleInit();
       // Then
       expect(oidcProviderConfigAppMock.setProvider).toHaveBeenCalledTimes(1);
       expect(oidcProviderConfigAppMock.setProvider).toHaveBeenCalledWith({
@@ -576,11 +576,16 @@ describe('OidcProviderService', () => {
       // then
       await expect(
         // when
-        service.abortInteraction(reqMock, resMock, mockErr, mockErrDescription),
+        service.abortInteraction(reqMock, resMock, {
+          error: mockErr,
+          // oidc naming
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          error_description: mockErrDescription,
+        }),
       ).rejects.toThrow(OidcProviderRuntimeException);
     });
 
-    it('Should have called this.provider.interactionFinished with parameters', async () => {
+    it('Should have called this.provider.interactionFinished with parameters if retry params is false', async () => {
       // given
       const resMock = Symbol('mock result');
       const reqMock = Symbol('mock request');
@@ -588,12 +593,12 @@ describe('OidcProviderService', () => {
       const mockErrDescription = 'this is an error description';
 
       // when
-      await service.abortInteraction(
-        reqMock,
-        resMock,
-        mockErr,
-        mockErrDescription,
-      );
+      await service.abortInteraction(reqMock, resMock, {
+        error: mockErr,
+        // oidc naming
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        error_description: mockErrDescription,
+      });
 
       // then
       expect(providerMock.interactionFinished).toHaveBeenCalledTimes(1);
@@ -604,6 +609,35 @@ describe('OidcProviderService', () => {
           error: mockErr,
           // eslint-disable-next-line @typescript-eslint/naming-convention
           error_description: mockErrDescription,
+        },
+      );
+    });
+
+    it('Should have called this.provider.interactionFinished with error undefined if retry params is true', async () => {
+      // given
+      const resMock = Symbol('mock result');
+      const reqMock = Symbol('mock request');
+
+      // when
+      await service.abortInteraction(
+        reqMock,
+        resMock,
+        {
+          error: 'error',
+          // oidc naming
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          error_description: 'error description',
+        },
+        true,
+      );
+
+      // then
+      expect(providerMock.interactionFinished).toHaveBeenCalledTimes(1);
+      expect(providerMock.interactionFinished).toHaveBeenCalledWith(
+        reqMock,
+        resMock,
+        {
+          error: undefined,
         },
       );
     });

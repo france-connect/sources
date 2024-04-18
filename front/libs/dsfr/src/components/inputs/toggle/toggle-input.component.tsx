@@ -1,5 +1,5 @@
 import React from 'react';
-import { FieldInputProps } from 'react-final-form';
+import type { FieldInputProps } from 'react-final-form';
 
 export interface ToggleInputComponentProps {
   disabled?: boolean;
@@ -11,9 +11,6 @@ export interface ToggleInputComponentProps {
 export const ToggleInputComponent: React.FC<ToggleInputComponentProps> = React.memo(
   ({ disabled, input }: ToggleInputComponentProps) => (
     <input
-      // @NOTE on autorise la destructuration des proprietes car
-      // les propprietes fournies par react-final-form sont issues d'un contexte contrôlé
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...input}
       aria-describedby={`${input.name}-hint-text`}
       className="fr-toggle__input"

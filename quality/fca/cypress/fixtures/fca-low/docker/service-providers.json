@@ -9,9 +9,7 @@
     "mocked": true,
     "url": "https://fsa1-low.docker.dev-franceconnect.fr",
     "acrValue": "eidas1",
-    "claims": [
-      "amr"
-    ],
+    "claims": ["amr"],
     "selectors": {
       "fcaButton": "#call-authorize-button",
       "logoutButton": ".nav-logout"
@@ -22,14 +20,13 @@
     "name": "fsa2-low",
     "descriptions": [
       "avec une whitelist de FI",
-      "avec accès au FI par défaut (deuxième FS)"
+      "avec accès au FI par défaut (deuxième FS)",
+      "acceptant le privé"
     ],
     "mocked": true,
     "url": "https://fsa2-low.docker.dev-franceconnect.fr",
     "acrValue": "eidas1",
-    "claims": [
-      "amr"
-    ],
+    "claims": ["amr"],
     "selectors": {
       "fcaButton": "#call-authorize-button",
       "logoutButton": ".nav-logout"

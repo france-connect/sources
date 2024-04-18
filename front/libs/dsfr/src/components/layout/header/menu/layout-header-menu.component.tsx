@@ -1,7 +1,8 @@
 import classnames from 'classnames';
-import React, { MouseEventHandler } from 'react';
+import type { MouseEventHandler } from 'react';
+import React from 'react';
 
-import { NavigationLink } from '../../../../interfaces';
+import type { NavigationLink } from '../../../../interfaces';
 import { LayoutHeaderToolsComponent } from '../tools';
 import styles from './layout-header-menu.module.scss';
 import { LayoutHeaderNavigationComponent } from './layout-header-navigation.component';

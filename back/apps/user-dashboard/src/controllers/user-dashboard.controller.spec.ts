@@ -5,18 +5,22 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { IPaginationResult } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import {
-  SessionCsrfService,
-  SessionInvalidCsrfSelectIdpException,
-} from '@fc/session';
+import { CsrfTokenGuard } from '@fc/csrf';
+import { I18nService } from '@fc/i18n';
 import { TrackingService } from '@fc/tracking';
-import { TrackDto, TracksService } from '@fc/tracks';
+import {
+  ICsmrTracksOutputTrack,
+  TrackDto,
+  TracksResults,
+  TracksService,
+} from '@fc/tracks';
 import {
   FormattedIdpDto,
   FormattedIdpSettingDto,
   UserPreferencesService,
 } from '@fc/user-preferences';
 
+import { getI18nServiceMock } from '@mocks/i18n';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { GetUserTracesQueryDto } from '../dto';
@@ -44,6 +48,7 @@ describe('UserDashboardController', () => {
 
   const uuidMockedValue = 'uuid-v4-Mocked-Value';
 
+  const i18nMock = getI18nServiceMock();
   const sessionServiceMock = getSessionServiceMock();
   const randomStringMock = 'randomStringMockValue';
   const idpStateMock = 'idpStateMockValue';
@@ -56,12 +61,6 @@ describe('UserDashboardController', () => {
     sub: 'identityMock.sub value',
     // eslint-disable-next-line @typescript-eslint/naming-convention
     idp_id: '8dfc4080-c90d-4234-969b-f6c961de3e90',
-  };
-
-  const sessionGenericCsrfServiceMock = {
-    get: jest.fn(),
-    save: jest.fn(),
-    validate: jest.fn(),
   };
 
   const cryptographyMock = {
@@ -113,6 +112,7 @@ describe('UserDashboardController', () => {
       UPDATED_USER_PREFERENCES_IDP: {},
     },
   };
+  const guardMock = { canActivate: jest.fn() };
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -122,17 +122,17 @@ describe('UserDashboardController', () => {
       controllers: [UserDashboardController],
       providers: [
         ConfigService,
-        SessionCsrfService,
         TracksService,
         TrackingService,
         UserPreferencesService,
         UserDashboardService,
+        I18nService,
       ],
     })
+      .overrideGuard(CsrfTokenGuard)
+      .useValue(guardMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
-      .overrideProvider(SessionCsrfService)
-      .useValue(sessionGenericCsrfServiceMock)
       .overrideProvider(TracksService)
       .useValue(tracksServiceMock)
       .overrideProvider(TrackingService)
@@ -141,6 +141,8 @@ describe('UserDashboardController', () => {
       .useValue(userPreferencesMock)
       .overrideProvider(UserDashboardService)
       .useValue(userDashboardServiceMock)
+      .overrideProvider(I18nService)
+      .useValue(i18nMock)
       .compile();
 
     controller = module.get<UserDashboardController>(UserDashboardController);
@@ -153,7 +155,7 @@ describe('UserDashboardController', () => {
       state: idpStateMock,
     });
 
-    sessionServiceMock.get.mockResolvedValue(identityMock);
+    sessionServiceMock.get.mockReturnValue(identityMock);
 
     configMock.get.mockReturnValueOnce({
       payloadEncoding: 'base64',
@@ -178,32 +180,10 @@ describe('UserDashboardController', () => {
 
   describe('getCsrfToken', () => {
     const csrfTokenMock = 'csrfTokenMock';
-    beforeEach(() => {
-      // Given
-      sessionGenericCsrfServiceMock.get.mockReturnValueOnce(csrfTokenMock);
-    });
 
-    it('should call csrfService.get', async () => {
+    it('should return csrfToken', () => {
       // When
-      await controller.getCsrfToken(sessionServiceMock);
-      // Then
-      expect(sessionGenericCsrfServiceMock.get).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call csrfService.save', async () => {
-      // When
-      await controller.getCsrfToken(sessionServiceMock);
-      // Then
-      expect(sessionGenericCsrfServiceMock.save).toHaveBeenCalledTimes(1);
-      expect(sessionGenericCsrfServiceMock.save).toHaveBeenCalledWith(
-        sessionServiceMock,
-        csrfTokenMock,
-      );
-    });
-
-    it('should return csrfToken', async () => {
-      // When
-      const result = await controller.getCsrfToken(sessionServiceMock);
+      const result = controller.getCsrfToken(csrfTokenMock);
       // Then
       expect(result).toEqual({ csrfToken: csrfTokenMock });
     });
@@ -221,7 +201,10 @@ describe('UserDashboardController', () => {
       provider: { key: 'keyValue', label: 'labelValue' },
     };
 
-    const listTracks: { meta: IPaginationResult; payload: TrackDto[] } = {
+    const addLabelsToTracksResult: {
+      meta: IPaginationResult;
+      payload: TrackDto[];
+    } = {
       meta: {
         total: 2,
         offset: 0,
@@ -241,8 +224,13 @@ describe('UserDashboardController', () => {
       ],
     };
 
+    const listTracksResult = Symbol('listTracksResult');
+
     beforeEach(() => {
-      tracksServiceMock.getList.mockResolvedValueOnce(listTracks);
+      tracksServiceMock.getList.mockResolvedValueOnce(listTracksResult);
+      controller['addLabelsToTracks'] = jest
+        .fn()
+        .mockReturnValue(addLabelsToTracksResult);
     });
 
     it('should fetch session', async () => {
@@ -260,7 +248,7 @@ describe('UserDashboardController', () => {
 
     it('should return a 401 if no session', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce(undefined);
+      sessionServiceMock.get.mockReturnValueOnce(undefined);
       // When
       await controller.getUserTraces(
         reqMock,
@@ -291,6 +279,21 @@ describe('UserDashboardController', () => {
       );
     });
 
+    it('should call addLabelsToTracks', async () => {
+      // When
+      await controller.getUserTraces(
+        reqMock,
+        resMock,
+        sessionServiceMock,
+        queryMock,
+      );
+      // Then
+      expect(controller['addLabelsToTracks']).toHaveBeenCalledTimes(1);
+      expect(controller['addLabelsToTracks']).toHaveBeenCalledWith(
+        listTracksResult,
+      );
+    });
+
     it('should return tracks.getList', async () => {
       // When
       const result = await controller.getUserTraces(
@@ -301,8 +304,96 @@ describe('UserDashboardController', () => {
       );
       // Then
       expect(result).toStrictEqual({
-        ...listTracks,
+        ...addLabelsToTracksResult,
         type: 'TRACKS_DATA',
+      });
+    });
+  });
+
+  describe('addLabelsToTracks', () => {
+    it('should call addLabelsToTrack with each track', () => {
+      // Given
+      const trackMock1 = {
+        claims: [
+          {
+            identifier: 'identifier 1 Value',
+            provider: {},
+          },
+        ],
+      };
+      const trackMock2 = {
+        claims: [
+          {
+            identifier: 'identifier 2 Value',
+            provider: {},
+          },
+        ],
+      };
+
+      const tracksMock = {
+        payload: [trackMock1, trackMock2],
+      } as unknown as TracksResults;
+
+      controller['addLabelsToTrack'] = jest
+        .fn()
+        .mockImplementation((track) => track);
+
+      // When
+      controller['addLabelsToTracks'](tracksMock);
+      // Then
+      expect(controller['addLabelsToTrack']).toHaveBeenCalledTimes(2);
+      expect(controller['addLabelsToTrack']).toHaveBeenNthCalledWith(
+        1,
+        trackMock1,
+        0,
+        tracksMock.payload,
+      );
+      expect(controller['addLabelsToTrack']).toHaveBeenNthCalledWith(
+        2,
+        trackMock2,
+        1,
+        tracksMock.payload,
+      );
+    });
+  });
+
+  describe('addLabelsToTrack', () => {
+    it('should return track with labels', () => {
+      // Given
+      controller['i18n'].translate = jest
+        .fn()
+        .mockReturnValueOnce('first claim label')
+        .mockReturnValueOnce('second claim label');
+      const trackMock = {
+        claims: [
+          {
+            identifier: 'identifier1Value',
+            provider: {},
+          },
+          {
+            identifier: 'identifier2Value',
+            provider: {},
+          },
+        ],
+      } as unknown as ICsmrTracksOutputTrack;
+
+      // When
+      const result = controller['addLabelsToTrack'](trackMock);
+
+      // Then
+      expect(result).toStrictEqual({
+        claims: [
+          {
+            identifier: 'identifier1Value',
+            label: 'first claim label',
+            provider: {},
+          },
+          {
+            identifier: 'identifier2Value',
+            label: 'second claim label',
+            provider: {},
+          },
+        ],
       });
     });
   });
@@ -318,7 +409,7 @@ describe('UserDashboardController', () => {
 
     it('should return a 401 if no session', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce(undefined);
+      sessionServiceMock.get.mockReturnValueOnce(undefined);
       // When
       await controller.getUserInfos(resMock, sessionServiceMock);
       // Then
@@ -330,7 +421,7 @@ describe('UserDashboardController', () => {
 
     it('should return an object with familyName, givenName and idp used for the connection props', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce(identityMock);
+      sessionServiceMock.get.mockReturnValueOnce(identityMock);
       // When
       const { firstname, lastname, idpId } = (await controller.getUserInfos(
         resMock,
@@ -354,7 +445,7 @@ describe('UserDashboardController', () => {
 
     it('should return a 401 if no session', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce(undefined);
+      sessionServiceMock.get.mockReturnValueOnce(undefined);
       // When
       await controller.getUserPreferences(reqMock, resMock, sessionServiceMock);
       // Then
@@ -444,7 +535,7 @@ describe('UserDashboardController', () => {
 
     it('should return a 401 if no session', async () => {
       // Given
-      sessionServiceMock.get.mockResolvedValueOnce(undefined);
+      sessionServiceMock.get.mockReturnValueOnce(undefined);
       // When
       await controller.updateUserPreferences(
         reqMock,
@@ -555,23 +646,6 @@ describe('UserDashboardController', () => {
         resolvedUserPreferencesMock,
         identityMock,
       );
-    });
-
-    it('should fail if csrfToken is invalid', async () => {
-      // Given
-      sessionGenericCsrfServiceMock.validate.mockImplementationOnce(() => {
-        throw new Error();
-      });
-
-      // Then / When
-      await expect(
-        controller.updateUserPreferences(
-          reqMock,
-          resMock,
-          updatePreferencesBodyMock,
-          sessionServiceMock,
-        ),
-      ).rejects.toThrow(SessionInvalidCsrfSelectIdpException);
     });
   });
 

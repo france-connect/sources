@@ -1,17 +1,22 @@
 /* istanbul ignore file */
 
 // Declarative code
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsEnum,
+  IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
   IsUrl,
   MinLength,
   NotContains,
   Validate,
+  ValidateIf,
+  ValidateNested,
 } from 'class-validator';
 
 import {
@@ -21,6 +26,32 @@ import {
 import { Amr, ResponseTypes } from '@fc/oidc';
 
 import { JwksUriValidator } from './jwksuri.validator';
+
+export class ModalIdpAdapterMongo {
+  @IsBoolean()
+  readonly active: boolean;
+
+  @IsString()
+  @ValidateIf(({ active }) => active)
+  readonly title: string;
+
+  @IsString()
+  @ValidateIf(({ active }) => active)
+  readonly body: string;
+
+  @IsString()
+  @ValidateIf(({ active }) => active)
+  readonly continueText: string;
+
+  @ValidateIf(({ active, moreInfoUrl }) => active && moreInfoUrl.length > 0)
+  @IsString()
+  @IsNotEmpty()
+  readonly moreInfoLabel?: string;
+
+  @ValidateIf(({ active, moreInfoLabel }) => active && moreInfoLabel.length > 0)
+  @IsUrl()
+  readonly moreInfoUrl?: string;
+}
 
 export class MetadataIdpAdapterMongoDTO {
   @IsString()
@@ -55,6 +86,12 @@ export class MetadataIdpAdapterMongoDTO {
 
   @IsRegisteredHandler()
   readonly featureHandlers: IFeatureHandlerDatabase;
+
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ModalIdpAdapterMongo)
+  readonly modal?: ModalIdpAdapterMongo;
 
   /**
    * CLIENT METADATA

@@ -1,4 +1,4 @@
-import { renderWithFinalForm } from '@fc/tests-utils';
+import { renderWithFinalForm } from '@fc/testing-library';
 
 import { ToggleInput } from './toggle.input';
 
@@ -8,10 +8,9 @@ jest.mock('./toggle-label.component');
 describe('ToggleInput', () => {
   it('should match the snapshot', () => {
     // When
-    const { container } = renderWithFinalForm(ToggleInput, {
-      label: 'any-label-mock',
-      name: 'any-name-mock',
-    });
+    const { container } = renderWithFinalForm(
+      <ToggleInput label="any-label-mock" name="any-name-mock" />,
+    );
 
     // Then
     expect(container).toMatchSnapshot();

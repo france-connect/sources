@@ -1,4 +1,4 @@
-import { GlobalState, InitialState } from './interfaces';
+import type { GlobalState, InitialState } from './interfaces';
 
 /** @see file ./interfaces/initial-state.ts */
 export const getInitialState = <S extends GlobalState, IS extends InitialState = InitialState>(

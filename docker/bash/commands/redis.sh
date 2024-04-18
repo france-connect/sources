@@ -25,5 +25,5 @@ _get_redis_db_for_service() {
   local service=$1
   local pattern="Redis_DB="
 
-  docker-compose exec ${service} env | grep ${pattern} | sed "s/${pattern}//"| sed 's/\r//'
+  $DOCKER_COMPOSE exec ${service} env | grep ${pattern} | sed "s/${pattern}//"| sed 's/\r//'
 }

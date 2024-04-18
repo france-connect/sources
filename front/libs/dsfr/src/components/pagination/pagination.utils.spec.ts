@@ -15,7 +15,7 @@ describe('getPagesCount', () => {
     });
 
     // then
-    expect(result).toEqual(1);
+    expect(result).toBe(1);
   });
 
   it('should return 1 if totalItems equal 1 and itemsPerPage equal 1', () => {
@@ -26,7 +26,7 @@ describe('getPagesCount', () => {
     });
 
     // then
-    expect(result).toEqual(1);
+    expect(result).toBe(1);
   });
 
   it('should return 3 if totalItems equal 9 and itemsPerPage equal 3', () => {
@@ -37,7 +37,7 @@ describe('getPagesCount', () => {
     });
 
     // then
-    expect(result).toEqual(3);
+    expect(result).toBe(3);
   });
 
   it('should return 4 if totalItems equal 10 and itemsPerPage equal 3', () => {
@@ -48,7 +48,7 @@ describe('getPagesCount', () => {
     });
 
     // then
-    expect(result).toEqual(4);
+    expect(result).toBe(4);
   });
 });
 
@@ -61,7 +61,7 @@ describe('getCurrentPage', () => {
     });
 
     // then
-    expect(result).toEqual(0);
+    expect(result).toBe(0);
   });
 
   it('should return the current page number as 0, when item of the page is 9 and 10 items per page', () => {
@@ -72,7 +72,7 @@ describe('getCurrentPage', () => {
     });
 
     // then
-    expect(result).toEqual(0);
+    expect(result).toBe(0);
   });
 
   it('should return the current page number as 1, when first item of the page is 3 and 3 items per page', () => {
@@ -83,7 +83,7 @@ describe('getCurrentPage', () => {
     });
 
     // then
-    expect(result).toEqual(1);
+    expect(result).toBe(1);
   });
 
   it('should return the current page number as 10, when first item of the page is 100 and 10 items per page', () => {
@@ -94,7 +94,7 @@ describe('getCurrentPage', () => {
     });
 
     // then
-    expect(result).toEqual(10);
+    expect(result).toBe(10);
   });
 });
 
@@ -418,7 +418,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showFirstPage).toBe(false);
+      expect(result.showFirstPage).toBeFalse();
     });
 
     it('should return showFirstPage as false, when number of items == 0', () => {
@@ -431,7 +431,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showFirstPage).toBe(false);
+      expect(result.showFirstPage).toBeFalse();
     });
 
     it('should return showFirstPage as false, when currentPage === 0', () => {
@@ -444,7 +444,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showFirstPage).toBe(false);
+      expect(result.showFirstPage).toBeFalse();
     });
 
     it('should return showFirstPage as true, when pagesCount > numberOfPagesShownIntoNavigation', () => {
@@ -457,7 +457,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showFirstPage).toBe(false);
+      expect(result.showFirstPage).toBeFalse();
     });
 
     it('should return showFirstPage as false, when currentPage <= numberOfPagesShownIntoNavigation / 2, numberOfPagesShownIntoNavigation as odd number', () => {
@@ -470,7 +470,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showFirstPage).toBe(false);
+      expect(result.showFirstPage).toBeFalse();
     });
 
     it('should return showFirstPage as true, when currentPage > numberOfPagesShownIntoNavigation / 2, numberOfPagesShownIntoNavigation as odd number', () => {
@@ -483,7 +483,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showFirstPage).toBe(true);
+      expect(result.showFirstPage).toBeTrue();
     });
 
     it('should return showFirstPage as false, when currentPage === numberOfPagesShownIntoNavigation / 2, numberOfPagesShownIntoNavigation as even number', () => {
@@ -496,7 +496,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showFirstPage).toBe(false);
+      expect(result.showFirstPage).toBeFalse();
     });
   });
 
@@ -511,7 +511,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showFirstEllipsis).toBe(false);
+      expect(result.showFirstEllipsis).toBeFalse();
     });
 
     it('should return showFirstEllipsis as false, when showFirstPage is true and currentPage < numberOfPagesShownIntoNavigation / 2 + 1', () => {
@@ -524,7 +524,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showFirstEllipsis).toBe(false);
+      expect(result.showFirstEllipsis).toBeFalse();
     });
 
     it('should return showFirstEllipsis as true, when showFirstPage is true and currentPage  > numberOfPagesShownIntoNavigation / 2 + 1', () => {
@@ -537,7 +537,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showFirstEllipsis).toBe(true);
+      expect(result.showFirstEllipsis).toBeTrue();
     });
   });
 
@@ -552,7 +552,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showLastPage).toBe(false);
+      expect(result.showLastPage).toBeFalse();
     });
 
     it('should return showLastPage as false, when number of items === 0', () => {
@@ -565,7 +565,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showLastPage).toBe(false);
+      expect(result.showLastPage).toBeFalse();
     });
 
     it('should return showLastPage as false, when number of currentPage === pagesCount', () => {
@@ -578,7 +578,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showLastPage).toBe(false);
+      expect(result.showLastPage).toBeFalse();
     });
 
     it('should return showLastPage as false, when number of currentPage + numberOfPagesShownIntoNavigation / 2 > zeroIndexPagesCount', () => {
@@ -591,7 +591,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showLastPage).toBe(false);
+      expect(result.showLastPage).toBeFalse();
     });
 
     it('should return showLastPage as true, when number of currentPage + numberOfPagesShownIntoNavigation / 2 < zeroIndexPagesCount', () => {
@@ -604,7 +604,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showLastPage).toBe(false);
+      expect(result.showLastPage).toBeFalse();
     });
   });
 
@@ -619,7 +619,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showLastEllipsis).toBe(false);
+      expect(result.showLastEllipsis).toBeFalse();
     });
 
     it('should return showLastEllipsis as false, when showLastPage is true and currentPage + numberOfPagesShownIntoNavigation /  2 + 1 > zeroIndexPagesCount', () => {
@@ -632,7 +632,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showLastEllipsis).toBe(false);
+      expect(result.showLastEllipsis).toBeFalse();
     });
 
     it('should return showLastEllipsis as true, when showLastPage is true and currentPage + numberOfPagesShownIntoNavigation / 2 + 1 < zeroIndexPagesCount', () => {
@@ -645,7 +645,7 @@ describe('getDisplayParameters', () => {
       });
 
       // then
-      expect(result.showLastEllipsis).toBe(true);
+      expect(result.showLastEllipsis).toBeTrue();
     });
   });
 });

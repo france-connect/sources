@@ -60,7 +60,7 @@ const fsa = {
     ssoDisabled: false,
   },
 
-  // -- FSA - FSA2-LOW - Activated - ES256 - encrypted response - No post-logout-redirect-uri
+  // -- FSA - FSA2-LOW - Activated - ES256 - encrypted response - No post-logout-redirect-uri - Accept private
   "FSA2-LOW": {
     name: "FSA - FSA2-LOW",
     title: "FSA - FSA2-LOW Title",
@@ -78,7 +78,7 @@ const fsa = {
     email: "fsa2@franceconnect.loc",
     IPServerAddressesAndRanges: ["1.1.1.1"],
     active: true,
-    type: "public",
+    type: "private",
     __v: 4,
     featureHandlers: { none: "" },
     updatedAt: new Date("2019-04-24 17:09:17"),
@@ -113,6 +113,7 @@ const fsa = {
       "0e7c099f-fe86-49a0-b7d1-19df45397212",
       "405d3839-9182-415f-9926-597489d11509",
       "46f5d9f9-881d-46b1-bdcc-0548913ea443",
+      "71144ab3-ee1a-4401-b7b3-79b44f7daeeb",
     ],
     identityConsent: false,
     trustedIdentity: false,

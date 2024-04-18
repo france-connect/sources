@@ -3,6 +3,7 @@
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
 import { MockIdentityProviderSession } from '@fc/mock-identity-provider';
+import { MockIdentityProviderRoutes } from '@fc/mock-identity-provider/enums';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
 
@@ -10,7 +11,7 @@ const env = new ConfigParser(process.env, 'Session');
 
 const cookieOptions: ISessionCookieOptions = {
   signed: true,
-  sameSite: 'Lax',
+  sameSite: 'lax',
   httpOnly: true,
   secure: true,
   maxAge: 600000, // 10 minutes
@@ -26,9 +27,18 @@ export default {
   lifetime: 600, // 10 minutes
   sessionIdLength: 64,
   slidingExpiration: true,
-  excludedRoutes: [
-    OidcProviderRoutes.JWKS,
-    OidcProviderRoutes.OPENID_CONFIGURATION,
+  middlewareExcludedRoutes: [OidcProviderRoutes.END_SESSION_CONFIRMATION],
+  middlewareIncludedRoutes: [
+    // Connect flow
+    OidcProviderRoutes.AUTHORIZATION,
+    MockIdentityProviderRoutes.INDEX,
+    MockIdentityProviderRoutes.INTERACTION,
+    MockIdentityProviderRoutes.INTERACTION_LOGIN,
+    MockIdentityProviderRoutes.INTERACTION_LOGIN_CUSTOM,
+
+    // Disconnect flow
+    OidcProviderRoutes.END_SESSION,
   ],
   schema: MockIdentityProviderSession,
+  defaultData: {},
 } as SessionConfig;

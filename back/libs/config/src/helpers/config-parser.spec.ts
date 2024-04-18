@@ -21,6 +21,7 @@ describe('ConfigParser', () => {
     'someprefix/foo': 'bar',
     'someprefix/bar': '{"fizz":"buzz"}',
     'someprefix/baz': 'true',
+    'someprefix/emptyString': '',
     'someprefix/woo': '42',
     'someprefix/zin': '/some/path/to/read.txt',
   };
@@ -148,6 +149,33 @@ describe('ConfigParser', () => {
       const result = reader.string(path);
       // Then
       expect(result).toBe('bar');
+    });
+
+    it('should return simple variable even if undefinedIfEmpty is true', () => {
+      // Given
+      const path = 'foo';
+      // When
+      const result = reader.string(path, { undefinedIfEmpty: true });
+      // Then
+      expect(result).toBe('bar');
+    });
+
+    it('should return empty string if undefinedIfEmpty is false', () => {
+      // Given
+      const path = 'emptyString';
+      // When
+      const result = reader.string(path, { undefinedIfEmpty: false });
+      // Then
+      expect(result).toBe('');
+    });
+
+    it('should return undefined if undefinedIfEmpty is true', () => {
+      // Given
+      const path = 'emptyString';
+      // When
+      const result = reader.string(path, { undefinedIfEmpty: true });
+      // Then
+      expect(result).toBe(undefined);
     });
   });
 

@@ -9,29 +9,24 @@ import {
   IsNumber,
   IsOptional,
   IsString,
-  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
-import { IProvider, IRichClaim } from '@fc/scopes';
+import { ProviderInterface, RichClaimInterface } from '@fc/scopes';
 
 import { TrackableEvent } from '../enums';
 import { ICsmrTracksOutputTrack } from '../interfaces';
 
-export class Provider implements IProvider {
+export class Provider implements ProviderInterface {
   @IsString()
   key: string;
 
   @IsString()
   label: string;
 }
-export class RichClaim implements IRichClaim {
+export class RichClaim implements RichClaimInterface {
   @IsString()
   identifier: string;
-
-  @IsString()
-  @ValidateIf((object, value) => value !== null)
-  label: string;
 
   @ValidateNested()
   @Type(() => Provider)

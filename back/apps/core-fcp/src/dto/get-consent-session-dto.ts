@@ -16,7 +16,7 @@ import { IOidcIdentity, OidcIdentityDto } from '@fc/oidc';
 import { RnippPivotIdentity } from '@fc/rnipp';
 
 import { AppSession } from './app-session.dto';
-import { CoreSessionDto } from './core-session.dto';
+import { CoreSession } from './core-session.dto';
 
 export class GetConsentOidcClientSessionDto extends CoreBaseOidcClientSessionDto {
   // Metadata: We MUST restrict the routes we can come from
@@ -77,6 +77,6 @@ export class GetConsentSessionDto {
   readonly OidcClient: GetConsentOidcClientSessionDto;
 
   @Expose()
-  @Type(() => CoreSessionDto)
-  readonly Core: CoreSessionDto;
+  @Type(() => CoreSession)
+  readonly Core: CoreSession;
 }

@@ -31,7 +31,7 @@ describe('AxiosErrorCatcherProvider', () => {
     // when
     render(axiosErrorCatcherProvider);
     // then
-    expect(axios.interceptors.response.use).toHaveBeenCalledTimes(1);
+    expect(axios.interceptors.response.use).toHaveBeenCalledOnce();
     expect(axios.interceptors.response.use).toHaveBeenCalledWith(undefined, expect.any(Function));
     expect(axios.interceptors.response.eject).toHaveBeenCalledTimes(0);
   });
@@ -50,7 +50,7 @@ describe('AxiosErrorCatcherProvider', () => {
     const { unmount } = render(axiosErrorCatcherProvider);
     unmount();
     // then
-    expect(axios.interceptors.response.eject).toHaveBeenCalledTimes(1);
+    expect(axios.interceptors.response.eject).toHaveBeenCalledOnce();
     expect(axios.interceptors.response.eject).toHaveBeenCalledWith(interceptorNumber);
   });
 
@@ -81,7 +81,7 @@ describe('AxiosErrorCatcherProvider', () => {
       });
       // then
       await waitFor(() => {
-        expect(setStateMock).toHaveBeenCalledTimes(1);
+        expect(setStateMock).toHaveBeenCalledOnce();
         expect(setStateMock).toHaveBeenCalledWith({ codeError: 401, hasError: true });
       });
     });

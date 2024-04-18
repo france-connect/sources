@@ -67,6 +67,7 @@ export default {
       revocation: { enabled: true },
       rpInitiatedLogout: { enabled: true },
       resourceIndicators: { enabled: false },
+      claimsParameter: { enabled: true },
     },
     acceptQueryParamAccessTokens: true,
     ttl: {
@@ -116,9 +117,11 @@ export default {
       ],
       // claims for FC legacy compatibility
       address: ['address'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       phone: ['phone_number'],
+      // claims for aidant connect
+      // node-oidc-provider like key
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      rep_scope: null,
     },
     clientDefaults: {
       // node-oidc-provider defined key

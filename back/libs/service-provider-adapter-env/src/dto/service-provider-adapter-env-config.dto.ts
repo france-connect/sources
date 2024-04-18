@@ -87,8 +87,9 @@ export class ServiceProvider {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_encrypted_response_enc: string;
 
+  @IsOptional()
   @IsUrl()
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly jwks_uri: string;
+  readonly jwks_uri?: string;
 }

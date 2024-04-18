@@ -1,6 +1,6 @@
-import { IClaim } from './claims.interface';
-import { IRichClaim } from './rich-claim.interface';
-import { IScope } from './scopes.interface';
+import { ClaimInterface } from './claims.interface';
+import { RichClaimInterface } from './rich-claim.interface';
+import { ScopeInterface } from './scopes.interface';
 
-export type IClaimIndex = Map<IClaim, IRichClaim>;
-export type IScopeIndex = Map<IScope, IClaim[]>;
+export type ClaimIndexInterface = Map<ClaimInterface, RichClaimInterface>;
+export type ScopeIndexInterface = Map<ScopeInterface, ClaimInterface[]>;

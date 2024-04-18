@@ -9,7 +9,7 @@ services:
       context: "${WORKING_DIR}"
       dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
       args:
-        MONGO_VERSION: "4.4"
+        MONGO_VERSION: "5.0.23"
     volumes:
       - "${VOLUMES_DIR}/mongo-fca-low/scripts:/opt/scripts"
       - "${VOLUMES_DIR}/mongo-fca-low/initdb.d:/docker-entrypoint-initdb.d"

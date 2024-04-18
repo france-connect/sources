@@ -18,7 +18,7 @@ import { OidcProviderRoutes } from '@fc/oidc-provider';
 import { RnippPivotIdentity } from '@fc/rnipp';
 
 import { AppSession } from './app-session.dto';
-import { CoreSessionDto } from './core-session.dto';
+import { CoreSession } from './core-session.dto';
 
 export class GetInteractionOidcClientSessionDto extends CoreBaseOidcClientSessionDto {
   // Metadata: We MAY have an accountId (SSO)
@@ -64,6 +64,6 @@ export class GetInteractionSessionDto {
   readonly OidcClient: GetInteractionOidcClientSessionDto;
 
   @Expose()
-  @Type(() => CoreSessionDto)
-  readonly Core: CoreSessionDto;
+  @Type(() => CoreSession)
+  readonly Core: CoreSession;
 }

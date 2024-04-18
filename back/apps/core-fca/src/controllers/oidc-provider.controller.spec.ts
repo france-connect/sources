@@ -36,7 +36,6 @@ describe('OidcProviderController', () => {
   const interactionFinishedValue = Symbol('interactionFinishedValue');
 
   const oidcClientSessionDataMock: OidcClientSession = {
-    csrfToken: randomStringMock,
     spId: spIdMock,
     idpId: idpIdMock,
     idpNonce: idpNonceMock,
@@ -68,7 +67,7 @@ describe('OidcProviderController', () => {
       .useValue(oidcProviderServiceMock)
       .compile();
 
-    oidcProviderController = await app.get<OidcProviderController>(
+    oidcProviderController = app.get<OidcProviderController>(
       OidcProviderController,
     );
     oidcProviderServiceMock.finishInteraction.mockReturnValue(
@@ -78,7 +77,7 @@ describe('OidcProviderController', () => {
       interactionDetailsResolved,
     );
 
-    sessionServiceMock.get.mockResolvedValue(oidcClientSessionDataMock);
+    sessionServiceMock.get.mockReturnValue(oidcClientSessionDataMock);
     sessionServiceMock.reset.mockResolvedValueOnce(sessionIdMock);
   });
 
@@ -107,26 +106,26 @@ describe('OidcProviderController', () => {
   });
 
   describe('getLogin()', () => {
-    it('should throw an exception if no identity in session', async () => {
+    it('should throw an exception if no identity in session', () => {
       // Given
       const next = jest.fn();
-      sessionServiceMock.get.mockResolvedValue({
+      sessionServiceMock.get.mockReturnValueOnce({
         csrfToken: randomStringMock,
         interactionId: interactionIdMock,
         spAcr: acrMock,
         spName: spNameMock,
       });
       // Then
-      await expect(
+      expect(() =>
         oidcProviderController.getLogin(reqMock, next, sessionServiceMock),
-      ).rejects.toThrow(CoreMissingIdentityException);
+      ).toThrow(CoreMissingIdentityException);
     });
 
-    it('should call next', async () => {
+    it('should call next', () => {
       // Given
       const res = {};
       // When
-      await oidcProviderController.getLogin(reqMock, res, sessionServiceMock);
+      oidcProviderController.getLogin(reqMock, res, sessionServiceMock);
       // Then
       expect(oidcProviderServiceMock.finishInteraction).toHaveBeenCalledTimes(
         1,
@@ -138,11 +137,11 @@ describe('OidcProviderController', () => {
       );
     });
 
-    it('should return result from controller.oidcProvider.finishInteraction()', async () => {
+    it('should return result from controller.oidcProvider.finishInteraction()', () => {
       // Given
       const res = {};
       // When
-      const result = await oidcProviderController.getLogin(
+      const result = oidcProviderController.getLogin(
         reqMock,
         res,
         sessionServiceMock,

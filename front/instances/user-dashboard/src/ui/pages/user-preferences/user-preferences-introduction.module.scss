@@ -1,7 +1,3 @@
-// @TODO check if this import is necessary
-// DSFR styles is already imported into main application file
-@import '@fc/dsfr/styles';
-
 .title {
   color: var(--text-active-blue-france);
 }
@@ -14,7 +10,7 @@
   }
 
   > img {
-    border: 2px solid $blue-france-500;
+    border: 2px solid var(--border-active-blue-france);
     border-radius: 8px;
   }
 }

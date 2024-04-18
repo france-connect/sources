@@ -290,4 +290,8 @@ export default class ServiceProviderPage {
   getMockIntrospectionTokenText(): Cypress.Chainable<string> {
     return cy.get('#json').first().invoke('text');
   }
+
+  getInteractionErrorMessage(): ChainableElement {
+    return cy.get('[data-testid="interaction-error-message"]');
+  }
 }

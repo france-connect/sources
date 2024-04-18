@@ -1,9 +1,16 @@
 /* istanbul ignore file */
 
 // Declarative file
-import { CoreAuthorizeParamsInterface, CoreServiceInterface } from '@fc/core';
+import { Response } from 'express';
 
-export interface CoreFcpServiceInterface extends CoreServiceInterface {}
+import { CoreServiceInterface } from '@fc/core';
 
-export interface CoreFcpAuthorizeParamsInterface
-  extends CoreAuthorizeParamsInterface {}
+import { CoreFcpAuthorizationParametersInterface } from './core-fcp-authorization-parameters.interface';
+
+export interface CoreFcpServiceInterface extends CoreServiceInterface {
+  redirectToIdp: (
+    res: Response,
+    idpId: string,
+    authorizeParams: CoreFcpAuthorizationParametersInterface,
+  ) => Promise<void>;
+}

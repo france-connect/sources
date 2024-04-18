@@ -4,7 +4,6 @@ export interface ServiceProviderConfig {
   redirectUri: string;
   redirectUriLogout: string;
   site: string;
-  jwksUri: string;
   emails: string[];
   ipAddresses: string[];
   scopes: string[];

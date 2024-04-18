@@ -10,15 +10,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "paths": {
-      "@entities/*": [
-        "entities/*"
-      ],
-      "@fc/rnipp": [
-        "libs/rnipp/src"
-      ],
-      "@fc/rnipp/*": [
-        "libs/rnipp/src/*"
-      ],
+      "@entities/*": ["entities/*"],
+      "@fc/rnipp": ["libs/rnipp/src"],
+      "@fc/rnipp/*": ["libs/rnipp/src/*"],
       "@fc/identity-provider-adapter-mongo": [
         "libs/identity-provider-adapter-mongo/src"
       ],
@@ -31,240 +25,88 @@
       "@fc/data-provider-adapter-mongo/*": [
         "libs/data-provider-adapter-mongo/src/*"
       ],
-      "@fc/identity": [
-        "libs/identity/src"
-      ],
-      "@fc/identity/*": [
-        "libs/identity/src/*"
-      ],
+      "@fc/identity": ["libs/identity/src"],
+      "@fc/identity/*": ["libs/identity/src/*"],
       "@fc/service-provider-adapter-mongo": [
         "libs/service-provider-adapter-mongo/src"
       ],
       "@fc/service-provider-adapter-mongo/*": [
         "libs/service-provider-adapter-mongo/src/*"
       ],
-      "@fc/logger-legacy": [
-        "libs/logger-legacy/src"
-      ],
-      "@fc/logger-legacy/*": [
-        "libs/logger-legacy/src/*"
-      ],
-      "@mocks/logger-legacy": [
-        "libs/logger-legacy/.mocks"
-      ],
-      "@mocks/logger-legacy/*": [
-        "libs/logger-legacy/.mocks/*"
-      ],
-      "@fc/logger": [
-        "libs/logger/src"
-      ],
-      "@fc/logger/*": [
-        "libs/logger/src/*"
-      ],
-      "@mocks/logger": [
-        "libs/logger/.mocks"
-      ],
-      "@mocks/logger/*": [
-        "libs/logger/.mocks/*"
-      ],
-      "@fc/oidc-provider": [
-        "libs/oidc-provider/src"
-      ],
-      "@fc/oidc-provider/*": [
-        "libs/oidc-provider/src/*"
-      ],
-      "@fc/oidc-client": [
-        "libs/oidc-client/src"
-      ],
-      "@fc/oidc-client/*": [
-        "libs/oidc-client/src/*"
-      ],
-      "@fc/cryptography-fcp": [
-        "libs/cryptography-fcp/src"
-      ],
-      "@fc/cryptography-fcp/*": [
-        "libs/cryptography-fcp/src/*"
-      ],
-      "@fc/cryptography": [
-        "libs/cryptography/src"
-      ],
-      "@fc/cryptography/*": [
-        "libs/cryptography/src/*"
-      ],
-      "@fc/core": [
-        "libs/core/src"
-      ],
-      "@fc/core/*": [
-        "libs/core/src/*"
-      ],
-      "@fc/core-fcp-logger": [
-        "libs/core-fcp-logger/src"
-      ],
-      "@fc/core-fcp-logger/*": [
-        "libs/core-fcp-logger/src/*"
-      ],
-      "@fc/eidas-bridge": [
-        "apps/eidas-bridge/src"
-      ],
-      "@fc/eidas-bridge/*": [
-        "apps/eidas-bridge/src/*"
-      ],
-      "@fc/core-fca": [
-        "apps/core-fca/src"
-      ],
-      "@fc/core-fca/*": [
-        "apps/core-fca/src/*"
-      ],
-      "@fc/core-fcp": [
-        "apps/core-fcp/src"
-      ],
-      "@fc/core-fcp/*": [
-        "apps/core-fcp/src/*"
-      ],
-      "@fc/csmr-hsm": [
-        "apps/csmr-hsm/src"
-      ],
-      "@fc/csmr-hsm/*": [
-        "apps/csmr-hsm/src/*"
-      ],
-      "@fc/csmr-http-proxy": [
-        "apps/csmr-http-proxy/src"
-      ],
-      "@fc/csmr-http-proxy/*": [
-        "apps/csmr-http-proxy/src/*"
-      ],
-      "@fc/csmr-tracks": [
-        "apps/csmr-tracks/src"
-      ],
-      "@fc/csmr-tracks/*": [
-        "apps/csmr-tracks/src/*"
-      ],
-      "@fc/common": [
-        "libs/common/src"
-      ],
-      "@fc/common/*": [
-        "libs/common/src/*"
-      ],
-      "@fc/config": [
-        "libs/config/src"
-      ],
-      "@fc/config/*": [
-        "libs/config/src/*"
-      ],
-      "@mocks/config": [
-        "libs/config/.mocks"
-      ],
-      "@mocks/config/*": [
-        "libs/config/.mocks/*"
-      ],
-      "@fc/exceptions": [
-        "libs/exceptions/src"
-      ],
-      "@fc/exceptions/*": [
-        "libs/exceptions/src/*"
-      ],
-      "@fc/ministries": [
-        "libs/ministries/src"
-      ],
-      "@fc/ministries/*": [
-        "libs/ministries/src/*"
-      ],
-      "@fc/mongoose": [
-        "libs/mongoose/src"
-      ],
-      "@fc/mongoose/*": [
-        "libs/mongoose/src/*"
-      ],
-      "@fc/redis": [
-        "libs/redis/src"
-      ],
-      "@fc/redis/*": [
-        "libs/redis/src/*"
-      ],
-      "@mocks/redis": [
-        "libs/redis/.mocks"
-      ],
-      "@mocks/redis/*": [
-        "libs/redis/.mocks/*"
-      ],
-      "@fc/rabbitmq": [
-        "libs/rabbitmq/src"
-      ],
-      "@fc/rabbitmq/*": [
-        "libs/rabbitmq/src/*"
-      ],
-      "@fc/hsm": [
-        "libs/hsm/src"
-      ],
-      "@fc/hsm/*": [
-        "libs/hsm/src/*"
-      ],
-      "@fc/microservices": [
-        "libs/microservices/src"
-      ],
-      "@fc/microservices/*": [
-        "libs/microservices/src/*"
-      ],
-      "@fc/account": [
-        "libs/account/src"
-      ],
-      "@fc/account/*": [
-        "libs/account/src/*"
-      ],
-      "@fc/oidc": [
-        "libs/oidc/src"
-      ],
-      "@fc/oidc/*": [
-        "libs/oidc/src/*"
-      ],
-      "@fc/http-proxy": [
-        "libs/http-proxy/src"
-      ],
-      "@fc/http-proxy/*": [
-        "libs/http-proxy/src/*"
-      ],
-      "@fc/session": [
-        "libs/session/src"
-      ],
-      "@fc/session/*": [
-        "libs/session/src/*"
-      ],
-      "@fc/override-oidc-provider": [
-        "libs/override-oidc-provider/src"
-      ],
-      "@fc/override-oidc-provider/*": [
-        "libs/override-oidc-provider/src/*"
-      ],
-      "@fc/mailer": [
-        "libs/mailer/src"
-      ],
-      "@fc/mailer/*": [
-        "libs/mailer/src/*"
-      ],
-      "@fc/mock-service-provider": [
-        "apps/mock-service-provider/src"
-      ],
-      "@fc/mock-service-provider/*": [
-        "apps/mock-service-provider/src/*"
-      ],
-      "@fc/tracking": [
-        "libs/tracking/src"
-      ],
-      "@fc/tracking/*": [
-        "libs/tracking/src/*"
-      ],
-      "@fc/tracking-context": [
-        "libs/tracking-context/src"
-      ],
-      "@fc/tracking-context/*": [
-        "libs/tracking-context/src/*"
-      ],
-      "@fc/app": [
-        "libs/app/src"
-      ],
-      "@fc/app/*": [
-        "libs/app/src/*"
-      ],
+      "@fc/logger-legacy": ["libs/logger-legacy/src"],
+      "@fc/logger-legacy/*": ["libs/logger-legacy/src/*"],
+      "@mocks/logger-legacy": ["libs/logger-legacy/.mocks"],
+      "@mocks/logger-legacy/*": ["libs/logger-legacy/.mocks/*"],
+      "@fc/logger": ["libs/logger/src"],
+      "@fc/logger/*": ["libs/logger/src/*"],
+      "@mocks/logger": ["libs/logger/.mocks"],
+      "@mocks/logger/*": ["libs/logger/.mocks/*"],
+      "@fc/oidc-provider": ["libs/oidc-provider/src"],
+      "@fc/oidc-provider/*": ["libs/oidc-provider/src/*"],
+      "@fc/oidc-client": ["libs/oidc-client/src"],
+      "@fc/oidc-client/*": ["libs/oidc-client/src/*"],
+      "@fc/cryptography-fcp": ["libs/cryptography-fcp/src"],
+      "@fc/cryptography-fcp/*": ["libs/cryptography-fcp/src/*"],
+      "@fc/cryptography": ["libs/cryptography/src"],
+      "@fc/cryptography/*": ["libs/cryptography/src/*"],
+      "@fc/core": ["libs/core/src"],
+      "@fc/core/*": ["libs/core/src/*"],
+      "@fc/core-fcp-logger": ["libs/core-fcp-logger/src"],
+      "@fc/core-fcp-logger/*": ["libs/core-fcp-logger/src/*"],
+      "@fc/eidas-bridge": ["apps/eidas-bridge/src"],
+      "@fc/eidas-bridge/*": ["apps/eidas-bridge/src/*"],
+      "@fc/core-fca": ["apps/core-fca/src"],
+      "@fc/core-fca/*": ["apps/core-fca/src/*"],
+      "@fc/core-fcp": ["apps/core-fcp/src"],
+      "@fc/core-fcp/*": ["apps/core-fcp/src/*"],
+      "@fc/csmr-hsm": ["apps/csmr-hsm/src"],
+      "@fc/csmr-hsm/*": ["apps/csmr-hsm/src/*"],
+      "@fc/csmr-http-proxy": ["apps/csmr-http-proxy/src"],
+      "@fc/csmr-http-proxy/*": ["apps/csmr-http-proxy/src/*"],
+      "@fc/csmr-tracks": ["apps/csmr-tracks/src"],
+      "@fc/csmr-tracks/*": ["apps/csmr-tracks/src/*"],
+      "@fc/common": ["libs/common/src"],
+      "@fc/common/*": ["libs/common/src/*"],
+      "@fc/config": ["libs/config/src"],
+      "@fc/config/*": ["libs/config/src/*"],
+      "@mocks/config": ["libs/config/.mocks"],
+      "@mocks/config/*": ["libs/config/.mocks/*"],
+      "@fc/exceptions-deprecated": ["libs/exceptions-deprecated/src"],
+      "@fc/exceptions-deprecated/*": ["libs/exceptions-deprecated/src/*"],
+      "@fc/ministries": ["libs/ministries/src"],
+      "@fc/ministries/*": ["libs/ministries/src/*"],
+      "@fc/mongoose": ["libs/mongoose/src"],
+      "@fc/mongoose/*": ["libs/mongoose/src/*"],
+      "@fc/redis": ["libs/redis/src"],
+      "@fc/redis/*": ["libs/redis/src/*"],
+      "@mocks/redis": ["libs/redis/.mocks"],
+      "@mocks/redis/*": ["libs/redis/.mocks/*"],
+      "@fc/rabbitmq": ["libs/rabbitmq/src"],
+      "@fc/rabbitmq/*": ["libs/rabbitmq/src/*"],
+      "@fc/hsm": ["libs/hsm/src"],
+      "@fc/hsm/*": ["libs/hsm/src/*"],
+      "@fc/microservices": ["libs/microservices/src"],
+      "@fc/microservices/*": ["libs/microservices/src/*"],
+      "@fc/account": ["libs/account/src"],
+      "@fc/account/*": ["libs/account/src/*"],
+      "@fc/oidc": ["libs/oidc/src"],
+      "@fc/oidc/*": ["libs/oidc/src/*"],
+      "@fc/http-proxy": ["libs/http-proxy/src"],
+      "@fc/http-proxy/*": ["libs/http-proxy/src/*"],
+      "@fc/session": ["libs/session/src"],
+      "@fc/session/*": ["libs/session/src/*"],
+      "@fc/override-oidc-provider": ["libs/override-oidc-provider/src"],
+      "@fc/override-oidc-provider/*": ["libs/override-oidc-provider/src/*"],
+      "@fc/mailer": ["libs/mailer/src"],
+      "@fc/mailer/*": ["libs/mailer/src/*"],
+      "@fc/mock-service-provider": ["apps/mock-service-provider/src"],
+      "@fc/mock-service-provider/*": ["apps/mock-service-provider/src/*"],
+      "@fc/tracking": ["libs/tracking/src"],
+      "@fc/tracking/*": ["libs/tracking/src/*"],
+      "@fc/tracking-context": ["libs/tracking-context/src"],
+      "@fc/tracking-context/*": ["libs/tracking-context/src/*"],
+      "@fc/app": ["libs/app/src"],
+      "@fc/app/*": ["libs/app/src/*"],
       "@fc/identity-provider-adapter-env": [
         "libs/identity-provider-adapter-env/src"
       ],
@@ -277,233 +119,95 @@
       "@fc/service-provider-adapter-env/*": [
         "libs/service-provider-adapter-env/src/*"
       ],
-      "@fc/mock-identity-provider": [
-        "apps/mock-identity-provider/src"
-      ],
-      "@fc/mock-identity-provider/*": [
-        "apps/mock-identity-provider/src/*"
-      ],
-      "@fc/eidas-country": [
-        "libs/eidas-country/src"
-      ],
-      "@fc/eidas-country/*": [
-        "libs/eidas-country/src/*"
-      ],
-      "@fc/eidas-light-protocol": [
-        "libs/eidas-light-protocol/src"
-      ],
-      "@fc/eidas-light-protocol/*": [
-        "libs/eidas-light-protocol/src/*"
-      ],
-      "@fc/eidas-client": [
-        "libs/eidas-client/src"
-      ],
-      "@fc/eidas-client/*": [
-        "libs/eidas-client/src/*"
-      ],
-      "@fc/apache-ignite": [
-        "libs/apache-ignite/src"
-      ],
-      "@fc/apache-ignite/*": [
-        "libs/apache-ignite/src/*"
-      ],
-      "@fc/eidas-provider": [
-        "libs/eidas-provider/src"
-      ],
-      "@fc/eidas-provider/*": [
-        "libs/eidas-provider/src/*"
-      ],
-      "@fc/user-dashboard": [
-        "apps/user-dashboard/src"
-      ],
-      "@fc/user-dashboard/*": [
-        "apps/user-dashboard/src/*"
-      ],
-      "@fc/eidas-oidc-mapper": [
-        "libs/eidas-oidc-mapper/src"
-      ],
-      "@fc/eidas-oidc-mapper/*": [
-        "libs/eidas-oidc-mapper/src/*"
-      ],
-      "@fc/eidas": [
-        "libs/eidas/src"
-      ],
-      "@fc/eidas/*": [
-        "libs/eidas/src/*"
-      ],
-      "@fc/notifications": [
-        "libs/notifications/src"
-      ],
-      "@fc/notifications/*": [
-        "libs/notifications/src/*"
-      ],
-      "@fc/scopes": [
-        "libs/scopes/src"
-      ],
-      "@fc/scopes/*": [
-        "libs/scopes/src/*"
-      ],
-      "@fc/feature-handler": [
-        "libs/feature-handler/src"
-      ],
-      "@fc/feature-handler/*": [
-        "libs/feature-handler/src/*"
-      ],
-      "@fc/cryptography-fca": [
-        "libs/cryptography-fca/src"
-      ],
-      "@fc/cryptography-fca/*": [
-        "libs/cryptography-fca/src/*"
-      ],
-      "@fc/cryptography-eidas": [
-        "libs/cryptography-eidas/src"
-      ],
-      "@fc/cryptography-eidas/*": [
-        "libs/cryptography-eidas/src/*"
-      ],
-      "@fc/elasticsearch": [
-        "libs/elasticsearch/src"
-      ],
-      "@fc/elasticsearch/*": [
-        "libs/elasticsearch/src/*"
-      ],
-      "@fc/csv": [
-        "libs/csv/src"
-      ],
-      "@fc/csv/*": [
-        "libs/csv/src/*"
-      ],
-      "@fc/cog": [
-        "libs/cog/src"
-      ],
-      "@fc/cog/*": [
-        "libs/cog/src/*"
-      ],
-      "@fc/bridge-http-proxy": [
-        "apps/bridge-http-proxy/src"
-      ],
-      "@fc/bridge-http-proxy/*": [
-        "apps/bridge-http-proxy/src/*"
-      ],
-      "@fc/csmr-user-preferences": [
-        "apps/csmr-user-preferences/src"
-      ],
-      "@fc/csmr-user-preferences/*": [
-        "apps/csmr-user-preferences/src/*"
-      ],
-      "@fc/data-provider-core-auth": [
-        "libs/data-provider-core-auth/src"
-      ],
-      "@fc/data-provider-core-auth/*": [
-        "libs/data-provider-core-auth/src/*"
-      ],
-      "@fc/tracks": [
-        "libs/tracks/src"
-      ],
-      "@fc/tracks/*": [
-        "libs/tracks/src/*"
-      ],
-      "@fc/hybridge-http-proxy": [
-        "libs/hybridge-http-proxy/src"
-      ],
-      "@fc/hybridge-http-proxy/*": [
-        "libs/hybridge-http-proxy/src/*"
-      ],
-      "@fc/user-preferences": [
-        "libs/user-preferences/src"
-      ],
-      "@fc/user-preferences/*": [
-        "libs/user-preferences/src/*"
-      ],
-      "@fc/geoip-maxmind": [
-        "libs/geoip-maxmind/src"
-      ],
-      "@fc/geoip-maxmind/*": [
-        "libs/geoip-maxmind/src/*"
-      ],
-      "@fc/jwt": [
-        "libs/jwt/src"
-      ],
-      "@fc/jwt/*": [
-        "libs/jwt/src/*"
-      ],
-      "@mocks/jwt": [
-        "libs/jwt/.mocks"
-      ],
-      "@mocks/jwt/*": [
-        "libs/jwt/.mocks/*"
-      ],
-      "@fc/csmr-account": [
-        "apps/csmr-account/src"
-      ],
-      "@fc/csmr-account/*": [
-        "apps/csmr-account/src/*"
-      ],
-      "@fc/mock-rnipp": [
-        "apps/mock-rnipp/src"
-      ],
-      "@fc/mock-rnipp/*": [
-        "apps/mock-rnipp/src/*"
-      ],
-      "@fc/mock-data-provider": [
-        "apps/mock-data-provider/src"
-      ],
-      "@fc/mock-data-provider/*": [
-        "apps/mock-data-provider/src/*"
-      ],
-      "@fc/oidc-acr": [
-        "libs/oidc-acr/src"
-      ],
-      "@fc/oidc-acr/*": [
-        "libs/oidc-acr/src/*"
-      ],
-      "@fc/flow-steps": [
-        "libs/flow-steps/src"
-      ],
-      "@fc/flow-steps/*": [
-        "libs/flow-steps/src/*"
-      ],
-      "@fc/data-provider-adapter-core": [
-        "libs/data-provider-adapter-core/src"
-      ],
+      "@fc/mock-identity-provider": ["apps/mock-identity-provider/src"],
+      "@fc/mock-identity-provider/*": ["apps/mock-identity-provider/src/*"],
+      "@fc/eidas-country": ["libs/eidas-country/src"],
+      "@fc/eidas-country/*": ["libs/eidas-country/src/*"],
+      "@fc/eidas-light-protocol": ["libs/eidas-light-protocol/src"],
+      "@fc/eidas-light-protocol/*": ["libs/eidas-light-protocol/src/*"],
+      "@fc/eidas-client": ["libs/eidas-client/src"],
+      "@fc/eidas-client/*": ["libs/eidas-client/src/*"],
+      "@fc/apache-ignite": ["libs/apache-ignite/src"],
+      "@fc/apache-ignite/*": ["libs/apache-ignite/src/*"],
+      "@fc/eidas-provider": ["libs/eidas-provider/src"],
+      "@fc/eidas-provider/*": ["libs/eidas-provider/src/*"],
+      "@fc/user-dashboard": ["apps/user-dashboard/src"],
+      "@fc/user-dashboard/*": ["apps/user-dashboard/src/*"],
+      "@fc/eidas-oidc-mapper": ["libs/eidas-oidc-mapper/src"],
+      "@fc/eidas-oidc-mapper/*": ["libs/eidas-oidc-mapper/src/*"],
+      "@fc/eidas": ["libs/eidas/src"],
+      "@fc/eidas/*": ["libs/eidas/src/*"],
+      "@fc/notifications": ["libs/notifications/src"],
+      "@fc/notifications/*": ["libs/notifications/src/*"],
+      "@fc/scopes": ["libs/scopes/src"],
+      "@fc/scopes/*": ["libs/scopes/src/*"],
+      "@fc/feature-handler": ["libs/feature-handler/src"],
+      "@fc/feature-handler/*": ["libs/feature-handler/src/*"],
+      "@fc/cryptography-fca": ["libs/cryptography-fca/src"],
+      "@fc/cryptography-fca/*": ["libs/cryptography-fca/src/*"],
+      "@fc/cryptography-eidas": ["libs/cryptography-eidas/src"],
+      "@fc/cryptography-eidas/*": ["libs/cryptography-eidas/src/*"],
+      "@fc/elasticsearch": ["libs/elasticsearch/src"],
+      "@fc/elasticsearch/*": ["libs/elasticsearch/src/*"],
+      "@fc/csv": ["libs/csv/src"],
+      "@fc/csv/*": ["libs/csv/src/*"],
+      "@fc/cog": ["libs/cog/src"],
+      "@fc/cog/*": ["libs/cog/src/*"],
+      "@fc/bridge-http-proxy": ["apps/bridge-http-proxy/src"],
+      "@fc/bridge-http-proxy/*": ["apps/bridge-http-proxy/src/*"],
+      "@fc/csmr-user-preferences": ["apps/csmr-user-preferences/src"],
+      "@fc/csmr-user-preferences/*": ["apps/csmr-user-preferences/src/*"],
+      "@fc/data-provider-core-auth": ["libs/data-provider-core-auth/src"],
+      "@fc/data-provider-core-auth/*": ["libs/data-provider-core-auth/src/*"],
+      "@fc/tracks": ["libs/tracks/src"],
+      "@fc/tracks/*": ["libs/tracks/src/*"],
+      "@fc/hybridge-http-proxy": ["libs/hybridge-http-proxy/src"],
+      "@fc/hybridge-http-proxy/*": ["libs/hybridge-http-proxy/src/*"],
+      "@fc/user-preferences": ["libs/user-preferences/src"],
+      "@fc/user-preferences/*": ["libs/user-preferences/src/*"],
+      "@fc/geoip-maxmind": ["libs/geoip-maxmind/src"],
+      "@fc/geoip-maxmind/*": ["libs/geoip-maxmind/src/*"],
+      "@fc/jwt": ["libs/jwt/src"],
+      "@fc/jwt/*": ["libs/jwt/src/*"],
+      "@mocks/jwt": ["libs/jwt/.mocks"],
+      "@mocks/jwt/*": ["libs/jwt/.mocks/*"],
+      "@fc/csmr-account": ["apps/csmr-account/src"],
+      "@fc/csmr-account/*": ["apps/csmr-account/src/*"],
+      "@fc/mock-rnipp": ["apps/mock-rnipp/src"],
+      "@fc/mock-rnipp/*": ["apps/mock-rnipp/src/*"],
+      "@fc/mock-data-provider": ["apps/mock-data-provider/src"],
+      "@fc/mock-data-provider/*": ["apps/mock-data-provider/src/*"],
+      "@fc/oidc-acr": ["libs/oidc-acr/src"],
+      "@fc/oidc-acr/*": ["libs/oidc-acr/src/*"],
+      "@fc/flow-steps": ["libs/flow-steps/src"],
+      "@fc/flow-steps/*": ["libs/flow-steps/src/*"],
+      "@fc/data-provider-adapter-core": ["libs/data-provider-adapter-core/src"],
       "@fc/data-provider-adapter-core/*": [
         "libs/data-provider-adapter-core/src/*"
       ],
-      "@mocks/session": [
-        "libs/session/.mocks"
-      ],
-      "@mocks/session/*": [
-        "libs/session/.mocks/*"
-      ],
-      "@fc/fqdn-to-idp-adapter-mongo": [
-        "libs/fqdn-to-idp-adapter-mongo/src"
-      ],
+      "@mocks/session": ["libs/session/.mocks"],
+      "@mocks/session/*": ["libs/session/.mocks/*"],
+      "@fc/fqdn-to-idp-adapter-mongo": ["libs/fqdn-to-idp-adapter-mongo/src"],
       "@fc/fqdn-to-idp-adapter-mongo/*": [
         "libs/fqdn-to-idp-adapter-mongo/src/*"
       ],
-      "@fc/async-local-storage": [
-        "libs/async-local-storage/src"
-      ],
-      "@fc/async-local-storage/*": [
-        "libs/async-local-storage/src/*"
-      ],
-      "@mocks/async-local-storage": [
-        "libs/async-local-storage/.mocks"
-      ],
-      "@mocks/async-local-storage/*": [
-        "libs/async-local-storage/.mocks/*"
-      ],
-      "@fc/view-templates": [
-        "libs/view-templates/src"
-      ],
-      "@fc/view-templates/*": [
-        "libs/view-templates/src/*"
-      ]
+      "@fc/async-local-storage": ["libs/async-local-storage/src"],
+      "@fc/async-local-storage/*": ["libs/async-local-storage/src/*"],
+      "@mocks/async-local-storage": ["libs/async-local-storage/.mocks"],
+      "@mocks/async-local-storage/*": ["libs/async-local-storage/.mocks/*"],
+      "@fc/view-templates": ["libs/view-templates/src"],
+      "@fc/view-templates/*": ["libs/view-templates/src/*"],
+      "@mocks/core": ["libs/core/.mocks"],
+      "@mocks/core/*": ["libs/core/.mocks/*"],
+      "@fc/csrf": ["libs/csrf/src"],
+      "@fc/csrf/*": ["libs/csrf/src/*"],
+      "@fc/i18n": ["libs/i18n/src"],
+      "@fc/i18n/*": ["libs/i18n/src/*"],
+      "@mocks/i18n": ["libs/i18n/.mocks"],
+      "@mocks/i18n/*": ["libs/i18n/.mocks/*"]
     }
   },
-  "files": [
-    "global.d.ts"
-  ],
+  "files": ["global.d.ts"],
   "include": [
     "*.js",
     "*.ts",
@@ -511,10 +215,5 @@
     "apps/**/*.ts",
     "instances/**/*.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "coverage",
-    "scripts"
-  ]
+  "exclude": ["node_modules", "dist", "coverage", "scripts"]
 }

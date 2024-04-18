@@ -11,7 +11,7 @@ import {
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterEnvService } from '@fc/service-provider-adapter-env';
-import { ISessionBoundContext, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 @Injectable()
@@ -104,7 +104,6 @@ export class OidcMiddlewareService {
       return;
     }
 
-    const { sessionId } = ctx.req;
     const interactionId = this.oidcProvider.getInteractionIdFromCtx(ctx);
 
     // oidc defined variable name
@@ -119,13 +118,8 @@ export class OidcMiddlewareService {
       spName,
     };
 
-    const boundSessionContext: ISessionBoundContext = {
-      sessionId,
-      moduleName: 'OidcClient',
-    };
-
-    await this.sessionService.set(boundSessionContext, sessionProperties);
-    await this.sessionService.commit(boundSessionContext);
+    this.sessionService.set('OidcClient', sessionProperties);
+    await this.sessionService.commit();
   }
 
   private async tokenMiddleware(ctx) {

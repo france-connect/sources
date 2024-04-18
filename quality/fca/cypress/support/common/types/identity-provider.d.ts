@@ -1,6 +1,5 @@
 export interface IdentityProviderBase {
   selectors: {
-    idpButton: string;
     password: string;
     loginButton: string;
     username: string;
@@ -17,6 +16,6 @@ export interface IdentityProvider extends IdentityProviderBase {
   idpId: string;
   mocked: boolean;
   title: string;
-  ministry: string;
-  fqdn: string;
+  name: string;
+  fqdn?: string;
 }

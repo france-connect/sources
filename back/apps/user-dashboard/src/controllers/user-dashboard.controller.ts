@@ -11,21 +11,24 @@ import {
   Query,
   Req,
   Res,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 
 import { FSA, PartialExcept } from '@fc/common';
+import { CsrfToken, CsrfTokenGuard } from '@fc/csrf';
+import { I18nService } from '@fc/i18n';
 import { IOidcIdentity } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
-import {
-  ISessionService,
-  Session,
-  SessionCsrfService,
-  SessionInvalidCsrfSelectIdpException,
-} from '@fc/session';
+import { RichClaimInterface } from '@fc/scopes';
+import { ISessionService, Session } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
-import { TracksService } from '@fc/tracks';
+import {
+  ICsmrTracksOutputTrack,
+  TracksResults,
+  TracksService,
+} from '@fc/tracks';
 import {
   FormattedIdpSettingDto,
   UserPreferencesService,
@@ -45,21 +48,15 @@ import { UserDashboardService } from '../services';
 export class UserDashboardController {
   // eslint-disable-next-line max-params
   constructor(
-    private readonly csrfService: SessionCsrfService,
     private readonly tracking: TrackingService,
     private readonly tracks: TracksService,
     private readonly userPreferences: UserPreferencesService,
     private readonly userDashboard: UserDashboardService,
+    private readonly i18n: I18nService,
   ) {}
 
   @Get(UserDashboardBackRoutes.CSRF_TOKEN)
-  async getCsrfToken(
-    @Session('OidcClient')
-    sessionOidc: ISessionService<OidcClientSession>,
-  ): Promise<{ csrfToken: string }> {
-    const csrfToken = this.csrfService.get();
-    await this.csrfService.save(sessionOidc, csrfToken);
-
+  getCsrfToken(@CsrfToken() csrfToken: string): { csrfToken: string } {
     return { csrfToken };
   }
 
@@ -72,7 +69,7 @@ export class UserDashboardController {
     sessionOidc: ISessionService<OidcClientSession>,
     @Query() query: GetUserTracesQueryDto,
   ): Promise<FSA | HttpErrorResponse> {
-    const idpIdentity = await sessionOidc.get('idpIdentity');
+    const idpIdentity = sessionOidc.get('idpIdentity');
     if (!idpIdentity) {
       return res.status(HttpStatus.UNAUTHORIZED).send({
         code: 'INVALID_SESSION',
@@ -89,14 +86,34 @@ export class UserDashboardController {
 
     const tracks = await this.tracks.getList(idpIdentity, query);
 
+    const humanReadableTracks = this.addLabelsToTracks(tracks);
+
     return res.json({
       type: 'TRACKS_DATA',
-      ...tracks,
+      ...humanReadableTracks,
     });
   }
 
+  private addLabelsToTracks(tracks: TracksResults): TracksResults {
+    tracks.payload = tracks.payload.map(this.addLabelsToTrack.bind(this));
+    return tracks;
+  }
+
+  private addLabelsToTrack(
+    track: ICsmrTracksOutputTrack,
+  ): ICsmrTracksOutputTrack {
+    track.claims = track.claims
+      .map((claim: RichClaimInterface) => {
+        claim.label = this.i18n.translate(`claim.${claim.identifier}`);
+        return claim;
+      })
+      .filter((claim: RichClaimInterface) => claim.label);
+
+    return track;
+  }
+
   @Get(UserDashboardBackRoutes.USER_INFOS)
-  async getUserInfos(
+  getUserInfos(
     @Res() res,
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
@@ -105,9 +122,7 @@ export class UserDashboardController {
      * @Todo find better way to define interface
      * Author: Emmanuel Maravilha
      */
-    const idpIdentity = (await sessionOidc.get(
-      'idpIdentity',
-    )) as OidcIdentityInterface;
+    const idpIdentity = sessionOidc.get('idpIdentity') as OidcIdentityInterface;
     if (!idpIdentity) {
       return res.status(HttpStatus.UNAUTHORIZED).send({
         code: 'INVALID_SESSION',
@@ -140,9 +155,7 @@ export class UserDashboardController {
      * @Todo find better way to define interface
      * Author: Emmanuel Maravilha
      */
-    const idpIdentity = (await sessionOidc.get(
-      'idpIdentity',
-    )) as OidcIdentityInterface;
+    const idpIdentity = sessionOidc.get('idpIdentity') as OidcIdentityInterface;
     if (!idpIdentity) {
       return res.status(HttpStatus.UNAUTHORIZED).send({
         code: 'INVALID_SESSION',
@@ -167,6 +180,7 @@ export class UserDashboardController {
 
   @Post(UserDashboardBackRoutes.USER_PREFERENCES)
   @UsePipes(new ValidationPipe({ whitelist: true }))
+  @UseGuards(CsrfTokenGuard)
   // eslint-disable-next-line complexity
   async updateUserPreferences(
     @Req() req: Request,
@@ -179,16 +193,14 @@ export class UserDashboardController {
      * @Todo find better way to define interface
      * Author: Emmanuel Maravilha
      */
-    const idpIdentity = (await sessionOidc.get(
-      'idpIdentity',
-    )) as OidcIdentityInterface;
+    const idpIdentity = sessionOidc.get('idpIdentity') as OidcIdentityInterface;
     if (!idpIdentity) {
       return res.status(HttpStatus.UNAUTHORIZED).send({
         code: 'INVALID_SESSION',
       });
     }
 
-    const { csrfToken, idpList, allowFutureIdp } = body;
+    const { idpList, allowFutureIdp } = body;
 
     const {
       email,
@@ -202,13 +214,6 @@ export class UserDashboardController {
       return res.status(HttpStatus.CONFLICT).send({
         code: 'CONFLICT',
       });
-    }
-
-    // -- control if the CSRF provided is the same as the one previously saved in session.
-    try {
-      await this.csrfService.validate(sessionOidc, csrfToken);
-    } catch (error) {
-      throw new SessionInvalidCsrfSelectIdpException(error);
     }
 
     // idp_id has been removed because it is not necessary to pass it to the consumer

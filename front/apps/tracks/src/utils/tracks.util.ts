@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-import {
+import type {
   EnhancedTrack,
   IGroupedClaims,
   IRichClaim,

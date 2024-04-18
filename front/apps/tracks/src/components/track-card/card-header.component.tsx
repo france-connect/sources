@@ -1,9 +1,9 @@
 import classnames from 'classnames';
-import { DateTime } from 'luxon';
+import type { DateTime } from 'luxon';
 import React from 'react';
 import { AiOutlineMinus as MinusIcon, AiOutlinePlus as PlusIcon } from 'react-icons/ai';
 
-import { TracksConfig } from '../../interfaces';
+import type { TracksConfig } from '../../interfaces';
 import styles from './card-header.module.scss';
 
 type TraceCardHeaderProps = {

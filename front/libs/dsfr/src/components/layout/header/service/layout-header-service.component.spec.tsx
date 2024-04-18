@@ -1,7 +1,7 @@
 // @see _doc/jest.md
 import { render } from '@testing-library/react';
 
-import { HeaderService } from '../../../../interfaces';
+import type { HeaderService } from '../../../../interfaces';
 import { LayoutHeaderServiceComponent } from './layout-header-service.component';
 
 describe('LayoutHeaderServiceComponent', () => {
@@ -91,7 +91,7 @@ describe('LayoutHeaderServiceComponent', () => {
     // then
     expect(elementName).toBeInTheDocument();
     expect(elementTitle).toBeInTheDocument();
-    expect(elementTitle.getAttribute('href')).toStrictEqual('/');
+    expect(elementTitle.getAttribute('href')).toBe('/');
   });
 
   it('should service name be in the document with a title and when href is defined', () => {
@@ -111,7 +111,7 @@ describe('LayoutHeaderServiceComponent', () => {
     // then
     expect(elementName).toBeInTheDocument();
     expect(elementTitle).toBeInTheDocument();
-    expect(elementTitle.getAttribute('href')).toStrictEqual('/any-href-mock');
+    expect(elementTitle.getAttribute('href')).toBe('/any-href-mock');
   });
 
   it('should service baseline be in the document', () => {

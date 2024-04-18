@@ -1,4 +1,5 @@
 import { ChainableElement, IdentityProvider } from '../../common/types';
+import Modal from './modal-component';
 
 export default class IdentityProviderSelectionPage {
   getBackToServiceProviderLink(): ChainableElement {
@@ -13,8 +14,14 @@ export default class IdentityProviderSelectionPage {
     return cy.get(idp.selectors.idpButton);
   }
 
-  getAidantsConnectLink(): ChainableElement {
-    return cy.get('[data-testid="footer-aidants-connect-link"]');
+  getAidantsConnectButton(): ChainableElement {
+    return cy.get('[data-testid="interaction-aidants-connect-button"]');
+  }
+
+  getIdpSelectionModal(idpId: string): Modal {
+    const selector = `[data-testid="provider-selection-modal-${idpId}"]`;
+    const modal = new Modal(selector);
+    return modal;
   }
 
   checkIsVisible(): void {

@@ -62,6 +62,9 @@ export class AppConfig extends AppGenericConfig {
   @IsBoolean()
   readonly allowCustomIdentity: boolean;
 
+  @IsBoolean()
+  readonly allowBackButton: boolean;
+
   @IsDefined()
   readonly identityDto?: Class<unknown>;
 }

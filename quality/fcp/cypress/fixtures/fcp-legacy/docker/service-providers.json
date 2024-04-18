@@ -34,23 +34,6 @@
     "authorizeHttpMethod": "get"
   },
   {
-    "name": "fsp1",
-    "clientId": "a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc",
-    "descriptions": ["connecté à FD traces"],
-    "mocked": true,
-    "url": "https://fsp1.docker.dev-franceconnect.fr",
-    "redirectUri": "https://fsp1.docker.dev-franceconnect.fr/tracks-callback",
-    "acrValue": "eidas1",
-    "claims": [],
-    "scopes": ["tous les scopes"],
-    "explicitConsent": false,
-    "selectors": {
-      "fcButton": "[data-role='login-authorize'] input",
-      "logoutButton": "[data-fc-logout-url='/logout']"
-    },
-    "authorizeHttpMethod": "get"
-  },
-  {
     "name": "fsp2",
     "clientId": "8279ce2e262b86324c004afee58ae2d63814baa20ed983696f2245c1f4d7e7fb",
     "descriptions": ["privé sans consentement obligatoire"],
@@ -91,23 +74,6 @@
     "mocked": true,
     "url": "https://fsp3.docker.dev-franceconnect.fr",
     "redirectUri": "https://fsp3.docker.dev-franceconnect.fr/data-callback",
-    "acrValue": "eidas1",
-    "claims": [],
-    "scopes": ["tous les scopes"],
-    "explicitConsent": true,
-    "selectors": {
-      "fcButton": "[data-role='login-authorize'] input",
-      "logoutButton": "[data-fc-logout-url='/logout']"
-    },
-    "authorizeHttpMethod": "get"
-  },
-  {
-    "name": "fsp3",
-    "clientId": "8ae981e67b301291d1f7d3b3b246967cfcc478d25f0aaa6b357386e02cb4476a",
-    "descriptions": ["privé connecté à FD traces"],
-    "mocked": true,
-    "url": "https://fsp3.docker.dev-franceconnect.fr",
-    "redirectUri": "https://fsp3.docker.dev-franceconnect.fr/tracks-callback",
     "acrValue": "eidas1",
     "claims": [],
     "scopes": ["tous les scopes"],

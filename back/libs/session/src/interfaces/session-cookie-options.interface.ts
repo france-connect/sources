@@ -14,5 +14,5 @@ export interface ISessionCookieOptions {
   secure: boolean;
   maxAge?: number;
   domain: string;
-  sameSite: 'Strict' | 'Lax' | 'None' | boolean;
+  sameSite: 'strict' | 'lax' | 'none' | boolean;
 }

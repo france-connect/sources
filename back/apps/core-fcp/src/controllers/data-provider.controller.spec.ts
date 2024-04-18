@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 import { HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -10,7 +10,7 @@ import {
 import { DataProviderInvalidCredentialsException } from '@fc/data-provider-adapter-mongo/exceptions';
 import { LoggerService } from '@fc/logger';
 import { RnippPivotIdentity } from '@fc/rnipp';
-import { ISessionRequest, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -77,7 +77,19 @@ describe('DataProviderController', () => {
 
   const reqMock = {
     foo: 'bar',
-  } as unknown as ISessionRequest;
+  } as unknown as Request;
+
+  const sessionDataMock = {
+    OidcClient: {
+      accountId: 'accountId',
+      browsingSessionId: 'browsingSessionId',
+      idpId: 'idpId',
+      idpName: 'idpName',
+      idpLabel: 'idpLabel',
+      spId: 'spId',
+      spName: 'spName',
+    },
+  };
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -112,6 +124,7 @@ describe('DataProviderController', () => {
     dataProviderAdapterMongoMock.getAuthenticatedDataProvider.mockReturnValue(
       dpMock,
     );
+    sessionServiceMock.getDataFromBackend.mockResolvedValue(sessionDataMock);
   });
 
   it('should be defined', () => {
@@ -150,7 +163,7 @@ describe('DataProviderController', () => {
     const subMock = 'subMock';
 
     beforeEach(() => {
-      dataProviderServiceMock.checkRequestValid.mockReturnValue(true);
+      dataProviderServiceMock.checkRequestValid.mockResolvedValue(true);
       dataProviderServiceMock.generateDataProviderSub.mockReturnValue(subMock);
       dataProviderServiceMock.generatePayload.mockReturnValue(payloadMock);
       dataProviderServiceMock.generateJwt.mockReturnValue(jwtMock);
@@ -163,10 +176,8 @@ describe('DataProviderController', () => {
       dataProviderServiceMock.getAccessTokenExp = jest
         .fn()
         .mockReturnValue(expMock);
-      jest
-        .spyOn(SessionService, 'getBoundSession')
-        .mockReturnValue(oidcSessionServiceMock);
-      jest.mocked(oidcSessionServiceMock.get).mockResolvedValue({
+
+      jest.mocked(oidcSessionServiceMock.get).mockReturnValue({
         rnippIdentity: rnippIdentityMock,
         spScope: spScopeMock,
       });
@@ -212,34 +223,13 @@ describe('DataProviderController', () => {
       ).toHaveBeenCalledWith(bodyMock.access_token);
     });
 
-    it('should set sessionId and sessionService on req', async () => {
-      // When
-      await dataProviderController.checktoken(reqMock, resMock, bodyMock);
-
-      // Then
-      expect(reqMock.sessionId).toEqual(sessionIdMock);
-      expect(reqMock.sessionService).toEqual(sessionServiceMock);
-    });
-
-    it('should get the session service bound to sessionId', async () => {
-      // When
-      await dataProviderController.checktoken(reqMock, resMock, bodyMock);
-
-      // Then
-      expect(SessionService.getBoundSession).toHaveBeenCalledTimes(1);
-      expect(SessionService.getBoundSession).toHaveBeenCalledWith(
-        reqMock,
-        'OidcClient',
-      );
-    });
-
     it('should call dataProvider.generatePayload with the right parameters', async () => {
       // When
       await dataProviderController.checktoken(reqMock, resMock, bodyMock);
       // Then
       expect(dataProviderServiceMock.generatePayload).toHaveBeenCalledTimes(1);
       expect(dataProviderServiceMock.generatePayload).toHaveBeenCalledWith(
-        oidcSessionServiceMock,
+        sessionDataMock,
         bodyMock.access_token,
         bodyMock.client_id,
       );
@@ -281,7 +271,12 @@ describe('DataProviderController', () => {
       ).toHaveBeenCalledTimes(1);
       expect(dataProviderController['trackChecktokenJWT']).toHaveBeenCalledWith(
         payloadMock,
-        { req: reqMock, dpId: 'dp-uid', dpTitle: 'data provider title' },
+        {
+          req: reqMock,
+          dpId: 'dp-uid',
+          dpTitle: 'data provider title',
+          ...sessionDataMock.OidcClient,
+        },
       );
     });
 

@@ -1,14 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { overrideWithSourceIfNotNull } from '@fc/common/helpers';
 import { ConfigService } from '@fc/config';
 import { OidcSession } from '@fc/oidc';
-import { ISessionBoundContext, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 import { extractNetworkInfoFromHeaders } from '@fc/tracking-context';
 
-import { CoreMissingContextException } from '../exceptions';
+import { getSessionServiceMock } from '@mocks/session';
+
 import { ICoreTrackingContext } from '../interfaces';
 import { CoreTrackingService } from './core-tracking.service';
 
+jest.mock('@fc/common/helpers');
 jest.mock('@fc/tracking-context', () => ({
   extractNetworkInfoFromHeaders: jest.fn(),
 }));
@@ -16,12 +19,7 @@ jest.mock('@fc/tracking-context', () => ({
 describe('CoreTrackingService', () => {
   let service: CoreTrackingService;
 
-  const sessionServiceMock = {
-    get: {
-      bind: jest.fn(),
-    },
-    getAlias: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const appConfigMock = {
     urlPrefix: '/api/v2',
@@ -75,6 +73,17 @@ describe('CoreTrackingService', () => {
     dpId: 'dp_uid',
     dpClientId: 'dp_client_id',
     dpTitle: 'dp_title',
+    accountId: undefined,
+    browsingSessionId: undefined,
+    isSso: undefined,
+    spId: undefined,
+    spAcr: undefined,
+    spName: undefined,
+    idpId: undefined,
+    idpAcr: undefined,
+    idpName: undefined,
+    idpLabel: undefined,
+    idpIdentity: undefined,
   };
 
   const sessionDataMock: OidcSession = {
@@ -114,8 +123,8 @@ describe('CoreTrackingService', () => {
 
     service = module.get<CoreTrackingService>(CoreTrackingService);
 
-    const sessionGetBinded = jest.fn().mockResolvedValue(sessionDataMock);
-    sessionServiceMock.get.bind.mockReturnValue(sessionGetBinded);
+    sessionServiceMock.get.mockReturnValue(sessionDataMock);
+    sessionServiceMock.getId.mockReturnValue(sessionIdMock);
   });
 
   it('should be defined', () => {
@@ -123,11 +132,19 @@ describe('CoreTrackingService', () => {
   });
 
   describe('buildLog()', () => {
+    const overrideWithSourceIfNotNullMock = jest.mocked(
+      overrideWithSourceIfNotNull,
+    );
+
     beforeEach(() => {
       service['extractContext'] = jest.fn().mockReturnValue(extractedValueMock);
       service['getDataFromSession'] = jest
         .fn()
-        .mockResolvedValue(sessionDataMock);
+        .mockReturnValue(sessionDataMock);
+      overrideWithSourceIfNotNullMock.mockReturnValue({
+        ...extractedValueMock,
+        ...sessionDataMock,
+      });
     });
 
     it('should call extractContext with req property of context param', async () => {
@@ -179,6 +196,24 @@ describe('CoreTrackingService', () => {
       expect(result).toEqual(expect.objectContaining({ claims: 'foo bar' }));
     });
 
+    it('should return sessionId from context if provided', async () => {
+      // Given
+      const contextWithSessionIdMock = {
+        sessionId: Symbol('contextWithSessionIdMock'),
+      };
+      // When
+      const result = await service.buildLog(
+        eventMock,
+        contextWithSessionIdMock,
+      );
+      // Then
+      expect(result).toEqual(
+        expect.objectContaining({
+          sessionId: contextWithSessionIdMock.sessionId,
+        }),
+      );
+    });
+
     it('should return object without claims if none provided', async () => {
       // Given
       const contextMock = {
@@ -222,7 +257,6 @@ describe('CoreTrackingService', () => {
           cookies: {
             _interaction: interactionIdMock,
           },
-          sessionId: sessionIdMock,
         },
         claims: ['foo', 'bar'],
         scope: 'fizz buzz',
@@ -230,6 +264,7 @@ describe('CoreTrackingService', () => {
         dpClientId: 'dp_client_id',
         dpTitle: 'dp_title',
         interactionId: interactionIdMock,
+        sessionId: sessionIdMock,
       };
       // When
       const result = service['extractContext'](contextMock);
@@ -261,8 +296,8 @@ describe('CoreTrackingService', () => {
           cookies: {
             _interaction: interactionIdMock,
           },
-          sessionId: sessionIdMock,
         },
+        sessionId: sessionIdMock,
         claims: ['foo', 'bar'],
         scope: 'fizz buzz',
         interactionId: interactionIdMock,
@@ -272,38 +307,18 @@ describe('CoreTrackingService', () => {
       // Then
       expect(result).toEqual(extractedValueWithNoDpMock);
     });
-
-    it('should throw if req is missing', () => {
-      // Given
-      const contextMock = { foo: 'bar' };
-
-      // Then
-      expect(() => service['extractContext'](contextMock)).toThrow(
-        CoreMissingContextException,
-      );
-    });
   });
 
   describe('getDataFromSession()', () => {
-    it('should call session.get', async () => {
-      // Given
-      const boundSessionContextMock: ISessionBoundContext = {
-        sessionId: sessionIdMock,
-        moduleName: 'OidcClient',
-      };
-      const sessionGetBinded = jest.fn().mockResolvedValue(sessionDataMock);
-      sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
+    it('should call session.get', () => {
       // When
-      await service['getDataFromSession'](sessionIdMock);
+      service['getDataFromSession'](sessionIdMock);
       // Then
-      expect(sessionServiceMock.get.bind).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.get.bind).toHaveBeenCalledWith(
-        sessionServiceMock,
-        boundSessionContextMock,
-      );
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.get).toHaveBeenCalledWith('OidcClient');
     });
 
-    it('should return a default object with only sessionId, if session is not found', async () => {
+    it('should return a default object with only sessionId, if session is not found', () => {
       // Given
       const expectedResult = {
         accountId: null,
@@ -323,16 +338,16 @@ describe('CoreTrackingService', () => {
         idpLabel: null,
         idpSub: null,
       };
+      sessionServiceMock.get.mockReturnValueOnce(null);
 
-      const sessionGetBinded = jest.fn().mockResolvedValue(undefined);
-      sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
       // When
-      const result = await service['getDataFromSession'](sessionIdMock);
+      const result = service['getDataFromSession'](sessionIdMock);
+
       // Then
       expect(result).toEqual(expectedResult);
     });
 
-    it('Should return partial data from session.get', async () => {
+    it('Should return partial data from session.get', () => {
       // Given
       const expectedResult = {
         accountId: 'accountId Mock Value',
@@ -353,12 +368,12 @@ describe('CoreTrackingService', () => {
         idpLabel: 'some idpLabel',
       };
       // When
-      const result = await service['getDataFromSession'](sessionIdMock);
+      const result = service['getDataFromSession'](sessionIdMock);
       // Then
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return null values for idp info and spSub if not set in session', async () => {
+    it('should return null values for idp info and spSub if not set in session', () => {
       // Given
       const expectedResult = {
         accountId: null,
@@ -385,15 +400,16 @@ describe('CoreTrackingService', () => {
         subs: { spIdMock: 'sub for spIdMock' },
         browsingSessionId: browsingSessionIdMock,
       };
-      const sessionGetBinded = jest.fn().mockResolvedValue(sessionMock);
-      sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
+      sessionServiceMock.get.mockReturnValueOnce(sessionMock);
+
       // When
-      const result = await service['getDataFromSession'](sessionIdMock);
+      const result = service['getDataFromSession'](sessionIdMock);
+
       // Then
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return null values for `idp` info if not set in session', async () => {
+    it('should return null values for `idp` info if not set in session', () => {
       // Given
       const expectedResult = {
         accountId: null,
@@ -421,17 +437,16 @@ describe('CoreTrackingService', () => {
         spIdentity: {},
         browsingSessionId: browsingSessionIdMock,
       };
-      const sessionGetBinded = jest.fn().mockResolvedValue(sessionMock);
-      sessionServiceMock.get.bind.mockReturnValueOnce(sessionGetBinded);
+      sessionServiceMock.get.mockReturnValueOnce(sessionMock);
 
       // When
-      const result = await service['getDataFromSession'](sessionIdMock);
+      const result = service['getDataFromSession'](sessionIdMock);
 
       // Then
       expect(result).toEqual(expectedResult);
     });
 
-    it('should return null values for `sp` info if not set in session', async () => {
+    it('should return null values for `sp` info if not set in session', () => {
       // Given
       const expectedResult = {
         accountId: null,
@@ -456,13 +471,10 @@ describe('CoreTrackingService', () => {
         spIdentity: {},
         browsingSessionId: browsingSessionIdMock,
       };
-      const boundSessionGet = jest.fn().mockResolvedValue(sessionMock);
-      sessionServiceMock.get.bind = jest
-        .fn()
-        .mockReturnValueOnce(boundSessionGet);
+      sessionServiceMock.get.mockReturnValueOnce(sessionMock);
 
       // When
-      const result = await service['getDataFromSession'](sessionIdMock);
+      const result = service['getDataFromSession'](sessionIdMock);
 
       // Then
       expect(result).toEqual(expectedResult);

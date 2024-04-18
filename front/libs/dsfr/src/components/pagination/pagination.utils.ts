@@ -4,7 +4,7 @@
  */
 import lodashRange from 'lodash.range';
 
-import {
+import type {
   IDesktopDisplayParams,
   IGetCurrentPage,
   IGetDisplayParameters,

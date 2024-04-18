@@ -2,12 +2,5 @@
   "name": "@fc/state-management",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-redux": "^9.0.4",
-    "redux": "^5.0.1",
-    "redux-persist": "^6.0.0",
-    "redux-thunk": "^3.1.0"
-  },
   "main": "src/index.ts"
 }

@@ -26,7 +26,9 @@
     "idpId": "07e573f2-3312-4bb9-bc48-6fcec737e497",
     "name": "fip1-low",
     "title": "FIP1-LOW - eIDAS LOW",
-    "descriptions": ["actif"],
+    "descriptions": [
+      "actif"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip1-low.docker.dev-franceconnect.fr",
@@ -44,7 +46,9 @@
     "idpId": "454833e7-4ba6-4e2f-931a-84c83553d0ce",
     "name": "fip1-wrong-signature",
     "title": "FIP1-LOW - WRONG SIGNATURE",
-    "descriptions": ["mauvais protocole de signature"],
+    "descriptions": [
+      "mauvais protocole de signature"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip1-low.docker.dev-franceconnect.fr",
@@ -62,7 +66,9 @@
     "idpId": "71146cf0-ee50-49a9-bac2-8c09c4ba5439",
     "name": "fip1-no-signature-error",
     "title": "FIP1-LOW - NO SIGNATURE",
-    "descriptions": ["ne devrait pas signer userinfo"],
+    "descriptions": [
+      "ne devrait pas signer userinfo"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip1-low.docker.dev-franceconnect.fr",
@@ -80,7 +86,11 @@
     "idpId": "b5e9539a-599a-4ed2-9b4f-8f4bfc5fbb64",
     "name": "fip2-low",
     "title": "FIP2-LOW - eIDAS SUBSTANTIAL - NO DISCOVERY",
-    "descriptions": ["actif", "non autorisé pour idp_hint"],
+    "descriptions": [
+      "actif",
+      "non autorisé pour idp_hint",
+      "différent"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip2-low.docker.dev-franceconnect.fr",
@@ -98,7 +108,11 @@
     "idpId": "0adf04be-536e-4986-b639-73ea8d38493e",
     "name": "fip3-low",
     "title": "FIP3-LOW - eIDAS HIGH - NO DISCOVERY",
-    "descriptions": ["actif", "whitelisté", "blacklisté"],
+    "descriptions": [
+      "actif",
+      "whitelisté",
+      "blacklisté"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip3-low.docker.dev-franceconnect.fr",
@@ -116,7 +130,11 @@
     "idpId": "ed9e1fdb-f2df-4d8d-85ca-fc72510e9ec8",
     "name": "fip4-low",
     "title": "FIP4-LOW - eIDAS LOW - NO DISCOVERY - ES256",
-    "descriptions": ["actif", "non whitelisté", "non blacklisté"],
+    "descriptions": [
+      "actif",
+      "non whitelisté",
+      "non blacklisté"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip4-low.docker.dev-franceconnect.fr/interaction",
@@ -134,7 +152,9 @@
     "idpId": "b18cb985-9492-4737-9890-da69a87a012a",
     "name": "fip5-low",
     "title": "IDP5 - LOW disabled",
-    "descriptions": ["désactivé et visible"],
+    "descriptions": [
+      "désactivé et visible"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip5-low.docker.dev-franceconnect.fr/interaction",
@@ -152,7 +172,9 @@
     "idpId": "caf0fe8d-0d8b-4288-9850-ce8b2a4b5251",
     "name": "fip6-low",
     "title": "IDP6 - LOW invisible",
-    "descriptions": ["actif et non visible"],
+    "descriptions": [
+      "actif et non visible"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip6-low.docker.dev-franceconnect.fr/interaction",
@@ -170,7 +192,9 @@
     "idpId": "0c1edaa3-c0a5-4cac-902e-29872bae2c6e",
     "name": "fip7-low",
     "title": "IDP7 - LOW disabled and invisible",
-    "descriptions": ["désactivé et non visible"],
+    "descriptions": [
+      "désactivé et non visible"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip7-low.docker.dev-franceconnect.fr/interaction",
@@ -188,7 +212,9 @@
     "idpId": "77fe5e8c-364c-440e-909f-5ef4f494e170",
     "name": "fip8-low",
     "title": "IDP8 - LOW",
-    "descriptions": ["disponible que pour un FS"],
+    "descriptions": [
+      "disponible que pour un FS"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip8-low.docker.dev-franceconnect.fr/interaction",
@@ -206,7 +232,9 @@
     "idpId": "720a5453-1964-4c71-a8fa-00bfb880fe9f",
     "name": "fip9-low",
     "title": "IDP9 - LOW - no endSessionUrl",
-    "descriptions": ["sans endSessionUrl"],
+    "descriptions": [
+      "sans endSessionUrl"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://fip9-low.docker.dev-franceconnect.fr",
@@ -223,7 +251,9 @@
   {
     "idpId": "3189d655-0c78-4ff7-9758-f3a3ac36dd7e",
     "name": "aidants-connect-mock",
-    "descriptions": ["Aidants Connect"],
+    "descriptions": [
+      "Aidants Connect"
+    ],
     "mocked": true,
     "usable": true,
     "url": "https://aidants-connect-mock.docker.dev-franceconnect.fr",
@@ -231,7 +261,7 @@
     "encryption": "",
     "signature": "HS256",
     "selectors": {
-      "idpButton": "[data-testid='footer-aidants-connect-link']",
+      "idpButton": "[data-testid='interaction-aidants-connect-button']",
       "username": "input[name='login']",
       "password": "input[name='password']",
       "loginButton": "[type='submit']"

@@ -1,4 +1,6 @@
 // == FI
+const BASE_DEV_IDP_LOW = {};
+
 const fip = {
   // -- FIP - FIP1 - No discovery
   "FIP1-NO-DISCOVERY": {
@@ -18,6 +20,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip1-no-discovery",
     discovery: false,
@@ -64,6 +67,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip1-low",
     url: "https://fip1-low.docker.dev-franceconnect.fr",
@@ -107,6 +111,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip1-beta-active",
     discovery: false,
@@ -152,6 +157,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip1-beta-inactive",
     discovery: false,
@@ -197,6 +203,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip1-no-discovery",
     discovery: false,
@@ -244,6 +251,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip1-no-discovery",
     discovery: false,
@@ -290,6 +298,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip2-low",
     discovery: false,
@@ -335,6 +344,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip3-low",
     discovery: false,
@@ -380,6 +390,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip4-low",
     discovery: false,
@@ -426,6 +437,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip5-low",
     discovery: false,
@@ -471,6 +483,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip6-low",
     discovery: false,
@@ -516,6 +529,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip7-low",
     discovery: false,
@@ -561,6 +575,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip8-low",
     discovery: false,
@@ -606,6 +621,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text fip9-low",
     url: "https://fip9-low.docker.dev-franceconnect.fr",
@@ -651,6 +667,7 @@ const fip = {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "aidants connect mock",
     url: "https://aidants-connect-mock.docker.dev-franceconnect.fr",
@@ -699,6 +716,7 @@ const fip = {
       coreVerify: "core-fcp-eidas-verify",
       authenticationEmail: null,
       idpIdentityCheck: "core-fcp-eidas-identity-check",
+      coreAuthorization: "core-fcp-default-authorization",
     },
     specificText: "specific text eidas bridge",
     clientID: "myclientidforeidas-bridge-low",
@@ -734,5 +752,9 @@ db.provider.createIndex({ name: 1 }, { unique: true });
 
 Object.values(fip).forEach((fi) => {
   print(`FIP > Initializing provider: ${fi.name} - Activated`);
-  db.provider.update({ uid: fi.uid }, fi, { upsert: true });
+  db.provider.update(
+    { uid: fi.uid },
+    { ...BASE_DEV_IDP_LOW, ...fi },
+    { upsert: true },
+  );
 });

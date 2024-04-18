@@ -31,8 +31,7 @@ const badEvents = [
 const goodEvents = [
   'FC_VERIFIED',
   'FC_DATATRANSFER_CONSENT_IDENTITY',
-  'FC_DATATRANSFER_CONSENT_DATA',
-  'DP_REQUESTED_FC_CHECKTOKEN',
+  'DP_VERIFIED_FC_CHECKTOKEN',
 ];
 
 // help to trace false logs generated in ES

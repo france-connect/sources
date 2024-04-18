@@ -1,0 +1,13 @@
+{
+  "name": "@fc/instance-template",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "vite dev --host",
+    "build": "tsc && vite build",
+    "preview": "vite preview --port=3000 --host",
+    "start:debug": "yarn vite dev --host --force --debug",
+    "tsc": "tsc --noEmit --showConfig --project ./tsconfig.json"
+  }
+}

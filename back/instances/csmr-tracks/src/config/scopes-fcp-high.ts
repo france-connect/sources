@@ -1,10 +1,20 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { fcpHigh, ScopesConfig } from '@fc/scopes';
+import {
+  cnam,
+  cnous,
+  dgfip,
+  fcpHigh,
+  fcTracks,
+  mesri,
+  mi,
+  pe,
+  ScopesConfig,
+} from '@fc/scopes';
 
 const config: ScopesConfig = {
-  mapping: [fcpHigh],
+  mapping: [fcpHigh, cnam, cnous, dgfip, mesri, mi, pe, fcTracks],
 };
 
 export default config;

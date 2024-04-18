@@ -52,10 +52,9 @@ Then('les cookies FranceConnect sont présents', function () {
   // FC uses session cookies only on fcp-high
   const isSessionCookie = platform === 'fcp-high';
   checkCookieExists('fc_session_id', domain, isSessionCookie);
-  checkCookieExists('duplicate-cookie-name', domain, isSessionCookie);
 
   cy.getCookies({ domain })
-    .should('have.length', 6)
+    .should('have.length', 5)
     .then((cookies: Cypress.Cookie[]) => {
       // FC cookies are intercepted by Cypress on integ01.
       // We force sameSite=none to test cross-domain.

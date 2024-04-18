@@ -3,9 +3,9 @@
 // @NOTE refacto needed
 // AppContext + useApiGet should be merged
 // the `update` is not necessary and migth be outsourced inside AppContext.Consumer
-import React, { ReactElement, useState } from 'react';
+import React, { type ReactElement, useState } from 'react';
 
-import { AppContextInterface, AppContextStateInterface } from './interfaces';
+import type { AppContextInterface, AppContextStateInterface } from './interfaces';
 
 export const defaultContext: AppContextStateInterface = {
   config: {},

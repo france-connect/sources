@@ -5,7 +5,7 @@ Fonctionnalité: Deconnexion Usager
   # je veux me déconnecter du fournisseur de service, d'agent connect et du fournisseur d'identité
   # afin de clore ma session
 
-  @ignoreDocker
+  @ignore
   Scénario: Deconnexion d'un usager
     Etant donné que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
     Et que je navigue sur la page fournisseur de service

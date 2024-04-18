@@ -4,7 +4,7 @@ import React from 'react';
 import { Form } from 'react-final-form';
 
 import { useUserPreferencesApi } from '../hooks';
-import { UserPreferencesConfig } from '../interfaces';
+import type { UserPreferencesConfig } from '../interfaces';
 import { UserPreferencesFormComponent } from './user-preferences-form.component';
 
 interface UserPreferencesComponentProps {

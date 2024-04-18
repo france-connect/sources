@@ -2,7 +2,7 @@ import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { ConfigService } from '@fc/config';
-import { ValidationException } from '@fc/exceptions';
+import { ValidationException } from '@fc/exceptions-deprecated';
 import { HsmService } from '@fc/hsm';
 import { LoggerService } from '@fc/logger';
 import { CryptoProtocol } from '@fc/microservices';
@@ -29,7 +29,7 @@ export class CsmrHsmController {
       exceptionFactory: ValidationException.factory,
     }),
   )
-  async sign(@Payload() payload: SignPayloadDto) {
+  sign(@Payload() payload: SignPayloadDto) {
     this.logger.debug(`received new ${CryptoProtocol.Commands.SIGN} command`);
 
     const { payloadEncoding } = this.config.get<RabbitmqConfig>(BROKER_NAME);
@@ -37,7 +37,7 @@ export class CsmrHsmController {
 
     try {
       const dataBuffer = Buffer.from(data, payloadEncoding);
-      const signedBuffer = await this.hsm.sign(dataBuffer, digest);
+      const signedBuffer = this.hsm.sign(dataBuffer, digest);
       const signed = signedBuffer.toString(payloadEncoding);
       return signed;
     } catch (error) {

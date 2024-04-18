@@ -17,16 +17,17 @@ import {
   CoreVerifyService,
   Interaction,
 } from '@fc/core';
+import { CsrfToken } from '@fc/csrf';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
 import { NotificationsService } from '@fc/notifications';
 import { OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
-import { OidcClientSession } from '@fc/oidc-client';
+import { OidcClientRoutes, OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderConfig, OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { ISessionService, Session, SessionCsrfService } from '@fc/session';
+import { ISessionService, Session } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import {
@@ -37,6 +38,7 @@ import {
   GetInteractionOidcClientSessionDto,
   GetVerifyOidcClientSessionDto,
 } from '../dto';
+import { InteractionResponseInterface } from '../interfaces';
 import { CoreFcpService, CoreFcpVerifyService } from '../services';
 
 @Controller()
@@ -51,7 +53,6 @@ export class CoreFcpController {
     private readonly coreFcp: CoreFcpService,
     private readonly config: ConfigService,
     private readonly notifications: NotificationsService,
-    private readonly csrf: SessionCsrfService,
     private readonly oidcAcr: OidcAcrService,
     private readonly coreAcr: CoreAcrService,
     private readonly coreVerify: CoreVerifyService,
@@ -86,8 +87,9 @@ export class CoreFcpController {
     sessionOidc: ISessionService<OidcClientSession>,
     @Session('App')
     sessionApp: ISessionService<AppSession>,
+    @CsrfToken() csrfToken: string,
   ) {
-    const { spName, stepRoute } = await sessionOidc.get();
+    const { spName, stepRoute, idpLabel = null } = sessionOidc.get();
 
     const { params } = await this.oidcProvider.getInteraction(req, res);
     const {
@@ -118,7 +120,7 @@ export class CoreFcpController {
       idpList: idpFilterList,
     });
 
-    const isSuspicious = await sessionApp.get('isSuspicious');
+    const isSuspicious = sessionApp.get('isSuspicious');
 
     const authorizedProviders = providers.map((provider) => {
       const isAcrValid = this.oidcAcr.isAcrValid(
@@ -141,15 +143,19 @@ export class CoreFcpController {
     const { aidantsConnectUid } = this.config.get<AppConfig>('App');
     const aidantsConnect = authorizedProviders.find((provider) => {
       const isAidantsConnect = provider.uid === aidantsConnectUid;
-      return isAidantsConnect && provider.active && provider.display;
+      return isAidantsConnect && provider.display;
     });
 
     // -- generate and store in session the CSRF token
-    const csrfToken = this.csrf.get();
-    await this.csrf.save(sessionOidc, csrfToken);
 
     const notification = await this.notifications.getNotificationToDisplay();
-    const response = {
+
+    /** Currently, we don't have the ability to know what the error message is.
+     * Therefore, the only way to check if we have an error is to verify
+     * if we just came from oidc callback step route */
+    const hasError = stepRoute === OidcClientRoutes.OIDC_CALLBACK;
+
+    const response: InteractionResponseInterface = {
       csrfToken,
       notification,
       params,
@@ -157,6 +163,10 @@ export class CoreFcpController {
       aidantsConnect: aidantsConnect,
       spName,
       spScope,
+      errorContext: {
+        hasError,
+        idpLabel,
+      },
     };
 
     const isRefresh = stepRoute === CoreRoutes.INTERACTION;
@@ -191,7 +201,7 @@ export class CoreFcpController {
     @Session('App')
     sessionApp: ISessionService<AppSession>,
   ) {
-    const { idpId, idpAcr, interactionId, spId } = await sessionOidc.get();
+    const { idpId, idpAcr, interactionId, spId } = sessionOidc.get();
 
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const params = { urlPrefix, interactionId, sessionOidc };
@@ -212,21 +222,20 @@ export class CoreFcpController {
       return res.redirect(url);
     }
 
-    const isSuspicious = await sessionApp.get('isSuspicious');
+    const isSuspicious = sessionApp.get('isSuspicious');
     const isInsufficientAcrLevel = this.coreFcp.isInsufficientAcrLevel(
       idpAcr,
       isSuspicious,
     );
     if (isInsufficientAcrLevel) {
-      const url =
-        await this.coreFcpVerify.handleInsufficientAcrLevel(interactionId);
+      const url = this.coreFcpVerify.handleInsufficientAcrLevel(interactionId);
 
       /**
        * Suspect context redirects to idp choice,
        * thus we are no longer in an "sso" interaction,
        * so we update isSso flag in session.
        */
-      await sessionOidc.set('isSso', false);
+      sessionOidc.set('isSso', false);
       this.logger.info(
         `Disabling SSO since idP ACR is insufficient: ${idpAcr}`,
       );
@@ -242,6 +251,7 @@ export class CoreFcpController {
     return res.redirect(url);
   }
 
+  // eslint-disable-next-line max-params
   @Get(CoreRoutes.INTERACTION_CONSENT)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -258,6 +268,7 @@ export class CoreFcpController {
      */
     @Session('OidcClient', GetConsentOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
+    @CsrfToken() csrfToken: string,
   ) {
     const {
       interactionId,
@@ -265,7 +276,7 @@ export class CoreFcpController {
       spIdentity: identity,
       spName,
       stepRoute,
-    }: OidcSession = await sessionOidc.get();
+    }: OidcSession = sessionOidc.get();
 
     const interaction = await this.oidcProvider.getInteraction(req, res);
 
@@ -275,8 +286,6 @@ export class CoreFcpController {
     const isOpenIdScope = scopes.every((scope) => scope === 'openid');
 
     // -- generate and store in session the CSRF token
-    const csrfToken = this.csrf.get();
-    await this.csrf.save(sessionOidc, csrfToken);
 
     const response = {
       isOpenIdScope,

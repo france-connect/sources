@@ -163,20 +163,19 @@ export function CustomLibRequested(): FSA {
 
 ```typescript
 import { ConfigService } from '@fc/config';
-import { FSA } from '@fc/common'
+import { FSA } from '@fc/common';
 import * as httpClient from '@fc/http-client';
 import { SideEffectMap } from '@fc/state-management';
 
-import { CustomLibActionTypes} from '../enums';
+import { CustomLibActionTypes } from '../enums';
 import { CustomLibFailed, CustomLibRequested } from './actions';
 
 export const requestCustomLib = async (action: FSA, dispatch: Function) => {
   try {
-
     /**
-     * 
+     *
      * Some treatments for example
-     * 
+     *
      */
 
     dispatch(CustomLibRequested(data));

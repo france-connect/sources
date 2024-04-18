@@ -1,7 +1,9 @@
+import { ValidationError } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger';
@@ -10,9 +12,13 @@ import { ServiceProviderMetadata } from '@fc/oidc';
 
 import { getLoggerMock } from '@mocks/logger';
 
-import { platform } from './enums';
 import { ServiceProvider } from './schemas';
 import { ServiceProviderAdapterMongoService } from './service-provider-adapter-mongo.service';
+
+jest.mock('@fc/common', () => ({
+  ...jest.requireActual('@fc/common'),
+  validateDto: jest.fn(),
+}));
 
 describe('ServiceProviderAdapterMongoService', () => {
   let service: ServiceProviderAdapterMongoService;
@@ -209,7 +215,7 @@ describe('ServiceProviderAdapterMongoService', () => {
   });
 
   describe('findAllServiceProvider', () => {
-    const { CORE_FCP } = platform;
+    const platformMock = 'CORE_FCP';
     const expectedRetreivedFields = {
       _id: false,
       active: true,
@@ -257,8 +263,15 @@ describe('ServiceProviderAdapterMongoService', () => {
       userinfo_signed_response_alg: true,
     };
 
+    const validateDtoMock = jest.mocked(validateDto);
+
     beforeEach(() => {
-      configMock.get.mockReturnValue({ platform: CORE_FCP });
+      configMock.get.mockReturnValue({
+        platform: platformMock,
+        isLocalhostAllowed: false,
+      });
+
+      validateDtoMock.mockResolvedValueOnce([]);
     });
 
     it('should retrieve platform from config', async () => {
@@ -284,7 +297,7 @@ describe('ServiceProviderAdapterMongoService', () => {
       // setup
       const expectedRequestFilter = {
         active: true,
-        platform: CORE_FCP,
+        platform: platformMock,
       };
       // action
       await service['findAllServiceProvider']();
@@ -322,6 +335,10 @@ describe('ServiceProviderAdapterMongoService', () => {
 
     it('should log a warning if an entry is excluded by the DTO', async () => {
       // setup
+      validateDtoMock.mockResolvedValueOnce([
+        new Error('Unknown Error') as unknown as ValidationError,
+      ]);
+
       const invalidServiceProviderListMock = [
         validServiceProviderMock,
         invalidServiceProviderMock,
@@ -335,11 +352,15 @@ describe('ServiceProviderAdapterMongoService', () => {
       await service['findAllServiceProvider']();
 
       // expect
-      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
+      expect(loggerMock.alert).toHaveBeenCalledTimes(1);
     });
 
     it('should filter out any entry excluded by the DTO', async () => {
       // setup
+      validateDtoMock.mockResolvedValueOnce([
+        new Error('Unknown Error') as unknown as ValidationError,
+      ]);
+
       const invalidServiceProviderListMock = [
         validServiceProviderMock,
         invalidServiceProviderMock,

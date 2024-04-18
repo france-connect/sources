@@ -1,3 +1,5 @@
+import { Response } from 'express';
+
 import {
   Body,
   Controller,
@@ -6,7 +8,6 @@ import {
   Next,
   Post,
   Query,
-  Req,
   Res,
   UsePipes,
   ValidationPipe,
@@ -14,7 +15,7 @@ import {
 
 import { LoggerService } from '@fc/logger';
 import { OidcProviderRoutes } from '@fc/oidc-provider/enums';
-import { ISessionRequest, ISessionResponse, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 
 import { AuthorizeParamsDto } from '../dto';
 
@@ -43,12 +44,11 @@ export class OidcProviderController {
     }),
   )
   async getAuthorize(
-    @Req() req: ISessionRequest,
-    @Res() res: ISessionResponse,
+    @Res() res: Response,
     @Next() next,
     @Query() _query: AuthorizeParamsDto,
   ) {
-    await this.session.reset(req, res);
+    await this.session.reset(res);
     this.logger.info('Session was reset');
 
     // Pass the query to oidc-provider

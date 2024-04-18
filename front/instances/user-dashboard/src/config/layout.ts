@@ -1,7 +1,8 @@
 /* istanbul ignore file */
 
 // declarative file
-import { LayoutConfig, LogoFranceConnect } from '@fc/dsfr';
+import type { LayoutConfig } from '@fc/dsfr';
+import { LogoFranceConnect } from '@fc/dsfr';
 
 export const Layout: LayoutConfig = {
   bottomLinks: [

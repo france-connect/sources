@@ -24,34 +24,25 @@ export class ForbidRefreshInterceptor implements NestInterceptor {
   constructor(
     private readonly config: ConfigService,
     private readonly reflector: Reflector,
+    private readonly session: SessionService,
   ) {}
 
-  async intercept(
-    context: ExecutionContext,
-    next: CallHandler,
-  ): Promise<Observable<any>> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const cantRefresh = ForbidRefresh.get(this.reflector, context);
 
     if (cantRefresh) {
-      await this.checkRefresh(context);
+      this.checkRefresh(context);
     }
 
     return next.handle();
   }
 
   // eslint-disable-next-line complexity
-  private async checkRefresh(context: ExecutionContext) {
+  private checkRefresh(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
-
-    if (!req.sessionId) {
-      return;
-    }
-    const session = SessionService.getBoundSession<OidcSession>(
-      req,
-      'OidcClient',
-    );
-    const { stepRoute } = (await session.get()) || {};
+    const { stepRoute } = this.session.get<OidcSession>('OidcClient') || {};
     const { urlPrefix } = this.config.get<AppConfig>('App');
+
     const currentRoute = req.route.path.replace(urlPrefix, '');
 
     if (!stepRoute) {

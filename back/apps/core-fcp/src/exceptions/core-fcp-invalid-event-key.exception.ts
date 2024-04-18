@@ -2,7 +2,7 @@
 
 // Declarative code
 import { CoreBaseException, ErrorCode } from '@fc/core';
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 /**
  * @todo #992 do not extend class from @fc/core, use a specific BaseException instead
  * This might be done while removing @fc/core altogether in favor of a light code duplication

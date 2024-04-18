@@ -49,15 +49,15 @@ describe('CsmrHsmController', () => {
     csmrHsmController = app.get<CsmrHsmController>(CsmrHsmController);
 
     jest.resetAllMocks();
-    signMock.mockResolvedValue(signResolvedValue);
+    signMock.mockReturnValue(signResolvedValue);
     configServiceMock.get.mockReturnValue({ payloadEncoding: 'base64' });
     hsmServiceMock.genRandom.mockReturnValue(randomString);
   });
 
   describe('sign', () => {
-    it('should call hsm.sign', async () => {
+    it('should call hsm.sign', () => {
       // When
-      await csmrHsmController.sign(payloadMock);
+      csmrHsmController.sign(payloadMock);
       // Then
       expect(signMock).toHaveBeenCalledTimes(1);
       expect(signMock).toHaveBeenCalledWith(
@@ -66,22 +66,22 @@ describe('CsmrHsmController', () => {
       );
     });
 
-    it('should resolve to stringified hsm.sign response', async () => {
+    it('should resolve to stringified hsm.sign response', () => {
       const base64result = Buffer.from(signResolvedValue).toString('base64');
       // When
-      const result = await csmrHsmController.sign(payloadMock);
+      const result = csmrHsmController.sign(payloadMock);
       // Then
       expect(result).toBe(base64result);
     });
 
-    it('should log an error if execution threw', async () => {
+    it('should log an error if execution threw', () => {
       // Given
       const errorMock = new Error();
       signMock.mockImplementationOnce(() => {
         throw errorMock;
       });
       // When
-      await csmrHsmController.sign(payloadMock);
+      csmrHsmController.sign(payloadMock);
       // Then
       expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
       expect(loggerServiceMock.err).toHaveBeenCalledWith(
@@ -89,10 +89,12 @@ describe('CsmrHsmController', () => {
       );
     });
 
-    it('should resolve to "ERROR" if execution threw', async () => {
-      hsmServiceMock.sign.mockRejectedValueOnce(Error('something not good'));
+    it('should resolve to "ERROR" if execution threw', () => {
+      hsmServiceMock.sign.mockImplementationOnce(() => {
+        throw new Error('something not good');
+      });
       // When
-      const result = await csmrHsmController.sign(payloadMock);
+      const result = csmrHsmController.sign(payloadMock);
       // Then
       expect(result).toBe('ERROR');
     });

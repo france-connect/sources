@@ -1,7 +1,7 @@
 import { ConfigService } from '@fc/config';
 
 import { Options } from '../enums';
-import { HttpClientOptions } from '../interfaces';
+import type { HttpClientOptions } from '../interfaces';
 import * as Module from './get-request-options';
 import { slashifyPath } from './slashify-path';
 
@@ -14,7 +14,7 @@ describe('getTimeout', () => {
     Module.getTimeout(expect.any(Object));
 
     // then
-    expect(ConfigService.get).toHaveBeenCalledTimes(1);
+    expect(ConfigService.get).toHaveBeenCalledOnce();
     expect(ConfigService.get).toHaveBeenCalledWith(Options.CONFIG_NAME);
   });
 
@@ -23,7 +23,7 @@ describe('getTimeout', () => {
     const result = Module.getTimeout({ timeout: 3000 });
 
     // then
-    expect(result).toStrictEqual(3000);
+    expect(result).toBe(3000);
   });
 
   it('should return a timeout from serviceConfig', () => {
@@ -34,7 +34,7 @@ describe('getTimeout', () => {
     const result = Module.getTimeout(undefined as unknown as HttpClientOptions);
 
     // then
-    expect(result).toStrictEqual(2000);
+    expect(result).toBe(2000);
   });
 
   it('should return a timeout from default values', () => {
@@ -55,7 +55,7 @@ describe('getBaseURL', () => {
     Module.getBaseURL(expect.any(Object));
 
     // then
-    expect(ConfigService.get).toHaveBeenCalledTimes(1);
+    expect(ConfigService.get).toHaveBeenCalledOnce();
     expect(ConfigService.get).toHaveBeenCalledWith(Options.CONFIG_NAME);
   });
 
@@ -66,7 +66,7 @@ describe('getBaseURL', () => {
     });
 
     // then
-    expect(result).toStrictEqual('http://any-url.com');
+    expect(result).toBe('http://any-url.com');
   });
 
   it('should return a baseURL from serviceConfig', () => {
@@ -76,7 +76,7 @@ describe('getBaseURL', () => {
     const result = Module.getBaseURL(undefined as unknown as HttpClientOptions);
 
     // then
-    expect(result).toStrictEqual('http://any-url.com');
+    expect(result).toBe('http://any-url.com');
   });
 
   it('should return a baseURL from default values', () => {
@@ -111,7 +111,7 @@ describe('getRequestOptions', () => {
     );
 
     // then
-    expect(slashifyPath).toHaveBeenCalledTimes(1);
+    expect(slashifyPath).toHaveBeenCalledOnce();
     expect(slashifyPath).toHaveBeenCalledWith('any-endpoint', 'http://any-url.mock');
   });
 
@@ -127,7 +127,7 @@ describe('getRequestOptions', () => {
     });
 
     // then
-    expect(slashifyPath).toHaveBeenCalledTimes(1);
+    expect(slashifyPath).toHaveBeenCalledOnce();
     expect(slashifyPath).toHaveBeenCalledWith('any-endpoint', 'http://any-url-config.mock');
   });
 
@@ -173,7 +173,7 @@ describe('getRequestOptions', () => {
     Module.getRequestOptions(targetRequest);
 
     // then
-    expect(Module.getBaseURL).toHaveBeenCalledTimes(1);
+    expect(Module.getBaseURL).toHaveBeenCalledOnce();
   });
 
   it('should have call getTimeout', () => {
@@ -190,6 +190,6 @@ describe('getRequestOptions', () => {
     Module.getRequestOptions(targetRequest);
 
     // then
-    expect(Module.getTimeout).toHaveBeenCalledTimes(1);
+    expect(Module.getTimeout).toHaveBeenCalledOnce();
   });
 });

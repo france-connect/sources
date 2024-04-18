@@ -2,9 +2,11 @@
 
 exports[`UserPreferencesPage should match the snapshot, display into a desktop viewport 1`] = `
 <div>
-  <div>
+  <div
+    data-mockid="Helmet"
+  >
     <div>
-      React Helmet
+      React Helmet Async
     </div>
   </div>
   <div
@@ -111,9 +113,11 @@ exports[`UserPreferencesPage should match the snapshot, display into a desktop v
 
 exports[`UserPreferencesPage should match the snapshot, display into a mobile viewport 1`] = `
 <div>
-  <div>
+  <div
+    data-mockid="Helmet"
+  >
     <div>
-      React Helmet
+      React Helmet Async
     </div>
   </div>
   <div

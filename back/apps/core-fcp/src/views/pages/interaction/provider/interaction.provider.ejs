@@ -1,0 +1,41 @@
+<%
+const disabled = !provider.active
+  ? 'disabled'
+  : '';
+
+const approvalModalId = !!provider?.modal?.active
+  ? `fr-modal-provider-${provider.uid}`
+  : undefined;
+
+%>
+<% if (provider.active && !!approvalModalId) { %>
+  <button
+    type="button"
+    data-fr-opened="false"
+    aria-controls="<%= approvalModalId %>"
+    role="link"
+    id="idp-<%= provider.uid %>"
+    data-testid="idp-<%= provider.uid %>"
+    class="fr-btn fr-btn--tertiary fr-px-0 fc-btn--provider"
+    <%= disabled %>
+  >
+    <%- include('pages/interaction/provider/interaction.provider-content.ejs', { provider }); %>
+  </button>
+  <%- include('pages/interaction/provider/interaction.provider-modal.ejs',
+    {
+      provider,
+      approvalModalId
+    });
+  %>
+<% } else { %>
+  <button
+    type="submit"
+    role="link"
+    id="idp-<%= provider.uid %>"
+    data-testid="idp-<%= provider.uid %>"
+    class="fr-btn fr-btn--tertiary fr-px-0 fc-btn--provider"
+    <%= disabled %>
+  >
+    <%- include('pages/interaction/provider/interaction.provider-content.ejs', { provider }); %>
+  </button>
+<% } %>

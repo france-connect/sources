@@ -18,7 +18,7 @@ describe('AccountService', () => {
       await AccountService.fetchData('any-endpoint-mock', jest.fn());
 
       // then
-      expect(axiosGetMock).toHaveBeenCalledTimes(1);
+      expect(axiosGetMock).toHaveBeenCalledOnce();
       expect(axiosGetMock).toHaveBeenCalledWith('any-endpoint-mock');
     });
 

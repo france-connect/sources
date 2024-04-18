@@ -4,6 +4,7 @@
 import { TrackingLogInterface } from '@fc/tracking';
 
 export class ICoreTrackingLog extends TrackingLogInterface {
+  readonly sessionId: string;
   readonly interactionId: string;
   readonly step: string;
   /** Service provider informations */

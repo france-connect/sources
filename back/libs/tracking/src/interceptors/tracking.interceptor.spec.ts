@@ -87,18 +87,18 @@ describe('TrackingInterceptor', () => {
   });
 
   describe('intercept', () => {
-    it('should not call log until next', async () => {
+    it('should not call log until next', () => {
       // Given
       interceptor['log'] = jest.fn();
       // When
-      await interceptor.intercept(contextMock, nextMock);
+      interceptor.intercept(contextMock, nextMock);
       // Then
       expect(interceptor['log']).toHaveBeenCalledTimes(0);
     });
 
-    it('should log a debug when intercepting', async () => {
+    it('should log a debug when intercepting', () => {
       // When
-      await interceptor.intercept(contextMock, nextMock);
+      interceptor.intercept(contextMock, nextMock);
       // Then
       expect(loggerMock.debug).toHaveBeenCalledTimes(1);
       expect(loggerMock.debug).toHaveBeenCalledWith({

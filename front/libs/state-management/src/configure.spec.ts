@@ -48,7 +48,7 @@ describe('configure', () => {
     configure(mockPersistKey, mockStates, mockReducers);
 
     // then
-    expect(getInitialState).toHaveBeenCalledTimes(1);
+    expect(getInitialState).toHaveBeenCalledOnce();
     expect(getInitialState).toHaveBeenCalledWith(mockStates);
   });
 
@@ -57,7 +57,7 @@ describe('configure', () => {
     configure(mockPersistKey, mockStates, mockReducers);
 
     // then
-    expect(getPersistLists).toHaveBeenCalledTimes(1);
+    expect(getPersistLists).toHaveBeenCalledOnce();
     expect(getPersistLists).toHaveBeenCalledWith(mockStates);
   });
 
@@ -66,7 +66,7 @@ describe('configure', () => {
     configure(mockPersistKey, mockStates, mockReducers);
 
     // then
-    expect(mapReducers).toHaveBeenCalledTimes(1);
+    expect(mapReducers).toHaveBeenCalledOnce();
     expect(mapReducers).toHaveBeenCalledWith(mockReducers);
   });
 
@@ -75,7 +75,7 @@ describe('configure', () => {
     configure(mockPersistKey, mockStates, mockReducers, [expect.any(Function)], true);
 
     // then
-    expect(bindMiddlewares).toHaveBeenCalledTimes(1);
+    expect(bindMiddlewares).toHaveBeenCalledOnce();
     expect(bindMiddlewares).toHaveBeenCalledWith([expect.any(Function)], true);
   });
 
@@ -84,7 +84,7 @@ describe('configure', () => {
     configure(mockPersistKey, mockStates, mockReducers, [expect.any(Function)], true);
 
     // then
-    expect(redux.legacy_createStore).toHaveBeenCalledTimes(1);
+    expect(redux.legacy_createStore).toHaveBeenCalledOnce();
   });
 
   it('should have called reduxPersist.persistStore method', () => {
@@ -92,6 +92,6 @@ describe('configure', () => {
     configure(mockPersistKey, mockStates, mockReducers);
 
     // then
-    expect(reduxPersist.persistStore).toHaveBeenCalledTimes(1);
+    expect(reduxPersist.persistStore).toHaveBeenCalledOnce();
   });
 });

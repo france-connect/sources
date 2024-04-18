@@ -1,12 +1,10 @@
-import { IProviderMappings } from '../../interfaces';
+import { ProviderMappingsInterface } from '../../interfaces';
 import { claims } from './fcp-low.claims';
-import { labels } from './fcp-low.labels';
 import { provider } from './fcp-low.provider';
 import { scopes } from './fcp-low.scopes';
 
-export const fcpLow: IProviderMappings = {
+export const fcpLow: ProviderMappingsInterface = {
   provider,
   claims,
-  labels,
   scopes,
 };

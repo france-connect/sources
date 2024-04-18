@@ -3,7 +3,7 @@
 // declarative file
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { DataProviderCoreAuthBaseException } from './data-provider-core-auth-base.exception';

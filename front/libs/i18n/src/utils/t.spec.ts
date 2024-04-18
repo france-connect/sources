@@ -25,7 +25,7 @@ describe('t shorthand', () => {
     t(inputMock, valuesMock);
 
     // Then
-    expect(I18nService.instance).toHaveBeenCalledTimes(1);
+    expect(I18nService.instance).toHaveBeenCalledOnce();
   });
 
   it('should call I18nService.translate with given arguments', () => {
@@ -33,7 +33,7 @@ describe('t shorthand', () => {
     t(inputMock, valuesMock);
 
     // Then
-    expect(mockedService.translate).toHaveBeenCalledTimes(1);
+    expect(mockedService.translate).toHaveBeenCalledOnce();
     expect(mockedService.translate).toHaveBeenCalledWith(inputMock, valuesMock);
   });
 

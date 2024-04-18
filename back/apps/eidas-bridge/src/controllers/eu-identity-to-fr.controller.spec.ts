@@ -137,7 +137,7 @@ describe('EuIdentityToFrController', () => {
       .useValue(trackingServiceMock)
       .compile();
 
-    euIdentityToFrController = await app.get<EuIdentityToFrController>(
+    euIdentityToFrController = app.get<EuIdentityToFrController>(
       EuIdentityToFrController,
     );
 
@@ -147,14 +147,12 @@ describe('EuIdentityToFrController', () => {
     configServiceMock.get.mockReturnValue(configMock);
 
     oidcProviderServiceMock.getInteraction.mockResolvedValue(interactionMock);
-    sessionServiceOidcMock.get.mockResolvedValue(sessionDataMock);
+    sessionServiceOidcMock.get.mockReturnValue(sessionDataMock);
   });
 
   describe('getInteraction', () => {
     beforeEach(() => {
-      eidasCountryServiceMock.getListByIso.mockResolvedValueOnce(
-        countryListMock,
-      );
+      eidasCountryServiceMock.getListByIso.mockReturnValueOnce(countryListMock);
     });
     it('should call oidcProvider.getInteraction', async () => {
       // When
@@ -223,7 +221,9 @@ describe('EuIdentityToFrController', () => {
       const errorMock = new Error('Unknown error');
       eidasCountryServiceMock.getListByIso
         .mockReset()
-        .mockRejectedValueOnce(errorMock);
+        .mockImplementationOnce(() => {
+          throw errorMock;
+        });
       // When
 
       await expect(
@@ -304,7 +304,7 @@ describe('EuIdentityToFrController', () => {
 
     it('should get the eidas response from the session', async () => {
       // setup
-      sessionServiceEidasMock.get.mockResolvedValue({
+      sessionServiceEidasMock.get.mockReturnValueOnce({
         eidasResponse: successEidasMandatoryJsonMock,
       });
       eidasToOidcServiceMock.mapPartialResponseSuccess.mockReturnValue(
@@ -326,7 +326,7 @@ describe('EuIdentityToFrController', () => {
 
     describe('eidas response is a success', () => {
       beforeEach(() => {
-        sessionServiceEidasMock.get.mockResolvedValueOnce({
+        sessionServiceEidasMock.get.mockReturnValueOnce({
           eidasResponse: successEidasMandatoryJsonMock,
         });
         eidasToOidcServiceMock.mapPartialResponseSuccess.mockReturnValueOnce(
@@ -509,7 +509,7 @@ describe('EuIdentityToFrController', () => {
       const interactionMock = { params: { scope: 'openid', acr: 'eidas2' } };
 
       beforeEach(() => {
-        sessionServiceEidasMock.get.mockResolvedValueOnce({
+        sessionServiceEidasMock.get.mockReturnValueOnce({
           eidasResponse: failureEidasMandatoryJsonMock,
         });
 

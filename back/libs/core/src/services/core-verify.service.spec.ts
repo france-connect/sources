@@ -109,7 +109,7 @@ describe('CoreVerifyService', () => {
 
     featureHandlerGetSpy = jest.spyOn(FeatureHandler, 'get');
 
-    sessionServiceMock.get.mockResolvedValue(sessionDataMock);
+    sessionServiceMock.get.mockReturnValue(sessionDataMock);
     featureHandlerGetSpy.mockReturnValueOnce(featureHandlerServiceMock);
     IdentityProviderMock.getById.mockResolvedValue(identityProviderResultMock);
   });

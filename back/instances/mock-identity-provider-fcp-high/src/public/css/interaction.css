@@ -90,20 +90,34 @@ body {
   border-radius: 3px;
 }
 
+#container .btn-section {
+  display:flex;
+  flex-direction: row-reverse;
+  justify-content: center;
+  margin: 2em auto 2em auto;
+}
+
 #container .inner form button {
-  width: 80%;
   display: block;
   color: #ffffff;
   font: inherit;
   font-weight: bold;
-  padding: 8px 14px;
+  padding: 15px 80px;
   background: #0c54b2;
-  line-height: 2.22;
   border: 0;
   cursor: pointer;
   border-radius: 3px;
-  margin: 2em auto 0 auto;
 }
+
+#container .btn-outline {
+  border: 1px solid #0c54b2;
+  color: #0c54b2;
+  text-decoration: none;
+  border-radius: 3px;
+  padding: 15px 40px;
+  margin-right: 10px;
+}
+
 
 #container .inner form button:hover {
   background: #0053b3;

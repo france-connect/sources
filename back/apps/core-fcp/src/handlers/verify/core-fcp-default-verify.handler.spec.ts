@@ -216,7 +216,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     jest.resetAllMocks();
 
     getInteractionMock.mockResolvedValue(getInteractionResultMock);
-    sessionServiceMock.get.mockResolvedValue(sessionDataMock);
+    sessionServiceMock.get.mockReturnValue(sessionDataMock);
     rnippServiceMock.check.mockResolvedValue(spIdentityMock);
     cryptographyFcpServiceMock.computeIdentityHash.mockReturnValueOnce(
       'spIdentityHash',
@@ -283,7 +283,9 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     it('Should throw if identity provider is not usable', async () => {
       // Given
       const errorMock = new Error('my error');
-      sessionServiceMock.get.mockRejectedValueOnce(errorMock);
+      sessionServiceMock.get.mockImplementationOnce(() => {
+        throw errorMock;
+      });
       // Then
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
@@ -310,7 +312,9 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     it('Should throw if identity storage for service provider fails', async () => {
       // Given
       const errorMock = new Error('my error');
-      sessionServiceMock.set.mockRejectedValueOnce(errorMock);
+      sessionServiceMock.set.mockImplementationOnce(() => {
+        throw errorMock;
+      });
       // Then
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
@@ -325,12 +329,17 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         birthdate: 'foo',
         sub: 'computedSubSp',
       };
+      const technicalClaims = { tech: 'claims' };
       service['buildRnippClaims'] = jest
         .fn()
         .mockReturnValueOnce(buildRnippClaimsResult);
       service['buildSpIdentity'] = jest
         .fn()
         .mockReturnValueOnce(buildSpIdentityResult);
+
+      service['getTechnicalClaims'] = jest
+        .fn()
+        .mockReturnValueOnce(technicalClaims);
       // When
       await service.handle(handleArgument);
       // Then
@@ -344,6 +353,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
           sub: 'computedSubSp',
           email: 'email',
           birthdate: 'foo',
+          ...technicalClaims,
         },
         subs: {
           // FranceConnect claims naming convention
@@ -417,6 +427,21 @@ describe('CoreFcpDefaultVerifyHandler', () => {
      * // Service provider usability
      * it('Should throw if service provider is not usable ', async () => {});
      */
+  });
+
+  describe('getTechnicalClaims', () => {
+    it('should return technical claims', () => {
+      // Given
+      const idpId = Symbol('idpId') as unknown as string;
+      // When
+      const result = service['getTechnicalClaims'](idpId);
+      // Then
+      expect(result).toEqual({
+        // OIDC fashion naming
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        idp_id: idpId,
+      });
+    });
   });
 
   describe('checkAccountBlocked', () => {

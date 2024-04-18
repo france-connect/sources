@@ -20,7 +20,7 @@ describe('LayoutHeaderLogosComponent', () => {
     render(<LayoutHeaderLogosComponent title="any-title-mock" />);
 
     // then
-    expect(LayoutHomepageLinkComponent).toHaveBeenCalledTimes(1);
+    expect(LayoutHomepageLinkComponent).toHaveBeenCalledOnce();
   });
 
   it('should render the brand logo with an alt param', () => {
