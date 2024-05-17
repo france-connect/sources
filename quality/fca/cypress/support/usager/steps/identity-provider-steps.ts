@@ -36,6 +36,13 @@ When("je m'authentifie avec succès", function () {
   identityProviderPage.login(userCredentials);
 });
 
+When(
+  `je m'authentifie avec succès avec l'identifiant {string}`,
+  function (login: string) {
+    identityProviderPage.loginWithUsername(login);
+  },
+);
+
 When("je saisi manuellement l'identité de l'utilisateur", function () {
   expect(this.user).to.exist;
 

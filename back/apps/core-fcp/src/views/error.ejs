@@ -1,32 +1,31 @@
 <!doctype html>
 <html lang="<%= $translate('meta.lang') %>" data-fr-scheme="light">
-<head>
-  <%- include('includes/head.ejs') %>
-  <link rel="stylesheet" href="/css/pages/error.css">
-  <%- include('pages/error/error.page-title.ejs') %>
-</head>
-<body id="fc-error-page">
-  <div class="fc-sticky-wrapper">
-    <div class="fc-sticky-body">
-      <%- include('includes/header.ejs') %>
-      <main class="fr-container fr-mt-5w fr-mt-md-8w">
-        <div class="fr-grid-row fr-grid-row--gutters">
-          <section
-            data-testid="error-section"
-            class="fr-col-12 fr-col-offset-md-1 fr-col-md-9 fr-mb-6v fr-mb-md-10v">
-            <%- include('pages/error/error.welcome.ejs') %>
-            <%- include('pages/error/error.action.ejs') %>
-          </section>
-        </div>
-
-        <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
-          <%- include('pages/error/error.support.ejs') %>
-        </div>
-
-      </main>
+  <head>
+    <%- include('includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/pages/error.css" />
+    <%- include('pages/error/error.page-title.ejs') %>
+  </head>
+  <body id="fc-error-page">
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main class="fr-container fr-mt-5w fr-mt-md-8w">
+          <div class="fr-grid-row fr-grid-row--gutters">
+            <section
+              data-testid="error-section"
+              class="fr-col-12 fr-col-offset-md-1 fr-col-md-9 fr-mb-6v fr-mb-md-10v"
+            >
+              <%- include('pages/error/error.welcome.ejs') %> <%-
+              include('pages/error/error.action.ejs') %>
+            </section>
+          </div>
+          <div class="fr-grid-row fr-grid-row--gutters fr-grid-row--middle">
+            <%- include('pages/error/error.support.ejs') %>
+          </div>
+        </main>
+      </div>
+      <%- include('includes/footer.ejs') %>
     </div>
-    <%- include('includes/footer.ejs') %>
-  </div>
-  <%- include('includes/scripts.ejs') %>
-</body>
+    <%- include('includes/scripts.ejs') %>
+  </body>
 </html>

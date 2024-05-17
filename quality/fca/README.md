@@ -54,8 +54,6 @@ In order to run tests with Cypress,
 ```shell
 docker-stack prune && \
 docker-stack up bdd-fca-low && \
-docker-stack dep core-fca-low && \
-docker-stack fixtures-fca-low && \
 docker-stack start-all
 ```
 
@@ -112,9 +110,9 @@ CYPRESS_PLATFORM=fca-low CYPRESS_TEST_ENV=integ01 yarn report
 
 ## Visual Validation
 
-We are running visual validation using the cypress plugin [cypress-image-snapshot](https://github.com/jaredpalmer/cypress-image-snapshot).
+We are running visual validation using the cypress plugin [cypress-image-snapshot](https://github.com/simonsmith/cypress-image-snapshot).
 
-The visual validations are done on Electron 106 headless in the terminal.
+The visual validations are done on Electron 114 headless in the terminal.
 
 ### Run the snapshot tests
 

@@ -6,13 +6,22 @@ import { ConfigService } from '@fc/config';
 import { CoreAuthorizationService } from '@fc/core';
 import { FqdnToIdpAdapterMongoService } from '@fc/fqdn-to-idp-adapter-mongo';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
-import { OidcClientConfig, OidcClientService } from '@fc/oidc-client';
+import {
+  OidcClientConfig,
+  OidcClientIdpBlacklistedException,
+  OidcClientIdpDisabledException,
+  OidcClientService,
+} from '@fc/oidc-client';
 import { SessionService } from '@fc/session';
 
 import { AppConfig } from '../dto/app-config.dto';
 import { CoreFcaOidcClientSession } from '../dto/core-fca-oidc-client-session.dto';
+import {
+  CoreFcaAgentIdpBlacklistedException,
+  CoreFcaAgentIdpDisabledException,
+  CoreFcaAgentNoIdpException,
+} from '../exceptions';
 import {
   CoreFcaAuthorizationParametersInterface,
   CoreFcaServiceInterface,
@@ -27,7 +36,6 @@ export class CoreFcaService implements CoreFcaServiceInterface {
     private readonly oidcClient: OidcClientService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
     private readonly fqdnToIdpAdapterMongo: FqdnToIdpAdapterMongoService,
-    private readonly logger: LoggerService,
     private readonly coreAuthorization: CoreAuthorizationService,
     private readonly session: SessionService,
   ) {}
@@ -51,8 +59,8 @@ export class CoreFcaService implements CoreFcaServiceInterface {
 
     const { scope } = this.config.get<OidcClientConfig>('OidcClient');
 
-    await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
-    await this.oidcClient.utils.checkIdpDisabled(idpId);
+    await this.checkIdpBlacklisted(spId, idpId);
+    await this.checkIdpDisabled(idpId);
 
     const { nonce, state } =
       await this.oidcClient.utils.buildAuthorizeParameters();
@@ -99,23 +107,57 @@ export class CoreFcaService implements CoreFcaServiceInterface {
     res.redirect(authorizationUrl);
   }
 
-  async getIdpIdForEmail(email: string): Promise<string> {
+  async getIdpIdForEmail(email: string): Promise<string[]> {
+    const { defaultIpdId } = this.config.get<AppConfig>('App');
     // find the proper identity provider by fqdn
     const fqdn = this.getFqdnFromEmail(email);
     const idpsByFqdn = await this.fqdnToIdpAdapterMongo.getIdpsByFqdn(fqdn);
 
-    if (idpsByFqdn?.length > 1) {
-      this.logger.warning('More than one IdP exists');
-    }
-
-    const { defaultIpdId } = this.config.get<AppConfig>('App');
-
-    return idpsByFqdn?.length > 0
-      ? idpsByFqdn[0].identityProvider
-      : defaultIpdId;
+    return idpsByFqdn.length > 0
+      ? idpsByFqdn.map(({ identityProvider }) => identityProvider)
+      : [defaultIpdId];
   }
 
-  private getFqdnFromEmail(email: string): string {
-    return email.split('@').pop();
+  getFqdnFromEmail(email: string): string {
+    return email.split('@').pop().toLowerCase();
+  }
+
+  private async checkIdpBlacklisted(spId: string, idpId: string) {
+    try {
+      await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
+    } catch (error) {
+      if (error instanceof OidcClientIdpBlacklistedException) {
+        throw new CoreFcaAgentIdpBlacklistedException();
+      }
+      throw error;
+    }
+  }
+
+  private async checkIdpDisabled(idpId: string) {
+    try {
+      await this.oidcClient.utils.checkIdpDisabled(idpId);
+    } catch (error) {
+      if (error instanceof OidcClientIdpDisabledException) {
+        throw new CoreFcaAgentIdpDisabledException();
+      }
+      throw error;
+    }
+  }
+
+  private getDefaultIdp(idpsByFqdnLength: number): string {
+    const { defaultIpdId } = this.config.get<AppConfig>('App');
+
+    if (idpsByFqdnLength === 0 && !defaultIpdId) {
+      throw new CoreFcaAgentNoIdpException();
+    }
+
+    return defaultIpdId;
+  }
+
+  async getIdentityProvidersByIds(...idpIds: string[]) {
+    const idpList = await this.identityProvider.getList();
+    return idpList
+      .filter(({ uid }) => idpIds.includes(uid))
+      .map(({ name, title, uid }) => ({ name, title, uid }));
   }
 }

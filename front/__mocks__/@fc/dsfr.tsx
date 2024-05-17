@@ -1,3 +1,5 @@
+import { PropsWithChildren } from 'react';
+
 export const FranceConnectButton = jest.fn(() => <div>FranceConnectButton</div>);
 
 export const SimpleButton = jest.fn(() => <div>SimpleButton</div>);
@@ -30,7 +32,7 @@ export const AccordionComponent = jest.fn(({ children }) => (
   </div>
 ));
 
-export const AccordionGroupComponent = jest.fn(({ children }) => (
+export const AccordionGroupComponent = jest.fn(({ children }: PropsWithChildren) => (
   <div data-mockid={'AccordionGroupComponent'}>
     <h3>AccordionGroupComponent</h3>
     <div>{children}</div>

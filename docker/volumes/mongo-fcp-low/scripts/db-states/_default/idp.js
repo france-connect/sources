@@ -47,7 +47,7 @@ const fip = {
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
     disabledForLegacy: false,
-    amr: ["fc", "pwd", "mail", "mfa"],
+    amr: ["fc", "pwd"],
   },
   // -- FIP - FIP1-LOW - Activated
   "FIP1-LOW": {
@@ -91,7 +91,7 @@ const fip = {
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
     disabledForLegacy: false,
-    amr: ["fc", "pwd", "mail"],
+    amr: ["fc", "pwd"],
   },
   // -- FIP - FIP1-LOW - Beta ACTIVE
   "FIP1-BETA-ACTIVE": {
@@ -278,7 +278,7 @@ const fip = {
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
     disabledForLegacy: false,
-    amr: ["fc", "pwd", "mail", "mfa"],
+    amr: ["fc", "pwd"],
   },
   // -- FIP - FIP2-LOW - Activated
   "FIP2-LOW": {
@@ -324,7 +324,7 @@ const fip = {
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
     disabledForLegacy: false,
-    amr: ["fc", "pwd", "pop", "mfa"],
+    amr: ["fc", "pwd", "mail"],
   },
   // -- FIP - FIP3-LOW - Activated
   "FIP3-LOW": {
@@ -370,7 +370,7 @@ const fip = {
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
     disabledForLegacy: false,
-    amr: ["fc", "pwd", "mail"],
+    amr: ["fc", "pop", "mfa", "pin"],
   },
   // -- FIP - FIP4-LOW - ES256
   "FIP4-LOW": {

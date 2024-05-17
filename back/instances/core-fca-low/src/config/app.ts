@@ -8,7 +8,7 @@ const env = new ConfigParser(process.env, 'App');
 
 export default {
   apiOutputContentType: env.string('API_OUTPUT_CONTENT_TYPE'),
-  name: 'FC_CORE_HIGH',
+  name: 'CORE_FCA_LOW',
   urlPrefix: '/api/v2',
   assetsPaths: env.json('ASSETS_PATHS'),
   assetsDsfrPaths: env.json('DSFR_ASSETS_PATHS'),

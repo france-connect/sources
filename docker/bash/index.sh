@@ -39,14 +39,16 @@ _command_register "generate-v2-traces" "_generate_v2_traces" "Generate FC+ conne
 _command_register "create-es-alias" "_create_es_alias" "create automatic es alias for FC legacy & FC v2 during _init_ud"
 _command_register "create-es-alias-legacy" "_create_es_alias_legacy" "create manual es alias for FC legacy"
 _command_register "create-es-alias-v2" "_create_es_alias_v2" "create manual es alias for FC v2"
-_command_register "generate-metrics" "_generate_metrics" ""                   # Description to be defined
+_command_register "generate-metrics" "_generate_metrics" "" # Description to be defined
 _command_register "generate-stats" "_generate_stats" "generate-stats => restore all stats (logs, event and metrics) index"
 _command_register "generate-events" "_generate_events" "restore logs and events index"
-_command_register "delete-indexes" "_delete_indexes" ""                       # Description to be defined
-_command_register "restore-snapshot" "_es_restore_snapshot" ""                # Description to be defined # Deprecated
+_command_register "delete-indexes" "_delete_indexes" ""        # Description to be defined
+_command_register "restore-snapshot" "_es_restore_snapshot" "" # Description to be defined # Deprecated
 
 ## Nodejs apps
 _command_register "start" "_start" "start application"
+_command_register "start:prod" "_start_prod" "Build, then start NestJS applications (each application is built only once)"
+_command_register "start:dev" "_start_dev" "Start application in dev mode (watching changes)"
 _command_register "start-all" "_start_all" "Start all application for wich containers are up"
 
 _command_register "start-ci" "_start_ci" "start for CI only"
@@ -59,6 +61,7 @@ _command_register "reload" "_start" "Alias of start"
 _command_register "reload-all" "_start_all" "Alias for start-all"
 
 _command_register "log" "_log" "log [<app>] => exec pm2 logs for given instance"
+_command_register "logs" "_logs" "[--bg] - Show and expose logs for chrome dev-tools. If --bg option is passed, logs are only exposed to dev-tools with a background process"
 
 _command_register "dependencies" "_install_dependencies" "dependencies [<app1> <app2> <...>] / dep [...] => install dependencies (using npm or yarn) on given nodejs applications (fc-core|fc-exploitation|fc-support|fc-workers|fdp1|fip1|aidants-connect-mock|fsp1|fsp2|fsp3|rnipp|partenaires|usagers - default: fc-core)"
 _command_register "dependencies-all" "_install_dependencies_all" "dependencies-all | dep-all => install dependencies (using npm or yarn) on all nodejs applications"
@@ -86,22 +89,22 @@ _command_register "list" "_list_services" "List available services / stacks: lis
 ## General / utils
 _command_register "help" "_command_list" "Display this help: help <search term>"
 
-_command_register "reload-rp" "_reload-rp" "Reload Reverse proxy"
+_command_register "reload-rp" "_reload_rp" "Reload Reverse proxy"
 
 _command_register "compose" "cd ${WORKING_DIR} && ${DOCKER_COMPOSE}" "Alias for docker-compose"
 
-_command_register "llng-configure" "_llng-configure" "Restore LemonLDAP configuration from ./docker/volumes/llng/llng-conf.json dump file"
+_command_register "llng-configure" "_llng_configure" "Restore LemonLDAP configuration from ./docker/volumes/llng/llng-conf.json dump file"
 
 _command_register "wait" "wait_for_nodejs" "Wait for a nodejs HTTP service to respond on an URL or try to display logs"
 
-_command_register "log-rotate" "_log-rotate" "log-rotate Rotate the logs and send SIGUSR"
+_command_register "log-rotate" "_log_rotate" "log-rotate Rotate the logs and send SIGUSR"
 
 _command_register "mongo" "_mongo_shell" "mongo <server> <database>: Opens mongo shell"
 ### Legacy aliases for mongo shell access
 _command_register "mongo-shell-core-fca-low" "_mongo_shell_core_fca_low" "[deprecated] Open mongo shell for core-fca-low "
-_command_register "mongo-shell-core-fcp-high" "_mongo_shell_core-fcp-high" "[deprecated] Open mongo shell for core-fcp-high"
-_command_register "mongo-shell-core-fcp-low" "_mongo_shell_core-fcp-low" "[deprecated] Open mongo shell for core-fcp-low"
-_command_register "mongo-shell-core-legacy" "_mongo_shell_core-legacy" "[deprecated] Open mongo shell for core-legacy"
+_command_register "mongo-shell-core-fcp-high" "_mongo_shell_core_fcp_high" "[deprecated] Open mongo shell for core-fcp-high"
+_command_register "mongo-shell-core-fcp-low" "_mongo_shell_core_fcp_low" "[deprecated] Open mongo shell for core-fcp-low"
+_command_register "mongo-shell-core-legacy" "_mongo_shell_core_legacy" "[deprecated] Open mongo shell for core-legacy"
 _command_register "mongo-script" "_mongo_script" "Execute MongoDB <script> on given <container>: docker-stack mongo-script <container> <script>"
 
 _command_register "add" "_add_node_app" "Start a node application."

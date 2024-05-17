@@ -75,7 +75,7 @@ describe('Idp activation & visibility', () => {
 
       cy.get('[data-testid=error-section]').should(
         'contain',
-        'code erreur : Y020017',
+        'code erreur : Y500017',
       );
     });
 

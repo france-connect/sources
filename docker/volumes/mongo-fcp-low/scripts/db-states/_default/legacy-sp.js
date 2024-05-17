@@ -2,7 +2,7 @@
 const spLegacy = {
   fsp1: {
     name: "Service Provider Example",
-    site: "https://site.com",
+    site: "https://fsp1.com",
     redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/login-callback",
       "https://fsp1.docker.dev-franceconnect.fr/data-callback",
@@ -49,7 +49,7 @@ const spLegacy = {
     trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
-    rep_scope: []
+    rep_scope: [],
   },
 
   fsp2: {
@@ -103,7 +103,7 @@ const spLegacy = {
       "Papier-Citoyenneté-Elections",
       "Famille-Scolarité",
       "Social-Santé",
-      "Travail-Formation"
+      "Travail-Formation",
     ],
   },
 

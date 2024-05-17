@@ -24,7 +24,9 @@ export class IsUrlRequiredTldFromConfigConstraint
     return isURL(url, {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       require_tld: !isLocalhostAllowed,
-      protocols: ['http', 'https'],
+      // https protocol should be used for production environment,regardless of whether localhost is allowed or not.
+      // for now we keep the logic that authorizes http protocol when localhost is allowed (integ only).
+      protocols: isLocalhostAllowed ? ['http', 'https'] : ['https'],
       // eslint-disable-next-line @typescript-eslint/naming-convention
       require_protocol: true,
     });

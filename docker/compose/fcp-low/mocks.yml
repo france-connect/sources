@@ -23,8 +23,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/fsp1-low.env"
-    ports:
-      - 9301:9301
     tty: true
     networks:
       - public
@@ -49,8 +47,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/fsp2-low.env"
-    ports:
-      - 9302:9302
     tty: true
     networks:
       - public
@@ -75,8 +71,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/fsp3-low.env"
-    ports:
-      - 9303:9303
     tty: true
     networks:
       - public
@@ -101,8 +95,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/fsp4-low.env"
-    ports:
-      - 9304:9304
     tty: true
     networks:
       - public
@@ -132,8 +124,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/fip1-low.env"
-    ports:
-      - 9321:9321
     tty: true
     networks:
       - public
@@ -159,8 +149,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/fip2-low.env"
-    ports:
-      - 9322:9322
     tty: true
     networks:
       - public
@@ -186,8 +174,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/fip3-low.env"
-    ports:
-      - 9323:9323
     tty: true
     networks:
       - public
@@ -211,8 +197,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/fip4-low.env"
-    ports:
-      - 9324:9324
     tty: true
     networks:
       - public
@@ -236,8 +220,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/fip8-low.env"
-    ports:
-      - 9328:9328
     tty: true
     networks:
       - public
@@ -261,8 +243,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/fip9-low.env"
-    ports:
-      - 9329:9329
     tty: true
     networks:
       - public
@@ -286,8 +266,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/aidants-connect-mock.env"
-    ports:
-      - 9330:9330
     tty: true
     networks:
       - public
@@ -312,8 +290,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/dp1-low.env"
-    ports:
-      - "9268:9268"
     networks:
       - public
     command: "pm2 logs"
@@ -332,8 +308,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/dp2-low.env"
-    ports:
-      - "9269:9269"
     networks:
       - public
     command: "pm2 logs"

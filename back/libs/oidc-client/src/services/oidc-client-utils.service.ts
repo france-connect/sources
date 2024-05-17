@@ -162,7 +162,14 @@ export class OidcClientUtilsService {
         this.buildExtraParameters(extraParams),
       );
     } catch (error) {
-      this.logger.debug(JSON.stringify(error));
+      this.logger.err(error.stack);
+      this.logger.debug({
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        client: { ...client, client_secret: '***' },
+        receivedParams,
+        params,
+      });
+
       throw new OidcClientTokenFailedException();
     }
 
@@ -242,7 +249,12 @@ export class OidcClientUtilsService {
 
     try {
       endSessionUrl = client.endSessionUrl();
-      return isURL(endSessionUrl, { protocols: ['http', 'https'] });
+      return isURL(endSessionUrl, {
+        protocols: ['https'],
+        // Validator.js defined property
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        require_protocol: true,
+      });
     } catch (error) {
       this.logger.err({ error });
       return false;

@@ -40,7 +40,6 @@ export class TrackingService {
       context,
     );
 
-    this.logger.debug({ [message.event]: message });
     this.loggerLegacy.businessEvent(message);
   }
 

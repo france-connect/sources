@@ -8,6 +8,7 @@ import { LayoutFooterBottomLinksComponent } from './layout-footer-bottom-links.c
 import { LayoutFooterContentLinksComponent } from './layout-footer-content-links.component';
 import { LayoutFooterLicenceComponent } from './layout-footer-licence.component';
 
+jest.mock('@fc/state-management');
 jest.mock('./../homepage-link/layout-homepage-link.component');
 jest.mock('./layout-footer-bottom-links.component');
 jest.mock('./layout-footer-content-links.component');
@@ -20,7 +21,7 @@ describe('LayoutFooterComponent', () => {
 
     // when
     const { container } = render(
-      <AppContextProvider value={{ config: AppConfigMock }}>
+      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
         <LayoutFooterComponent />
       </AppContextProvider>,
     );
@@ -35,7 +36,7 @@ describe('LayoutFooterComponent', () => {
 
     // when
     const { container } = render(
-      <AppContextProvider value={{ config: AppConfigMock }}>
+      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
         <LayoutFooterComponent />
       </AppContextProvider>,
     );
@@ -57,7 +58,7 @@ describe('LayoutFooterComponent', () => {
 
     // when
     const { container, getByText } = render(
-      <AppContextProvider value={{ config: AppConfigMock }}>
+      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
         <LayoutFooterComponent />
       </AppContextProvider>,
     );
@@ -74,7 +75,7 @@ describe('LayoutFooterComponent', () => {
 
     // when
     render(
-      <AppContextProvider value={{ config: AppConfigMock }}>
+      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
         <LayoutFooterComponent />
       </AppContextProvider>,
     );
@@ -94,7 +95,7 @@ describe('LayoutFooterComponent', () => {
 
     // when
     const { getByAltText } = render(
-      <AppContextProvider value={{ config: AppConfigMock }}>
+      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
         <LayoutFooterComponent />
       </AppContextProvider>,
     );
@@ -126,7 +127,7 @@ describe('LayoutFooterComponent', () => {
 
     // when
     const { container } = render(
-      <AppContextProvider value={{ config: AppConfigMock }}>
+      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
         <LayoutFooterComponent />
       </AppContextProvider>,
     );
@@ -143,7 +144,7 @@ describe('LayoutFooterComponent', () => {
 
     // when
     render(
-      <AppContextProvider value={{ config: AppConfigMock }}>
+      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
         <LayoutFooterComponent showLicence />
       </AppContextProvider>,
     );
@@ -162,7 +163,7 @@ describe('LayoutFooterComponent', () => {
 
     // when
     const { getByTestId } = render(
-      <AppContextProvider value={{ config: AppConfigMock }}>
+      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
         <LayoutFooterComponent showLicence={false} />
       </AppContextProvider>,
     );

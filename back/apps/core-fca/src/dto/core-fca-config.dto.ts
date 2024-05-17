@@ -5,7 +5,6 @@ import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
 import { CoreConfig } from '@fc/core';
-import { CryptographyFcaConfig } from '@fc/cryptography-fca';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
 import { LoggerConfig } from '@fc/logger';
 import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
@@ -71,11 +70,6 @@ export class CoreFcaConfig {
   @ValidateNested()
   @Type(() => SessionConfig)
   readonly Session: SessionConfig;
-
-  @IsObject()
-  @ValidateNested()
-  @Type(() => CryptographyFcaConfig)
-  readonly CryptographyFca: CryptographyFcaConfig;
 
   @IsObject()
   @ValidateNested()

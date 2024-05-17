@@ -10,10 +10,20 @@ const messageToDisplay = "Bonjour, je vous signale que j'ai rencontré une erreu
 <section class="fr-grid-row fr-grid-row--center">
   <div class="fr-col-lg-8 fr-col-md-7 fr-col-sm-12">
     <div class="fr-mb-8w">
-      <h1 data-testid="error-section-title" class="fr-mb-3w">Accès impossible</h1>
+      <h1 data-testid="error-section-title" class="fr-mb-3w">
+        <%  if (locals.exception.title)  { %>
+          <%= locals.exception.title %>
+        <% } else { %>
+          Accès impossible
+        <% } %>
+      </h1>
 
       <p>
-        Nous n'arrivons pas à vous connecter à votre service en ligne pour l'instant.
+        <%  if (locals.exception.description)  { %>
+          <%= locals.exception.description %>
+        <% } else { %>
+          Nous n'arrivons pas à vous connecter à votre service en ligne pour l'instant.
+        <% } %>
       </p>
 
       <% if (locals.error.code) { %>
@@ -21,31 +31,45 @@ const messageToDisplay = "Bonjour, je vous signale que j'ai rencontré une erreu
           code erreur : <%= locals.error.code %>
         </p>
       <% } %>
+
+      <% if (locals.error.id) { %>
+        <p class="fr-text--xs fr-mt-0 fr-mb-1v" data-testid="error-id">
+          id erreur : <%= locals.error.id %>
+        </p>
+      <% } %>
     
       <% if (locals.error.message) { %>
         <p class="fr-text--xs fr-mt-0 fr-mb-1v" data-testid="error-message">
-          message erreur : "<%= locals.error.message %>".
+          message erreur : "<%= locals.exception.message %>".
         </p>
       <% } %>
     </div>
 
-    <hr>
+    <%  if (locals.exception.displayContact)  { %>
+      <% var contactMessage = locals.exception.contactMessage || 'Vous pouvez nous signaler cette erreur en nous écrivant.' %>
+      <section>
+        <hr>
 
-    <div class="fr-pt-1w">
-      <p class="fr-text--sm">
-        Vous pouvez nous signaler cette erreur en nous écrivant.
-      </p>
-    </div>
+        <div class="fr-pt-1w">
+          <p class="fr-text--sm">
+            <%= locals.exception.contactMessage %>
+          </p>
+        </div>
 
-    <p class="fr-btn fr-btn--tertiary">
-      <a class="mailto" href="mailto:support@agentconnect.gouv.fr?subject=Signaler l'erreur <%= locals.error.code %> sur AgentConnect&body=<%= messageToDisplay %>">
-        Signaler l'erreur
-        <span class="fr-icon-flag-line fr-pl-1v" aria-hidden="true"></span>
-      </a>
-    </p>
+        <p class="fr-btn fr-btn--tertiary">
+          <a class="mailto" href="mailto:support@agentconnect.gouv.fr?subject=Signaler l'erreur <%= locals.error.code %> sur AgentConnect&body=<%= messageToDisplay %>">
+            Signaler l'erreur
+            <span class="fr-icon-flag-line fr-pl-1v" aria-hidden="true"></span>
+          </a>
+        </p>
+      </section>
+    <% } %>
+
   </div>
   
   <aside class="fr-col-lg-4 fr-col-md-5 error-aside">
-    <img src="/img/default-error.svg" alt="error illustration" />
+    <% var imageSrc = 'default-error' %>
+    <%  if (locals.exception.illustration) imageSrc = locals.exception.illustration; %>
+    <img src="/img/<%= imageSrc %>.svg" alt="error illustration" />
   </aside>
 </section>

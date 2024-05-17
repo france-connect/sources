@@ -49,6 +49,10 @@ const fqdnToProviders = [
     fqdn: "abcd.com",
     identityProvider: "9c716f61-b8a1-435c-a407-ef4d677ec270",
   },
+  {
+    fqdn: "fi-rie.fr",
+    identityProvider: "c6ecab5e-dc67-4390-af57-fe208e97b649",
+  },
 ];
 
 print("Initializing fqdnToProvider collection");

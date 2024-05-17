@@ -21,8 +21,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/core-fca-low.env"
-    ports:
-      - 9229:9229
     tty: true
     networks:
       - fc

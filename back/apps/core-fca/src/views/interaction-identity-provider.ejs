@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="fr" data-fr-scheme="light">
+  <head>
+    <%- include('includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/pages/interaction.css" />
+    <link rel="stylesheet" href="/css/pages/ac.interaction.css" />
+    <title>Connexion - choix du compte</title>
+  </head>
+  <body id="fc-interaction-page">
+    <div class="fc-sticky-wrapper">
+      <div class="ac-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <main class="fr-container ac-full-height">
+          <div
+            class="fr-grid-row fr-grid-row--center fr-grid-row--middle ac-full-height"
+          >
+            <div
+              class="fr-col-lg-5 fr-col-offset-lg-1--right fr-col-md-7 fr-col-sm-8 ac-full-height"
+            >
+              <a
+                href="javascript:history.back()"
+                class="fr-mt-2w fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-left fr-icon-arrow-left-line"
+              >
+                retour
+              </a>
+
+              <h2 class="fr-my-4w">Choisir votre accès</h2>
+
+              <p class="fr-mb-2w">
+                Votre adresse email pourrait correspondre à plusieurs annuaires
+                d’agent.
+              </p>
+
+              <h6 class="fr-mb-2w">
+                Quel accès voulez-vous utiliser aujourd'hui ?
+              </h6>
+              <%-
+              include('pages/interaction-identity-provider/interaction.loop.ejs')
+              %>
+
+              <hr class="fr-mt-6w" />
+
+              <p class="fr-my-2w">
+                Si vous ne faites partie d’aucune de ces administrations,
+                faites-le nous savoir.
+              </p>
+              <p class="fr-btn fr-btn--sm fr-btn--tertiary fr-mb-6w">
+                <a
+                  class="mailto"
+                  href="mailto:support@agentconnect.gouv.fr?subject=Je ne trouve pas mon administration sur AgentConnect"
+                >
+                  Nous écrire
+                  <span
+                    class="fr-icon-mail-line fr-icon--sm fr-pl-1v"
+                    aria-hidden="true"
+                  ></span>
+                </a>
+              </p>
+            </div>
+            <div class="fr-col-lg-6 fr-pt-5w ac-full-height interaction-media">
+              <%-
+              include('pages/interaction-identity-provider/interaction.media.ejs')
+              %>
+            </div>
+          </div>
+        </main>
+        <div class="ac-background-alt-grey"></div>
+      </div>
+      <%- include('includes/footer.ejs') %>
+    </div>
+    <%- include('includes/scripts.ejs') %>
+  </body>
+</html>

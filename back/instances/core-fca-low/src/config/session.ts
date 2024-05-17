@@ -4,6 +4,7 @@
 import { ConfigParser } from '@fc/config';
 import { CoreRoutes } from '@fc/core';
 import { CoreFcaSession } from '@fc/core-fca';
+import { CoreFcaRoutes } from '@fc/core-fca/enums/core-fca-routes.enum';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 import { ISessionCookieOptions, SessionConfig } from '@fc/session';
@@ -39,6 +40,7 @@ export default {
     CoreRoutes.INTERACTION_CONSENT,
     CoreRoutes.INTERACTION_LOGIN,
     OidcProviderRoutes.REDIRECT_TO_SP,
+    CoreFcaRoutes.INTERACTION_IDENTITY_PROVIDER_SELECTION,
 
     // Disconnect flow
     OidcClientRoutes.DISCONNECT_FROM_IDP,

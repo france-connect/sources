@@ -16,7 +16,7 @@
 import 'cypress-axe';
 import 'cypress-plugin-api';
 
-import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command';
+import { addMatchImageSnapshotCommand } from '@simonsmith/cypress-image-snapshot/command';
 
 import { injectAxeFromQualityModules } from './common/helpers';
 
@@ -36,6 +36,7 @@ addMatchImageSnapshotCommand({
   customDiffConfig: { threshold: 0.3 },
   customDiffDir: './cypress/snapshots/diff',
   customSnapshotsDir: './cypress/snapshots/base',
+  e2eSpecDir: 'cypress/integration/visuel',
   failureThreshold: 0,
   failureThresholdType: 'percent',
 });

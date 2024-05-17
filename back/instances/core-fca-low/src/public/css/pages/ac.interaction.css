@@ -1,0 +1,35 @@
+.ac-full-height {
+  height: 100%;
+}
+.ac-sticky-body {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.ac-background-alt-grey {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  left: 50%;
+  background: #f6f6f6;
+  z-index: -1;
+}
+
+.ac-background-alt-blue-france {
+  background-color: #f5f5fe;
+}
+
+.ac-color-alt-grey {
+  color: #161616;
+}
+
+.ac-alt-high-blue-france {
+  color: #000091;
+}
+
+@media only screen and (max-width: 991px) {
+  .interaction-media,
+  .ac-background-alt-grey {
+    display: none;
+  }
+}

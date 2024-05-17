@@ -2,8 +2,10 @@
 
 // Declarative code
 import { Global, Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 
 import { AccountModule } from '@fc/account';
+import { AccountFcaModule } from '@fc/account-fca';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import {
   CORE_SERVICE,
@@ -13,9 +15,8 @@ import {
   CoreTrackingService,
   CoreVerifyService,
 } from '@fc/core';
-import { CryptographyFcaModule } from '@fc/cryptography-fca';
 import { CsrfModule } from '@fc/csrf';
-import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import { ExceptionsModule } from '@fc/exceptions';
 import { FeatureHandlerModule } from '@fc/feature-handler';
 import { FlowStepsModule } from '@fc/flow-steps';
 import { FqdnToIdpAdapterMongoModule } from '@fc/fqdn-to-idp-adapter-mongo';
@@ -44,6 +45,12 @@ import {
   OidcClientController,
   OidcProviderController,
 } from './controllers';
+import {
+  FcaDeprecatedExceptionFilter,
+  FcaExceptionFilter,
+  UnhandledExceptionFilter,
+} from './exception-filters';
+import { HttpExceptionFilter } from './exception-filters/http.exception-filter';
 import { CoreFcaDefaultVerifyHandler } from './handlers';
 import {
   CoreFcaDefaultAuthorizationHandler,
@@ -60,6 +67,26 @@ import {
 const trackingModule = TrackingModule.forRoot(CoreTrackingService);
 
 const exceptionModule = ExceptionsModule.withTracking(trackingModule);
+
+const exceptionFiltersProviders = [
+  {
+    provide: APP_FILTER,
+    useClass: UnhandledExceptionFilter,
+  },
+  {
+    provide: APP_FILTER,
+    useClass: FcaExceptionFilter,
+  },
+  {
+    provide: APP_FILTER,
+    useClass: FcaDeprecatedExceptionFilter,
+  },
+  {
+    provide: APP_FILTER,
+    useClass: HttpExceptionFilter,
+  },
+];
+
 @Global()
 @Module({
   imports: [
@@ -67,7 +94,6 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     AsyncLocalStorageModule,
     SessionModule,
     MongooseModule.forRoot(),
-    CryptographyFcaModule,
     AccountModule,
     ServiceProviderAdapterMongoModule,
     IdentityProviderAdapterMongoModule,
@@ -92,6 +118,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     NotificationsModule,
     FeatureHandlerModule,
     CsrfModule,
+    AccountFcaModule,
   ],
   controllers: [
     CoreFcaController,
@@ -99,6 +126,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     OidcProviderController,
   ],
   providers: [
+    ...exceptionFiltersProviders,
     CoreAccountService,
     CoreAcrService,
     CoreFcaService,

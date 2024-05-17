@@ -143,8 +143,6 @@
       "@fc/scopes/*": ["libs/scopes/src/*"],
       "@fc/feature-handler": ["libs/feature-handler/src"],
       "@fc/feature-handler/*": ["libs/feature-handler/src/*"],
-      "@fc/cryptography-fca": ["libs/cryptography-fca/src"],
-      "@fc/cryptography-fca/*": ["libs/cryptography-fca/src/*"],
       "@fc/cryptography-eidas": ["libs/cryptography-eidas/src"],
       "@fc/cryptography-eidas/*": ["libs/cryptography-eidas/src/*"],
       "@fc/elasticsearch": ["libs/elasticsearch/src"],
@@ -201,10 +199,16 @@
       "@mocks/core/*": ["libs/core/.mocks/*"],
       "@fc/csrf": ["libs/csrf/src"],
       "@fc/csrf/*": ["libs/csrf/src/*"],
+      "@fc/exceptions": ["libs/exceptions/src"],
+      "@fc/exceptions/*": ["libs/exceptions/src/*"],
       "@fc/i18n": ["libs/i18n/src"],
       "@fc/i18n/*": ["libs/i18n/src/*"],
       "@mocks/i18n": ["libs/i18n/.mocks"],
-      "@mocks/i18n/*": ["libs/i18n/.mocks/*"]
+      "@mocks/i18n/*": ["libs/i18n/.mocks/*"],
+      "@fc/account-fca": ["libs/account-fca/src"],
+      "@fc/account-fca/*": ["libs/account-fca/src/*"],
+      "@fc/partners": ["apps/partners/src"],
+      "@fc/partners/*": ["apps/partners/src/*"]
     }
   },
   "files": ["global.d.ts"],

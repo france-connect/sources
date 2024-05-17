@@ -12,6 +12,12 @@ module.exports = {
     }
     return <div data-mockid={'Route'}>{children}</div>;
   }),
+  BrowserRouter: jest.fn(({ children, element }) => {
+    if (element) {
+      return element;
+    }
+    return <div data-mockid={'BrowserRouter'}>{children}</div>;
+  }),
   Routes: jest.fn(({ children }) => children),
   matchPath: jest.fn(),
   useLocation: jest.fn(() => ({

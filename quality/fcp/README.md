@@ -232,9 +232,9 @@ yarn start:high --env skipFailures=true
 
 ## Visual Validation
 
-We are running visual validation using the cypress plugin [cypress-image-snapshot](https://github.com/jaredpalmer/cypress-image-snapshot).
+We are running visual validation using the cypress plugin [cypress-image-snapshot](https://github.com/simonsmith/cypress-image-snapshot).
 
-The visual validations are done on Electron 94 headless in the terminal.
+The visual validations are done on Electron 114 headless in the terminal.
 
 ### Run the snapshot tests
 

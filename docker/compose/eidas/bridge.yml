@@ -26,8 +26,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/eidas/.env/bridge.env"
-    ports:
-      - 9243:9243
     tty: true
     networks:
       - public

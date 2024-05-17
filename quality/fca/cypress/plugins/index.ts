@@ -3,7 +3,7 @@
 import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor';
 import { createEsbuildPlugin } from '@badeball/cypress-cucumber-preprocessor/esbuild';
 import createBundler from '@bahmutov/cypress-esbuild-preprocessor';
-import { addMatchImageSnapshotPlugin } from 'cypress-image-snapshot/plugin';
+import { addMatchImageSnapshotPlugin } from '@simonsmith/cypress-image-snapshot/plugin';
 
 import { log, table } from './console-log-plugin';
 import { createHexaHash } from './crypto-plugin';
@@ -41,7 +41,7 @@ const pluginConfig = async (
   );
 
   if (isVisualTestConfig) {
-    addMatchImageSnapshotPlugin(on, config);
+    addMatchImageSnapshotPlugin(on);
 
     on('before:browser:launch', (_browser, launchOptions) => {
       // Use larger headless screen size to support all viewports

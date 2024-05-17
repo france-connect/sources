@@ -54,14 +54,14 @@ _mongo_shell_core_fca_low() {
   _mongo_core_shell "fca-low"
 }
 
-_mongo_shell_core-fcp-high() {
+_mongo_shell_core_fcp_high() {
   _mongo_core_shell "fcp-high"
 }
 
-_mongo_shell_core-fcp-low() {
+_mongo_shell_core_fcp_low() {
   _mongo_core_shell "fcp-low"
 
 }
-_mongo_shell_core-legacy() {
+_mongo_shell_core_legacy() {
   _mongo_core_shell "legacy"
 }

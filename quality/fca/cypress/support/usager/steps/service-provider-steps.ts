@@ -126,6 +126,13 @@ Then(
   },
 );
 
+Then(
+  'le sub transmis au fournisseur de service est le suivant {string}',
+  function (sub: string) {
+    serviceProviderPage.getMockSubText().should('be.equal', sub);
+  },
+);
+
 Given(
   "je rentre l'id du fournisseur d'identité dans le champ idp_hint",
   function () {

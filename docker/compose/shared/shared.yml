@@ -151,6 +151,10 @@ services:
 
   squid:
     image: ${FC_DOCKER_REGISTRY}/squid:4.6
+    ulimits:
+      nofile:
+        soft: 1048576
+        hard: 1048576
     extra_hosts:
       - auth.llng.docker.dev-franceconnect.fr:172.16.1.254
       - fia-rie-low.docker.dev-franceconnect.fr:172.16.1.254
@@ -163,6 +167,10 @@ services:
   haproxy:
     image: haproxy:2.3
     hostname: haproxy
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 1024
     ports:
       - 8404:8404
     volumes:
@@ -174,6 +182,26 @@ services:
       - exploitation
     depends_on:
       - rp-all
+
+  log-hub:
+    hostname: log-hub
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    volumes:
+      - "${FC_ROOT}/fc/docker/log-hub:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+    environment:
+      - "DEFAULT_MODE=dev"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+    ports:
+      - 6666:6666
+    tty: true
+    command: "node --inspect=0.0.0.0:6666 ./app.js /var/log/app"
 
   broker:
     build:
@@ -335,8 +363,11 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
     environment:
-      - "PM2_SCRIPT=yarn start:dev csmr-hsm-high | yarn pino-pretty"
-      - "PM2_CI_SCRIPT=yarn start:ci csmr-hsm-high | yarn pino-pretty"
+      - "DEFAULT_MODE=prod"
+      - "APP_NAME=csmr-hsm-high"
+      - "NESTJS_INSTANCE=csmr-hsm-high"
+      - "PM2_SCRIPT=yarn start:dev csmr-hsm-high"
+      - "PM2_CI_SCRIPT=yarn start:ci csmr-hsm-high"
       - "REQUEST_TIMEOUT=6000"
       # LoggerLegacy
       - "LoggerLegacy_FILE=/var/log/app/csmr-hsm.log"
@@ -393,8 +424,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/mock-rnipp.env"
-    ports:
-      - "10300:3001"
     networks:
       - public
     command: "pm2 logs"
@@ -409,9 +438,16 @@ services:
       - "${VOLUMES_DIR}/src/rnipp-mock:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
       - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/log:/var/log/app"
     environment:
+      - "APP_NAME=rnipp"
       - "VIRTUAL_HOST=rnipp.docker.dev-franceconnect.fr"
+      # HA Proxy health check puts annoying entries in logs
+      # so we disable logging redirection for now
+      - "PM2_OUT_FILE=/dev/null"
+      - "PM2_ERROR_FILE=/dev/null"
       - "VIRTUAL_PORT=3000"
+      - "DEFAULT_MODE=legacy"
       - "NODE_ENV=development"
       - "PORT=3000"
       - "PM2_SCRIPT=index.js"
@@ -469,12 +505,13 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/csmr-tracks.env"
-    ports:
-      - 10253:10253
     environment:
       - "NODE_TLS_REJECT_UNAUTHORIZED=0"
-      - "PM2_SCRIPT=yarn start:dev --debug=0.0.0.0:10253 csmr-tracks-instance | yarn pino-pretty"
-      - "PM2_CI_SCRIPT=yarn start:ci csmr-tracks-instance | yarn pino-pretty"
+      - "DEFAULT_MODE=prod"
+      - "APP_NAME=csmr-tracks"
+      - "NESTJS_INSTANCE=csmr-tracks-instance"
+      - "PM2_SCRIPT=yarn start:dev csmr-tracks-instance"
+      - "PM2_CI_SCRIPT=yarn start:ci csmr-tracks-instance"
       - "REQUEST_TIMEOUT=6000"
       # -- LoggerLegacy
       - "LoggerLegacy_FILE=/var/log/app/csmr-tracks.log"
@@ -517,11 +554,12 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
-    ports:
-      - 10254:10254
     environment:
-      - "PM2_SCRIPT=yarn start:dev --debug=0.0.0.0:10254 csmr-account-instance | yarn pino-pretty"
-      - "PM2_CI_SCRIPT=yarn start:ci csmr-account-instance | yarn pino-pretty"
+      - "DEFAULT_MODE=prod"
+      - "APP_NAME=csmr-account-legacy"
+      - "NESTJS_INSTANCE=csmr-account-instance"
+      - "PM2_SCRIPT=yarn start:dev csmr-account-instance"
+      - "PM2_CI_SCRIPT=yarn start:ci csmr-account-instance"
       - "REQUEST_TIMEOUT=6000"
       # -- LoggerLegacy
       - "LoggerLegacy_FILE=/var/log/app/csmr-account-legacy.log"
@@ -549,11 +587,12 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/mongo-high.env"
-    ports:
-      - 10255:10255
     environment:
-      - "PM2_SCRIPT=yarn start:dev --debug=0.0.0.0:10255 csmr-account-instance | yarn pino-pretty"
-      - "PM2_CI_SCRIPT=yarn start:ci csmr-account-instance | yarn pino-pretty"
+      - "DEFAULT_MODE=prod"
+      - "APP_NAME=csmr-account-high"
+      - "NESTJS_INSTANCE=csmr-account-instance"
+      - "PM2_SCRIPT=yarn start:dev csmr-account-instance"
+      - "PM2_CI_SCRIPT=yarn start:ci csmr-account-instance"
       - "REQUEST_TIMEOUT=6000"
       # -- LoggerLegacy
       - "LoggerLegacy_FILE=/var/log/app/csmr-account-high.log"
@@ -583,8 +622,6 @@ services:
       - "${COMPOSE_DIR}/shared/.env/csmr-user-preferences-high.env"
       - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
     tty: true
-    ports:
-      - 9600:9600
     networks:
       - data
     command: "pm2 logs"

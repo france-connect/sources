@@ -10,7 +10,7 @@ import { CoreFcaAuthorizationParametersInterface } from './core-fca-authorizatio
 export interface CoreFcaServiceInterface extends CoreServiceInterface {
   redirectToIdp: (
     res: Response,
-    idpId: string,
+    email: string,
     authorizeParams: CoreFcaAuthorizationParametersInterface,
   ) => Promise<void>;
 }

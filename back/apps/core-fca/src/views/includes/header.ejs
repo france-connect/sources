@@ -2,22 +2,56 @@
   <div class="fr-header__body">
     <div class="fr-container">
       <div class="fr-header__body-row">
-        <div class="fr-header__brand fr-enlarge-link">
+        <div class="fr-header__brand">
           <div class="fr-header__brand-top">
             <div class="fr-header__logo">
-              <a role="link" aria-disabled="true" title="Retour à l’accueil du site">
-                <p class="fr-logo">
-                  République
-                  <br>Française
-                </p>
-              </a>
+              <p class="fr-logo">
+                République
+                <br />Française
+              </p>
             </div>
-            <div class="fr-header__operator">
-              <img class="fr-responsive-img" src="/img/fca-logo.svg" alt="AgentConnect" />
+            <div class="fr-header__navbar">
+              <button
+                class="fr-btn--menu fr-btn fr-mr-7v"
+                data-fr-opened="false"
+                aria-controls="modal-491"
+                aria-haspopup="menu"
+                id="button-492"
+              >
+                Menu
+              </button>
             </div>
+          </div>
+          <div class="fr-header__service">
+            <p class="fr-header__service-title">AgentConnect</p>
+          </div>
+        </div>
+        <div class="fr-header__tools">
+          <div class="fr-header__tools-links">
+            <ul class="fr-btns-group">
+              <li class="fr-mr-15v">
+                <a
+                  class="fr-btn fr-icon-question-fill"
+                  href=" https://agentconnect.gouv.fr/aide "
+                  >Aide</a
+                >
+              </li>
+            </ul>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+  <div
+    class="fr-header__menu fr-modal"
+    id="modal-491"
+    aria-labelledby="button-492"
+  >
+    <div class="fr-container">
+      <button class="fr-btn--close fr-btn" aria-controls="modal-491">
+        Fermer
+      </button>
+      <div class="fr-header__menu-links"></div>
     </div>
   </div>
 </header>

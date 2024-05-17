@@ -21,7 +21,7 @@ import { AppConfig } from '@fc/app';
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
-import { CsrfTokenGuard } from '@fc/csrf';
+import { CsrfToken, CsrfTokenGuard } from '@fc/csrf';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
@@ -36,12 +36,14 @@ import { ISessionService, Session, SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import {
+  GetIdentityProviderSelectionOidcClientSessionDto,
   GetOidcCallbackOidcClientSessionDto,
   GetOidcCallbackSessionDto,
   GetRedirectToIdpOidcClientSessionDto,
   OidcIdentityDto,
 } from '../dto';
 import { RedirectToIdp } from '../dto/redirect-to-idp.dto';
+import { CoreFcaRoutes } from '../enums/core-fca-routes.enum';
 import { CoreFcaInvalidIdentityException } from '../exceptions';
 import { CoreFcaService } from '../services';
 
@@ -61,6 +63,24 @@ export class OidcClientController {
     private readonly crypto: CryptographyService,
   ) {}
 
+  @Get(CoreFcaRoutes.INTERACTION_IDENTITY_PROVIDER_SELECTION)
+  @Header('cache-control', 'no-store')
+  @IsStep()
+  async getIdentityProviderSelection(
+    @CsrfToken() csrfToken: string,
+    @Res() res: Response,
+    @Session('OidcClient', GetIdentityProviderSelectionOidcClientSessionDto)
+    sessionOidc: ISessionService<OidcClientSession>,
+  ) {
+    const { login_hint: email } = sessionOidc.get();
+
+    const idpIds = await this.coreFca.getIdpIdForEmail(email);
+    const providers = await this.coreFca.getIdentityProvidersByIds(...idpIds);
+    const response = { csrfToken, email, providers };
+
+    res.render('interaction-identity-provider', response);
+  }
+
   /**
    * @todo #242 get configured parameters (scope and acr)
    */
@@ -70,9 +90,8 @@ export class OidcClientController {
   @IsStep()
   @ForbidRefresh()
   @UseGuards(CsrfTokenGuard)
-  // eslint-disable-next-line complexity
   async redirectToIdp(
-    @Req() req,
+    @Req() req: Request,
     @Res() res: Response,
     @Body() body: RedirectToIdp,
     /**
@@ -81,14 +100,12 @@ export class OidcClientController {
      * @ticket FC-1020
      */
     @Session('OidcClient', GetRedirectToIdpOidcClientSessionDto)
-    _sessionOidc: ISessionService<OidcClientSession>,
+    sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
-    const { email } = body;
-
-    const idpId = await this.coreFca.getIdpIdForEmail(email);
+    const { email, identityProviderUid } = body;
+    const fqdn = this.coreFca.getFqdnFromEmail(email);
 
     const {
-      // acr_values is an oidc defined variable name
       // eslint-disable-next-line @typescript-eslint/naming-convention
       params: { acr_values },
     } = await this.oidcProvider.getInteraction(req, res);
@@ -102,7 +119,36 @@ export class OidcClientController {
       login_hint: email,
     };
 
-    await this.coreFca.redirectToIdp(res, idpId, authorizeParams);
+    sessionOidc.set('login_hint', email);
+
+    if (identityProviderUid) {
+      return this.coreFca.redirectToIdp(
+        res,
+        identityProviderUid,
+        authorizeParams,
+      );
+    }
+
+    const idpIds = await this.coreFca.getIdpIdForEmail(email);
+    const hasUniqueProvider = idpIds.length === 1;
+
+    if (hasUniqueProvider) {
+      const [idpId] = idpIds;
+      this.logger.debug(
+        `Redirect "****@${fqdn}" to the identity provider "${idpId}"`,
+      );
+
+      // we need to keep idpId as 2nd parameter for the idp_hint
+      return this.coreFca.redirectToIdp(res, idpId, authorizeParams);
+    }
+
+    this.logger.debug(
+      `${idpIds.length} identity providers matching for "****@${fqdn}"`,
+    );
+    const { urlPrefix } = this.config.get<AppConfig>('App');
+    const url = `${urlPrefix}${CoreFcaRoutes.INTERACTION_IDENTITY_PROVIDER_SELECTION}`;
+
+    return res.redirect(url);
   }
 
   /**

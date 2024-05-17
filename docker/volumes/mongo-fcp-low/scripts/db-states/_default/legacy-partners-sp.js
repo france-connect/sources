@@ -1,7 +1,7 @@
 // == FS
 const fspLegacyPartners = {
   MarieDeHem: {
-    site: "https://site.com",
+    site: "https://fsp1.com",
     redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/login-callback",
       "https://fsp1.docker.dev-franceconnect.fr/data-callback",

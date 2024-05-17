@@ -116,6 +116,15 @@
         ]
       }
     },
+    "partners": {
+      "type": "library",
+      "root": "apps/partners",
+      "entryFile": "index",
+      "sourceRoot": "apps/partners/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/partners/tsconfig.lib.json"
+      }
+    },
     "csmr-hsm-high": {
       "type": "application",
       "root": "instances/csmr-hsm-high",
@@ -273,7 +282,7 @@
         ]
       }
     },
-    "bridge-http-proxy-rie-instance": {
+    "bridge-http-proxy-rie": {
       "type": "application",
       "root": "instances/bridge-http-proxy-rie",
       "entryFile": "main",
@@ -289,18 +298,16 @@
       "sourceRoot": "instances/csmr-user-preferences-high/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
-        "assets": [
-          "../../../instances/csmr-user-preferences-high/**/*.ejs"
-        ]
+        "assets": ["../../../instances/csmr-user-preferences-high/**/*.ejs"]
       }
     },
     "csmr-account-instance": {
       "type": "application",
-      "root": "instances/csmr-account",
+      "root": "instances/csmr-account-instance",
       "entryFile": "main",
-      "sourceRoot": "instances/csmr-account/src",
+      "sourceRoot": "instances/csmr-account-instance/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/csmr-account/tsconfig.app.json"
+        "tsConfigPath": "instances/csmr-account-instance/tsconfig.app.json"
       }
     },
     "rnipp": {
@@ -744,15 +751,6 @@
         "tsConfigPath": "libs/notifications/tsconfig.lib.json"
       }
     },
-    "cryptography-fca": {
-      "type": "library",
-      "root": "libs/cryptography-fca",
-      "entryFile": "index",
-      "sourceRoot": "libs/cryptography-fca/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/cryptography-fca/tsconfig.lib.json"
-      }
-    },
     "cryptography-eidas": {
       "type": "library",
       "root": "libs/cryptography-eidas",
@@ -854,11 +852,11 @@
     },
     "csmr-tracks-instance": {
       "type": "application",
-      "root": "instances/csmr-tracks",
+      "root": "instances/csmr-tracks-instance",
       "entryFile": "main",
-      "sourceRoot": "instances/csmr-tracks/src",
+      "sourceRoot": "instances/csmr-tracks-instance/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/csmr-tracks/tsconfig.app.json"
+        "tsConfigPath": "instances/csmr-tracks-instance/tsconfig.app.json"
       }
     },
     "geoip-maxmind": {
@@ -985,6 +983,24 @@
       "sourceRoot": "libs/i18n/src",
       "compilerOptions": {
         "tsConfigPath": "libs/i18n/tsconfig.lib.json"
+      }
+    },
+    "exceptions": {
+      "type": "library",
+      "root": "libs/exceptions",
+      "entryFile": "index",
+      "sourceRoot": "libs/exceptions/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/exceptions/tsconfig.lib.json"
+      }
+    },
+    "account-fca": {
+      "type": "library",
+      "root": "libs/account-fca",
+      "entryFile": "index",
+      "sourceRoot": "libs/account-fca/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/account-fca/tsconfig.lib.json"
       }
     }
   }

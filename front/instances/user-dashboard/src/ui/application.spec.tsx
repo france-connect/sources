@@ -1,49 +1,27 @@
 import { render } from '@testing-library/react';
-import type { ReactElement } from 'react';
 
-import type { AccountProviderProps } from '@fc/account';
 import { AccountProvider } from '@fc/account';
-import type { AxiosErrorCatcherProviderProps } from '@fc/axios-error-catcher';
 import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
-import type { AppContextProviderProps } from '@fc/state-management';
 import { AppContextProvider } from '@fc/state-management';
 
 import { AppConfig } from '../config';
 import { Application } from './application';
 import { ApplicationRoutes } from './application.routes';
 
+jest.mock('react-router-dom');
 jest.mock('@fc/dsfr');
+jest.mock('@fc/account');
 jest.mock('@fc/state-management');
-
-// given
-jest.mock('./application.routes', () => ({
-  ApplicationRoutes: jest.fn(() => <div>ApplicationRoutes</div>),
-}));
+jest.mock('@fc/axios-error-catcher');
+jest.mock('./application.routes');
 
 describe('Application', () => {
-  const AppContextProviderMock = jest.mocked(AppContextProvider);
-  const AccountProviderMock = jest.mocked(AccountProvider);
-  const AxiosErrorCatcherProviderMock = jest.mocked(AxiosErrorCatcherProvider);
-  const ApplicationRoutesMock = jest.mocked(ApplicationRoutes);
-
-  beforeEach(() => {
-    AppContextProviderMock.mockImplementation(
-      ({ children }: AppContextProviderProps) => children as ReactElement,
-    );
-    AccountProviderMock.mockImplementation(
-      ({ children }: AccountProviderProps) => children as ReactElement,
-    );
-    AxiosErrorCatcherProviderMock.mockImplementation(
-      ({ children }: AxiosErrorCatcherProviderProps) => children as ReactElement,
-    );
-  });
-
-  it('should call AccountProviderMock with config', () => {
+  it('should call AccountProvider with config', () => {
     // when
     render(<Application />);
 
     // then
-    expect(AccountProviderMock).toHaveBeenCalledWith(
+    expect(AccountProvider).toHaveBeenCalledWith(
       expect.objectContaining({
         config: AppConfig.Account,
       }),
@@ -56,7 +34,7 @@ describe('Application', () => {
     render(<Application />);
 
     // then
-    expect(AppContextProviderMock).toHaveBeenCalledWith(
+    expect(AppContextProvider).toHaveBeenCalledWith(
       expect.objectContaining({
         value: { config: AppConfig },
       }),
@@ -68,7 +46,7 @@ describe('Application', () => {
     // When
     render(<Application />);
     // Then
-    expect(AxiosErrorCatcherProviderMock).toHaveBeenCalled();
+    expect(AxiosErrorCatcherProvider).toHaveBeenCalled();
   });
 
   it('should call ApplicationRoutes', () => {
@@ -76,6 +54,6 @@ describe('Application', () => {
     render(<Application />);
 
     // then
-    expect(ApplicationRoutesMock).toHaveBeenCalledOnce();
+    expect(ApplicationRoutes).toHaveBeenCalledOnce();
   });
 });

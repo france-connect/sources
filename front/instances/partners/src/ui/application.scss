@@ -1,0 +1,7 @@
+#page-container {
+  max-width: 992px;
+
+  &:not(.large-container) {
+    max-width: 768px;
+  }
+}

@@ -33,4 +33,4 @@ Fonctionnalité: Connexion Partenaires
     Et que je me connecte sur moncomptepro
     Et que je sélectionne une organisation privée
     Alors je suis redirigé vers la page erreur technique
-    Et le code d'erreur est "Y000015"
+    Et le code d'erreur est "Y500015"

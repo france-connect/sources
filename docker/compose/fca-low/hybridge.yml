@@ -36,8 +36,6 @@ services:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/bridge-proxy-rie.env"
     tty: true
-    ports:
-      - 9262:9262
     networks:
       - public
       - data
@@ -72,8 +70,6 @@ services:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/csmr-rie.env"
     tty: true
-    ports:
-      - 9263:9263
     networks:
       - rie
     command: "pm2 logs"
@@ -107,8 +103,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fia-rie-low.env"
-    ports:
-      - 9264:9264
     tty: true
     networks:
       - rie

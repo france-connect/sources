@@ -5,7 +5,6 @@ import { CoreFcaConfig } from '@fc/core-fca';
 
 import App from './app';
 import Core from './core';
-import CryptographyFca from './cryptography-fca';
 import IdentityProviderAdapterMongo from './identity-provider-adapter-mongo';
 import Logger from './logger';
 import LoggerLegacy from './logger-legacy';
@@ -29,7 +28,6 @@ export default {
   OidcClient,
   Mongoose,
   Redis,
-  CryptographyFca,
   ServiceProviderAdapterMongo,
   IdentityProviderAdapterMongo,
   Session,

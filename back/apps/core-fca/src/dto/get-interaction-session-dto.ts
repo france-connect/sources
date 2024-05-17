@@ -17,6 +17,7 @@ import { OidcClientRoutes } from '@fc/oidc-client';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 import { RnippPivotIdentity } from '@fc/rnipp';
 
+import { CoreFcaRoutes } from '../enums/core-fca-routes.enum';
 import { AppSession } from './app-session.dto';
 import { CoreSessionDto } from './core-session.dto';
 
@@ -29,13 +30,15 @@ export class GetInteractionOidcClientSessionDto extends CoreBaseOidcClientSessio
   readonly accountId?: string;
 
   // Metadata: We MUST restrict the routes we can come from
+  // routes are listed in chronological order of the cinematic
   @IsString()
   @IsIn([
     OidcProviderRoutes.AUTHORIZATION, // Standard cinematic
     CoreRoutes.INTERACTION, // Refresh
     OidcClientRoutes.OIDC_CALLBACK, // Back on error
     CoreRoutes.INTERACTION_VERIFY, // Back on error
-    CoreRoutes.INTERACTION_CONSENT, // Back on error
+    CoreFcaRoutes.INTERACTION_IDENTITY_PROVIDER_SELECTION, // Client is choosing an identity provider
+    OidcClientRoutes.REDIRECT_TO_IDP, // Browser back button
   ])
   @Expose()
   readonly stepRoute: string;

@@ -1,13 +1,13 @@
 import { DateTime } from 'luxon';
 
 import { MaildevHelper } from '../../common/helpers';
-import { ChainableElement, Maildev } from '../../common/types';
+import { ChainableElement, Email } from '../../common/types';
 
 const IDP_SETTINGS_UPDATE_SUBJECT =
   'Modification de vos accès dans FranceConnect';
 
 export default class UdIdpSettingsUpdateMessage {
-  isUpdateMessage(message: Maildev.Mail, userEmail: string): boolean {
+  isUpdateMessage(message: Email, userEmail: string): boolean {
     return (
       message.subject === IDP_SETTINGS_UPDATE_SUBJECT &&
       MaildevHelper.isUserMessage(message, userEmail)

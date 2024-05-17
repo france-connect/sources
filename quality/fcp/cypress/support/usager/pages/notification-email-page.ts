@@ -1,10 +1,10 @@
 import { MaildevHelper } from '../../common/helpers';
-import { ChainableElement, Maildev } from '../../common/types';
+import { ChainableElement, Email } from '../../common/types';
 
 const CONNECTION_SUBJECT = 'Notification de connexion au service';
 
 export default class UsagerNotificationConnection {
-  isNotificationMessage(message: Maildev.Mail, userEmail: string): boolean {
+  isNotificationMessage(message: Email, userEmail: string): boolean {
     const isUserMessage = MaildevHelper.isUserMessage(message, userEmail);
     const isConnectionSubject = message.subject.includes(CONNECTION_SUBJECT);
     return isConnectionSubject && isUserMessage;

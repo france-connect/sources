@@ -79,13 +79,9 @@ export class I18nService {
   // Makes it easier for testing purpose to have instance members
   // eslint-disable-next-line class-methods-use-this
   private handleSubstitution(input: string, values: TranslationsReplacement): string {
-    let replaced = input;
-
-    Object.keys(values).forEach((key) => {
-      const pattern = new RegExp(`{${key}}`, 'g');
-      replaced = replaced.replace(pattern, String(values[key]));
-    });
-
-    return replaced;
+    return Object.keys(values).reduce(
+      (output, key) => output.replaceAll(`{${key}}`, `${values[key]}`),
+      input,
+    );
   }
 }

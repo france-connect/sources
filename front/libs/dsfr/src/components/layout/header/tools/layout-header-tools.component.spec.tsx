@@ -7,6 +7,7 @@ import { LayoutHeaderToolsComponent } from './layout-header-tools.component';
 import { LayoutHeaderToolsAccountComponent } from './layout-header-tools-account.component';
 import { LayoutHeaderToolsLogoutButton } from './layout-header-tools-logout.button';
 
+jest.mock('@fc/state-management');
 jest.mock('./layout-header-tools-logout.button');
 jest.mock('./layout-header-tools-account.component');
 jest.mock('../return-button/return-button.component');
@@ -15,9 +16,11 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should match the snapshot', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        // @TODO refacto OidcClient
-        OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
+      state: {
+        config: {
+          // @TODO refacto OidcClient
+          OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
+        },
       },
     };
 
@@ -35,7 +38,9 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should match the snapshot, when OidcClient is not defined', () => {
     // given
     const appContextConfigMock = {
-      config: {},
+      state: {
+        config: {},
+      },
     };
 
     // when
@@ -52,9 +57,11 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should match the snapshot, when OidcClient.endpoints is not defined', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        // @TODO refacto OidcClient
-        OidcClient: {},
+      state: {
+        config: {
+          // @TODO refacto OidcClient
+          OidcClient: {},
+        },
       },
     };
 
@@ -72,9 +79,11 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should match the snapshot, when isModalMenu is true', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        // @TODO refacto OidcClient
-        OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
+      state: {
+        config: {
+          // @TODO refacto OidcClient
+          OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
+        },
       },
     };
 
@@ -92,10 +101,12 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should match the snapshot, when isMobile is true and returnButtonUrl is defined', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        OidcClient: {
-          // @TODO refacto OidcClient
-          endpoints: { endSessionUrl: undefined, returnButtonUrl: expect.any(String) },
+      state: {
+        config: {
+          OidcClient: {
+            // @TODO refacto OidcClient
+            endpoints: { endSessionUrl: undefined, returnButtonUrl: expect.any(String) },
+          },
         },
       },
     };
@@ -114,10 +125,12 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should match the snapshot, when user is connected but endSessionUrl is not defined', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        OidcClient: {
-          // @TODO refacto OidcClient
-          endpoints: { endSessionUrl: undefined, returnButtonUrl: expect.any(String) },
+      state: {
+        config: {
+          OidcClient: {
+            // @TODO refacto OidcClient
+            endpoints: { endSessionUrl: undefined, returnButtonUrl: expect.any(String) },
+          },
         },
       },
     };
@@ -136,10 +149,12 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should match the snapshot, when user is connected and endSessionUrl is defined', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        OidcClient: {
-          // @TODO refacto OidcClient
-          endpoints: { endSessionUrl: expect.any(String), returnButtonUrl: expect.any(String) },
+      state: {
+        config: {
+          OidcClient: {
+            // @TODO refacto OidcClient
+            endpoints: { endSessionUrl: expect.any(String), returnButtonUrl: expect.any(String) },
+          },
         },
       },
     };
@@ -158,12 +173,14 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should call LayoutHeaderToolsLogoutButton with props', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        OidcClient: {
-          endpoints: {
-            endSessionUrl: 'any-endSessionUrl-mock',
-            // @TODO refacto OidcClient
-            returnButtonUrl: expect.any(String),
+      state: {
+        config: {
+          OidcClient: {
+            endpoints: {
+              endSessionUrl: 'any-endSessionUrl-mock',
+              // @TODO refacto OidcClient
+              returnButtonUrl: expect.any(String),
+            },
           },
         },
       },
@@ -190,12 +207,14 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should call LayoutHeaderToolsLogoutButton with props, when isModalMenu is true', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        OidcClient: {
-          endpoints: {
-            endSessionUrl: 'any-endSessionUrl-mock',
-            // @TODO refacto OidcClient
-            returnButtonUrl: expect.any(String),
+      state: {
+        config: {
+          OidcClient: {
+            endpoints: {
+              endSessionUrl: 'any-endSessionUrl-mock',
+              // @TODO refacto OidcClient
+              returnButtonUrl: expect.any(String),
+            },
           },
         },
       },
@@ -226,10 +245,12 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should match the snapshot, when all props and config are defined', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        OidcClient: {
-          // @TODO refacto OidcClient
-          endpoints: { endSessionUrl: expect.any(String), returnButtonUrl: expect.any(String) },
+      state: {
+        config: {
+          OidcClient: {
+            // @TODO refacto OidcClient
+            endpoints: { endSessionUrl: expect.any(String), returnButtonUrl: expect.any(String) },
+          },
         },
       },
     };
@@ -253,9 +274,11 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should call LayoutHeaderToolsAccountComponent with props', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        // @TODO refacto OidcClient
-        OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
+      state: {
+        config: {
+          // @TODO refacto OidcClient
+          OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
+        },
       },
     };
 
@@ -281,9 +304,11 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should call LayoutHeaderToolsAccountComponent with props when isModalMenu is true', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        // @TODO refacto OidcClient
-        OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
+      state: {
+        config: {
+          // @TODO refacto OidcClient
+          OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
+        },
       },
     };
 
@@ -313,10 +338,12 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should call ReturnButtonComponent', () => {
     // given
     const appContextConfigMock = {
-      config: {
-        OidcClient: {
-          // @TODO refacto OidcClient
-          endpoints: { endSessionUrl: undefined, returnButtonUrl: 'any-returnButtonUrl-mock' },
+      state: {
+        config: {
+          OidcClient: {
+            // @TODO refacto OidcClient
+            endpoints: { endSessionUrl: undefined, returnButtonUrl: 'any-returnButtonUrl-mock' },
+          },
         },
       },
     };
@@ -336,7 +363,9 @@ describe('LayoutHeaderToolsComponent', () => {
   it('should not call ReturnButtonComponent when OidcClient is undefined', () => {
     // given
     const appContextConfigMock = {
-      config: {},
+      state: {
+        config: {},
+      },
     };
 
     // when

@@ -414,10 +414,7 @@ describe('OidcClientUtilsService', () => {
       await expect(
         service.getTokenSet(req, providerId, params),
       ).rejects.toThrow(OidcClientTokenFailedException);
-      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.debug).toHaveBeenCalledWith(
-        JSON.stringify(errorMessage),
-      );
+      expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -673,7 +670,12 @@ describe('OidcClientUtilsService', () => {
       expect(isURLMock).toHaveBeenCalledTimes(1);
       expect(isURLMock).toHaveBeenCalledWith(
         'https://endSessionUrlMockMock?id_token_hint=idTokenMockValue&post_logout_redirect_uri=https://postLogoutRedirectUriMock&state=stateMockValue',
-        { protocols: ['http', 'https'] },
+        {
+          protocols: ['https'],
+          // Validator.js defined property
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          require_protocol: true,
+        },
       );
       expect(result).toBeTrue;
     });

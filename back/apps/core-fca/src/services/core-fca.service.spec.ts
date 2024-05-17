@@ -6,23 +6,28 @@ import { ConfigService } from '@fc/config';
 import { CoreAuthorizationService } from '@fc/core';
 import { FqdnToIdpAdapterMongoService } from '@fc/fqdn-to-idp-adapter-mongo';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
-import { LoggerService } from '@fc/logger';
-import { OidcClientService } from '@fc/oidc-client';
+import {
+  OidcClientIdpBlacklistedException,
+  OidcClientIdpDisabledException,
+  OidcClientService,
+} from '@fc/oidc-client';
 import { SessionService } from '@fc/session';
 
 import { getConfigMock } from '@mocks/config';
 import { getCoreAuthorizationServiceMock } from '@mocks/core';
-import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
+import {
+  CoreFcaAgentIdpBlacklistedException,
+  CoreFcaAgentIdpDisabledException,
+  CoreFcaAgentNoIdpException,
+} from '../exceptions';
 import { CoreFcaService } from './core-fca.service';
 
 describe('CoreFcaService', () => {
   let service: CoreFcaService;
 
   const configServiceMock = getConfigMock();
-
-  const loggerMock = getLoggerMock();
 
   const sessionServiceMock = getSessionServiceMock();
 
@@ -38,10 +43,12 @@ describe('CoreFcaService', () => {
   const spIdMock = 'spIdMockValue';
   const resMock = {
     redirect: jest.fn(),
+    render: jest.fn(),
   } as unknown as Response;
 
   const identityProviderMock = {
     getById: jest.fn(),
+    getList: jest.fn(),
   };
 
   const acrMock = 'acrMockValue';
@@ -79,15 +86,12 @@ describe('CoreFcaService', () => {
         OidcClientService,
         IdentityProviderAdapterMongoService,
         FqdnToIdpAdapterMongoService,
-        LoggerService,
         CoreAuthorizationService,
         SessionService,
       ],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(LoggerService)
-      .useValue(loggerMock)
       .overrideProvider(OidcClientService)
       .useValue(oidcMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
@@ -119,7 +123,7 @@ describe('CoreFcaService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('redirectToIdp()', () => {
+  describe('redirectToIdp', () => {
     const authorizationParametersMock = {
       // oidc parameter
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -133,6 +137,10 @@ describe('CoreFcaService', () => {
       sessionServiceMock.get.mockReturnValue({
         spId: spIdMock,
       });
+
+      const getIdpIdForEmailMock = jest.spyOn(service, 'getIdpIdForEmail');
+
+      getIdpIdForEmailMock.mockResolvedValueOnce([idpIdMock]);
     });
 
     it('should call config.get to retrieve configured parameters', async () => {
@@ -266,26 +274,18 @@ describe('CoreFcaService', () => {
   });
 
   describe('getIdpIdForEmail', () => {
-    it('should return the default uuid of idp when no idp is found', async () => {
+    it('should return the default uuid of idp when the idp list is empty', async () => {
+      // Given
+      fqdnToIdpAdapterMongoMock.getIdpsByFqdn.mockResolvedValueOnce([]);
+
       // When
-      const result = await service.getIdpIdForEmail('dobby@unknown.person');
+      const result = await service.getIdpIdForEmail('voldemort@bad.person');
 
       // Then
-      expect(result).toBe(process.env.DEFAULT_IDP_UID);
+      expect(result).toEqual([process.env.DEFAULT_IDP_UID]);
     });
 
-    it('should call fqdnToIdpAdapterMongoService getIdpsByFqdn', async () => {
-      // When
-      await service.getIdpIdForEmail('voldemort@bad.person');
-
-      // Then
-      expect(fqdnToIdpAdapterMongoMock.getIdpsByFqdn).toHaveBeenCalledTimes(1);
-      expect(fqdnToIdpAdapterMongoMock.getIdpsByFqdn).toHaveBeenCalledWith(
-        'bad.person',
-      );
-    });
-
-    it('should get return the first corresponding idp for fqdn', async () => {
+    it('should get return all the corresponding idp for fqdn', async () => {
       // Given
       fqdnToIdpAdapterMongoMock.getIdpsByFqdn.mockResolvedValueOnce([
         { fqdn: 'bad.person', identityProvider: 'snapeIdp' },
@@ -297,32 +297,14 @@ describe('CoreFcaService', () => {
       const result = await service.getIdpIdForEmail('voldemort@bad.person');
 
       // Then
-      expect(result).toBe('snapeIdp');
-    });
-
-    it('should log a warning when there more than one idp for fqdn', async () => {
-      // Given
-      fqdnToIdpAdapterMongoMock.getIdpsByFqdn.mockResolvedValueOnce([
-        { fqdn: 'bad.person', identityProvider: 'snapeIdp' },
-        { fqdn: 'bad.person', identityProvider: 'luciusIdp' },
-        { fqdn: 'bad.person', identityProvider: 'dobbyIdp' },
-      ]);
-
-      // When
-      await service.getIdpIdForEmail('voldemort@bad.person');
-
-      // Then
-      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
-      expect(loggerMock.warning).toHaveBeenCalledWith(
-        'More than one IdP exists',
-      );
+      expect(result).toEqual(['snapeIdp', 'luciusIdp', 'dobbyIdp']);
     });
   });
 
   describe('getFqdnFromEmail', () => {
     it('should only return the full qualified domain name from an email address', () => {
       // When
-      const fqdn = service['getFqdnFromEmail']('hermione.granger@hogwards.uk');
+      const fqdn = service.getFqdnFromEmail('hermione.granger@hogwards.uk');
 
       // Then
       expect(fqdn).toBe('hogwards.uk');
@@ -330,12 +312,159 @@ describe('CoreFcaService', () => {
 
     it('should only return the full qualified domain name from an email address with numbers', () => {
       // When
-      const fqdn = service['getFqdnFromEmail'](
+      const fqdn = service.getFqdnFromEmail(
         'hermione.grangerhogwards4321@hogwards1234.uk',
       );
 
       // Then
       expect(fqdn).toBe('hogwards1234.uk');
+    });
+
+    const emailToTest = [
+      {
+        value: 'hermione.granger@hogwards1234.uK',
+        expectedFqdn: 'hogwards1234.uk',
+      },
+      {
+        value: 'hermione.granger@hogwardS1234.uk',
+        expectedFqdn: 'hogwards1234.uk',
+      },
+      {
+        value: 'hermione.granger@hogwardS1234.uK',
+        expectedFqdn: 'hogwards1234.uk',
+      },
+      {
+        value: 'hermione.granger@HOGWARDS1234.UK',
+        expectedFqdn: 'hogwards1234.uk',
+      },
+    ];
+    it.each(emailToTest)(
+      'should always return qualified domain name in lower case from an email address with upper case',
+      ({ value, expectedFqdn }) => {
+        // When
+        const fqdn = service.getFqdnFromEmail(value);
+
+        // Then
+        expect(fqdn).toBe(expectedFqdn);
+      },
+    );
+  });
+
+  describe('checkIdpBlacklisted', () => {
+    it('should call oidcClient.utils.checkIdpBlacklisted', async () => {
+      // When
+      await service['checkIdpBlacklisted'](spIdMock, idpIdMock);
+
+      // Then
+      expect(oidcMock.utils.checkIdpBlacklisted).toHaveBeenCalledTimes(1);
+      expect(oidcMock.utils.checkIdpBlacklisted).toHaveBeenCalledWith(
+        spIdMock,
+        idpIdMock,
+      );
+    });
+
+    it('should throw a CoreFcaAgentIdpBlacklistedException', async () => {
+      // Given
+      oidcMock.utils.checkIdpBlacklisted.mockRejectedValue(
+        new OidcClientIdpBlacklistedException(),
+      );
+      // When
+      await expect(
+        service['checkIdpBlacklisted'](spIdMock, idpIdMock),
+      ).rejects.toThrow(CoreFcaAgentIdpBlacklistedException);
+    });
+
+    it('should throw an error if utils return an error', async () => {
+      // Given
+      oidcMock.utils.checkIdpBlacklisted.mockRejectedValue(new Error('wrong'));
+      // When
+      await expect(
+        service['checkIdpBlacklisted'](spIdMock, idpIdMock),
+      ).rejects.toThrow(Error);
+    });
+  });
+
+  describe('checkIdpDisabled', () => {
+    it('should call oidcClient.utils.checkIdpDisabled', async () => {
+      // When
+      await service['checkIdpDisabled'](idpIdMock);
+
+      // Then
+      expect(oidcMock.utils.checkIdpDisabled).toHaveBeenCalledTimes(1);
+      expect(oidcMock.utils.checkIdpDisabled).toHaveBeenCalledWith(idpIdMock);
+    });
+
+    it('should throw a CoreFcaAgentIdpDisabledException if utils returns a OidcClientIdpDisabledException', async () => {
+      // Given
+      oidcMock.utils.checkIdpDisabled.mockRejectedValue(
+        new OidcClientIdpDisabledException(),
+      );
+      // When
+      await expect(service['checkIdpDisabled'](idpIdMock)).rejects.toThrow(
+        CoreFcaAgentIdpDisabledException,
+      );
+    });
+
+    it('should throw an error if utils return an error', async () => {
+      // Given
+      oidcMock.utils.checkIdpDisabled.mockRejectedValue(new Error('wrong'));
+      // When
+      await expect(service['checkIdpDisabled'](idpIdMock)).rejects.toThrow(
+        Error,
+      );
+    });
+  });
+
+  describe('getDefaultIdp', () => {
+    it('should call the config when we call getDefaultIdp', () => {
+      // When
+      service['getDefaultIdp'](1);
+
+      // Then
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(configServiceMock.get).toHaveBeenCalledWith('App');
+    });
+
+    it('should throw an CoreFcaAgentNoIdpException error when no idp is found', () => {
+      // Then
+      expect(() => service['getDefaultIdp'](0)).toThrow(
+        CoreFcaAgentNoIdpException,
+      );
+    });
+  });
+
+  describe('getIdentityProvidersByIds', () => {
+    it('should return the identity providers for the given ids', async () => {
+      // Given
+      identityProviderMock.getList.mockResolvedValue([
+        { ...identityProviderMockResponse, uid: 'dobbyIdp' },
+        { ...identityProviderMockResponse, uid: 'horcruxIdp' },
+        { ...identityProviderMockResponse, uid: 'luciusIdp' },
+        { ...identityProviderMockResponse, uid: 'snapeIdp' },
+      ]);
+
+      const { name, title } = identityProviderMockResponse;
+      const identityProviderNameTitle = { name, title };
+      const idpIds = ['snapeIdp', 'luciusIdp', 'dobbyIdp'];
+
+      // When
+      const providers = await service.getIdentityProvidersByIds(...idpIds);
+
+      // Then
+      expect(providers).toEqual([
+        {
+          ...identityProviderNameTitle,
+          uid: 'dobbyIdp',
+        },
+        {
+          ...identityProviderNameTitle,
+          uid: 'luciusIdp',
+        },
+        {
+          ...identityProviderNameTitle,
+          uid: 'snapeIdp',
+        },
+      ]);
     });
   });
 });

@@ -5,6 +5,7 @@ import TechnicalErrorPage from '../pages/technical-error-page';
 const {
   checkErrorCode,
   checkErrorMessage,
+  checkErrorTitle,
   checkIsVisible,
   checkSessionNumberVisible,
 } = new TechnicalErrorPage();
@@ -12,6 +13,13 @@ const {
 Then('je suis redirigé vers la page erreur technique', function () {
   checkIsVisible();
 });
+
+Then(
+  "le titre de la page d'erreur est {string}",
+  function (errorTitle: string) {
+    checkErrorTitle(errorTitle);
+  },
+);
 
 Then("le code d'erreur est {string}", function (errorCode: string) {
   checkErrorCode(errorCode);

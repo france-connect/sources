@@ -40,7 +40,7 @@
       Et que le fournisseur d'identité garantit un niveau de sécurité "inconnu"
       Quand je m'authentifie avec succès
       Alors je suis redirigé vers la page erreur technique
-      Et la copie d'écran "erreur" correspond à la page actuelle sur "<device>"
+      Et la copie d'écran "erreur" sans "[data-testid='error-id']" correspond à la page actuelle sur "<device>"
       Et le code d'erreur est "Y020001"
       # todo: before merging redesign fca feature branch, add a more specific error(s) like previous version "Le niveau de sécurité utilisé pour vous authentifier ne correspondant pas au niveau exigé pour votre démarche."
       Et le message d'erreur est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."

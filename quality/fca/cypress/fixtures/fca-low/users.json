@@ -84,5 +84,22 @@
       "is_service_public": "false",
       "acr": "eidas1"
     }
+  },
+  {
+    "enabled": true,
+    "criteria": ["mulitple sub"],
+    "claims": {
+      "uid": "43",
+      "given_name": "mohamed",
+      "usual_name": "Martinot",
+      "email": "mohamed@fia1.fr",
+      "siren": "343293775",
+      "siret": "34329377500037",
+      "organizational_unit": "comptabilite",
+      "belonging_population": "agent",
+      "phone_number": "+331-12-44-45-23",
+      "is_service_public": "none",
+      "acr": "eidas1"
+    }
   }
 ]

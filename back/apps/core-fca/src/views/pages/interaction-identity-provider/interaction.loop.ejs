@@ -1,0 +1,14 @@
+<ul class="fr-btns-group fr-btns-group--inline-sm">
+<% locals.providers.forEach((provider) => { %>
+  <li>
+    <form 
+      action="/api/v2/redirect-to-idp"
+      method="POST" 
+      name="fs-request"
+    >
+      <%- include('pages/interaction-identity-provider/interaction.button.ejs', { provider }) %>
+      <%- include('pages/interaction-identity-provider/interaction.inputs.ejs', { provider }) %>
+    </form>
+  </li>
+<% }); %>
+</ul>

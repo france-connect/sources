@@ -1,11 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-import {
-  CoreAccountService,
-  CoreAcrService,
-  IVerifyFeatureHandlerHandleArgument,
-} from '@fc/core';
-import { CryptographyFcaService, IAgentIdentity } from '@fc/cryptography-fca';
+import { AccountFca, AccountFcaService, IIdpAgentKeys } from '@fc/account-fca';
+import { CoreAcrService, IVerifyFeatureHandlerHandleArgument } from '@fc/core';
+import { CoreFcaAgentAccountBlockedException } from '@fc/core-fca/exceptions/core-fca-account-blocked.exception';
+import { IAgentIdentity } from '@fc/core-fca/interfaces';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
@@ -20,17 +18,16 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
   /* eslint-disable-next-line max-params */
   constructor(
     protected readonly logger: LoggerService,
-    protected readonly coreAccount: CoreAccountService,
     protected readonly coreAcr: CoreAcrService,
-    protected readonly cryptographyFca: CryptographyFcaService,
     protected readonly identityProvider: IdentityProviderAdapterMongoService,
+    protected readonly accountService: AccountFcaService,
   ) {}
 
   /**
    * Main business manipulations occurs in this method
    *
    * 1. Get infos on current interaction and identity fetched from IdP
-   * 2. Store interaction with account service (long term storage)
+   * 2. Create or update account with interaction (long term storage)
    * 3. Store identity with session service (short term storage)
    *
    * @param req
@@ -40,56 +37,87 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
   }: IVerifyFeatureHandlerHandleArgument): Promise<void> {
     this.logger.debug('verifyIdentity service: ##### core-fca-default-verify');
 
-    const { idpId, idpIdentity, idpAcr, spId, spAcr } = sessionOidc.get();
+    const { idpId, idpIdentity, idpAcr, spAcr } = sessionOidc.get();
 
     // Acr check
     const { maxAuthorizedAcr } = await this.identityProvider.getById(idpId);
 
     this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr, maxAuthorizedAcr);
 
-    // todo: we will need to add a proper way to check and transform sessionOidc into IAgentIdentity
     const agentIdentity = idpIdentity as IAgentIdentity;
 
-    const agentHash = this.getAgentHash(idpId, agentIdentity);
-    await this.coreAccount.checkIfAccountIsBlocked(agentHash);
-    const sub = this.cryptographyFca.computeSubV1(spId, agentHash);
+    const account = await this.createOrUpdateAccount(agentIdentity, idpId);
 
-    const accountId = await this.saveInteractionToDatabase(
-      spId,
-      sub,
-      agentHash,
-    );
+    this.checkIfAccountIsBlocked(account);
 
-    // get sp's sub to avoid double computation
-    const spIdentity = this.getSpSub(agentIdentity, idpId, idpAcr);
+    const fcaIdentity = this.composeFcaIdentity(agentIdentity, idpId, idpAcr);
 
     this.storeIdentityWithSessionService(
       sessionOidc,
-      sub,
-      spIdentity,
-      accountId,
+      account.sub,
+      fcaIdentity,
+      account.id,
     );
   }
 
-  protected getAgentHash(idpId: string, idpIdentity: IAgentIdentity): string {
-    const agentIdentity = idpIdentity;
+  protected async createOrUpdateAccount(
+    agentIdentity: IAgentIdentity,
+    idpUid: string,
+  ): Promise<AccountFca> {
+    const account = await this.getAccountForInteraction(agentIdentity, idpUid);
 
-    return this.cryptographyFca.computeIdentityHash(idpId, agentIdentity);
+    this.updateAccountWithInteraction(account, agentIdentity, idpUid);
+
+    await this.accountService.upsertWithSub(account);
+
+    return account;
   }
 
-  protected async saveInteractionToDatabase(
-    spId: string,
-    sub: string,
-    agentHash: string,
-  ): Promise<string> {
-    return await this.coreAccount.computeFederation({
-      key: spId,
-      sub,
-      identityHash: agentHash,
-    });
+  private async getAccountForInteraction(
+    agentIdentity: IAgentIdentity,
+    idpUid: string,
+  ): Promise<AccountFca> {
+    const idpAgentKeys = this.getIdpAgentKeys(idpUid, agentIdentity.sub);
+    const existingAccount =
+      await this.accountService.getAccountByIdpAgentKeys(idpAgentKeys);
+
+    if (existingAccount) {
+      return existingAccount;
+    }
+
+    return this.accountService.createAccount();
   }
 
-  protected getSpSub(
+  private updateAccountWithInteraction(
+    account: AccountFca,
+    agentIdentity: IAgentIdentity,
+    idpUid: string,
+  ): void {
+    const { sub } = agentIdentity;
+    const hasInteraction = this.hasInteraction(account, sub);
+
+    if (!hasInteraction) {
+      account.idpIdentityKeys.push({ idpSub: sub, idpUid });
+    }
+
+    account.lastConnection = new Date();
+  }
+
+  private hasInteraction(account: AccountFca, sub: string): boolean {
+    return !!account.idpIdentityKeys.find(
+      ({ idpSub, idpUid }) => idpSub === sub && idpUid === idpUid,
+    );
+  }
+
+  // IdpAgentKeys is a combination of idpId and idpSub
+  protected getIdpAgentKeys(idpUid: string, idpSub: string): IIdpAgentKeys {
+    return {
+      idpUid,
+      idpSub,
+    };
+  }
+
+  protected composeFcaIdentity(
     idpIdentity: IAgentIdentity,
     idpId: string,
     idpAcr: string,
@@ -133,5 +161,11 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
     };
 
     sessionOidc.set(session);
+  }
+
+  protected checkIfAccountIsBlocked(account: AccountFca): void {
+    if (!account.active) {
+      throw new CoreFcaAgentAccountBlockedException();
+    }
   }
 }

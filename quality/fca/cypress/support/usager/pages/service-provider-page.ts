@@ -10,7 +10,7 @@ const mandatoryData = {
   exp: /^\d+/,
   iat: /^\d+/,
   iss: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
-  sub: /^[0-9a-f]{64}$/,
+  sub: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
 };
 export default class ServiceProviderPage {
   fcaButtonSelector: string;

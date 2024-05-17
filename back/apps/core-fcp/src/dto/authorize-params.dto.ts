@@ -1,15 +1,9 @@
 /* istanbul ignore file */
 
 // Declarative file
-import {
-  IsArray,
-  IsOptional,
-  IsString,
-  IsUrl,
-  MinLength,
-} from 'class-validator';
+import { IsArray, IsOptional, IsString, MinLength } from 'class-validator';
 
-import { Split } from '@fc/common';
+import { IsUrlRequiredTldFromConfig, Split } from '@fc/common';
 import { IsValidPrompt } from '@fc/oidc-provider';
 
 /**
@@ -46,7 +40,7 @@ export class AuthorizeParamsDto {
   @IsString()
   readonly state: string;
 
-  @IsUrl()
+  @IsUrlRequiredTldFromConfig()
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly redirect_uri: string;

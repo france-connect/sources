@@ -2,16 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "target": "esnext",
-    "module": "es2015",
-    "sourceMap": true,
-    "inlineSources": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "importHelpers": true,
-    "outDir": "../../dist/apps/mock-identity-provider-fca"
+    "outDir": "../../dist/apps/mock-identity-provider"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]

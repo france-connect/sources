@@ -41,6 +41,11 @@ export default class IdentityProviderPage {
     cy.get(this.loginButtonSelector).click();
   }
 
+  loginWithUsername(username: string): void {
+    cy.get(this.usernameSelector).clearThenType(username);
+    cy.get(this.loginButtonSelector).click();
+  }
+
   getLogin(): ChainableElement {
     return cy.get('#login');
   }

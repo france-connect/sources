@@ -33,7 +33,7 @@ Fonctionnalité: Connexion Usager - SSO
     Et que j'entre l'email "test@fia8.fr"
     Et que je clique sur le bouton de connexion
     Alors je suis redirigé vers la page erreur technique
-    Et le code d'erreur est "Y020023"
+    Et le code d'erreur est "Y500023"
 
   @ignoreInteg01
   Scénario: Connexion SSO - deuxième FS utilise un autre FI

@@ -13,6 +13,7 @@ import { ReturnButtonComponent } from './return-button';
 import { LayoutHeaderServiceComponent } from './service';
 import { LayoutHeaderToolsComponent } from './tools';
 
+jest.mock('@fc/state-management');
 jest.mock('./tools/layout-header-tools.component');
 jest.mock('./logos/layout-header-logos.component');
 jest.mock('./menu/layout-header-menu.component');
@@ -37,13 +38,15 @@ describe('LayoutHeaderComponent', () => {
   } as unknown as AccountInterface;
 
   const appContextConfigMock = {
-    config: {
-      Layout: {
-        footerLinkTitle: 'any-title',
-        logo: 'any-logo-mock',
-        navigationItems: navigationItemsMock,
+    state: {
+      config: {
+        Layout: {
+          footerLinkTitle: 'any-title',
+          logo: 'any-logo-mock',
+          navigationItems: navigationItemsMock,
+        },
+        OidcClient: { endpoints: {} },
       },
-      OidcClient: { endpoints: {} },
     },
   };
 
@@ -196,12 +199,14 @@ describe('LayoutHeaderComponent', () => {
       <AccountContext.Provider value={accountMock}>
         <AppContextProvider
           value={{
-            config: {
-              Layout: {
-                logo: 'any-logo-mock',
-                navigationItems: navigationItemsMock,
+            state: {
+              config: {
+                Layout: {
+                  logo: 'any-logo-mock',
+                  navigationItems: navigationItemsMock,
+                },
+                OidcClient: { endpoints: { returnButtonUrl: returnButtonUrlMock } },
               },
-              OidcClient: { endpoints: { returnButtonUrl: returnButtonUrlMock } },
             },
           }}>
           <LayoutHeaderComponent />
@@ -230,11 +235,13 @@ describe('LayoutHeaderComponent', () => {
     render(
       <AppContextProvider
         value={{
-          config: {
-            Layout: {
-              logo: 'any-logo-mock',
-              navigationItems: navigationItemsMock,
-              service: serviceConfigMock,
+          state: {
+            config: {
+              Layout: {
+                logo: 'any-logo-mock',
+                navigationItems: navigationItemsMock,
+                service: serviceConfigMock,
+              },
             },
           },
         }}>

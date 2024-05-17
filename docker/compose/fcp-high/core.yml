@@ -28,8 +28,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/core.env"
-    ports:
-      - 9235:9235
     tty: true
     networks:
       - public

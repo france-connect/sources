@@ -1,10 +1,6 @@
 version: "2.4"
 
 services:
-  ####################
-  # MINIMUM FCP LOW
-  ####################
-
   ud:
     image: alpine
     depends_on:

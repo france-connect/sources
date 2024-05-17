@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function _fc-common-symlink() {
+function _fc_common_symlink() {
   local base="$FC_ROOT/fc/docker/volumes/src/FranceConnect/projects"
 
   case ${app} in

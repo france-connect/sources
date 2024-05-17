@@ -44,7 +44,12 @@ export class AuthorizeParamsDto {
   @IsString()
   readonly state: string;
 
-  @IsUrl()
+  @IsUrl({
+    protocols: ['https'],
+    // Validator.js defined property
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    require_protocol: true,
+  })
   // openid defined property names
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly redirect_uri: string;

@@ -228,5 +228,18 @@
       "rnipp_family_name": "Byron",
       "acr": "eidas1"
     }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "désactivé"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "E000001",
+        "password": "123"
+      }
+    ]
   }
 ]

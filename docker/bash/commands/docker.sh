@@ -5,15 +5,15 @@ _get_running_containers() {
   local raw_nodejs_containers=$(docker ps --format '{{.Names}}' -f ancestor=${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev)
   local raw_all_containers=$(docker ps --format '{{.Names}}')
 
-  NODEJS_CONTAINERS=$(_container-to-compose-name "${raw_nodejs_containers}")
-  FC_CONTAINERS=$(_container-to-compose-name "${raw_all_containers}")
+  NODEJS_CONTAINERS=$(_container_to_compose_name "${raw_nodejs_containers}")
+  FC_CONTAINERS=$(_container_to_compose_name "${raw_all_containers}")
 }
 
-_reload-rp() {
+_reload_rp() {
   docker exec fc-rp-all service nginx reload
 }
 
-_container-to-compose-name() {
+_container_to_compose_name() {
   local input=$1
   local output=""
 
@@ -129,6 +129,7 @@ _prune_ci() {
 
 _switch() {
   _prune
+  _logs "--bg"
   _up "${@}"
   _start_all
 }

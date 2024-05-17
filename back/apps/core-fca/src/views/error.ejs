@@ -1,24 +1,27 @@
 <!doctype html>
 <html lang="fr" data-fr-scheme="light">
-<head>
-  <%- include('includes/head.ejs') %>
-  <link rel="stylesheet" href="/css/pages/error.css">
-  <title>Erreur</title>
-</head>
-<body id="fc-error-page">
-  <div class="fc-sticky-wrapper">
-    <div class="fc-sticky-body">
-      <%- include('includes/header.ejs') %>
-      <div class="fr-container fr-mt-md-8w fr-mt-5w">
-        <main class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
-          <section data-testid="error-section" class="fr-col-lg-10 fr-col-md-10">
-            <%- include('pages/error/error.content.ejs') %>
-          </section>
-        </main>
+  <head>
+    <%- include('includes/head.ejs') %>
+    <link rel="stylesheet" href="/css/pages/error.css" />
+    <title>Erreur</title>
+  </head>
+  <body id="fc-error-page">
+    <div class="fc-sticky-wrapper">
+      <div class="fc-sticky-body">
+        <%- include('includes/header.ejs') %>
+        <div class="fr-container fr-mt-md-8w fr-mt-5w">
+          <main class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
+            <section
+              data-testid="error-section"
+              class="fr-col-lg-10 fr-col-md-10"
+            >
+              <%- include('pages/error/error.content.ejs') %>
+            </section>
+          </main>
+        </div>
       </div>
+      <%- include('includes/footer.ejs') %>
     </div>
-    <%- include('includes/footer.ejs') %>
-  </div>
-  <%- include('includes/scripts.ejs') %>
-</body>
+    <%- include('includes/scripts.ejs') %>
+  </body>
 </html>

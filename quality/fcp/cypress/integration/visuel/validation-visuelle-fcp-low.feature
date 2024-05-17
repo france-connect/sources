@@ -120,3 +120,23 @@ Fonctionnalité: Validation Visuelle
       | tablet portrait  |
       | tablet landscape |
       | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Erreur usager désactivé sur <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que j'utilise un compte usager "désactivé"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Quand je m'authentifie avec succès
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y180001"
+    Et la copie d'écran "erreurUsagerDesactive" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |

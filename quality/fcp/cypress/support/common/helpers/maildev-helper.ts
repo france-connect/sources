@@ -1,7 +1,7 @@
-import { Maildev } from '../types';
+import { Email } from '../types';
 
 export class MaildevHelper {
-  static isUserMessage(message: Maildev.Mail, userEmail: string): boolean {
+  static isUserMessage(message: Email, userEmail: string): boolean {
     return message.to.some(({ address }) => address === userEmail);
   }
 

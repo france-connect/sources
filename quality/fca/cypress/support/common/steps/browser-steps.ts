@@ -6,3 +6,5 @@ When(/^je rafraîchis la page$/, function () {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(500);
 });
+
+When('je reviens en arrière', () => cy.go('back'));

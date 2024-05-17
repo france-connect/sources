@@ -1,0 +1,7 @@
+# Erreur specs
+
+<% for(var i=0; i < markdown.length; i++) { %>
+| Code d'erreur | Code HTTP | Message utilisateur | Description | Erreur | Erreur Description |
+|---|---|---|---|---|---|<% for(var j=0; j < markdown[i].length; j++) { %>
+| [<%= markdown[i][j].errorCode %>](<%=projectRootPath%><%=markdown[i][j].path%> "<%=markdown[i][j].exception%>") | <%= markdown[i][j].httpStatusCode %> | <%= markdown[i][j].message %> | <%= markdown[i][j].description %> | <%= markdown[i][j].ERROR %> | <%= markdown[i][j].ERROR_DESCRIPTION %> |<% } %>
+<% } %>

@@ -7,13 +7,17 @@ import { IsIn, IsNotEmpty, IsString } from 'class-validator';
 import { CoreBaseOidcClientSessionDto } from '@fc/core';
 import { OidcClientRoutes } from '@fc/oidc-client';
 
+import { CoreFcaRoutes } from '../enums/core-fca-routes.enum';
 import { AppSession } from './app-session.dto';
 import { CoreSessionDto } from './core-session.dto';
 
 export class GetOidcCallbackOidcClientSessionDto extends CoreBaseOidcClientSessionDto {
   // Metadata: We MUST restrict the routes we can come from
   @IsString()
-  @IsIn([OidcClientRoutes.REDIRECT_TO_IDP])
+  @IsIn([
+    CoreFcaRoutes.INTERACTION_IDENTITY_PROVIDER_SELECTION,
+    OidcClientRoutes.REDIRECT_TO_IDP,
+  ])
   @Expose()
   readonly stepRoute: string;
 

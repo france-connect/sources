@@ -72,9 +72,19 @@ export class OidcClientConfig {
   @IsBoolean()
   readonly fapi: boolean;
 
-  @IsUrl()
+  @IsUrl({
+    protocols: ['https'],
+    // Validator.js defined property
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    require_protocol: true,
+  })
   readonly redirectUri: string;
 
-  @IsUrl()
+  @IsUrl({
+    protocols: ['https'],
+    // Validator.js defined property
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    require_protocol: true,
+  })
   readonly postLogoutRedirectUri: string;
 }

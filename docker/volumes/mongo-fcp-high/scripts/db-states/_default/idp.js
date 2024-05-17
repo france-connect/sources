@@ -52,7 +52,7 @@ const fip = {
     userinfo_signed_response_alg: "ES256",
     userinfo_encrypted_response_alg: "RSA-OAEP-256",
     userinfo_encrypted_response_enc: "A256GCM",
-    amr: ["fc", "pwd", "mail", "mfa"],
+    amr: ["fc", "pop", "pin", "mfa"],
   },
 
   // -- FIP - FIP2-HIGH - Activated

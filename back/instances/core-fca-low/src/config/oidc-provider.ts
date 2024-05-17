@@ -40,7 +40,7 @@ export default {
       token: OidcProviderRoutes.TOKEN,
       userinfo: OidcProviderRoutes.USERINFO,
     },
-    subjectTypes: ['pairwise'],
+    subjectTypes: ['public'],
     cookies: {
       keys: env.json('COOKIES_KEYS'),
       long: {

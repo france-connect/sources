@@ -3,7 +3,6 @@ import {
   basicSuccessScenario,
   beforeSuccessScenario,
   checkInformations,
-  checkInStringifiedJson,
   getServiceProvider,
   logout,
 } from './mire.utils';
@@ -12,9 +11,6 @@ describe('RP Initiated logout scenarios', () => {
   const idpId = '9c716f61-b8a1-435c-a407-ef4d677ec270';
 
   it('should log out from AgentConnect with post logout redirect uri', () => {
-    const SUB =
-      '4a897042fa9e7a1098a1951a7a3f461db54be2105c400f8594ce0eeb03cc5756';
-
     const params = {
       userName: 'test',
       password: '123',
@@ -29,7 +25,6 @@ describe('RP Initiated logout scenarios', () => {
       givenName: 'Angela Claire Louise',
       usualName: 'DUBOIS',
     });
-    checkInStringifiedJson('sub', SUB);
 
     logout();
 
@@ -56,7 +51,6 @@ describe('RP Initiated logout scenarios', () => {
       givenName: 'Angela Claire Louise',
       usualName: 'DUBOIS',
     });
-    checkInStringifiedJson('sub', SUB);
 
     logout();
 

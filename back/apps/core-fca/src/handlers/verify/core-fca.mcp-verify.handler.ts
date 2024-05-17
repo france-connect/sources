@@ -1,12 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import {
-  CoreAccountService,
-  CoreAcrService,
-  IVerifyFeatureHandlerHandleArgument,
-} from '@fc/core';
+import { AccountFcaService } from '@fc/account-fca';
+import { CoreAcrService, IVerifyFeatureHandlerHandleArgument } from '@fc/core';
 import { CoreFcaAgentNotFromPublicServiceException } from '@fc/core-fca/exceptions';
-import { CryptographyFcaService } from '@fc/cryptography-fca';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
@@ -15,7 +11,7 @@ import {
   Types,
 } from '@fc/service-provider-adapter-mongo';
 
-import { IAgentConnectOidcIdentity } from '../../interfaces';
+import { IAgentIdentity, IAgentIdentityWithPublicness } from '../../interfaces';
 import { CoreFcaDefaultVerifyHandler } from './core-fca.default-verify.handler';
 
 @Injectable()
@@ -28,13 +24,12 @@ export class CoreFcaMcpVerifyHandler
   // eslint-disable-next-line max-params
   constructor(
     protected readonly logger: LoggerService,
-    protected readonly coreAccount: CoreAccountService,
     protected readonly coreAcr: CoreAcrService,
-    protected readonly cryptographyFca: CryptographyFcaService,
     protected readonly identityProvider: IdentityProviderAdapterMongoService,
     protected readonly serviceProvider: ServiceProviderAdapterMongoService,
+    protected readonly accountService: AccountFcaService,
   ) {
-    super(logger, coreAccount, coreAcr, cryptographyFca, identityProvider);
+    super(logger, coreAcr, identityProvider, accountService);
   }
 
   /**
@@ -51,16 +46,17 @@ export class CoreFcaMcpVerifyHandler
   }: IVerifyFeatureHandlerHandleArgument): Promise<void> {
     this.logger.debug('verifyIdentity service: ##### core-fca-mcp-verify');
 
-    const { idpId, idpIdentity, idpAcr, spId, spAcr } = sessionOidc.get();
+    const { idpId, idpIdentity, idpAcr, spAcr, spId } = sessionOidc.get();
+    // Check if the sp accepts private employees
     const { type } = await this.serviceProvider.getById(spId);
 
-    const isIdentityPrivate =
-      (idpIdentity as IAgentConnectOidcIdentity).is_service_public !== true;
+    const isPrivateIdentity =
+      (idpIdentity as IAgentIdentityWithPublicness).is_service_public !== true;
     // Types.PUBLIC = sp that accepts public servant only
     // Types.PRIVATE = sp that also accepts private compagnies employes
-    const doesSpAcceptPrivate = type !== Types.PUBLIC;
+    const spAcceptsPrivate = type !== Types.PUBLIC;
 
-    if (isIdentityPrivate && !doesSpAcceptPrivate) {
+    if (isPrivateIdentity && !spAcceptsPrivate) {
       throw new CoreFcaAgentNotFromPublicServiceException();
     }
 
@@ -69,31 +65,19 @@ export class CoreFcaMcpVerifyHandler
 
     this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr, maxAuthorizedAcr);
 
-    const agentHash = this.getAgentHash(
-      idpId,
-      idpIdentity as IAgentConnectOidcIdentity,
-    );
-    await this.coreAccount.checkIfAccountIsBlocked(agentHash);
-    const sub = this.cryptographyFca.computeSubV1(spId, agentHash);
+    // todo: we will need to add a proper way to check and transform sessionOidc into IAgentIdentity
+    const agentIdentity = idpIdentity as IAgentIdentity;
 
-    const accountId = await this.saveInteractionToDatabase(
-      spId,
-      sub,
-      agentHash,
-    );
+    const account = await this.createOrUpdateAccount(agentIdentity, idpId);
+    this.checkIfAccountIsBlocked(account);
 
-    // get sp's sub to avoid double computation
-    const spIdentity = this.getSpSub(
-      idpIdentity as IAgentConnectOidcIdentity,
-      idpId,
-      idpAcr,
-    );
+    const fcaIdentity = this.composeFcaIdentity(agentIdentity, idpId, idpAcr);
 
     this.storeIdentityWithSessionService(
       sessionOidc,
-      sub,
-      spIdentity,
-      accountId,
+      account.sub,
+      fcaIdentity,
+      account.id,
     );
   }
 }

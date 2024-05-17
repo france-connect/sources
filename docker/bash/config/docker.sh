@@ -40,3 +40,5 @@ export COMPOSE_COMPATIBILITY
 # see https://medium.com/redbubble/running-a-docker-container-as-a-non-root-user-7d2e00f8ee15
 # Modf 2020-06-04: récupération de l'id du groupe docker (nécessaire pour le conteneur 'docker-gen')
 export CURRENT_UID="$(id -u):$(grep docker /etc/group | cut -d: -f3)"
+
+export LOGS_PATH="${WORKING_DIR}/volumes/log"

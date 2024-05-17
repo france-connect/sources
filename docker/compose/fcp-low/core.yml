@@ -26,8 +26,6 @@ services:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-low/.env/core-fcp-low.env"
       - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
-    ports:
-      - 9300:9300
     tty: true
     networks:
       - public

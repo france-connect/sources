@@ -10,7 +10,7 @@
       "non blacklisté",
       "français",
       "autorisé pour idp_hint",
-      "par défaut avec amr 'fc pwd mail mfa'"
+      "par défaut avec amr 'fc pop mfa pin'"
     ],
     "mocked": true,
     "usable": true,

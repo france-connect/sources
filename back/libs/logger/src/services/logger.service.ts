@@ -1,4 +1,4 @@
-import pino, { DestinationStream, Logger, StreamEntry } from 'pino';
+import pino, { Logger } from 'pino';
 
 import { Injectable } from '@nestjs/common';
 
@@ -143,65 +143,11 @@ export class LoggerService {
       customLevels,
       useOnlyCustomLevels: true,
     };
-    const streams = this.buildStreams();
 
-    this.pino = pino(options, streams);
+    this.pino = pino(options);
 
     this.overloadConsole();
     this.pino.notice('Logger is ready and native console is now overloaded.');
-  }
-
-  private buildTransportFdTargets(
-    levels: LogLevels[],
-    { fd: destination }: NodeJS.WriteStream & { fd: number },
-  ) {
-    const targets = [];
-
-    levels.forEach((level: string) => {
-      targets.push({
-        target: 'pino/file',
-        level,
-        options: {
-          destination,
-        },
-      });
-    });
-
-    return targets;
-  }
-
-  private buildStreams(): DestinationStream {
-    const { wsMultiplexer, stdoutLevels, stderrLevels } =
-      this.config.get<LoggerConfig>('Logger');
-
-    const targets = [
-      ...this.buildTransportFdTargets(stdoutLevels, process.stdout),
-      ...this.buildTransportFdTargets(stderrLevels, process.stderr),
-    ];
-
-    const stdTransport = pino.transport({
-      targets,
-      levels: this.customLevels,
-      dedupe: true,
-    });
-
-    const streams: StreamEntry[] = [
-      {
-        stream: stdTransport,
-        level: LogLevels.DEBUG,
-      },
-    ];
-
-    if (wsMultiplexer) {
-      throw new Error('Websocket transport is not implemented yet.');
-    }
-
-    /**
-     * Multistream needs to be aware of our custom levels so it must be passed here as well.
-     */
-    return pino.multistream(streams, {
-      levels: this.customLevels,
-    });
   }
 
   private overloadConsole() {

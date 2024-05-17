@@ -86,8 +86,9 @@ describe('OidcClient Controller', () => {
   };
 
   const configMock = {
-    scope: 'some scope',
     configuration: { acrValues: ['eidas1'] },
+    defaultRedirectUri: 'https://hogwartsconnect.gouv.fr',
+    scope: 'some scope',
     urlPrefix: '/api/v2',
   };
 
@@ -138,9 +139,14 @@ describe('OidcClient Controller', () => {
     },
   } as unknown as TrackingService;
 
-  const coreServiceMock = {
-    redirectToIdp: jest.fn(),
+  const coreServiceMock: Record<
+    keyof InstanceType<typeof CoreFcaService>,
+    jest.Mock
+  > = {
+    getFqdnFromEmail: jest.fn(),
     getIdpIdForEmail: jest.fn(),
+    getIdentityProvidersByIds: jest.fn(),
+    redirectToIdp: jest.fn(),
   };
 
   const oidcClientConfigServiceMock = {
@@ -210,6 +216,7 @@ describe('OidcClient Controller', () => {
     };
     res = {
       redirect: jest.fn(),
+      render: jest.fn(),
     };
 
     const idpMock: Partial<IdentityProviderMetadata> = {
@@ -240,38 +247,62 @@ describe('OidcClient Controller', () => {
     expect(controller).toBeDefined();
   });
 
+  describe('getIdentityProviderSelection()', () => {
+    it('should render identity providers interaction page', async () => {
+      // Given
+      const hogwartsProviders = [
+        'gryffindor_provider_id',
+        'slytherin_provider_id',
+      ];
+
+      sessionServiceMock.get.mockReturnValueOnce({
+        ...oidcClientSessionDataMock,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        login_hint: 'harry.potter@hogwarts.uk',
+      });
+      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce(hogwartsProviders);
+      coreServiceMock.getIdentityProvidersByIds.mockResolvedValueOnce([
+        {
+          uid: 'gryffindor_provider_id',
+        },
+        { uid: 'slytherin_provider_id' },
+      ]);
+
+      // When
+      await controller.getIdentityProviderSelection(
+        'csrfMockValue',
+        res,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(coreServiceMock.getIdentityProvidersByIds).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(coreServiceMock.getIdentityProvidersByIds).toHaveBeenCalledWith(
+        ...hogwartsProviders,
+      );
+
+      expect(res.render).toHaveBeenCalledTimes(1);
+      expect(res.render).toHaveBeenCalledWith('interaction-identity-provider', {
+        csrfToken: 'csrfMockValue',
+        email: 'harry.potter@hogwarts.uk',
+        providers: [
+          { uid: 'gryffindor_provider_id' },
+          { uid: 'slytherin_provider_id' },
+        ],
+      });
+    });
+  });
+
   describe('redirectToIdp()', () => {
-    it('should call oidcProviderService.getInteraction to retrieve dynamic parameters', async () => {
+    it('should redirect to a given identity provider', async () => {
       // Given
       const body = {
-        providerUid: providerIdMock,
+        identityProviderUid: providerIdMock,
         csrfToken: 'csrfMockValue',
         email: 'harry.potter@hogwarts.uk',
       };
-
-      identityProviderServiceMock.isActiveById.mockReturnValueOnce(true);
-
-      // When
-      await controller.redirectToIdp(req, res, body, sessionServiceMock);
-
-      // Then
-      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledTimes(1);
-      expect(oidcProviderServiceMock.getInteraction).toHaveBeenCalledWith(
-        req,
-        res,
-      );
-    });
-
-    it('should call coreService redirectToIdp', async () => {
-      // Given
-      const email = 'harry.potter@hogwarts.uk';
-      const body = {
-        providerUid: providerIdMock,
-        csrfToken: 'csrfMockValue',
-        email,
-      };
-
-      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce(providerIdMock);
 
       // When
       await controller.redirectToIdp(req, res, body, sessionServiceMock);
@@ -287,28 +318,58 @@ describe('OidcClient Controller', () => {
           acr_values: interactionDetailsResolved.params.acr_values,
           // oidc spec defined property
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          login_hint: email,
+          login_hint: body.email,
         },
       );
     });
 
-    it('should call coreServiceMock getIdpIdForEmail', async () => {
+    it('should redirect to the unique identity provider', async () => {
       // Given
       const body = {
-        providerUid: providerIdMock,
         csrfToken: 'csrfMockValue',
-        email: 'ginny.potter@hogwarts.uk',
+        email: 'harry.potter@hogwarts.uk',
       };
 
-      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce(providerIdMock);
+      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce([providerIdMock]);
 
       // When
       await controller.redirectToIdp(req, res, body, sessionServiceMock);
 
       // Then
-      expect(coreServiceMock.getIdpIdForEmail).toHaveBeenCalledTimes(1);
-      expect(coreServiceMock.getIdpIdForEmail).toHaveBeenCalledWith(
-        'ginny.potter@hogwarts.uk',
+      expect(coreServiceMock.redirectToIdp).toHaveBeenCalledTimes(1);
+      expect(coreServiceMock.redirectToIdp).toHaveBeenCalledWith(
+        res,
+        providerIdMock,
+        {
+          // oidc spec defined property
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          acr_values: interactionDetailsResolved.params.acr_values,
+          // oidc spec defined property
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          login_hint: body.email,
+        },
+      );
+    });
+
+    it('should redirect to identity provider selection page when no email was provided', async () => {
+      // Given
+      const body = {
+        csrfToken: 'csrfMockValue',
+        email: 'harry.potter@hogwarts.uk',
+      };
+
+      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce([
+        'gryffindor_provider_id',
+        'slytherin_provider_id',
+      ]);
+
+      // When
+      await controller.redirectToIdp(req, res, body, sessionServiceMock);
+
+      // Then
+      expect(res.redirect).toHaveBeenCalledTimes(1);
+      expect(res.redirect).toHaveBeenCalledWith(
+        '/api/v2/interaction/identity/select',
       );
     });
   });

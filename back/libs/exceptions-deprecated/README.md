@@ -1,4 +1,4 @@
-# Librairie d'erreur
+# Librairie d'erreur dépréciée
 
 ## Dossier _Decorator_
 
@@ -10,4 +10,4 @@ Il suffit de rajouter ce décorateur pour **loguer** l'exception. La valeur par 
 ### Trackable
 
 Ce décorateur permet de **tracker** tous les évènements dit **business** ne nécessitant pas d'action de notre part mais important juridiquement.
-Il suffit de rajouter ce décorateur pour **tracker** l'exception. La valeur par défaut est _true_, on retourne _false_ si décorateur non instancié
+Il suffit de rajouter ce décorateur pour **tracker** l'exception. La valeur par défaut est _true_, on retourne _false_ si décorateur non instancié.

@@ -7,9 +7,6 @@ import {
   getServiceProvider,
 } from './mire.utils';
 
-const BASIC_SUB =
-  '4a897042fa9e7a1098a1951a7a3f461db54be2105c400f8594ce0eeb03cc5756';
-
 describe('Revoke token', () => {
   // -- replace by either `fip1-high` or `fia1-low`
   const idpId = '9c716f61-b8a1-435c-a407-ef4d677ec270';
@@ -31,7 +28,6 @@ describe('Revoke token', () => {
       givenName: 'Angela Claire Louise',
       usualName: 'DUBOIS',
     });
-    checkInStringifiedJson('sub', BASIC_SUB);
 
     // reload userinfo with valid token
     cy.get('#reload-userinfo').click();
@@ -42,7 +38,6 @@ describe('Revoke token', () => {
       givenName: 'Angela Claire Louise',
       usualName: 'DUBOIS',
     });
-    checkInStringifiedJson('sub', BASIC_SUB);
 
     // revoke token
     cy.get('#revoke-token').click();

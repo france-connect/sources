@@ -190,5 +190,5 @@ Fonctionnalité: API - authorize
     Exemples:
       | redirectUri                          | httpCode | error   | errorDescription                                                                            |
       |                                      | 400      | Y030007 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. |
-      | http://localhost/callback            | 400      | Y030007 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. |
-      | https://my-malicious-url.fr/callback | 500      | Y030118 | invalid_redirect_uri                                                                        |      
+      | https://my-malicious-url.fr/callback | 500      | Y030118 | invalid_redirect_uri                                                                        |
+      | example.com                          | 400      | Y030007 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. |

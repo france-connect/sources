@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="<%= $translate('meta.lang') %>" data-fr-scheme="light">
   <head>
     <%- include('includes/head.ejs') %>
@@ -14,10 +14,11 @@
 
           <div class="fr-container fr-mt-5w fr-mt-md-8w">
             <section class="fr-grid-row fr-grid-row--gutters">
-
               <%- include('pages/interaction/interaction.error.ejs') %>
 
-              <div class="fr-col-12 fr-col-md-10 fr-col-lg-10 fr-col-offset-lg-1 fc-text--left fc-text-lg--center">
+              <div
+                class="fr-col-12 fr-col-md-10 fr-col-lg-10 fr-col-offset-lg-1 fc-text--left fc-text-lg--center"
+              >
                 <%- include('pages/interaction/interaction.anonymous.ejs') %>
                 <%- include('pages/interaction/interaction.welcome.ejs') %>
               </div>
@@ -28,8 +29,10 @@
             <section id="grid-main-providers">
               <div
                 class="fc-grid--provider fr-my-n3v"
-                data-testid="main-providers">
-                <%- include('pages/interaction/interaction.providers-loop.ejs') %>
+                data-testid="main-providers"
+              >
+                <%- include('pages/interaction/interaction.providers-loop.ejs')
+                %>
               </div>
             </section>
           </div>
@@ -45,14 +48,16 @@
                 <%- include('includes/back-button.ejs') %>
               </div>
             </section>
-            <section class="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
+            <section
+              class="fr-grid-row fr-grid-row--gutters fr-grid-row--center"
+            >
               <div class="fr-col-sm-12 fr-col-md-10 fr-col-lg-10 fr-col-xl-8">
-                <%- include('pages/interaction/interaction.aidants-connect.ejs'); %>
+                <%-
+                include('pages/interaction/interaction.aidants-connect.ejs'); %>
                 <%- include('pages/interaction/interaction.tuto.ejs'); %>
               </div>
             </section>
           </div>
-
         </main>
       </div>
       <%- include('includes/footer.ejs') %>

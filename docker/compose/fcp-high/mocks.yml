@@ -26,8 +26,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fsp1-high.env"
-    ports:
-      - 9238:9238
     tty: true
 
     networks:
@@ -54,8 +52,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fsp2-high.env"
-    ports:
-      - 9239:9239
     tty: true
     networks:
       - public
@@ -81,8 +77,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fsp3-high.env"
-    ports:
-      - 9240:9240
     tty: true
     networks:
       - public
@@ -108,8 +102,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fsp5-high.env"
-    ports:
-      - 9249:9249
     tty: true
     networks:
       - public
@@ -135,8 +127,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fsp6-high.env"
-    ports:
-      - 9250:9250
     tty: true
     networks:
       - public
@@ -160,8 +150,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fip1-high.env"
-    ports:
-      - 9236:9236
     tty: true
     networks:
       - public
@@ -185,8 +173,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fip2-high.env"
-    ports:
-      - 9237:9237
     tty: true
     networks:
       - public
@@ -210,8 +196,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fip6-high.env"
-    ports:
-      - 9241:9241
     tty: true
     networks:
       - public
@@ -235,8 +219,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fip13-high.env"
-    ports:
-      - 9244:9244
     tty: true
     networks:
       - public
@@ -260,8 +242,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fip14-high.env"
-    ports:
-      - 9252:9252
     tty: true
     networks:
       - public
@@ -285,8 +265,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fip15-high.env"
-    ports:
-      - 9253:9253
     tty: true
     networks:
       - public
@@ -310,8 +288,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fip16-high.env"
-    ports:
-      - 9254:9254
     tty: true
     networks:
       - public
@@ -335,8 +311,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fip17-high.env"
-    ports:
-      - 9255:9255
     tty: true
     networks:
       - public
@@ -360,8 +334,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fip18-high.env"
-    ports:
-      - 9256:9256
     tty: true
     networks:
       - public
@@ -385,8 +357,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fip19-high.env"
-    ports:
-      - 9257:9257
     tty: true
     networks:
       - public
@@ -410,8 +380,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/fip20-high.env"
-    ports:
-      - 9258:9258
     tty: true
     networks:
       - public
@@ -436,8 +404,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/dp1-high.env"
-    ports:
-      - "9266:9266"
     networks:
       - public
     command: "pm2 logs"
@@ -456,8 +422,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fcp-high/.env/dp2-high.env"
-    ports:
-      - "9267:9267"
     networks:
       - public
     command: "pm2 logs"

@@ -8,10 +8,10 @@
 2. [core-fca-low](#core-fca-low)
 3. [core-fcp-high](#core-fcp-high)
 4. [core-fcp-low](#core-fcp-low)
-5. [csmr-account](#csmr-account)
+5. [csmr-account-instance](#csmr-account-instance)
 6. [csmr-hsm-high](#csmr-hsm-high)
 7. [csmr-rie](#csmr-rie)
-8. [csmr-tracks](#csmr-tracks)
+8. [csmr-tracks-instance](#csmr-tracks-instance)
 9. [csmr-user-preferences-high](#csmr-user-preferences-high)
 10. [eidas-bridge](#eidas-bridge)
 11. [mock-data-provider](#mock-data-provider)
@@ -57,8 +57,6 @@
 | App_HTTPS_SERVER_KEY | file |
 | App_VIEWS_PATHS | json |
 | Core_ALLOWED_IDP_HINTS | json |
-| CryptographyFca_CRYPTO_HASH_SECRET | string |
-| CryptographyFca_CRYPTO_SUB_SECRET | string |
 | FQDN | string |
 | LoggerLegacy_FILE | string |
 | Logger_STDERR_LEVELS | json |
@@ -231,7 +229,7 @@
 | Session_USERINFO_CRYPT_KEY | string |
 | UD_FQDN | string |
 
-### csmr-account
+### csmr-account-instance
 
 | Var Name | Inferred type |
 |---|---|
@@ -277,7 +275,7 @@
 | RieBroker_QUEUE | string |
 | RieBroker_URLS | json |
 
-### csmr-tracks
+### csmr-tracks-instance
 
 | Var Name | Inferred type |
 |---|---|

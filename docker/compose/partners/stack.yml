@@ -1,0 +1,13 @@
+version: "2.4"
+
+services:
+  partners:
+    image: alpine
+    depends_on:
+      - "partners-front"
+
+  bdd-partners:
+    image: alpine
+    depends_on:
+      # -- PARTNERS
+      - "partners"

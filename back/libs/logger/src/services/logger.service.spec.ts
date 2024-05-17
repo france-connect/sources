@@ -1,4 +1,4 @@
-import pino, { Logger, MultiStreamRes } from 'pino';
+import pino, { Logger } from 'pino';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -52,8 +52,6 @@ describe('LoggerService', () => {
   });
 
   describe('configure', () => {
-    const buildStreamsResult = Symbol('buildStreamsResult');
-
     /**
      * 🚨 Due to the use of a constructor, we need to clear counter to properly test the function.
      * Please exerts utmost caution while updating. 🚨
@@ -61,10 +59,7 @@ describe('LoggerService', () => {
     beforeEach(() => {
       jest.clearAllMocks();
 
-      service['buildStreams'] = jest.fn().mockReturnValue(buildStreamsResult);
-      service['overloadConsole'] = jest
-        .fn()
-        .mockReturnValue(buildStreamsResult);
+      service['overloadConsole'] = jest.fn();
     });
 
     it('should retrieve the logger config', () => {
@@ -76,16 +71,7 @@ describe('LoggerService', () => {
       expect(configServiceMock.get).toHaveBeenCalledWith('Logger');
     });
 
-    it('should build the streams that logs should be sent to', () => {
-      // When
-      service['configure']();
-
-      // Then
-      expect(service['buildStreams']).toHaveBeenCalledTimes(1);
-      expect(service['buildStreams']).toHaveBeenCalledWith();
-    });
-
-    it('should instantiate pino with the configuration, custom levels and the built streams', () => {
+    it('should instantiate pino with the configuration, custom levels', () => {
       // Given
       const expectedOptions = {
         level: configMock.threshold,
@@ -98,10 +84,7 @@ describe('LoggerService', () => {
 
       // Then
       expect(jest.mocked(pino)).toHaveBeenCalledTimes(1);
-      expect(jest.mocked(pino)).toHaveBeenCalledWith(
-        expectedOptions,
-        buildStreamsResult,
-      );
+      expect(jest.mocked(pino)).toHaveBeenCalledWith(expectedOptions);
     });
 
     it('should overload the console', () => {
@@ -538,154 +521,6 @@ describe('LoggerService', () => {
 
       // Then
       expect(requestContext).toStrictEqual(expectedRequestContextWithHeader);
-    });
-  });
-
-  describe('buildTransportFdTargets', () => {
-    it('should build the transport targets for each level to the given destination', () => {
-      // Given
-      const levels = [LogLevels.DEBUG, LogLevels.INFO];
-      const mockDestination = {
-        fd: process.stdout,
-      } as unknown as NodeJS.WriteStream & { fd: number };
-      const expectedTransportTargets = [
-        {
-          target: 'pino/file',
-          level: levels[0],
-          options: {
-            destination: mockDestination.fd,
-          },
-        },
-        {
-          target: 'pino/file',
-          level: levels[1],
-          options: {
-            destination: mockDestination.fd,
-          },
-        },
-      ];
-
-      // When
-      const transportTargets = service['buildTransportFdTargets'](
-        levels,
-        mockDestination,
-      );
-
-      // Then
-      expect(transportTargets).toStrictEqual(expectedTransportTargets);
-    });
-  });
-
-  describe('buildStreams', () => {
-    beforeEach(() => {
-      jest.clearAllMocks();
-
-      service['buildTransportFdTargets'] = jest
-        .fn()
-        .mockReturnValueOnce(['stdoutLevels'])
-        .mockReturnValueOnce(['stderrLevels']);
-    });
-
-    it('should retrieve the logger config', () => {
-      // When
-      service['buildStreams']();
-
-      // Then
-      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(configServiceMock.get).toHaveBeenCalledWith('Logger');
-    });
-
-    it('should build the transport targets for stdout levels', () => {
-      // When
-      service['buildStreams']();
-
-      // Then
-      expect(service['buildTransportFdTargets']).toHaveBeenCalledTimes(2);
-      expect(service['buildTransportFdTargets']).toHaveBeenNthCalledWith(
-        1,
-        configMock.stdoutLevels,
-        process.stdout,
-      );
-    });
-
-    it('should build the transport targets for stderr levels', () => {
-      // When
-      service['buildStreams']();
-
-      // Then
-      expect(service['buildTransportFdTargets']).toHaveBeenCalledTimes(2);
-      expect(service['buildTransportFdTargets']).toHaveBeenNthCalledWith(
-        2,
-        configMock.stderrLevels,
-        process.stderr,
-      );
-    });
-
-    it('should build transports with the pino.transport method', () => {
-      // Given
-      const expectedTransport = {
-        targets: ['stdoutLevels', 'stderrLevels'],
-        levels: service['customLevels'],
-        dedupe: true,
-      };
-
-      // When
-      service['buildStreams']();
-
-      // Then
-      expect(pino.transport).toHaveBeenCalledTimes(1);
-      expect(pino.transport).toHaveBeenCalledWith(expectedTransport);
-    });
-
-    it('should build the streams with the transports', () => {
-      // Given
-      const transportsMock = Symbol('transportsMock');
-      jest.mocked(pino.transport).mockReturnValue(transportsMock);
-      const expectedStreams = [
-        {
-          stream: transportsMock,
-          level: LogLevels.DEBUG,
-        },
-      ];
-
-      // When
-      service['buildStreams']();
-
-      // Then
-      expect(pino.multistream).toHaveBeenCalledTimes(1);
-      expect(pino.multistream).toHaveBeenCalledWith(expectedStreams, {
-        levels: service['customLevels'],
-      });
-    });
-
-    it('should return the built streams from pino.multistream', () => {
-      // Given
-      const expectedStreams = Symbol(
-        'expectedStreams',
-      ) as unknown as MultiStreamRes;
-      jest.mocked(pino.multistream).mockReturnValue(expectedStreams);
-
-      // When
-      const streams = service['buildStreams']();
-
-      // Then
-      expect(streams).toStrictEqual(expectedStreams);
-    });
-
-    it('should throw an error if wsMultiplexer is set since it not implemented yet', () => {
-      // Given
-      const configMock = {
-        wsMultiplexer: {
-          url: 'ws://localhost:8080',
-          reconnectTries: 5,
-        },
-      };
-      configServiceMock.get.mockReturnValueOnce(configMock);
-
-      // When/Then
-      expect(() => service['buildStreams']()).toThrowError(
-        'Websocket transport is not implemented yet.',
-      );
     });
   });
 

@@ -24,8 +24,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fsa1-low.env"
-    ports:
-      - 9231:9231
     tty: true
     networks:
       - public
@@ -49,8 +47,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fsa2-low.env"
-    ports:
-      - 9232:9232
     tty: true
     networks:
       - public
@@ -74,8 +70,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fsa3-low.env"
-    ports:
-      - 9233:9233
     tty: true
     networks:
       - public
@@ -99,8 +93,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fsa4-low.env"
-    ports:
-      - 9234:9234
     tty: true
     networks:
       - public
@@ -124,8 +116,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fsa5-low.env"
-    ports:
-      - 9235:9235
     tty: true
     networks:
       - public
@@ -153,8 +143,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fia1-low.env"
-    ports:
-      - 9241:9241
     tty: true
     networks:
       - public
@@ -178,8 +166,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fia2-low.env"
-    ports:
-      - 9242:9242
     tty: true
     networks:
       - public
@@ -203,8 +189,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fia4-low.env"
-    ports:
-      - 9244:9244
     tty: true
     networks:
       - public
@@ -228,8 +212,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fia5-low.env"
-    ports:
-      - 9245:9245
     tty: true
     networks:
       - public
@@ -253,8 +235,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/fia8-low.env"
-    ports:
-      - 9248:9248
     tty: true
     networks:
       - public
@@ -278,8 +258,6 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/fca-low/.env/moncomptepro.env"
-    ports:
-      - 9249:9249
     tty: true
     networks:
       - public

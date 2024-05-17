@@ -9,7 +9,7 @@ import { CoreBaseOidcClientSessionDto } from '@fc/core';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 
-import { IAgentConnectOidcIdentity } from '../interfaces';
+import { IAgentIdentityWithPublicness } from '../interfaces';
 import { AppSession } from './app-session.dto';
 import { CoreSessionDto } from './core-session.dto';
 
@@ -42,8 +42,8 @@ export class GetVerifyOidcClientSessionDto extends CoreBaseOidcClientSessionDto 
   @IsObject()
   @Expose()
   readonly idpIdentity:
-    | PartialExcept<IAgentConnectOidcIdentity, 'sub'>
-    | IAgentConnectOidcIdentity;
+    | PartialExcept<IAgentIdentityWithPublicness, 'sub'>
+    | IAgentIdentityWithPublicness;
 }
 
 export class GetVerifySessionDto {

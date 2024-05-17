@@ -10,6 +10,13 @@ services:
       - "fsa1-low"
       - "fia1-low"
 
+  min-fca-rie:
+    image: alpine
+    depends_on:
+      - "core-fca-rie"
+      - "fsa1-low"
+      - "fia1-low"
+
   bdd-fca-low:
     image: alpine
     depends_on:

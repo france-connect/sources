@@ -49,10 +49,10 @@ function _init_hooks() {
     _init_ud
     ;;
   "fc-core")
-    _fc-common-symlink "fc-core"
+    _fc_common_symlink "fc-core"
     ;;
   "partenaires")
-    _fc-common-symlink "partenaires"
+    _fc_common_symlink "partenaires"
     ;;
   *)
     # Erase line content for containers that don't have an init section

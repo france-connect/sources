@@ -41,13 +41,29 @@ export class ServiceProvider {
   readonly client_secret: string;
 
   @IsArray()
-  @IsUrl({}, { each: true })
+  @IsUrl(
+    {
+      protocols: ['https'],
+      // Validator.js defined property
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      require_protocol: true,
+    },
+    { each: true },
+  )
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly redirect_uris: string[];
 
   @IsArray()
-  @IsUrl({}, { each: true })
+  @IsUrl(
+    {
+      protocols: ['https'],
+      // Validator.js defined property
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      require_protocol: true,
+    },
+    { each: true },
+  )
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly post_logout_redirect_uris: string[];
