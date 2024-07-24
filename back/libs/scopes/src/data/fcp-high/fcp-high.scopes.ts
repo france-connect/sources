@@ -26,19 +26,11 @@ export const scopes: ScopesInterface = {
   birthdate: [claims.birthdate],
   birthcountry: [claims.birthcountry],
   birthplace: [claims.birthplace],
-  // OIDC fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   given_name: [claims.given_name],
-  // OIDC fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   family_name: [claims.family_name],
   email: [claims.email],
-  // OIDC fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   preferred_username: [claims.preferred_username],
   address: [claims.address],
-  // OIDC fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   rnipp_identite_pivot: [
     claims.gender,
     claims.rnipp_gender,
@@ -54,30 +46,16 @@ export const scopes: ScopesInterface = {
     claims.birthcountry,
     claims.rnipp_birthcountry,
   ],
-  // oidc fashioned name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   rnipp_gender: [claims.gender, claims.rnipp_gender],
-  // oidc fashioned name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   rnipp_family_name: [claims.family_name, claims.rnipp_family_name],
-  // oidc fashioned name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   rnipp_given_name: [
     claims.given_name,
     claims.rnipp_given_name,
     claims.rnipp_given_name_array,
   ],
-  // oidc fashioned name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   rnipp_birthdate: [claims.birthdate, claims.rnipp_birthdate],
-  // oidc fashioned name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   rnipp_birthplace: [claims.birthplace, claims.rnipp_birthplace],
-  // oidc fashioned name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   rnipp_birthcountry: [claims.birthcountry, claims.rnipp_birthcountry],
-  // oidc fashioned name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   rnipp_profile: [
     claims.given_name,
     claims.rnipp_given_name,
@@ -90,8 +68,6 @@ export const scopes: ScopesInterface = {
     claims.rnipp_gender,
     claims.preferred_username,
   ],
-  // oidc fashioned name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   rnipp_birth: [
     claims.birthplace,
     claims.rnipp_birthplace,

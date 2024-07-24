@@ -48,7 +48,5 @@ export class EidasIdentityDto extends MinIdentityDto {
   @IsString()
   @IsOptional()
   @Expose()
-  // oidc naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly preferred_username?: string;
 }

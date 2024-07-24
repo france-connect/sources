@@ -33,7 +33,6 @@
   }
 }
 
-
 @media (min-width: 992px) {
   .fc-text-align--left-md-center {
     text-align: center;
@@ -52,12 +51,6 @@
 
 ----------------------------------------------------------------- */
 
-.fc-footer {
-  /* CL-349 : change border coolor hack */
-  box-shadow: inset 0 1px 0 0 var(--border-default-grey),
-    inset 0 -1px 0 0 var(--border-default-grey);
-}
-.fc-footer .fr-container .fr-footer__bottom {
-  /* CL-349 : remove border hack */
-  box-shadow: inherit;
+.fr-footer__bottom-link {
+  white-space: nowrap;
 }

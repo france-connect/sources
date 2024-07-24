@@ -28,22 +28,12 @@ export const scopes: ScopesInterface = {
   birthdate: [claims.birthdate],
   birthcountry: [claims.birthcountry],
   birthplace: [claims.birthplace],
-  // OIDC fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   given_name: [claims.given_name, claims.given_name_array],
-  // OIDC fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   family_name: [claims.family_name],
   email: [claims.email],
-  // OIDC fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   preferred_username: [claims.preferred_username],
   address: [claims.address],
-  // OIDC fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   idp_birthdate: [claims.idp_birthdate],
   amr: [claims.amr],
-  // OIDC fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   idp_id: [claims.idp_id],
 };

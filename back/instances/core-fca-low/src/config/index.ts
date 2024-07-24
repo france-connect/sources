@@ -5,6 +5,7 @@ import { CoreFcaConfig } from '@fc/core-fca';
 
 import App from './app';
 import Core from './core';
+import DataProviderAdapterMongo from './data-provider-adapter-mongo';
 import IdentityProviderAdapterMongo from './identity-provider-adapter-mongo';
 import Logger from './logger';
 import LoggerLegacy from './logger-legacy';
@@ -14,6 +15,7 @@ import OidcClient from './oidc-client';
 import OidcProvider from './oidc-provider';
 import OverrideOidcProvider from './override-oidc-provider';
 import Redis from './redis';
+import Scopes from './scopes';
 import ServiceProviderAdapterMongo from './service-provider-adapter-mongo';
 import Session from './session';
 import Tracking from './tracking';
@@ -33,4 +35,6 @@ export default {
   Session,
   Tracking,
   OverrideOidcProvider,
+  DataProviderAdapterMongo,
+  Scopes,
 } as CoreFcaConfig;

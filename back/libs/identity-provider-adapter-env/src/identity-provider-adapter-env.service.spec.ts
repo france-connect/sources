@@ -26,46 +26,20 @@ describe('IdentityProviderAdapterEnvService', () => {
       'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/.well-known/openid-configuration',
     clientSecretEncryptKey: 'clientSecretEncryptKey',
     client: {
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_id: 'client_id',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret: '7vhnwzo1yUVOJT9GJ91gD5oid56effu1',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_signed_response_alg: 'ES256',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       response_types: ['code'],
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       token_endpoint_auth_method: 'client_secret_post',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       revocation_endpoint_auth_method: 'client_secret_post',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_encrypted_response_alg: 'RSA-OAEP',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_encrypted_response_enc: 'A256GCM',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_encrypted_response_alg: 'RSA-OAEP',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_encrypted_response_enc: 'A256GCM',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_signed_response_alg: 'ES256',
     },
     issuer: {
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       jwks_uri: 'https://fsp1-high.docker.dev-franceconnect.fr/jwks_uri',
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       end_session_endpoint: 'https://end-session-endpoint.mock',
     },
   };
@@ -84,46 +58,20 @@ describe('IdentityProviderAdapterEnvService', () => {
     discoveryUrl:
       'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/.well-known/openid-configuration',
     client: {
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_id: 'client_id',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret: 'totoIsDecrypted',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_signed_response_alg: 'ES256',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       response_types: ['code'],
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       token_endpoint_auth_method: 'client_secret_post',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       revocation_endpoint_auth_method: 'client_secret_post',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_encrypted_response_alg: 'RSA-OAEP',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_encrypted_response_enc: 'A256GCM',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_encrypted_response_alg: 'RSA-OAEP',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_encrypted_response_enc: 'A256GCM',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_signed_response_alg: 'ES256',
     },
     issuer: {
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       jwks_uri: 'https://fsp1-high.docker.dev-franceconnect.fr/jwks_uri',
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       end_session_endpoint: 'https://end-session-endpoint.mock',
     },
   };
@@ -134,52 +82,24 @@ describe('IdentityProviderAdapterEnvService', () => {
     name: idpConfiguration.name,
     display: true,
     active: true,
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     discovery: true,
     discoveryUrl:
       'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/.well-known/openid-configuration',
     issuer: {
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       jwks_uri: 'https://fsp1-high.docker.dev-franceconnect.fr/jwks_uri',
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       end_session_endpoint: 'https://end-session-endpoint.mock',
     },
     client: {
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_id: 'client_id',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret: '7vhnwzo1yUVOJT9GJ91gD5oid56effu1',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_signed_response_alg: 'ES256',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       response_types: ['code'],
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       token_endpoint_auth_method: 'client_secret_post',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       revocation_endpoint_auth_method: 'client_secret_post',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_encrypted_response_alg: 'RSA-OAEP',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_encrypted_response_enc: 'A256GCM',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_encrypted_response_alg: 'RSA-OAEP',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_encrypted_response_enc: 'A256GCM',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_signed_response_alg: 'ES256',
     },
   };
@@ -263,8 +183,6 @@ describe('IdentityProviderAdapterEnvService', () => {
         list: [
           {
             ...idpConfiguration,
-            // oidc param name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             active: 'not a boolean',
           },
         ],
@@ -284,7 +202,6 @@ describe('IdentityProviderAdapterEnvService', () => {
         list: [
           {
             ...idpConfiguration,
-            // oidc param name
             // eslint-disable-next-line @typescript-eslint/naming-convention
             not_validated: 'by DTO',
           },
@@ -323,21 +240,13 @@ describe('IdentityProviderAdapterEnvService', () => {
       const listMock = [
         {
           client: {
-            // oidc param name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             client_id: 'foo',
-            // oidc param name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             client_secret: 'totoIsDecrypted',
           },
         },
         {
           client: {
-            // oidc param name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             client_id: 'bar',
-            // oidc param name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             client_secret: 'totoIsDecrypted',
           },
         },
@@ -358,15 +267,11 @@ describe('IdentityProviderAdapterEnvService', () => {
       service['identityProviderCache'] = [
         {
           client: {
-            // oidc param name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             client_id: 'foo',
           },
         } as IdentityProviderMetadata,
         {
           client: {
-            // oidc param name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             client_id: 'bar',
           },
         } as IdentityProviderMetadata,
@@ -377,6 +282,20 @@ describe('IdentityProviderAdapterEnvService', () => {
       // Then
       expect(result).toBe(service['identityProviderCache']);
       expect(service['findAllIdentityProvider']).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('refreshCache', () => {
+    beforeEach(() => {
+      // Given
+      service.getList = jest.fn();
+    });
+    it('should call getList method with true value in param', async () => {
+      // When
+      await service.refreshCache();
+      // Then
+      expect(service.getList).toHaveBeenCalledTimes(1);
+      expect(service.getList).toHaveBeenCalledWith(true);
     });
   });
 

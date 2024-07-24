@@ -1,0 +1,7 @@
+{
+  "name": "@fc/stylelint-config-react-app",
+  "description": "FC React/Front Stylelint base configuration",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js"
+}

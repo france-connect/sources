@@ -5,9 +5,9 @@ exports[`TracksPage should match the snapshot 1`] = `
   <div
     data-mockid="Helmet"
   >
-    <div>
-      React Helmet Async
-    </div>
+    <title>
+      Mon tableau de bord - Historique
+    </title>
   </div>
   <div
     class="fr-m-auto fr-px-2w fr-mt-8w"

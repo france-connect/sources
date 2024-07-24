@@ -9,18 +9,15 @@ import {
   Render,
   Req,
   Res,
-  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { CsrfTokenGuard } from '@fc/csrf';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { OidcSession } from '@fc/oidc';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import {
-  CrsfToken,
   OidcClientConfig,
   OidcClientRoutes,
   OidcClientService,
@@ -53,10 +50,9 @@ export class OidcClientController {
    */
   @Post(OidcClientRoutes.REDIRECT_TO_IDP)
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  @UseGuards(CsrfTokenGuard)
   async redirectToIdp(
     @Res() res,
-    @Body() body: CrsfToken,
+    @Body() _body,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
@@ -65,8 +61,6 @@ export class OidcClientController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
-    // acr_values is an oidc defined variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { defaultAcrValue: acr_values } =
       this.config.get<OidcAcrConfig>('OidcAcr');
 
@@ -80,8 +74,6 @@ export class OidcClientController {
     const prompt = [OidcProviderPrompt.LOGIN].join(' ');
 
     const authorizeParams = {
-      // acr_values is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
       nonce,
       scope,

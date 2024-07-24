@@ -5,12 +5,11 @@ import {
   AccountService,
   IIdpSettings,
 } from '@fc/account';
-import { PartialExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
-import { IdentityProviderMetadata } from '@fc/oidc';
+import { IdentityProviderMetadata, PivotIdentityDto } from '@fc/oidc';
 
 import { AppConfig } from '../dto';
 import { CsmrUserPreferencesIdpNotFoundException } from '../exceptions';
@@ -97,7 +96,7 @@ export class CsmrUserPreferencesService {
   }
 
   async getIdpSettings(
-    identity: IPivotIdentity | PartialExcept<IPivotIdentity, 'sub'>,
+    identity: PivotIdentityDto,
   ): Promise<IFormattedIdpSettings> {
     this.logger.debug(`Identity received : ${identity}`);
 
@@ -121,7 +120,7 @@ export class CsmrUserPreferencesService {
   }
 
   async setIdpSettings(
-    identity: IPivotIdentity,
+    identity: PivotIdentityDto,
     inputIdpList: string[],
     inputIsExcludeList: boolean,
   ): Promise<ISetIdpSettingsPayload> {

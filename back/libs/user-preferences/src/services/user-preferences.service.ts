@@ -6,7 +6,7 @@ import { ClientProxy } from '@nestjs/microservices';
 
 import { ConfigService } from '@fc/config';
 import { UserPreferencesProtocol } from '@fc/microservices';
-import { IOidcIdentity } from '@fc/oidc';
+import { PivotIdentityDto } from '@fc/oidc';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
 import { FormattedIdpSettingDto, IdpSettingsDto } from '../dto';
@@ -25,7 +25,7 @@ export class UserPreferencesService {
   ) {}
 
   async getUserPreferencesList(
-    identity: Partial<IOidcIdentity>,
+    identity: PivotIdentityDto,
   ): Promise<FormattedIdpSettingDto> {
     let data;
     const { requestTimeout } = this.config.get<RabbitmqConfig>(
@@ -51,7 +51,7 @@ export class UserPreferencesService {
   }
 
   async setUserPreferencesList(
-    identity: Partial<IOidcIdentity>,
+    identity: PivotIdentityDto,
     idpSettings: IdpSettingsDto,
   ): Promise<FormattedIdpSettingDto> {
     let data;

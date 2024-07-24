@@ -2,15 +2,13 @@ import pino, { Logger } from 'pino';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { AsyncLocalStorageService } from '@fc/async-local-storage';
 import { ConfigService } from '@fc/config';
-import { SESSION_STORE_KEY } from '@fc/session/tokens';
 
-import { getAsyncLocalStorageMock } from '@mocks/async-local-storage';
 import { getConfigMock } from '@mocks/config';
 import { getLoggerMock } from '@mocks/logger';
 
 import { LogLevels } from '../enums';
+import { PLUGIN_SERVICES } from '../tokens';
 import { LoggerService } from './logger.service';
 
 jest.mock('pino');
@@ -25,7 +23,16 @@ describe('LoggerService', () => {
   };
   const configServiceMock = getConfigMock();
   const loggerMock = getLoggerMock();
-  const asyncLocalStorageMock = getAsyncLocalStorageMock();
+
+  const pluginMock1 = {
+    getContext: jest.fn(),
+  };
+
+  const pluginMock2 = {
+    getContext: jest.fn(),
+  };
+
+  const pluginsMocks = [pluginMock1, pluginMock2];
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -36,12 +43,17 @@ describe('LoggerService', () => {
     jest.mocked(pino).mockReturnValue(loggerMock as unknown as Logger<string>);
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [LoggerService, ConfigService, AsyncLocalStorageService],
+      providers: [
+        LoggerService,
+        ConfigService,
+        {
+          provide: PLUGIN_SERVICES,
+          useValue: pluginsMocks,
+        },
+      ],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(AsyncLocalStorageService)
-      .useValue(asyncLocalStorageMock)
       .compile();
 
     service = module.get<LoggerService>(LoggerService);
@@ -352,13 +364,14 @@ describe('LoggerService', () => {
   });
 
   describe('logWithContext', () => {
-    const requestMock = {
+    const contextMock = {
       foo: 'bar',
     };
 
     beforeEach(() => {
       jest.clearAllMocks();
-      service['getRequestContext'] = jest.fn().mockReturnValue(requestMock);
+
+      service['getContextFromPlugins'] = jest.fn().mockReturnValue(contextMock);
     });
 
     it('should call the pino logger with the correct level and arguments when first argument is the message', () => {
@@ -373,7 +386,7 @@ describe('LoggerService', () => {
       // Then
       expect(loggerMock[level]).toHaveBeenCalledTimes(1);
       expect(loggerMock[level]).toHaveBeenCalledWith(
-        requestMock,
+        contextMock,
         message,
         ...args,
       );
@@ -387,7 +400,7 @@ describe('LoggerService', () => {
       const args = ['arg1', 'arg2'];
       const expectedMessage = {
         ...obj,
-        ...requestMock,
+        ...contextMock,
       };
 
       // When
@@ -415,112 +428,64 @@ describe('LoggerService', () => {
       // Then
       expect(loggerMock[level]).toHaveBeenCalledTimes(1);
       expect(loggerMock[level]).toHaveBeenCalledWith(
-        requestMock,
+        contextMock,
         message,
         ...args,
       );
     });
-  });
 
-  describe('getRequestContext', () => {
-    const requestMock = {
-      method: 'GET',
-      baseUrl: '/base-url',
-      path: '/path',
-      headers: {},
-    };
-
-    const sessionDataMock = {
-      id: 'test-session-id',
-    };
-
-    const expectedRequestContext = {
-      method: requestMock.method,
-      sessionId: sessionDataMock.id,
-      path: `${requestMock.baseUrl}${requestMock.path}`,
-    };
-
-    it('should retrieve the request context from the async local storage', () => {
+    it('should call getContextFromPlugins with the call stack', () => {
       // When
-      service['getRequestContext']();
+      service['logWithContext'](LogLevels.DEBUG, 'test message');
 
       // Then
-      expect(asyncLocalStorageMock.get).toHaveBeenCalledTimes(2);
-      expect(asyncLocalStorageMock.get).toHaveBeenNthCalledWith(1, 'request');
-      expect(asyncLocalStorageMock.get).toHaveBeenNthCalledWith(
-        2,
-        SESSION_STORE_KEY,
+      expect(
+        service['getContextFromPlugins'],
+      ).toHaveBeenCalledExactlyOnceWith();
+    });
+
+    it('should call getContextFromPlugins without the call stack', () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({ threshold: LogLevels.INFO });
+
+      // When
+      service['logWithContext'](LogLevels.DEBUG, 'test message');
+
+      // Then
+      expect(service['getContextFromPlugins']).toHaveBeenCalledExactlyOnceWith(
+        undefined,
       );
     });
+  });
 
-    it('should return the request context if found', () => {
-      // Given
-      asyncLocalStorageMock.get
-        .mockReturnValueOnce(requestMock)
-        .mockReturnValueOnce(sessionDataMock);
-
+  describe('getContextFromPlugins', () => {
+    it('should call the getContext method of each plugin service', () => {
       // When
-      const requestContext = service['getRequestContext']();
+      service['getContextFromPlugins']();
 
       // Then
-      expect(requestContext).toStrictEqual(expectedRequestContext);
+      expect(pluginMock1.getContext).toHaveBeenCalledExactlyOnceWith();
+      expect(pluginMock2.getContext).toHaveBeenCalledExactlyOnceWith();
     });
 
-    it('should return undefined if no request context is found', () => {
+    it('should return the context from the plugins', () => {
       // Given
-      asyncLocalStorageMock.get.mockReturnValueOnce(undefined);
+      const plugin1Context = {
+        foo: 'bar',
+      };
+      const plugin2Context = {
+        bar: 'foo',
+      };
+      pluginMock1.getContext.mockReturnValueOnce(plugin1Context);
+      pluginMock2.getContext.mockReturnValueOnce(plugin2Context);
 
       // When
-      const requestContext = service['getRequestContext']();
-
+      const result = service['getContextFromPlugins']();
       // Then
-      expect(requestContext).toBeUndefined();
-    });
-
-    it('should return the request context with the x-request-id if present', () => {
-      // Given
-      const headersMock = {
-        'x-request-id': 'test-x-request-id',
-      };
-      const expectedRequestContextWithHeader = {
-        ...expectedRequestContext,
-        requestId: headersMock['x-request-id'],
-      };
-      asyncLocalStorageMock.get
-        .mockReturnValueOnce({
-          ...requestMock,
-          headers: headersMock,
-        })
-        .mockReturnValueOnce(sessionDataMock);
-
-      // When
-      const requestContext = service['getRequestContext']();
-
-      // Then
-      expect(requestContext).toStrictEqual(expectedRequestContextWithHeader);
-    });
-
-    it('should return the request context with the isSuspicious if present', () => {
-      // Given
-      const headersMock = {
-        'x-suspicious': '1',
-      };
-      const expectedRequestContextWithHeader = {
-        ...expectedRequestContext,
-        isSuspicious: true,
-      };
-      asyncLocalStorageMock.get
-        .mockReturnValueOnce({
-          ...requestMock,
-          headers: headersMock,
-        })
-        .mockReturnValueOnce(sessionDataMock);
-
-      // When
-      const requestContext = service['getRequestContext']();
-
-      // Then
-      expect(requestContext).toStrictEqual(expectedRequestContextWithHeader);
+      expect(result).toEqual({
+        ...plugin1Context,
+        ...plugin2Context,
+      });
     });
   });
 

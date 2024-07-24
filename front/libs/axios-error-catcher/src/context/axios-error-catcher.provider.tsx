@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios';
 import axios from 'axios';
-import type { ReactElement } from 'react';
+import type { PropsWithChildren } from 'react';
 import { useContext, useEffect, useState } from 'react';
 
 import { AccountContext } from '@fc/account';
@@ -9,9 +9,7 @@ import { HttpStatusCode } from '@fc/common';
 import type { AxiosErrorCatcher } from '../inferfaces';
 import { AxiosErrorCatcherContext } from './axios-error-catcher.context';
 
-export interface AxiosErrorCatcherProviderProps {
-  children: ReactElement | ReactElement[];
-}
+interface AxiosErrorCatcherProviderProps extends Required<PropsWithChildren> {}
 
 export const AxiosErrorCatcherProvider = ({ children }: AxiosErrorCatcherProviderProps) => {
   const { connected } = useContext(AccountContext);

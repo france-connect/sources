@@ -12,6 +12,7 @@ db.provider.update(
     imageFocus: "fi-mock-eleve.svg",
     alt: "idp test",
     eidas: 3,
+    allowedAcr: ["eidas3"],
     mailto: "",
     featureHandlers: { coreVerify: "core-fca-default-verify" },
     specificText: "specific text FI 3",
@@ -39,13 +40,4 @@ db.provider.update(
     userinfo_encrypted_response_enc: "A256GCM",
   },
   { upsert: true },
-);
-
-db.ministries.update(
-  { id: "mock-ministere-de-la-transition-ecologique-all-fis-sort-2" },
-  {
-    $push: {
-      identityProviders: "ebe0026f-d6e3-4807-bfa2-c65c8ae46d07",
-    },
-  },
 );

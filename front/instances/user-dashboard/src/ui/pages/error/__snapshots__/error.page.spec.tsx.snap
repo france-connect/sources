@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ErrorPage should match the snapshot 1`] = `
+exports[`ErrorPage should match the snapshot when greater than or equal to desktop 1`] = `
 <div>
   <div
     data-mockid="Helmet"
   >
-    <div>
-      React Helmet Async
-    </div>
+    <title>
+      Mon tableau de bord - Erreur
+    </title>
   </div>
   <div
     class="large-container fr-m-auto fr-px-2w fr-mt-8w"
@@ -27,14 +27,14 @@ exports[`ErrorPage should match the snapshot 1`] = `
 </div>
 `;
 
-exports[`ErrorPage should match the snapshot, in a mobile viewport 1`] = `
+exports[`ErrorPage should match the snapshot when lower than desktop 1`] = `
 <div>
   <div
     data-mockid="Helmet"
   >
-    <div>
-      React Helmet Async
-    </div>
+    <title>
+      Mon tableau de bord - Erreur
+    </title>
   </div>
   <div
     class="large-container fr-m-auto fr-px-2w fr-mt-5w"

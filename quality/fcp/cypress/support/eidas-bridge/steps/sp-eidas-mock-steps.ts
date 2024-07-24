@@ -1,25 +1,19 @@
 import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { navigateTo } from '../../common/helpers';
-import {
-  Environment,
-  ScopeContext,
-  ServiceProvider,
-  UserData,
-} from '../../common/types';
 import { getScopeByType } from '../../usager/helpers';
 import SpEidasMockPage from '../pages/sp-eidas-mock-page';
 
 const spEidasMockPage = new SpEidasMockPage();
 
 When('je navigue sur la page fournisseur de service eidas', function () {
-  const { allAppsUrl }: Environment = this.env;
-  const { name: spName }: ServiceProvider = this.serviceProvider;
+  const { allAppsUrl } = this.env;
+  const { name: spName } = this.serviceProvider;
   navigateTo({ appId: spName, baseUrl: allAppsUrl });
 });
 
 When('je configure un fournisseur de service sur eidas mock', function () {
-  const { scopes }: ScopeContext = this.requestedScope;
+  const { scopes } = this.requestedScope;
   spEidasMockPage.configureEidasSpMock({ scopes });
 });
 
@@ -34,9 +28,9 @@ Then(
 Then(
   'le fournisseur de service eidas mock a accès aux informations des scopes {string}',
   function (scopeType: string) {
-    const { name: spName }: ServiceProvider = this.serviceProvider;
-    const { claims, eidasClaims }: UserData = this.user;
-    const { scopes }: ScopeContext = getScopeByType(this.scopes, scopeType);
+    const { name: spName } = this.serviceProvider;
+    const { claims, eidasClaims } = this.user;
+    const { scopes } = getScopeByType(this.scopes, scopeType);
 
     spEidasMockPage.checkClaims(scopes, claims, eidasClaims, spName);
   },

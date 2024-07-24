@@ -62,25 +62,17 @@ function getBirthplace(
 function getGivenNames(
   attributes: EidasResponseAttributes,
 ): Partial<IOidcIdentity> {
-  // oidc param
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const given_name = attributes[EidasAttributes.CURRENT_GIVEN_NAME]?.join(' ');
 
-  // oidc param
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   return { given_name };
 }
 
 function getFamilyName(
   attributes: EidasResponseAttributes,
 ): Partial<IOidcIdentity> {
-  // oidc param
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const family_name =
     attributes[EidasAttributes.CURRENT_FAMILY_NAME]?.join(' ');
 
-  // oidc param
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   return { family_name, preferred_username: family_name };
 }
 

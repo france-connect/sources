@@ -50,8 +50,6 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e:core-fca-low": "cypress run -P instances/core-fca-low",
-    "test:e2e:core-fca-low:open": "cypress open -P instances/core-fca-low",
     "doc:exceptions": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/exceptions/src/cli/export-exceptions",
     "doc:env": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/config/src/cli/export-env",
     "doc": "yarn doc:exceptions && yarn doc:env",
@@ -147,7 +145,8 @@
     "ts-node": "^10.9.1",
     "tsconfig-paths": "4.2.0",
     "typedoc": "^0.25.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "webpack-stats-plugin": "^1.1.3"
   },
   "husky": {
     "hooks": {
@@ -199,7 +198,6 @@
       "^@fc/core-fcp(|/.*)$": "<rootDir>/apps/core-fcp/src$1",
       "^@fc/csmr-hsm(|/.*)$": "<rootDir>/apps/csmr-hsm/src$1",
       "^@fc/csmr-http-proxy(|/.*)$": "<rootDir>/apps/csmr-http-proxy/src$1",
-      "^@fc/ministries(|/.*)$": "<rootDir>/libs/ministries/src/$1",
       "^@fc/mock-service-provider(|/.*)$": "<rootDir>/apps/mock-service-provider/src$1",
       "^@fc/eidas-bridge(|/.*)$": "<rootDir>/apps/eidas-bridge/src$1",
       "^@fc/rnipp(|/.*)$": "<rootDir>/libs/rnipp/src$1",
@@ -226,6 +224,7 @@
       "^@fc/cryptography-gateway-high(|/.*)$": "<rootDir>/libs/cryptography-gateway-high/src$1",
       "^@fc/config(|/.*)$": "<rootDir>/libs/config/src$1",
       "^@mocks/config(|/.*)$": "<rootDir>/libs/config/.mocks$1",
+      "^@fc/exceptions-fcp(|/.*)$": "<rootDir>/libs/exceptions-fcp/src$1",
       "^@fc/exceptions-deprecated(|/.*)$": "<rootDir>/libs/exceptions-deprecated/src$1",
       "^@fc/mongoose(|/.*)$": "<rootDir>/libs/mongoose/src$1",
       "^@fc/redis(|/.*)$": "<rootDir>/libs/redis/src$1",
@@ -281,7 +280,12 @@
       "^@fc/i18n(|/.*)$": "<rootDir>/libs/i18n/src/$1",
       "^@mocks/i18n(|/.*)$": "<rootDir>/libs/i18n/.mocks$1",
       "^@fc/account-fca(|/.*)$": "<rootDir>/libs/account-fca/src/$1",
-      "^@fc/partners(|/.*)$": "<rootDir>/apps/partners/src/$1"
+      "^@fc/partners(|/.*)$": "<rootDir>/apps/partners/src/$1",
+      "^@fc/device(|/.*)$": "<rootDir>/libs/device/src/$1",
+      "^@fc/dto2form(|/.*)$": "<rootDir>/libs/dto2form/src/$1",
+      "^@mocks/dto2form(|/.*)$": "<rootDir>/libs/dto2form/.mocks/$1",
+      "^@fc/logger-plugins(|/.*)$": "<rootDir>/libs/logger-plugins/src/$1",
+      "^@mocks/common(|/.*)$": "<rootDir>/libs/common/.mocks/$1"
     },
     "preset": "ts-jest"
   }

@@ -1,37 +1,30 @@
-import type { ReactNode } from 'react';
-import { useContext } from 'react';
+import type { PropsWithChildren } from 'react';
+import React from 'react';
 
-import type { AppContextInterface } from '@fc/state-management';
-import { AppContext } from '@fc/state-management';
+import { ConfigService } from '@fc/config';
 
-export type RedirectToIdpFormProps = {
-  children: ReactNode;
+import { Options } from '../enums';
+import type { OidcClientConfig } from '../interfaces';
+
+interface RedirectToIdpFormProps extends Required<PropsWithChildren> {
   csrf?: string;
   id: string;
   uid?: string;
-};
+}
 
-export const RedirectToIdpFormComponent = ({ children, csrf, id, uid }: RedirectToIdpFormProps) => {
-  const {
-    state: {
-      config: { OidcClient },
-    },
-  } = useContext<AppContextInterface>(AppContext);
+export const RedirectToIdpFormComponent = React.memo(
+  ({ children, csrf, id, uid }: RedirectToIdpFormProps) => {
+    const config = ConfigService.get<OidcClientConfig>(Options.CONFIG_NAME);
+    const { redirectToIdp } = config.endpoints;
 
-  const { redirectToIdp } = OidcClient.endpoints;
-
-  return (
-    <form action={redirectToIdp} aria-label="form" data-testid="csrf-form" id={id} method="post">
-      {uid && <input data-testid="uid-input" name="providerUid" type="hidden" value={uid} />}
-      {csrf && <input data-testid="csrf-input" name="csrfToken" type="hidden" value={csrf} />}
-      {children}
-    </form>
-  );
-};
-
-RedirectToIdpFormComponent.defaultProps = {
-  csrf: undefined,
-  uid: undefined,
-};
+    return (
+      <form action={redirectToIdp} aria-label="form" data-testid="csrf-form" id={id} method="post">
+        {uid && <input data-testid="uid-input" name="providerUid" type="hidden" value={uid} />}
+        {csrf && <input data-testid="csrf-input" name="csrfToken" type="hidden" value={csrf} />}
+        {children}
+      </form>
+    );
+  },
+);
 
 RedirectToIdpFormComponent.displayName = 'RedirectToIdpFormComponent';

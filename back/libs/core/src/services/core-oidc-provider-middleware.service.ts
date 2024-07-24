@@ -4,9 +4,14 @@ import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger';
-import { atHashFromAccessToken, IOidcClaims, OidcSession } from '@fc/oidc';
+import {
+  atHashFromAccessToken,
+  IOidcClaims,
+  OidcSession,
+  stringToArray,
+} from '@fc/oidc';
 import { OidcAcrConfig, OidcAcrService } from '@fc/oidc-acr';
-import { OidcClientRoutes } from '@fc/oidc-client';
+import { AuthorizationParameters, OidcClientRoutes } from '@fc/oidc-client';
 import {
   OidcCtx,
   OidcProviderConfig,
@@ -53,6 +58,14 @@ export class CoreOidcProviderMiddlewareService {
     this.oidcProvider.registerMiddleware(step, pattern, middleware.bind(this));
   }
 
+  protected getAuthorizationParameters({
+    method,
+    req,
+  }: OidcCtx): AuthorizationParameters {
+    const isPostMethod = method === 'POST';
+    return isPostMethod ? req.body : req.query;
+  }
+
   protected beforeAuthorizeMiddleware({ req, res }: OidcCtx): void {
     /**
      * Force cookies to be reset to prevent panva from keeping
@@ -74,10 +87,8 @@ export class CoreOidcProviderMiddlewareService {
 
     const isPostMethod = ctx.method === 'POST';
     const data = isPostMethod ? ctx.req.body : ctx.query;
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { acr_values: dataAcrValues } = data as { acr_values: string };
-    const acrValues = dataAcrValues.split(/\s+/);
+    const { acr_values: dataAcrValues = '' } = data as { acr_values?: string };
+    const acrValues = stringToArray(dataAcrValues);
     data.acr_values = pickAcr(knownAcrValues, acrValues, defaultAcrValue);
 
     this.logger.info(`Overriding "acr_values" with "${data.acr_values}"`);
@@ -94,8 +105,8 @@ export class CoreOidcProviderMiddlewareService {
    * Overriding the parameters in the request allows us to influence
    * `oidc-provider` behavior and disable all 'SSO' or 'auto login' like features.
    *
-   * We make sure that a new call to autorization endpoint will result
-   * in a new interaction, wether or not user agent has a previous session.
+   * We make sure that a new call to authorization endpoint will result
+   * in a new interaction, whether user agent has a previous session.
    *
    * @param ctx
    * @param overrideValue
@@ -160,15 +171,18 @@ export class CoreOidcProviderMiddlewareService {
     spAcr: string;
     spId: string;
     spName: string;
+    spRedirectUri: string;
     isSso: boolean;
     stepRoute: string;
   }> {
     const { interactionId } = eventContext.fc;
     const { isSso } = ctx;
 
-    // oidc defined variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { acr_values: spAcr, client_id: spId } = ctx.oidc.params;
+    const {
+      acr_values: spAcr,
+      client_id: spId,
+      redirect_uri: spRedirectUri,
+    } = ctx.oidc.params;
 
     /**
      * We  have to cast properties of `ctx.oidc.params` to `string`
@@ -180,6 +194,7 @@ export class CoreOidcProviderMiddlewareService {
       interactionId,
       spAcr: spAcr as string,
       spId: spId as string,
+      spRedirectUri: spRedirectUri as string,
       spName,
       isSso,
       /**
@@ -269,8 +284,6 @@ export class CoreOidcProviderMiddlewareService {
     const { req, res } = ctx;
     const idpHint = req.query.idp_hint as string;
     const { allowedIdpHints } = this.config.get<CoreConfig>('Core');
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const acr_values = ctx.oidc.params.acr_values as string;
 
     if (this.shouldAbortIdpHint(ctx)) {
@@ -285,8 +298,6 @@ export class CoreOidcProviderMiddlewareService {
     this.flowSteps.setStep(OidcClientRoutes.REDIRECT_TO_IDP);
 
     try {
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       await this.core.redirectToIdp(res, idpHint, { acr_values });
       await this.sessionService.commit();
       await this.trackRedirectToIdp(ctx);
@@ -296,7 +307,8 @@ export class CoreOidcProviderMiddlewareService {
   }
 
   protected isSsoAvailable(spAcr: string): boolean {
-    const { allowedSsoAcrs, enableSso } = this.config.get<CoreConfig>('Core');
+    const { enableSso } = this.config.get<CoreConfig>('Core');
+    const { allowedSsoAcrs } = this.config.get<OidcAcrConfig>('OidcAcr');
     const { spIdentity, idpAcr } =
       this.sessionService.get<OidcSession>('OidcClient') || {};
 

@@ -5,7 +5,7 @@ export default class IdpMonCompteProPage {
     cy.get(".fr-password input[name='password']").clearThenType(password, {
       log: false,
     });
-    cy.get('button').first().click();
+    cy.get("button[type='submit']").first().click();
   }
 
   selectPublicOrganization(): void {

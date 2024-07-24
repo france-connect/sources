@@ -79,7 +79,7 @@ export class ScopesHelper {
       Providers.FCP_LOW,
     ];
 
-    const result = identityProviders.includes(claim.provider.key as Providers);
+    const result = identityProviders.includes(claim.provider.slug as Providers);
 
     return result;
   }
@@ -105,10 +105,10 @@ export class ScopesHelper {
     groups: Record<string, RichClaimInterface[]>,
     claim: RichClaimInterface,
   ): void {
-    if (!groups[claim.provider.key]) {
-      groups[claim.provider.key] = [];
+    if (!groups[claim.provider.slug]) {
+      groups[claim.provider.slug] = [];
     }
 
-    groups[claim.provider.key].push(claim);
+    groups[claim.provider.slug].push(claim);
   }
 }

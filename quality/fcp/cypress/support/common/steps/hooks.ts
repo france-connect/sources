@@ -1,4 +1,5 @@
-import { After, Before } from '@badeball/cypress-cucumber-preprocessor';
+import { After, Before, Given } from '@badeball/cypress-cucumber-preprocessor';
+import { Context } from 'mocha';
 
 import {
   addFCBasicAuthorization,
@@ -24,12 +25,14 @@ const setFixtureContext = (
   );
 };
 
-Before(function () {
-  // Load environment config and test data
-  const platform: string = Cypress.env('PLATFORM');
-  const testEnv: string = Cypress.env('TEST_ENV');
+const setupTestFramework = (
+  platform: string,
+  testEnv: string,
+  ctx: Context,
+): void => {
   const pathArray = [platform, testEnv];
   setFixtureContext('environment.json', pathArray, 'env');
+  setFixtureContext('api-common.json', pathArray, 'apiRequests');
   setFixtureContext('service-providers.json', pathArray, 'serviceProviders');
   setFixtureContext('service-provider-configs.json', pathArray, 'spConfigs');
   setFixtureContext('identity-providers.json', pathArray, 'identityProviders');
@@ -39,13 +42,13 @@ Before(function () {
 
   // Define default data
   cy.get<ServiceProvider[]>('@serviceProviders').then((serviceProviders) => {
-    this.serviceProvider = getDefaultServiceProvider(serviceProviders);
+    ctx.serviceProvider = getDefaultServiceProvider(serviceProviders);
   });
   cy.get<IdentityProvider[]>('@identityProviders').then((identityProviders) => {
-    this.identityProvider = getDefaultIdentityProvider(identityProviders);
+    ctx.identityProvider = getDefaultIdentityProvider(identityProviders);
   });
   cy.get<UserData[]>('@users').then((users) => {
-    this.user = getDefaultUser(users);
+    ctx.user = getDefaultUser(users);
   });
 
   // Setup interceptions to add basic authorization header on FC requests
@@ -68,7 +71,28 @@ Before(function () {
     };
     disableSameSiteLax(crossDomains);
   }
+};
+
+Before(function () {
+  // Load environment config and test data
+  const platform: string = Cypress.env('PLATFORM');
+  const testEnv: string = Cypress.env('TEST_ENV');
+  setupTestFramework(platform, testEnv, this);
 });
+
+Given(
+  /^j'utilise la plateforme "(FranceConnect\(v2\)|FranceConnect\(CL\)|FranceConnect\+)"$/,
+  function (plateformName: string) {
+    const platformMapping = {
+      'FranceConnect(CL)': 'fcp-legacy',
+      'FranceConnect(v2)': 'fcp-low',
+      'FranceConnect+': 'fcp-high',
+    };
+    const platform = platformMapping[plateformName];
+    const testEnv: string = Cypress.env('TEST_ENV');
+    setupTestFramework(platform, testEnv, this);
+  },
+);
 
 /**
  * @todo Need refactor to handle increasing number of context variables

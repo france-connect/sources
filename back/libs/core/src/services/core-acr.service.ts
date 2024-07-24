@@ -5,9 +5,9 @@ import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcProviderService } from '@fc/oidc-provider';
 
 import {
-  CoreHighAcrException,
   CoreInvalidAcrException,
   CoreLowAcrException,
+  CoreNotAllowedAcrException,
 } from '../exceptions';
 
 @Injectable()
@@ -40,8 +40,6 @@ export class CoreAcrService {
 
     await this.oidcProvider.abortInteraction(req, res, {
       error,
-      // oidc naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       error_description: errorDescription,
     });
 
@@ -52,7 +50,7 @@ export class CoreAcrService {
   checkIfAcrIsValid(
     received: string,
     requested: string,
-    maxAuthorizedAcr: string,
+    idpConfiguredAcr: string[],
   ): void {
     /**
      * @todo #494
@@ -72,11 +70,11 @@ export class CoreAcrService {
       throw new CoreLowAcrException();
     }
 
-    if (!this.oidcAcr.isAcrValid(maxAuthorizedAcr, received)) {
+    if (!idpConfiguredAcr.includes(received)) {
       this.logger.err(
-        `Received ACR value "${received}" is higher than max authorized "${maxAuthorizedAcr}"`,
+        `Received ACR value "${received}" is not in the list of allowed ACR values "${idpConfiguredAcr.join(',')}"`,
       );
-      throw new CoreHighAcrException();
+      throw new CoreNotAllowedAcrException();
     }
   }
 }

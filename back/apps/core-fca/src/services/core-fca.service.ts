@@ -20,7 +20,6 @@ import { CoreFcaOidcClientSession } from '../dto/core-fca-oidc-client-session.dt
 import {
   CoreFcaAgentIdpBlacklistedException,
   CoreFcaAgentIdpDisabledException,
-  CoreFcaAgentNoIdpException,
 } from '../exceptions';
 import {
   CoreFcaAuthorizationParametersInterface,
@@ -44,11 +43,7 @@ export class CoreFcaService implements CoreFcaServiceInterface {
     res: Response,
     idpId: string,
     {
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       login_hint,
     }: Pick<
       CoreFcaAuthorizationParametersInterface,
@@ -68,15 +63,9 @@ export class CoreFcaService implements CoreFcaServiceInterface {
     const authorizeParams: CoreFcaAuthorizationParametersInterface = {
       state,
       scope,
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
       nonce,
-      // We want the same nomenclature as OpenId Connect
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       sp_id: spId,
-      // login_hint is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       login_hint,
     };
 
@@ -97,8 +86,6 @@ export class CoreFcaService implements CoreFcaServiceInterface {
       idpIdentity: undefined,
       spIdentity: undefined,
       accountId: undefined,
-      // login_hint is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       login_hint: login_hint,
     };
 
@@ -108,14 +95,16 @@ export class CoreFcaService implements CoreFcaServiceInterface {
   }
 
   async getIdpIdForEmail(email: string): Promise<string[]> {
-    const { defaultIpdId } = this.config.get<AppConfig>('App');
+    const { defaultIdpId } = this.config.get<AppConfig>('App');
     // find the proper identity provider by fqdn
     const fqdn = this.getFqdnFromEmail(email);
     const idpsByFqdn = await this.fqdnToIdpAdapterMongo.getIdpsByFqdn(fqdn);
 
     return idpsByFqdn.length > 0
       ? idpsByFqdn.map(({ identityProvider }) => identityProvider)
-      : [defaultIpdId];
+      : defaultIdpId
+        ? [defaultIdpId]
+        : [];
   }
 
   getFqdnFromEmail(email: string): string {
@@ -142,16 +131,6 @@ export class CoreFcaService implements CoreFcaServiceInterface {
       }
       throw error;
     }
-  }
-
-  private getDefaultIdp(idpsByFqdnLength: number): string {
-    const { defaultIpdId } = this.config.get<AppConfig>('App');
-
-    if (idpsByFqdnLength === 0 && !defaultIpdId) {
-      throw new CoreFcaAgentNoIdpException();
-    }
-
-    return defaultIpdId;
   }
 
   async getIdentityProvidersByIds(...idpIds: string[]) {

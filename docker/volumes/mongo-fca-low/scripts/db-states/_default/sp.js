@@ -39,6 +39,7 @@ const fsa = {
       "chorusdt",
       "idp_id",
       "idp_acr",
+      "groups",
     ],
     claims: ["amr"],
     id_token_signed_response_alg: "HS256",

@@ -5,18 +5,26 @@ Fonctionnalité: Connexion Usager - SSO
   # je souhaite bénéficier d'une authentification unique sur AgentConnect
   # afin de naviguer sur différents FS sans avoir à me ré-authentifier
 
-  Scénario: Connexion SSO - deux FS avec accès au même FI
+  Plan du Scénario: Connexion SSO - deux FS avec accès au même FI
     Etant donné que j'utilise un fournisseur de service "avec accès au FI par défaut (premier FS)"
     Et que j'utilise le fournisseur d'identité "par défaut"
     Et que je navigue sur la page fournisseur de service
+    Et que je rentre "<prompt premier FS>" dans le champ prompt
     Et que je me connecte à AgentConnect
     Et que je suis redirigé vers la page fournisseur de service
     Et que je suis connecté au fournisseur de service
     Et que j'utilise un fournisseur de service "avec accès au FI par défaut (deuxième FS)"
     Et que je navigue sur la page fournisseur de service
+    Et que je rentre "<prompt deuxième FS>" dans le champ prompt
     Quand je clique sur le bouton AgentConnect
     Alors je suis redirigé vers la page fournisseur de service
     Et je suis connecté au fournisseur de service
+
+    Exemples:
+      | prompt premier FS        | prompt deuxième FS  |
+      | login                    | disabled            |
+      | login consent            | login               |
+      | disabled                 | login consent       |
 
   @ignoreInteg01
   Scénario: Connexion SSO - deuxième FS sans accès au FI

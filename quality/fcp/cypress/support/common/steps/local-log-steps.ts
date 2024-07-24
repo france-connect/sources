@@ -6,6 +6,7 @@ import {
   getValueByKeyFromFirstEvent,
   hasBusinessLog,
   LogResult,
+  prepareEventVerification,
 } from '../helpers';
 
 /**
@@ -200,25 +201,3 @@ Then(
     });
   },
 );
-
-const prepareEventVerification = (
-  text: string,
-  delimitor: string,
-  keyMapping: Record<string, string> = {},
-  valueMapping: Record<string, unknown> = {},
-): Record<string, unknown> => {
-  const expectedEvent = {};
-  if (text) {
-    text.split(delimitor).forEach((infoText) => {
-      const result = infoText.match(/^"([^"]+)" "([^"]*)"$/);
-      if (result) {
-        const [, key, value] = result;
-        const technicalKey = keyMapping[key] ?? key;
-        const technicalValue =
-          valueMapping[value] !== undefined ? valueMapping[value] : value;
-        expectedEvent[technicalKey] = technicalValue;
-      }
-    });
-  }
-  return expectedEvent;
-};

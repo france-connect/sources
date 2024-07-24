@@ -1,0 +1,5 @@
+cypress/fixtures.out
+cypress/reports
+cypress/screenshots
+cypress/snapshots/diff
+cypress/videos

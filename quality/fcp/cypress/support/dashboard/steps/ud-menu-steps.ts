@@ -1,12 +1,11 @@
 import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
-import { User } from '../../common/helpers';
 import UdMenuComponent from '../pages/ud-menu-component';
 
 const udMenuComponent = new UdMenuComponent();
 
 Then("le nom de l'usager du tableau de bord usager est affiché", function () {
-  const { fullName } = this.user as User;
+  const { fullName } = this.user;
   udMenuComponent.getUserLabel().should('have.text', fullName);
 });
 

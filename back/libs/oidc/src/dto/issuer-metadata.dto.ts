@@ -6,8 +6,6 @@ import { IsObject, IsString, IsUrl } from 'class-validator';
 
 class MtlsEndpointAliases {
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_endpoint: string;
 
   @IsString()
@@ -31,18 +29,12 @@ export class IssuerMetadata {
   readonly issuer: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly authorization_endpoint: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_endpoint: string;
 
   @IsUrl()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly jwks_uri: string;
 
   @IsString()
@@ -61,8 +53,6 @@ export class IssuerMetadata {
   readonly introspection_endpoint: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly end_session_endpoint: string;
 
   @IsString()

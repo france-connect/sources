@@ -19,7 +19,7 @@ import { ICsmrTracksOutputTrack } from '../interfaces';
 
 export class Provider implements ProviderInterface {
   @IsString()
-  key: string;
+  slug: string;
 
   @IsString()
   label: string;
@@ -53,7 +53,7 @@ export class TrackDto implements ICsmrTracksOutputTrack {
   idpLabel?: string;
 
   @IsString()
-  spAcr: string;
+  interactionAcr: string;
 
   @IsString()
   spLabel: string;

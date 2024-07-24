@@ -13,6 +13,7 @@ export interface InteractionResponseInterface {
   spName: string | null;
   spScope: string;
   errorContext: ErrorContextInterface;
+  showExcludedIdp?: boolean;
 }
 
 interface ErrorContextInterface {

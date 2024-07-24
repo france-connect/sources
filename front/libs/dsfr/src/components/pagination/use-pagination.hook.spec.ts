@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
-import { useMediaQuery } from 'react-responsive';
 
 import { useScrollTo } from '@fc/common';
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import {
   getCurrentPage,
@@ -12,6 +12,7 @@ import {
 } from './pagination.utils';
 import { usePagination } from './use-pagination.hook';
 
+jest.mock('@fc/styles');
 jest.mock('./pagination.utils.ts');
 
 describe('usePagination', () => {
@@ -20,7 +21,11 @@ describe('usePagination', () => {
 
   beforeEach(() => {
     // given
-    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+    // @NOTE used to prevent useStylesVariables.useStylesContext to throw
+    // useStylesContext requires to be into a StylesProvider context
+    jest.mocked(useStylesVariables).mockReturnValueOnce([expect.any(Number), expect.any(Number)]);
+
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
     jest.mocked(getDisplayParameters).mockReturnValueOnce({
       showFirstEllipsis: true,
       showFirstPage: true,
@@ -35,6 +40,7 @@ describe('usePagination', () => {
       scrollToTop: scrollToTopMock,
     });
   });
+
   it('should return a function', () => {
     const { result } = renderHook(() => usePagination);
     expect(result.current).toBeInstanceOf(Function);
@@ -153,7 +159,7 @@ describe('usePagination', () => {
 
     it('should call getMobileNavigationNumbers', () => {
       // given
-      jest.mocked(useMediaQuery).mockReset().mockReturnValueOnce(false);
+      jest.mocked(useStylesQuery).mockReset().mockReturnValueOnce(false);
 
       // when
       renderHook(() =>

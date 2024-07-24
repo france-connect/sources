@@ -3,7 +3,7 @@ import { v4 as uuid } from 'uuid';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { IPaginationResult } from '@fc/common';
+import { getTransformed, IPaginationResult } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CsrfTokenGuard } from '@fc/csrf';
 import { I18nService } from '@fc/i18n';
@@ -29,9 +29,15 @@ import { UserDashboardService } from '../services';
 import { UserDashboardController } from './user-dashboard.controller';
 
 jest.mock('uuid');
+jest.mock('@fc/common', () => ({
+  ...jest.requireActual('@fc/common'),
+  getTransformed: jest.fn(),
+}));
 
 describe('UserDashboardController', () => {
   let controller: UserDashboardController;
+
+  const getTransformedMock = jest.mocked(getTransformed);
 
   const oidcClientServiceMock = {
     getTokenFromProvider: jest.fn(),
@@ -54,12 +60,9 @@ describe('UserDashboardController', () => {
   const idpStateMock = 'idpStateMockValue';
   const identityMock = {
     email: 'email@email.fr',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'givenName',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'familyName',
     sub: 'identityMock.sub value',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     idp_id: '8dfc4080-c90d-4234-969b-f6c961de3e90',
   };
 
@@ -148,7 +151,6 @@ describe('UserDashboardController', () => {
     controller = module.get<UserDashboardController>(UserDashboardController);
 
     oidcClientServiceMock.utils.buildAuthorizeParameters.mockReturnValue({
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'acrMock',
       providerUid: 'providerUidMock',
       scope: 'scopeMock',
@@ -198,7 +200,7 @@ describe('UserDashboardController', () => {
     const claimMock = {
       identifier: 'identifierValue',
       label: 'labelValue',
-      provider: { key: 'keyValue', label: 'labelValue' },
+      provider: { slug: 'slugValue', label: 'labelValue' },
     };
 
     const addLabelsToTracksResult: {
@@ -215,7 +217,7 @@ describe('UserDashboardController', () => {
           event: 'eventValue',
           idpLabel: 'idpLabelValue',
           platform: 'platformValue',
-          spAcr: 'eidas1',
+          interactionAcr: 'eidas1',
           spLabel: 'spLabelValue',
           time: 11233335550000,
           trackId: 'trackIdValue',
@@ -458,6 +460,7 @@ describe('UserDashboardController', () => {
     it('should call userPreferences.getUserPreferencesList', async () => {
       // Given
       const { idp_id: _idpId, ...identityWithoutIdpIdMock } = identityMock;
+      getTransformedMock.mockReturnValueOnce(identityWithoutIdpIdMock);
 
       // When
       await controller.getUserPreferences(reqMock, resMock, sessionServiceMock);
@@ -582,6 +585,7 @@ describe('UserDashboardController', () => {
       const { allowFutureIdp, idpList } = updatePreferencesBodyMock;
       const expectedServicedArguments = { allowFutureIdp, idpList };
 
+      getTransformedMock.mockReturnValueOnce(identityWithoutIdpIdMock);
       userPreferencesMock.setUserPreferencesList.mockResolvedValueOnce(
         resolvedUserPreferencesMock,
       );

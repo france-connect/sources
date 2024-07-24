@@ -148,7 +148,7 @@ describe('ScopesHelpers', () => {
     const claimsMock: RichClaimInterface[] = [
       {
         provider: {
-          key: 'b',
+          slug: 'b',
           label: 'b',
         } as unknown as ProviderInterface,
         identifier: 'b',
@@ -156,7 +156,7 @@ describe('ScopesHelpers', () => {
       },
       {
         provider: {
-          key: Providers.FCP_HIGH,
+          slug: Providers.FCP_HIGH,
           label: 'x',
         } as unknown as ProviderInterface,
         identifier: 'x',
@@ -164,7 +164,7 @@ describe('ScopesHelpers', () => {
       },
       {
         provider: {
-          key: 'a',
+          slug: 'a',
           label: 'a',
         } as unknown as ProviderInterface,
         identifier: 'a',
@@ -172,7 +172,7 @@ describe('ScopesHelpers', () => {
       },
       {
         provider: {
-          key: 'a',
+          slug: 'a',
           label: 'a',
         } as unknown as ProviderInterface,
         identifier: 'c',
@@ -180,7 +180,7 @@ describe('ScopesHelpers', () => {
       },
       {
         provider: {
-          key: Providers.FCP_HIGH,
+          slug: Providers.FCP_HIGH,
           label: 'x',
         } as unknown as ProviderInterface,
         identifier: 'z',
@@ -192,7 +192,7 @@ describe('ScopesHelpers', () => {
       [
         {
           provider: {
-            key: Providers.FCP_HIGH,
+            slug: Providers.FCP_HIGH,
             label: 'x',
           } as unknown as ProviderInterface,
           identifier: 'x',
@@ -200,7 +200,7 @@ describe('ScopesHelpers', () => {
         },
         {
           provider: {
-            key: Providers.FCP_HIGH,
+            slug: Providers.FCP_HIGH,
             label: 'x',
           } as unknown as ProviderInterface,
           identifier: 'z',
@@ -210,7 +210,7 @@ describe('ScopesHelpers', () => {
       [
         {
           provider: {
-            key: 'a',
+            slug: 'a',
             label: 'a',
           } as unknown as ProviderInterface,
           identifier: 'a',
@@ -218,7 +218,7 @@ describe('ScopesHelpers', () => {
         },
         {
           provider: {
-            key: 'a',
+            slug: 'a',
             label: 'a',
           } as unknown as ProviderInterface,
           identifier: 'c',
@@ -228,7 +228,7 @@ describe('ScopesHelpers', () => {
       [
         {
           provider: {
-            key: 'b',
+            slug: 'b',
             label: 'b',
           } as unknown as ProviderInterface,
           identifier: 'b',

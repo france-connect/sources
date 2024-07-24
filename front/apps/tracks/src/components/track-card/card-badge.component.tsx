@@ -5,7 +5,8 @@ import {
   RiArrowLeftRightFill as ArrowsIcon,
   RiCheckboxCircleFill as CheckIcon,
 } from 'react-icons/ri';
-import { useMediaQuery } from 'react-responsive';
+
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { CinematicEvents } from '../../enums';
 import type { Badges } from '../../interfaces';
@@ -35,7 +36,9 @@ type TraceCardBadgeProps = {
 };
 
 export const TrackCardBadgeComponent = React.memo(({ fromFcPlus, type }: TraceCardBadgeProps) => {
-  const gtMobile = useMediaQuery({ minWidth: 576 });
+  const [breakpointSm] = useStylesVariables('breakpoint-sm');
+  const gtMobile = useStylesQuery({ minWidth: breakpointSm });
+
   const badge = !type ? null : TYPE_CONFIG[type.toUpperCase()];
   return (
     <div className={classnames('is-absolute', styles.container)}>

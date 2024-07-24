@@ -20,20 +20,14 @@ export class RnippPivotIdentity {
 
   @IsString()
   @MinLength(1)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly family_name: string;
 
   @IsString()
   @MinLength(1)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly given_name: string;
 
   @IsString({ each: true })
   @IsArray()
-  // variable name based on given_name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly given_name_array: string[];
 
   @IsString()

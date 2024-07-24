@@ -1,7 +1,7 @@
 import type { MouseEventHandler } from 'react';
 import React from 'react';
 
-export interface LayoutHeaderMobileBurgerButtonProps {
+interface LayoutHeaderMobileBurgerButtonProps {
   onOpen: MouseEventHandler<HTMLButtonElement>;
   opened: boolean;
 }

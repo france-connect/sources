@@ -81,5 +81,20 @@
       "logoutButton": ".nav-logout"
     },
     "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "ud-home",
+    "descriptions": ["user-dashboard"],
+    "mocked": false,
+    "url": "https://ud.docker.dev-franceconnect.fr",
+    "acrValue": "eidas1",
+    "claims": [],
+    "scopes": [],
+    "explicitConsent": false,
+    "selectors": {
+      "fcButton": "#login-form button",
+      "logoutButton": "[data-testid='logout-button-component']"
+    },
+    "authorizeHttpMethod": "get"
   }
 ]

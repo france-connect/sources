@@ -11,12 +11,13 @@ import {
 } from '@fc/core';
 import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger';
-import { OidcSession } from '@fc/oidc';
+import { OidcSession, stringToArray } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
 import {
   OidcCtx,
   OidcProviderErrorService,
   OidcProviderMiddlewareStep,
+  OidcProviderPrompt,
   OidcProviderRoutes,
   OidcProviderService,
 } from '@fc/oidc-provider';
@@ -77,7 +78,7 @@ export class CoreFcaMiddlewareService extends CoreOidcProviderMiddlewareService 
     this.registerMiddleware(
       OidcProviderMiddlewareStep.BEFORE,
       OidcProviderRoutes.AUTHORIZATION,
-      this.overrideAuthorizePrompt,
+      this.handleSilentAuthenticationMiddleware,
     );
 
     this.registerMiddleware(
@@ -111,6 +112,43 @@ export class CoreFcaMiddlewareService extends CoreOidcProviderMiddlewareService 
     );
   }
 
+  protected async handleSilentAuthenticationMiddleware(
+    ctx: OidcCtx,
+  ): Promise<void> {
+    const { acr_values: acrValues, prompt } =
+      this.getAuthorizationParameters(ctx);
+
+    if (!prompt) {
+      return this.overrideAuthorizePrompt(ctx);
+    }
+
+    const isSilentAuthentication = this.isPromptStrictlyEqualNone(prompt);
+
+    // Persist this flag to adjust redirections during '/verify'
+    this.sessionService.set(
+      'OidcClient',
+      'isSilentAuthentication',
+      isSilentAuthentication,
+    );
+    await this.sessionService.commit();
+
+    if (this.isSsoAvailable(acrValues) && isSilentAuthentication) {
+      // Given the Panva middlewares lack of active session awareness, overriding the prompt value is crucial to prevent
+      // login-required errors. Silent authentication will be treated as a login attempt when an active session exists.
+      this.overrideAuthorizePrompt(ctx);
+    }
+  }
+
+  private isPromptStrictlyEqualNone(prompt: string) {
+    if (!prompt) {
+      return false;
+    }
+    const promptValues = stringToArray(prompt);
+    return (
+      promptValues.length === 1 && promptValues[0] === OidcProviderPrompt.NONE
+    );
+  }
+
   protected async afterAuthorizeMiddleware(ctx: OidcCtx) {
     /**
      * Abort middleware if authorize is in error
@@ -125,7 +163,7 @@ export class CoreFcaMiddlewareService extends CoreOidcProviderMiddlewareService 
     const eventContext = this.getEventContext(ctx);
     await this.renewSession(ctx);
 
-    // We force string casting because if it's undefined SSO will not be enable
+    // We force string casting because if it's undefined SSO will not be enabled
     const spAcr = ctx?.oidc?.params?.acr_values as string;
     ctx.isSso = this.isSsoAvailable(spAcr);
 

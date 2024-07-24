@@ -6,7 +6,6 @@ import {
   IdentityProvider,
   ScopeContext,
   ServiceProvider,
-  UserCredentials,
 } from '../../common/types';
 import { getDefaultScope } from '../helpers';
 import IdentityProviderPage from '../pages/identity-provider-page';
@@ -60,7 +59,7 @@ export class ConnectionWorkflow {
    * @returns the current ConnectionWorkflow instance
    */
   start(): this {
-    const { acrValue, claims }: ServiceProvider = this.serviceProvider;
+    const { acrValue, claims } = this.serviceProvider;
 
     this.serviceProviderPage.startLogin(
       this.fcRootUrl,
@@ -102,9 +101,7 @@ export class ConnectionWorkflow {
     const identityProviderPage = new IdentityProviderPage(
       this.identityProvider,
     );
-    const credentials: UserCredentials = user.getCredentials(
-      this.identityProvider.idpId,
-    );
+    const credentials = user.getCredentials(this.identityProvider.idpId);
     expect(credentials).to.exist;
     identityProviderPage.login(credentials);
     return this;
@@ -140,6 +137,12 @@ export class ConnectionWorkflow {
    */
   checkIsConnected(): this {
     this.serviceProviderPage.checkIsUserConnected();
+    return this;
+  }
+
+  fetchData(): this {
+    this.serviceProviderPage.getDataButton().click();
+    this.serviceProviderPage.getUserInfoButton().click();
     return this;
   }
 
@@ -181,6 +184,25 @@ When("j'ai fait une cinématique FranceConnect", function () {
     .login(this.user)
     .consent()
     .checkIsConnected()
+    .logout();
+});
+
+When("j'ai fait une cinématique FranceConnect avec appel aux FD", function () {
+  expect(this.env).to.exist;
+  expect(this.serviceProvider).to.exist;
+  expect(this.scopes).to.exist;
+  expect(this.identityProvider).to.exist;
+  expect(this.user).to.exist;
+  const scopes = this.requestedScope || getDefaultScope(this.scopes);
+  new ConnectionWorkflow(this.env, this.serviceProvider)
+    .init()
+    .withScope(scopes)
+    .start()
+    .selectIdentityProvider(this.identityProvider)
+    .login(this.user)
+    .consent()
+    .checkIsConnected()
+    .fetchData()
     .logout();
 });
 

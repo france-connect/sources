@@ -84,14 +84,8 @@ describe('OidcClientUtilsService', () => {
     revoke: revokeMock,
     endSessionUrl: endSessionUrlMock,
     metadata: {
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       redirect_uris: ['redirect', 'uris'],
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       response_types: ['response', 'types'],
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       discoveryUrl: 'mock well-known url',
     },
   };
@@ -181,15 +175,12 @@ describe('OidcClientUtilsService', () => {
       const nonce = 'someNonce';
       const scope = 'foo_scope bar_scope';
       const providerId = 'myidp';
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       const acr_values = 'eidas1';
       service['createOidcClient'] = createOidcClientMock;
       // When
       await service.getAuthorizeUrl(providerId, {
         state,
         scope,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
       });
@@ -203,8 +194,6 @@ describe('OidcClientUtilsService', () => {
       const nonce = 'someNonce';
       const scope = 'foo_scope bar_scope';
       const providerId = 'myidp';
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       const acr_values = 'eidas1';
       const prompt = 'login';
       service['createOidcClient'] = createOidcClientMock;
@@ -212,8 +201,6 @@ describe('OidcClientUtilsService', () => {
       await service.getAuthorizeUrl(providerId, {
         state,
         scope,
-        // oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
         prompt,
@@ -223,8 +210,6 @@ describe('OidcClientUtilsService', () => {
         prompt,
         state,
         scope,
-        // oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
         claims: undefined,
@@ -237,8 +222,6 @@ describe('OidcClientUtilsService', () => {
       const nonce = 'someNonce';
       const scope = 'foo_scope bar_scope';
       const providerId = 'myidp';
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       const acr_values = 'eidas1';
       const claims = '{ id_token: { amr: { essential: true } } }';
       const prompt = 'login';
@@ -247,8 +230,6 @@ describe('OidcClientUtilsService', () => {
       await service.getAuthorizeUrl(providerId, {
         state,
         scope,
-        // oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
         claims,
@@ -259,7 +240,6 @@ describe('OidcClientUtilsService', () => {
         prompt,
         state,
         scope,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
         claims,
@@ -272,8 +252,6 @@ describe('OidcClientUtilsService', () => {
       const nonce = 'randomNonceMock';
       const scope = 'foo_scope bar_scope';
       const providerId = 'myidp';
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       const acr_values = 'eidas1';
       service['createOidcClient'] = createOidcClientMock;
 
@@ -281,8 +259,6 @@ describe('OidcClientUtilsService', () => {
       const url = await service.getAuthorizeUrl(providerId, {
         state,
         scope,
-        // oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
       });
@@ -389,8 +365,6 @@ describe('OidcClientUtilsService', () => {
           state: 'callbackParamsState',
         },
         {
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           response_type: 'response,types',
           state: 'callbackParamsState',
           nonce: 'callbackParamsNonce',
@@ -524,12 +498,8 @@ describe('OidcClientUtilsService', () => {
       // Then
       expect(clientMock.endSessionUrl).toHaveBeenCalledTimes(1);
       expect(clientMock.endSessionUrl).toHaveBeenCalledWith({
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         id_token_hint: idTokenMock,
         state: stateMock,
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         post_logout_redirect_uri: postLogoutRedirectUriMock,
       });
     });

@@ -26,7 +26,7 @@ export interface ICsmrTracksOutputTrack {
   event: string;
   idpLabel?: string;
   platform: string;
-  spAcr: string;
+  interactionAcr: string;
   spLabel: string;
   time: number;
   trackId: string;

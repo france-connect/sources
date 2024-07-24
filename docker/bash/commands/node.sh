@@ -58,7 +58,7 @@ _detect_instances() {
   local apps="${@:-no-container}"
   local instances=$(
     for app in ${apps}; do
-      $DOCKER_COMPOSE exec ${NO_TTY} "${app}" env | grep -oP '(?<=NESTJS_INSTANCE=)[^=]+'
+      _get_env "${app}" "NESTJS_INSTANCE"
     done
   )
 

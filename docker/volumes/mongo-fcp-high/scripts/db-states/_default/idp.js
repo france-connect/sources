@@ -24,6 +24,7 @@ const fip = {
     alt: "IDP1 - Identity Provider - eIDAS élevé - discov - crypt",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -69,6 +70,7 @@ const fip = {
     alt: "IDP2 - Identity Provider - eIDAS élevé - nodiscov - nocrypt",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -116,6 +118,7 @@ const fip = {
     alt: "FIP3 - FI désactivé mais visible",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -164,6 +167,7 @@ const fip = {
     alt: "FIP4 - FI désactivé et invisible",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -212,6 +216,7 @@ const fip = {
     alt: "FIP5 - FI activé et invisible",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -260,6 +265,7 @@ const fip = {
     alt: "IDP6 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -309,6 +315,7 @@ const fip = {
     alt: "IDP7 - Identity Provider - eIDAS élevé - blacklisted - discov - nocrypt",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -357,6 +364,7 @@ const fip = {
     alt: "IDP8 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -403,6 +411,7 @@ const fip = {
     alt: "IDP9 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -449,6 +458,7 @@ const fip = {
     alt: "IDP10 - Identity Provider - eIDAS élevé - whitelisted - discov - crypt",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -498,6 +508,7 @@ const fip = {
     alt: "IDP11 - Identity Provider - eIDAS élevé - whitelisted - nodiscov - crypt - modal",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -555,6 +566,7 @@ const fip = {
     alt: "IDP12 - Identity Provider - eIDAS élevé - crypted (ECDH-ES + A256GCM) - signed (ES256)",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -604,6 +616,7 @@ const fip = {
     alt: "impots",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -652,6 +665,7 @@ const fip = {
     alt: "impots",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -691,6 +705,7 @@ const fip = {
     alt: "impots",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -740,6 +755,7 @@ const fip = {
     alt: "impots",
     trustedIdentity: false,
     eidas: 2,
+    allowedAcr: ["eidas2"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -790,6 +806,7 @@ const fip = {
     alt: "impots",
     trustedIdentity: false,
     eidas: 2,
+    allowedAcr: ["eidas2"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -839,6 +856,7 @@ const fip = {
     alt: "impots",
     trustedIdentity: false,
     eidas: 2,
+    allowedAcr: ["eidas2"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -888,6 +906,7 @@ const fip = {
     alt: "impots",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -937,6 +956,7 @@ const fip = {
     alt: "impots",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -986,6 +1006,7 @@ const fip = {
     alt: "impots",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -1032,6 +1053,7 @@ const fip = {
     alt: "IDP21 - Identity Provider - eIDAS élevé - nodiscov - crypt - beta",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
       authenticationEmail: "core-fcp-send-email",
@@ -1106,6 +1128,7 @@ const fip = {
     alt: "impots",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas2", "eidas3"],
     mailto: "",
     specificText: "specific text fip1-high",
     // order set at 99: to avoid to change every time a new FI is added

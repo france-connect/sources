@@ -21,7 +21,7 @@ import { RouteInfo, Type as Class } from '@nestjs/common/interfaces';
 
 import { IsStringOrRegExp } from '@fc/common';
 
-import { TemplateExposedType } from '../types';
+import { SameSiteType, TemplateExposedType } from '../types';
 
 export class CookieOptions {
   @IsBoolean()
@@ -29,7 +29,7 @@ export class CookieOptions {
 
   @IsString()
   @IsIn(['strict', 'lax', 'none'])
-  readonly sameSite: 'strict' | 'lax' | 'none';
+  readonly sameSite: SameSiteType;
 
   @IsBoolean()
   readonly httpOnly: boolean;

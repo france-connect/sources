@@ -2,19 +2,15 @@
 
 // Declarative code
 import { Type } from 'class-transformer';
-import {
-  IsEnum,
-  IsObject,
-  IsString,
-  IsUrl,
-  ValidateNested,
-} from 'class-validator';
+import { IsEnum, IsObject, IsUrl, ValidateNested } from 'class-validator';
 
 import { ConfigConfig } from '@fc/config';
 import { CoreConfig as CoreLibConfig } from '@fc/core';
 import { CryptographyEidasConfig } from '@fc/cryptography-eidas';
 import { CryptographyFcpConfig } from '@fc/cryptography-fcp';
 import { DataProviderAdapterMongoConfig } from '@fc/data-provider-adapter-mongo';
+import { DeviceConfig } from '@fc/device';
+import { ExceptionsFcpConfig } from '@fc/exceptions-fcp';
 import { I18nConfig } from '@fc/i18n';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
 import { LoggerConfig } from '@fc/logger';
@@ -39,9 +35,6 @@ export class CoreConfig extends CoreLibConfig {
   @IsUrl()
   readonly supportFormUrl: string;
 
-  @IsString({ each: true })
-  readonly supportFormCodes: string[];
-
   @IsEnum(IdentitySource)
   readonly useIdentityFrom: IdentitySource;
 }
@@ -61,6 +54,11 @@ export class CoreFcpConfig {
   @ValidateNested()
   @Type(() => ConfigConfig)
   readonly Config: ConfigConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => DeviceConfig)
+  readonly Device: DeviceConfig;
 
   @IsObject()
   @ValidateNested()
@@ -156,4 +154,9 @@ export class CoreFcpConfig {
   @ValidateNested()
   @Type(() => I18nConfig)
   readonly I18n: I18nConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ExceptionsFcpConfig)
+  readonly ExceptionsFcp: ExceptionsFcpConfig;
 }

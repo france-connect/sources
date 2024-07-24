@@ -29,10 +29,8 @@ describe('DataProviderAdapterMongoService', () => {
     uid: '6f21b751-ed06-48b6-a59c-36e1300a368a',
     title: 'Fournisseur de données Mock - 1',
     active: true,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     client_id:
       '423dcbdc5a15ece61ed00ff5989d72379c26d9ed4c8e4e05a87cffae019586e0',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     client_secret:
       'jClItOnQiSZdE4kxm7EWzJbz4ckfD89k1e3NJw/pbGRHD/Jp6ooupqmHTyc3b62L9wqyF2TlR/5hJejE',
   };
@@ -259,13 +257,9 @@ describe('DataProviderAdapterMongoService', () => {
       const refresh = true;
       const listMock = [
         {
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_id: 'foo',
         },
         {
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_id: 'bar',
         },
       ];
@@ -286,13 +280,9 @@ describe('DataProviderAdapterMongoService', () => {
       // Given
       service['listCache'] = [
         {
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_id: 'foo',
         } as DataProviderMetadata,
         {
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_id: 'bar',
         } as DataProviderMetadata,
       ];
@@ -395,9 +385,7 @@ describe('DataProviderAdapterMongoService', () => {
   describe('getByCLientId', () => {
     // Given
     const dpListMock = [
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       { client_id: 'client_id_1' },
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       { client_id: 'client_id_2' },
     ];
 
@@ -408,7 +396,6 @@ describe('DataProviderAdapterMongoService', () => {
       // When
       const result = await service.getByClientId(idMock);
       // Then
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       expect(result).toEqual({ client_id: 'client_id_2' });
     });
 
@@ -438,9 +425,10 @@ describe('DataProviderAdapterMongoService', () => {
   describe('getAuthenticatedDataProvider', () => {
     it('should return data provider when client_id and client_secret are same as data provider', async () => {
       // Given
-      const dpMock =
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        { client_id: 'client_id_1', client_secret: 'client_secret_1' };
+      const dpMock = {
+        client_id: 'client_id_1',
+        client_secret: 'client_secret_1',
+      };
       const clientId = 'client_id_1';
       const clientSecret = 'client_secret_1';
       service['getByClientId'] = jest.fn().mockReturnValue(dpMock);
@@ -457,9 +445,7 @@ describe('DataProviderAdapterMongoService', () => {
     it('should throw an error when client_id and client_secret are differents of data provider', async () => {
       // Given
       const errorMock = new DataProviderInvalidCredentialsException();
-      const dpMock =
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        { client_id: 'foo', client_secret: 'bar' };
+      const dpMock = { client_id: 'foo', client_secret: 'bar' };
       const clientId = 'client_id_1';
       const clientSecret = 'client_secret_1';
       service['getByClientId'] = jest.fn().mockReturnValue(dpMock);

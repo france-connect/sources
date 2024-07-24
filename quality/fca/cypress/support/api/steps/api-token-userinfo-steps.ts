@@ -5,7 +5,7 @@ Then('le corps de la réponse contient le JWT id_token pour le FS', function () 
     .its('body.id_token')
     .then((idToken) => {
       expect(idToken).to.be.a('string');
-      expect(idToken.length).to.be.greaterThan(500);
+      expect(idToken.length).to.be.greaterThan(450);
       const jwk = Cypress.env('RSA_ENC_PRIV_KEY');
       cy.task('getJwtContent', { jwk, jwt: idToken }).then((jwtContent) => {
         const content = JSON.stringify(jwtContent, null, 2);

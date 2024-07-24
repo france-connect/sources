@@ -28,13 +28,10 @@ describe('CsmrUserPreferencesController', () => {
 
   const identityMock: IPivotIdentity = {
     sub: '',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Angela Claire Louise',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'DUBOIS',
     birthdate: '1962-08-24',
     gender: 'female',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     preferred_username: '',
     birthcountry: '99100',
     birthplace: '75107',

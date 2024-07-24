@@ -49,17 +49,7 @@ export class OidcClientController {
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
-    const {
-      scope,
-      claims,
-      providerUid: idpId,
-      // acr_values is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      acr_values,
-      // acr_values is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      idp_hint,
-    } = body;
+    const { scope, claims, providerUid: idpId, acr_values, idp_hint } = body;
 
     let serviceProviderId: string | null;
     try {
@@ -82,13 +72,9 @@ export class OidcClientController {
       {
         state,
         scope,
-        // acr_values is an oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values,
         nonce,
         claims,
-        // acr_values is an oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         idp_hint,
       },
     );

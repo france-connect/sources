@@ -12,15 +12,9 @@ describe('OidcToEidasMapper', () => {
       birthdate: '1962-08-24',
       birthcountry: '99100',
       birthplace: '75107',
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name: 'Angela Claire Louise',
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       family_name: 'DUBOIS',
       email: 'wossewodda-3728@yopmail.com',
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       preferred_username: 'DUMEUBLE',
     };
 
@@ -87,8 +81,6 @@ describe('OidcToEidasMapper', () => {
         // setup
         const claimsWithoutPreferredUsername = {
           ...claims,
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           preferred_username: undefined,
         };
         const expected = [claims.family_name];
@@ -130,15 +122,9 @@ describe('OidcToEidasMapper', () => {
           birthdate: '1962-08-00',
           birthcountry: '99100',
           birthplace: '75107',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           given_name: 'Angela Claire Louise',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           family_name: 'DUBOIS',
           email: 'wossewodda-3728@yopmail.com',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           preferred_username: 'DUMEUBLE',
         };
         const expected = ['1962-08-01'];
@@ -161,15 +147,9 @@ describe('OidcToEidasMapper', () => {
           birthdate: '1962-00-00',
           birthcountry: '99100',
           birthplace: '75107',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           given_name: 'Angela Claire Louise',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           family_name: 'DUBOIS',
           email: 'wossewodda-3728@yopmail.com',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           preferred_username: 'DUMEUBLE',
         };
         const expected = ['1962-01-01'];
@@ -191,15 +171,9 @@ describe('OidcToEidasMapper', () => {
           gender: 'female',
           birthcountry: '99100',
           birthplace: '75107',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           given_name: 'Angela Claire Louise',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           family_name: 'DUBOIS',
           email: 'wossewodda-3728@yopmail.com',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           preferred_username: 'DUMEUBLE',
         };
         const expected = [undefined];
@@ -240,15 +214,9 @@ describe('OidcToEidasMapper', () => {
           gender: 'female',
           birthdate: '1962-08-24',
           birthcountry: '99217',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           given_name: 'Angela Claire Louise',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           family_name: 'DUBOIS',
           email: 'wossewodda-3728@yopmail.com',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           preferred_username: 'DUMEUBLE',
         };
         const expected = [claimsWithoutBirthplace.birthcountry];

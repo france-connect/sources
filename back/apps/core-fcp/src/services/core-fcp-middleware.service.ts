@@ -9,10 +9,11 @@ import {
   CoreConfig,
   CoreOidcProviderMiddlewareService,
 } from '@fc/core';
+import { DeviceService } from '@fc/device';
 import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger';
 import { OidcSession, stringToArray } from '@fc/oidc';
-import { OidcAcrService } from '@fc/oidc-acr';
+import { OidcAcrConfig, OidcAcrService } from '@fc/oidc-acr';
 import {
   OidcCtx,
   OidcProviderErrorService,
@@ -46,6 +47,7 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     @Inject(CORE_SERVICE)
     protected readonly core: CoreFcpService,
     protected readonly flowSteps: FlowStepsService,
+    protected readonly device: DeviceService,
   ) {
     super(
       logger,
@@ -156,7 +158,8 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     spAcr: string,
   ): Promise<void> {
     const { res } = ctx;
-    const { allowedSsoAcrs, enableSso } = this.config.get<CoreConfig>('Core');
+    const { enableSso } = this.config.get<CoreConfig>('Core');
+    const { allowedSsoAcrs } = this.config.get<OidcAcrConfig>('OidcAcr');
     const hasAuthorizedAcr = allowedSsoAcrs.includes(spAcr);
     const isSsoSession =
       enableSso && hasAuthorizedAcr && isFinishedInteractionSession;
@@ -189,11 +192,7 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     const spAcr = ctx?.oidc?.params?.acr_values as string;
     await this.renewSession(ctx, spAcr);
 
-    this.sessionService.set(
-      'App',
-      'isSuspicious',
-      ctx.req.headers['x-suspicious'] === '1',
-    );
+    await this.device.initSession(ctx.req);
 
     ctx.isSso = this.isSsoAvailable(spAcr);
 

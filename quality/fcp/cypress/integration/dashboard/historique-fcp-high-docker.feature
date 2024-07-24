@@ -5,9 +5,11 @@ Fonctionnalité: Historique Connexion FC+ (docker)
   # je veux me connecter au user-dashboard
   # afin de consulter mon historique de connexion FC+
 
+  Scénario: Historique Connexion - FC+ - Supprimer les traces dans ElasticSearch
+    Etant donné que les traces "FranceConnect+" contiennent "des connexions récentes et anciennes de plus de 6 mois"
+
   Scénario: Historique Connexion - FC+ - FS public avec scope identité
     Etant donné que j'utilise un compte usager "pour les tests de traces"
-    Et que les traces "FranceConnect+" contiennent "des connexions récentes et anciennes de plus de 6 mois"
     Et que je navigue sur la page d'accueil du tableau de bord usager
     Quand je me connecte au tableau de bord usager
     Alors je suis redirigé vers la page historique du tableau de bord usager
@@ -19,11 +21,10 @@ Fonctionnalité: Historique Connexion FC+ (docker)
     Et la date et heure de connexion sont affichées
     Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "IDP1 - Identity Provider - eIDAS élevé - discov - crypt"
-    Et le niveau de sécurité de l'évènement est "Substantiel"
+    Et le niveau de sécurité de l'évènement est "Élevé"
 
   Scénario: Historique Connexion - FC+ - FS privé avec scope identité
     Etant donné que j'utilise un compte usager "pour les tests de traces"
-    Et que les traces "FranceConnect+" contiennent "des connexions récentes et anciennes de plus de 6 mois"
     Et que je navigue sur la page d'accueil du tableau de bord usager
     Quand je me connecte au tableau de bord usager
     Alors je suis redirigé vers la page historique du tableau de bord usager
@@ -57,7 +58,6 @@ Fonctionnalité: Historique Connexion FC+ (docker)
 
   Scénario: Historique Échange de Données - FC+ - FS public avec scope identité
     Etant donné que j'utilise un compte usager "pour les tests de traces"
-    Et que les traces "FranceConnect+" contiennent "des connexions d'échange de donnée"
     Et que je navigue sur la page d'accueil du tableau de bord usager
     Quand je me connecte au tableau de bord usager
     Alors je suis redirigé vers la page historique du tableau de bord usager

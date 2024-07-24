@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { overrideWithSourceIfNotNull } from '@fc/common';
+import { DeviceSession } from '@fc/device';
 import { OidcSession } from '@fc/oidc';
 import { SessionService } from '@fc/session';
 import {
@@ -82,6 +83,15 @@ export class CoreTrackingService {
       idpName,
       idpLabel,
       idpIdentity,
+
+      isTrusted,
+      isSuspicious,
+
+      accountCount,
+      knownDevice,
+      newIdentity,
+      becameTrusted,
+      becameShared,
     } = ctx;
     const source = extractNetworkInfoFromHeaders(ctx);
 
@@ -105,17 +115,33 @@ export class CoreTrackingService {
       idpName,
       idpLabel,
       idpIdentity,
+
+      deviceTrusted: isTrusted,
+      deviceIsSuspicious: isSuspicious,
+      deviceAccountCount: accountCount,
+      deviceKnown: knownDevice,
+      deviceNewIdentity: newIdentity,
+      deviceBecameTrusted: becameTrusted,
+      deviceBecameShared: becameShared,
     };
   }
 
+  // eslint-disable-next-line complexity
   private getDataFromSession(sessionId: string): ICoreTrackingProviders {
-    const sessionData =
+    const oidcSession =
       this.sessionService.get<OidcSession>('OidcClient') || {};
+
+    // Defaults to undefined rather than null to not pollute AC logs
+    const deviceSession = this.sessionService.get<DeviceSession>('Device') || {
+      isTrusted: undefined,
+      isSuspicious: undefined,
+    };
 
     const {
       browsingSessionId = null,
       accountId = null,
       interactionId = null,
+      interactionAcr = null,
       isSso = null,
 
       spId = null,
@@ -128,12 +154,15 @@ export class CoreTrackingService {
       idpName = null,
       idpLabel = null,
       idpIdentity = null,
-    } = sessionData;
+    } = oidcSession;
+
+    const { isTrusted, isSuspicious } = deviceSession;
 
     return {
       browsingSessionId,
       accountId,
       interactionId,
+      interactionAcr,
       isSso,
       sessionId,
 
@@ -147,6 +176,9 @@ export class CoreTrackingService {
       idpName,
       idpLabel,
       idpSub: idpIdentity?.sub || null,
+
+      deviceTrusted: isTrusted,
+      deviceIsSuspicious: isSuspicious,
     };
   }
 }

@@ -8,10 +8,13 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
   # La localisation n'est pas affichée lorsque les tests sont exécutés depuis les runners de la CI
 
   Scénario: Historique Connexion - FC Legacy - FS public avec scope identité
-    Etant donné que j'utilise un compte usager "pour les tests de traces"
+    Etant donné que j'utilise la plateforme "FranceConnect(CL)"
+    Et que j'utilise un compte usager "pour les tests de traces"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
     Et que j'utilise le fournisseur de service "par défaut"
     Et que j'ai fait une cinématique FranceConnect
+    Et que j'utilise la plateforme "FranceConnect(v2)"
+    Et que j'utilise un compte usager "pour les tests de traces"
     Et que je navigue sur la page d'accueil du tableau de bord usager
     Quand je me connecte au tableau de bord usager
     Alors je suis redirigé vers la page historique du tableau de bord usager
@@ -27,10 +30,13 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
 
   @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS public avec scope data
-    Etant donné que j'utilise un compte usager "pour les tests de traces"
-    Et que j'utilise le fournisseur de service "pour les scopes data"
+    Etant donné que j'utilise la plateforme "FranceConnect(CL)"
+    Et que j'utilise un compte usager "pour les tests de traces"
+    Et que j'utilise le fournisseur de service "pour les scopes data (sur CL)"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "dgfip et cnam"
     Et que j'ai fait une cinématique FranceConnect
+    Et que j'utilise la plateforme "FranceConnect(v2)"
+    Et que j'utilise un compte usager "pour les tests de traces"
     Et que je navigue sur la page d'accueil du tableau de bord usager
     Quand je me connecte au tableau de bord usager
     Alors je suis redirigé vers la page historique du tableau de bord usager
@@ -61,10 +67,13 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
 
   @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS privé avec scope identité
-    Etant donné que j'utilise un compte usager "pour les tests de traces"
+    Etant donné que j'utilise la plateforme "FranceConnect(CL)"
+    Et que j'utilise un compte usager "pour les tests de traces"
     Et que j'utilise le fournisseur de service "privé avec consentement obligatoire"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "profile sans preferred_username"
     Et que j'ai fait une cinématique FranceConnect
+    Et que j'utilise la plateforme "FranceConnect(v2)"
+    Et que j'utilise un compte usager "pour les tests de traces"
     Et que je navigue sur la page d'accueil du tableau de bord usager
     Quand je me connecte au tableau de bord usager
     Alors je suis redirigé vers la page historique du tableau de bord usager
@@ -92,10 +101,13 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et l'évènement concerne aucune donnée "CNAM"
 
   Scénario: Historique Connexion - FC Legacy - FS privé avec scope data
-    Etant donné que j'utilise un compte usager "pour les tests de traces"
+    Etant donné que j'utilise la plateforme "FranceConnect(CL)"
+    Et que j'utilise un compte usager "pour les tests de traces"
     Et que j'utilise le fournisseur de service "privé pour les scopes data"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "dgfip et cnam"
     Et que j'ai fait une cinématique FranceConnect
+    Et que j'utilise la plateforme "FranceConnect(v2)"
+    Et que j'utilise un compte usager "pour les tests de traces"
     Et que je navigue sur la page d'accueil du tableau de bord usager
     Quand je me connecte au tableau de bord usager
     Alors je suis redirigé vers la page historique du tableau de bord usager
@@ -141,10 +153,13 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
 
   @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS privé avec scope anonyme
-    Etant donné que j'utilise un compte usager "pour les tests de traces"
+    Etant donné que j'utilise la plateforme "FranceConnect(CL)"
+    Et que j'utilise un compte usager "pour les tests de traces"
     Et que j'utilise le fournisseur de service "privé avec consentement obligatoire"
     Et que le fournisseur de service requiert l'accès aux informations du scope "anonyme"
     Et que j'ai fait une cinématique FranceConnect
+    Et que j'utilise la plateforme "FranceConnect(v2)"
+    Et que j'utilise un compte usager "pour les tests de traces"
     Et que je navigue sur la page d'accueil du tableau de bord usager
     Quand je me connecte au tableau de bord usager
     Alors je suis redirigé vers la page historique du tableau de bord usager

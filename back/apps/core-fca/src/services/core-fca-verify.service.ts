@@ -64,4 +64,20 @@ export class CoreFcaVerifyService {
 
     return url;
   }
+
+  /**
+   * @todo #1581 exceptions v2
+   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1581
+   * @ticket FC-1581
+   */
+  handleErrorLoginRequired(spRedirectUri: string) {
+    const redirectUrl = new URL(spRedirectUri);
+    const errorParams = new URLSearchParams({
+      error: 'login_required',
+      error_description: 'End-User authentication is required',
+    });
+    redirectUrl.search = errorParams.toString();
+
+    return redirectUrl.toString();
+  }
 }

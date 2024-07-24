@@ -1,12 +1,21 @@
 import { render } from '@testing-library/react';
 import { Helmet } from 'react-helmet-async';
-import { useMediaQuery } from 'react-responsive';
 import { Link, Outlet } from 'react-router-dom';
+
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { ErrorPage } from './error.page';
 
 describe('ErrorPage', () => {
-  it('should match the snapshot', () => {
+  beforeEach(() => {
+    // given
+    jest.mocked(useStylesVariables).mockReturnValue([expect.any(String)]);
+  });
+
+  it('should match the snapshot when greater than or equal to desktop', () => {
+    // given
+    jest.mocked(useStylesQuery).mockReturnValue(true);
+
     // when
     const { container } = render(<ErrorPage />);
 
@@ -14,9 +23,9 @@ describe('ErrorPage', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should match the snapshot, in a mobile viewport', () => {
+  it('should match the snapshot when lower than desktop', () => {
     // given
-    jest.mocked(useMediaQuery).mockReturnValue(false);
+    jest.mocked(useStylesQuery).mockReturnValue(false);
 
     // when
     const { container } = render(<ErrorPage />);

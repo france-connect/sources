@@ -1,6 +1,9 @@
 /* istanbul ignore file */
 
 // Not to be tested
+import { join } from 'path';
+
+import { renderFile } from 'ejs';
 import { urlencoded } from 'express';
 import helmet from 'helmet';
 
@@ -21,6 +24,7 @@ async function bootstrap() {
     schema: MockRnippConfig,
   });
   const {
+    viewsPaths,
     httpsOptions: { cert, key },
     urlPrefix,
   } = configService.get<AppConfig>('App');
@@ -97,6 +101,15 @@ async function bootstrap() {
    * @see body-parser.md in the project doc folder for further informations.
    */
   app.use(urlencoded({ extended: false }));
+
+  app.engine('ejs', renderFile);
+  app.setViewEngine('ejs');
+  app.set(
+    'views',
+    viewsPaths.map((viewsPath) => {
+      return join(__dirname, viewsPath, 'views');
+    }),
+  );
 
   await app.listen(3000);
 }

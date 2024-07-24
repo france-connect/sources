@@ -22,10 +22,7 @@ describe('CoreVerifyService', () => {
   const sessionServiceMock = getSessionServiceMock();
 
   const spIdentityMock = {
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Edward',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'TEACH',
     email: 'eteach@fqdn.ext',
   } as IOidcIdentity;

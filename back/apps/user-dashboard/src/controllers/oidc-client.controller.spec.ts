@@ -4,7 +4,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialDeep } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { CsrfTokenGuard } from '@fc/csrf';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { IdentityProviderMetadata } from '@fc/oidc';
 import { OidcClientService } from '@fc/oidc-client';
@@ -51,8 +50,6 @@ describe('OidcClient Controller', () => {
   const idpIdTokenMock = 'idpIdToken';
   const oidcErrorMock = {
     error: 'error',
-    // OIDC style variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     error_description: 'error_description',
   };
 
@@ -76,8 +73,6 @@ describe('OidcClient Controller', () => {
 
   const configServiceMock = getConfigMock();
 
-  const guardMock = { canActivate: jest.fn() };
-
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -92,8 +87,6 @@ describe('OidcClient Controller', () => {
         IdentityProviderAdapterEnvService,
       ],
     })
-      .overrideGuard(CsrfTokenGuard)
-      .useValue(guardMock)
       .overrideProvider(OidcClientService)
       .useValue(oidcClientServiceMock)
       .overrideProvider(SessionService)
@@ -123,7 +116,6 @@ describe('OidcClient Controller', () => {
       name: 'nameValue',
       title: 'titleValue',
       client: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         post_logout_redirect_uris: ['any-post_logout_redirect_uris-mock'],
       },
     };
@@ -138,7 +130,6 @@ describe('OidcClient Controller', () => {
     });
 
     oidcClientServiceMock.utils.buildAuthorizeParameters.mockReturnValue({
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'acrMock',
       nonce: idpNonceMock,
       providerUid: configMock.idpId,
@@ -169,8 +160,6 @@ describe('OidcClient Controller', () => {
       );
 
       const expectedGetAuthorizeCallParameter = {
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         nonce: idpNonceMock,
         scope: 'openid',
@@ -240,8 +229,6 @@ describe('OidcClient Controller', () => {
     it('should resolve even if no spId are fetchable', async () => {
       // setup
       const body = {
-        // oidc param
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         claims: 'any_formatted_json_string',
         csrfToken: 'csrfMockValue',
@@ -287,8 +274,6 @@ describe('OidcClient Controller', () => {
     const accessTokenMock = Symbol('accesToken');
     const acrMock = Symbol('acr');
     const identityMock = {
-      // oidc spec defined property
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name: 'given_name',
       sub: '1',
     };
@@ -317,11 +302,7 @@ describe('OidcClient Controller', () => {
       };
 
       oidcClientServiceMock.getTokenFromProvider.mockReturnValueOnce({
-        // oidc spec defined property
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         accessToken: accessTokenMock,
-        // oidc spec defined property
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr: acrMock,
       });
       oidcClientServiceMock.getUserInfosFromProvider.mockReturnValueOnce(

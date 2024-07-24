@@ -10,49 +10,26 @@ describe('ServiceProviderService', () => {
   const validServiceProviderMock = {
     name: 'FSA - FSA1-LOW',
     title: 'FSA - FSA1-LOW - TITLE',
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     redirect_uris: [
       'https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fia1-low',
     ],
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     post_logout_redirect_uris: [
       'https://core-fca-low.docker.dev-franceconnect.fr/logout-callback',
     ],
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     client_secret: 'client_secret',
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     client_id: '123',
     active: true,
-    // openid defined property names
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __v: 4,
     updatedAt: new Date('2019-04-24 17:09:17'),
     updatedBy: 'admin',
     scope: 'openid profile',
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_signed_response_alg: 'ES256',
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_encrypted_response_alg: 'RSA-OAEP',
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_encrypted_response_enc: 'A256GCM',
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_signed_response_alg: 'ES256',
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_encrypted_response_alg: 'RSA-OAEP',
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_encrypted_response_enc: 'A256GCM',
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     jwks_uri:
       'https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/.well-known/keys',
   };
@@ -107,18 +84,12 @@ describe('ServiceProviderService', () => {
     // Given
     const spListMock = [
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'wizz',
       },
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'foo',
       },
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'bar',
       },
     ];
@@ -131,8 +102,6 @@ describe('ServiceProviderService', () => {
       const result = await service.getById(idMock);
       // Then
       expect(result).toEqual({
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'foo',
       });
     });
@@ -159,22 +128,16 @@ describe('ServiceProviderService', () => {
   describe('shouldExcludeIdp', () => {
     const spListMock = [
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'wizz',
         idpFilterExclude: true,
         idpFilterList: ['idp1'],
       },
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'foo',
         idpFilterExclude: false,
         idpFilterList: ['idp1'],
       },
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'bar',
         idpFilterExclude: true,
         idpFilterList: ['idp2'],

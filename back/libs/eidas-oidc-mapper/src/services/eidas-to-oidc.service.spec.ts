@@ -25,8 +25,6 @@ describe('EidasToOidcService', () => {
   };
 
   const expectedPartialRequest = {
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     acr_values: AcrValues.EIDAS2,
     scope: [
       'openid',
@@ -124,15 +122,8 @@ describe('EidasToOidcService', () => {
       // setup
       const claimsMock = {
         birthdate: '1998-02-03',
-
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         family_name: 'Eude',
-
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         given_name: 'Jean',
-
         sub: '0123456789',
       };
       const acrMock = AcrValues.EIDAS2;
@@ -162,8 +153,6 @@ describe('EidasToOidcService', () => {
 
       const expectedError = {
         error: 'eidas_node_error',
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: `StatusCode: ${eidasResponse.status.statusCode}\nSubStatusCode: ${eidasResponse.status.subStatusCode}\nStatusMessage: ${eidasResponse.status.statusMessage}`,
       };
 
@@ -185,8 +174,6 @@ describe('EidasToOidcService', () => {
 
       const expectedError = {
         error: 'eidas_node_error',
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: `StatusCode: ${eidasResponse.status.statusCode}\nStatusMessage: ${eidasResponse.status.statusMessage}`,
       };
 
@@ -208,8 +195,6 @@ describe('EidasToOidcService', () => {
 
       const expectedError = {
         error: 'eidas_node_error',
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: `StatusCode: ${eidasResponse.status.statusCode}\nSubStatusCode: ${eidasResponse.status.subStatusCode}\n`,
       };
 
@@ -231,8 +216,6 @@ describe('EidasToOidcService', () => {
 
       const expectedError = {
         error: 'eidas_node_error',
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: `SubStatusCode: ${eidasResponse.status.subStatusCode}\nStatusMessage: ${eidasResponse.status.statusMessage}`,
       };
 

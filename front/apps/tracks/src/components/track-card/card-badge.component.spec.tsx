@@ -1,10 +1,34 @@
 import { render } from '@testing-library/react';
 
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
+
 import { CinematicEvents } from '../../enums';
 import { TrackCardBadgeComponent } from './card-badge.component';
 
 describe('TrackCardBadgeComponent', () => {
-  it('should match the snapshot', () => {
+  beforeEach(() => {
+    // @NOTE used to prevent useStylesVariables.useStylesContext to throw
+    // useStylesContext requires to be into a StylesProvider context
+    jest.mocked(useStylesVariables).mockReturnValueOnce([expect.any(Number), expect.any(Number)]);
+  });
+
+  it('should match the snapshot when breakpoint is greater than mobile', () => {
+    // given
+    jest.mocked(useStylesQuery).mockReturnValue(true);
+
+    // when
+    const { container } = render(
+      <TrackCardBadgeComponent fromFcPlus={false} type={CinematicEvents.FC_VERIFIED} />,
+    );
+
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
+  it('should match the snapshot when breakpoint is lower than mobile', () => {
+    // given
+    jest.mocked(useStylesQuery).mockReturnValue(false);
+
     // when
     const { container } = render(
       <TrackCardBadgeComponent fromFcPlus={false} type={CinematicEvents.FC_VERIFIED} />,

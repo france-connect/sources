@@ -2,7 +2,14 @@
 
 // Declarative file
 import { Expose, Type } from 'class-transformer';
-import { IsJWT, IsNotEmpty, IsObject, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsJWT,
+  IsNotEmpty,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 import { PartialExcept } from '@fc/common';
 import { CoreBaseOidcClientSessionDto } from '@fc/core';
@@ -57,6 +64,11 @@ export class GetAuthorizeOidcClientSsoSession extends CoreBaseOidcClientSessionD
   @IsObject()
   @Expose()
   readonly idpIdentity: PartialExcept<IOidcIdentity, 'sub'> | IOidcIdentity;
+
+  @IsOptional()
+  @IsBoolean()
+  @Expose()
+  readonly isSilentAuthentication: boolean;
 
   // Identity: We MUST have an spIdentity (SSO)
   @IsObject()

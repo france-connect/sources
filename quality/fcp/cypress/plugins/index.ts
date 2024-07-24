@@ -16,7 +16,12 @@ import {
   hasBusinessLog,
 } from './log-plugin';
 import { getTotp } from './otp-plugin';
-import { tracksBuilder } from './tracks-plugin';
+import {
+  addTracks,
+  injectTracks,
+  removeAllTracks,
+  removeTracks,
+} from './tracks-plugin';
 
 const pluginConfig = async (
   on: Cypress.PluginEvents,
@@ -26,6 +31,7 @@ const pluginConfig = async (
   await addCucumberPreprocessorPlugin(on, config);
 
   on('task', {
+    addTracks,
     clearBusinessLog,
     createHexaHash,
     getAllBusinessLogs,
@@ -34,12 +40,13 @@ const pluginConfig = async (
     getJwtContent,
     getTotp,
     hasBusinessLog,
+    injectTracks,
     isJwsValid,
     log,
+    removeAllTracks,
+    removeTracks,
     table,
   });
-
-  tracksBuilder(on, config);
 
   on(
     'file:preprocessor',

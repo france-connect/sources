@@ -10,8 +10,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { OidcIdentityDto } from '../dto';
-import { IPivotIdentity } from '../interfaces';
+import { PivotIdentityDto } from '@fc/oidc';
 
 class IdpSettingsDto {
   @IsAscii({ each: true })
@@ -25,15 +24,15 @@ class IdpSettingsDto {
 export class GetIdpSettingsPayloadDto {
   @IsObject()
   @ValidateNested()
-  @Type(() => OidcIdentityDto)
-  readonly identity: IPivotIdentity;
+  @Type(() => PivotIdentityDto)
+  readonly identity: PivotIdentityDto;
 }
 
 export class SetIdpSettingsPayloadDto {
   @IsObject()
   @ValidateNested()
-  @Type(() => OidcIdentityDto)
-  readonly identity: IPivotIdentity;
+  @Type(() => PivotIdentityDto)
+  readonly identity: PivotIdentityDto;
 
   @IsObject()
   @ValidateNested()

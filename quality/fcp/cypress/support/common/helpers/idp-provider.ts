@@ -32,7 +32,7 @@ export const getIdentityProviderByAttributes = (
   const search = Object.entries(attrFilters).filter(
     ([, value]) => value !== undefined && value !== null,
   );
-  const identityProvider: IdentityProvider = identityProviders.find((idp) =>
+  const identityProvider = identityProviders.find((idp) =>
     search.every(([attribute, value]) => idp[attribute] === value),
   );
   expect(
@@ -47,8 +47,8 @@ export const getIdentityProviderByDescription = (
   description: string,
   shouldExist = true,
 ): IdentityProvider | undefined => {
-  const identityProvider: IdentityProvider = identityProviders.find(
-    (identityProvider) => identityProvider.descriptions.includes(description),
+  const identityProvider = identityProviders.find((identityProvider) =>
+    identityProvider.descriptions.includes(description),
   );
   if (shouldExist) {
     expect(
@@ -64,7 +64,7 @@ export const getIdentityProviderByNameOrDescription = (
   idpNameOrDescription: string,
   shouldExist = true,
 ): IdentityProvider | undefined => {
-  const identityProvider: IdentityProvider = identityProviders.find(
+  const identityProvider = identityProviders.find(
     ({ descriptions, name }) =>
       name === idpNameOrDescription ||
       descriptions.includes(idpNameOrDescription),

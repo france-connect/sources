@@ -2,10 +2,7 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
-import { OidcClientConfig, OidcClientRoutes } from '@fc/oidc-client';
-import { UserDashboardBackRoutes } from '@fc/user-dashboard';
-
-import app from './app';
+import { OidcClientConfig } from '@fc/oidc-client';
 
 const env = new ConfigParser(process.env, 'OidcClient');
 
@@ -21,14 +18,8 @@ export default {
   },
   stateLength: 32,
   // Toggle Financial Grade API
-
-  /**
-   * @TODO migrate User Dashboard to ConfigParser
-   * This must be done while giving US its own stack.
-   */
-  fapi: false,
-  scope:
-    'openid gender birthdate birthcountry birthplace given_name family_name email idp_id',
-  postLogoutRedirectUri: `https://${app.fqdn}${app.urlPrefix}${UserDashboardBackRoutes.LOGOUT_CALLBACK}`,
-  redirectUri: `https://${app.fqdn}${app.urlPrefix}${OidcClientRoutes.OIDC_CALLBACK}`,
+  fapi: env.boolean('FAPI'),
+  scope: env.string('SCOPE'),
+  postLogoutRedirectUri: env.string('POST_LOGOUT_REDIRECT_URI'),
+  redirectUri: env.string('REDIRECT_URI'),
 } as OidcClientConfig;

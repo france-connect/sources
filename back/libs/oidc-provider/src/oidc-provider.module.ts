@@ -9,6 +9,7 @@ import { IsUrlRequiredTldFromConfigConstraint } from '@fc/common';
 import { FcExceptionFilter } from '@fc/exceptions-deprecated';
 import { IServiceProviderAdapter } from '@fc/oidc';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc/tokens';
+import { OidcAcrModule } from '@fc/oidc-acr';
 import { RedisModule } from '@fc/redis';
 import { SessionModule } from '@fc/session';
 
@@ -54,6 +55,7 @@ export class OidcProviderModule {
         RedisModule,
         ServiceProviderModule,
         CqrsModule,
+        OidcAcrModule,
         SessionModule,
       ],
       providers: [

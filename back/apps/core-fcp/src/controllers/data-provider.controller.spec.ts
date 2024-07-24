@@ -4,20 +4,21 @@ import { HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
+  ChecktokenRequestDto,
+  InvalidChecktokenRequestException,
+} from '@fc/core';
+import {
   DataProviderAdapterMongoService,
   DataProviderMetadata,
 } from '@fc/data-provider-adapter-mongo';
 import { DataProviderInvalidCredentialsException } from '@fc/data-provider-adapter-mongo/exceptions';
 import { LoggerService } from '@fc/logger';
 import { RnippPivotIdentity } from '@fc/rnipp';
-import { SessionService } from '@fc/session';
 import { TrackingService } from '@fc/tracking';
 
 import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
-import { ChecktokenRequestDto } from '../dto';
-import { InvalidChecktokenRequestException } from '../exceptions';
 import { DataProviderService } from '../services';
 import { DataProviderController } from './data-provider.controller';
 
@@ -27,11 +28,10 @@ describe('DataProviderController', () => {
   const dataProviderServiceMock = {
     checkRequestValid: jest.fn(),
     generateJwt: jest.fn(),
-    generatePayload: jest.fn(),
+    generateTokenIntrospection: jest.fn(),
     getSessionByAccessToken: jest.fn(),
     getAccessTokenExp: jest.fn(),
     generateDataProviderSub: jest.fn(),
-    generateExpiredPayload: jest.fn(),
     generateErrorMessage: jest.fn(),
   };
 
@@ -42,7 +42,6 @@ describe('DataProviderController', () => {
   const loggerServiceMock = getLoggerMock();
 
   const oidcSessionServiceMock = getSessionServiceMock();
-  const sessionServiceMock = getSessionServiceMock();
 
   const trackingServiceMock: TrackingService = {
     track: jest.fn(),
@@ -53,26 +52,19 @@ describe('DataProviderController', () => {
     },
   } as unknown as TrackingService;
 
-  const payloadMock = {
-    // oidc naming
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    token_introspection: {
-      active: true,
-      scope: 'scope',
-    },
+  const tokenIntrospectionMock = {
+    active: true,
+    scope: 'scope',
   };
 
-  const expiredPayload = {
-    // oidc naming
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    token_introspection: {
-      active: false,
-    },
+  const expiredTokenIntrospectionMock = {
+    active: false,
   };
 
   const dpMock = {
     uid: 'dp-uid',
     title: 'data provider title',
+    client_id: 'client_id',
   } as DataProviderMetadata;
 
   const reqMock = {
@@ -101,7 +93,6 @@ describe('DataProviderController', () => {
         DataProviderAdapterMongoService,
         DataProviderService,
         LoggerService,
-        SessionService,
         TrackingService,
       ],
     })
@@ -111,8 +102,6 @@ describe('DataProviderController', () => {
       .useValue(dataProviderServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(SessionService)
-      .useValue(sessionServiceMock)
       .overrideProvider(TrackingService)
       .useValue(trackingServiceMock)
       .compile();
@@ -124,7 +113,6 @@ describe('DataProviderController', () => {
     dataProviderAdapterMongoMock.getAuthenticatedDataProvider.mockReturnValue(
       dpMock,
     );
-    sessionServiceMock.getDataFromBackend.mockResolvedValue(sessionDataMock);
   });
 
   it('should be defined', () => {
@@ -133,14 +121,8 @@ describe('DataProviderController', () => {
 
   describe('checktoken', () => {
     const bodyMock: ChecktokenRequestDto = {
-      // oidc compliant
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      access_token: 'acces_token',
-      // oidc compliant
-      // eslint-disable-next-line @typescript-eslint/naming-convention
+      token: 'acces_token',
       client_id: 'client_id',
-      // oidc compliant
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret: 'client_secret',
     };
 
@@ -150,8 +132,6 @@ describe('DataProviderController', () => {
       json: jest.fn(),
       end: jest.fn(),
     } as unknown as Response;
-
-    const sessionIdMock = 'testSessionId';
 
     const jwtMock = Symbol('jwtMock');
 
@@ -165,14 +145,16 @@ describe('DataProviderController', () => {
     beforeEach(() => {
       dataProviderServiceMock.checkRequestValid.mockResolvedValue(true);
       dataProviderServiceMock.generateDataProviderSub.mockReturnValue(subMock);
-      dataProviderServiceMock.generatePayload.mockReturnValue(payloadMock);
+      dataProviderServiceMock.generateTokenIntrospection.mockReturnValue(
+        tokenIntrospectionMock,
+      );
       dataProviderServiceMock.generateJwt.mockReturnValue(jwtMock);
-      dataProviderAdapterMongoMock.getAuthenticatedDataProvider.mockResolvedValue(
+      dataProviderAdapterMongoMock.getAuthenticatedDataProvider.mockReturnValue(
         dpMock,
       );
       dataProviderServiceMock.getSessionByAccessToken = jest
         .fn()
-        .mockReturnValue(sessionIdMock);
+        .mockReturnValue(sessionDataMock);
       dataProviderServiceMock.getAccessTokenExp = jest
         .fn()
         .mockReturnValue(expMock);
@@ -220,19 +202,19 @@ describe('DataProviderController', () => {
       ).toHaveBeenCalledTimes(1);
       expect(
         dataProviderServiceMock.getSessionByAccessToken,
-      ).toHaveBeenCalledWith(bodyMock.access_token);
+      ).toHaveBeenCalledWith(bodyMock.token);
     });
 
-    it('should call dataProvider.generatePayload with the right parameters', async () => {
+    it('should call dataProvider.generateIntrospectionToken with the right parameters', async () => {
       // When
       await dataProviderController.checktoken(reqMock, resMock, bodyMock);
       // Then
-      expect(dataProviderServiceMock.generatePayload).toHaveBeenCalledTimes(1);
-      expect(dataProviderServiceMock.generatePayload).toHaveBeenCalledWith(
-        sessionDataMock,
-        bodyMock.access_token,
-        bodyMock.client_id,
-      );
+      expect(
+        dataProviderServiceMock.generateTokenIntrospection,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        dataProviderServiceMock.generateTokenIntrospection,
+      ).toHaveBeenCalledWith(sessionDataMock, bodyMock.token, dpMock);
     });
 
     it('should call generateJwt with the right parameters', async () => {
@@ -241,8 +223,8 @@ describe('DataProviderController', () => {
       // Then
       expect(dataProviderServiceMock.generateJwt).toHaveBeenCalledTimes(1);
       expect(dataProviderServiceMock.generateJwt).toHaveBeenCalledWith(
-        payloadMock,
-        bodyMock.client_id,
+        tokenIntrospectionMock,
+        dpMock,
       );
     });
 
@@ -270,7 +252,7 @@ describe('DataProviderController', () => {
         dataProviderController['trackChecktokenJWT'],
       ).toHaveBeenCalledTimes(1);
       expect(dataProviderController['trackChecktokenJWT']).toHaveBeenCalledWith(
-        payloadMock,
+        tokenIntrospectionMock,
         {
           req: reqMock,
           dpId: 'dp-uid',
@@ -302,8 +284,6 @@ describe('DataProviderController', () => {
       dataProviderServiceMock.checkRequestValid.mockResolvedValueOnce(true);
       dataProviderServiceMock.generateErrorMessage.mockReturnValueOnce({
         error: 'invalid_client',
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: 'Client authentication failed.',
       });
       dataProviderAdapterMongoMock.getAuthenticatedDataProvider.mockRejectedValueOnce(
@@ -319,8 +299,6 @@ describe('DataProviderController', () => {
       expect(resMock.json).toHaveBeenCalledTimes(1);
       expect(resMock.json).toHaveBeenCalledWith({
         error: 'invalid_client',
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: 'Client authentication failed.',
       });
 
@@ -338,8 +316,6 @@ describe('DataProviderController', () => {
       );
       dataProviderServiceMock.generateErrorMessage.mockReturnValueOnce({
         error: 'invalid_request',
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: 'Required parameter missing or invalid.',
       });
 
@@ -352,8 +328,6 @@ describe('DataProviderController', () => {
       expect(resMock.json).toHaveBeenCalledTimes(1);
       expect(resMock.json).toHaveBeenCalledWith({
         error: 'invalid_request',
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: 'Required parameter missing or invalid.',
       });
 
@@ -383,8 +357,6 @@ describe('DataProviderController', () => {
       dataProviderServiceMock.checkRequestValid.mockRejectedValue(new Error());
       dataProviderServiceMock.generateErrorMessage.mockReturnValueOnce({
         error: 'server_error',
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description:
           'The authorization server encountered an unexpected condition that prevented it from fulfilling the request.',
       });
@@ -398,8 +370,6 @@ describe('DataProviderController', () => {
       expect(resMock.json).toHaveBeenCalledTimes(1);
       expect(resMock.json).toHaveBeenCalledWith({
         error: 'server_error',
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description:
           'The authorization server encountered an unexpected condition that prevented it from fulfilling the request.',
       });
@@ -410,11 +380,9 @@ describe('DataProviderController', () => {
     it('should return expired JWT if session is not found', async () => {
       // Given
       dataProviderController['trackChecktokenJWT'] = jest.fn();
-      dataProviderServiceMock.getSessionByAccessToken.mockReturnValueOnce(
-        undefined,
-      );
-      dataProviderServiceMock.generateExpiredPayload.mockReturnValueOnce(
-        expiredPayload,
+      dataProviderServiceMock.getSessionByAccessToken.mockReturnValueOnce(null);
+      dataProviderServiceMock.generateTokenIntrospection.mockReturnValueOnce(
+        expiredTokenIntrospectionMock,
       );
 
       // When
@@ -422,23 +390,23 @@ describe('DataProviderController', () => {
 
       // Then
       expect(
-        dataProviderServiceMock.generateExpiredPayload,
+        dataProviderServiceMock.generateTokenIntrospection,
       ).toHaveBeenCalledTimes(1);
       expect(
-        dataProviderServiceMock.generateExpiredPayload,
-      ).toHaveBeenCalledWith(bodyMock.client_id);
+        dataProviderServiceMock.generateTokenIntrospection,
+      ).toHaveBeenCalledWith(null, bodyMock.token, dpMock);
 
       expect(dataProviderServiceMock.generateJwt).toHaveBeenCalledTimes(1);
       expect(dataProviderServiceMock.generateJwt).toHaveBeenCalledWith(
-        expiredPayload,
-        bodyMock.client_id,
+        expiredTokenIntrospectionMock,
+        dpMock,
       );
 
       expect(
         dataProviderController['trackChecktokenJWT'],
       ).toHaveBeenCalledTimes(1);
       expect(dataProviderController['trackChecktokenJWT']).toHaveBeenCalledWith(
-        expiredPayload,
+        expiredTokenIntrospectionMock,
         { req: reqMock, dpId: 'dp-uid', dpTitle: 'data provider title' },
       );
     });
@@ -447,9 +415,12 @@ describe('DataProviderController', () => {
   describe('trackChecktokenJWT()', () => {
     it('should emit DP_VERIFIED_FC_CHECKTOKEN event if token_introspection is active', async () => {
       // When
-      await dataProviderController['trackChecktokenJWT'](payloadMock, {
-        req: reqMock,
-      });
+      await dataProviderController['trackChecktokenJWT'](
+        tokenIntrospectionMock,
+        {
+          req: reqMock,
+        },
+      );
 
       // Then
       expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);
@@ -461,9 +432,12 @@ describe('DataProviderController', () => {
 
     it('should emit DP_USED_INVALID_ACCESS_TOKEN event if token_introspection is not active', async () => {
       // When
-      await dataProviderController['trackChecktokenJWT'](expiredPayload, {
-        req: reqMock,
-      });
+      await dataProviderController['trackChecktokenJWT'](
+        expiredTokenIntrospectionMock,
+        {
+          req: reqMock,
+        },
+      );
 
       // Then
       expect(trackingServiceMock.track).toHaveBeenCalledTimes(1);

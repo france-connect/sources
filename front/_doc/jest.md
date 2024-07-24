@@ -3,9 +3,9 @@
 **Boucher une function exportée d'un fichier**
 
 ```
-import { removeIdentityProvider } from '../../../redux/actions';
+import { removeIdentityProvider } from '../../../<ma_lib>/actions';
 ...
-jest.mock('../../../redux/actions');
+jest.mock('../../../<ma_lib>/actions');
 ...
 const spy = jest.mocked(removeIdentityProvider, true);
 spy.mockReturnValueOnce(action);

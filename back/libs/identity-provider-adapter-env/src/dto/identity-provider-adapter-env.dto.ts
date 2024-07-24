@@ -20,96 +20,64 @@ class IssuerDto {
 
   @IsUrl()
   @IsOptional()
-  // oidc param name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly authorization_endpoint?: string;
 
   @IsUrl()
   @IsOptional()
-  // oidc param name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_endpoint?: string;
 
   @IsUrl()
   @IsOptional()
-  // oidc param name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_endpoint?: string;
 
   @IsUrl()
   @IsOptional()
-  //oidc param name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly end_session_endpoint?: string;
 
   @IsUrl()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly jwks_uri: string;
 }
 
 class ClientMetadataDto {
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_id: string;
 
   @IsString()
   @MinLength(32)
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_secret: string;
 
   @IsArray()
   @IsString({ each: true })
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly response_types: string[];
 
   @IsString()
   @IsIn(SUPPORTED_SIG_ALG)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_signed_response_alg: 'ES256' | 'RS256' | 'HS256';
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_encrypted_response_alg?: string;
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_encrypted_response_enc?: string;
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_signed_response_alg?: string;
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_encrypted_response_alg?: string;
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_encrypted_response_enc?: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_endpoint_auth_method: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly revocation_endpoint_auth_method: string;
 }
 

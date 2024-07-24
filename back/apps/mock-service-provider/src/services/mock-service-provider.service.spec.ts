@@ -15,7 +15,7 @@ describe('MockServiceProviderService', () => {
   let service: MockServiceProviderService;
 
   const httpServiceMock = {
-    get: jest.fn(),
+    post: jest.fn(),
   };
 
   const loggerServiceMock = getLoggerMock();
@@ -47,7 +47,7 @@ describe('MockServiceProviderService', () => {
     const accessTokenMock = 'accessToken';
     const authSecretMock = 'authSecret';
     const authorizationMock = `Bearer ${Buffer.from(
-      `${accessTokenMock}:${authSecretMock}`,
+      accessTokenMock,
       'utf-8',
     ).toString('base64')}`;
 
@@ -65,19 +65,26 @@ describe('MockServiceProviderService', () => {
       await service.getData(apiUrlMock, accessTokenMock, authSecretMock);
 
       // Then
-      expect(httpServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(httpServiceMock.get).toHaveBeenCalledWith(apiUrlMock, {
-        headers: {
-          Authorization: authorizationMock,
+      expect(httpServiceMock.post).toHaveBeenCalledTimes(1);
+      expect(httpServiceMock.post).toHaveBeenCalledWith(
+        apiUrlMock,
+        {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          auth_secret: authSecretMock,
         },
-        proxy: false,
-      });
+        {
+          headers: {
+            Authorization: authorizationMock,
+          },
+          proxy: false,
+        },
+      );
     });
 
-    it('should call lastValueFrom with the value returned by the httpServiceMock.get call', async () => {
+    it('should call lastValueFrom with the value returned by the httpServiceMock.post call', async () => {
       // Given
       const observableMock = 'observable';
-      jest.mocked(httpServiceMock.get).mockReturnValue(observableMock);
+      jest.mocked(httpServiceMock.post).mockReturnValue(observableMock);
 
       // When
       await service.getData(apiUrlMock, accessTokenMock, authSecretMock);
@@ -99,14 +106,12 @@ describe('MockServiceProviderService', () => {
       expect(result).toStrictEqual(successResponseMock.data);
     });
 
-    it('should throw an error if the httpServiceMock.get call fails', async () => {
+    it('should throw an error if the httpServiceMock.post call fails', async () => {
       // Given
       const errorResponseMock = {
         response: {
           data: {
             error: 'error',
-            // oidc compliant
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             error_description: 'error_description',
           },
         },

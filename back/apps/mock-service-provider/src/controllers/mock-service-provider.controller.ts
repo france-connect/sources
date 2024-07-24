@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
+import { FcException } from '@fc/exceptions-deprecated';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
@@ -193,8 +194,8 @@ export class MockServiceProviderController {
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/308
    */
   // needed for controller
-  // eslint-disable-next-line max-params
   @Get(OidcClientRoutes.OIDC_CALLBACK)
+  // eslint-disable-next-line complexity, max-params
   async getOidcCallback(
     @Req() req,
     @Res() res,
@@ -222,52 +223,62 @@ export class MockServiceProviderController {
       return res.redirect(errorUri);
     }
 
-    const session: OidcSession = sessionOidc.get();
+    try {
+      const session: OidcSession = sessionOidc.get();
 
-    if (!session) {
-      throw new SessionNotFoundException('OidcClient');
+      if (!session) {
+        throw new SessionNotFoundException('OidcClient');
+      }
+
+      const { idpId, idpNonce, idpState } = session;
+
+      const tokenParams = {
+        state: idpState,
+        nonce: idpNonce,
+      };
+
+      const { accessToken, idToken, acr, amr } =
+        await this.oidcClient.getTokenFromProvider(idpId, tokenParams, req);
+      const userInfoParams = {
+        accessToken,
+        idpId,
+      };
+
+      const identity: IOidcIdentity =
+        await this.oidcClient.getUserInfosFromProvider(userInfoParams, req);
+
+      /**
+       * @todo
+       *    action: Check the data returns from FC.
+       *
+       * @author Arnaud
+       * @date 19/03/2020
+       * @ticket FC-244 (identity, DTO, Mock, FS)
+       */
+      const identityExchange: OidcSession = {
+        idpIdentity: identity,
+        idpAcr: acr,
+        amr,
+        idpAccessToken: accessToken,
+        idpIdToken: idToken,
+      };
+
+      sessionOidc.set({ ...identityExchange });
+
+      // BUSINESS: Redirect to business page
+      const { urlPrefix } = this.config.get<AppConfig>('App');
+      const url = `${urlPrefix}/interaction/verify`;
+
+      res.redirect(url);
+    } catch (e) {
+      this.logger.err(e);
+      const redirect =
+        e instanceof FcException
+          ? `/error?error=${e.code}&error_description=${[e.message, e.stack, e.originalError?.stack ?? ''].join('\n\n')}`
+          : `/error?error=${e.name}&error_description=${[e.message, e.stack].join('\n\n')}`;
+
+      return res.redirect(redirect);
     }
-
-    const { idpId, idpNonce, idpState } = session;
-
-    const tokenParams = {
-      state: idpState,
-      nonce: idpNonce,
-    };
-    const { accessToken, idToken, acr, amr } =
-      await this.oidcClient.getTokenFromProvider(idpId, tokenParams, req);
-
-    const userInfoParams = {
-      accessToken,
-      idpId,
-    };
-
-    const identity: IOidcIdentity =
-      await this.oidcClient.getUserInfosFromProvider(userInfoParams, req);
-
-    /**
-     * @todo
-     *    action: Check the data returns from FC.
-     *
-     * @author Arnaud
-     * @date 19/03/2020
-     * @ticket FC-244 (identity, DTO, Mock, FS)
-     */
-    const identityExchange: OidcSession = {
-      idpIdentity: identity,
-      idpAcr: acr,
-      amr,
-      idpAccessToken: accessToken,
-      idpIdToken: idToken,
-    };
-
-    sessionOidc.set({ ...identityExchange });
-
-    // BUSINESS: Redirect to business page
-    const { urlPrefix } = this.config.get<AppConfig>('App');
-    const url = `${urlPrefix}/interaction/verify`;
-
-    res.redirect(url);
   }
 
   @Post(MockServiceProviderRoutes.USERINFO)
@@ -363,7 +374,7 @@ export class MockServiceProviderController {
 
   @Get(MockServiceProviderRoutes.ERROR)
   @Render('error')
-  error(@Query() query) {
+  error(@Query() query: { error: string; error_description: string }) {
     const response = {
       titleFront: "Mock service provider - Erreur lors de l'authentification",
       ...query,
@@ -385,7 +396,6 @@ export class MockServiceProviderController {
     const authorizeParams = {
       state,
       scope,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: defaultAcrValue,
       nonce,
       claims,
@@ -402,11 +412,7 @@ export class MockServiceProviderController {
 
     return {
       params: {
-        // oidc name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         redirect_uri: redirectUri,
-        // oidc name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: provider.client.client_id,
         uid: provider.uid,
         state,
@@ -414,8 +420,6 @@ export class MockServiceProviderController {
         acr: defaultAcrValue,
         claims,
         nonce,
-        // oidc name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         authorization_endpoint: `${url.origin}${url.pathname}`,
         prompt,
       },

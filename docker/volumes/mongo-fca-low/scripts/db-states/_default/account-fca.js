@@ -1,10 +1,10 @@
 // == ACCOUNTS
 const accountsFca = {
-  // -- User Account already desactivated for tests purposes
-  E000001: {
-    id: "E000001",
+  // -- User E000001 already deactivated for test purpose
+  deactivated: {
+    id: "ec64cb33-6d86-4a8d-836f-fe635c59840d",
     sub: "2c98c3a8-5094-45e9-9c85-7e453323c328",
-    createdAt: new Date("2019-12-11T11:16:23.540Z"),
+    createdAt: new Date("2024-05-11T11:16:23.540Z"),
     idpIdentityKeys: [
       {
         idpUid: "9c716f61-b8a1-435c-a407-ef4d677ec270",
@@ -14,11 +14,11 @@ const accountsFca = {
     active: false,
     __v: 1,
   },
-  // -- User with multiple idpIdentityKeys
-  E000002: {
-    id: "E000002",
+  // -- User 12355 with multiple idp sub
+  multipleIdpSub: {
+    id: "dfee2663-6e6c-4a90-a669-9c864c0cb0d9",
     sub: "d68cec59-ed65-48ab-bfbf-1ca65dd807f8",
-    createdAt: new Date("2019-12-11T11:16:23.540Z"),
+    createdAt: new Date("2024-05-11T11:16:23.540Z"),
     idpIdentityKeys: [
       {
         idpUid: "9c716f61-b8a1-435c-a407-ef4d677ec270", // fia1
@@ -42,7 +42,7 @@ db.accountFca.createIndex(
   { unique: true },
 );
 
-print("Initializing user account: E000001...");
-db.accountFca.update({ id: "E000001" }, accountsFca.E000001, { upsert: true });
-print("Initializing user account: E000002...");
-db.accountFca.update({ id: "E000002" }, accountsFca.E000002, { upsert: true });
+Object.entries(accountsFca).forEach(([key, account]) => {
+  print(`${key} > Initializing user account: ${key}...`);
+  db.accountFca.update({ id: account.id }, account, { upsert: true });
+});

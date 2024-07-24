@@ -112,7 +112,6 @@ describe('MockIdentityProviderController', () => {
       state: stateMock,
       scope: scopeMock,
       providerUid: providerUidMock,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: acrMock,
     });
 
@@ -385,7 +384,7 @@ describe('MockIdentityProviderController', () => {
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledWith({
         spIdentity: {},
-        spAcr: acrMock,
+        interactionAcr: acrMock,
         amr: ['pwd'],
         subs: { spId: 'sub' },
       });
@@ -436,7 +435,7 @@ describe('MockIdentityProviderController', () => {
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(oidcClientSessionServiceMock.set).toHaveBeenCalledWith(
         expect.objectContaining({
-          spAcr: 'acrValue',
+          interactionAcr: 'acrValue',
         }),
       );
     });

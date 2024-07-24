@@ -1,5 +1,7 @@
 /* istanbul ignore file */
 
+import { SameSiteType } from '../types';
+
 // declarative code
 /**
  * @todo This interface is not complete, it should have the right attributes
@@ -14,5 +16,5 @@ export interface ISessionCookieOptions {
   secure: boolean;
   maxAge?: number;
   domain: string;
-  sameSite: 'strict' | 'lax' | 'none' | boolean;
+  sameSite: SameSiteType | boolean;
 }

@@ -4,7 +4,8 @@
     "criteria": [
       "par défaut",
       "avec genre feminin",
-      "avec un prénom"
+      "avec un prénom",
+      "première identité"
     ],
     "credentials": [
       {
@@ -31,9 +32,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "pour le test de désactivation"
-    ],
+    "criteria": ["pour le test de désactivation"],
     "credentials": [
       {
         "idpId": "default",
@@ -53,9 +52,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "non trouvé avec un echo RNIPP"
-    ],
+    "criteria": ["non trouvé avec un echo RNIPP"],
     "credentials": [
       {
         "idpId": "default",
@@ -75,9 +72,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "non trouvé avec plusieurs echos RNIPP"
-    ],
+    "criteria": ["non trouvé avec plusieurs echos RNIPP"],
     "credentials": [
       {
         "idpId": "default",
@@ -97,9 +92,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "non trouvé avec aucun echo RNIPP"
-    ],
+    "criteria": ["non trouvé avec aucun echo RNIPP"],
     "credentials": [
       {
         "idpId": "default",
@@ -119,9 +112,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "avec erreur RNIPP mauvaise requête"
-    ],
+    "criteria": ["avec erreur RNIPP mauvaise requête"],
     "credentials": [
       {
         "idpId": "default",
@@ -141,9 +132,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "avec erreur RNIPP mauvais format"
-    ],
+    "criteria": ["avec erreur RNIPP mauvais format"],
     "credentials": [
       {
         "idpId": "default",
@@ -163,9 +152,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "sans nom de naissance"
-    ],
+    "criteria": ["sans nom de naissance"],
     "credentials": [
       {
         "idpId": "default",
@@ -183,9 +170,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "avec date de naissance erronée"
-    ],
+    "criteria": ["avec date de naissance erronée"],
     "credentials": [
       {
         "idpId": "default",
@@ -204,9 +189,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "décédé"
-    ],
+    "criteria": ["décédé"],
     "credentials": [
       {
         "idpId": "default",
@@ -225,9 +208,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "décédée"
-    ],
+    "criteria": ["décédée"],
     "credentials": [
       {
         "idpId": "default",
@@ -246,10 +227,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "né en Corse",
-      "avec genre masculin"
-    ],
+    "criteria": ["né en Corse", "avec genre masculin", "deuxième identité"],
     "credentials": [
       {
         "idpId": "default",
@@ -273,9 +251,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "présumé né jour"
-    ],
+    "criteria": ["présumé né jour"],
     "credentials": [
       {
         "idpId": "default",
@@ -301,9 +277,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "présumé né jour et mois"
-    ],
+    "criteria": ["présumé né jour et mois"],
     "credentials": [
       {
         "idpId": "default",
@@ -329,9 +303,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "né en Algérie"
-    ],
+    "criteria": ["né en Algérie", "troisième identité"],
     "credentials": [
       {
         "idpId": "default",
@@ -350,9 +322,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "né dans l'Aisne"
-    ],
+    "criteria": ["né dans l'Aisne"],
     "credentials": [
       {
         "idpId": "default",
@@ -373,9 +343,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "désactivé"
-    ],
+    "criteria": ["désactivé"],
     "credentials": [
       {
         "idpId": "default",
@@ -386,10 +354,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "pour le test de dernière connexion",
-      "avec 3 prénoms"
-    ],
+    "criteria": ["pour le test de dernière connexion", "avec 3 prénoms"],
     "credentials": [
       {
         "idpId": "default",
@@ -409,9 +374,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "n'ayant jamais utilisé FranceConnect"
-    ],
+    "criteria": ["n'ayant jamais utilisé FranceConnect"],
     "credentials": [],
     "claims": {
       "gender": "male",
@@ -424,9 +387,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "pour les tests eidas-bridge"
-    ],
+    "criteria": ["pour les tests eidas-bridge"],
     "credentials": [
       {
         "idpId": "eidas-bridge",
@@ -445,9 +406,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "avec des caractères spéciaux"
-    ],
+    "criteria": ["avec des caractères spéciaux", "quatrième identité"],
     "credentials": [
       {
         "idpId": "default",
@@ -471,9 +430,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "avec prénom composé"
-    ],
+    "criteria": ["avec prénom composé"],
     "credentials": [
       {
         "idpId": "default",
@@ -497,9 +454,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "avec un nom de famille long"
-    ],
+    "criteria": ["avec un nom de famille long"],
     "credentials": [
       {
         "idpId": "default",
@@ -523,9 +478,7 @@
   },
   {
     "enabled": true,
-    "criteria": [
-      "avec un prénom contenant un espace"
-    ],
+    "criteria": ["avec un prénom contenant un espace"],
     "credentials": [
       {
         "idpId": "default",
@@ -543,19 +496,13 @@
       "birthplace": "75107",
       "email": "multiPrenom@france.fr",
       "rnipp_given_name": "Jean Philippe Pierre Louis",
-      "rnipp_given_name_array": [
-        "Jean Philippe",
-        "Pierre",
-        "Louis"
-      ],
+      "rnipp_given_name_array": ["Jean Philippe", "Pierre", "Louis"],
       "rnipp_family_name": "DUBOIS"
     }
   },
   {
     "enabled": true,
-    "criteria": [
-      "personnalisé"
-    ],
+    "criteria": ["personnalisé"],
     "claims": {
       "given_name": "Augusta Ada",
       "family_name": "Byron",
@@ -566,12 +513,32 @@
       "birthplace": "",
       "email": "ada@babbage.co.uk",
       "rnipp_given_name": "Augusta Ada",
-      "rnipp_given_name_array": [
-        "Augusta",
-        "Ada"
-      ],
+      "rnipp_given_name_array": ["Augusta", "Ada"],
       "rnipp_family_name": "Byron",
       "acr": "eidas2"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "pour les tests de traces"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "test_TRACE_USER",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "given_name": "utilisateur traces",
+      "family_name": "TRACE_USER",
+      "preferred_username": "",
+      "birthdate": "1985-01-01",
+      "gender": "male",
+      "birthcountry": "99100",
+      "birthplace": "75107",
+      "email": "aucun@email.com"
     }
   }
 ]

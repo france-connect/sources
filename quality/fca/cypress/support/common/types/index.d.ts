@@ -1,11 +1,13 @@
-/// <reference types="cypress" />
+import { Result } from 'axe-core';
 
-export * from './environment';
-export * from './identity-provider';
-export * from './identity-provider-config';
-export * from './service-provider';
-export * from './service-provider-config';
-export * from './user';
+import { type OperatorUser } from '../../exploitation/helpers';
+import { type User } from '../helpers';
+import { Environment } from './environment';
+import { IdentityProvider } from './identity-provider';
+import { IdentityProviderConfig } from './identity-provider-config';
+import { ScopeContext, ServiceProvider } from './service-provider';
+import { ServiceProviderConfig } from './service-provider-config';
+import { UserData } from './user';
 
 // Cypress Alias
 // eslint-disable-next-line no-undef
@@ -19,3 +21,39 @@ declare global {
     }
   }
 }
+
+// Define Cucumber world interface
+declare module 'mocha' {
+  export interface Context {
+    // Accessibility context
+    allViolations?: Result[];
+    newViolations?: Result[];
+
+    // API context
+    apiRequests: Partial<Cypress.RequestOptions>[];
+    apiRequest?: Partial<Cypress.RequestOptions>;
+
+    // BDD context
+    env: Environment;
+    identityProvider: IdentityProvider;
+    identityProviders: IdentityProvider[];
+    idpConfig?: IdentityProviderConfig;
+    idpConfigs: IdentityProviderConfig[];
+    operatorUser?: OperatorUser;
+    requestedScope: ScopeContext;
+    scopes: ScopeContext[];
+    serviceProvider: ServiceProvider;
+    serviceProviders: ServiceProvider[];
+    spConfig?: ServiceProviderConfig;
+    spConfigs: ServiceProviderConfig[];
+    users: UserData[];
+    user: User;
+  }
+}
+
+export * from './environment';
+export * from './identity-provider';
+export * from './identity-provider-config';
+export * from './service-provider';
+export * from './service-provider-config';
+export * from './user';

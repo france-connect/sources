@@ -101,8 +101,6 @@ export class OidcToEidasService {
     if (error instanceof Error) {
       errorToReturn = {
         error: 'internal_error',
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description:
           'FranceConnect encountered an unexpected error, please contact the support (Code Y000000).',
       };

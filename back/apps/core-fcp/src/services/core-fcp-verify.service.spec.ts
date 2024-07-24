@@ -145,8 +145,6 @@ describe('CoreFcpVerifyService', () => {
     // Given
     const errorMock = {
       error: 'error',
-      // oidc naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       error_description: 'error description',
     };
 

@@ -3,7 +3,7 @@
 // declarative file
 export interface IUsePaginationHook {
   currentPage: number;
-  isTabletOrDesktop: boolean;
+  gtTablet: boolean;
   navigationNumbers: number[];
   pagesCount: number;
   paginationChangeHandler: Function;

@@ -1,4 +1,4 @@
 /* istanbul ignore file */
 
 // Declarative code
-export * from './log-context.interface';
+export * from './logger-plugin.interface';

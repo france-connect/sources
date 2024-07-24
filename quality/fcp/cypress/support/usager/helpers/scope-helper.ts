@@ -69,9 +69,7 @@ export const getScopeByType = (
   scopes: ScopeContext[],
   type: string,
 ): ScopeContext => {
-  const scopeContext: ScopeContext = scopes.find(
-    (scope) => scope.type === type,
-  );
+  const scopeContext = scopes.find((scope) => scope.type === type);
   expect(scopeContext, `No scope matches the type '${type}'`).to.exist;
   return scopeContext;
 };

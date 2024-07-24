@@ -9,29 +9,24 @@ import {
   MailerConfig,
   MailerNotificationConnectException,
   MailerService,
-  MailFrom,
   MailTo,
   NoEmailException,
 } from '@fc/mailer';
 import { OidcSession } from '@fc/oidc';
+import { SessionService } from '@fc/session';
 
 import { AppConfig } from '../../dto';
 import { EmailsTemplates } from '../../enums';
 
 @Injectable()
 @FeatureHandler('core-fcp-send-email')
-export class CoreFcpSendEmailHandler
-  implements IFeatureHandler<void, OidcSession>
-{
-  private configMailer;
-
+export class CoreFcpSendEmailHandler implements IFeatureHandler<void> {
   constructor(
     private readonly config: ConfigService,
     private readonly mailer: MailerService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
-  ) {
-    this.configMailer = this.config.get<MailerConfig>('Mailer');
-  }
+    private readonly session: SessionService,
+  ) {}
 
   getTodayFormattedDate(datejs: Date): string {
     const timeZone = 'Europe/Paris';
@@ -49,11 +44,9 @@ export class CoreFcpSendEmailHandler
     return formattedDate;
   }
 
-  private async getConnectNotificationEmailBodyContent(
-    session: OidcSession,
-  ): Promise<string> {
+  private async getConnectNotificationEmailBodyContent(): Promise<string> {
     const { fqdn, udFqdn } = this.config.get<AppConfig>('App');
-    const { idpId, spName } = session;
+    const { idpId, spName } = this.session.get<OidcSession>('OidcClient');
     const { title: idpTitle } = await this.identityProvider.getById(idpId);
     const today = this.getTodayFormattedDate(new Date());
     const connectNotificationEmailParameters = {
@@ -90,41 +83,35 @@ export class CoreFcpSendEmailHandler
    * @param {OidcSession} session session content.
    * @returns {Promise<void>}
    */
-  async handle(session: OidcSession): Promise<void> {
-    // -- email from
-    const { from } = this.configMailer;
-    let errors = await validateDto(from, MailFrom, validationOptions);
-    if (errors.length > 0) {
-      throw new NoEmailException();
-    }
+  async handle(): Promise<void> {
+    const { from } = this.config.get<MailerConfig>('Mailer');
+    const { platform } = this.config.get<AppConfig>('App');
 
-    // -- email to
-    const { spName, spIdentity } = session;
+    const { spName, spIdentity } = this.session.get<OidcSession>('OidcClient');
     const {
       email,
       given_name: givenName,
       family_name: familyName,
     } = spIdentity;
+
     const mailTo: MailTo = {
       email,
       name: `${givenName} ${familyName}`,
     };
-    const to: MailTo[] = [mailTo];
-    errors = await validateDto(mailTo, MailTo, validationOptions);
+
+    const errors = await validateDto(mailTo, MailTo, validationOptions);
     if (errors.length > 0) {
       throw new NoEmailException();
     }
 
-    const { platform } = this.config.get<AppConfig>('App');
-
     // -- email body
-    const body = await this.getConnectNotificationEmailBodyContent(session);
+    const body = await this.getConnectNotificationEmailBodyContent();
 
     // -- send
     await this.mailer.send({
       from,
-      to,
-      subject: `Notification de connexion au service "${spName}" grâce à ${platform}`,
+      to: [mailTo],
+      subject: `Alerte de connexion au service "${spName}" avec ${platform}`,
       body,
     });
   }

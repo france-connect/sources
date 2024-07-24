@@ -7,9 +7,9 @@ import { OidcProviderService } from '@fc/oidc-provider';
 import { getLoggerMock } from '@mocks/logger';
 
 import {
-  CoreHighAcrException,
   CoreInvalidAcrException,
   CoreLowAcrException,
+  CoreNotAllowedAcrException,
 } from '../exceptions';
 import { CoreAcrService } from './core-acr.service';
 
@@ -62,10 +62,11 @@ describe('CoreAcrService', () => {
       // Given
       const received = 'eidas3';
       const requested = 'eidas3';
-      const maxAcr = 'eidas3';
+      const allowedAcr = ['eidas3'];
 
       // When
-      const call = () => service.checkIfAcrIsValid(received, requested, maxAcr);
+      const call = () =>
+        service.checkIfAcrIsValid(received, requested, allowedAcr);
 
       // Then
       expect(call).not.toThrow();
@@ -75,11 +76,11 @@ describe('CoreAcrService', () => {
       // Given
       const received = 'eidas3';
       const requested = '';
-      const maxAcr = 'eidas3';
+      const allowedAcr = ['eidas3'];
 
       // When
       const call = () =>
-        service['checkIfAcrIsValid'](received, requested, maxAcr);
+        service['checkIfAcrIsValid'](received, requested, allowedAcr);
 
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
@@ -90,11 +91,11 @@ describe('CoreAcrService', () => {
       // Given
       const received = '';
       const requested = 'eidas2';
-      const maxAcr = 'eidas3';
+      const allowedAcr = ['eidas3'];
 
       // When
       const call = () =>
-        service['checkIfAcrIsValid'](received, requested, maxAcr);
+        service['checkIfAcrIsValid'](received, requested, allowedAcr);
 
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
@@ -105,11 +106,11 @@ describe('CoreAcrService', () => {
       // Given
       const received = 'eidas3';
       const requested = undefined;
-      const maxAcr = 'eidas3';
+      const allowedAcr = ['eidas3'];
 
       // When
       const call = () =>
-        service['checkIfAcrIsValid'](received, requested, maxAcr);
+        service['checkIfAcrIsValid'](received, requested, allowedAcr);
 
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
@@ -120,11 +121,11 @@ describe('CoreAcrService', () => {
       // Given
       const received = undefined;
       const requested = 'eidas2';
-      const maxAcr = 'eidas3';
+      const allowedAcr = ['eidas3'];
 
       // When
       const call = () =>
-        service['checkIfAcrIsValid'](received, requested, maxAcr);
+        service['checkIfAcrIsValid'](received, requested, allowedAcr);
 
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
@@ -135,11 +136,11 @@ describe('CoreAcrService', () => {
       // Given
       const received = 'eidas3';
       const requested = null;
-      const maxAcr = 'eidas3';
+      const allowedAcr = ['eidas3'];
 
       // When
       const call = () =>
-        service['checkIfAcrIsValid'](received, requested, maxAcr);
+        service['checkIfAcrIsValid'](received, requested, allowedAcr);
 
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
@@ -150,11 +151,11 @@ describe('CoreAcrService', () => {
       // Given
       const received = null;
       const requested = 'eidas2';
-      const maxAcr = 'eidas3';
+      const allowedAcr = ['eidas3'];
 
       // When
       const call = () =>
-        service['checkIfAcrIsValid'](received, requested, maxAcr);
+        service['checkIfAcrIsValid'](received, requested, allowedAcr);
 
       // Then
       expect(call).toThrow(CoreInvalidAcrException);
@@ -167,11 +168,11 @@ describe('CoreAcrService', () => {
 
       const received = 'eidas1';
       const requested = 'eidas2';
-      const maxAcr = 'eidas3';
+      const allowedAcr = ['eidas3'];
 
       // When
       const call = () =>
-        service['checkIfAcrIsValid'](received, requested, maxAcr);
+        service['checkIfAcrIsValid'](received, requested, allowedAcr);
 
       // Then
       expect(call).toThrow(CoreLowAcrException);
@@ -187,15 +188,15 @@ describe('CoreAcrService', () => {
 
       const received = 'eidas3';
       const requested = 'eidas2';
-      const maxAcr = 'eidas2';
+      const allowedAcr = ['eidas2'];
 
       // When
       const call = () =>
-        service['checkIfAcrIsValid'](received, requested, maxAcr);
+        service['checkIfAcrIsValid'](received, requested, allowedAcr);
 
       // Then
-      expect(call).toThrow(CoreHighAcrException);
-      expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(2);
+      expect(call).toThrow(CoreNotAllowedAcrException);
+      expect(oidcAcrServiceMock.isAcrValid).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -248,8 +249,6 @@ describe('CoreAcrService', () => {
       expect(oidcProviderServiceMock.abortInteraction).toHaveBeenCalledWith(
         req,
         res,
-        // oidc naming
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         { error, error_description: errorDescription },
       );
     });

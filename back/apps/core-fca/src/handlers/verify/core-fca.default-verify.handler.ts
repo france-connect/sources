@@ -8,6 +8,7 @@ import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
+import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService } from '@fc/session';
 
@@ -21,6 +22,7 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
     protected readonly coreAcr: CoreAcrService,
     protected readonly identityProvider: IdentityProviderAdapterMongoService,
     protected readonly accountService: AccountFcaService,
+    protected readonly oidcAcr: OidcAcrService,
   ) {}
 
   /**
@@ -37,12 +39,17 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
   }: IVerifyFeatureHandlerHandleArgument): Promise<void> {
     this.logger.debug('verifyIdentity service: ##### core-fca-default-verify');
 
-    const { idpId, idpIdentity, idpAcr, spAcr } = sessionOidc.get();
+    const { idpId, idpIdentity, idpAcr, spAcr, isSso } = sessionOidc.get();
 
     // Acr check
-    const { maxAuthorizedAcr } = await this.identityProvider.getById(idpId);
+    const { allowedAcr } = await this.identityProvider.getById(idpId);
 
-    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr, maxAuthorizedAcr);
+    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr, allowedAcr);
+    const interactionAcr = this.oidcAcr.getInteractionAcr({
+      idpAcr,
+      spAcr,
+      isSso,
+    });
 
     const agentIdentity = idpIdentity as IAgentIdentity;
 
@@ -57,6 +64,7 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
       account.sub,
       fcaIdentity,
       account.id,
+      interactionAcr,
     );
   }
 
@@ -122,33 +130,27 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
     idpId: string,
     idpAcr: string,
   ): {
-    // AgentConnect claims naming convention
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     idp_id: string;
-    // AgentConnect claims naming convention
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     idp_acr: string;
   } & Omit<IAgentIdentity, 'sub'> {
     const { sub: _sub, ...spIdentityCleaned } = idpIdentity;
 
     return {
       ...spIdentityCleaned,
-      // AgentConnect claims naming convention
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_id: idpId,
-      // AgentConnect claims naming convention
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_acr: idpAcr,
     };
   }
 
+  // New parameter needed
+  // @fixme Check with AC team what to do about that
+  // eslint-disable-next-line max-params
   protected storeIdentityWithSessionService(
     sessionOidc: ISessionService<OidcClientSession>,
     sub: string,
-    // AgentConnect claims naming convention
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     spIdentity: Partial<Omit<IOidcIdentity, 'sub'>>,
     accountId: string,
+    interactionAcr: string,
   ): void {
     const { idpIdentity, spId, amr, subs } = sessionOidc.get();
 
@@ -157,6 +159,7 @@ export class CoreFcaDefaultVerifyHandler implements IFeatureHandler {
       idpIdentity,
       spIdentity,
       accountId,
+      interactionAcr,
       subs: { ...subs, [spId]: sub },
     };
 

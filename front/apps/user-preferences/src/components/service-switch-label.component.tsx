@@ -6,8 +6,8 @@ interface ServiceSwitchLabelComponentProps {
   serviceTitle: string;
 }
 
-export const ServiceSwitchLabelComponent: React.FC<ServiceSwitchLabelComponentProps> = React.memo(
-  ({ checked, disabled, serviceTitle }: ServiceSwitchLabelComponentProps) => {
+export const ServiceSwitchLabelComponent = React.memo(
+  ({ checked, disabled = false, serviceTitle }: ServiceSwitchLabelComponentProps) => {
     const state = checked ? 'autorisée' : 'bloquée';
     return (
       (!disabled && (
@@ -26,9 +26,5 @@ export const ServiceSwitchLabelComponent: React.FC<ServiceSwitchLabelComponentPr
     );
   },
 );
-
-ServiceSwitchLabelComponent.defaultProps = {
-  disabled: false,
-};
 
 ServiceSwitchLabelComponent.displayName = 'ServiceSwitchLabelComponent';

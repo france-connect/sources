@@ -12,7 +12,8 @@
     "clean": "yarn clean:snapshots:diff && rm -rf cypress/reports && rm -rf cypress/screenshots && rm -rf cypress/videos",
     "clean:snapshots:diff": "rm -rf cypress/snapshots/diff",
     "prettier": "prettier -c \"{.,cypress,scripts}/**/*.ts\" --config ../.prettierrc",
-    "lint": "eslint \"{.,cypress,scripts}/**/*.ts\"",
+    "lint": "eslint '**/*.ts'",
+    "test": "jest --config=../jest.config.js",
     "test:eidas:base": "cypress run --config-file cypress-eidas-bridge.config.ts",
     "test:eidas": "yarn test:eidas:base  --browser chrome --headless",
     "test:eidas:snapshot": "yarn clean:snapshots:diff && cypress run --headless --config-file cypress-eidas-bridge-visual.config.ts",
@@ -35,6 +36,7 @@
     "start:low": "cypress open --e2e --config-file cypress-fcp-low.config.ts",
     "start:ud": "cypress open --e2e --config-file cypress-ud.config.ts",
     "start:eidas": "cypress open --e2e --config-file cypress-eidas-bridge.config.ts",
-    "report": "ts-node ../scripts/multiple-cucumber-html-reporter"
+    "report": "ts-node ../scripts/multiple-cucumber-html-reporter",
+    "traces": "ts-node ./data/log-generator/src/populate-account-traces.ts"
   }
 }

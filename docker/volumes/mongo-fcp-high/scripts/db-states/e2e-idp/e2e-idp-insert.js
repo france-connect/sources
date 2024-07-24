@@ -12,6 +12,7 @@ db.provider.update(
     imageFocus: "",
     alt: "idp test",
     eidas: 3,
+    allowedAcr: ["eidas3"],
     featureHandlers: { coreVerify: "core-fcp-default-verify" },
     mailto: "",
     specificText: "specific text FI 3",

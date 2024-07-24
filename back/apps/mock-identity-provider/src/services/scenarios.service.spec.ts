@@ -255,11 +255,7 @@ describe('ScenarioService', () => {
     const subSpMock = 'the-world';
     const spIdentityMock = {
       email: 'dio@brando.it',
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name: 'Dio',
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       family_name: 'Brando',
     };
 
@@ -337,8 +333,6 @@ describe('ScenarioService', () => {
       // Then
       expect(result).toStrictEqual({
         sub: subSpMock,
-        // oidc claim
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         family_name: spIdentityMock.family_name,
       });
     });

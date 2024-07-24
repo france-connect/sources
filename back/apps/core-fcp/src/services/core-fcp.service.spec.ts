@@ -6,6 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PartialExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CoreAuthorizationService } from '@fc/core';
+import { DeviceInformationInterface } from '@fc/device';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
@@ -28,18 +29,13 @@ describe('CoreFcpService', () => {
 
   const oidcAcrServiceMock = {
     isAcrValid: jest.fn(),
+    getAcrToAskToIdp: jest.fn(),
   };
 
   const sessionServiceMock = getSessionServiceMock();
 
-  const sessionCoreServiceMock = getSessionServiceMock();
-
   const spIdentityMock = {
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Edward',
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'TEACH',
     email: 'eteach@fqdn.ext',
   } as IOidcIdentity;
@@ -160,18 +156,24 @@ describe('CoreFcpService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('sendAuthenticationMail()', () => {
+  describe('sendNotificationMail()', () => {
+    const deviceInfo = {
+      isTrusted: true,
+      isSuspicious: false,
+    } as DeviceInformationInterface;
+
+    beforeEach(() => {
+      service['shouldSendNotificationMail'] = jest.fn().mockReturnValue(true);
+    });
+
     it('should return a promise', async () => {
       // given
-      sessionCoreServiceMock.get.mockReset().mockReturnValue({
+      sessionServiceMock.get.mockReset().mockReturnValue({
         sentNotificationsForSp: [],
       });
 
       // action
-      const result = service.sendAuthenticationMail(
-        sessionDataMock,
-        sessionCoreServiceMock,
-      );
+      const result = service.sendNotificationMail(deviceInfo);
       await result;
       // expect
       expect(result).toBeInstanceOf(Promise);
@@ -179,15 +181,12 @@ describe('CoreFcpService', () => {
 
     it('Should call `FeatureHandler.get()` to get instantiated featureHandler class', async () => {
       // Given
-      sessionCoreServiceMock.get.mockReset().mockReturnValue({
+      sessionServiceMock.get.mockReset().mockReturnValue({
         sentNotificationsForSp: [],
       });
 
       // When
-      await service.sendAuthenticationMail(
-        sessionDataMock,
-        sessionCoreServiceMock,
-      );
+      await service.sendNotificationMail(deviceInfo);
       // Then
       expect(featureHandlerGetSpy).toBeCalledTimes(1);
       expect(featureHandlerGetSpy).toBeCalledWith(
@@ -196,93 +195,227 @@ describe('CoreFcpService', () => {
       );
     });
 
-    it('Should use an empty array if `sessionCore.sentNotificationsForSp` is not set', async () => {
+    it('Should use an empty array if session `Core.sentNotificationsForSp` is not set', async () => {
       // Given
-      sessionCoreServiceMock.get.mockReset().mockReturnValue(undefined);
+      const spIdMock = Symbol('spIdMockValue');
+      sessionServiceMock.get.mockReset().mockReturnValue({ spId: spIdMock });
 
       // When
-      await service.sendAuthenticationMail(
-        sessionDataMock,
-        sessionCoreServiceMock,
-      );
+      await service.sendNotificationMail(deviceInfo);
 
       // Then
-      expect(featureHandlerServiceMock.handle).toBeCalledTimes(1);
-      expect(featureHandlerServiceMock.handle).toBeCalledWith(sessionDataMock);
+      expect(sessionServiceMock.set).toHaveBeenCalledExactlyOnceWith(
+        'Core',
+        'sentNotificationsForSp',
+        [spIdMock],
+      );
     });
-    it('Should call featureHandle.handle() with `session`', async () => {
+
+    it('Should use an empty array if session `Core` is not set', async () => {
       // Given
-      sessionCoreServiceMock.get.mockReset().mockReturnValue({
+      const spIdMock = Symbol('spIdMockValue');
+      sessionServiceMock.get
+        .mockReturnValueOnce(undefined)
+        .mockReturnValueOnce({ spId: spIdMock });
+
+      // When
+      await service.sendNotificationMail(deviceInfo);
+
+      // Then
+      expect(sessionServiceMock.set).toHaveBeenCalledExactlyOnceWith(
+        'Core',
+        'sentNotificationsForSp',
+        [spIdMock],
+      );
+    });
+
+    it('Should call featureHandle.handle()', async () => {
+      // Given
+      sessionServiceMock.get.mockReset().mockReturnValue({
         sentNotificationsForSp: [],
       });
 
       // When
-      await service.sendAuthenticationMail(
-        sessionDataMock,
-        sessionCoreServiceMock,
-      );
+      await service.sendNotificationMail(deviceInfo);
 
       // Then
-      expect(featureHandlerServiceMock.handle).toBeCalledTimes(1);
-      expect(featureHandlerServiceMock.handle).toBeCalledWith(sessionDataMock);
-    });
-
-    it('should initialize sentNotificationsForSp to an empty array if it is not defined', async () => {
-      // Given
-      sessionCoreServiceMock.get.mockReset().mockReturnValue({});
-
-      // When
-      await service.sendAuthenticationMail(
-        sessionDataMock,
-        sessionCoreServiceMock,
-      );
-
-      // Then
-      expect(sessionCoreServiceMock.set).toBeCalledTimes(1);
-      expect(sessionCoreServiceMock.set).toBeCalledWith(
-        'sentNotificationsForSp',
-        [sessionDataMock.spId],
-      );
-    });
-
-    it('Should not call featureHandle.handle() when notification is already sent', async () => {
-      // Given
-      const spIdMock = 'sp_id';
-      jest
-        .mocked(sessionCoreServiceMock.get)
-        .mockReset()
-        .mockReturnValue({
-          sentNotificationsForSp: [spIdMock],
-        });
-
-      // When
-      await service.sendAuthenticationMail(
-        sessionDataMock,
-        sessionCoreServiceMock,
-      );
-
-      // Then
-      expect(featureHandlerServiceMock.handle).not.toBeCalled();
+      expect(
+        featureHandlerServiceMock.handle,
+      ).toHaveBeenCalledExactlyOnceWith();
     });
 
     it('Should call featureHandle.handle() when notification from another service provider is already sent', async () => {
       // Given
       const anotherSpIdMock = 'another_sp_id';
-      jest
-        .mocked(sessionCoreServiceMock.get)
-        .mockReset()
-        .mockReturnValue({
-          sentNotificationsForSp: [anotherSpIdMock],
-        });
+      sessionServiceMock.get.mockReset().mockReturnValue({
+        sentNotificationsForSp: [anotherSpIdMock],
+      });
 
       // When
-      await service.sendAuthenticationMail(
-        sessionDataMock,
-        sessionCoreServiceMock,
+      await service.sendNotificationMail(deviceInfo);
+
+      // Then
+      expect(featureHandlerServiceMock.handle).toHaveBeenCalledOnce();
+    });
+
+    it('should not call featureHandler.handle() if authenticationMail is not to be sent', async () => {
+      // Given
+      service['shouldSendNotificationMail'] = jest
+        .fn()
+        .mockReturnValueOnce(false);
+
+      // When
+      await service.sendNotificationMail(deviceInfo);
+
+      // Then
+      expect(featureHandlerServiceMock.handle).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('shouldSendNotificationMail()', () => {
+    // Given
+
+    const spIdMock = 'spIdMockValue';
+    const deviceInfoMock = { isTrusted: false } as DeviceInformationInterface;
+    const sentNotificationsForSpMock = ['foo'];
+
+    beforeEach(() => {
+      service['isForcedByDevice'] = jest.fn().mockReturnValue(false);
+      service['isAlreadySent'] = jest.fn().mockReturnValue(false);
+    });
+
+    it('should return false if alreadySent', () => {
+      // Given
+      service['isAlreadySent'] = jest.fn().mockReturnValueOnce(true);
+
+      // When
+      const result = service['shouldSendNotificationMail'](
+        spIdMock,
+        deviceInfoMock,
+        sentNotificationsForSpMock,
       );
 
       // Then
-      expect(featureHandlerServiceMock.handle).toBeCalled();
+      expect(result).toBeFalse();
+    });
+
+    it('should return true if NOT alreadySent and forcedByDevice', () => {
+      // Given
+      service['isForcedByDevice'] = jest.fn().mockReturnValueOnce(true);
+
+      // When
+      const result = service['shouldSendNotificationMail'](
+        spIdMock,
+        deviceInfoMock,
+        sentNotificationsForSpMock,
+      );
+
+      // Then
+      expect(result).toBeTrue();
+    });
+
+    it('should return false if trusted, NOT alreadySent and NOT forcedByDevice', () => {
+      // When
+      const result = service['shouldSendNotificationMail'](
+        spIdMock,
+        { isTrusted: true } as DeviceInformationInterface,
+        sentNotificationsForSpMock,
+      );
+
+      // Then
+      expect(result).toBeFalse();
+    });
+
+    it('should return true if NOT trusted, NOT alreadySent and NOT forcedByDevice', () => {
+      // Given
+      const deviceInfoMock = {
+        isTrusted: false,
+      } as DeviceInformationInterface;
+
+      // When
+      const result = service['shouldSendNotificationMail'](
+        spIdMock,
+        deviceInfoMock,
+        sentNotificationsForSpMock,
+      );
+
+      // Then
+      expect(result).toBeTrue();
+    });
+  });
+
+  describe('isForcedByDevice()', () => {
+    it('should return true if suspicious', () => {
+      // Given
+      const deviceInfoMock = {
+        isSuspicious: true,
+      } as DeviceInformationInterface;
+
+      // When
+      const result = service['isForcedByDevice'](deviceInfoMock);
+
+      // Then
+      expect(result).toBeTrue();
+    });
+
+    it('should return true if newIdentity', () => {
+      // Given
+      const deviceInfoMock = {
+        newIdentity: true,
+      } as DeviceInformationInterface;
+
+      // When
+      const result = service['isForcedByDevice'](deviceInfoMock);
+
+      // Then
+      expect(result).toBeTrue();
+    });
+
+    it('should return false if trusted, not suspicious and not newIdentity', () => {
+      // Given
+      const deviceInfoMock = {
+        isTrusted: true,
+        isSuspicious: false,
+        newIdentity: false,
+      } as DeviceInformationInterface;
+
+      // When
+      const result = service['isForcedByDevice'](deviceInfoMock);
+
+      // Then
+      expect(result).toBeFalse();
+    });
+  });
+
+  describe('isAlreadySent()', () => {
+    it('should return true if spId is in sentNotificationsForSp', () => {
+      // Given
+      const spIdMock = 'foo';
+      const sentNotificationsForSpMock = ['foo'];
+
+      // When
+      const result = service['isAlreadySent'](
+        spIdMock,
+        sentNotificationsForSpMock,
+      );
+
+      // Then
+      expect(result).toBeTrue();
+    });
+
+    it('should return false if spId is not in sentNotificationsForSp', () => {
+      // Given
+      const spIdMock = 'foo';
+      const sentNotificationsForSpMock = ['bar'];
+
+      // When
+      const result = service['isAlreadySent'](
+        spIdMock,
+        sentNotificationsForSpMock,
+      );
+
+      // Then
+      expect(result).toBeFalse();
     });
   });
 

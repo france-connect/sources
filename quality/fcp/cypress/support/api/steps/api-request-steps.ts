@@ -9,58 +9,47 @@ import { Given, When } from '@badeball/cypress-cucumber-preprocessor';
  */
 
 Given('je prépare une requête {string}', function (requestKey: string) {
-  const platform: string = Cypress.env('PLATFORM');
-  const testEnv: string = Cypress.env('TEST_ENV');
-  const pathArray = [platform, testEnv];
-  const fixture = 'api-common.json';
-  cy.task('getFixturePath', { fixture, pathArray }).then(
-    (fixturePath: string) => {
-      cy.log(fixturePath);
-      cy.fixture(fixturePath).then((requests) => {
-        expect(requests[requestKey]).to.be.ok;
-        this.requestOptions = requests[requestKey];
-      });
-    },
-  );
+  this.apiRequest = this.apiRequests[requestKey];
+  expect(this.apiRequest).to.exist;
 });
 
 Given(
   'je retire le paramètre {string} de la requête',
   function (property: string) {
-    expect(this.requestOptions.qs[property]).to.exist;
-    delete this.requestOptions.qs[property];
+    expect(this.apiRequest.qs[property]).to.exist;
+    delete this.apiRequest.qs[property];
   },
 );
 
 Given(
   'je mets {string} dans le paramètre {string} de la requête',
   function (value: string, property: string) {
-    this.requestOptions.qs[property] = value;
+    this.apiRequest.qs[property] = value;
   },
 );
 
 Given('je retire {string} du corps de la requête', function (property: string) {
-  expect(this.requestOptions.body[property]).to.exist;
-  delete this.requestOptions.body[property];
+  expect(this.apiRequest.body[property]).to.exist;
+  delete this.apiRequest.body[property];
 });
 
 Given(
   'je mets {string} dans la propriété {string} du corps de la requête',
   function (value: string, property: string) {
-    this.requestOptions.body[property] = value;
+    this.apiRequest.body[property] = value;
   },
 );
 
 Given(
   'je configure la requête pour ne pas suivre les redirections',
   function () {
-    this.requestOptions.followRedirect = false;
+    this.apiRequest.followRedirect = false;
   },
 );
 
 When('je lance la requête', function () {
   const requestOptions: Partial<Cypress.RequestOptions> = {
-    ...this.requestOptions,
+    ...this.apiRequest,
     failOnStatusCode: false,
   };
   cy.api(requestOptions).as('apiResponse');

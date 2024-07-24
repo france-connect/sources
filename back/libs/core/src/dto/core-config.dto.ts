@@ -10,8 +10,4 @@ export class CoreConfig {
   @IsArray()
   @IsString({ each: true })
   readonly allowedIdpHints: string[];
-
-  @IsString({ each: true })
-  @IsArray()
-  readonly allowedSsoAcrs: string[];
 }

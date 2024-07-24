@@ -1,0 +1,24 @@
+{
+  "name": "partners-system-testing",
+  "version": "1.0.0",
+  "description": "Partners - System Testing using Cypress/Cucumber",
+  "private": true,
+  "keywords": [
+    "Cypress",
+    "QA",
+    "Cucumber"
+  ],
+  "scripts": {
+    "clean": "rm -rf cypress/fixtures.out && rm -rf cypress/reports && rm -rf cypress/screenshots && rm -rf cypress/videos",
+    "clean:snapshots:diff": "rm -rf cypress/snapshots/diff",
+    "prettier": "prettier -c \"{.,cypress,scripts}/**/*.ts\" --config ../.prettierrc",
+    "lint": "eslint \"{.,cypress,scripts}/**/*.ts\"",
+    "test:base": "cypress run --config-file cypress-partners.config.ts",
+    "test:chrome-desktop": "yarn test:base --browser chrome --headless",
+    "test:ci": "yarn test:chrome-desktop --env TAGS='@ci and not @ignore'",
+    "test:snapshot": "yarn clean:snapshots:diff && cypress run --headless --config-file cypress-partners-visual.config.ts",
+    "test": "yarn clean && yarn test:ci",
+    "start": "cypress open --e2e --config-file cypress-partners.config.ts",
+    "report": "ts-node ../scripts/multiple-cucumber-html-reporter"
+  }
+}

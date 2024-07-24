@@ -46,7 +46,7 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
        * Date: 06/04/2022
        */
       const idpLabel = this.getIdpLabel(_source);
-      const spAcr = this.getAcrValue(_source);
+      const interactionAcr = this.getAcrValue(_source);
       const event = this.getEventFromAction(_source);
       const claims = this.getClaimsGroups(_source);
       const { country, city } = this.geoip.getGeoFromIp(_source);
@@ -55,7 +55,7 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
         event,
         time,
         spLabel,
-        spAcr,
+        interactionAcr,
         idpLabel,
         country,
         city,

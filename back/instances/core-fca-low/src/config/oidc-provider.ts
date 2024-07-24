@@ -12,27 +12,22 @@ const env = new ConfigParser(process.env, 'OidcProvider');
 
 export default {
   forcedPrompt: [OidcProviderPrompt.LOGIN, OidcProviderPrompt.CONSENT],
+  allowedPrompt: [
+    OidcProviderPrompt.LOGIN,
+    OidcProviderPrompt.CONSENT,
+    OidcProviderPrompt.NONE,
+  ],
   prefix: env.string('PREFIX'),
   issuer: `https://${process.env.FQDN}${env.string('PREFIX')}`,
   configuration: {
     routes: {
       authorization: OidcProviderRoutes.AUTHORIZATION,
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       check_session: OidcProviderRoutes.CHECK_SESSION,
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       code_verification: OidcProviderRoutes.CODE_VERIFICATION,
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       device_authorization: OidcProviderRoutes.DEVICE_AUTHORIZATION,
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       end_session: OidcProviderRoutes.END_SESSION,
       introspection: OidcProviderRoutes.INTROSPECTION,
       jwks: OidcProviderRoutes.JWKS,
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       pushed_authorization_request:
         OidcProviderRoutes.PUSHED_AUTHORIZATION_REQUEST,
       registration: OidcProviderRoutes.REGISTRATION,
@@ -54,8 +49,6 @@ export default {
         path: '/',
       },
     },
-    // node-oidc-provider defined key
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     grant_types_supported: ['authorization_code'],
     features: {
       devInteractions: { enabled: false },
@@ -82,48 +75,26 @@ export default {
       amr: ['amr'],
       uid: ['uid'],
       openid: ['sub'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name: ['given_name'],
       email: ['email'],
       phone: ['phone_number'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       organizational_unit: ['organizational_unit'],
       siren: ['siren'],
       siret: ['siret'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       usual_name: ['usual_name'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       belonging_population: ['belonging_population'],
       chorusdt: ['chorusdt:matricule', 'chorusdt:societe'],
-      // AgentConnect claims naming convention
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_id: ['idp_id'],
-      // AgentConnect claims naming convention
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_acr: ['idp_acr'],
       // MonComptePro claims naming convention
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       is_service_public: ['is_service_public'],
+      groups: ['groups'],
     },
     clientDefaults: {
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       grant_types: ['authorization_code'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_signed_response_alg: 'ES256',
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       response_types: ['code'],
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       token_endpoint_auth_method: 'client_secret_post',
-      // node-oidc-provider defined key
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       application_type: 'web',
     },
     responseTypes: ['code'],

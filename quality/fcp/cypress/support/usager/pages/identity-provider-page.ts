@@ -30,6 +30,10 @@ export default class IdentityProviderPage {
     cy.url().should('not.include', this.originUrl);
   }
 
+  checkMockAcrValue(idpAcr: string): void {
+    cy.get('[name="acr"]').should('have.value', idpAcr);
+  }
+
   setMockAcrValue(idpAcr: string): void {
     cy.get('[name="acr"]').then(($elem) => {
       if ($elem.is('select')) {

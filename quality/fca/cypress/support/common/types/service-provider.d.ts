@@ -1,4 +1,6 @@
 export interface ServiceProviderBase {
+  // fixme
+  clientId?: string;
   selectors: {
     fcaButton: string;
     logoutButton: string;
@@ -7,8 +9,9 @@ export interface ServiceProviderBase {
 }
 
 export interface ServiceProvider extends ServiceProviderBase {
-  acrValue: string;
+  acrValue?: string;
   authorizeHttpMethod: 'post' | 'get';
+  claims: string[];
   mocked: boolean;
   name: string;
   descriptions: string[];

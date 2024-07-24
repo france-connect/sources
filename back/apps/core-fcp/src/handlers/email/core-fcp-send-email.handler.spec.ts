@@ -1,6 +1,7 @@
+import { ValidationError } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { PartialExcept } from '@fc/common';
+import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import {
@@ -10,11 +11,18 @@ import {
   MailTo,
   NoEmailException,
 } from '@fc/mailer';
-import { IOidcIdentity, OidcSession } from '@fc/oidc';
+import { OidcSession } from '@fc/oidc';
 import { SessionService } from '@fc/session';
+
+import { getSessionServiceMock } from '@mocks/session';
 
 import { EmailsTemplates } from '../../enums';
 import { CoreFcpSendEmailHandler } from './core-fcp-send-email.handler';
+
+jest.mock('@fc/common', () => ({
+  ...jest.requireActual('@fc/common'),
+  validateDto: jest.fn(),
+}));
 
 /**
  * @TODO #471 En tant que PO je peux avoir des templates de mail différent suivant l'instance
@@ -331,10 +339,7 @@ describe('CoreFcpSendEmailHandler', () => {
     udFqdn: 'my-ud-instance-domain',
   };
 
-  const sessionServiceMock = {
-    get: jest.fn(),
-    set: jest.fn(),
-  };
+  const sessionServiceMock = getSessionServiceMock();
 
   const spIdentityWithEmailMock = {
     sub: '42',
@@ -344,14 +349,6 @@ describe('CoreFcpSendEmailHandler', () => {
     family_name: 'TEACH',
     email: 'eteach@fqdn.ext',
   };
-
-  const spIdentityWithoutEmailMock = {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    given_name: 'Edward',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    family_name: 'TEACH',
-    email: undefined,
-  } as PartialExcept<IOidcIdentity, 'sub'>;
 
   const idpIdentityMock = {
     sub: 'some idpSub',
@@ -427,17 +424,12 @@ describe('CoreFcpSendEmailHandler', () => {
       .compile();
 
     service = module.get<CoreFcpSendEmailHandler>(CoreFcpSendEmailHandler);
-    sessionServiceMock.get.mockResolvedValue(sessionDataMock);
+    sessionServiceMock.get.mockReturnValue(sessionDataMock);
   });
 
   it('should be defined', () => {
-    // Given
-    const configName = 'Mailer';
-
     // Then
     expect(service).toBeDefined();
-    expect(configServiceMock.get).toBeCalledTimes(1);
-    expect(configServiceMock.get).toBeCalledWith(configName);
   });
 
   describe('getTodayFormattedDate()', () => {
@@ -463,84 +455,51 @@ describe('CoreFcpSendEmailHandler', () => {
         .mockReturnValue(connectNotificationEmailParametersMock.today);
       identityProviderMock.getById.mockResolvedValueOnce(idpMock);
       configServiceMock.get.mockReturnValue(configAppMock);
+
+      jest.mocked(validateDto).mockResolvedValue([]);
     });
 
     it('should get fqdn back from app config', async () => {
       // When
-      await service['getConnectNotificationEmailBodyContent'](sessionDataMock);
+      await service['getConnectNotificationEmailBodyContent']();
       // Then
-      expect(configServiceMock.get).toHaveBeenCalledTimes(2);
-      expect(configServiceMock.get).toHaveBeenCalledWith('Mailer');
-      expect(configServiceMock.get).toHaveBeenCalledWith('App');
+      expect(configServiceMock.get).toHaveBeenCalledExactlyOnceWith('App');
     });
 
-    it('should throw error dto if fqdn is not defined', async () => {
+    it('should throw if dto validation fails', async () => {
       // Given
-      const errorMock = new MailerNotificationConnectException();
-      const configAppMockWithoutUdFqdn = {
-        udFqdn: 'my-ud-instance-domain',
-      };
-      configServiceMock.get.mockReturnValue(configAppMockWithoutUdFqdn);
-
-      // When / Then
+      jest
+        .mocked(validateDto)
+        .mockResolvedValueOnce(['foo'] as unknown as ValidationError[]);
+      // When/Then
       await expect(
-        service['getConnectNotificationEmailBodyContent'](sessionDataMock),
-      ).rejects.toThrow(errorMock);
-    });
-
-    it('should throw error dto if udFqdn is not defined', async () => {
-      // Given
-      const errorMock = new MailerNotificationConnectException();
-      const configAppMockWithoutUdFqdn = {
-        fqdn: 'my-instance-domain',
-      };
-      configServiceMock.get.mockReturnValue(configAppMockWithoutUdFqdn);
-
-      // When / Then
-      await expect(
-        service['getConnectNotificationEmailBodyContent'](sessionDataMock),
-      ).rejects.toThrow(errorMock);
+        service['getConnectNotificationEmailBodyContent'](),
+      ).rejects.toThrow(MailerNotificationConnectException);
     });
 
     it('should call identity provider getById', async () => {
       // When
-      await service['getConnectNotificationEmailBodyContent'](sessionDataMock);
+      await service['getConnectNotificationEmailBodyContent']();
       // Then
-      expect(identityProviderMock.getById).toBeCalledTimes(1);
-      expect(identityProviderMock.getById).toBeCalledWith(
+      expect(identityProviderMock.getById).toHaveBeenCalledExactlyOnceWith(
         sessionDataMock.idpId,
       );
     });
 
     it('should call getTodayFormattedDate', async () => {
       // When
-      await service['getConnectNotificationEmailBodyContent'](sessionDataMock);
+      await service['getConnectNotificationEmailBodyContent']();
       // Then
-      expect(service.getTodayFormattedDate).toBeCalledTimes(1);
-      expect(service.getTodayFormattedDate).toBeCalledWith(expect.any(Date));
-    });
-
-    it('should throw if any parameters is not valid', async () => {
-      // Given
-      const sessionDataWithoutEmailMock: OidcSession = {
-        spName: null,
-        spIdentity: spIdentityWithoutEmailMock,
-      };
-      // When/Then
-      const errorMock = new MailerNotificationConnectException();
-      await expect(
-        service['getConnectNotificationEmailBodyContent'](
-          sessionDataWithoutEmailMock,
-        ),
-      ).rejects.toThrow(errorMock);
+      expect(service.getTodayFormattedDate).toHaveBeenCalledExactlyOnceWith(
+        expect.any(Date),
+      );
     });
 
     it('should call mailToSend', async () => {
       // When
-      await service['getConnectNotificationEmailBodyContent'](sessionDataMock);
+      await service['getConnectNotificationEmailBodyContent']();
       // Then
-      expect(mailerServiceMock.mailToSend).toHaveBeenCalledTimes(1);
-      expect(mailerServiceMock.mailToSend).toHaveBeenCalledWith(
+      expect(mailerServiceMock.mailToSend).toHaveBeenCalledExactlyOnceWith(
         EmailsTemplates.NOTIFICATION_EMAIL,
         {
           idpTitle: idpMock.title,
@@ -556,10 +515,7 @@ describe('CoreFcpSendEmailHandler', () => {
       // Given
       mailerServiceMock.mailToSend.mockReturnValueOnce('my HTML content');
       // When
-      const result =
-        await service['getConnectNotificationEmailBodyContent'](
-          sessionDataMock,
-        );
+      const result = await service['getConnectNotificationEmailBodyContent']();
       // Then
       expect(result).toEqual('my HTML content');
     });
@@ -569,29 +525,31 @@ describe('CoreFcpSendEmailHandler', () => {
     beforeEach(() => {
       const AppConfigMock = { platform: 'FranceConnect+' };
       serviceProviderMock.getById.mockResolvedValue(spMock);
-      configServiceMock.get.mockReturnValue(AppConfigMock);
-      service['configMailer'] = configMailerMock;
+      configServiceMock.get
+        .mockReset()
+        .mockReturnValueOnce(configMailerMock)
+        .mockReturnValueOnce(AppConfigMock);
 
       service['getConnectNotificationEmailBodyContent'] = jest
         .fn()
         .mockReturnValue(`connect notification html body content`);
+
+      jest.mocked(validateDto).mockResolvedValue([]);
     });
 
     it('should not throw if email is sent', async () => {
       // Then
-      await expect(service.handle(sessionDataMock)).resolves.not.toThrow();
+      await expect(service.handle()).resolves.not.toThrow();
     });
 
     it('should have called getConnectNotificationEmailBodyContent with `session` as parameter', async () => {
       // When
-      await service.handle(sessionDataMock);
+      await service.handle();
+
       // Then
-      expect(service['getConnectNotificationEmailBodyContent']).toBeCalledTimes(
-        1,
-      );
-      expect(service['getConnectNotificationEmailBodyContent']).toBeCalledWith(
-        sessionDataMock,
-      );
+      expect(
+        service['getConnectNotificationEmailBodyContent'],
+      ).toHaveBeenCalledExactlyOnceWith();
     });
 
     it('should send the email to the end-user by calling "mailer.send" (FranceConnect+)', async () => {
@@ -603,16 +561,17 @@ describe('CoreFcpSendEmailHandler', () => {
       const expectedEmailParams = {
         body: `connect notification html body content`,
         from: fromMock,
-        subject: `Notification de connexion au service "${sessionDataMock.spName}" grâce à FranceConnect+`,
+        subject: `Alerte de connexion au service "${sessionDataMock.spName}" avec FranceConnect+`,
         to: [mailTo],
       };
 
       // When
-      await service.handle(sessionDataMock);
+      await service.handle();
 
       // Then
-      expect(mailerServiceMock.send).toBeCalledTimes(1);
-      expect(mailerServiceMock.send).toBeCalledWith(expectedEmailParams);
+      expect(mailerServiceMock.send).toHaveBeenCalledExactlyOnceWith(
+        expectedEmailParams,
+      );
     });
 
     it('should send the email to the end-user by calling "mailer.send" (FranceConnect)', async () => {
@@ -624,51 +583,32 @@ describe('CoreFcpSendEmailHandler', () => {
       const expectedEmailParams = {
         body: `connect notification html body content`,
         from: fromMock,
-        subject: `Notification de connexion au service "${sessionDataMock.spName}" grâce à FranceConnect`,
+        subject: `Alerte de connexion au service "${sessionDataMock.spName}" avec FranceConnect`,
         to: [mailTo],
       };
       const AppConfigMock = { platform: 'FranceConnect' };
-      configServiceMock.get.mockReset().mockReturnValue(AppConfigMock);
+      configServiceMock.get
+        .mockReset()
+        .mockReturnValueOnce(configMailerMock)
+        .mockReturnValueOnce(AppConfigMock);
 
       // When
-      await service.handle(sessionDataMock);
+      await service.handle();
 
       // Then
-      expect(mailerServiceMock.send).toBeCalledTimes(1);
-      expect(mailerServiceMock.send).toBeCalledWith(expectedEmailParams);
-    });
-
-    // Dependencies sevices errors
-    it('should throw an `Error` if the FROM email is no valid', async () => {
-      // Given
-      const configMailerWithoutEmail: MailFrom = {
-        email: 'fake_email',
-        name: '',
-      };
-      service['configMailer'] = { from: configMailerWithoutEmail };
-      const errorMock = new NoEmailException();
-      // When/Then
-      await expect(service.handle(sessionDataMock)).rejects.toThrow(errorMock);
+      expect(mailerServiceMock.send).toHaveBeenCalledExactlyOnceWith(
+        expectedEmailParams,
+      );
     });
 
     it('should throw an Error if the TO email is no valid', async () => {
       // Given
-      const sessionDataWithoutEmailMock: OidcSession = {
-        idpId: '42',
-        idpAcr: 'eidas3',
-        idpName: 'my favorite Idp',
-        idpIdentity: idpIdentityMock,
+      jest
+        .mocked(validateDto)
+        .mockResolvedValueOnce(['foo'] as unknown as ValidationError[]);
 
-        spId: 'sp_id',
-        spAcr: 'eidas3',
-        spName: 'my great SP',
-        spIdentity: spIdentityWithoutEmailMock,
-      };
       // When/Then
-      const errorMock = new NoEmailException();
-      await expect(service.handle(sessionDataWithoutEmailMock)).rejects.toThrow(
-        errorMock,
-      );
+      await expect(service.handle()).rejects.toThrow(NoEmailException);
     });
   });
 });

@@ -5,8 +5,7 @@ import {
   isUsingFCBasicAuthorization,
   navigateTo,
 } from '../../common/helpers';
-import { ServiceProvider } from '../../common/types';
-import { getClaims } from '../helpers/scope-helper';
+import { getClaims, getScopeByType } from '../helpers';
 import ServiceProviderPage from '../pages/service-provider-page';
 
 let serviceProviderPage: ServiceProviderPage;
@@ -21,10 +20,9 @@ When("je redemande les informations de l'usager", function () {
 
 When('je navigue sur la page fournisseur de service', function () {
   const { allAppsUrl } = this.env;
-  const currentServiceProvider: ServiceProvider = this.serviceProvider;
-  expect(currentServiceProvider).to.exist;
-  serviceProviderPage = new ServiceProviderPage(currentServiceProvider);
-  navigateTo({ appId: currentServiceProvider.name, baseUrl: allAppsUrl });
+  expect(this.serviceProvider).to.exist;
+  serviceProviderPage = new ServiceProviderPage(this.serviceProvider);
+  navigateTo({ appId: this.serviceProvider.name, baseUrl: allAppsUrl });
 });
 
 When('je clique sur le bouton AgentConnect', function () {
@@ -58,20 +56,19 @@ Then(
   /le fournisseur de service a accès aux informations (?:du|des) scopes? "([^"]+)"/,
   function (type: string) {
     if (this.serviceProvider.mocked === true) {
-      const scope = this.scopes.find((scope) => scope.type === type);
       serviceProviderPage.checkMandatoryData();
+      const scope = getScopeByType(this.scopes, type);
+      const expectedClaims = getClaims(scope);
 
-      const expectedClaims: string[] = getClaims(scope);
-
-      // Dynamic claims
-      const claims = this.user.claims;
-      if (expectedClaims.includes('idpId')) {
-        claims.idpId = this.identityProvider.idpId;
-      }
-
-      if (expectedClaims.includes('idpAcr')) {
-        claims.idpAcr = this.identityProvider.idpAcr;
-      }
+      const { claims } = this.user;
+      // Add idp claims' values
+      const idpClaimsMap = [
+        { claim: 'idp_acr', valueKey: 'acrValue' },
+        { claim: 'idp_id', valueKey: 'idpId' },
+      ];
+      idpClaimsMap.forEach(({ claim, valueKey }) => {
+        claims[claim] = this.identityProvider[valueKey];
+      });
 
       serviceProviderPage.checkExpectedUserClaims(expectedClaims, claims);
       serviceProviderPage.checkNoExtraClaims(expectedClaims);
@@ -140,3 +137,64 @@ Given(
     serviceProviderPage.setIdpHint(idpId);
   },
 );
+
+Given('je rentre {string} dans le champ prompt', function (prompt: string) {
+  if (prompt === 'disabled') {
+    serviceProviderPage.disablePrompt();
+    return;
+  }
+  serviceProviderPage.setPrompt(prompt);
+});
+
+When('je révoque le token AgentConnect', function () {
+  serviceProviderPage.getRevokeTokenButton().click();
+});
+
+When(
+  "le fournisseur de service demande l'accès aux données au fournisseur de données",
+  function () {
+    serviceProviderPage.getDataButton().click();
+  },
+);
+
+Then(
+  "le fournisseur de données vérifie l'access token fourni par le fournisseur de service",
+  function () {
+    serviceProviderPage.checkIsMockDataPageVisible();
+    serviceProviderPage
+      .getMockIntrospectionTokenText()
+      .should('be.ok')
+      .then((tokenText) => {
+        const token = JSON.parse(tokenText);
+        cy.wrap(token).as('tokenIntrospection');
+      });
+  },
+);
+
+Given(
+  "je paramètre un intercepteur pour l'appel à la redirect_uri du fournisseur de service",
+  function () {
+    const { url } = this.serviceProvider;
+    cy.intercept(`${url}/oidc-callback*`, (req) => {
+      req.reply({
+        body: '<h1>Intercepted request</h1>',
+      });
+    }).as('FS:OidcCallback');
+  },
+);
+
+Given(
+  'je mets le code renvoyé par AC au FS dans la propriété "code" du corps de la requête',
+  function () {
+    cy.wait('@FS:OidcCallback')
+      .its('request.query.code')
+      .should('exist')
+      .then((value: string) => {
+        this.apiRequest.body['code'] = value;
+      });
+  },
+);
+
+Then('le token AgentConnect est révoqué', function () {
+  serviceProviderPage.getTokenRevokationConfirmation().should('be.visible');
+});

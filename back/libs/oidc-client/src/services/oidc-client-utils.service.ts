@@ -155,8 +155,6 @@ export class OidcClientUtilsService {
         receivedParams,
         {
           ...params,
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           response_type: client.metadata.response_types.join(','),
         },
         this.buildExtraParameters(extraParams),
@@ -164,7 +162,6 @@ export class OidcClientUtilsService {
     } catch (error) {
       this.logger.err(error.stack);
       this.logger.debug({
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client: { ...client, client_secret: '***' },
         receivedParams,
         params,
@@ -214,11 +211,7 @@ export class OidcClientUtilsService {
 
     try {
       endSessionUrl = client.endSessionUrl({
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         id_token_hint: idTokenHint,
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         post_logout_redirect_uri: postLogoutRedirectUri,
         state: stateFromSession,
       });

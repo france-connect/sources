@@ -18,7 +18,9 @@ import { CryptographyEidasModule } from '@fc/cryptography-eidas';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { CsrfModule, CsrfService } from '@fc/csrf';
 import { DataProviderAdapterMongoModule } from '@fc/data-provider-adapter-mongo';
+import { DeviceModule } from '@fc/device';
 import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import { ExceptionsFcpModule } from '@fc/exceptions-fcp';
 import { FeatureHandlerModule } from '@fc/feature-handler';
 import { FlowStepsModule } from '@fc/flow-steps';
 import { HttpProxyModule } from '@fc/http-proxy';
@@ -113,6 +115,8 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     ViewTemplatesModule,
     CsrfModule,
     I18nModule,
+    DeviceModule,
+    ExceptionsFcpModule,
   ],
   controllers: [
     CoreFcpController,

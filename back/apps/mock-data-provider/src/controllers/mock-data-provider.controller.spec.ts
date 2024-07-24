@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { DataProviderAdapterCoreService } from '@fc/data-provider-adapter-core';
 import { LoggerService } from '@fc/logger';
+import { DataParamsDto } from '@fc/mock-data-provider';
 
 import { getLoggerMock } from '@mocks/logger';
 
@@ -77,7 +78,12 @@ describe('MockDataProviderController', () => {
 
     const tokenMock = 'token_24';
     const secretMock = '42_secret';
-    const authorizationHeaderMock = 'Bearer dG9rZW5fMjQ6NDJfc2VjcmV0';
+    const authorizationHeaderMock = 'Bearer dG9rZW5fMjQ=';
+
+    const bodyMock = {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      auth_secret: secretMock,
+    } as DataParamsDto;
 
     beforeEach(() => {
       dataProviderAdapterCoreServiceMock.checktoken.mockResolvedValue(
@@ -85,9 +91,13 @@ describe('MockDataProviderController', () => {
       );
     });
 
-    it('should call authenticateServiceProvider with the secret from bearer', async () => {
+    it('should call authenticateServiceProvider with the secret from the body', async () => {
       // When
-      await mockDataProviderController.data(resMock, authorizationHeaderMock);
+      await mockDataProviderController.data(
+        resMock,
+        bodyMock,
+        authorizationHeaderMock,
+      );
 
       // Then
       expect(
@@ -98,9 +108,9 @@ describe('MockDataProviderController', () => {
       ).toHaveBeenCalledWith(secretMock);
     });
 
-    it('should use default empty string value for bearer if authorization header is not provided', async () => {
+    it('should use default empty string value for the access token if no authorization header is provided', async () => {
       // When
-      await mockDataProviderController.data(resMock);
+      await mockDataProviderController.data(resMock, bodyMock);
 
       // Then
       expect(
@@ -108,12 +118,22 @@ describe('MockDataProviderController', () => {
       ).toHaveBeenCalledTimes(1);
       expect(
         mockDataProviderServiceMock.authenticateServiceProvider,
-      ).toHaveBeenCalledWith(undefined);
+      ).toHaveBeenCalledWith(secretMock);
+      expect(
+        dataProviderAdapterCoreServiceMock.checktoken,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        dataProviderAdapterCoreServiceMock.checktoken,
+      ).toHaveBeenCalledWith('');
     });
 
-    it('should call checktoken with the access token from bearer', async () => {
+    it('should call checktoken with the access token from the authorization header', async () => {
       // When
-      await mockDataProviderController.data(resMock, authorizationHeaderMock);
+      await mockDataProviderController.data(
+        resMock,
+        bodyMock,
+        authorizationHeaderMock,
+      );
 
       // Then
       expect(
@@ -135,7 +155,11 @@ describe('MockDataProviderController', () => {
         checktokenErrorMock,
       );
       // When
-      await mockDataProviderController.data(resMock, authorizationHeaderMock);
+      await mockDataProviderController.data(
+        resMock,
+        bodyMock,
+        authorizationHeaderMock,
+      );
 
       // Then
       expect(resMock.status).toHaveBeenCalledTimes(1);
@@ -148,6 +172,7 @@ describe('MockDataProviderController', () => {
       // When
       const result = await mockDataProviderController.data(
         resMock,
+        bodyMock,
         authorizationHeaderMock,
       );
 
@@ -169,14 +194,13 @@ describe('MockDataProviderController', () => {
       // When
       const result = await mockDataProviderController.data(
         resMock,
+        bodyMock,
         authorizationHeaderMock,
       );
 
       // Then
       expect(result).toStrictEqual({
         error: checktokenErrorMock.error,
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: checktokenErrorMock.message,
       });
     });

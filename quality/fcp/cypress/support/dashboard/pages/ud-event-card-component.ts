@@ -110,15 +110,15 @@ export default class UdEventCard {
     );
   }
 
-  getClaimsTitleLabel(fdName: string): ChainableElement {
+  getClaimsTitleLabel(dpName: string): ChainableElement {
     return this.getCardButton().find(
-      `[data-testid="ClaimsComponent-claims-title-${fdName}"]`,
+      `[data-testid="ClaimsComponent-claims-title-${dpName}"]`,
     );
   }
 
-  getClaimsList(fdName: string): ChainableElement {
+  getClaimsList(dpName: string): ChainableElement {
     return this.getCardButton().find(
-      `ul[data-testid="ClaimsComponent-claims-list-${fdName}"] li`,
+      `ul[data-testid="ClaimsComponent-claims-list-${dpName}"] li`,
     );
   }
 

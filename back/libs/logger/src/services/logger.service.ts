@@ -1,18 +1,13 @@
 import pino, { Logger } from 'pino';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
-import {
-  AsyncLocalStorageRequestInterface,
-  AsyncLocalStorageService,
-} from '@fc/async-local-storage';
 import { ConfigService } from '@fc/config';
-import { SessionStoreInterface } from '@fc/session/interfaces';
-import { SESSION_STORE_KEY } from '@fc/session/tokens';
 
 import { LoggerConfig } from '../dto';
 import { LogLevels } from '../enums';
-import { LogContextInterface } from '../interfaces';
+import { LoggerPluginServiceInterface } from '../interfaces';
+import { PLUGIN_SERVICES } from '../tokens';
 import { CustomLogLevels } from '../types';
 
 @Injectable()
@@ -32,9 +27,8 @@ export class LoggerService {
 
   constructor(
     private readonly config: ConfigService,
-    private readonly asyncLocalStorage: AsyncLocalStorageService<
-      AsyncLocalStorageRequestInterface & SessionStoreInterface
-    >,
+    @Inject(PLUGIN_SERVICES)
+    private readonly plugins: LoggerPluginServiceInterface[],
   ) {
     this.configure();
   }
@@ -98,40 +92,23 @@ export class LoggerService {
   }
 
   private logWithContext(level: LogLevels, ...args: unknown[]): void {
-    const requestContext = this.getRequestContext();
+    const pluginsContext = this.getContextFromPlugins();
     const userContext = typeof args[0] === 'string' ? {} : args.shift();
-    const finalContext = Object.assign({}, userContext, requestContext);
+    const finalContext = Object.assign({}, userContext, pluginsContext);
 
     this.pino[level](finalContext, ...(args as [string?, ...unknown[]]));
   }
 
-  private getRequestContext(): LogContextInterface | undefined {
-    const req = this.asyncLocalStorage.get('request');
-    const sessionStore = this.asyncLocalStorage.get(SESSION_STORE_KEY);
+  private getContextFromPlugins(): Record<string, unknown> {
+    const context = {};
 
-    if (!req) {
-      return;
-    }
+    this.plugins.forEach((plugin) => {
+      if (typeof plugin.getContext === 'function') {
+        Object.assign(context, plugin.getContext());
+      }
+    });
 
-    const sessionId = sessionStore?.id;
-
-    const { headers, method, baseUrl, path } = req;
-    const context: Partial<LogContextInterface> = {
-      method,
-      path: `${baseUrl}${path}`,
-      sessionId,
-    };
-
-    if (headers['x-request-id']) {
-      // We do not expect an array from the RP
-      context.requestId = headers['x-request-id'] as string;
-    }
-
-    if (headers['x-suspicious']) {
-      context.isSuspicious = headers['x-suspicious'] === '1';
-    }
-
-    return context as LogContextInterface;
+    return context;
   }
 
   private configure() {

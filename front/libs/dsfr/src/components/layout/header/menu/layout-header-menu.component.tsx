@@ -7,7 +7,7 @@ import { LayoutHeaderToolsComponent } from '../tools';
 import styles from './layout-header-menu.module.scss';
 import { LayoutHeaderNavigationComponent } from './layout-header-navigation.component';
 
-export interface LayoutHeaderMenuComponentProps {
+interface LayoutHeaderMenuComponentProps {
   opened: boolean;
   isMobile: boolean;
   onClose: MouseEventHandler<HTMLButtonElement>;
@@ -16,7 +16,7 @@ export interface LayoutHeaderMenuComponentProps {
   firstname: string | undefined;
 }
 
-export const LayoutHeaderMenuComponent: React.FC<LayoutHeaderMenuComponentProps> = React.memo(
+export const LayoutHeaderMenuComponent = React.memo(
   ({
     firstname,
     isMobile,
@@ -52,9 +52,5 @@ export const LayoutHeaderMenuComponent: React.FC<LayoutHeaderMenuComponentProps>
     </div>
   ),
 );
-
-LayoutHeaderMenuComponent.defaultProps = {
-  navigationItems: undefined,
-};
 
 LayoutHeaderMenuComponent.displayName = 'LayoutHeaderMenuComponent';

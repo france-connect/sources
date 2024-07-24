@@ -4,7 +4,7 @@ import React from 'react';
 
 import { IconPlacement, Priorities, Sizes } from '../../enums';
 
-export interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   // @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/217284660/Boutons+-+Buttons
   className?: string;
   dataTestId?: string;
@@ -16,18 +16,18 @@ export interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElemen
   iconPlacement?: IconPlacement;
 }
 
-export const SimpleButton: React.FC<SimpleButtonProps> = React.memo(
+export const SimpleButton = React.memo(
   ({
     className,
     dataTestId,
     disabled,
     icon,
-    iconPlacement,
+    iconPlacement = IconPlacement.RIGHT,
     label,
-    noOutline,
+    noOutline = false,
     onClick,
-    priority,
-    size,
+    priority = Priorities.PRIMARY,
+    size = Sizes.MEDIUM,
     title,
     type: nativeButtonType,
   }: SimpleButtonProps) => (
@@ -58,15 +58,5 @@ export const SimpleButton: React.FC<SimpleButtonProps> = React.memo(
     </button>
   ),
 );
-
-SimpleButton.defaultProps = {
-  className: undefined,
-  dataTestId: undefined,
-  icon: undefined,
-  iconPlacement: IconPlacement.RIGHT,
-  noOutline: false,
-  priority: Priorities.PRIMARY,
-  size: Sizes.MEDIUM,
-};
 
 SimpleButton.displayName = 'SimpleButton';

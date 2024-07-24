@@ -7,6 +7,7 @@ import { I18nService } from '@fc/i18n';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
+import { OidcAcrService } from '@fc/oidc-acr';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 
 import {
@@ -27,6 +28,7 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     private readonly cryptographyEidas: CryptographyEidasService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
     private readonly i18n: I18nService,
+    private readonly oidcAcr: OidcAcrService,
   ) {}
 
   async handle({
@@ -35,13 +37,19 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
     this.logger.debug('getConsent service: ##### core-fcp-eidas-verify ');
 
     // Grab informations on interaction and identity
-    const { idpId, idpIdentity, idpAcr, spId, spAcr, subs } = sessionOidc.get();
+    const { idpId, idpIdentity, idpAcr, spId, spAcr, subs, isSso } =
+      sessionOidc.get();
     const { entityId } = await this.serviceProvider.getById(spId);
 
     // Acr check
-    const { maxAuthorizedAcr } = await this.identityProvider.getById(idpId);
+    const { allowedAcr } = await this.identityProvider.getById(idpId);
 
-    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr, maxAuthorizedAcr);
+    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr, allowedAcr);
+    const interactionAcr = this.oidcAcr.getInteractionAcr({
+      idpAcr,
+      spAcr,
+      isSso,
+    });
 
     const identityHash = this.cryptographyEidas.computeIdentityHash(
       idpIdentity as IOidcIdentity,
@@ -69,6 +77,7 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
 
     sessionOidc.set({
       idpIdentity: idpIdentityCleaned,
+      interactionAcr,
       spIdentity: {
         ...spIdentityCleaned,
         ...technicalClaims,
@@ -83,8 +92,6 @@ export class CoreFcpEidasVerifyHandler implements IVerifyFeatureHandler {
 
   private getTechnicalClaims(idpId: string): Record<string, unknown> {
     return {
-      // OIDC fashion naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_id: idpId,
     };
   }

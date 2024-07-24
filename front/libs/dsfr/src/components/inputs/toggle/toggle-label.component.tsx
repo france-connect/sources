@@ -3,7 +3,7 @@ import type { FieldInputProps } from 'react-final-form';
 
 import type { CheckableLegend } from '../../../interfaces';
 
-export interface ToggleLabelComponentProps {
+interface ToggleLabelComponentProps {
   // @NOTE la regle est desactivée car le type provient de la librairie react-final-form
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   input: FieldInputProps<any, HTMLElement>;
@@ -13,7 +13,7 @@ export interface ToggleLabelComponentProps {
 
 const defaultLegend = { checked: 'Activé', unchecked: 'Désactivé' };
 
-export const ToggleLabelComponent: React.FC<ToggleLabelComponentProps> = React.memo(
+export const ToggleLabelComponent = React.memo(
   ({ input, label, legend = defaultLegend }: ToggleLabelComponentProps) => {
     const isLabelString = typeof label === 'string';
     const isLabelFunction = typeof label === 'function';
@@ -30,9 +30,5 @@ export const ToggleLabelComponent: React.FC<ToggleLabelComponentProps> = React.m
     );
   },
 );
-
-ToggleLabelComponent.defaultProps = {
-  legend: undefined,
-};
 
 ToggleLabelComponent.displayName = 'ToggleLabelComponent';

@@ -8,7 +8,7 @@ import type { FSA } from '@fc/common';
 import type { CinematicEvents, EidasToLabel } from '../enums';
 
 export interface IProvider {
-  key: string;
+  slug: string;
   label: string;
 }
 
@@ -35,7 +35,7 @@ export interface Track {
   event: CinematicEvents;
   idpLabel: string;
   platform: 'FranceConnect' | 'FranceConnect+';
-  spAcr: keyof typeof EidasToLabel;
+  interactionAcr: keyof typeof EidasToLabel;
   spLabel?: string;
   time: number;
   trackId: string;

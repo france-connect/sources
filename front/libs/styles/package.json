@@ -2,8 +2,5 @@
   "name": "@fc/styles",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "build:dev": "sass --style=expanded --load-path=../../node_modules ./src/index.scss ./dist/fc/fc.min.css",
-    "build": "yarn build:styles:dev --style=compressed"
-  }
+  "main": "src/index.ts"
 }

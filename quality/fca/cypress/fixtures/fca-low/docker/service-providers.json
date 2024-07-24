@@ -4,8 +4,10 @@
     "descriptions": [
       "par défaut",
       "avec une blacklist de FI",
-      "avec accès au FI par défaut (premier FS)"
+      "avec accès au FI par défaut (premier FS)",
+      "éligible au scope groups"
     ],
+    "clientId": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
     "mocked": true,
     "url": "https://fsa1-low.docker.dev-franceconnect.fr",
     "acrValue": "eidas1",
@@ -23,6 +25,7 @@
       "avec accès au FI par défaut (deuxième FS)",
       "acceptant le privé"
     ],
+    "clientId": "7a79e45107f9ccc6a3a5971d501220dc4fd9e87bb5e3fc62ce4104c756e22775",
     "mocked": true,
     "url": "https://fsa2-low.docker.dev-franceconnect.fr",
     "acrValue": "eidas1",
@@ -40,6 +43,7 @@
       "non habilité à demander le claim amr",
       "avec accès au FI par défaut (troisième FS)"
     ],
+    "clientId": "6495f347513b860e6b931fae4a1ba70c8489a558a0fc74ecdc094d48a4035e77",
     "mocked": true,
     "url": "https://fsa4-low.docker.dev-franceconnect.fr",
     "acrValue": "eidas1",
@@ -56,6 +60,7 @@
       "sans accès au FI par défaut",
       "avec accès exclusif à un FI"
     ],
+    "clientId": "1235f347513b860e6b931fae4a1ba70c8489a558a0fc74ecdc094d48a4035e77",
     "mocked": true,
     "url": "https://fsa5-low.docker.dev-franceconnect.fr",
     "acrValue": "eidas1",

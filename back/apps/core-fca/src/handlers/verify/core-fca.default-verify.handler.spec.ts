@@ -7,6 +7,7 @@ import { CoreAcrService } from '@fc/core';
 import { CoreFcaAgentAccountBlockedException } from '@fc/core-fca/exceptions';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
+import { OidcAcrService } from '@fc/oidc-acr';
 import { SessionService } from '@fc/session';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -40,12 +41,8 @@ describe('CoreFcaDefaultVerifyHandler', () => {
 
   const idpIdentityMock = {
     sub: 'computedSubIdp',
-    // Oidc Naming convention
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'givenNameValue',
     uid: 'uidValue',
-    // Oidc Naming convention
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     usual_name: 'usalNameValue',
     email: 'myemail@mail.fr',
   };
@@ -66,11 +63,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
 
   const fcaIdentityMock = {
     ...idpIdentityMockCleaned,
-    // AgentConnect claims naming convention
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     idp_id: sessionDataMock.idpId,
-    // AgentConnect claims naming convention
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     idp_acr: sessionDataMock.idpAcr,
   };
 
@@ -93,6 +86,11 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     upsertWithSub: jest.fn(),
   };
 
+  const oidcAcrMock = {
+    getInteractionAcr: jest.fn(),
+  };
+  const interactionAcrMock = 'interactionAcrMock';
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -102,6 +100,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
         CoreAcrService,
         IdentityProviderAdapterMongoService,
         AccountFcaService,
+        OidcAcrService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -114,6 +113,8 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       .useValue(identityProviderAdapterMock)
       .overrideProvider(AccountFcaService)
       .useValue(accountFcaServiceMock)
+      .overrideProvider(OidcAcrService)
+      .useValue(oidcAcrMock)
       .compile();
 
     service = module.get<CoreFcaDefaultVerifyHandler>(
@@ -128,6 +129,8 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     identityProviderAdapterMock.getById.mockResolvedValue({
       maxAuthorizedAcr: 'maxAuthorizedAcr value',
     });
+
+    oidcAcrMock.getInteractionAcr.mockReturnValue(interactionAcrMock);
   });
 
   it('should be defined', () => {
@@ -244,25 +247,16 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       // Given
       const calledMock = {
         idpIdentity: idpIdentityMock,
+        interactionAcr: interactionAcrMock,
         spIdentity: {
-          // Oidc naming convention
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           given_name: idpIdentityMock.given_name,
           uid: idpIdentityMock.uid,
-          // AgentConnect claims naming convention
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           idp_id: sessionDataMock.idpId,
-          // AgentConnect claims naming convention
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           idp_acr: sessionDataMock.idpAcr,
           email: idpIdentityMock.email,
-          // Oidc Naming convention
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           usual_name: idpIdentityMock.usual_name,
         },
         subs: {
-          // AgentConnect claims naming convention
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           sp_id: universalSubMock,
         },
         accountId: accountIdMock,
@@ -400,11 +394,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
 
       const expected = {
         ...idpIdentityMockCleaned,
-        // AgentConnect claims naming convention
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         idp_id: '42',
-        // AgentConnect claims naming convention
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         idp_acr: 'eidas3',
       };
 
@@ -419,6 +409,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
         accountFcaMock.sub,
         idpIdentityMock,
         accountIdMock,
+        interactionAcrMock,
       );
 
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
@@ -431,6 +422,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
         accountFcaMock.sub,
         fcaIdentityMock,
         accountIdMock,
+        interactionAcrMock,
       );
 
       // Then
@@ -439,18 +431,13 @@ describe('CoreFcaDefaultVerifyHandler', () => {
         accountId: accountIdMock,
         amr: ['pwd'],
         idpIdentity: idpIdentityMock,
+        interactionAcr: interactionAcrMock,
         spIdentity: {
           ...idpIdentityMockCleaned,
-          // AgentConnect claims naming convention
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           idp_id: sessionDataMock.idpId,
-          // AgentConnect claims naming convention
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           idp_acr: sessionDataMock.idpAcr,
         },
         subs: {
-          // AgentConnect claims naming convention
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           sp_id: universalSubMock,
         },
       });

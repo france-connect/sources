@@ -18,7 +18,7 @@ describe('IsValidPromptConstraint', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     configMock.get.mockReturnValueOnce({
-      forcedPrompt: resultsMock,
+      allowedPrompt: resultsMock,
     });
     constraint = new IsValidPromptConstraint(
       configMock as unknown as ConfigService,
@@ -106,7 +106,7 @@ describe('IsValidPromptConstraint', () => {
   describe('defaultMessage', () => {
     beforeEach(() => {
       configMock.get.mockReturnValueOnce({
-        forcedPrompt: resultsMock,
+        allowedPrompt: resultsMock,
       });
     });
 

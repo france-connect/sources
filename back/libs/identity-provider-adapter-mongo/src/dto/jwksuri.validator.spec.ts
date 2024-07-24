@@ -19,11 +19,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: true,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: ASYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: ASYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -39,11 +35,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: true,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: SYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: ASYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -59,11 +51,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: true,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: ASYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: SYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -79,11 +67,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: true,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: SYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: SYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -99,11 +83,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: true,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: ASYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: ASYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -119,11 +99,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: true,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: SYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: ASYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -139,11 +115,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: true,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: ASYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: SYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -159,11 +131,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: true,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: SYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: SYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -179,11 +147,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: false,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: ASYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: ASYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -199,11 +163,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: false,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: SYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: ASYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -219,11 +179,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: false,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: ASYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: SYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -239,11 +195,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: false,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: SYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: SYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -259,11 +211,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: false,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: ASYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: ASYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -279,11 +227,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: false,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: SYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: ASYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -299,11 +243,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: false,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: ASYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: SYMETRIC_ALG,
         },
       } as ValidationArguments;
@@ -319,11 +259,7 @@ describe('JwksUriValidator', () => {
       const dtoInstanceMock = {
         object: {
           discovery: false,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: SYMETRIC_ALG,
-          // OIDC defined name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: SYMETRIC_ALG,
         },
       } as ValidationArguments;

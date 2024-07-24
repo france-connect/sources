@@ -1,3 +1,5 @@
+import { ChainableElement } from '../../common/types';
+
 export default class TechnicalErrorPage {
   checkIsVisible(): void {
     cy.get('[data-testid="error-section"]').should('be.visible');
@@ -28,5 +30,9 @@ export default class TechnicalErrorPage {
         'match',
         /^ID : [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
       );
+  }
+
+  getBackToSPLink(): ChainableElement {
+    return cy.get('[data-testid="back-to-sp-link"]');
   }
 }

@@ -4,7 +4,6 @@ import {
   getIdentityProviderByDescription,
   navigateTo,
 } from '../../common/helpers';
-import { Environment } from '../../common/types';
 import UdPreferencesPage from '../pages/ud-preferences-page';
 
 let udPreferencesPage: UdPreferencesPage;
@@ -12,7 +11,7 @@ let udPreferencesPage: UdPreferencesPage;
 Given(
   'je navigue directement vers la page gestion des accès du tableau de bord usager',
   function () {
-    const { allAppsUrl }: Environment = this.env;
+    const { allAppsUrl } = this.env;
     navigateTo({ appId: 'ud-preferences', baseUrl: allAppsUrl });
   },
 );
@@ -20,7 +19,7 @@ Given(
 Given(
   'je navigue vers la page gestion des accès du tableau de bord usager',
   function () {
-    const { allAppsUrl, udRootUrl }: Environment = this.env;
+    const { allAppsUrl, udRootUrl } = this.env;
     navigateTo({ appId: 'ud-preferences', baseUrl: allAppsUrl });
     udPreferencesPage = new UdPreferencesPage(udRootUrl);
     udPreferencesPage.checkIsVisible();
@@ -33,7 +32,7 @@ Given(
 Given(
   /^je suis (redirigé vers|sur) la page gestion des accès du tableau de bord usager$/,
   function () {
-    const { udRootUrl }: Environment = this.env;
+    const { udRootUrl } = this.env;
     udPreferencesPage = new UdPreferencesPage(udRootUrl);
     udPreferencesPage.checkIsVisible();
     // Wait for the IDP settings loading

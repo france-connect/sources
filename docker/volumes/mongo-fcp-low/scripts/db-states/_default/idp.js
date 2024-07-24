@@ -15,6 +15,7 @@ const fip = {
     alt: "fip1-no-discovery",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -62,6 +63,7 @@ const fip = {
     alt: "fip1-low",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -106,6 +108,7 @@ const fip = {
     alt: "fip1-beta-active",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -152,6 +155,7 @@ const fip = {
     alt: "fip1-beta-inactive",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -198,6 +202,7 @@ const fip = {
     alt: "fip1-wrong-signature",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -246,6 +251,7 @@ const fip = {
     alt: "fip1-no-signature",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -293,6 +299,7 @@ const fip = {
     alt: "fip2-low",
     trustedIdentity: false,
     eidas: 2,
+    allowedAcr: ["eidas2"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -339,6 +346,7 @@ const fip = {
     alt: "fip3-low",
     trustedIdentity: false,
     eidas: 3,
+    allowedAcr: ["eidas3"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -385,6 +393,7 @@ const fip = {
     alt: "fip4-low",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -432,6 +441,7 @@ const fip = {
     alt: "fip5-low",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -478,6 +488,7 @@ const fip = {
     alt: "fip6-low",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -524,6 +535,7 @@ const fip = {
     alt: "fip7-low",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -570,6 +582,7 @@ const fip = {
     alt: "fip8-low",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -616,6 +629,7 @@ const fip = {
     alt: "fip9-low",
     trustedIdentity: false,
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -662,6 +676,7 @@ const fip = {
     alt: "aidants connect mock",
     trustedIdentity: "false",
     eidas: 1,
+    allowedAcr: ["eidas1"],
     mailto: "test@dev-franceconnect.fr",
     featureHandlers: {
       coreVerify: "core-fcp-default-verify",
@@ -711,6 +726,7 @@ const fip = {
     imageFocus: "fi-europe.svg",
     alt: "eIDAS Bridge",
     eidas: 2,
+    allowedAcr: ["eidas2", "eidas3"],
     mailto: "",
     featureHandlers: {
       coreVerify: "core-fcp-eidas-verify",

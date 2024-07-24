@@ -176,4 +176,18 @@ describe('CoreFcaVerifyService', () => {
       expect(service['trackSsoDisabled']).toHaveBeenCalledWith(eventContext);
     });
   });
+
+  describe('handleErrorLoginRequired()', () => {
+    it("should build a redirect url containing a 'login_required' error and its description", () => {
+      // When
+      const result = service['handleErrorLoginRequired'](
+        'https://foo.com/callback',
+      );
+
+      // Then
+      expect(result).toBe(
+        'https://foo.com/callback?error=login_required&error_description=End-User+authentication+is+required',
+      );
+    });
+  });
 });

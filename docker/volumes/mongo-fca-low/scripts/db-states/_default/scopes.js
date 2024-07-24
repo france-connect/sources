@@ -69,3 +69,16 @@ db.scopes.update(
   { scope: "idp_acr", fd: "IDENTITY", label: "", __v: 0 },
   { upsert: true },
 );
+
+// -- Scopes - Desk
+print("Initializing Desk scopes...");
+db.scopes.update(
+  { scope: "groups" },
+  {
+    scope: "groups",
+    fd: "DESK",
+    label: "Groupes La Suite Numérique",
+    __v: 0,
+  },
+  { upsert: true },
+);

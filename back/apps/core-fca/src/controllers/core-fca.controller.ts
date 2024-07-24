@@ -11,7 +11,6 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import {
   CoreAcrService,
@@ -31,6 +30,7 @@ import { ISessionService, Session } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import {
+  AppConfig,
   GetInteractionOidcClientSessionDto,
   GetVerifyOidcClientSessionDto,
 } from '../dto';
@@ -98,8 +98,11 @@ export class CoreFcaController {
 
     const notification = await this.notifications.getNotificationToDisplay();
 
+    const { defaultEmailRenater } = this.config.get<AppConfig>('App');
+
     const response = {
       csrfToken,
+      defaultEmailRenater,
       notification,
       params,
       spName,
@@ -136,13 +139,24 @@ export class CoreFcaController {
     @Session('OidcClient', GetVerifyOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
-    const { idpId, interactionId, spId, isSso } = sessionOidc.get();
+    const {
+      idpId,
+      interactionId,
+      spId,
+      isSso,
+      spRedirectUri,
+      isSilentAuthentication,
+    } = sessionOidc.get();
 
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const params = { urlPrefix, interactionId, sessionOidc };
 
     const { ssoDisabled } = await this.serviceProvider.getById(spId);
     if (isSso && ssoDisabled) {
+      if (isSilentAuthentication) {
+        const url = this.coreFcaVerify.handleErrorLoginRequired(spRedirectUri);
+        return res.redirect(url);
+      }
       const url = await this.coreFcaVerify.handleSsoDisabled(req, params);
       return res.redirect(url);
     }
@@ -154,6 +168,10 @@ export class CoreFcaController {
     );
 
     if (isBlackListed || !isIdpActive) {
+      if (isSilentAuthentication) {
+        const url = this.coreFcaVerify.handleErrorLoginRequired(spRedirectUri);
+        return res.redirect(url);
+      }
       const url = await this.coreVerify.handleUnavailableIdp(
         req,
         params,

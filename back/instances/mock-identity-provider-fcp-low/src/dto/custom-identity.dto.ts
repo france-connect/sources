@@ -29,20 +29,14 @@ export const defaultToFranceBirthcountry = ({ obj }: TransformFnParams) => {
 export class CustomIdentityDto implements MinimalCustomIdentityInterface {
   @IsString()
   @IsNotEmpty()
-  // OIDC naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly given_name: string;
 
   @IsString()
   @IsNotEmpty()
-  // OIDC naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly family_name: string;
 
   @IsString()
   @IsOptional()
-  // OIDC naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   preferred_username?: string;
 
   @IsIn(['female', 'male'])
@@ -75,7 +69,5 @@ export class CustomIdentityDto implements MinimalCustomIdentityInterface {
 
   @IsOptional()
   @IsString()
-  // oidc like name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly rep_scope?: string;
 }

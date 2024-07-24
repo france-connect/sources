@@ -13,12 +13,28 @@ export default class TechnicalErrorPage {
     cy.get('[data-testid="error-section-title"]').contains(message);
   }
 
+  checkErrorSubTitle(message: string): void {
+    cy.get('[data-testid="error-section-subtitle"]').contains(message);
+  }
+
   checkErrorCode(errorCode: string): void {
     cy.get('[data-testid="error-code"]').contains(errorCode);
   }
 
   checkErrorMessage(message: string): void {
     cy.get('[data-testid="error-message"]').contains(message);
+  }
+
+  checkIsSupportButtonVisible(buttonType: 'support' | 'faq'): void {
+    const label =
+      buttonType === 'support' ? 'Contactez-nous' : 'Consulter la page d’aide';
+    cy.get('[data-testid="error-support-button"]').contains(label);
+  }
+
+  checkSupportLinkHref(errorCode: string): void {
+    cy.get('[data-testid="error-support-button"]')
+      .invoke('attr', 'value')
+      .contains(errorCode);
   }
 
   getBackToSPLink(): ChainableElement {

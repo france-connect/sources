@@ -6,6 +6,7 @@ import { CryptographyEidasService } from '@fc/cryptography-eidas';
 import { I18nService } from '@fc/i18n';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
+import { OidcAcrService } from '@fc/oidc-acr';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { TrackingService } from '@fc/tracking';
 
@@ -94,6 +95,11 @@ describe('CoreFcpEidasVerifyHandler', () => {
     getById: jest.fn(),
   };
 
+  const oidcAcrMock = {
+    getInteractionAcr: jest.fn(),
+  };
+  const interactionAcrMock = 'interactionAcrMock';
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -107,6 +113,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
         ServiceProviderAdapterMongoService,
         IdentityProviderAdapterMongoService,
         CryptographyEidasService,
+        OidcAcrService,
       ],
     })
       .overrideProvider(ConfigService)
@@ -127,6 +134,8 @@ describe('CoreFcpEidasVerifyHandler', () => {
       .useValue(cryptographyEidasServiceMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
       .useValue(identityProviderAdapterMock)
+      .overrideProvider(OidcAcrService)
+      .useValue(oidcAcrMock)
       .compile();
 
     service = module.get<CoreFcpEidasVerifyHandler>(CoreFcpEidasVerifyHandler);
@@ -147,6 +156,8 @@ describe('CoreFcpEidasVerifyHandler', () => {
     identityProviderAdapterMock.getById.mockResolvedValue({
       maxAuthorizedAcr: 'maxAuthorizedAcr value',
     });
+
+    oidcAcrMock.getInteractionAcr.mockReturnValue(interactionAcrMock);
   });
 
   it('should be defined', () => {
@@ -279,14 +290,13 @@ describe('CoreFcpEidasVerifyHandler', () => {
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledExactlyOnceWith({
         idpIdentity: { sub: idpIdentityMock.sub },
+        interactionAcr: interactionAcrMock,
         spIdentity: {
           email: idpIdentityMock.email,
           ...technicalClaims,
         },
         accountId: accountIdMock,
         subs: {
-          // FranceConnect claims naming convention
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           sp_id: 'computedSubSp',
         },
       });
@@ -301,8 +311,6 @@ describe('CoreFcpEidasVerifyHandler', () => {
       const result = service['getTechnicalClaims'](idpId);
       // Then
       expect(result).toEqual({
-        // OIDC fashion naming
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         idp_id: idpId,
       });
     });

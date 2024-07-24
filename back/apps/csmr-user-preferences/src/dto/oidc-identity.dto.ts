@@ -28,15 +28,11 @@ export class OidcIdentityDto {
   @IsSafeString()
   @Length(1, 256)
   @Expose()
-  // oidc naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly given_name: string;
 
   @IsSafeString()
   @Length(1, 256)
   @Expose()
-  // oidc naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly family_name: string;
 
   @IsSafeString()
@@ -60,8 +56,6 @@ export class OidcIdentityDto {
   @IsSafeString()
   @IsOptional()
   @Expose()
-  // oidc naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly preferred_username?: string;
 
   @IsEmail()

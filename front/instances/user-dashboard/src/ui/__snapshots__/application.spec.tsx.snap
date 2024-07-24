@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Application should match snapshot 1`] = `
+<div>
+  <div
+    data-mockid="BrowserRouter"
+  >
+    <div
+      data-mockid="AccountProvider"
+    >
+      <div>
+        AccountProvider
+      </div>
+      <div>
+        <div
+          data-mockid="HelmetProvider"
+        >
+          <div>
+            <div>
+              ApplicationRoutes
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

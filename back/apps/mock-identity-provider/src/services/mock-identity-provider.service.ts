@@ -67,7 +67,6 @@ export class MockIdentityProviderService {
 
     const interactionId = this.oidcProvider.getInteractionIdFromCtx(ctx);
 
-    // oidc defined variable name
     const { client_id: spId, acr_values: spAcr } = ctx.oidc.params;
 
     const { name: spName } = await this.serviceProvider.getById(spId);
@@ -192,19 +191,13 @@ export class MockIdentityProviderService {
       'street_address',
     ]);
 
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { country, postal_code, locality, street_address } =
       identity as Record<string, string>;
 
     oidcIdentity.address = {
       country: country,
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       postal_code: postal_code,
       locality: locality,
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       street_address: street_address,
       formatted: `${country} ${locality} ${postal_code} ${street_address}`,
     };

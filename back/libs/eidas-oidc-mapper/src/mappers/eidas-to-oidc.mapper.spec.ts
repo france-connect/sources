@@ -144,8 +144,6 @@ describe('EidasToOidcMapper', () => {
     describe('getGivenNames', () => {
       it('should call getGivenNames with the eidas attributes and return the given names', () => {
         // setup
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         const expected = { given_name: 'Angela Claire Louise' };
 
         // action
@@ -162,8 +160,6 @@ describe('EidasToOidcMapper', () => {
         // setup
         const emptyAttributesMock = {};
         const expected = {
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           given_name: undefined,
         };
 
@@ -182,11 +178,7 @@ describe('EidasToOidcMapper', () => {
       it('should call with the eidas attributes and return the family name and the preferred_username', () => {
         // setup
         const expected = {
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           family_name: 'DUBOIS',
-          // oidc parameter
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           preferred_username: 'DUBOIS',
         };
 
@@ -205,11 +197,7 @@ describe('EidasToOidcMapper', () => {
       // setup
       const emptyAttributesMock = {};
       const expected = {
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         family_name: undefined,
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         preferred_username: undefined,
       };
 

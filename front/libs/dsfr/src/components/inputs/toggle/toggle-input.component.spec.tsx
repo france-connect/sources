@@ -1,9 +1,10 @@
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import type { FieldInputProps } from 'react-final-form';
 
 import { ToggleInputComponent } from './toggle-input.component';
 
 describe('ToggleInputComponent', () => {
+  // Given
   const fieldInputPropsMock = {
     name: 'any-field-name-mock',
     onBlur: () => {},
@@ -21,15 +22,25 @@ describe('ToggleInputComponent', () => {
   });
 
   it('should match snapshot with disabled props to true', () => {
-    // given
-    const disabled = true;
-
     // When
-    const { container } = render(
-      <ToggleInputComponent disabled={disabled} input={fieldInputPropsMock} />,
-    );
+    const { container } = render(<ToggleInputComponent disabled input={fieldInputPropsMock} />);
 
     // Then
     expect(container.firstChild).toHaveProperty('disabled', true);
+  });
+
+  it('should call onUpdate when input change', () => {
+    // Given
+    const onUpdateMock = jest.fn();
+
+    // When
+    const { getByTestId } = render(
+      <ToggleInputComponent disabled input={fieldInputPropsMock} onUpdate={onUpdateMock} />,
+    );
+    const inputElement = getByTestId('field-toggle-input-any-field-name-mock');
+    fireEvent.click(inputElement);
+
+    // Then
+    expect(onUpdateMock).toHaveBeenCalled();
   });
 });

@@ -146,7 +146,6 @@ describe('MockIdentityProviderFcaService', () => {
         },
         oidc: {
           isError: hasError,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: { client_id: spIdMock, acr_values: spAcrMock },
         },
         res: {},

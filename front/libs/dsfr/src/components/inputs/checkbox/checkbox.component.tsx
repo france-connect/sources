@@ -1,7 +1,7 @@
 import React from 'react';
 import type { FieldInputProps } from 'react-final-form';
 
-export interface CheckboxComponentProps {
+interface CheckboxComponentProps {
   // @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/217251933/Case+cocher+-+Checkbox
   disabled?: boolean;
   hint?: string;
@@ -11,8 +11,8 @@ export interface CheckboxComponentProps {
   label: string;
 }
 
-export const CheckboxComponent: React.FC<CheckboxComponentProps> = React.memo(
-  ({ disabled, hint, input, label }: CheckboxComponentProps) => (
+export const CheckboxComponent = React.memo(
+  ({ disabled = false, hint, input, label }: CheckboxComponentProps) => (
     <div className="fr-checkbox-group">
       <input
         {...input}
@@ -28,10 +28,5 @@ export const CheckboxComponent: React.FC<CheckboxComponentProps> = React.memo(
     </div>
   ),
 );
-
-CheckboxComponent.defaultProps = {
-  disabled: false,
-  hint: undefined,
-};
 
 CheckboxComponent.displayName = 'CheckboxComponent';

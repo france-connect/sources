@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { unique } from '@fc/common';
 
-import * as Data from '../data';
+import * as PROVIDERS from '../data';
 import { ScopesService } from './scopes.service';
 import { ScopesIndexService } from './scopes-index.service';
 
@@ -10,7 +10,7 @@ jest.mock('@fc/common');
 jest.mock('../data', () => ({
   foo: {
     provider: {
-      key: 'IDENTIFIER_MOCK',
+      slug: 'IDENTIFIER_MOCK',
     },
     scopes: {
       foo: Symbol('foo'),
@@ -24,7 +24,7 @@ describe('ScopesService', () => {
   const uniqueMock = jest.mocked(unique);
 
   const IdentifierMock = 'IDENTIFIER_MOCK';
-  const DataMock = jest.mocked(Data);
+  const StaticProvidersMocked = jest.mocked(PROVIDERS);
 
   const scopesIndexServiceMock = {
     getClaim: jest.fn(),
@@ -178,12 +178,12 @@ describe('ScopesService', () => {
     });
   });
 
-  describe('getScopesByDataProvider', () => {
-    it('should return the scopes of the data provider', () => {
+  describe('getScopesByProviderSlug', () => {
+    it('should return the scopes of the provider', () => {
       // When
-      const result = service.getScopesByDataProvider(IdentifierMock);
+      const result = service.getScopesByProviderSlug(IdentifierMock);
       // Then
-      expect(result).toEqual(Object.keys(DataMock['foo'].scopes));
+      expect(result).toEqual(Object.keys(StaticProvidersMocked['foo'].scopes));
     });
   });
 });

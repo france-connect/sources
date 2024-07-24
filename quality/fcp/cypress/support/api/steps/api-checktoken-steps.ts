@@ -1,6 +1,5 @@
 import { Then } from '@badeball/cypress-cucumber-preprocessor';
 
-import { ServiceProvider, UserClaims } from '../../common/types';
 import { getRnippClaims } from '../../usager/helpers';
 import {
   PostChecktokenExpiredTokenDto,
@@ -74,7 +73,7 @@ Then(
 );
 
 Then("le token d'introspection contient l'identité de l'usager", function () {
-  const claims: UserClaims = this.user.allClaims;
+  const { allClaims: claims } = this.user;
   const rnippClaims = getRnippClaims(claims, '');
   cy.get<PostChecktokenValidTokenDto>('@tokenIntrospection')
     .its('token_introspection')
@@ -88,7 +87,7 @@ Then("le token d'introspection contient l'identité de l'usager", function () {
 Then(
   'le token d\'introspection a une propriété "aud" avec le client_id du fournisseur de service',
   function () {
-    const { clientId }: ServiceProvider = this.serviceProvider;
+    const { clientId } = this.serviceProvider;
     cy.get<PostChecktokenValidTokenDto>('@tokenIntrospection')
       .its('token_introspection.aud')
       .should('equal', clientId);

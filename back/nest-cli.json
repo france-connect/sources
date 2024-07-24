@@ -499,6 +499,15 @@
         "tsConfigPath": "libs/config/tsconfig.lib.json"
       }
     },
+    "exceptions-fcp": {
+      "type": "library",
+      "root": "libs/exceptions-fcp",
+      "entryFile": "index",
+      "sourceRoot": "libs/exceptions-fcp/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/exceptions-fcp/tsconfig.lib.json"
+      }
+    },
     "exceptions-deprecated": {
       "type": "library",
       "root": "libs/exceptions-deprecated",
@@ -1001,6 +1010,33 @@
       "sourceRoot": "libs/account-fca/src",
       "compilerOptions": {
         "tsConfigPath": "libs/account-fca/tsconfig.lib.json"
+      }
+    },
+    "device": {
+      "type": "library",
+      "root": "libs/device",
+      "entryFile": "index",
+      "sourceRoot": "libs/device/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/device/tsconfig.lib.json"
+      }
+    },
+    "dto2form": {
+      "type": "library",
+      "root": "libs/dto2form",
+      "entryFile": "index",
+      "sourceRoot": "libs/dto2form/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/dto2form/tsconfig.lib.json"
+      }
+    },
+    "logger-plugins": {
+      "type": "library",
+      "root": "libs/logger-plugins",
+      "entryFile": "index",
+      "sourceRoot": "libs/logger-plugins/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/logger-plugins/tsconfig.lib.json"
       }
     }
   }

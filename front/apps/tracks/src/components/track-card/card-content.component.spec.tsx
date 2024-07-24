@@ -15,8 +15,8 @@ describe('TrackCardContentComponent', () => {
     identifier: 'claims1',
     label: 'Claims 1 Label',
     provider: {
-      key: 'provider1_key',
       label: 'Provider 1 label',
+      slug: 'provider1_key',
     },
   };
 
@@ -24,8 +24,8 @@ describe('TrackCardContentComponent', () => {
     identifier: 'claims2',
     label: 'Claims 2 Label',
     provider: {
-      key: 'provider1_key',
       label: 'Provider 1 label',
+      slug: 'provider1_key',
     },
   };
 
@@ -56,9 +56,9 @@ describe('TrackCardContentComponent', () => {
         datetime={date}
         eventType={CinematicEvents.FC_VERIFIED}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         opened={false}
         options={options}
-        spAcr="eidas1"
       />,
     );
 
@@ -77,9 +77,9 @@ describe('TrackCardContentComponent', () => {
         datetime={date}
         eventType={CinematicEvents.DP_VERIFIED_FC_CHECKTOKEN}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         opened={false}
         options={options}
-        spAcr="eidas1"
       />,
     );
 
@@ -101,9 +101,9 @@ describe('TrackCardContentComponent', () => {
         datetime={date}
         eventType={eventType}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         opened={false}
         options={options}
-        spAcr="eidas1"
       />,
     );
 
@@ -116,8 +116,8 @@ describe('TrackCardContentComponent', () => {
         country: 'countryMock',
         datetime: date,
         idpLabel: 'idpLabelValue',
+        interactionAcr: 'eidas1',
         options,
-        spAcr: 'eidas1',
       },
       {},
     );
@@ -137,9 +137,9 @@ describe('TrackCardContentComponent', () => {
         datetime={date}
         eventType={eventType}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         opened={false}
         options={options}
-        spAcr="eidas1"
       />,
     );
 

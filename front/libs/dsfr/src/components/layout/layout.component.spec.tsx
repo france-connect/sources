@@ -1,36 +1,58 @@
+import { render } from '@testing-library/react';
 import { Helmet } from 'react-helmet-async';
-
-import { renderWithRouter } from '@fc/testing-library';
+import { Outlet } from 'react-router-dom';
 
 import { LayoutFooterComponent } from './footer';
 import { LayoutHeaderComponent } from './header';
-import * as LayoutComponent from './layout.component';
+import { ApplicationLayout } from './layout.component';
 
 // given
+jest.mock('react-router-dom');
 jest.mock('react-helmet-async');
 jest.mock('./footer/layout-footer.component');
 jest.mock('./header/layout-header.component');
 
 describe('ApplicationLayout', () => {
+  // given
+  let consoleErrorMock: jest.SpyInstance;
+
+  beforeEach(() => {
+    // @NOTE by implementation JEST.DOM render component into a <div />
+    // <html element cannot be a child of a <div /> element
+    // we cannot use JEST.DOM.render(..., { container }) option, because
+    // there's no parent container for a html element
+    consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
+  });
+
+  afterEach(() => {
+    // @NOTE by implementation JEST.DOM render component into a <div />
+    // <html element cannot be a child of a <div /> element
+    // we cannot use JEST.DOM.render(..., { container }) option, because
+    // there's no parent container for a html element
+    consoleErrorMock.mockRestore();
+  });
+
   it('should match snapshot', () => {
     // when
-    const { container } = renderWithRouter(<LayoutComponent.ApplicationLayout />);
+    const { container } = render(<ApplicationLayout />);
 
     // then
     expect(container).toMatchSnapshot();
   });
 
-  // @TODO fix this test
-  // @NOTE skipped: unable to tests children property
-  it.skip('should call react-helmet-async with children', () => {
+  it('should call Helmet component with children', () => {
     // when
-    renderWithRouter(<LayoutComponent.ApplicationLayout />);
+    render(<ApplicationLayout />);
 
     // then
     expect(Helmet).toHaveBeenCalledOnce();
     expect(Helmet).toHaveBeenCalledWith(
       {
-        children: <html data-fr-theme="light" lang="fr" />,
+        children: expect.objectContaining({
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          props: { 'data-fr-theme': 'light', lang: 'fr' },
+          type: 'html',
+        }),
       },
       {},
     );
@@ -38,7 +60,7 @@ describe('ApplicationLayout', () => {
 
   it('should render LayoutHeaderComponent without props', () => {
     // when
-    renderWithRouter(<LayoutComponent.ApplicationLayout />);
+    render(<ApplicationLayout />);
 
     // then
     expect(LayoutHeaderComponent).toHaveBeenCalledOnce();
@@ -47,10 +69,19 @@ describe('ApplicationLayout', () => {
 
   it('should render LayoutFooterComponent without props', () => {
     // when
-    renderWithRouter(<LayoutComponent.ApplicationLayout />);
+    render(<ApplicationLayout />);
 
     // then
     expect(LayoutFooterComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderComponent).toHaveBeenCalledWith({}, {});
+  });
+
+  it('should render Outlet without props', () => {
+    // when
+    render(<ApplicationLayout />);
+
+    // then
+    expect(Outlet).toHaveBeenCalledOnce();
+    expect(Outlet).toHaveBeenCalledWith({}, {});
   });
 });

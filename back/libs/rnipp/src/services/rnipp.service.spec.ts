@@ -47,18 +47,12 @@ describe('RnippService', () => {
 
   const identityMock = {
     gender: Genders.MALE,
-    // openid claim
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'MARTIN',
-    // openid claim
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Jean',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name_array: ['Jean'],
     birthdate: '1981-02-03',
     birthplace: '75112',
     birthcountry: '99100',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     idp_birthdate: 'foo',
   };
   const requestUrlMock =

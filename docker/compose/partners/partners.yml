@@ -10,6 +10,7 @@ services:
       - "${VOLUMES_DIR}/src/fc/front:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
       - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/log:/var/log/app"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/partners/.env/partners-front.env"

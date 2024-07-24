@@ -5,7 +5,7 @@ import type { IconType } from 'react-icons';
 import { Sizes } from '../../enums';
 import styles from './badge.module.scss';
 
-export interface BadgeComponentProps {
+interface BadgeComponentProps {
   colorName?: string;
   label: string;
   size?: Sizes;
@@ -15,8 +15,16 @@ export interface BadgeComponentProps {
   noIcon?: boolean;
 }
 
-export const BadgeComponent: React.FC<BadgeComponentProps> = React.memo(
-  ({ colorName, dataTestId, icon: Icon, iconSize, label, noIcon, size }: BadgeComponentProps) => (
+export const BadgeComponent = React.memo(
+  ({
+    colorName = 'grey',
+    dataTestId,
+    icon: Icon,
+    iconSize = 18,
+    label,
+    noIcon = false,
+    size = Sizes.MEDIUM,
+  }: BadgeComponentProps) => (
     <div
       className={classnames(styles.badge, `fr-badge fr-badge--${colorName} fr-badge--${size}`, {
         // DSFR classname
@@ -29,14 +37,5 @@ export const BadgeComponent: React.FC<BadgeComponentProps> = React.memo(
     </div>
   ),
 );
-
-BadgeComponent.defaultProps = {
-  colorName: 'grey',
-  dataTestId: undefined,
-  icon: undefined,
-  iconSize: 18,
-  noIcon: false,
-  size: Sizes.MEDIUM,
-};
 
 BadgeComponent.displayName = 'BadgeComponent';

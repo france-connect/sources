@@ -5,7 +5,7 @@ Fonctionnalité: Connexion avec LocalStorage
   # je veux me connecter sans avoir à écrire mon email après m'être connecté une première fois
   # afin d'accéder à mon service
 
-  Scénario: Connexion avec LocalStorage - avec email et interruption
+  Plan du Scénario: Connexion avec LocalStorage - avec email et interruption
     Etant donné que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton AgentConnect

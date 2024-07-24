@@ -3,7 +3,7 @@
 exports[`TrackCardComponent Initial component render should match snapshot, with default props 1`] = `
 <div>
   <button
-    aria-controls="card::a11y::mock-track-id"
+    aria-controls="track::card::mock-track-id"
     aria-expanded="false"
     aria-label="Voir les détails"
     class="is-full-width text-left is-block is-relative is-blue-shadow fr-mb-4w fr-px-5v fr-py-2w"

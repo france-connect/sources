@@ -88,6 +88,8 @@ export class OidcClientService {
     try {
       identity = await this.utils.getUserInfo(accessToken, idpId);
     } catch (error) {
+      this.logger.debug(error.stack);
+
       /**
        * @todo #587 Add the error to the exception, then add "@Loggable()" decorator
        * to the exception.

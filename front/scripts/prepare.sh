@@ -32,7 +32,7 @@ build_and_copy_fc_stylesheet_to_instances_public_folder() {
   # We should install a third-party plugin or using a build tool like rollup
   MODULES_PATH="$(pwd)/node_modules"
 
-  SRC_FOLDER="./libs/styles"
+  SRC_FOLDER="./libs/css"
   DEST_FOLDER="./instances/$1/public"
 
   check_source_and_files "$MODULES_PATH"

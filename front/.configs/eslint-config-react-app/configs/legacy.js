@@ -608,7 +608,6 @@ module.exports = {
     'no-underscore-dangle': [
       2,
       {
-        allow: ['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'],
         allowAfterSuper: false,
         allowAfterThis: false,
         allowAfterThisConstructor: false,

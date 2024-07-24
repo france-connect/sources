@@ -176,7 +176,8 @@
     "name": "fip14-high",
     "title": "IDP14 - Identity Provider - eIDAS élevé - crypted (RSA-OAEP + A256GCM) - signed (RS256)",
     "descriptions": [
-      "eidas 3 - crypted (RSA-OAEP + A256GCM) - signed (RS256)"
+      "eidas 3 - crypted (RSA-OAEP + A256GCM) - signed (RS256)",
+      "eidas3 seulement"
     ],
     "mocked": true,
     "usable": true,

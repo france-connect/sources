@@ -28,9 +28,7 @@ describe('CsmrUserPreferencesService', () => {
   let preferencesMock: IIdpSettings;
 
   const identityMock = {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Jean Paul Henri',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'Dupont',
     gender: 'male',
     birthdate: '1970-01-01',
@@ -55,7 +53,6 @@ describe('CsmrUserPreferencesService', () => {
       discoveryUrl:
         'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/.well-known/openid-configuration',
       issuer: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         jwks_uri: 'https://fsp1v2.docker.dev-franceconnect.fr/jwks_uri',
       },
     },
@@ -70,8 +67,6 @@ describe('CsmrUserPreferencesService', () => {
       discoveryUrl:
         'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/.well-known/openid-configuration',
       issuer: {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         jwks_uri: 'https://fsp1v2.docker.dev-franceconnect.fr/jwks_uri',
       },
     },

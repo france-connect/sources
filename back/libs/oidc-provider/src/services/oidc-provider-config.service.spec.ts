@@ -112,7 +112,7 @@ describe('OidcProviderConfigService', () => {
       expect(result).toMatchObject(configOidcProviderMock);
     });
 
-    it('should return false to pkce output if we pass two empty objects', () => {
+    it('should return false to PKCE output if we pass two empty objects', () => {
       // Given
       OidcProviderRedisAdapter.getConstructorWithDI = jest
         .fn()

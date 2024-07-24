@@ -6,32 +6,20 @@
     <link rel="stylesheet" href="/css/pages/ac.interaction.css" />
     <title>Connexion - choix du compte</title>
   </head>
-  <body id="fc-interaction-page">
-    <div class="fc-sticky-wrapper">
-      <div class="ac-sticky-body">
-        <%- include('includes/header.ejs') %>
-        <main class="fr-container ac-full-height">
-          <div
-            class="fr-grid-row fr-grid-row--center fr-grid-row--middle ac-full-height"
-          >
-            <div
-              class="fr-col-lg-5 fr-col-offset-lg-1--right fr-col-md-7 fr-col-sm-8 fr-pt-5w ac-full-height"
-            >
-              <%- include('pages/interaction/interaction.anonymous.ejs') %> <%-
-              include('pages/interaction/interaction.welcome.ejs') %> <%-
-              include('pages/interaction/interaction.notice.ejs') %> <%-
-              include('pages/interaction/interaction.email.ejs') %>
-            </div>
-            <div class="fr-col-lg-6 fr-pt-5w ac-full-height interaction-media">
-              <%- include('pages/interaction/interaction.media.ejs') %>
-            </div>
-          </div>
-        </main>
-        <div class="ac-background-alt-grey"></div>
+  <body>
+    <%- include('includes/header.ejs') %>
+    <main class="onboarding-container">
+      <div>
+        <%- include('pages/interaction/interaction.welcome.ejs') %> <%-
+        include('pages/interaction/interaction.notice.ejs') %> <%-
+        include('pages/interaction/interaction.email.ejs') %>
+        <% if (locals.defaultEmailRenater) { %> <%-
+          include('pages/interaction/interaction.renater.ejs') %>
+        <% } %>
       </div>
-      <%- include('includes/footer.ejs') %>
-    </div>
-    <%- include('includes/scripts.ejs') %>
+      <%- include('pages/interaction/interaction.media.ejs') %>
+    </main>
+    <%- include('includes/footer.ejs') %> <%- include('includes/scripts.ejs') %>
     <script type="text/javascript" src="/js/email-fca.js" defer></script>
   </body>
 </html>

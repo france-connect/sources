@@ -21,7 +21,7 @@ const _dirname =
 export default {
   build: {
     outDir: 'build',
-    sourcemap: false,
+    sourcemap: true,
   },
   plugins: [
     tsconfigPaths({

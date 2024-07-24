@@ -1,9 +1,8 @@
 import classnames from 'classnames';
 import React, { useCallback, useState } from 'react';
-import { OnChange } from 'react-final-form-listeners';
-import { useMediaQuery } from 'react-responsive';
 
 import { ToggleInput } from '@fc/dsfr';
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import type { Service } from '../interfaces';
 import { ServiceImageComponent } from './service-image.component';
@@ -14,10 +13,12 @@ interface ServiceComponentProps {
   allowToBeUpdated?: boolean;
 }
 
-export const ServiceComponent: React.FC<ServiceComponentProps> = React.memo(
-  ({ allowToBeUpdated, service }: ServiceComponentProps) => {
-    const gtMobile = useMediaQuery({ query: '(min-width: 576px)' });
-    const gtDesktop = useMediaQuery({ query: '(min-width: 992px)' });
+export const ServiceComponent = React.memo(
+  ({ allowToBeUpdated = true, service }: ServiceComponentProps) => {
+    const [breakpointLg, breakpointSm] = useStylesVariables(['breakpoint-lg', 'breakpoint-sm']);
+
+    const gtDesktop = useStylesQuery({ minWidth: breakpointLg });
+    const gtMobile = useStylesQuery({ minWidth: breakpointSm });
 
     const [isDisabled, setIsDisabled] = useState(!service.isChecked);
 
@@ -40,6 +41,7 @@ export const ServiceComponent: React.FC<ServiceComponentProps> = React.memo(
       setIsDisabled(!value);
     }, []);
 
+    const inputName = `idpList.${service.uid}`;
     return (
       <li
         className={classnames('flex-start items-start fr-pt-2w fr-toggle--border-bottom', {
@@ -58,21 +60,12 @@ export const ServiceComponent: React.FC<ServiceComponentProps> = React.memo(
           initialValue={service.isChecked}
           label={labelCallback}
           legend={{ checked: 'Autorisé', unchecked: 'Bloqué' }}
-          name={`idpList.${service.uid}`}
+          name={inputName}
+          onUpdate={allowToBeUpdated ? onChangeHandler : undefined}
         />
-        {/*
-          @TODO find a way to remove OnChange
-          Author: Matthieu
-          Date: 06/10/2022
-        */}
-        {allowToBeUpdated && <OnChange name={`idpList.${service.uid}`}>{onChangeHandler}</OnChange>}
       </li>
     );
   },
 );
-
-ServiceComponent.defaultProps = {
-  allowToBeUpdated: true,
-};
 
 ServiceComponent.displayName = 'ServiceComponent';

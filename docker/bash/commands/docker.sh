@@ -52,7 +52,7 @@ _list_services() {
 
   DOCKER_COMPOSE_SERVICES_CMD="${DOCKER_COMPOSE} ps"
 
-  if $DOCKER_COMPOSE version | grep -iq 'docker compose version v2' ; then
+  if $DOCKER_COMPOSE version | grep -iq 'docker compose version v2'; then
     DOCKER_COMPOSE_SERVICES_CMD="${DOCKER_COMPOSE} config"
   fi
 
@@ -125,6 +125,15 @@ _prune_ci() {
   done
 
   docker volume prune -f
+}
+
+_get_env() {
+  local app=${1}
+  local varName=${2}
+  local containerName="${COMPOSE_PROJECT_NAME}_${app}_1"
+  local expression='${'${varName}'}'
+
+  docker exec ${containerName} bash -c "echo ${expression}"
 }
 
 _switch() {

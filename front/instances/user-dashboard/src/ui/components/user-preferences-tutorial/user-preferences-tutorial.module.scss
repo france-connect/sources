@@ -1,0 +1,18 @@
+.tutorial {
+  > img {
+    border: 2px solid var(--border-active-blue-france);
+    border-radius: 8px;
+  }
+}
+
+// @NOTE CSS Module file, unable to use kebab-case
+// stylelint-disable-next-line selector-class-pattern
+.tutorialFullWidth {
+  width: 100%;
+}
+
+// @NOTE CSS Module file, unable to use kebab-case
+// stylelint-disable-next-line selector-class-pattern
+.tutorialSmallWidth {
+  width: 350px;
+}

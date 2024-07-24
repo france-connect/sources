@@ -6,6 +6,8 @@
     box-shadow: inset 0 0 0 1px var(--border-action-high-error);
   }
 
+  // @NOTE DSFR classname
+  // stylelint-disable-next-line selector-class-pattern
   .fr-toggle input[type='checkbox']:not(:disabled) ~ .fr-toggle__label::after {
     --data-uri-svg: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ce0500' d='m10 15.17 9.2-9.2 1.4 1.42L10 18l-6.36-6.36 1.4-1.42z'/%3E%3C/svg%3E");
 
@@ -19,6 +21,8 @@
     z-index: 999999;
   }
 
+  // @NOTE DSFR classname
+  // stylelint-disable-next-line selector-class-pattern
   .fr-toggle input[type='checkbox']:not(:disabled) ~ .fr-toggle__label::before {
     --data-uri-svg: url("data:image/svg+xml;charset=utf-8,%3Csvg width='40' stroke='%23ce0500' height='24' fill='%23ce0500' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='.5' y='.5' width='39' height='23' rx='11.5'/%3E%3C/svg%3E");
 
@@ -33,6 +37,8 @@
     box-shadow: inset 0 0 0 1px var(--border-action-high-success);
   }
 
+  // @NOTE DSFR classname
+  // stylelint-disable-next-line selector-class-pattern
   .fr-toggle input[type='checkbox']:checked:not(:disabled) ~ .fr-toggle__label::after {
     --data-uri-svg: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2318753c' d='m10 15.17 9.2-9.2 1.4 1.42L10 18l-6.36-6.36 1.4-1.42z'/%3E%3C/svg%3E");
 
@@ -46,6 +52,8 @@
     z-index: 999999;
   }
 
+  // @NOTE DSFR classname
+  // stylelint-disable-next-line selector-class-pattern
   .fr-toggle input[type='checkbox']:checked:not(:disabled) ~ .fr-toggle__label::before {
     --data-uri-svg: url("data:image/svg+xml;charset=utf-8,%3Csvg width='40' stroke='%2318753c' height='24' fill='%2318753c' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='.5' y='.5' width='39' height='23' rx='11.5'/%3E%3C/svg%3E");
 

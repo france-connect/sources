@@ -1,3 +1,4 @@
+import { ClassTransformOptions } from 'class-transformer';
 import { Request } from 'express';
 import { v4 as uuid } from 'uuid';
 
@@ -16,10 +17,10 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
-import { FSA, PartialExcept } from '@fc/common';
+import { FSA, getTransformed, PartialExcept } from '@fc/common';
 import { CsrfToken, CsrfTokenGuard } from '@fc/csrf';
 import { I18nService } from '@fc/i18n';
-import { IOidcIdentity } from '@fc/oidc';
+import { IOidcIdentity, PivotIdentityDto } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { RichClaimInterface } from '@fc/scopes';
 import { ISessionService, Session } from '@fc/session';
@@ -42,6 +43,10 @@ import {
   UserInfosInterface,
 } from '../interfaces';
 import { UserDashboardService } from '../services';
+
+const FILTERED_OPTIONS: ClassTransformOptions = {
+  excludeExtraneousValues: true,
+};
 
 @Injectable()
 @Controller()
@@ -168,9 +173,12 @@ export class UserDashboardController {
       identity: idpIdentity,
     };
     await this.tracking.track(DISPLAYED_USER_PREFERENCES, context);
-    // idp_id has been removed because it is not necessary to pass it to the consumer
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { idp_id: _idpId, ...identityFiltered } = idpIdentity;
+
+    const identityFiltered = getTransformed<PivotIdentityDto>(
+      idpIdentity,
+      PivotIdentityDto,
+      FILTERED_OPTIONS,
+    );
 
     const preferences =
       await this.userPreferences.getUserPreferencesList(identityFiltered);
@@ -216,9 +224,11 @@ export class UserDashboardController {
       });
     }
 
-    // idp_id has been removed because it is not necessary to pass it to the consumer
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { idp_id: _idpId, ...identityFiltered } = idpIdentity;
+    const identityFiltered = getTransformed<PivotIdentityDto>(
+      idpIdentity,
+      PivotIdentityDto,
+      FILTERED_OPTIONS,
+    );
 
     const preferences = await this.userPreferences.setUserPreferencesList(
       identityFiltered,

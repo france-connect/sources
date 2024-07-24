@@ -1,19 +1,19 @@
-import { lastValueFrom } from 'rxjs';
-
-import { HttpService } from '@nestjs/axios';
 import { ValidationError } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import {
-  DataProviderAdapterMongoService,
-  DataProviderMetadata,
-} from '@fc/data-provider-adapter-mongo';
-import { CustomJwtPayload, JwtService } from '@fc/jwt';
+  ChecktokenRequestDto,
+  DpJwtPayloadInterface,
+  InvalidChecktokenRequestException,
+  TokenIntrospectionInterface,
+} from '@fc/core';
+import { CryptographyFcpService } from '@fc/cryptography-fcp';
+import { DataProviderMetadata } from '@fc/data-provider-adapter-mongo';
+import { JwtService } from '@fc/jwt';
 import { LoggerService } from '@fc/logger';
-import { AccessToken, atHashFromAccessToken, stringToArray } from '@fc/oidc';
+import { atHashFromAccessToken, stringToArray } from '@fc/oidc';
 import { OidcProviderRedisAdapter } from '@fc/oidc-provider/adapters';
 import { RedisService } from '@fc/redis';
 import { RnippPivotIdentity } from '@fc/rnipp';
@@ -25,15 +25,9 @@ import { getLoggerMock } from '@mocks/logger';
 import { getRedisServiceMock } from '@mocks/redis';
 import { getSessionServiceMock } from '@mocks/session';
 
-import { ChecktokenRequestDto, CoreFcpSession } from '../dto';
-import {
-  CoreFcpFetchDataProviderJwksFailedException,
-  InvalidChecktokenRequestException,
-} from '../exceptions';
-import { DpJwtPayloadInterface } from '../interfaces';
+import { CoreFcpSession } from '../dto';
 import { DataProviderService } from './data-provider.service';
 
-jest.mock('rxjs');
 jest.mock('@fc/oidc');
 
 jest.mock('@fc/common', () => ({
@@ -48,30 +42,22 @@ const configServiceMock = {
 };
 
 const loggerServiceMock = getLoggerMock();
-const dataProviderMock = {
-  getByClientId: jest.fn(),
-};
-
-const httpServiceMock = {
-  get: jest.fn(),
-};
 
 const jwtServiceMock = getJwtServiceMock();
 
 const DataProviderMock = {
   slug: 'SLUG',
-  // OIDC fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   jwks_uri: 'jwks_uri',
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  checktoken_endpoint_auth_signing_alg: 'checktoken_endpoint_auth_signing_alg',
+  checktoken_signed_response_alg: 'checktoken_signed_response_alg',
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
   checktoken_encrypted_response_alg: 'checktoken_encrypted_response_alg',
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
   checktoken_encrypted_response_enc: 'checktoken_encrypted_response_enc',
+  client_id: 'client_id',
 } as unknown as DataProviderMetadata;
 
 const configDataMock = {
@@ -90,7 +76,7 @@ const sessionDataMock = {
 const redisMock = getRedisServiceMock();
 
 const scopesMock = {
-  getScopesByDataProvider: jest.fn(),
+  getScopesByProviderSlug: jest.fn(),
 };
 
 describe('DataProviderService', () => {
@@ -109,8 +95,6 @@ describe('DataProviderService', () => {
         DataProviderService,
         LoggerService,
         ConfigService,
-        DataProviderAdapterMongoService,
-        HttpService,
         JwtService,
         RedisService,
         SessionService,
@@ -122,10 +106,6 @@ describe('DataProviderService', () => {
       .useValue(loggerServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(DataProviderAdapterMongoService)
-      .useValue(dataProviderMock)
-      .overrideProvider(HttpService)
-      .useValue(httpServiceMock)
       .overrideProvider(JwtService)
       .useValue(jwtServiceMock)
       .overrideProvider(RedisService)
@@ -139,8 +119,6 @@ describe('DataProviderService', () => {
       .compile();
 
     service = module.get<DataProviderService>(DataProviderService);
-
-    dataProviderMock.getByClientId.mockResolvedValue(DataProviderMock);
 
     configServiceMock.get.mockReturnValue(configDataMock);
   });
@@ -158,14 +136,11 @@ describe('DataProviderService', () => {
     it('should return true when the request token is valid', async () => {
       // Given
       const requestTokenMock: ChecktokenRequestDto = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id:
           '423dcbdc5a15ece61ed00ff5989d72379c26d9ed4c8e4e05a87cffae019586e0',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_secret:
           'jClItOnQiSZdE4kxm7EWzJbz4ckfD89k1e3NJw/pbGRHD/Jp6ooupqmHTyc3b62L9wqyF2TlR/5hJejE',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        access_token: 'acces_token',
+        token: 'acces_token',
       };
       validateDtoMock.mockResolvedValueOnce([
         /* No error */
@@ -180,12 +155,9 @@ describe('DataProviderService', () => {
     it('should throw an error when the request token is invalid', async () => {
       // Given
       const requestTokenMock: ChecktokenRequestDto = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_secret: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        access_token: '',
+        token: '',
       };
       validateDtoMock.mockResolvedValueOnce([
         new Error('Unknown Error') as unknown as ValidationError,
@@ -199,8 +171,7 @@ describe('DataProviderService', () => {
   });
 
   describe('generateJwt', () => {
-    const payload = {} as unknown as CustomJwtPayload<DpJwtPayloadInterface>;
-    const dataProviderId = 'client_id';
+    const tokenIntrospection = {} as unknown as TokenIntrospectionInterface;
     const jwsMock = Symbol('jws');
     const jweMock = Symbol('jwe');
 
@@ -209,32 +180,23 @@ describe('DataProviderService', () => {
       service['generateJwe'] = jest.fn().mockResolvedValue(jweMock);
     });
 
-    it('should fetch dataProvider by client_id', async () => {
-      // When
-      await service.generateJwt(payload, dataProviderId);
-
-      // Then
-      expect(dataProviderMock.getByClientId).toHaveBeenCalledTimes(1);
-      expect(dataProviderMock.getByClientId).toHaveBeenCalledWith(
-        dataProviderId,
-      );
-    });
-
     it('should call generateJws', async () => {
       // When
-      await service.generateJwt(payload, dataProviderId);
+      await service.generateJwt(tokenIntrospection, DataProviderMock);
 
       // Then
       expect(service['generateJws']).toHaveBeenCalledTimes(1);
       expect(service['generateJws']).toHaveBeenCalledWith(
-        payload,
+        {
+          token_introspection: tokenIntrospection,
+        },
         DataProviderMock,
       );
     });
 
     it('should call generateJwe', async () => {
       // When
-      await service.generateJwt(payload, dataProviderId);
+      await service.generateJwt(tokenIntrospection, DataProviderMock);
 
       // Then
       expect(service['generateJwe']).toHaveBeenCalledTimes(1);
@@ -246,7 +208,10 @@ describe('DataProviderService', () => {
 
     it('should return the generated jwt', async () => {
       // When
-      const result = await service.generateJwt(payload, dataProviderId);
+      const result = await service.generateJwt(
+        tokenIntrospection,
+        DataProviderMock,
+      );
 
       // Then
       expect(result).toEqual(jweMock);
@@ -271,37 +236,46 @@ describe('DataProviderService', () => {
       expect(atHashFromAccessToken).toHaveBeenCalledWith({ jti: atHashMock });
     });
 
-    it('should get session id from session service', async () => {
+    it('should get session id and data from session service', async () => {
       // When
       await service.getSessionByAccessToken(atHashMock);
 
       // Then
       expect(sessionServiceMock.getAlias).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.getAlias).toHaveBeenCalledWith(atHashMock);
+      expect(sessionServiceMock.getDataFromBackend).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.getDataFromBackend).toHaveBeenCalledWith(
+        sessionIdMock,
+      );
+    });
+
+    it('should return null if session id is not defined', async () => {
+      // Given
+      sessionServiceMock.getAlias.mockResolvedValue(undefined);
+
+      // When
+      const result = await service.getSessionByAccessToken(atHashMock);
+
+      // Then
+      expect(sessionServiceMock.getAlias).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.getAlias).toHaveBeenCalledWith(atHashMock);
+      expect(result).toBe(null);
     });
   });
 
-  describe('generateExpiredPayload', () => {
-    const audMock = 'clientId';
-
+  describe('generateExpiredResponse', () => {
     it('should return a payload with an expired token', () => {
       // When
-      const result = service['generateExpiredPayload'](audMock);
+      const result = service['generateExpiredResponse']();
 
       // Then
       expect(result).toEqual({
-        // OIDC defined var name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        token_introspection: {
-          active: false,
-        },
-        aud: audMock,
+        active: false,
       });
     });
   });
 
-  describe('generateValidPayload', () => {
-    const dpClientIdMock = 'dataProvider ClientId';
+  describe('generateValidResponse', () => {
     const acrMock = ['acr', 'values'];
     const iatMock = 33;
     const expMock = 42;
@@ -316,8 +290,6 @@ describe('DataProviderService', () => {
 
     const interactionMock = {
       claims: {
-        // OIDC defined var name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         id_token: {
           acr: { values: acrMock },
         },
@@ -332,41 +304,36 @@ describe('DataProviderService', () => {
     beforeEach(() => {
       sessionServiceMock.get.mockReturnValueOnce(sessionMock);
       service['generateDataProviderSub'] = jest.fn().mockReturnValue(dpSubMock);
-      service['getDpRelatedScopes'] = jest.fn().mockResolvedValue(['space']);
+      service['filterScopes'] = jest.fn().mockReturnValue(['space']);
     });
 
-    it('should return a payload with an active token', async () => {
+    it('should return a payload with an active token', () => {
       // When
-      const result = await service['generateValidPayload'](
-        dpClientIdMock,
+      const result = service['generateValidResponse'](
+        DataProviderMock,
         sessionDataMock as unknown as CoreFcpSession,
         interactionMock,
       );
 
       // Then
       expect(result).toEqual({
-        // OIDC defined var name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        token_introspection: {
-          active: true,
-          acr: 'acr values',
-          aud: 'clientIdValue',
-          exp: 42,
-          iat: 33,
-          jti: 'jtiValue',
-          scope: 'space',
-          sub: 'dpSubMock value',
-          mockedRnippProperty:
-            sessionDataMock.OidcClient.rnippIdentity.mockedRnippProperty,
-        },
-        aud: 'dataProvider ClientId',
+        active: true,
+        acr: 'acr values',
+        aud: 'clientIdValue',
+        exp: 42,
+        iat: 33,
+        jti: 'jtiValue',
+        scope: 'space',
+        sub: 'dpSubMock value',
+        mockedRnippProperty:
+          sessionDataMock.OidcClient.rnippIdentity.mockedRnippProperty,
       });
     });
 
-    it('should call generateDataProviderSub() with rnippIdentity from session and dpClientId from interaction (accessToken)', async () => {
+    it('should call generateDataProviderSub() with rnippIdentity from session and clientId from data provider', () => {
       // When
-      await service['generateValidPayload'](
-        dpClientIdMock,
+      service['generateValidResponse'](
+        DataProviderMock,
         sessionDataMock as unknown as CoreFcpSession,
         interactionMock,
       );
@@ -375,28 +342,28 @@ describe('DataProviderService', () => {
       expect(service['generateDataProviderSub']).toHaveBeenCalledTimes(1);
       expect(service['generateDataProviderSub']).toHaveBeenCalledWith(
         sessionDataMock.OidcClient.rnippIdentity,
-        dpClientIdMock,
+        DataProviderMock.client_id,
       );
     });
 
-    it('should call getDpRelatedScopes() with dpClientId and interaction', async () => {
+    it('should call filterScopes() with slug from data provider', () => {
       // When
-      await service['generateValidPayload'](
-        dpClientIdMock,
+      service['generateValidResponse'](
+        DataProviderMock,
         sessionDataMock as unknown as CoreFcpSession,
         interactionMock,
       );
 
       // Then
-      expect(service['getDpRelatedScopes']).toHaveBeenCalledTimes(1);
-      expect(service['getDpRelatedScopes']).toHaveBeenCalledWith(
-        dpClientIdMock,
-        interactionMock,
+      expect(service['filterScopes']).toHaveBeenCalledTimes(1);
+      expect(service['filterScopes']).toHaveBeenCalledWith(
+        DataProviderMock.slug,
+        interactionMock.scope,
       );
     });
   });
 
-  describe('generatePayload', () => {
+  describe('generateIntrospectionToken', () => {
     // Given
 
     const adapterMocked = jest.mocked(OidcProviderRedisAdapter);
@@ -409,8 +376,8 @@ describe('DataProviderService', () => {
     const accessTokenMock = 'accessTokenMockValue';
 
     beforeEach(() => {
-      service['generateExpiredPayload'] = jest.fn();
-      service['generateValidPayload'] = jest.fn();
+      service['generateExpiredResponse'] = jest.fn();
+      service['generateValidResponse'] = jest.fn();
 
       adapterMocked.mockImplementation(adapterMock);
       getExpireAndPayload.mockResolvedValue({
@@ -421,10 +388,10 @@ describe('DataProviderService', () => {
 
     it('should call adapterMock', async () => {
       // When
-      await service['generatePayload'](
+      await service['generateTokenIntrospection'](
         sessionDataMock as unknown as CoreFcpSession,
         accessTokenMock,
-        'dpClientId',
+        DataProviderMock,
       );
 
       // Then
@@ -436,10 +403,10 @@ describe('DataProviderService', () => {
       );
     });
 
-    it('should return result of generateExpiredPayload()', async () => {
+    it('should return result of generateExpiredResponse() when access token is expired', async () => {
       // Given
       const expiredPayloadMock = Symbol('expiredPayload');
-      service['generateExpiredPayload'] = jest
+      service['generateExpiredResponse'] = jest
         .fn()
         .mockReturnValue(expiredPayloadMock);
 
@@ -448,19 +415,37 @@ describe('DataProviderService', () => {
         payload: null,
       });
       // When
-      const result = await service['generatePayload'](
+      const result = await service['generateTokenIntrospection'](
         sessionDataMock as unknown as CoreFcpSession,
         accessTokenMock,
-        'dpClientId',
+        DataProviderMock,
       );
       // Then
       expect(result).toBe(expiredPayloadMock);
     });
 
-    it('should return result of generateValidPayload()', async () => {
+    it('should return result of generateExpiredResponse() when session data is null', async () => {
+      // Given
+      const expiredPayloadMock = Symbol('expiredPayload');
+      service['generateExpiredResponse'] = jest
+        .fn()
+        .mockReturnValue(expiredPayloadMock);
+
+      const sessionDataMock = null;
+      // When
+      const result = await service['generateTokenIntrospection'](
+        sessionDataMock as unknown as CoreFcpSession,
+        accessTokenMock,
+        DataProviderMock,
+      );
+      // Then
+      expect(result).toBe(expiredPayloadMock);
+    });
+
+    it('should return result of generateValidResponse()', async () => {
       // Given
       const validPayloadMock = Symbol('validPayload');
-      service['generateValidPayload'] = jest
+      service['generateValidResponse'] = jest
         .fn()
         .mockReturnValue(validPayloadMock);
 
@@ -469,56 +454,43 @@ describe('DataProviderService', () => {
         payload: {},
       });
       // When
-      const result = await service['generatePayload'](
+      const result = await service['generateTokenIntrospection'](
         sessionDataMock as unknown as CoreFcpSession,
         accessTokenMock,
-        'dpClientId',
+        DataProviderMock,
       );
       // Then
       expect(result).toBe(validPayloadMock);
     });
   });
 
-  describe('getDpRelatedScopes', () => {
+  describe('filterScopes', () => {
     const dpClientIdMock = 'dpClientId';
-    const interactionMock = {
-      scope: 'scope1 scope2',
-    } as AccessToken;
+    const interactionScopeMock = 'scope1 scope2';
 
     const stringToArrayMock = jest.mocked(stringToArray);
 
     beforeEach(() => {
-      scopesMock.getScopesByDataProvider.mockReturnValue(['scope1']);
+      scopesMock.getScopesByProviderSlug.mockReturnValue(['scope1']);
       stringToArrayMock.mockReturnValue(['scope1', 'scope2']);
     });
 
-    it('should fetch slug from dataProviderService', async () => {
+    it("should get scopes related to the data provider's slug", () => {
       // When
-      await service['getDpRelatedScopes'](dpClientIdMock, interactionMock);
+      service['filterScopes'](DataProviderMock.slug, interactionScopeMock);
 
       // Then
-      expect(dataProviderMock.getByClientId).toHaveBeenCalledTimes(1);
-      expect(dataProviderMock.getByClientId).toHaveBeenCalledWith(
-        dpClientIdMock,
-      );
-    });
-
-    it('should get scopes related to dpClientId', async () => {
-      // When
-      await service['getDpRelatedScopes'](dpClientIdMock, interactionMock);
-
-      // Then
-      expect(scopesMock.getScopesByDataProvider).toHaveBeenCalledTimes(1);
-      expect(scopesMock.getScopesByDataProvider).toHaveBeenCalledWith(
+      expect(scopesMock.getScopesByProviderSlug).toHaveBeenCalledTimes(1);
+      expect(scopesMock.getScopesByProviderSlug).toHaveBeenCalledWith(
         DataProviderMock.slug,
       );
     });
 
-    it('should return the scopes intersection', async () => {
+    it('should return the scopes intersection', () => {
       // When
-      const result = await service['getDpRelatedScopes'](
+      const result = service['filterScopes'](
         dpClientIdMock,
-        interactionMock,
+        interactionScopeMock,
       );
 
       // Then
@@ -578,7 +550,7 @@ describe('DataProviderService', () => {
 
   describe('generateJws', () => {
     // Given
-    const payload = {} as unknown as CustomJwtPayload<DpJwtPayloadInterface>;
+    const payload = {} as unknown as DpJwtPayloadInterface;
     const jwsMock = Symbol('jws');
 
     beforeEach(() => {
@@ -596,7 +568,7 @@ describe('DataProviderService', () => {
       expect(jwtServiceMock.getFirstRelevantKey).toHaveBeenCalledTimes(1);
       expect(jwtServiceMock.getFirstRelevantKey).toHaveBeenCalledWith(
         configDataMock.configuration.jwks,
-        DataProviderMock.checktoken_endpoint_auth_signing_alg,
+        DataProviderMock.checktoken_signed_response_alg,
         'sig',
       );
     });
@@ -620,6 +592,7 @@ describe('DataProviderService', () => {
       expect(jwtServiceMock.sign).toHaveBeenCalledWith(
         payload,
         configDataMock.issuer,
+        DataProviderMock.client_id,
         sigKey,
       );
     });
@@ -635,16 +608,13 @@ describe('DataProviderService', () => {
 
   describe('generateJwe', () => {
     // Given
-    const payload = {} as unknown as CustomJwtPayload<DpJwtPayloadInterface>;
+    const tokenIntrospection = {} as TokenIntrospectionInterface;
     const dataProviderJwksMock = {};
-    const dataProviderId = 'client_id';
     const jwsMock = Symbol('jws') as unknown as string;
     const jweMock = Symbol('jwe');
 
     beforeEach(() => {
-      service['fetchEncryptionKeys'] = jest
-        .fn()
-        .mockResolvedValue(dataProviderJwksMock);
+      jwtServiceMock.fetchJwks.mockReturnValue(dataProviderJwksMock);
       jwtServiceMock.encrypt.mockReturnValue(jweMock);
     });
 
@@ -653,8 +623,8 @@ describe('DataProviderService', () => {
       await service['generateJwe'](jwsMock, DataProviderMock);
 
       // Then
-      expect(service['fetchEncryptionKeys']).toHaveBeenCalledTimes(1);
-      expect(service['fetchEncryptionKeys']).toHaveBeenCalledWith(
+      expect(jwtServiceMock.fetchJwks).toHaveBeenCalledTimes(1);
+      expect(jwtServiceMock.fetchJwks).toHaveBeenCalledWith(
         DataProviderMock.jwks_uri,
       );
     });
@@ -693,50 +663,13 @@ describe('DataProviderService', () => {
 
     it('should return encrypted signed token', async () => {
       // When
-      const result = await service.generateJwt(payload, dataProviderId);
+      const result = await service.generateJwt(
+        tokenIntrospection,
+        DataProviderMock,
+      );
 
       // Then
       expect(result).toEqual(jweMock);
-    });
-  });
-
-  describe('fetchEncryptionKeys', () => {
-    it('should call the signkeys endpoint with the given URL', async () => {
-      // Given
-      const urlMock = 'url';
-      jest.mocked(lastValueFrom).mockResolvedValue({ data: 'data' });
-
-      // When
-      await service['fetchEncryptionKeys'](urlMock);
-
-      // Then
-      expect(httpServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(httpServiceMock.get).toHaveBeenCalledWith(urlMock);
-    });
-
-    it('should throw if fetch fails', async () => {
-      // Given
-      const urlMock = 'url';
-      const errorMock = new Error('error');
-      jest.mocked(lastValueFrom).mockRejectedValue(errorMock);
-
-      // When / Then
-      await expect(
-        service['fetchEncryptionKeys'](urlMock),
-      ).rejects.toThrowError(CoreFcpFetchDataProviderJwksFailedException);
-    });
-
-    it('should return the response data', async () => {
-      // Given
-      const urlMock = 'url';
-      const responseMock = { data: 'data' };
-      jest.mocked(lastValueFrom).mockResolvedValue(responseMock);
-
-      // When
-      const result = await service['fetchEncryptionKeys'](urlMock);
-
-      // Then
-      expect(result).toStrictEqual(responseMock.data);
     });
   });
 
@@ -756,8 +689,6 @@ describe('DataProviderService', () => {
       // Then
       expect(result).toEqual({
         error: 'foo_bar',
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: 'Error message description',
       });
     });
@@ -774,13 +705,11 @@ describe('DataProviderService', () => {
       // Then
       expect(result).toEqual({
         error: 'foo_bar',
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: 'Error message description',
       });
     });
 
-    it('should send predifined message if http status code is 500', () => {
+    it('should send predefined message if http status code is 500', () => {
       // Given
       const httpStatusCodeMock = 500;
       // When
@@ -792,8 +721,6 @@ describe('DataProviderService', () => {
       // Then
       expect(result).toEqual({
         error: 'server_error',
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description:
           'The authorization server encountered an unexpected condition that prevented it from fulfilling the request.',
       });

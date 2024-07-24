@@ -17,7 +17,7 @@ export class AppModule {
         // 1. Load config module first
         ConfigModule.forRoot(configService),
         // 2. Load logger module next
-        LoggerModule,
+        LoggerModule.forRoot(),
         // 2.1 Load logger legacy module next for business logs
         LoggerLegacyModule,
         // 3. Load other modules

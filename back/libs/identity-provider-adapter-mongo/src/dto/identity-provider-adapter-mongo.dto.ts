@@ -7,7 +7,6 @@ import {
   IsBoolean,
   IsEnum,
   IsNotEmpty,
-  IsNumber,
   IsObject,
   IsOptional,
   IsString,
@@ -19,6 +18,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
+import { IsIncludedInConfig } from '@fc/common';
 import {
   IFeatureHandlerDatabase,
   IsRegisteredHandler,
@@ -96,69 +96,49 @@ export class MetadataIdpAdapterMongoDTO {
   /**
    * CLIENT METADATA
    */
-  @IsNumber()
-  readonly eidas: number;
+  @IsIncludedInConfig('IdentityProviderAdapterMongo', 'allowedAcr')
+  readonly allowedAcr: string[];
 
   @IsString()
   readonly clientID: string;
 
   @IsArray()
   @IsEnum(ResponseTypes, { each: true })
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly response_types: ResponseTypes[];
 
   @IsOptional()
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly revocation_endpoint_auth_method?: string;
 
   @IsOptional()
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_signed_response_alg?: string;
 
   @IsOptional()
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_encrypted_response_alg?: string;
 
   @IsOptional()
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_encrypted_response_enc?: string;
 
   @IsOptional()
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_signed_response_alg?: string;
 
   @IsOptional()
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_encrypted_response_alg?: string;
 
   @IsOptional()
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_encrypted_response_enc?: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_endpoint_auth_method: string;
 
   @IsString()
   @MinLength(32)
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_secret: string;
 
   // issuer metadata
@@ -181,8 +161,6 @@ export class NoDiscoveryIdpAdapterMongoDTO extends MetadataIdpAdapterMongoDTO {
   readonly jwksURL: string | undefined;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly authzURL: string;
 
   @IsString()

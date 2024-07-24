@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { Sizes } from '../../enums';
+import { IconPlacement, Sizes } from '../../enums';
 import { LinkComponent } from './link.component';
 
 describe('LinkComponent', () => {
@@ -42,7 +42,11 @@ describe('LinkComponent', () => {
   it('should match the snapshot, with iconPlacement props', () => {
     // when
     const { container } = render(
-      <LinkComponent href="any-url-mock" icon="any-icon-mock" iconPlacement="right" />,
+      <LinkComponent
+        href="any-url-mock"
+        icon="any-icon-mock"
+        iconPlacement={IconPlacement.RIGHT}
+      />,
     );
 
     // then

@@ -1,21 +1,22 @@
 import classnames from 'classnames';
+import type { PropsWithChildren } from 'react';
 import React from 'react';
 
 import styles from './return-button.module.scss';
 import { useReturnButton } from './use-return-button.hook';
 
-export interface ReturnButtonComponentProps {
+interface ReturnButtonComponentProps {
   url: string;
   isMobileViewport?: boolean;
 }
 
-export const ReturnButtonComponent: React.FC<ReturnButtonComponentProps> = React.memo(
-  ({ isMobileViewport, url }: ReturnButtonComponentProps) => {
+export const ReturnButtonComponent = React.memo(
+  ({ isMobileViewport = false, url }: ReturnButtonComponentProps) => {
     const { historyBackURL, serviceProviderName, showButton } = useReturnButton(url);
 
     // @TODO To be fixed
     // eslint-disable-next-line react/no-unstable-nested-components
-    const WrapperComponent = ({ children }: { children: React.ReactNode }) => {
+    const WrapperComponent = ({ children }: Required<PropsWithChildren>) => {
       if (!isMobileViewport) {
         return <li>{children}</li>;
       }
@@ -63,9 +64,5 @@ export const ReturnButtonComponent: React.FC<ReturnButtonComponentProps> = React
     );
   },
 );
-
-ReturnButtonComponent.defaultProps = {
-  isMobileViewport: false,
-};
 
 ReturnButtonComponent.displayName = 'ReturnButtonComponent';

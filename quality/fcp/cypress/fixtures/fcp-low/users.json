@@ -3,7 +3,8 @@
     "enabled": true,
     "criteria": [
       "par défaut",
-      "avec un prénom"
+      "avec un prénom",
+      "première identité"
     ],
     "credentials": [
       {
@@ -26,7 +27,8 @@
   {
     "enabled": true,
     "criteria": [
-      "né en Corse"
+      "né en Corse",
+      "deuxième identité"
     ],
     "credentials": [
       {
@@ -94,7 +96,8 @@
   {
     "enabled": true,
     "criteria": [
-      "né en Algérie"
+      "né en Algérie",
+      "troisième identité"
     ],
     "credentials": [
       {
@@ -115,7 +118,8 @@
   {
     "enabled": true,
     "criteria": [
-      "avec des caractères spéciaux"
+      "avec des caractères spéciaux",
+      "quatrième identité"
     ],
     "credentials": [
       {
@@ -241,5 +245,79 @@
         "password": "123"
       }
     ]
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "pour les tests de traces"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "test_TRACE_USER",
+        "password": "123"
+      }
+    ]
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "pour le test de préférences FI"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "bdd_idp_settings",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jean",
+      "family_name": "BON",
+      "preferred_username": "",
+      "birthdate": "1992-09-25",
+      "birthcountry": "99100",
+      "birthplace": "94073",
+      "email": "x1_bdd_idp_settings@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "sans préférence FI"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "bdd_no_idp_settings",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Jack",
+      "family_name": "ADDI",
+      "preferred_username": "",
+      "birthdate": "2000-10-01",
+      "birthcountry": "99100",
+      "birthplace": "75113",
+      "email": "x1_bdd_no_idp_settings@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "n'ayant jamais utilisé FranceConnect"
+    ],
+    "credentials": [],
+    "claims": {
+      "gender": "male",
+      "given_name": "Nicolas",
+      "family_name": "Inconnu",
+      "birthdate": "1987-07-29",
+      "birthcountry": "99100",
+      "birthplace": "93051"
+    }
   }
 ]

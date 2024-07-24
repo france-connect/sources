@@ -1,14 +1,32 @@
-<ul class="fr-btns-group fr-btns-group--inline-sm">
-<% locals.providers.forEach((provider) => { %>
-  <li>
-    <form 
-      action="/api/v2/redirect-to-idp"
-      method="POST" 
-      name="fs-request"
+<form action="/api/v2/redirect-to-idp" method="POST" name="fs-request">
+  <fieldset
+    aria-labelledby="radio-hint-legend radio-hint-messages"
+    class="fr-fieldset"
+    id="radio-hint"
+  >
+    <legend
+      class="fr-fieldset__legend--regular fr-fieldset__legend"
+      id="radio-hint-legend"
     >
-      <%- include('pages/interaction-identity-provider/interaction.button.ejs', { provider }) %>
+      Quel accès voulez-vous utiliser aujourd’hui ?
+      <span class="fr-hint-text"
+        >Si votre administration n'est pas répertoriée, sélectionnez
+        "Autre".</span
+      >
+    </legend>
+    <input type="hidden" name="csrfToken" value="<%= locals.csrfToken %>" />
+    <input type="hidden" name="email" value="<%= locals.email %>" />
+
+    <% locals.providers.forEach((provider) => { %>
       <%- include('pages/interaction-identity-provider/interaction.inputs.ejs', { provider }) %>
-    </form>
-  </li>
-<% }); %>
-</ul>
+    <% }); %>
+
+  </fieldset>
+
+  <button
+    class="fr-btn fr-btn--tertiary fc-btn--provider"
+    type="submit"
+  >
+    Continuer
+  </button>
+</form>

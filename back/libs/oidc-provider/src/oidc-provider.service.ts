@@ -146,39 +146,31 @@ export class OidcProviderService {
   // `oidc-provider` does not provide a type for interaction
   async getInteraction(req, res): Promise<any> {
     try {
-      const interactionDetail = await this.provider.interactionDetails(
+      const interactionDetails = await this.provider.interactionDetails(
         req,
         res,
       );
 
-      return interactionDetail;
+      return interactionDetails;
     } catch (error) {
       throw new OidcProviderRuntimeException(error);
     }
   }
 
-  /**
-   * @todo Expliciter par une interface le retour d'appel à OidcProvider.interactionFinished
-   *
-   * @see #533
-   * https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/553
-   */
   async abortInteraction(
     req: any,
     res: any,
-    // oidc naming convention
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     errorParams: InteractionResults,
     retry: boolean = false,
-  ): Promise<any> {
+  ): Promise<void> {
     try {
       const result = retry ? {} : errorParams;
-      const finished = await this.provider.interactionFinished(
+      const interactionFinished = await this.provider.interactionFinished(
         req,
         res,
         result,
       );
-      return finished;
+      return interactionFinished;
     } catch (error) {
       throw new OidcProviderRuntimeException(error);
     }
@@ -198,7 +190,7 @@ export class OidcProviderService {
     { step, route, path, pattern, ctx },
     middleware: Function,
   ) {
-    // run middleware AFTER pattern occured
+    // run middleware AFTER pattern occurred
     if (
       step === OidcProviderMiddlewareStep.AFTER &&
       /**

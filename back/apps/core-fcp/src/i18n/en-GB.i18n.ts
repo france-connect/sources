@@ -49,11 +49,18 @@ export const enGB: I18nTranslationsMapType = {
   'consent.data_fetched_from': 'Data fetched from {dpName}',
   'consent.no_personal_data_transmitted':
     'No personal data will be transmitted',
-
+  'consent.information_block_title':
+    'The connection notifications are evolving.',
+  'consent.information_block_content':
+    'FranceConnect will no longer systematically send you a notification for each connection. A notification will be sent only when an unusual connection is detected.',
   // Errors
   'error.page_title': 'Connection - Error - {platform}',
-  'error.what_to_do': 'What to do?',
-  'error.contact_us': 'Contact us',
-  'error.an_error_occurred': 'An error occurred',
+  'error.support.title': 'What to do?',
+  'error.support.button_label': 'Contact us',
+  'error.error_title': 'An error occurred',
   'error.error_code': 'Error {code}',
+  'error.faq.title': 'Need help ?',
+  'error.faq.button_label': 'Please refer to the help page',
+  'error.faq.body':
+    'For more information on how to use FranceConnect, please visit our help page.',
 };

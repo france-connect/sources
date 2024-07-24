@@ -75,23 +75,15 @@ export class Routes {
   readonly authorization: OidcProviderRoutes;
 
   @IsEnum(OidcProviderRoutes)
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly check_session: OidcProviderRoutes;
 
   @IsEnum(OidcProviderRoutes)
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly code_verification: OidcProviderRoutes;
 
   @IsEnum(OidcProviderRoutes)
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly device_authorization: OidcProviderRoutes;
 
   @IsEnum(OidcProviderRoutes)
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly end_session: OidcProviderRoutes;
 
   @IsEnum(OidcProviderRoutes)
@@ -101,8 +93,6 @@ export class Routes {
   readonly jwks: OidcProviderRoutes;
 
   @IsEnum(OidcProviderRoutes)
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly pushed_authorization_request: OidcProviderRoutes;
 
   @IsEnum(OidcProviderRoutes)
@@ -364,34 +354,24 @@ class OidcProviderInteractionConfig {
 class AllClientMetadataValidator implements AllClientMetadata {
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_id?: string;
 
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly redirect_uris?: string[];
 
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly grant_types?: string[];
 
   @IsArray()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly response_types?: ResponseType[];
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly application_type?: 'web' | 'native';
 
   @IsNumber()
@@ -414,8 +394,6 @@ class AllClientMetadataValidator implements AllClientMetadata {
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_secret?: string;
 
   @IsString()
@@ -427,8 +405,6 @@ class AllClientMetadataValidator implements AllClientMetadata {
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly contacts?: string[];
 
   @IsArray()
@@ -445,8 +421,6 @@ class AllClientMetadataValidator implements AllClientMetadata {
   readonly default_max_age?: number;
 
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_signed_response_alg?: SigningAlgorithmWithNone;
 
   @IsString()
@@ -457,13 +431,9 @@ class AllClientMetadataValidator implements AllClientMetadata {
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly jwks_uri?: string;
 
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly jwks?: { keys: JWK[] };
 
   @IsString()
@@ -481,8 +451,6 @@ class AllClientMetadataValidator implements AllClientMetadata {
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly post_logout_redirect_uris?: string[];
 
   @IsBoolean()
@@ -493,8 +461,6 @@ class AllClientMetadataValidator implements AllClientMetadata {
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly scope?: string;
 
   @IsString()
@@ -509,8 +475,6 @@ class AllClientMetadataValidator implements AllClientMetadata {
   readonly subject_type?: SubjectTypes;
 
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_endpoint_auth_method?: ClientAuthMethod;
 
   @IsString()
@@ -609,23 +573,15 @@ class AllClientMetadataValidator implements AllClientMetadata {
   readonly request_uris?: string[];
 
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_encrypted_response_alg?: EncryptionAlgValues;
 
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_encrypted_response_enc?: EncryptionEncValues;
 
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_encrypted_response_alg?: EncryptionAlgValues;
 
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_encrypted_response_enc?: EncryptionEncValues;
 
   @IsOptional()
@@ -704,8 +660,6 @@ export class Configuration {
   readonly cookies: Cookies;
 
   @IsArray()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly grant_types_supported: GrantType[];
 
   @IsObject()
@@ -864,6 +818,10 @@ export class OidcProviderConfig {
   @IsArray()
   @IsEnum(OidcProviderPrompt, { each: true })
   readonly forcedPrompt: OidcProviderPrompt[];
+
+  @IsArray()
+  @IsEnum(OidcProviderPrompt, { each: true })
+  readonly allowedPrompt: OidcProviderPrompt[];
 
   @IsBoolean()
   @IsOptional()

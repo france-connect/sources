@@ -5,13 +5,12 @@ import {
   getCookieFromUrl,
   setUnknowSessionIdInSessionCookie,
 } from '../helpers';
-import { Environment } from '../types';
 
 Then(
   /^le cookie "([^"]+)" est (présent|absent|supprimé)$/,
   function (cookieName: string, text: string) {
     const existNotExist = text === 'présent' ? 'exist' : 'not.exist';
-    const { fcRootUrl }: Environment = this.env;
+    const { fcRootUrl } = this.env;
     getCookieFromUrl(cookieName, fcRootUrl).should(existNotExist);
   },
 );
@@ -19,7 +18,7 @@ Then(
 When(
   /^je mémorise la valeur du cookie "([^"]+)"$/,
   function (cookieName: string) {
-    const { fcRootUrl }: Environment = this.env;
+    const { fcRootUrl } = this.env;
     getCookieFromUrl(cookieName, fcRootUrl)
       .should('exist')
       .as(`cookie:${cookieName}`);
@@ -29,7 +28,7 @@ When(
 Then(
   /^la valeur du cookie "([^"]+)" est (identique|différente)$/,
   function (cookieName: string, text: string) {
-    const { fcRootUrl }: Environment = this.env;
+    const { fcRootUrl } = this.env;
     const equalNotEqual = text === 'identique' ? 'equal' : 'not.equal';
     cy.get<Cypress.Cookie>(`@cookie:${cookieName}`).then((previousCookie) => {
       expect(previousCookie).to.exist;
@@ -45,7 +44,7 @@ Then(
 
 Then('les cookies FranceConnect sont présents', function () {
   const platform: string = Cypress.env('PLATFORM');
-  const { fcRootUrl, name }: Environment = this.env;
+  const { fcRootUrl, name } = this.env;
   const url = new URL(fcRootUrl);
   const domain = url.hostname;
 
@@ -70,16 +69,23 @@ Then('les cookies FranceConnect sont présents', function () {
 When(
   'je force un sessionId inexistant dans le cookie de session FranceConnect',
   function () {
-    const { fcRootUrl }: Environment = this.env;
+    const { fcRootUrl } = this.env;
     setUnknowSessionIdInSessionCookie(fcRootUrl);
   },
 );
 
 Given('je supprime les cookies FranceConnect', function () {
-  const { fcRootUrl }: Environment = this.env;
+  const { fcRootUrl } = this.env;
   const url = new URL(fcRootUrl);
   const domain = url.hostname;
   cy.clearCookies({ domain });
+});
+
+Given('je supprime les cookies du FS Mock', function () {
+  const { url: spUrl } = this.serviceProvider;
+  const url = new URL(spUrl);
+  const domain = url.hostname;
+  cy.clearCookie('sp_session_id', { domain });
 });
 
 Given('je supprime tous les cookies', function () {

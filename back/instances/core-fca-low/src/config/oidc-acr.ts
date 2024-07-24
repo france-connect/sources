@@ -3,12 +3,16 @@
 // Tested by DTO
 import { OidcAcrConfig } from '@fc/oidc-acr';
 
+import OidcProvider from './oidc-provider';
+
 export default {
   // Higher is safer
-  acrLevels: {
+  knownAcrValues: {
     eidas1: 1, // eIDAS Low
     eidas2: 2, // eIDAS Substantial
     eidas3: 3, // eIDAS High
   },
+  allowedAcrValues: OidcProvider.configuration.acrValues,
   defaultAcrValue: 'eidas1',
+  allowedSsoAcrs: ['eidas1'],
 } as OidcAcrConfig;

@@ -69,37 +69,17 @@ export class ServiceProviderAdapterMongoService
         title: true,
         key: true,
         entityId: true,
-        // openid defined property names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_secret: true,
         scopes: true,
         claims: true,
-        // openid defined property names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         redirect_uris: true,
-        // openid defined property names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         post_logout_redirect_uris: true,
-        // openid defined property names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         id_token_signed_response_alg: true,
-        // openid defined property names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         id_token_encrypted_response_alg: true,
-        // openid defined property names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         id_token_encrypted_response_enc: true,
-        // openid defined property names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         userinfo_signed_response_alg: true,
-        // openid defined property names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         userinfo_encrypted_response_alg: true,
-        // openid defined property names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         userinfo_encrypted_response_enc: true,
-        // openid defined property names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         jwks_uri: true,
         idpFilterExclude: true,
         idpFilterList: true,
@@ -155,8 +135,6 @@ export class ServiceProviderAdapterMongoService
     refreshCache = false,
   ): Promise<ServiceProviderMetadata> {
     const list = await this.getList(refreshCache);
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const serviceProvider: ServiceProviderMetadata = list.find(
       ({ client_id: dbId }) => dbId === spId,
     );
@@ -180,21 +158,13 @@ export class ServiceProviderAdapterMongoService
   private legacyToOpenIdPropertyName(
     source: ServiceProvider,
   ): ServiceProviderMetadata {
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const client_id = source.key;
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const client_secret = this.decryptClientSecret(source.client_secret);
     const scope = source.scopes.join(' ');
 
     const result = {
       ...source,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_id,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret,
       scope,
     };

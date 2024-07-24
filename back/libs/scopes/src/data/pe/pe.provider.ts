@@ -2,6 +2,6 @@ import { Providers } from '../../enum';
 import { ProviderInterface } from '../../interfaces';
 
 export const provider: ProviderInterface = {
-  key: Providers.PE,
+  slug: Providers.PE,
   label: 'Pôle emploi',
 };

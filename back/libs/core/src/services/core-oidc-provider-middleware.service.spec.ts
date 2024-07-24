@@ -97,8 +97,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       'x-forwarded-for-original': xForwardedForOriginalMock,
     },
     sessionId: sessionIdMock,
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     query: { acr_values: spAcrMock, client_id: spIdMock },
   };
   const resMock = {
@@ -299,8 +297,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
   describe('buildSessionWithNewInteraction', () => {
     const ctxMock = {
       oidc: {
-        // oidc naming style
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         params: { acr_values: 'acr_values', client_id: 'client_id' },
       },
       isSso: true,
@@ -345,6 +341,70 @@ describe('CoreOidcProviderMiddlewareService', () => {
       );
       // Then
       expect(result).toEqual(expected);
+    });
+  });
+
+  describe('getAuthorizationParameters', () => {
+    it('should return request body when method is POST', () => {
+      // Given
+      const ctxMock: any = {
+        method: 'POST',
+        req: {
+          body: { param1: 'value1', param2: 'value2' },
+          query: { param3: 'value3', param4: 'value4' },
+        },
+      };
+
+      // When
+      const result = service['getAuthorizationParameters'](ctxMock);
+
+      // Then
+      expect(result).toEqual({ param1: 'value1', param2: 'value2' });
+    });
+
+    it('should return query parameters when method is not POST', () => {
+      // Given
+      const ctxMock: any = {
+        method: 'GET',
+        req: {
+          body: { param1: 'value1', param2: 'value2' },
+          query: { param3: 'value3', param4: 'value4' },
+        },
+      };
+
+      // When
+      const result = service['getAuthorizationParameters'](ctxMock);
+
+      // Then
+      expect(result).toEqual({ param3: 'value3', param4: 'value4' });
+    });
+
+    it('should return empty object when method is POST and request body is empty', () => {
+      // Given
+      const ctxMock: any = {
+        method: 'POST',
+        req: { body: {}, query: { param3: 'value3', param4: 'value4' } },
+      };
+
+      // When
+      const result = service['getAuthorizationParameters'](ctxMock);
+
+      // Then
+      expect(result).toEqual({});
+    });
+
+    it('should return empty object when method is not POST and query parameters are empty', () => {
+      // Arrange
+      const ctxMock: any = {
+        method: 'GET',
+        req: { body: { param1: 'value1', param2: 'value2' }, query: {} },
+      };
+
+      // When
+      const result = service['getAuthorizationParameters'](ctxMock);
+
+      // Then
+      expect(result).toEqual({});
     });
   });
 
@@ -393,11 +453,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Given
       const ctxMock = {
         oidc: {
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: { acr_values: spAcrMock, client_id: spIdMock },
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           claims: { id_token: { amr: { essential: true } } },
         },
         req: reqMock,
@@ -427,8 +483,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Given
       const ctxMock = {
         oidc: {
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: { acr_values: spAcrMock, client_id: spIdMock },
           claims: {},
         },
@@ -451,8 +505,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Given
       const ctxMock = {
         oidc: {
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: { acr_values: spAcrMock, client_id: spIdMock },
           claims: {},
         },
@@ -475,11 +527,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Given
       const ctxMock = {
         oidc: {
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: { acr_values: spAcrMock, client_id: spIdMock },
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           claims: { id_token: { amr: { essential: true } } },
         },
         req: reqMock,
@@ -505,11 +553,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Given
       const ctxMock = {
         oidc: {
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: { acr_values: spAcrMock, client_id: spIdMock },
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           claims: { id_token: { amr: { essential: true } } },
         },
         req: reqMock,
@@ -539,8 +583,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Given
       const ctxMock = {
         oidc: {
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: { acr_values: spAcrMock, client_id: spIdMock },
           claims: {},
         },
@@ -563,8 +605,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Given
       const ctxMock = {
         oidc: {
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: { acr_values: spAcrMock, client_id: spIdMock },
           claims: {},
         },
@@ -587,11 +627,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Given
       const ctxMock = {
         oidc: {
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: { acr_values: spAcrMock, client_id: spIdMock },
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           claims: { id_token: { amr: { essential: true } } },
         },
         req: reqMock,
@@ -677,12 +713,36 @@ describe('CoreOidcProviderMiddlewareService', () => {
       pickAcrMock.mockReturnValueOnce(overrideAcr);
     });
 
-    it('should set acr values parameter on query', () => {
+    it('should set acr_values in query when acr_values is an empty string', () => {
       // Given
       const ctxMock = {
         method: 'GET',
-        // Oidc Naming convention
-        // eslint-disable-next-line @typescript-eslint/naming-convention
+        query: { acr_values: '' },
+      } as unknown as OidcCtx;
+      // When
+      service['overrideAuthorizeAcrValues'](ctxMock);
+      // Then
+      expect(ctxMock.query.acr_values).toBe(overrideAcr);
+      expect(ctxMock.body).toBeUndefined();
+    });
+
+    it('should set acr_values in query when acr_values is undefined', () => {
+      // Given
+      const ctxMock = {
+        method: 'GET',
+        query: {},
+      } as unknown as OidcCtx;
+      // When
+      service['overrideAuthorizeAcrValues'](ctxMock);
+      // Then
+      expect(ctxMock.query.acr_values).toBe(overrideAcr);
+      expect(ctxMock.body).toBeUndefined();
+    });
+
+    it('should override acr_values in query when acr_values has a value', () => {
+      // Given
+      const ctxMock = {
+        method: 'GET',
         query: { acr_values: 'boots' },
       } as unknown as OidcCtx;
       // When
@@ -692,12 +752,36 @@ describe('CoreOidcProviderMiddlewareService', () => {
       expect(ctxMock.body).toBeUndefined();
     });
 
-    it('should set acr values parameter on body', () => {
+    it('should set acr_values in body when acr_values is an empty string', () => {
       // Given
       const ctxMock = {
         method: 'POST',
-        // Oidc Naming convention
-        // eslint-disable-next-line @typescript-eslint/naming-convention
+        req: { body: { acr_values: '' } },
+      } as unknown as OidcCtx;
+      // When
+      service['overrideAuthorizeAcrValues'](ctxMock);
+      // Then
+      expect(ctxMock.req.body.acr_values).toBe(overrideAcr);
+      expect(ctxMock.query).toBeUndefined();
+    });
+
+    it('should set acr_values in body when acr_values is undefined', () => {
+      // Given
+      const ctxMock = {
+        method: 'POST',
+        req: { body: {} },
+      } as unknown as OidcCtx;
+      // When
+      service['overrideAuthorizeAcrValues'](ctxMock);
+      // Then
+      expect(ctxMock.req.body.acr_values).toBe(overrideAcr);
+      expect(ctxMock.query).toBeUndefined();
+    });
+
+    it('should override acr_values in body when acr_values has a value', () => {
+      // Given
+      const ctxMock = {
+        method: 'POST',
         req: { body: { acr_values: 'boots' } },
       } as unknown as OidcCtx;
       // When
@@ -735,8 +819,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
           'x-forwarded-source-port': '443',
           'x-forwarded-for-original': '123.123.123.123,124.124.124.124',
         },
-        // oidc
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         query: { acr_values: 'eidas3', client_id: 'foo' },
       },
       res: {},
@@ -841,8 +923,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       const ctxMock = {
         req: {
           headers: { 'x-forwarded-for': '123.123.123.123' },
-          // oidc
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           query: { acr_values: 'eidas3', client_id: 'foo' },
         },
         res: {},
@@ -946,10 +1026,13 @@ describe('CoreOidcProviderMiddlewareService', () => {
     const idpAcrMock = 'eidas2';
 
     beforeEach(() => {
-      configServiceMock.get.mockReturnValueOnce({
-        allowedSsoAcrs: ['eidas2'],
-        enableSso: true,
-      });
+      configServiceMock.get
+        .mockReturnValueOnce({
+          enableSso: true,
+        })
+        .mockReturnValueOnce({
+          allowedSsoAcrs: ['eidas2'],
+        });
 
       sessionServiceMock.get.mockReturnValue({
         idpAcr: idpAcrMock,
@@ -1155,8 +1238,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Given
       const ctxMock = {
         oidc: { isError: true },
-        // OIDC fashion variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         req: { query: { idp_hint: 'foo' } },
       } as unknown as OidcCtx;
 
@@ -1171,8 +1252,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // Given
       const ctxMock = {
         oidc: {},
-        // OIDC fashion variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         req: { query: { idp_hint: 'foo' } },
         isSso: true,
       } as unknown as OidcCtx;
@@ -1210,15 +1289,11 @@ describe('CoreOidcProviderMiddlewareService', () => {
     const ctxMock = {
       req: {
         query: {
-          // OIDC fashion variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           idp_hint: idpHintMock,
         },
       },
       oidc: {
         params: {
-          // OIDC fashion variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           acr_values: Symbol('acr'),
         },
       },
@@ -1240,8 +1315,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
         ...ctxMock,
         req: {
           query: {
-            // OIDC fashion variable name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             idp_hint: 'invalidIdpHint',
           },
         },
@@ -1296,8 +1369,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       expect(coreServiceMock.redirectToIdp).toHaveBeenCalledWith(
         ctxMock.res,
         idpHintMock,
-        // oidc param
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         { acr_values: ctxMock.oidc.params.acr_values },
       );
     });
@@ -1316,8 +1387,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
       const noIdpHintCtx = {
         ...ctxMock,
-        // OIDC fashion variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         req: { query: { idp_hint: 'foo' } },
       } as unknown as OidcCtx;
 
@@ -1334,8 +1403,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
       const noIdpHintCtx = {
         ...ctxMock,
-        // OIDC fashion variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         req: { query: { idp_hint: 'foo' } },
       } as unknown as OidcCtx;
 

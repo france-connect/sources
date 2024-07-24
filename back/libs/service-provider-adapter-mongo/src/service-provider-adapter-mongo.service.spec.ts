@@ -29,37 +29,17 @@ describe('ServiceProviderAdapterMongoService', () => {
     active: true,
     name: 'foo',
     title: 'title',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     client_secret: "This is an encrypted string, don't ask !",
     scopes: ['openid', 'profile'],
     claims: [],
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     redirect_uris: ['https://sp-site.fr/redirect_uris'],
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     post_logout_redirect_uris: ['https://sp-site.fr/post_logout_redirect_uris'],
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_signed_response_alg: 'ES256',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_encrypted_response_alg: 'RS256',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_encrypted_response_enc: 'AES256GCM',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_encrypted_response_alg: 'RS256',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_encrypted_response_enc: 'AES256GCM',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_signed_response_alg: 'ES256',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     jwks_uri: 'https://sp-site.fr/jwks-uri',
     idpFilterExclude: true,
     idpFilterList: [],
@@ -190,11 +170,7 @@ describe('ServiceProviderAdapterMongoService', () => {
       // setup
       const expected = {
         ...validServiceProviderMock,
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: validServiceProviderMock.key,
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_secret: 'client_secret',
         scope: validServiceProviderMock.scopes.join(' '),
       };
@@ -220,46 +196,26 @@ describe('ServiceProviderAdapterMongoService', () => {
       _id: false,
       active: true,
       claims: true,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret: true,
       entityId: true,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_encrypted_response_alg: true,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_encrypted_response_enc: true,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_signed_response_alg: true,
       identityConsent: true,
       idpFilterExclude: true,
       idpFilterList: true,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       jwks_uri: true,
       key: true,
       name: true,
       platform: true,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       post_logout_redirect_uris: true,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       redirect_uris: true,
       scopes: true,
       ssoDisabled: true,
       title: true,
       type: true,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_encrypted_response_alg: true,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_encrypted_response_enc: true,
-      // openid defined property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_signed_response_alg: true,
     };
 
@@ -406,11 +362,7 @@ describe('ServiceProviderAdapterMongoService', () => {
       const expected = [
         {
           ...validServiceProviderMock,
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_id: '987654321987654321987654321987654',
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_secret: 'client_secret',
           scope: 'openid profile',
         },
@@ -433,13 +385,9 @@ describe('ServiceProviderAdapterMongoService', () => {
       // setup
       service['listCache'] = [
         {
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_id: 'foo',
         },
         {
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_id: 'bar',
         },
       ] as unknown as ServiceProviderMetadata[];
@@ -457,11 +405,7 @@ describe('ServiceProviderAdapterMongoService', () => {
       const expected = [
         {
           ...validServiceProviderMock,
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_id: '987654321987654321987654321987654',
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_secret: 'client_secret',
           scope: 'openid profile',
         },
@@ -485,18 +429,12 @@ describe('ServiceProviderAdapterMongoService', () => {
     // Given
     const spListMock = [
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'wizz',
       },
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'foo',
       },
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'bar',
       },
     ];
@@ -509,8 +447,6 @@ describe('ServiceProviderAdapterMongoService', () => {
       const result = await service.getById(idMock);
       // Then
       expect(result).toEqual({
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'foo',
       });
     });
@@ -540,22 +476,16 @@ describe('ServiceProviderAdapterMongoService', () => {
     // Given
     const spListMock = [
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'wizz',
         idpFilterExclude: true,
         idpFilterList: ['idp1'],
       },
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'foo',
         idpFilterExclude: false,
         idpFilterList: ['idp1'],
       },
       {
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: 'bar',
         idpFilterExclude: true,
         idpFilterList: ['idp2'],
@@ -601,11 +531,7 @@ describe('ServiceProviderAdapterMongoService', () => {
       // setup
       const expected = {
         ...validServiceProviderMock,
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: '987654321987654321987654321987654',
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_secret: 'client_secret',
         scope: 'openid profile',
       };

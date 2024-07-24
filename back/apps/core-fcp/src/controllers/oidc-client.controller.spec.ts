@@ -59,8 +59,6 @@ describe('OidcClient Controller', () => {
   const providerIdMock = 'providerIdMockValue';
 
   const identityMock = {
-    // oidc spec defined property
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'given_name',
     sub: '1',
   } as IOidcIdentity;
@@ -158,8 +156,6 @@ describe('OidcClient Controller', () => {
 
   const interactionMock = {
     params: {
-      // acr_values is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: Symbol('acrMock'),
     },
   };
@@ -239,7 +235,6 @@ describe('OidcClient Controller', () => {
       nonce: idpNonceMock,
       scope: 'scopeMock',
       idpId: providerIdMock,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'acrMock',
     });
 
@@ -296,8 +291,6 @@ describe('OidcClient Controller', () => {
         res,
         providerIdMock,
         {
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           acr_values: interactionMock.params.acr_values,
         },
       );
@@ -342,8 +335,6 @@ describe('OidcClient Controller', () => {
 
     const errorParamsMock = {
       error: 'error',
-      // oidc naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       error_description: 'error description',
       state: 'state',
     };
@@ -408,8 +399,6 @@ describe('OidcClient Controller', () => {
       expect(coreFcpVerifyMock.handleIdpError).toHaveBeenCalledTimes(1);
       expect(coreFcpVerifyMock.handleIdpError).toHaveBeenCalledWith(req, res, {
         error: errorParamsMock.error,
-        // oidc naming
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: errorParamsMock.error_description,
       });
     });

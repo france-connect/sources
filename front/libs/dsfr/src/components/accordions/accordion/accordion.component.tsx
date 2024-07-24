@@ -1,20 +1,22 @@
 import classnames from 'classnames';
 import type * as CSS from 'csstype';
+import type { PropsWithChildren } from 'react';
 import React, { useCallback, useId } from 'react';
 
 import { HeadingTag, useContentHeight } from '@fc/common';
 
 import type { AccordionGroupItemInterface } from '../../../interfaces';
 
-interface AccordionComponentProps extends Omit<AccordionGroupItemInterface, 'id' | 'element'> {
-  children?: React.ReactNode;
+interface AccordionComponentProps
+  extends Omit<AccordionGroupItemInterface, 'id' | 'element'>,
+    PropsWithChildren {
   onClick: (id: string) => void;
   opened?: boolean;
   id?: string;
   element?: React.ReactElement;
 }
 
-export const AccordionComponent: React.FC<AccordionComponentProps> = React.memo(
+export const AccordionComponent = React.memo(
   ({
     children,
     className,
@@ -23,7 +25,7 @@ export const AccordionComponent: React.FC<AccordionComponentProps> = React.memo(
     headingClassname,
     id,
     onClick,
-    opened,
+    opened = false,
     title,
     titleClassname,
   }: AccordionComponentProps) => {
@@ -82,12 +84,5 @@ export const AccordionComponent: React.FC<AccordionComponentProps> = React.memo(
     );
   },
 );
-
-AccordionComponent.defaultProps = {
-  children: undefined,
-  element: undefined,
-  id: undefined,
-  opened: false,
-};
 
 AccordionComponent.displayName = 'AccordionComponent';

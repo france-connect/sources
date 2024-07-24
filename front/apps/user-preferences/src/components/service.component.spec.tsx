@@ -1,15 +1,10 @@
-import { OnChange } from 'react-final-form-listeners';
-import { useMediaQuery } from 'react-responsive';
-
 import { ToggleInput } from '@fc/dsfr';
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import { renderWithFinalForm } from '@fc/testing-library';
 
 import { ServiceComponent } from './service.component';
 import { ServiceImageComponent } from './service-image.component';
 
-jest.mock('@fc/dsfr');
-jest.mock('react-responsive');
-jest.mock('react-final-form-listeners');
 jest.mock('./service-image.component');
 jest.mock('./service-switch-label.component');
 
@@ -24,10 +19,16 @@ describe('ServiceComponent', () => {
     uid: 'any-uid',
   };
 
+  beforeEach(() => {
+    // @NOTE used to prevent useStylesVariables.useStylesContext to throw
+    // useStylesContext requires to be into a StylesProvider context
+    jest.mocked(useStylesVariables).mockReturnValueOnce([expect.any(Number), expect.any(Number)]);
+  });
+
   it('should match the snapshot, in a desktop viewport', () => {
     // given
-    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
-    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
     // when
     const { container } = renderWithFinalForm(<ServiceComponent service={serviceMock} />);
 
@@ -37,8 +38,8 @@ describe('ServiceComponent', () => {
 
   it('should match the snapshot, in a mobile viewport', () => {
     // given
-    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
-    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
     // when
     const { container } = renderWithFinalForm(<ServiceComponent service={serviceMock} />);
 
@@ -106,18 +107,6 @@ describe('ServiceComponent', () => {
     );
   });
 
-  it('should call OnChange from react-final-form-listener with name param', () => {
-    // when
-    renderWithFinalForm(<ServiceComponent service={serviceMock} />);
-
-    // then
-    expect(OnChange).toHaveBeenCalledOnce();
-    expect(OnChange).toHaveBeenCalledWith(
-      { children: expect.any(Function), name: 'idpList.any-uid' },
-      {},
-    );
-  });
-
   describe('when is not allowed to be updated', () => {
     it('should set the disabled class on the service component', () => {
       // when
@@ -154,14 +143,6 @@ describe('ServiceComponent', () => {
         }),
         {},
       );
-    });
-
-    it('should not call OnChange from react-final-form-listener', () => {
-      // when
-      renderWithFinalForm(<ServiceComponent allowToBeUpdated={false} service={serviceMock} />);
-
-      // then
-      expect(OnChange).not.toHaveBeenCalled();
     });
   });
 });

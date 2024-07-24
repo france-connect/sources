@@ -3,15 +3,20 @@ import React from 'react';
 
 import { ButtonTypes } from '../../enums';
 
-export interface FranceConnectButtonProps {
+interface FranceConnectButtonProps {
   showIcon?: boolean;
   className?: string;
   showHelp?: boolean;
   buttonType?: ButtonTypes;
 }
 
-export const FranceConnectButton: React.FC<FranceConnectButtonProps> = React.memo(
-  ({ buttonType, className, showHelp, showIcon }: FranceConnectButtonProps) => {
+export const FranceConnectButton = React.memo(
+  ({
+    buttonType = ButtonTypes.BUTTON,
+    className,
+    showHelp = false,
+    showIcon = false,
+  }: FranceConnectButtonProps) => {
     const target = showIcon ? '_blank' : undefined;
     const rel = showIcon ? 'noreferrer' : undefined;
     return (
@@ -35,12 +40,5 @@ export const FranceConnectButton: React.FC<FranceConnectButtonProps> = React.mem
     );
   },
 );
-
-FranceConnectButton.defaultProps = {
-  buttonType: ButtonTypes.BUTTON,
-  className: undefined,
-  showHelp: false,
-  showIcon: false,
-};
 
 FranceConnectButton.displayName = 'FranceConnectButton';

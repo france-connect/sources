@@ -9,14 +9,10 @@ import { IsUrlRequiredTldFromConfig } from '@fc/common';
 export class LogoutParamsDto {
   @IsNotEmpty()
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_hint: string;
 
   @IsUrlRequiredTldFromConfig()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly post_logout_redirect_uri?: string;
 
   @IsString()
@@ -25,8 +21,6 @@ export class LogoutParamsDto {
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_id?: string;
 
   @IsString()

@@ -1,4 +1,5 @@
-export interface ServiceProviderConfig {
+export interface ServiceProviderConfig
+  extends Record<string, string | string[]> {
   name: string;
   signupId: string;
   redirectUri: string;

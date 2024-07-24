@@ -4,6 +4,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 
+import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CryptographyModule } from '@fc/cryptography';
 import { CsrfModule } from '@fc/csrf';
@@ -35,6 +36,7 @@ const oidcClientModule = OidcClientModule.register(
 
 @Module({
   imports: [
+    AppModule,
     ExceptionsModule.withoutTracking(),
     AsyncLocalStorageModule,
     SessionModule,

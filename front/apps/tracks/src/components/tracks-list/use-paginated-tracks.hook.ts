@@ -21,8 +21,8 @@ export const usePaginatedTracks = (options: TracksConfig) => {
   /**
    * @TODO Add retry and logout process here
    */
-  const getTacksErrorHandler = useCallback((error: AxiosError | Error) => {
-    setSubmitErrors(error);
+  const getTacksErrorHandler = useCallback((error: unknown) => {
+    setSubmitErrors(error as AxiosError | Error);
   }, []);
 
   const getTracks = useCallback(() => {

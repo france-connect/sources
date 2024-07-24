@@ -1,14 +1,13 @@
 import { render } from '@testing-library/react';
 
+import { ConfigService } from '@fc/config';
+
 import { RedirectToIdpFormComponent } from './redirect-to-idp-form.component';
 
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useContext: () => ({
-    state: {
-      config: { OidcClient: { endpoints: { redirectToIdp: 'mock-redirectToIdp' } } },
-    },
-  }),
+jest.mock('@fc/config', () => ({
+  ConfigService: {
+    get: jest.fn(() => ({ endpoints: { redirectToIdp: 'mock-redirectToIdp' } })),
+  },
 }));
 
 describe('RedirectToIdpFormComponent', () => {
@@ -41,6 +40,18 @@ describe('RedirectToIdpFormComponent', () => {
     // then
     expect(element).toBeInTheDocument();
     expect(element).toHaveAttribute('id', 'mock-id');
+  });
+
+  it('should call ConfigService.get with oidcclient config name', () => {
+    // when
+    render(
+      <RedirectToIdpFormComponent csrf="mock-csrf" id="mock-id">
+        <div>mock-component-content</div>
+      </RedirectToIdpFormComponent>,
+    );
+
+    // then
+    expect(ConfigService.get).toHaveBeenCalledWith('OidcClient');
   });
 
   it('should render a a form with the action attribute equal to the context value', () => {

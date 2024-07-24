@@ -31,15 +31,9 @@ describe('CoreFcaDefaultAuthorizationHandler', () => {
     const params = {
       state: 'state',
       scope: 'scope',
-      // acr_values is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'acr',
       nonce: 'nonce',
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       sp_id: 'spId',
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       login_hint: 'test@example.com',
     };
 
@@ -48,18 +42,10 @@ describe('CoreFcaDefaultAuthorizationHandler', () => {
       const expectedParams = {
         state: 'state',
         scope: 'scope',
-        // acr_values is an oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'acr',
         nonce: 'nonce',
-        // acr_values is an oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         claims: { id_token: { amr: { essential: true } } },
-        // oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         sp_id: 'spId',
-        // oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         login_hint: 'test@example.com',
       };
 

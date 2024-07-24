@@ -13,7 +13,7 @@ type TraceCardContentProps = {
   eventType: CinematicEvents;
   datetime: DateTime;
   opened: boolean;
-  spAcr: keyof typeof EidasToLabel;
+  interactionAcr: keyof typeof EidasToLabel;
   city: string | undefined;
   country: string | undefined;
   claims: IRichClaim[];
@@ -30,9 +30,9 @@ export const TrackCardContentComponent = React.memo(
     datetime,
     eventType,
     idpLabel,
+    interactionAcr,
     opened,
     options,
-    spAcr,
   }: TraceCardContentProps) => {
     const shouldDisplayClaims =
       claims &&
@@ -67,8 +67,8 @@ export const TrackCardContentComponent = React.memo(
             country={country}
             datetime={datetime}
             idpLabel={idpLabel}
+            interactionAcr={interactionAcr}
             options={options}
-            spAcr={spAcr}
           />
         )}
 

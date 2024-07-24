@@ -305,12 +305,10 @@ describe('OidcProviderAppConfigLibService', () => {
       fc: { interactionId: 'interactiondMockValue' },
     };
     const resMock = {};
-    const acrMock = Symbol('acrMock');
 
     const sessionIdMock = 'sessionId';
 
     beforeEach(() => {
-      service['getInteractionAcr'] = jest.fn().mockReturnValue(acrMock);
       sessionServiceMock.getId.mockReturnValue(sessionIdMock);
     });
 
@@ -342,12 +340,14 @@ describe('OidcProviderAppConfigLibService', () => {
       const spIdentityMock = {
         sub: 'subValue',
       } as IOidcIdentity;
+      const interactionAcrMock = 'interactionAcrMock';
 
       const sessionDataMock: OidcSession = {
         spAcr: spAcrMock,
         amr: amrValueMock,
         interactionId: interactionIdMock,
         spIdentity: spIdentityMock,
+        interactionAcr: interactionAcrMock,
       };
       sessionServiceMock.get.mockReturnValueOnce(sessionDataMock);
 
@@ -364,7 +364,7 @@ describe('OidcProviderAppConfigLibService', () => {
         },
         login: {
           accountId: sessionIdMock,
-          acr: acrMock,
+          acr: interactionAcrMock,
           amr: amrValueMock,
           ts: expect.any(Number),
           remember: false,
@@ -410,40 +410,6 @@ describe('OidcProviderAppConfigLibService', () => {
       await expect(
         service.finishInteraction(reqMock, resMock, sessionDataMock),
       ).rejects.toThrow(OidcProviderRuntimeException);
-    });
-  });
-
-  describe('getInteractionAcr()', () => {
-    beforeEach(() => {
-      configMock.get.mockReturnValue({
-        configuration: {
-          acrValues: ['spAcrValue', 'idpAcrValue'],
-        },
-      });
-    });
-
-    it('should return the idpAcr value', () => {
-      // Given
-      const sessionDataMock: OidcSession = {
-        spAcr: 'spAcrValue',
-        idpAcr: 'idpAcrValue',
-      };
-      // When
-      const result = service['getInteractionAcr'](sessionDataMock);
-      // Then
-      expect(result).toBe('idpAcrValue');
-    });
-
-    it('should return the spAcr value', () => {
-      // Given
-      const sessionDataMock: OidcSession = {
-        spAcr: 'spAcrValue',
-        idpAcr: 'idpAcrValueNotInConfig',
-      };
-      // When
-      const result = service['getInteractionAcr'](sessionDataMock);
-      // Then
-      expect(result).toBe('spAcrValue');
     });
   });
 

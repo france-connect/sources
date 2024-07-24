@@ -1,18 +1,19 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { useMediaQuery } from 'react-responsive';
+
+import { useStylesQuery } from '@fc/styles';
 
 import { DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION, DEFAULT_USE_ELLIPSIS } from '../../enums';
 import { PaginationComponent } from './pagination.component';
 import { usePagination } from './use-pagination.hook';
 
 jest.mock('./use-pagination.hook');
-jest.mock('react-responsive');
+jest.mock('@fc/styles');
 
 describe('PaginationComponent', () => {
   // given
   const usePaginationMock = {
     currentPage: 2,
-    isTabletOrDesktop: true,
+    gtTablet: true,
     navigationNumbers: [1, 2, 3, 4, 5],
     pagesCount: 10,
     paginationChangeHandler: jest.fn(),
@@ -29,7 +30,7 @@ describe('PaginationComponent', () => {
 
   it('should match the snapshot', () => {
     // given
-    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
     jest.mocked(usePagination).mockReturnValue({
       ...usePaginationMock,
       showFirstEllipsis: true,
@@ -63,7 +64,7 @@ describe('PaginationComponent', () => {
       showLastEllipsis: true,
       showLastPage: true,
     });
-    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(
@@ -236,7 +237,7 @@ describe('PaginationComponent', () => {
       it('should display : "Page précédente"', () => {
         // given
 
-        jest.mocked(useMediaQuery).mockReturnValueOnce(false);
+        jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
         // when
         const { container } = render(
@@ -305,7 +306,7 @@ describe('PaginationComponent', () => {
         jest.mocked(usePagination).mockReturnValue({
           ...usePaginationMock,
         });
-        jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+        jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
         // when
         render(
@@ -436,7 +437,7 @@ describe('PaginationComponent', () => {
           showLastEllipsis: true,
           showLastPage: true,
         });
-        jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+        jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
         // when
         render(
@@ -469,7 +470,7 @@ describe('PaginationComponent', () => {
           showLastEllipsis: true,
           showLastPage: true,
         });
-        jest.mocked(useMediaQuery).mockReturnValueOnce(false);
+        jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
         // when
         render(
@@ -499,7 +500,7 @@ describe('PaginationComponent', () => {
           showLastEllipsis: false,
           showLastPage: true,
         });
-        jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+        jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
         // when
         render(
@@ -529,7 +530,7 @@ describe('PaginationComponent', () => {
           showLastEllipsis: true,
           showLastPage: true,
         });
-        jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+        jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
         // when
         render(
@@ -555,7 +556,7 @@ describe('PaginationComponent', () => {
             onPageClick={expect.any(Function)}
           />,
         );
-        jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+        jest.mocked(useStylesQuery).mockReturnValueOnce(true);
         jest.mocked(usePagination).mockReturnValue({
           ...usePaginationMock,
         });

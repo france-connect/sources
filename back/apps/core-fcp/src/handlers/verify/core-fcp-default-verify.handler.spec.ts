@@ -9,6 +9,7 @@ import { CryptographyFcpService } from '@fc/cryptography-fcp';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
+import { OidcAcrService } from '@fc/oidc-acr';
 import { RnippPivotIdentity, RnippService } from '@fc/rnipp';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
@@ -114,19 +115,12 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     birthcountry: 'birthcountry',
   };
   const rnippClaims = {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     rnipp_gender: 'gender',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     rnipp_given_name: 'given_name',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     rnipp_given_name_array: ['given_name_array'],
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     rnipp_family_name: 'family_name',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     rnipp_birthdate: 'birthdate',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     rnipp_birthplace: 'birthplace',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     rnipp_birthcountry: 'birthcountry',
   };
   const spMock = {
@@ -166,6 +160,11 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     getById: jest.fn(),
   };
 
+  const oidcAcrMock = {
+    getInteractionAcr: jest.fn(),
+  };
+  const interactionAcrMock = 'interactionAcrMock';
+
   const trackingContext = {} as unknown as TrackedEventContextInterface;
 
   beforeEach(async () => {
@@ -183,6 +182,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         IdentityProviderAdapterMongoService,
         CryptographyFcpService,
         AccountService,
+        OidcAcrService,
       ],
     })
       .overrideProvider(ConfigService)
@@ -207,6 +207,8 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       .useValue(accountServiceMock)
       .overrideProvider(IdentityProviderAdapterMongoService)
       .useValue(identityProviderAdapterMock)
+      .overrideProvider(OidcAcrService)
+      .useValue(oidcAcrMock)
       .compile();
 
     service = module.get<CoreFcpDefaultVerifyHandler>(
@@ -235,6 +237,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     identityProviderAdapterMock.getById.mockResolvedValue({
       maxAuthorizedAcr: 'maxAuthorizedAcr value',
     });
+    oidcAcrMock.getInteractionAcr.mockReturnValue(interactionAcrMock);
   });
 
   it('should be defined', () => {
@@ -348,6 +351,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         accountId: accountIdMock,
         idpIdentity: idpIdentityMock,
         rnippIdentity: rnippIdentityMock,
+        interactionAcr: interactionAcrMock,
         spIdentity: {
           ...idpIdentityMock,
           sub: 'computedSubSp',
@@ -356,8 +360,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
           ...technicalClaims,
         },
         subs: {
-          // FranceConnect claims naming convention
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           sp_id: 'computedSubSp',
         },
       });
@@ -437,8 +439,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       const result = service['getTechnicalClaims'](idpId);
       // Then
       expect(result).toEqual({
-        // OIDC fashion naming
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         idp_id: idpId,
       });
     });
@@ -598,9 +598,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     const idpIdentityMock = {
       sub: 'some idpSub',
       email: 'emailMock',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       birthdate: 'idpBirthdateMock',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       preferred_username: 'preferredUsernameMock',
     };
 
@@ -621,10 +619,8 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       // Then
       expect(buildFromRnippIdentityResult).toEqual({
         ...rnippIdentityMock,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         idp_birthdate: idpIdentityMock.birthdate,
         email: idpIdentityMock.email,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         preferred_username: idpIdentityMock.preferred_username,
       });
     });
@@ -700,23 +696,11 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       );
       // Then
       expect(result).toEqual({
-        // oidc fashioned name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         rnipp_gender: input.gender,
-        // oidc fashioned name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         rnipp_given_name: input.given_name,
-        // oidc fashioned name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         rnipp_family_name: input.family_name,
-        // oidc fashioned name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         rnipp_birthdate: input.birthdate,
-        // oidc fashioned name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         rnipp_birthplace: input.birthplace,
-        // oidc fashioned name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         rnipp_birthcountry: input.birthcountry,
       });
     });

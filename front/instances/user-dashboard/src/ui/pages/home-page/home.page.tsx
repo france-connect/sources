@@ -1,19 +1,22 @@
 import classnames from 'classnames';
 import React, { useContext } from 'react';
-import { useMediaQuery } from 'react-responsive';
 
 import { AxiosErrorCatcherContext } from '@fc/axios-error-catcher';
 import { useApiGet } from '@fc/common';
 import { AlertComponent, AlertTypes, ButtonTypes, FranceConnectButton, Sizes } from '@fc/dsfr';
 import { RedirectToIdpFormComponent } from '@fc/oidc-client';
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import styles from './home.module.scss';
 
 export const HomePage = React.memo(() => {
   const csrf = useApiGet<{ csrfToken: string }>({ endpoint: '/api/csrf-token' });
   const { hasError } = useContext(AxiosErrorCatcherContext);
-  const gtTablet = useMediaQuery({ query: '(min-width: 992px)' });
-  const gtMobile = useMediaQuery({ query: '(min-width: 576px)' });
+
+  const [breakpointLg, breakpointSm] = useStylesVariables(['breakpoint-lg', 'breakpoint-sm']);
+
+  const gtDesktop = useStylesQuery({ minWidth: breakpointLg });
+  const gtMobile = useStylesQuery({ minWidth: breakpointSm });
 
   return (
     <div
@@ -23,10 +26,10 @@ export const HomePage = React.memo(() => {
         'fr-mt-3w': hasError,
         // Class CSS
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        'fr-mt-5w': !gtTablet && !hasError,
+        'fr-mt-5w': !gtDesktop && !hasError,
         // Class CSS
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        'fr-mt-8w': gtTablet && !hasError,
+        'fr-mt-8w': gtDesktop && !hasError,
         // Class CSS
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'text-center': gtMobile,

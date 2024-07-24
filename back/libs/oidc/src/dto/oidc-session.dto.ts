@@ -7,15 +7,15 @@ import {
   IsAscii,
   IsBoolean,
   IsJWT,
+  IsNotEmpty,
   IsObject,
   IsOptional,
   IsString,
   IsUUID,
-  MinLength,
   ValidateNested,
 } from 'class-validator';
 
-import { PartialExcept } from '@fc/common';
+import { IsUrlRequiredTldFromConfig, PartialExcept } from '@fc/common';
 import { RnippPivotIdentity } from '@fc/rnipp';
 
 import { IOidcIdentity } from '../interfaces';
@@ -23,7 +23,7 @@ import { IOidcIdentity } from '../interfaces';
 export class OidcSession {
   @IsOptional()
   @IsAscii()
-  @MinLength(1)
+  @IsNotEmpty()
   readonly sessionId?: string;
 
   @IsOptional()
@@ -31,43 +31,53 @@ export class OidcSession {
   readonly browsingSessionId?: string;
 
   @IsOptional()
-  @IsUUID(4)
+  @IsString()
+  @IsNotEmpty()
   readonly accountId?: string;
 
   @IsOptional()
   @IsAscii()
-  @MinLength(1)
+  @IsNotEmpty()
   readonly interactionId?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  readonly interactionAcr?: string;
 
   @IsOptional()
   @IsArray()
   readonly amr?: string[];
 
+  @IsOptional()
+  @IsBoolean()
+  readonly isSilentAuthentication?: boolean;
+
   // == IdP
 
   @IsOptional()
   @IsString()
-  @MinLength(1)
+  @IsNotEmpty()
   readonly idpId?: string;
 
   @IsOptional()
   @IsString()
-  @MinLength(1)
+  @IsNotEmpty()
   readonly idpName?: string;
 
   @IsOptional()
   @IsString()
-  @MinLength(1)
+  @IsNotEmpty()
   readonly idpLabel?: string;
 
   @IsOptional()
   @IsString()
-  @MinLength(1)
+  @IsNotEmpty()
   readonly idpState?: string;
 
   @IsOptional()
   @IsString()
-  @MinLength(1)
+  @IsNotEmpty()
   readonly idpNonce?: string;
 
   /**
@@ -96,12 +106,12 @@ export class OidcSession {
 
   @IsOptional()
   @IsString()
-  @MinLength(1)
+  @IsNotEmpty()
   readonly idpAcr?: string;
 
   @IsOptional()
   @IsString()
-  @MinLength(1)
+  @IsNotEmpty()
   readonly idpAccessToken?: string;
 
   @IsOptional()
@@ -118,18 +128,22 @@ export class OidcSession {
 
   @IsOptional()
   @IsString()
-  @MinLength(1)
+  @IsNotEmpty()
   readonly spId?: string;
 
-  @IsString()
   @IsOptional()
-  @MinLength(1)
+  @IsString()
+  @IsNotEmpty()
   readonly spName?: string;
 
   @IsOptional()
   @IsString()
-  @MinLength(1)
+  @IsNotEmpty()
   readonly spAcr?: string;
+
+  @IsOptional()
+  @IsUrlRequiredTldFromConfig()
+  readonly spRedirectUri?: string;
 
   /**
    * @todo #485 This section require a deep type validation
@@ -149,25 +163,23 @@ export class OidcSession {
   @IsObject()
   readonly spIdentity?: Partial<Omit<IOidcIdentity, 'sub'>>;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   readonly oidcProviderLogoutForm?: string;
 
-  @IsBoolean()
   @IsOptional()
+  @IsBoolean()
   readonly isSso?: boolean;
 
-  @IsObject()
   @IsOptional()
+  @IsObject()
   readonly subs?: Record<string, string>;
 
-  @IsString()
   @IsOptional()
+  @IsString()
   readonly stepRoute?: string;
 
-  @IsString()
   @IsOptional()
-  // OIDC parameter name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
+  @IsString()
   readonly login_hint?: string;
 }

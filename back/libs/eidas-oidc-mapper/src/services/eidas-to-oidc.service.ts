@@ -33,8 +33,6 @@ export class EidasToOidcService {
     const scope = Array.from(scopeSet);
 
     return {
-      // oidc claim
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: LevelOfAssurancesToAcrValueMap[levelOfAssurance],
       scope,
     };
@@ -42,8 +40,6 @@ export class EidasToOidcService {
 
   mapPartialResponseSuccess({ attributes, levelOfAssurance }: EidasResponse) {
     return {
-      // oidc claim
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr: LevelOfAssurancesToAcrValueMap[levelOfAssurance],
       userinfos: this.mapAttributesToClaims(attributes),
     };
@@ -63,8 +59,6 @@ export class EidasToOidcService {
 
     return {
       error: 'eidas_node_error',
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       error_description: errorDescription,
     };
   }

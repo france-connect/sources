@@ -45,17 +45,3 @@ Le document compile les remontées de checkmarx (outil actuel) ainsi que les con
 ## Erreur
 
 - [@fc/error](libs/error/README.md)
-
-## Run the Cypress E2E tests
-
-Run the tests from a terminal
-
-```
-yarn test:e2e:core-fca-low
-```
-
-Open Cypress UI
-
-```
-yarn test:e2e:core-fca-low:open
-```

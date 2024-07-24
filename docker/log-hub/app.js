@@ -127,8 +127,8 @@ function formatLogForDebug(entry) {
   let meta = [source.toUpperCase(), dateTime, levelMaps[level]];
 
   if (methodName) {
-    meta.push(methodName);
-    metaStyles.push(styled("black", "PeachPuff"));
+    meta.push(` 📦️ ${methodName}`);
+    metaStyles.push(styled("white", "SteelBlue", "bold"));
   }
 
   const mainMsg = data.msg || "";
@@ -146,7 +146,7 @@ function formatLogForDebug(entry) {
 }
 
 function tagAsBusinessLog(eventName, meta, styles) {
-  styles.push(styled("white", "green", "bold"));
+  styles.push(styled("white", "OliveDrab", "bold"));
   meta.push(` 🏷️ ${eventName} `);
 }
 // --------------------------

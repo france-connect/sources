@@ -17,7 +17,7 @@ import { ICsmrTracksV2FieldsData } from '../interfaces';
 import { CsmrTracksGeoService } from '../services';
 import { TracksV2Formatter } from './tracks-v2.formatter';
 
-describe('CsmrTracksV2DataService', () => {
+describe('TracksV2Formatter', () => {
   let service: TracksV2Formatter;
 
   const loggerMock = getLoggerMock();
@@ -216,7 +216,8 @@ describe('CsmrTracksV2DataService', () => {
         idpName: 'idpNameValue',
         event: 'FC_VERIFIED',
         spId: 'spIdValue',
-        spAcr: 'eidas1',
+        spAcr: 'acrFromSpAcr',
+        interactionAcr: 'acrFromInteractionAcr',
         time: 1664661600000,
         service: CoreInstance.FCP_LOW,
       },
@@ -237,7 +238,7 @@ describe('CsmrTracksV2DataService', () => {
         claims: ['sub', 'given_name', 'gender'],
         time: 1664661600000,
         event: 'FC_VERIFIED',
-        spAcr: 'eidas1',
+        interactionAcr: 'acrFromInteractionAcr',
         spLabel: 'spNameValue',
         idpLabel: 'idpLabelValue',
         platform: platformMock,
@@ -246,6 +247,35 @@ describe('CsmrTracksV2DataService', () => {
 
       // When
       const tracks = service.formatTrack(sourceMock);
+      // Then
+      expect(tracks).toStrictEqual(resultMock);
+    });
+
+    it('should use spAcr if interactionAcr is not set', () => {
+      // Given
+      const sourceWithoutInteractionAcrMock = {
+        ...sourceMock,
+        _source: {
+          ...sourceMock._source,
+          interactionAcr: undefined,
+        },
+      };
+
+      const resultMock = {
+        country: geoIpDataMock.country,
+        city: geoIpDataMock.city,
+        claims: ['sub', 'given_name', 'gender'],
+        time: 1664661600000,
+        event: 'FC_VERIFIED',
+        interactionAcr: 'acrFromSpAcr',
+        spLabel: 'spNameValue',
+        idpLabel: 'idpLabelValue',
+        platform: platformMock,
+        trackId: 'idValue',
+      };
+
+      // When
+      const tracks = service.formatTrack(sourceWithoutInteractionAcrMock);
       // Then
       expect(tracks).toStrictEqual(resultMock);
     });

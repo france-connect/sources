@@ -36,8 +36,6 @@ export class ServiceProviderAdapterEnvService
 
   async getById(id: string): Promise<ServiceProviderMetadata> {
     const list = await this.getList();
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     return list.find(({ client_id: dbId }) => dbId === id);
   }
 }

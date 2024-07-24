@@ -108,7 +108,6 @@ describe('OidcClientController', () => {
       nonce: nonceMock,
       scope: 'scopeMock',
       providerUid: providerIdMock,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'acrMock',
     });
   });
@@ -123,8 +122,6 @@ describe('OidcClientController', () => {
       const body = {
         scope: 'openid',
         providerUid: providerIdMock,
-        // oidc param
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         claims: 'json_stringified',
         nonce: nonceMock,
@@ -138,8 +135,6 @@ describe('OidcClientController', () => {
       );
 
       const expectedGetAuthorizeCallParameter = {
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         claims: 'json_stringified',
         nonce: 'nonceMock',
@@ -165,8 +160,6 @@ describe('OidcClientController', () => {
       const body = {
         scope: 'openid',
         providerUid: providerIdMock,
-        // oidc param
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         claims: 'json_stringified',
         nonce: nonceMock,
@@ -192,8 +185,6 @@ describe('OidcClientController', () => {
       const body = {
         scope: 'openid',
         providerUid: providerIdMock,
-        // oidc param
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         claims: 'json_stringified',
         nonce: nonceMock,
@@ -225,8 +216,6 @@ describe('OidcClientController', () => {
       const body = {
         scope: 'openid',
         providerUid: providerIdMock,
-        // oidc param
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         nonce: nonceMock,
         claims: 'any_formatted_json_string',
@@ -248,8 +237,6 @@ describe('OidcClientController', () => {
       const body = {
         scope: 'openid',
         providerUid: providerIdMock,
-        // oidc param
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         nonce: nonceMock,
         claims: 'any_formatted_json_string',
@@ -273,8 +260,6 @@ describe('OidcClientController', () => {
       const body = {
         scope: 'openid',
         providerUid: providerIdMock,
-        // oidc param
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: 'eidas3',
         nonce: nonceMock,
         claims: 'any_formatted_json_string',
@@ -302,8 +287,6 @@ describe('OidcClientController', () => {
         const body = {
           scope: 'openid',
           providerUid: providerIdMock,
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           acr_values: 'eidas3',
           nonce: nonceMock,
           claims: 'any_formatted_json_string',
@@ -327,8 +310,6 @@ describe('OidcClientController', () => {
         const body = {
           scope: 'openid',
           providerUid: providerIdMock,
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           acr_values: 'eidas3',
           nonce: nonceMock,
           claims: 'any_formatted_json_string',

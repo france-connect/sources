@@ -103,3 +103,27 @@ Fonctionnalité: Connexion Usager - Acr
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique
     Et le code d'erreur est "Y020018"
+
+  Plan du Scénario: Connexion ACR - aucun niveau de sécurité requis
+    Etant donné que j'utilise le fournisseur de service "par défaut"
+    Et que j'utilise le fournisseur d'identité "par défaut"
+    Et que le fournisseur de service requiert l'accès aux informations des scopes "obligatoires"
+    Et que le fournisseur de service ne requiert aucun niveau de sécurité
+    Et que le fournisseur de service se connecte à AgentConnect via la méthode "<method>"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton AgentConnect
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "test@fia1.fr"
+    Quand je clique sur le bouton de connexion
+    Et je suis redirigé vers la page login du fournisseur d'identité
+    Et je m'authentifie avec succès
+    Alors je suis redirigé vers la page fournisseur de service
+    Et je suis connecté au fournisseur de service
+    Et la cinématique a utilisé le niveau de sécurité "eidas1"
+    Et le fournisseur de service a accès aux informations du scope "obligatoires"
+
+
+    Exemples:
+      | method |
+      | get    |
+      | post   |

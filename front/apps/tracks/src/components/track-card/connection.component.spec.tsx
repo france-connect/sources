@@ -27,8 +27,8 @@ describe('ConnectionComponent', () => {
         country="countryMock"
         datetime={date}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         options={options}
-        spAcr="eidas1"
       />,
     );
 
@@ -44,8 +44,8 @@ describe('ConnectionComponent', () => {
         country="countryMock"
         datetime={date}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         options={options}
-        spAcr="eidas1"
       />,
     );
 
@@ -64,8 +64,8 @@ describe('ConnectionComponent', () => {
         country={undefined}
         datetime={date}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         options={options}
-        spAcr="eidas1"
       />,
     );
 
@@ -86,8 +86,8 @@ describe('ConnectionComponent', () => {
         country="countryMock"
         datetime={date}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         options={options}
-        spAcr="eidas1"
       />,
     );
 
@@ -112,8 +112,8 @@ describe('ConnectionComponent', () => {
         country="countryMock"
         datetime={date}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         options={options}
-        spAcr="eidas1"
       />,
     );
 
@@ -138,8 +138,8 @@ describe('ConnectionComponent', () => {
         country={undefined}
         datetime={date}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         options={options}
-        spAcr="eidas1"
       />,
     );
 
@@ -164,8 +164,8 @@ describe('ConnectionComponent', () => {
         country="countryMock"
         datetime={date}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         options={options}
-        spAcr="eidas1"
       />,
     );
 
@@ -190,8 +190,8 @@ describe('ConnectionComponent', () => {
         country="countryMock"
         datetime={date}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         options={options}
-        spAcr="eidas1"
       />,
     );
 
@@ -216,8 +216,8 @@ describe('ConnectionComponent', () => {
         country="countryMock"
         datetime={date}
         idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
         options={options}
-        spAcr="eidas1"
       />,
     );
 

@@ -1,17 +1,26 @@
 import './application.scss';
 
+import { HelmetProvider } from 'react-helmet-async';
+
 import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
-import { AppContextProvider } from '@fc/state-management';
+import { ConfigService } from '@fc/config';
+import { I18nService } from '@fc/i18n';
+import { StylesProvider } from '@fc/styles';
 
 import { AppConfig } from '../config';
+import translations from '../i18n/fr.json';
 import { ApplicationRoutes } from './application.routes';
 
-export function Application(): JSX.Element {
+export function Application() {
+  I18nService.initialize('fr', translations);
+  ConfigService.initialize(AppConfig);
   return (
-    <AppContextProvider value={{ config: AppConfig }}>
-      <AxiosErrorCatcherProvider>
-        <ApplicationRoutes />
-      </AxiosErrorCatcherProvider>
-    </AppContextProvider>
+    <AxiosErrorCatcherProvider>
+      <HelmetProvider>
+        <StylesProvider>
+          <ApplicationRoutes />
+        </StylesProvider>
+      </HelmetProvider>
+    </AxiosErrorCatcherProvider>
   );
 }

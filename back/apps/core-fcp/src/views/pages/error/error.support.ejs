@@ -1,11 +1,11 @@
 <%
-const showSupportButton = $config('Core.supportFormCodes')?.includes(locals.error.code);
-const offsetLgClass = showSupportButton
+const showButton = $showSupportButton(locals.error.code);
+const offsetLgClass = showButton
   ? 'fr-col-offset-lg-0'
   : 'fr-col-offset-lg-1';
 %>
 
-<% if (showSupportButton) { %>
+<% if (showButton) { %>
 <%
 const sp_name = $session('OidcClient.spName') || locals.spName;
 const idp_name = $session('OidcClient.idpLabel') || $session('OidcClient.idpName');
@@ -23,7 +23,11 @@ const queryString = Object.entries(params).reduce((acc, [key, value]) => {
   return value ? `${acc}${separator}${key}=${encodeURIComponent(value)}` : acc;
 }, '');
 
-const href = `${$config('Core.supportFormUrl')}${queryString}`;
+const { href, buttonLabel } = $getCustomErrorSupport({
+  code: locals.error.code,
+  href: `${$config('Core.supportFormUrl')}${queryString}`
+})
+
 %>
 <section
   data-testid="error-support"
@@ -31,11 +35,11 @@ const href = `${$config('Core.supportFormUrl')}${queryString}`;
   <a
     href="<%= href %>"
     rel="noreferrer noopener"
-    data-testid="form-link-container"
+    data-testid="error-support-button"
     class="fr-btn fr-btn--lg fc-btn--full-width fc-text--center"
     title="Naviguer vers le formulaire d’aide"
   >
-    <%= $translate('error.contact_us') %>
+    <%= buttonLabel %>
   </a>
 </section>
 <% } %>

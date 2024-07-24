@@ -1,20 +1,21 @@
-import { AxiosResponse } from 'axios';
 import { ValidatorOptions } from 'class-validator';
 import { JSONWebKeySet } from 'jose';
-import { lastValueFrom } from 'rxjs';
 
-import { HttpService } from '@nestjs/axios';
 import { HttpStatus, Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import {
+  ChecktokenRequestDto,
+  DpJwtPayloadInterface,
+  ErrorParamsDto,
+  InvalidChecktokenRequestException,
+  TokenIntrospectionInterface,
+} from '@fc/core';
 import { Use } from '@fc/cryptography';
 import { CryptographyFcpService } from '@fc/cryptography-fcp';
-import {
-  DataProviderAdapterMongoService,
-  DataProviderMetadata,
-} from '@fc/data-provider-adapter-mongo';
-import { CustomJwtPayload, JwtService } from '@fc/jwt';
+import { DataProviderMetadata } from '@fc/data-provider-adapter-mongo';
+import { JwtService } from '@fc/jwt';
 import { AccessToken, atHashFromAccessToken, stringToArray } from '@fc/oidc';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { OidcProviderRedisAdapter } from '@fc/oidc-provider/adapters';
@@ -23,12 +24,7 @@ import { RnippPivotIdentity } from '@fc/rnipp';
 import { ScopesService } from '@fc/scopes';
 import { SessionService } from '@fc/session';
 
-import { ChecktokenRequestDto, CoreFcpSession, ErrorParamsDto } from '../dto';
-import {
-  CoreFcpFetchDataProviderJwksFailedException,
-  InvalidChecktokenRequestException,
-} from '../exceptions';
-import { DpJwtPayloadInterface } from '../interfaces';
+import { CoreFcpSession } from '../dto';
 
 @Injectable()
 export class DataProviderService {
@@ -37,20 +33,13 @@ export class DataProviderService {
   // eslint-disable-next-line max-params
   constructor(
     private readonly config: ConfigService,
-    private readonly dataProvider: DataProviderAdapterMongoService,
-    private readonly http: HttpService,
     private readonly jwt: JwtService,
     private readonly redis: RedisService,
     private readonly session: SessionService,
     private readonly cryptographyFcp: CryptographyFcpService,
     private readonly scopes: ScopesService,
   ) {}
-  /**
-   * This function take the checkTokenRequest to validate it
-   * @param checktokenRequest checktoken of the request
-   * @returns nothing
-   * @throws InvalidChecktokenRequestException if the request body doesn't respect the DTO
-   */
+
   async checkRequestValid(
     checktokenRequest: ChecktokenRequestDto,
   ): Promise<void> {
@@ -71,10 +60,12 @@ export class DataProviderService {
   }
 
   async generateJwt(
-    payload: CustomJwtPayload<DpJwtPayloadInterface>,
-    dataProviderId: string,
+    tokenIntrospection: TokenIntrospectionInterface,
+    dataProvider: DataProviderMetadata,
   ): Promise<string> {
-    const dataProvider = await this.dataProvider.getByClientId(dataProviderId);
+    const payload: DpJwtPayloadInterface = {
+      token_introspection: tokenIntrospection,
+    };
 
     const jws = await this.generateJws(payload, dataProvider);
     const jwe = await this.generateJwe(jws, dataProvider);
@@ -82,17 +73,24 @@ export class DataProviderService {
     return jwe;
   }
 
-  async getSessionByAccessToken(accessToken: string): Promise<string> {
+  async getSessionByAccessToken(
+    accessToken: string,
+  ): Promise<CoreFcpSession | null> {
     const atHash = atHashFromAccessToken({ jti: accessToken });
+    const sessionId = await this.session.getAlias(atHash);
 
-    return await this.session.getAlias(atHash);
+    if (!sessionId) {
+      return null;
+    }
+
+    return await this.session.getDataFromBackend<CoreFcpSession>(sessionId);
   }
 
-  async generatePayload(
+  async generateTokenIntrospection(
     userSession: CoreFcpSession,
     accessToken: string,
-    dpClientId: string,
-  ): Promise<CustomJwtPayload<DpJwtPayloadInterface>> {
+    dataProvider: DataProviderMetadata,
+  ): Promise<TokenIntrospectionInterface> {
     /**
      * We can not use DI for this adapter since it was made to be instantiated by `oidc-provider`
      * It requires a ServiceProviderAdapter that we won't use here
@@ -107,22 +105,15 @@ export class DataProviderService {
     const { expire, payload: interaction } =
       await adapter.getExpireAndPayload<AccessToken>(accessToken);
 
-    if (expire <= 0) {
-      return this.generateExpiredPayload(dpClientId);
+    if (expire <= 0 || !userSession) {
+      return this.generateExpiredResponse();
     }
 
-    return this.generateValidPayload(dpClientId, userSession, interaction);
+    return this.generateValidResponse(dataProvider, userSession, interaction);
   }
 
-  generateExpiredPayload(aud: string): CustomJwtPayload<DpJwtPayloadInterface> {
-    return {
-      // OIDC defined var name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      token_introspection: {
-        active: false,
-      },
-      aud,
-    };
+  generateExpiredResponse(): TokenIntrospectionInterface {
+    return { active: false };
   }
 
   generateErrorMessage(
@@ -133,8 +124,6 @@ export class DataProviderService {
     if (httpStatusCode === HttpStatus.INTERNAL_SERVER_ERROR) {
       return {
         error: 'server_error',
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description:
           'The authorization server encountered an unexpected condition that prevented it from fulfilling the request.',
       };
@@ -142,21 +131,19 @@ export class DataProviderService {
 
     return {
       error,
-      // oidc compliant
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       error_description: message,
     };
   }
 
-  private async generateValidPayload(
-    dpClientId: string,
+  private generateValidResponse(
+    dataProvider: DataProviderMetadata,
     userSession: CoreFcpSession,
     interaction: AccessToken,
-  ): Promise<CustomJwtPayload<DpJwtPayloadInterface>> {
+  ): TokenIntrospectionInterface {
     const {
       claims: {
         id_token: {
-          acr: { values: acr },
+          acr: { values: acrValues },
         },
       },
       iat,
@@ -169,45 +156,40 @@ export class DataProviderService {
       OidcClient: { rnippIdentity },
     } = userSession;
 
-    const dpSub = this.generateDataProviderSub(rnippIdentity, dpClientId);
-
-    const scope = await this.getDpRelatedScopes(dpClientId, interaction);
-
-    const payload = {
-      // OIDC defined var name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      token_introspection: {
-        active: true,
-        aud: spClientId,
-        sub: dpSub,
-        iat,
-        exp,
-        acr: acr.join(' '),
-        jti,
-        scope: scope.join(' '),
-        ...rnippIdentity,
-      },
-      aud: dpClientId,
-    };
-
-    return payload;
-  }
-
-  private async getDpRelatedScopes(
-    dpClientId: string,
-    interaction: AccessToken,
-  ): Promise<string[]> {
-    const { slug } = await this.dataProvider.getByClientId(dpClientId);
-
-    const { scope: interactionScopes } = interaction;
-
-    const dataProviderScope = this.scopes.getScopesByDataProvider(slug);
-
-    const dpRelatedScopes = stringToArray(interactionScopes).filter(
-      (scope: string) => dataProviderScope.includes(scope),
+    const dpSub = this.generateDataProviderSub(
+      rnippIdentity,
+      dataProvider.client_id,
+    );
+    // Limit scopes returned to prevent data provider from learning more about the network than necessary.
+    // @see https://www.rfc-editor.org/rfc/rfc7662.html#section-2.2
+    const authorizedScopes = this.filterScopes(
+      dataProvider.slug,
+      interaction.scope,
     );
 
-    return dpRelatedScopes;
+    return {
+      active: true,
+      aud: spClientId,
+      sub: dpSub,
+      iat,
+      exp,
+      acr: acrValues.join(' '),
+      jti,
+      scope: authorizedScopes.join(' '),
+      ...rnippIdentity,
+    };
+  }
+
+  private filterScopes(
+    providerSlug: string,
+    requestedScopes: string,
+  ): string[] {
+    const dataProviderScopes =
+      this.scopes.getScopesByProviderSlug(providerSlug);
+
+    return stringToArray(requestedScopes).filter((requestedScope: string) =>
+      dataProviderScopes.includes(requestedScope),
+    );
   }
 
   private generateDataProviderSub(
@@ -219,23 +201,25 @@ export class DataProviderService {
   }
 
   private async generateJws(
-    payload: CustomJwtPayload<DpJwtPayloadInterface>,
+    payload: DpJwtPayloadInterface,
     dataProvider: DataProviderMetadata,
   ): Promise<string> {
-    const { checktoken_endpoint_auth_signing_alg: signAlgorithm } =
-      dataProvider;
+    const { checktoken_signed_response_alg: signingAlgorithm } = dataProvider;
 
-    const {
-      issuer,
-      configuration: { jwks: signJwks },
-    } = this.config.get<OidcProviderConfig>('OidcProvider');
+    const { issuer, configuration } =
+      this.config.get<OidcProviderConfig>('OidcProvider');
 
-    const signKey = this.jwt.getFirstRelevantKey(
-      signJwks as JSONWebKeySet, // Types are incompatible for now, @todo see if we can fix this without side effect
-      signAlgorithm,
+    const signingKey = this.jwt.getFirstRelevantKey(
+      configuration.jwks as JSONWebKeySet, // Types are incompatible for now, @todo see if we can fix this without side effect
+      signingAlgorithm,
       Use.SIG,
     );
-    const jws = await this.jwt.sign(payload, issuer, signKey);
+    const jws = await this.jwt.sign(
+      payload,
+      issuer,
+      dataProvider.client_id,
+      signingKey,
+    );
 
     return jws;
   }
@@ -245,33 +229,20 @@ export class DataProviderService {
     dataProvider: DataProviderMetadata,
   ): Promise<string> {
     const {
-      jwks_uri: dataProviderJwksUrl,
-      checktoken_encrypted_response_alg: encryptAlgorithm,
-      checktoken_encrypted_response_enc: encryptEncoding,
+      checktoken_encrypted_response_alg: encryptionAlgorithm,
+      checktoken_encrypted_response_enc: encryptionEncoding,
     } = dataProvider;
 
-    const encryptJwks = await this.fetchEncryptionKeys(dataProviderJwksUrl);
+    const jwks = await this.jwt.fetchJwks(dataProvider.jwks_uri);
 
-    const encryptKey = this.jwt.getFirstRelevantKey(
-      encryptJwks,
-      encryptAlgorithm,
+    const encryptionKey = this.jwt.getFirstRelevantKey(
+      jwks,
+      encryptionAlgorithm,
       Use.ENC,
     );
 
-    const jwe = await this.jwt.encrypt(jwt, encryptKey, encryptEncoding);
+    const jwe = await this.jwt.encrypt(jwt, encryptionKey, encryptionEncoding);
 
     return jwe;
-  }
-
-  private async fetchEncryptionKeys(url: string): Promise<JSONWebKeySet> {
-    let response: AxiosResponse<JSONWebKeySet>;
-
-    try {
-      response = await lastValueFrom(this.http.get(url));
-    } catch (error) {
-      throw new CoreFcpFetchDataProviderJwksFailedException(error);
-    }
-
-    return response.data as JSONWebKeySet;
   }
 }

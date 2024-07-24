@@ -128,7 +128,7 @@ describe('TracksLegacyFormatter', () => {
         event: getEventFromActionMockResult,
         time: expect.any(Number),
         spLabel: 'spLabel',
-        spAcr: getAcrValueMockResult,
+        interactionAcr: getAcrValueMockResult,
         idpLabel: getIdpLabelMockResult,
         country: geoIpResultMock.country,
         city: geoIpResultMock.city,

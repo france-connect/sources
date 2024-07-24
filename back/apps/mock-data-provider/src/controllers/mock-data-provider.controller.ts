@@ -1,7 +1,16 @@
 import { Response } from 'express';
 import { JSONWebKeySet } from 'jose';
 
-import { Controller, Get, Headers, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Post,
+  Res,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import {
@@ -9,6 +18,7 @@ import {
   DataProviderAdapterCoreService,
 } from '@fc/data-provider-adapter-core';
 import { LoggerService } from '@fc/logger';
+import { DataParamsDto } from '@fc/mock-data-provider/dto';
 
 import { MockDataProviderRoutes } from '../enums';
 import { MockDataProviderService } from '../services';
@@ -22,14 +32,17 @@ export class MockDataProviderController {
     private readonly mockDataProvider: MockDataProviderService,
   ) {}
 
-  @Get(MockDataProviderRoutes.DATA)
+  @Post(MockDataProviderRoutes.DATA)
+  @UsePipes(new ValidationPipe({ whitelist: true }))
   async data(
     @Res({ passthrough: true }) res: Response,
+    @Body() body: DataParamsDto,
     @Headers('authorization') authorization = '',
   ): Promise<any> {
     const encodedBearer = authorization.replace('Bearer ', '');
-    const bearer = Buffer.from(encodedBearer, 'base64').toString('utf-8');
-    const [accessToken, receivedSecret] = bearer.split(':');
+    const accessToken = Buffer.from(encodedBearer, 'base64').toString('utf-8');
+
+    const { auth_secret: receivedSecret } = body;
 
     try {
       this.mockDataProvider.authenticateServiceProvider(receivedSecret);
@@ -44,8 +57,6 @@ export class MockDataProviderController {
 
       const result = {
         error,
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: message,
       };
 

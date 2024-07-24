@@ -51,7 +51,14 @@
           </div>
         <% }) %>
 
-        <h2>ACR</h2>
+        <h2>ACR <input
+            id="acr_values_toggle"
+            type="checkbox"
+            name="activate-acr-values"
+            onChange="toggleAcrValues()"
+            checked
+          />
+        </h2>
         <select name="acr" id="acrSelector" aria-label="ACR Value" onChange="updateAcr();">
           <% ['eidas1', 'eidas2', 'eidas3'].forEach(acr => { %>
           <option value="<%=acr%>"><%=acr%></option>
@@ -202,6 +209,15 @@
         const toggle = document.querySelector(selector);
         const prompt = document.getElementById('prompt')
         prompt.disabled = !toggle.checked
+      }
+
+      function toggleAcrValues(){
+        const selector = 'input[name="activate-acr-values"]'
+        const toggle = document.querySelector(selector);
+        const acrValues = document.getElementById('acrValues')
+        acrValues.disabled = !toggle.checked
+        const acrSelector = document.getElementById('acrSelector')
+        acrSelector.disabled = !toggle.checked
       }
 
       function getPrompt() {

@@ -1,11 +1,10 @@
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import {
-  getDefaultIdentityProvider,
+  getIdentityProviderByDescription,
   getServiceProviderByDescription,
   navigateTo,
 } from '../../common/helpers';
-import { Environment } from '../../common/types';
 import { ConnectionWorkflow } from '../../usager/steps/workflow-steps';
 import UdLoginPage from '../pages/ud-login-page';
 
@@ -14,7 +13,7 @@ let udLoginPage: UdLoginPage;
 Given(
   "je navigue sur la page d'accueil du tableau de bord usager",
   function () {
-    const { allAppsUrl, udAppId, udRootUrl }: Environment = this.env;
+    const { allAppsUrl, udAppId, udRootUrl } = this.env;
     navigateTo({ appId: udAppId, baseUrl: allAppsUrl });
     udLoginPage = new UdLoginPage(udRootUrl);
     udLoginPage.checkIsVisible();
@@ -24,7 +23,7 @@ Given(
 Then(
   /^je suis (redirigé vers|sur) la page d'accueil du tableau de bord usager$/,
   function () {
-    const { udRootUrl }: Environment = this.env;
+    const { udRootUrl } = this.env;
     udLoginPage = new UdLoginPage(udRootUrl);
     udLoginPage.checkIsVisible();
   },
@@ -50,7 +49,11 @@ When('je me connecte au tableau de bord usager', function () {
     this.serviceProviders,
     'user-dashboard',
   );
-  const identityProvider = getDefaultIdentityProvider(this.identityProviders);
+  const IDP_DESCRIPTION = 'pour user-dashboard (core v2)';
+  const identityProvider = getIdentityProviderByDescription(
+    this.identityProviders,
+    IDP_DESCRIPTION,
+  );
   new ConnectionWorkflow(this.env, serviceProvider)
     .init()
     .start()

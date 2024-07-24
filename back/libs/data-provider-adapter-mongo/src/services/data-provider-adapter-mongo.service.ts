@@ -128,7 +128,6 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
   ): Promise<DataProviderMetadata> {
     const providers = cloneDeep(await this.getList(refreshCache));
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const provider = providers.find(({ client_id }) => client_id === clientId);
 
     return provider;
@@ -145,8 +144,6 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
       throw new DataProviderNotFoundException();
     }
 
-    // oidc property
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     if (dataProvider.client_secret !== clientSecret) {
       throw new DataProviderInvalidCredentialsException();
     }

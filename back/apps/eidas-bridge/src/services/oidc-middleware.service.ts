@@ -106,7 +106,6 @@ export class OidcMiddlewareService {
 
     const interactionId = this.oidcProvider.getInteractionIdFromCtx(ctx);
 
-    // oidc defined variable name
     const { client_id: spId, acr_values: spAcr } = ctx.oidc.params;
 
     const { name: spName } = await this.serviceProvider.getById(spId);

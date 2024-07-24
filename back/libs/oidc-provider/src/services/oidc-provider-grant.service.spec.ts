@@ -9,7 +9,13 @@ import {
 } from '../exceptions';
 import { OidcProviderGrantService } from './oidc-provider-grant.service';
 
-jest.mock('@fc/common');
+jest.mock('@fc/common', () => {
+  const actual = jest.requireActual('@fc/common');
+  return {
+    ...actual,
+    safelyParseJson: jest.fn(),
+  };
+});
 jest.mock('@fc/oidc');
 
 describe('OidcProviderGrantService', () => {
@@ -40,7 +46,6 @@ describe('OidcProviderGrantService', () => {
 
     const interactionDetailsMock = {
       params: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_id: clientIdMock,
         scope: 'nautilus u571',
         claims:
@@ -235,8 +240,6 @@ describe('OidcProviderGrantService', () => {
       // Given
       const claimsMock = '{"id_token":{"rep_scope":{"essential":false}}}';
       const claimsMockParsed = {
-        // oidc naming convention
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         id_token: { rep_scope: { essential: false } },
       };
 

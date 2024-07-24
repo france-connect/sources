@@ -5,6 +5,7 @@ import { Expose, Type } from 'class-transformer';
 import { IsIn, IsNotEmpty, IsString } from 'class-validator';
 
 import { CoreBaseOidcClientSessionDto } from '@fc/core';
+import { DeviceSession } from '@fc/device';
 import { I18nSession } from '@fc/i18n';
 import { OidcClientRoutes } from '@fc/oidc-client';
 
@@ -65,4 +66,8 @@ export class GetOidcCallbackSessionDto {
   @Expose()
   @Type(() => I18nSession)
   readonly I18n: I18nSession;
+
+  @Expose()
+  @Type(() => DeviceSession)
+  readonly Device: DeviceSession;
 }

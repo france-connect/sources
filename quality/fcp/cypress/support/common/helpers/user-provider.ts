@@ -7,7 +7,7 @@ export const getUserByCriteria = (
   users: UserData[],
   criteria: string[],
 ): User => {
-  const user: User = User.extractUserFromDataByCriteria(users, criteria);
+  const user = User.extractUserFromDataByCriteria(users, criteria);
   expect(user, `No user matches the criteria ${JSON.stringify(criteria)}`).to
     .exist;
   return user;
@@ -17,7 +17,7 @@ export const getEnabledUserByIdpId = (
   users: UserData[],
   idpId: string,
 ): User => {
-  const user: User = User.extractEnabledUserFromDataByIdpId(users, idpId);
+  const user = User.extractEnabledUserFromDataByIdpId(users, idpId);
   expect(
     user,
     `No active user has credentials for the identity provider '${idpId}'`,

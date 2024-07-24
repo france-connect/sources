@@ -42,7 +42,7 @@ Fonctionnalité: Préférences FI
     Et que je me déconnecte du tableau de bord usager
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "E000035"
+    Et le code d'erreur FranceConnect est "Y000011"
     Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
 
   Scénario: Préférences FI - FI bloqué - futur FI bloqué
@@ -59,7 +59,7 @@ Fonctionnalité: Préférences FI
     Et que je me déconnecte du tableau de bord usager
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "E000035"
+    Et le code d'erreur FranceConnect est "Y000011"
     Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
 
   @ci
@@ -103,7 +103,7 @@ Fonctionnalité: Préférences FI
     Et que je décide d'autoriser les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du tableau de bord usager
-    Et que je crée le fournisseur d'identité "bdd-idp-fip1-future" avec la configuration "fiLegacy" sur le site d'exploitation
+    Et que je crée le fournisseur d'identité "bdd-idp-fip1-future" avec la configuration "idpSignedUserinfo" sur le site d'exploitation
     Et que j'utilise le dernier fournisseur d'identité créé
     Quand je me connecte à FranceConnect
     Alors je suis connecté au fournisseur de service
@@ -119,11 +119,11 @@ Fonctionnalité: Préférences FI
     Et que je décide de bloquer les futurs fournisseurs d'identité par défaut
     Et que j'enregistre mes réglages d'accès
     Et que je me déconnecte du tableau de bord usager
-    Et que je crée le fournisseur d'identité "bdd-idp-fip1-future" avec la configuration "fiLegacy" sur le site d'exploitation
+    Et que je crée le fournisseur d'identité "bdd-idp-fip1-future" avec la configuration "idpSignedUserinfo" sur le site d'exploitation
     Et que j'utilise le dernier fournisseur d'identité créé
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "E000035"
+    Et le code d'erreur FranceConnect est "Y000011"
     Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
     Et je supprime le fournisseur d'identité "bdd-idp-fip1-future" sur le site d'exploitation
 
@@ -176,7 +176,7 @@ Fonctionnalité: Préférences FI
     Et que j'utilise le fournisseur d'identité "Aidants Connect"
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "E000035"
+    Et le code d'erreur FranceConnect est "Y000011"
     Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
 
   @ignoreInteg01

@@ -31,7 +31,6 @@ describe('OidcProviderController', () => {
       const nextMock = jest.fn();
       const queryMock = {
         // Parameter should be like an openid one because it is in the same url
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         sp_id: 'abcdefghijklmnopqrstuvwxyz0123456789',
       } as AuthorizeParamsDto;
 

@@ -6,3 +6,7 @@ export const RedirectToIdpFormComponent = jest.fn(({ children }: PropsWithChildr
     {children}
   </React.Fragment>
 ));
+
+export const Options = {
+  CONFIG_NAME: 'OidcClient',
+};

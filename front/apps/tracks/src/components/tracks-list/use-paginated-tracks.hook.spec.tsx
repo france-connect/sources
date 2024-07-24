@@ -6,8 +6,6 @@ import { useLocation } from 'react-router-dom';
 import type { TracksConfig } from '../../interfaces';
 import { DEFAULT_OFFSET, DEFAULT_SIZE, usePaginatedTracks } from './use-paginated-tracks.hook';
 
-jest.mock('axios');
-
 describe('usePaginatedTracks', () => {
   // given
   const options = { API_ROUTE_TRACKS: 'tracks-route' } as TracksConfig;
@@ -37,7 +35,7 @@ describe('usePaginatedTracks', () => {
   describe('should get tracks depends on query params', () => {
     it('should call axios.get with formatted endpoint based on query params', async () => {
       // given
-      jest.mocked(axios.get).mockResolvedValue(getTracksResponse);
+      const axiosGetMock = jest.mocked(axios.get).mockResolvedValue(getTracksResponse);
 
       // when
       renderHook(() => usePaginatedTracks(options));
@@ -50,7 +48,7 @@ describe('usePaginatedTracks', () => {
       // then
       await waitFor(() => {
         expect(axios.get).toHaveBeenCalledTimes(2);
-        expect((axios.get as jest.Mock).mock.calls).toEqual([
+        expect(axiosGetMock.mock.calls).toEqual([
           [`${options.API_ROUTE_TRACKS}?offset=${DEFAULT_OFFSET}&size=${DEFAULT_SIZE}`],
           [`${options.API_ROUTE_TRACKS}?offset=30&size=2`],
         ]);

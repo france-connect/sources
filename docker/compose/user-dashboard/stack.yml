@@ -14,14 +14,15 @@ services:
       - "fc-exploitation"
       - "fc-support"
       # -- SP
-      - "fsp1" # for public tests
-      - "fsp3" # for private tests
+      - "fsp1-low" # for public tests
+      - "fsp3-low" # for private tests
       # -- IdP
       - "fip1-low"
       - "fip3-low"
       - "fip4-low"
       - "aidants-connect-mock"
       # -- DP
-      - "fdp1"
+      - "dpp1-low"
+      - "dpp2-low"
       # -- UD
       - "ud"

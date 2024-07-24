@@ -1,7 +1,6 @@
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { navigateTo } from '../../common/helpers';
-import { Environment } from '../../common/types';
 import UdEventCard from '../pages/ud-event-card-component';
 import UdHistoryPage from '../pages/ud-history-page';
 import UdPagination from '../pages/ud-pagination-component';
@@ -13,7 +12,7 @@ const udPagination = new UdPagination();
 Given(
   'je navigue directement vers la page historique du tableau de bord usager',
   function () {
-    const { allAppsUrl }: Environment = this.env;
+    const { allAppsUrl } = this.env;
     navigateTo({ appId: 'ud-history', baseUrl: allAppsUrl });
     // Wait for the connection history loading
     // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -24,7 +23,7 @@ Given(
 Given(
   'je navigue vers la page historique du tableau de bord usager',
   function () {
-    const { allAppsUrl, udRootUrl }: Environment = this.env;
+    const { allAppsUrl, udRootUrl } = this.env;
     navigateTo({ appId: 'ud-history', baseUrl: allAppsUrl });
     udHistoryPage = new UdHistoryPage(udRootUrl);
     udHistoryPage.checkIsVisible();
@@ -37,7 +36,7 @@ Given(
 Given(
   /^je suis (redirigé vers|sur) la page historique du tableau de bord usager$/,
   function () {
-    const { udRootUrl }: Environment = this.env;
+    const { udRootUrl } = this.env;
     udHistoryPage = new UdHistoryPage(udRootUrl);
     udHistoryPage.checkIsVisible();
     // Wait for the connection history loading
@@ -46,45 +45,47 @@ Given(
   },
 );
 
-Given('les traces sont récupérées dans elasticsearch', function () {
-  cy.task('removeTracks');
-  cy.task('removeTracksLegacy');
-  cy.task('injectTracksLegacy');
+Given('les traces sont supprimées dans elasticsearch', function () {
+  cy.task('removeAllTracks');
 });
+
+Given(
+  /^les traces "FranceConnect\(v2\)" sont récupérées dans elasticsearch$/,
+  function () {
+    cy.task('removeTracks', { mockSet: 'low' });
+    cy.task('injectTracks', { mockSet: 'low' });
+  },
+);
 
 Given(
   /^les traces "(FranceConnect\(v2\)|FranceConnect\(CL\)|FranceConnect\+|FranceConnect\(CL\) et FranceConnect\+)" contiennent "([^"]+)"$/,
   function (platform: string, description: string) {
     let tracksType = description;
 
-    // Divide the connections between the 2 platforms
+    // Remove all tracks
+    cy.task('removeAllTracks');
+
+    // Handle mixed FC legacy and FC+ tracks
     if (platform === 'FranceConnect(CL) et FranceConnect+') {
+      // Divide the connections between the 2 platforms
       const result = tracksType.match(/^(\d+) connexions$/);
       if (result) {
         const connectionCount = parseInt(result[1], 10);
         tracksType = `${connectionCount / 2} connexions`;
       }
+      cy.task('addTracks', { mockSet: 'legacy', tracksType });
+      cy.task('addTracks', { mockSet: 'high', tracksType });
+      return;
     }
 
-    // Remove all tracks
-    cy.task('removeTracksLegacy');
-    cy.task('removeTracks');
-
-    switch (platform) {
-      case 'FranceConnect(CL)':
-        cy.task('addTracksLegacy', { tracksType });
-        break;
-      case 'FranceConnect+':
-        cy.task('addTracks', { mockSet: 'high', tracksType });
-        break;
-      case 'FranceConnect(v2)':
-        cy.task('addTracks', { mockSet: 'low', tracksType });
-        break;
-      default:
-        cy.task('addTracksLegacy', { tracksType });
-        cy.task('addTracks', { tracksType });
-        break;
-    }
+    // Add tracks for the specific platform
+    const mapping = {
+      'FranceConnect(CL)': 'legacy',
+      'FranceConnect(v2)': 'low',
+      'FranceConnect+': 'high',
+    };
+    const mockSet = mapping[platform];
+    cy.task('addTracks', { mockSet, tracksType });
   },
 );
 
@@ -185,6 +186,24 @@ When(
   },
 );
 
+When(
+  /^j'affiche le détail du (\d+)\D+ évènement "Échange de Données" sur "([^"]*)" du FS "([^"]*)" avec le FD "([^"]*)"$/,
+  function (
+    eventIndex: number,
+    plateform: string,
+    spTitle: string,
+    dpName: string,
+  ) {
+    udHistoryPage
+      .findDataExchangeCard(plateform, spTitle, dpName, eventIndex)
+      .then((eventCard) => {
+        expect(eventCard).to.exist;
+        currentEventCard = eventCard;
+        currentEventCard.getCardButton().click();
+      });
+  },
+);
+
 Then(
   /^la plateforme de l'évènement est "([^"]*)"$/,
   function (platform: string) {
@@ -261,9 +280,9 @@ Then(
 
 Then(
   /^les données "([^"]*)" de l'évènement contiennent "([^"]*)"$/,
-  function (fdName: string, claimTitle: string) {
+  function (dpName: string, claimTitle: string) {
     currentEventCard
-      .getClaimsList(fdName)
+      .getClaimsList(dpName)
       .invoke('text')
       .should('include', claimTitle);
   },
@@ -271,16 +290,16 @@ Then(
 
 Then(
   /^l'évènement concerne aucune donnée "([^"]*)"$/,
-  function (fdName: string) {
-    currentEventCard.getClaimsTitleLabel(fdName).should('not.exist');
-    currentEventCard.getClaimsList(fdName).should('not.exist');
+  function (dpName: string) {
+    currentEventCard.getClaimsTitleLabel(dpName).should('not.exist');
+    currentEventCard.getClaimsList(dpName).should('not.exist');
   },
 );
 
 Then(
   /^l'évènement concerne (\d+) données? "([^"]*)"$/,
-  function (claimsCount: number, fdName: string) {
-    currentEventCard.getClaimsTitleLabel(fdName).should('be.visible');
-    currentEventCard.getClaimsList(fdName).should('have.length', claimsCount);
+  function (claimsCount: number, dpName: string) {
+    currentEventCard.getClaimsTitleLabel(dpName).should('be.visible');
+    currentEventCard.getClaimsList(dpName).should('have.length', claimsCount);
   },
 );

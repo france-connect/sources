@@ -578,8 +578,6 @@ describe('OidcProviderService', () => {
         // when
         service.abortInteraction(reqMock, resMock, {
           error: mockErr,
-          // oidc naming
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           error_description: mockErrDescription,
         }),
       ).rejects.toThrow(OidcProviderRuntimeException);
@@ -595,8 +593,6 @@ describe('OidcProviderService', () => {
       // when
       await service.abortInteraction(reqMock, resMock, {
         error: mockErr,
-        // oidc naming
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: mockErrDescription,
       });
 
@@ -607,7 +603,6 @@ describe('OidcProviderService', () => {
         resMock,
         {
           error: mockErr,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           error_description: mockErrDescription,
         },
       );
@@ -624,8 +619,6 @@ describe('OidcProviderService', () => {
         resMock,
         {
           error: 'error',
-          // oidc naming
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           error_description: 'error description',
         },
         true,

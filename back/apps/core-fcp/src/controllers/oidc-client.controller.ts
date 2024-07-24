@@ -89,13 +89,9 @@ export class OidcClientController {
     const { providerUid: idpId } = body;
 
     const {
-      // acr_values is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       params: { acr_values },
     } = await this.oidcProvider.getInteraction(req, res);
 
-    // acr_values is an oidc defined variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     await this.coreFcp.redirectToIdp(res, idpId, { acr_values });
   }
 
@@ -130,13 +126,7 @@ export class OidcClientController {
     @Session('OidcClient', GetOidcCallbackOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
     @Query()
-    {
-      error,
-      // oidc naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      error_description,
-      state,
-    }: OidcCallbackInterface,
+    { error, error_description, state }: OidcCallbackInterface,
   ) {
     if (error) {
       const { idpState } = sessionOidc.get();
@@ -144,8 +134,6 @@ export class OidcClientController {
 
       await this.coreFcpVerify.handleIdpError(req, res, {
         error,
-        // oidc naming
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description,
       });
       return;

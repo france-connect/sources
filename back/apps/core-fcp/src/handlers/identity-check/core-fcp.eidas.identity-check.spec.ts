@@ -20,10 +20,7 @@ describe('CoreFcpEidasIdentityCheckHandler', () => {
 
   const identityMock = {
     sub: '1',
-    // oidc spec defined property
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'given_nameValue',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'family_nameValue',
     email: 'emailValue',
   };

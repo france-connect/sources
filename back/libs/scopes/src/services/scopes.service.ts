@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { unique } from '@fc/common';
 
-import * as Data from '../data';
+import * as PROVIDERS from '../data';
 import {
   ClaimInterface,
   RichClaimInterface,
@@ -20,9 +20,7 @@ export class ScopesService {
       [] as ClaimInterface[],
     );
 
-    /**
-     * Same claim may be present in several scopes
-     */
+    // Some claims may be duplicated between several scopes
     const uniqueClaims = unique(claims.filter(Boolean));
 
     return uniqueClaims;
@@ -43,12 +41,10 @@ export class ScopesService {
     return richClaims;
   }
 
-  getScopesByDataProvider(dataProvider: string): ScopeInterface[] {
-    const provider = Object.values(Data).find(
-      ({ provider }) => provider.key === dataProvider,
+  getScopesByProviderSlug(providerSlug: string): ScopeInterface[] {
+    const provider = Object.values(PROVIDERS).find(
+      ({ provider }) => provider.slug === providerSlug,
     );
-    const scopes = Object.keys(provider.scopes);
-
-    return scopes;
+    return Object.keys(provider.scopes);
   }
 }

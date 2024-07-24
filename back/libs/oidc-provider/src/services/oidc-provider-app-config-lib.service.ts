@@ -12,7 +12,6 @@ import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { SessionService, SessionSubNotFoundException } from '@fc/session';
 
-import { OidcProviderConfig } from '../dto';
 import {
   OidcProviderRuntimeException,
   OidcProviderSpIdNotFoundException,
@@ -132,8 +131,7 @@ export abstract class OidcProviderAppConfigLibService
    * @param {OidcSession} session Object that contains the session info
    */
   async finishInteraction(req: any, res: any, session: OidcSession) {
-    const { amr }: OidcClientSession = session;
-    const acr = this.getInteractionAcr(session);
+    const { amr, interactionAcr: acr }: OidcClientSession = session;
     const sessionId = this.sessionService.getId();
 
     /**
@@ -178,20 +176,6 @@ export abstract class OidcProviderAppConfigLibService
     } catch (error) {
       throw new OidcProviderRuntimeException(error);
     }
-  }
-
-  private getInteractionAcr(session: OidcSession): string {
-    const { spAcr, idpAcr }: OidcClientSession = session;
-
-    const {
-      configuration: { acrValues },
-    } = this.config.get<OidcProviderConfig>('OidcProvider');
-
-    if (acrValues.includes(idpAcr)) {
-      return idpAcr;
-    }
-
-    return spAcr;
   }
 
   /**

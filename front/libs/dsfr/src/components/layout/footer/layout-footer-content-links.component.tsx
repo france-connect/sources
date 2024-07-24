@@ -2,18 +2,18 @@ import React from 'react';
 
 import type { NavigationLink } from '../../../interfaces';
 
-export interface LayoutFooterContentLinksComponentProps {
+interface LayoutFooterContentLinksComponentProps {
   items: NavigationLink[];
   showIcon?: boolean;
 }
 
-export const LayoutFooterContentLinksComponent: React.FC<LayoutFooterContentLinksComponentProps> =
-  React.memo(({ items, showIcon }: LayoutFooterContentLinksComponentProps) => {
+export const LayoutFooterContentLinksComponent = React.memo(
+  ({ items, showIcon = false }: LayoutFooterContentLinksComponentProps) => {
     const target = showIcon ? '_blank' : undefined;
     const rel = showIcon ? 'noreferrer' : undefined;
     return (
       <ul className="fr-footer__content-list">
-        {items.map(({ a11y, href, label }, index) => {
+        {items.map(({ href, label, title }, index) => {
           const uniqKey = `layout-footer-content-links::${index}`;
           return (
             <li key={uniqKey} className="fr-footer__content-item">
@@ -22,7 +22,7 @@ export const LayoutFooterContentLinksComponent: React.FC<LayoutFooterContentLink
                 href={href}
                 rel={rel}
                 target={target}
-                title={a11y}>
+                title={title}>
                 {label}
               </a>
             </li>
@@ -30,10 +30,7 @@ export const LayoutFooterContentLinksComponent: React.FC<LayoutFooterContentLink
         })}
       </ul>
     );
-  });
-
-LayoutFooterContentLinksComponent.defaultProps = {
-  showIcon: false,
-};
+  },
+);
 
 LayoutFooterContentLinksComponent.displayName = 'LayoutFooterContentLinksComponent';

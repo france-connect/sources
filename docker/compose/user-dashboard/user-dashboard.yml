@@ -10,7 +10,7 @@ services:
     working_dir: /var/www/app
     depends_on:
       - "squid"
-      - "fc-core"
+      - "core-fcp-low"
       - "fip1-low"
       - "redis-pwd"
       - "csmr-account-legacy"

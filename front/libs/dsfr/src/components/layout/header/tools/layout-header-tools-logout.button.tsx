@@ -1,6 +1,6 @@
 import React from 'react';
 
-export interface LayoutHeaderToolsLogoutButtonProps {
+interface LayoutHeaderToolsLogoutButtonProps {
   endSessionUrl: string;
   isMobile: boolean;
 }

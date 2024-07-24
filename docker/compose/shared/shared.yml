@@ -99,10 +99,12 @@ services:
           # Mock RNIPP
           - mock-rnipp.docker.dev-franceconnect.fr
           # Mock Data Provider
-          - dp1-high.docker.dev-franceconnect.fr
-          - dp2-high.docker.dev-franceconnect.fr
-          - dp1-low.docker.dev-franceconnect.fr
-          - dp2-low.docker.dev-franceconnect.fr
+          - dpp1-high.docker.dev-franceconnect.fr
+          - dpp2-high.docker.dev-franceconnect.fr
+          - dpp1-low.docker.dev-franceconnect.fr
+          - dpp2-low.docker.dev-franceconnect.fr
+          - dpa1-low.docker.dev-franceconnect.fr
+          - dpa2-low.docker.dev-franceconnect.fr
           # Generic
           - docker.dev-franceconnect.fr
           # Stack Documentation 11TY
@@ -421,6 +423,7 @@ services:
       - "${VOLUMES_DIR}/log:/var/log/app"
       - "${VOLUMES_DIR}/.home:/home"
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - "${VOLUMES_DIR}/mock-rnipp/responses:/responses:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/mock-rnipp.env"

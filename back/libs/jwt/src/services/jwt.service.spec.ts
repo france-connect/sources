@@ -11,10 +11,13 @@ import {
   ResolvedKey,
   SignJWT,
 } from 'jose';
+import { lastValueFrom } from 'rxjs';
 
+import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { DekAlg, KekAlg, Use } from '@fc/cryptography';
+import { FetchJwksFailedException } from '@fc/jwt/exceptions/fetch-jwks-failed.exception';
 
 import {
   CanNotDecodePlaintextException,
@@ -30,6 +33,11 @@ import {
 import { JwtService } from './jwt.service';
 
 jest.mock('jose');
+jest.mock('rxjs');
+
+const httpServiceMock = {
+  get: jest.fn(),
+};
 
 describe('JwtService', () => {
   let service: JwtService;
@@ -38,8 +46,11 @@ describe('JwtService', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [JwtService],
-    }).compile();
+      providers: [JwtService, HttpService],
+    })
+      .overrideProvider(HttpService)
+      .useValue(httpServiceMock)
+      .compile();
 
     service = module.get<JwtService>(JwtService);
   });
@@ -282,6 +293,7 @@ describe('JwtService', () => {
     // Given
     const payload = { foo: 'bar' };
     const issuer = 'https://issuer.com';
+    const audience = 'client_id';
     const jwk = { alg: 'RS256', use: 'sig' };
     const key = Symbol('key');
 
@@ -290,6 +302,7 @@ describe('JwtService', () => {
       setProtectedHeader: jest.fn(),
       setIssuedAt: jest.fn(),
       setIssuer: jest.fn(),
+      setAudience: jest.fn(),
       sign: jest.fn(),
     };
     const signJwtMock = function () {
@@ -303,12 +316,13 @@ describe('JwtService', () => {
       signJWTInstance.setProtectedHeader.mockReturnValue(signJWTInstance);
       signJWTInstance.setIssuedAt.mockReturnValue(signJWTInstance);
       signJWTInstance.setIssuer.mockReturnValue(signJWTInstance);
+      signJWTInstance.setAudience.mockReturnValue(signJWTInstance);
       signJWTInstance.sign.mockResolvedValue(signResult);
     });
 
     it('should call this.importJwk()', async () => {
       // When
-      await service.sign(payload, issuer, jwk);
+      await service.sign(payload, issuer, audience, jwk);
 
       // Then
       expect(service['importJwk']).toHaveBeenCalledTimes(1);
@@ -317,12 +331,43 @@ describe('JwtService', () => {
 
     it('should instantiate SignJWT and call setProtectedHeader, setIssuedAt, setIssuer and sign', async () => {
       // When
-      await service.sign(payload, issuer, jwk);
+      await service.sign(payload, issuer, audience, jwk);
 
       // Then
       expect(signJWTInstance.setProtectedHeader).toHaveBeenCalledTimes(1);
       expect(signJWTInstance.setProtectedHeader).toHaveBeenCalledWith({
         alg: 'RS256',
+      });
+
+      expect(signJWTInstance.setIssuedAt).toHaveBeenCalledTimes(1);
+      expect(signJWTInstance.setIssuedAt).toHaveBeenCalledWith();
+
+      expect(signJWTInstance.setIssuer).toHaveBeenCalledTimes(1);
+      expect(signJWTInstance.setIssuer).toHaveBeenCalledWith(issuer);
+
+      expect(signJWTInstance.setAudience).toHaveBeenCalledTimes(1);
+      expect(signJWTInstance.setAudience).toHaveBeenCalledWith(audience);
+
+      expect(signJWTInstance.sign).toHaveBeenCalledTimes(1);
+      expect(signJWTInstance.sign).toHaveBeenCalledWith(key);
+    });
+
+    it('should instantiate SignJWT and call setProtectedHeader with a kid, setIssuedAt, setIssuer and sign', async () => {
+      // Given
+      const kidExpectedValue = 'NewKidValue12345';
+      const jwkWithKid = {
+        kid: kidExpectedValue,
+        ...jwk,
+      };
+
+      // When
+      await service.sign(payload, issuer, audience, jwkWithKid);
+
+      // Then
+      expect(signJWTInstance.setProtectedHeader).toHaveBeenCalledTimes(1);
+      expect(signJWTInstance.setProtectedHeader).toHaveBeenCalledWith({
+        alg: 'RS256',
+        kid: kidExpectedValue,
       });
 
       expect(signJWTInstance.setIssuedAt).toHaveBeenCalledTimes(1);
@@ -341,14 +386,14 @@ describe('JwtService', () => {
       signJWTInstance.sign.mockRejectedValueOnce(error);
 
       // When / Then
-      await expect(service.sign(payload, issuer, jwk)).rejects.toThrow(
-        CanNotSignJwtException,
-      );
+      await expect(
+        service.sign(payload, issuer, audience, jwk),
+      ).rejects.toThrow(CanNotSignJwtException);
     });
 
     it('should return the result of signJWT.sign()', async () => {
       // When
-      const result = await service.sign(payload, issuer, jwk);
+      const result = await service.sign(payload, issuer, audience, jwk);
 
       // Then
       expect(result).toEqual(signResult);
@@ -487,6 +532,46 @@ describe('JwtService', () => {
 
       // Then
       expect(result).toEqual(headers);
+    });
+  });
+
+  describe('fetchJwks', () => {
+    it('should call the signkeys endpoint with the given URL', async () => {
+      // Given
+      const urlMock = 'url';
+      jest.mocked(lastValueFrom).mockResolvedValue({ data: 'data' });
+
+      // When
+      await service['fetchJwks'](urlMock);
+
+      // Then
+      expect(httpServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(httpServiceMock.get).toHaveBeenCalledWith(urlMock);
+    });
+
+    it('should throw if fetch fails', async () => {
+      // Given
+      const urlMock = 'url';
+      const errorMock = new Error('error');
+      jest.mocked(lastValueFrom).mockRejectedValue(errorMock);
+
+      // When / Then
+      await expect(service['fetchJwks'](urlMock)).rejects.toThrowError(
+        FetchJwksFailedException,
+      );
+    });
+
+    it('should return the response data', async () => {
+      // Given
+      const urlMock = 'url';
+      const responseMock = { data: 'data' };
+      jest.mocked(lastValueFrom).mockResolvedValue(responseMock);
+
+      // When
+      const result = await service['fetchJwks'](urlMock);
+
+      // Then
+      expect(result).toStrictEqual(responseMock.data);
     });
   });
 });

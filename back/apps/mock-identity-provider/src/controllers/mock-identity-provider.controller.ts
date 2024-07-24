@@ -112,11 +112,10 @@ export class MockIdentityProviderController {
 
     const spId = sessionOidc.get('spId');
     const { sub, ...spIdentityCleaned } = spIdentity;
-    const spAcr = acr;
 
     sessionOidc.set({
-      spAcr,
       spIdentity: spIdentityCleaned,
+      interactionAcr: acr,
       amr: ['pwd'],
       subs: { [spId]: sub },
     });
@@ -175,7 +174,7 @@ export class MockIdentityProviderController {
     const sub = this.mockIdentityProviderService.getSub(spIdentityCleaned);
 
     sessionOidc.set({
-      spAcr: acr,
+      interactionAcr: acr,
       spIdentity: spIdentityCleaned,
       amr: ['pwd'],
       subs: { [spId]: sub },

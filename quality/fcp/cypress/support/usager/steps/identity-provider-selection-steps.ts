@@ -1,7 +1,6 @@
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 import { addInterceptParams } from '../../common/helpers';
-import { IdentityProvider } from '../../common/types';
 import { getDefaultIdpScope } from '../helpers';
 import IdentityProviderSelectionPage from '../pages/identity-provider-selection-page';
 
@@ -38,7 +37,7 @@ Then(
 Given(
   "je paramètre un intercepteur pour l'appel authorize au fournisseur d'identité",
   function () {
-    const { url }: IdentityProvider = this.identityProvider;
+    const { url } = this.identityProvider;
     cy.intercept(`${url}/authorize*`).as('FI:Authorize');
   },
 );
@@ -50,7 +49,7 @@ Given(
       .its('request.query.state')
       .should('exist')
       .then((value: string) => {
-        this.requestOptions.qs['state'] = value;
+        this.apiRequest.qs['state'] = value;
       });
   },
 );
@@ -58,7 +57,7 @@ Given(
 Given(
   "je paramètre un intercepteur pour retirer le scope {string} au prochain appel au fournisseur d'identité",
   function (scopeToRemove) {
-    const { idpId, url }: IdentityProvider = this.identityProvider;
+    const { idpId, url } = this.identityProvider;
     // Use requested scope for eidas idp and default scope for other idp
     const scopeContext =
       idpId === 'eidas-bridge'
@@ -79,7 +78,7 @@ Given(
 Given(
   "je paramètre un intercepteur pour ajouter le scope {string} au prochain appel au fournisseur d'identité",
   function (scopeToAdd) {
-    const { idpId, url }: IdentityProvider = this.identityProvider;
+    const { idpId, url } = this.identityProvider;
     // Use requested scope for eidas idp and default scope for other idp
     const scopeContext =
       idpId === 'eidas-bridge'
@@ -98,7 +97,7 @@ Given(
 Given(
   "je paramètre un intercepteur pour forcer un mauvais client_id au prochain appel au fournisseur d'identité",
   function () {
-    const { url }: IdentityProvider = this.identityProvider;
+    const { url } = this.identityProvider;
     addInterceptParams(
       `${url}/authorize*`,
       { client_id: 'wrong_client_id' },

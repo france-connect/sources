@@ -37,12 +37,12 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
   const validateHandler = useCallback(validateHandlerCallback, []);
 
   const commitErrorHandler = useCallback(
-    (err: AxiosError | Error) => {
+    (err: unknown) => {
       const { response } = err as AxiosError;
       if (response?.status === HttpStatusCode.CONFLICT) {
         navigate('/error/409', { replace: true });
       } else {
-        setSubmitErrors(err);
+        setSubmitErrors(err as AxiosError | Error);
         setSubmitWithSuccess(false);
       }
     },

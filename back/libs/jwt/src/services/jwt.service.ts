@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import {
   compactDecrypt,
   CompactEncrypt,
@@ -12,10 +13,13 @@ import {
   ProtectedHeaderParameters,
   SignJWT,
 } from 'jose';
+import { lastValueFrom } from 'rxjs';
 
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
 import { DekAlg, KekAlg, Use } from '@fc/cryptography';
+import { FetchJwksFailedException } from '@fc/jwt/exceptions/fetch-jwks-failed.exception';
 
 import {
   CanNotDecodePlaintextException,
@@ -31,7 +35,7 @@ import { MultipleRelevantKeysException } from '../exceptions/multiple-relevant-k
 
 @Injectable()
 export class JwtService {
-  constructor() {}
+  constructor(private readonly http: HttpService) {}
 
   getFirstRelevantKey(
     jwks: JSONWebKeySet,
@@ -108,17 +112,24 @@ export class JwtService {
     return clearToken;
   }
 
-  async sign(payload: JWTPayload, issuer: string, jwk: JWK): Promise<string> {
+  async sign(
+    payload: JWTPayload,
+    issuer: string,
+    audience: string,
+    jwk: JWK,
+  ): Promise<string> {
     const key = await this.importJwk(jwk);
-    const { alg } = jwk;
+    const { alg, kid } = jwk;
 
     let jwt: string;
+    const protectedHeader = kid ? { alg, kid } : { alg };
 
     try {
       jwt = await new SignJWT(payload)
-        .setProtectedHeader({ alg })
+        .setProtectedHeader(protectedHeader)
         .setIssuedAt()
         .setIssuer(issuer)
+        .setAudience(audience)
         .sign(key);
     } catch (error) {
       throw new CanNotSignJwtException(error);
@@ -165,5 +176,17 @@ export class JwtService {
     }
 
     return key;
+  }
+
+  async fetchJwks(url: string): Promise<JSONWebKeySet> {
+    let response: AxiosResponse<JSONWebKeySet>;
+
+    try {
+      response = await lastValueFrom(this.http.get(url));
+    } catch (error) {
+      throw new FetchJwksFailedException(error);
+    }
+
+    return response.data as JSONWebKeySet;
   }
 }

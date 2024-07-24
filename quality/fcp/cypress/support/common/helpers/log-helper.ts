@@ -55,3 +55,29 @@ export function getValueByKeyFromFirstEvent(
   const value = firstEvent[key];
   return value;
 }
+
+export function prepareEventVerification(
+  text: string,
+  delimitor: string,
+  keyMapping: Record<string, string> = {},
+  valueMapping: Record<string, unknown> = {},
+): Record<string, unknown> {
+  const expectedEvent = {};
+  if (text) {
+    text.split(delimitor).forEach((infoText) => {
+      const result = infoText.match(/^"([^"]+)" "([^"]*)"$/);
+      if (result) {
+        const [, key, value] = result;
+        const technicalKey = keyMapping[key] ?? key;
+        let technicalValue: unknown = value;
+        if (Object.keys(valueMapping).includes(value)) {
+          technicalValue = valueMapping[value];
+        } else if (value.startsWith('int:')) {
+          technicalValue = parseInt(value.replace('int:', ''), 10);
+        }
+        expectedEvent[technicalKey] = technicalValue;
+      }
+    });
+  }
+  return expectedEvent;
+}

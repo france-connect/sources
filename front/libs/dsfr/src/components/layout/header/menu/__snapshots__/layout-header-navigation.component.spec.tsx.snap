@@ -49,6 +49,31 @@ exports[`LayoutHeaderNavigationComponent should match the snapshot, with default
 </div>
 `;
 
+exports[`LayoutHeaderNavigationComponent should match the snapshot, with navigationItems and without title 1`] = `
+<div>
+  <nav
+    aria-label="Menu principal"
+    class="fr-nav"
+    id="navigation-869"
+    role="navigation"
+  >
+    <ul
+      class="fr-nav__list"
+    >
+      <li
+        class="fr-nav__item"
+      >
+        <span
+          data-mockid="Link"
+        >
+          any-label-mock-without-title
+        </span>
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
 exports[`LayoutHeaderNavigationComponent should match the snapshot, with navigationItems defined 1`] = `
 <div>
   <nav

@@ -7,9 +7,9 @@ const errorId = locals.error.id ?? notProvided;
 const FS = $session('OidcClient.spName') ?? notProvided;
 const messageToDisplay = "Bonjour, je vous signale que j'ai rencontré une erreur dont le code est : " + errorCode + " et dont le message d'erreur est : " + errorMessage  + ". L'id de l'erreur est : " + errorId + ". Je souhaitais me connecter à : " + FS + ". Mon fournisseur d'identité est : " + FI + "." ;
 %>
-<section class="fr-grid-row fr-grid-row--center">
+<section class="fr-grid-row fr-grid-row--center fr-my-5w">
   <div class="fr-col-lg-8 fr-col-md-7 fr-col-sm-12">
-    <div class="fr-mb-8w">
+    <div>
       <h1 data-testid="error-section-title" class="fr-mb-3w">
         <%  if (locals.exception.title)  { %>
           <%= locals.exception.title %>

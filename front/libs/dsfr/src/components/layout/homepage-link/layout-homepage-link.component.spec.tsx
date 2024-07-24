@@ -1,45 +1,38 @@
 import { render } from '@testing-library/react';
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
-import { AppContextProvider } from '@fc/state-management';
+import { ConfigService } from '@fc/config';
 
 import { LayoutHomepageLinkComponent } from './layout-homepage-link.component';
 
-jest.mock('@fc/state-management');
-
-jest.mock('react', () => {
-  const actualReact = jest.requireActual('react');
-  return {
-    ...actualReact,
-    useContext: jest.fn(),
-  };
-});
+jest.mock('@fc/config', () => ({
+  ConfigService: {
+    get: jest.fn(() => ({
+      footerLinkTitle: 'any-title',
+      homepage: '/',
+    })),
+  },
+}));
 
 describe('LayoutHomepageLinkComponent', () => {
-  // given
-  const appContextConfigMock = {
-    state: {
-      config: {
-        Layout: {
-          footerLinkTitle: 'any-title',
-          homepage: '/',
-        },
-      },
-    },
-  };
-
-  it('should choose prefix: return to homepage, when isFooter is set at true', () => {
-    // given
-    jest.mocked(useContext).mockReturnValueOnce(appContextConfigMock);
-
+  it('should call ConfigService.get with layout config name', () => {
     // when
     render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHomepageLinkComponent isFooter>
-          <div>Test</div>
-        </LayoutHomepageLinkComponent>
-      </AppContextProvider>,
+      <LayoutHomepageLinkComponent>
+        <div>Test</div>
+      </LayoutHomepageLinkComponent>,
+    );
+
+    // then
+    expect(ConfigService.get).toHaveBeenCalledWith('Layout');
+  });
+
+  it('should choose prefix: return to homepage, when isFooter is set at true', () => {
+    // when
+    render(
+      <LayoutHomepageLinkComponent isFooter>
+        <div>Test</div>
+      </LayoutHomepageLinkComponent>,
     );
 
     // then
@@ -54,16 +47,11 @@ describe('LayoutHomepageLinkComponent', () => {
   });
 
   it('should render Link if path is defined', () => {
-    // given
-    jest.mocked(useContext).mockReturnValueOnce(appContextConfigMock);
-
     // when
     render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHomepageLinkComponent>
-          <div>Test</div>
-        </LayoutHomepageLinkComponent>
-      </AppContextProvider>,
+      <LayoutHomepageLinkComponent>
+        <div>Test</div>
+      </LayoutHomepageLinkComponent>,
     );
 
     // then
@@ -79,25 +67,16 @@ describe('LayoutHomepageLinkComponent', () => {
 
   it('should render a tag, if homepage is not defined', () => {
     // given
-    const configMock = {
-      state: {
-        ...appContextConfigMock,
-        config: {
-          Layout: {
-            footerLinkTitle: 'any-title',
-          },
-        },
-      },
-    };
-    jest.mocked(useContext).mockReturnValue(configMock);
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      footerLinkTitle: 'any-title',
+      homepage: undefined,
+    });
 
     // when
     const { getByRole } = render(
-      <AppContextProvider value={configMock}>
-        <LayoutHomepageLinkComponent>
-          <div>Test</div>
-        </LayoutHomepageLinkComponent>
-      </AppContextProvider>,
+      <LayoutHomepageLinkComponent>
+        <div>Test</div>
+      </LayoutHomepageLinkComponent>,
     );
 
     // then

@@ -55,15 +55,9 @@ export class DataProviderAdapterCoreService {
     const { client_id, client_secret, checktokenEndpoint } =
       this.config.get<DataProviderAdapterCoreConfig>('DataProviderAdapterCore');
     const checktokenRequest = {
-      // Based on oidc standard
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_id,
-      // Based on oidc standard
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret,
-      // Based on oidc standard
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      access_token: accessToken,
+      token: accessToken,
     };
 
     const { status, data } = await lastValueFrom<AxiosResponse<string>>(
@@ -118,8 +112,6 @@ export class DataProviderAdapterCoreService {
   }
 
   private checktokenHttpError(
-    // oidc compliant
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     error: AxiosError<{ error: string; error_description: string }>,
   ) {
     switch (error.code) {

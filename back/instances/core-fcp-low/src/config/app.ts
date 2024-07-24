@@ -37,4 +37,5 @@ export default {
     'email',
     'phone_number',
   ],
+  showExcludedIdp: env.boolean('SHOW_EXCLUDED_IDP'),
 } as AppConfig;

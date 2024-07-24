@@ -23,7 +23,7 @@ export class OidcProviderConfigAppService extends OidcProviderAppConfigLibServic
     protected readonly errorService: OidcProviderErrorService,
     protected readonly grantService: OidcProviderGrantService,
     protected readonly config: ConfigService,
-    private readonly scenarios: ScenariosService,
+    protected readonly scenarios: ScenariosService,
   ) {
     super(logger, sessionService, errorService, grantService, config);
   }
@@ -39,14 +39,10 @@ export class OidcProviderConfigAppService extends OidcProviderAppConfigLibServic
 
     const claims = this.scenarios.deleteClaims(userLogin, spIdentity, subSp);
 
-    // openid like property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { rep_scope = '' } = claims;
     const repScopeArray = stringToArray(rep_scope);
 
     if (repScopeArray.length > 0) {
-      // openid like property names
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       Object.assign(claims, { rep_scope: repScopeArray });
     } else {
       delete claims.rep_scope;

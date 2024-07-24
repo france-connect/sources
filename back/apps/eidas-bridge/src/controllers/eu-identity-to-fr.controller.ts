@@ -168,6 +168,7 @@ export class EuIdentityToFrController {
     const session = {
       // Save idp identity.
       idpIdentity: idpIdentityReset,
+      interactionAcr: acr,
       // Save service provider identity.
       spIdentity,
       spAcr: acr,

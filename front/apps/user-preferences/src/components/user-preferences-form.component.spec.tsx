@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react';
-import { useMediaQuery } from 'react-responsive';
 
 import { AlertComponent, SimpleButton, ToggleInput } from '@fc/dsfr';
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { useUserPreferencesForm } from '../hooks';
 import { AllowFutureIdpSwitchLabelComponent } from './allow-future-idp-switch-label.component';
@@ -9,6 +9,7 @@ import { ServicesListComponent } from './services-list.component';
 import { UserPreferencesFormComponent } from './user-preferences-form.component';
 
 jest.mock('@fc/dsfr');
+jest.mock('@fc/styles');
 jest.mock('../hooks');
 jest.mock('./services-list.component');
 jest.mock('./allow-future-idp-switch-label.component');
@@ -27,10 +28,15 @@ describe('UserPreferencesFormComponent', () => {
     allowingIdPConfirmation: jest.fn(),
   };
 
+  beforeEach(() => {
+    // given
+    jest.mocked(useStylesVariables).mockReturnValue([expect.any(String)]);
+  });
+
   it('should match the snapshot, display into a desktop viewport', () => {
     // given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(
@@ -51,7 +57,7 @@ describe('UserPreferencesFormComponent', () => {
   it('should match the snapshot, display into a mobile viewport', () => {
     // given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(
@@ -72,7 +78,7 @@ describe('UserPreferencesFormComponent', () => {
   it('should match the snapshot, display into a desktop viewport when form validation button is not disabled', () => {
     // given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(
@@ -93,7 +99,7 @@ describe('UserPreferencesFormComponent', () => {
   it('should match the snapshot, display into a mobile viewport when form validation button is not disabled', () => {
     // given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(
@@ -114,7 +120,7 @@ describe('UserPreferencesFormComponent', () => {
   it('should match the snapshot, display into a desktop viewport when the form has errors', () => {
     // given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(
@@ -135,7 +141,7 @@ describe('UserPreferencesFormComponent', () => {
   it('should match the snapshot, display into a mobile viewport when the form has errors', () => {
     // given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(

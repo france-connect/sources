@@ -8,6 +8,7 @@ import {
   getDtoInputWithErrors,
   getTransformed,
   validateDto,
+  validateDtoSync,
 } from './dto-validation';
 
 describe('DtoValidation', () => {
@@ -145,6 +146,119 @@ describe('DtoValidation', () => {
 
       // action
       const errors = await validateDto(plain, TestClass, validationOptions);
+
+      // expect
+      expect(errors).toBeInstanceOf(Array);
+      expect(errors.length).toStrictEqual(1);
+      expect(errors).toMatchObject(validateResult);
+    });
+  });
+
+  describe('validateDtoSync', () => {
+    it('should call "plainToInstance" from "class-transformer" through "getTransformed" call', () => {
+      // setup
+      jest.spyOn(ClassTransformer, 'plainToInstance');
+      jest.spyOn(ClassValidator, 'validateSync').mockReturnValue([]);
+
+      class TestClass {}
+      const plain = { foo: 'bar' };
+      const validationOptions = { whitelist: false };
+      const resultValidationOptions = undefined;
+
+      // action
+      validateDtoSync(plain, TestClass, validationOptions);
+
+      // expect
+      expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
+      expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
+        TestClass,
+        plain,
+        resultValidationOptions,
+      );
+    });
+
+    it('should call "plainToInstance" from "class-transformer" through "getTransformed" call with full options', () => {
+      // setup
+      jest.spyOn(ClassTransformer, 'plainToInstance');
+      jest.spyOn(ClassValidator, 'validateSync').mockReturnValue([]);
+
+      class TestClass {}
+      const plain = { foo: 'bar' };
+      const validationOptions = { whitelist: false };
+      const transformOptions = { groups: ['hello'] };
+
+      // action
+      validateDtoSync(plain, TestClass, validationOptions, transformOptions);
+
+      // expect
+      expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
+      expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
+        TestClass,
+        plain,
+        transformOptions,
+      );
+    });
+
+    it('should call "validateSync" from "class-validator" with given Dto', () => {
+      // setup
+      jest.spyOn(ClassValidator, 'validateSync');
+
+      class TestClass {}
+      const plain = { foo: 'bar' };
+      const validationOptions = { whitelist: false };
+
+      // action
+      validateDtoSync(plain, TestClass, validationOptions);
+
+      // expect
+      expect(ClassValidator.validateSync).toHaveBeenCalledTimes(1);
+      expect(ClassValidator.validateSync).toHaveBeenCalledWith(
+        plain,
+        validationOptions,
+      );
+    });
+
+    it('should return an empty array if no error is found', () => {
+      // setup
+      jest.spyOn(ClassTransformer, 'plainToInstance');
+      jest.spyOn(ClassValidator, 'validateSync').mockReturnValue([]);
+
+      class TestClass {}
+      const plain = { foo: 'bar' };
+      const validationOptions = { whitelist: false };
+
+      // action
+      const errors = validateDtoSync(plain, TestClass, validationOptions);
+
+      // expect
+      expect(errors).toBeInstanceOf(Array);
+      expect(errors.length).toStrictEqual(0);
+    });
+
+    it('should return the "validateSync" call result', () => {
+      // setup
+      const validateResult = [
+        {
+          property: 'foo',
+          constraints: {
+            Bar: 'oops !',
+            Rab: 'oops too !',
+          },
+          children: [],
+        },
+      ];
+
+      jest.spyOn(ClassTransformer, 'plainToInstance');
+      jest
+        .spyOn(ClassValidator, 'validateSync')
+        .mockReturnValue(validateResult);
+
+      class TestClass {}
+      const plain = { foo: 'bar' };
+      const validationOptions = { whitelist: false };
+
+      // action
+      const errors = validateDtoSync(plain, TestClass, validationOptions);
 
       // expect
       expect(errors).toBeInstanceOf(Array);

@@ -3,8 +3,10 @@
 // Declarative code
 import { Global, Module } from '@nestjs/common';
 
+import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import { OidcAcrModule } from '@fc/oidc-acr';
 import {
   OidcProviderGrantService,
   OidcProviderModule,
@@ -31,6 +33,7 @@ const exceptionModule = ExceptionsModule.withoutTracking();
 @Global()
 @Module({
   imports: [
+    AppModule,
     exceptionModule,
     AsyncLocalStorageModule,
     ServiceProviderAdapterEnvModule,
@@ -42,6 +45,7 @@ const exceptionModule = ExceptionsModule.withoutTracking();
       exceptionModule,
     ),
     ViewTemplatesModule,
+    OidcAcrModule,
   ],
   controllers: [MockIdentityProviderController, OidcProviderController],
   providers: [

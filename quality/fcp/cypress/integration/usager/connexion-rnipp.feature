@@ -104,10 +104,33 @@ Fonctionnalité: Connexion Usager - RNIPP
       | non trouvé avec un echo        | E010004  | Y010004   | FC_RECEIVED_INVALID_RNIPP  |
       | non trouvé plusieurs echos     | E010006  | Y010006   | FC_RECEIVED_INVALID_RNIPP  |
       | echo avec le nom d'usage       | E010007  | Y010007   | FC_RECEIVED_INVALID_RNIPP  |
-      | aucun echo trouvé              | E010008  | Y010008   | FC_RECEIVED_INVALID_RNIPP  |
       | mauvais format de requête      | E010009  | Y010009   | FC_FAILED_RNIPP            |
       | pas de réponse du RNIPP        | E010011  | Y010011   | FC_FAILED_RNIPP            |
       | impossible de joindre le RNIPP | E010012  | Y010012   | FC_FAILED_RNIPP            |
       | citoyen sans nom dans le RNIPP | E010013  | Y010013   | FC_RECEIVED_INVALID_RNIPP  |
       | statut non valide              | E010099  | Y010013   | FC_RECEIVED_INVALID_RNIPP  |
       | usager décédé                  | E010015  | Y010015   | FC_RECEIVED_DECEASED_RNIPP |
+
+    @fcpLow
+    Exemples:
+      | scenario          | username | errorCode | event                     |
+      | aucun echo trouvé | E010008  | Y010008   | FC_RECEIVED_INVALID_RNIPP |
+
+  @fcpHigh
+  Plan du Scénario: Connexion avec erreur RNIPP <errorCode> <scenario>
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton FranceConnect
+    Et que je suis redirigé vers la page sélection du fournisseur d'identité
+    Et que je clique sur le fournisseur d'identité
+    Et que je suis redirigé vers la page login du fournisseur d'identité
+    Quand je m'authentifie avec "<username>"
+    Alors je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "<errorCode>"
+    Et le sous-titre de la page d'erreur est "Besoin d'aide ?"
+    Et le message d'erreur FranceConnect est "Merci de consulter notre page d’aide FranceConnect."
+    Et le bouton "consulter la faq" est affiché
+    Et le lien vers la faq contient le code d'erreur "<errorCode>"
+
+    Exemples:
+      | scenario          | username | errorCode | event                     |
+      | aucun echo trouvé | E010008  | Y010008   | FC_RECEIVED_INVALID_RNIPP |

@@ -1,29 +1,52 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { AppContext } from '@fc/state-management';
+import { ConfigService } from '@fc/config';
 
-import type { NavigationLink } from '../../../interfaces';
+import { Options } from '../../../enums';
+import type { LayoutConfig, NavigationLink } from '../../../interfaces';
 import { LogoRepubliqueFrancaiseComponent } from '../../logos';
 import { LayoutHomepageLinkComponent } from '../homepage-link';
 import { LayoutFooterBottomLinksComponent } from './layout-footer-bottom-links.component';
 import { LayoutFooterContentLinksComponent } from './layout-footer-content-links.component';
 import { LayoutFooterLicenceComponent } from './layout-footer-licence.component';
 
-export interface LayoutFooterComponentProps {
+interface LayoutFooterComponentProps {
   showLicence?: boolean;
   topLinks?: NavigationLink[];
 }
 
-export const LayoutFooterComponent: React.FC<LayoutFooterComponentProps> = React.memo(
-  ({ showLicence, topLinks }: LayoutFooterComponentProps) => {
-    const appContext = useContext(AppContext);
-    const layoutConfig = appContext.state.config.Layout;
+const DEFAULT_TOP_LINKS = [
+  {
+    href: 'https://www.legifrance.gouv.fr',
+    label: 'legifrance.gouv.fr',
+    title: 'Accèder au site legifrance.gouv.fr nouvelle fenêtre',
+  },
+  {
+    href: 'https://www.info.gouv.fr',
+    label: 'info.gouv.fr',
+    title: 'Accèder au site info.gouv.fr nouvelle fenêtre',
+  },
+  {
+    href: 'https://www.service-public.fr/',
+    label: 'service-public.fr',
+    title: 'Accèder au site service-public.fr nouvelle fenêtre',
+  },
+  {
+    href: 'https://data.gouv.fr',
+    label: 'data.gouv.fr',
+    title: 'Accèder au site data.gouv.fr nouvelle fenêtre',
+  },
+];
+
+export const LayoutFooterComponent = React.memo(
+  ({ showLicence = false, topLinks = DEFAULT_TOP_LINKS }: LayoutFooterComponentProps) => {
+    const config = ConfigService.get<LayoutConfig>(Options.CONFIG_NAME);
     const {
       bottomLinks,
       footerDescription: description,
       footerLinkTitle,
       logo: ApplicationLogo,
-    } = layoutConfig;
+    } = config;
 
     const showFooterBottom = bottomLinks || showLicence;
 
@@ -60,31 +83,5 @@ export const LayoutFooterComponent: React.FC<LayoutFooterComponentProps> = React
     );
   },
 );
-
-LayoutFooterComponent.defaultProps = {
-  showLicence: false,
-  topLinks: [
-    {
-      a11y: 'Accèder au site legifrance.gouv.fr nouvelle fenêtre',
-      href: 'https://www.legifrance.gouv.fr',
-      label: 'legifrance.gouv.fr',
-    },
-    {
-      a11y: 'Accèder au site gouvernement.fr nouvelle fenêtre',
-      href: 'https://www.gouvernement.fr',
-      label: 'gouvernement.fr',
-    },
-    {
-      a11y: 'Accèder au site service-public.fr nouvelle fenêtre',
-      href: 'https://www.service-public.fr/',
-      label: 'service-public.fr',
-    },
-    {
-      a11y: 'Accèder au site data.gouv.fr nouvelle fenêtre',
-      href: 'https://data.gouv.fr',
-      label: 'data.gouv.fr',
-    },
-  ],
-};
 
 LayoutFooterComponent.displayName = 'LayoutFooterComponent';

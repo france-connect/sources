@@ -51,11 +51,17 @@ export const frFR: I18nTranslationsMapType = {
   'consent.data_fetched_from': 'Informations récupérées depuis {dpName}',
   'consent.no_personal_data_transmitted':
     'Aucune donnée personnelle ne sera transmise',
+  'consent.information_block_title': 'Les notifications de connexion évoluent',
+  'consent.information_block_content':
+    'FranceConnect ne vous enverra plus systématiquement une notification à chacune de vos connexions. Une notification vous sera envoyée uniquement lorsqu’une connexion inhabituelle est détectée.',
 
   // Errors
   'error.page_title': 'Connexion - Erreur - {platform}',
-  'error.what_to_do': 'Que faire ?',
-  'error.contact_us': 'Contactez-nous',
-  'error.an_error_occurred': 'Une erreur s’est produite',
+  'error.support.title': 'Que faire ?',
+  'error.support.button_label': 'Contactez-nous',
+  'error.error_title': 'Une erreur s’est produite',
   'error.error_code': 'Erreur {code}',
+  'error.faq.title': "Besoin d'aide ?",
+  'error.faq.button_label': 'Consulter la page d’aide',
+  'error.faq.body': 'Merci de consulter notre page d’aide FranceConnect.',
 };

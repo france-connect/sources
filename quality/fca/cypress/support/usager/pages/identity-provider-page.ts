@@ -76,4 +76,8 @@ export default class IdentityProviderPage {
 
     cy.get(this.loginButtonSelector).click();
   }
+
+  checkSpIdIsVisible(spIdp: string): void {
+    cy.get('#final-sp-id').should('contain', spIdp);
+  }
 }

@@ -12,6 +12,10 @@ section.welcome {
   color: #fff;
 }
 
+section.welcome--error {
+  background-color: #c9191e;
+}
+
 section.connect {
   margin-top: 1rem;
   margin-bottom: 1rem;

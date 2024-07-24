@@ -7,7 +7,8 @@
       "par défaut",
       "actif",
       "autorisé pour idp_hint",
-      "par défaut avec amr 'fc pwd'"
+      "par défaut avec amr 'fc pwd'",
+      "pour user-dashboard (core v2)"
     ],
     "mocked": true,
     "usable": true,
@@ -111,7 +112,8 @@
     "descriptions": [
       "actif",
       "whitelisté",
-      "blacklisté"
+      "blacklisté",
+      "pour le test de préférences FI"
     ],
     "mocked": true,
     "usable": true,

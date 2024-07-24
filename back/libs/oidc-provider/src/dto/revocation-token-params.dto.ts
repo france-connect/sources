@@ -12,14 +12,10 @@ export class RevocationTokenParamsDTO {
   readonly token: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_id: string;
 
   @IsString()
   @MinLength(32)
   @IsAscii()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_secret: string;
 }

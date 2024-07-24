@@ -20,7 +20,7 @@ export class AppModule {
         // 1. Load config module first
         ConfigModule.forRoot(configService),
         // 2. Load logger module next
-        LoggerModule,
+        LoggerModule.forRoot(),
         // 3. Load other modules
       ],
     };
@@ -47,7 +47,7 @@ app.useLogger(logger);
 
 ### 3. LoggerService
 
-The `LoggerService` is the global service that should be used in the application to log messages. Its structure and levels are based on the syslog protocol for a better compatibility with external tools. If defined, it uses the `AsyncLocalStorageModule` to retrieve the current request context and add it to the log message.  
+The `LoggerService` is the global service that should be used in the application to log messages. Its structure and levels are based on the syslog protocol for a better compatibility with external tools.
 ⚠️ You should import the `AsyncLocalStorageModule` in each app that use the logger. It will not be active if there is no middleware set, but is a dependency.
 
 ### 3.1 Logs levels
@@ -116,3 +116,32 @@ logger.info({ context: { foo: 'bar' } }, `Hello ${name} !`);
 // This is not ok 👎
 logger.info({ context: { foo: 'bar' } }, 'Hello %s !', name);
 ```
+
+## Plugins
+
+You can add some specific context to logs by applying some plugins to logger module.
+
+```typescript
+import { somePlugin } from 'some-lib';
+
+@Module({})
+export class AppModule {
+  static forRoot(configService: ConfigService): DynamicModule {
+    return {
+      module: AppModule,
+      imports: [
+        // 1. Load config module first
+        ConfigModule.forRoot(configService),
+        // 2. Load logger module next
+        LoggerModule.forRoot([somePlugin]), // <-- Add an array of plugins as parameter
+        // 3. Load other modules
+      ],
+    };
+  }
+}
+```
+
+A plugin is an object of type [LoggerPluginInterface](./src/interfaces/logger-plugin.interface.ts).
+It exposes a list of imports and a service.
+
+See [@fc/logger-plugins](../logger-plugins/) for some examples of plugins definition.

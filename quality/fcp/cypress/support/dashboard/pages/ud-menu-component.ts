@@ -30,6 +30,9 @@ export default class UdMenuComponent {
   }
 
   getPreferencesMobileLink(): ChainableElement {
-    return cy.get('#layout-header-menu-modal a[title="Gérer mes accès"]');
+    return cy.contains(
+      '#layout-header-menu-modal nav[role="navigation"] a',
+      'Gérer mes accès',
+    );
   }
 }

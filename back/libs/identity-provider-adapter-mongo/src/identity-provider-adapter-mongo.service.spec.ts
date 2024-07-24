@@ -16,7 +16,6 @@ import {
   NoDiscoveryIdpAdapterMongoDTO,
 } from './dto';
 import { IdentityProviderAdapterMongoService } from './identity-provider-adapter-mongo.service';
-import { FilteringOptions } from './interfaces';
 import { IdentityProvider } from './schemas';
 
 jest.mock('@fc/common', () => ({
@@ -33,191 +32,107 @@ describe('IdentityProviderAdapterMongoService', () => {
       'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/authorize',
     clientID: 'clientID',
     amr: [Amr.MAIL, Amr.PWD],
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     client_secret: '7vhnwzo1yUVOJT9GJ91gD5oid56effu1',
     discovery: false,
     display: false,
-    eidas: 2,
+    allowedAcr: ['eidas2'],
     endSessionURL:
       'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/session/end',
     featureHandlers: {
       authenticationEmail: null,
       coreVerify: 'core-fcp-default-verify',
     },
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_encrypted_response_alg: 'RSA-OAEP',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_encrypted_response_enc: 'A256GCM',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_signed_response_alg: 'HS256',
     image: 'provider1.png',
     jwksURL: 'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/certs',
     name: 'provider1',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     response_types: ['code'],
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     revocation_endpoint_auth_method: 'client_secret_post',
     title: 'provider 1',
     tokenURL: 'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/token',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     token_endpoint_auth_method: 'client_secret_post',
     uid: 'uid',
     url: 'https://core-fcp-high.docker.dev-franceconnect.fr',
     userInfoURL:
       'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/userinfo',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_encrypted_response_alg: 'RSA-OAEP',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_encrypted_response_enc: 'A256GCM',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_signed_response_alg: 'HS256',
   };
 
   const legacyToOpenIdPropertyNameOutputMock = {
     active: true,
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     authorization_endpoint:
       'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/authorize',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     client_id: 'clientID',
     amr: [Amr.MAIL, Amr.PWD],
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     client_secret: '7vhnwzo1yUVOJT9GJ91gD5oid56effu1',
     discovery: false,
     display: false,
-    maxAuthorizedAcr: 'eidas2',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+    allowedAcr: ['eidas2'],
     end_session_endpoint:
       'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/session/end',
     featureHandlers: {
       authenticationEmail: null,
       coreVerify: 'core-fcp-default-verify',
     },
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_encrypted_response_alg: 'RSA-OAEP',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_encrypted_response_enc: 'A256GCM',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_signed_response_alg: 'HS256',
     image: 'provider1.png',
     issuer: 'https://core-fcp-high.docker.dev-franceconnect.fr',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     jwks_uri: 'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/certs',
     name: 'provider1',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     response_types: ['code'],
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     revocation_endpoint_auth_method: 'client_secret_post',
     title: 'provider 1',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     token_endpoint:
       'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/token',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     token_endpoint_auth_method: 'client_secret_post',
     uid: 'uid',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_encrypted_response_alg: 'RSA-OAEP',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_encrypted_response_enc: 'A256GCM',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_endpoint:
       'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/userinfo',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_signed_response_alg: 'HS256',
   };
 
   const validIdentityProviderMock = {
     active: true,
     client: {
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_id: 'clientID',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret: '7vhnwzo1yUVOJT9GJ91gD5oid56effu1',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_encrypted_response_alg: 'RSA-OAEP',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_encrypted_response_enc: 'A256GCM',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_signed_response_alg: 'HS256',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       response_types: ['code'],
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       revocation_endpoint_auth_method: 'client_secret_post',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       token_endpoint_auth_method: 'client_secret_post',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_encrypted_response_alg: 'RSA-OAEP',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_encrypted_response_enc: 'A256GCM',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_signed_response_alg: 'HS256',
     },
     amr: [Amr.MAIL, Amr.PWD],
     discovery: false,
     display: false,
-    maxAuthorizedAcr: 'eidas2',
+    allowedAcr: ['eidas2'],
     featureHandlers: {
       authenticationEmail: null,
       coreVerify: 'core-fcp-default-verify',
     },
     image: 'provider1.png',
     issuer: {
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       authorization_endpoint:
         'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/authorize',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       end_session_endpoint:
         'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/session/end',
       issuer: 'https://core-fcp-high.docker.dev-franceconnect.fr',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       jwks_uri:
         'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/certs',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       token_endpoint:
         'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/token',
-      // oidc param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_endpoint:
         'https://core-fcp-high.docker.dev-franceconnect.fr/api/v2/userinfo',
     },
@@ -529,11 +444,7 @@ describe('IdentityProviderAdapterMongoService', () => {
         Object.assign(validIdentityProviderMock, {
           client: Object.assign(
             {
-              // oidc param name
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               client_id: 'clientID',
-              // oidc param name
-              // eslint-disable-next-line @typescript-eslint/naming-convention
               client_secret: 'client_secret',
             },
             validIdentityProviderMock.client,
@@ -561,13 +472,9 @@ describe('IdentityProviderAdapterMongoService', () => {
       const refresh = true;
       const listMock = [
         {
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_id: 'foo',
         },
         {
-          // oidc param name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_id: 'bar',
         },
       ];
@@ -593,15 +500,11 @@ describe('IdentityProviderAdapterMongoService', () => {
       service['listCache'] = [
         {
           client: {
-            // oidc param name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             client_id: 'foo',
           },
         } as IdentityProviderMetadata,
         {
           client: {
-            // oidc param name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             client_id: 'bar',
           },
         } as IdentityProviderMetadata,
@@ -616,12 +519,6 @@ describe('IdentityProviderAdapterMongoService', () => {
   });
 
   describe('getFilteredList', () => {
-    const blacklist = true;
-    const idpList = ['idp1'];
-    const defaultOptionsMock: FilteringOptions = {
-      blacklist,
-      idpList,
-    };
     const defaultProvidersMock = [
       {
         eidas: 1,
@@ -633,27 +530,17 @@ describe('IdentityProviderAdapterMongoService', () => {
         name: 'idp2',
         uid: 'idp2',
       },
-      {
-        eidas: 2,
-        name: 'idp3',
-        uid: 'idp3',
-      },
-      {
-        eidas: 3,
-        name: 'idp4',
-        uid: 'idp4',
-      },
     ];
 
     beforeEach(() => {
       service.getList = jest.fn().mockResolvedValueOnce(defaultProvidersMock);
     });
 
-    it('should return a list of mapped providers', async () => {
+    it('should return a list of mapped providers containing blacklist that we want to display', async () => {
       // GIVEN
-      const optionsMock = {
-        ...defaultOptionsMock,
-      };
+      const idpListMock = ['idp1'];
+      const blacklistMock = true;
+      const showExcludedIdpMock = true;
       const expected = [
         {
           active: false,
@@ -666,36 +553,42 @@ describe('IdentityProviderAdapterMongoService', () => {
           name: 'idp2',
           uid: 'idp2',
         },
-        {
-          eidas: 2,
-          name: 'idp3',
-          uid: 'idp3',
-        },
-        {
-          eidas: 3,
-          name: 'idp4',
-          uid: 'idp4',
-        },
       ];
 
+      service['updateProviderStatus'] = jest
+        .fn()
+        .mockReturnValueOnce({
+          active: false,
+          eidas: 1,
+          name: 'idp1',
+          uid: 'idp1',
+        })
+        .mockReturnValueOnce({
+          eidas: 1,
+          name: 'idp2',
+          uid: 'idp2',
+        });
+
       // WHEN
-      const result = await service.getFilteredList(optionsMock);
+      const result = await service.getFilteredList(
+        idpListMock,
+        blacklistMock,
+        showExcludedIdpMock,
+      );
 
       // THEN
       expect(result).toEqual(expected);
     });
 
-    it('should return a list of providers containing whitelisted ones', async () => {
+    it('should return a list of providers containing whitelisted ones and not displaying blacklist', async () => {
       // GIVEN
-      const optionsMock = {
-        ...defaultOptionsMock,
-        acrValues: null,
-        blacklist: false,
-        idpList: ['idp2'],
-      };
+      const idpListMock = ['idp2'];
+      const blacklistMock = false;
+      const showExcludedIdpMock = false;
       const expected = [
         {
           active: false,
+          display: false,
           eidas: 1,
           name: 'idp1',
           uid: 'idp1',
@@ -705,22 +598,29 @@ describe('IdentityProviderAdapterMongoService', () => {
           name: 'idp2',
           uid: 'idp2',
         },
-        {
-          active: false,
-          eidas: 2,
-          name: 'idp3',
-          uid: 'idp3',
-        },
-        {
-          active: false,
-          eidas: 3,
-          name: 'idp4',
-          uid: 'idp4',
-        },
       ];
 
+      service['updateProviderStatus'] = jest
+        .fn()
+        .mockReturnValueOnce({
+          active: false,
+          display: false,
+          eidas: 1,
+          name: 'idp1',
+          uid: 'idp1',
+        })
+        .mockReturnValueOnce({
+          eidas: 1,
+          name: 'idp2',
+          uid: 'idp2',
+        });
+
       // WHEN
-      const result = await service.getFilteredList(optionsMock);
+      const result = await service.getFilteredList(
+        idpListMock,
+        blacklistMock,
+        showExcludedIdpMock,
+      );
 
       // THEN
       expect(result).toEqual(expected);
@@ -890,6 +790,80 @@ describe('IdentityProviderAdapterMongoService', () => {
       const result = await service.isActiveById('id');
       // Then
       expect(result).toBeFalse();
+    });
+  });
+
+  describe('updateProviderStatus', () => {
+    const defaultProvidersMock = {
+      eidas: 1,
+      name: 'idp1',
+      uid: 'idp1',
+    } as unknown as IdentityProviderMetadata;
+
+    it('should return provider without modification', () => {
+      // Given
+      const isIdpAuthorizedMock = true;
+      const showExcludedIdpMock = false;
+      const expected = {
+        eidas: 1,
+        name: 'idp1',
+        uid: 'idp1',
+      };
+
+      // When
+      const result = service['updateProviderStatus'](
+        defaultProvidersMock,
+        isIdpAuthorizedMock,
+        showExcludedIdpMock,
+      );
+
+      // When
+      expect(result).toEqual(expected);
+    });
+
+    it('Should return a blacklisted provider that we want to display', () => {
+      // Given
+      const isIdpAuthorizedMock = false;
+      const showExcludedIdpMock = true;
+      const expected = {
+        active: false,
+        eidas: 1,
+        name: 'idp1',
+        uid: 'idp1',
+      };
+
+      // When
+      const result = service['updateProviderStatus'](
+        defaultProvidersMock,
+        isIdpAuthorizedMock,
+        showExcludedIdpMock,
+      );
+
+      // When
+      expect(result).toEqual(expected);
+    });
+
+    it("Should return a blacklisted provider that we don't want to display", () => {
+      // Given
+      const isIdpAuthorizedMock = false;
+      const showExcludedIdpMock = false;
+      const expected = {
+        active: false,
+        display: false,
+        eidas: 1,
+        name: 'idp1',
+        uid: 'idp1',
+      };
+
+      // When
+      const result = service['updateProviderStatus'](
+        defaultProvidersMock,
+        isIdpAuthorizedMock,
+        showExcludedIdpMock,
+      );
+
+      // When
+      expect(result).toEqual(expected);
     });
   });
 });

@@ -71,7 +71,6 @@ describe('FrIdentityToEuController', () => {
 
   const oidcErrorMock = {
     error: 'error',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     error_description: 'error_description',
   };
 
@@ -253,8 +252,6 @@ describe('FrIdentityToEuController', () => {
       relayState: 'relayState',
     };
     const oidcRequestMock = {
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: AcrValues.EIDAS2,
       scope: ['openid', 'given_name'],
     };
@@ -327,8 +324,6 @@ describe('FrIdentityToEuController', () => {
 
     it('Should call oidc-client-service to retrieve authorize url', async () => {
       const authorizeParametersMock = {
-        // acr_values is an oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: oidcRequestMock.acr_values,
         nonce: idpNonceMock,
         scope: oidcRequestMock.scope.join(' '),
@@ -353,7 +348,6 @@ describe('FrIdentityToEuController', () => {
       expect(oidcClientServiceMock.utils.getAuthorizeUrl).toHaveBeenCalledWith(
         idpIdMock,
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           acr_values: authorizeParametersMock.acr_values,
           nonce: authorizeParametersMock.nonce,
           scope: authorizeParametersMock.scope,
@@ -791,11 +785,7 @@ describe('FrIdentityToEuController', () => {
     let identityMock;
     beforeEach(() => {
       identityMock = {
-        // Oidc naming convention
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         family_name: 'family_nameValue',
-        // Oidc naming convention
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         given_name: 'given_nameValue',
       };
       validateDtoMock = jest.mocked(validateDto);

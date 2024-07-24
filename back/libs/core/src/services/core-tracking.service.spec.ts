@@ -86,11 +86,14 @@ describe('CoreTrackingService', () => {
     idpIdentity: undefined,
   };
 
+  const interactionAcrMock = 'interactionAcrMock';
+
   const sessionDataMock: OidcSession = {
     accountId: 'accountId Mock Value',
     browsingSessionId: 'browsingSessionId Mock Value',
     sessionId: sessionIdMock,
     interactionId: interactionIdMock,
+    interactionAcr: interactionAcrMock,
 
     subs: {
       clientId: 'sub client id',
@@ -314,8 +317,9 @@ describe('CoreTrackingService', () => {
       // When
       service['getDataFromSession'](sessionIdMock);
       // Then
-      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.get).toHaveBeenCalledWith('OidcClient');
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(2);
+      expect(sessionServiceMock.get).toHaveBeenNthCalledWith(1, 'OidcClient');
+      expect(sessionServiceMock.get).toHaveBeenNthCalledWith(2, 'Device');
     });
 
     it('should return a default object with only sessionId, if session is not found', () => {
@@ -324,6 +328,7 @@ describe('CoreTrackingService', () => {
         accountId: null,
         browsingSessionId: null,
         interactionId: null,
+        interactionAcr: null,
         sessionId: sessionIdMock,
         isSso: null,
 
@@ -338,7 +343,9 @@ describe('CoreTrackingService', () => {
         idpLabel: null,
         idpSub: null,
       };
-      sessionServiceMock.get.mockReturnValueOnce(null);
+      sessionServiceMock.get
+        .mockReturnValueOnce(null)
+        .mockReturnValueOnce(null);
 
       // When
       const result = service['getDataFromSession'](sessionIdMock);
@@ -354,6 +361,7 @@ describe('CoreTrackingService', () => {
         browsingSessionId: 'browsingSessionId Mock Value',
         sessionId: sessionIdMock,
         interactionId: interactionIdMock,
+        interactionAcr: interactionAcrMock,
         isSso: null,
 
         spId: 'clientId',
@@ -380,6 +388,7 @@ describe('CoreTrackingService', () => {
         browsingSessionId: browsingSessionIdMock,
         sessionId: sessionIdMock,
         interactionId: null,
+        interactionAcr: null,
         isSso: null,
 
         spId: 'spIdMock',
@@ -416,6 +425,7 @@ describe('CoreTrackingService', () => {
         sessionId: sessionIdMock,
         browsingSessionId: browsingSessionIdMock,
         interactionId: null,
+        interactionAcr: null,
         isSso: null,
 
         spId: 'spIdMock',
@@ -453,6 +463,7 @@ describe('CoreTrackingService', () => {
         sessionId: sessionIdMock,
         browsingSessionId: browsingSessionIdMock,
         interactionId: null,
+        interactionAcr: null,
         isSso: null,
 
         spId: null,

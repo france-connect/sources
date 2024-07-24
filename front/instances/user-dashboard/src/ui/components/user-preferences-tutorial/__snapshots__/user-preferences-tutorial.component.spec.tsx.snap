@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserPreferencesTutorialComponent should match snapshot 1`] = `
+<div>
+  <div
+    class="tutorial tutorialSmallWidth"
+    data-testid="user-preferences-tutorial-container"
+  >
+    <strong
+      class="fr-text--md is-block fr-mb-1w"
+    >
+      any-label-mock-string
+    </strong>
+    <img
+      alt="any-alt-mock-string"
+      class="shadow-bottom tutorialSmallWidth"
+      data-testid="user-preferences-tutorial-img"
+      src="any-img-mock-string"
+    />
+  </div>
+</div>
+`;

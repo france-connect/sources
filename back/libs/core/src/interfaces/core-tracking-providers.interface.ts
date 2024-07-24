@@ -6,6 +6,7 @@ export interface ICoreTrackingProviders {
   readonly accountId: string | null;
   readonly sessionId: string | null;
   readonly interactionId: string | null;
+  readonly interactionAcr: string | null;
   readonly isSso: boolean;
 
   readonly spId: string | null;
@@ -18,4 +19,7 @@ export interface ICoreTrackingProviders {
   readonly idpName: string | null;
   readonly idpSub: string | null;
   readonly idpLabel: string | null;
+
+  readonly deviceTrusted: boolean | undefined;
+  readonly deviceIsSuspicious: boolean | undefined;
 }

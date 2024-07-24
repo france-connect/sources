@@ -52,7 +52,6 @@ Fonctionnalité: Connexion Usager - session fca-low (avec SSO)
     Et la valeur "sessionId" est identique dans l'événement "SP_REQUESTED_FC_USERINFO"
     Et la valeur "accountId" est identique dans l'événement "SP_REQUESTED_FC_USERINFO"
 
-
   Scénario: Session avec SSO activé - Nouvelle session après retour du FI si FI non disponible
     Etant donné que j'utilise un compte usager "par défaut"
     Et que j'utilise un fournisseur de service "avec accès exclusif à un FI"

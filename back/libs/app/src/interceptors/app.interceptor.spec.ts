@@ -21,6 +21,8 @@ describe('AppInterceptor', () => {
   const reqMock = {
     fc: { interactionId: '42' },
     ip: '123.123.123.123',
+    method: 'GET',
+    path: '/some/path',
   };
 
   const nextMock = {
@@ -56,7 +58,7 @@ describe('AppInterceptor', () => {
 
       // Then
       expect(loggerMock.debug).toHaveBeenCalledTimes(1);
-      expect(loggerMock.debug).toHaveBeenCalledWith('AppInterceptor');
+      expect(loggerMock.debug).toHaveBeenCalledWith('GET /some/path');
     });
   });
 });

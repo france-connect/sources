@@ -18,4 +18,5 @@ export default {
   urlPrefix: '',
   viewsPaths: env.json('VIEWS_PATHS'),
   idpId: env.string('IDP_ID'),
+  dataApis: env.json('DATA_APIS'),
 } as AppConfig;

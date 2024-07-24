@@ -45,3 +45,15 @@ Then('je suis déconnecté du fournisseur de service', function () {
     expect(intercept.response?.statusCode).to.equal(302);
   });
 });
+
+Then('je suis redirigé vers la page confirmation de déconnexion', function () {
+  const { fcaRootUrl } = this.env;
+  cy.url().should(
+    'contain',
+    `${fcaRootUrl}/api/v2/session/end/success?client_id=`,
+  );
+  cy.contains(
+    'p',
+    'Vous êtes bien déconnecté, vous pouvez fermer votre navigateur.',
+  );
+});

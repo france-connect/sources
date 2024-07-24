@@ -55,11 +55,7 @@ describe('OidcClientService', () => {
   const claimsMock = jest.fn();
 
   const tokenResultMock = {
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     access_token: accessTokenMock,
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token: idTokenMock,
     claims: claimsMock,
   };
@@ -77,11 +73,7 @@ describe('OidcClientService', () => {
 
   const identityMock: PartialExcept<IOidcIdentity, 'sub'> = {
     sub: 'xxxxxxyyyyy1122334455667788',
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'jean-paul',
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'rive',
   };
 

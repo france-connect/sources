@@ -15,8 +15,8 @@ interface CheckboxInputProps {
   name: string;
 }
 
-export const CheckboxInput: React.FC<CheckboxInputProps> = React.memo(
-  ({ disabled, hint, initialValue, label, name }: CheckboxInputProps) => (
+export const CheckboxInput = React.memo(
+  ({ disabled = false, hint, initialValue, label, name }: CheckboxInputProps) => (
     <Field initialValue={initialValue} name={name} type="checkbox">
       {({ input }) => (
         <CheckboxComponent disabled={disabled} hint={hint} input={input} label={label} />
@@ -24,11 +24,5 @@ export const CheckboxInput: React.FC<CheckboxInputProps> = React.memo(
     </Field>
   ),
 );
-
-CheckboxInput.defaultProps = {
-  disabled: false,
-  hint: undefined,
-  initialValue: undefined,
-};
 
 CheckboxInput.displayName = 'CheckboxInput';

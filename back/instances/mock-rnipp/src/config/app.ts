@@ -10,7 +10,6 @@ export default {
   apiOutputContentType: env.string('API_OUTPUT_CONTENT_TYPE'),
   name: 'MOCK_RNIPP',
   urlPrefix: '',
-  assetsPaths: env.json('ASSETS_PATHS'),
   viewsPaths: env.json('VIEWS_PATHS'),
   httpsOptions: {
     key: env.file('HTTPS_SERVER_KEY', { optional: true }),

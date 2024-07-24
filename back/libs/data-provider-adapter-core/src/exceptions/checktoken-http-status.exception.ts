@@ -24,7 +24,6 @@ export class ChecktokenHttpStatusException extends ChecktokenBaseException {
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   constructor(error: AxiosError<{ error: string; error_description: string }>) {
     super(error);
 

@@ -112,6 +112,50 @@ export default class UdHistoryPage {
       });
   }
 
+  findDataExchangeCard(
+    platform: string,
+    spTitle: string,
+    dpName: string,
+    eventIndex = 1,
+  ): Cypress.Chainable<UdEventCard | null> {
+    let cardIndex;
+    const actionType = 'Échange de Données';
+    return this.getAllEventCards()
+      .each(($el, index) => {
+        const platformActual = $el
+          .find('[data-testid="TrackCardBadgeComponent-platform-badge"]')
+          .text();
+        const actionTypeActual = $el
+          .find('[data-testid="TrackCardBadgeComponent-action-badge"]')
+          .text();
+        const spTitleActual = $el
+          .find('[data-testid="TrackCardHeaderComponent-sp-label"]')
+          .text();
+        const isDpEvent = $el.find(
+          `[data-testid="ClaimsComponent-claims-${dpName}"]`,
+        ).length;
+        if (
+          platformActual === platform &&
+          actionTypeActual === actionType &&
+          spTitleActual === spTitle &&
+          isDpEvent
+        ) {
+          if (eventIndex === 1) {
+            cardIndex = index;
+            return false;
+          }
+          eventIndex = eventIndex - 1;
+        }
+      })
+      .then(() => {
+        if (cardIndex != undefined) {
+          return this.getEventCard(cardIndex);
+        } else {
+          return null;
+        }
+      });
+  }
+
   // Index starting with 0
   getEventCard(index: number): UdEventCard {
     return new UdEventCard(index);

@@ -13,8 +13,6 @@ import { OidcAcrService } from '@fc/oidc-acr';
 import {
   OidcCtx,
   OidcProviderErrorService,
-  OidcProviderMiddlewareStep,
-  OidcProviderRoutes,
   OidcProviderService,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
@@ -78,11 +76,7 @@ describe('CoreFcaMiddlewareService', () => {
 
   const spIdentityMock = {
     email: 'eteach@fqdn.ext',
-    // oidc param
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'TEACH',
-    // oidc param
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Edward',
     sub: '42',
   };
@@ -118,8 +112,6 @@ describe('CoreFcaMiddlewareService', () => {
       'x-forwarded-for-original': xForwardedForOriginalMock,
     },
     sessionId: sessionIdMockValue,
-    // oidc param
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     query: { acr_values: spAcrMock, client_id: spIdMock },
   };
   const resMock = {
@@ -189,7 +181,7 @@ describe('CoreFcaMiddlewareService', () => {
   });
 
   describe('onModuleInit()', () => {
-    it('should register ovrrideAuthorizePrompt middleware', () => {
+    it('should register 8 middlewares', () => {
       // Given
       service['registerMiddleware'] = jest.fn();
       // When
@@ -197,43 +189,188 @@ describe('CoreFcaMiddlewareService', () => {
       // Then
       expect(service['registerMiddleware']).toHaveBeenCalledTimes(8);
     });
+  });
 
-    it('should register 8 events', () => {
+  describe('handleSilentAuthenticationMiddleware()', () => {
+    beforeEach(() => {
+      jest.resetAllMocks();
+    });
+
+    it('should override prompt with default values when prompt is undefined', async () => {
       // Given
-      service['overrideAuthorizePrompt'] = jest.fn();
-      service['overrideAuthorizeAcrValues'] = jest.fn();
-      service['overrideClaimAmrMiddleware'] = jest.fn();
-      service['afterAuthorizeMiddleware'] = jest.fn();
-      service['beforeAuthorizeMiddleware'] = jest.fn();
-      service['tokenMiddleware'] = jest.fn();
-      service['userinfoMiddleware'] = jest.fn();
+      const ctxMock: any = {
+        acr_values: ['acr1', 'acr2'],
+      };
+      const mockOverrideAuthorizePrompt = (service[
+        'getAuthorizationParameters'
+      ] = jest.fn().mockReturnValue(ctxMock));
+      service['isSsoAvailable'] = jest.fn();
+      service['isPromptStrictlyEqualNone'] = jest.fn();
+      service['overrideAuthorizePrompt'] = mockOverrideAuthorizePrompt;
+
       // When
-      service.onModuleInit();
+      await service['handleSilentAuthenticationMiddleware'](ctxMock);
+
       // Then
-      expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledWith(
-        OidcProviderMiddlewareStep.BEFORE,
-        OidcProviderRoutes.AUTHORIZATION,
-        expect.any(Function),
-      );
+      expect(mockOverrideAuthorizePrompt).toHaveBeenCalledWith(ctxMock);
 
-      expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledWith(
-        OidcProviderMiddlewareStep.AFTER,
-        OidcProviderRoutes.AUTHORIZATION,
-        expect.any(Function),
-      );
+      expect(service['isSsoAvailable']).not.toHaveBeenCalled();
+      expect(service['isPromptStrictlyEqualNone']).not.toHaveBeenCalled();
+      expect(sessionServiceMock.set).not.toHaveBeenCalled();
+    });
 
-      expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledWith(
-        OidcProviderMiddlewareStep.AFTER,
-        OidcProviderRoutes.TOKEN,
-        expect.any(Function),
-      );
+    it('should override prompt with default values when SSO is available and prompt is "none"', async () => {
+      // Given
+      const ctxMock: any = {
+        acr_values: ['acr1', 'acr2'],
+        prompt: 'none',
+      };
+      const mockOverrideAuthorizePrompt = jest.fn();
+      service['getAuthorizationParameters'] = jest
+        .fn()
+        .mockReturnValue(ctxMock);
+      service['isSsoAvailable'] = jest.fn().mockReturnValue(true);
+      service['isPromptStrictlyEqualNone'] = jest.fn().mockReturnValue(true);
+      service['overrideAuthorizePrompt'] = mockOverrideAuthorizePrompt;
 
-      expect(oidcProviderServiceMock.registerMiddleware).toHaveBeenCalledWith(
-        OidcProviderMiddlewareStep.AFTER,
-        OidcProviderRoutes.USERINFO,
-        expect.any(Function),
+      // When
+      await service['handleSilentAuthenticationMiddleware'](ctxMock);
+
+      // Then
+      expect(mockOverrideAuthorizePrompt).toHaveBeenCalledWith(ctxMock);
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.set).toHaveBeenCalledWith(
+        'OidcClient',
+        'isSilentAuthentication',
+        true,
       );
     });
+
+    it('should not override prompt values when SSO is not available', async () => {
+      // Given
+      const ctxMock: any = {
+        acr_values: ['acr1', 'acr2'],
+        prompt: 'none',
+      };
+      const mockOverrideAuthorizePrompt = jest.fn();
+      service['getAuthorizationParameters'] = jest
+        .fn()
+        .mockReturnValue(ctxMock);
+      service['isSsoAvailable'] = jest.fn().mockReturnValue(false);
+      service['isPromptStrictlyEqualNone'] = jest.fn().mockReturnValue(true);
+      service['overrideAuthorizePrompt'] = mockOverrideAuthorizePrompt;
+
+      // When
+      await service['handleSilentAuthenticationMiddleware'](ctxMock);
+
+      // Then
+      expect(mockOverrideAuthorizePrompt).not.toHaveBeenCalled();
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.set).toHaveBeenCalledWith(
+        'OidcClient',
+        'isSilentAuthentication',
+        true,
+      );
+    });
+
+    it('should not override prompt values when prompt does not include "none"', async () => {
+      // Given
+      const ctxMock: any = {
+        acr_values: ['acr1', 'acr2'],
+        prompt: 'login',
+      };
+      const mockOverrideAuthorizePrompt = jest.fn();
+      service['getAuthorizationParameters'] = jest
+        .fn()
+        .mockReturnValue(ctxMock);
+      service['isSsoAvailable'] = jest.fn().mockReturnValue(true);
+      service['isPromptStrictlyEqualNone'] = jest.fn().mockReturnValue(false);
+      service['overrideAuthorizePrompt'] = mockOverrideAuthorizePrompt;
+
+      // When
+      await service['handleSilentAuthenticationMiddleware'](ctxMock);
+
+      // Then
+      expect(mockOverrideAuthorizePrompt).not.toHaveBeenCalled();
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.set).toHaveBeenCalledWith(
+        'OidcClient',
+        'isSilentAuthentication',
+        false,
+      );
+    });
+
+    it('should not override prompt values when prompt does not include "none" and SSO is not available', async () => {
+      // Given
+      const ctxMock: any = {
+        acr_values: ['acr1', 'acr2'],
+        prompt: 'login',
+      };
+      const mockOverrideAuthorizePrompt = jest.fn();
+      service['getAuthorizationParameters'] = jest
+        .fn()
+        .mockReturnValue(ctxMock);
+      service['isSsoAvailable'] = jest.fn().mockReturnValue(false);
+      service['isPromptStrictlyEqualNone'] = jest.fn().mockReturnValue(false);
+      service['overrideAuthorizePrompt'] = mockOverrideAuthorizePrompt;
+
+      // When
+      await service['handleSilentAuthenticationMiddleware'](ctxMock);
+
+      // Then
+      expect(mockOverrideAuthorizePrompt).not.toHaveBeenCalled();
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.set).toHaveBeenCalledWith(
+        'OidcClient',
+        'isSilentAuthentication',
+        false,
+      );
+    });
+
+    it('should not override prompt values when "none" is not the single prompt value', async () => {
+      // Given
+      const ctxMock: any = {
+        acr_values: ['acr1', 'acr2'],
+        prompt: 'login none',
+      };
+      const mockOverrideAuthorizePrompt = jest.fn();
+      service['getAuthorizationParameters'] = jest
+        .fn()
+        .mockReturnValue(ctxMock);
+      service['isSsoAvailable'] = jest.fn().mockReturnValue(true);
+      service['isPromptStrictlyEqualNone'] = jest.fn().mockReturnValue(false);
+      service['overrideAuthorizePrompt'] = mockOverrideAuthorizePrompt;
+
+      // When
+      await service['handleSilentAuthenticationMiddleware'](ctxMock);
+
+      // Then
+      expect(mockOverrideAuthorizePrompt).not.toHaveBeenCalled();
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.set).toHaveBeenCalledWith(
+        'OidcClient',
+        'isSilentAuthentication',
+        false,
+      );
+    });
+  });
+
+  describe('isPromptStrictlyEqualNone()', () => {
+    const values = [
+      { expected: true, value: 'none' },
+      { expected: false, value: 'none consent' },
+      { expected: false, value: 'consent login none' },
+      { expected: false, value: 'consent login' },
+      { expected: false, value: undefined },
+      { expected: false, value: '' },
+      { expected: false, value: null },
+    ];
+    it.each(values)(
+      'should returns %s for input "%s"',
+      ({ value, expected }) => {
+        expect(service['isPromptStrictlyEqualNone'](value)).toBe(expected);
+      },
+    );
   });
 
   describe('afterAuthorizeMiddleware()', () => {
@@ -241,8 +378,6 @@ describe('CoreFcaMiddlewareService', () => {
       return {
         oidc: {
           isError: hasError,
-          // oidc param
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           params: { acr_values: spAcrMock, client_id: spIdMock },
         },
         req: reqMock,
@@ -350,9 +485,7 @@ describe('CoreFcaMiddlewareService', () => {
             'x-forwarded-source-port': '443',
           },
           query: {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             acr_values: 'eidas3',
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             client_id: 'spIdValue',
           },
           sessionId: '42',
@@ -510,8 +643,6 @@ describe('CoreFcaMiddlewareService', () => {
     // Given
     const ctxMock = {
       oidc: {
-        // OIDC defined variable names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         params: { acr_values: spAcrMock, client_id: spIdMock },
       },
       req: reqMock,

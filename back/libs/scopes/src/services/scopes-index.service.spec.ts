@@ -22,7 +22,7 @@ describe('ScopesIndexService', () => {
   const mappingMock: ProviderMappingsInterface[] = [
     {
       provider: {
-        key: Providers.CNAM,
+        slug: Providers.CNAM,
         label: 'Data Provider 1 Mock Label',
       },
       claims: {
@@ -35,7 +35,7 @@ describe('ScopesIndexService', () => {
 
     {
       provider: {
-        key: Providers.PE,
+        slug: Providers.PE,
         label: 'Data Provider 2 Mock Label',
       },
       claims: {
@@ -250,7 +250,7 @@ describe('ScopesIndexService', () => {
         wizzClaim: {
           identifier: 'wizzClaim',
           provider: {
-            key: 'CNAM',
+            slug: 'CNAM',
             label: 'Data Provider 1 Mock Label',
           },
         },
@@ -271,28 +271,28 @@ describe('ScopesIndexService', () => {
         fooClaim: {
           identifier: 'fooClaim',
           provider: {
-            key: 'PE',
+            slug: 'PE',
             label: 'Data Provider 2 Mock Label',
           },
         },
         barClaim: {
           identifier: 'barClaim',
           provider: {
-            key: 'PE',
+            slug: 'PE',
             label: 'Data Provider 2 Mock Label',
           },
         },
         fizzClaim: {
           identifier: 'fizzClaim',
           provider: {
-            key: 'PE',
+            slug: 'PE',
             label: 'Data Provider 2 Mock Label',
           },
         },
         buzzClaim: {
           identifier: 'buzzClaim',
           provider: {
-            key: 'PE',
+            slug: 'PE',
             label: 'Data Provider 2 Mock Label',
           },
         },

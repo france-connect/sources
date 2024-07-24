@@ -15,8 +15,8 @@ const claims1: IRichClaim = {
   identifier: 'claims1',
   label: 'Claims 1 Label',
   provider: {
-    key: 'provider1',
     label: 'Provider 1',
+    slug: 'provider1',
   },
 };
 
@@ -24,8 +24,8 @@ const claims2: IRichClaim = {
   identifier: 'claims2',
   label: 'Claims 2 Label',
   provider: {
-    key: 'provider1',
     label: 'Provider 1',
+    slug: 'provider1',
   },
 };
 
@@ -38,8 +38,8 @@ const track1: EnhancedTrack = {
   datetime: DateTime.fromMillis(dateTrack1, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO' as CinematicEvents,
   idpLabel: 'Ameli',
+  interactionAcr: 'eidas1' as keyof typeof EidasToLabel,
   platform: 'FranceConnect',
-  spAcr: 'eidas1' as keyof typeof EidasToLabel,
   spLabel: 'Acme Service Provider',
   time: dateTrack1,
   trackId: 'trackId-1',
@@ -54,8 +54,8 @@ const track2: EnhancedTrack = {
   event: 'FC_REQUESTED_IDP_USERINFO' as CinematicEvents,
   idpLabel: 'Ameli',
 
+  interactionAcr: 'eidas1' as keyof typeof EidasToLabel,
   platform: 'FranceConnect+',
-  spAcr: 'eidas1' as keyof typeof EidasToLabel,
   spLabel: 'Acme Service Provider',
   time: dateTrack2,
   trackId: 'trackId-2',
@@ -69,8 +69,8 @@ const track3: EnhancedTrack = {
   datetime: DateTime.fromMillis(dateTrack3, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO' as CinematicEvents,
   idpLabel: 'Ameli',
+  interactionAcr: 'eidas1' as keyof typeof EidasToLabel,
   platform: 'FranceConnect',
-  spAcr: 'eidas1' as keyof typeof EidasToLabel,
   spLabel: 'Acme Service Provider',
   time: dateTrack3,
   trackId: 'trackId-3',
@@ -190,8 +190,8 @@ describe('groupByDataProviderReducer', () => {
       identifier: 'foo',
       label: 'Claim Mock Label',
       provider: {
-        key: 'providerKey',
         label: 'Provider Label',
+        slug: 'providerKey',
       },
     };
 

@@ -5,6 +5,14 @@ import {
   UserClaims,
 } from '../../common/types';
 
+const mandatoryData = {
+  aud: /^[\w-]+$/,
+  exp: /^\d+/,
+  iat: /^\d+/,
+  iss: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+  sub: /^[0-9a-f]{64}v1$/,
+};
+
 export default class ServiceProviderPage {
   clientId: string;
   fcButtonSelector: string;
@@ -154,61 +162,65 @@ export default class ServiceProviderPage {
     }
   }
 
-  getMockSubText(): Cypress.Chainable<string> {
+  getUserInfo(): Cypress.Chainable<Record<string, unknown>> {
     return cy
       .get('#json-output')
       .invoke('text')
       .then((text) => {
+        expect(text).to.exist;
         const responseBody = JSON.parse(text.trim());
-        return responseBody['sub'];
+        return responseBody;
       });
   }
 
-  checkMockInformationAccess(
+  getMockSubText(): Cypress.Chainable<string> {
+    return this.getUserInfo()
+      .its('sub')
+      .should('exist')
+      .then((sub) => `${sub}`);
+  }
+
+  checkMandatoryData(): void {
+    this.getUserInfo().then((responseBody) => {
+      Object.keys(mandatoryData).forEach((key) =>
+        expect(responseBody[key]).to.match(
+          mandatoryData[key],
+          `${key} should be present.`,
+        ),
+      );
+    });
+  }
+
+  // Check the userInfo claims against the user fixtures
+  checkExpectedUserClaims(
     expectedClaims: string[],
     userClaims: UserClaims,
   ): void {
-    cy.get('#json-output')
-      .invoke('text')
-      .then((text) => {
-        const responseBody = JSON.parse(text.trim());
-
-        // Check mandatory data
-        const mandatoryData = {
-          aud: /^[\w-]+$/,
-          exp: /^\d+/,
-          iat: /^\d+/,
-          iss: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
-          sub: /^[0-9a-f]{64}v1$/,
-        };
-        Object.keys(mandatoryData).forEach((key) =>
-          expect(responseBody[key]).to.match(
-            mandatoryData[key],
-            `${key} should be present.`,
-          ),
-        );
-
-        // Check expected claims (except sub)
-        expectedClaims
-          .filter((claimName) => claimName !== 'sub')
-          .forEach((claimName) => {
-            expect(responseBody[claimName]).to.deep.equal(
+    this.getUserInfo().then((responseBody) => {
+      // Check expected claims (except sub)
+      expectedClaims
+        .filter((claimName) => claimName !== 'sub')
+        .forEach((claimName) => {
+          expect(responseBody[claimName]).to.deep.equal(
+            userClaims[claimName],
+            `The claim ${claimName} should be ${JSON.stringify(
               userClaims[claimName],
-              `The claim ${claimName} should be ${JSON.stringify(
-                userClaims[claimName],
-              )}`,
-            );
-          });
+            )}`,
+          );
+        });
+    });
+  }
 
-        // Check no extra claims
-        const extraClaimsName = Object.keys(responseBody).filter(
-          (key) => !mandatoryData[key] && !expectedClaims.includes(key),
-        );
-        expect(extraClaimsName).to.deep.equal(
-          [],
-          'No extra claims should be sent.',
-        );
-      });
+  checkNoExtraClaims(expectedClaims: string[]): void {
+    this.getUserInfo().then((responseBody) => {
+      const extraClaimsName = Object.keys(responseBody).filter(
+        (key) => !mandatoryData[key] && !expectedClaims.includes(key),
+      );
+      expect(extraClaimsName).to.deep.equal(
+        [],
+        'No extra claims should be sent.',
+      );
+    });
   }
 
   checkTracks(): void {

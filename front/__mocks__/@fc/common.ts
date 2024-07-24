@@ -1,10 +1,10 @@
 import React from 'react';
 
-export const useIsMounted = jest.fn(() => () => false);
-
 export const useApiGet = jest.fn(() => null);
 
 export const ucfirst = jest.fn((v) => v);
+
+export const sortBykey = jest.fn();
 
 export const objectToFormData = jest.fn();
 
@@ -13,15 +13,15 @@ export const useContentHeight = jest.fn(() => ({
   contentRef: React.createRef<HTMLDivElement>(),
 }));
 
-export const useLocalStorage = jest.fn(() => ({
-  flush: jest.fn(),
-  get: jest.fn(),
-  set: jest.fn(),
-}));
-
 export const useSelectedItems = jest.fn(() => ({
   onSelectItem: jest.fn(),
   selected: [],
+}));
+
+export const useClipboard = jest.fn(() => ({
+  onCopy: jest.fn(),
+  onPaste: jest.fn(),
+  value: expect.any(String),
 }));
 
 export const useScrollTo = jest.fn(() => ({
@@ -41,4 +41,10 @@ export enum HeadingTag {
   H4 = 'h4',
   H5 = 'h5',
   H6 = 'h6',
+}
+
+export enum Strings {
+  EMPTY_STRING = '',
+  WHITE_SPACE = ' ',
+  DASH = '-',
 }

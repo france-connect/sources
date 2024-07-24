@@ -24,6 +24,7 @@ import {
   DataTransfertType,
 } from '@fc/core';
 import { CsrfTokenGuard } from '@fc/csrf';
+import { DeviceService } from '@fc/device';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger';
 import { OidcError, OidcSession } from '@fc/oidc';
@@ -49,7 +50,6 @@ import {
 import {
   AuthorizeParamsDto,
   CoreConfig,
-  CoreSession,
   GetLoginOidcClientSessionDto,
 } from '../dto';
 import { ConfirmationType, DataType } from '../enums';
@@ -77,6 +77,7 @@ export class OidcProviderController {
     private readonly core: CoreFcpService,
     private readonly tracking: TrackingService,
     private readonly config: ConfigService,
+    private readonly device: DeviceService,
   ) {}
 
   /**
@@ -185,8 +186,6 @@ export class OidcProviderController {
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @IsStep()
   async redirectToSpWithError(
-    // oidc naming
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     @Query() { error, error_description }: OidcError,
     @Req() req,
     @Res() res,
@@ -194,8 +193,6 @@ export class OidcProviderController {
     try {
       await this.oidcProvider.abortInteraction(req, res, {
         error,
-        // oidc naming
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description,
       });
     } catch (error) {
@@ -278,23 +275,26 @@ export class OidcProviderController {
      */
     @Session('OidcClient', GetLoginOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
-    @Session('Core')
-    sessionCore: ISessionService<CoreSession>,
   ) {
     const session: OidcSession = sessionOidc.get();
 
-    const { spId, spIdentity } = session;
+    const { spId, spIdentity, rnippIdentity } = session;
 
     if (!spIdentity) {
       throw new CoreMissingIdentityException();
     }
 
+    const deviceIdentity = rnippIdentity || spIdentity;
+
+    const deviceInfo = await this.device.update(req, res, deviceIdentity);
+    const trackingContext: TrackedEventContextInterface = {
+      ...deviceInfo,
+      req,
+    };
     const interaction = await this.oidcProvider.getInteraction(req, res);
-    const trackingContext: TrackedEventContextInterface = { req };
     await this.trackDatatransfer(trackingContext, interaction, spId);
 
-    // send the notification mail to the final user
-    await this.core.sendAuthenticationMail(session, sessionCore);
+    await this.core.sendNotificationMail(deviceInfo);
 
     this.oidcProvider.finishInteraction(req, res, session);
 

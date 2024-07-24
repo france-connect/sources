@@ -11,7 +11,7 @@ services:
       - "core-fcp-low"
       - "fsp1-low"
       - "fip1-low"
-      - "dp1-low"
+      - "dpp1-low"
 
   ####################
   # BDD FCP LOW
@@ -35,8 +35,8 @@ services:
       - "fip9-low"
       - "aidants-connect-mock"
       # -- DP
-      - "dp1-low"
-      - "dp2-low"
+      - "dpp1-low"
+      - "dpp2-low"
       # --
       - "rnipp"
       # -- Exploitation
@@ -65,5 +65,5 @@ services:
       - "aidants-connect-mock"
       # --
       - "maildev"
-      - "dp1-low"
-      - "dp2-low"
+      - "dpp1-low"
+      - "dpp2-low"

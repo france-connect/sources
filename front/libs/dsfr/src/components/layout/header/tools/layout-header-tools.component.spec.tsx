@@ -1,98 +1,53 @@
 import { render } from '@testing-library/react';
 
-import { AppContextProvider } from '@fc/state-management';
+import { ConfigService } from '@fc/config';
 
 import { ReturnButtonComponent } from '../return-button';
 import { LayoutHeaderToolsComponent } from './layout-header-tools.component';
 import { LayoutHeaderToolsAccountComponent } from './layout-header-tools-account.component';
 import { LayoutHeaderToolsLogoutButton } from './layout-header-tools-logout.button';
 
-jest.mock('@fc/state-management');
 jest.mock('./layout-header-tools-logout.button');
 jest.mock('./layout-header-tools-account.component');
 jest.mock('../return-button/return-button.component');
 
+jest.mock('@fc/config', () => ({
+  ConfigService: {
+    get: jest.fn(() => ({ endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } })),
+  },
+}));
+
 describe('LayoutHeaderToolsComponent', () => {
+  it('should call ConfigService.get with OidcClient config name', () => {
+    // when
+    render(<LayoutHeaderToolsComponent />);
+
+    // then
+    expect(ConfigService.get).toHaveBeenCalledWith('OidcClient');
+  });
+
   it('should match the snapshot', () => {
-    // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          // @TODO refacto OidcClient
-          OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
-        },
-      },
-    };
-
     // when
-    const { container } = render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent />
-      </AppContextProvider>,
-    );
+    const { container } = render(<LayoutHeaderToolsComponent />);
 
     // then
     expect(container).toMatchSnapshot();
   });
 
-  it('should match the snapshot, when OidcClient is not defined', () => {
+  it('should match the snapshot, when OidcClient?.endpoints are undefined', () => {
     // given
-    const appContextConfigMock = {
-      state: {
-        config: {},
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({});
 
     // when
-    const { container } = render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent isModalMenu />
-      </AppContextProvider>,
-    );
-
-    // then
-    expect(container).toMatchSnapshot();
-  });
-
-  it('should match the snapshot, when OidcClient.endpoints is not defined', () => {
-    // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          // @TODO refacto OidcClient
-          OidcClient: {},
-        },
-      },
-    };
-
-    // when
-    const { container } = render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent isModalMenu />
-      </AppContextProvider>,
-    );
+    const { container } = render(<LayoutHeaderToolsComponent isModalMenu />);
 
     // then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot, when isModalMenu is true', () => {
-    // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          // @TODO refacto OidcClient
-          OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
-        },
-      },
-    };
-
     // when
-    const { container } = render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent isModalMenu />
-      </AppContextProvider>,
-    );
+    const { container } = render(<LayoutHeaderToolsComponent isModalMenu />);
 
     // then
     expect(container).toMatchSnapshot();
@@ -100,23 +55,12 @@ describe('LayoutHeaderToolsComponent', () => {
 
   it('should match the snapshot, when isMobile is true and returnButtonUrl is defined', () => {
     // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          OidcClient: {
-            // @TODO refacto OidcClient
-            endpoints: { endSessionUrl: undefined, returnButtonUrl: expect.any(String) },
-          },
-        },
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      endpoints: { endSessionUrl: undefined, returnButtonUrl: expect.any(String) },
+    });
 
     // when
-    const { container } = render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent isDesktopViewport />
-      </AppContextProvider>,
-    );
+    const { container } = render(<LayoutHeaderToolsComponent isDesktopViewport />);
 
     // then
     expect(container).toMatchSnapshot();
@@ -124,22 +68,13 @@ describe('LayoutHeaderToolsComponent', () => {
 
   it('should match the snapshot, when user is connected but endSessionUrl is not defined', () => {
     // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          OidcClient: {
-            // @TODO refacto OidcClient
-            endpoints: { endSessionUrl: undefined, returnButtonUrl: expect.any(String) },
-          },
-        },
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      endpoints: { endSessionUrl: undefined, returnButtonUrl: expect.any(String) },
+    });
 
     // when
     const { container } = render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />
-      </AppContextProvider>,
+      <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />,
     );
 
     // then
@@ -148,22 +83,13 @@ describe('LayoutHeaderToolsComponent', () => {
 
   it('should match the snapshot, when user is connected and endSessionUrl is defined', () => {
     // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          OidcClient: {
-            // @TODO refacto OidcClient
-            endpoints: { endSessionUrl: expect.any(String), returnButtonUrl: expect.any(String) },
-          },
-        },
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      endpoints: { endSessionUrl: expect.any(String), returnButtonUrl: expect.any(String) },
+    });
 
     // when
     const { container } = render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />
-      </AppContextProvider>,
+      <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />,
     );
 
     // then
@@ -172,25 +98,13 @@ describe('LayoutHeaderToolsComponent', () => {
 
   it('should call LayoutHeaderToolsLogoutButton with props', () => {
     // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          OidcClient: {
-            endpoints: {
-              endSessionUrl: 'any-endSessionUrl-mock',
-              // @TODO refacto OidcClient
-              returnButtonUrl: expect.any(String),
-            },
-          },
-        },
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      endpoints: { endSessionUrl: 'any-endSessionUrl-mock', returnButtonUrl: expect.any(String) },
+    });
 
     // when
     render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />
-      </AppContextProvider>,
+      <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />,
     );
 
     // then
@@ -206,29 +120,17 @@ describe('LayoutHeaderToolsComponent', () => {
 
   it('should call LayoutHeaderToolsLogoutButton with props, when isModalMenu is true', () => {
     // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          OidcClient: {
-            endpoints: {
-              endSessionUrl: 'any-endSessionUrl-mock',
-              // @TODO refacto OidcClient
-              returnButtonUrl: expect.any(String),
-            },
-          },
-        },
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      endpoints: { endSessionUrl: 'any-endSessionUrl-mock', returnButtonUrl: expect.any(String) },
+    });
 
     // when
     render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent
-          isModalMenu
-          firstname="any-firstname-mock"
-          lastname="any-lastname-mock"
-        />
-      </AppContextProvider>,
+      <LayoutHeaderToolsComponent
+        isModalMenu
+        firstname="any-firstname-mock"
+        lastname="any-lastname-mock"
+      />,
     );
 
     // then
@@ -244,27 +146,18 @@ describe('LayoutHeaderToolsComponent', () => {
 
   it('should match the snapshot, when all props and config are defined', () => {
     // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          OidcClient: {
-            // @TODO refacto OidcClient
-            endpoints: { endSessionUrl: expect.any(String), returnButtonUrl: expect.any(String) },
-          },
-        },
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      endpoints: { endSessionUrl: expect.any(String), returnButtonUrl: expect.any(String) },
+    });
 
     // when
     const { container } = render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent
-          isDesktopViewport
-          isModalMenu
-          firstname="any-firstname-mock"
-          lastname="any-lastname-mock"
-        />
-      </AppContextProvider>,
+      <LayoutHeaderToolsComponent
+        isDesktopViewport
+        isModalMenu
+        firstname="any-firstname-mock"
+        lastname="any-lastname-mock"
+      />,
     );
 
     // then
@@ -272,21 +165,9 @@ describe('LayoutHeaderToolsComponent', () => {
   });
 
   it('should call LayoutHeaderToolsAccountComponent with props', () => {
-    // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          // @TODO refacto OidcClient
-          OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
-        },
-      },
-    };
-
     // when
     render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />
-      </AppContextProvider>,
+      <LayoutHeaderToolsComponent firstname="any-firstname-mock" lastname="any-lastname-mock" />,
     );
 
     // then
@@ -302,25 +183,13 @@ describe('LayoutHeaderToolsComponent', () => {
   });
 
   it('should call LayoutHeaderToolsAccountComponent with props when isModalMenu is true', () => {
-    // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          // @TODO refacto OidcClient
-          OidcClient: { endpoints: { endSessionUrl: undefined, returnButtonUrl: undefined } },
-        },
-      },
-    };
-
     // when
     render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent
-          isModalMenu
-          firstname="any-firstname-mock"
-          lastname="any-lastname-mock"
-        />
-      </AppContextProvider>,
+      <LayoutHeaderToolsComponent
+        isModalMenu
+        firstname="any-firstname-mock"
+        lastname="any-lastname-mock"
+      />,
     );
 
     // then
@@ -337,23 +206,12 @@ describe('LayoutHeaderToolsComponent', () => {
 
   it('should call ReturnButtonComponent', () => {
     // given
-    const appContextConfigMock = {
-      state: {
-        config: {
-          OidcClient: {
-            // @TODO refacto OidcClient
-            endpoints: { endSessionUrl: undefined, returnButtonUrl: 'any-returnButtonUrl-mock' },
-          },
-        },
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      endpoints: { endSessionUrl: undefined, returnButtonUrl: 'any-returnButtonUrl-mock' },
+    });
 
     // when
-    render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent isDesktopViewport />
-      </AppContextProvider>,
-    );
+    render(<LayoutHeaderToolsComponent isDesktopViewport />);
 
     // then
     expect(ReturnButtonComponent).toHaveBeenCalledOnce();
@@ -362,18 +220,10 @@ describe('LayoutHeaderToolsComponent', () => {
 
   it('should not call ReturnButtonComponent when OidcClient is undefined', () => {
     // given
-    const appContextConfigMock = {
-      state: {
-        config: {},
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({});
 
     // when
-    render(
-      <AppContextProvider value={appContextConfigMock}>
-        <LayoutHeaderToolsComponent isDesktopViewport />
-      </AppContextProvider>,
-    );
+    render(<LayoutHeaderToolsComponent isDesktopViewport />);
 
     // then
     expect(ReturnButtonComponent).not.toHaveBeenCalled();

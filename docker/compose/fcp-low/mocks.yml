@@ -276,8 +276,8 @@ services:
   # DP Mocks V2
   ####################
 
-  dp1-low:
-    hostname: dp1-low
+  dpp1-low:
+    hostname: dpp1-low
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
     user: ${CURRENT_UID}
     working_dir: /var/www/app
@@ -289,13 +289,13 @@ services:
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
-      - "${COMPOSE_DIR}/fcp-low/.env/dp1-low.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/dpp1-low.env"
     networks:
       - public
     command: "pm2 logs"
 
-  dp2-low:
-    hostname: dp2-low
+  dpp2-low:
+    hostname: dpp2-low
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
     user: ${CURRENT_UID}
     working_dir: /var/www/app
@@ -307,7 +307,7 @@ services:
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
-      - "${COMPOSE_DIR}/fcp-low/.env/dp2-low.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/dpp2-low.env"
     networks:
       - public
     command: "pm2 logs"

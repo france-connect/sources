@@ -189,9 +189,7 @@ describe('MailerService', () => {
     } as PartialExcept<IOidcIdentity, 'sub'>;
     const spIdentityWithEmailMock = {
       sub: 'some spSub',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name: 'Edward',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       family_name: 'TEACH',
       email: undefined,
     };
@@ -209,9 +207,7 @@ describe('MailerService', () => {
     const connectNotificationEmailParametersMock = {
       idpName: sessionDataMock.idpName,
       spName: sessionDataMock.spName,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       givenName: spIdentityWithEmailMock.given_name,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       familyName: spIdentityWithEmailMock.family_name,
       today: 'Le 01/01/2021 à 14:14',
     };

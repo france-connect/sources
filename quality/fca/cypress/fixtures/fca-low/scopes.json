@@ -116,5 +116,16 @@
     "type": "vide",
     "scopes": [
     ]
+  },
+  {
+    "type": "obligatoires et groups",
+    "scopes": [
+      "openid",
+      "uid",
+      "given_name",
+      "usual_name",
+      "email",
+      "groups"
+    ]
   }
 ]

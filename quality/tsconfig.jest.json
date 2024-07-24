@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "lib": [
+      "ES2022",
+    ],
+    "module": "nodenext",
+    "target": "ES2022",
+    "types": [
+      "node",
+      "jest"
+    ]
+  },
+  "files": ["globals.d.ts"],
+  "include": [
+    "**/*.spec.ts"
+  ]
+}

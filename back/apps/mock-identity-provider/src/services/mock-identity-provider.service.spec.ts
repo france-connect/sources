@@ -295,16 +295,14 @@ describe('MockIdentityProviderService', () => {
           property1: '1',
           property2: '2',
           property3: '3',
-          // is_service_public is a moncomptepro variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
+          // MonComptePro claims naming convention
           is_service_public: 'true',
         },
         {
           property1: '6',
           property2: '7',
           property3: '8',
-          // is_service_public is a moncomptepro variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
+          // MonComptePro claims naming convention
           is_service_public: 'false',
         },
       ];
@@ -314,16 +312,14 @@ describe('MockIdentityProviderService', () => {
           property1: '1',
           property2: '2',
           property3: '3',
-          // is_service_public is a moncomptepro variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
+          // MonComptePro claims naming convention
           is_service_public: 'true',
         },
         {
           property1: '6',
           property2: '7',
           property3: '8',
-          // is_service_public is a moncomptepro variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
+          // MonComptePro claims naming convention
           is_service_public: 'false',
         },
       ];
@@ -434,7 +430,6 @@ describe('MockIdentityProviderService', () => {
         headers: { 'x-forwarded-for': '123.123.123.123' },
       },
       oidc: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         params: { client_id: clientIdMock, acr_values: spAcrMock },
       },
       res: {},
@@ -643,9 +638,7 @@ describe('MockIdentityProviderService', () => {
     it('should return the sha256 hash of the concatenation of given_name, family_name and birthdate if present and login or uid are not present', () => {
       // Given
       const identity = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         given_name: 'given_name value',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         family_name: 'family_name value',
         birthdate: 'birthdate value',
       };
@@ -722,12 +715,8 @@ describe('MockIdentityProviderService', () => {
         login: '42',
         key: 'value',
         country: 'North Korea',
-        // oidc claim
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         postal_code: '99999',
         locality: 'Pyongyang',
-        // oidc claim
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         street_address: '1 st street',
       };
       const expected = {
@@ -735,12 +724,8 @@ describe('MockIdentityProviderService', () => {
         sub: '73475cb40a568e8da8a045ced110137e159f890ac4da883b6b17dc651b3a8049',
         key: 'value',
         country: 'North Korea',
-        // oidc claim
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         postal_code: '99999',
         locality: 'Pyongyang',
-        // oidc claim
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         street_address: '1 st street',
       };
       service['formatOidcAddress'] = jest.fn();
@@ -759,12 +744,8 @@ describe('MockIdentityProviderService', () => {
         login: '42',
         key: 'value',
         country: 'North Korea',
-        // oidc claim
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         postal_code: '99999',
         locality: 'Pyongyang',
-        // oidc claim
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         street_address: '1 st street',
       };
       const expected = {
@@ -773,12 +754,8 @@ describe('MockIdentityProviderService', () => {
         key: 'value',
         address: {
           country: 'North Korea',
-          // oidc claim
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           postal_code: '99999',
           locality: 'Pyongyang',
-          // oidc claim
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           street_address: '1 st street',
           formatted: 'North Korea Pyongyang 99999 1 st street',
         },
@@ -831,8 +808,6 @@ describe('MockIdentityProviderService', () => {
       const csvObject = {
         sub: '42',
         key: 'value',
-        // oidc claim
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         postal_code: '99999',
       };
 
@@ -863,8 +838,6 @@ describe('MockIdentityProviderService', () => {
       const csvObject = {
         sub: '42',
         key: 'value',
-        // oidc claim
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         street_address: '1 st street',
       };
 

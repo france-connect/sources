@@ -1,15 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Type } from 'class-transformer';
-import {
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-  IsUrl,
-  ValidateNested,
-} from 'class-validator';
+import { IsEnum, IsNumber, IsString, IsUrl } from 'class-validator';
 
 import { LogLevels } from '../enums';
 
@@ -29,15 +21,4 @@ export class WsMultiplexerConfig {
 export class LoggerConfig {
   @IsEnum(LogLevels)
   readonly threshold: LogLevels;
-
-  @IsEnum(LogLevels, { each: true })
-  readonly stdoutLevels: LogLevels[];
-
-  @IsEnum(LogLevels, { each: true })
-  readonly stderrLevels: LogLevels[];
-
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => WsMultiplexerConfig)
-  readonly wsMultiplexer?: object;
 }

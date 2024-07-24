@@ -4,6 +4,7 @@ const BASE_PRODUCTION_IPD_LOW = {
   isBeta: false,
   trustedIdentity: false,
   eidas: 1,
+  allowedAcr: ["eidas1"],
   mailto: "",
   featureHandlers: {
     coreVerify: "core-fcp-default-verify",

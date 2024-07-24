@@ -65,7 +65,7 @@ export function transformTrackToEnhanced(track: Track): EnhancedTrack {
 }
 
 export function groupByDataProviderReducer(acc: IGroupedClaims, claim: IRichClaim): IGroupedClaims {
-  const { key: name, label } = claim.provider;
+  const { label, slug: name } = claim.provider;
 
   if (!acc[name]) {
     acc[name] = {

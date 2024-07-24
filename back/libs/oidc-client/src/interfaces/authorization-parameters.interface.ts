@@ -12,8 +12,6 @@ import {
  */
 export interface AuthorizationParameters extends BaseAuthorizationParameters {
   claims?: {
-    // Oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token?: {
       [key: string]: ClaimsParameterMember;
     };

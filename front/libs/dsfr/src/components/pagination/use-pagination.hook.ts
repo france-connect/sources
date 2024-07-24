@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { useMediaQuery } from 'react-responsive';
 
 import { useScrollTo } from '@fc/common';
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import type { IUsePaginationHook, Pagination } from '../../interfaces';
 import {
@@ -23,7 +23,9 @@ export const usePagination = ({
   onPageClick,
   pagination,
 }: usePaginationProps): IUsePaginationHook => {
-  const isTabletOrDesktop = useMediaQuery({ minWidth: 768 });
+  const [breakpointMd] = useStylesVariables('breakpoint-md');
+
+  const gtTablet = useStylesQuery({ minWidth: breakpointMd });
   const { scrollToTop } = useScrollTo();
 
   const { offset, size, total } = pagination;
@@ -51,7 +53,7 @@ export const usePagination = ({
     currentPage,
     pagesCount,
   };
-  const navigationNumbers = !isTabletOrDesktop
+  const navigationNumbers = !gtTablet
     ? getMobileNavigationNumbers(navNumbersParams)
     : getNavigationNumbers({
         ...navNumbersParams,
@@ -60,14 +62,14 @@ export const usePagination = ({
 
   const desktopDisplayParams = getDisplayParameters({
     currentPage,
-    isMobile: !isTabletOrDesktop,
+    isMobile: !gtTablet,
     numberOfPagesShownIntoNavigation,
     pagesCount,
   });
 
   return {
     currentPage,
-    isTabletOrDesktop,
+    gtTablet,
     navigationNumbers,
     pagesCount,
     paginationChangeHandler,

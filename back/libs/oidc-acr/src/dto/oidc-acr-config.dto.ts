@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative file
-import { IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 import { AcrLevels } from '../validators';
 
@@ -19,8 +19,16 @@ export class OidcAcrConfig {
    * - defaultAcrValue -> 'anyAcr_3'
    */
   @AcrLevels()
-  readonly acrLevels: AcrLevelsConfig;
+  readonly knownAcrValues: AcrLevelsConfig;
+
+  @IsString({ each: true })
+  readonly allowedAcrValues: string[];
 
   @IsString()
   readonly defaultAcrValue: string;
+
+  @IsOptional()
+  @IsString({ each: true })
+  @IsArray()
+  readonly allowedSsoAcrs?: string[];
 }

@@ -30,7 +30,7 @@ export interface IdpFCMetadata {
   featureHandlers: {
     [key: string]: string;
   };
-  maxAuthorizedAcr: string;
+  allowedAcr: string[];
   amr: string[];
   modal?: IdpFCModal;
 }

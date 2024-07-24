@@ -14,9 +14,9 @@ export class AppInterceptor implements NestInterceptor {
   constructor(private readonly logger: LoggerService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
-    context.switchToHttp().getRequest();
+    const req = context.switchToHttp().getRequest();
 
-    this.logger.debug('AppInterceptor');
+    this.logger.debug(`${req.method} ${req.path}`);
 
     return next.handle();
   }

@@ -9,6 +9,7 @@ import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
+import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientSession } from '@fc/oidc-client';
 import { RnippPivotIdentity, RnippService } from '@fc/rnipp';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
@@ -38,6 +39,7 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     private readonly cryptographyFcp: CryptographyFcpService,
     private readonly account: AccountService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
+    private readonly oidcAcr: OidcAcrService,
   ) {}
 
   /**
@@ -73,9 +75,14 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
      */
 
     // 1. Acr check
-    const { maxAuthorizedAcr } = await this.identityProvider.getById(idpId);
+    const { allowedAcr } = await this.identityProvider.getById(idpId);
 
-    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr, maxAuthorizedAcr);
+    this.coreAcr.checkIfAcrIsValid(idpAcr, spAcr, allowedAcr);
+    const interactionAcr = this.oidcAcr.getInteractionAcr({
+      idpAcr,
+      spAcr,
+      isSso,
+    });
 
     const rnippIdentity = await this.retrieveRnippIdentity(
       isSso,
@@ -112,6 +119,7 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     const session: OidcClientSession = {
       idpIdentity,
       rnippIdentity,
+      interactionAcr,
       spIdentity: {
         ...spIdentity,
         ...technicalClaims,
@@ -125,8 +133,6 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
 
   private getTechnicalClaims(idpId: string): Record<string, unknown> {
     return {
-      // OIDC fashion naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_id: idpId,
     };
   }
@@ -213,15 +219,11 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
     rnippIdentity: RnippPivotIdentity,
     idpIdentity: PartialExcept<IOidcIdentity, 'sub'>,
   ): Partial<Omit<IOidcIdentity, 'sub'>> {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { birthdate, email, preferred_username } = idpIdentity;
     return {
       ...rnippIdentity,
-      // oidc claim
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       idp_birthdate: birthdate,
       email,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       preferred_username,
     };
   }

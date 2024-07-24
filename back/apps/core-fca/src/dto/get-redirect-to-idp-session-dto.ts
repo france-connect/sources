@@ -30,7 +30,6 @@ export class GetIdentityProviderSelectionOidcClientSessionDto extends CoreBaseOi
   readonly stepRoute: string;
 
   @IsString()
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly login_hint: string;
 }
 

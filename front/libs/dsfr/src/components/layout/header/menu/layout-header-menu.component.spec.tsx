@@ -10,19 +10,19 @@ jest.mock('../tools/layout-header-tools.component');
 describe('LayoutHeaderMenuComponent', () => {
   const navigationItemsMock = [
     {
-      a11y: 'any-a11y-mock-1',
       href: 'any-href-mock-1',
       label: 'any-label-mock-1',
+      title: 'any-title-mock-1',
     },
     {
-      a11y: 'any-a11y-mock-2',
       href: 'any-href-mock-2',
       label: 'any-label-mock-2',
+      title: 'any-title-mock-2',
     },
     {
-      a11y: 'any-a11y-mock-3',
       href: 'any-href-mock-3',
       label: 'any-label-mock-3',
+      title: 'any-title-mock-3',
     },
   ];
 

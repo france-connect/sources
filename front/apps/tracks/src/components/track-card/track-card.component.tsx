@@ -1,5 +1,6 @@
 import classnames from 'classnames';
-import React, { useCallback, useState } from 'react';
+import React from 'react';
+import { useToggle } from 'usehooks-ts';
 
 import type { EnhancedTrack, TracksConfig } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
@@ -8,18 +9,13 @@ import { TrackCardHeaderComponent } from './card-header.component';
 
 export const MISSING_SP_LABEL_VALUE = 'Nom du service non défini';
 
-export interface TrackCardProps {
+interface TrackCardProps {
   track: EnhancedTrack;
   options: TracksConfig;
 }
 
 export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps) => {
-  const [opened, setOpened] = useState(false);
-
-  const openCardHandler = useCallback(() => {
-    const next = !opened;
-    setOpened(next);
-  }, [opened]);
+  const [opened, toggleOpened] = useToggle(false);
 
   const {
     city,
@@ -28,8 +24,8 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
     datetime,
     event: eventType,
     idpLabel,
+    interactionAcr,
     platform,
-    spAcr,
     spLabel,
     trackId,
   } = track;
@@ -43,12 +39,12 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
    */
   const isFromFranceConnectPlus = platform === 'FranceConnect+';
 
-  const cardA11YId = `card::a11y::${trackId}`;
+  const cardId = `track::card::${trackId}`;
   const dataTestId = `${platform}-${trackId}`;
   return (
     <button
-      key={cardA11YId}
-      aria-controls={cardA11YId}
+      key={cardId}
+      aria-controls={cardId}
       aria-expanded={opened}
       aria-label="Voir les détails"
       className={classnames(
@@ -57,7 +53,7 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
       data-testid={dataTestId}
       data-time={datetime}
       type="button"
-      onClick={openCardHandler}>
+      onClick={toggleOpened}>
       <TrackCardBadgeComponent fromFcPlus={isFromFranceConnectPlus} type={eventType} />
       <TrackCardHeaderComponent
         datetime={datetime}
@@ -67,16 +63,16 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
       />
 
       <TrackCardContentComponent
-        accessibleId={cardA11YId}
+        accessibleId={cardId}
         city={city}
         claims={claims}
         country={country}
         datetime={datetime}
         eventType={eventType}
         idpLabel={idpLabel}
+        interactionAcr={interactionAcr}
         opened={opened}
         options={options}
-        spAcr={spAcr}
       />
     </button>
   );

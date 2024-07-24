@@ -28,4 +28,14 @@ export interface ICoreTrackingContext {
   readonly idpName?: string;
   readonly idpLabel?: string;
   readonly idpIdentity?: OidcIdentityDto;
+
+  readonly deviceTrusted?: boolean;
+  readonly deviceIsSuspicious?: boolean;
+
+  readonly deviceAccountCount?: number;
+
+  readonly deviceKnown?: boolean;
+  readonly deviceNewIdentity?: boolean;
+  readonly deviceBecameTrusted?: boolean;
+  readonly deviceBecameShared?: boolean;
 }

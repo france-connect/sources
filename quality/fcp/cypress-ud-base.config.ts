@@ -12,7 +12,7 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
   },
   env: {
     // Base Configuration
-    PLATFORM: 'fcp-legacy',
+    PLATFORM: 'fcp-low',
     TEST_ENV: 'docker',
     TAGS: '@userDashboard and not @ignore',
     // Test environment access
@@ -28,16 +28,11 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
     FC_ACCESS_USER: '',
     FC_ACCESS_PASS: '',
     // Other Configuration
-    Elasticsearch_TRACKS_INDEX: 'fc_tracks',
-    Elasticsearch_NODES:
-      '["http://elasticsearch:9200","https://elasticsearch:9200"]',
-    Elasticsearch_USERNAME: 'docker-stack',
-    Elasticsearch_PASSWORD: 'docker-stack',
     MAILDEV_PROTOCOL: 'https',
     MAILDEV_HOST: 'maildev.docker.dev-franceconnect.fr',
     MAILDEV_SMTP_PORT: '1025',
     MAILDEV_API_PORT: '443',
-    LOG_FILE_PATH: '../../../fc/docker/volumes/log/event.log',
+    LOG_FILE_PATH: '../../../fc/docker/volumes/log/core-fcp-low.log',
   },
 };
 

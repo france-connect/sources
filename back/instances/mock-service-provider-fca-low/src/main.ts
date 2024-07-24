@@ -40,9 +40,9 @@ async function bootstrap() {
 
   const app = await NestFactory.create<NestExpressApplication>(appModule, {
     /**
-     * We need to handle the bodyParser ourself because of prototype pollution risk with `body-parser` library.
+     * We need to handle the bodyParser ourselves because of prototype pollution risk with `body-parser` library.
      *
-     * Track the handling of this issue on `body-parser` repositoty:
+     * Track the handling of this issue on `body-parser` repository:
      * @see https://github.com/expressjs/body-parser/issues/347
      *
      * Description of the vulnerability:
@@ -100,8 +100,8 @@ async function bootstrap() {
    *
    * JSON parsing exists in our app, but it is handled by `jose`.
    *
-   * Desactivate extended "qs" parser to prevent prototype pollution hazard.
-   * @see body-parser.md in the project doc folder for further informations.
+   * Deactivate extended "qs" parser to prevent prototype pollution hazard.
+   * @see body-parser.md in the project doc folder for further information.
    */
   app.use(urlencoded({ extended: false }));
 

@@ -38,9 +38,6 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     <div>
       ToggleInput
     </div>
-    <div>
-      OnChange
-    </div>
     <div
       class="text-center fr-mt-11w"
     >
@@ -89,9 +86,6 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     </p>
     <div>
       ToggleInput
-    </div>
-    <div>
-      OnChange
     </div>
     <div
       class="text-center fr-mt-11w"
@@ -159,9 +153,6 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     <div>
       ToggleInput
     </div>
-    <div>
-      OnChange
-    </div>
     <div
       class="text-center fr-mt-11w"
     >
@@ -211,9 +202,6 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     <div>
       ToggleInput
     </div>
-    <div>
-      OnChange
-    </div>
     <div
       class="text-center fr-mt-5w"
     >
@@ -262,9 +250,6 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     </p>
     <div>
       ToggleInput
-    </div>
-    <div>
-      OnChange
     </div>
     <div
       class="text-center fr-mt-5w"
@@ -331,9 +316,6 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     </p>
     <div>
       ToggleInput
-    </div>
-    <div>
-      OnChange
     </div>
     <div
       class="text-center fr-mt-5w"

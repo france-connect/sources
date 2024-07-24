@@ -17,17 +17,8 @@ module.exports = {
   ],
   globals: {},
   ignorePatterns: [
-    '**/tmp',
-    '**/temp',
-    '**/dist',
-    '**/build',
-    '**/public',
-    '**/scripts',
-    '**/coverage',
-    '**/node_modules',
     '**/__mocks__',
     '**/__fixtures__',
-    '**/__snapshots__',
     '**/*.css',
     '**/*.scss',
     // @NOTE

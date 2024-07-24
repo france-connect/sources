@@ -12,16 +12,12 @@ export class MandatoryIdentityDto extends MinIdentityDto {
   @MinLength(1)
   @MaxLength(256)
   @Expose()
-  // oidc naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly given_name: string;
 
   @IsSafeString()
   @MinLength(1)
   @MaxLength(256)
   @Expose()
-  // oidc naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly usual_name: string;
 
   @IsEmail()

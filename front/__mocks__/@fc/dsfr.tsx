@@ -75,3 +75,7 @@ export const ButtonTypes = {
   RESET: 'reset',
   SUBMIT: 'submit',
 };
+
+export const Options = {
+  CONFIG_NAME: 'Layout',
+};

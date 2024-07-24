@@ -18,6 +18,7 @@ import {
   Interaction,
 } from '@fc/core';
 import { CsrfToken } from '@fc/csrf';
+import { DeviceSession } from '@fc/device';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
@@ -32,7 +33,6 @@ import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import {
   AppConfig,
-  AppSession,
   CoreConfig,
   GetConsentOidcClientSessionDto,
   GetInteractionOidcClientSessionDto,
@@ -85,8 +85,8 @@ export class CoreFcpController {
      */
     @Session('OidcClient', GetInteractionOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
-    @Session('App')
-    sessionApp: ISessionService<AppSession>,
+    @Session('Device')
+    sessionDevice: ISessionService<DeviceSession>,
     @CsrfToken() csrfToken: string,
   ) {
     const { spName, stepRoute, idpLabel = null } = sessionOidc.get();
@@ -115,21 +115,25 @@ export class CoreFcpController {
     const { idpFilterExclude, idpFilterList } =
       await this.serviceProvider.getById(clientId);
 
-    const providers = await this.identityProvider.getFilteredList({
-      blacklist: idpFilterExclude,
-      idpList: idpFilterList,
-    });
+    const { aidantsConnectUid, showExcludedIdp } =
+      this.config.get<AppConfig>('App');
 
-    const isSuspicious = sessionApp.get('isSuspicious');
+    const providers = await this.identityProvider.getFilteredList(
+      idpFilterList,
+      idpFilterExclude,
+      showExcludedIdp,
+    );
+
+    const isSuspicious = sessionDevice.get('isSuspicious');
 
     const authorizedProviders = providers.map((provider) => {
       const isAcrValid = this.oidcAcr.isAcrValid(
-        provider.maxAuthorizedAcr,
+        this.oidcAcr.getMaxAcr(provider.allowedAcr),
         acrValues,
       );
 
       const isInsufficientAcrLevel = this.coreFcp.isInsufficientAcrLevel(
-        provider.maxAuthorizedAcr,
+        this.oidcAcr.getMinAcr(provider.allowedAcr),
         isSuspicious,
       );
 
@@ -140,7 +144,6 @@ export class CoreFcpController {
       return provider;
     });
 
-    const { aidantsConnectUid } = this.config.get<AppConfig>('App');
     const aidantsConnect = authorizedProviders.find((provider) => {
       const isAidantsConnect = provider.uid === aidantsConnectUid;
       return isAidantsConnect && provider.display;
@@ -198,8 +201,8 @@ export class CoreFcpController {
      */
     @Session('OidcClient', GetVerifyOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
-    @Session('App')
-    sessionApp: ISessionService<AppSession>,
+    @Session('Device')
+    sessionDevice: ISessionService<DeviceSession>,
   ) {
     const { idpId, idpAcr, interactionId, spId } = sessionOidc.get();
 
@@ -222,7 +225,7 @@ export class CoreFcpController {
       return res.redirect(url);
     }
 
-    const isSuspicious = sessionApp.get('isSuspicious');
+    const isSuspicious = sessionDevice.get('isSuspicious');
     const isInsufficientAcrLevel = this.coreFcp.isInsufficientAcrLevel(
       idpAcr,
       isSuspicious,

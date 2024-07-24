@@ -10,5 +10,4 @@ export default {
   allowedIdpHints: env.json('ALLOWED_IDP_HINTS'),
   defaultRedirectUri: 'https://agentconnect.gouv.fr',
   enableSso: true,
-  allowedSsoAcrs: ['eidas1'],
 } as CoreConfig;

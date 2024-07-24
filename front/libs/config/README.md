@@ -16,7 +16,7 @@ import { config } from './config/index.ts';
 // initializing the module
 ConfigService.initialize(config);
 
-export function Application(): JSX.Element {
+export function Application() {
   return <React.StrictMode>...</React.StrictMode>;
 }
 ```

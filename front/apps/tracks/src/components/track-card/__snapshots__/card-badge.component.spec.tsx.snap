@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TrackCardBadgeComponent should match the snapshot 1`] = `
+exports[`TrackCardBadgeComponent should match the snapshot when breakpoint is greater than mobile 1`] = `
 <div>
   <div
     class="is-absolute container"
@@ -16,6 +16,40 @@ exports[`TrackCardBadgeComponent should match the snapshot 1`] = `
       </div>
       <div
         class="fr-badge fr-badge--green-archipel fr-badge--md"
+        data-testid="TrackCardBadgeComponent-action-badge"
+      >
+        <div
+          size="18"
+        >
+          RiAccountCircleFill
+        </div>
+        <b
+          class="fr-ml-1w"
+        >
+          Connexion
+        </b>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TrackCardBadgeComponent should match the snapshot when breakpoint is lower than mobile 1`] = `
+<div>
+  <div
+    class="is-absolute container"
+  >
+    <div
+      class="fr-badge-group"
+    >
+      <div
+        class="fr-badge is-white badgeFranceConnect fr-badge--sm"
+        data-testid="TrackCardBadgeComponent-platform-badge"
+      >
+        FranceConnect
+      </div>
+      <div
+        class="fr-badge fr-badge--green-archipel fr-badge--sm"
         data-testid="TrackCardBadgeComponent-action-badge"
       >
         <div

@@ -42,7 +42,7 @@ export class OidcProviderConfigService {
      * @see https://github.com/panva/node-oidc-provider/tree/master/docs#adapter
      *
      * We can't use nest DI for our adapter.
-     * `oidc-provider` wants a class and instantiate the adapter on it's own.
+     * `oidc-provider` wants a class and instantiate the adapter on its own.
      * @see https://github.com/panva/node-oidc-provider/blob/9306f66bdbcdff01400773f26539cf35951b9ce8/lib/models/client.js#L201
      * @see https://github.com/panva/node-oidc-provider/blob/22cc547ffb45503cf2fc4357958325e0f5ed4b2f/lib/models/base_model.js#L28
      *
@@ -54,7 +54,7 @@ export class OidcProviderConfigService {
      * 3. We give the resulting constructor to `oidc-provider`
      *
      * NB: If we want to add more services to the adapter,
-     * we need add them to contructor and to pass them along here.
+     * we need add them to constructor and to pass them along here.
      */
     const adapter = OidcProviderRedisAdapter.getConstructorWithDI(
       oidcProviderService,
@@ -64,11 +64,17 @@ export class OidcProviderConfigService {
     /**
      * Get data from config file
      */
-    const { prefix, issuer, configuration, forcedPrompt, isLocalhostAllowed } =
-      this.config.get<OidcProviderConfig>('OidcProvider');
+    const {
+      prefix,
+      issuer,
+      configuration,
+      forcedPrompt,
+      allowedPrompt,
+      isLocalhostAllowed,
+    } = this.config.get<OidcProviderConfig>('OidcProvider');
 
     /**
-     * Bind callbacks to this class before passing them to oidc-provider
+     * Bind callbacks to this class before passing them to oidc-provider,
      * so we can use the NestJS dependencies injection
      */
     const logoutSource = this.oidcProviderConfigApp.logoutSource.bind(
@@ -92,6 +98,7 @@ export class OidcProviderConfigService {
      */
     const oidcProviderConfig: OidcProviderConfig = {
       forcedPrompt,
+      allowedPrompt,
       prefix,
       issuer,
       configuration: {
@@ -122,7 +129,7 @@ export class OidcProviderConfigService {
   }
 
   /**
-   * Passthru original identifier (sub).
+   * Pass through original identifier (sub).
    *
    * While we could imagine that `accountId` would carry the value set by the `findAccount` method above,
    * it actually carries the sub.

@@ -3,6 +3,7 @@
 // Declarative code
 export * from './cnam';
 export * from './cnous';
+export * from './desk';
 export * from './dgfip';
 export * from './fc-tracks';
 export * from './fcp-high';

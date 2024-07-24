@@ -16,15 +16,11 @@ import { IsValidPrompt } from '@fc/oidc-provider';
  */
 export class AuthorizeParamsDto {
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_id: string;
 
   @IsString({ each: true })
   @IsArray()
   @Split(/[ ]+/)
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly acr_values: string;
 
   @IsOptional()
@@ -32,8 +28,6 @@ export class AuthorizeParamsDto {
   readonly claims?: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly response_type: string;
 
   @IsString()
@@ -50,8 +44,6 @@ export class AuthorizeParamsDto {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     require_protocol: true,
   })
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly redirect_uri: string;
 
   // The openid verification is made into oidc-provider
@@ -74,13 +66,9 @@ export class AuthorizeParamsDto {
 
   @IsString()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly sp_id?: string;
 
   @IsUrl()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly login_hint?: string;
 }

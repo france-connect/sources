@@ -5,6 +5,7 @@ import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
 import { CoreConfig } from '@fc/core';
+import { DataProviderAdapterMongoConfig } from '@fc/data-provider-adapter-mongo';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
 import { LoggerConfig } from '@fc/logger';
 import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
@@ -14,6 +15,7 @@ import { OidcClientConfig } from '@fc/oidc-client';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { OverrideOidcProviderConfig } from '@fc/override-oidc-provider';
 import { RedisConfig } from '@fc/redis';
+import { ScopesConfig } from '@fc/scopes';
 import { ServiceProviderAdapterMongoConfig } from '@fc/service-provider-adapter-mongo';
 import { SessionConfig } from '@fc/session';
 import { TrackingConfig } from '@fc/tracking';
@@ -90,4 +92,14 @@ export class CoreFcaConfig {
   @ValidateNested()
   @Type(() => TrackingConfig)
   readonly Tracking: TrackingConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => DataProviderAdapterMongoConfig)
+  readonly DataProviderAdapterMongo: DataProviderAdapterMongoConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ScopesConfig)
+  readonly Scopes: ScopesConfig;
 }

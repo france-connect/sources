@@ -15,11 +15,7 @@ describe('CryptographyService', () => {
 
   const mockEncryptKey = 'p@ss p@rt0ut';
   const mockData = {
-    // openid connect claim is not camelcase
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Chuck',
-    // openid connect claim is not camelcase
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'NORRIS',
   };
   const mockDataToEncrypt = JSON.stringify(mockData);

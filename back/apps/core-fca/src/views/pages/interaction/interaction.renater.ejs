@@ -1,0 +1,30 @@
+<div class="fr-px-10v fr-py-7v fr-mt-10v" style="background-color: #f6f6f6">
+  <div class="fr-grid-row fr-grid-row--center">
+    <div class="fr-col-1">
+      <img src="/img/renater.svg" alt="" />
+    </div>
+    <div class="fr-col-10">
+      <p class="fr-ml-2v">
+        Pour les membres des établissements de l’Enseignement supérieur et de la
+        recherche raccordés à RENATER
+      </p>
+    </div>
+    <form
+      name="renaterRedirection"
+      method="POST"
+      action="/api/v2/redirect-to-idp"
+    >
+      <input
+        type="hidden"
+        name="email"
+        value="<%= locals.defaultEmailRenater %>"
+      />
+      <input type="hidden" name="acr_values" value="<%= params.acr_values %>" />
+      <input type="hidden" name="scope" value="<%= locals.idpScope %>" />
+      <input type="hidden" name="csrfToken" value="<%= locals.csrfToken %>" />
+      <button class="fr-btn fr-btn--secondary">
+        Continuer avec FÉDÉRATION Éducation‑Recherche
+      </button>
+    </form>
+  </div>
+</div>

@@ -7,14 +7,14 @@ describe('LayoutHeaderNavigationComponent', () => {
   // given
   const navigationItemsMock = [
     {
-      a11y: 'any-a11y-mock-1',
       href: 'any-href-mock-1',
       label: 'any-label-mock-1',
+      title: 'any-title-mock-1',
     },
     {
-      a11y: 'any-a11y-mock-2',
       href: 'any-href-mock-2',
       label: 'any-label-mock-2',
+      title: 'any-title-mock-2',
     },
   ];
 
@@ -30,6 +30,23 @@ describe('LayoutHeaderNavigationComponent', () => {
     // when
     const { container } = render(
       <LayoutHeaderNavigationComponent navigationItems={navigationItemsMock} />,
+    );
+
+    // then
+    expect(container).toMatchSnapshot();
+  });
+
+  it('should match the snapshot, with navigationItems and without title', () => {
+    // when
+    const { container } = render(
+      <LayoutHeaderNavigationComponent
+        navigationItems={[
+          {
+            href: 'any-href-mock-without-title',
+            label: 'any-label-mock-without-title',
+          },
+        ]}
+      />,
     );
 
     // then
@@ -62,7 +79,7 @@ describe('LayoutHeaderNavigationComponent', () => {
         className: 'fr-nav__link',
         onClick: undefined,
         target: '_self',
-        title: navigationItemsMock[0].a11y,
+        title: navigationItemsMock[0].title,
         to: navigationItemsMock[0].href,
       },
       {},
@@ -74,7 +91,7 @@ describe('LayoutHeaderNavigationComponent', () => {
         className: 'fr-nav__link',
         onClick: undefined,
         target: '_self',
-        title: navigationItemsMock[1].a11y,
+        title: navigationItemsMock[1].title,
         to: navigationItemsMock[1].href,
       },
       {},
@@ -99,7 +116,7 @@ describe('LayoutHeaderNavigationComponent', () => {
         className: 'fr-nav__link',
         onClick: undefined,
         target: '_self',
-        title: navigationItemsMock[1].a11y,
+        title: navigationItemsMock[1].title,
         to: navigationItemsMock[1].href,
       },
       {},

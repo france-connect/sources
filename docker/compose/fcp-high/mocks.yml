@@ -390,8 +390,8 @@ services:
   # DP Mocks V2
   ####################
 
-  dp1-high:
-    hostname: dp1-high
+  dpp1-high:
+    hostname: dpp1-high
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
     user: ${CURRENT_UID}
     working_dir: /var/www/app
@@ -403,13 +403,13 @@ services:
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
-      - "${COMPOSE_DIR}/fcp-high/.env/dp1-high.env"
+      - "${COMPOSE_DIR}/fcp-high/.env/dpp1-high.env"
     networks:
       - public
     command: "pm2 logs"
 
-  dp2-high:
-    hostname: dp2-high
+  dpp2-high:
+    hostname: dpp2-high
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
     user: ${CURRENT_UID}
     working_dir: /var/www/app
@@ -421,7 +421,7 @@ services:
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
-      - "${COMPOSE_DIR}/fcp-high/.env/dp2-high.env"
+      - "${COMPOSE_DIR}/fcp-high/.env/dpp2-high.env"
     networks:
       - public
     command: "pm2 logs"

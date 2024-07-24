@@ -129,8 +129,6 @@ describe('OidcProviderErrorService', () => {
       },
       oidc: {
         params: {
-          // OIDC fashion naming
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           redirect_uri: redirectUriMock,
         },
       },

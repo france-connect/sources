@@ -21,6 +21,7 @@ export type ICsmrTracksV2FieldsData = {
   idpAcr: string;
   idpLabel: string;
   spAcr: string;
+  interactionAcr?: string;
   claims?: string;
   time: number;
   source: ISource;

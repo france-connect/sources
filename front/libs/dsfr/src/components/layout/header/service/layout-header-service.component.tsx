@@ -1,6 +1,6 @@
 import type { HeaderService } from '../../../../interfaces';
 
-export interface LayoutHeaderServiceComponentProps {
+interface LayoutHeaderServiceComponentProps {
   service: HeaderService;
 }
 

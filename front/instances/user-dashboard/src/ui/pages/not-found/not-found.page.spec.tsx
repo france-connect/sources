@@ -1,14 +1,20 @@
 import { render } from '@testing-library/react';
-import { useMediaQuery } from 'react-responsive';
+
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { NotFoundPage } from './not-found.page';
 
-jest.mock('react-responsive');
+jest.mock('@fc/styles');
 
 describe('NotFoundPage', () => {
+  beforeEach(() => {
+    // given
+    jest.mocked(useStylesVariables).mockReturnValue([expect.any(String)]);
+  });
+
   it('should match the snapshot, when view is lower than a tablet view', () => {
     // given
-    jest.mocked(useMediaQuery).mockReturnValueOnce(false);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
     // when
     const { container } = render(<NotFoundPage />);
@@ -19,7 +25,7 @@ describe('NotFoundPage', () => {
 
   it('should match the snapshot, when view is greater or equal than a tablet view', () => {
     // given
-    jest.mocked(useMediaQuery).mockReturnValueOnce(true);
+    jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
     // when
     const { container } = render(<NotFoundPage />);

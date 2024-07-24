@@ -190,14 +190,8 @@ describe('BrokerProxyController', () => {
           },
           status: 200,
           data: {
-            // oidc variable name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             access_token: 'access_token',
-            // oidc variable name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             id_token: 'id_token',
-            // oidc variable name
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             token_type: 'token_type',
           },
         },
@@ -223,14 +217,8 @@ describe('BrokerProxyController', () => {
         },
         status: 200,
         data: {
-          // oidc variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           access_token: 'access_token',
-          // oidc variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token: 'id_token',
-          // oidc variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           token_type: 'token_type',
         },
       });

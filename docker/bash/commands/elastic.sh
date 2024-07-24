@@ -59,15 +59,15 @@ _create_es_alias_legacy() {
 }
 
 _generate_legacy_traces() {
-  echo "Generate traces for test_TRACE_USER"
-  docker exec fc_fc-core_1 bash -c "cd cypress/support/script && node traces.js generate test_TRACE_USER"
+  cd $FC_ROOT/fc/quality/fcp
+  yarn install --ignore-engines
+  yarn traces generate legacy test_TRACE_USER
 }
 
 _generate_v2_traces() {
-  cd $FC_ROOT/fc/quality/fcp/data/userdashboard
+  cd $FC_ROOT/fc/quality/fcp
   yarn install --ignore-engines
-  URL="https://docker-stack:docker-stack@elasticsearch:9200"
-  Elasticsearch_TRACKS_INDEX=fc_tracks Elasticsearch_NODES="[\"${URL}\"]" Elasticsearch_USERNAME=docker-stack Elasticsearch_PASSWORD=docker-stack node populate-account-traces.script.js
+  yarn traces generate high test_TRACE_USER
 }
 
 _init_ud() {

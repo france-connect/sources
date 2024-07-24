@@ -1,26 +1,13 @@
 import { renderHook } from '@testing-library/react';
-import { useState } from 'react';
+import React from 'react';
 
 import { useApiGet } from '@fc/common';
 
 import { useReturnButton } from './use-return-button.hook';
 
 jest.mock('@fc/common');
-// @TOOD creat a React mock into __mocks__ folder
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
-jest.mock<typeof import('react')>('react', () => {
-  const actualReact = jest.requireActual('react');
-  return {
-    ...actualReact,
-    useState: jest.fn(),
-  };
-});
 
 describe('useReturnButton', () => {
-  beforeEach(() => {
-    jest.mocked(useState).mockImplementation(jest.requireActual('react').useState);
-  });
-
   it('should have return default values at first render', () => {
     // given
     const url = expect.any(String);
@@ -102,7 +89,9 @@ describe('useReturnButton', () => {
     // given
     const url = expect.any(String);
     const setStateMock = jest.fn();
-    jest.mocked(useState).mockImplementation(() => ['unused-mocked-use-state-value', setStateMock]);
+    jest
+      .spyOn(React, 'useState')
+      .mockImplementation(() => ['unused-mocked-use-state-value', setStateMock]);
     jest.mocked(useApiGet).mockReturnValue({
       redirectURI: 'redirect-uri-mock',
       redirectURIQuery: { mock: 'mock' },

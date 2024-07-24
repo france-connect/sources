@@ -6,7 +6,6 @@ import {
   isUsingFCBasicAuthorization,
   navigateTo,
 } from '../../common/helpers';
-import { ServiceProvider, UserClaims } from '../../common/types';
 import {
   getClaims,
   getIdpClaims,
@@ -19,10 +18,9 @@ let serviceProviderPage: ServiceProviderPage;
 
 When('je navigue sur la page fournisseur de service', function () {
   const { allAppsUrl } = this.env;
-  const currentServiceProvider: ServiceProvider = this.serviceProvider;
-  expect(currentServiceProvider).to.exist;
-  serviceProviderPage = new ServiceProviderPage(currentServiceProvider);
-  navigateTo({ appId: currentServiceProvider.name, baseUrl: allAppsUrl });
+  expect(this.serviceProvider).to.exist;
+  serviceProviderPage = new ServiceProviderPage(this.serviceProvider);
+  navigateTo({ appId: this.serviceProvider.name, baseUrl: allAppsUrl });
 });
 
 When('je clique sur le bouton FranceConnect', function () {
@@ -86,7 +84,7 @@ When(
 Given(
   "je paramètre un intercepteur pour l'appel à la redirect_uri du fournisseur de service",
   function () {
-    const { url }: ServiceProvider = this.serviceProvider;
+    const { url } = this.serviceProvider;
     cy.intercept(`${url}/oidc-callback*`, (req) => {
       req.reply({
         body: '<h1>Intercepted request</h1>',
@@ -102,7 +100,7 @@ Given(
       .its('request.query.code')
       .should('exist')
       .then((value: string) => {
-        this.requestOptions.body['code'] = value;
+        this.apiRequest.body['code'] = value;
       });
   },
 );
@@ -114,7 +112,7 @@ Given(
       .its('body.access_token')
       .should('exist')
       .then((accessToken: string) => {
-        this.requestOptions.headers['authorization'] = `Bearer ${accessToken}`;
+        this.apiRequest.headers['authorization'] = `Bearer ${accessToken}`;
       });
   },
 );
@@ -137,8 +135,9 @@ When('je me déconnecte du fournisseur de service', function () {
 Then(
   /le fournisseur de service a accès aux informations (?:du|des) scopes? "([^"]+)"/,
   function (type: string) {
-    const allClaims: UserClaims = this.user.allClaims;
+    const { allClaims } = this.user;
     if (this.serviceProvider.mocked === true) {
+      serviceProviderPage.checkMandatoryData();
       const platform: string = Cypress.env('PLATFORM');
       const scope = getScopeByType(this.scopes, type);
       const expectedClaims = getClaims(scope);
@@ -149,10 +148,8 @@ Then(
           ...allClaims,
           ...rnippClaims,
         };
-        serviceProviderPage.checkMockInformationAccess(
-          expectedClaims,
-          userClaims,
-        );
+        serviceProviderPage.checkExpectedUserClaims(expectedClaims, userClaims);
+        serviceProviderPage.checkNoExtraClaims(expectedClaims);
         return;
       }
       if (platform === 'fcp-low') {
@@ -165,13 +162,12 @@ Then(
           ...allClaims,
           ...idpClaims,
         };
-        serviceProviderPage.checkMockInformationAccess(
-          expectedClaims,
-          userClaims,
-        );
+        serviceProviderPage.checkExpectedUserClaims(expectedClaims, userClaims);
+        serviceProviderPage.checkNoExtraClaims(expectedClaims);
         return;
       }
-      serviceProviderPage.checkMockInformationAccess(expectedClaims, allClaims);
+      serviceProviderPage.checkExpectedUserClaims(expectedClaims, allClaims);
+      serviceProviderPage.checkNoExtraClaims(expectedClaims);
     }
   },
 );

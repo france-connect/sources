@@ -1,7 +1,5 @@
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
-import { User } from '../../common/helpers';
-import { UserCredentials } from '../../common/types';
 import IdentityProviderPage from '../pages/identity-provider-page';
 
 let identityProviderPage: IdentityProviderPage;
@@ -19,6 +17,13 @@ Then(
   },
 );
 
+Then(
+  /^Le fournisseur d'identité a été appelé avec le niveau de sécurité "([^"]+)"$/,
+  function (idpAcr: string) {
+    identityProviderPage.checkMockAcrValue(idpAcr);
+  },
+);
+
 Given(
   "le fournisseur d'identité garantit un niveau de sécurité {string}",
   function (idpAcr: string) {
@@ -29,9 +34,8 @@ Given(
 When("je m'authentifie avec succès", function () {
   expect(this.user).to.exist;
 
-  const currentUser: User = this.user;
   const { idpId } = this.identityProvider;
-  const userCredentials: UserCredentials = currentUser.getCredentials(idpId);
+  const userCredentials = this.user.getCredentials(idpId);
   expect(userCredentials).to.exist;
   identityProviderPage.login(userCredentials);
 });
@@ -43,9 +47,7 @@ When("je m'authentifie avec {string}", function (username: string) {
 When("je saisi manuellement l'identité de l'utilisateur", function () {
   expect(this.user).to.exist;
 
-  const currentUser: User = this.user;
-
-  identityProviderPage.useCustomIdentity(currentUser);
+  identityProviderPage.useCustomIdentity(this.user);
 });
 
 When('je clique sur le lien retour vers FC depuis un FI', function () {

@@ -12,6 +12,7 @@ const mandatoryData = {
   iss: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
   sub: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/,
 };
+
 export default class ServiceProviderPage {
   fcaButtonSelector: string;
   logoutButtonSelector: string;
@@ -73,8 +74,13 @@ export default class ServiceProviderPage {
     }
   }
 
-  setMockRequestedAcr(acrValue: string): void {
-    cy.get('input[name="acr_values"]').clearThenType(acrValue);
+  setMockRequestedAcr(acrValue?: string): void {
+    if (!acrValue) {
+      cy.get('input[name="acr_values"]').clear();
+      cy.get('input[id="acr_values_toggle"]').uncheck();
+    } else {
+      cy.get('input[name="acr_values"]').clearThenType(acrValue);
+    }
   }
 
   setMockRequestedAmr(isRequested: boolean): void {
@@ -83,6 +89,14 @@ export default class ServiceProviderPage {
     } else {
       cy.get('#claim_amr').uncheck();
     }
+  }
+
+  disablePrompt(): void {
+    cy.get('#prompt_toggle').uncheck();
+  }
+
+  setPrompt(prompt: string): void {
+    cy.get('input[name="prompt"').clearThenType(prompt);
   }
 
   setIdpHint(idpHint: string): void {
@@ -131,7 +145,7 @@ export default class ServiceProviderPage {
   }
 
   checkMandatoryData(): void {
-    this.getUserInfo().then((responseBody: Record<string, unknown>) => {
+    this.getUserInfo().then((responseBody) => {
       Object.keys(mandatoryData).forEach((key) =>
         expect(responseBody[key]).to.match(
           mandatoryData[key],
@@ -146,9 +160,9 @@ export default class ServiceProviderPage {
     expectedClaims: string[],
     userClaims: UserClaims,
   ): void {
-    this.getUserInfo().then((responseBody: Record<string, unknown>) => {
-      Object.keys(userClaims)
-        .filter((userClaim) => expectedClaims.includes(userClaim))
+    this.getUserInfo().then((responseBody) => {
+      expectedClaims
+        .filter((claimName) => claimName !== 'sub')
         .forEach((claimName) => {
           expect(responseBody[claimName]).to.deep.equal(
             userClaims[claimName],
@@ -161,7 +175,7 @@ export default class ServiceProviderPage {
   }
 
   checkNoExtraClaims(expectedClaims: string[]): void {
-    this.getUserInfo().then((responseBody: Record<string, unknown>) => {
+    this.getUserInfo().then((responseBody) => {
       const extraClaimsName = Object.keys(responseBody).filter(
         (key) => !mandatoryData[key] && !expectedClaims.includes(key),
       );
@@ -170,5 +184,26 @@ export default class ServiceProviderPage {
         'No extra claims should be sent.',
       );
     });
+  }
+
+  getMockIntrospectionTokenText(): Cypress.Chainable<string> {
+    return cy.get('#json').first().invoke('text');
+  }
+
+  getRevokeTokenButton(): ChainableElement {
+    return cy.get('#revoke-token');
+  }
+
+  getDataButton(): ChainableElement {
+    return cy.get('[data-testid="get-data-link"]');
+  }
+
+  checkIsMockDataPageVisible(): void {
+    const dataPageURL = `${this.originUrl}/data`;
+    cy.url().should('include', dataPageURL);
+  }
+
+  getTokenRevokationConfirmation(): ChainableElement {
+    return cy.contains('h1', 'Le token a été révoqué');
   }
 }

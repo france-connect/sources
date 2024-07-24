@@ -10,7 +10,7 @@ export interface CustomClientMetadata extends AllClientMetadata {
 
 /**
  * Alias and export interface provided by `node-oidc-provider` from our module,
- * so that we do not expose our depency to `node-oidc-provider`.
+ * so that we do not expose our dependency to `node-oidc-provider`.
  */
 export type ServiceProviderMetadata = CustomClientMetadata;
 

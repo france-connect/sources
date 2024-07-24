@@ -10,8 +10,8 @@ interface ServiceImageComponentProps {
   service: Service;
 }
 
-export const ServiceImageComponent: React.FC<ServiceImageComponentProps> = React.memo(
-  ({ className, disabled, service }: ServiceImageComponentProps) => {
+export const ServiceImageComponent = React.memo(
+  ({ className = undefined, disabled = false, service }: ServiceImageComponentProps) => {
     const { image, title } = service;
     return (
       <div
@@ -38,10 +38,5 @@ export const ServiceImageComponent: React.FC<ServiceImageComponentProps> = React
     );
   },
 );
-
-ServiceImageComponent.defaultProps = {
-  className: undefined,
-  disabled: false,
-};
 
 ServiceImageComponent.displayName = 'ServiceImageComponent';

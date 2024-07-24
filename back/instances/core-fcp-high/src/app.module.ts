@@ -7,6 +7,11 @@ import { ConfigModule, ConfigService } from '@fc/config';
 import { CoreFcpModule } from '@fc/core-fcp';
 import { LoggerModule } from '@fc/logger';
 import { LoggerModule as LoggerLegacyModule } from '@fc/logger-legacy';
+import {
+  LoggerDebugPlugin,
+  LoggerRequestPlugin,
+  LoggerSessionPlugin,
+} from '@fc/logger-plugins';
 import { OverrideOidcProviderModule } from '@fc/override-oidc-provider';
 
 @Module({})
@@ -18,7 +23,11 @@ export class AppModule {
         // 1. Load config module first
         ConfigModule.forRoot(configService),
         // 2. Load logger module next
-        LoggerModule,
+        LoggerModule.forRoot([
+          LoggerDebugPlugin,
+          LoggerRequestPlugin,
+          LoggerSessionPlugin,
+        ]),
         // 2.1 Load logger legacy module next for business logs
         LoggerLegacyModule,
         // 3. Load other modules

@@ -1,21 +1,21 @@
 import classnames from 'classnames';
-import React, { useContext } from 'react';
+import type { PropsWithChildren } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-import type { AppContextInterface } from '@fc/state-management';
-import { AppContext } from '@fc/state-management';
+import { ConfigService } from '@fc/config';
 
-interface LayoutHomepageLinkComponentProps {
-  children: React.ReactNode;
+import { Options } from '../../../enums';
+import type { LayoutConfig } from '../../../interfaces';
+
+interface LayoutHomepageLinkComponentProps extends Required<PropsWithChildren> {
   isFooter?: boolean;
 }
 
-export const LayoutHomepageLinkComponent: React.FC<LayoutHomepageLinkComponentProps> = React.memo(
-  ({ children, isFooter }: LayoutHomepageLinkComponentProps): JSX.Element => {
-    // @TODO use ConfigService instead of Context; first ConfigService needs to be initialized
-    const { state } = useContext<AppContextInterface>(AppContext);
-    const layoutConfig = state.config.Layout;
-    const { footerLinkTitle, homepage } = layoutConfig;
+export const LayoutHomepageLinkComponent = React.memo(
+  ({ children, isFooter = false }: LayoutHomepageLinkComponentProps) => {
+    const config = ConfigService.get<LayoutConfig>(Options.CONFIG_NAME);
+    const { footerLinkTitle, homepage } = config;
 
     // @TODO use i18n translation library
     const prefix = isFooter ? 'Retour à l’accueil du site' : 'Accueil';
@@ -31,6 +31,9 @@ export const LayoutHomepageLinkComponent: React.FC<LayoutHomepageLinkComponentPr
         {children}
       </Link>
     ) : (
+      // @TODO Check the comment for the eslint rule below from #1005
+      // AgentConnect has been removed
+      //
       // DSFR forces us to use <a href=""/> for accessibility; for AgentConnect app: it is a single page application with a dynamic URL
       // eslint-disable-next-line jsx-a11y/anchor-is-valid
       <a
@@ -44,9 +47,5 @@ export const LayoutHomepageLinkComponent: React.FC<LayoutHomepageLinkComponentPr
     );
   },
 );
-
-LayoutHomepageLinkComponent.defaultProps = {
-  isFooter: false,
-};
 
 LayoutHomepageLinkComponent.displayName = 'LayoutHomepageLinkComponent';

@@ -5,6 +5,7 @@ import { ModuleRef } from '@nestjs/core';
 
 import { ConfigService } from '@fc/config';
 import { CoreAuthorizationService } from '@fc/core';
+import { DeviceInformationInterface } from '@fc/device';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { OidcSession, stringToArray } from '@fc/oidc';
@@ -17,7 +18,7 @@ import {
 import { OidcProviderPrompt } from '@fc/oidc-provider';
 import { ClaimInterface, RichClaimInterface, ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
-import { ISessionService, SessionService } from '@fc/session';
+import { SessionService } from '@fc/session';
 
 import { AppConfig, CoreSession } from '../dto';
 import { CoreFcpSendEmailHandler } from '../handlers';
@@ -48,12 +49,20 @@ export class CoreFcpService implements CoreFcpServiceInterface {
    * @param {ISessionService<OidcClientSession>} sessionOidc
    * @returns {Promise<void>}
    */
-  async sendAuthenticationMail(
-    session: OidcSession,
-    sessionCore: ISessionService<CoreSession>,
+  async sendNotificationMail(
+    deviceInfo: DeviceInformationInterface,
   ): Promise<void> {
-    let { sentNotificationsForSp } = sessionCore.get() || {};
-    const { idpId, spId } = session;
+    const { sentNotificationsForSp = [] } =
+      this.session.get<CoreSession>('Core') || {};
+
+    const { idpId, spId } = this.session.get<OidcSession>('OidcClient');
+
+    if (
+      !this.shouldSendNotificationMail(spId, deviceInfo, sentNotificationsForSp)
+    ) {
+      return;
+    }
+
     const idp = await this.identityProvider.getById(idpId);
 
     const { authenticationEmail } = idp.featureHandlers;
@@ -62,20 +71,44 @@ export class CoreFcpService implements CoreFcpServiceInterface {
       this,
     );
 
-    if (!sentNotificationsForSp) {
-      sentNotificationsForSp = [];
-    }
-
-    // notification already sent for this service provider during this session
-    if (sentNotificationsForSp.includes(spId)) {
-      return;
-    }
-
     // update the session to take into account the notification for this service provider
     sentNotificationsForSp.push(spId);
-    sessionCore.set('sentNotificationsForSp', sentNotificationsForSp);
+    this.session.set('Core', 'sentNotificationsForSp', sentNotificationsForSp);
 
-    await handler.handle(session);
+    await handler.handle();
+  }
+
+  private shouldSendNotificationMail(
+    spId: string,
+    deviceInfo: DeviceInformationInterface,
+    sentNotificationsForSp: string[],
+  ): boolean {
+    if (this.isAlreadySent(spId, sentNotificationsForSp)) {
+      return false;
+    }
+
+    if (this.isForcedByDevice(deviceInfo)) {
+      return true;
+    }
+
+    if (deviceInfo.isTrusted) {
+      return false;
+    }
+
+    return true;
+  }
+
+  private isForcedByDevice(deviceInfo: DeviceInformationInterface): boolean {
+    const { isSuspicious, newIdentity } = deviceInfo;
+
+    return isSuspicious || newIdentity;
+  }
+
+  private isAlreadySent(
+    spId: string,
+    sentNotificationsForSp: string[],
+  ): boolean {
+    return sentNotificationsForSp.includes(spId);
   }
 
   async isConsentRequired(spId: string): Promise<boolean> {
@@ -92,9 +125,9 @@ export class CoreFcpService implements CoreFcpServiceInterface {
   async redirectToIdp(
     res: Response,
     idpId: string,
-    // acr_values is an oidc defined variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    { acr_values }: Pick<CoreFcpAuthorizationParametersInterface, 'acr_values'>,
+    {
+      acr_values: spAcr,
+    }: Pick<CoreFcpAuthorizationParametersInterface, 'acr_values'>,
   ): Promise<void> {
     const { spId } = this.session.get<OidcSession>('OidcClient');
     const { scope } = this.config.get<OidcClientConfig>('OidcClient');
@@ -104,6 +137,13 @@ export class CoreFcpService implements CoreFcpServiceInterface {
 
     const { nonce, state } =
       await this.oidcClient.utils.buildAuthorizeParameters();
+
+    const {
+      allowedAcr,
+      name: idpName,
+      title: idpLabel,
+    } = await this.identityProvider.getById(idpId);
+    const acr_values = this.oidcAcr.getAcrToAskToIdp(spAcr, allowedAcr);
 
     const authorizeParams: CoreFcpAuthorizationParametersInterface = {
       // acr_values is an oidc defined variable name
@@ -122,8 +162,6 @@ export class CoreFcpService implements CoreFcpServiceInterface {
       authorizeParams,
     );
 
-    const { name: idpName, title: idpLabel } =
-      await this.identityProvider.getById(idpId);
     const sessionPayload: OidcClientSession = {
       idpId,
       idpName,

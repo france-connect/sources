@@ -8,6 +8,7 @@ const {
   checkErrorTitle,
   checkIsVisible,
   checkSessionNumberVisible,
+  getBackToSPLink,
 } = new TechnicalErrorPage();
 
 Then('je suis redirigé vers la page erreur technique', function () {
@@ -32,3 +33,11 @@ Then("le message d'erreur est {string}", function (errorCode: string) {
 Then('le numéro de session AgentConnect est affiché', function () {
   checkSessionNumberVisible();
 });
+
+Then(
+  /^le lien retour vers le FS (est|n'est pas) affiché dans la page erreur technique$/,
+  function (text: string) {
+    const isVisible = text === 'est';
+    getBackToSPLink().should(isVisible ? 'be.visible' : 'not.exist');
+  },
+);

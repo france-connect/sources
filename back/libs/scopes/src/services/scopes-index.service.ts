@@ -15,7 +15,7 @@ import {
 import { CONFIG_NAME } from '../tokens';
 
 /**
- * This service exposes two optimized indexes to retrieves claims informations
+ * This service exposes two optimized indexes to retrieves claims information
  * from scopes or claims
  *
  * Beyond the two getters for indexes, all method are used to initialize index

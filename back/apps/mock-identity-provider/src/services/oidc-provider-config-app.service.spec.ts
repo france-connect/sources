@@ -91,11 +91,7 @@ describe('OidcProviderConfigAppService', () => {
     const spIdentityMock = {
       sub: spSubMock,
       email: 'dio@brando.it',
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name: 'Dio',
-      // oidc parameter
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       family_name: 'Brando',
     };
 
@@ -176,8 +172,6 @@ describe('OidcProviderConfigAppService', () => {
 
       const claimsMock = {
         sub: spSubMock,
-        // oidc like param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         rep_scope: '',
         ...spIdentityMock,
       };
@@ -205,8 +199,6 @@ describe('OidcProviderConfigAppService', () => {
 
       const claimsMock = {
         sub: spSubMock,
-        // oidc like param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         rep_scope: 'foo bar',
         ...spIdentityMock,
       };

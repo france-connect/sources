@@ -1,13 +1,24 @@
 import { MaildevHelper } from '../../common/helpers';
 import { ChainableElement, Email } from '../../common/types';
 
-const CONNECTION_SUBJECT = 'Notification de connexion au service';
+const CONNECTION_SUBJECT = 'Alerte de connexion au service';
 
 export default class UsagerNotificationConnection {
   isNotificationMessage(message: Email, userEmail: string): boolean {
     const isUserMessage = MaildevHelper.isUserMessage(message, userEmail);
     const isConnectionSubject = message.subject.includes(CONNECTION_SUBJECT);
     return isConnectionSubject && isUserMessage;
+  }
+
+  getLastNotificationMessage(
+    userEmail: string,
+  ): Cypress.Chainable<Email | undefined> {
+    return cy.maildevGetAllMessages().then((messages) => {
+      const updateMessage = messages
+        .reverse()
+        .find((message) => this.isNotificationMessage(message, userEmail));
+      return cy.wrap(updateMessage);
+    });
   }
 
   visitLastNotificationMessage(userEmail: string): void {

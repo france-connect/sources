@@ -17,19 +17,23 @@ export class MockServiceProviderService {
     accessToken: string,
     authSecret: string,
   ): Promise<unknown> {
-    const bearer = Buffer.from(
-      `${accessToken}:${authSecret}`,
-      'utf-8',
-    ).toString('base64');
+    const bearer = Buffer.from(accessToken, 'utf-8').toString('base64');
 
     try {
       const response = await lastValueFrom(
-        this.httpService.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${bearer}`,
+        this.httpService.post(
+          apiUrl,
+          {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            auth_secret: authSecret,
           },
-          proxy: false,
-        }),
+          {
+            headers: {
+              Authorization: `Bearer ${bearer}`,
+            },
+            proxy: false,
+          },
+        ),
       );
 
       return response.data;

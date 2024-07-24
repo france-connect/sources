@@ -13,5 +13,50 @@
     },
     "method": "GET",
     "url": "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/authorize"
+  },
+  "checktoken": {
+    "body": {
+      "token": "tototototo",
+      "client_id": "423dcbdc5a15ece61ed00ff5989d72379c26d9ed4c8e4e05a87cffae019586e0",
+      "client_secret": "36aa214e7a0043c8da60ae991d8908947147d637137c5bf14bc2fc53e1055847"
+    },
+    "form": true,
+    "method": "POST",
+    "url": "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/checktoken"
+  },
+  "discovery": {
+    "method": "GET",
+    "url": "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/.well-known/openid-configuration"
+  },
+  "oidc-callback": {
+    "qs": {
+      "code": "FRdEP6Pt4zIrHmzytWM_CZfzvkTd_cLEAPUznce_V7R",
+      "state": "93f3526894944aebb3163e50b776fc2e7d904e7a2e0e4ca4808992115ed058e5"
+    },
+    "method": "GET",
+    "url": "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback"
+  },
+  "token": {
+    "body": {
+      "grant_type": "authorization_code",
+      "client_id": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
+      "client_secret": "a970fc88b3111fcfdce515c2ee03488d8a349e5379a3ba2aa48c225dcea243a5",
+      "redirect_uri": "https://fsa1-low.docker.dev-franceconnect.fr/oidc-callback",
+      "code": "bAEk2ZasUawAGYjicNwLYvefJsDhoxi0VA61xUZqh44"
+    },
+    "form": true,
+    "method": "POST",
+    "url": "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/token"
+  },
+  "redirect-to-idp": {
+    "method": "POST",
+    "url": "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/redirect-to-idp",
+    "form": true,
+    "body": {
+      "email": "test@fia1.fr",
+      "scope": "openid profile",
+      "acr_values": "eidas1",
+      "csrfToken": "3f42c6c16ef2f1fc63ae9f8ee85b476819e204c91cdb68f39be01ed3faec42f2"
+    }
   }
 }

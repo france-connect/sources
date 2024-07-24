@@ -65,7 +65,12 @@ exports[`LayoutHeaderComponent should match the snapshot, when user is connected
                 LayoutHeaderLogosComponent
               </div>
               <div>
-                LayoutHeaderMobileBurgerButton
+                <div>
+                  LayoutHeaderMobileBurgerButton
+                </div>
+                <button
+                  data-testid="LayoutHeaderMobileBurgerButton-button-mock"
+                />
               </div>
             </div>
           </div>
@@ -80,7 +85,12 @@ exports[`LayoutHeaderComponent should match the snapshot, when user is connected
       </div>
     </div>
     <div>
-      LayoutHeaderMenuComponent
+      <div>
+        LayoutHeaderMenuComponent
+      </div>
+      <button
+        data-testid="LayoutHeaderMenuComponent-button-mock"
+      />
     </div>
   </header>
 </div>

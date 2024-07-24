@@ -34,6 +34,9 @@ services:
       - "fia5-low"
       - "fia8-low"
       - "moncomptepro"
+      # -- DP
+      - "dpa1-low"
+      - "dpa2-low"
 
   all-fca-low:
     image: alpine
@@ -73,3 +76,15 @@ services:
       - "lemon-ldap"
       - "csmr-rie"
       - "fia-rie-low"
+
+  dp-fca-low:
+    image: alpine
+    depends_on:
+      - "core-fca-low"
+      # -- SP
+      - "fsa1-low"
+      # -- IdP
+      - "fia1-low"
+      # -- DP
+      - "dpa1-low"
+      - "dpa2-low"

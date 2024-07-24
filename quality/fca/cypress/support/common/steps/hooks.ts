@@ -35,6 +35,7 @@ Before(function () {
   const testEnv: string = Cypress.env('TEST_ENV');
   const pathArray = [platform, testEnv];
   setFixtureContext('environment.json', pathArray, 'env');
+  setFixtureContext('api-common.json', pathArray, 'apiRequests');
   setFixtureContext('service-providers.json', pathArray, 'serviceProviders');
   setFixtureContext('service-provider-configs.json', pathArray, 'spConfigs');
   setFixtureContext('identity-providers.json', pathArray, 'identityProviders');

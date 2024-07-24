@@ -3,13 +3,13 @@ import React from 'react';
 import { LogoRepubliqueFrancaiseComponent } from '../../../logos';
 import { LayoutHomepageLinkComponent } from '../../homepage-link';
 
-export interface LayoutHeaderLogosComponentProps {
+interface LayoutHeaderLogosComponentProps {
   logo?: string;
   title?: string;
 }
 
-export const LayoutHeaderLogosComponent: React.FC<LayoutHeaderLogosComponentProps> = React.memo(
-  ({ logo: ApplicationLogo, title }: LayoutHeaderLogosComponentProps): JSX.Element => (
+export const LayoutHeaderLogosComponent = React.memo(
+  ({ logo: ApplicationLogo, title }: LayoutHeaderLogosComponentProps) => (
     <React.Fragment>
       <div className="fr-header__logo">
         <LayoutHomepageLinkComponent>
@@ -24,10 +24,5 @@ export const LayoutHeaderLogosComponent: React.FC<LayoutHeaderLogosComponentProp
     </React.Fragment>
   ),
 );
-
-LayoutHeaderLogosComponent.defaultProps = {
-  logo: undefined,
-  title: undefined,
-};
 
 LayoutHeaderLogosComponent.displayName = 'LayoutHeaderLogosComponent';

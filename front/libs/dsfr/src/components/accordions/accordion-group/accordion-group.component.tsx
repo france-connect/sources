@@ -13,9 +13,16 @@ interface AccordionGroupComponentProps {
   options?: SelectedItemsHook<string>;
 }
 
-export const AccordionGroupComponent: React.FC<AccordionGroupComponentProps> = React.memo(
+export const AccordionGroupComponent = React.memo(
   // @TODO enhance with an items extra options props, like heading, classname...
-  ({ className, items, options }: AccordionGroupComponentProps) => {
+  ({
+    className,
+    items,
+    options = {
+      defaultValues: [],
+      multiple: false,
+    },
+  }: AccordionGroupComponentProps) => {
     const { onItemSelect, selected } = useSelectedItems(options);
 
     return (
@@ -41,13 +48,5 @@ export const AccordionGroupComponent: React.FC<AccordionGroupComponentProps> = R
     );
   },
 );
-
-AccordionGroupComponent.defaultProps = {
-  className: undefined,
-  options: {
-    defaultValues: [],
-    multiple: false,
-  },
-};
 
 AccordionGroupComponent.displayName = 'AccordionGroupComponent';

@@ -12,7 +12,7 @@ services:
       # --
       - "rnipp"
       - "csmr-hsm"
-      - "dp1-high"
+      - "dpp1-high"
 
   bdd-fcp-high:
     image: alpine
@@ -39,8 +39,8 @@ services:
       - "fip19-high"
       - "fip20-high"
       # -- DP
-      - "dp1-high"
-      - "dp2-high"
+      - "dpp1-high"
+      - "dpp2-high"
       # -- Mailer
       - "maildev"
 
@@ -72,5 +72,5 @@ services:
       - "csmr-hsm"
       # --
       - "maildev"
-      - "dp1-high"
-      - "dp2-high"
+      - "dpp1-high"
+      - "dpp2-high"

@@ -17,7 +17,7 @@ export class AppModule {
         // 1. Load config module first
         ConfigModule.forRoot(configService),
         // 2. Load logger module next
-        LoggerModule,
+        LoggerModule.forRoot(),
         // 3. Load other modules
         CsmrAccountModule,
       ],

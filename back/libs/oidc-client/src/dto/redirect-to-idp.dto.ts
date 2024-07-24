@@ -19,14 +19,10 @@ export class RedirectToIdp extends CrsfToken {
   @IsString()
   @IsOptional()
   @IsAscii()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly acr_values?: string;
 
   @IsString()
   @IsOptional()
   @IsAscii()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly idp_hint?: string;
 }

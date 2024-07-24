@@ -14,11 +14,7 @@ export class JwksUriValidator implements ValidatorConstraintInterface {
   validate(JwksUri: string, args: ValidationArguments) {
     const {
       discovery,
-      // OIDC defined name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       userinfo_signed_response_alg,
-      // OIDC defined name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       id_token_signed_response_alg,
     } = args.object as MetadataIdpAdapterMongoDTO;
 

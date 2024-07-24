@@ -8,59 +8,37 @@ import { SUPPORTED_SIG_ALG } from '@fc/cryptography';
 
 export class ClientMetadata {
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_id: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly client_secret: string;
 
   @IsString()
   @IsIn(SUPPORTED_SIG_ALG)
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_signed_response_alg: 'ES256' | 'RS256' | 'HS256';
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_encrypted_response_alg: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly id_token_encrypted_response_enc: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_signed_response_alg: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_encrypted_response_alg: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_encrypted_response_enc: string;
 
   @IsArray()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly redirect_uris: string[];
 
   @IsArray()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly response_types: ResponseType[];
 
   @IsArray()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly post_logout_redirect_uris: string[];
 
   @IsNumber()
@@ -89,8 +67,6 @@ export class ClientMetadata {
   readonly request_object_encryption_enc: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_endpoint_auth_method: ClientAuthMethod;
 
   @IsString()
@@ -99,8 +75,6 @@ export class ClientMetadata {
   readonly introspection_endpoint_auth_method?: ClientAuthMethod;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly revocation_endpoint_auth_method: ClientAuthMethod;
 
   @IsString()

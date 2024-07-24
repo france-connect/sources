@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 
-import { AppContextProvider } from '@fc/state-management';
+import { ConfigService } from '@fc/config';
 
 import { LayoutHomepageLinkComponent } from '../homepage-link';
 import { LayoutFooterComponent } from './layout-footer.component';
@@ -8,23 +8,29 @@ import { LayoutFooterBottomLinksComponent } from './layout-footer-bottom-links.c
 import { LayoutFooterContentLinksComponent } from './layout-footer-content-links.component';
 import { LayoutFooterLicenceComponent } from './layout-footer-licence.component';
 
-jest.mock('@fc/state-management');
 jest.mock('./../homepage-link/layout-homepage-link.component');
 jest.mock('./layout-footer-bottom-links.component');
 jest.mock('./layout-footer-content-links.component');
 jest.mock('./layout-footer-licence.component');
 
-describe('LayoutFooterComponent', () => {
-  it('should match the snapshot, with default props', () => {
-    // given
-    const AppConfigMock = { Layout: expect.any(Object) };
+jest.mock('@fc/config', () => ({
+  ConfigService: {
+    get: jest.fn(() => expect.any(Object)),
+  },
+}));
 
+describe('LayoutFooterComponent', () => {
+  it('should call ConfigService.get with layout config name', () => {
     // when
-    const { container } = render(
-      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
-        <LayoutFooterComponent />
-      </AppContextProvider>,
-    );
+    render(<LayoutFooterComponent />);
+
+    // then
+    expect(ConfigService.get).toHaveBeenCalledWith('Layout');
+  });
+
+  it('should match the snapshot, with default props', () => {
+    // when
+    const { container } = render(<LayoutFooterComponent />);
 
     // then
     expect(container).toMatchSnapshot();
@@ -32,14 +38,10 @@ describe('LayoutFooterComponent', () => {
 
   it('should render a defined application logo', () => {
     // given
-    const AppConfigMock = { Layout: { logo: expect.any(String) } };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({ logo: expect.any(String) });
 
     // when
-    const { container } = render(
-      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
-        <LayoutFooterComponent />
-      </AppContextProvider>,
-    );
+    const { container } = render(<LayoutFooterComponent />);
 
     // then
     expect(container).toMatchSnapshot();
@@ -54,14 +56,12 @@ describe('LayoutFooterComponent', () => {
 
   it('should render a defined description', () => {
     // given
-    const AppConfigMock = { Layout: { footerDescription: 'any-description-mock' } };
+    jest
+      .mocked(ConfigService.get)
+      .mockReturnValueOnce({ footerDescription: 'any-description-mock' });
 
     // when
-    const { container, getByText } = render(
-      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
-        <LayoutFooterComponent />
-      </AppContextProvider>,
-    );
+    const { container, getByText } = render(<LayoutFooterComponent />);
     const element = getByText('any-description-mock');
 
     // then
@@ -70,15 +70,8 @@ describe('LayoutFooterComponent', () => {
   });
 
   it('should call LayoutFooterContentLinksComponent', () => {
-    // given
-    const AppConfigMock = { Layout: expect.any(Object) };
-
     // when
-    render(
-      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
-        <LayoutFooterComponent />
-      </AppContextProvider>,
-    );
+    render(<LayoutFooterComponent />);
 
     // then
     expect(LayoutFooterContentLinksComponent).toHaveBeenCalledOnce();
@@ -86,19 +79,13 @@ describe('LayoutFooterComponent', () => {
 
   it('should render the footerLinkTitle', () => {
     // given
-    const AppConfigMock = {
-      Layout: {
-        footerLinkTitle: 'any-footerLinkTitle-mock',
-        logo: 'anylogo-mock',
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      footerLinkTitle: 'any-footerLinkTitle-mock',
+      logo: 'anylogo-mock',
+    });
 
     // when
-    const { getByAltText } = render(
-      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
-        <LayoutFooterComponent />
-      </AppContextProvider>,
-    );
+    const { getByAltText } = render(<LayoutFooterComponent />);
     const element = getByAltText('any-footerLinkTitle-mock');
 
     // then
@@ -109,28 +96,20 @@ describe('LayoutFooterComponent', () => {
     // given
     const bottomLinksMock = [
       {
-        a11y: 'any-a11y-mock-1',
         href: 'any-href-mock-1',
         label: 'any-label-mock-1',
+        title: 'any-title-mock-1',
       },
       {
-        a11y: 'any-a11y-mock-2',
         href: 'any-href-mock-2',
         label: 'any-label-mock-2',
+        title: 'any-title-mock-2',
       },
     ];
-    const AppConfigMock = {
-      Layout: {
-        bottomLinks: bottomLinksMock,
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({ bottomLinks: bottomLinksMock });
 
     // when
-    const { container } = render(
-      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
-        <LayoutFooterComponent />
-      </AppContextProvider>,
-    );
+    const { container } = render(<LayoutFooterComponent />);
 
     // then
     expect(container).toMatchSnapshot();
@@ -139,15 +118,8 @@ describe('LayoutFooterComponent', () => {
   });
 
   it('should call LayoutFooterLicenceComponent', () => {
-    // given
-    const AppConfigMock = { Layout: expect.any(Object) };
-
     // when
-    render(
-      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
-        <LayoutFooterComponent showLicence />
-      </AppContextProvider>,
-    );
+    render(<LayoutFooterComponent showLicence />);
 
     // then
     expect(LayoutFooterLicenceComponent).toHaveBeenCalledOnce();
@@ -155,18 +127,10 @@ describe('LayoutFooterComponent', () => {
 
   it('should not render .fr-footer__bottom element when bottomLinks and showLicence are falsy', () => {
     // given
-    const AppConfigMock = {
-      Layout: {
-        bottomLinks: undefined,
-      },
-    };
+    jest.mocked(ConfigService.get).mockReturnValueOnce({ bottomLinks: undefined });
 
     // when
-    const { getByTestId } = render(
-      <AppContextProvider value={{ state: { config: AppConfigMock } }}>
-        <LayoutFooterComponent showLicence={false} />
-      </AppContextProvider>,
-    );
+    const { getByTestId } = render(<LayoutFooterComponent showLicence={false} />);
 
     // then
     expect(() => {

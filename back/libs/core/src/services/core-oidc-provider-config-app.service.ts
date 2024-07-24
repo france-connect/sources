@@ -26,8 +26,8 @@ export class CoreOidcProviderConfigAppService extends OidcProviderAppConfigLibSe
     protected readonly errorService: OidcProviderErrorService,
     protected readonly grantService: OidcProviderGrantService,
     protected readonly config: ConfigService,
-    private readonly oidcClient: OidcClientService,
-    private tracking: TrackingService,
+    protected readonly oidcClient: OidcClientService,
+    protected readonly tracking: TrackingService,
   ) {
     super(logger, sessionService, errorService, grantService, config);
   }

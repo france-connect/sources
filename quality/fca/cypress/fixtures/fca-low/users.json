@@ -42,7 +42,6 @@
       "is_service_public": "true"
     }
   },
-
   {
     "enabled": true,
     "criteria": ["différent", "privé"],
@@ -87,7 +86,7 @@
   },
   {
     "enabled": true,
-    "criteria": ["mulitple sub"],
+    "criteria": ["avec plusieurs identités"],
     "claims": {
       "uid": "43",
       "given_name": "mohamed",
@@ -100,6 +99,29 @@
       "phone_number": "+331-12-44-45-23",
       "is_service_public": "none",
       "acr": "eidas1"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": ["sans email"],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "12357",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "uid": "1",
+      "given_name": "Paul",
+      "usual_name": "Martinot",
+      "email": "",
+      "siren": "343293775",
+      "siret": "34329377500037",
+      "organizational_unit": "comptabilite",
+      "belonging_population": "agent",
+      "phone_number": "+331-12-44-45-23",
+      "is_service_public": "true"
     }
   }
 ]

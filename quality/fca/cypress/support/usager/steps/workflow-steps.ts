@@ -6,7 +6,6 @@ import {
   IdentityProvider,
   ScopeContext,
   ServiceProvider,
-  UserCredentials,
 } from '../../common/types';
 import { getDefaultScope } from '../helpers';
 import IdentityProviderPage from '../pages/identity-provider-page';
@@ -82,9 +81,7 @@ class ConnectionWorkflow {
     const identityProviderPage = new IdentityProviderPage(
       this.identityProvider,
     );
-    const credentials: UserCredentials = user.getCredentials(
-      this.identityProvider.idpId,
-    );
+    const credentials = user.getCredentials(this.identityProvider.idpId);
     expect(credentials).to.exist;
     identityProviderPage.login(credentials);
     return this;
@@ -122,4 +119,21 @@ When(/^je me connecte à AgentConnect$/, function () {
     .redirectToIdp(email)
     .login(this.user, this.identityProvider)
     .checkIsConnected();
+});
+
+When("je me connecte au fournisseur d'identité via AgentConnect", function () {
+  expect(this.env).to.exist;
+  expect(this.serviceProvider).to.exist;
+  expect(this.scopes).to.exist;
+  expect(this.identityProvider).to.exist;
+  expect(this.user).to.exist;
+  const scopes = this.requestedScope || getDefaultScope(this.scopes);
+  const email = `default@${this.identityProvider.fqdn}`;
+
+  new ConnectionWorkflow(this.env, this.serviceProvider)
+    .init()
+    .withScope(scopes)
+    .start()
+    .redirectToIdp(email)
+    .login(this.user, this.identityProvider);
 });

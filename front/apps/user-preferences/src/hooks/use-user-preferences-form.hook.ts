@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { UserPreferencesData } from '../interfaces';
 import { checkHasDefaultConfiguration, checkSomeIdpHasBeenChangedSinceLoading } from '../utils';
 
-export interface useUserPreferencesFormProps {
+interface useUserPreferencesFormProps {
   dirtyFields: Record<string, boolean>;
   userPreferences: UserPreferencesData;
 }

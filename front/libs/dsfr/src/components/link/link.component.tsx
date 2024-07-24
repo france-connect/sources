@@ -1,19 +1,26 @@
 import classnames from 'classnames';
 import React from 'react';
 
-import { Sizes } from '../../enums';
+import { IconPlacement, Sizes } from '../../enums';
 
-export interface LinkComponentProps {
+interface LinkComponentProps {
   className?: string;
   href: string;
   icon?: string;
-  iconPlacement?: 'right' | 'left';
+  iconPlacement?: IconPlacement;
   label?: string;
   size?: Sizes;
 }
 
-export const LinkComponent: React.FC<LinkComponentProps> = React.memo(
-  ({ className, href, icon, iconPlacement, label, size }: LinkComponentProps) => (
+export const LinkComponent = React.memo(
+  ({
+    className,
+    href,
+    icon,
+    iconPlacement = IconPlacement.LEFT,
+    label,
+    size = Sizes.MEDIUM,
+  }: LinkComponentProps) => (
     // @TODO add an URL validators
     // it will be created with any backoffice app
     <a
@@ -30,13 +37,5 @@ export const LinkComponent: React.FC<LinkComponentProps> = React.memo(
     </a>
   ),
 );
-
-LinkComponent.defaultProps = {
-  className: undefined,
-  icon: undefined,
-  iconPlacement: 'left',
-  label: undefined,
-  size: Sizes.MEDIUM,
-};
 
 LinkComponent.displayName = 'LinkComponent';

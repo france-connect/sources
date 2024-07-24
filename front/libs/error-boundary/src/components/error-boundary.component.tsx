@@ -1,13 +1,12 @@
-import type { ReactNode } from 'react';
+import type { PropsWithChildren } from 'react';
 import React from 'react';
 
-export interface ErrorBoundaryComponentState {
+interface ErrorBoundaryComponentState {
   error: Error | null;
 }
 
-export interface ErrorBoundaryComponentProps {
+interface ErrorBoundaryComponentProps extends Required<PropsWithChildren> {
   onError?: (error: Error, info: React.ErrorInfo) => void;
-  children: ReactNode;
 }
 
 export class ErrorBoundaryComponent extends React.Component<

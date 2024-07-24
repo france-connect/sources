@@ -28,59 +28,27 @@ describe('OidcClientIssuerService', () => {
 
   const idpMetadataIssuerMock = {
     issuer: 'https://corev2.docker.dev-franceconnect.fr',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     token_endpoint: 'https://corev2.docker.dev-franceconnect.fr/api/v2/token',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     authorization_endpoint:
       'https://corev2.docker.dev-franceconnect.fr/api/v2/authorize',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     jwks_uri: 'https://corev2.docker.dev-franceconnect.fr/api/v2/certs',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_endpoint:
       'https://corev2.docker.dev-franceconnect.fr/api/v2/userinfo',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     end_session_endpoint:
       'https://corev2.docker.dev-franceconnect.fr/api/v2/session/end',
   };
 
   const idpMetadataClientMock = {
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     client_id: 'clientID',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     client_secret: '7vhnwzo1yUVOJT9GJ91gD5oid56effu1',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     response_types: ['code'],
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_signed_response_alg: 'HS256',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     token_endpoint_auth_method: 'client_secret_post',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     revocation_endpoint_auth_method: 'client_secret_post',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_encrypted_response_alg: 'RSA-OAEP',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     id_token_encrypted_response_enc: 'A256GCM',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_encrypted_response_alg: 'RSA-OAEP',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_encrypted_response_enc: 'A256GCM',
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     userinfo_signed_response_alg: 'HS256',
   };
 
@@ -91,19 +59,11 @@ describe('OidcClientIssuerService', () => {
       {
         uid: 'idpUidMock',
         name: 'idpNameMock',
-        // oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         response_types: ['response', 'types'],
-        // oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         discoveryUrl: 'mock well-known url',
       },
     ],
-    // oidc defined variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     redirectUri: ['redirect', 'uris'],
-    // oidc defined variable name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     postLogoutRedirectUri: ['post', 'logout', 'redirect', 'uri'],
     client: idpMetadataClientMock,
     issuer: idpMetadataIssuerMock,
@@ -304,11 +264,7 @@ describe('OidcClientIssuerService', () => {
       expect(result).toEqual({
         ...providerMock2,
         client: {
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           post_logout_redirect_uris: [idpMetadataMock.postLogoutRedirectUri],
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           redirect_uris: [idpMetadataMock.redirectUri],
         },
       });

@@ -1,3 +1,13 @@
-<input type="hidden" name="csrfToken" value="<%= locals.csrfToken %>" />
-<input type="hidden" name="email" value="<%= locals.email %>" />
-<input type="hidden" name="identityProviderUid" value="<%= provider.uid %>" />
+<div class="fr-fieldset__element">
+  <div class="fr-radio-group">
+    <input
+      type="radio"
+      id="idp-<%= provider.uid %>"
+      name="identityProviderUid"
+      value="<%= provider.uid %>"
+    />
+    <label class="fr-label" for="idp-<%= provider.uid %>">
+      <%= provider.title %>
+    </label>
+  </div>
+</div>

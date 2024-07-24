@@ -36,8 +36,6 @@
 | App_HTTPS_SERVER_KEY | file |
 | Broker_QUEUE | string |
 | Broker_URLS | json |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | REQUEST_TIMEOUT | string |
 
@@ -51,6 +49,7 @@
 | App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
+| App_DEFAULT_EMAIL_RENATER | string |
 | App_DEFAULT_IDP_UID | string |
 | App_DSFR_ASSETS_PATHS | json |
 | App_HTTPS_SERVER_CERT | file |
@@ -59,8 +58,6 @@
 | Core_ALLOWED_IDP_HINTS | json |
 | FQDN | string |
 | LoggerLegacy_FILE | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | Mongoose_DATABASE | string |
 | Mongoose_HOSTS | string |
@@ -103,6 +100,7 @@
 | App_EIDAS_BRIDGE_UID | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
+| App_SHOW_EXCLUDED_IDP | boolean |
 | App_VIEWS_PATHS | json |
 | Core_ALLOWED_IDP_HINTS | json |
 | Core_FEATURE_SSO_SUBSTANTIAL | boolean |
@@ -110,11 +108,15 @@
 | CryptographyBroker_QUEUE | string |
 | CryptographyBroker_URLS | json |
 | Cryptography_CRYPTO_SUB_SECRET | string |
+| Device_COOKIE_DOMAIN | string |
+| Device_COOKIE_NAME | string |
+| Device_IDENTITY_HMAC_DAILY_TTL | number |
+| Device_IDENTITY_HMAC_SECRET | json |
+| Device_MAX_IDENTITY_NUMBER | number |
+| Device_MAX_IDENTITY_TRUSTED | number |
 | FQDN | string |
 | GLOBAL_AGENT_HTTPS_PROXY | string |
 | LoggerLegacy_FILE | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | Mailer_FROM_EMAIL | string |
 | Mailer_FROM_NAME | string |
@@ -175,15 +177,20 @@
 | App_EIDAS_BRIDGE_UID | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
+| App_SHOW_EXCLUDED_IDP | boolean |
 | App_VIEWS_PATHS | json |
 | Core_ALLOWED_IDP_HINTS | json |
 | Core_SUPPORT_FORM_URL | string |
 | Cryptography_SUB_SECRET | string |
+| Device_COOKIE_DOMAIN | string |
+| Device_COOKIE_NAME | string |
+| Device_IDENTITY_HMAC_DAILY_TTL | number |
+| Device_IDENTITY_HMAC_SECRET | json |
+| Device_MAX_IDENTITY_NUMBER | number |
+| Device_MAX_IDENTITY_TRUSTED | number |
 | FQDN | string |
 | GLOBAL_AGENT_HTTPS_PROXY | string |
 | LoggerLegacy_FILE | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | Mailer_FROM_EMAIL | string |
 | Mailer_FROM_NAME | string |
@@ -235,8 +242,6 @@
 |---|---|
 | AccountBroker_QUEUE | string |
 | AccountBroker_URLS | json |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | Mongoose_DATABASE | string |
 | Mongoose_HOSTS | string |
@@ -259,8 +264,6 @@
 | Hsm_SIG_HSM_PUB_KEY_CKA_LABEL | string |
 | Hsm_VIRTUAL_HSM_SLOT | number |
 | LoggerLegacy_FILE | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | REQUEST_TIMEOUT | string |
 
@@ -268,8 +271,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | REQUEST_TIMEOUT | string |
 | RieBroker_QUEUE | string |
@@ -289,8 +290,6 @@
 | Elasticsearch_USERNAME | string |
 | GeoIpMaxmind_DATABASE_PATH | string |
 | Idp_MAPPINGS | json |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | REQUEST_TIMEOUT | string |
 | TracksBroker_QUEUE | string |
@@ -306,8 +305,6 @@
 | App_AIDANTS_CONNECT_UID | string |
 | Broker_QUEUE | string |
 | Broker_URLS | json |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | Mongoose_DATABASE | string |
 | Mongoose_HOSTS | string |
@@ -379,8 +376,6 @@
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
 | LoggerLegacy_FILE | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
@@ -422,6 +417,7 @@
 | ServiceProviderAdapterEnvLow_USERINFO_ENCRYPTED_RESPONSE_ALG | string |
 | ServiceProviderAdapterEnvLow_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | ServiceProviderAdapterEnvLow_USERINFO_SIGNED_RESPONSE_ALG | string |
+| Session_COOKIE_SAMESITE | string |
 | Session_COOKIE_SECRETS | json |
 | Session_USERINFO_CRYPT_KEY | string |
 
@@ -443,8 +439,6 @@
 | DataProviderAdapterCore_ISSUER | string |
 | DataProviderAdapterCore_JWKS | json |
 | DataProviderAdapterCore_JWKS_ENDPOINT | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 
 ### mock-identity-provider-fca-low
@@ -461,8 +455,6 @@
 | App_SCENARIOS_DATABASE_PATH | string |
 | App_VIEWS_PATHS | json |
 | FQDN | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
@@ -506,8 +498,6 @@
 | App_SCENARIOS_DATABASE_PATH | string |
 | App_VIEWS_PATHS | json |
 | FQDN | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
@@ -551,8 +541,6 @@
 | App_SCENARIOS_DATABASE_PATH | string |
 | App_VIEWS_PATHS | json |
 | FQDN | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
@@ -586,12 +574,9 @@
 | Var Name | Inferred type |
 |---|---|
 | App_API_OUTPUT_CONTENT_TYPE | string |
-| App_ASSETS_PATHS | json |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
 | App_VIEWS_PATHS | json |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 
 ### mock-service-provider-fca-low
@@ -600,6 +585,7 @@
 |---|---|
 | App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_PATHS | json |
+| App_DATA_APIS | json |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
 | App_IDP_ID | string |
@@ -623,8 +609,6 @@
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
 | JWKS | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
@@ -673,8 +657,6 @@
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
 | JWKS | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
@@ -721,8 +703,6 @@
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ALG | string |
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
@@ -749,23 +729,24 @@
 | App_HTTPS_SERVER_KEY | file |
 | App_IDP_ID | string |
 | FQDN | string |
-| IdentityProviderAdapterEnv_AUTHORIZATION_ENDPOINT | string |
 | IdentityProviderAdapterEnv_CLIENT_ID | string |
 | IdentityProviderAdapterEnv_CLIENT_SECRET | string |
 | IdentityProviderAdapterEnv_CLIENT_SECRET_CIPHER_PASS | string |
-| IdentityProviderAdapterEnv_END_SESSION_ENDPOINT | string |
-| IdentityProviderAdapterEnv_ISSUER | string |
+| IdentityProviderAdapterEnv_DISCOVERY | boolean |
+| IdentityProviderAdapterEnv_DISCOVERY_URL | string |
+| IdentityProviderAdapterEnv_ID_TOKEN_ENCRYPTED_RESPONSE_ALG | string |
+| IdentityProviderAdapterEnv_ID_TOKEN_ENCRYPTED_RESPONSE_ENC | string |
+| IdentityProviderAdapterEnv_ID_TOKEN_SIGNED_RESPONSE_ALG | string |
 | IdentityProviderAdapterEnv_JWKS_URI | string |
 | IdentityProviderAdapterEnv_NAME | string |
 | IdentityProviderAdapterEnv_REVOCATION_ENDPOINT_AUTH_METHOD | string |
 | IdentityProviderAdapterEnv_TITLE | string |
-| IdentityProviderAdapterEnv_TOKEN_ENDPOINT | string |
 | IdentityProviderAdapterEnv_TOKEN_ENDPOINT_AUTH_METHOD | string |
 | IdentityProviderAdapterEnv_UID | string |
-| IdentityProviderAdapterEnv_USERINFO_ENDPOINT | string |
+| IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ALG | string |
+| IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
+| IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
 | LoggerLegacy_FILE | string |
-| Logger_STDERR_LEVELS | json |
-| Logger_STDOUT_LEVELS | json |
 | Logger_THRESHOLD | string |
 | Mailer_FROM_EMAIL | string |
 | Mailer_FROM_NAME | string |
@@ -774,9 +755,13 @@
 | Mailer_SECURE | boolean |
 | Mailer_TEMPLATES_PATHS | json |
 | Mailer_TRANSPORT | string |
+| OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
 | OidcClient_HTTPS_CLIENT_KEY | file |
 | OidcClient_JWKS | json |
+| OidcClient_POST_LOGOUT_REDIRECT_URI | string |
+| OidcClient_REDIRECT_URI | string |
+| OidcClient_SCOPE | string |
 | REQUEST_TIMEOUT | string |
 | Redis_CACERT | file |
 | Redis_DB | number |

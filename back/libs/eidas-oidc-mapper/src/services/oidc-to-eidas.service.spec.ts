@@ -29,16 +29,10 @@ describe('OidcToEidasService', () => {
     birthdate: '1962-08-24',
     birthplace: '75107',
     email: 'wossewodda-3728@yopmail.com',
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'DUBOIS',
     gender: 'female',
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Angela Claire Louise',
 
-    // oidc parameter
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     preferred_username: 'DUMEUBLE',
 
     sub: 'b155a2129530e5fd3f6b95275b6da72a99ea1a486b8b33148abb4a62ddfb3609v2',
@@ -211,8 +205,6 @@ describe('OidcToEidasService', () => {
       expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
       expect(loggerServiceMock.err).toHaveBeenCalledWith({
         error: 'internal_error',
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description:
           'FranceConnect encountered an unexpected error, please contact the support (Code Y000000).',
       });
@@ -242,8 +234,6 @@ describe('OidcToEidasService', () => {
       // setup
       const error: OidcError = {
         error: 'invalid_scope',
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: 'Access denied for the scope "given_name"',
       };
       const partialFailureResponse = {

@@ -7,5 +7,6 @@ export function getJwtServiceMock() {
     sign: jest.fn(),
     verify: jest.fn(),
     retrieveJwtHeaders: jest.fn(),
+    fetchJwks: jest.fn(),
   };
 }

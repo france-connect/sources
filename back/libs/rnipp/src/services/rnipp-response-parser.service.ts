@@ -66,15 +66,11 @@ export class RnippResponseParserService {
 
     const identity: RnippPivotIdentity = {
       gender: this.getGenderFromParsedXml(parsedXml, RnippXmlSelectors.GENDER),
-      // oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       family_name: this.getXmlAttribute(
         parsedXml,
         RnippXmlSelectors.FAMILY_NAME,
       ),
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name: givenName,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name_array: givenNameArray,
       birthdate: this.getBirthdateAttribute(
         parsedXml,

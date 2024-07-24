@@ -26,8 +26,6 @@ export class CoreFcaDefaultAuthorizationHandler
         CoreFcaAuthorizationParametersInterface,
         Partial<CoreFcaAuthorizationParametersInterface>
       >(authorizationParameters, {
-        // oidc parameter
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         claims: { id_token: { amr: { essential: true } } },
       });
 

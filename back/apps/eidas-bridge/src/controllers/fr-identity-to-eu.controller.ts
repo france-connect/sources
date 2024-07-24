@@ -106,8 +106,6 @@ export class FrIdentityToEuController {
     const authorizationUrl = await this.oidcClient.utils.getAuthorizeUrl(
       this.getIdpId(),
       {
-        // acr_values is an oidc defined variable name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         acr_values: oidcRequest.acr_values,
         nonce,
         scope: oidcRequest.scope.join(' '),
@@ -151,8 +149,6 @@ export class FrIdentityToEuController {
 
     let partialEidasResponse;
 
-    // oidc param name
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { error, error_description } = query;
     if (error) {
       this.logger.err({ error }, error_description);
@@ -160,8 +156,6 @@ export class FrIdentityToEuController {
 
       partialEidasResponse = this.oidcToEidas.mapPartialResponseFailure({
         error,
-        // oidc param name
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description,
       });
     } else {

@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
+export * from './array-async.helper';
 export * from './async-filter';
 export * from './difference';
 export * from './dto-validation';

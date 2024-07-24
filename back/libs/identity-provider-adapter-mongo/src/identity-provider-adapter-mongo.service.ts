@@ -22,7 +22,6 @@ import {
   IdentityProviderAdapterMongoConfig,
   NoDiscoveryIdpAdapterMongoDTO,
 } from './dto';
-import { FilteringOptions } from './interfaces';
 import { IdentityProvider } from './schemas';
 
 const CLIENT_METADATA = [
@@ -90,49 +89,29 @@ export class IdentityProviderAdapterMongoService
           isBeta: true,
           authzURL: true,
           clientID: true,
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           client_secret: true,
           discovery: true,
           discoveryUrl: true,
           display: true,
-          eidas: true,
+          allowedAcr: true,
           featureHandlers: true,
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_encrypted_response_alg: true,
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_encrypted_response_enc: true,
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           id_token_signed_response_alg: true,
           image: true,
           issuer: true,
           jwksURL: true,
           name: true,
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           response_types: true,
-          // openid defined property names
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           revocation_endpoint_auth_method: true,
           title: true,
           tokenURL: true,
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           token_endpoint_auth_method: true,
           uid: true,
           url: true,
           userInfoURL: true,
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_encrypted_response_alg: true,
-          // oidc defined variable namev
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_encrypted_response_enc: true,
-          // oidc defined variable name
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           userinfo_signed_response_alg: true,
           endSessionURL: true,
           modal: true,
@@ -181,7 +160,9 @@ export class IdentityProviderAdapterMongoService
   }
 
   /**
-   * @param refreshCache  Should we refreshCache the cache made by the service?
+   * Get the list of IdentityProviderMetadata, optionally refreshing the cache.
+   *
+   * @param {boolean} [refreshCache=false] - Whether to refresh the cache made by the service
    */
   async getList(refreshCache?: boolean): Promise<IdentityProviderMetadata[]> {
     if (refreshCache || !this.listCache) {
@@ -197,25 +178,30 @@ export class IdentityProviderAdapterMongoService
 
   /**
    * Method triggered when you want to filter identity providers
-   * from service providers's whitelist/blacklist
-   * @param idpList  list of identity providers's clientID
+   * from service providers' whitelist/blacklist
+   *
+   * @param idpList  list of identity providers' clientID
    * @param blacklist  boolean false = blacklist true = whitelist
    */
   async getFilteredList(
-    options: FilteringOptions,
+    idpList: string[],
+    blacklist: boolean,
+    showExcludedIdp: boolean,
   ): Promise<IdentityProviderMetadata[]> {
     const providers = cloneDeep(await this.getList());
-    const { blacklist, idpList } = options;
     const mappedProviders = providers.map((provider) => {
       const idpFound = idpList.includes(provider.uid);
       const isIdpAuthorized = blacklist ? !idpFound : idpFound;
 
-      if (!isIdpAuthorized) {
-        provider.active = false;
-      }
+      const providerUpdated = this.updateProviderStatus(
+        provider,
+        isIdpAuthorized,
+        showExcludedIdp,
+      );
 
-      return provider;
+      return providerUpdated;
     });
+
     return mappedProviders;
   }
 
@@ -236,6 +222,22 @@ export class IdentityProviderAdapterMongoService
     return Boolean(idp?.active);
   }
 
+  private updateProviderStatus(
+    provider: IdentityProviderMetadata,
+    isIdpAuthorized: boolean,
+    showExcludedIdp: boolean,
+  ): IdentityProviderMetadata {
+    if (!isIdpAuthorized) {
+      provider.active = false;
+    }
+
+    if (!showExcludedIdp && !isIdpAuthorized) {
+      provider.display = false;
+    }
+
+    return provider;
+  }
+
   private legacyToOpenIdPropertyName(
     source: IdentityProvider,
   ): IdentityProviderMetadata {
@@ -248,8 +250,6 @@ export class IdentityProviderAdapterMongoService
       tokenURL: 'token_endpoint',
       url: 'issuer',
       userInfoURL: 'userinfo_endpoint',
-      // Business properties
-      eidas: 'maxAuthorizedAcr',
     };
 
     const result: Partial<IdentityProvider & IdentityProviderMetadata> = {
@@ -261,15 +261,12 @@ export class IdentityProviderAdapterMongoService
       Reflect.deleteProperty(result, legacyName);
     });
 
-    // openid defined property names
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     result.client_secret = this.decryptClientSecret(source.client_secret);
-    result.maxAuthorizedAcr = `eidas${source['eidas']}`;
 
     /**
      * @TODO #326 Fix type issues between legacy model and `oidc-client` library
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/merge_requests/326
-     * We have non blocking incompatilities.
+     * We have non-blocking incompatibilities.
      */
     return this.toPanvaFormat(result);
   }
