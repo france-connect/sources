@@ -3,12 +3,12 @@ import React from 'react';
 import { t } from '@fc/i18n';
 
 import { DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION, DEFAULT_USE_ELLIPSIS } from '../../enums';
-import type { Pagination } from '../../interfaces';
+import type { PaginationInterface } from '../../interfaces';
 import { usePagination } from './use-pagination.hook';
 
 interface PaginationComponentProps {
   onPageClick: (nextOffset: number) => void;
-  pagination: Pagination;
+  pagination: PaginationInterface;
   numberOfPagesShownIntoNavigation?: number;
   useEdgeArrows?: boolean;
   useEllipsis?: boolean;

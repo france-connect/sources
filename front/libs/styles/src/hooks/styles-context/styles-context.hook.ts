@@ -1,14 +1,9 @@
-import { useContext } from 'react';
+import { useSafeContext } from '@fc/common';
 
 import { StylesContext } from '../../context';
-import { NotWrappedIntoProviderException } from '../../exceptions';
+import type { StylesInterface } from '../../interfaces';
 
 export const useStylesContext = () => {
-  const values = useContext(StylesContext);
-
-  if (!values) {
-    throw new NotWrappedIntoProviderException();
-  }
-
+  const values = useSafeContext<StylesInterface>(StylesContext);
   return values;
 };

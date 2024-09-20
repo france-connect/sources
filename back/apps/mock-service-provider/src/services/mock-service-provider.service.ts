@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from 'axios';
 import { lastValueFrom } from 'rxjs';
 
 import { HttpService } from '@nestjs/axios';
@@ -15,25 +16,18 @@ export class MockServiceProviderService {
   async getData(
     apiUrl: string,
     accessToken: string,
-    authSecret: string,
+    authSecret?: string,
   ): Promise<unknown> {
-    const bearer = Buffer.from(accessToken, 'utf-8').toString('base64');
-
+    const requestConfig = authSecret
+      ? this.getConfigForPostRequestWithAuthSecret(
+          apiUrl,
+          accessToken,
+          authSecret,
+        )
+      : this.getConfigForGetRequest(apiUrl, accessToken);
     try {
       const response = await lastValueFrom(
-        this.httpService.post(
-          apiUrl,
-          {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            auth_secret: authSecret,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${bearer}`,
-            },
-            proxy: false,
-          },
-        ),
+        this.httpService.request(requestConfig),
       );
 
       return response.data;
@@ -41,5 +35,42 @@ export class MockServiceProviderService {
       this.logger.err(exception);
       throw exception.response.data;
     }
+  }
+
+  private getConfigForPostRequestWithAuthSecret(
+    apiUrl: string,
+    accessToken: string,
+    authSecret: string,
+  ): AxiosRequestConfig {
+    const bearer = Buffer.from(accessToken, 'utf-8').toString('base64');
+    const requestConfig: AxiosRequestConfig = {
+      url: apiUrl,
+      method: 'post',
+      headers: {
+        Authorization: `Bearer ${bearer}`,
+      },
+      data: {
+        // Input data for the mock-data-provider endpoint
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        auth_secret: authSecret,
+      },
+      proxy: false,
+    };
+    return requestConfig;
+  }
+
+  private getConfigForGetRequest(
+    apiUrl: string,
+    accessToken: string,
+  ): AxiosRequestConfig {
+    const requestConfig: AxiosRequestConfig = {
+      url: apiUrl,
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      proxy: false,
+    };
+    return requestConfig;
   }
 }

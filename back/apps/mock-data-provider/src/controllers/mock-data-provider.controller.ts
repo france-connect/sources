@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import { JSONWebKeySet } from 'jose';
+import { JWK } from 'jose-openid-client';
 
 import {
   Body,
@@ -67,9 +68,14 @@ export class MockDataProviderController {
 
   @Get(MockDataProviderRoutes.JWKS)
   jwks(): JSONWebKeySet {
-    const { jwks } = this.config.get<DataProviderAdapterCoreConfig>(
+    const {
+      jwks: { keys },
+    } = this.config.get<DataProviderAdapterCoreConfig>(
       'DataProviderAdapterCore',
     );
-    return jwks;
+
+    const publicKeys = keys.map((key) => JWK.asKey(key as any).toJWK());
+
+    return { keys: publicKeys } as JSONWebKeySet;
   }
 }

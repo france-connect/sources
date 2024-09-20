@@ -5,7 +5,7 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
   video: false,
   e2e: {
     baseUrl: 'https://partners.docker.dev-franceconnect.fr',
-    specPattern: 'cypress/integration/*.feature',
+    specPattern: 'cypress/integration/partners/*.feature',
     supportFile: 'cypress/support/index.ts',
     experimentalRunAllSpecs: true,
     experimentalMemoryManagement: true,

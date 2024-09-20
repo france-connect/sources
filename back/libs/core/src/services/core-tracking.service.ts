@@ -92,6 +92,8 @@ export class CoreTrackingService {
       newIdentity,
       becameTrusted,
       becameShared,
+
+      rep_scope,
     } = ctx;
     const source = extractNetworkInfoFromHeaders(ctx);
 
@@ -115,6 +117,7 @@ export class CoreTrackingService {
       idpName,
       idpLabel,
       idpIdentity,
+      rep_scope: rep_scope?.join(' '),
 
       deviceTrusted: isTrusted,
       deviceIsSuspicious: isSuspicious,

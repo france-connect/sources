@@ -679,10 +679,10 @@ const fip = {
     allowedAcr: ["eidas1"],
     mailto: "test@dev-franceconnect.fr",
     featureHandlers: {
-      coreVerify: "core-fcp-default-verify",
+      coreVerify: "core-fcp-aidants-connect-verify",
       authenticationEmail: "core-fcp-send-email",
       idpIdentityCheck: "core-fcp-default-identity-check",
-      coreAuthorization: "core-fcp-default-authorization",
+      coreAuthorization: "core-fcp-aidants-connect-authorization",
     },
     specificText: "aidants connect mock",
     url: "https://aidants-connect-mock.docker.dev-franceconnect.fr",

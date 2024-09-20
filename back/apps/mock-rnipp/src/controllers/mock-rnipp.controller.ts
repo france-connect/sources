@@ -1,3 +1,5 @@
+import * as path from 'path';
+
 import { NextFunction, Response } from 'express';
 
 import {
@@ -18,14 +20,19 @@ import { MockRnippRoutes, RnippCode, Scenario } from '../enums';
 import { SuccessfullResponseInterface } from '../interfaces';
 import { MockRnippService } from '../services';
 
-@Controller(MockRnippRoutes.BASE)
+@Controller()
 export class MockRnippController {
   constructor(
     private readonly mockRnippService: MockRnippService,
     private readonly logger: LoggerService,
   ) {}
 
-  @Get()
+  @Get(MockRnippRoutes.HEALTH_CHECK)
+  healthCheck() {
+    return 'OK';
+  }
+
+  @Get(MockRnippRoutes.BASE)
   @UsePipes(new ValidationPipe())
   handleScenario(
     @Query() query: ScenarioQueryDto,
@@ -55,7 +62,9 @@ export class MockRnippController {
         }, 7000);
         break;
       case Scenario.ERROR:
-        res.sendFile(`/responses/${exceptionKey}.xml`);
+        res.sendFile(`responses/${exceptionKey}.xml`, {
+          root: path.join(__dirname),
+        });
     }
   }
 

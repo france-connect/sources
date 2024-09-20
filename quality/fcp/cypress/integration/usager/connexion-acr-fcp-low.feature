@@ -96,6 +96,8 @@ Fonctionnalité: Connexion ACR
     Et le code d'erreur FranceConnect est "Y020001"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
 
+  # Absence de FI configuré avec eidas1 seulement en integ01. Scénario à revoir pour être exécutable en integ01 
+  @ignoreInteg01
   Scénario: Connexion ACR - FCP low - erreur FI retourne un niveau eidas2
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"

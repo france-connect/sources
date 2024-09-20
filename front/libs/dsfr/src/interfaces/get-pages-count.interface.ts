@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-export interface IGetPagesCount {
+export interface GetPagesCountInterface {
   totalItems: number;
   itemsPerPage: number;
 }

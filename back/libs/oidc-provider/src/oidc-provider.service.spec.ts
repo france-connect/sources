@@ -511,6 +511,29 @@ describe('OidcProviderService', () => {
       // Then
       expect(callback).toHaveBeenCalledTimes(0);
     });
+
+    it('should not call the callback method if context indicates an error in oidc interaction', async () => {
+      // Given
+      const callback = jest.fn();
+      const ctx = {
+        oidc: { route: OidcProviderMiddlewarePattern.USERINFO, isError: true },
+      };
+
+      // When
+      await service['runMiddlewareAfterPattern'](
+        {
+          step: OidcProviderMiddlewareStep.AFTER,
+          route: '',
+          path: OidcProviderMiddlewarePattern.USERINFO,
+          pattern: OidcProviderMiddlewarePattern.USERINFO,
+          ctx,
+        },
+        callback,
+      );
+
+      // Then
+      expect(callback).toHaveBeenCalledTimes(0);
+    });
   });
 
   describe('getHttpOptions', () => {

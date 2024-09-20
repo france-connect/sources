@@ -3,13 +3,12 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description, Loggable } from '@fc/exceptions-deprecated';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { FieldErrorsInterface } from '../interfaces';
 import { Dto2FormBaseException } from './dto2form-base.exception';
 
-@Loggable()
 @Description(
   'Les données soumises dans le formulaire ne satisfont pas les règles de validation.',
 )

@@ -1,4 +1,4 @@
-import type { FormValues, UserPreferencesData } from '../interfaces';
+import type { FormValuesInterface, UserPreferencesDataInterface } from '../interfaces';
 
 export interface UserPreferencesServiceInterface {
   allowFutureIdp: boolean;
@@ -19,7 +19,10 @@ export class UserPreferencesService {
     return formData;
   }
 
-  static parseFormData({ allowFutureIdp, idpList }: UserPreferencesData): FormValues {
+  static parseFormData({
+    allowFutureIdp,
+    idpList,
+  }: UserPreferencesDataInterface): FormValuesInterface {
     const list =
       idpList &&
       idpList.reduce((acc, { isChecked, uid }) => {

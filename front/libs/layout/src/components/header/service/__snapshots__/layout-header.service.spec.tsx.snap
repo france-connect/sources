@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderServiceComponent should render the baseline, when service.baseline is defined 1`] = `
+<div>
+  <div
+    class="fr-header__service"
+    data-testid="layout-header-service-component"
+  >
+    <p
+      class="fr-header__service-tagline"
+      data-testid="layout-header-service-component-baseline"
+    >
+      any service baseline mock
+    </p>
+  </div>
+</div>
+`;
+
+exports[`LayoutHeaderServiceComponent should render the link and the baseline, when service.name and service.baseline are defined 1`] = `
+<div>
+  <div
+    class="fr-header__service"
+    data-testid="layout-header-service-component"
+  >
+    <a
+      data-testid="layout-header-service-component-name"
+      href="/any-href-mock"
+      title="Retour à l’accueil du site - any service baseline mock - any service name mock"
+    >
+      <p
+        class="fr-header__service-title"
+      >
+        any service name mock
+      </p>
+    </a>
+    <p
+      class="fr-header__service-tagline"
+      data-testid="layout-header-service-component-baseline"
+    >
+      any service baseline mock
+    </p>
+  </div>
+</div>
+`;
+
+exports[`LayoutHeaderServiceComponent should render the link, when service.name is defined 1`] = `
+<div>
+  <div
+    class="fr-header__service"
+    data-testid="layout-header-service-component"
+  >
+    <a
+      data-testid="layout-header-service-component-name"
+      href="/any-href-mock"
+      title="Retour à l’accueil du site - any service name mock"
+    >
+      <p
+        class="fr-header__service-title"
+      >
+        any service name mock
+      </p>
+    </a>
+  </div>
+</div>
+`;

@@ -69,6 +69,7 @@ describe('I18nService', () => {
 
   describe('translate', () => {
     let service: I18nService;
+
     beforeEach(() => {
       I18nService.initialize(localeMock, translationMappingMock);
       service = I18nService.instance();
@@ -159,6 +160,7 @@ describe('I18nService', () => {
 
   describe('handlePlural - general cases', () => {
     let service: I18nService;
+
     beforeEach(() => {
       I18nService.initialize(localeMock, translationMappingMock);
       service = I18nService.instance();
@@ -450,6 +452,7 @@ describe('I18nService', () => {
 
   describe('handleSubstitution', () => {
     let service: I18nService;
+
     beforeEach(() => {
       I18nService.initialize(localeMock, translationMappingMock);
       service = I18nService.instance();

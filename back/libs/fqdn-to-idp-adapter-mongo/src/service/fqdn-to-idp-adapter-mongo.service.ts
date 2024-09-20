@@ -39,7 +39,7 @@ export class FqdnToIdpAdapterMongoService
 
   /**
    * Return a list of fqdnToIdp
-   * for a specific domain
+   * for a specific fqdn
    */
   async getIdpsByFqdn(fqdn: string): Promise<FqdnToIdentityProvider[]> {
     const allfqdnToProvider = await this.getList();
@@ -93,6 +93,7 @@ export class FqdnToIdpAdapterMongoService
         _id: false,
         fqdn: true,
         identityProvider: true,
+        acceptsDefaultIdp: true,
       },
     )
       .sort({ fqdn: 1, identityProvider: 1 })

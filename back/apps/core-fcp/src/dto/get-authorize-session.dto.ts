@@ -2,7 +2,14 @@
 
 // Declarative file
 import { Expose, Type } from 'class-transformer';
-import { IsEnum, IsJWT, IsNotEmpty, IsObject, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsEnum,
+  IsJWT,
+  IsNotEmpty,
+  IsObject,
+  IsString,
+} from 'class-validator';
 
 import { PartialExcept } from '@fc/common';
 import { CoreBaseOidcClientSessionDto } from '@fc/core';
@@ -11,6 +18,7 @@ import { I18nSession } from '@fc/i18n';
 import { Amr, IOidcIdentity, OidcIdentityDto } from '@fc/oidc';
 import { RnippPivotIdentity } from '@fc/rnipp';
 
+import { DelegationScope } from '../enums';
 import { AppSession } from './app-session.dto';
 import { CoreSession } from './core-session.dto';
 
@@ -49,6 +57,11 @@ export class GetAuthorizeOidcClientSsoSession extends CoreBaseOidcClientSessionD
   @IsNotEmpty()
   @Expose()
   readonly idpAcr: string;
+
+  @IsArray()
+  @IsEnum(DelegationScope, { each: true })
+  @Expose()
+  readonly idpRepresentativeScope: string[];
 
   // Identity Provider: We MUST have amr (SSO)
   @IsEnum(Amr, { each: true })

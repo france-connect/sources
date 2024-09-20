@@ -3,13 +3,11 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description, Loggable, Trackable } from '@fc/exceptions-deprecated';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { RnippBaseException } from './';
 
-@Loggable(false)
-@Trackable()
 @Description("Le RNIPP n'a pas trouvé l'identité fournie")
 export class RnippNotFoundNoEchoException extends RnippBaseException {
   public readonly code = ErrorCode.NOT_FOUND_NO_ECHO;

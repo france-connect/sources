@@ -160,6 +160,18 @@ export default {
       event: 'FC_IDP_INSUFFICIENT_ACR',
     },
 
+    FC_VALID_REP_SCOPE: {
+      step: '5.4.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_VALID_REP_SCOPE',
+    },
+
+    FC_INVALID_REP_SCOPE: {
+      step: '5.4.1',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_INVALID_REP_SCOPE',
+    },
+
     FC_SHOWED_CONSENT: {
       step: '6.1.0',
       category: EventsCategories.FRONT_CINEMATIC,

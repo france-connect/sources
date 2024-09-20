@@ -403,21 +403,6 @@ describe('CoreFcaMiddlewareService', () => {
       service['renewSession'] = jest.fn();
     });
 
-    it('should abort middleware execution if the request is flagged with an error', async () => {
-      // Given
-      const ctxMock = getCtxMock(true);
-      // When
-      await service['afterAuthorizeMiddleware'](ctxMock);
-      // Then
-      expect(service['getEventContext']).toHaveBeenCalledTimes(0);
-      expect(configServiceMock.get).toHaveBeenCalledTimes(0);
-      expect(service['isSsoAvailable']).toHaveBeenCalledTimes(0);
-      expect(sessionServiceMock.set).toHaveBeenCalledTimes(0);
-      expect(service['isSsoAvailable']).toHaveBeenCalledTimes(0);
-      expect(service['trackAuthorize']).toHaveBeenCalledTimes(0);
-      expect(service['checkRedirectToSso']).toHaveBeenCalledTimes(0);
-    });
-
     it('should call renewSession()', async () => {
       // Given
       const ctxMock = getCtxMock();

@@ -10,6 +10,7 @@ Fonctionnalité: Connexion Notification
   # 2. notification non envoyée si SSO avec même FS
   # 3. notification non envoyée si situation habituelle "trusted" (appareil connu, identité connue et appareil non partagé )
   # 4. notification envoyée par défaut
+  @fcpLow @fcpHigh
   Scénario: Connexion Notification - pas de notification si une seule identité connue
     Etant donné que je supprime les mails envoyés à l'usager
     Et que j'utilise un fournisseur de service "public"
@@ -28,6 +29,7 @@ Fonctionnalité: Connexion Notification
     Et je suis connecté au fournisseur de service
     Et le mail "notification de connexion" n'est pas envoyé
 
+  @fcpLow @fcpHigh
   Scénario: Connexion Notification - plusieurs identités
     Etant donné que je supprime les mails envoyés à l'usager
     Et que j'utilise un compte usager "première identité"

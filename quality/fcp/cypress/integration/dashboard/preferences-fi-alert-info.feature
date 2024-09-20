@@ -36,6 +36,8 @@ Fonctionnalité: Préférences FI - Message d'information autorisation futurs FI
     Et le bouton "enregistrer mes réglages" est actif
     Et j'enregistre mes réglages d'accès
 
+  # Besoin d'un troisième FI mock v2 sur l'integ01
+  @ignoreInteg01
   Scénario: Préférences FI - Un usager avec FI bloqué et futurs FI autorisés qui bloque un FI TA04
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du tableau de bord usager
@@ -132,6 +134,8 @@ Fonctionnalité: Préférences FI - Message d'information autorisation futurs FI
     Alors le message d'information "autorisation des futurs fournisseurs d'identité" n'est pas affiché
     Et le bouton "enregistrer mes réglages" est actif
 
+  # Besoin d'un troisième FI mock v2 sur l'integ01
+  @ignoreInteg01
   Scénario: Préférences FI - Un usager avec préférences FI par défaut fait un enregistrement et bloque un FI TA10
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du tableau de bord usager

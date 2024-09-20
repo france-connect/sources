@@ -1,7 +1,6 @@
 import { Given } from '@badeball/cypress-cucumber-preprocessor';
 
-import { getScopeByType } from '../../usager/helpers';
-import { getServiceProviderByDescription } from '../helpers';
+import { getScopeByType, getServiceProviderByDescription } from '../helpers';
 
 Given(
   /^j'utilise (?:un|le) fournisseur de service "([^"]+)"$/,

@@ -35,7 +35,10 @@ class IssuerDto {
   readonly end_session_endpoint?: string;
 
   @IsUrl()
-  readonly jwks_uri: string;
+  @IsOptional()
+  // openid defined property names
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  readonly jwks_uri?: string;
 }
 
 class ClientMetadataDto {

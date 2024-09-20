@@ -16,4 +16,5 @@ export const claims: ClaimsInterface = {
   idp_birthdate: 'idp_birthdate',
   amr: 'amr',
   idp_id: 'idp_id',
+  rep_scope: 'rep_scope',
 };

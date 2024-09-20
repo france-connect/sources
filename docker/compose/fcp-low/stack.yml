@@ -37,8 +37,6 @@ services:
       # -- DP
       - "dpp1-low"
       - "dpp2-low"
-      # --
-      - "rnipp"
       # -- Exploitation
       - "fc-exploitation"
       # -- Mailer

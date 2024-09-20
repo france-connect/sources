@@ -10,7 +10,7 @@ Fonctionnalité: API - authorize
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique
     Et le code d'erreur est "Y030106"
-    Et le message d'erreur est "invalid_client"
+    Et le message d'erreur est "client is invalid (client not found)"
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
     Exemples:
@@ -114,6 +114,16 @@ Fonctionnalité: API - authorize
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page interaction
 
+  @ignoreInteg01
+  Scénario: API authorize - Cas nominal sans login_hint
+    Etant donné que je prépare une requête "authorize"
+    Et que je retire le paramètre "login_hint" de la requête
+    Quand je lance la requête
+    Alors le statut de la réponse est 200
+    Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
+    Et le corps de la réponse contient une page web
+    Et je suis redirigé vers la page interaction
+
   Plan du Scénario: API authorize - Erreur <error> avec response_type=<responseType>
     Etant donné que je prépare une requête "authorize"
     Et que je mets "<responseType>" dans le paramètre "response_type" de la requête
@@ -166,6 +176,6 @@ Fonctionnalité: API - authorize
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
     Exemples:
-      | redirectUri                          | httpCode | error   | errorDescription      |
-      |                                      | 400      | Y000400 | Bad Request Exception |
-      | https://my-malicious-url.fr/callback | 500      | Y030118 | invalid_redirect_uri  |
+      | redirectUri                          | httpCode | error   | errorDescription                                                                    |
+      |                                      | 400      | Y000400 | Bad Request Exception                                                               |
+      | https://my-malicious-url.fr/callback | 500      | Y030118 | redirect_uri did not match any of the client's registered redirect_uris (undefined) |

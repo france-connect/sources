@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import type { FieldInputProps } from 'react-final-form';
 
-import type { CheckableLegend } from '../../../interfaces';
+import type { CheckableLegendInterface } from '../../../interfaces';
 import { ToggleLabelComponent } from './toggle-label.component';
 
 describe('ToggleLabelComponent', () => {
@@ -14,7 +14,7 @@ describe('ToggleLabelComponent', () => {
     value: 'any-field-value-mock',
   } as FieldInputProps<unknown, HTMLElement>;
 
-  const legendMock = { checked: 'foo', unchecked: 'bar' } as CheckableLegend;
+  const legendMock = { checked: 'foo', unchecked: 'bar' } as CheckableLegendInterface;
 
   it('should match the snapshot', () => {
     // When
@@ -34,6 +34,7 @@ describe('ToggleLabelComponent', () => {
 
     // Then
     const element = container.firstChild;
+
     expect(element).toHaveAttribute('data-fr-checked-label', 'Activé');
     expect(element).toHaveAttribute('data-fr-unchecked-label', 'Désactivé');
   });

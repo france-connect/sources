@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 import { useToggle } from 'usehooks-ts';
 
-import type { EnhancedTrack, TracksConfig } from '../../interfaces';
+import type { EnhancedTrackInterface, TracksConfig } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';
@@ -10,7 +10,7 @@ import { TrackCardHeaderComponent } from './card-header.component';
 export const MISSING_SP_LABEL_VALUE = 'Nom du service non défini';
 
 interface TrackCardProps {
-  track: EnhancedTrack;
+  track: EnhancedTrackInterface;
   options: TracksConfig;
 }
 

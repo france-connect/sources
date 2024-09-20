@@ -1,7 +1,7 @@
 import { ConfigService } from '@fc/config';
 
 import { Options } from '../enums';
-import type { HttpClientOptions } from '../interfaces';
+import type { HttpClientOptionsInterface } from '../interfaces';
 import * as Module from './get-request-options';
 import { slashifyPath } from './slashify-path';
 
@@ -31,7 +31,7 @@ describe('getTimeout', () => {
     jest.mocked(ConfigService.get).mockReturnValueOnce({ timeout: 2000 });
 
     // when
-    const result = Module.getTimeout(undefined as unknown as HttpClientOptions);
+    const result = Module.getTimeout(undefined as unknown as HttpClientOptionsInterface);
 
     // then
     expect(result).toBe(2000);
@@ -73,7 +73,7 @@ describe('getBaseURL', () => {
     // given
     jest.mocked(ConfigService.get).mockReturnValueOnce({ baseURL: 'http://any-url.com' });
     // when
-    const result = Module.getBaseURL(undefined as unknown as HttpClientOptions);
+    const result = Module.getBaseURL(undefined as unknown as HttpClientOptionsInterface);
 
     // then
     expect(result).toBe('http://any-url.com');

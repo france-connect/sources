@@ -1,42 +1,49 @@
-import type { PropsWithChildren } from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import { type PropsWithChildren, useEffect, useState } from 'react';
 
-import type { AccountConfig, AccountInterface } from '../interfaces';
-import { AccountService } from '../services';
+import { AxiosErrorCatcherContext } from '@fc/axios-error-catcher';
+import type { AxiosErrorCatcherInterface } from '@fc/axios-error-catcher/src/inferfaces';
+import { HttpStatusCode, useSafeContext } from '@fc/common';
+import { ConfigService } from '@fc/config';
+
+import { Options } from '../enums';
+import type {
+  AccountConfig,
+  AccountContextState,
+  UserInfosValidatorInterface,
+} from '../interfaces';
+import { fetchUserInfos } from '../services';
 import { AccountContext } from './account.context';
 
 interface AccountProviderProps extends Required<PropsWithChildren> {
-  config: AccountConfig;
+  validator: UserInfosValidatorInterface;
 }
 
-export const AccountProvider = ({ children, config }: AccountProviderProps) => {
-  const [state, setState] = useState<AccountInterface>({
+export const AccountProvider = ({ children, validator }: AccountProviderProps) => {
+  const { endpoints } = ConfigService.get<AccountConfig>(Options.CONFIG_NAME);
+
+  const { codeError, hasError } =
+    useSafeContext<AxiosErrorCatcherInterface>(AxiosErrorCatcherContext);
+
+  const [account, setAccount] = useState<AccountContextState>({
     connected: false,
+    expired: false,
     ready: false,
-    updateAccount: /* istanbul ignore next */ () => {},
-    userinfos: {
-      firstname: '',
-      lastname: '',
-    },
+    userinfos: undefined,
   });
 
-  const updateAccount = useCallback(
-    (update: Partial<AccountInterface>) => {
-      const merge = { ...state, ...update };
-      setState(merge);
-    },
-    [state, setState],
-  );
-
   useEffect(() => {
-    AccountService.fetchData(config.endpoints.me, updateAccount);
-    // @NOTE should be called only once
+    fetchUserInfos({ endpoint: endpoints.me, updateState: setAccount, validator });
+    // @NOTE should be called only at first render
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <AccountContext.Provider value={{ ...state, updateAccount }}>
-      {children}
-    </AccountContext.Provider>
-  );
+  useEffect(() => {
+    const sessionHasExpired = account.connected && codeError === HttpStatusCode.UNAUTHORIZED;
+    const shouldUpdateState = sessionHasExpired && !account.expired;
+    if (shouldUpdateState) {
+      setAccount({ connected: false, expired: true, ready: true, userinfos: undefined });
+    }
+  }, [account.expired, account.connected, codeError, hasError]);
+
+  return <AccountContext.Provider value={account}>{children}</AccountContext.Provider>;
 };

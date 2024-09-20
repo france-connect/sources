@@ -20,6 +20,7 @@ copy_dsfr_files() {
 
   copy_folder "$DSFR_FOLDER/fonts" "$DEST_FOLDER/dsfr/fonts"
   copy_folder "$DSFR_FOLDER/icons" "$DEST_FOLDER/dsfr/icons"
+  copy_folder "$DSFR_FOLDER/artwork" "$DEST_FOLDER/dsfr/artwork"
 
   copy_file "$DSFR_FOLDER/dsfr.min.css" "$DEST_FOLDER/dsfr/dsfr.min.css"
   create_folder_path "$DEST_FOLDER/dsfr/utility"

@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { JWK } from 'jose-openid-client';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -60,10 +61,6 @@ describe('MockDataProviderController', () => {
     mockDataProviderController = app.get<MockDataProviderController>(
       MockDataProviderController,
     );
-
-    configServiceMock.get.mockReturnValueOnce({
-      jwks: { keys: 'some keys' },
-    });
   });
 
   it('should be defined', () => {
@@ -208,11 +205,25 @@ describe('MockDataProviderController', () => {
 
   describe('jwks', () => {
     it('Should return some status object', () => {
+      // Given
+      const JwkKeyMock = {
+        toJWK: jest.fn().mockReturnValueOnce('a').mockReturnValueOnce('b'),
+      };
+      const spy = jest.spyOn(JWK, 'asKey').mockReturnValue(JwkKeyMock as any);
+
+      configServiceMock.get.mockReturnValueOnce({
+        jwks: { keys: ['foo', 'bar'] },
+      });
+
       // When
       const result = mockDataProviderController.jwks();
 
-      // assert
-      expect(result).toEqual({ keys: 'some keys' });
+      // Then
+      expect(spy).toHaveBeenCalledTimes(2);
+      expect(spy).toHaveBeenCalledWith('foo');
+      expect(spy).toHaveBeenCalledWith('bar');
+      expect(JwkKeyMock.toJWK).toHaveBeenCalledTimes(2);
+      expect(result).toEqual({ keys: ['a', 'b'] });
     });
   });
 });

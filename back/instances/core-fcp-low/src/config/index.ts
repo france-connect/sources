@@ -1,14 +1,14 @@
 /* istanbul ignore file */
 
 // Tested by DTO
-import { CoreFcpConfig } from '@fc/core-fcp';
-
+import { CoreFcpLowConfig } from '../dto';
 import App from './app';
 import Config from './config';
 import Core from './core';
 import CryptographyEidas from './cryptography-eidas';
 import CryptographyFcp from './cryptography-fcp';
 import DataProviderAdapterMongo from './data-provider-adapter-mongo';
+import DelegationScope from './delegation-scope';
 import Device from './device';
 import ExceptionsFcp from './exceptions-fcp';
 import I18n from './i18n';
@@ -33,6 +33,7 @@ export default {
   Config,
   Core,
   DataProviderAdapterMongo,
+  DelegationScope,
   Device,
   Logger,
   LoggerLegacy,
@@ -53,4 +54,4 @@ export default {
   Tracking,
   I18n,
   ExceptionsFcp,
-} as CoreFcpConfig;
+} as CoreFcpLowConfig;

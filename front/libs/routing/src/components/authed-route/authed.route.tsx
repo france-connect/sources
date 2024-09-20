@@ -1,41 +1,30 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
-import type { AccountInterface } from '@fc/account';
+import type { AccountContextState } from '@fc/account';
 import { AccountContext } from '@fc/account';
-import { AxiosErrorCatcherContext } from '@fc/axios-error-catcher';
-import { HttpStatusCode } from '@fc/common';
+import { useSafeContext } from '@fc/common';
 
-import type { AuthRouteProps } from '../../interfaces';
+import { AuthFallbackRoutes } from '../../enums';
+import type { AuthRouteInterface } from '../../interfaces';
 
-export const AuthedRoute = React.memo(({ fallbackPath, replace }: AuthRouteProps) => {
-  const { pathname } = useLocation();
-  const { connected, ready, updateAccount } = useContext<AccountInterface>(AccountContext);
+export const AuthedRoute = React.memo(
+  ({ fallback = AuthFallbackRoutes.LOGIN, replace = false }: AuthRouteInterface) => {
+    const location = useLocation();
+    const { connected, expired, ready } = useSafeContext<AccountContextState>(AccountContext);
 
-  const { codeError, hasError } = useContext(AxiosErrorCatcherContext);
-
-  useEffect(() => {
-    if (hasError && codeError === HttpStatusCode.UNAUTHORIZED) {
-      updateAccount({
-        connected: false,
-        ready: true,
-        userinfos: {
-          firstname: '',
-          lastname: '',
-        },
-      });
+    if (!ready) {
+      return <div data-testid="route-authed-component-loader-div" />;
     }
-  }, [codeError, hasError, updateAccount]);
 
-  if (!ready) {
-    return <div data-testid="route-authed-component-loader-div" />;
-  }
+    if (!connected || expired) {
+      const { pathname } = location;
+      const navigateTo = typeof fallback === 'function' ? fallback(location) : fallback;
+      return <Navigate replace={!!replace} state={{ from: pathname }} to={navigateTo} />;
+    }
 
-  if (!connected) {
-    return <Navigate replace={!!replace} state={{ from: pathname }} to={fallbackPath} />;
-  }
-
-  return <Outlet />;
-});
+    return <Outlet />;
+  },
+);
 
 AuthedRoute.displayName = 'AuthedRoute';

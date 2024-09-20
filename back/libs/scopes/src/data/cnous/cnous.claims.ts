@@ -18,4 +18,7 @@ export const claims: ClaimsInterface = {
   // OIDC fashion variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   cnous_ville_etudes: 'cnous_ville_etudes',
+  // OIDC fashion variable name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  cnous_identite: 'cnous_identite',
 };

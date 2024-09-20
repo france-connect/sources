@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AxiosErrorCatcherProvider should render the child component, if initialized 1`] = `
+<div>
+  <div
+    data-testid="ChildComponent"
+  />
+</div>
+`;
+
+exports[`AxiosErrorCatcherProvider should return null, if not initialized 1`] = `<div />`;

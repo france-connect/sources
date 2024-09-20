@@ -3,7 +3,7 @@
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
 import { OidcClientRoutes } from '@fc/oidc-client';
-import { ISessionCookieOptions, SessionConfig } from '@fc/session';
+import { SessionConfig, SessionCookieOptionsInterface } from '@fc/session';
 import {
   UserDashboardBackRoutes,
   UserDashboardSession,
@@ -13,7 +13,7 @@ import I18nConfig from './i18n';
 
 const env = new ConfigParser(process.env, 'Session');
 
-const cookieOptions: ISessionCookieOptions = {
+const cookieOptions: SessionCookieOptionsInterface = {
   signed: true,
   sameSite: 'strict',
   httpOnly: true,

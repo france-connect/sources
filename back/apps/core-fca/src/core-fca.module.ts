@@ -35,7 +35,6 @@ import {
   OidcProviderGrantService,
   OidcProviderModule,
 } from '@fc/oidc-provider';
-import { ScopesModule } from '@fc/scopes';
 import {
   ServiceProviderAdapterMongoModule,
   ServiceProviderAdapterMongoService,
@@ -69,6 +68,7 @@ import {
   DataProviderService,
   OidcProviderConfigAppService,
 } from './services';
+import { CoreFcaFqdnService } from './services/core-fca-fqdn.service';
 
 const trackingModule = TrackingModule.forRoot(CoreFcaTrackingService);
 
@@ -106,7 +106,6 @@ const exceptionFiltersProviders = [
     FqdnToIdpAdapterMongoModule,
     DataProviderAdapterMongoModule,
     JwtModule,
-    ScopesModule,
     HttpProxyModule,
     OidcAcrModule,
     OidcProviderModule.register(
@@ -152,6 +151,7 @@ const exceptionFiltersProviders = [
     CoreFcaDefaultAuthorizationHandler,
     CoreFcaMcpAuthorizationHandler,
     DataProviderService,
+    CoreFcaFqdnService,
     {
       provide: CORE_SERVICE,
       useClass: CoreFcaService,

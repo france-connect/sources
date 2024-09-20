@@ -11,14 +11,6 @@ import {
 
 import { MinimalCustomIdentityInterface } from '@fc/mock-identity-provider';
 
-export const noForeignBirthplaces = ({ obj }: TransformFnParams) => {
-  if (obj.birthcountry && obj.birthcountry !== '99100') {
-    return '';
-  }
-
-  return obj.birthplace;
-};
-
 export const defaultToFranceBirthcountry = ({ obj }: TransformFnParams) => {
   if (obj.birthcountry === '') {
     obj.birthcountry = '99100';
@@ -49,7 +41,6 @@ export class CustomIdentityDto implements MinimalCustomIdentityInterface {
   @IsString()
   @IsNotEmpty()
   @ValidateIf((o) => o.birthcountry === '')
-  @Transform(noForeignBirthplaces)
   readonly birthplace: string;
 
   @IsString()

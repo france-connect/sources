@@ -8,7 +8,7 @@ Handles the communication with an apache ignite cache using the node module **ap
 
 See [Apache ignite NodeJS thin client](https://ignite.apache.org/docs/latest/thin-clients/nodejs-thin-client)
 
-Instanciates an apache ignite client and connects to an apache ignite server at module initialization.
+Instantiates an apache ignite client and connects to an apache ignite server at module initialization.
 
 Can prepare and serve instances to manipulate caches.
 

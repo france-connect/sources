@@ -5,33 +5,32 @@ import {
   IsEmail,
   IsEnum,
   IsHexadecimal,
+  IsString,
   MaxLength,
   MinLength,
   ValidateIf,
 } from 'class-validator';
 
-import { IsSafeString } from '@fc/common';
+import { COG_FRANCE } from '@fc/cog';
 import { MinIdentityDto } from '@fc/oidc-client';
 import { Genders } from '@fc/rnipp';
 
-const COG_FRANCE = '99100';
-
 export class FcIdentityDto extends MinIdentityDto {
-  @IsSafeString()
+  @IsString()
   @MinLength(1)
   @MaxLength(256)
   readonly given_name: string;
 
-  @IsSafeString()
+  @IsString()
   @MinLength(1)
   @MaxLength(256)
   readonly family_name: string;
 
-  @IsSafeString()
+  @IsString()
   @MinLength(1)
   readonly birthdate: string;
 
-  @IsSafeString()
+  @IsString()
   @IsEnum(Genders)
   readonly gender: string;
 

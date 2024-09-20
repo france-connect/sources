@@ -26,7 +26,6 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé - discov - crypt"
     Et le niveau de sécurité de l'évènement est "Substantiel"
 
-  @ignoreInteg01
   Scénario: Historique Connexion - FC+ - FS public avec scope data
     Etant donné que j'utilise la plateforme "FranceConnect+"
     Et que j'utilise un compte usager "pour les tests de traces"
@@ -70,7 +69,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et l'évènement concerne aucune donnée "FCP_HIGH"
     Et l'évènement concerne aucune donnée "DGFIP"
     Et l'évènement concerne 1 donnée "CNAM"
-    Et les données "CNAM" de l'évènement contiennent "Paiements d'indemnités journalières versées par l'Assurance Maladie"
+    Et les données "CNAM" de l'évènement contiennent "Paiements d’indemnités journalières versées par l’Assurance Maladie"
 
   Scénario: Historique Connexion - FC+ - FS privé avec scope identité
     Etant donné que j'utilise la plateforme "FranceConnect+"
@@ -109,7 +108,6 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et l'évènement concerne aucune donnée "DGFIP"
     Et l'évènement concerne aucune donnée "CNAM"
 
-  @ignoreInteg01
   Scénario: Historique Connexion - FC+ - FS privé avec scope data
     Etant donné que j'utilise la plateforme "FranceConnect+"
     Et que j'utilise un compte usager "pour les tests de traces"
@@ -144,7 +142,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et les données "DGFIP" de l'évènement contiennent "Détail des personnes à charge et rattachées"
     Et les données "DGFIP" de l'évènement contiennent "Adresse déclarée au 1er Janvier"
     Et l'évènement concerne 1 donnée "CNAM"
-    Et les données "CNAM" de l'évènement contiennent "Paiements d'indemnités journalières versées par l'Assurance Maladie"
+    Et les données "CNAM" de l'évènement contiennent "Paiements d’indemnités journalières versées par l’Assurance Maladie"
     Et j'affiche le détail du 1er évènement "Échange de Données" sur "FranceConnect+" du FS "FSP2V2 - Integ" avec le FD "DGFIP"
     Et la plateforme de l'évènement est "FranceConnect+"
     Et le type d'action de l'évènement est "Échange de Données"
@@ -168,7 +166,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     Et l'évènement concerne aucune donnée "FCP_HIGH"
     Et l'évènement concerne aucune donnée "DGFIP"
     Et l'évènement concerne 1 donnée "CNAM"
-    Et les données "CNAM" de l'évènement contiennent "Paiements d'indemnités journalières versées par l'Assurance Maladie"
+    Et les données "CNAM" de l'évènement contiennent "Paiements d’indemnités journalières versées par l’Assurance Maladie"
 
   Scénario: Historique Connexion - FC+ - FS privé avec scope anonyme
     Etant donné que j'utilise la plateforme "FranceConnect+"

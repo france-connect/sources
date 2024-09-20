@@ -1,15 +1,15 @@
 import { DateTime } from 'luxon';
 
 import type {
-  EnhancedTrack,
+  EnhancedTrackInterface,
   IGroupedClaims,
-  IRichClaim,
-  Track,
-  TrackList,
+  RichClaimInterface,
+  TrackInterface,
+  TrackListType,
   TracksConfig,
 } from '../interfaces';
 
-export function createUniqueGroupKeyFromTrackDate(track: EnhancedTrack): number {
+export function createUniqueGroupKeyFromTrackDate(track: EnhancedTrackInterface): number {
   // crée une clé unique pour un groupe
   // à partir de l'année et du mois
 
@@ -23,7 +23,7 @@ export function createUniqueGroupKeyFromTrackDate(track: EnhancedTrack): number 
 
 export const groupTracksByMonth =
   (options: TracksConfig) =>
-  (acc: TrackList[], track: EnhancedTrack, index: number): TrackList[] => {
+  (acc: TrackListType[], track: EnhancedTrackInterface, index: number): TrackListType[] => {
     const isFirstTrack = index === 0;
     const previousGroup = isFirstTrack ? [] : acc[acc.length - 1];
     const previousGroupKey = (previousGroup && previousGroup[0]) || null;
@@ -34,7 +34,7 @@ export const groupTracksByMonth =
 
     const nextTrackList = (
       !shouldCreateNewTrackList ? acc.pop() : [currentGroupKey, { label: null, tracks: [] }]
-    ) as TrackList;
+    ) as TrackListType;
 
     nextTrackList[1].label = !shouldCreateNewTrackList
       ? nextTrackList[1].label
@@ -51,20 +51,26 @@ export const groupTracksByMonth =
     return next;
   };
 
-export function orderGroupByKeyAsc([uniqKeyA]: TrackList, [uniqKeyB]: TrackList) {
+export function orderGroupByKeyAsc([uniqKeyA]: TrackListType, [uniqKeyB]: TrackListType) {
   return uniqKeyB - uniqKeyA;
 }
 
-export function orderTracksByDateDesc({ time: a }: EnhancedTrack, { time: b }: EnhancedTrack) {
+export function orderTracksByDateDesc(
+  { time: a }: EnhancedTrackInterface,
+  { time: b }: EnhancedTrackInterface,
+) {
   return b - a;
 }
 
-export function transformTrackToEnhanced(track: Track): EnhancedTrack {
+export function transformTrackToEnhanced(track: TrackInterface): EnhancedTrackInterface {
   const datetime = DateTime.fromMillis(track.time);
   return { ...track, datetime };
 }
 
-export function groupByDataProviderReducer(acc: IGroupedClaims, claim: IRichClaim): IGroupedClaims {
+export function groupByDataProviderReducer(
+  acc: IGroupedClaims,
+  claim: RichClaimInterface,
+): IGroupedClaims {
   const { label, slug: name } = claim.provider;
 
   if (!acc[name]) {
@@ -79,7 +85,7 @@ export function groupByDataProviderReducer(acc: IGroupedClaims, claim: IRichClai
   return acc;
 }
 
-export function groupByDataProvider(claims: IRichClaim[]): IGroupedClaims {
+export function groupByDataProvider(claims: RichClaimInterface[]): IGroupedClaims {
   const grouped = claims.reduce(groupByDataProviderReducer, {} as IGroupedClaims);
 
   return grouped;

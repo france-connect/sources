@@ -1,11 +1,10 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description, Loggable } from '@fc/exceptions-deprecated';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { CryptographyBaseException } from './cryptography-base.exception';
 
-@Loggable()
 @Description(
   "Problème de configuration dans la librairie de cryptographie (Une fonction de génération d'aléa requiert une longueur minimale pour éviter des collisions)",
 )

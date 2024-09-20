@@ -2,6 +2,25 @@
 @usager @apiToken @ignoreInteg01 @ci
 Fonctionnalité: API - token
 
+  @fcpLow @fcpHigh
+  Scénario: API token - cas non passant
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je me connecte au fournisseur d'identité via FranceConnect
+    Et que je suis redirigé vers la page d'information
+    Et que je paramètre un intercepteur pour l'appel à la redirect_uri du fournisseur de service
+    Et que je continue sur le fournisseur de service
+    Et que je prépare une requête "token"
+    Et que je mets "wrong-client-secret" dans la propriété "client_secret" du corps de la requête
+    Et que je mets le code renvoyé par FC au FS dans la propriété "code" du corps de la requête
+    Quand je lance la requête
+    Alors le statut de la réponse est 401
+    Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
+    Et l'entête de la réponse n'a pas de propriété "set-cookie"
+    Et le corps de la réponse n'a pas de propriété "id_token"
+    Et le corps de la réponse a une propriété "error" égale à "invalid_client"
+    Et le corps de la réponse a une propriété "error_description" égale à "client authentication failed"
+
+  @fcpLow @fcpHigh
   Scénario: API token - cas nominal
     Etant donné que je navigue sur la page fournisseur de service
     Et que je me connecte au fournisseur d'identité via FranceConnect

@@ -3,15 +3,13 @@ import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 import {
   addInterceptHeaders,
   checkFCBasicAuthorization,
-  isUsingFCBasicAuthorization,
-  navigateTo,
-} from '../../common/helpers';
-import {
   getClaims,
   getIdpClaims,
   getRnippClaims,
   getScopeByType,
-} from '../helpers';
+  isUsingFCBasicAuthorization,
+  navigateTo,
+} from '../../common/helpers';
 import ServiceProviderPage from '../pages/service-provider-page';
 
 let serviceProviderPage: ServiceProviderPage;

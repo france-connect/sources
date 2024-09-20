@@ -25,6 +25,9 @@ const blackout = [
   {
     selector: '[data-testid="connection-notification-message"]',
   },
+  {
+    selector: '[data-testid="connection-notification-browsing-session-id"]',
+  },
 ];
 const blackoutDiv = (width) => {
   const style = width ? ` style="width: ${width}px"` : '';

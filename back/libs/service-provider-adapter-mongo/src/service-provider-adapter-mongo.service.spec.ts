@@ -217,6 +217,7 @@ describe('ServiceProviderAdapterMongoService', () => {
       userinfo_encrypted_response_alg: true,
       userinfo_encrypted_response_enc: true,
       userinfo_signed_response_alg: true,
+      rep_scope: true,
     };
 
     const validateDtoMock = jest.mocked(validateDto);

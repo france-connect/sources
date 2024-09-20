@@ -2,6 +2,7 @@
 
 // Declarative code
 export * from './core-fca.service';
+export * from './core-fca-fqdn.service';
 export * from './core-fca-middleware.service';
 export * from './core-fca-tracking.service';
 export * from './core-fca-verify.service';

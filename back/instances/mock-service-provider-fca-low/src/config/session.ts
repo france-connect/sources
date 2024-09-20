@@ -5,11 +5,11 @@ import { ConfigParser } from '@fc/config';
 import { MockServiceProviderSession } from '@fc/mock-service-provider';
 import { MockServiceProviderRoutes } from '@fc/mock-service-provider/enums';
 import { OidcClientRoutes } from '@fc/oidc-client';
-import { ISessionCookieOptions, SessionConfig } from '@fc/session';
+import { SessionConfig, SessionCookieOptionsInterface } from '@fc/session';
 
 const env = new ConfigParser(process.env, 'Session');
 
-const cookieOptions: ISessionCookieOptions = {
+const cookieOptions: SessionCookieOptionsInterface = {
   signed: true,
   sameSite: 'lax',
   httpOnly: true,

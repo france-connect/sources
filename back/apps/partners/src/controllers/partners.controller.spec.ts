@@ -1,23 +1,118 @@
+import { HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { PartnersService } from '../services/partners.service';
+import { getSessionServiceMock } from '@mocks/session';
+
+import { PartnersFrontRoutes } from '../enums';
 import { PartnersController } from './partners.controller';
 
-describe('PartnersFcaController', () => {
-  let partnersFcaController: PartnersController;
+describe('PartnersController', () => {
+  let controller: PartnersController;
+
+  const resMock = {
+    json: jest.fn(),
+    redirect: jest.fn(),
+    status: jest.fn(),
+    send: jest.fn(),
+  };
+
+  const sessionServiceMock = getSessionServiceMock();
+
+  const redirectMock = PartnersFrontRoutes.INDEX;
+
+  const identityMock = {
+    email: 'email@email.fr',
+    given_name: 'givenName',
+    usual_name: 'usualName',
+    siret: 'siret',
+    sub: 'identityMock.sub value',
+  };
 
   beforeEach(async () => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+
     const app: TestingModule = await Test.createTestingModule({
       controllers: [PartnersController],
-      providers: [PartnersService],
     }).compile();
 
-    partnersFcaController = app.get<PartnersController>(PartnersController);
+    resMock.json.mockImplementationOnce((arg) => arg);
+
+    controller = app.get<PartnersController>(PartnersController);
+
+    sessionServiceMock.get.mockReturnValue(identityMock);
+
+    resMock.json.mockImplementationOnce((arg) => arg);
+    jest.mocked(resMock.status).mockReturnValue(resMock);
   });
 
-  describe('root', () => {
-    it('should return "Hello Partners FC!"', () => {
-      expect(partnersFcaController.getHello()).toBe('Hello Partners FC!');
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+
+  describe('getCsrfToken', () => {
+    const csrfTokenMock = 'csrfTokenMock';
+
+    it('should return csrfToken', () => {
+      // When
+      const result = controller.getCsrfToken(csrfTokenMock);
+
+      // Then
+      expect(result).toEqual({ csrfToken: csrfTokenMock });
+    });
+  });
+
+  describe('getUserInfo', () => {
+    it('should fetch idpIdentity in oidc session', async () => {
+      // When
+      await controller.getUserInfo(resMock, sessionServiceMock);
+
+      // Then
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
+    });
+
+    it('should return a 401 if no session', async () => {
+      // Given
+      sessionServiceMock.get.mockReturnValueOnce(undefined);
+
+      // When
+      await controller.getUserInfo(resMock, sessionServiceMock);
+
+      // Then
+      expect(resMock.status).toHaveBeenCalledTimes(1);
+      expect(resMock.status).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED);
+      expect(resMock.send).toHaveBeenCalledTimes(1);
+      expect(resMock.send).toHaveBeenCalledWith({ code: 'INVALID_SESSION' });
+    });
+
+    it('should return an object with lastname, firstname, email and siret used for the connection props', async () => {
+      // Given
+      sessionServiceMock.get.mockReturnValueOnce(identityMock);
+
+      const expected = {
+        firstname: identityMock.given_name,
+        lastname: identityMock.usual_name,
+        email: identityMock.email,
+        siret: identityMock.siret,
+        sub: identityMock.sub,
+      };
+
+      // When
+      const result = await controller.getUserInfo(resMock, sessionServiceMock);
+
+      // Then
+      expect(result).toStrictEqual(expected);
+    });
+  });
+
+  describe('getLogin', () => {
+    it('should redirect to the homepage', () => {
+      // When
+      controller.getIndex(resMock);
+      // Then
+      expect(resMock.redirect).toHaveBeenCalledTimes(1);
+      expect(resMock.redirect).toHaveBeenCalledWith(redirectMock);
     });
   });
 });

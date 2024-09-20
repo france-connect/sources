@@ -149,10 +149,6 @@ describe('OidcClient Controller', () => {
 
     it('should call oidc-client-service to retrieve authorize url', async () => {
       // setup
-      const body = {
-        csrfToken: 'csrfMockValue',
-      };
-
       const authorizeUrlMock = 'https://my-authentication-openid-url.com';
 
       oidcClientServiceMock.utils.getAuthorizeUrl.mockReturnValueOnce(
@@ -168,7 +164,7 @@ describe('OidcClient Controller', () => {
       };
 
       // action
-      await controller.redirectToIdp(res, body, sessionServiceMock);
+      await controller.redirectToIdp(res, sessionServiceMock);
 
       // assert
       expect(oidcClientServiceMock.utils.getAuthorizeUrl).toHaveBeenCalledTimes(
@@ -182,10 +178,6 @@ describe('OidcClient Controller', () => {
 
     it('should call res.redirect() with the authorizeUrl', async () => {
       // setup
-      const body = {
-        csrfToken: 'csrfMockValue',
-      };
-
       const authorizeUrlMock = 'https://my-authentication-openid-url.com';
 
       oidcClientServiceMock.utils.getAuthorizeUrl.mockReturnValueOnce(
@@ -193,7 +185,7 @@ describe('OidcClient Controller', () => {
       );
 
       // action
-      await controller.redirectToIdp(res, body, sessionServiceMock);
+      await controller.redirectToIdp(res, sessionServiceMock);
 
       // assert
       expect(res.redirect).toHaveBeenCalledTimes(1);
@@ -202,10 +194,6 @@ describe('OidcClient Controller', () => {
 
     it('should store state and nonce in session', async () => {
       // setup
-      const body = {
-        csrfToken: 'csrfMockValue',
-      };
-
       const authorizeUrlMock = 'https://my-authentication-openid-url.com';
 
       oidcClientServiceMock.utils.getAuthorizeUrl.mockReturnValueOnce(
@@ -213,7 +201,7 @@ describe('OidcClient Controller', () => {
       );
 
       // action
-      await controller.redirectToIdp(res, body, sessionServiceMock);
+      await controller.redirectToIdp(res, sessionServiceMock);
 
       // assert
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
@@ -224,27 +212,6 @@ describe('OidcClient Controller', () => {
         idpNonce: idpNonceMock,
         idpState: idpStateMock,
       });
-    });
-
-    it('should resolve even if no spId are fetchable', async () => {
-      // setup
-      const body = {
-        acr_values: 'eidas3',
-        claims: 'any_formatted_json_string',
-        csrfToken: 'csrfMockValue',
-        nonce: idpNonceMock,
-        providerUid: configMock.idpId,
-        scope: 'openid',
-      };
-      sessionServiceMock.get.mockImplementationOnce(() => {
-        throw new Error();
-      });
-
-      // action
-      await controller.redirectToIdp(res, body, sessionServiceMock);
-
-      // assert
-      expect(res.redirect).toHaveBeenCalledTimes(1);
     });
   });
 

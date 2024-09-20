@@ -60,13 +60,13 @@ _create_es_alias_legacy() {
 
 _generate_legacy_traces() {
   cd $FC_ROOT/fc/quality/fcp
-  yarn install --ignore-engines
+  yarn install --frozen-lockfile
   yarn traces generate legacy test_TRACE_USER
 }
 
 _generate_v2_traces() {
   cd $FC_ROOT/fc/quality/fcp
-  yarn install --ignore-engines
+  yarn install --frozen-lockfile
   yarn traces generate high test_TRACE_USER
 }
 

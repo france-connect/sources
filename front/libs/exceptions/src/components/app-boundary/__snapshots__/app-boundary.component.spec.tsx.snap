@@ -1,0 +1,136 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AppBoundaryComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="sticky-body"
+  >
+    <div
+      class="sticky-content"
+    >
+      <header
+        class="fr-header"
+        role="banner"
+      >
+        <div
+          class="fr-header__body"
+        >
+          <div
+            class="fr-container"
+          >
+            <div
+              class="fr-header__body-row"
+            >
+              <div
+                class="fr-header__brand fr-enlarge-link"
+              >
+                <div
+                  class="fr-header__brand-top"
+                >
+                  <div
+                    class="fr-header__logo"
+                  >
+                    <a
+                      aria-disabled="true"
+                      href="/"
+                      style="cursor: pointer;"
+                      title="République Française"
+                    >
+                      <p
+                        class="fr-logo"
+                      >
+                        République
+                        <br />
+                        Française
+                      </p>
+                    </a>
+                  </div>
+                  <div
+                    class="fr-header__operator"
+                  >
+                    <img
+                      alt="FranceConnect"
+                      class="fr-responsive-img"
+                      src="function SvgLogoFranceConnect(props) {
+  return React.createElement(
+    'svg', 
+    Object.assign({}, props, {'data-file-name': SvgLogoFranceConnect.name})
+  );
+}"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main
+        class="fr-container fr-my-8w"
+      >
+        <h1>
+          Oooops, Something went wrong ! 🤷
+        </h1>
+        <div
+          class="fr-alert fr-alert--error fr-alert--md"
+        >
+          <h3
+            class="fr-alert__title"
+          >
+            any error with message mock
+          </h3>
+          <ul>
+            <li>
+              any error with stack mock
+            </li>
+          </ul>
+        </div>
+      </main>
+    </div>
+    <footer
+      class="sticky-footer fr-footer"
+      id="footer"
+      role="contentinfo"
+    >
+      <div
+        class="fr-container"
+      >
+        <div
+          class="fr-footer__body"
+        >
+          <div
+            class="fr-footer__brand fr-enlarge-link"
+          >
+            <p
+              class="fr-logo"
+            >
+              République
+              <br />
+              Française
+            </p>
+            <a
+              aria-disabled="true"
+              class="fr-footer__brand-link"
+              href="/"
+              style="cursor: pointer;"
+              title="République Française"
+            >
+              <img
+                alt="FranceConnect"
+                class="fr-footer__logo fr-responsive-img"
+                src="function SvgLogoFranceConnect(props) {
+  return React.createElement(
+    'svg', 
+    Object.assign({}, props, {'data-file-name': SvgLogoFranceConnect.name})
+  );
+}"
+                style="height: 90px; max-height: 90px;"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+`;

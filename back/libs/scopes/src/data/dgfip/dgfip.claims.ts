@@ -130,4 +130,8 @@ export const claims: ClaimsInterface = {
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
   dgfip_EpargRetrDeduc: 'dgfip_EpargRetrDeduc',
+  // OIDC fashion naming
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  dgfip_annee_n_moins_2_si_indispo_n_moins_1:
+    'dgfip_annee_n_moins_2_si_indispo_n_moins_1',
 };

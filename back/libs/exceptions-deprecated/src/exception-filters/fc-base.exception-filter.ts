@@ -42,6 +42,7 @@ export abstract class FcBaseExceptionFilter extends BaseExceptionFilter {
       id,
       stackTrace,
       redirect,
+      originalError: exception.originalError,
     };
     this.logger.err(exceptionObject, message);
   }

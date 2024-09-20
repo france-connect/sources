@@ -1,9 +1,12 @@
 import { render } from '@testing-library/react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
+import { BrowserRouter } from 'react-router-dom';
 
-import { AccountProvider } from '@fc/account';
+import { AccountProvider, ConnectValidator } from '@fc/account';
 import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
 import { ConfigService } from '@fc/config';
+import { AppBoundaryComponent } from '@fc/exceptions';
 import { I18nService } from '@fc/i18n';
 import { StylesProvider } from '@fc/styles';
 
@@ -12,13 +15,6 @@ import translations from '../i18n/fr.json';
 import { Application } from './application';
 import { ApplicationRoutes } from './application.routes';
 
-jest.mock('react-router-dom');
-jest.mock('react-helmet-async');
-jest.mock('@fc/dsfr');
-jest.mock('@fc/styles');
-jest.mock('@fc/account');
-jest.mock('@fc/config');
-jest.mock('@fc/axios-error-catcher');
 jest.mock('./application.routes');
 
 describe('Application', () => {
@@ -28,19 +24,6 @@ describe('Application', () => {
 
     // then
     expect(container).toMatchSnapshot();
-  });
-
-  it('should call AccountProvider with config', () => {
-    // when
-    render(<Application />);
-
-    // then
-    expect(AccountProvider).toHaveBeenCalledWith(
-      expect.objectContaining({
-        config: AppConfig.Account,
-      }),
-      {},
-    );
   });
 
   it('should call I18nService initialize with config', () => {
@@ -59,9 +42,47 @@ describe('Application', () => {
     expect(ConfigService.initialize).toHaveBeenCalledWith(AppConfig);
   });
 
+  it('should call ErrorBoundary with props', () => {
+    // When
+    render(<Application />);
+
+    // Then
+    expect(ErrorBoundary).toHaveBeenCalledOnce();
+    expect(ErrorBoundary).toHaveBeenCalledWith(
+      expect.objectContaining({
+        FallbackComponent: AppBoundaryComponent,
+      }),
+      {},
+    );
+  });
+
+  it('should call BrowserRouter with props', () => {
+    // When
+    render(<Application />);
+
+    // Then
+    expect(BrowserRouter).toHaveBeenCalledOnce();
+  });
+
+  it('should call AccountProvider with params', () => {
+    // when
+    render(<Application />);
+
+    // then
+    expect(AccountProvider).toHaveBeenCalledOnce();
+    expect(AccountProvider).toHaveBeenCalledWith(
+      {
+        children: expect.any(Object),
+        validator: ConnectValidator,
+      },
+      {},
+    );
+  });
+
   it('should call AxiosErrorCatcherProvider', () => {
     // When
     render(<Application />);
+
     // Then
     expect(AxiosErrorCatcherProvider).toHaveBeenCalled();
   });

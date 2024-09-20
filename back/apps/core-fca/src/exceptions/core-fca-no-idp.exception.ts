@@ -8,18 +8,17 @@ import { Description } from '@fc/exceptions';
 import { ErrorCode } from '../enums';
 import { CoreFcaBaseException } from './core-fca-base.exception';
 
-@Description(
-  'Aucun fournisseur d’identité n’a été trouvé pour l’usager et il n’y a pas de fournisseur d’identité par défaut configuré pour ce service',
-)
+const description =
+  "Nous n'arrivons pas à vous identifier. Nous vous conseillons de créer un compte sur le site sans passer par le bouton AgentConnect";
+
+@Description(description)
 export class CoreFcaAgentNoIdpException extends CoreFcaBaseException {
   code = ErrorCode.NO_IDP;
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
+  public description: string = description;
 
-  illustration = 'temporary-restricted-error';
+  illustration = 'access-restricted-error';
   title = 'Accès indisponible';
-  description =
-    'Votre identité ne peut pas être vérifiée pour l’instant. Merci de réessayer dans quelques minutes.';
-
   public displayContact = true;
   public contactMessage =
     'Si cette situation vous parait inhabituelle, vous pouvez nous signaler l’erreur.';

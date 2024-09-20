@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
 import type { CinematicEvents, EidasToLabel } from '../../enums';
-import type { EnhancedTrack } from '../../interfaces';
+import type { EnhancedTrackInterface } from '../../interfaces';
 import * as TrackUtils from '../../utils/tracks.util';
 import { TrackCardComponent } from '../track-card/track-card.component';
 import { TracksGroupComponent } from './tracks-group';
@@ -19,7 +19,7 @@ describe('tracksGroupComponent', () => {
     LUXON_FORMAT_MONTH_YEAR: 'mock_LUXON_FORMAT_MONTH_YEAR',
     LUXON_FORMAT_TIMEZONE: 'mock_LUXON_FORMAT_TIMEZONE',
   };
-  const oldestTrack: EnhancedTrack = {
+  const oldestTrack: EnhancedTrackInterface = {
     city: 'any',
     claims: [],
     country: 'any',
@@ -32,7 +32,7 @@ describe('tracksGroupComponent', () => {
     time: 1633042800000, // '2021-10-01T00:00:00.000+01:00',
     trackId: 'oldest track',
   };
-  const newestTrack: EnhancedTrack = {
+  const newestTrack: EnhancedTrackInterface = {
     city: 'any',
     claims: [],
     country: 'any',
@@ -54,7 +54,9 @@ describe('tracksGroupComponent', () => {
     );
     // then
     const element = getByText('Any Label');
+
     expect(element).toBeInTheDocument();
+
     unmount();
   });
 
@@ -64,8 +66,10 @@ describe('tracksGroupComponent', () => {
     const { unmount } = render(
       <TracksGroupComponent label="Any Label" options={options} tracks={allTracks} />,
     );
+
     // then
     expect(sortFunctionSpy).toHaveBeenCalledOnce();
+
     unmount();
   });
 
@@ -74,8 +78,10 @@ describe('tracksGroupComponent', () => {
     const { unmount } = render(
       <TracksGroupComponent label="Any Label" options={options} tracks={allTracks} />,
     );
+
     // then
     expect(TrackCardComponent).toHaveBeenCalledTimes(2);
+
     unmount();
   });
 
@@ -84,8 +90,10 @@ describe('tracksGroupComponent', () => {
     const { unmount } = render(
       <TracksGroupComponent label="Any Label" options={options} tracks={allTracks} />,
     );
+
     // then
     expect(TrackCardComponent).toHaveBeenNthCalledWith(1, { options, track: newestTrack }, {});
+
     unmount();
   });
 });

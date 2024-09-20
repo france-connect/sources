@@ -9,10 +9,14 @@ import lodashOmit from 'lodash.omit';
 import { ConfigService } from '@fc/config';
 
 import { Options } from '../enums';
-import type { HttpClientConfig, HttpClientOptions, HttpClientRequest } from '../interfaces';
+import type {
+  HttpClientConfig,
+  HttpClientOptionsInterface,
+  HttpClientRequestInterface,
+} from '../interfaces';
 import { slashifyPath } from './slashify-path';
 
-export const getTimeout = (requestOptions: HttpClientOptions) => {
+export const getTimeout = (requestOptions: HttpClientOptionsInterface) => {
   if (requestOptions?.timeout) {
     return requestOptions.timeout;
   }
@@ -25,7 +29,7 @@ export const getTimeout = (requestOptions: HttpClientOptions) => {
   return Options.TIMEOUT;
 };
 
-export const getBaseURL = (requestOptions: HttpClientOptions) => {
+export const getBaseURL = (requestOptions: HttpClientOptionsInterface) => {
   if (requestOptions?.baseURL) {
     return requestOptions.baseURL;
   }
@@ -39,8 +43,8 @@ export const getBaseURL = (requestOptions: HttpClientOptions) => {
 };
 
 export const getRequestOptions = (
-  targetRequest: HttpClientRequest,
-  requestOptions: HttpClientOptions = {},
+  targetRequest: HttpClientRequestInterface,
+  requestOptions: HttpClientOptionsInterface = {},
 ): AxiosRequestConfig => {
   const timeout = getTimeout(requestOptions);
   const baseURL = getBaseURL(requestOptions);

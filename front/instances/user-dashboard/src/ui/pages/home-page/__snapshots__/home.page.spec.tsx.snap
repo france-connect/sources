@@ -3,7 +3,7 @@
 exports[`HomePage should match snapshot when session is expired 1`] = `
 <div>
   <div
-    class="large-container fr-m-auto fr-px-2w fr-mt-3w text-center"
+    class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
     id="page-container"
   >
     <div
@@ -23,6 +23,9 @@ exports[`HomePage should match snapshot when session is expired 1`] = `
     >
       Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter
     </h1>
+    <div
+      data-mockid="LoginFormComponent"
+    />
     <p
       class="paragraph fr-m-auto fr-mt-7v"
       data-testid="paragraph"
@@ -44,12 +47,9 @@ exports[`HomePage should match the snapshot on desktop layout 1`] = `
     >
       Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter
     </h1>
-    <div>
-      FoorBar RedirectToIdpFormComponentMock
-    </div>
-    <div>
-      FranceConnectButton
-    </div>
+    <div
+      data-mockid="LoginFormComponent"
+    />
     <p
       class="paragraph fr-m-auto fr-mt-7v"
       data-testid="paragraph"
@@ -71,12 +71,9 @@ exports[`HomePage should match the snapshot on mobile layout 1`] = `
     >
       Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter
     </h1>
-    <div>
-      FoorBar RedirectToIdpFormComponentMock
-    </div>
-    <div>
-      FranceConnectButton
-    </div>
+    <div
+      data-mockid="LoginFormComponent"
+    />
     <p
       class="paragraph fr-m-auto fr-mt-7v"
       data-testid="paragraph"
@@ -98,12 +95,9 @@ exports[`HomePage should match the snapshot on tablet layout 1`] = `
     >
       Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter
     </h1>
-    <div>
-      FoorBar RedirectToIdpFormComponentMock
-    </div>
-    <div>
-      FranceConnectButton
-    </div>
+    <div
+      data-mockid="LoginFormComponent"
+    />
     <p
       class="paragraph fr-m-auto fr-mt-7v"
       data-testid="paragraph"
@@ -114,7 +108,7 @@ exports[`HomePage should match the snapshot on tablet layout 1`] = `
 </div>
 `;
 
-exports[`HomePage should match the snapshot, when csrf token is defined 1`] = `
+exports[`HomePage should match the snapshot when session is not expired 1`] = `
 <div>
   <div
     class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
@@ -125,39 +119,9 @@ exports[`HomePage should match the snapshot, when csrf token is defined 1`] = `
     >
       Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter
     </h1>
-    <div>
-      FoorBar RedirectToIdpFormComponentMock
-    </div>
-    <div>
-      FranceConnectButton
-    </div>
-    <p
-      class="paragraph fr-m-auto fr-mt-7v"
-      data-testid="paragraph"
-    >
-      Une fois connecté, vous pourrez accéder à l’ensemble des connexions et échanges de données liés à votre compte sur les 6 derniers mois.
-    </p>
-  </div>
-</div>
-`;
-
-exports[`HomePage should match the snapshot, when csrf token is not defined 1`] = `
-<div>
-  <div
-    class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
-    id="page-container"
-  >
-    <h1
-      class="title fr-mb-5w"
-    >
-      Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter
-    </h1>
-    <div>
-      FoorBar RedirectToIdpFormComponentMock
-    </div>
-    <div>
-      FranceConnectButton
-    </div>
+    <div
+      data-mockid="LoginFormComponent"
+    />
     <p
       class="paragraph fr-m-auto fr-mt-7v"
       data-testid="paragraph"

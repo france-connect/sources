@@ -20,6 +20,14 @@
   pointer-events: none !important;
 }
 
+.no-touch-action {
+  touch-action: none;
+}
+
+.no-touch-action-important {
+  touch-action: none !important;
+}
+
 .no-flex-grow {
   flex: 0 1;
 }

@@ -88,6 +88,32 @@ describe('CryptographyFcpService', () => {
     });
   });
 
+  describe('formatBirthPlace', () => {
+    it('should return empty string when birthcountry is not FRANCE_COG', () => {
+      // Given
+      const birthplace = '95277';
+      const birthcountry = '99101';
+
+      // When
+      const result = service['formatBirthPlace']({ birthplace, birthcountry });
+
+      // Then
+      expect(result).toEqual('');
+    });
+
+    it('should return birthplace when birthcountry is FRANCE_COG', () => {
+      // Given
+      const birthplace = '95277';
+      const birthcountry = '99100';
+
+      // When
+      const result = service['formatBirthPlace']({ birthplace, birthcountry });
+
+      // Then
+      expect(result).toEqual('95277');
+    });
+  });
+
   describe('computeSubV1', () => {
     const providerRefMock = 'providerRefMockValue';
     const identityHashMock = 'identityHashValue';

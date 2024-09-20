@@ -2,10 +2,10 @@
 
 // declarative file
 import { RenderOptions, render } from '@testing-library/react';
-import { ReactElement } from 'react';
+import { PropsWithChildren, ReactElement } from 'react';
 import { Form } from 'react-final-form';
 
-const FinalFormWrapper = ({ children }: { children: React.ReactNode }) => {
+const FinalFormWrapper = ({ children }: PropsWithChildren) => {
   return (
     <Form onSubmit={jest.fn()}>
       {({ handleSubmit }) => (

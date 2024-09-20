@@ -343,6 +343,100 @@
   },
   {
     "enabled": true,
+    "criteria": [
+      "avec genre indéfini"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "genre_indéfini",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "unspecified",
+      "given_name": "Camille",
+      "family_name": "LAFORGE",
+      "birthdate": "1954-08-07",
+      "birthplace": "75119",
+      "birthcountry": "99100",
+      "email": "xagreureufadda-6730@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "né à l'étranger avec un lieu de naissance (COG)"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "naissance_etranger_birthplace_cog",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "Vincent",
+      "family_name": "ALGER",
+      "birthdate": "1963-12-05",
+      "birthplace": "90900",
+      "birthcountry": "99352",
+      "rnipp_birthcountry": "99100",
+      "email": "didejuttoja-8426@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "né à l'étranger avec un lieu de naissance (texte)"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "naissance_etranger_birthplace_texte",
+        "password": "123"
+      }
+    ],
+    "claims": {
+      "gender": "female",
+      "given_name": "Alia",
+      "family_name": "ALGERIE",
+      "birthdate": "1963-12-05",
+      "birthplace": "Alger",
+      "rnipp_birthplace": "",
+      "birthcountry": "99352",
+      "email": "xagreureufadda-6730@yopmail.com"
+    }
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "sans genre"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "sans_genre",
+        "password": "123"
+      }
+    ]
+  },
+  {
+    "enabled": true,
+    "criteria": [
+      "sans lieu de naissance"
+    ],
+    "credentials": [
+      {
+        "idpId": "default",
+        "username": "sans_birthplace",
+        "password": "123"
+      }
+    ]
+  },
+  {
+    "enabled": true,
     "criteria": ["désactivé"],
     "credentials": [
       {

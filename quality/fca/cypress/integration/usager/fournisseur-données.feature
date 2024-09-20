@@ -5,6 +5,7 @@ Fonctionnalité: Fournisseur Données
   # je souhaite vérifier la validité d'un access token
   # afin de fournir les données liées aux scopes autorisés pour le fournisseur de service
 
+  @ignoreInteg01
   Scénario: Checktoken - access token valide avec un scope groups
     Etant donné que j'utilise un fournisseur de service "éligible au scope groups"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "obligatoires et groups"

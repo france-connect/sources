@@ -3,4 +3,4 @@
 // Declarative code
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Config = Record<string, any>;
+export type ConfigInterface = Record<string, any>;

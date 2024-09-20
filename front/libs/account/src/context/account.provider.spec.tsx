@@ -1,158 +1,179 @@
-import { fireEvent, render } from '@testing-library/react';
-import React from 'react';
+import { render } from '@testing-library/react';
+import React, { useState } from 'react';
 
-import { AccountService } from '../services/account.service';
+import { AxiosErrorCatcherContext } from '@fc/axios-error-catcher';
+import { useSafeContext } from '@fc/common';
+import { ConfigService } from '@fc/config';
+
+import { fetchUserInfos } from '../services';
 import { AccountContext } from './account.context';
 import { AccountProvider } from './account.provider';
 
-jest.mock('./../services/account.service');
-
-const configMock = {
-  csrf: 'secretCsrf',
-  endpoints: {
-    login: '/login/endpoint',
-    logout: '/logout/endpoint',
-    me: '/me/endpoint',
-  },
-};
+jest.mock('./account.context');
+jest.mock('./../services/user-infos/user-infos.service');
 
 describe('AccountProvider', () => {
-  it('should render the child component', () => {
-    // given
-    const theProvider = (
-      <AccountProvider config={{ ...configMock }}>
-        <div>the children</div>
-      </AccountProvider>
-    );
+  // given
+  const ConnectValidatorMock = { validate: jest.fn() };
+  const Provider = () => (
+    <AccountProvider validator={ConnectValidatorMock}>
+      <div data-testid="ChildComponent" />
+    </AccountProvider>
+  );
 
+  beforeEach(() => {
+    // given
+    const endpoint = '/any-account-endpoints-me-mock';
+    jest.mocked(ConfigService.get).mockReturnValue({ endpoints: { me: endpoint } });
+    jest.mocked(useSafeContext).mockReturnValue({ codeError: undefined, hasError: false });
+    jest.spyOn(React, 'useState').mockReturnValue([expect.any(Object), jest.fn()]);
+  });
+
+  it('should render the child component', () => {
     // when
-    const { getByText } = render(theProvider);
-    const element = getByText('the children');
+    const { container, getByTestId } = render(<Provider />);
+    const element = getByTestId('ChildComponent');
 
     // then
+    expect(container).toMatchSnapshot();
     expect(element).toBeInTheDocument();
   });
 
-  it('should call AccountService.fetchData only once at first render', () => {
+  it('should retrieve the account config', () => {
     // when
-    const theProvider = (
-      <AccountProvider config={{ ...configMock }}>
-        <div>the children</div>
-      </AccountProvider>
-    );
-    const { rerender } = render(theProvider);
-    rerender(theProvider);
-    rerender(theProvider);
-    rerender(theProvider);
-    rerender(theProvider);
-    rerender(theProvider);
+    render(<Provider />);
 
     // then
-    expect(AccountService.fetchData).toHaveBeenCalledOnce();
-    expect(AccountService.fetchData).toHaveBeenCalledWith('/me/endpoint', expect.any(Function));
+    expect(ConfigService.get).toHaveBeenCalledOnce();
+    expect(ConfigService.get).toHaveBeenCalledWith('Account');
   });
 
-  it('should call AccountService.fetchData only once either url has changed', () => {
+  it('should retrieve api call errors', () => {
     // when
-    const { rerender } = render(
-      <AccountProvider config={{ ...configMock }}>
-        <div>the children</div>
-      </AccountProvider>,
-    );
-    rerender(
-      <AccountProvider config={{ ...configMock }}>
-        <div>the children</div>
-      </AccountProvider>,
-    );
+    render(<Provider />);
 
     // then
-    expect(AccountService.fetchData).toHaveBeenCalledOnce();
-    expect(AccountService.fetchData).toHaveBeenCalledWith('/me/endpoint', expect.any(Function));
+    expect(useSafeContext).toHaveBeenCalledOnce();
+    expect(useSafeContext).toHaveBeenCalledWith(AxiosErrorCatcherContext);
   });
 
-  it('should call AccountService.fetchData only once at first render with an useCallback as parameter', () => {
+  it('should set the initial state', () => {
     // given
-    const setStateMock = jest.fn();
-    const useCallbackMock = jest.fn();
-    jest.spyOn(React, 'useCallback').mockImplementationOnce(() => useCallbackMock);
-    jest.spyOn(React, 'useState').mockImplementationOnce(() => [expect.any(Object), setStateMock]);
+    jest.spyOn(React, 'useState');
 
     // when
-    const theProvider = (
-      <AccountProvider config={{ ...configMock }}>
-        <div>the children</div>
-      </AccountProvider>
-    );
-    const { rerender } = render(theProvider);
-    rerender(theProvider);
-    rerender(theProvider);
-    rerender(theProvider);
-    rerender(theProvider);
-    rerender(theProvider);
+    render(<Provider />);
 
     // then
-    expect(AccountService.fetchData).toHaveBeenCalledOnce();
-    expect(AccountService.fetchData).toHaveBeenCalledWith('/me/endpoint', useCallbackMock);
+    expect(useState).toHaveBeenCalledOnce();
+    expect(useState).toHaveBeenCalledWith({
+      connected: false,
+      expired: false,
+      ready: false,
+      userinfos: undefined,
+    });
   });
 
-  it('should call the provider updateAccount callback hook handler while any consumer using it', () => {
+  it('should call useEffect twice with differents params', () => {
     // given
-    const theUpdateMock = { thekey: 'thekey' };
-    const useCallbackMock = jest.fn();
-    jest.spyOn(React, 'useCallback').mockImplementationOnce(() => useCallbackMock);
+    const expired = Symbol('account.state.expired');
+    const connected = Symbol('account.state.connected');
+    const hasError = Symbol('axioscatcher.state.hasError');
+
+    const useEffectMock = jest.spyOn(React, 'useEffect');
+    jest.spyOn(React, 'useState').mockReturnValueOnce([{ connected, expired }, jest.fn()]);
+    jest.mocked(useSafeContext).mockReturnValueOnce({ codeError: 'any-error-code-mock', hasError });
 
     // when
-    const { getByRole } = render(
-      <AccountProvider config={{ ...configMock }}>
-        <AccountContext.Consumer>
-          {({ updateAccount }) => (
-            <button
-              type="button"
-              onClick={() => {
-                updateAccount(theUpdateMock);
-              }}>
-              the button
-            </button>
-          )}
-        </AccountContext.Consumer>
-      </AccountProvider>,
-    );
-    const theButton = getByRole('button');
-    fireEvent.click(theButton);
+    render(<Provider />);
 
     // then
-    expect(useCallbackMock).toHaveBeenCalledOnce();
-    expect(useCallbackMock).toHaveBeenCalledWith(theUpdateMock);
+    expect(useEffectMock).toHaveBeenCalledTimes(2);
+    // @NOTE first call is for fetchUserInfos
+    expect(useEffectMock).toHaveBeenNthCalledWith(1, expect.any(Function), []);
+    // @NOTE second call is for session expiration
+    expect(useEffectMock).toHaveBeenNthCalledWith(2, expect.any(Function), [
+      expired,
+      connected,
+      'any-error-code-mock',
+      hasError,
+    ]);
   });
 
-  it('should call setState handler as a callback of any AccountContext.Consumer', () => {
+  it('should call fetch user infos only at first render', () => {
     // given
-    const theUpdateMock = { thekey: 'thekey' };
-    const stateMock = { thebase: 'thebase', thekey: undefined };
-    const setStateMock = jest.fn();
-    jest.spyOn(React, 'useState').mockImplementationOnce(() => [stateMock, setStateMock]);
+    const setAccountMock = jest.fn();
+    jest.spyOn(React, 'useState').mockReturnValueOnce([expect.any(Object), setAccountMock]);
+    jest.mocked(ConfigService.get).mockReturnValueOnce({
+      endpoints: {
+        me: '/any-account-endpoints-me-mock',
+      },
+    });
 
     // when
-    const { getByRole } = render(
-      <AccountProvider config={{ ...configMock }}>
-        <AccountContext.Consumer>
-          {({ updateAccount }) => (
-            <button
-              type="button"
-              onClick={() => {
-                updateAccount(theUpdateMock);
-              }}>
-              the button
-            </button>
-          )}
-        </AccountContext.Consumer>
-      </AccountProvider>,
-    );
-    const theButton = getByRole('button');
-    fireEvent.click(theButton);
+    const { rerender } = render(<Provider />);
+    // @NOTE excessive multiple renders
+    rerender(<Provider />);
+    rerender(<Provider />);
+    rerender(<Provider />);
+    rerender(<Provider />);
 
     // then
-    expect(setStateMock).toHaveBeenCalledOnce();
-    expect(setStateMock).toHaveBeenCalledWith({ ...stateMock, ...theUpdateMock });
+    expect(fetchUserInfos).toHaveBeenCalledOnce();
+    expect(fetchUserInfos).toHaveBeenCalledWith({
+      endpoint: '/any-account-endpoints-me-mock',
+      updateState: setAccountMock,
+      validator: ConnectValidatorMock,
+    });
+  });
+
+  it('should upodate the state only once when session has expired', () => {
+    // given
+    const setAccountMock = jest.fn();
+    jest.mocked(useSafeContext).mockReturnValueOnce({ codeError: 401 });
+    jest
+      .spyOn(React, 'useState')
+      .mockReturnValueOnce([{ connected: true, expired: false }, setAccountMock]);
+
+    // when
+    const { rerender } = render(<Provider />);
+    // @NOTE excessive multiple renders
+    rerender(<Provider />);
+    rerender(<Provider />);
+    rerender(<Provider />);
+    rerender(<Provider />);
+
+    // then
+    expect(setAccountMock).toHaveBeenCalledOnce();
+    expect(setAccountMock).toHaveBeenCalledWith({
+      connected: false,
+      expired: true,
+      ready: true,
+      userinfos: undefined,
+    });
+  });
+
+  it('should render the provider with account values', () => {
+    // given
+    const accountStateMock = {
+      connected: Symbol('account.state.connected'),
+      expired: Symbol('account.state.expired'),
+      ready: Symbol('account.state.ready'),
+      userinfos: Symbol('account.state.userinfos'),
+    };
+    jest.spyOn(React, 'useState').mockReturnValueOnce([accountStateMock, jest.fn()]);
+
+    // when
+    render(<Provider />);
+
+    // then
+    expect(AccountContext.Provider).toHaveBeenCalledOnce();
+    expect(AccountContext.Provider).toHaveBeenCalledWith(
+      {
+        children: expect.any(Object),
+        value: accountStateMock,
+      },
+      {},
+    );
   });
 });

@@ -27,8 +27,10 @@ describe('TrackCardHeaderComponent', () => {
         serviceProviderLabel="any identity provider name"
       />,
     );
+
     // then
     const element = getByText('any identity provider name');
+
     expect(element).toBeInTheDocument();
   });
 
@@ -45,6 +47,7 @@ describe('TrackCardHeaderComponent', () => {
     );
     // then
     const element = getByText(expected);
+
     expect(element).toBeInTheDocument();
   });
 
@@ -60,6 +63,7 @@ describe('TrackCardHeaderComponent', () => {
     );
     // then
     const elements = container.getElementsByTagName('title');
+
     expect(elements).toHaveLength(1);
     expect(elements[0].innerHTML).toBe('Icone plus');
   });
@@ -74,8 +78,10 @@ describe('TrackCardHeaderComponent', () => {
         serviceProviderLabel="any"
       />,
     );
+
     // then
     const elements = container.getElementsByTagName('title');
+
     expect(elements).toHaveLength(1);
     expect(elements[0].innerHTML).toBe('Icone moins');
   });

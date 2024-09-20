@@ -2,12 +2,11 @@
 
 // Declarative code
 
-import { Description, Loggable } from '@fc/exceptions-deprecated';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { CsvBaseException } from './csv-base.exception';
 
-@Loggable()
 @Description("Problème d'extraction des données CSV")
 export class CsvParsingException extends CsvBaseException {
   code = ErrorCode.PARSING_CSV;

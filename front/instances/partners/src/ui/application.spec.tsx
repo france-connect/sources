@@ -1,8 +1,11 @@
 import { render } from '@testing-library/react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
 
+import { AccountProvider, ConnectValidator } from '@fc/account';
 import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
 import { ConfigService } from '@fc/config';
+import { AppBoundaryComponent } from '@fc/exceptions';
 import { I18nService } from '@fc/i18n';
 
 import { AppConfig } from '../config';
@@ -10,10 +13,6 @@ import translations from '../i18n/fr.json';
 import { Application } from './application';
 import { ApplicationRoutes } from './application.routes';
 
-jest.mock('react-router-dom');
-jest.mock('react-helmet-async');
-jest.mock('@fc/dsfr');
-jest.mock('@fc/axios-error-catcher');
 jest.mock('./application.routes');
 
 describe('Application', () => {
@@ -41,9 +40,39 @@ describe('Application', () => {
     expect(ConfigService.initialize).toHaveBeenCalledWith(AppConfig);
   });
 
+  it('should call ErrorBoundary with props', () => {
+    // When
+    render(<Application />);
+
+    // Then
+    expect(ErrorBoundary).toHaveBeenCalledOnce();
+    expect(ErrorBoundary).toHaveBeenCalledWith(
+      expect.objectContaining({
+        FallbackComponent: AppBoundaryComponent,
+      }),
+      {},
+    );
+  });
+
+  it('should call AccountProvider with props', () => {
+    // When
+    render(<Application />);
+
+    // Then
+    expect(AccountProvider).toHaveBeenCalledOnce();
+    expect(AccountProvider).toHaveBeenCalledWith(
+      {
+        children: expect.any(Object),
+        validator: ConnectValidator,
+      },
+      {},
+    );
+  });
+
   it('should call AxiosErrorCatcherProvider', () => {
     // When
     render(<Application />);
+
     // Then
     expect(AxiosErrorCatcherProvider).toHaveBeenCalled();
   });

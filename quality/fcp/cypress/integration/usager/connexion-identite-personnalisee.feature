@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionIdentitePersonnalisee @ci
+@usager @connexionIdentitePersonnalisee @fcpLow @fcpHigh @ci
 Fonctionnalité: Connexion Usager personalisée bac à sable
   # En tant que partenaire,
   # je veux me connecter avec une identité personalisée dans la bac à sable

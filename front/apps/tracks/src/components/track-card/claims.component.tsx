@@ -2,11 +2,11 @@ import type { DateTime } from 'luxon';
 import React from 'react';
 
 import { CinematicEvents } from '../../enums';
-import type { IGroupedClaims, IRichClaim, TracksConfig } from '../../interfaces';
+import type { IGroupedClaims, RichClaimInterface, TracksConfig } from '../../interfaces';
 import { groupByDataProvider } from '../../utils';
 
 type ClaimsComponentProps = {
-  claims: IRichClaim[];
+  claims: RichClaimInterface[];
   datetime: DateTime;
   eventType: string;
   options: TracksConfig;

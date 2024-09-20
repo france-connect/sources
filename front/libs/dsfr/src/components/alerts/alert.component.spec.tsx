@@ -96,6 +96,7 @@ describe('Alert', () => {
     // when
     const { getByTestId } = render(<AlertComponent className="foo bar">Children</AlertComponent>);
     const element = getByTestId('AlertComponent');
+
     // then
     expect(element).toHaveClass('foo bar');
   });

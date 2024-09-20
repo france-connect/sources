@@ -42,6 +42,7 @@ Fonctionnalité: Connexion Usager - idp_hint
     Et je suis redirigé vers la page fournisseur de service
     Et je suis connecté au fournisseur de service
 
+  @fcpLow @fcpHigh
   Scénario: Connexion avec idp_hint invalide
     Etant donné que j'utilise un fournisseur de service "par défaut"
     Et que j'utilise le fournisseur d'identité "non autorisé pour idp_hint"

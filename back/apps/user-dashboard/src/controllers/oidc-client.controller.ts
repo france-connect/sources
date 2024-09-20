@@ -48,11 +48,10 @@ export class OidcClientController {
   /**
    * @todo #242 get configured parameters (scope and acr)
    */
-  @Post(OidcClientRoutes.REDIRECT_TO_IDP)
+  @Get(OidcClientRoutes.REDIRECT_TO_IDP)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async redirectToIdp(
     @Res() res,
-    @Body() _body,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020

@@ -27,7 +27,7 @@
   {
     "name": "fsp2-high",
     "descriptions": [
-      "habilité à demander le scope identite_pivot",
+      "non habilité à demander le scope cnous_statut_boursier",
       "avec une blacklist de FI",
       "avec le même entityId",
       "avec accès au FI par défaut (deuxième FS)",

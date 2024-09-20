@@ -3,4 +3,4 @@
 // declarative file
 export * from './badge.interface';
 export * from './track.interface';
-export * from './tracks.config';
+export * from './tracks.config.interface';

@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-export * from './account.config';
-export * from './account.interface';
-export * from './account-data.interface';
+export * from './account-config.interface';
+export * from './account-context.state.interface';
+export * from './user-infos.interface';
+export * from './user-infos-validator.interface';

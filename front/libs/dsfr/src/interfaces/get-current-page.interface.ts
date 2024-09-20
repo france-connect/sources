@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-export interface IGetCurrentPage {
+export interface GetCurrentPageInterface {
   itemsPerPage: number;
   currentElementIndexIntoTheList: number;
 }

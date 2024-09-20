@@ -38,6 +38,17 @@ export default class UsagerNotificationConnection {
     return cy.get('[data-testid="connection-notification-message"]');
   }
 
+  checkConnectionNotificationHasBrowsingSessionId(): void {
+    const notificationMessageBrowsingSessionId = new RegExp(
+      `[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}`,
+      'i',
+    );
+    cy.get('[data-testid="connection-notification-browsing-session-id"]')
+      .invoke('text')
+      .then((text) => text.trim().replace(/\s\s+/g, ' '))
+      .should('match', notificationMessageBrowsingSessionId);
+  }
+
   checkConnectionNotificationMessage(
     platform: string,
     spName: string,

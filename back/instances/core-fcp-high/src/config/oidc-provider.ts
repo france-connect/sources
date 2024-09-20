@@ -7,16 +7,7 @@ import {
   OidcProviderPrompt,
   OidcProviderRoutes,
 } from '@fc/oidc-provider';
-import {
-  cnam,
-  cnous,
-  dgfip,
-  fcpHigh,
-  fcTracks,
-  mesri,
-  mi,
-  pe,
-} from '@fc/scopes';
+import { cnam, cnous, dgfip, fcpHigh } from '@fc/scopes';
 
 const env = new ConfigParser(process.env, 'OidcProvider');
 
@@ -82,10 +73,6 @@ export default {
       ...dgfip.scopes,
       ...cnam.scopes,
       ...cnous.scopes,
-      ...mesri.scopes,
-      ...mi.scopes,
-      ...pe.scopes,
-      ...fcTracks.scopes,
     },
     clientDefaults: {
       grant_types: ['authorization_code'],

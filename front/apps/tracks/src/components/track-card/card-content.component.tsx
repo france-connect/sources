@@ -4,7 +4,7 @@ import React from 'react';
 
 import type { EidasToLabel } from '../../enums';
 import { CinematicEvents } from '../../enums';
-import type { IRichClaim, TracksConfig } from '../../interfaces';
+import type { RichClaimInterface, TracksConfig } from '../../interfaces';
 import { ClaimsComponent } from './claims.component';
 import { ConnectionComponent } from './connection.component';
 
@@ -16,7 +16,7 @@ type TraceCardContentProps = {
   interactionAcr: keyof typeof EidasToLabel;
   city: string | undefined;
   country: string | undefined;
-  claims: IRichClaim[];
+  claims: RichClaimInterface[];
   idpLabel: string;
   options: TracksConfig;
 };

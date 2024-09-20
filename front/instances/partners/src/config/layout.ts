@@ -1,50 +1,72 @@
 /* istanbul ignore file */
 
 // declarative file
-import type { LayoutConfig } from '@fc/dsfr';
-import { LogoFranceConnect } from '@fc/dsfr';
+import { LogoFranceConnect } from '@fc/assets';
+import type { LayoutConfig } from '@fc/layout';
 
 export const Layout: LayoutConfig = {
-  bottomLinks: [
-    {
-      href: 'https://franceconnect.gouv.fr/plan-site',
-      label: 'Plan du site',
-    },
-    {
-      href: 'https://franceconnect.gouv.fr/accessibilite',
-      label: 'Accessibilité : non conforme',
-    },
-    {
-      href: 'https://franceconnect.gouv.fr/mentions-legales',
-      label: 'Mentions légales',
-    },
-    {
-      href: 'https://franceconnect.gouv.fr/cgu',
-      label: 'Données personnelles',
-    },
-    {
-      href: 'https://franceconnect.gouv.fr/cgu',
-      label: 'Gestion des cookies',
-    },
-  ],
-  footerDescription:
-    'Partenaires France Connect est un dispositif qui permet aux administrateurs FC de gérer les partenaires France Connnect.',
-  footerLinkTitle: 'Espace Partenaires',
-  homepage: '/',
-  logo: LogoFranceConnect,
-  navigationItems: [
+  features: {
+    showLicence: false,
+    showServiceTitle: true,
+  },
+  footer: {
+    description:
+      'Partenaires France Connect est un dispositif qui permet aux administrateurs FC de gérer les partenaires France Connnect.',
+    links: [
+      {
+        href: 'https://www.legifrance.gouv.fr',
+        label: 'legifrance.gouv.fr',
+        title: 'Accéder au site legifrance.gouv.fr nouvelle fenêtre',
+      },
+      {
+        href: 'https://www.info.gouv.fr',
+        label: 'info.gouv.fr',
+        title: 'Accéder au site info.gouv.fr nouvelle fenêtre',
+      },
+      {
+        href: 'https://www.service-public.fr/',
+        label: 'service-public.fr',
+        title: 'Accéder au site service-public.fr nouvelle fenêtre',
+      },
+      {
+        href: 'https://data.gouv.fr',
+        label: 'data.gouv.fr',
+        title: 'Accéder au site data.gouv.fr nouvelle fenêtre',
+      },
+    ],
+    navigation: [
+      {
+        href: 'https://franceconnect.gouv.fr/plan-site',
+        label: 'Plan du site',
+      },
+      {
+        href: 'https://franceconnect.gouv.fr/accessibilite',
+        label: 'Accessibilité : non conforme',
+      },
+      {
+        href: 'https://franceconnect.gouv.fr/mentions-legales',
+        label: 'Mentions légales',
+      },
+      {
+        href: 'https://franceconnect.gouv.fr/cgu',
+        label: 'Données personnelles',
+      },
+      {
+        href: 'https://franceconnect.gouv.fr/cgu',
+        label: 'Gestion des cookies',
+      },
+    ],
+  },
+  navigation: [
     {
       href: '/',
       label: 'Home',
     },
-    {
-      href: '/form',
-      label: 'Formulaires',
-    },
   ],
   service: {
     baseline: 'Espace Partenaires',
+    homepage: '/',
+    logo: LogoFranceConnect,
     name: 'FranceConnect / FranceConnect+',
-    title: 'Retourner à l’accueil',
   },
 };

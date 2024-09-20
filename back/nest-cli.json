@@ -116,6 +116,15 @@
         ]
       }
     },
+    "partners-instance": {
+      "type": "application",
+      "root": "instances/partners",
+      "entryFile": "main",
+      "sourceRoot": "instances/partners/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/partners/tsconfig.app.json"
+      }
+    },
     "partners": {
       "type": "library",
       "root": "apps/partners",
@@ -200,6 +209,29 @@
           "../../../instances/mock-service-provider-fcp-low/**/*.css",
           "../../../instances/mock-service-provider-fcp-low/**/*.svg",
           "../../../instances/mock-service-provider-fcp-low/**/*.png"
+        ]
+      }
+    },
+    "mock-service-provider-fcp-legacy": {
+      "type": "application",
+      "root": "instances/mock-service-provider-fcp-legacy",
+      "entryFile": "main",
+      "sourceRoot": "instances/mock-service-provider-fcp-legacy/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/mock-service-provider-fcp-legacy/tsconfig.app.json",
+        "assets": [
+          "../../../apps/mock-service-provider/src/public/css/main.css",
+          "../../../apps/mock-service-provider/src/views/error.ejs",
+          "../../../apps/mock-service-provider/src/views/success-revoke-token.ejs",
+          "../../../apps/mock-service-provider/**/*.ejs",
+          "../../../apps/mock-service-provider/**/*.css",
+          "../../../apps/mock-service-provider/**/*.svg",
+          "../../../apps/mock-service-provider/**/*.png",
+          "../../../instances/mock-service-provider-fcp-legacy/**/*.js",
+          "../../../instances/mock-service-provider-fcp-legacy/**/*.ejs",
+          "../../../instances/mock-service-provider-fcp-legacy/**/*.css",
+          "../../../instances/mock-service-provider-fcp-legacy/**/*.svg",
+          "../../../instances/mock-service-provider-fcp-legacy/**/*.png"
         ]
       }
     },
@@ -298,7 +330,9 @@
       "sourceRoot": "instances/csmr-user-preferences-high/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
-        "assets": ["../../../instances/csmr-user-preferences-high/**/*.ejs"]
+        "assets": [
+          "../../../instances/csmr-user-preferences-high/**/*.ejs"
+        ]
       }
     },
     "csmr-account-instance": {
@@ -308,6 +342,15 @@
       "sourceRoot": "instances/csmr-account-instance/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-account-instance/tsconfig.app.json"
+      }
+    },
+    "csmr-fraud-instance": {
+      "type": "application",
+      "root": "instances/csmr-fraud-instance",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-fraud-instance/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-fraud-instance/tsconfig.app.json"
       }
     },
     "rnipp": {
@@ -886,6 +929,15 @@
         "tsConfigPath": "apps/csmr-account/tsconfig.lib.json"
       }
     },
+    "csmr-fraud": {
+      "type": "library",
+      "root": "apps/csmr-fraud",
+      "entryFile": "index",
+      "sourceRoot": "apps/csmr-fraud/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/csmr-fraud/tsconfig.lib.json"
+      }
+    },
     "roles": {
       "type": "library",
       "root": "libs/roles",
@@ -901,7 +953,11 @@
       "entryFile": "main",
       "sourceRoot": "instances/mock-rnipp/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/mock-rnipp/tsconfig.app.json"
+        "tsConfigPath": "instances/mock-rnipp/tsconfig.app.json",
+        "assets": [
+          "../../../apps/mock-rnipp/**/*.ejs",
+          "../../../apps/mock-rnipp/**/*.xml"
+        ]
       }
     },
     "oidc-acr": {

@@ -4,12 +4,12 @@ import React, { useCallback, useState } from 'react';
 import { ToggleInput } from '@fc/dsfr';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
-import type { Service } from '../interfaces';
+import type { ServiceInterface } from '../interfaces';
 import { ServiceImageComponent } from './service-image.component';
 import { ServiceSwitchLabelComponent } from './service-switch-label.component';
 
 interface ServiceComponentProps {
-  service: Service;
+  service: ServiceInterface;
   allowToBeUpdated?: boolean;
 }
 
@@ -56,6 +56,7 @@ export const ServiceComponent = React.memo(
         data-testid={`service-component-${service.name}`}>
         <ServiceImageComponent disabled={isDisabled} service={service} />
         <ToggleInput
+          className="fr-mt-2w"
           disabled={!allowToBeUpdated}
           initialValue={service.isChecked}
           label={labelCallback}

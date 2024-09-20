@@ -11,7 +11,7 @@ services:
     user: ${CURRENT_UID}
     working_dir: /var/www/app
     depends_on:
-      - "rnipp"
+      - "mock-rnipp"
       - "mongo-fcp-low"
       - "redis-sentinel"
       - "squid"

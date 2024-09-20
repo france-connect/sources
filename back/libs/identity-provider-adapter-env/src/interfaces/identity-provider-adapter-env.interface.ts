@@ -11,7 +11,7 @@ export interface IIdentityProviderAdapterEnv {
     token_endpoint?: string;
     userinfo_endpoint?: string;
     end_session_endpoint?: string;
-    jwks_uri: string;
+    jwks_uri?: string;
   };
   client: {
     client_id: string;

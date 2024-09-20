@@ -6,19 +6,18 @@ import {
   IsEmail,
   IsEnum,
   IsOptional,
+  IsString,
   MaxLength,
   MinLength,
   ValidateIf,
 } from 'class-validator';
 
-import { IsCog } from '@fc/cog';
-import { IsSafeString } from '@fc/common';
+import { COG_FRANCE, IsCog } from '@fc/cog';
 import { MinIdentityDto } from '@fc/oidc-client';
 import { Genders } from '@fc/rnipp';
 
-const COG_FRANCE = '99100';
 export class OidcIdentityDto extends MinIdentityDto {
-  @IsSafeString()
+  @IsString()
   @MinLength(1)
   @MaxLength(256)
   @Expose()
@@ -26,7 +25,7 @@ export class OidcIdentityDto extends MinIdentityDto {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly given_name: string;
 
-  @IsSafeString()
+  @IsString()
   @MinLength(1)
   @MaxLength(256)
   @Expose()
@@ -34,11 +33,11 @@ export class OidcIdentityDto extends MinIdentityDto {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly family_name: string;
 
-  @IsSafeString()
+  @IsString()
   @Expose()
   readonly birthdate: string;
 
-  @IsSafeString()
+  @IsString()
   @IsEnum(Genders)
   @Expose()
   readonly gender: string;
@@ -52,7 +51,7 @@ export class OidcIdentityDto extends MinIdentityDto {
   @Expose()
   readonly birthcountry: string;
 
-  @IsSafeString()
+  @IsString()
   @IsOptional()
   @Expose()
   readonly preferred_username?: string;

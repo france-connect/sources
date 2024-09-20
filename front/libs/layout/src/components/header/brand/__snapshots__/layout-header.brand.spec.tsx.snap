@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderBrandComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-header__brand fr-enlarge-link"
+  >
+    <div
+      class="fr-header__brand-top"
+    >
+      <div
+        class="fr-header__logo"
+      >
+        <span
+          data-mockid="Link"
+        >
+          <div>
+            LogoRepubliqueFrancaiseComponent
+          </div>
+        </span>
+      </div>
+      <div
+        class="fr-header__operator"
+      >
+        <img
+          alt="Retour à l’accueil du site - any-service-baseline-mock - any-service-name-mock"
+          class="fr-responsive-img"
+          src="Any"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

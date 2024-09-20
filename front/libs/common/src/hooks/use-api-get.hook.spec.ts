@@ -5,6 +5,7 @@ import { useApiGet } from './use-api-get.hook';
 
 describe('useApiGet', () => {
   const axiosGetMock = jest.mocked(axios.get);
+
   beforeEach(() => {
     axiosGetMock.mockResolvedValue({ data: 'any-data-response' });
   });

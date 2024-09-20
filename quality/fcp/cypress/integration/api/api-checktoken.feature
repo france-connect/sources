@@ -1,5 +1,5 @@
 #language: fr
-@api @apiChecktoken @ignoreInteg01 @ci
+@api @apiChecktoken @fcpLow @fcpHigh @ignoreInteg01 @ci
 Fonctionnalité: API - checktoken
 
   Scénario: API checktoken - Cas nominal

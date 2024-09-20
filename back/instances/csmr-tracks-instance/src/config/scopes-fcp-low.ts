@@ -2,19 +2,20 @@
 
 // Declarative code
 import {
+  cnafMsa,
   cnam,
   cnous,
   dgfip,
+  dss,
   fcpLow,
-  fcTracks,
+  ft,
   mesri,
   mi,
-  pe,
   ScopesConfig,
 } from '@fc/scopes';
 
 const config: ScopesConfig = {
-  mapping: [cnam, cnous, dgfip, fcpLow, mesri, mi, pe, fcTracks],
+  mapping: [cnam, cnous, dgfip, fcpLow, mesri, mi, ft, cnafMsa, dss],
 };
 
 export default config;

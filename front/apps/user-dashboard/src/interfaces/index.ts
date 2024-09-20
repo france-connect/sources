@@ -1,4 +1,4 @@
 /* istanbul ignore file */
 
 // declarative file
-export * from './user-infos.interface';
+export * from './dashboard-user-infos.interface';

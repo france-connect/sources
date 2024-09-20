@@ -63,7 +63,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et les données "DGFIP" de l'évènement contiennent "Détail des personnes à charge et rattachées"
     Et les données "DGFIP" de l'évènement contiennent "Adresse déclarée au 1er Janvier"
     Et l'évènement concerne 1 donnée "CNAM"
-    Et les données "CNAM" de l'évènement contiennent "Paiements d'indemnités journalières versées par l'Assurance Maladie"
+    Et les données "CNAM" de l'évènement contiennent "Paiements d’indemnités journalières versées par l’Assurance Maladie"
 
   @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS privé avec scope identité
@@ -134,7 +134,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et les données "DGFIP" de l'évènement contiennent "Détail des personnes à charge et rattachées"
     Et les données "DGFIP" de l'évènement contiennent "Adresse déclarée au 1er Janvier"
     Et l'évènement concerne 1 donnée "CNAM"
-    Et les données "CNAM" de l'évènement contiennent "Paiements d'indemnités journalières versées par l'Assurance Maladie"
+    Et les données "CNAM" de l'évènement contiennent "Paiements d’indemnités journalières versées par l’Assurance Maladie"
     Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Service Provider Example - Data"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Échange de Données"
@@ -149,7 +149,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     Et les données "DGFIP" de l'évènement contiennent "Détail des personnes à charge et rattachées"
     Et les données "DGFIP" de l'évènement contiennent "Adresse déclarée au 1er Janvier"
     Et l'évènement concerne 1 donnée "CNAM"
-    Et les données "CNAM" de l'évènement contiennent "Paiements d'indemnités journalières versées par l'Assurance Maladie"
+    Et les données "CNAM" de l'évènement contiennent "Paiements d’indemnités journalières versées par l’Assurance Maladie"
 
   @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS privé avec scope anonyme

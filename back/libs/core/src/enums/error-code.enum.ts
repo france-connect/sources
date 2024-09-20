@@ -23,4 +23,5 @@ export enum ErrorCode {
   INVALID_IDP_HINT = 16,
   NOT_ALLOWED_ACR = 18,
   MISSING_AT_HASH = 19,
+  INVALID_REP_SCOPE = 20,
 }

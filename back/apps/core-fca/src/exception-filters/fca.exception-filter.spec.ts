@@ -11,8 +11,6 @@ import { getLoggerMock } from '@mocks/logger';
 
 import { FcaExceptionFilter } from './fca.exception-filter';
 
-jest.mock('@fc/exceptions/decorator/trackable.decorator');
-
 describe('FcaExceptionFilter', () => {
   let exceptionFilter: FcaExceptionFilter;
 

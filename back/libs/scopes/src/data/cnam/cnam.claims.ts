@@ -3,9 +3,6 @@ import { ClaimsInterface } from '../../interfaces';
 export const claims: ClaimsInterface = {
   // OIDC fashion variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  ensagri_releve_note: 'ensagri_releve_note',
-  // OIDC fashion variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   droits_assurance_maladie: 'droits_assurance_maladie',
   // OIDC fashion variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention

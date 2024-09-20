@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 
 // declarative file
-import type { Service } from './service.interface';
+import type { ServiceInterface } from './service.interface';
 
-export interface UserPreferencesData {
-  idpList: Service[] | undefined;
+export interface UserPreferencesDataInterface {
+  idpList: ServiceInterface[] | undefined;
   allowFutureIdp: boolean;
 }

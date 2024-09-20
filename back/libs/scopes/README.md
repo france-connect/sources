@@ -72,6 +72,24 @@ There are actually two genreated indexes, the first to get the `claims` for a gi
 
 ## Generated index example (extract from `csmr-tracks`')
 
+### Provider identifier grouped claims 
+
+The table below provides a clear view of the technical keys used by the library (named `Grouped claims identifier`), along with the corresponding data provider names and slug"
+
+| Slug | Grouped claims identifier | Provider Label |
+| - | - | - |
+| CNAF_MSA | cnafMsa | Caisse nationale des allocations familiales & Mutualité sociale agricole |
+| CNAM |cnam | Caisse nationale de l’assurance maladie|
+| CNOUS | cnous | Centre national des œuvres universitaires et scolaires |
+| DESK | desk | Gestion d'accès - La Suite numérique |
+| DGFIP | dgfip | Direction générale des Finances publiques |
+| DSS | dss | Sécurité Sociale |
+| fCP_HIGH | fcpHigh | FranceConnect+ |
+| fCP_LOW | fcpLow | FranceConnect |
+| FT | ft | France Travail|
+| MESRI | mesri | Ministère de l’Enseignement supérieur, de la Recherche et de l’Innovation |
+| MI | mi | Ministère de l’Intérieur |
+
 ### `claimIndex`
 
 ```json
@@ -113,18 +131,18 @@ There are actually two genreated indexes, the first to get the `claims` for a gi
   },
   "api_fc-liste-paiementsv1": {
     "identifier": "api_fc-liste-paiementsv1",
-    "label": "Indemnités de Pôle emploi (Pôle emploi)",
+    "label": "Indemnités de Pôle emploi ou Montants et dates des paiements France Travail",
     "dataProvider": {
-      "identifier": "PE",
-      "label": "Pôle emploi"
+      "identifier": "FT",
+      "label": "France Travail"
     }
   },
   "api_fc-statutaugmentev1": {
     "identifier": "api_fc-statutaugmentev1",
-    "label": "Statut demandeur d’emploi (Pôle emploi)",
+    "label": "Statut demandeur d’emploi ou Statut demandeur d’emploi et identité",
     "dataProvider": {
-      "identifier": "PE",
-      "label": "Pôle emploi"
+      "identifier": "FT",
+      "label": "France Travail"
     }
   }
 }

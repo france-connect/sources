@@ -2,6 +2,7 @@
 
 // Declarative code
 import {
+  IsArray,
   IsBoolean,
   IsEnum,
   IsString,
@@ -22,8 +23,9 @@ export class DataProviderAdapterMongoDTO {
   @IsString()
   readonly title: string;
 
-  @IsString()
-  readonly slug: string;
+  @IsArray()
+  @IsString({ each: true })
+  readonly scopes: string[];
 
   @IsString()
   @MinLength(32)

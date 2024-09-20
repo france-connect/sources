@@ -26,7 +26,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
       ServicesListComponent
     </div>
     <p
-      class="fr-mt-5w"
+      class="fr-my-5w"
     >
       Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
       <strong>
@@ -75,7 +75,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
       ServicesListComponent
     </div>
     <p
-      class="fr-mt-5w"
+      class="fr-my-5w"
     >
       Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
       <strong>
@@ -141,7 +141,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
       </div>
     </div>
     <p
-      class="fr-mt-5w"
+      class="fr-my-5w"
     >
       Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
       <strong>
@@ -190,7 +190,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
       ServicesListComponent
     </div>
     <p
-      class="fr-mt-5w"
+      class="fr-my-5w"
     >
       Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
       <strong>
@@ -239,7 +239,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
       ServicesListComponent
     </div>
     <p
-      class="fr-mt-5w"
+      class="fr-my-5w"
     >
       Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
       <strong>
@@ -305,7 +305,7 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
       </div>
     </div>
     <p
-      class="fr-mt-5w"
+      class="fr-my-5w"
     >
       Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
       <strong>

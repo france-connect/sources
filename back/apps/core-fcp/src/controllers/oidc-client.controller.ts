@@ -159,8 +159,12 @@ export class OidcClientController {
       nonce: idpNonce,
     };
 
-    const { accessToken, idToken, acr } =
-      await this.oidcClient.getTokenFromProvider(idpId, tokenParams, req);
+    const {
+      accessToken,
+      idToken,
+      acr,
+      idpRepresentativeScope = [],
+    } = await this.oidcClient.getTokenFromProvider(idpId, tokenParams, req);
 
     await this.tracking.track(FC_REQUESTED_IDP_TOKEN, trackingContext);
 
@@ -187,6 +191,7 @@ export class OidcClientController {
       idpAcr: acr,
       idpLabel,
       idpIdentity: identity,
+      idpRepresentativeScope,
     });
     sessionOidc.set(identityExchange);
 

@@ -4,7 +4,7 @@ export interface DataProviderMetadata {
   uid: string;
   title: string;
   active: boolean;
-  slug: string;
+  scopes: string[];
   client_id: string;
   client_secret: string;
   jwks_uri: string;

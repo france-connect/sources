@@ -1,42 +1,34 @@
-import type { AxiosError } from 'axios';
-import axios from 'axios';
 import type { PropsWithChildren } from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { AccountContext } from '@fc/account';
-import { HttpStatusCode } from '@fc/common';
-
-import type { AxiosErrorCatcher } from '../inferfaces';
+import type { AxiosErrorCatcherInterface } from '../inferfaces';
+import { addAxiosCatcherInterceptors, removeAxiosCatcherInterceptors } from '../services';
 import { AxiosErrorCatcherContext } from './axios-error-catcher.context';
 
-interface AxiosErrorCatcherProviderProps extends Required<PropsWithChildren> {}
-
-export const AxiosErrorCatcherProvider = ({ children }: AxiosErrorCatcherProviderProps) => {
-  const { connected } = useContext(AccountContext);
-  const [state, setState] = useState<AxiosErrorCatcher>({
+export const AxiosErrorCatcherProvider = ({ children }: Required<PropsWithChildren>) => {
+  const [state, setState] = useState<AxiosErrorCatcherInterface>({
     codeError: undefined,
     hasError: false,
+    initialized: false,
   });
 
   useEffect(() => {
-    const errorCatcherInterceptor = axios.interceptors.response.use(
-      undefined,
-      (error: AxiosError) => {
-        if (error.response?.status === HttpStatusCode.UNAUTHORIZED && connected) {
-          setState({ codeError: HttpStatusCode.UNAUTHORIZED, hasError: true });
-        }
-        return Promise.reject(error);
-      },
-    );
+    const interceptors = addAxiosCatcherInterceptors(setState);
+
+    // @NOTE
+    // flag all interceptors as initialized
+    setState((prev) => ({ ...prev, initialized: true }));
 
     return () => {
-      axios.interceptors.response.eject(errorCatcherInterceptor);
+      removeAxiosCatcherInterceptors(interceptors);
     };
-  }, [connected]);
+  }, []);
+
+  if (!state.initialized) {
+    return null;
+  }
 
   return (
-    <AxiosErrorCatcherContext.Provider value={{ ...state }}>
-      {children}
-    </AxiosErrorCatcherContext.Provider>
+    <AxiosErrorCatcherContext.Provider value={state}>{children}</AxiosErrorCatcherContext.Provider>
   );
 };

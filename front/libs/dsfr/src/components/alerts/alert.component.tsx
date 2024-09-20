@@ -2,10 +2,11 @@ import classnames from 'classnames';
 import type { PropsWithChildren } from 'react';
 import React from 'react';
 
+import type { PropsWithClassName } from '@fc/common';
+
 import { AlertTypes, Sizes } from '../../enums';
 
-interface AlertComponentProps extends Required<PropsWithChildren> {
-  className?: string;
+interface AlertComponentProps extends Required<PropsWithChildren>, PropsWithClassName {
   dataTestId?: string;
   // @NOTE [DSFR] attribute role="alert"
   // - should be defined if the Component is injected dynamicly into the page

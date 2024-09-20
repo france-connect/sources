@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-export interface FormValues {
+export interface FormValuesInterface {
   idpList: { [key: string]: boolean } | undefined;
   allowFutureIdp: boolean;
 }

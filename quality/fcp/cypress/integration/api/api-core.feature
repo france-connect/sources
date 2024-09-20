@@ -1,5 +1,5 @@
 #language: fr
-@api @apiCore @ignoreInteg01
+@api @apiCore @fcpLow @fcpHigh @ignoreInteg01
 Fonctionnalité: API - core
 
   Scénario: API core - redirection vers le site usager

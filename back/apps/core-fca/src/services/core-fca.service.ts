@@ -4,7 +4,6 @@ import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { CoreAuthorizationService } from '@fc/core';
-import { FqdnToIdpAdapterMongoService } from '@fc/fqdn-to-idp-adapter-mongo';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { OidcSession } from '@fc/oidc';
 import {
@@ -15,7 +14,6 @@ import {
 } from '@fc/oidc-client';
 import { SessionService } from '@fc/session';
 
-import { AppConfig } from '../dto/app-config.dto';
 import { CoreFcaOidcClientSession } from '../dto/core-fca-oidc-client-session.dto';
 import {
   CoreFcaAgentIdpBlacklistedException,
@@ -34,7 +32,6 @@ export class CoreFcaService implements CoreFcaServiceInterface {
     private readonly config: ConfigService,
     private readonly oidcClient: OidcClientService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
-    private readonly fqdnToIdpAdapterMongo: FqdnToIdpAdapterMongoService,
     private readonly coreAuthorization: CoreAuthorizationService,
     private readonly session: SessionService,
   ) {}
@@ -94,23 +91,6 @@ export class CoreFcaService implements CoreFcaServiceInterface {
     res.redirect(authorizationUrl);
   }
 
-  async getIdpIdForEmail(email: string): Promise<string[]> {
-    const { defaultIdpId } = this.config.get<AppConfig>('App');
-    // find the proper identity provider by fqdn
-    const fqdn = this.getFqdnFromEmail(email);
-    const idpsByFqdn = await this.fqdnToIdpAdapterMongo.getIdpsByFqdn(fqdn);
-
-    return idpsByFqdn.length > 0
-      ? idpsByFqdn.map(({ identityProvider }) => identityProvider)
-      : defaultIdpId
-        ? [defaultIdpId]
-        : [];
-  }
-
-  getFqdnFromEmail(email: string): string {
-    return email.split('@').pop().toLowerCase();
-  }
-
   private async checkIdpBlacklisted(spId: string, idpId: string) {
     try {
       await this.oidcClient.utils.checkIdpBlacklisted(spId, idpId);
@@ -133,7 +113,7 @@ export class CoreFcaService implements CoreFcaServiceInterface {
     }
   }
 
-  async getIdentityProvidersByIds(...idpIds: string[]) {
+  async getIdentityProvidersByIds(idpIds: string[]) {
     const idpList = await this.identityProvider.getList();
     return idpList
       .filter(({ uid }) => idpIds.includes(uid))

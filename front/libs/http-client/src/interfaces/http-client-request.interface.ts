@@ -3,10 +3,10 @@
 // declarative file
 import type { Method } from 'axios';
 
-import type { HttpClientData } from './http-client-data.interface';
+import type { HttpClientDataInterface } from './http-client-data.interface';
 
-export interface HttpClientRequest {
+export interface HttpClientRequestInterface {
   url: string;
   method: Method;
-  data?: HttpClientData | URLSearchParams;
+  data?: HttpClientDataInterface | URLSearchParams;
 }

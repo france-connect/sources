@@ -1,7 +1,7 @@
-import type { UserPreferencesData } from '../interfaces';
+import type { UserPreferencesDataInterface } from '../interfaces';
 
 export const checkHasDefaultConfiguration = (
-  userPreferences: UserPreferencesData | undefined,
+  userPreferences: UserPreferencesDataInterface | undefined,
 ): boolean => {
   if (!userPreferences?.idpList) {
     return false;

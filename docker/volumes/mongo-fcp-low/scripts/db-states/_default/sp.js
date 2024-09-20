@@ -46,7 +46,6 @@ const fsp = {
       "dgfip_nbpart",
       "dgfip_sitfam",
       "dgfip_pac",
-      "dgfip_aft",
       "droits_assurance_maladie",
       "cnam_caisse",
       "cnam_paiements_ij",
@@ -65,6 +64,7 @@ const fsp = {
     trustedIdentity: false,
     ssoDisabled: false,
     platform: "CORE_FCP",
+    rep_scope: [],
   },
   // FSP2-LOW - amr not authorized
   "FSP2-LOW": {
@@ -135,6 +135,7 @@ const fsp = {
     trustedIdentity: false,
     ssoDisabled: false,
     platform: "CORE_FCP",
+    rep_scope: [],
   },
   // FSP3-LOW - private sp
   "FSP3-LOW": {
@@ -201,6 +202,12 @@ const fsp = {
     trustedIdentity: false,
     ssoDisabled: false,
     platform: "CORE_FCP",
+    rep_scope: [
+      "Papier-Citoyenneté-Elections",
+      "Famille-Scolarité",
+      "Social-Santé",
+      "Travail-Formation",
+    ],
   },
   // FSP4-LOW - whitelist fip8
   "FSP4-LOW": {
@@ -267,6 +274,7 @@ const fsp = {
     trustedIdentity: false,
     ssoDisabled: false,
     platform: "CORE_FCP",
+    rep_scope: [],
   },
   "user dashboard": {
     name: "User Dashboard",

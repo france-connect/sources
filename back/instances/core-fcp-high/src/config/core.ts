@@ -11,5 +11,5 @@ export default {
   defaultRedirectUri: 'https://franceconnect.gouv.fr',
   supportFormUrl: env.string('SUPPORT_FORM_URL'),
   useIdentityFrom: IdentitySource.IDP,
-  enableSso: env.boolean('FEATURE_SSO_SUBSTANTIAL'),
+  enableSso: true,
 } as CoreConfig;

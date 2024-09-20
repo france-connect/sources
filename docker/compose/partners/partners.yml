@@ -1,11 +1,34 @@
 version: "2.4"
 
 services:
+  partners-back:
+    hostname: partners-back
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - "redis-pwd"
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/partners/.env/partners-back.env"
+    networks:
+      - public
+      - data
+    command: "pm2 logs"
+
   partners-front:
     hostname: partners-front
     image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
     user: ${CURRENT_UID}
     working_dir: /var/www/app
+    depends_on:
+      - "partners-back"
     volumes:
       - "${VOLUMES_DIR}/src/fc/front:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"

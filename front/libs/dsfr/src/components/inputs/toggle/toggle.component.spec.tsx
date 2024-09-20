@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import type { FieldInputProps } from 'react-final-form';
 
-import type { CheckableLegend } from '../../../interfaces';
+import type { CheckableLegendInterface } from '../../../interfaces';
 import { ToggleComponent } from './toggle.component';
 
 jest.mock('./toggle-input.component');
@@ -15,7 +15,7 @@ describe('ToggleComponent', () => {
     onFocus: () => {},
     value: 'any-field-value-mock',
   } as FieldInputProps<unknown, HTMLElement>;
-  const legendMock = { checked: 'foo', unchecked: 'bar' } as CheckableLegend;
+  const legendMock = { checked: 'foo', unchecked: 'bar' } as CheckableLegendInterface;
 
   it('should match snapshot with default props', () => {
     // When

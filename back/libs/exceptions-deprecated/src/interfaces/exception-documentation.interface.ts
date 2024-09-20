@@ -3,8 +3,6 @@ export interface IExceptionDocumentation {
   code: number;
   errorCode: string;
   message: string;
-  loggable: boolean;
-  trackable: boolean;
   description: string;
   path: string;
   exception: string;

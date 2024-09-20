@@ -1,5 +1,5 @@
 #language: fr
-@usager @fsRetour @ci
+@usager @fsRetour @fcpLow @fcpHigh @ci
 Fonctionnalité: Fournisseur Service - Retour
   # En tant qu'usager,
   # je veux retourner vers le FS

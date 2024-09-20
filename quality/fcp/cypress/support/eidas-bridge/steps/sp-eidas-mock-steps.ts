@@ -1,7 +1,6 @@
 import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
-import { navigateTo } from '../../common/helpers';
-import { getScopeByType } from '../../usager/helpers';
+import { getScopeByType, navigateTo } from '../../common/helpers';
 import SpEidasMockPage from '../pages/sp-eidas-mock-page';
 
 const spEidasMockPage = new SpEidasMockPage();

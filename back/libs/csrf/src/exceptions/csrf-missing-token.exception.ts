@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative code
-import { Description, Loggable } from '@fc/exceptions-deprecated';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { CsrfBaseException } from './csrf-base.exception';
@@ -9,7 +9,6 @@ import { CsrfBaseException } from './csrf-base.exception';
 @Description(
   "le jeton CSRF n'a pas été envoyé. Si le problème persiste, contacter le support N3",
 )
-@Loggable()
 export class CsrfMissingTokenException extends CsrfBaseException {
   public readonly code = ErrorCode.MISSING_CSRF_TOKEN;
 

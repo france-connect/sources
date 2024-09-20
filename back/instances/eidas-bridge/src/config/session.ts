@@ -8,16 +8,16 @@ import { EidasProviderRoutes } from '@fc/eidas-provider';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 import {
-  ISessionCookieOptions,
   SameSiteType,
   SessionConfig,
+  SessionCookieOptionsInterface,
 } from '@fc/session';
 
 const env = new ConfigParser(process.env, 'Session');
 
 const sameSite = env.string('COOKIE_SAMESITE') as SameSiteType;
 
-const cookieOptions: ISessionCookieOptions = {
+const cookieOptions: SessionCookieOptionsInterface = {
   signed: true,
   sameSite,
   httpOnly: true,

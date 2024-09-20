@@ -10,7 +10,7 @@ export default defineConfig({
     async setupNodeEvents(on, config) {
       return await pluginConfig(on, config, true);
     },
-    specPattern: 'cypress/integration/*.feature',
+    specPattern: 'cypress/integration/visuel/*.feature',
   },
   env: {
     ...baseConfig.env,

@@ -21,7 +21,6 @@ import { AccessToken, atHashFromAccessToken, stringToArray } from '@fc/oidc';
 import { OidcProviderConfig } from '@fc/oidc-provider';
 import { OidcProviderRedisAdapter } from '@fc/oidc-provider/adapters';
 import { RedisService } from '@fc/redis';
-import { ScopesService } from '@fc/scopes';
 import { SessionService } from '@fc/session';
 
 @Injectable()
@@ -33,7 +32,6 @@ export class DataProviderService {
     private readonly jwt: JwtService,
     private readonly redis: RedisService,
     private readonly session: SessionService,
-    private readonly scopes: ScopesService,
     private readonly accountService: AccountFcaService,
   ) {}
 
@@ -161,7 +159,7 @@ export class DataProviderService {
     // Limit scopes returned to prevent data provider from learning more about the network than necessary.
     // @see https://www.rfc-editor.org/rfc/rfc7662.html#section-2.2
     const authorizedScopes = this.filterScopes(
-      dataProvider.slug,
+      dataProvider.scopes,
       interaction.scope,
     );
 
@@ -178,13 +176,10 @@ export class DataProviderService {
   }
 
   private filterScopes(
-    providerSlug: string,
-    requestedScopes: string,
+    dataProviderScopes: string[],
+    interactionScope: string,
   ): string[] {
-    const dataProviderScopes =
-      this.scopes.getScopesByProviderSlug(providerSlug);
-
-    return stringToArray(requestedScopes).filter((requestedScope: string) =>
+    return stringToArray(interactionScope).filter((requestedScope: string) =>
       dataProviderScopes.includes(requestedScope),
     );
   }

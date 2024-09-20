@@ -1,14 +1,14 @@
 import { act, renderHook } from '@testing-library/react';
 import React from 'react';
 
-import type { UserPreferencesData } from '../interfaces';
+import type { UserPreferencesDataInterface } from '../interfaces';
 import { checkHasDefaultConfiguration, checkSomeIdpHasBeenChangedSinceLoading } from '../utils';
 import { useUserPreferencesForm } from './use-user-preferences-form.hook';
 
 jest.mock('../utils');
 
 describe('useUserPreferencesForm', () => {
-  const userPreferences: UserPreferencesData = {
+  const userPreferences: UserPreferencesDataInterface = {
     allowFutureIdp: false,
     idpList: [
       {

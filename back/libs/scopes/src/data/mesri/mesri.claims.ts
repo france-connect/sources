@@ -3,7 +3,7 @@ import { ClaimsInterface } from '../../interfaces';
 export const claims: ClaimsInterface = {
   // OIDC fashion variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  mesri_identifiant: 'mesri_identifiant',
+  mesri_identite: 'mesri_identite',
   // OIDC fashion variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   mesri_inscription_etudiant: 'mesri_inscription_etudiant',

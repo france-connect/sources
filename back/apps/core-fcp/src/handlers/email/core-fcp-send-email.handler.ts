@@ -46,7 +46,8 @@ export class CoreFcpSendEmailHandler implements IFeatureHandler<void> {
 
   private async getConnectNotificationEmailBodyContent(): Promise<string> {
     const { fqdn, udFqdn } = this.config.get<AppConfig>('App');
-    const { idpId, spName } = this.session.get<OidcSession>('OidcClient');
+    const { idpId, spName, browsingSessionId } =
+      this.session.get<OidcSession>('OidcClient');
     const { title: idpTitle } = await this.identityProvider.getById(idpId);
     const today = this.getTodayFormattedDate(new Date());
     const connectNotificationEmailParameters = {
@@ -55,6 +56,7 @@ export class CoreFcpSendEmailHandler implements IFeatureHandler<void> {
       today,
       fqdn,
       udFqdn,
+      browsingSessionId,
     };
 
     const dtoValidationErrors = await validateDto(

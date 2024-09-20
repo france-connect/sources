@@ -1,14 +1,13 @@
 import classnames from 'classnames';
 import React from 'react';
 
-import type { SelectedItemsHook } from '@fc/common';
+import type { PropsWithClassName, SelectedItemsHook } from '@fc/common';
 import { useSelectedItems } from '@fc/common';
 
 import type { AccordionGroupItemInterface } from '../../../interfaces';
 import { AccordionComponent } from '../accordion/accordion.component';
 
-interface AccordionGroupComponentProps {
-  className?: string;
+interface AccordionGroupComponentProps extends PropsWithClassName {
   items: AccordionGroupItemInterface[];
   options?: SelectedItemsHook<string>;
 }

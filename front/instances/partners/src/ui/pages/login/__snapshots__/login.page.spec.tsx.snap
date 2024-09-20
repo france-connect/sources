@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login Page shoud match the snapshot, greater than desktop viewport 1`] = `
+<div>
+  <main
+    class="fr-container fr-py-8v"
+  >
+    <div
+      class="fr-grid-row fr-grid-row--center fr-mt-8w"
+    >
+      <div
+        class="fr-col-9"
+      >
+        <h1>
+          Mon espace partenaires
+        </h1>
+        <h2
+          class="fr-mt-4w"
+        >
+          Centralisez toutes les étapes d’implémentation de FranceConnect sur votre fournisseur de service.
+        </h2>
+        <div
+          data-mockid="LoginFormComponent"
+        />
+      </div>
+    </div>
+  </main>
+</div>
+`;
+
+exports[`Login Page shoud match the snapshot, lower than mobile viewport 1`] = `
+<div>
+  <main
+    class="fr-container fr-py-8v"
+  >
+    <div
+      class="fr-grid-row fr-grid-row--center fr-mt-5w"
+    >
+      <div
+        class="fr-col-9"
+      >
+        <h1>
+          Mon espace partenaires
+        </h1>
+        <h2
+          class="fr-mt-4w"
+        >
+          Centralisez toutes les étapes d’implémentation de FranceConnect sur votre fournisseur de service.
+        </h2>
+        <div
+          data-mockid="LoginFormComponent"
+        />
+      </div>
+    </div>
+  </main>
+</div>
+`;

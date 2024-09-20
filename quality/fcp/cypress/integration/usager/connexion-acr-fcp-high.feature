@@ -128,6 +128,8 @@ Fonctionnalité: Connexion ACR
     Et le code d'erreur FranceConnect est "Y020018"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
 
+  # @Todo: check if we can use FIN as an "eidas3 only" provider on Integ01
+  @ignoreInteg01
   Scénario: Connexion ACR - FCP high - erreur FI retourne un acr qui ne lui est pas permis (inférieur)
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"

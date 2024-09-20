@@ -29,3 +29,9 @@ export const AccountProtocol = {
     GET_ACCOUNT_ID: 'GET_ACCOUNT_ID',
   },
 };
+
+export const FraudProtocol = {
+  Commands: {
+    GET_HELLO: 'GET_HELLO',
+  },
+};

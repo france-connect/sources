@@ -16,7 +16,6 @@ import { LoggerService } from '@fc/logger';
 import { atHashFromAccessToken, stringToArray } from '@fc/oidc';
 import { OidcProviderRedisAdapter } from '@fc/oidc-provider/adapters';
 import { RedisService } from '@fc/redis';
-import { ScopesService } from '@fc/scopes';
 import { SessionService } from '@fc/session';
 
 import { getJwtServiceMock } from '@mocks/jwt';
@@ -45,7 +44,7 @@ const loggerServiceMock = getLoggerMock();
 const jwtServiceMock = getJwtServiceMock();
 
 const DataProviderMock = {
-  slug: 'SLUG',
+  scopes: ['scope1'],
   jwks_uri: 'jwks_uri',
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -88,10 +87,6 @@ const sessionDataMock = {
 
 const redisMock = getRedisServiceMock();
 
-const scopesMock = {
-  getScopesByProviderSlug: jest.fn(),
-};
-
 const accountFcaServiceMock = {
   getAccountByIdpAgentKeys: jest.fn(),
 };
@@ -110,7 +105,6 @@ describe('DataProviderService', () => {
         JwtService,
         RedisService,
         SessionService,
-        ScopesService,
         AccountFcaService,
       ],
     })
@@ -124,8 +118,6 @@ describe('DataProviderService', () => {
       .useValue(redisMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
-      .overrideProvider(ScopesService)
-      .useValue(scopesMock)
       .overrideProvider(AccountFcaService)
       .useValue(accountFcaServiceMock)
       .compile();
@@ -356,7 +348,7 @@ describe('DataProviderService', () => {
       );
     });
 
-    it('should call filterScopes() with slug from data provider', async () => {
+    it('should call filterScopes() with scopes from data provider', async () => {
       // When
       await service['generateValidResponse'](
         DataProviderMock,
@@ -367,7 +359,7 @@ describe('DataProviderService', () => {
       // Then
       expect(service['filterScopes']).toHaveBeenCalledTimes(1);
       expect(service['filterScopes']).toHaveBeenCalledWith(
-        DataProviderMock.slug,
+        DataProviderMock.scopes,
         interactionMock.scope,
       );
     });
@@ -527,36 +519,36 @@ describe('DataProviderService', () => {
   });
 
   describe('filterScopes', () => {
-    const dpClientIdMock = 'dpClientId';
     const interactionScopeMock = 'scope1 scope2';
 
     const stringToArrayMock = jest.mocked(stringToArray);
 
     beforeEach(() => {
-      scopesMock.getScopesByProviderSlug.mockReturnValue(['scope1']);
       stringToArrayMock.mockReturnValue(['scope1', 'scope2']);
     });
 
-    it("should get scopes related to the data provider's slug", () => {
+    it('should return only scopes related to the data provider', () => {
       // When
-      service['filterScopes'](DataProviderMock.slug, interactionScopeMock);
-
-      // Then
-      expect(scopesMock.getScopesByProviderSlug).toHaveBeenCalledTimes(1);
-      expect(scopesMock.getScopesByProviderSlug).toHaveBeenCalledWith(
-        DataProviderMock.slug,
-      );
-    });
-
-    it('should return the scopes intersection', () => {
-      // When
-      const result = service['filterScopes'](
-        dpClientIdMock,
-        interactionScopeMock,
-      );
+      const result = service['filterScopes'](['scope1'], interactionScopeMock);
 
       // Then
       expect(result).toEqual(['scope1']);
+    });
+
+    it('should return empty string if no scopes related to the data provider', () => {
+      // When
+      const result = service['filterScopes'](['scope3'], interactionScopeMock);
+
+      // Then
+      expect(result).toEqual([]);
+    });
+
+    it('should return empty string if no scopes supported by the data provider', () => {
+      // When
+      const result = service['filterScopes']([], interactionScopeMock);
+
+      // Then
+      expect(result).toEqual([]);
     });
   });
 

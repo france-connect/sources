@@ -3,12 +3,8 @@
 // declarative file
 import type { IconType } from 'react-icons';
 
-export interface Badge {
+export interface BadgeInterface {
   colorName: string;
   Icon: IconType;
   label: string;
-}
-
-export interface Badges {
-  [key: string]: Badge;
 }

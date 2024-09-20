@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import type { UserPreferencesData } from '../interfaces';
+import type { UserPreferencesDataInterface } from '../interfaces';
 import { checkHasDefaultConfiguration, checkSomeIdpHasBeenChangedSinceLoading } from '../utils';
 
 interface useUserPreferencesFormProps {
   dirtyFields: Record<string, boolean>;
-  userPreferences: UserPreferencesData;
+  userPreferences: UserPreferencesDataInterface;
 }
 
 export const useUserPreferencesForm = ({

@@ -6,6 +6,7 @@ import { CryptographyService } from '@fc/cryptography';
 import { CryptographyFcpConfig } from './dto/cryptography-fcp-config';
 import { IPivotIdentity } from './interfaces/pivot-identity.interface';
 
+const FRANCE_COG = '99100';
 @Injectable()
 export class CryptographyFcpService {
   constructor(
@@ -35,10 +36,26 @@ export class CryptographyFcpService {
       pivotIdentity.family_name +
       pivotIdentity.birthdate +
       pivotIdentity.gender +
-      pivotIdentity.birthplace +
+      this.formatBirthPlace(pivotIdentity) +
       pivotIdentity.birthcountry;
 
     return this.crypto.hash(serial, 'binary', 'sha256', 'base64');
+  }
+
+  /**
+   * Stay compliant with legacy.
+   * The birthplace was removed if the birthcountry is not FRANCE_COG,
+   * we keep this behavior while v2 and legacy coexist.
+   */
+  private formatBirthPlace({
+    birthplace,
+    birthcountry,
+  }: Partial<IPivotIdentity>): string {
+    if (birthcountry !== FRANCE_COG) {
+      return '';
+    }
+
+    return birthplace;
   }
 
   /**

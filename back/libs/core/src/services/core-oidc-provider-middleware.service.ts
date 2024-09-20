@@ -271,7 +271,7 @@ export class CoreOidcProviderMiddlewareService {
     const { req } = ctx;
     const idpHint = req.query.idp_hint as string;
 
-    return ctx.oidc['isError'] === true || ctx.isSso || !idpHint;
+    return ctx.isSso || !idpHint;
   }
 
   private trackRedirectToIdp(ctx: OidcCtx) {

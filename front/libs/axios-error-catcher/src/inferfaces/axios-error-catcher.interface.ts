@@ -1,7 +1,8 @@
 /* istanbul ignore file */
 
 // declarative file
-export interface AxiosErrorCatcher {
+export interface AxiosErrorCatcherInterface {
+  initialized: boolean;
   hasError: boolean;
   codeError: number | undefined;
 }

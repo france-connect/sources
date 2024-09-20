@@ -160,5 +160,24 @@
       "droits_assurance_maladie",
       "cnam_caisse"
     ]
+  },
+  {
+    "type": "dgfip et cnam",
+    "scopes": [
+      "openid",
+      "dgfip_rfr",
+      "dgfip_nbpart",
+      "dgfip_sitfam",
+      "dgfip_pac",
+      "dgfip_aft",
+      "cnam_paiements_ij"
+    ]
+  },
+  {
+    "type": "cnous_statut_boursier",
+    "scopes": [
+      "openid",
+      "cnous_statut_boursier"
+    ]
   }
 ]

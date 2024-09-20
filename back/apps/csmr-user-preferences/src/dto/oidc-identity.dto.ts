@@ -7,16 +7,14 @@ import {
   IsEmail,
   IsEnum,
   IsOptional,
+  IsString,
   Length,
   MinLength,
   ValidateIf,
 } from 'class-validator';
 
-import { IsCog } from '@fc/cog';
-import { IsSafeString } from '@fc/common';
+import { COG_FRANCE, IsCog } from '@fc/cog';
 import { Genders } from '@fc/rnipp';
-
-const COG_FRANCE = '99100';
 
 export class OidcIdentityDto {
   @MinLength(1)
@@ -25,21 +23,21 @@ export class OidcIdentityDto {
   @Expose()
   readonly sub?: string;
 
-  @IsSafeString()
+  @IsString()
   @Length(1, 256)
   @Expose()
   readonly given_name: string;
 
-  @IsSafeString()
+  @IsString()
   @Length(1, 256)
   @Expose()
   readonly family_name: string;
 
-  @IsSafeString()
+  @IsString()
   @Expose()
   readonly birthdate: string;
 
-  @IsSafeString()
+  @IsString()
   @IsEnum(Genders)
   @Expose()
   readonly gender: string;
@@ -53,7 +51,7 @@ export class OidcIdentityDto {
   @Expose()
   readonly birthcountry: string;
 
-  @IsSafeString()
+  @IsString()
   @IsOptional()
   @Expose()
   readonly preferred_username?: string;

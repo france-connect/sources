@@ -20,9 +20,10 @@ export class DataApi {
   @IsNotEmpty()
   readonly url: string;
 
+  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  readonly secret: string;
+  readonly secret?: string;
 }
 
 export class AppConfig extends AppGenericConfig {

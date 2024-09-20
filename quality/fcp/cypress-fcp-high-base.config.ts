@@ -14,7 +14,7 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
     // Base Configuration
     PLATFORM: 'fcp-high',
     TEST_ENV: 'docker',
-    TAGS: 'not @ignoreHigh and not @fcpLow',
+    TAGS: '@fcpHigh and not @ignoreHigh',
     // Test environment access
     EXPLOIT_ADMIN_NAME: 'jean_moust',
     EXPLOIT_ADMIN_PASS: 'georgesmoustaki',

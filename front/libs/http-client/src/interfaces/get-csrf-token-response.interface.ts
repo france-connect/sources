@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
 // declarative file
-export interface GetCsrfTokenResponse {
+export interface GetCsrfTokenResponseInterface {
   csrfToken: string;
 }

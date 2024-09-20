@@ -10,10 +10,10 @@ export default defineConfig({
     async setupNodeEvents(on, config) {
       return await pluginConfig(on, config, false);
     },
-    specPattern: 'cypress/integration/*.feature',
+    specPattern: 'cypress/integration/partners/*.feature',
   },
   env: {
     ...baseConfig.env,
-    TAGS: 'not @validationVisuelle and not @ignore',
+    TAGS: 'not @ignore',
   },
 });

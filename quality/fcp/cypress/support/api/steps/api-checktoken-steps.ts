@@ -1,6 +1,6 @@
 import { Then } from '@badeball/cypress-cucumber-preprocessor';
 
-import { getRnippClaims } from '../../usager/helpers';
+import { getRnippClaims } from '../../common/helpers';
 import {
   PostChecktokenExpiredTokenDto,
   PostChecktokenValidTokenDto,

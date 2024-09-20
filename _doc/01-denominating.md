@@ -192,7 +192,7 @@ _Doc/
 
 ### Characters set
 
-Characters used MUST be within [standard ASCII table](https://fr.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange#Table_des_128_caract%C3%A8res_ASCII) with the exception of commentaries (see [9 - Commentaries]<./9-commentaries.md> for more).
+Characters used MUST be within [standard ASCII table](https://fr.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange#Table_des_128_caract%C3%A8res_ASCII) with the exception of comments (see [9 - Comments](./09-comments.md) for more).
 
 ```typescript
 /**
@@ -215,9 +215,7 @@ const ウセル_ラスト_コネチウン = /* ... */;
  * 😍 Cool 😍
  */
 
-/**
- * 💡 This is a perfectly 🍷 valid commentary 😉
- */
+// 💡 This is a perfectly 🍷 valid comment 😉
 ```
 
 ```bash

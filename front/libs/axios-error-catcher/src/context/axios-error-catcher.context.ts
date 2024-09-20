@@ -3,14 +3,10 @@
 // declarative file
 import React from 'react';
 
-import type { AxiosErrorCatcher } from '../inferfaces';
+import type { AxiosErrorCatcherInterface } from '../inferfaces';
 
-export const DEFAULT_CONTEXT_STATE: AxiosErrorCatcher = {
-  codeError: undefined,
-  hasError: false,
-};
-
-export const AxiosErrorCatcherContext =
-  React.createContext<AxiosErrorCatcher>(DEFAULT_CONTEXT_STATE);
+export const AxiosErrorCatcherContext = React.createContext<AxiosErrorCatcherInterface | undefined>(
+  undefined,
+);
 
 AxiosErrorCatcherContext.displayName = 'AxiosErrorCatcherContext';

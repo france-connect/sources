@@ -1,91 +1,51 @@
 import { render } from '@testing-library/react';
 
-import { AxiosErrorCatcherContext } from '@fc/axios-error-catcher';
-import { useApiGet } from '@fc/common';
-import { AlertComponent, FranceConnectButton } from '@fc/dsfr';
-import { RedirectToIdpFormComponent } from '@fc/oidc-client';
+import { AccountContext } from '@fc/account';
+import { useSafeContext } from '@fc/common';
+import { AlertComponent } from '@fc/dsfr';
+import { LoginFormComponent } from '@fc/login-form';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { HomePage } from './home.page';
 
 describe('HomePage', () => {
-  // given
-  const useApiGetMock = jest.mocked(useApiGet);
-
   beforeEach(() => {
+    jest.mocked(useSafeContext).mockReturnValue({ expired: false });
     // @NOTE used to prevent useStylesVariables.useStylesContext to throw
     // useStylesContext requires to be into a StylesProvider context
-    jest.mocked(useStylesVariables).mockReturnValueOnce([expect.any(Number), expect.any(Number)]);
+    jest.mocked(useStylesVariables).mockReturnValue([expect.any(Number), expect.any(Number)]);
+    jest.mocked(useStylesQuery).mockReturnValue(true);
   });
 
-  it('should match the snapshot, when csrf token is not defined', () => {
+  it('should match the snapshot when session is not expired', () => {
     // given
-    jest.mocked(useStylesQuery).mockReturnValue(true);
-    useApiGetMock.mockReturnValueOnce({ csrfToken: undefined });
+    jest.mocked(useSafeContext).mockReturnValueOnce({ expired: false });
 
     // when
-    const { container } = render(
-      <AxiosErrorCatcherContext.Provider
-        value={{
-          codeError: undefined,
-          hasError: false,
-        }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
+    const { container } = render(<HomePage />);
 
-    // then
-    expect(container).toMatchSnapshot();
-  });
-
-  it('should match the snapshot, when csrf token is defined', () => {
-    // given
-    jest.mocked(useStylesQuery).mockReturnValue(true);
-    useApiGetMock.mockReturnValueOnce({ csrfToken: 'any-string' });
-
-    // when
-    const { container } = render(
-      <AxiosErrorCatcherContext.Provider
-        value={{
-          codeError: undefined,
-          hasError: false,
-        }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
     // then
     expect(container).toMatchSnapshot();
   });
 
   it('should match snapshot when session is expired', () => {
     // given
-    jest.mocked(useStylesQuery).mockReturnValue(true);
+    jest.mocked(useSafeContext).mockReturnValueOnce({ expired: true });
 
     // when
-    const { container } = render(
-      <AxiosErrorCatcherContext.Provider value={{ codeError: 401, hasError: true }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
+    const { container } = render(<HomePage />);
+
     // then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot on mobile layout', () => {
     // given
-    jest.mocked(useStylesQuery).mockReturnValue(false);
-    useApiGetMock.mockReturnValueOnce({ csrfToken: 'any-string' });
+    jest.mocked(useStylesQuery).mockReturnValueOnce(false).mockReturnValueOnce(false);
 
     // when
-    const { container } = render(
-      <AxiosErrorCatcherContext.Provider
-        value={{
-          codeError: undefined,
-          hasError: false,
-        }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
+    const { container } = render(<HomePage />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -93,17 +53,10 @@ describe('HomePage', () => {
   it('should match the snapshot on desktop layout', () => {
     // given
     jest.mocked(useStylesQuery).mockReturnValueOnce(true).mockReturnValueOnce(false);
-    useApiGetMock.mockReturnValueOnce({ csrfToken: 'any-string' });
+
     // when
-    const { container } = render(
-      <AxiosErrorCatcherContext.Provider
-        value={{
-          codeError: undefined,
-          hasError: false,
-        }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
+    const { container } = render(<HomePage />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -111,32 +64,27 @@ describe('HomePage', () => {
   it('should match the snapshot on tablet layout', () => {
     // given
     jest.mocked(useStylesQuery).mockReturnValueOnce(false).mockReturnValueOnce(true);
-    useApiGetMock.mockReturnValueOnce({ csrfToken: 'any-string' });
+
     // when
-    const { container } = render(
-      <AxiosErrorCatcherContext.Provider
-        value={{
-          codeError: undefined,
-          hasError: false,
-        }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
+    const { container } = render(<HomePage />);
+
     // then
     expect(container).toMatchSnapshot();
   });
 
+  it('should call useSafeContext with AccountContext', () => {
+    // when
+    render(<HomePage />);
+
+    // then
+    expect(useSafeContext).toHaveBeenCalledOnce();
+    expect(useSafeContext).toHaveBeenCalledWith(AccountContext);
+  });
+
   it('should render the main heading', () => {
     // given
-    const { getByRole } = render(
-      <AxiosErrorCatcherContext.Provider
-        value={{
-          codeError: undefined,
-          hasError: false,
-        }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
+    const { getByRole } = render(<HomePage />);
+
     // when
     const element = getByRole('heading');
 
@@ -147,83 +95,10 @@ describe('HomePage', () => {
     );
   });
 
-  it('should have called useApiGet hook', () => {
-    // when
-    render(
-      <AxiosErrorCatcherContext.Provider
-        value={{
-          codeError: undefined,
-          hasError: false,
-        }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
-    // then
-    expect(useApiGetMock).toHaveBeenCalled();
-  });
-
-  it('should not have called RedirectToIdpFormComponent when csrf is falsy', () => {
-    // when
-    render(
-      <AxiosErrorCatcherContext.Provider
-        value={{
-          codeError: undefined,
-          hasError: false,
-        }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
-    // then
-    expect(RedirectToIdpFormComponent).not.toHaveBeenCalled();
-  });
-
-  it('should have called RedirectToIdpFormComponent when csrf is truthy', () => {
-    // given
-    useApiGetMock.mockReturnValueOnce({ csrfToken: 'any-string' });
-
-    // when
-    render(
-      <AxiosErrorCatcherContext.Provider
-        value={{
-          codeError: undefined,
-          hasError: false,
-        }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
-    // then
-    expect(RedirectToIdpFormComponent).toHaveBeenCalled();
-  });
-
-  it('should have called FranceConnectButton when csrf is truthy', () => {
-    // given
-    useApiGetMock.mockReturnValueOnce({ csrfToken: 'any-string' });
-
-    // when
-    render(
-      <AxiosErrorCatcherContext.Provider
-        value={{
-          codeError: undefined,
-          hasError: false,
-        }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
-    // then
-    expect(FranceConnectButton).toHaveBeenCalled();
-  });
-
   it('should render the paragraph', () => {
     // given
-    const { getByTestId } = render(
-      <AxiosErrorCatcherContext.Provider
-        value={{
-          codeError: undefined,
-          hasError: false,
-        }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
+    const { getByTestId } = render(<HomePage />);
+
     // when
     const element = getByTestId('paragraph');
 
@@ -234,21 +109,36 @@ describe('HomePage', () => {
     );
   });
 
-  it('should call AlertComponent with specific props if session has expired', () => {
+  it('should render AlertComponent with specific props if session has expired', () => {
+    // given
+    jest.mocked(useSafeContext).mockReturnValueOnce({ expired: true });
+
     // when
-    render(
-      <AxiosErrorCatcherContext.Provider value={{ codeError: undefined, hasError: true }}>
-        <HomePage />
-      </AxiosErrorCatcherContext.Provider>,
-    );
+    render(<HomePage />);
+
     // then
     expect(AlertComponent).toHaveBeenCalledOnce();
     expect(AlertComponent).toHaveBeenCalledWith(
       {
-        children: expect.anything(),
-        className: 'text-left fr-mb-3w',
+        children: expect.any(Object),
+        className: 'text-left fr-my-3w',
         size: 'sm',
         type: 'warning',
+      },
+      {},
+    );
+  });
+
+  it('should render LoginFormComponent', () => {
+    // when
+    render(<HomePage />);
+
+    // then
+    expect(LoginFormComponent).toHaveBeenCalledOnce();
+    expect(LoginFormComponent).toHaveBeenCalledWith(
+      {
+        className: 'flex-rows items-center',
+        connectType: 'FranceConnect',
       },
       {},
     );

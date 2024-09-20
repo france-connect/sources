@@ -11,9 +11,8 @@ export class DataProvider extends Document {
   // :warning: Ceci est un champ métier (Ex: "Les services de la DGFIP")
   title: string;
 
-  @Prop({ type: String })
-  // :warning: Ceci est un champ métier (Ex: "Les services de la DGFIP")
-  slug: string;
+  @Prop({ type: [String] })
+  scopes: string[];
 
   @Prop({ type: Boolean })
   active: boolean;

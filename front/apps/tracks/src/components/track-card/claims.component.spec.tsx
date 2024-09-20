@@ -1,11 +1,11 @@
 import { render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
-import type { IRichClaim } from '../../interfaces';
+import type { RichClaimInterface } from '../../interfaces';
 import { ClaimsComponent } from './claims.component';
 
 describe('ConnexionComponent', () => {
-  const claims1: IRichClaim = {
+  const claims1: RichClaimInterface = {
     identifier: 'claims1',
     label: 'Claims 1 Label',
     provider: {
@@ -13,7 +13,7 @@ describe('ConnexionComponent', () => {
       slug: 'provider1',
     },
   };
-  const claims2: IRichClaim = {
+  const claims2: RichClaimInterface = {
     identifier: 'claims2',
     label: 'Claims 2 Label',
     provider: {

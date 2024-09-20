@@ -6,6 +6,7 @@ import { lastValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
+import { validateCog } from '@fc/cog';
 import { getDtoErrors, RequiredExcept, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 
@@ -104,7 +105,18 @@ export class RnippService {
     birthplace: string,
     birthcountry: string,
   ): string {
-    return birthplace || birthcountry;
+    /**
+     * This control is used in legacy and seems necessary for RNIPP
+     * We might encounter some weird birthplace codes,
+     * but we can (must) not alter the idp provided identity.
+     */
+    const isCog = validateCog(birthplace);
+
+    if (isCog) {
+      return birthplace;
+    }
+
+    return birthcountry;
   }
 
   private async callRnipp(requestUrl: string): Promise<AxiosResponse<string>> {

@@ -3,11 +3,21 @@
 exports[`Application should match snapshot 1`] = `
 <div>
   <div
-    data-mockid="HelmetProvider"
+    data-mockid="ErrorBoundary"
   >
-    <div>
+    <div
+      data-mockid="AccountProvider"
+    >
       <div>
-        ApplicationRoutes
+        <div
+          data-mockid="HelmetProvider"
+        >
+          <div>
+            <div>
+              ApplicationRoutes
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

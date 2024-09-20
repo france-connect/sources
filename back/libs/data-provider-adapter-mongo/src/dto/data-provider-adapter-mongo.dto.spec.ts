@@ -11,7 +11,7 @@ describe('Data Provider (Data Transfer Object)', () => {
     uid: '6f21b751-ed06-48b6-a59c-36e1300a368a',
     title: 'Fournisseur de données Mock - 1',
     active: true,
-    slug: 'MOCK_1',
+    scopes: ['scope1'],
     client_id:
       '423dcbdc5a15ece61ed00ff5989d72379c26d9ed4c8e4e05a87cffae019586e0',
     client_secret:

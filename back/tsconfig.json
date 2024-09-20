@@ -171,6 +171,8 @@
       "@mocks/jwt/*": ["libs/jwt/.mocks/*"],
       "@fc/csmr-account": ["apps/csmr-account/src"],
       "@fc/csmr-account/*": ["apps/csmr-account/src/*"],
+      "@fc/csmr-fraud": ["apps/csmr-fraud/src"],
+      "@fc/csmr-fraud/*": ["apps/csmr-fraud/src/*"],
       "@fc/mock-rnipp": ["apps/mock-rnipp/src"],
       "@fc/mock-rnipp/*": ["apps/mock-rnipp/src/*"],
       "@fc/mock-data-provider": ["apps/mock-data-provider/src"],

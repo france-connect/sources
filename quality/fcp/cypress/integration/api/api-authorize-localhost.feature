@@ -2,7 +2,7 @@
 @api @apiAuthorize
 Fonctionnalité: API - authorize localhost
 
-  @ignoreInteg01
+  @fcpLow @fcpHigh @ignoreInteg01
   Scénario: API authorize - localhost refusé sur la stack locale
     Etant donné que je prépare une requête "authorize"
     Et je mets "http://localhost/login-callback" dans le paramètre "redirect_uri" de la requête
@@ -16,7 +16,7 @@ Fonctionnalité: API - authorize localhost
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
-  @ignoreDocker @fcpHigh
+  @fcpHigh @ignoreDocker
   Scénario: API authorize - localhost refusé en integ pour FC+
     Etant donné que je prépare une requête "authorize"
     Et je mets "http://localhost/login-callback" dans le paramètre "redirect_uri" de la requête
@@ -30,7 +30,7 @@ Fonctionnalité: API - authorize localhost
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous."
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
-  @ignoreDocker @fcpLow
+  @fcpLow @ignoreDocker
   Scénario: API authorize - localhost autorisé en integ pour FC
     Etant donné que je prépare une requête "authorize"
     Et je mets "http://localhost/login-callback" dans le paramètre "redirect_uri" de la requête

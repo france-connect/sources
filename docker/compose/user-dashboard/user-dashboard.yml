@@ -16,6 +16,7 @@ services:
       - "csmr-account-legacy"
       - "csmr-account-high"
       - "csmr-tracks"
+      - "csmr-fraud"
       - "csmr-user-preferences-high"
       - "maildev"
     volumes:

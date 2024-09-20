@@ -4,9 +4,9 @@ import axios from 'axios';
 import * as ReactRouter from 'react-router-dom';
 
 import { useApiGet } from '@fc/common';
-import type { GetCsrfTokenResponse } from '@fc/http-client';
+import type { GetCsrfTokenResponseInterface } from '@fc/http-client';
 
-import type { FormValues } from '../interfaces';
+import type { FormValuesInterface } from '../interfaces';
 import { UserPreferencesService } from '../services/user-preferences.service';
 import { useUserPreferencesApi, validateHandlerCallback } from './use-user-preferences-api.hook';
 
@@ -58,11 +58,11 @@ describe('useUserPreferencesApi', () => {
   const csrfToken = 'csrfTokenMockValue';
   const formValuesMock = { allowFutureIdp: false, idpList };
 
-  const getCsrfTokenResponse = {
+  const getCsrfTokenResponseInterface = {
     data: {
       csrfToken,
     },
-  } as unknown as AxiosResponse<GetCsrfTokenResponse>;
+  } as unknown as AxiosResponse<GetCsrfTokenResponseInterface>;
 
   beforeEach(() => {
     // given
@@ -95,7 +95,7 @@ describe('useUserPreferencesApi', () => {
 
   describe('updating preferences', () => {
     beforeEach(() => {
-      jest.mocked(axios.get).mockResolvedValue(getCsrfTokenResponse);
+      jest.mocked(axios.get).mockResolvedValue(getCsrfTokenResponseInterface);
     });
 
     it('should call UserPreferencesService.parseFormData when userPreferences are defined but none formValues', () => {
@@ -202,7 +202,7 @@ describe('useUserPreferencesApi', () => {
       };
       const parseFormDataMock = jest
         .mocked(UserPreferencesService.parseFormData)
-        .mockImplementation((v) => v as unknown as FormValues);
+        .mockImplementation((v) => v as unknown as FormValuesInterface);
       jest.mocked(axios.post).mockResolvedValueOnce({ data: dataValueMock });
 
       /**

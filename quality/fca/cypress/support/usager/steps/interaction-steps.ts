@@ -20,18 +20,6 @@ Then('le champ email correspond à {string}', function (email: string) {
   interactionPage.getEmail().invoke('val').should('be.equal', email);
 });
 
-Then("je choisis le fournisseur d'identité {string}", function (text: string) {
-  cy.contains('label', text).click();
-  cy.contains('button', 'Continue').click();
-});
-
-Then(
-  "je suis redirigé vers la page permettant la selection d'un fournisseur d'identité",
-  function () {
-    cy.contains('Choisir votre accès');
-  },
-);
-
 Given(
   "je paramètre un intercepteur pour l'appel authorize au fournisseur d'identité",
   function () {

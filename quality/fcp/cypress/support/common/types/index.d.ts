@@ -43,6 +43,8 @@ declare module 'mocha' {
     idpConfig?: IdentityProviderConfig;
     idpConfigs: IdentityProviderConfig[];
     operatorUser?: OperatorUser;
+    repScopes: ScopeContext[];
+    repScope?: ScopeContext;
     requestedScope: ScopeContext;
     scopes: ScopeContext[];
     serviceProvider: ServiceProvider;

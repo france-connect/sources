@@ -29,17 +29,17 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
   // Dependency injection can require more than 4 parameters
   /* eslint-disable-next-line max-params */
   constructor(
-    private readonly logger: LoggerService,
-    private readonly coreAccount: CoreAccountService,
-    private readonly coreAcr: CoreAcrService,
-    private readonly config: ConfigService,
-    private readonly tracking: TrackingService,
-    private readonly rnipp: RnippService,
-    private readonly serviceProvider: ServiceProviderAdapterMongoService,
-    private readonly cryptographyFcp: CryptographyFcpService,
-    private readonly account: AccountService,
-    private readonly identityProvider: IdentityProviderAdapterMongoService,
-    private readonly oidcAcr: OidcAcrService,
+    protected readonly logger: LoggerService,
+    protected readonly coreAccount: CoreAccountService,
+    protected readonly coreAcr: CoreAcrService,
+    protected readonly config: ConfigService,
+    protected readonly tracking: TrackingService,
+    protected readonly rnipp: RnippService,
+    protected readonly serviceProvider: ServiceProviderAdapterMongoService,
+    protected readonly cryptographyFcp: CryptographyFcpService,
+    protected readonly account: AccountService,
+    protected readonly identityProvider: IdentityProviderAdapterMongoService,
+    protected readonly oidcAcr: OidcAcrService,
   ) {}
 
   /**

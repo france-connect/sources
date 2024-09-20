@@ -11,7 +11,7 @@ import {
   IExceptionDocumentation,
 } from '@fc/exceptions-deprecated';
 
-import { Description, Loggable, Trackable } from '../../decorator';
+import { Description } from '../../decorator';
 import {
   ExceptionClass,
   PathAndException,
@@ -126,8 +126,6 @@ export default class Runner {
     const { ERROR, ERROR_DESCRIPTION } = error;
 
     const errorCode = ExceptionsService.getCode(scope, code);
-    const loggable = Loggable.isLoggable(errorInstance);
-    const trackable = Trackable.isTrackable(errorInstance);
     const description = Description.getDescription(errorInstance);
 
     const data = {
@@ -136,8 +134,6 @@ export default class Runner {
       errorCode,
       httpStatusCode,
       message,
-      loggable,
-      trackable,
       description,
       path,
       exception,

@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-export interface IUsePaginationHook {
+export interface UsePaginationInterface {
   currentPage: number;
   gtTablet: boolean;
   navigationNumbers: number[];

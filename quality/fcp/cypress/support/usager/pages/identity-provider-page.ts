@@ -2,6 +2,7 @@ import { User } from '../../common/helpers';
 import {
   ChainableElement,
   IdentityProviderBase,
+  ScopeContext,
   UserCredentials,
 } from '../../common/types';
 
@@ -52,7 +53,14 @@ export default class IdentityProviderPage {
     cy.get(this.loginButtonSelector).click();
   }
 
-  useCustomIdentity(user: User): void {
+  setRepScope({ scopes }: ScopeContext): void {
+    if (scopes.length > 0) {
+      const value = scopes.join(' ');
+      cy.get('input#rep_scope').clearThenType(value);
+    }
+  }
+
+  useCustomIdentity(user: User, repScopeContext?: ScopeContext): void {
     cy.get('#custom-identity-link').click();
 
     const fields = [
@@ -74,6 +82,10 @@ export default class IdentityProviderPage {
     });
 
     cy.get('select#gender').select(user.claims.gender);
+
+    if (repScopeContext) {
+      this.setRepScope(repScopeContext);
+    }
 
     cy.get(this.loginButtonSelector).click();
   }

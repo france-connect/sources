@@ -2,7 +2,6 @@ import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 
 import { ApiErrorMessage, ApiErrorParams } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { Loggable } from '@fc/exceptions-deprecated';
 import { LoggerService } from '@fc/logger';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 import { ViewTemplateService } from '@fc/view-templates';
@@ -35,11 +34,7 @@ export class FcExceptionFilter
 
     const { message } = exception;
 
-    const isLoggableError = Loggable.isLoggable(exception);
-
-    if (isLoggableError) {
-      this.logException(code, id, exception);
-    }
+    this.logException(code, id, exception);
 
     if (this.tracking) {
       const context: TrackedEventContextInterface = { req, exception };

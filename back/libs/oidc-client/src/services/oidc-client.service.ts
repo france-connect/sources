@@ -16,6 +16,7 @@ import {
 } from '../exceptions';
 import {
   ExtraTokenParams,
+  IdTokenClaimsWithRepScope,
   TokenParams,
   TokenResults,
   UserInfosParams,
@@ -56,13 +57,18 @@ export class OidcClientService {
     );
 
     const { access_token: accessToken, id_token: idToken } = tokenSet;
-    const { acr, amr = [] } = tokenSet.claims();
+    const {
+      acr,
+      amr = [],
+      rep_scope: idpRepresentativeScope,
+    }: IdTokenClaimsWithRepScope = tokenSet.claims();
 
     const tokenResult = {
       acr,
       amr,
       accessToken,
       idToken,
+      idpRepresentativeScope,
     };
 
     const errorsOutputs = await validateDto(

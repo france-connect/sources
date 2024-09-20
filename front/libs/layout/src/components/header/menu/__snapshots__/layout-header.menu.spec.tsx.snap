@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderMenuComponent should match the snapshot, whithout navigation defined 1`] = `
+<div>
+  <div
+    aria-labelledby="burger-button-mobile-menu"
+    class="fr-header__menu fr-modal no-touch-action"
+    id="layout-header-menu-modal"
+  >
+    <div
+      class="fr-container"
+    >
+      <button
+        aria-controls="layout-header-menu-modal"
+        class="fr-btn--close fr-btn"
+      >
+        Fermer
+      </button>
+      <div
+        class="fr-header__menu-links"
+      >
+        <div>
+          LayoutHeaderToolsComponent
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`LayoutHeaderMenuComponent should match the snapshot, with navigation defined 1`] = `
+<div>
+  <div
+    aria-labelledby="burger-button-mobile-menu"
+    class="fr-header__menu fr-modal no-touch-action fr-modal--opened"
+    id="layout-header-menu-modal"
+  >
+    <div
+      class="fr-container"
+    >
+      <button
+        aria-controls="layout-header-menu-modal"
+        class="fr-btn--close fr-btn"
+      >
+        Fermer
+      </button>
+      <div
+        class="fr-header__menu-links"
+      >
+        <div>
+          LayoutHeaderToolsComponent
+        </div>
+      </div>
+      <div>
+        LayoutHeaderNavigationComponent
+      </div>
+    </div>
+  </div>
+</div>
+`;

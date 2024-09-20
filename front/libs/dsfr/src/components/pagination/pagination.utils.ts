@@ -5,14 +5,14 @@
 import lodashRange from 'lodash.range';
 
 import type {
-  IDesktopDisplayParams,
-  IGetCurrentPage,
-  IGetDisplayParameters,
-  IGetNavigationNumbers,
-  IGetPagesCount,
+  DesktopDisplayParamsInterface,
+  GetCurrentPageInterface,
+  GetDisplayParametersInterface,
+  GetNavigationNumbersInterface,
+  GetPagesCountInterface,
 } from '../../interfaces';
 
-export const getPagesCount = ({ itemsPerPage, totalItems }: IGetPagesCount): number => {
+export const getPagesCount = ({ itemsPerPage, totalItems }: GetPagesCountInterface): number => {
   const pagesCount = Math.ceil(totalItems / itemsPerPage);
   return pagesCount;
 };
@@ -20,7 +20,7 @@ export const getPagesCount = ({ itemsPerPage, totalItems }: IGetPagesCount): num
 export const getCurrentPage = ({
   currentElementIndexIntoTheList,
   itemsPerPage,
-}: IGetCurrentPage): number => {
+}: GetCurrentPageInterface): number => {
   const zeroIndexCurrentPage = Math.floor(currentElementIndexIntoTheList / itemsPerPage);
   return zeroIndexCurrentPage;
 };
@@ -30,7 +30,7 @@ export const getNavigationNumbers = ({
   currentPage: zeroIndexCurrentPage,
   numberOfPagesShownIntoNavigation,
   pagesCount,
-}: IGetNavigationNumbers): number[] => {
+}: GetNavigationNumbersInterface): number[] => {
   if (!pagesCount || !numberOfPagesShownIntoNavigation || Number.isNaN(zeroIndexCurrentPage)) {
     return [];
   }
@@ -65,7 +65,7 @@ export const getNavigationNumbers = ({
 export const getMobileNavigationNumbers = ({
   currentPage: zeroIndexCurrentPage,
   pagesCount,
-}: IGetNavigationNumbers): number[] => {
+}: GetNavigationNumbersInterface): number[] => {
   const maxNumberOfPagesShownIntoNavigation = 3;
 
   if (pagesCount <= maxNumberOfPagesShownIntoNavigation) {
@@ -91,7 +91,7 @@ export const getDisplayParameters = ({
   isMobile,
   numberOfPagesShownIntoNavigation,
   pagesCount,
-}: IGetDisplayParameters): IDesktopDisplayParams => {
+}: GetDisplayParametersInterface): DesktopDisplayParamsInterface => {
   if (isMobile) {
     return {
       showFirstEllipsis: false,

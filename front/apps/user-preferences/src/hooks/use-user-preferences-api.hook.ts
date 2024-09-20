@@ -4,13 +4,17 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { HttpStatusCode, useApiGet } from '@fc/common';
-import type { GetCsrfTokenResponse } from '@fc/http-client';
+import type { GetCsrfTokenResponseInterface } from '@fc/http-client';
 
-import type { FormValues, UserPreferencesConfig, UserPreferencesData } from '../interfaces';
+import type {
+  FormValuesInterface,
+  UserPreferencesConfig,
+  UserPreferencesDataInterface,
+} from '../interfaces';
 import type { UserPreferencesServiceInterface } from '../services';
 import { UserPreferencesService } from '../services';
 
-export const validateHandlerCallback = ({ idpList }: Pick<FormValues, 'idpList'>) => {
+export const validateHandlerCallback = ({ idpList }: Pick<FormValuesInterface, 'idpList'>) => {
   const isDefinedPreferences = idpList && Object.values(idpList);
   const hasError = isDefinedPreferences && !isDefinedPreferences.includes(true);
 
@@ -26,13 +30,13 @@ export const validateHandlerCallback = ({ idpList }: Pick<FormValues, 'idpList'>
 export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
   const navigate = useNavigate();
 
-  const userPreferences: UserPreferencesData = useApiGet({
+  const userPreferences: UserPreferencesDataInterface = useApiGet({
     endpoint: options.API_ROUTE_USER_PREFERENCES,
   });
 
   const [submitErrors, setSubmitErrors] = useState<AxiosError | Error | undefined>(undefined);
   const [submitWithSuccess, setSubmitWithSuccess] = useState(false);
-  const [formValues, setFormValues] = useState<FormValues | undefined>(undefined);
+  const [formValues, setFormValues] = useState<FormValuesInterface | undefined>(undefined);
 
   const validateHandler = useCallback(validateHandlerCallback, []);
 
@@ -49,12 +53,15 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
     [navigate],
   );
 
-  const commitSuccessHandler = useCallback(({ data }: AxiosResponse<UserPreferencesData>) => {
-    const { allowFutureIdp, idpList } = UserPreferencesService.parseFormData(data);
-    setFormValues({ allowFutureIdp, idpList });
-    setSubmitErrors(undefined);
-    setSubmitWithSuccess(true);
-  }, []);
+  const commitSuccessHandler = useCallback(
+    ({ data }: AxiosResponse<UserPreferencesDataInterface>) => {
+      const { allowFutureIdp, idpList } = UserPreferencesService.parseFormData(data);
+      setFormValues({ allowFutureIdp, idpList });
+      setSubmitErrors(undefined);
+      setSubmitWithSuccess(true);
+    },
+    [],
+  );
 
   const commit = useCallback(
     async ({
@@ -63,7 +70,7 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
     }: Pick<UserPreferencesServiceInterface, 'allowFutureIdp' | 'idpList'>) => {
       const {
         data: { csrfToken },
-      } = await axios.get<GetCsrfTokenResponse>(options.API_ROUTE_CSRF_TOKEN);
+      } = await axios.get<GetCsrfTokenResponseInterface>(options.API_ROUTE_CSRF_TOKEN);
 
       const data = UserPreferencesService.encodeFormData({
         allowFutureIdp,
@@ -72,7 +79,7 @@ export const useUserPreferencesApi = (options: UserPreferencesConfig) => {
       });
 
       return axios
-        .post<UserPreferencesData>(options.API_ROUTE_USER_PREFERENCES, data)
+        .post<UserPreferencesDataInterface>(options.API_ROUTE_USER_PREFERENCES, data)
         .then(commitSuccessHandler)
         .catch(commitErrorHandler);
     },

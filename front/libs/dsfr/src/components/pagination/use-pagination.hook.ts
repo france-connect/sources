@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useScrollTo } from '@fc/common';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
-import type { IUsePaginationHook, Pagination } from '../../interfaces';
+import type { PaginationInterface, UsePaginationInterface } from '../../interfaces';
 import {
   getCurrentPage,
   getDisplayParameters,
@@ -15,14 +15,14 @@ import {
 interface usePaginationProps {
   numberOfPagesShownIntoNavigation: number;
   onPageClick: (nextOffset: number) => void;
-  pagination: Pagination;
+  pagination: PaginationInterface;
 }
 
 export const usePagination = ({
   numberOfPagesShownIntoNavigation,
   onPageClick,
   pagination,
-}: usePaginationProps): IUsePaginationHook => {
+}: usePaginationProps): UsePaginationInterface => {
   const [breakpointMd] = useStylesVariables('breakpoint-md');
 
   const gtTablet = useStylesQuery({ minWidth: breakpointMd });

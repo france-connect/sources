@@ -22,6 +22,7 @@ describe('AccordionComponent', () => {
         Children
       </AccordionComponent>,
     );
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -38,6 +39,7 @@ describe('AccordionComponent', () => {
         Children
       </AccordionComponent>,
     );
+
     // Then
     expect(container).toMatchSnapshot();
   });
@@ -47,6 +49,7 @@ describe('AccordionComponent', () => {
     const { container } = render(
       <AccordionComponent title="accordion title mock" onClick={onAccordionClickMock} />,
     );
+
     // Then
     expect(container).toMatchSnapshot();
   });
@@ -58,6 +61,7 @@ describe('AccordionComponent', () => {
         Children
       </AccordionComponent>,
     );
+
     // Then
     expect(container).toMatchSnapshot();
   });
@@ -72,6 +76,7 @@ describe('AccordionComponent', () => {
         Children
       </AccordionComponent>,
     );
+
     // Then
     expect(container).toMatchSnapshot();
   });
@@ -85,6 +90,7 @@ describe('AccordionComponent', () => {
     );
     const button = getByRole('button');
     fireEvent.click(button);
+
     // Then
     expect(onAccordionClickMock).toHaveBeenCalledOnce();
   });
@@ -101,6 +107,7 @@ describe('AccordionComponent', () => {
         Children
       </AccordionComponent>,
     );
+
     // Then
     expect(container.firstChild).toHaveClass(classnameMock);
   });

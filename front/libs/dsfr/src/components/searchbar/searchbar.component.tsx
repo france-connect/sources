@@ -2,16 +2,17 @@ import classnames from 'classnames';
 import React from 'react';
 import type { FieldInputProps } from 'react-final-form';
 
+import type { PropsWithClassName } from '@fc/common';
+
 import { Sizes } from '../../enums';
 
-interface SearchBarComponentProps {
+interface SearchBarComponentProps extends PropsWithClassName {
   size?: Omit<Sizes, Sizes.SMALL>;
   buttonLabel?: string;
   // @NOTE la regle est desactivée car le type provient de la librairie react-final-form
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   input: FieldInputProps<any, HTMLElement>;
   inputLabel?: string;
-  className?: string;
   placeholder?: string;
 }
 

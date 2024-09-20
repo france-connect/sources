@@ -10,7 +10,7 @@ import { SameSiteType } from '../types';
  * @author Brice
  * @date 2021-04-16
  */
-export interface ISessionCookieOptions {
+export interface SessionCookieOptionsInterface {
   signed: boolean;
   httpOnly: boolean;
   secure: boolean;

@@ -192,6 +192,15 @@ export class OidcProviderService {
   ) {
     // run middleware AFTER pattern occurred
     if (
+      !this.isInError(ctx) &&
+      this.shouldRunAfterPattern({ step, route, path, pattern })
+    ) {
+      await middleware(ctx);
+    }
+  }
+
+  private shouldRunAfterPattern({ step, route, path, pattern }) {
+    return (
       step === OidcProviderMiddlewareStep.AFTER &&
       /**
        * In the post processing phase, we may also target more specific actions with ctx.oidc.route
@@ -202,9 +211,11 @@ export class OidcProviderService {
        * we can safely use a unique function parameter (`pattern`) and test it against both values.
        */
       (route === pattern || path === pattern)
-    ) {
-      await middleware(ctx);
-    }
+    );
+  }
+
+  private isInError(ctx) {
+    return ctx['oidc']?.isError === true;
   }
 
   /**

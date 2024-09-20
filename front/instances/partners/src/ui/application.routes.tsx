@@ -9,15 +9,21 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
-import { ApplicationLayout } from '@fc/dsfr';
+import { ApplicationLayout } from '@fc/layout';
+import { AuthedRoute, UnauthedRoute } from '@fc/routing';
 
-import { HomePage } from './pages';
+import { HomePage, LoginPage } from './pages';
 
 export const ApplicationRoutes = React.memo(() => {
   const appRouter = createBrowserRouter(
     createRoutesFromElements(
       <Route element={<ApplicationLayout />} path="/">
-        <Route index element={<HomePage />} />
+        <Route element={<UnauthedRoute />}>
+          <Route element={<LoginPage />} path="login" />
+        </Route>
+        <Route element={<AuthedRoute fallback="/login" />}>
+          <Route index element={<HomePage />} />
+        </Route>
       </Route>,
     ),
   );

@@ -40,6 +40,10 @@ const setupTestFramework = (
   setFixtureContext('scopes.json', pathArray, 'scopes');
   setFixtureContext('users.json', pathArray, 'users');
 
+  if (platform === 'fcp-low') {
+    setFixtureContext('rep-scopes.json', pathArray, 'repScopes');
+  }
+
   // Define default data
   cy.get<ServiceProvider[]>('@serviceProviders').then((serviceProviders) => {
     ctx.serviceProvider = getDefaultServiceProvider(serviceProviders);

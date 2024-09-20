@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
 // declarative file
-export interface HttpClientData {
+export interface HttpClientDataInterface {
   [key: string]: unknown;
 }

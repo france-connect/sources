@@ -150,16 +150,6 @@ export class CoreFcaMiddlewareService extends CoreOidcProviderMiddlewareService 
   }
 
   protected async afterAuthorizeMiddleware(ctx: OidcCtx) {
-    /**
-     * Abort middleware if authorize is in error
-     *
-     * We do not want to start a session
-     * nor trigger authorization event for invalid requests
-     */
-    if (ctx.oidc['isError'] === true) {
-      return;
-    }
-
     const eventContext = this.getEventContext(ctx);
     await this.renewSession(ctx);
 

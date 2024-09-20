@@ -2,7 +2,7 @@ import { ArgumentsHost, HttpStatus } from '@nestjs/common';
 
 import { ApiErrorMessage, ApiErrorParams } from '@fc/app';
 import { ConfigService } from '@fc/config';
-import { FcException, Loggable, Trackable } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions-deprecated';
 import { LoggerService } from '@fc/logger';
 import { TrackingService } from '@fc/tracking';
 import { ViewTemplateService } from '@fc/view-templates';
@@ -10,8 +10,6 @@ import { ViewTemplateService } from '@fc/view-templates';
 import { getLoggerMock } from '@mocks/logger';
 
 import { FcaDeprecatedExceptionFilter } from './fca-deprecated.exception-filter';
-
-jest.mock('@fc/exceptions/decorator/trackable.decorator');
 
 describe('FcaDepreactedExceptionFilter', () => {
   let exceptionFilter: FcaDeprecatedExceptionFilter;
@@ -144,21 +142,6 @@ describe('FcaDepreactedExceptionFilter', () => {
       );
     });
 
-    it('should not log error', async () => {
-      // Given
-      @Loggable(false)
-      class ClassMock extends FcException {}
-      const exception = new ClassMock('message text');
-      exception.scope = STUB_ERROR_SCOPE;
-      exception.code = STUB_ERROR_CODE;
-      exceptionFilter['logException'] = jest.fn();
-      // When
-      await exceptionFilter.catch(exception, argumentHostMock);
-      // Then
-      expect(exceptionFilter['logException']).toHaveBeenCalledTimes(0);
-      expect(resMock.render).toHaveBeenCalled();
-    });
-
     it('should log error', async () => {
       // Given
       const exception = new FcException('message text');
@@ -190,8 +173,6 @@ describe('FcaDepreactedExceptionFilter', () => {
       exception.scope = STUB_ERROR_SCOPE;
       exception.code = STUB_ERROR_CODE;
 
-      const spy = jest.spyOn(Trackable, 'isTrackable');
-      spy.mockImplementationOnce(() => true);
       // When
       await exceptionFilter.catch(exception, argumentHostMock);
       // Then
@@ -206,8 +187,6 @@ describe('FcaDepreactedExceptionFilter', () => {
         },
       );
       expect(resMock.render).toHaveBeenCalled();
-
-      spy.mockRestore();
     });
   });
 

@@ -2,7 +2,7 @@
 
 exports[`ToggleLabelComponent should match the snapshot 1`] = `
 <label
-  class="fr-toggle__label"
+  class="fr-toggle__label label"
   data-fr-checked-label="foo"
   data-fr-unchecked-label="bar"
   data-testid="field-toggle-label-any-field-name-mock"

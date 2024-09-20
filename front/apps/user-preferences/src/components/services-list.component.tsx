@@ -1,27 +1,23 @@
 import './user-preferences.scss';
 
-import React, { useContext } from 'react';
+import React from 'react';
 
-import type { AccountInterface } from '@fc/account';
+import type { AccountContextState } from '@fc/account';
 import { AccountContext } from '@fc/account';
-import type { UserInfosInterface } from '@fc/user-dashboard';
+import { useSafeContext } from '@fc/common';
+import type { DashboardUserInfosInterface } from '@fc/user-dashboard';
 
-import type { Service } from '../interfaces';
+import type { ServiceInterface } from '../interfaces';
 import { ServiceComponent } from './service.component';
 
 interface ServicesListComponentProps {
-  identityProviders: Service[] | undefined;
+  identityProviders: ServiceInterface[] | undefined;
 }
 
 export const ServicesListComponent: React.FC<ServicesListComponentProps> = React.memo(
   ({ identityProviders }: ServicesListComponentProps) => {
-    /*
-      @TODO use <AccountInterface<UserInfosInterface>> type
-      Author: Matthieu
-      Date: 2022-10-06
-    */
-    const { userinfos } = useContext<AccountInterface>(AccountContext);
-    const currentLoggedInIdentityProvider = (userinfos as UserInfosInterface)?.idpId;
+    const { userinfos } = useSafeContext<AccountContextState>(AccountContext);
+    const currentLoggedInIdentityProvider = (userinfos as DashboardUserInfosInterface)?.idpId;
 
     return (
       <ul className="fr-toggle__list">

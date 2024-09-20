@@ -174,18 +174,7 @@ export class CoreFcpMiddlewareService extends CoreOidcProviderMiddlewareService 
     return this.sessionService.get('OidcClient', 'browsingSessionId') || uuid();
   }
 
-  // eslint-disable-next-line complexity
   protected async afterAuthorizeMiddleware(ctx: OidcCtx): Promise<void> {
-    /**
-     * Abort middleware if authorize is in error
-     *
-     * We do not want to start a session
-     * nor trigger authorization event for invalid requests
-     */
-    if (ctx.oidc['isError'] === true) {
-      return;
-    }
-
     const eventContext = this.getEventContext(ctx);
 
     // We force string casting because if it's undefined SSO will not be enable

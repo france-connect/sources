@@ -1,5 +1,5 @@
 #language: fr
-@usager @connexionSub @ci
+@usager @connexionSub @fcpLow @fcpHigh @ci
 Fonctionnalité: Connexion Usager - Sub
   # En tant qu'usager,
   # je veux transmettre un sub unique au fournisseur de service

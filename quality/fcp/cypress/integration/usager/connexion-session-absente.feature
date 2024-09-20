@@ -1,5 +1,5 @@
 #language: fr
-@usager @sessionAbsente @ci
+@usager @sessionAbsente @fcpLow @fcpHigh @ci
 Fonctionnalité: Connexion Usager - session absente
   # En tant qu'usager,
   # je veux être informer quand il y a un problème avec ma session

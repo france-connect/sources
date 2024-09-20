@@ -1,10 +1,11 @@
 import classnames from 'classnames';
 import React from 'react';
 
+import type { PropsWithClassName } from '@fc/common';
+
 import { IconPlacement, Sizes } from '../../enums';
 
-interface LinkComponentProps {
-  className?: string;
+interface LinkComponentProps extends PropsWithClassName {
   href: string;
   icon?: string;
   iconPlacement?: IconPlacement;

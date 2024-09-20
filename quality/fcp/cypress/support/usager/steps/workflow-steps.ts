@@ -1,13 +1,19 @@
 import { When } from '@badeball/cypress-cucumber-preprocessor';
 
-import { navigateTo, User } from '../../common/helpers';
+import {
+  getDefaultScope,
+  getIdentityProviderByDescription,
+  getScopeByType,
+  getUserByCriteria,
+  navigateTo,
+  User,
+} from '../../common/helpers';
 import {
   Environment,
   IdentityProvider,
   ScopeContext,
   ServiceProvider,
 } from '../../common/types';
-import { getDefaultScope } from '../helpers';
 import IdentityProviderPage from '../pages/identity-provider-page';
 import IdentityProviderSelectionPage from '../pages/identity-provider-selection-page';
 import InfoConsentPage from '../pages/info-consent-page';
@@ -104,6 +110,29 @@ export class ConnectionWorkflow {
     const credentials = user.getCredentials(this.identityProvider.idpId);
     expect(credentials).to.exist;
     identityProviderPage.login(credentials);
+    return this;
+  }
+
+  /**
+   * Log the user in on aidants connect identity provider page
+   * @param user user with its credentials
+   * @param repScope representative scope sent by aidants connect mock
+   * @returns the current ConnectionWorkflow instance
+   */
+  loginToAidantConnect(user: User, repScope: ScopeContext): this {
+    expect(repScope).to.exist;
+    const identityProviderPage = new IdentityProviderPage(
+      this.identityProvider,
+    );
+    identityProviderPage.useCustomIdentity(user, repScope);
+    return this;
+  }
+
+  /**
+   * Check that the user is connected on the service provider page
+   */
+  checkConnected(): this {
+    this.serviceProviderPage.checkIsUserConnected();
     return this;
   }
 
@@ -266,4 +295,24 @@ When("l'usager ne peut pas se connecter à FranceConnect", function () {
     .selectIdentityProvider(this.identityProvider)
     .login(this.user)
     .checkError();
+});
+
+When('je me connecte à FranceConnect avec Aidants Connect', function () {
+  expect(this.env).to.exist;
+  expect(this.serviceProvider).to.exist;
+  this.identityProvider = getIdentityProviderByDescription(
+    this.identityProviders,
+    'Aidants Connect',
+  );
+  const scopes = this.requestedScope || getDefaultScope(this.scopes);
+  this.user = getUserByCriteria(this.users, ['personnalisé']);
+  this.repScope = this.repScope || getScopeByType(this.repScopes, 'par défaut');
+  new ConnectionWorkflow(this.env, this.serviceProvider)
+    .init()
+    .withScope(scopes)
+    .start()
+    .selectIdentityProvider(this.identityProvider)
+    .loginToAidantConnect(this.user, this.repScope)
+    .consent()
+    .checkConnected();
 });

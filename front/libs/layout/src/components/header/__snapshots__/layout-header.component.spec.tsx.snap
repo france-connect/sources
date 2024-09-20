@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderComponent should match the snapshot when user is connected 1`] = `
+<div>
+  <header
+    class="banner fr-header"
+    role="banner"
+  >
+    <div
+      class="fr-header__body"
+    >
+      <div
+        class="fr-container"
+      >
+        <div
+          class="fr-header__body-row"
+        >
+          <div>
+            LayoutHeaderBrandComponent
+          </div>
+          <div
+            class="fr-header__tools"
+          >
+            <div
+              class="fr-header__tools-links"
+            >
+              <div>
+                LayoutHeaderToolsComponent
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div>
+        LayoutHeaderMenuComponent
+      </div>
+      <button
+        data-testid="LayoutHeaderMenuComponent-button-mock"
+      />
+    </div>
+  </header>
+</div>
+`;
+
+exports[`LayoutHeaderComponent should match the snapshot when user is not connected 1`] = `
+<div>
+  <header
+    class="banner fr-header"
+    role="banner"
+  >
+    <div
+      class="fr-header__body"
+    >
+      <div
+        class="fr-container"
+      >
+        <div
+          class="fr-header__body-row"
+        >
+          <div>
+            LayoutHeaderBrandComponent
+          </div>
+          <div
+            class="fr-header__tools"
+          >
+            <div
+              class="fr-header__tools-links"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+</div>
+`;

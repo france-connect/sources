@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderAccountComponent should match the snapshot 1`] = `
+<div>
+  <span
+    class="fr-btn fr-icon-account-line"
+    data-testid="layout-header-tools-account-component"
+  >
+    any firstname mock any lastname mock
+  </span>
+</div>
+`;

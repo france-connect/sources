@@ -1,5 +1,5 @@
 #language: fr
-@usager @interactionErrorMessage @ci
+@usager @interactionErrorMessage @fcpLow @fcpHigh @ci
 Fonctionnalité: Message d'erreur sur la mire
   # En tant qu'usager FranceConnect,
   # je veux être informé par un message d'erreur sur la mire

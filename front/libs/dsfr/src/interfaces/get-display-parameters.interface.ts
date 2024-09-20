@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-export interface IGetDisplayParameters {
+export interface GetDisplayParametersInterface {
   currentPage: number;
   numberOfPagesShownIntoNavigation: number;
   pagesCount: number;

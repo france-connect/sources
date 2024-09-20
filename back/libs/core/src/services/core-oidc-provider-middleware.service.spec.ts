@@ -1234,20 +1234,6 @@ describe('CoreOidcProviderMiddlewareService', () => {
       expect(result).toBe(true);
     });
 
-    it('should return true if oidc.isError is true', () => {
-      // Given
-      const ctxMock = {
-        oidc: { isError: true },
-        req: { query: { idp_hint: 'foo' } },
-      } as unknown as OidcCtx;
-
-      // When
-      const result = service['shouldAbortIdpHint'](ctxMock);
-
-      // Then
-      expect(result).toBe(true);
-    });
-
     it('should reuturn true if ctx.isSso is true', () => {
       // Given
       const ctxMock = {

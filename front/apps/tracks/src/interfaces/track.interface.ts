@@ -3,34 +3,34 @@
 // declarative file
 import type { DateTime } from 'luxon';
 
-import type { FSA } from '@fc/common';
+import type { FSAInterface } from '@fc/common';
 
 import type { CinematicEvents, EidasToLabel } from '../enums';
 
-export interface IProvider {
+interface ProviderInterface {
   slug: string;
   label: string;
 }
 
 export type IClaim = string;
 
-export interface IRichClaim {
+export interface RichClaimInterface {
   identifier: IClaim;
   label: string;
-  provider: IProvider;
+  provider: ProviderInterface;
 }
 
-export type IPaginationResult = {
+export type PaginationResultInterface = {
   total: number;
   size: number;
   offset: number;
 };
 
-export type UserDashboardTracks = FSA<IPaginationResult, Track[]>;
+export type UserDashboardTracks = FSAInterface<PaginationResultInterface, TrackInterface[]>;
 
-export interface Track {
+export interface TrackInterface {
   city: string;
-  claims: IRichClaim[];
+  claims: RichClaimInterface[];
   country: string;
   event: CinematicEvents;
   idpLabel: string;
@@ -41,15 +41,15 @@ export interface Track {
   trackId: string;
 }
 
-export interface EnhancedTrack extends Track {
+export interface EnhancedTrackInterface extends TrackInterface {
   datetime: DateTime;
 }
 
-export type TrackList = [
+export type TrackListType = [
   number,
   {
     label: string;
-    tracks: EnhancedTrack[];
+    tracks: EnhancedTrackInterface[];
   },
 ];
 

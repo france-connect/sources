@@ -15,7 +15,7 @@ describe('MockServiceProviderService', () => {
   let service: MockServiceProviderService;
 
   const httpServiceMock = {
-    post: jest.fn(),
+    request: jest.fn(),
   };
 
   const loggerServiceMock = getLoggerMock();
@@ -46,7 +46,8 @@ describe('MockServiceProviderService', () => {
     const apiUrlMock = 'apiUrl';
     const accessTokenMock = 'accessToken';
     const authSecretMock = 'authSecret';
-    const authorizationMock = `Bearer ${Buffer.from(
+    const authorizationMockV1 = `Bearer ${accessTokenMock}`;
+    const authorizationMockV2 = `Bearer ${Buffer.from(
       accessTokenMock,
       'utf-8',
     ).toString('base64')}`;
@@ -60,31 +61,48 @@ describe('MockServiceProviderService', () => {
       jest.mocked(lastValueFrom).mockResolvedValue(successResponseMock);
     });
 
-    it('should call the httpService with the authorization header containing the bearer', async () => {
+    it('should call the httpService using get method with the authorization header containing the accessToken', async () => {
       // When
+      // Get data from DP mock v1 (without secret)
+      await service.getData(apiUrlMock, accessTokenMock, undefined);
+
+      // Then
+      expect(httpServiceMock.request).toHaveBeenCalledTimes(1);
+      expect(httpServiceMock.request).toHaveBeenCalledWith({
+        method: 'get',
+        url: apiUrlMock,
+        headers: {
+          Authorization: authorizationMockV1,
+        },
+        proxy: false,
+      });
+    });
+
+    it('should call the httpService using post method with the authorization header containing the bearer', async () => {
+      // When
+      // Get data from DP mock v2 (with secret)
       await service.getData(apiUrlMock, accessTokenMock, authSecretMock);
 
       // Then
-      expect(httpServiceMock.post).toHaveBeenCalledTimes(1);
-      expect(httpServiceMock.post).toHaveBeenCalledWith(
-        apiUrlMock,
-        {
+      expect(httpServiceMock.request).toHaveBeenCalledTimes(1);
+      expect(httpServiceMock.request).toHaveBeenCalledWith({
+        method: 'post',
+        url: apiUrlMock,
+        data: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           auth_secret: authSecretMock,
         },
-        {
-          headers: {
-            Authorization: authorizationMock,
-          },
-          proxy: false,
+        headers: {
+          Authorization: authorizationMockV2,
         },
-      );
+        proxy: false,
+      });
     });
 
     it('should call lastValueFrom with the value returned by the httpServiceMock.post call', async () => {
       // Given
       const observableMock = 'observable';
-      jest.mocked(httpServiceMock.post).mockReturnValue(observableMock);
+      jest.mocked(httpServiceMock.request).mockReturnValue(observableMock);
 
       // When
       await service.getData(apiUrlMock, accessTokenMock, authSecretMock);

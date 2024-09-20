@@ -6,7 +6,7 @@ import { AlertComponent, AlertTypes, SimpleButton, Sizes, ToggleInput } from '@f
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { useUserPreferencesForm } from '../hooks';
-import type { UserPreferencesData } from '../interfaces';
+import type { UserPreferencesDataInterface } from '../interfaces';
 import { AllowFutureIdpSwitchLabelComponent } from './allow-future-idp-switch-label.component';
 import { ServicesListComponent } from './services-list.component';
 import styles from './user-preferences-form.module.scss';
@@ -15,7 +15,7 @@ interface UserPreferencesFormComponentProps {
   dirtyFields: Record<string, boolean>;
   isDisabled: boolean;
   onSubmit: FormEventHandler<HTMLFormElement>;
-  userPreferences: UserPreferencesData;
+  userPreferences: UserPreferencesDataInterface;
   showNotification: boolean;
   hasValidationErrors: boolean;
 }
@@ -69,7 +69,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
           </AlertComponent>
         )}
 
-        <p className="fr-mt-5w">
+        <p className="fr-my-5w">
           Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux
           comptes pour vous connecter à vos services.
           <strong> Par défaut leur utilisation sera autorisée.</strong>
@@ -87,7 +87,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
         />
 
         {alertInfoState.isDisplayedAlertInfo && (
-          <AlertComponent size={Sizes.SMALL}>
+          <AlertComponent className="fr-mt-2w" size={Sizes.SMALL}>
             <p data-testid="UserPreferenceFormComponent-title-info">
               Êtes-vous sûr de vouloir autoriser par défaut les futurs moyens de connexion ?
             </p>

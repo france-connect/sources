@@ -3,12 +3,14 @@ import { ChainableElement } from '../../common/types';
 export default class UdMenuComponent {
   getUserLabel(): ChainableElement {
     return cy.get(
-      'span[data-testid="layout-header-tools-account-component-desktop"]',
+      '.fr-header__tools span[data-testid="layout-header-tools-account-component"]',
     );
   }
 
   getLogoutLink(): ChainableElement {
-    return cy.get('a[data-testid="layout-header-tools-logout-button-desktop"]');
+    return cy.get(
+      '.fr-header__tools a[data-testid="layout-header-tools-logout-button"]',
+    );
   }
 
   getHistoryLink(): ChainableElement {

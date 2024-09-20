@@ -3,7 +3,7 @@ import { DateTime } from 'luxon';
 import { useToggle } from 'usehooks-ts';
 
 import type { CinematicEvents, EidasToLabel } from '../../enums';
-import type { EnhancedTrack, IRichClaim } from '../../interfaces';
+import type { EnhancedTrackInterface, RichClaimInterface } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';
@@ -24,7 +24,7 @@ describe('TrackCardComponent', () => {
     LUXON_FORMAT_TIMEZONE: 'z',
   };
 
-  const claims1: IRichClaim = {
+  const claims1: RichClaimInterface = {
     identifier: 'claims1',
     label: 'Claims 1 Label',
     provider: {
@@ -33,7 +33,7 @@ describe('TrackCardComponent', () => {
     },
   };
 
-  const claims2: IRichClaim = {
+  const claims2: RichClaimInterface = {
     identifier: 'claims2',
     label: 'Claims 2 Label',
     provider: {
@@ -42,7 +42,7 @@ describe('TrackCardComponent', () => {
     },
   };
 
-  const track: EnhancedTrack = {
+  const track: EnhancedTrackInterface = {
     city: 'mock-city',
     claims: [claims1, claims2],
     country: 'mock-country',
@@ -138,7 +138,7 @@ describe('TrackCardComponent', () => {
   describe('Special component render', () => {
     it('should render element at container top level', () => {
       // given
-      const spMissingTrack: EnhancedTrack = {
+      const spMissingTrack: EnhancedTrackInterface = {
         ...track,
         spLabel: undefined,
       };
@@ -193,6 +193,7 @@ describe('TrackCardComponent', () => {
     fireEvent.click(element);
     fireEvent.click(element);
     fireEvent.click(element);
+
     expect(toggleMock).toHaveBeenCalledTimes(3);
   });
 

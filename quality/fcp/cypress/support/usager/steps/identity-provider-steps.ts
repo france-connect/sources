@@ -1,5 +1,6 @@
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
+import { getScopeByType } from '../../common/helpers';
 import IdentityProviderPage from '../pages/identity-provider-page';
 
 let identityProviderPage: IdentityProviderPage;
@@ -53,3 +54,12 @@ When("je saisi manuellement l'identité de l'utilisateur", function () {
 When('je clique sur le lien retour vers FC depuis un FI', function () {
   identityProviderPage.getBackToFCLink().click();
 });
+
+When(
+  /^je m'authentifie sur Aidants Connect(?: avec un mandat "([^"]+)")?$/,
+  function (type: string) {
+    const repScopeType = type ?? 'par défaut';
+    this.repScope = getScopeByType(this.repScopes, repScopeType);
+    identityProviderPage.useCustomIdentity(this.user, this.repScope);
+  },
+);

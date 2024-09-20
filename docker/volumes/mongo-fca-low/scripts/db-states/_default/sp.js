@@ -291,6 +291,47 @@ const fsa = {
     trustedIdentity: false,
     ssoDisabled: false,
   },
+
+  PARTNERS: {
+    name: "Partners FC / FC+",
+    title: "Partners Title",
+    site: "https://partners.docker.dev-franceconnect.fr/",
+    redirect_uris: [
+      "https://partners.docker.dev-franceconnect.fr/api/oidc-callback",
+    ],
+    post_logout_redirect_uris: [
+      "https://partners.docker.dev-franceconnect.fr/api/logout-callback",
+    ],
+    client_secret:
+      "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
+    key: "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39958",
+    entityId:
+      "aa41f9fa5752420a516422a4bf98c09f11e1617d9ebddd4b545cc5cc109680bc",
+    credentialsFlow: false,
+    email: "partners@franceconnect.loc",
+    IPServerAddressesAndRanges: ["1.1.1.1"],
+    active: true,
+    type: "public",
+    __v: 4,
+    featureHandlers: { none: "" },
+    updatedAt: new Date("2019-04-24 17:09:17"),
+    updatedBy: "admin",
+    scopes: ["uid", "openid", "given_name", "siret", "usual_name", "email"],
+    claims: ["amr"],
+    id_token_signed_response_alg: "ES256",
+    id_token_encrypted_response_alg: "",
+    id_token_encrypted_response_enc: "",
+    userinfo_signed_response_alg: "ES256",
+    userinfo_encrypted_response_alg: "",
+    userinfo_encrypted_response_enc: "",
+    jwks_uri:
+      "https://partners.docker.dev-franceconnect.fr/client/.well-known/keys",
+    idpFilterExclude: true,
+    idpFilterList: [],
+    identityConsent: false,
+    trustedIdentity: false,
+    ssoDisabled: false,
+  },
 };
 
 // -- SPs ----------

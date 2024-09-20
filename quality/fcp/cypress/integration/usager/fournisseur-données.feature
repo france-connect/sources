@@ -33,6 +33,7 @@ Fonctionnalité: Fournisseur Données
       | eidas2   |
       | eidas3   |
 
+  @fcpLow @fcpHigh
   Scénario: Checktoken - access token expiré
     Etant donné que je navigue sur la page fournisseur de service
     Et que je me connecte à FranceConnect
@@ -43,6 +44,7 @@ Fonctionnalité: Fournisseur Données
     Alors le fournisseur de données vérifie l'access token fourni par le fournisseur de service
     Et le checktoken endpoint envoie un token d'introspection expiré
 
+  @fcpLow @fcpHigh
   Scénario: Checktoken - access token aucun scope ne correspond au FD
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "CNAM"
     Et que je navigue sur la page fournisseur de service
@@ -54,6 +56,7 @@ Fonctionnalité: Fournisseur Données
     Et le checktoken endpoint envoie un token d'introspection valide
     Et le token d'introspection a une propriété "scope" égale à ""
 
+  @fcpLow @fcpHigh
   Plan du Scénario: Checktoken - access token valide pour usager "<userType>"
     Etant donné que j'utilise un compte usager "<userType>"
     Et que je navigue sur la page fournisseur de service
@@ -75,7 +78,7 @@ Fonctionnalité: Fournisseur Données
       | présumé né jour                    |
       | présumé né jour et mois            |
 
-  @ignoreInteg01
+  @fcpLow @fcpHigh @ignoreInteg01
   Plan du Scénario: Checktoken - Vérification log métier access token valide
     Etant donné que j'utilise un compte usager "par défaut"
     Et que je navigue sur la page fournisseur de service

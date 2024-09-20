@@ -1,12 +1,11 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description, Loggable } from '@fc/exceptions-deprecated';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { CryptographyBaseException } from './cryptography-base.exception';
 
-@Loggable()
 @Description(
   "Une erreur est survenue lors de la vérification d'un mot de passe. Contacter le support N3.",
 )

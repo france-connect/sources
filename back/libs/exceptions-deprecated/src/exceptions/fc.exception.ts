@@ -1,8 +1,7 @@
 import { HttpStatus } from '@nestjs/common';
 
-import { Description, Loggable } from '../decorator';
+import { Description } from '../decorator';
 
-@Loggable()
 @Description()
 export class FcException extends Error {
   /**

@@ -12,12 +12,17 @@
       </div>
     </section>
 
-  <section class="container">
+    <section class="container">
     <h2 id="error-title" class=text-center>
-      Error: <span id="error-title"><%= locals.error || locals.message %></span>
+      <%= locals.exception?.constructor?.name ?? "Error" %>: <span id="error-title"><%= locals.exception?.message || locals.error %></span>
     </h1>
     <p class="text-center">
+      <!-- error description from query parameters -->
       <pre id="error-description"><%= locals.error_description %></pre>
+
+      <!-- error details from exception -->
+      <pre id="error-stack"><%= locals.exception?.stack %></pre>
+      <pre id="original-stack"><%= locals.exception?.originalError?.stack %></pre>
     </p>
   </section>
 

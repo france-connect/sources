@@ -255,21 +255,6 @@ describe('CoreFcpMiddlewareService', () => {
       service['renewSession'] = jest.fn();
     });
 
-    it('should abort middleware execution if the request is flagged with an error', async () => {
-      // Given
-      const ctxMock = getCtxMock(true);
-      service['getEventContext'] = jest.fn().mockReturnValueOnce(eventCtxMock);
-      service['buildSessionWithNewInteraction'] = jest
-        .fn()
-        .mockReturnValueOnce(sessionPropertiesMock);
-      // When
-      await service['afterAuthorizeMiddleware'](ctxMock);
-      // Then
-      expect(service['getEventContext']).toHaveBeenCalledTimes(0);
-      expect(sessionServiceMock.set).toHaveBeenCalledTimes(0);
-      expect(trackingMock.track).toHaveBeenCalledTimes(0);
-    });
-
     it('should call renewSession()', async () => {
       // Given
       const ctxMock = getCtxMock();

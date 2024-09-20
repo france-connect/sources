@@ -1,5 +1,5 @@
+import { getClaimsWithoutRnippPrefix } from '../../common/helpers';
 import { ChainableElement, ScopeContext } from '../../common/types';
-import { getClaimsWithoutRnippPrefix } from '../helpers';
 /* eslint-enable @typescript-eslint/naming-convention */
 
 export default class InfoConsentPage {

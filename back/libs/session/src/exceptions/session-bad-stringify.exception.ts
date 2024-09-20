@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative code
-import { Description, Loggable } from '@fc/exceptions-deprecated';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { SessionBaseException } from './session-base.exception';
@@ -9,7 +9,6 @@ import { SessionBaseException } from './session-base.exception';
 @Description(
   "Les données pour la session se sont mal formatées avant d'être chiffrées. Si le problème persiste, contacter le support N3",
 )
-@Loggable()
 export class SessionBadStringifyException extends SessionBaseException {
   public readonly code = ErrorCode.BAD_STRINGIFY;
 

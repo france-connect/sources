@@ -62,6 +62,7 @@ Fonctionnalité: Connexion Usager - Token
     Et je redemande les informations de l'usager
     Alors le fournisseur de service a accès aux informations des scopes "identite_pivot"
 
+  @fcpLow @fcpHigh
   Scénario: Token non valide après révocation
     Etant donné que j'utilise un compte usager "par défaut"
     Et que j'utilise un fournisseur de service "public"

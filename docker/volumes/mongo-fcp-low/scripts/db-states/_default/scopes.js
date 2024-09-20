@@ -85,19 +85,6 @@ db.scopes.update(
   { upsert: true },
 );
 
-// --Scope - FranceConnect
-print("Initializing FranceConnect scopes...");
-db.scopes.update(
-  { scope: "connexion_tracks" },
-  {
-    scope: "connexion_tracks",
-    fd: "FranceConnect",
-    label: "Historique de connexions",
-    __v: 0,
-  },
-  { upsert: true },
-);
-
 // -- Scopes - DGFIP
 print("Initializing DGFIP scopes...");
 db.scopes.update(
@@ -567,20 +554,20 @@ db.scopes.update(
   },
   { upsert: true },
 );
-
-// -- Scopes - CNAM
-print("Initializing CNAM scopes...");
 db.scopes.update(
-  { scope: "ensagri_releve_notes" },
+  { scope: "dgfip_annee_n_moins_2_si_indispo_n_moins_1" },
   {
-    scope: "ensagri_releve_notes",
-    fd: "CNAM",
+    scope: "dgfip_annee_n_moins_2_si_indispo_n_moins_1",
+    fd: "DGFIP",
     label:
-      "Relevé de notes (Enseignement Agricole) (Caisse nationale de l'assurance maladie)",
+      "Avant-dernière année de revenu, si la dernière année de revenu est indisponible (Direction générale des Finances publiques)",
     __v: 0,
   },
   { upsert: true },
 );
+
+// -- Scopes - CNAM
+print("Initializing CNAM scopes...");
 db.scopes.update(
   { scope: "droits_assurance_maladie" },
   {
@@ -650,7 +637,7 @@ db.scopes.update(
     scope: "cnam_presence_medecin_traitant",
     fd: "CNAM",
     label:
-      "Présence d'un médecin traitant (Caisse nationale de l'assurance maladie)",
+      "Présence d’un médecin traitant (Caisse nationale de l'assurance maladie)",
     __v: 0,
   },
   { upsert: true },
@@ -661,7 +648,7 @@ db.scopes.update(
     scope: "cnam_paiements_ij",
     fd: "CNAM",
     label:
-      "Paiements d'indemnités journalières versées par l'Assurance Maladie (Caisse nationale de l'assurance maladie)",
+      "Paiements d’indemnités journalières versées par l’Assurance Maladie (Caisse nationale de l'assurance maladie)",
     __v: 0,
   },
   { upsert: true },
@@ -684,12 +671,12 @@ db.scopes.update(
 // -- Scopes - MESRI
 print("Initializing MESRI scopes...");
 db.scopes.update(
-  { scope: "mesri_identifiant" },
+  { scope: "mesri_identite" },
   {
-    scope: "mesri_identifiant",
+    scope: "mesri_identite",
     fd: "MESRI",
     label:
-      "Identifiant national étudiant (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
+      "Identité de l’étudiant (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
     __v: 0,
   },
   { upsert: true },
@@ -700,7 +687,7 @@ db.scopes.update(
     scope: "mesri_inscription_etudiant",
     fd: "MESRI",
     label:
-      "Formation initiale (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
+      "Statut étudiant inscrit | Périmètre formation initiale (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
     __v: 0,
   },
   { upsert: true },
@@ -711,7 +698,7 @@ db.scopes.update(
     scope: "mesri_inscription_autre",
     fd: "MESRI",
     label:
-      "Formation continue (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
+      "Statut étudiant inscrit | Périmètre formation continue (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
     __v: 0,
   },
   { upsert: true },
@@ -722,7 +709,7 @@ db.scopes.update(
     scope: "mesri_admission",
     fd: "MESRI",
     label:
-      "Admission (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
+      "Statut étudiant \"admis\" (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
     __v: 0,
   },
   { upsert: true },
@@ -733,7 +720,7 @@ db.scopes.update(
     scope: "mesri_etablissements",
     fd: "MESRI",
     label:
-      "Établissements (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
+      "Liste des établissements (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
     __v: 0,
   },
   { upsert: true },
@@ -747,7 +734,7 @@ db.scopes.update(
     scope: "cnous_statut_boursier",
     fd: "CNOUS",
     label:
-      "Statut boursier (Centre national des œuvres universitaires et scolaires)",
+      "Statut étudiant boursier (Centre national des œuvres universitaires et scolaires)",
     __v: 0,
   },
   { upsert: true },
@@ -768,7 +755,7 @@ db.scopes.update(
   {
     scope: "cnous_email",
     fd: "CNOUS",
-    label: "Courriel (Centre national des œuvres universitaires et scolaires)",
+    label: "E-mail (Centre national des œuvres universitaires et scolaires)",
     __v: 0,
   },
   { upsert: true },
@@ -806,15 +793,26 @@ db.scopes.update(
   },
   { upsert: true },
 );
+db.scopes.update(
+  { scope: "cnous_identite" },
+  {
+    scope: "cnous_identite",
+    fd: "CNOUS",
+    label: "Identité",
+    __v: 0,
+  },
+  { upsert: true },
+);
 
-// -- Scopes - Pôle emploi
-print("Initializing Pôle emploi scopes...");
+// -- Scopes - France Travail
+print("Initializing France Travail scopes...");
 db.scopes.update(
   { scope: "api_fc-liste-paiementsv1" },
   {
     scope: "api_fc-liste-paiementsv1",
-    fd: "Pôle emploi",
-    label: "Indemnités de Pôle emploi (Pôle emploi)",
+    fd: "France Travail",
+    label:
+      "Indemnités de Pôle emploi ou Montants et dates des paiements France Travail (France Travail)",
     __v: 0,
   },
   { upsert: true },
@@ -823,8 +821,134 @@ db.scopes.update(
   { scope: "api_fc-statutaugmentev1" },
   {
     scope: "api_fc-statutaugmentev1",
-    fd: "Pôle emploi",
-    label: "Statut demandeur d'emploi (Pôle emploi)",
+    fd: "France Travail",
+    label: "Statut demandeur d'emploi (France Travail)",
+    __v: 0,
+  },
+  { upsert: true },
+);
+
+// -- Scopes - CNAF & MSA
+print("Initializing CNAF & MSA scopes...");
+db.scopes.update(
+  { scope: "allocation_adulte_handicape" },
+  {
+    scope: "allocation_adulte_handicape",
+    fd: "CNAF & MSA",
+    label:
+      "Statut bénéficiaire AAH (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
+    __v: 0,
+  },
+  { upsert: true },
+);
+db.scopes.update(
+  { scope: "allocation_soutien_familial" },
+  {
+    scope: "allocation_soutien_familial",
+    fd: "CNAF & MSA",
+    label:
+      "Statut bénéficiaire ASF (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
+    __v: 0,
+  },
+  { upsert: true },
+);
+db.scopes.update(
+  { scope: "prime_activite" },
+  {
+    scope: "prime_activite",
+    fd: "CNAF & MSA",
+    label:
+      "Statut bénéficiaire prime d’activité (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
+    __v: 0,
+  },
+  { upsert: true },
+);
+db.scopes.update(
+  { scope: "prime_activite_majoration" },
+  {
+    scope: "prime_activite_majoration",
+    fd: "CNAF & MSA",
+    label:
+      "Statut bénéficiaire majoration (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
+    __v: 0,
+  },
+  { upsert: true },
+);
+db.scopes.update(
+  { scope: "revenu_solidarite_active" },
+  {
+    scope: "revenu_solidarite_active",
+    fd: "CNAF & MSA",
+    label:
+      "Statut bénéficiaire RSA (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
+    __v: 0,
+  },
+  { upsert: true },
+);
+db.scopes.update(
+  { scope: "revenu_solidarite_active_majoration" },
+  {
+    scope: "revenu_solidarite_active_majoration",
+    fd: "CNAF & MSA",
+    label:
+      "Statut bénéficiaire majoration (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
+    __v: 0,
+  },
+  { upsert: true },
+);
+db.scopes.update(
+  { scope: "cnaf_quotient_familial" },
+  {
+    scope: "cnaf_quotient_familial",
+    fd: "CNAF & MSA",
+    label:
+      "Quotient familial CAF & MSA et composition familiale (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
+    __v: 0,
+  },
+  { upsert: true },
+);
+db.scopes.update(
+  { scope: "cnaf_allocataires" },
+  {
+    scope: "cnaf_allocataires",
+    fd: "CNAF & MSA",
+    label:
+      "Identités allocataire et conjoint (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
+    __v: 0,
+  },
+  { upsert: true },
+);
+db.scopes.update(
+  { scope: "cnaf_enfants" },
+  {
+    scope: "cnaf_enfants",
+    fd: "CNAF & MSA",
+    label:
+      "Identités enfants (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
+    __v: 0,
+  },
+  { upsert: true },
+);
+db.scopes.update(
+  { scope: "cnaf_adresse" },
+  {
+    scope: "cnaf_adresse",
+    fd: "CNAF & MSA",
+    label:
+      "Adresse du foyer (Caisse nationale des allocations familiales & Mutualité sociale agricole)",
+    __v: 0,
+  },
+  { upsert: true },
+);
+
+// -- Scopes - DSS
+print("Initializing DSS scopes...");
+db.scopes.update(
+  { scope: "complementaire_sante_solidaire" },
+  {
+    scope: "complementaire_sante_solidaire",
+    fd: "DSS",
+    label: "Statut bénéficiaire C2S (Sécurité sociale)",
     __v: 0,
   },
   { upsert: true },

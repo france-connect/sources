@@ -25,10 +25,10 @@ Fonctionnalité: Connexion Usager - Acr
 
     @ci
     Exemples:
-      | acrValues            | method | actualAcr |
-      | eidas1               | get    | eidas1    |
-      | eidas1               | post   | eidas1    |
-      | niveau_inconnu       | get    | eidas1    |
+      | acrValues      | method | actualAcr |
+      | eidas1         | get    | eidas1    |
+      | eidas1         | post   | eidas1    |
+      | niveau_inconnu | get    | eidas1    |
 
     Exemples:
       | acrValues            | method | actualAcr |
@@ -89,6 +89,7 @@ Fonctionnalité: Connexion Usager - Acr
     Alors je suis redirigé vers la page erreur technique
     Et le code d'erreur est "Y020001"
 
+  @ignoreInteg01
   Scénario: Connexion ACR - FI retourne un niveau trop élevé
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que j'utilise le fournisseur d'identité "par défaut"

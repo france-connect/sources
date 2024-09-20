@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { IsString } from 'class-validator';
+import { IsString, IsUUID } from 'class-validator';
 
 export class ConnectNotificationEmailParameters {
   @IsString()
@@ -18,4 +18,7 @@ export class ConnectNotificationEmailParameters {
 
   @IsString()
   readonly udFqdn: string;
+
+  @IsUUID(4)
+  readonly browsingSessionId: string;
 }

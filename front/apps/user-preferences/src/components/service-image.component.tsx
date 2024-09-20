@@ -1,13 +1,15 @@
 import classnames from 'classnames';
 import React from 'react';
 
-import type { Service } from '../interfaces';
+import type { PropsWithClassName } from '@fc/common';
+
+import type { ServiceInterface } from '../interfaces';
 import styles from './service-image.module.scss';
 
-interface ServiceImageComponentProps {
+interface ServiceImageComponentProps extends PropsWithClassName {
   disabled?: boolean;
   className?: string;
-  service: Service;
+  service: ServiceInterface;
 }
 
 export const ServiceImageComponent = React.memo(

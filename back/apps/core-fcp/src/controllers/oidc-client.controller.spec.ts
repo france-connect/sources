@@ -328,6 +328,8 @@ describe('OidcClient Controller', () => {
       idpAcr: acrMock,
       idpIdentity: identityMock,
       idpLabel: idpLabelMock,
+      idpIdToken: idpIdTokenMock,
+      idpRepresentativeScope: [],
     };
     const redirectMock = `/api/v2/interaction/${interactionIdMock}/verify`;
 
@@ -344,6 +346,7 @@ describe('OidcClient Controller', () => {
         accessToken: accessTokenMock,
         acr: acrMock,
         amr: [amrMock],
+        idToken: idpIdTokenMock,
       });
       oidcClientServiceMock.getUserInfosFromProvider.mockReturnValueOnce(
         identityMock,

@@ -56,6 +56,8 @@ import {
   OidcProviderController,
 } from './controllers';
 import {
+  CoreFcpAidantsConnectAuthorizationHandler,
+  CoreFcpAidantsConnectVerifyHandler,
   CoreFcpDefaultAuthorizationHandler,
   CoreFcpDefaultIdentityCheckHandler,
   CoreFcpDefaultVerifyHandler,
@@ -136,10 +138,12 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     OidcProviderConfigAppService,
     CoreFcpDefaultVerifyHandler,
     CoreFcpEidasVerifyHandler,
+    CoreFcpAidantsConnectVerifyHandler,
     CoreFcpSendEmailHandler,
     CoreFcpDefaultIdentityCheckHandler,
     CoreFcpEidasIdentityCheckHandler,
     CoreFcpDefaultAuthorizationHandler,
+    CoreFcpAidantsConnectAuthorizationHandler,
     CsrfService,
     {
       provide: CORE_SERVICE,

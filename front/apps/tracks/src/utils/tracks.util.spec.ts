@@ -1,7 +1,12 @@
 import { DateTime } from 'luxon';
 
 import type { CinematicEvents, EidasToLabel } from '../enums';
-import type { EnhancedTrack, IRichClaim, TrackList, TracksConfig } from '../interfaces';
+import type {
+  EnhancedTrackInterface,
+  RichClaimInterface,
+  TrackListType,
+  TracksConfig,
+} from '../interfaces';
 import {
   groupByDataProvider,
   groupByDataProviderReducer,
@@ -11,7 +16,7 @@ import {
   transformTrackToEnhanced,
 } from './tracks.util';
 
-const claims1: IRichClaim = {
+const claims1: RichClaimInterface = {
   identifier: 'claims1',
   label: 'Claims 1 Label',
   provider: {
@@ -20,7 +25,7 @@ const claims1: IRichClaim = {
   },
 };
 
-const claims2: IRichClaim = {
+const claims2: RichClaimInterface = {
   identifier: 'claims2',
   label: 'Claims 2 Label',
   provider: {
@@ -31,7 +36,7 @@ const claims2: IRichClaim = {
 
 // Fixtures
 const dateTrack1 = 1317826080000; // '2011-10-05T14:48:00.000Z'
-const track1: EnhancedTrack = {
+const track1: EnhancedTrackInterface = {
   city: 'Acme City',
   claims: [claims1, claims2],
   country: 'Acme Country',
@@ -46,7 +51,7 @@ const track1: EnhancedTrack = {
 };
 
 const dateTrack2 = 1317912480000; // '2011-10-06T14:48:00.000Z'
-const track2: EnhancedTrack = {
+const track2: EnhancedTrackInterface = {
   city: 'Acme City',
   claims: [],
   country: 'Acme Country',
@@ -62,7 +67,7 @@ const track2: EnhancedTrack = {
 };
 
 const dateTrack3 = 1349448480000; // '2012-10-05T14:48:00.000Z'
-const track3: EnhancedTrack = {
+const track3: EnhancedTrackInterface = {
   city: 'Acme City',
   claims: [claims1, claims2],
   country: 'Acme Country',
@@ -131,7 +136,11 @@ describe('groupTracksByMonth', () => {
 describe('orderGroupByKeyAsc', () => {
   it('doit retourner un tableau ordonner par la clé unique (timestamp)', () => {
     // given
-    const sortable = [[456, {}] as TrackList, [789, {}] as TrackList, [123, {}] as TrackList];
+    const sortable = [
+      [456, {}] as TrackListType,
+      [789, {}] as TrackListType,
+      [123, {}] as TrackListType,
+    ];
 
     // when
     const result = sortable.sort(orderGroupByKeyAsc);
@@ -150,11 +159,11 @@ describe('orderTracksByDateDesc', () => {
     // given
     const sortable = [
       //  '2011-09-02T14:48:00.000Z'
-      { time: 1314974880000 } as EnhancedTrack,
+      { time: 1314974880000 } as EnhancedTrackInterface,
       // '2011-10-06T14:48:00.000Z'
-      { time: 1317912480000 } as EnhancedTrack,
+      { time: 1317912480000 } as EnhancedTrackInterface,
       // 2011-09-01T14:48:00.000Z
-      { time: 1314888480000 } as EnhancedTrack,
+      { time: 1314888480000 } as EnhancedTrackInterface,
     ];
 
     // when
@@ -186,7 +195,7 @@ describe('groupByDataProviderReducer', () => {
   it('should return an object with expected format', () => {
     // Given
     const accMock = {};
-    const claimMock: IRichClaim = {
+    const claimMock: RichClaimInterface = {
       identifier: 'foo',
       label: 'Claim Mock Label',
       provider: {
@@ -211,7 +220,7 @@ describe('groupByDataProviderReducer', () => {
 describe('groupByDataProvider', () => {
   it('should call reduce with groupByDataProviderReducer', () => {
     // Given
-    const claimsMock = [] as IRichClaim[];
+    const claimsMock = [] as RichClaimInterface[];
     jest.spyOn(claimsMock, 'reduce').mockImplementation();
 
     // When
@@ -224,7 +233,7 @@ describe('groupByDataProvider', () => {
 
   it('should return result from call to reduce', () => {
     // Given
-    const claimsMock = [] as IRichClaim[];
+    const claimsMock = [] as RichClaimInterface[];
     const claimsReduceMockedReturn = Symbol('claimsReduceMockedReturnValue');
     jest.spyOn(claimsMock, 'reduce').mockImplementation().mockReturnValue(claimsReduceMockedReturn);
 

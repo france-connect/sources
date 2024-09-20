@@ -4,24 +4,27 @@
 
 export const enGB = {
   // Caisse nationale de l’assurance maladie
-  'claim.ensagri_releve_note': 'Relevé de notes (Enseignement Agricole)',
-  'claim.droits_assurance_maladie': 'Droits assurance maladie',
+  'claim.droits_assurance_maladie': 'Droits Assurance Maladie',
   'claim.cnam_beneficiaires': 'Liste de vos ayant-droits',
   'claim.cnam_contrats': 'Vos droits de base',
   'claim.cnam_caisse': 'Votre caisse gestionnaire',
   'claim.cnam_exonerations': 'Vos exonérations ou modulations éventuelles',
   'claim.cnam_medecin_traitant': 'Votre médecin traitant',
-  'claim.cnam_presence_medecin_traitant': "Présence d'un médecin traitant",
+  'claim.cnam_presence_medecin_traitant': 'Présence d’un médecin traitant',
   'claim.cnam_paiements_ij':
-    "Paiements d'indemnités journalières versées par l'Assurance Maladie",
+    'Paiements d’indemnités journalières versées par l’Assurance Maladie',
+
+  // Sécurité sociale
+  'claim.complementaire_sante_solidaire': 'Statut bénéficiaire C2S',
 
   // Centre national des œuvres universitaires et scolaires
-  'claim.cnous_statut_boursier': 'Statut boursier',
+  'claim.cnous_statut_boursier': 'Statut étudiant boursier',
   'claim.cnous_echelon_bourse': 'Échelon de la bourse',
-  'claim.cnous_email': 'Courriel',
+  'claim.cnous_email': 'E-mail',
   'claim.cnous_periode_versement': 'Période de versement',
   'claim.cnous_statut_bourse': 'Statut définitif de la bourse',
-  'claim.cnous_ville_etudes': 'Ville d’étude',
+  'claim.cnous_ville_etudes': 'Ville d’études et établissement',
+  'claim.cnous_identite': 'Identité',
 
   // Direction générale des Finances publiques
   'claim.dgfip_rfr': 'Revenu fiscal de référence',
@@ -65,7 +68,7 @@ export const enGB = {
   'claim.dgfip_RevDecl_Cat4_Ref': 'Catégorie 4 - Revenus fonciers',
   'claim.dgfip_RevDecl_Cat5_NonSal':
     'Catégorie 5 - Revenus des professions non salariées',
-  'claim.dgfip_RevNets_Cat1_Tspr': 'Catégorie 1 - Salaires,pensions,rentes',
+  'claim.dgfip_RevNets_Cat1_Tspr': 'Catégorie 1 - Salaires, pensions, rentes',
   'claim.dgfip_RevNets_Cat1_RentOn':
     'Catégorie 1 - Rentes viagères à titre onéreux',
   'claim.dgfip_RevNets_Cat2_Rcm': 'Catégorie 2 - Revenus de capitaux mobiliers',
@@ -78,24 +81,40 @@ export const enGB = {
   'claim.dgfip_PaDeduc_Autres':
     'Pensions alimentaires déductibles - Autres pensions alimentaires versées (enfants mineurs, ascendants, etc.)',
   'claim.dgfip_EpargRetrDeduc': 'Versement épargne retraite',
+  'claim.dgfip_annee_n_moins_2_si_indispo_n_moins_1':
+    'Avant-dernière année de revenu, si la dernière année de revenu est indisponible',
 
   // Ministère de l'Enseignement Supérieur de la Recherche et de l'Innovation
-  'claim.mesri_identifiant': 'Identifiant national étudiant',
-  'claim.mesri_inscription_etudiant': 'Formation initiale',
-  'claim.mesri_inscription_autre': 'Formation continue',
-  'claim.mesri_admission': 'Admission',
-  'claim.mesri_etablissements': 'Établissements',
+  'claim.mesri_identite': 'Identité de l’étudiant',
+  'claim.mesri_inscription_etudiant':
+    'Statut étudiant inscrit | Périmètre formation initiale',
+  'claim.mesri_inscription_autre':
+    'Statut étudiant inscrit | Périmètre formation continue',
+  'claim.mesri_admission': 'Statut étudiant "admis"',
+  'claim.mesri_etablissements': 'Liste des établissements',
 
-  // Pôle emploi
-  'claim.api_fc-liste-paiementsv1': 'Indemnités de Pôle emploi',
-  'claim.api_fc-statutaugmentev1': 'Statut demandeur d’emploi',
+  // France Travail
+  'claim.api_fc-liste-paiementsv1':
+    'Indemnités de Pôle emploi ou Montants et dates des paiements France Travail',
+  'claim.api_fc-statutaugmentev1':
+    'Statut demandeur d’emploi ou Statut demandeur d’emploi et identité',
 
   // Ministère de l'intérieur
   'claim.mi_siv_carte_grise':
     'Informations de la carte grise: Titulaire et véhicule',
 
-  // Fc tracks
-  'claim.connexion_tracks': 'Connections logs',
+  // Caisse nationale des allocations familiales & Mutualité sociale agricole
+  'claim.allocation_adulte_handicape': 'Statut bénéficiaire AAH',
+  'claim.allocation_soutien_familial': 'Statut bénéficiaire ASF',
+  'claim.prime_activite': 'Statut bénéficiaire prime d’activité',
+  'claim.prime_activite_majoration': 'Statut bénéficiaire majoration',
+  'claim.revenu_solidarite_active': 'Statut bénéficiaire RSA',
+  'claim.revenu_solidarite_active_majoration': 'Statut bénéficiaire majoration',
+  'claim.cnaf_quotient_familial':
+    'Quotient familial CAF & MSA et composition familiale',
+  'claim.cnaf_allocataires': ' Identités allocataire et conjoint',
+  'claim.cnaf_enfants': 'Identités enfants',
+  'claim.cnaf_adresse': 'Adresse du foyer',
 
   // FranceConnect OIDC
   'claim.sub': '',

@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderToolsComponent should match the snapshot 1`] = `
+<div>
+  <ul
+    class="fr-btns-group"
+  >
+    <li>
+      <div>
+        LayoutHeaderAccountComponent
+      </div>
+    </li>
+    <li>
+      <div>
+        LayoutHeaderLogoutButton
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`LayoutHeaderToolsComponent should match the snapshot, when AccountConfig?.endpoints are undefined 1`] = `
+<div>
+  <ul
+    class="fr-btns-group"
+  >
+    <li>
+      <div>
+        LayoutHeaderAccountComponent
+      </div>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`LayoutHeaderToolsComponent should match the snapshot, when AccountConfig?.endpoints.logout is undefined 1`] = `
+<div>
+  <ul
+    class="fr-btns-group"
+  >
+    <li>
+      <div>
+        LayoutHeaderAccountComponent
+      </div>
+    </li>
+  </ul>
+</div>
+`;

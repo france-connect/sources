@@ -1,12 +1,11 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description, Loggable } from '@fc/exceptions-deprecated';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { I18nBaseException } from './i18n-base-exception';
 
-@Loggable()
 @Description("La clé de traduction demandée n'a pas été trouvée")
 export class I18nKeyNotFoundException extends I18nBaseException {
   code = ErrorCode.KEY_NOT_FOUND;

@@ -35,7 +35,7 @@ describe('ScopesIndexService', () => {
 
     {
       provider: {
-        slug: Providers.PE,
+        slug: Providers.FT,
         label: 'Data Provider 2 Mock Label',
       },
       claims: {
@@ -271,28 +271,28 @@ describe('ScopesIndexService', () => {
         fooClaim: {
           identifier: 'fooClaim',
           provider: {
-            slug: 'PE',
+            slug: 'FT',
             label: 'Data Provider 2 Mock Label',
           },
         },
         barClaim: {
           identifier: 'barClaim',
           provider: {
-            slug: 'PE',
+            slug: 'FT',
             label: 'Data Provider 2 Mock Label',
           },
         },
         fizzClaim: {
           identifier: 'fizzClaim',
           provider: {
-            slug: 'PE',
+            slug: 'FT',
             label: 'Data Provider 2 Mock Label',
           },
         },
         buzzClaim: {
           identifier: 'buzzClaim',
           provider: {
-            slug: 'PE',
+            slug: 'FT',
             label: 'Data Provider 2 Mock Label',
           },
         },

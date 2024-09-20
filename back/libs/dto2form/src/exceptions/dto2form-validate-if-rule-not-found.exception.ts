@@ -1,12 +1,11 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description, Loggable } from '@fc/exceptions-deprecated';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { Dto2FormBaseException } from './dto2form-base.exception';
 
-@Loggable()
 @Description(
   "Une des fonctions de validation conditionelle (validateIf) du formulaire en cours de validation n'existe pas.",
 )

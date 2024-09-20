@@ -1,24 +1,30 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
-import type { AccountInterface } from '@fc/account';
+import type { AccountContextState } from '@fc/account';
 import { AccountContext } from '@fc/account';
+import { useSafeContext } from '@fc/common';
 
-import type { AuthRouteProps } from '../../interfaces';
+import { AuthFallbackRoutes } from '../../enums';
+import type { AuthRouteInterface } from '../../interfaces';
 
-export const UnauthedRoute = React.memo(({ fallbackPath, replace }: AuthRouteProps) => {
-  const { pathname } = useLocation();
-  const { connected, ready } = useContext<AccountInterface>(AccountContext);
+export const UnauthedRoute = React.memo(
+  ({ fallback = AuthFallbackRoutes.INDEX, replace = false }: AuthRouteInterface) => {
+    const location = useLocation();
+    const { connected, ready } = useSafeContext<AccountContextState>(AccountContext);
 
-  if (!ready) {
-    return <div data-testid="route-unauthed-component-loader-div" />;
-  }
+    if (!ready) {
+      return <div data-testid="route-unauthed-component-loader-div" />;
+    }
 
-  if (connected) {
-    return <Navigate replace={!!replace} state={{ from: pathname }} to={fallbackPath} />;
-  }
+    if (connected) {
+      const { pathname } = location;
+      const navigateTo = typeof fallback === 'function' ? fallback(location) : fallback;
+      return <Navigate replace={!!replace} state={{ from: pathname }} to={navigateTo} />;
+    }
 
-  return <Outlet />;
-});
+    return <Outlet />;
+  },
+);
 
 UnauthedRoute.displayName = 'UnauthedRoute';

@@ -6,6 +6,7 @@ export * from './intercept-helper';
 export * from './log-helper';
 export * from './maildev-helper';
 export * from './navigation-helper';
+export * from './scope-helper';
 export * from './sp-provider';
 export * from './string-helper';
 export * from './user';

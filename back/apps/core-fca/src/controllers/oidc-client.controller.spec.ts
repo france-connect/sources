@@ -1,3 +1,5 @@
+import { plainToInstance } from 'class-transformer';
+import { validate } from 'class-validator';
 import { cloneDeep } from 'lodash';
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -27,7 +29,7 @@ import {
   CoreFcaAgentNoIdpException,
   CoreFcaInvalidIdentityException,
 } from '../exceptions';
-import { CoreFcaService } from '../services';
+import { CoreFcaFqdnService, CoreFcaService } from '../services';
 import { OidcClientController } from './oidc-client.controller';
 
 jest.mock('lodash', () => ({
@@ -143,8 +145,6 @@ describe('OidcClient Controller', () => {
     keyof InstanceType<typeof CoreFcaService>,
     jest.Mock
   > = {
-    getFqdnFromEmail: jest.fn(),
-    getIdpIdForEmail: jest.fn(),
     getIdentityProvidersByIds: jest.fn(),
     redirectToIdp: jest.fn(),
   };
@@ -159,6 +159,11 @@ describe('OidcClient Controller', () => {
 
   const csrfTokenGuardMock = {
     canActivate: () => true,
+  };
+
+  const coreFcaFqdnServiceMock = {
+    getFqdnFromEmail: jest.fn(),
+    getFqdnConfigFromEmail: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -179,6 +184,7 @@ describe('OidcClient Controller', () => {
         CoreFcaService,
         OidcClientConfigService,
         CryptographyService,
+        CoreFcaFqdnService,
       ],
     })
       .overrideGuard(CsrfTokenGuard)
@@ -205,6 +211,8 @@ describe('OidcClient Controller', () => {
       .useValue(oidcClientConfigServiceMock)
       .overrideProvider(CryptographyService)
       .useValue(cryptographyMock)
+      .overrideProvider(CoreFcaFqdnService)
+      .useValue(coreFcaFqdnServiceMock)
       .compile();
 
     controller = module.get<OidcClientController>(OidcClientController);
@@ -247,68 +255,41 @@ describe('OidcClient Controller', () => {
   });
 
   describe('getIdentityProviderSelection()', () => {
-    it('should render identity providers interaction page', async () => {
+    it('should render identity providers interaction page with default idp entitled "Autre"', async () => {
       // Given
       const hogwartsProviders = [
         'ravenclaw_provider_id',
         'slytherin_provider_id',
       ];
 
+      const hogwardsFqdnConfig = {
+        fqdn: 'hogwarts.uk',
+        identityProviders: hogwartsProviders,
+        acceptsDefaultIdp: true,
+      };
       sessionServiceMock.get.mockReturnValueOnce({
         ...oidcClientSessionDataMock,
         login_hint: 'harry.potter@hogwarts.uk',
       });
-      configServiceMock.get.mockReturnValue({});
-      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce(hogwartsProviders);
-      coreServiceMock.getIdentityProvidersByIds.mockResolvedValueOnce([
-        { title: 'Ravenclaw', uid: 'ravenclaw_provider_id' },
-        { title: 'Slytherin', uid: 'slytherin_provider_id' },
-      ]);
 
-      // When
-      await controller.getIdentityProviderSelection(
-        'csrfMockValue',
-        res,
-        sessionServiceMock,
-      );
-
-      // Then
-      expect(coreServiceMock.getIdentityProvidersByIds).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(coreServiceMock.getIdentityProvidersByIds).toHaveBeenCalledWith(
-        ...hogwartsProviders,
-      );
-
-      expect(res.render).toHaveBeenCalledTimes(1);
-      expect(res.render).toHaveBeenCalledWith('interaction-identity-provider', {
-        csrfToken: 'csrfMockValue',
-        email: 'harry.potter@hogwarts.uk',
-        providers: [
-          { title: 'Ravenclaw', uid: 'ravenclaw_provider_id' },
-          { title: 'Slytherin', uid: 'slytherin_provider_id' },
-        ],
-      });
-    });
-
-    it('should render identity providers interaction page with default provider', async () => {
-      // Given
-      const hogwartsProviders = [
-        'ravenclaw_provider_id',
-        'slytherin_provider_id',
-      ];
-
-      sessionServiceMock.get.mockReturnValueOnce({
-        ...oidcClientSessionDataMock,
-        login_hint: 'harry.potter@hogwarts.uk',
-      });
+      const defaultIdpId = 'gryffindor_provider_id';
       configServiceMock.get.mockReturnValueOnce({
         defaultIdpId: 'gryffindor_provider_id',
       } satisfies Partial<InstanceType<typeof AppConfig>>);
-      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce(hogwartsProviders);
+
+      coreFcaFqdnServiceMock.getFqdnConfigFromEmail.mockResolvedValueOnce({
+        acceptsDefaultIdp: hogwardsFqdnConfig.acceptsDefaultIdp,
+        fqdn: hogwardsFqdnConfig.fqdn,
+        identityProviders: [
+          ...hogwardsFqdnConfig.identityProviders,
+          defaultIdpId,
+        ],
+      });
+
       coreServiceMock.getIdentityProvidersByIds.mockResolvedValueOnce([
         { title: 'Ravenclaw', uid: 'ravenclaw_provider_id' },
         { title: 'Slytherin', uid: 'slytherin_provider_id' },
+        { title: 'Gryffindor', uid: 'gryffindor_provider_id' },
       ]);
 
       // When
@@ -322,13 +303,17 @@ describe('OidcClient Controller', () => {
       expect(coreServiceMock.getIdentityProvidersByIds).toHaveBeenCalledTimes(
         1,
       );
-      expect(coreServiceMock.getIdentityProvidersByIds).toHaveBeenCalledWith(
+      expect(coreServiceMock.getIdentityProvidersByIds).toHaveBeenCalledWith([
         ...hogwartsProviders,
-      );
+        defaultIdpId,
+      ]);
+
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
 
       expect(res.render).toHaveBeenCalledTimes(1);
       expect(res.render).toHaveBeenCalledWith('interaction-identity-provider', {
         csrfToken: 'csrfMockValue',
+        acceptsDefaultIdp: true,
         email: 'harry.potter@hogwarts.uk',
         providers: [
           { title: 'Ravenclaw', uid: 'ravenclaw_provider_id' },
@@ -370,7 +355,11 @@ describe('OidcClient Controller', () => {
         email: 'harry.potter@hogwarts.uk',
       };
 
-      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce([providerIdMock]);
+      coreFcaFqdnServiceMock.getFqdnConfigFromEmail.mockResolvedValueOnce({
+        fqdn: 'hogwarts.uk',
+        identityProviders: [providerIdMock],
+        acceptsDefaultIdp: true,
+      });
 
       // When
       await controller.redirectToIdp(req, res, body, sessionServiceMock);
@@ -394,10 +383,11 @@ describe('OidcClient Controller', () => {
         email: 'harry.potter@hogwarts.uk',
       };
 
-      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce([
-        'gryffindor_provider_id',
-        'slytherin_provider_id',
-      ]);
+      coreFcaFqdnServiceMock.getFqdnConfigFromEmail.mockResolvedValueOnce({
+        fqdn: 'hogwarts.uk',
+        identityProviders: ['gryffindor_provider_id', 'slytherin_provider_id'],
+        acceptsDefaultIdp: true,
+      });
 
       // When
       await controller.redirectToIdp(req, res, body, sessionServiceMock);
@@ -416,7 +406,11 @@ describe('OidcClient Controller', () => {
         email: 'harry.potter@hogwarts.uk',
       };
 
-      coreServiceMock.getIdpIdForEmail.mockResolvedValueOnce([]);
+      coreFcaFqdnServiceMock.getFqdnConfigFromEmail.mockResolvedValueOnce({
+        fqdn: 'hogwarts.uk',
+        identityProviders: [],
+        acceptsDefaultIdp: false,
+      });
 
       // Then
       await expect(
@@ -710,6 +704,61 @@ describe('OidcClient Controller', () => {
         controller['validateIdentity'](idpIdMock, identityMock),
         // Then
       ).rejects.toThrow(CoreFcaInvalidIdentityException);
+    });
+
+    it('should throw when email is a string of number', async () => {
+      const emailIdentity = {
+        email: '12345',
+      };
+      const oidcIdentityDto = plainToInstance(OidcIdentityDto, emailIdentity);
+      const errors = await validate(oidcIdentityDto, {
+        skipMissingProperties: true,
+      });
+      expect(errors.length).not.toBe(0);
+      expect(errors[0].constraints.isEmail).toContain(`email must be an email`);
+    });
+
+    it('should success when phone_number contains list of phones number', async () => {
+      const phoneNumberIdentity = {
+        phone_number: '0634283766,0471432775',
+      };
+      const oidcIdentityDto = plainToInstance(
+        OidcIdentityDto,
+        phoneNumberIdentity,
+      );
+      const errors = await validate(oidcIdentityDto, {
+        skipMissingProperties: true,
+      });
+      expect(errors.length).toBe(0);
+    });
+
+    it('should success when organizational_unit contains points and others specifics characters', async () => {
+      const organizationalUnitIdentity = {
+        organizational_unit:
+          'MINISTERE INTERIEUR/DGPN/US REGROUPEMENT DES DZPN/US REGROUP. DIPN GC/DIPN77/CPN MELUN VAL DE SEINE',
+      };
+      const oidcIdentityDto = plainToInstance(
+        OidcIdentityDto,
+        organizationalUnitIdentity,
+      );
+      const errors = await validate(oidcIdentityDto, {
+        skipMissingProperties: true,
+      });
+      expect(errors.length).toBe(0);
+    });
+
+    it('should failed if siren is empty string', async () => {
+      const sirenIdentity = {
+        siren: '',
+      };
+      const oidcIdentityDto = plainToInstance(OidcIdentityDto, sirenIdentity);
+      const errors = await validate(oidcIdentityDto, {
+        skipMissingProperties: true,
+      });
+      expect(errors.length).not.toBe(0);
+      expect(errors[0].constraints.minLength).toContain(
+        `siren must be longer than or equal to 1 characters`,
+      );
     });
   });
 });

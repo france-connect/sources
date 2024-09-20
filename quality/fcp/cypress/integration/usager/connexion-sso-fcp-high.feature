@@ -1,5 +1,5 @@
 #language: fr
-@usager @fcpHigh @connexionSSO @ci
+@usager @connexionSSO @fcpHigh @ci
 Fonctionnalité: Connexion Usager - SSO - FCP High
   # En tant qu'agent,
   # je souhaite bénéficier d'une authentification unique sur FranceConnect+

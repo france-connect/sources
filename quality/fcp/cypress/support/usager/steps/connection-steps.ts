@@ -28,6 +28,7 @@ Then(
       spName,
       idpTitle,
     );
+    notificationConnection.checkConnectionNotificationHasBrowsingSessionId();
   },
 );
 

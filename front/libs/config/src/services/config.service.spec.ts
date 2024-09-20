@@ -13,6 +13,7 @@ describe('ConfigService', () => {
       it('should setup appConfig', () => {
         // when
         ConfigService.initialize({ key: 'current config' });
+
         // then
         expect(ConfigService.get('key')).toBe('current config');
       });
@@ -20,6 +21,7 @@ describe('ConfigService', () => {
       it('should not override appConfig', () => {
         // when
         ConfigService.initialize({ key: 'will not override current config' });
+
         // then
         expect(ConfigService.get('key')).toBe('current config');
       });
@@ -79,6 +81,7 @@ describe('ConfigService', () => {
       it('should not throw, if config part is defined', () => {
         // given
         ConfigService.initialize({ foo: null });
+
         // then
         expect(() => {
           ConfigService.get('foo');
@@ -88,6 +91,7 @@ describe('ConfigService', () => {
       it('should not throw, if config part is null', () => {
         // given
         ConfigService.initialize({ foo: null });
+
         // then
         expect(() => {
           ConfigService.get('foo');

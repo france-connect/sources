@@ -15,6 +15,6 @@ export default defineConfig({
   },
   env: {
     ...baseConfig.env,
-    TAGS: 'not @ignoreHigh and not @fcpLow',
+    TAGS: '@fcpHigh and not @ignoreHigh',
   },
 });

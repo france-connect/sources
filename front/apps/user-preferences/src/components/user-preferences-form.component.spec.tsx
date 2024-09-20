@@ -8,8 +8,6 @@ import { AllowFutureIdpSwitchLabelComponent } from './allow-future-idp-switch-la
 import { ServicesListComponent } from './services-list.component';
 import { UserPreferencesFormComponent } from './user-preferences-form.component';
 
-jest.mock('@fc/dsfr');
-jest.mock('@fc/styles');
 jest.mock('../hooks');
 jest.mock('./services-list.component');
 jest.mock('./allow-future-idp-switch-label.component');
@@ -242,10 +240,6 @@ describe('UserPreferencesFormComponent', () => {
   it('should call AlertComponent with params when the form has errors', () => {
     // given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
-    const expectedProps = {
-      children: expect.any(Array),
-      type: 'error',
-    };
 
     // when
     render(
@@ -261,7 +255,13 @@ describe('UserPreferencesFormComponent', () => {
 
     // then
     expect(AlertComponent).toHaveBeenCalledOnce();
-    expect(AlertComponent).toHaveBeenCalledWith(expectedProps, {});
+    expect(AlertComponent).toHaveBeenCalledWith(
+      {
+        children: expect.any(Array),
+        type: 'error',
+      },
+      {},
+    );
   });
 
   it('should call useUserPreferencesForm with dirtyFields and userPreference when allowingIdPConfirmation is called', () => {
@@ -274,10 +274,6 @@ describe('UserPreferencesFormComponent', () => {
       },
       allowingIdPConfirmation: jest.fn(),
     });
-    const expectedArgs = {
-      dirtyFields: {},
-      userPreferences: userPreferencesMock,
-    };
 
     // when
     const { getByTestId } = render(
@@ -295,7 +291,10 @@ describe('UserPreferencesFormComponent', () => {
 
     // then
     expect(useUserPreferencesForm).toHaveBeenCalledOnce();
-    expect(useUserPreferencesForm).toHaveBeenCalledWith(expectedArgs);
+    expect(useUserPreferencesForm).toHaveBeenCalledWith({
+      dirtyFields: {},
+      userPreferences: userPreferencesMock,
+    });
   });
 
   it('should not call AlertComponent if there are no errors', () => {

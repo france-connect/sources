@@ -4,7 +4,7 @@
 type Meta = Record<string, unknown>;
 type Payload = unknown;
 
-export type FSA<M extends Meta = Meta, P = Payload> = {
+export type FSAInterface<M extends Meta = Meta, P = Payload> = {
   meta?: M;
   payload?: P;
   type: string;

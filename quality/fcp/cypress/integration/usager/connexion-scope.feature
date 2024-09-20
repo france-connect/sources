@@ -5,6 +5,7 @@ Fonctionnalité: Connexion Usager - Scope
   # je veux me connecter en utilisant un fournisseur d'identité
   # afin de communiquer certaines informations personnelles au fournisseur de service
 
+  @fcpLow @fcpHigh
   Plan du Scénario: Connexion d'un usager - scope <scopeType>
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "<scopeType>"
     Et que je navigue sur la page fournisseur de service
@@ -30,7 +31,7 @@ Fonctionnalité: Connexion Usager - Scope
       | profile                   |
       | identite_pivot            |
 
-  @fcpHigh
+  @fcpHigh 
   Plan du Scénario: Connexion d'un usager - tous les claims rnipp avec usager <userType>
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "tous les scopes rnipp (authorize)"
     Et que je navigue sur la page fournisseur de service
@@ -58,6 +59,7 @@ Fonctionnalité: Connexion Usager - Scope
       | avec un prénom                     |
       | avec 3 prénoms                     |
       | avec prénom composé                |
+      | avec genre indéfini                |
 
   @fcpLow @ci
   Scénario: Connexion d'un usager - scope idp_birthdate
@@ -98,13 +100,15 @@ Fonctionnalité: Connexion Usager - Scope
     Exemples:
       | userType                           |
       | avec un prénom contenant un espace |
-    
+
     Exemples:
       | userType                           |
       | avec un prénom                     |
       | avec 3 prénoms                     |
       | avec prénom composé                |
+      | avec genre indéfini                |
 
+  @fcpLow @fcpHigh
   Scénario: Connexion d'un usager - scope anonyme
     Etant donné que le fournisseur de service requiert l'accès aux informations du scope "anonyme"
     Et que je navigue sur la page fournisseur de service
@@ -121,6 +125,7 @@ Fonctionnalité: Connexion Usager - Scope
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "anonyme"
 
+  @fcpLow @fcpHigh
   Scénario: Connexion d'un usager - attribut scope inconnu ignoré
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "profile avec scope inconnu"
     Et que je navigue sur la page fournisseur de service
@@ -137,10 +142,10 @@ Fonctionnalité: Connexion Usager - Scope
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations des scopes "profile"
 
-  @ignoreLow
+  @fcpLow @fcpHigh
   Scénario: Connexion d'un usager - erreur FS non habilité pour ce scope
-    Etant donné que j'utilise le fournisseur de service "habilité à demander le scope identite_pivot"
-    Et que le fournisseur de service requiert l'accès aux informations du scope "email"
+    Etant donné que j'utilise le fournisseur de service "non habilité à demander le scope cnous_statut_boursier"
+    Et que le fournisseur de service requiert l'accès aux informations du scope "cnous_statut_boursier"
     Et que je navigue sur la page fournisseur de service
     Quand je clique sur le bouton FranceConnect
     Alors je suis redirigé vers la page erreur du fournisseur de service

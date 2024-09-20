@@ -1,5 +1,5 @@
 /* istanbul ignore file */
 
 // declarative file
-export * from './france-connect.button';
-export * from './simple.button';
+export * from './login-connect';
+export * from './simple';

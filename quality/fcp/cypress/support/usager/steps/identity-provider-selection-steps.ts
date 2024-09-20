@@ -1,7 +1,6 @@
 import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
-import { addInterceptParams } from '../../common/helpers';
-import { getDefaultIdpScope } from '../helpers';
+import { addInterceptParams, getDefaultIdpScope } from '../../common/helpers';
 import IdentityProviderSelectionPage from '../pages/identity-provider-selection-page';
 
 const identityProviderSelectionPage = new IdentityProviderSelectionPage();

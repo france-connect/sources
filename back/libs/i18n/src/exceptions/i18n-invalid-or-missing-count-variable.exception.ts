@@ -1,12 +1,11 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description, Loggable } from '@fc/exceptions-deprecated';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { I18nBaseException } from './i18n-base-exception';
 
-@Loggable()
 @Description(
   'La variable passée en paramètre de traduction pour la gestion du pluriel est invalide ou manquante',
 )

@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { Form } from 'react-final-form';
 
 import { useUserPreferencesApi } from '../hooks';
-import type { UserPreferencesData } from '../interfaces';
+import type { UserPreferencesDataInterface } from '../interfaces';
 import { UserPreferencesComponent } from './user-preferences.component';
 
 jest.mock('react-final-form');
@@ -47,7 +47,7 @@ describe('UserPreferencesComponent', () => {
     // given
     jest.mocked(useUserPreferencesApi).mockReturnValue({
       ...hookResultMock,
-      userPreferences: null as unknown as UserPreferencesData,
+      userPreferences: null as unknown as UserPreferencesDataInterface,
     });
 
     // when
@@ -61,7 +61,7 @@ describe('UserPreferencesComponent', () => {
     // given
     jest.mocked(useUserPreferencesApi).mockReturnValue({
       ...hookResultMock,
-      userPreferences: {} as unknown as UserPreferencesData,
+      userPreferences: {} as unknown as UserPreferencesDataInterface,
     });
 
     // when

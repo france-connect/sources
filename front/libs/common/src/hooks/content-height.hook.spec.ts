@@ -9,6 +9,7 @@ describe('useAccordionContentHeight', () => {
     jest.spyOn(React, 'useRef');
     // When
     const { result } = renderHook(() => useContentHeight());
+
     // Then
     expect(result.current.contentHeight).toBe(0);
   });
@@ -20,6 +21,7 @@ describe('useAccordionContentHeight', () => {
     jest.spyOn(React, 'useRef').mockReturnValue(refMock);
     // When
     const { result } = renderHook(() => useContentHeight());
+
     // Then
     expect(result.current.contentHeight).toBe(heightMock);
   });

@@ -8,6 +8,10 @@ export const sortBykey = jest.fn();
 
 export const objectToFormData = jest.fn();
 
+export const getAccessibleTitle = jest.fn();
+
+export const useSafeContext = jest.fn();
+
 export const useContentHeight = jest.fn(() => ({
   contentHeight: expect.any(Number),
   contentRef: React.createRef<HTMLDivElement>(),

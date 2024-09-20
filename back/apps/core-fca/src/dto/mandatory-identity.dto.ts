@@ -2,19 +2,24 @@
 
 // Declarative code
 import { Expose } from 'class-transformer';
-import { IsAscii, IsEmail, MaxLength, MinLength } from 'class-validator';
+import {
+  IsAscii,
+  IsEmail,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
-import { IsSafeString } from '@fc/common';
 import { MinIdentityDto } from '@fc/oidc-client';
 
 export class MandatoryIdentityDto extends MinIdentityDto {
-  @IsSafeString()
+  @IsString()
   @MinLength(1)
   @MaxLength(256)
   @Expose()
   readonly given_name: string;
 
-  @IsSafeString()
+  @IsString()
   @MinLength(1)
   @MaxLength(256)
   @Expose()

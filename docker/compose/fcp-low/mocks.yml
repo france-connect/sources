@@ -13,7 +13,6 @@ services:
     depends_on:
       - "redis-pwd"
       - "squid"
-      - "haproxy"
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -37,7 +36,6 @@ services:
     depends_on:
       - "redis-pwd"
       - "squid"
-      - "haproxy"
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -61,7 +59,6 @@ services:
     depends_on:
       - "redis-pwd"
       - "squid"
-      - "haproxy"
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -85,7 +82,6 @@ services:
     depends_on:
       - "redis-pwd"
       - "squid"
-      - "haproxy"
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -113,7 +109,6 @@ services:
     depends_on:
       - "redis-pwd"
       - "squid"
-      - "haproxy"
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -138,7 +133,6 @@ services:
     depends_on:
       - "redis-pwd"
       - "squid"
-      - "haproxy"
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -163,7 +157,6 @@ services:
     depends_on:
       - "redis-pwd"
       - "squid"
-      - "haproxy"
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"

@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutFooterComponent should call LayoutFooterBottomComponent when features.showLicence is true 1`] = `
+<div>
+  <footer
+    class="sticky-footer fr-footer"
+    id="footer"
+    role="contentinfo"
+  >
+    <div
+      class="fr-container"
+    >
+      <div
+        class="fr-footer__body"
+      >
+        <div>
+          LayoutFooterBrandComponent
+        </div>
+        <div>
+          LayoutFooterContentComponent
+        </div>
+      </div>
+      <div>
+        LayoutFooterBottomComponent
+      </div>
+    </div>
+  </footer>
+</div>
+`;
+
+exports[`LayoutFooterComponent should call LayoutFooterBottomComponent when footer.navigation is defined 1`] = `
+<div>
+  <footer
+    class="sticky-footer fr-footer"
+    id="footer"
+    role="contentinfo"
+  >
+    <div
+      class="fr-container"
+    >
+      <div
+        class="fr-footer__body"
+      >
+        <div>
+          LayoutFooterBrandComponent
+        </div>
+        <div>
+          LayoutFooterContentComponent
+        </div>
+      </div>
+      <div>
+        LayoutFooterBottomComponent
+      </div>
+    </div>
+  </footer>
+</div>
+`;

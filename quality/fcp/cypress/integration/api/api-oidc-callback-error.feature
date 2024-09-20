@@ -1,5 +1,5 @@
 #language: fr
-@usager @apiOidcCallbackError @ignoreInteg01 @ci
+@usager @apiOidcCallbackError @fcpLow @fcpHigh @ignoreInteg01 @ci
 Fonctionnalité: API - oidc-callback erreur
 
   Scénario: API oidc-callback-error - cas passant

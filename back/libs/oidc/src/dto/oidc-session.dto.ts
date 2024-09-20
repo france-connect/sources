@@ -119,6 +119,11 @@ export class OidcSession {
   @IsJWT()
   readonly idpIdToken?: string;
 
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  readonly idpRepresentativeScope?: string[];
+
   // == SP
 
   @IsOptional()

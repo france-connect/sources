@@ -69,13 +69,18 @@ export class OidcProviderRuntimeException extends OidcProviderBaseException {
   public readonly code: ErrorCode;
   public redirect: boolean;
 
-  constructor(error: Error, code?: ErrorCode, canRedirect = true) {
+  constructor(
+    error: Error | RuntimeErrors.OIDCProviderError,
+    code?: ErrorCode,
+    canRedirect = true,
+  ) {
     super(error);
 
     // Default code,
     this.code = ErrorCode.UNKNOWN;
     // Deduce a code from mapping if error is a known `oidc-provider` error.
     if (error instanceof RuntimeErrors.OIDCProviderError) {
+      this.message = `${error.error_description} (${error.error_detail})`;
       this.code = this.getCodeFromError(error);
     }
 

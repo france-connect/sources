@@ -5,6 +5,9 @@ services:
     image: alpine
     depends_on:
       - "partners-front"
+      - "partners-back"
+      - "core-fca-low"
+      - "fia1-low"
 
   bdd-partners:
     image: alpine

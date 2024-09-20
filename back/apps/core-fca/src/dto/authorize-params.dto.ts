@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsAscii,
+  IsEmail,
   IsOptional,
   IsString,
   Length,
@@ -39,6 +40,10 @@ export class AuthorizeParamsDto {
   @IsAscii({ message: 'Le nonce doit être composé de caractères ASCII' })
   @Length(1, 512)
   readonly nonce?: string;
+
+  @IsOptional()
+  @IsEmail({}, { message: 'Le login_hint doit être une adresse email valide' })
+  readonly login_hint?: string;
 
   @IsString()
   readonly state: string;

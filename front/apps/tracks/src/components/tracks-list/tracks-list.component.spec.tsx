@@ -5,7 +5,7 @@ import * as ReactRouterDom from 'react-router-dom';
 
 import { PaginationComponent } from '@fc/dsfr';
 
-import type { Track } from '../../interfaces';
+import type { TrackInterface } from '../../interfaces';
 import { orderGroupByKeyAsc, transformTrackToEnhanced } from '../../utils';
 import { TracksGroupComponent } from './tracks-group';
 import { TracksListComponent } from './tracks-list.component';
@@ -43,7 +43,7 @@ const payloadMock = [
     spLabel: 'mock-splabel-2',
     trackId: 'mock-trackid-2',
   },
-] as unknown as Track[];
+] as unknown as TrackInterface[];
 
 const tracksMock = {
   meta: {
@@ -95,6 +95,7 @@ describe('TracksListComponent', () => {
     usePaginatedTracksMock.mockReturnValue({ submitErrors: undefined, tracks: emptyTracksMock });
     // when
     const { container } = render(<TracksListComponent options={options} />);
+
     // then
     expect(container).toMatchSnapshot();
   });
@@ -125,17 +126,17 @@ describe('TracksListComponent', () => {
 
   it('should filter out nullish entries', () => {
     // Given
-    const nonNullish1 = Symbol('nonNullish1') as unknown as Track;
-    const nonNullish2 = Symbol('nonNullish2') as unknown as Track;
+    const nonNullish1 = Symbol('nonNullish1') as unknown as TrackInterface;
+    const nonNullish2 = Symbol('nonNullish2') as unknown as TrackInterface;
 
     const tracksWithNullishEntries = {
       ...tracksMock,
       payload: [
         nonNullish1,
-        false as unknown as Track,
-        null as unknown as Track,
+        false as unknown as TrackInterface,
+        null as unknown as TrackInterface,
         nonNullish2,
-        undefined as unknown as Track,
+        undefined as unknown as TrackInterface,
       ],
     };
     const filteredPayload = [nonNullish1, nonNullish2];

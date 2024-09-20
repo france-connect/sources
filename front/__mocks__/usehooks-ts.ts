@@ -1,5 +1,7 @@
 export const useMediaQuery = jest.fn();
 
+export const useDocumentTitle = jest.fn();
+
 export const useToggle = jest.fn(() => [
   expect.any(Boolean),
   jest.fn().mockImplementation((v) => !v),

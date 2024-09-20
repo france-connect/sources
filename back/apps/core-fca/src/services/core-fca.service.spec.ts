@@ -17,7 +17,6 @@ import { getConfigMock } from '@mocks/config';
 import { getCoreAuthorizationServiceMock } from '@mocks/core';
 import { getSessionServiceMock } from '@mocks/session';
 
-import { AppConfig } from '../dto';
 import {
   CoreFcaAgentIdpBlacklistedException,
   CoreFcaAgentIdpDisabledException,
@@ -133,10 +132,6 @@ describe('CoreFcaService', () => {
       sessionServiceMock.get.mockReturnValue({
         spId: spIdMock,
       });
-
-      const getIdpIdForEmailMock = jest.spyOn(service, 'getIdpIdForEmail');
-
-      getIdpIdForEmailMock.mockResolvedValueOnce([idpIdMock]);
     });
 
     it('should call config.get to retrieve configured parameters', async () => {
@@ -261,97 +256,6 @@ describe('CoreFcaService', () => {
     });
   });
 
-  describe('getIdpIdForEmail', () => {
-    it('should return the default uuid of idp when the idp list is empty', async () => {
-      // Given
-      configServiceMock.get.mockReturnValueOnce({
-        defaultIdpId: 'gryffindor_provider_id',
-      } satisfies Partial<InstanceType<typeof AppConfig>>);
-      fqdnToIdpAdapterMongoMock.getIdpsByFqdn.mockResolvedValueOnce([]);
-
-      // When
-      const result = await service.getIdpIdForEmail('voldemort@bad.person');
-
-      // Then
-      expect(result).toEqual(['gryffindor_provider_id']);
-    });
-
-    it('should return an empty list when no default and an empty idp list is empty', async () => {
-      // Given
-      fqdnToIdpAdapterMongoMock.getIdpsByFqdn.mockResolvedValueOnce([]);
-
-      // When
-      const result = await service.getIdpIdForEmail('voldemort@bad.person');
-
-      // Then
-      expect(result).toEqual([]);
-    });
-
-    it('should get return all the corresponding idp for fqdn', async () => {
-      // Given
-      fqdnToIdpAdapterMongoMock.getIdpsByFqdn.mockResolvedValueOnce([
-        { fqdn: 'bad.person', identityProvider: 'snapeIdp' },
-        { fqdn: 'bad.person', identityProvider: 'luciusIdp' },
-        { fqdn: 'bad.person', identityProvider: 'dobbyIdp' },
-      ]);
-
-      // When
-      const result = await service.getIdpIdForEmail('voldemort@bad.person');
-
-      // Then
-      expect(result).toEqual(['snapeIdp', 'luciusIdp', 'dobbyIdp']);
-    });
-  });
-
-  describe('getFqdnFromEmail', () => {
-    it('should only return the full qualified domain name from an email address', () => {
-      // When
-      const fqdn = service.getFqdnFromEmail('hermione.granger@hogwards.uk');
-
-      // Then
-      expect(fqdn).toBe('hogwards.uk');
-    });
-
-    it('should only return the full qualified domain name from an email address with numbers', () => {
-      // When
-      const fqdn = service.getFqdnFromEmail(
-        'hermione.grangerhogwards4321@hogwards1234.uk',
-      );
-
-      // Then
-      expect(fqdn).toBe('hogwards1234.uk');
-    });
-
-    const emailToTest = [
-      {
-        value: 'hermione.granger@hogwards1234.uK',
-        expectedFqdn: 'hogwards1234.uk',
-      },
-      {
-        value: 'hermione.granger@hogwardS1234.uk',
-        expectedFqdn: 'hogwards1234.uk',
-      },
-      {
-        value: 'hermione.granger@hogwardS1234.uK',
-        expectedFqdn: 'hogwards1234.uk',
-      },
-      {
-        value: 'hermione.granger@HOGWARDS1234.UK',
-        expectedFqdn: 'hogwards1234.uk',
-      },
-    ];
-    it.each(emailToTest)(
-      'should always return qualified domain name in lower case from an email address with upper case',
-      ({ value, expectedFqdn }) => {
-        // When
-        const fqdn = service.getFqdnFromEmail(value);
-
-        // Then
-        expect(fqdn).toBe(expectedFqdn);
-      },
-    );
-  });
-
   describe('checkIdpBlacklisted', () => {
     it('should call oidcClient.utils.checkIdpBlacklisted', async () => {
       // When
@@ -432,7 +336,7 @@ describe('CoreFcaService', () => {
       const idpIds = ['snapeIdp', 'luciusIdp', 'dobbyIdp'];
 
       // When
-      const providers = await service.getIdentityProvidersByIds(...idpIds);
+      const providers = await service.getIdentityProvidersByIds(idpIds);
 
       // Then
       expect(providers).toEqual([

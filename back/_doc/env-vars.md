@@ -9,20 +9,23 @@
 3. [core-fcp-high](#core-fcp-high)
 4. [core-fcp-low](#core-fcp-low)
 5. [csmr-account-instance](#csmr-account-instance)
-6. [csmr-hsm-high](#csmr-hsm-high)
-7. [csmr-rie](#csmr-rie)
-8. [csmr-tracks-instance](#csmr-tracks-instance)
-9. [csmr-user-preferences-high](#csmr-user-preferences-high)
-10. [eidas-bridge](#eidas-bridge)
-11. [mock-data-provider](#mock-data-provider)
-12. [mock-identity-provider-fca-low](#mock-identity-provider-fca-low)
-13. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
-14. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
-15. [mock-rnipp](#mock-rnipp)
-16. [mock-service-provider-fca-low](#mock-service-provider-fca-low)
-17. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
-18. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
-19. [user-dashboard](#user-dashboard)
+6. [csmr-fraud-instance](#csmr-fraud-instance)
+7. [csmr-hsm-high](#csmr-hsm-high)
+8. [csmr-rie](#csmr-rie)
+9. [csmr-tracks-instance](#csmr-tracks-instance)
+10. [csmr-user-preferences-high](#csmr-user-preferences-high)
+11. [eidas-bridge](#eidas-bridge)
+12. [mock-data-provider](#mock-data-provider)
+13. [mock-identity-provider-fca-low](#mock-identity-provider-fca-low)
+14. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
+15. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
+16. [mock-rnipp](#mock-rnipp)
+17. [mock-service-provider-fca-low](#mock-service-provider-fca-low)
+18. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
+19. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
+20. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
+21. [partners](#partners)
+22. [user-dashboard](#user-dashboard)
 
 ## Variables
 
@@ -49,6 +52,11 @@
 | App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
+| App_CSP_CONNECT_SRC | json |
+| App_CSP_DEFAULT_SRC | json |
+| App_CSP_FRAME_ANCESTORS | json |
+| App_CSP_SCRIPT_SRC | json |
+| App_CSP_STYLE_SRC | json |
 | App_DEFAULT_EMAIL_RENATER | string |
 | App_DEFAULT_IDP_UID | string |
 | App_DSFR_ASSETS_PATHS | json |
@@ -103,7 +111,6 @@
 | App_SHOW_EXCLUDED_IDP | boolean |
 | App_VIEWS_PATHS | json |
 | Core_ALLOWED_IDP_HINTS | json |
-| Core_FEATURE_SSO_SUBSTANTIAL | boolean |
 | Core_SUPPORT_FORM_URL | string |
 | CryptographyBroker_QUEUE | string |
 | CryptographyBroker_URLS | json |
@@ -251,6 +258,15 @@
 | Mongoose_TLS_CA_FILE | string |
 | Mongoose_TLS_INSECURE | boolean |
 | Mongoose_USER | string |
+| REQUEST_TIMEOUT | string |
+
+### csmr-fraud-instance
+
+| Var Name | Inferred type |
+|---|---|
+| FraudBroker_QUEUE | string |
+| FraudBroker_URLS | json |
+| Logger_THRESHOLD | string |
 | REQUEST_TIMEOUT | string |
 
 ### csmr-hsm-high
@@ -674,6 +690,56 @@
 | Session_COOKIE_SECRETS | json |
 | Session_USERINFO_CRYPT_KEY | string |
 
+### mock-service-provider-fcp-legacy
+
+| Var Name | Inferred type |
+|---|---|
+| App_API_OUTPUT_CONTENT_TYPE | string |
+| App_ASSETS_PATHS | json |
+| App_DATA_APIS | json |
+| App_HTTPS_SERVER_CERT | file |
+| App_HTTPS_SERVER_KEY | file |
+| App_IDP_ID | string |
+| App_VIEWS_PATHS | json |
+| FQDN | string |
+| IdentityProviderAdapterEnv_AUTHORIZATION_ENDPOINT | string |
+| IdentityProviderAdapterEnv_CLIENT_ID | string |
+| IdentityProviderAdapterEnv_CLIENT_SECRET | string |
+| IdentityProviderAdapterEnv_CLIENT_SECRET_CIPHER_PASS | string |
+| IdentityProviderAdapterEnv_DISCOVERY | boolean |
+| IdentityProviderAdapterEnv_DISCOVERY_URL | string |
+| IdentityProviderAdapterEnv_END_SESSION_ENDPOINT | string |
+| IdentityProviderAdapterEnv_ID_TOKEN_ENCRYPTED_RESPONSE_ALG | string |
+| IdentityProviderAdapterEnv_ID_TOKEN_ENCRYPTED_RESPONSE_ENC | string |
+| IdentityProviderAdapterEnv_ID_TOKEN_SIGNED_RESPONSE_ALG | string |
+| IdentityProviderAdapterEnv_ISSUER | string |
+| IdentityProviderAdapterEnv_NAME | string |
+| IdentityProviderAdapterEnv_REVOCATION_ENDPOINT_AUTH_METHOD | string |
+| IdentityProviderAdapterEnv_TITLE | string |
+| IdentityProviderAdapterEnv_TOKEN_ENDPOINT | string |
+| IdentityProviderAdapterEnv_TOKEN_ENDPOINT_AUTH_METHOD | string |
+| IdentityProviderAdapterEnv_UID | string |
+| IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ALG | string |
+| IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
+| IdentityProviderAdapterEnv_USERINFO_ENDPOINT | string |
+| IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
+| Logger_THRESHOLD | string |
+| OidcClient_FAPI | boolean |
+| OidcClient_HTTPS_CLIENT_CERT | file |
+| OidcClient_HTTPS_CLIENT_KEY | file |
+| OidcClient_POST_LOGOUT_REDIRECT_URI | string |
+| OidcClient_REDIRECT_URI | string |
+| OidcClient_SCOPE | string |
+| REQUEST_TIMEOUT | string |
+| Redis_CACERT | file |
+| Redis_DB | number |
+| Redis_ENABLE_TLS_FOR_SENTINEL_MODE | boolean |
+| Redis_HOST | string |
+| Redis_PASSWORD | string |
+| Redis_PORT | number |
+| Session_COOKIE_SECRETS | json |
+| Session_USERINFO_CRYPT_KEY | string |
+
 ### mock-service-provider-fcp-low
 
 | Var Name | Inferred type |
@@ -719,6 +785,55 @@
 | Redis_PORT | number |
 | Session_COOKIE_SECRETS | json |
 | Session_USERINFO_CRYPT_KEY | string |
+
+### partners
+
+| Var Name | Inferred type |
+|---|---|
+| App_API_OUTPUT_CONTENT_TYPE | string |
+| App_FQDN | string |
+| App_HTTPS_SERVER_CERT | file |
+| App_HTTPS_SERVER_KEY | file |
+| App_IDP_ID | string |
+| App_NAME | string |
+| FQDN | string |
+| IdentityProviderAdapterEnv_CLIENT_ID | string |
+| IdentityProviderAdapterEnv_CLIENT_SECRET | string |
+| IdentityProviderAdapterEnv_CLIENT_SECRET_CIPHER_PASS | string |
+| IdentityProviderAdapterEnv_DISCOVERY | boolean |
+| IdentityProviderAdapterEnv_DISCOVERY_URL | string |
+| IdentityProviderAdapterEnv_ID_TOKEN_ENCRYPTED_RESPONSE_ALG | string |
+| IdentityProviderAdapterEnv_ID_TOKEN_ENCRYPTED_RESPONSE_ENC | string |
+| IdentityProviderAdapterEnv_ID_TOKEN_SIGNED_RESPONSE_ALG | string |
+| IdentityProviderAdapterEnv_JWKS_URI | string |
+| IdentityProviderAdapterEnv_NAME | string |
+| IdentityProviderAdapterEnv_REVOCATION_ENDPOINT_AUTH_METHOD | string |
+| IdentityProviderAdapterEnv_TITLE | string |
+| IdentityProviderAdapterEnv_TOKEN_ENDPOINT_AUTH_METHOD | string |
+| IdentityProviderAdapterEnv_UID | string |
+| IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ALG | string |
+| IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
+| IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
+| Logger_THRESHOLD | string |
+| OidcClient_FAPI | boolean |
+| OidcClient_HTTPS_CLIENT_CERT | file |
+| OidcClient_HTTPS_CLIENT_KEY | file |
+| OidcClient_JWKS | json |
+| OidcClient_POST_LOGOUT_REDIRECT_URI | string |
+| OidcClient_REDIRECT_URI | string |
+| OidcClient_SCOPE | string |
+| REQUEST_TIMEOUT | string |
+| Redis_CACERT | file |
+| Redis_DB | number |
+| Redis_ENABLE_TLS_FOR_SENTINEL_MODE | boolean |
+| Redis_HOST | string |
+| Redis_NAME | string |
+| Redis_PASSWORD | string |
+| Redis_PORT | number |
+| Redis_SENTINELS | json |
+| Redis_SENTINEL_PASSWORD | string |
+| Session_COOKIE_SECRETS | json |
+| Session_ENCRYPTION_KEY | string |
 
 ### user-dashboard
 

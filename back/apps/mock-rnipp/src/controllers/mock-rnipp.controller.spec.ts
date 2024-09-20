@@ -68,6 +68,12 @@ describe('MockRnippController', () => {
     });
   });
 
+  describe('healthCheck', () => {
+    it('should return OK', () => {
+      expect(controller.healthCheck()).toBe('OK');
+    });
+  });
+
   describe('handleScenario', () => {
     const successfullQuery = {
       codeLieuNaissance: '75020',
@@ -178,7 +184,9 @@ describe('MockRnippController', () => {
 
       // Then
       expect(resMock.sendFile).toHaveBeenCalledTimes(1);
-      expect(resMock.sendFile).toHaveBeenCalledWith('/responses/E010004.xml');
+      expect(resMock.sendFile).toHaveBeenCalledWith('responses/E010004.xml', {
+        root: expect.any(String),
+      });
     });
   });
 

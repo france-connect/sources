@@ -1,0 +1,29 @@
+[
+  {
+    "type": "par défaut",
+    "scopes": []
+  },
+  {
+    "type": "sans périmètre",
+    "scopes": []
+  },
+  {
+    "type": "avec le périmètre Famille-Scolarité",
+    "scopes": [
+      "Famille-Scolarité"
+    ]
+  },
+  {
+    "type": "avec les périmètres Famille-Scolarité et Travail-Formation",
+    "scopes": [
+      "Famille-Scolarité",
+      "Travail-Formation"
+    ]
+  },
+  {
+    "type": "avec un périmètre différent",
+    "scopes": [
+      "Etranger-Europe"
+    ]
+  }
+]

@@ -14,17 +14,17 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppConfig } from '@fc/app';
 import { NestJsDependencyInjectionWrapper } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { CoreFcpConfig } from '@fc/core-fcp';
 import { NestLoggerService } from '@fc/logger';
 import { SessionConfig } from '@fc/session';
 
 import { AppModule } from './app.module';
 import config from './config';
+import { CoreFcpLowConfig } from './dto';
 
 async function bootstrap() {
   const configService = new ConfigService({
     config,
-    schema: CoreFcpConfig,
+    schema: CoreFcpLowConfig,
   });
   const {
     urlPrefix,

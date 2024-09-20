@@ -33,13 +33,13 @@ const template = `
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Notification de connexion à FranceConnect+</title>
+    <title>Notification de connexion à FranceConnect</title>
     <style type="text/css">
       body {
         margin: 0;
         padding: 0;
         min-width: 100%;
-        font-family: 'Helvetica Neue', Arial, sans-serif;
+        font-family: Arial, sans-serif;
       }
 
       .content {
@@ -55,23 +55,13 @@ const template = `
         padding: 16px 30px 26px 16px;
       }
 
+      .footer {
+        padding: 24px 16px;
+        background-color: #f6f6f6;
+      }
+
       .innerpadding {
-        padding: 0px 16px 0px 16px;
-      }
-
-      .innerpadding12 {
-        padding: 12px 16px 12px 12px;
-      }
-
-      .borderbottom {
-        border-bottom: 1px solid #f2eeed;
-      }
-
-      .h1,
-      .h2,
-      .bodycopy {
-        color: #3a3a3a;
-        font-family: 'Helvetica Neue', Arial, sans-serif;
+        padding: 0px 16px 16px 16px;
       }
 
       a {
@@ -79,36 +69,28 @@ const template = `
         text-decoration: none;
       }
 
+      .underline {
+        text-decoration: underline;
+      }
+
       strong {
         font-weight: bold;
-      }
-
-      .h1 {
-        font-size: 33px;
-        line-height: 38px;
-        font-weight: bold;
-      }
-
-      .h2 {
-        padding: 0 0 10px 0;
-        font-size: 16px;
-        font-weight: bold;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.31;
-        letter-spacing: normal;
-        color: #000091;
       }
 
       .bodycopy {
         font-size: 16px;
         line-height: 24px;
+        color: #3a3a3a;
       }
 
       .bodycopy-small {
+        color: #666666;
+      }
+
+      .bodycopy-small,
+      .bodycopy-small a {
         font-size: 14px;
         line-height: 24px;
-        color: #666666;
       }
 
       .bold {
@@ -116,14 +98,12 @@ const template = `
       }
 
       .button {
-        border-radius: 4px;
-        background-color: #ffffff;
         text-decoration: none;
-        padding: 20px 48px;
-      }
-
-      .button a {
-        text-decoration: none;
+        font-weight: 500;
+        background-color: #000091;
+        line-height: 1.5rem;
+        padding: 8px 16px 8px 16px;
+        color: #f5f5fe;
       }
     </style>
   </head>
@@ -146,7 +126,7 @@ const template = `
           <td>
     <![endif]-->
           <table
-            class="content bottompadding50"
+            class="content"
             align="center"
             cellpadding="0"
             cellspacing="0"
@@ -158,16 +138,8 @@ const template = `
                   <tr>
                     <td height="73">
                       <img
-                        src="https://auth.franceconnect.gouv.fr/img/logo-marianne.png"
-                        height="73"
-                        border="0"
-                        alt=""
-                      />
-                      <img
-                        style="margin-left: 16px;"
-                        src="https://auth.franceconnect.gouv.fr/img/logo-fc-plus.png"
-                        width="150"
-                        height="73"
+                        src="https://franceconnect.gouv.fr/images/Marianne-FranceConnect-logo.png"
+                        height="98"
                         border="0"
                         alt=""
                       />
@@ -185,13 +157,30 @@ const template = `
               <![endif]-->
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td class="h2">Bonjour,</td>
+                    <td 
+                      class="bodycopy" 
+                      style="text-align: right; padding-bottom: 16px"
+                    >
+                      Code d’identification&nbsp;:</br>
+                      <strong 
+                        data-testid="connection-notification-browsing-session-id"
+                      >
+                        <%= locals.browsingSessionId %>
+                      </strong>
+                    </td>
                   </tr>
                   <tr>
-                    <td class="bodycopy">
-                      Une connexion avec FranceConnect+ a eu lieu
-                      <strong><%= locals.today %></strong> (heure de Paris) sur le site
-                      <strong><%= locals.spName %></strong> avec votre compte
+                    <td class="bodycopy" style="padding-bottom: 32px">Bonjour,</td>
+                  </tr>
+                  <tr>
+                    <td
+                      class="bodycopy"
+                      data-testid="connection-notification-message"
+                    >
+                      Une connexion avec FranceConnect a eu lieu
+                      <strong><%= locals.today %></strong> (heure de Paris) sur
+                      le site <strong><%= locals.spName %></strong> avec votre
+                      compte
                       <strong><%= locals.idpTitle %>.</strong>
                     </td>
                   </tr>
@@ -205,62 +194,65 @@ const template = `
               </td>
             </tr>
             <tr>
-              <td
-                class="innerpadding"
-                style="padding-top: 25px; padding-bottom: 25px;"
-              >
+              <td class="innerpadding">
                 <!--[if (gte mso 9)|(IE)]>
                 <table width="580" align="center" cellpadding="0" cellspacing="0" border="0">
                   <tr>
                     <td>
               <![endif]-->
                 <table
-                  class="content"
-                  bgcolor="#e5edf5"
-                  align="center"
                   cellpadding="0"
                   cellspacing="0"
                   border="0"
-                  style="width: 100%;max-width: 580px;"
+                  style="width: 100%"
                 >
                   <tr>
-                    <td
-                      valign="center"
-                      class="bodycopy-small"
-                      style="padding: 25px 0px 25px 25px;"
-                    >
-                      <img
-                          src="https://franceconnect.gouv.fr/images/info_icon.png"
-                          height="25"
-                          width="25"
-                          border="0"
-                          alt=""
-                        />
-                      </td>
-                      <td class="bodycopy-small innerpadding12">
-                        Si vous n&rsquo;&ecirc;tes pas &agrave; l&rsquo;origine de
-                        cette connexion,
-                        <strong>
-                          <a href="https://franceconnect.gouv.fr/faq#SECURITE"
-                            >consultez notre rubrique d&rsquo;aide
-                            d&eacute;di&eacute;e</a
-                          >
-                        </strong>
-                        <img
-                          src="https://franceconnect.gouv.fr/images/arrow_icon.png"
-                          width="10"
-                          border="0"
-                          alt=""
-                        />
-                      </td>
-                    </tr>
-                  </table>
-
-                  <!--[if (gte mso 9)|(IE)]>
-                      </td>
-                    </tr>
+                    <td class="bodycopy">
+                      Vous recevez cette alerte car une connexion inhabituelle
+                      avec FranceConnect a &eacute;t&eacute;
+                      d&eacute;tect&eacute;e. Si vous &ecirc;tes à
+                      l&rsquo;origine de cette connexion, aucune action
+                      n&rsquo;est requise. Dans le cas contraire, contactez
+                      notre &eacute;quipe support pour s&eacute;curiser
+                      votre acc&egrave;s.
+                    </td>
+                  </tr>
                 </table>
-                
+                <!--[if (gte mso 9)|(IE)]>
+                    </td>
+                  </tr>
+              </table>
+              <![endif]-->
+              </td>
+            </tr>
+            <tr>
+              <td class="innerpadding">
+                <!--[if (gte mso 9)|(IE)]>
+                <table width="580" align="center" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td>
+              <![endif]-->
+                <table
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
+                  style="width: 100%"
+                >
+                  <tr>
+                    <td class="bodycopy" style="padding-bottom: 8px; padding-top: 8px">
+                      <a
+                        class="button"
+                        style="color: #f5f5fe;"
+                        href="https://aide.franceconnect.gouv.fr/erreurs/signalement/etape-1/"
+                        >Je signale une usurpation</a
+                      >
+                    </td>
+                  </tr>
+                </table>
+                <!--[if (gte mso 9)|(IE)]>
+                    </td>
+                  </tr>
+              </table>
               <![endif]-->
               </td>
             </tr>
@@ -268,52 +260,55 @@ const template = `
               <td class="innerpadding">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td class="bodycopy-small">
-                      Vous recevez ce mail automatiquement apr&egrave;s chaque
-                      utilisation de FranceConnect+ pour vous aider &agrave;
-                      contr&ocirc;ler la s&eacute;curit&eacute; de vos
-                      acc&egrave;s. Si vous &ecirc;tes &agrave; l&rsquo;origine
-                      de cette connexion, aucune action n&rsquo;est requise.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="bodycopy" style="padding-top: 15px;">
-                      Pour suivre et contr&ocirc;ler votre utilisation de
-                      FranceConnect+, vous pouvez &eacute;galement
-                      <strong>
-                        <a href="https://app.franceconnect.gouv.fr/traces"
-                          >consulter votre historique de connexions
-                          FranceConnect+.</a
-                        >
-                      </strong>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="bodycopy" style="padding-top: 15px;">
-                      Pour toute autre question en lien avec votre
-                      d&eacute;marche, merci de contacter le support du site
-                      <%= locals.spName %>.
+                    <td class="bodycopy">
+                      Pour suivre et contr&ocirc;ler votre utilisation 
+                      de FranceConnect, vous pouvez &eacute;galement 
+                      consulter votre historique de connexion via votre 
+                      <a 
+                        class="underline" 
+                        style="color: #000091;"
+                        href="https://tableaudebord.franceconnect.gouv.fr"
+                        >tableau de bord</a
+                      >.
                     </td>
                   </tr>
                 </table>
               </td>
             </tr>
             <tr>
-              <td class="innerpadding" style="padding-top: 15px;">
+              <td class="innerpadding">
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td
-                      class="bodycopy"
-                      style="padding-top: 15px; padding-bottom: 24px;"
-                    >
-                      <i>L&rsquo;&eacute;quipe FranceConnect+</i>
+                    <td class="bodycopy" style="padding-bottom: 16px; padding-top: 16px">
+                      <i>L&rsquo;&eacute;quipe FranceConnect</i>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td class="footer">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td class="bodycopy-small">
+                      Si vous ne souhaitez plus recevoir ces notifications, vous
+                      pouvez les d&eacute;sactiver
+                      <a 
+                        class="underline" 
+                        style="color: #000091;"
+                        href="[#DL:UNSUBSCRIBE-0#]"
+                        >en&nbsp;cliquant&nbsp;ici</a
+                      >. Attention&nbsp;: vous ne serez plus pr&eacute;venu lors
+                      de l&rsquo;utilisation de FranceConnect avec cette adresse
+                      mail, y compris dans le cas o&ugrave; une tierce personne
+                      utiliserait vos identifiants &agrave; votre insu.
                     </td>
                   </tr>
                 </table>
               </td>
             </tr>
           </table>
-        <!--[if (gte mso 9)|(IE)]>
+          <!--[if (gte mso 9)|(IE)]>
           </td>
         </tr>
     </table>
@@ -376,6 +371,7 @@ describe('CoreFcpSendEmailHandler', () => {
     spAcr: 'eidas3',
     spName: 'my great SP',
     spIdentity: spIdentityWithEmailMock,
+    browsingSessionId: '4c43a136-871b-409b-ba12-b0087bd556cc',
   };
 
   const mailerServiceMock = {
@@ -398,6 +394,7 @@ describe('CoreFcpSendEmailHandler', () => {
     today: 'le 01 janvier 2021 à 14:14',
     fqdn: 'my-instance-domain',
     udFqdn: 'my-ud-instance-domain',
+    browsingSessionId: '4c43a136-871b-409b-ba12-b0087bd556cc',
   };
 
   beforeEach(async () => {
@@ -507,6 +504,8 @@ describe('CoreFcpSendEmailHandler', () => {
           today: connectNotificationEmailParametersMock.today,
           fqdn: connectNotificationEmailParametersMock.fqdn,
           udFqdn: connectNotificationEmailParametersMock.udFqdn,
+          browsingSessionId:
+            connectNotificationEmailParametersMock.browsingSessionId,
         },
       );
     });

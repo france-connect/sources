@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutHeaderMobileBurgerButton should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-header__navbar"
+  >
+    <button
+      aria-controls="layout-header-menu-modal"
+      aria-haspopup="menu"
+      class="fr-btn--menu fr-btn"
+      data-fr-opened="true"
+      data-testid="burger-button-mobile-menu"
+      id="burger-button-mobile-menu"
+      title="Menu"
+    >
+      Menu
+    </button>
+  </div>
+</div>
+`;

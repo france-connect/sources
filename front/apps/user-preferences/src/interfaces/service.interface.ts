@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 // declarative file
-export interface Service {
+export interface ServiceInterface {
   uid: string;
   title: string;
   image: string | undefined;

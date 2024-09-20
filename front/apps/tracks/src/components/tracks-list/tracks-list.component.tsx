@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { PaginationComponent } from '@fc/dsfr';
 
-import type { IPaginationResult, TrackList, TracksConfig } from '../../interfaces';
+import type { PaginationResultInterface, TrackListType, TracksConfig } from '../../interfaces';
 import { groupTracksByMonth, orderGroupByKeyAsc, transformTrackToEnhanced } from '../../utils';
 import { TracksGroupComponent } from './tracks-group';
 import { usePaginatedTracks } from './use-paginated-tracks.hook';
@@ -21,7 +21,7 @@ export const TracksListComponent = React.memo(({ options }: TracksListComponentP
 
   const onPageClickHandler = useCallback(
     (offset: number) => {
-      const { size } = tracks.meta as IPaginationResult;
+      const { size } = tracks.meta as PaginationResultInterface;
       const location = new URLSearchParams({
         offset: String(offset),
         size: String(size),
@@ -39,7 +39,7 @@ export const TracksListComponent = React.memo(({ options }: TracksListComponentP
         .map(transformTrackToEnhanced)
         .reduce(groupTracksByMonth(options), [])
         .sort(orderGroupByKeyAsc)
-        .map(([tracksGroupKey, { label, tracks: items }]: TrackList) => (
+        .map(([tracksGroupKey, { label, tracks: items }]: TrackListType) => (
           <TracksGroupComponent
             key={tracksGroupKey}
             label={label}

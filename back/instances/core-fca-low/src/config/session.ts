@@ -7,11 +7,11 @@ import { CoreFcaSession } from '@fc/core-fca';
 import { CoreFcaRoutes } from '@fc/core-fca/enums/core-fca-routes.enum';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
-import { ISessionCookieOptions, SessionConfig } from '@fc/session';
+import { SessionConfig, SessionCookieOptionsInterface } from '@fc/session';
 
 const env = new ConfigParser(process.env, 'Session');
 
-const cookieOptions: ISessionCookieOptions = {
+const cookieOptions: SessionCookieOptionsInterface = {
   signed: true,
   sameSite: 'lax',
   httpOnly: true,

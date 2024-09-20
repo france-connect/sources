@@ -97,6 +97,7 @@ describe('ServiceComponent', () => {
     expect(ToggleInput).toHaveBeenCalledOnce();
     expect(ToggleInput).toHaveBeenCalledWith(
       expect.objectContaining({
+        className: 'fr-mt-2w',
         disabled: false,
         initialValue: serviceMock.isChecked,
         label: expect.any(Function),

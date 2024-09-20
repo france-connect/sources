@@ -9,7 +9,7 @@ import {
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { CinematicEvents } from '../../enums';
-import type { Badges } from '../../interfaces';
+import type { BadgeInterface } from '../../interfaces';
 import styles from './card-badge.module.scss';
 
 const TYPE_CONFIG = {
@@ -28,7 +28,7 @@ const TYPE_CONFIG = {
     colorName: 'green-archipel',
     label: 'Connexion',
   },
-} as Badges;
+} as { [key: string]: BadgeInterface };
 
 type TraceCardBadgeProps = {
   type: string | undefined;

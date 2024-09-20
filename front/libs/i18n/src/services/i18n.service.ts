@@ -1,5 +1,9 @@
 import { I18nServiceNotInitializedExceptions, I18nTranslationNotFound } from '../exceptions';
-import type { TranslationMap, TranslationsReplacement, TranslationValue } from '../interfaces';
+import type {
+  TranslationMapType,
+  TranslationsReplacementType,
+  TranslationValueType,
+} from '../types';
 
 let INSTANCE: I18nService | null = null;
 
@@ -10,12 +14,12 @@ export class I18nService {
 
   translations;
 
-  constructor(locale: string, translations: TranslationMap) {
+  constructor(locale: string, translations: TranslationMapType) {
     this.locale = locale;
     this.translations = translations;
   }
 
-  static initialize(locale: string, map: TranslationMap): void {
+  static initialize(locale: string, map: TranslationMapType): void {
     INSTANCE = new I18nService(locale, map);
   }
 
@@ -27,7 +31,7 @@ export class I18nService {
     return INSTANCE;
   }
 
-  translate(key: string, values: TranslationsReplacement = {}): string {
+  translate(key: string, values: TranslationsReplacementType = {}): string {
     let translated = this.translations[key];
 
     if (translated === undefined) {
@@ -43,7 +47,7 @@ export class I18nService {
 
   // Makes it easier for testing purpose to have instance members
   // eslint-disable-next-line class-methods-use-this
-  private handlePlural(input: TranslationValue, values: TranslationsReplacement): string {
+  private handlePlural(input: TranslationValueType, values: TranslationsReplacementType): string {
     if (typeof input === 'string') {
       return input;
     }
@@ -78,7 +82,7 @@ export class I18nService {
 
   // Makes it easier for testing purpose to have instance members
   // eslint-disable-next-line class-methods-use-this
-  private handleSubstitution(input: string, values: TranslationsReplacement): string {
+  private handleSubstitution(input: string, values: TranslationsReplacementType): string {
     return Object.keys(values).reduce(
       (output, key) => output.replaceAll(`{${key}}`, `${values[key]}`),
       input,

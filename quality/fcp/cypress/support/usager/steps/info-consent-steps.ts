@@ -1,6 +1,6 @@
 import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
-import { getScopeByType } from '../helpers';
+import { getScopeByType } from '../../common/helpers';
 import InfoConsentPage from '../pages/info-consent-page';
 
 const infoConsentPage = new InfoConsentPage();

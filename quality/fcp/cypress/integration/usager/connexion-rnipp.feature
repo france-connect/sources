@@ -28,10 +28,15 @@ Fonctionnalité: Connexion Usager - RNIPP
       | userType                |
       | présumé né jour         |
       | présumé né jour et mois |
+      | né en Corse             |
 
+    # FC Low va appeler le RNIPP avec le COG fourni pour le lieu de naissance (si au format COG)
+    # Lorsque le RNIPP mock reçoit un lieu de naissance ne commençant par "99", il considère que l'usager est né en France.
+    # Le test avec usager "né à l'étranger avec un lieu de naissance (COG)" renverra un usager né en France.
     Exemples:
-      | userType    |
-      | né en Corse |
+      | userType                                          |
+      | né à l'étranger avec un lieu de naissance (COG)   |
+      | né à l'étranger avec un lieu de naissance (texte) |
 
   @fcpHigh
   Plan du Scénario: Connexion d'un usager - tous les claims rnipp avec usager <userType>
@@ -56,38 +61,39 @@ Fonctionnalité: Connexion Usager - RNIPP
       | userType                |
       | présumé né jour         |
       | présumé né jour et mois |
+      | né en Corse             |
 
+    # FC+ va appeler le RNIPP avec le COG fourni pour le lieu de naissance (si au format COG)
+    # Lorsque le RNIPP mock reçoit un lieu de naissance ne commençant par "99", il considère que l'usager est né en France.
+    # Le test avec usager "né à l'étranger avec un lieu de naissance (COG)" renverra strictement les données fournies par le FI.
+    # Dans le cas usager "né à l'étranger avec un lieu de naissance (COG)", le claim rnipp_birthcountry sera 99100.
+    # Dans le cas usager "né à l'étranger avec un lieu de naissance (texte)", le claim birthplace contient le texte fourni par le FI.
     Exemples:
-      | userType    |
-      | né en Corse |
+      | userType                                          |
+      | né à l'étranger avec un lieu de naissance (COG)   |
+      | né à l'étranger avec un lieu de naissance (texte) |
 
-  Scénario: Connexion avec erreur Y000006 identité sans mail renvoyé par le FI
+  @fcpLow @fcpHigh
+  Plan du Scénario: Connexion avec erreur Y000006 identité <description> renvoyée par le FI
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
     Et que je clique sur le fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
-    Quand je m'authentifie avec "sans_mail"
+    Quand je m'authentifie avec "<username>"
     Alors je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y000006"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous"
-
-  # Pas d'accès aux logs métier en integ01
-  @ignoreInteg01
-  Scénario: Connexion avec erreur Y000006 birthplace non valide renvoyé par le FI
-    Etant donné que je navigue sur la page fournisseur de service
-    Et que je clique sur le bouton FranceConnect
-    Et que je suis redirigé vers la page sélection du fournisseur d'identité
-    Et que je clique sur le fournisseur d'identité
-    Et que je suis redirigé vers la page login du fournisseur d'identité
-    Quand je m'authentifie avec "test_INVALID_COG"
-    Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y000006"
     Et l'événement "FC_REQUESTED_IDP_USERINFO" est journalisé avec "idpId" "non null"
     Et l'événement "FC_REQUESTED_RNIPP" n'est pas journalisé
 
-  # Pas d'accès aux logs métier en integ01
-  @ignoreInteg01
+    Exemples:
+      | username         | description                            |
+      | sans_genre       | sans genre                             |
+      | sans_mail        | sans adresse e-mail                    |
+      | test_INVALID_COG | avec lieu de naissance non valide      |
+      | sans_birthplace  | né en France et sans lieu de naissance |
+
   Plan du Scénario: Connexion avec erreur RNIPP <errorCode> <scenario>
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
@@ -99,6 +105,7 @@ Fonctionnalité: Connexion Usager - RNIPP
     Et le code d'erreur FranceConnect est "<errorCode>"
     Et l'événement "<event>" est journalisé avec "idpId" "non null"
 
+    @fcpLow @fcpHigh
     Exemples:
       | scenario                       | username | errorCode | event                      |
       | non trouvé avec un echo        | E010004  | Y010004   | FC_RECEIVED_INVALID_RNIPP  |

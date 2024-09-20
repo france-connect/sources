@@ -22,7 +22,7 @@ FCP validation with system tests implemented using a Test Framework (based on Cy
 | -------------------- | --------------------------------- | -------------------------------------------- |
 | PLATFORM             | Platform under test               | `fcp-high` or `fcp-low` or `fcp-legacy`      |
 | TEST_ENV             | Test environment                  | `docker` or `integ01`, etc.                  |
-| TAGS                 | Tags expression                   | `not @ignoreLow and not @fcpHigh`            |
+| TAGS                 | Tags expression                   | `@fcpLow and not @ignoreLow`                 |
 | EXPLOIT_ADMIN_NAME   | Exploitation admin username       | needed only for integ01/preprod              |
 | EXPLOIT_ADMIN_PASS   | Exploitation admin password       | needed only for integ01/preprod              |
 | EXPLOIT_ADMIN_TOTP   | Exploitation admin totp secret    | needed only for integ01/preprod              |
@@ -356,6 +356,8 @@ yarn test:eidas:snapshot --env failOnSnapshotDiff=false
 
 ## Gitlab test pipeline
 
+### Create a test pipeline
+
 You can create a test pipeline in Gitlab from a merge request or from the staging branch
 
 1. Navigate to https://gitlab.dev-franceconnect.fr/france-connect/fc/-/pipelines/new
@@ -363,19 +365,18 @@ You can create a test pipeline in Gitlab from a merge request or from the stagin
 3. Click on the "Run pipeline" button
 4. Start the back and front jobs
 
-| Environment Variable | Description                           | Comment                                                        |
-| -------------------- | ------------------------------------- | -------------------------------------------------------------- |
-| CI_PIPELINE_SOURCE   | merge_request_event                   | if pipeline linked to a merge request                          |
-| CI_MERGE_REQUEST_IID | id of the merge request               | for instance 860 for the merge request `/-/merge_requests/860` |
-| FC_LEGACY_VERSION    | branch from core-legacy repository    | only if not staging                                            |
-| FC_APPS_VERSION      | branch from fc-apps repository        | only if not staging                                            |
-| BDD_TAGS_FCP_LOW     | tags for the fcp-low BDD tests        | by default '@ci and not @ignoreLow and not @fcpHigh'           |
-| BDD_TAGS_FCP_HIGH    | tags for the fcp-high BDD tests       | by default '@ci and not @ignoreHigh and not @fcpLow'           |
-| BDD_TAGS_FCA_LOW     | tags for the fca-low BDD tests        | by default '@ci and not @ignore'                               |
-| BDD_TAGS_EIDAS       | tags for the eidas-bridge BDD tests   | by default '@ci and not @ignore'                               |
-| BDD_TAGS_UD          | tags for the user-dashboard BDD tests | by default '@ci and not @ignore'                               |
-| RUN_E2E_FCP_HIGH     | 0 (skip end-to-end tests) or 1        | by default 0 on MR and 1 on staging branch                     |
-| RUN_E2E_FCA_LOW      | 0 (skip end-to-end tests) or 1        | by default 0 on MR and 1 on staging branch                     |
+| Environment Variable | Description                                                                  | Comment                                                          |
+| -------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| CI_PIPELINE_SOURCE   | merge_request_event                                                          | if pipeline linked to a merge request                            |
+| CI_MERGE_REQUEST_IID | id of the merge request                                                      | for instance 860 for the merge request `/-/merge_requests/860`   |
+| FC_LEGACY_VERSION    | branch from core-legacy repository                                           | only if not staging                                              |
+| FC_APPS_VERSION      | branch from fc-apps repository                                               | only if not staging                                              |
+| SKIP_DIFF_CHECK      | allows to skip the difference check in order to force the BDD test execution | by default "true" for BDD jobs run on staging or MR from staging |
+| BDD_TAGS_FCP_LOW     | tags for the fcp-low BDD tests                                               | by default '@fcpLow and not @ignoreLow and @ci'                  |
+| BDD_TAGS_FCP_HIGH    | tags for the fcp-high BDD tests                                              | by default '@fcpHigh and not @ignoreHigh and @ci'                |
+| BDD_TAGS_FCA_LOW     | tags for the fca-low BDD tests                                               | by default '@ci and not @ignore'                                 |
+| BDD_TAGS_EIDAS       | tags for the eidas-bridge BDD tests                                          | by default '@ci and not @ignore'                                 |
+| BDD_TAGS_UD          | tags for the user-dashboard BDD tests                                        | by default '@ci and not @ignore'                                 |
 
 ## Plugins VSCode
 

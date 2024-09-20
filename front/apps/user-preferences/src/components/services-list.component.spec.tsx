@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
-import React from 'react';
 
 import { AccountContext } from '@fc/account';
+import { useSafeContext } from '@fc/common';
 
 import { ServiceComponent } from './service.component';
 import { ServicesListComponent } from './services-list.component';
@@ -10,7 +10,6 @@ jest.mock('./service.component');
 
 describe('ServicesListComponent', () => {
   // given
-  let useContextMock: jest.SpyInstance;
   const identityProvidersMock = [
     {
       active: false,
@@ -32,7 +31,7 @@ describe('ServicesListComponent', () => {
 
   beforeEach(() => {
     // given
-    useContextMock = jest.spyOn(React, 'useContext');
+    jest.mocked(useSafeContext).mockReturnValue({ userinfos: {} });
   });
 
   it('should match the snapshot', () => {
@@ -43,12 +42,12 @@ describe('ServicesListComponent', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should call useContext with AccountContext as parameter', () => {
+  it('should call useSafeContext with AccountContext as parameter', () => {
     // when
     render(<ServicesListComponent identityProviders={[]} />);
 
     // then
-    expect(useContextMock).toHaveBeenCalledWith(AccountContext);
+    expect(useSafeContext).toHaveBeenCalledWith(AccountContext);
   });
 
   it('should call ServiceComponent with a service', () => {
@@ -72,7 +71,7 @@ describe('ServicesListComponent', () => {
   it('should call a ServiceComponent with params when first element is not allowed to be updated', () => {
     // given
     const userinfos = { idpId: identityProvidersMock[0].uid };
-    useContextMock.mockReturnValueOnce({ userinfos });
+    jest.mocked(useSafeContext).mockReturnValueOnce({ userinfos });
 
     // when
     render(<ServicesListComponent identityProviders={identityProvidersMock} />);

@@ -82,6 +82,8 @@ describe('OidcClientService', () => {
     idpId: idpIdMock,
   };
 
+  const repScopeMock = ['scope1'];
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -115,7 +117,11 @@ describe('OidcClientService', () => {
 
   describe('getTokenFromProvider', () => {
     beforeEach(() => {
-      claimsMock.mockReturnValueOnce({ acr: acrMock, amr: amrMock });
+      claimsMock.mockReturnValueOnce({
+        acr: acrMock,
+        amr: amrMock,
+        rep_scope: repScopeMock,
+      });
       oidcClientUtilsServiceMock.getTokenSet.mockResolvedValueOnce(
         tokenResultMock,
       );
@@ -150,6 +156,7 @@ describe('OidcClientService', () => {
         idToken: idTokenMock,
         acr: acrMock,
         amr: amrMock,
+        idpRepresentativeScope: repScopeMock,
       };
       // action
       const result = await service.getTokenFromProvider(

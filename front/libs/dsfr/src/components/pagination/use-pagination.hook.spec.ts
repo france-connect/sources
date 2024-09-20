@@ -43,11 +43,13 @@ describe('usePagination', () => {
 
   it('should return a function', () => {
     const { result } = renderHook(() => usePagination);
+
     expect(result.current).toBeInstanceOf(Function);
   });
 
   describe('paginationChangeHandler', () => {
     const onPageClickMock = jest.fn();
+
     it('should return offset 10 if next page equal to 1', () => {
       // when
       const { result } = renderHook(() =>

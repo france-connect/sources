@@ -74,3 +74,25 @@ Fonctionnalité: Connexion Usager dont le fqdn est lié à plusieurs fi
     Alors je suis redirigé vers la page permettant la selection d'un fournisseur d'identité
     Quand je reviens en arrière
     Alors je suis redirigé vers la page interaction
+
+  @ignoreInteg01
+  Scénario: Connexion d'un usager - fi par défaut est accepté par tous les fqdnToIdp
+    Etant donné que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton AgentConnect
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "many@polyfi.fr"
+    Quand je clique sur le bouton de connexion
+    Et je suis redirigé vers la page permettant la selection d'un fournisseur d'identité
+    Alors le fournisseur d'identité "Autre" est affiché
+
+  @ignoreInteg01
+  Scénario: Connexion d'un usager - fi par défaut n'est pas accepté par l'un des fqdnToIdp
+    Etant donné que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
+    Et que je navigue sur la page fournisseur de service
+    Et que je clique sur le bouton AgentConnect
+    Et que je suis redirigé vers la page interaction
+    Et que j'entre l'email "many@polyfi2.fr"
+    Quand je clique sur le bouton de connexion
+    Et je suis redirigé vers la page permettant la selection d'un fournisseur d'identité
+    Alors le fournisseur d'identité "Autre" n'est pas affiché

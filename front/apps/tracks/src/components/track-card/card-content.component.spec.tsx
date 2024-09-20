@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
 import { CinematicEvents } from '../../enums';
-import type { IRichClaim } from '../../interfaces';
+import type { RichClaimInterface } from '../../interfaces';
 import { TrackCardContentComponent } from './card-content.component';
 import { ClaimsComponent } from './claims.component';
 import { ConnectionComponent } from './connection.component';
@@ -11,7 +11,7 @@ jest.mock('./connection.component');
 jest.mock('./claims.component');
 
 describe('TrackCardContentComponent', () => {
-  const claims1: IRichClaim = {
+  const claims1: RichClaimInterface = {
     identifier: 'claims1',
     label: 'Claims 1 Label',
     provider: {
@@ -20,7 +20,7 @@ describe('TrackCardContentComponent', () => {
     },
   };
 
-  const claims2: IRichClaim = {
+  const claims2: RichClaimInterface = {
     identifier: 'claims2',
     label: 'Claims 2 Label',
     provider: {

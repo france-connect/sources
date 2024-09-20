@@ -1,0 +1,6 @@
+{
+  "main": "src/index.ts",
+  "name": "@fc/login-form",
+  "private": true,
+  "version": "0.1.0"
+}

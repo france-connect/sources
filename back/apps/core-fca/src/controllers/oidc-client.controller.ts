@@ -49,7 +49,7 @@ import {
   CoreFcaAgentNoIdpException,
   CoreFcaInvalidIdentityException,
 } from '../exceptions';
-import { CoreFcaService } from '../services';
+import { CoreFcaFqdnService, CoreFcaService } from '../services';
 
 @Controller()
 export class OidcClientController {
@@ -66,6 +66,7 @@ export class OidcClientController {
     private readonly sessionService: SessionService,
     private readonly tracking: TrackingService,
     private readonly crypto: CryptographyService,
+    private readonly fqdnService: CoreFcaFqdnService,
   ) {}
 
   @Get(CoreFcaRoutes.INTERACTION_IDENTITY_PROVIDER_SELECTION)
@@ -78,17 +79,25 @@ export class OidcClientController {
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
     const { login_hint: email } = sessionOidc.get();
-    const { defaultIdpId } = this.config.get<AppConfig>('App');
+    const fqdnConfig = await this.fqdnService.getFqdnConfigFromEmail(email);
+    const { acceptsDefaultIdp, identityProviders } = fqdnConfig;
 
-    const idpIds = await this.coreFca.getIdpIdForEmail(email);
-    const providers = await this.coreFca.getIdentityProvidersByIds(...idpIds);
+    const providers: { title: string; uid: string }[] =
+      await this.coreFca.getIdentityProvidersByIds(identityProviders);
+
+    // replace default idp title by "Autre"
+    const defaultIdpId = this.config.get<AppConfig>('App').defaultIdpId;
+    providers.map((provider) => {
+      if (provider.uid === defaultIdpId) {
+        provider.title = 'Autre';
+      }
+    });
+
     const response = {
+      acceptsDefaultIdp,
       csrfToken,
       email,
-      providers: [
-        ...providers,
-        ...(defaultIdpId ? [{ title: 'Autre', uid: defaultIdpId }] : []),
-      ],
+      providers,
     };
 
     res.render('interaction-identity-provider', response);
@@ -116,7 +125,7 @@ export class OidcClientController {
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
     const { email, identityProviderUid } = body;
-    const fqdn = this.coreFca.getFqdnFromEmail(email);
+    const fqdn = this.fqdnService.getFqdnFromEmail(email);
 
     const {
       params: { acr_values },
@@ -143,16 +152,17 @@ export class OidcClientController {
       );
     }
 
-    const idpIds = await this.coreFca.getIdpIdForEmail(email);
-    const hasNoProvider = idpIds.length === 0;
-    const hasUniqueProvider = idpIds.length === 1;
+    const { identityProviders } =
+      await this.fqdnService.getFqdnConfigFromEmail(email);
+    const hasNoProvider = identityProviders.length === 0;
+    const hasUniqueProvider = identityProviders.length === 1;
 
     if (hasNoProvider) {
       throw new CoreFcaAgentNoIdpException();
     }
 
     if (hasUniqueProvider) {
-      const [idpId] = idpIds;
+      const [idpId] = identityProviders;
 
       const { title: idpLabel } = await this.identityProvider.getById(idpId);
       this.logger.debug(
@@ -164,7 +174,7 @@ export class OidcClientController {
     }
 
     this.logger.debug(
-      `${idpIds.length} identity providers matching for "****@${fqdn}"`,
+      `${identityProviders.length} identity providers matching for "****@${fqdn}"`,
     );
     const { urlPrefix } = this.config.get<AppConfig>('App');
     const url = `${urlPrefix}${CoreFcaRoutes.INTERACTION_IDENTITY_PROVIDER_SELECTION}`;

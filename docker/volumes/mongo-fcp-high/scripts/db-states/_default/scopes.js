@@ -156,19 +156,6 @@ db.scopes.update(
   { upsert: true },
 );
 
-// --Scope - FranceConnect
-print("Initializing FranceConnect scopes...");
-db.scopes.update(
-  { scope: "connexion_tracks" },
-  {
-    scope: "connexion_tracks",
-    fd: "FranceConnect",
-    label: "Historique de connexions",
-    __v: 0,
-  },
-  { upsert: true },
-);
-
 // -- Scopes - DGFIP
 print("Initializing DGFIP scopes...");
 db.scopes.update(
@@ -638,20 +625,20 @@ db.scopes.update(
   },
   { upsert: true },
 );
-
-// -- Scopes - CNAM
-print("Initializing CNAM scopes...");
 db.scopes.update(
-  { scope: "ensagri_releve_notes" },
+  { scope: "dgfip_annee_n_moins_2_si_indispo_n_moins_1" },
   {
-    scope: "ensagri_releve_notes",
-    fd: "CNAM",
+    scope: "dgfip_annee_n_moins_2_si_indispo_n_moins_1",
+    fd: "DGFIP",
     label:
-      "Relevé de notes (Enseignement Agricole) (Caisse nationale de l'assurance maladie)",
+      "Avant-dernière année de revenu, si la dernière année de revenu est indisponible (Direction générale des Finances publiques)",
     __v: 0,
   },
   { upsert: true },
 );
+
+// -- Scopes - CNAM
+print("Initializing CNAM scopes...");
 db.scopes.update(
   { scope: "droits_assurance_maladie" },
   {
@@ -721,7 +708,7 @@ db.scopes.update(
     scope: "cnam_presence_medecin_traitant",
     fd: "CNAM",
     label:
-      "Présence d'un médecin traitant (Caisse nationale de l'assurance maladie)",
+      "Présence d’un médecin traitant (Caisse nationale de l'assurance maladie)",
     __v: 0,
   },
   { upsert: true },
@@ -752,64 +739,6 @@ db.scopes.update(
   { upsert: true },
 );
 
-// -- Scopes - MESRI
-print("Initializing MESRI scopes...");
-db.scopes.update(
-  { scope: "mesri_identifiant" },
-  {
-    scope: "mesri_identifiant",
-    fd: "MESRI",
-    label:
-      "Identifiant national étudiant (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
-    __v: 0,
-  },
-  { upsert: true },
-);
-db.scopes.update(
-  { scope: "mesri_inscription_etudiant" },
-  {
-    scope: "mesri_inscription_etudiant",
-    fd: "MESRI",
-    label:
-      "Formation initiale (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
-    __v: 0,
-  },
-  { upsert: true },
-);
-db.scopes.update(
-  { scope: "mesri_inscription_autre" },
-  {
-    scope: "mesri_inscription_autre",
-    fd: "MESRI",
-    label:
-      "Formation continue (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
-    __v: 0,
-  },
-  { upsert: true },
-);
-db.scopes.update(
-  { scope: "mesri_admission" },
-  {
-    scope: "mesri_admission",
-    fd: "MESRI",
-    label:
-      "Admission (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
-    __v: 0,
-  },
-  { upsert: true },
-);
-db.scopes.update(
-  { scope: "mesri_etablissements" },
-  {
-    scope: "mesri_etablissements",
-    fd: "MESRI",
-    label:
-      "Établissements (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
-    __v: 0,
-  },
-  { upsert: true },
-);
-
 // -- Scopes - CNOUS
 print("Initializing CNOUS scopes...");
 db.scopes.update(
@@ -818,7 +747,7 @@ db.scopes.update(
     scope: "cnous_statut_boursier",
     fd: "CNOUS",
     label:
-      "Statut boursier (Centre national des œuvres universitaires et scolaires)",
+      "Statut étudiant boursier (Centre national des œuvres universitaires et scolaires)",
     __v: 0,
   },
   { upsert: true },
@@ -839,7 +768,7 @@ db.scopes.update(
   {
     scope: "cnous_email",
     fd: "CNOUS",
-    label: "Courriel (Centre national des œuvres universitaires et scolaires)",
+    label: "E-mail (Centre national des œuvres universitaires et scolaires)",
     __v: 0,
   },
   { upsert: true },
@@ -877,25 +806,12 @@ db.scopes.update(
   },
   { upsert: true },
 );
-
-// -- Scopes - Pôle emploi
-print("Initializing Pôle emploi scopes...");
 db.scopes.update(
-  { scope: "api_fc-liste-paiementsv1" },
+  { scope: "cnous_identite" },
   {
-    scope: "api_fc-liste-paiementsv1",
-    fd: "Pôle emploi",
-    label: "Indemnités de Pôle emploi (Pôle emploi)",
-    __v: 0,
-  },
-  { upsert: true },
-);
-db.scopes.update(
-  { scope: "api_fc-statutaugmentev1" },
-  {
-    scope: "api_fc-statutaugmentev1",
-    fd: "Pôle emploi",
-    label: "Statut demandeur d'emploi (Pôle emploi)",
+    scope: "cnous_identite",
+    fd: "CNOUS",
+    label: "Identité",
     __v: 0,
   },
   { upsert: true },

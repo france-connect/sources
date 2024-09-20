@@ -3,13 +3,11 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description, Loggable, Trackable } from '@fc/exceptions-deprecated';
+import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 import { RnippBaseException } from './';
 
-@Loggable(false)
-@Trackable()
 @Description(
   "Ce code erreur correspond au RNIPP qui renvoie l'information 'décédée' pour la personne dont l'identité est actuellement redressée. On veut éviter en cas d'erreur d'être trop brutal et d'afficher 'correspond à une personne décédée'",
 )

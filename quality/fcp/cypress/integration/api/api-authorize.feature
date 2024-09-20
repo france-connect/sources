@@ -1,5 +1,5 @@
 #language: fr
-@api @apiAuthorize @ignoreInteg01
+@api @apiAuthorize @fcpLow @fcpHigh @ignoreInteg01
 Fonctionnalité: API - authorize
 
   Plan du Scénario: API authorize - Cas nominal prompt=<prompt>
@@ -150,7 +150,7 @@ Fonctionnalité: API - authorize
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y030106"
-    Et le message d'erreur FranceConnect est "invalid_client"
+    Et le message d'erreur FranceConnect est "client is invalid (client not found)"
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
     Exemples:
@@ -190,5 +190,5 @@ Fonctionnalité: API - authorize
     Exemples:
       | redirectUri                          | httpCode | error   | errorDescription                                                                            |
       |                                      | 400      | Y030007 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. |
-      | https://my-malicious-url.fr/callback | 500      | Y030118 | invalid_redirect_uri                                                                        |
+      | https://my-malicious-url.fr/callback | 500      | Y030118 | redirect_uri did not match any of the client's registered redirect_uris (undefined)         |
       | example.com                          | 400      | Y030007 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. |

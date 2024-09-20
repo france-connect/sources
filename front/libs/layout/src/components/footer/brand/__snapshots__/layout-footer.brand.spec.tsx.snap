@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LayoutFooterBrandComponent should call Link with params 1`] = `
+<div>
+  <div
+    class="fr-footer__brand fr-enlarge-link"
+  >
+    <div>
+      LogoRepubliqueFrancaiseComponent
+    </div>
+    <span
+      data-mockid="Link"
+    >
+      <img
+        alt="Any"
+        class="fr-footer__logo fr-responsive-img"
+        src="Any"
+        style="height: 90px; max-height: 90px;"
+      />
+    </span>
+  </div>
+</div>
+`;
+
+exports[`LayoutFooterBrandComponent should match Snapshot 1`] = `
+<div>
+  <div
+    class="fr-footer__brand fr-enlarge-link"
+  >
+    <div>
+      LogoRepubliqueFrancaiseComponent
+    </div>
+    <span
+      data-mockid="Link"
+    >
+      <img
+        class="fr-footer__logo fr-responsive-img"
+        src="Any"
+        style="height: 90px; max-height: 90px;"
+      />
+    </span>
+  </div>
+</div>
+`;
+
+exports[`LayoutFooterBrandComponent should render the logo with a title 1`] = `
+<div>
+  <div
+    class="fr-footer__brand fr-enlarge-link"
+  >
+    <div>
+      LogoRepubliqueFrancaiseComponent
+    </div>
+    <span
+      data-mockid="Link"
+    >
+      <img
+        alt="any-service-baseline-mock- any-service-name-mock"
+        class="fr-footer__logo fr-responsive-img"
+        src="any-service-logo-mock"
+        style="height: 90px; max-height: 90px;"
+      />
+    </span>
+  </div>
+</div>
+`;

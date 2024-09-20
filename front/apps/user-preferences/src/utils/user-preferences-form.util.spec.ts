@@ -1,4 +1,4 @@
-import type { Service, UserPreferencesData } from '../interfaces';
+import type { ServiceInterface, UserPreferencesDataInterface } from '../interfaces';
 import {
   checkHasDefaultConfiguration,
   checkSomeIdpHasBeenChangedSinceLoading,
@@ -8,7 +8,7 @@ describe('user-preferences-form.util', () => {
   describe('checkHasDefaultConfiguration', () => {
     it('should return "false" if userPreferences is undefined', () => {
       // Given
-      const userPreferences: UserPreferencesData | undefined = undefined;
+      const userPreferences: UserPreferencesDataInterface | undefined = undefined;
 
       // When
       const result = checkHasDefaultConfiguration(userPreferences);
@@ -19,7 +19,7 @@ describe('user-preferences-form.util', () => {
 
     it('should return "false" if idpList is undefined', () => {
       // Given
-      const userPreferences: UserPreferencesData = {
+      const userPreferences: UserPreferencesDataInterface = {
         allowFutureIdp: true,
         idpList: undefined,
       };
@@ -33,7 +33,7 @@ describe('user-preferences-form.util', () => {
 
     it('should return "false" if allowFutureIdp is false', () => {
       // Given
-      const userPreferences: UserPreferencesData = {
+      const userPreferences: UserPreferencesDataInterface = {
         allowFutureIdp: false,
         idpList: [],
       };
@@ -47,9 +47,9 @@ describe('user-preferences-form.util', () => {
 
     it('should return "true" if some idp in idpList not in default configuration and future idp are allowed', () => {
       // Given
-      const userPreferences: UserPreferencesData = {
+      const userPreferences: UserPreferencesDataInterface = {
         allowFutureIdp: true,
-        idpList: [{ isChecked: true } as Service],
+        idpList: [{ isChecked: true } as ServiceInterface],
       };
 
       // When
@@ -61,9 +61,9 @@ describe('user-preferences-form.util', () => {
 
     it('should return "false" if some idp in idpList not in default configuration and future idp are not allowed', () => {
       // Given
-      const userPreferences: UserPreferencesData = {
+      const userPreferences: UserPreferencesDataInterface = {
         allowFutureIdp: false,
-        idpList: [{ isChecked: true } as Service],
+        idpList: [{ isChecked: true } as ServiceInterface],
       };
 
       // When

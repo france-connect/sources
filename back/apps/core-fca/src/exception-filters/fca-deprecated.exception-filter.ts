@@ -5,7 +5,6 @@ import { ConfigService } from '@fc/config';
 import {
   ExceptionsService as DeprecatedExceptionsService,
   FcException as DeprecatedFcException,
-  Loggable as DeprecatedLoggable,
 } from '@fc/exceptions-deprecated';
 import { LoggerService } from '@fc/logger';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
@@ -37,11 +36,7 @@ export class FcaDeprecatedExceptionFilter
 
     const { message } = exception;
 
-    const isLoggableError = DeprecatedLoggable.isLoggable(exception);
-
-    if (isLoggableError) {
-      this.logException(code, id, exception);
-    }
+    this.logException(code, id, exception);
 
     if (this.tracking) {
       const context: TrackedEventContextInterface = { req, exception };

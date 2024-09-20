@@ -333,6 +333,36 @@ describe('RnippService', () => {
       // expect
       expect(result).toStrictEqual(birthcountry);
     });
+
+    it('should return the birthcountry cog if the birthplace is nan empty string', () => {
+      // setup
+      const birthplace = '';
+      const birthcountry = '99100';
+
+      // action
+      const result = service['formatCodeLieuNaissance'](
+        birthplace,
+        birthcountry,
+      );
+
+      // expect
+      expect(result).toStrictEqual(birthcountry);
+    });
+
+    it('should return the birthcountry cog if the birthplace is not a valid cog', () => {
+      // setup
+      const birthplace = 'not-a-cog';
+      const birthcountry = '99100';
+
+      // action
+      const result = service['formatCodeLieuNaissance'](
+        birthplace,
+        birthcountry,
+      );
+
+      // expect
+      expect(result).toStrictEqual(birthcountry);
+    });
   });
 
   describe('callRnipp', () => {

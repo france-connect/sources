@@ -1,4 +1,7 @@
-import { IsString } from 'class-validator';
+/* istanbul ignore file */
+
+// Declarative code
+import { IsBoolean, IsString } from 'class-validator';
 
 export class GetFqdnToIdentityProviderMongoDto {
   @IsString()
@@ -6,4 +9,7 @@ export class GetFqdnToIdentityProviderMongoDto {
 
   @IsString()
   readonly identityProvider: string;
+
+  @IsBoolean()
+  readonly acceptsDefaultIdp: boolean;
 }

@@ -2,15 +2,15 @@
 
 // declarative file
 import { Account } from './account';
+import { HttpClient } from './http-client';
 import { Layout } from './layout';
-import { OidcClient } from './oidc-client';
 import { Tracks } from './tracks';
 import { UserPreferences } from './user-preferences';
 
 export const AppConfig = {
   Account,
+  HttpClient,
   Layout,
-  OidcClient,
   Tracks,
   UserPreferences,
 };

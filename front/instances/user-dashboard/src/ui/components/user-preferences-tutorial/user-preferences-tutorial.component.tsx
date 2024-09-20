@@ -1,15 +1,15 @@
 import classnames from 'classnames';
 import React from 'react';
 
+import type { PropsWithClassName } from '@fc/common';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import styles from './user-preferences-tutorial.module.scss';
 
-interface UserPreferencesTutorialComponentProps {
+interface UserPreferencesTutorialComponentProps extends PropsWithClassName {
   label: string;
   alt: string;
   img: string;
-  className?: string | undefined;
 }
 
 export const UserPreferencesTutorialComponent: React.FC<UserPreferencesTutorialComponentProps> =

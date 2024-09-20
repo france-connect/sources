@@ -12,18 +12,18 @@ import { ConfigService } from '@fc/config';
 import { Methods, Options } from '../enums';
 import { AxiosException } from '../errors';
 import type {
-  GetCsrfTokenResponse,
+  GetCsrfTokenResponseInterface,
   HttpClientConfig,
-  HttpClientData,
-  HttpClientOptions,
+  HttpClientDataInterface,
+  HttpClientOptionsInterface,
 } from '../interfaces';
 import { getRequestOptions } from '../utils';
 
 export const makeRequest = async (
   method: Method,
   endpoint: string,
-  data: HttpClientData | URLSearchParams = {},
-  axiosOptions: HttpClientOptions = {},
+  data: HttpClientDataInterface | URLSearchParams = {},
+  axiosOptions: HttpClientOptionsInterface = {},
 ): Promise<AxiosResponse> => {
   const requestTarget = { data, method, url: endpoint };
   const request = getRequestOptions(requestTarget, axiosOptions);
@@ -35,7 +35,7 @@ export const makeRequest = async (
  * @param data URLSearchParams
  * @returns
  */
-export const getCSRF = async (): Promise<GetCsrfTokenResponse> => {
+export const getCSRF = async (): Promise<GetCsrfTokenResponseInterface> => {
   try {
     const { apiCsrfURL } = ConfigService.get<HttpClientConfig>(Options.CONFIG_NAME);
 
@@ -51,15 +51,15 @@ export const getCSRF = async (): Promise<GetCsrfTokenResponse> => {
 /**
  *
  * @param endpoint Relative leading slashed string to a single API entry point (eg: '/hello-world')
- * @param data HttpClientData | URLSearchParams
+ * @param data HttpClientDataInterface | URLSearchParams
  * @param axiosOptions AxiosRequestConfig
  * @returns
  */
-export const get = async (
+export const get = async <T = unknown>(
   endpoint: string,
-  data?: HttpClientData | URLSearchParams,
-  options?: HttpClientOptions,
-): Promise<AxiosResponse> => {
+  data?: HttpClientDataInterface | URLSearchParams,
+  options?: HttpClientOptionsInterface,
+): Promise<AxiosResponse<T>> => {
   try {
     const method = Methods.GET;
     return await makeRequest(method, endpoint, data, options);
@@ -71,14 +71,14 @@ export const get = async (
 /**
  *
  * @param endpoint Relative leading slashed string to a single API entry point (eg: '/hello-world')
- * @param data HttpClientData
+ * @param data HttpClientDataInterface
  * @param axiosOptions AxiosRequestConfig
  * @returns
  */
 export const post = async (
   endpoint: string,
-  data?: HttpClientData,
-  options?: HttpClientOptions,
+  data?: HttpClientDataInterface,
+  options?: HttpClientOptionsInterface,
 ): Promise<AxiosResponse> => {
   try {
     const { csrfToken } = await getCSRF();
