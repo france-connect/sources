@@ -6,6 +6,7 @@ import { ConfigService } from '@fc/config';
 import { CoreAuthorizationService } from '@fc/core';
 import { FqdnToIdpAdapterMongoService } from '@fc/fqdn-to-idp-adapter-mongo';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
+import { LoggerService } from '@fc/logger';
 import {
   OidcClientIdpBlacklistedException,
   OidcClientIdpDisabledException,
@@ -15,6 +16,7 @@ import { SessionService } from '@fc/session';
 
 import { getConfigMock } from '@mocks/config';
 import { getCoreAuthorizationServiceMock } from '@mocks/core';
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import {
@@ -22,11 +24,13 @@ import {
   CoreFcaAgentIdpDisabledException,
 } from '../exceptions';
 import { CoreFcaService } from './core-fca.service';
+import { CoreFcaFqdnService } from './core-fca-fqdn.service';
 
 describe('CoreFcaService', () => {
   let service: CoreFcaService;
 
   const configServiceMock = getConfigMock();
+  const loggerServiceMock = getLoggerMock();
 
   const sessionServiceMock = getSessionServiceMock();
 
@@ -53,6 +57,7 @@ describe('CoreFcaService', () => {
   const acrMock = 'acrMockValue';
   const configMock = {
     scope: Symbol('scopeMockValue'),
+    spAuthorizedFqdnsConfigs: [],
   };
 
   const identityProviderMockResponse = {
@@ -74,6 +79,11 @@ describe('CoreFcaService', () => {
 
   const coreAuthorizationServiceMock = getCoreAuthorizationServiceMock();
 
+  const coreFcaFqdnServiceMock = {
+    getFqdnConfigFromEmail: jest.fn(),
+    getSpAuthorizedFqdnsConfig: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -87,6 +97,8 @@ describe('CoreFcaService', () => {
         FqdnToIdpAdapterMongoService,
         CoreAuthorizationService,
         SessionService,
+        CoreFcaFqdnService,
+        LoggerService,
       ],
     })
       .overrideProvider(ConfigService)
@@ -101,6 +113,10 @@ describe('CoreFcaService', () => {
       .useValue(coreAuthorizationServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
+      .overrideProvider(CoreFcaFqdnService)
+      .useValue(coreFcaFqdnServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerServiceMock)
       .compile();
 
     service = app.get<CoreFcaService>(CoreFcaService);
@@ -116,6 +132,10 @@ describe('CoreFcaService', () => {
     coreAuthorizationServiceMock.getAuthorizeUrl.mockResolvedValue(
       authorizeUrlMock,
     );
+
+    coreFcaFqdnServiceMock.getFqdnConfigFromEmail.mockResolvedValue({
+      fqdn: '',
+    });
   });
 
   it('should be defined', () => {
@@ -353,6 +373,57 @@ describe('CoreFcaService', () => {
           uid: 'snapeIdp',
         },
       ]);
+    });
+  });
+
+  describe('validateEmailForSp', () => {
+    it('should return nothing if authorized email configuration is empty', async () => {
+      await expect(
+        service['validateEmailForSp'](spIdMock, 'anyEmail@mail.fr'),
+      ).resolves.not.toThrow();
+    });
+
+    it('should throw an error if the email is not authorized', async () => {
+      coreFcaFqdnServiceMock.getSpAuthorizedFqdnsConfig.mockReturnValueOnce({
+        spName: 'Barad-Dur',
+        spContact: 'sauron@palantir.morgoth',
+        authorizedFqdns: ['mordor.orc'],
+      });
+      await expect(
+        service['validateEmailForSp'](spIdMock, 'galadriel@lorien.elve'),
+      ).rejects.toThrow();
+    });
+
+    it('should return nothing if the email is authorized', async () => {
+      coreFcaFqdnServiceMock.getSpAuthorizedFqdnsConfig.mockReturnValueOnce({
+        spName: 'Barad-Dur',
+        spContact: 'sauron@palantir.morgoth',
+        authorizedFqdns: ['mordor.orc'],
+      });
+
+      coreFcaFqdnServiceMock.getFqdnConfigFromEmail.mockResolvedValueOnce({
+        fqdn: 'mordor.orc',
+      });
+
+      await expect(
+        service['validateEmailForSp'](spIdMock, 'gollum@mordor.orc'),
+      ).resolves.not.toThrow();
+    });
+
+    it('should return nothing if the config has no authorized fqdns', async () => {
+      coreFcaFqdnServiceMock.getSpAuthorizedFqdnsConfig.mockReturnValueOnce({
+        spName: 'Barad-Dur',
+        spContact: 'sauron@palantir.morgoth',
+        authorizedFqdns: [],
+      });
+
+      coreFcaFqdnServiceMock.getFqdnConfigFromEmail.mockResolvedValueOnce({
+        fqdn: 'mordor.orc',
+      });
+
+      await expect(
+        service['validateEmailForSp'](spIdMock, 'gollum@mordor.orc'),
+      ).resolves.not.toThrow();
     });
   });
 });

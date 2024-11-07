@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { AccountFcaService } from '@fc/account-fca';
+import { ConfigService } from '@fc/config';
 import { CoreAcrService, IVerifyFeatureHandlerHandleArgument } from '@fc/core';
 import { CoreFcaAgentNotFromPublicServiceException } from '@fc/core-fca/exceptions';
 import { FeatureHandler, IFeatureHandler } from '@fc/feature-handler';
@@ -30,8 +31,9 @@ export class CoreFcaMcpVerifyHandler
     protected readonly serviceProvider: ServiceProviderAdapterMongoService,
     protected readonly accountService: AccountFcaService,
     protected readonly oidcAcr: OidcAcrService,
+    protected readonly config: ConfigService,
   ) {
-    super(logger, coreAcr, identityProvider, accountService, oidcAcr);
+    super(logger, coreAcr, identityProvider, accountService, oidcAcr, config);
   }
 
   /**

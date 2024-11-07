@@ -1,10 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialExcept } from '@fc/common';
+import { LoggerService } from '@fc/logger';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc/tokens';
 import { OidcProviderService } from '@fc/oidc-provider';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { LogoutParamsDto, RevocationTokenParamsDTO } from './dto';
@@ -28,6 +30,10 @@ const oidcSessionDataMock: OidcSession = {
 
 describe('OidcProviderController', () => {
   let oidcProviderController: OidcProviderController;
+
+  const reqMock = {};
+
+  const loggerMock = getLoggerMock();
 
   const providerMock = {
     interactionDetails: jest.fn(),
@@ -62,10 +68,13 @@ describe('OidcProviderController', () => {
           provide: OIDC_PROVIDER_CONFIG_APP_TOKEN,
           useValue: oidcProviderConfigAppMock,
         },
+        LoggerService,
       ],
     })
       .overrideProvider(OidcProviderService)
       .useValue(oidcProviderServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerMock)
       .compile();
 
     oidcProviderController = app.get<OidcProviderController>(
@@ -83,7 +92,7 @@ describe('OidcProviderController', () => {
       const next = jest.fn();
 
       // When
-      oidcProviderController.getUserInfo(next);
+      oidcProviderController.getUserInfo(next, reqMock);
       // Then
       expect(next).toHaveBeenCalledTimes(1);
     });
@@ -114,7 +123,7 @@ describe('OidcProviderController', () => {
       // Given
       const next = jest.fn();
       // When
-      oidcProviderController.postToken(next);
+      oidcProviderController.postToken(next, reqMock);
       // Then
       expect(next).toHaveBeenCalledTimes(1);
     });

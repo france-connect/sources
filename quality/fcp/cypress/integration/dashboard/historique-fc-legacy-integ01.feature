@@ -27,6 +27,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     # Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
+    Et le code d'identification de l'évènement est affiché
 
   @ignoreInteg01
   Scénario: Historique Connexion - FC Legacy - FS public avec scope data
@@ -49,6 +50,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     # Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
+    Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du dernier évènement "Échange de Données" sur "FranceConnect" du fournisseur de service "Service Provider Example - Data"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Échange de Données"
@@ -86,6 +88,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     # Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
+    Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Service Provider Example - Authentication"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Autorisation"
@@ -120,6 +123,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     # Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
+    Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "Service Provider Example - Data"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Autorisation"
@@ -172,3 +176,4 @@ Fonctionnalité: Historique Connexion sur FC Legacy (integ01)
     # Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "Démonstration - faible"
     Et le niveau de sécurité de l'évènement est "Faible"
+    Et le code d'identification de l'évènement est affiché

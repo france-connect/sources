@@ -1,5 +1,3 @@
-version: "2.4"
-
 services:
   ####################
   # CORE FCP LOW
@@ -30,6 +28,7 @@ services:
     networks:
       - public
       - data
+    init: true
     command: "pm2 logs"
     environment:
       # Mailer

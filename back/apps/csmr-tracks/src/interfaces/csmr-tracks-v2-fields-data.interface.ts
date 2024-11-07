@@ -25,5 +25,6 @@ export type ICsmrTracksV2FieldsData = {
   claims?: string;
   time: number;
   source: ISource;
+  browsingSessionId: string;
   scope?: string;
 };

@@ -4,6 +4,7 @@
 import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
+import { AppRmqConfig } from '@fc/app';
 import { ElasticsearchConfig } from '@fc/elasticsearch';
 import { GeoipMaxmindConfig } from '@fc/geoip-maxmind';
 import { LoggerConfig } from '@fc/logger';
@@ -13,6 +14,11 @@ import { ScopesConfig } from '@fc/scopes';
 import { IdpMappings } from './idp-mappings.config';
 
 export class CsmrTracksConfig {
+  @IsObject()
+  @ValidateNested()
+  @Type(() => AppRmqConfig)
+  readonly App: AppRmqConfig;
+
   @IsObject()
   @ValidateNested()
   @Type(() => LoggerConfig)

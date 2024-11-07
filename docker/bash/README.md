@@ -78,7 +78,7 @@ In case of success, the utility will display an "OK" message after the `label`.
 The whole behavior can be turned off using the global variable `VERBOSE` :
 
 ```shell
-> VERBOSE=1 docker-stack up some-stack
+> VERBOSE=1 dks up some-stack
 ```
 
 **Returning custom messages**
@@ -122,7 +122,7 @@ wait_for_nodejs container-name, URL [max_time, delay_between_retries, max_retrie
 Usage is shell / CI:
 
 ```bash
-> docker-stack wait "fc-exploitation" "https://fc-exploitation.docker.dev-franceconnect.fr"
+> dks wait "fc-exploitation" "https://fc-exploitation.docker.dev-franceconnect.fr"
 ```
 
 This will print PM2 logs on case of failure to reach the app.  

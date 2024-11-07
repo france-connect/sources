@@ -1,0 +1,13 @@
+# To get the Gitlab job runner container to see the containers created by
+# docker-stack, it needs to share a network with those containers.
+# This is achieved on the CI instances by instructing the Gitlab
+# runner to create job containers in a pre-existing `fc_public`
+# network.
+# Because this network is already declared in the Compose stack,
+# it needs to be specified as `external` in the CI environment
+# so that Docker Compose does not report a failure while trying
+# to create or destroy it.
+networks:
+  public:
+    name: fc_public
+    external: true

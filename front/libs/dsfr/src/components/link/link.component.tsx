@@ -1,30 +1,39 @@
 import classnames from 'classnames';
+import type { PropsWithChildren } from 'react';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import type { PropsWithClassName } from '@fc/common';
 
 import { IconPlacement, Sizes } from '../../enums';
 
-interface LinkComponentProps extends PropsWithClassName {
+interface LinkComponentProps extends PropsWithChildren, PropsWithClassName {
   href: string;
   icon?: string;
   iconPlacement?: IconPlacement;
-  label?: string;
   size?: Sizes;
+  label?: string | undefined;
+  external?: boolean;
+  target?: string;
+  rel?: string;
+  dataTestId?: string;
 }
 
 export const LinkComponent = React.memo(
   ({
+    children,
     className,
+    dataTestId,
+    external = false,
     href,
     icon,
     iconPlacement = IconPlacement.LEFT,
-    label,
+    label = undefined,
+    rel,
     size = Sizes.MEDIUM,
+    target,
   }: LinkComponentProps) => (
-    // @TODO add an URL validators
-    // it will be created with any backoffice app
-    <a
+    <Link
       className={classnames(
         `fr-link fr-link--${size}`,
         {
@@ -33,9 +42,13 @@ export const LinkComponent = React.memo(
         },
         className,
       )}
-      href={href}>
-      {label}
-    </a>
+      data-testid={dataTestId}
+      rel={rel}
+      reloadDocument={external}
+      target={target}
+      to={href}>
+      {label || children}
+    </Link>
   ),
 );
 

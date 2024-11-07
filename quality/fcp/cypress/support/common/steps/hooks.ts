@@ -42,6 +42,7 @@ const setupTestFramework = (
 
   if (platform === 'fcp-low') {
     setFixtureContext('rep-scopes.json', pathArray, 'repScopes');
+    setFixtureContext('fraud-form-values.json', pathArray, 'fraudFormValues');
   }
 
   // Define default data

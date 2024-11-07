@@ -8,9 +8,15 @@ interface MailTo {
   readonly name: string;
 }
 
+interface ReplyTo {
+  readonly email: string;
+  readonly name: string;
+}
+
 export interface MailOptions {
   readonly subject: string;
   readonly body: string;
   readonly from: MailFrom;
   readonly to: MailTo[];
+  readonly replyTo?: ReplyTo;
 }

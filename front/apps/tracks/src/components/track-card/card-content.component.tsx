@@ -18,12 +18,14 @@ type TraceCardContentProps = {
   country: string | undefined;
   claims: RichClaimInterface[];
   idpLabel: string;
+  authenticationEventId: string;
   options: TracksConfig;
 };
 
 export const TrackCardContentComponent = React.memo(
   ({
     accessibleId,
+    authenticationEventId,
     city,
     claims,
     country,
@@ -63,6 +65,7 @@ export const TrackCardContentComponent = React.memo(
         tabIndex={-1}>
         {shouldDisplayConnexion && (
           <ConnectionComponent
+            authenticationEventId={authenticationEventId}
             city={city}
             country={country}
             datetime={datetime}

@@ -33,8 +33,8 @@ export default class IdpEidasMockPage {
 
     cy.get('#buttonNextSlide2').click();
 
-    cy.get('#username').type(username);
-    cy.get('#password').type(password);
+    cy.get('#username').clearThenType(username);
+    cy.get('#password').clearThenType(password);
     cy.get('#eidasloa').select(EidasAssuranceLevelEnum[loa]);
 
     // turn off uncaught:exception handling on idp eidas mock

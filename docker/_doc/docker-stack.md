@@ -19,7 +19,7 @@ This directory contains everything to run a local FranceConnect or AgentConnect 
 - A linux working environment (The stack is used on ubuntu LTS 20.04 on a daily basis)
 - [Yarn package manager](https://yarnpkg.com/getting-started/install). You may need to uninstall [cmdtest](https://stackoverflow.com/questions/46013544/yarn-install-command-error-no-such-file-or-directory-install).
 - [Docker >= 20.04](https://docs.docker.com/engine/install/ubuntu). Don't forget to do `sudo usermod -aG docker $USER` disconnect and reconnect your current user.
-- [docker-compose ~1.21.2 | ~2](https://docs.docker.com/compose/install).
+- [Docker Compose >= 2.0](https://docs.docker.com/compose/install).
 - Bash >= 5
 - Installing the build-essential package. `sudo apt install build-essential`.
 - ~~[Binding the container root user to the current host user](https://docs.docker.com/engine/security/userns-remap).~~
@@ -58,15 +58,18 @@ export COMPOSE_HTTP_TIMEOUT=200
 export CYPRESS_FC_ROOT=$FC_ROOT
 
 # Setup the docker registry url
-export FC_DOCKER_REGISTRY=france-connect-docker-registry-url
+export FC_DOCKER_REGISTRY=registry.gitlab.dev-franceconnect.fr/france-connect/fc
 
 # Alias for the docker-stack command (you can add it to your "~/.bash_aliases" if you prefer but don't forget to set the variables before the .bash_aliases sourcing in your .bashrc 😉) :
-alias docker-stack=$FC_ROOT/fc/docker/docker-stack
+alias dks=$FC_ROOT/fc/docker/docker-stack
+
+# If you use version 2 of docker compose
+export FC_DOCKER_COMPOSE='docker compose'
 ```
 
 - Clone every needed repository
 
-  - If you are an internal developer
+  - If you are an internal franceconnect developer
 
   ```bash
   mkdir -p $FC_ROOT && cd $FC_ROOT
@@ -80,7 +83,19 @@ alias docker-stack=$FC_ROOT/fc/docker/docker-stack
   git clone <france-connect-repository>/usagers-fca.git
   git clone <france-connect-repository>/formulaire-usagers.git
 
-  # Old backoffice apps (DEPRECATED)
+  # Backoffice apps
+  git clone <france-connect-repository>/fc-apps.git
+  ```
+
+  - If you are an internal agentconnect developer
+
+  ```bash
+  mkdir -p $FC_ROOT && cd $FC_ROOT
+
+  # The main repository
+  git clone <france-connect-repository>/fc.git
+
+  # Backoffice apps
   git clone <france-connect-repository>/fc-apps.git
   ```
 
@@ -118,7 +133,7 @@ ln -s $FC_ROOT/formulaire-usagers
 
 ## Quick Start
 
-This is the main script you will use to manipulate the local environment. If you run a command `docker-stack` without arguments, it will display most of the available commands. To minimize performances impacts, you can run a sub-stack using `docker-stack up <sub-stack>`.
+This is the main script you will use to manipulate the local environment. If you run a command `dks` without arguments, it will display most of the available commands. To minimize performances impacts, you can run a sub-stack using `dks up <sub-stack>`.
 
 ### Docker Registry
 
@@ -136,56 +151,70 @@ You will be prompted for:
 ### Running FranceConnect
 
 ```bash
-docker-stack up min-fcp-low
-docker-stack start-all
+dks up min-fcp-low
+dks start-all
 ```
 
 ### Running FranceConnect+
 
 ```bash
-docker-stack up min-fcp-high
-docker-stack start-all
+dks up min-fcp-high
+dks start-all
 ```
 
 ### Running EidasBridge
 
 ```bash
-docker-stack up min-eidas-high
-docker-stack start-all
+dks up min-eidas-high
+dks start-all
 ```
 
 ### Running AgentConnect
 
 ```bash
-docker-stack up min-fca-low
-docker-stack start-all
+dks up min-fca-low
+dks start-all
 ```
 
-You will then find a list of accessible URLs here: https://hello.docker.dev-franceconnect.fr. Most URLs follow the same pattern <app-name>.docker.dev-franceconnect.fr
+On https://fsa1-low.docker.dev-franceconnect.fr/, you can test the connexion with :
 
-> ⚠️ Note that https://fca-low-front.docker.dev-franceconnect.fr/ and https://fca-low-back.docker.dev-franceconnect.fr/ will return a 502. fca-low-front is the container used to compile the React app into a js bundle through the build process while fca-low-back is the backend API. The bundle is served as a ressource on https://fca-low.docker.dev-franceconnect.fr/ through the nginx reverse proxy. You can start a standard connexion by accessing the service provider mock: https://fsa1-low.docker.dev-franceconnect.fr/
+- On the AgentConnect page use this email: test@fia1.fr
+- Change the login to: test
+- Leave the password empty
 
-> Nota bene: You can use `docker-stack log <app-container>` to obtain the NodeJS app logs. Ex. `docker-stack log fsp1-low` or `docker-stack log core-fcp-high`.
+You are now connected to fsa1!
+
+### Testing the installation
+
+You will then find a list of accessible URLs here: https://hello.docker.dev-franceconnect.fr.
+
+Most URLs follow the same pattern <app-name>.docker.dev-franceconnect.fr
+
+On any URL, if you got a 502, it might still be booting, wait one minute then reload.
+
+### Get the logs
+
+You can use `dks log <app-container>` to obtain the NodeJS app logs. Ex. `dks log fsp1-low` or `dks log core-fcp-high`.
 
 ### Halt a stack
 
 ```bash
-docker-stack halt
+dks halt
 ```
 
 ### Starting more or less fresh
 
 ```bash
 # Will clean docker containers and networks
-docker-stack prune
+dks prune
 # Will remove as well images, caches, node_modules...
-docker-stack prune-all
+dks prune-all
 ```
 
 ### See Usages
 
 ```bash
-docker-stack help
+dks help
 ```
 
 ## Some advanced usage
@@ -193,35 +222,35 @@ docker-stack help
 ### Access a MongoDb shell
 
 ```bash
-docker-stack mongo-shell-core-fcp-high
+dks mongo-shell-core-fcp-high
 # Or
-docker-stack mongo-shell-core-fcp-low
+dks mongo-shell-core-fcp-low
 # Or
-docker-stack mongo-shell-core-fca-low
+dks mongo-shell-core-fca-low
 ```
 
 ### Reset the MongoDb fixtures
 
 ```bash
-docker-stack reset-db-core-fcp-high
+dks reset-db-core-fcp-high
 # Or
-docker-stack reset-db-core-fcp-low
+dks reset-db-core-fcp-low
 # Or
-docker-stack reset-db-core-fca-low
+dks reset-db-core-fca-low
 ```
 
 ### Execute a shell command in a container
 
 ```bash
 # some commands may not work as expected since a refacto is in progress
-docker-stack exec <container_name> <command>
+dks exec <container_name> <command>
 ```
 
 ### Troubleshooting
 
 You may experience some docker network issues with docker containers, for exemple in case of a switch of network on the hosts or long inactivity of the stack.
 
-In most case you can get back a healthy state by resetting the stack with `docker-stack prune`
+In most case you can get back a healthy state by resetting the stack with `dks prune`
 
 ### Maintaining and Extending
 

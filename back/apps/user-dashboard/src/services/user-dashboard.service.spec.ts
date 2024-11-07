@@ -119,7 +119,7 @@ describe('UserDashboardService', () => {
         familyName: 'lastname',
       };
 
-      // When/Then
+      // When / Then
       const errorMock = new MailerNotificationConnectException();
       await expect(
         service['getIdpConfigUpdateEmailBodyContent'](
@@ -130,13 +130,13 @@ describe('UserDashboardService', () => {
     });
 
     it('should call mailToSend with futureIdpChoice =!idpConfiguration.allowFutureIdp', async () => {
-      // WHEN
+      // When
       await service['getIdpConfigUpdateEmailBodyContent'](
         userInfo,
         idpConfiguration,
       );
 
-      // THEN
+      // Then
       expect(mailerServiceMock.mailToSend).toHaveBeenCalledTimes(1);
       expect(mailerServiceMock.mailToSend).toHaveBeenCalledWith(
         EmailsTemplates.IDP_CONFIG_UPDATES_EMAIL,
@@ -151,7 +151,7 @@ describe('UserDashboardService', () => {
     });
 
     it('should call mailToSend with futureIdpChoice =idpConfiguration.allowFutureIdp', async () => {
-      // GIVEN
+      // Given
       const otherIdpConfiguration = {
         formattedIdpSettingsList: formattedUserIdpSettingsListMock,
         updatedIdpSettingsList: updatedIdpIdpSettingListMock,
@@ -159,13 +159,13 @@ describe('UserDashboardService', () => {
         allowFutureIdp: false,
       };
 
-      // WHEN
+      // When
       await service['getIdpConfigUpdateEmailBodyContent'](
         userInfo,
         otherIdpConfiguration,
       );
 
-      // THEN
+      // Then
       expect(mailerServiceMock.mailToSend).toHaveBeenCalledTimes(1);
       expect(mailerServiceMock.mailToSend).toHaveBeenCalledWith(
         EmailsTemplates.IDP_CONFIG_UPDATES_EMAIL,
@@ -181,18 +181,18 @@ describe('UserDashboardService', () => {
     });
 
     it('should return html content', async () => {
-      // GIVEN
+      // Given
       jest
         .mocked(mailerServiceMock.mailToSend)
         .mockResolvedValueOnce(getIdpConfigUpdateEmailBodyContentMock);
 
-      // WHEN
+      // When
       const result = await service['getIdpConfigUpdateEmailBodyContent'](
         userInfo,
         idpConfiguration,
       );
 
-      // THEN
+      // Then
       expect(result).toEqual(getIdpConfigUpdateEmailBodyContentMock);
     });
   });
@@ -217,7 +217,7 @@ describe('UserDashboardService', () => {
       configMock.get.mockReturnValueOnce({ from: configMailerWithoutEmail });
       const errorMock = new NoEmailException();
 
-      // When/Then
+      // When / Then
       await expect(
         service.sendMail(userInfo, idpConfiguration),
       ).rejects.toThrow(errorMock);
@@ -232,7 +232,7 @@ describe('UserDashboardService', () => {
       };
       configMock.get.mockReturnValueOnce({ from: fromMock });
 
-      // When/Then
+      // When / Then
       const errorMock = new NoEmailException();
       await expect(
         service.sendMail(badUserInfoData, idpConfiguration),

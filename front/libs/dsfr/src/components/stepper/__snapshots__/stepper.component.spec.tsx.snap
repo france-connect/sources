@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Stepper should match snapshot with a custom heading title 1`] = `
+<div>
+  <div
+    class="fr-stepper"
+  >
+    <h3
+      class="fr-stepper__title"
+      data-testid="stepper-component-heading-title"
+    >
+      current step title mock
+      <span
+        class="fr-stepper__state"
+      >
+        stepper current mock
+      </span>
+    </h3>
+    <div
+      class="fr-stepper__steps"
+      data-fr-current-step="1"
+      data-fr-steps="5"
+    />
+  </div>
+</div>
+`;
+
+exports[`Stepper should match snapshot with current and next titles 1`] = `
+<div>
+  <div
+    class="fr-stepper"
+  >
+    <h2
+      class="fr-stepper__title"
+      data-testid="stepper-component-heading-title"
+    >
+      current step title mock
+      <span
+        class="fr-stepper__state"
+      >
+        stepper current mock
+      </span>
+    </h2>
+    <div
+      class="fr-stepper__steps"
+      data-fr-current-step="1"
+      data-fr-steps="5"
+    />
+    <p
+      class="fr-stepper__details"
+    >
+      <span
+        class="fr-text--bold"
+      >
+        stepper next step mock
+         :
+      </span>
+       
+      next step title mock
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Stepper should match snapshot without next title 1`] = `
+<div>
+  <div
+    class="fr-stepper"
+  >
+    <h2
+      class="fr-stepper__title"
+      data-testid="stepper-component-heading-title"
+    >
+      current step title mock
+      <span
+        class="fr-stepper__state"
+      >
+        stepper current mock
+      </span>
+    </h2>
+    <div
+      class="fr-stepper__steps"
+      data-fr-current-step="1"
+      data-fr-steps="5"
+    />
+  </div>
+</div>
+`;

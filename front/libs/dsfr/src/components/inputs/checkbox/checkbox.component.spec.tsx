@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { CheckboxComponent } from './checkbox.component';
 
 describe('CheckboxComponent', () => {
-  // given
+  // Given
   const fieldInputPropsMock = {
     name: 'any-field-name-mock',
     onBlur: () => {},
@@ -13,78 +13,93 @@ describe('CheckboxComponent', () => {
   };
 
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(
       <CheckboxComponent input={fieldInputPropsMock} label="any-label-mock" />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should have render the label', () => {
-    // when
+    // When
     const { getByText } = render(
       <CheckboxComponent input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByText('any-label-mock');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 
   it('should have render the hint', () => {
-    // when
+    // When
     const { getByText } = render(
       <CheckboxComponent hint="any-hint-mock" input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByText('any-hint-mock');
 
-    // then
+    // Then
+    expect(element).toBeInTheDocument();
+  });
+
+  it('should have render the error', () => {
+    // When
+    const { getByText } = render(
+      <CheckboxComponent
+        error="any-error-mock"
+        input={fieldInputPropsMock}
+        label="any-label-mock"
+      />,
+    );
+    const element = getByText('any-error-mock');
+
+    // Then
     expect(element).toBeInTheDocument();
   });
 
   it("should have set the input's name attribute", () => {
-    // when
+    // When
     const { getByTestId } = render(
       <CheckboxComponent input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByTestId('field-checkbox-input');
 
-    // then
+    // Then
     expect(element).toHaveAttribute('id', fieldInputPropsMock.name);
   });
 
   it("should have set the label's htmlfor attribute related to the input's id", () => {
-    // when
+    // When
     const { getByTestId } = render(
       <CheckboxComponent input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByTestId('field-checkbox-label');
 
-    // then
+    // Then
     expect(element).toHaveAttribute('for', fieldInputPropsMock.name);
   });
 
   it("should have set the input's disabled attribute", () => {
-    // when
+    // When
     const { getByTestId } = render(
       <CheckboxComponent disabled input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByTestId('field-checkbox-input');
 
-    // then
+    // Then
     expect(element).toHaveAttribute('disabled');
   });
 
   it("should not have set the input's disabled attribute", () => {
-    // when
+    // When
     const { getByTestId } = render(
       <CheckboxComponent disabled={false} input={fieldInputPropsMock} label="any-label-mock" />,
     );
     const element = getByTestId('field-checkbox-input');
 
-    // then
+    // Then
     expect(element).not.toHaveAttribute('disabled');
   });
 });

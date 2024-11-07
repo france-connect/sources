@@ -220,6 +220,7 @@ describe('TracksV2Formatter', () => {
         interactionAcr: 'acrFromInteractionAcr',
         time: 1664661600000,
         service: CoreInstance.FCP_LOW,
+        browsingSessionId: 'authenticationEventIdValue',
       },
     } as SearchHit<ICsmrTracksV2FieldsData>;
 
@@ -243,6 +244,7 @@ describe('TracksV2Formatter', () => {
         idpLabel: 'idpLabelValue',
         platform: platformMock,
         trackId: 'idValue',
+        authenticationEventId: 'authenticationEventIdValue',
       };
 
       // When
@@ -272,6 +274,7 @@ describe('TracksV2Formatter', () => {
         idpLabel: 'idpLabelValue',
         platform: platformMock,
         trackId: 'idValue',
+        authenticationEventId: 'authenticationEventIdValue',
       };
 
       // When

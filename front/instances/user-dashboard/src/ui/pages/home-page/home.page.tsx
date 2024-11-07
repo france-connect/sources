@@ -1,5 +1,6 @@
 import classnames from 'classnames';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 import type { AccountContextState } from '@fc/account';
 import { AccountContext } from '@fc/account';
@@ -12,11 +13,14 @@ import styles from './home.module.scss';
 
 export const HomePage = React.memo(() => {
   const { expired } = useSafeContext<AccountContextState>(AccountContext);
+  const location = useLocation();
 
   const [breakpointLg, breakpointSm] = useStylesVariables(['breakpoint-lg', 'breakpoint-sm']);
 
   const gtDesktop = useStylesQuery({ minWidth: breakpointLg });
   const gtMobile = useStylesQuery({ minWidth: breakpointSm });
+
+  const { pathname } = location.state?.from ?? {};
 
   return (
     <div
@@ -41,15 +45,16 @@ export const HomePage = React.memo(() => {
         </AlertComponent>
       )}
       <h1 className={classnames(styles.title, 'fr-mb-5w')}>
-        Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter
+        Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter
       </h1>
       <LoginFormComponent
         className="flex-rows items-center"
         connectType={ConnectTypes.FRANCE_CONNECT}
+        redirectUrl={pathname}
       />
       <p className={classnames(styles.paragraph, 'fr-m-auto fr-mt-7v')} data-testid="paragraph">
-        Une fois connecté, vous pourrez accéder à l’ensemble des connexions et échanges de données
-        liés à votre compte sur les 6 derniers mois.
+        Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos
+        accès FranceConnect.
       </p>
     </div>
   );

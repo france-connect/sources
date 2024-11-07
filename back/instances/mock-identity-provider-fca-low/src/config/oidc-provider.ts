@@ -76,12 +76,12 @@ export default {
       given_name: ['given_name'],
       email: ['email'],
       phone: ['phone_number'],
-      organizational_unit: ['organizational_unit'],
+      // profession is an unexpected claim for testing custom scope
+      organizational_unit: ['organizational_unit', 'profession'],
       siren: ['siren'],
       siret: ['siret'],
       usual_name: ['usual_name'],
       belonging_population: ['belonging_population'],
-      // identity_provider: ['identity_provider'],
       chorusdt: ['chorusdt:matricule', 'chorusdt:societe'],
       // MonComptePro claims naming convention
       is_service_public: ['is_service_public'],

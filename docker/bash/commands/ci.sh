@@ -151,7 +151,14 @@ _ci_job_relevant_for_back_apps() {
   apt update
   apt install -y make g++
 
-  yarn install --frozen-lockfile
+  if [[ ${CI_MERGE_REQUEST_LABELS} == *"CI Refresh Cache"* ]]; then
+    echo "Refreshing cache (rm -rf node_modules/)"
+    rm -rf node_modules
+  fi
+
+  # --frozen-lockfile  Do not update yarn.lock
+  # --ignore-engines Temporary fix for runner
+  yarn install --frozen-lockfile --ignore-engines
 
   local i
   for ((i = 1; i <= $#; i++)); do
@@ -164,6 +171,10 @@ _ci_job_relevant_for_back_apps() {
   local files=$(_get_modified_files_for_back_apps "${@}" "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}" 2>&1)
 
   _analyse_diff_results ${BACK_PREFIX} "${files}"
+
+  if [[ ${CI_MERGE_REQUEST_LABELS} == *"CI Refresh Cache"* ]]; then
+    rm -rf node_modules
+  fi
 }
 
 _ci_job_relevant_for_front_apps() {

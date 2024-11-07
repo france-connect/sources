@@ -107,18 +107,14 @@ export default class ServiceProviderPage {
 
   setMockRequestedScope(scopeContext?: ScopeContext): void {
     if (scopeContext) {
-      cy.get('input[name="scope"]').clear();
       const { scopes = [] } = scopeContext;
       const scopeValue = scopes.join(' ');
-      if (scopeValue) {
-        cy.get('input[name="scope"]').type(scopeValue);
-      }
+      cy.get('input[name="scope"]').clearThenType(scopeValue);
     }
   }
 
   setMockRequestedAcr(acrValue: string): void {
-    cy.get('input[name="acr_values"]').clear();
-    cy.get('input[name="acr_values"]').type(acrValue);
+    cy.get('input[name="acr_values"]').clearThenType(acrValue);
   }
 
   setMockRequestedAmr(isRequested: boolean): void {
@@ -130,8 +126,7 @@ export default class ServiceProviderPage {
   }
 
   setIdpHint(idpHint: string): void {
-    cy.get('input[name="idp_hint"]').clear();
-    cy.get('input[name="idp_hint"]').type(idpHint);
+    cy.get('input[name="idp_hint"]').clearThenType(idpHint);
   }
 
   startLogin(

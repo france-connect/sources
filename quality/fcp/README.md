@@ -53,6 +53,20 @@ The BDD tests are run at different moments of the continuous integration:
 
 Before being able to merge a branch to `staging` branch, the BDD scenarios tagged with `@ci` are run. They represent the critical scenarios to pass in order to prevent system regression. When a new feature is implemented most of its scenarios should be tagged `@ci`. Then overtime, once the feature is more stable, only key scenarios remain tagged `@ci`.
 
+## Force test execution on MR
+
+The following Merge Request labels force the execution of the BDD test jobs in Gitlab:
+
+| Label            | Description                           |
+| ---------------- | ------------------------------------- |
+| CI Test all      | Run all the BDD test jobs             |
+| CI Test fca-low  | Run the `fca-low` BDD test job        |
+| CI Test fcp-low  | Run the `fcp-low` BDD test job        |
+| CI Test fcp-high | Run the `fcp-high` BDD test job       |
+| CI Test eidas    | Run the `eidas-bridge` BDD test job   |
+| CI Test ud       | Run the `user-dashboard` BDD test job |
+| CI Test partners | Run the `partners` BDD test job       |
+
 ### 2. overnight build of the `staging` branch
 
 Overnight build of the `staging` branch are executed. Those build run all the BDD tests. As no developpers are using Gitlab, we can run all the tests and not only the critical ones (tagged `@ci`).
@@ -282,6 +296,13 @@ docker-stack reset-mongo-as-prod mongo-fcp-low
 yarn test:low:snapshot --env 'TAGS=@fcpLow and @validationVisuelleProduction and not @ignore'
 ```
 
+- USER-DASHBOARD
+
+```shell
+docker-stack reset-mongo-as-prod mongo-fcp-low
+yarn test:ud:snapshot --env 'TAGS=@userDashboard and @validationVisuelleProduction and not @ignore'
+```
+
 ### Update the base image files for all of your tests
 
 #### In a development environment
@@ -326,6 +347,13 @@ yarn test:high:snapshot --env 'TAGS=@fcpHigh and @validationVisuelleProduction a
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-low
 yarn test:low:snapshot --env 'TAGS=@fcpLow and @validationVisuelleProduction and not @ignore,updateSnapshots=true'
+```
+
+- USER-DASHBOARD
+
+```shell
+docker-stack reset-mongo-as-prod mongo-fcp-low
+yarn test:ud:snapshot --env 'TAGS=@userDashboard and @validationVisuelleProduction and not @ignore,updateSnapshots=true'
 ```
 
 ### Prevent test failures when an image diff does not pass

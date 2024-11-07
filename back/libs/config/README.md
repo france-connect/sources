@@ -35,6 +35,6 @@ export default {
  ```html
 <!-- /apps/core-fcp/src/views/template.ejs -->
 
-<%= locals.config.App.name %>
+<%= $config('App.name') %>
  ```
 

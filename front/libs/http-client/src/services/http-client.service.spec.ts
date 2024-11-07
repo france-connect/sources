@@ -211,7 +211,7 @@ describe('HttpClientService', () => {
         expect(HttpClientService.makeRequest).toHaveBeenCalledWith(
           'post',
           endpoint,
-          { ...data, _csrf: 'any-csrf-token' },
+          { ...data, csrfToken: 'any-csrf-token' },
           { ...axiosOptions, transformRequest: jest.mocked(objectToFormData) },
         );
       });

@@ -3,6 +3,7 @@
 // Declarative code
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
@@ -25,6 +26,7 @@ import {
   MockServiceProviderController,
   OidcClientController,
 } from './controllers';
+import { AppModeInterceptor } from './interceptors';
 import { MockServiceProviderService } from './services';
 
 const oidcClientModule = OidcClientModule.register(
@@ -48,6 +50,9 @@ const oidcClientModule = OidcClientModule.register(
     CsrfModule,
   ],
   controllers: [OidcClientController, MockServiceProviderController],
-  providers: [MockServiceProviderService],
+  providers: [
+    MockServiceProviderService,
+    { provide: APP_INTERCEPTOR, useClass: AppModeInterceptor },
+  ],
 })
 export class MockServiceProviderModule {}

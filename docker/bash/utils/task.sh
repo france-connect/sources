@@ -18,17 +18,20 @@ _task_success() {
 }
 
 _task_fail() {
+  local message=${1}
+  local cmd=${2}
+  local exitcode=${3}
 
-  if [ $3 == $__DKS_TASK_RETURN_EXIT_CODE ]; then
+  if [ "$exitcode" == "$__DKS_TASK_RETURN_EXIT_CODE" ]; then
     cat "$__DKS_LAST_LOG_FILE"
   else
     echo $(format_failure "Failed")
-    echo -e "   - command: > $1"
+    echo -e "   - command: > ${cmd}"
     echo "   - result:"
     echo " -------------------------------- "
     cat "$__DKS_LAST_LOG_FILE"
     echo " -------------------------------- "
-    echo -e " * $1: $KO"
+    echo -e "${message}: KO"
     exit 1
   fi
 }

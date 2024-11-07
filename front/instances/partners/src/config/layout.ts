@@ -62,6 +62,10 @@ export const Layout: LayoutConfig = {
       href: '/',
       label: 'Home',
     },
+    {
+      href: '/mock/steps',
+      label: 'Stepper',
+    },
   ],
   service: {
     baseline: 'Espace Partenaires',

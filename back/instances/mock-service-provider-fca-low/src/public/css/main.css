@@ -29,6 +29,25 @@ section.connect {
   height: 22rem;
 }
 
+#modeForm {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+#modeForm .form-check {
+  display: inline-flex;
+  align-items: center;
+}
+
+#modeForm .form-check-input {
+  margin-top: 0;
+}
+
+#modeForm .form-check-label {
+  padding-left: 0.5rem;
+  font-size: 1.6rem;
+}
+
 #scopes .claim-input-wrapper,
 #scopes .scope-input-wrapper,
 #scopes .prompt-input-wrapper {

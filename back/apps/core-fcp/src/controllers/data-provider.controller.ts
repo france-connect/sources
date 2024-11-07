@@ -34,6 +34,12 @@ export class DataProviderController {
     let tokenIntrospection: TokenIntrospectionInterface;
     let trackingContext: TrackedEventContextInterface;
 
+    this.logger.debug({
+      body: req.body,
+      headers: req.headers,
+      query: req.query,
+    });
+
     try {
       await this.dataProviderService.checkRequestValid(body);
 

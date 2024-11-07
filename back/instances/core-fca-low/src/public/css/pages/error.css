@@ -7,3 +7,7 @@
 .error-contact {
   border-top: 1px solid lightgrey;
 }
+
+.error-description-with-white-space {
+  white-space: pre-wrap;
+}

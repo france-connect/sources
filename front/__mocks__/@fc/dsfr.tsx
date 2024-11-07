@@ -4,7 +4,7 @@ export const CheckboxInput = jest.fn(() => <div>CheckboxInput</div>);
 
 export const ToggleInput = jest.fn(() => <div>ToggleInput</div>);
 
-export const LinkComponent = jest.fn(() => <div>LinkComponent</div>);
+export const LinkComponent = jest.fn(({ label }) => <div data-mockid="LinkComponent">{label}</div>);
 
 export const SearchBarComponent = jest.fn(() => <div>SearchBarComponent</div>);
 
@@ -14,6 +14,13 @@ export const PaginationComponent = jest.fn(() => <div>PaginationComponent</div>)
 
 export const LogoRepubliqueFrancaiseComponent = jest.fn(() => (
   <div>LogoRepubliqueFrancaiseComponent</div>
+));
+
+export const CalloutComponent = jest.fn(({ children }) => (
+  <div data-mockid="CalloutComponent">
+    <div>CalloutComponent</div>
+    <div>{children}</div>
+  </div>
 ));
 
 export const AlertComponent = jest.fn(({ children }) => (

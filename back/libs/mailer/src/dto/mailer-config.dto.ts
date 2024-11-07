@@ -27,6 +27,14 @@ export class MailFrom {
   readonly name: string;
 }
 
+export class ReplyTo {
+  @IsEmail()
+  readonly email: string;
+
+  @IsString()
+  readonly name: string;
+}
+
 export class MailTo {
   @IsEmail()
   @NotContains('localhost')
@@ -50,6 +58,10 @@ class SmtpOptions {
 
   @IsBoolean()
   readonly secure: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  readonly rejectUnauthorized?: boolean;
 }
 
 export class MailerConfig {
@@ -66,8 +78,9 @@ export class MailerConfig {
   @ValidateIf(({ transport }) => transport === 'smtp')
   readonly options: SmtpOptions;
 
+  @IsOptional()
   @IsObject()
   @ValidateNested()
   @Type(() => MailFrom)
-  readonly from: MailFrom;
+  readonly from?: MailFrom;
 }

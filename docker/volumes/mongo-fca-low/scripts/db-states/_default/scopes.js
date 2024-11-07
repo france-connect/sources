@@ -69,6 +69,11 @@ db.scopes.update(
   { scope: "idp_acr", fd: "IDENTITY", label: "", __v: 0 },
   { upsert: true },
 );
+db.scopes.update(
+  { scope: "custom" },
+  { scope: "custom", fd: "IDENTITY", label: "", __v: 0 },
+  { upsert: true },
+);
 
 // -- Scopes - Desk
 print("Initializing Desk scopes...");

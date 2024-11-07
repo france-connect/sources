@@ -9,7 +9,7 @@ import { ErrorCode } from '../enums';
 import { CoreFcaBaseException } from './core-fca-base.exception';
 
 @Description(
-  'Le FI est désactivé, si le problème persiste, contacter le support AgentConnect',
+  'Le FI est désactivé, si le problème persiste, contacter le support ProConnect',
 )
 export class CoreFcaAgentIdpDisabledException extends CoreFcaBaseException {
   code = ErrorCode.DISABLED_PROVIDER;

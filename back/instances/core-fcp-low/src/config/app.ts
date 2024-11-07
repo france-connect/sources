@@ -38,4 +38,5 @@ export default {
     'phone_number',
   ],
   showExcludedIdp: env.boolean('SHOW_EXCLUDED_IDP'),
+  environment: env.string('ENVIRONMENT'),
 } as AppConfig;

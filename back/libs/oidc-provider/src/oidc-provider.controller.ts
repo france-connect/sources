@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 
 import { ForbidRefresh } from '@fc/flow-steps';
+import { LoggerService } from '@fc/logger';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService, Session } from '@fc/session';
 
@@ -27,6 +28,7 @@ export class OidcProviderController {
   constructor(
     @Inject(OIDC_PROVIDER_CONFIG_APP_TOKEN)
     private readonly oidcProviderConfigApp: IOidcProviderConfigAppService,
+    private readonly logger: LoggerService,
   ) {}
 
   @Post(OidcProviderRoutes.REDIRECT_TO_SP)
@@ -49,7 +51,15 @@ export class OidcProviderController {
   }
 
   @Post(OidcProviderRoutes.TOKEN)
-  postToken(@Next() next) {
+  postToken(@Next() next, @Req() req) {
+    const { body, query, headers } = req;
+
+    this.logger.debug({
+      body,
+      query,
+      headers,
+    });
+
     // Pass the query to oidc-provider
     return next();
   }
@@ -67,7 +77,14 @@ export class OidcProviderController {
   }
 
   @Get(OidcProviderRoutes.USERINFO)
-  getUserInfo(@Next() next) {
+  getUserInfo(@Next() next, @Req() req) {
+    const { body, query, headers } = req;
+
+    this.logger.debug({
+      body,
+      query,
+      headers,
+    });
     // Pass the query to oidc-provider
     return next();
   }

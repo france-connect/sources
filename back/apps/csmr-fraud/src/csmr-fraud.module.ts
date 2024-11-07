@@ -3,14 +3,22 @@
 // Declarative code
 import { Module } from '@nestjs/common';
 
+import { AsyncLocalStorageModule } from '@fc/async-local-storage';
+import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import { MailerModule } from '@fc/mailer';
 import { RabbitmqModule } from '@fc/rabbitmq';
 
 import { CsmrFraudController } from './controllers';
-import { CsmrFraudService } from './services';
+import { CsmrFraudDataService, CsmrFraudSupportService } from './services';
 
 @Module({
-  imports: [RabbitmqModule.registerFor('Fraud')],
+  imports: [
+    RabbitmqModule.registerFor('Fraud'),
+    MailerModule,
+    AsyncLocalStorageModule,
+    ExceptionsModule.withoutTracking(),
+  ],
   controllers: [CsmrFraudController],
-  providers: [CsmrFraudService],
+  providers: [CsmrFraudSupportService, CsmrFraudDataService],
 })
 export class CsmrFraudModule {}

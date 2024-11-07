@@ -9,13 +9,13 @@ import { LoggerConfig } from '@fc/logger';
 import { MongooseConfig } from '@fc/mongoose';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
-import { AppConfig } from './app-config.dto';
+import { AppRmqConfig } from './app-rmq-config.dto';
 
 export class CsmrUserPreferencesConfig {
   @IsObject()
   @ValidateNested()
-  @Type(() => AppConfig)
-  readonly App: AppConfig;
+  @Type(() => AppRmqConfig)
+  readonly App: AppRmqConfig;
 
   @IsObject()
   @ValidateNested()

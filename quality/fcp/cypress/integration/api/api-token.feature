@@ -52,7 +52,7 @@ Fonctionnalité: API - token
     Quand je lance la requête
     Alors le statut de la réponse est 200
     Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
-    Et le corps de la réponse contient le JWT id_token pour le FS
+    Et le corps de la réponse contient le JWE id_token pour le FS
     Et l'entête du JWE a une propriété "alg" égale à "RSA-OAEP"
     Et l'entête du JWE a une propriété "iss" égale à "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2"
     Et l'entête du JWS a une propriété "alg" égale à "ES256"

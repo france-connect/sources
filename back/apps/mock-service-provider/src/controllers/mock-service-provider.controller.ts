@@ -6,9 +6,11 @@ import {
   Get,
   Post,
   Query,
+  Redirect,
   Render,
   Req,
   Res,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -31,12 +33,13 @@ import {
   SessionNotFoundException,
 } from '@fc/session';
 
-import { AccessTokenParamsDTO, AppConfig, DataApi } from '../dto';
-import { MockServiceProviderRoutes } from '../enums';
+import { AccessTokenParamsDTO, AppConfig, AppSession, DataApi } from '../dto';
+import { AppMode, MockServiceProviderRoutes } from '../enums';
 import {
   MockServiceProviderTokenRevocationException,
   MockServiceProviderUserinfoException,
 } from '../exceptions';
+import { AuthRedirectInterceptor } from '../interceptors';
 import { MockServiceProviderService } from '../services';
 
 @Controller()
@@ -52,8 +55,13 @@ export class MockServiceProviderController {
   ) {}
 
   @Get(MockServiceProviderRoutes.INDEX)
+  @UseInterceptors(AuthRedirectInterceptor)
+  @Redirect(MockServiceProviderRoutes.VERIFY)
+  index() {}
+
+  @Get(MockServiceProviderRoutes.LOGIN)
   @Render('index')
-  async index(
+  async login(
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
@@ -61,7 +69,13 @@ export class MockServiceProviderController {
      */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
+    @Session('App')
+    sessionApp: ISessionService<AppSession>,
   ) {
+    // Get App mode
+    const { mode } = sessionApp.get() || {};
+    const isAdvancedMode = mode === AppMode.ADVANCED;
+
     const { defaultAcrValue } = this.config.get<OidcAcrConfig>('OidcAcr');
 
     // Only one provider is available with `@fc/identity-provider-env`
@@ -81,15 +95,16 @@ export class MockServiceProviderController {
       params,
       authorizationUrl: authorizationUrl,
       defaultAcrValue,
+      isAdvancedMode,
     };
 
     return response;
   }
 
   @Get(MockServiceProviderRoutes.VERIFY)
+  @UseInterceptors(AuthRedirectInterceptor)
   @Render('login-callback')
   getVerify(
-    @Res() res,
     /**
      * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
@@ -99,12 +114,6 @@ export class MockServiceProviderController {
     sessionOidc: ISessionService<OidcClientSession>,
   ) {
     const session = sessionOidc.get();
-
-    // Redirect to the home page if no idpIdentity present in the session
-    if (!session?.idpIdentity) {
-      res.redirect('/');
-    }
-
     const { dataApis } = this.config.get<AppConfig>('App');
 
     const response = {
@@ -269,6 +278,7 @@ export class MockServiceProviderController {
   }
 
   @Post(MockServiceProviderRoutes.USERINFO)
+  @UseInterceptors(AuthRedirectInterceptor)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @Render('login-callback')
   async retrieveUserinfo(
@@ -323,6 +333,7 @@ export class MockServiceProviderController {
   }
 
   @Get(MockServiceProviderRoutes.DATA)
+  @UseInterceptors(AuthRedirectInterceptor)
   async getAllData(
     @Res() res,
     @Session('OidcClient')
@@ -337,7 +348,7 @@ export class MockServiceProviderController {
       return res.redirect(redirect);
     }
 
-    const { idpAccessToken } = sessionOidc.get();
+    const { idpAccessToken, idpIdentity } = sessionOidc.get();
 
     const data = await Promise.all(
       dataApis.map(async (dataApi) => {
@@ -352,6 +363,7 @@ export class MockServiceProviderController {
     const response = {
       titleFront: 'Mock Service Provider - UserData',
       accessToken: idpAccessToken,
+      idpIdentity,
       data,
       dataApiActive: true,
     };

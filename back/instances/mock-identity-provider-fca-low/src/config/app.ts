@@ -27,6 +27,7 @@ export default {
   title: "Fournisseur d'identité de démonstration - FCA-LOW",
   allowCustomIdentity: env.boolean('ALLOW_CUSTOM_IDENTITY'),
   allowBackButton: false,
+  environment: env.string('ENVIRONMENT'),
   identityDto: CustomIdentityDto,
   identityForm: [
     {

@@ -15,4 +15,5 @@ export default {
     cert: env.file('HTTPS_SERVER_CERT', { optional: true }),
   },
   apiAuthSecret: env.string('API_AUTH_SECRET'),
+  environment: env.string('ENVIRONMENT'),
 } as AppConfig;

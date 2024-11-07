@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>
+      Demande de support - signalement usurpation d’identité
+    </title>
+  </head>
+  <body>
+    <p>
+      Bonjour,
+      <br />
+      <br />
+      Une demande de support a été envoyée avec les données ci-dessous.
+    </p>
+    <p>
+      <strong>Nom :</strong> <%= familyName %>
+    </p>
+    <p>
+      <strong>Prénom :</strong> <%= givenName %>
+    </p>
+    <p>
+      <strong>Date de naissance :</strong> <%= birthdate %>
+    </p>
+    <p>
+      <strong>Pays de naissance :</strong> <%= birthcountry %>
+    </p>
+    <p>
+      <strong>Ville de naissance :</strong> <%= birthplace %>
+    </p>
+    <p>
+      <strong>Email de communication :</strong> <%= contactEmail %>
+    </p>
+    <p>
+      <strong>Email du compte FI :</strong> <%= idpEmail %>
+    </p>
+    <% if (typeof phoneNumber !== 'undefined') { %>
+      <p>
+        <strong>Numéro de téléphone :</strong> <%= phoneNumber %>
+      </p>
+    <% } %>
+    <p>
+      <strong>Provenance questionnaire usurpation :</strong> <%= fraudSurveyOrigin %>
+    </p>
+    <p>
+      <strong>Code d’identification de session :</strong> <%= authenticationEventId %>
+    </p>
+    <% if (typeof comment !== 'undefined') { %>
+      <p>
+        <strong>Commentaire de l’usager :</strong> <%= comment %>
+      </p>
+    <% } %>
+  </body>
+</html>

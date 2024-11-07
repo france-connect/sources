@@ -3,6 +3,8 @@ import { DateTime } from 'luxon';
 import { ChainableElement } from '../../common/types';
 
 const DATE_REGEXP = /^\d\d? \S+ \d{4}$/;
+const UUID_V4_REGEXP =
+  /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
 const DATE_TIME_REGEXP =
   /^(\d{2}\/\d{2}\/\d{4}) à (\d\d:\d\d) \(heure de Paris\)$/;
 const LOCATION_REGEXP = /^\w+ \(\w+\)$/;
@@ -104,6 +106,12 @@ export default class UdEventCard {
     );
   }
 
+  getAuthenticationEventIdLabel(): ChainableElement {
+    return this.getCardButton().find(
+      '[data-testid="ConnectionComponent-authentication-event-id"]',
+    );
+  }
+
   getClaimsDateLabel(): ChainableElement {
     return this.getCardButton().find(
       '[data-testid="ClaimsComponent-date-label"]',
@@ -124,6 +132,10 @@ export default class UdEventCard {
 
   checkEventDateIsDisplayed(): void {
     checkLabelIsDisplayed(this.getEventDateLabel(), DATE_REGEXP);
+  }
+
+  checkAuthenticationEventIdIsDisplayed(): void {
+    checkLabelIsDisplayed(this.getAuthenticationEventIdLabel(), UUID_V4_REGEXP);
   }
 
   checkEventDateIsToday(): void {

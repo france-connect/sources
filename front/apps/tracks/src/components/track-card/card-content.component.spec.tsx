@@ -45,11 +45,14 @@ describe('TrackCardContentComponent', () => {
     LUXON_FORMAT_TIMEZONE: 'z',
   };
 
+  const authenticationEventId = 'mock-authentication-event-id';
+
   it('should match snapshot, for connection', () => {
     // when
     const { container } = render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
+        authenticationEventId={authenticationEventId}
         city="cityMock"
         claims={claimsMock}
         country="countryMock"
@@ -71,6 +74,7 @@ describe('TrackCardContentComponent', () => {
     const { container } = render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
+        authenticationEventId={authenticationEventId}
         city="cityMock"
         claims={claimsMock}
         country="countryMock"
@@ -95,6 +99,7 @@ describe('TrackCardContentComponent', () => {
     render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
+        authenticationEventId={authenticationEventId}
         city="cityMock"
         claims={claimsMock}
         country="countryMock"
@@ -112,6 +117,7 @@ describe('TrackCardContentComponent', () => {
 
     expect(ConnectionComponent).toHaveBeenCalledWith(
       {
+        authenticationEventId,
         city: 'cityMock',
         country: 'countryMock',
         datetime: date,
@@ -131,6 +137,7 @@ describe('TrackCardContentComponent', () => {
     render(
       <TrackCardContentComponent
         accessibleId="mock-accessibleId"
+        authenticationEventId={authenticationEventId}
         city="cityMock"
         claims={claimsMock}
         country="countryMock"

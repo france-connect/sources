@@ -71,6 +71,11 @@ export class UserDashboardConfig {
 
   @IsObject()
   @ValidateNested()
+  @Type(() => RabbitmqConfig)
+  readonly FraudBroker: RabbitmqConfig;
+
+  @IsObject()
+  @ValidateNested()
   @Type(() => MailerConfig)
   readonly Mailer: MailerConfig;
 

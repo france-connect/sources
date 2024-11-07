@@ -9,6 +9,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
   ValidateNested,
 } from 'class-validator';
 
@@ -54,6 +55,9 @@ export class TrackDto implements ICsmrTracksOutputTrack {
 
   @IsString()
   interactionAcr: string;
+
+  @IsUUID(4)
+  authenticationEventId: string;
 
   @IsString()
   spLabel: string;

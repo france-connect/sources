@@ -278,6 +278,10 @@ Then(
   },
 );
 
+Then(/^le code d'identification de l'évènement est affiché$/, function () {
+  currentEventCard.checkAuthenticationEventIdIsDisplayed();
+});
+
 Then(
   /^les données "([^"]*)" de l'évènement contiennent "([^"]*)"$/,
   function (dpName: string, claimTitle: string) {

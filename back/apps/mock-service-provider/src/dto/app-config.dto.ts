@@ -3,6 +3,7 @@
 // Declarative code
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -35,4 +36,8 @@ export class AppConfig extends AppGenericConfig {
   @ValidateNested({ each: true })
   @Type(() => DataApi)
   readonly dataApis?: DataApi[];
+
+  @IsOptional()
+  @IsBoolean()
+  readonly allowRevokeToken?: boolean;
 }

@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextAreaInputComponent should match the snapshot 1`] = `
+<div>
+  <form
+    data-testid="form-wrapper"
+  >
+    <div
+      class="fr-input-group"
+    >
+      <label
+        class="fr-label fr-mb-0"
+        for="name"
+      >
+        <b>
+          <span
+            class="fr-h7"
+          >
+            label
+          </span>
+        </b>
+      </label>
+      <div
+        data-mockid="Field"
+      />
+      <div
+        aria-live="assertive"
+        class="fr-messages-group"
+        id="name-messages"
+      />
+    </div>
+  </form>
+</div>
+`;
+
+exports[`TextAreaInputComponent should match the snapshot, with info 1`] = `
+<div>
+  <form
+    data-testid="form-wrapper"
+  >
+    <div
+      class="fr-input-group"
+    >
+      <label
+        class="fr-label fr-mb-0"
+        for="name"
+      >
+        <b>
+          <span
+            class="fr-h7"
+          >
+            label
+          </span>
+        </b>
+      </label>
+      <div
+        data-mockid="Field"
+      />
+      <div
+        aria-live="assertive"
+        class="fr-messages-group"
+        id="name-messages"
+      >
+        <p
+          class="fr-message fr-message--info"
+          id="name-info-desc"
+        >
+          info
+        </p>
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`TextAreaInputComponent should match the snapshot, with maxLength 1`] = `
+<div>
+  <form
+    data-testid="form-wrapper"
+  >
+    <div
+      class="fr-input-group"
+    >
+      <label
+        class="fr-label fr-mb-0"
+        for="name"
+      >
+        <b>
+          <span
+            class="fr-h7"
+          >
+            label
+          </span>
+        </b>
+      </label>
+      <div
+        data-mockid="Field"
+      />
+      <div
+        aria-live="assertive"
+        class="fr-messages-group"
+        id="name-messages"
+      >
+        <p
+          aria-live="polite"
+          class="fr-text--xs fr-mt-1w"
+        >
+          10
+           / 
+          100
+           caractères
+        </p>
+        <p
+          class="fr-message fr-message--info"
+          id="name-info-desc"
+        >
+          info
+        </p>
+      </div>
+    </div>
+  </form>
+</div>
+`;

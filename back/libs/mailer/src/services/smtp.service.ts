@@ -16,6 +16,7 @@ export class SmtpService implements Transport {
       body,
       to,
       from: { name, email },
+      replyTo,
     } = params;
 
     const emailInfo = await this.mailerService.sendMail({
@@ -26,6 +27,12 @@ export class SmtpService implements Transport {
       })) as Address[],
       subject,
       html: body,
+      ...(replyTo && {
+        replyTo: {
+          address: replyTo.email,
+          name: replyTo.name,
+        } as Address,
+      }),
     });
 
     return emailInfo;

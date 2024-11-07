@@ -1,18 +1,20 @@
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
+
+import { redirectToUrl } from '@fc/routing';
 
 import { LayoutHeaderLogoutButton } from './layout-header.logout';
 
 describe('LayoutHeaderLogoutButton', () => {
+  const endSessionUrlMock = 'any endSessionUrl mock';
+
   it('should match the snapshot', () => {
-    // given
-    const endSessionUrlMock = 'any endSessionUrl mock';
-    // when
+    // When
     const { container, getByText } = render(
       <LayoutHeaderLogoutButton endSessionUrl={endSessionUrlMock} />,
     );
     const element = getByText('Se déconnecter');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(element).toBeInTheDocument();
     expect(container.firstChild).toHaveClass('fr-btn fr-icon-logout-box-r-line');
@@ -21,5 +23,21 @@ describe('LayoutHeaderLogoutButton', () => {
       'title',
       'bouton permettant la déconnexion de votre compte',
     );
+  });
+
+  it('should clear the localStorage', () => {
+    // Given
+    const clearSpy = jest.spyOn(Storage.prototype, 'clear');
+
+    // When
+    const { getByText } = render(<LayoutHeaderLogoutButton endSessionUrl={endSessionUrlMock} />);
+
+    const logoutButton = getByText('Se déconnecter');
+    fireEvent.click(logoutButton);
+
+    // Then
+    expect(clearSpy).toHaveBeenCalledOnce();
+    expect(redirectToUrl).toHaveBeenCalledOnce();
+    expect(redirectToUrl).toHaveBeenCalledWith(endSessionUrlMock);
   });
 });

@@ -27,6 +27,7 @@ Fonctionnalité: Historique Connexion sur FranceConnect(v2) (docker)
     Et la localisation de l'évènement n'est pas affichée
     Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
+    Et le code d'identification de l'évènement est affiché
 
   Scénario: Historique Connexion - FranceConnect(v2) - FS public avec scope data
     Etant donné que j'utilise un compte usager "pour les tests de traces"
@@ -47,6 +48,7 @@ Fonctionnalité: Historique Connexion sur FranceConnect(v2) (docker)
     Et la localisation de l'évènement n'est pas affichée
     Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
+    Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du 1er évènement "Échange de Données" sur "FranceConnect" du FS "fsp1-low" avec le FD "DGFIP"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Échange de Données"
@@ -91,6 +93,7 @@ Fonctionnalité: Historique Connexion sur FranceConnect(v2) (docker)
     Et la localisation de l'évènement n'est pas affichée
     Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
+    Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "fsp3-low"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Autorisation"
@@ -128,6 +131,7 @@ Fonctionnalité: Historique Connexion sur FranceConnect(v2) (docker)
     Et la localisation de l'évènement n'est pas affichée
     Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
+    Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "fsp3-low"
     Et la plateforme de l'évènement est "FranceConnect"
     Et le type d'action de l'évènement est "Autorisation"
@@ -187,3 +191,4 @@ Fonctionnalité: Historique Connexion sur FranceConnect(v2) (docker)
     Et la localisation de l'évènement n'est pas affichée
     Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
+    Et le code d'identification de l'évènement est affiché

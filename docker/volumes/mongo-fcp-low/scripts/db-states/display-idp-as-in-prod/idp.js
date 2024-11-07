@@ -75,6 +75,12 @@ const PRODUCTION_IDPS_LOW = {
     title: "France Identité",
     image: "fi-france-identite.svg",
   },
+  TRUSTME: {
+    order: 7,
+    uid: "84b31772-0510-4d98-8ad8-d179919f7305",
+    title: "TrustMe",
+    image: "fi-trustme.svg",
+  },
   AIDANTS_CONNECT: {
     order: 98,
     uid: "3189d655-0c78-4ff7-9758-f3a3ac36dd7e", // should match App_AIDANTS_CONNECT_UID env

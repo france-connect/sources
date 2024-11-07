@@ -34,6 +34,94 @@ Fonctionnalité: Validation Visuelle - User Dashboard
       | tablet landscape |
       | desktop          |
 
+  Plan du Scénario: Validation Visuelle - Connexion usurpation sur <device>
+    Etant donné que j'utilise un compte usager "par défaut"
+    Et que j'utilise un navigateur web sur "<device>"
+    Quand je navigue sur la page de connexion du formulaire usurpation
+    Alors la copie d'écran "udFraudLogin" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Redirection vers le questionnaire fraude sur <device>
+    Etant donné que j'utilise un compte usager "par défaut"
+    Et que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page de connexion du formulaire usurpation
+    Quand je me connecte pour accéder au formulaire usurpation
+    Alors je suis redirigé vers la page formulaire usurpation
+    Et le bouton vers le questionnaire fraude est affiché
+    Et la copie d'écran "udRedirectToFraudSurvey" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Formulaire usurpation sur <device>
+    Etant donné que j'utilise un compte usager "par défaut"
+    Et que j'utilise un navigateur web sur "<device>"
+    Et que je navigue directement vers la page formulaire usurpation avec le paramètre fraudSurveyOrigin égal à "identite-inconnue"
+    Et que je suis redirigé vers la page de connexion du formulaire usurpation
+    Quand je me connecte pour accéder au formulaire usurpation
+    Alors je suis redirigé vers la page formulaire usurpation
+    Et le formulaire usurpation est affiché
+    Et la copie d'écran "udFraudForm" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Confirmation d'envoie du formulaire usurpation sur <device>
+    Etant donné que j'utilise un compte usager "par défaut"
+    Et que j'utilise un navigateur web sur "<device>"
+    Et que je navigue directement vers la page formulaire usurpation avec le paramètre fraudSurveyOrigin égal à "identite-inconnue"
+    Et que je suis redirigé vers la page de connexion du formulaire usurpation
+    Et que je me connecte pour accéder au formulaire usurpation
+    Et que je suis redirigé vers la page formulaire usurpation
+    Et que le formulaire usurpation est affiché
+    Et que j'entre les valeurs par défaut sur le formulaire usurpation
+    Et que je coche la case de consentement du formulaire usurpation
+    Quand je valide le formulaire usurpation
+    Alors la demande de support est prise en compte
+    Et la copie d'écran "udFraudFormSent" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |
+
+  Plan du Scénario: Formulaire usurpation - Erreurs formulaire usurpation
+    Etant donné que j'utilise un compte usager "par défaut"
+    Et que j'utilise un navigateur web sur "<device>"
+    Et que je navigue directement vers la page formulaire usurpation avec le paramètre fraudSurveyOrigin égal à "identite-inconnue"
+    Et que je suis redirigé vers la page de connexion du formulaire usurpation
+    Et que je me connecte pour accéder au formulaire usurpation
+    Et que je suis redirigé vers la page formulaire usurpation
+    Et que le formulaire usurpation est affiché
+    Et que j'entre "bad authentication event id" dans le champ "authenticationEventId" du formulaire usurpation
+    Quand je valide le formulaire usurpation
+    Alors le champ "authenticationEventId" a une erreur "Le code est erroné, veuillez vérifier sa valeur" dans le formulaire usurpation
+    Et le champ "acceptTransmitData" a une erreur "Veuillez cocher cette case si vous souhaitez continuer" dans le formulaire usurpation
+    Et la copie d'écran "udFraudFormError" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |
+
   Plan du Scénario: Validation Visuelle - Préférences FI sur <device>
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que j'utilise un navigateur web sur "<device>"

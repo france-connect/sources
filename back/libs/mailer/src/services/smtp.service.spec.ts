@@ -23,6 +23,10 @@ describe('SmtpService', () => {
       email: 'from@from.fr',
       name: 'from',
     },
+    replyTo: {
+      email: 'reply@to.fr',
+      name: 'replyTo',
+    },
   };
 
   beforeEach(async () => {
@@ -58,6 +62,10 @@ describe('SmtpService', () => {
         from: {
           address: 'from@from.fr',
           name: 'from',
+        },
+        replyTo: {
+          address: 'reply@to.fr',
+          name: 'replyTo',
         },
       };
 

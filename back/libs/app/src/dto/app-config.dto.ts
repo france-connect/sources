@@ -4,6 +4,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsEnum,
   IsIn,
   IsNumber,
   IsOptional,
@@ -13,7 +14,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { ApiContentType } from '../enums';
+import { ApiContentType, Environment } from '../enums';
 
 class HttpsOptions {
   @IsString()
@@ -98,4 +99,8 @@ export class AppConfig {
   @IsOptional()
   @IsString()
   aidantsConnectUid?: string;
+
+  @IsOptional()
+  @IsEnum(Environment)
+  environment?: Environment;
 }

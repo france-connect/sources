@@ -20,6 +20,14 @@ See [CHANGELOG](./CHANGELOG.md)
 
 Before making any request on the code, please read our [HOW TO CONTRIBUTE](./CONTRIBUTING.md). Any request that does not match our contributing policy will be closed without further investigations. As the documentation is likely to change over time, the future, you can find [a specific changelog here](<./CONTRIBUTING.md#Changelog des standards>).
 
+## Getting started
+
+Follow this documentation to start working on the project.
+
+**⚠️ You may not currently have access to all docker images used to start a development stack. We are working on a solution to give access that complies with our security policy.**
+
+See [docker-stack documentation](./docker/_doc/docker-stack.md)
+
 ## Back
 
 See [Backend documentation](./back/_doc/README.md)
@@ -31,8 +39,6 @@ See [Frontend documentation](./front/_doc/README.md)
 ## Docker
 
 See [docker-stack documentation](./docker/_doc/README.md)
-
-**⚠️ You may not currently have access to all docker images used to start a development stack. We are working on a solution to give access that complies with our security policy.**
 
 ## Quality
 

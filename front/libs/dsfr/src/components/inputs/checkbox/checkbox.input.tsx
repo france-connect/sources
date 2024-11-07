@@ -1,5 +1,5 @@
 import React from 'react';
-import { Field } from 'react-final-form';
+import { Field, useField } from 'react-final-form';
 
 import { CheckboxComponent } from './checkbox.component';
 
@@ -15,14 +15,31 @@ interface CheckboxInputProps {
   name: string;
 }
 
+export const validateCheckbox = (value?: boolean) => {
+  const msg = 'Veuillez cocher cette case si vous souhaitez continuer';
+  return !value ? msg : undefined;
+};
+
 export const CheckboxInput = React.memo(
-  ({ disabled = false, hint, initialValue, label, name }: CheckboxInputProps) => (
-    <Field initialValue={initialValue} name={name} type="checkbox">
-      {({ input }) => (
-        <CheckboxComponent disabled={disabled} hint={hint} input={input} label={label} />
-      )}
-    </Field>
-  ),
+  ({ disabled = false, hint, initialValue, label, name }: CheckboxInputProps) => {
+    const metaField = useField(name, { subscription: { error: true, touched: true } });
+
+    const error = metaField.meta.touched && metaField.meta.error;
+
+    return (
+      <Field initialValue={initialValue} name={name} type="checkbox" validate={validateCheckbox}>
+        {({ input }) => (
+          <CheckboxComponent
+            disabled={disabled}
+            error={error}
+            hint={hint}
+            input={input}
+            label={label}
+          />
+        )}
+      </Field>
+    );
+  },
 );
 
 CheckboxInput.displayName = 'CheckboxInput';

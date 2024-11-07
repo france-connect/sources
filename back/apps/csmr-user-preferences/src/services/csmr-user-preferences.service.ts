@@ -11,7 +11,7 @@ import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapt
 import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata, PivotIdentityDto } from '@fc/oidc';
 
-import { AppConfig } from '../dto';
+import { AppRmqConfig } from '../dto';
 import { CsmrUserPreferencesIdpNotFoundException } from '../exceptions';
 import {
   IFormattedIdpList,
@@ -215,7 +215,7 @@ export class CsmrUserPreferencesService {
   }
 
   private async getIdentityProviderList(): Promise<IdentityProviderMetadata[]> {
-    const { aidantsConnectUid } = this.config.get<AppConfig>('App');
+    const { aidantsConnectUid } = this.config.get<AppRmqConfig>('App');
 
     const idpList = await this.identityProvider.getList();
     const filteredIdpList = idpList.filter(

@@ -68,8 +68,6 @@ volumes/
 - create the `<my_application>/stack.yml` file
 
 ```yml
-version: "2.4"
-
 services:
   <my_application>:
     image: alpine
@@ -86,8 +84,6 @@ services:
 - create the application availables services `<my_application>/<my_application>.yml` file
 
 ```yml
-version: "2.4"
-
 services:
   <my_application>-<back/front>:
     hostname: <my_application>-<back/front>
@@ -105,6 +101,7 @@ services:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
     networks:
       - public
+    init: true
     command: "pm2 logs"
 ```
 

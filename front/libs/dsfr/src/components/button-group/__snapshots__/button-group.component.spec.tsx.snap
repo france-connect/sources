@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonGroupComponent should match snapshot with all props 1`] = `
+<div>
+  <ul
+    class="fr-btns-group fr-btns-group--md fr-btns-group--equisized"
+  >
+    <li>
+      <div
+        data-mockid="SimpleButton"
+      />
+    </li>
+    <li>
+      <div
+        data-mockid="SimpleButton"
+      />
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`ButtonGroupComponent should match snapshot with default props 1`] = `
+<div>
+  <ul
+    class="fr-btns-group fr-btns-group--inline-md"
+  >
+    <li>
+      <div
+        data-mockid="SimpleButton"
+      />
+    </li>
+    <li>
+      <div
+        data-mockid="SimpleButton"
+      />
+    </li>
+  </ul>
+</div>
+`;

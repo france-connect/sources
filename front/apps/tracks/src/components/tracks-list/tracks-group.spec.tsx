@@ -20,6 +20,7 @@ describe('tracksGroupComponent', () => {
     LUXON_FORMAT_TIMEZONE: 'mock_LUXON_FORMAT_TIMEZONE',
   };
   const oldestTrack: EnhancedTrackInterface = {
+    authenticationEventId: 'any',
     city: 'any',
     claims: [],
     country: 'any',
@@ -29,10 +30,12 @@ describe('tracksGroupComponent', () => {
     interactionAcr: 'any' as keyof typeof EidasToLabel,
     platform: 'FranceConnect',
     spLabel: 'any',
-    time: 1633042800000, // '2021-10-01T00:00:00.000+01:00',
+    time: 1633042800000,
+    // '2021-10-01T00:00:00.000+01:00',
     trackId: 'oldest track',
   };
   const newestTrack: EnhancedTrackInterface = {
+    authenticationEventId: 'any',
     city: 'any',
     claims: [],
     country: 'any',
@@ -42,7 +45,8 @@ describe('tracksGroupComponent', () => {
     interactionAcr: 'any' as keyof typeof EidasToLabel,
     platform: 'FranceConnect',
     spLabel: 'any',
-    time: 1635721200000, // '2021-11-01T00:00:00.000+01:00',
+    time: 1635721200000,
+    // '2021-11-01T00:00:00.000+01:00',
     trackId: 'newest track',
   };
   const allTracks = [oldestTrack, newestTrack];

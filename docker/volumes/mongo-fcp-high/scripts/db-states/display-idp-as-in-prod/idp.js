@@ -43,6 +43,12 @@ const PRODUCTION_IPDS_HIGH = {
     title: "L’Identité Numérique La Poste",
     image: `fi-laposte.svg`,
   },
+  FRANCE_IDENTITE: {
+    order: 2,
+    uid: "eda17ef8-55a2-45b6-bf3f-e2406240949c",
+    title: "France Identité",
+    image: "fi-france-identite.svg",
+  },
   EIDAS_BRIDGE: {
     order: 99,
     uid: "8aa849db-8402-4f2e-bad9-7471dd21ff94", // same as App_EIDAS_BRIDGE_UID env

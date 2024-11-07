@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { validateDto } from '@fc/common';
+import * as FcCommon from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { CsrfTokenGuard } from '@fc/csrf';
@@ -41,10 +41,12 @@ jest.mock('querystring', () => ({
   encode: jest.fn(),
 }));
 
-jest.mock('@fc/common', () => ({
-  ...jest.requireActual('@fc/common'),
-  validateDto: jest.fn(),
-}));
+// This code make it possible to spyOn on the validateDto function
+jest.mock('@fc/common', () => {
+  return {
+    ...jest.requireActual('@fc/common'),
+  };
+});
 
 describe('OidcClient Controller', () => {
   let controller: OidcClientController;
@@ -88,6 +90,9 @@ describe('OidcClient Controller', () => {
 
   const trackingMock = {
     track: jest.fn(),
+    TrackedEventsMap: {
+      FC_REQUESTED_IDP_USERINFO: Symbol('FC_REQUESTED_IDP_USERINFO'),
+    },
   };
 
   const configMock = {
@@ -119,6 +124,9 @@ describe('OidcClient Controller', () => {
   const identityMock = {
     given_name: 'given_name',
     sub: '1',
+    email: 'complete@identity.fr',
+    usual_name: 'usual_name',
+    uid: 'uid',
   };
 
   const oidcClientSessionDataMock: OidcClientSession = {
@@ -137,6 +145,7 @@ describe('OidcClient Controller', () => {
   const trackingServiceMock: TrackingService = {
     track: jest.fn(),
     TrackedEventsMap: {
+      FC_FQDN_MISSMATCH: Symbol('FC_FQDN_MISSMATCH'),
       IDP_CALLEDBACK: {},
     },
   } as unknown as TrackingService;
@@ -164,6 +173,7 @@ describe('OidcClient Controller', () => {
   const coreFcaFqdnServiceMock = {
     getFqdnFromEmail: jest.fn(),
     getFqdnConfigFromEmail: jest.fn(),
+    isAllowedIdpForEmail: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -633,6 +643,18 @@ describe('OidcClient Controller', () => {
       );
     });
 
+    it('should track fqdn missmatch if detected', async () => {
+      // When
+      await controller.getOidcCallback(req, res, sessionServiceMock);
+
+      // Then
+      expect(trackingServiceMock.track).toHaveBeenCalledTimes(4);
+      expect(trackingServiceMock.track).toHaveBeenCalledWith(
+        trackingServiceMock.TrackedEventsMap.FC_FQDN_MISSMATCH,
+        { req },
+      );
+    });
+
     it('should create an object with cloned values', async () => {
       // Given
       const cloneDeepMock = jest.mocked(cloneDeep);
@@ -658,6 +680,23 @@ describe('OidcClient Controller', () => {
       expect(sessionServiceMock.set).toHaveBeenCalledWith(clonedIdentityMock);
     });
 
+    it('should track empty email.', async () => {
+      // Given
+      oidcClientServiceMock.getUserInfosFromProvider
+        .mockReset()
+        .mockReturnValueOnce({});
+
+      // When
+      await controller.getOidcCallback(req, res, sessionServiceMock);
+
+      // assert
+      expect(trackingServiceMock.track).toHaveBeenCalledTimes(4);
+      expect(trackingServiceMock.track).toHaveBeenCalledWith(
+        trackingServiceMock.TrackedEventsMap.FC_REQUESTED_IDP_USERINFO,
+        { req, fqdn: undefined },
+      );
+    });
+
     it('should redirect user after token and userinfo received and saved', async () => {
       // When
       await controller.getOidcCallback(req, res, sessionServiceMock);
@@ -669,21 +708,25 @@ describe('OidcClient Controller', () => {
   });
 
   describe('validateIdentity()', () => {
-    let validateDtoMock;
     beforeEach(() => {
-      validateDtoMock = jest.mocked(validateDto);
+      jest.spyOn(FcCommon, 'validateDto');
     });
 
-    it('should succeed to validate identity', async () => {
-      // arrange
-      validateDtoMock.mockResolvedValueOnce([]);
+    it('should validate a correct identity', async () => {
+      // When
+      const res = await controller['validateIdentity'](idpIdMock, identityMock);
 
+      // Then
+      expect(res).toBe(true);
+    });
+
+    it('should validate the OidcIdentityDto with correct params', async () => {
       // When
       await controller['validateIdentity'](idpIdMock, identityMock);
 
       // Then
-      expect(validateDtoMock).toHaveBeenCalledTimes(1);
-      expect(validateDtoMock).toHaveBeenCalledWith(
+      expect(FcCommon.validateDto).toHaveBeenCalledTimes(1);
+      expect(FcCommon.validateDto).toHaveBeenCalledWith(
         identityMock,
         OidcIdentityDto,
         {
@@ -695,13 +738,14 @@ describe('OidcClient Controller', () => {
       );
     });
 
-    it('should failed to validate identity', async () => {
-      // arrange
-      validateDtoMock.mockResolvedValueOnce(['Unknown Error']);
+    it('should failed to validate an incorrect identity with missing sub', async () => {
+      // Given
+      const incorrectIdentityMock = { ...identityMock };
+      delete incorrectIdentityMock.sub;
 
       await expect(
         // When
-        controller['validateIdentity'](idpIdMock, identityMock),
+        controller['validateIdentity'](idpIdMock, incorrectIdentityMock),
         // Then
       ).rejects.toThrow(CoreFcaInvalidIdentityException);
     });
@@ -710,6 +754,7 @@ describe('OidcClient Controller', () => {
       const emailIdentity = {
         email: '12345',
       };
+
       const oidcIdentityDto = plainToInstance(OidcIdentityDto, emailIdentity);
       const errors = await validate(oidcIdentityDto, {
         skipMissingProperties: true,
@@ -759,6 +804,35 @@ describe('OidcClient Controller', () => {
       expect(errors[0].constraints.minLength).toContain(
         `siren must be longer than or equal to 1 characters`,
       );
+    });
+
+    it('should validate an identity with custom properties', async () => {
+      // Given
+      const identityMockWithCustomProperties = {
+        ...identityMock,
+        unknownField: 'a custom field',
+        anotherField: 'another custom field',
+      };
+
+      // When
+      const res = await controller['validateIdentity'](
+        idpIdMock,
+        identityMockWithCustomProperties,
+      );
+
+      // Then
+      expect(FcCommon.validateDto).toHaveBeenCalledTimes(1);
+      expect(FcCommon.validateDto).toHaveBeenCalledWith(
+        identityMockWithCustomProperties,
+        OidcIdentityDto,
+        {
+          forbidNonWhitelisted: true,
+          forbidUnknownValues: true,
+          whitelist: true,
+        },
+        { excludeExtraneousValues: true },
+      );
+      expect(res).toBe(true);
     });
   });
 });

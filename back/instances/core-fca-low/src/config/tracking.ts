@@ -40,6 +40,12 @@ export default {
       event: 'FC_REDIRECTED_TO_HINTED_IDP',
     },
 
+    FC_REDIRECT_TO_IDP: {
+      step: '2.2.0',
+      category: EventsCategories.BACK_CINEMATIC,
+      event: 'FC_REDIRECT_TO_IDP',
+    },
+
     IDP_CHOSEN: {
       step: '3.0.0',
       category: EventsCategories.FRONT_CINEMATIC,
@@ -92,6 +98,12 @@ export default {
       step: '5.2.0',
       category: EventsCategories.FRONT_CINEMATIC,
       event: 'FC_IDP_BLACKLISTED',
+    },
+
+    FC_FQDN_MISSMATCH: {
+      step: '6.0.0',
+      category: EventsCategories.FRONT_CINEMATIC,
+      event: 'FC_FQDN_MISSMATCH',
     },
 
     FC_REDIRECTED_TO_SP: {

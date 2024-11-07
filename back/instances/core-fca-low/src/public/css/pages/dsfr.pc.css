@@ -1,0 +1,41 @@
+/* CUSTOMIZE CALLOUT BORDER COLOR */
+.ac-callout {
+  background-image: linear-gradient(
+    0deg,
+    var(--text-title-blue-france),
+    var(--text-title-blue-france)
+  ) !important;
+}
+/* CUSTOMIZE CALLOUT ICON */
+.ac-icon-information-line:after,
+.ac-icon-information-line:before {
+  color: var(--text-title-blue-france);
+  -webkit-mask-image: url(/icons/others/lightbulb-line.svg) !important;
+  mask-image: url(/icons/others/lightbulb-line.svg) !important;
+  mask-repeat: no-repeat;
+}
+
+/* -----------------------------------------------------------------
+
+  CUSTOMISE ICON NOTICE COMPONENT - it's a temporary handover between AC and PC
+
+----------------------------------------------------------------- */
+
+.ac-notice--info
+  .ac-notice__title:not([class^='fr-icon-']):not([class*=' fr-icon-']):not(
+    [class^='fr-fi-']
+  ):not([class*=' fr-fi-']):before {
+  -webkit-mask-image: url(/icons/weather/flashlight-fill.svg) !important;
+  mask-image: url(/icons/weather/flashlight-fill.svg) !important;
+  mask-repeat: no-repeat;
+}
+
+/* -----------------------------------------------------------------
+
+  OVERRIDES
+
+----------------------------------------------------------------- */
+
+.fr-footer__bottom-link {
+  white-space: nowrap;
+}

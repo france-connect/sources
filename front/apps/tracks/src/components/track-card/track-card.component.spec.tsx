@@ -43,6 +43,7 @@ describe('TrackCardComponent', () => {
   };
 
   const track: EnhancedTrackInterface = {
+    authenticationEventId: 'mock-authentication-event-id',
     city: 'mock-city',
     claims: [claims1, claims2],
     country: 'mock-country',
@@ -52,7 +53,8 @@ describe('TrackCardComponent', () => {
     interactionAcr: 'eidas1' as keyof typeof EidasToLabel,
     platform: 'FranceConnect',
     spLabel: 'mock-spLabel',
-    time: 1633042800000, // '2021-10-01T00:00:00.000+01:00'
+    time: 1633042800000,
+    // '2021-10-01T00:00:00.000+01:00'
     trackId: 'mock-track-id',
   };
 
@@ -120,6 +122,7 @@ describe('TrackCardComponent', () => {
       expect(TrackCardContentComponent).toHaveBeenCalledWith(
         {
           accessibleId: `track::card::${track.trackId}`,
+          authenticationEventId: track.authenticationEventId,
           city: 'mock-city',
           claims: [claims1, claims2],
           country: 'mock-country',

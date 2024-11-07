@@ -1,0 +1,129 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextInputComponent should match the snapshot 1`] = `
+<div>
+  <form
+    data-testid="form-wrapper"
+  >
+    <div
+      class="fr-input-group"
+    >
+      <label
+        class="fr-label fr-mb-0"
+        for="name"
+      >
+        <b>
+          <span
+            class="fr-h7"
+          >
+            label*
+          </span>
+        </b>
+        <span
+          class="fr-hint-text"
+        >
+          description
+        </span>
+      </label>
+      <div
+        data-mockid="Field"
+      />
+      <div
+        aria-live="assertive"
+        class="fr-messages-group"
+        id="name-messages"
+      />
+    </div>
+  </form>
+</div>
+`;
+
+exports[`TextInputComponent should match the snapshot, with info 1`] = `
+<div>
+  <form
+    data-testid="form-wrapper"
+  >
+    <div
+      class="fr-input-group"
+    >
+      <label
+        class="fr-label fr-mb-0"
+        for="name"
+      >
+        <b>
+          <span
+            class="fr-h7"
+          >
+            label*
+          </span>
+        </b>
+        <span
+          class="fr-hint-text"
+        >
+          description
+        </span>
+      </label>
+      <div
+        data-mockid="Field"
+      />
+      <div
+        aria-live="assertive"
+        class="fr-messages-group"
+        id="name-messages"
+      >
+        <p
+          class="fr-message fr-message--info"
+          id="name-info-desc"
+        >
+          info
+        </p>
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`TextInputComponent should match the snapshot, with validation error 1`] = `
+<div>
+  <form
+    data-testid="form-wrapper"
+  >
+    <div
+      class="fr-input-group fr-input-group--error"
+    >
+      <label
+        class="fr-label fr-mb-0"
+        for="name"
+      >
+        <b>
+          <span
+            class="fr-h7"
+          >
+            label*
+          </span>
+        </b>
+        <span
+          class="fr-hint-text"
+        >
+          description
+        </span>
+      </label>
+      <div
+        data-mockid="Field"
+      />
+      <div
+        aria-live="assertive"
+        class="fr-messages-group"
+        id="name-messages"
+      >
+        <p
+          class="fr-message fr-message--error"
+          id="name-error-desc"
+        >
+          error
+        </p>
+      </div>
+    </div>
+  </form>
+</div>
+`;

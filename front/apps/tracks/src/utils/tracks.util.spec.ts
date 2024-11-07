@@ -37,6 +37,7 @@ const claims2: RichClaimInterface = {
 // Fixtures
 const dateTrack1 = 1317826080000; // '2011-10-05T14:48:00.000Z'
 const track1: EnhancedTrackInterface = {
+  authenticationEventId: 'e33b8838-111a-4654-8f53-61b1ad4a9ce5',
   city: 'Acme City',
   claims: [claims1, claims2],
   country: 'Acme Country',
@@ -52,13 +53,14 @@ const track1: EnhancedTrackInterface = {
 
 const dateTrack2 = 1317912480000; // '2011-10-06T14:48:00.000Z'
 const track2: EnhancedTrackInterface = {
+  authenticationEventId: '9668373d-f14f-4bce-a0c9-6fc57a3fda06',
   city: 'Acme City',
   claims: [],
   country: 'Acme Country',
   datetime: DateTime.fromMillis(dateTrack2, { zone: 'Europe/Paris' }),
   event: 'FC_REQUESTED_IDP_USERINFO' as CinematicEvents,
-  idpLabel: 'Ameli',
 
+  idpLabel: 'Ameli',
   interactionAcr: 'eidas1' as keyof typeof EidasToLabel,
   platform: 'FranceConnect+',
   spLabel: 'Acme Service Provider',
@@ -68,6 +70,7 @@ const track2: EnhancedTrackInterface = {
 
 const dateTrack3 = 1349448480000; // '2012-10-05T14:48:00.000Z'
 const track3: EnhancedTrackInterface = {
+  authenticationEventId: '674d41c1-88ae-45f7-85a7-e4158ddd6ebc',
   city: 'Acme City',
   claims: [claims1, claims2],
   country: 'Acme Country',

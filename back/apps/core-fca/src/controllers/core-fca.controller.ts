@@ -34,7 +34,7 @@ import {
   GetInteractionOidcClientSessionDto,
   GetVerifyOidcClientSessionDto,
 } from '../dto';
-import { CoreFcaVerifyService } from '../services';
+import { CoreFcaFqdnService, CoreFcaVerifyService } from '../services';
 
 @Controller()
 export class CoreFcaController {
@@ -47,6 +47,7 @@ export class CoreFcaController {
     private readonly config: ConfigService,
     private readonly notifications: NotificationsService,
     private readonly coreAcr: CoreAcrService,
+    private readonly fqdnService: CoreFcaFqdnService,
     private readonly coreFcaVerify: CoreFcaVerifyService,
     private readonly coreVerify: CoreVerifyService,
     private readonly tracking: TrackingService,
@@ -77,7 +78,7 @@ export class CoreFcaController {
     @Session('OidcClient', GetInteractionOidcClientSessionDto)
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
-    const { spName, stepRoute } = sessionOidc.get();
+    const { spName, stepRoute, login_hint: email } = sessionOidc.get();
 
     const { params } = await this.oidcProvider.getInteraction(req, res);
     const { acr_values: acrValues, scope: spScope } = params;
@@ -112,7 +113,8 @@ export class CoreFcaController {
     const isRefresh = stepRoute === CoreRoutes.INTERACTION;
 
     if (!isRefresh) {
-      const trackingContext: TrackedEventContextInterface = { req };
+      const fqdn = this.fqdnService.getFqdnFromEmail(email ?? '');
+      const trackingContext: TrackedEventContextInterface = { req, fqdn };
       const { FC_SHOWED_IDP_CHOICE } = this.tracking.TrackedEventsMap;
       await this.tracking.track(FC_SHOWED_IDP_CHOICE, trackingContext);
     }

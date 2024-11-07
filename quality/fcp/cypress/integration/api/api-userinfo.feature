@@ -20,7 +20,7 @@ Fonctionnalité: API - userinfo
     Alors le statut de la réponse est 200
     Et l'entête de la réponse a une propriété "content-type" contenant "application/jwt"
     Et l'entête de la réponse n'a pas de propriété "set-cookie"
-    Et le corps de la réponse contient le JWT userinfo pour le FS
+    Et le corps de la réponse contient le JWE userinfo pour le FS
     Et l'entête du JWE a une propriété "alg" égale à "RSA-OAEP"
     Et l'entête du JWE a une propriété "iss" égale à "https://core-fcp-high.docker.dev-franceconnect.fr/api/v2"
     Et l'entête du JWS a une propriété "alg" égale à "ES256"

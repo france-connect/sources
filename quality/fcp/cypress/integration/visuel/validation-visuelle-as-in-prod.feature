@@ -42,3 +42,20 @@ Fonctionnalité: Validation Visuelle - Production
       | tablet portrait  |
       | tablet landscape |
       | desktop          |
+  
+  @userDashboard
+  Plan du Scénario: Validation Visuelle - Préférences FI sur <device>
+    Etant donné que j'utilise un compte usager "pour le test de préférences FI"
+    Et que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Et que je me connecte au tableau de bord usager
+    Et que je suis redirigé vers la page historique du tableau de bord usager
+    Quand je navigue directement vers la page gestion des accès du tableau de bord usager
+    Alors la copie d'écran "udPreferences" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |

@@ -26,6 +26,7 @@ export default {
   title: "Fournisseur d'identité de démonstration - FCP-HIGH",
   allowCustomIdentity: env.boolean('ALLOW_CUSTOM_IDENTITY'),
   allowBackButton: true,
+  environment: env.string('ENVIRONMENT'),
   identityDto: CustomIdentityDto,
   identityForm: [
     {

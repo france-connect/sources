@@ -30,4 +30,5 @@ export interface ICsmrTracksOutputTrack {
   spLabel: string;
   time: number;
   trackId: string;
+  authenticationEventId: string;
 }

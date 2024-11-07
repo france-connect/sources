@@ -48,6 +48,16 @@ exports[`ConnectionComponent should match snapshot, with default props 1`] = `
         Faible
       </strong>
     </li>
+    <li>
+      <span>
+        Code d’identification : 
+      </span>
+      <strong
+        data-testid="ConnectionComponent-authentication-event-id"
+      >
+        mock-authentication-event-id
+      </strong>
+    </li>
   </ul>
 </div>
 `;

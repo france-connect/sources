@@ -10,11 +10,20 @@ type TrackCardConnectionProps = {
   datetime: DateTime;
   idpLabel: string;
   interactionAcr: keyof typeof EidasToLabel;
+  authenticationEventId: string;
   options: TracksConfig;
 };
 
 export const ConnectionComponent = React.memo(
-  ({ city, country, datetime, idpLabel, interactionAcr, options }: TrackCardConnectionProps) => {
+  ({
+    authenticationEventId,
+    city,
+    country,
+    datetime,
+    idpLabel,
+    interactionAcr,
+    options,
+  }: TrackCardConnectionProps) => {
     const formattedTime = datetime
       .setZone('Europe/Paris')
       .setLocale('fr')
@@ -44,6 +53,12 @@ export const ConnectionComponent = React.memo(
           <span>Niveau de garantie eIDAS&nbsp;:&nbsp;</span>
           <strong data-testid="ConnectionComponent-eidas-label">
             {EidasToLabel[interactionAcr]}
+          </strong>
+        </li>
+        <li>
+          <span>Code d’identification&nbsp;:&nbsp;</span>
+          <strong data-testid="ConnectionComponent-authentication-event-id">
+            {authenticationEventId}
           </strong>
         </li>
       </ul>

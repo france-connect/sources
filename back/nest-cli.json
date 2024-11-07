@@ -151,9 +151,7 @@
       "compilerOptions": {
         "tsConfigPath": "instances/mock-service-provider-fcp-high/tsconfig.app.json",
         "assets": [
-          "../../../apps/mock-service-provider/src/public/css/main.css",
-          "../../../apps/mock-service-provider/src/views/error.ejs",
-          "../../../apps/mock-service-provider/src/views/success-revoke-token.ejs",
+          "../../../apps/mock-service-provider/**/*.js",
           "../../../apps/mock-service-provider/**/*.ejs",
           "../../../apps/mock-service-provider/**/*.css",
           "../../../apps/mock-service-provider/**/*.svg",
@@ -174,9 +172,7 @@
       "compilerOptions": {
         "tsConfigPath": "instances/mock-service-provider-fca-low/tsconfig.app.json",
         "assets": [
-          "../../../apps/mock-service-provider/src/public/css/main.css",
-          "../../../apps/mock-service-provider/src/views/error.ejs",
-          "../../../apps/mock-service-provider/src/views/success-revoke-token.ejs",
+          "../../../apps/mock-service-provider/**/*.js",
           "../../../apps/mock-service-provider/**/*.ejs",
           "../../../apps/mock-service-provider/**/*.css",
           "../../../apps/mock-service-provider/**/*.svg",
@@ -197,9 +193,7 @@
       "compilerOptions": {
         "tsConfigPath": "instances/mock-service-provider-fcp-low/tsconfig.app.json",
         "assets": [
-          "../../../apps/mock-service-provider/src/public/css/main.css",
-          "../../../apps/mock-service-provider/src/views/error.ejs",
-          "../../../apps/mock-service-provider/src/views/success-revoke-token.ejs",
+          "../../../apps/mock-service-provider/**/*.js",
           "../../../apps/mock-service-provider/**/*.ejs",
           "../../../apps/mock-service-provider/**/*.css",
           "../../../apps/mock-service-provider/**/*.svg",
@@ -220,9 +214,7 @@
       "compilerOptions": {
         "tsConfigPath": "instances/mock-service-provider-fcp-legacy/tsconfig.app.json",
         "assets": [
-          "../../../apps/mock-service-provider/src/public/css/main.css",
-          "../../../apps/mock-service-provider/src/views/error.ejs",
-          "../../../apps/mock-service-provider/src/views/success-revoke-token.ejs",
+          "../../../apps/mock-service-provider/**/*.js",
           "../../../apps/mock-service-provider/**/*.ejs",
           "../../../apps/mock-service-provider/**/*.css",
           "../../../apps/mock-service-provider/**/*.svg",
@@ -350,7 +342,10 @@
       "entryFile": "main",
       "sourceRoot": "instances/csmr-fraud-instance/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/csmr-fraud-instance/tsconfig.app.json"
+        "tsConfigPath": "instances/csmr-fraud-instance/tsconfig.app.json",
+        "assets": [
+          "../../../instances/csmr-fraud-instance/**/*.ejs"
+        ]
       }
     },
     "rnipp": {
@@ -891,6 +886,15 @@
       "sourceRoot": "libs/tracks/src",
       "compilerOptions": {
         "tsConfigPath": "libs/tracks/tsconfig.lib.json"
+      }
+    },
+    "csmr-fraud-client": {
+      "type": "library",
+      "root": "libs/csmr-fraud-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/csmr-fraud-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csmr-fraud-client/tsconfig.lib.json"
       }
     },
     "hybridge-http-proxy": {

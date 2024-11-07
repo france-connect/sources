@@ -21,4 +21,5 @@ export default {
   },
   fqdn: process.env.FQDN,
   idpId: env.string('IDP_ID'),
+  environment: env.string('ENVIRONMENT'),
 } as AppConfig;

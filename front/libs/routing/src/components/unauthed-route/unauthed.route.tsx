@@ -18,9 +18,8 @@ export const UnauthedRoute = React.memo(
     }
 
     if (connected) {
-      const { pathname } = location;
       const navigateTo = typeof fallback === 'function' ? fallback(location) : fallback;
-      return <Navigate replace={!!replace} state={{ from: pathname }} to={navigateTo} />;
+      return <Navigate replace={!!replace} state={{ from: location }} to={navigateTo} />;
     }
 
     return <Outlet />;

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "./scripts/prepare.sh"
+source "./scripts/functions.sh"
 source "./scripts/utils.sh"
 
 # ---------------------------------------
@@ -11,6 +11,7 @@ source "./scripts/utils.sh"
 check_app_argument_exists "$1"
 copy_dsfr_files "$1"
 build_and_copy_fc_stylesheet_to_instances_public_folder "$1"
+generate_18n_files "$1"
 
 INSTANCE_FOLDER="./instances/$1"
 if [ -d "$INSTANCE_FOLDER/build" ]; then

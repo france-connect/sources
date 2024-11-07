@@ -117,6 +117,7 @@ describe('TracksLegacyFormatter', () => {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           type_action: 'typeAction',
           claims: 'claims',
+          cinematicID: 'authenticationEventId',
         },
       } as unknown as SearchHit<ICsmrTracksLegacyFieldsData>;
 
@@ -135,6 +136,7 @@ describe('TracksLegacyFormatter', () => {
         claims: getClaimsGroupsMockResult,
         platform: Platform.FCP_LOW,
         trackId: 'trackId',
+        authenticationEventId: 'authenticationEventId',
       });
     });
 
@@ -154,6 +156,7 @@ describe('TracksLegacyFormatter', () => {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           type_action: 'typeAction',
           claims: 'claims',
+          cinematicID: 'authenticationEventId',
         },
       } as unknown as SearchHit<ICsmrTracksLegacyFieldsData>;
 

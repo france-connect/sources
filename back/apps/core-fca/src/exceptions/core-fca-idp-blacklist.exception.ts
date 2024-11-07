@@ -9,7 +9,7 @@ import { ErrorCode } from '../enums';
 import { CoreFcaBaseException } from './core-fca-base.exception';
 
 @Description(
-  "Le fournisseur d'identité utilisé par l'usager n'est pas autorisé pour ce FS. Cela peut se produire uniquement lorsque l'on a ajouté le FI dans la blacklist du FS. L'utilisateur doit recommencer sa cinématique. Si le problème persiste, contacter le support AgentConnect",
+  "Le fournisseur d'identité utilisé par l'usager n'est pas autorisé pour ce FS. Cela peut se produire uniquement lorsque l'on a ajouté le FI dans la blacklist du FS. L'utilisateur doit recommencer sa cinématique. Si le problème persiste, contacter le support ProConnect",
 )
 export class CoreFcaAgentIdpBlacklistedException extends CoreFcaBaseException {
   code = ErrorCode.PROVIDER_BLACKLISTED_OR_NON_WHITELISTED;
@@ -18,7 +18,7 @@ export class CoreFcaAgentIdpBlacklistedException extends CoreFcaBaseException {
   illustration = 'access-restricted-error';
   title = 'Accès impossible';
   description =
-    'Nous rencontrons des difficultés pour vous identifier. En attendant, vous pouvez créer un compte sur le site sans passer par le bouton AgentConnect';
+    'Nous rencontrons des difficultés pour vous identifier. En attendant, vous pouvez créer un compte sur le site sans passer par le bouton ProConnect';
 
   public displayContact = true;
   public contactMessage =

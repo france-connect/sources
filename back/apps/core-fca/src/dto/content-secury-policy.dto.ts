@@ -20,4 +20,8 @@ export class ContentSecurityPolicy {
   @IsArray()
   @IsString({ each: true })
   frameAncestors: string[];
+
+  @IsArray()
+  @IsString({ each: true })
+  imgSrc: string[];
 }

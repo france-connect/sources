@@ -11,6 +11,7 @@ export default {
       platform: true,
       eidasBridgeUid: true,
       aidantsConnectUid: true,
+      environment: true,
     },
   },
 } as ConfigConfig;

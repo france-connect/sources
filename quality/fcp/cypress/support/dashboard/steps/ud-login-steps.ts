@@ -30,7 +30,7 @@ Then(
 );
 
 Then(
-  /^le message d'alerte "session expirée" (est|n'est pas) affiché$/,
+  /^le message d'alerte "session expirée" (est|n'est pas) affiché sur la page d'accueil$/,
   function (text) {
     const isDisplayed = text === 'est';
     udLoginPage.checkIsExpiredSessionAlertDisplayed(isDisplayed);
@@ -55,7 +55,6 @@ When('je me connecte au tableau de bord usager', function () {
     IDP_DESCRIPTION,
   );
   new ConnectionWorkflow(this.env, serviceProvider)
-    .init()
     .start()
     .selectIdentityProvider(identityProvider)
     .login(this.user)

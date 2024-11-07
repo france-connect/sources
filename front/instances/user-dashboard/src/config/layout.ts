@@ -66,6 +66,10 @@ export const Layout: LayoutConfig = {
       href: '/preferences',
       label: 'Gérer mes accès',
     },
+    {
+      href: '/fraud/form',
+      label: 'Signaler une usurpation',
+    },
   ],
   service: {
     homepage: '/',

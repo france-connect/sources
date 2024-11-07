@@ -14,18 +14,13 @@
       "phone",
       "chorusdt",
       "idp_id",
-      "idp_acr"
+      "idp_acr",
+      "custom"
     ]
   },
   {
     "type": "obligatoires",
-    "scopes": [
-      "openid",
-      "uid",
-      "given_name",
-      "usual_name",
-      "email"
-    ]
+    "scopes": ["openid", "uid", "given_name", "usual_name", "email"]
   },
   {
     "type": "obligatoires et siren/siret",
@@ -64,41 +59,19 @@
   },
   {
     "type": "obligatoires et idp_id",
-    "scopes": [
-      "openid",
-      "uid",
-      "given_name",
-      "usual_name",
-      "email",
-      "idp_id"
-    ]
+    "scopes": ["openid", "uid", "given_name", "usual_name", "email", "idp_id"]
   },
   {
     "type": "obligatoires et idp_acr",
-    "scopes": [
-      "openid",
-      "uid",
-      "given_name",
-      "usual_name",
-      "email",
-      "idp_acr"
-    ]
+    "scopes": ["openid", "uid", "given_name", "usual_name", "email", "idp_acr"]
   },
   {
     "type": "obligatoires sans openid",
-    "scopes": [
-      "uid",
-      "given_name",
-      "usual_name",
-      "email"
-    ]
+    "scopes": ["uid", "given_name", "usual_name", "email"]
   },
   {
     "type": "chorusdt",
-    "scopes": [
-      "openid",
-      "chorusdt"
-    ]
+    "scopes": ["openid", "chorusdt"]
   },
   {
     "type": "email avec scope inconnu",
@@ -114,18 +87,10 @@
   },
   {
     "type": "vide",
-    "scopes": [
-    ]
+    "scopes": []
   },
   {
     "type": "obligatoires et groups",
-    "scopes": [
-      "openid",
-      "uid",
-      "given_name",
-      "usual_name",
-      "email",
-      "groups"
-    ]
+    "scopes": ["openid", "uid", "given_name", "usual_name", "email", "groups"]
   }
 ]

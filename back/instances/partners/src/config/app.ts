@@ -17,4 +17,5 @@ export default {
   fqdn: env.string('FQDN'),
   timezone: 'Europe/Paris',
   agentConnectIdpHint: env.string('IDP_ID'),
+  environment: env.string('ENVIRONMENT'),
 } as AppConfig;

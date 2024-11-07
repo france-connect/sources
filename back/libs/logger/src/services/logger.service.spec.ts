@@ -20,6 +20,7 @@ describe('LoggerService', () => {
     threshold: 'debug',
     stdoutLevels: ['notice', 'info', 'debug'],
     stderrLevels: ['emerg', 'alert', 'crit', 'err', 'warning'],
+    environment: 'DEVELOPMENT',
   };
   const configServiceMock = getConfigMock();
   const loggerMock = getLoggerMock();
@@ -341,14 +342,13 @@ describe('LoggerService', () => {
       jest.clearAllMocks();
       service['logWithContext'] = jest.fn();
     });
+    // Given
+    const level = LogLevels.DEBUG;
+    const message = 'test message';
+    const obj = { test: 'test' };
+    const args = ['arg1', 'arg2'];
 
-    it('should call the pino logger with the correct level, object and message with arguments', () => {
-      // Given
-      const level = LogLevels.DEBUG;
-      const message = 'test message';
-      const obj = { test: 'test' };
-      const args = ['arg1', 'arg2'];
-
+    it('should call the pino logger with the correct level, object and message with arguments if env is allowed to debug', () => {
       // When
       service[level](obj, message, ...args);
 
@@ -360,6 +360,28 @@ describe('LoggerService', () => {
         message,
         ...args,
       );
+    });
+
+    it('should NOT call the pino logger with the correct level, object and message with arguments if env is NOT allowed to debug', () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({ environment: 'PRODUCTION' });
+
+      // When
+      service[level](obj, message, ...args);
+
+      // Then
+      expect(service['logWithContext']).not.toHaveBeenCalled();
+    });
+
+    it('should NOT call the pino logger with the correct level, object and message with arguments if env is NOT set or to an unknown value', () => {
+      // Given
+      configServiceMock.get.mockReturnValueOnce({ environment: 'random' });
+
+      // When
+      service[level](obj, message, ...args);
+
+      // Then
+      expect(service['logWithContext']).not.toHaveBeenCalled();
     });
   });
 

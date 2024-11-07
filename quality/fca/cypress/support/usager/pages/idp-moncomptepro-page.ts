@@ -13,6 +13,6 @@ export default class IdpMonCompteProPage {
   }
 
   selectPrivateOrganization(): void {
-    cy.get('#submit-join-organization-443').click();
+    cy.get('#submit-join-organization-49').click();
   }
 }

@@ -29,6 +29,12 @@ export class DataProviderController {
     let jwt: string;
     let tokenIntrospection: TokenIntrospectionInterface;
 
+    this.logger.debug({
+      body: req.body,
+      headers: req.headers,
+      query: req.query,
+    });
+
     try {
       await this.dataProviderService.checkRequestValid(body);
 

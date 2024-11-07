@@ -22,6 +22,7 @@ Fonctionnalité: Historique Connexion sur FC Legacy (docker)
     Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW - NO DISCOVERY"
     Et le niveau de sécurité de l'évènement est "Faible"
+    Et le code d'identification de l'évènement est affiché
 
   Scénario: Historique Connexion - FC Legacy - FS privé avec scope data
     Etant donné que j'utilise un compte usager "pour les tests de traces"

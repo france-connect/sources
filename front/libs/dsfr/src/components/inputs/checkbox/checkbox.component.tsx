@@ -1,3 +1,4 @@
+import classnames from 'classnames';
 import React from 'react';
 import type { FieldInputProps } from 'react-final-form';
 
@@ -9,11 +10,16 @@ interface CheckboxComponentProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   input: FieldInputProps<any, HTMLElement>;
   label: string;
+  error?: string;
 }
 
 export const CheckboxComponent = React.memo(
-  ({ disabled = false, hint, input, label }: CheckboxComponentProps) => (
-    <div className="fr-checkbox-group">
+  ({ disabled = false, error, hint, input, label }: CheckboxComponentProps) => (
+    <div
+      className={classnames('fr-checkbox-group', {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'fr-checkbox-group--error': !!error,
+      })}>
       <input
         {...input}
         data-testid="field-checkbox-input"
@@ -25,6 +31,11 @@ export const CheckboxComponent = React.memo(
         {label}
         {hint && <span className="fr-hint-text">{hint}</span>}
       </label>
+      {!!error && (
+        <p className="fr-message fr-message--error" id={`${input.name}-error-desc`}>
+          {error}
+        </p>
+      )}
     </div>
   ),
 );

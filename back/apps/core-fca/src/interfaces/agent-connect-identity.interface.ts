@@ -18,6 +18,7 @@ export interface IAgentIdentity {
   phone_number?: string;
   'chorusdt:societe'?: string;
   'chorusdt:matricule'?: string;
+  custom?: unknown;
 }
 
 export interface IAgentIdentityWithPublicness extends IAgentIdentity {

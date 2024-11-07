@@ -159,6 +159,8 @@
       "@fc/data-provider-core-auth/*": ["libs/data-provider-core-auth/src/*"],
       "@fc/tracks": ["libs/tracks/src"],
       "@fc/tracks/*": ["libs/tracks/src/*"],
+      "@fc/csmr-fraud-client": ["libs/csmr-fraud-client/src"],
+      "@fc/csmr-fraud-client/*": ["libs/csmr-fraud-client/src/*"],
       "@fc/hybridge-http-proxy": ["libs/hybridge-http-proxy/src"],
       "@fc/hybridge-http-proxy/*": ["libs/hybridge-http-proxy/src/*"],
       "@fc/user-preferences": ["libs/user-preferences/src"],

@@ -1,20 +1,25 @@
 import { defineConfig } from 'cypress';
 
 import pluginConfig from './cypress/plugins';
-import baseConfig from './cypress-fcp-high-base.config';
+import baseConfig from './cypress-base.config';
 
 export default defineConfig({
   ...baseConfig,
   e2e: {
     ...baseConfig.e2e,
     async setupNodeEvents(on, config) {
-      return await pluginConfig(on, config, false);
+      return await pluginConfig(on, config);
     },
     specPattern:
       'cypress/integration/{accessibilité,api,usager,exploitation}/*.feature',
   },
   env: {
     ...baseConfig.env,
+    // Other Configuration
+    LOG_FILE_PATH: '../../docker/volumes/log/core-fcp-high.log',
+    // Base Configuration
+    PLATFORM: 'fcp-high',
     TAGS: '@fcpHigh and not @ignoreHigh',
+    TEST_ENV: 'docker',
   },
 });

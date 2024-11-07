@@ -37,7 +37,7 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
     this.logger.debug('formatTracks from Legacy');
     try {
       const { _id: trackId, _source } = rawTrack;
-      const { fs_label: spLabel } = _source;
+      const { fs_label: spLabel, cinematicID: authenticationEventId } = _source;
       const time = new Date(_source.time).getTime();
 
       /**
@@ -60,6 +60,7 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
         country,
         city,
         claims,
+        authenticationEventId,
         platform: Platform.FCP_LOW,
         trackId,
       };

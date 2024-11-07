@@ -19,7 +19,7 @@ export default class UdLoginPage {
     cy.url().should('include', this.udRootUrl);
     cy.contains(
       'h1',
-      'Pour accéder à votre historique d’utilisation de FranceConnect, veuillez vous connecter',
+      'Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter',
     );
     this.getAuthorizeButton().should('be.visible');
   }

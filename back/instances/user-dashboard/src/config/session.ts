@@ -42,6 +42,7 @@ export default {
     // Business
     UserDashboardBackRoutes.ERROR,
     UserDashboardBackRoutes.USER_PREFERENCES,
+    UserDashboardBackRoutes.FRAUD_FORM,
     UserDashboardBackRoutes.TRACKS,
     UserDashboardBackRoutes.USER_INFOS,
     UserDashboardBackRoutes.VERIFY,

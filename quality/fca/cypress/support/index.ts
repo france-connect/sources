@@ -26,9 +26,13 @@ Cypress.Commands.overwrite('injectAxe', injectAxeFromQualityModules);
 Cypress.Commands.add(
   'clearThenType',
   { prevSubject: 'element' },
-  // Force Cypress to accept chaining clear and type commands
-  // eslint-disable-next-line cypress/unsafe-to-chain-command
-  (subject, text, options) => cy.wrap(subject).clear().type(text, options),
+  (subject, text, options = {}) => {
+    cy.wrap(subject).trigger('keydown');
+    cy.wrap(subject).invoke('val', text, options);
+    // It is safe to chain those commands as there are no UI changes
+    // eslint-disable-next-line cypress/unsafe-to-chain-command
+    cy.wrap(subject).trigger('keyup').trigger('input').trigger('change');
+  },
 );
 
 addMatchImageSnapshotCommand({

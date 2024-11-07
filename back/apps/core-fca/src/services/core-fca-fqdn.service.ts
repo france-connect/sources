@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@fc/config';
 import { FqdnToIdpAdapterMongoService } from '@fc/fqdn-to-idp-adapter-mongo';
 
-import { AppConfig } from '../dto/app-config.dto';
+import { AppConfig } from '../dto';
 import { FqdnConfigInterface } from '../interfaces';
 
 @Injectable()
@@ -61,6 +61,36 @@ export class CoreFcaFqdnService {
 
   getFqdnFromEmail(email: string): string {
     return email.split('@').pop().toLowerCase();
+  }
+
+  getSpAuthorizedFqdnsConfig(spId: string): {
+    spName: string;
+    spContact: string;
+    authorizedFqdns: string[];
+  } | null {
+    const { spAuthorizedFqdnsConfigs } = this.config.get<AppConfig>('App');
+
+    return (
+      spAuthorizedFqdnsConfigs.find((config) => {
+        return config.spId === spId;
+      }) || null
+    );
+  }
+
+  async isAllowedIdpForEmail(idpId: string, email: string): Promise<boolean> {
+    const fqdn = this.getFqdnFromEmail(email);
+    const existingFqdnToProvider =
+      await this.fqdnToIdpAdapterMongo.getIdpsByFqdn(fqdn);
+
+    if (existingFqdnToProvider.length > 0) {
+      return existingFqdnToProvider.some(
+        ({ identityProvider }) => identityProvider === idpId,
+      );
+    }
+
+    // if fqdnToProvider not exists, the only idp allowed is the default one
+    const { defaultIdpId } = this.config.get<AppConfig>('App');
+    return defaultIdpId === idpId;
   }
 
   private addDefaultIdp(

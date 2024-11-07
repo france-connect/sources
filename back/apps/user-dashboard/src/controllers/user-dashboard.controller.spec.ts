@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { getTransformed, IPaginationResult } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { CsmrFraudClientService } from '@fc/csmr-fraud-client';
 import { CsrfTokenGuard } from '@fc/csrf';
 import { I18nService } from '@fc/i18n';
 import { TrackingService } from '@fc/tracking';
@@ -66,6 +67,8 @@ describe('UserDashboardController', () => {
     idp_id: '8dfc4080-c90d-4234-969b-f6c961de3e90',
   };
 
+  const { idp_id: _idpId, ...identityWithoutIdpIdMock } = identityMock;
+
   const cryptographyMock = {
     genRandomString: jest.fn(),
   };
@@ -76,6 +79,10 @@ describe('UserDashboardController', () => {
 
   const tracksServiceMock = {
     getList: jest.fn(),
+  };
+
+  const fraudServiceMock = {
+    processFraudCase: jest.fn(),
   };
 
   const userPreferencesMock = {
@@ -95,6 +102,15 @@ describe('UserDashboardController', () => {
     idpList: ['8dfc4080-c90d-4234-969b-f6c961de3e90'],
     csrfToken: 'csrfTokenMockValue',
     allowFutureIdp: false,
+  };
+
+  const processFraudFormBodyMock = {
+    contactEmail: 'email@mock.fr',
+    idpEmail: 'email@idp.fr',
+    authenticationEventId: '1a344d7d-fb1f-432f-99df-01b374c93687',
+    fraudSurveyOrigin: 'fraudSurveyOriginMock',
+    comment: 'commentMock',
+    phoneNumber: '0678912345',
   };
 
   const userDashboardServiceMock = {
@@ -126,6 +142,7 @@ describe('UserDashboardController', () => {
       providers: [
         ConfigService,
         TracksService,
+        CsmrFraudClientService,
         TrackingService,
         UserPreferencesService,
         UserDashboardService,
@@ -138,6 +155,8 @@ describe('UserDashboardController', () => {
       .useValue(configMock)
       .overrideProvider(TracksService)
       .useValue(tracksServiceMock)
+      .overrideProvider(CsmrFraudClientService)
+      .useValue(fraudServiceMock)
       .overrideProvider(TrackingService)
       .useValue(trackingService)
       .overrideProvider(UserPreferencesService)
@@ -171,6 +190,8 @@ describe('UserDashboardController', () => {
     userDashboardServiceMock.formatUserPreferenceChangeTrackLog.mockReturnValueOnce(
       formatUserPreferenceChangeTrackLogReturnValue,
     );
+
+    getTransformedMock.mockReturnValueOnce(identityWithoutIdpIdMock);
 
     jest.mocked(uuid).mockReturnValueOnce(uuidMockedValue);
     jest.mocked(resMock.status).mockReturnValue(resMock);
@@ -222,6 +243,7 @@ describe('UserDashboardController', () => {
           time: 11233335550000,
           trackId: 'trackIdValue',
           claims: [claimMock],
+          authenticationEventId: 'f8f52a8e-896d-4975-93cc-fa91ee6ede51',
         },
       ],
     };
@@ -251,6 +273,7 @@ describe('UserDashboardController', () => {
     it('should return a 401 if no session', async () => {
       // Given
       sessionServiceMock.get.mockReturnValueOnce(undefined);
+
       // When
       await controller.getUserTraces(
         reqMock,
@@ -412,8 +435,10 @@ describe('UserDashboardController', () => {
     it('should return a 401 if no session', async () => {
       // Given
       sessionServiceMock.get.mockReturnValueOnce(undefined);
+
       // When
       await controller.getUserInfos(resMock, sessionServiceMock);
+
       // Then
       expect(resMock.status).toHaveBeenCalledTimes(1);
       expect(resMock.status).toHaveBeenCalledWith(401);
@@ -425,13 +450,15 @@ describe('UserDashboardController', () => {
       // Given
       sessionServiceMock.get.mockReturnValueOnce(identityMock);
       // When
-      const { firstname, lastname, idpId } = (await controller.getUserInfos(
-        resMock,
-        sessionServiceMock,
-      )) as UserInfosInterface;
+      const { firstname, lastname, idpId, email } =
+        (await controller.getUserInfos(
+          resMock,
+          sessionServiceMock,
+        )) as UserInfosInterface;
       // Then
       expect(firstname).toStrictEqual(identityMock.given_name);
       expect(lastname).toStrictEqual(identityMock.family_name);
+      expect(email).toStrictEqual(identityMock.email);
       expect(idpId).toStrictEqual('8dfc4080-c90d-4234-969b-f6c961de3e90');
     });
   });
@@ -448,8 +475,10 @@ describe('UserDashboardController', () => {
     it('should return a 401 if no session', async () => {
       // Given
       sessionServiceMock.get.mockReturnValueOnce(undefined);
+
       // When
       await controller.getUserPreferences(reqMock, resMock, sessionServiceMock);
+
       // Then
       expect(resMock.status).toHaveBeenCalledTimes(1);
       expect(resMock.status).toHaveBeenCalledWith(401);
@@ -458,10 +487,6 @@ describe('UserDashboardController', () => {
     });
 
     it('should call userPreferences.getUserPreferencesList', async () => {
-      // Given
-      const { idp_id: _idpId, ...identityWithoutIdpIdMock } = identityMock;
-      getTransformedMock.mockReturnValueOnce(identityWithoutIdpIdMock);
-
       // When
       await controller.getUserPreferences(reqMock, resMock, sessionServiceMock);
       // Then
@@ -539,6 +564,7 @@ describe('UserDashboardController', () => {
     it('should return a 401 if no session', async () => {
       // Given
       sessionServiceMock.get.mockReturnValueOnce(undefined);
+
       // When
       await controller.updateUserPreferences(
         reqMock,
@@ -581,11 +607,9 @@ describe('UserDashboardController', () => {
 
     it('should call userPreferences.setUserPreferencesList', async () => {
       // Given
-      const { idp_id: _idpId, ...identityWithoutIdpIdMock } = identityMock;
       const { allowFutureIdp, idpList } = updatePreferencesBodyMock;
       const expectedServicedArguments = { allowFutureIdp, idpList };
 
-      getTransformedMock.mockReturnValueOnce(identityWithoutIdpIdMock);
       userPreferencesMock.setUserPreferencesList.mockResolvedValueOnce(
         resolvedUserPreferencesMock,
       );
@@ -756,6 +780,66 @@ describe('UserDashboardController', () => {
           identity: identityMock,
         },
       );
+    });
+  });
+
+  describe('processFraudForm', () => {
+    it('should fetch session', async () => {
+      // When
+      await controller.processFraudForm(
+        resMock,
+        processFraudFormBodyMock,
+        sessionServiceMock,
+      );
+      // Then
+      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
+      expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
+    });
+
+    it('should return a 401 if no session', async () => {
+      // Given
+      sessionServiceMock.get.mockReturnValueOnce(undefined);
+
+      // When
+      await controller.processFraudForm(
+        resMock,
+        processFraudFormBodyMock,
+        sessionServiceMock,
+      );
+      // Then
+      expect(resMock.status).toHaveBeenCalledTimes(1);
+      expect(resMock.status).toHaveBeenCalledWith(401);
+      expect(resMock.send).toHaveBeenCalledTimes(1);
+      expect(resMock.send).toHaveBeenCalledWith({ code: 'INVALID_SESSION' });
+    });
+
+    it('should call csmrFraudClient.processFraudCase', async () => {
+      // When
+      await controller.processFraudForm(
+        resMock,
+        processFraudFormBodyMock,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(fraudServiceMock.processFraudCase).toHaveBeenCalledTimes(1);
+      expect(fraudServiceMock.processFraudCase).toHaveBeenCalledWith(
+        identityWithoutIdpIdMock,
+        processFraudFormBodyMock,
+      );
+    });
+
+    it('should return a 200', async () => {
+      // When
+      await controller.processFraudForm(
+        resMock,
+        processFraudFormBodyMock,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(resMock.status).toHaveBeenCalledWith(200);
+      expect(resMock.send).toHaveBeenCalledTimes(1);
     });
   });
 });

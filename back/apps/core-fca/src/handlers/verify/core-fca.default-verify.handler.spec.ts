@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AccountFca, AccountFcaService } from '@fc/account-fca';
+import { ConfigService } from '@fc/config';
 import { CoreAcrService } from '@fc/core';
 import { CoreFcaAgentAccountBlockedException } from '@fc/core-fca/exceptions';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
@@ -91,6 +92,34 @@ describe('CoreFcaDefaultVerifyHandler', () => {
   };
   const interactionAcrMock = 'interactionAcrMock';
 
+  const configServiceMock = {
+    get: jest.fn(),
+  };
+
+  const appConfigMock = {
+    configuration: {
+      claims: {
+        amr: ['amr'],
+        uid: ['uid'],
+        openid: ['sub'],
+        given_name: ['given_name'],
+        email: ['email'],
+        phone: ['phone_number'],
+        organizational_unit: ['organizational_unit'],
+        siren: ['siren'],
+        siret: ['siret'],
+        usual_name: ['usual_name'],
+        belonging_population: ['belonging_population'],
+        chorusdt: ['chorusdt:matricule', 'chorusdt:societe'],
+        idp_id: ['idp_id'],
+        idp_acr: ['idp_acr'],
+        is_service_public: ['is_service_public'],
+        groups: ['groups'],
+        custom: ['custom'],
+      },
+    },
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -101,6 +130,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
         IdentityProviderAdapterMongoService,
         AccountFcaService,
         OidcAcrService,
+        ConfigService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -115,6 +145,8 @@ describe('CoreFcaDefaultVerifyHandler', () => {
       .useValue(accountFcaServiceMock)
       .overrideProvider(OidcAcrService)
       .useValue(oidcAcrMock)
+      .overrideProvider(ConfigService)
+      .useValue(configServiceMock)
       .compile();
 
     service = module.get<CoreFcaDefaultVerifyHandler>(
@@ -131,6 +163,28 @@ describe('CoreFcaDefaultVerifyHandler', () => {
     });
 
     oidcAcrMock.getInteractionAcr.mockReturnValue(interactionAcrMock);
+
+    configServiceMock.get.mockReturnValue(appConfigMock);
+
+    service['expectedClaims'] = [
+      'belonging_population',
+      'chorusdt:matricule',
+      'chorusdt:societe',
+      'email',
+      'given_name',
+      'idp_acr',
+      'idp_id',
+      'organizational_unit',
+      'phone_number',
+      'uid',
+      'siren',
+      'siret',
+      'sub',
+      'uid',
+      'usual_name',
+      'custom',
+      'is_service_public',
+    ];
   });
 
   it('should be defined', () => {
@@ -255,6 +309,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
           idp_acr: sessionDataMock.idpAcr,
           email: idpIdentityMock.email,
           usual_name: idpIdentityMock.usual_name,
+          custom: {},
         },
         subs: {
           sp_id: universalSubMock,
@@ -394,6 +449,7 @@ describe('CoreFcaDefaultVerifyHandler', () => {
 
       const expected = {
         ...idpIdentityMockCleaned,
+        custom: {},
         idp_id: '42',
         idp_acr: 'eidas3',
       };
@@ -616,6 +672,102 @@ describe('CoreFcaDefaultVerifyHandler', () => {
 
       // Then
       expect(result).toBe(false);
+    });
+  });
+
+  describe('customizeIdentity()', () => {
+    const identityMock = {
+      sub: '7396c91e-b9f2-4f9d-8547-5e9b3332725b',
+      uid: '1',
+      given_name: 'Angela Claire Louise',
+      usual_name: 'DUBOIS',
+      email: 'test@abcd.com',
+      siren: '343293775',
+      siret: '34329377500037',
+      organizational_unit: 'comptabilite',
+      belonging_population: 'agent',
+      phone_number: '+331-12-44-45-23',
+      'chorusdt:matricule': 'USER_AGC',
+      'chorusdt:societe': 'CHT',
+      idp_id: 'fia1v2',
+      idp_acr: 'eidas1',
+    };
+
+    it('should return an identity with no "custom" property when identity has no unknown property', () => {
+      // Then
+      expect(service['customizeIdentity'](identityMock)).toStrictEqual({
+        ...identityMock,
+        custom: {},
+      });
+    });
+
+    it('should return a customized identity with custom property when identity has at least one property non recognized as claims', () => {
+      // Given
+      const customizedIdentity = {
+        ...identityMock,
+        unexpected: 'not in claims',
+      };
+
+      // Then
+      const { unexpected: _, ...cleanedIdentity } = customizedIdentity;
+      expect(service['customizeIdentity'](customizedIdentity)).toStrictEqual({
+        ...cleanedIdentity,
+        custom: { unexpected: 'not in claims' },
+      });
+    });
+
+    it('should return a customized identity able to handle a custom field in idp payload', () => {
+      // Given
+      const customizedIdentity = {
+        ...identityMock,
+        custom: 'not in claims',
+      };
+
+      const { custom: _, ...cleanedIdentity } = customizedIdentity;
+
+      // Then
+      expect(service['customizeIdentity'](customizedIdentity)).toStrictEqual({
+        ...cleanedIdentity,
+        custom: { custom: 'not in claims' },
+      });
+    });
+
+    it('should return a customized identity able to handle a nested field in idp payload', () => {
+      // Given
+      const customizedIdentity = {
+        ...identityMock,
+        security: { header: 'not in claims' },
+        options: ['not in claims', 'still not in claims'],
+      };
+
+      const {
+        security: _security,
+        options: _options,
+        ...cleanedIdentity
+      } = customizedIdentity;
+
+      // Then
+      expect(service['customizeIdentity'](customizedIdentity)).toStrictEqual({
+        ...cleanedIdentity,
+        custom: {
+          security: { header: 'not in claims' },
+          options: ['not in claims', 'still not in claims'],
+        },
+      });
+    });
+  });
+
+  describe('onModuleInit()', () => {
+    it('should call configService.get', () => {
+      service.onModuleInit();
+
+      expect(configServiceMock.get).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getExpectedClaims()', () => {
+    it('should return the expected claims', () => {
+      service['expectedClaims'] = ['sub', 'email', 'given_name'];
     });
   });
 });

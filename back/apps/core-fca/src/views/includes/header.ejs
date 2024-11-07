@@ -1,3 +1,4 @@
+<%- include('includes/notice-proconnect.ejs') %>
 <header role="banner" class="fr-header">
   <div class="fr-header__body">
     <div class="fr-container">
@@ -14,16 +15,20 @@
               <button
                 class="fr-btn--menu fr-btn fr-mr-7v"
                 data-fr-opened="false"
-                aria-controls="modal-491"
+                aria-controls="menu-navigation"
                 aria-haspopup="menu"
-                id="button-492"
+                id="button-navigation"
               >
                 Menu
               </button>
             </div>
           </div>
           <div class="fr-header__service">
-            <p class="fr-header__service-title">AgentConnect</p>
+            <p class="fr-header__service-title">ProConnect</p>
+            <p class="fr-header__service-tagline">
+              la solution officielle qui vous identifie en tant que
+              professionnel.
+            </p>
           </div>
         </div>
         <div class="fr-header__tools">
@@ -32,7 +37,8 @@
               <li>
                 <a
                   class="fr-btn fr-icon-question-fill"
-                  href=" https://agentconnect.gouv.fr/aide "
+                  target="_blank"
+                  href="https://agentconnect.crisp.help/fr/"
                   >Aide</a
                 >
               </li>
@@ -44,11 +50,11 @@
   </div>
   <div
     class="fr-header__menu fr-modal"
-    id="modal-491"
-    aria-labelledby="button-492"
+    id="menu-navigation"
+    aria-labelledby="button-navigation"
   >
     <div class="fr-container">
-      <button class="fr-btn--close fr-btn" aria-controls="modal-491">
+      <button class="fr-btn--close fr-btn" aria-controls="menu-navigation">
         Fermer
       </button>
       <div class="fr-header__menu-links"></div>

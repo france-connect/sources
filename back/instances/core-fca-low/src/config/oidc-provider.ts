@@ -89,6 +89,7 @@ export default {
       // MonComptePro claims naming convention
       is_service_public: ['is_service_public'],
       groups: ['groups'],
+      custom: ['custom'],
     },
     clientDefaults: {
       grant_types: ['authorization_code'],

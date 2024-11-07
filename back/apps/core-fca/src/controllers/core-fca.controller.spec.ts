@@ -16,7 +16,7 @@ import { TrackedEventInterface, TrackingService } from '@fc/tracking';
 
 import { getSessionServiceMock } from '@mocks/session';
 
-import { CoreFcaVerifyService } from '../services';
+import { CoreFcaFqdnService, CoreFcaVerifyService } from '../services';
 import { CoreFcaController } from './core-fca.controller';
 
 describe('CoreFcaController', () => {
@@ -76,6 +76,15 @@ describe('CoreFcaController', () => {
     handleUnavailableIdp: jest.fn(),
   };
 
+  const coreFcaFqdnServiceMock: Record<
+    keyof InstanceType<typeof CoreFcaFqdnService>,
+    jest.Mock
+  > = {
+    getFqdnConfigFromEmail: jest.fn(),
+    getFqdnFromEmail: jest.fn(),
+    getSpAuthorizedFqdnsConfig: jest.fn(),
+    isAllowedIdpForEmail: jest.fn(),
+  };
   const coreFcaVerifyServiceMock = {
     handleVerifyIdentity: jest.fn(),
     handleSsoDisabled: jest.fn(),
@@ -201,6 +210,7 @@ describe('CoreFcaController', () => {
         ServiceProviderAdapterMongoService,
         ConfigService,
         CoreAcrService,
+        CoreFcaFqdnService,
         CoreFcaVerifyService,
         CoreVerifyService,
         TrackingService,
@@ -215,6 +225,8 @@ describe('CoreFcaController', () => {
       .useValue(identityProviderServiceMock)
       .overrideProvider(ServiceProviderAdapterMongoService)
       .useValue(serviceProviderServiceMock)
+      .overrideProvider(CoreFcaFqdnService)
+      .useValue(coreFcaFqdnServiceMock)
       .overrideProvider(CoreFcaVerifyService)
       .useValue(coreFcaVerifyServiceMock)
       .overrideProvider(CoreVerifyService)

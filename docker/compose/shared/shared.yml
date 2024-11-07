@@ -1,5 +1,3 @@
-version: "2.4"
-
 ####################
 ####################
 services:
@@ -235,7 +233,7 @@ services:
     volumes:
       - "${VOLUMES_DIR}/ssl:/bitnami/redis/data/ssl"
     healthcheck:
-      test: redis-c-li -a $${REDIS_PASSWORD} --tls --cacert $${REDIS_TLS_CA_FILE} role | grep master
+      test: redis-cli -a $${REDIS_PASSWORD} --tls --cacert $${REDIS_TLS_CA_FILE} role | grep master
       interval: 2s
       start_period: 5s
     networks:
@@ -392,6 +390,7 @@ services:
       - "CryptographyBroker_QUEUE=crypto"
     networks:
       - data
+    init: true
     command: "pm2 logs"
 
   ####################
@@ -430,6 +429,7 @@ services:
       - "${COMPOSE_DIR}/shared/.env/mock-rnipp.env"
     networks:
       - public
+    init: true
     command: "pm2 logs"
 
   ####################
@@ -507,6 +507,7 @@ services:
       - "GeoIpMaxmind_DATABASE_PATH=/var/geoipdb/GeoLite2-City.mmdb"
     networks:
       - data
+    init: true
     command: "pm2 logs"
 
   csmr-account-legacy:
@@ -540,6 +541,7 @@ services:
       - "AccountBroker_QUEUE=account-legacy"
     networks:
       - data
+    init: true
     command: "pm2 logs"
 
   csmr-account-high:
@@ -573,6 +575,7 @@ services:
       - "AccountBroker_QUEUE=account-high"
     networks:
       - data
+    init: true
     command: "pm2 logs"
 
   csmr-fraud:
@@ -582,6 +585,7 @@ services:
     working_dir: /var/www/app
     depends_on:
       - "broker"
+      - "maildev"
     volumes:
       - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
       - "${VOLUMES_DIR}/app:/opt/scripts"
@@ -590,9 +594,10 @@ services:
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
-      - "${COMPOSE_DIR}/shared/.env/fraud.env"
+      - "${COMPOSE_DIR}/shared/.env/csmr-fraud.env"
     networks:
       - data
+    init: true
     command: "pm2 logs"
 
   csmr-user-preferences-high:
@@ -616,6 +621,7 @@ services:
     tty: true
     networks:
       - data
+    init: true
     command: "pm2 logs"
 
 ####################

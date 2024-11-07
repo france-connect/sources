@@ -2,10 +2,12 @@
 
 // Tested by DTO
 import { ConfigParser } from '@fc/config';
-import { AppConfig } from '@fc/csmr-user-preferences';
+import { AppRpcConfig } from '@fc/csmr-user-preferences';
 
 const env = new ConfigParser(process.env, 'App');
 
 export default {
+  name: process.env.APP_NAME,
   aidantsConnectUid: env.string('AIDANTS_CONNECT_UID'),
-} as AppConfig;
+  environment: env.string('ENVIRONMENT'),
+} as AppRpcConfig;

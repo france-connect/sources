@@ -9,7 +9,7 @@ import { ErrorCode } from '../enums';
 import { CoreFcaBaseException } from './core-fca-base.exception';
 
 const description =
-  "Nous n'arrivons pas à vous identifier. Nous vous conseillons de créer un compte sur le site sans passer par le bouton AgentConnect";
+  "Nous n'arrivons pas à vous identifier. Nous vous conseillons de créer un compte sur le site sans passer par le bouton ProConnect";
 
 @Description(description)
 export class CoreFcaAgentNoIdpException extends CoreFcaBaseException {

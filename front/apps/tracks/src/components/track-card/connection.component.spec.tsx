@@ -9,6 +9,8 @@ describe('ConnectionComponent', () => {
     { zone: 'Europe/Paris' },
   );
 
+  const authenticationEventId = 'mock-authentication-event-id';
+
   const options = {
     API_ROUTE_TRACKS: 'mock_API_ROUTE_TRACKS',
     API_ROUTE_USER_INFOS: 'mock_API_ROUTE_USER_INFOS',
@@ -23,6 +25,7 @@ describe('ConnectionComponent', () => {
     // when
     const { container } = render(
       <ConnectionComponent
+        authenticationEventId={authenticationEventId}
         city="cityMock"
         country="countryMock"
         datetime={date}
@@ -40,6 +43,7 @@ describe('ConnectionComponent', () => {
     // given
     const { container } = render(
       <ConnectionComponent
+        authenticationEventId={authenticationEventId}
         city="cityMock"
         country="countryMock"
         datetime={date}
@@ -53,13 +57,14 @@ describe('ConnectionComponent', () => {
     const elements = container.getElementsByTagName('li');
 
     // then
-    expect(elements).toHaveLength(4);
+    expect(elements).toHaveLength(5);
   });
 
   it('should render a list of 3 informations if city and country are undefined', () => {
     // given
     const { container, queryByText } = render(
       <ConnectionComponent
+        authenticationEventId={authenticationEventId}
         city={undefined}
         country={undefined}
         datetime={date}
@@ -73,7 +78,7 @@ describe('ConnectionComponent', () => {
     const elements = container.getElementsByTagName('li');
 
     // then
-    expect(elements).toHaveLength(3);
+    expect(elements).toHaveLength(4);
     expect(queryByText('Localisation :')).not.toBeInTheDocument();
     expect(queryByText('cityMock (countryMock)')).not.toBeInTheDocument();
   });
@@ -82,6 +87,7 @@ describe('ConnectionComponent', () => {
     // given
     const { getByText } = render(
       <ConnectionComponent
+        authenticationEventId={authenticationEventId}
         city="cityMock"
         country="countryMock"
         datetime={date}
@@ -108,6 +114,7 @@ describe('ConnectionComponent', () => {
     // given
     const { getByText } = render(
       <ConnectionComponent
+        authenticationEventId={authenticationEventId}
         city="cityMock"
         country="countryMock"
         datetime={date}
@@ -134,6 +141,7 @@ describe('ConnectionComponent', () => {
     // given
     const { getByText } = render(
       <ConnectionComponent
+        authenticationEventId={authenticationEventId}
         city="cityMock"
         country={undefined}
         datetime={date}
@@ -160,6 +168,7 @@ describe('ConnectionComponent', () => {
     // given
     const { getByText } = render(
       <ConnectionComponent
+        authenticationEventId={authenticationEventId}
         city={undefined}
         country="countryMock"
         datetime={date}
@@ -186,6 +195,7 @@ describe('ConnectionComponent', () => {
     // given
     const { getByText } = render(
       <ConnectionComponent
+        authenticationEventId={authenticationEventId}
         city="cityMock"
         country="countryMock"
         datetime={date}
@@ -212,6 +222,7 @@ describe('ConnectionComponent', () => {
     // given
     const { getByText } = render(
       <ConnectionComponent
+        authenticationEventId={authenticationEventId}
         city="cityMock"
         country="countryMock"
         datetime={date}
@@ -224,6 +235,31 @@ describe('ConnectionComponent', () => {
     // when
     const labelElement = getByText('Niveau de garantie eIDAS :');
     const valueElement = getByText('Faible');
+    const firstElement = labelElement.parentNode?.firstElementChild;
+
+    // then
+    expect(labelElement).toBeInTheDocument();
+    expect(valueElement).toBeInTheDocument();
+    expect(firstElement).toStrictEqual(labelElement);
+  });
+
+  it('should render the authenticationEventId block', () => {
+    // given
+    const { getByText } = render(
+      <ConnectionComponent
+        authenticationEventId={authenticationEventId}
+        city="cityMock"
+        country="countryMock"
+        datetime={date}
+        idpLabel="idpLabelValue"
+        interactionAcr="eidas1"
+        options={options}
+      />,
+    );
+
+    // when
+    const labelElement = getByText('Code d’identification :');
+    const valueElement = getByText('mock-authentication-event-id');
     const firstElement = labelElement.parentNode?.firstElementChild;
 
     // then

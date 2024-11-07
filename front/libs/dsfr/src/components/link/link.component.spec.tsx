@@ -1,79 +1,58 @@
 import { render } from '@testing-library/react';
+import { Link } from 'react-router-dom';
 
-import { IconPlacement, Sizes } from '../../enums';
+import { IconPlacement } from '../../enums';
 import { LinkComponent } from './link.component';
 
 describe('LinkComponent', () => {
   it('should match the snapshot, with default props', () => {
     // when
-    const { container } = render(<LinkComponent href="any-url-mock" />);
+    const { container } = render(<LinkComponent href="any-url-mock">any-label-mock</LinkComponent>);
 
     // then
     expect(container).toMatchSnapshot();
+    expect(Link).toHaveBeenCalledOnce();
+    expect(Link).toHaveBeenCalledWith(
+      {
+        children: 'any-label-mock',
+        className: 'fr-link fr-link--md',
+        reloadDocument: false,
+        to: 'any-url-mock',
+      },
+      {},
+    );
   });
 
-  it('should match the snapshot, with size sm props', () => {
-    // when
-    const { container } = render(<LinkComponent href="any-url-mock" size={Sizes.SMALL} />);
-
-    // then
-    expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveClass('fr-link fr-link--sm');
-  });
-
-  it('should match the snapshot, with size lg props', () => {
-    // when
-    const { container } = render(<LinkComponent href="any-url-mock" size={Sizes.LARGE} />);
-
-    // then
-    expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveClass('fr-link fr-link--lg');
-  });
-
-  it('should match the snapshot, with icon props', () => {
-    // when
-    const { container } = render(<LinkComponent href="any-url-mock" icon="any-icon-mock" />);
-
-    // then
-    expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveClass('fr-icon-any-icon-mock');
-  });
-
-  it('should match the snapshot, with iconPlacement props', () => {
+  it('should match the snapshot, with all props', () => {
     // when
     const { container } = render(
       <LinkComponent
+        external
+        dataTestId="data-test-id"
         href="any-url-mock"
         icon="any-icon-mock"
         iconPlacement={IconPlacement.RIGHT}
-      />,
+        rel="noopener"
+        target="_blank">
+        any-label-mock
+      </LinkComponent>,
     );
 
     // then
     expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveClass('fr-link--icon-right');
-  });
-
-  it('should match the snapshot, with label props', () => {
-    // when
-    const { container, getByText } = render(
-      <LinkComponent href="any-url-mock" label="any-label-mock" />,
+    expect(Link).toHaveBeenCalledOnce();
+    expect(Link).toHaveBeenCalledWith(
+      {
+        children: 'any-label-mock',
+        className: 'fr-link fr-link--md fr-icon-any-icon-mock fr-link--icon-right',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'data-testid': 'data-test-id',
+        rel: 'noopener',
+        reloadDocument: true,
+        target: '_blank',
+        to: 'any-url-mock',
+      },
+      {},
     );
-    const element = getByText('any-label-mock');
-
-    // then
-    expect(container).toMatchSnapshot();
-    expect(element).toBeInTheDocument();
-  });
-
-  it('should match the snapshot, with className props', () => {
-    // when
-    const { container } = render(
-      <LinkComponent className="any-className-mock" href="any-url-mock" />,
-    );
-
-    // then
-    expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveClass('any-className-mock');
   });
 });

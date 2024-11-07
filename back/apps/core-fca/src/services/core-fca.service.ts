@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@fc/config';
 import { CoreAuthorizationService } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
+import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import {
   OidcClientConfig,
@@ -19,10 +20,12 @@ import {
   CoreFcaAgentIdpBlacklistedException,
   CoreFcaAgentIdpDisabledException,
 } from '../exceptions';
+import { CoreFcaUnauthorizedEmailException } from '../exceptions/core-fca-unauthorized-email-exception';
 import {
   CoreFcaAuthorizationParametersInterface,
   CoreFcaServiceInterface,
 } from '../interfaces';
+import { CoreFcaFqdnService } from './core-fca-fqdn.service';
 
 @Injectable()
 export class CoreFcaService implements CoreFcaServiceInterface {
@@ -34,6 +37,8 @@ export class CoreFcaService implements CoreFcaServiceInterface {
     private readonly identityProvider: IdentityProviderAdapterMongoService,
     private readonly coreAuthorization: CoreAuthorizationService,
     private readonly session: SessionService,
+    private readonly fqdnService: CoreFcaFqdnService,
+    private readonly logger: LoggerService,
   ) {}
   // eslint-disable-next-line max-params
   async redirectToIdp(
@@ -51,6 +56,7 @@ export class CoreFcaService implements CoreFcaServiceInterface {
 
     const { scope } = this.config.get<OidcClientConfig>('OidcClient');
 
+    await this.validateEmailForSp(spId, login_hint);
     await this.checkIdpBlacklisted(spId, idpId);
     await this.checkIdpDisabled(idpId);
 
@@ -89,6 +95,33 @@ export class CoreFcaService implements CoreFcaServiceInterface {
     this.session.set('OidcClient', sessionPayload);
 
     res.redirect(authorizationUrl);
+  }
+
+  /**
+   * temporary code for resolving Uniforces issue
+   * we check if the email is authorized to access the idp for the sp
+   */
+  private async validateEmailForSp(spId: string, email: string): Promise<void> {
+    const authorizedFqdnsConfig =
+      this.fqdnService.getSpAuthorizedFqdnsConfig(spId);
+
+    if (!authorizedFqdnsConfig?.authorizedFqdns.length) return;
+
+    const { fqdn: fqdnFromEmail } =
+      await this.fqdnService.getFqdnConfigFromEmail(email);
+
+    if (
+      !authorizedFqdnsConfig.authorizedFqdns.some(
+        (fqdnInConfig) => fqdnInConfig === fqdnFromEmail,
+      )
+    ) {
+      this.logger.err(`Unauthorized fqdn ${fqdnFromEmail} for SP ${spId}`);
+      throw new CoreFcaUnauthorizedEmailException(
+        authorizedFqdnsConfig.spName,
+        authorizedFqdnsConfig.spContact,
+        authorizedFqdnsConfig.authorizedFqdns,
+      );
+    }
   }
 
   private async checkIdpBlacklisted(spId: string, idpId: string) {

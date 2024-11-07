@@ -11,13 +11,7 @@ import { AuthedRoute } from './authed.route';
 describe('AuthedRoute', () => {
   beforeEach(() => {
     // given
-    jest.mocked(useLocation).mockReturnValue({
-      hash: expect.any(String),
-      key: expect.any(String),
-      pathname: '/any-location-pathname-mock',
-      search: expect.any(String),
-      state: expect.any(Object),
-    });
+    jest.mocked(useLocation).mockReturnValue(expect.any(Object));
     jest
       .mocked(useSafeContext)
       .mockReturnValue({ codeError: undefined, connected: false, hasError: false, ready: true });
@@ -63,7 +57,7 @@ describe('AuthedRoute', () => {
 
   it('should redirect with parameters if the user is not connected', () => {
     // given
-    const fallbackMock = jest.fn(({ search }) => `/any-authed-fallback${search}`);
+    const fallbackMock = jest.fn(() => `/any-authed-fallback`);
     const locationMock = {
       pathname: '/any-pathname',
       search: '?param=toto',
@@ -79,8 +73,8 @@ describe('AuthedRoute', () => {
     expect(Navigate).toHaveBeenCalledWith(
       {
         replace: true,
-        state: { from: '/any-pathname' },
-        to: '/any-authed-fallback?param=toto',
+        state: { from: locationMock },
+        to: '/any-authed-fallback',
       },
       {},
     );
@@ -109,7 +103,11 @@ describe('AuthedRoute', () => {
     // then
     expect(Navigate).toHaveBeenCalledOnce();
     expect(Navigate).toHaveBeenCalledWith(
-      { replace: false, state: { from: expect.any(String) }, to: '/login' },
+      {
+        replace: false,
+        state: { from: expect.any(Object) },
+        to: '/login',
+      },
       {},
     );
   });

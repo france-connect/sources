@@ -50,3 +50,80 @@ sequenceDiagram
   CoreFcaController ->> OidcProviderController : getLogin
   OidcProviderController ->> FS: via 303
 ```
+
+## Restriction des fqdns par FI
+
+Actuellement, l'user peut entrer une adresse email dans la mire PCI puis en changer dans certains FIs.
+Nous allons bientôt ajouter un contrôle qui force à utiliser sur le FI le même fqdn que celui transmis à PC.
+
+Les règles d'acception sont détaillés dans le schéma ci-dessous:
+
+```mermaid
+flowchart TD
+  fqdnIsAllowedForIdp[Is fqdn allowed?]
+  fqdnIsAllowedForIdp-->HasFqdnIdp
+
+  HasFqdnIdp["Fqdn has connected idp(s)?"]
+  FqdnHasIdp["Fqdn has idp(s)"]
+  FqdnHasNoIdp[Fqdn has no idp]
+  HasFqdnIdp-->FqdnHasIdp
+  HasFqdnIdp-->FqdnHasNoIdp
+
+  FqdnMatchesIdp[Fqdn matches 1 idp]
+  FqdnMatchesNoIdp[Fqdn doesn't match 1 idp]
+  FqdnHasIdp-->FqdnMatchesIdp
+  FqdnHasIdp-->FqdnMatchesNoIdp
+
+  IsAllowed[Allowed]
+  IsNotAllowed["Not allowed
+  (could have been a problem
+  with regions fqdns
+  using mcp
+  but now all regions fqdns
+  are connected with mcp idp)"]
+
+  FqdnMatchesIdp-->IsAllowed
+  FqdnMatchesNoIdp-->IsNotAllowed
+
+  IsDefaultIdpActivated[Has default idp?]
+  DefaultIdpActivated[Default idp activated]
+  DefaultIdpNotActivated[Default idp not activated]
+
+  FqdnHasNoIdp-->IsDefaultIdpActivated
+  IsDefaultIdpActivated-->DefaultIdpActivated
+  IsDefaultIdpActivated-->DefaultIdpNotActivated
+
+  NoIdpNoDefaultNotAllowed["Not allowed
+  (e.g. on rie all idps
+  are associated to one or
+  more fqdns
+  if a fqdn has no idp
+  connected and there is no
+  default idp
+  this fqdn doesn't
+  permit to connect)"]
+
+  DefaultIdpNotActivated-->NoIdpNoDefaultNotAllowed
+
+  IsThisDefaultIdp[Idp is default Idp?]
+
+  DefaultIdpActivated-->IsThisDefaultIdp
+  ThisIsDefaultIdp["Idp is default idp"]
+  ThisIsNotDefaultIdp["Idp isn't default idp"]
+  IsThisDefaultIdp-->ThisIsDefaultIdp
+  IsThisDefaultIdp-->ThisIsNotDefaultIdp
+
+  IsAllowed2[Allowed]
+  ThisIsDefaultIdp-->IsAllowed2
+
+  IsNotAllowed2[Not allowed]
+  ThisIsNotDefaultIdp-->IsNotAllowed2
+
+```
+
+En résumé:
+
+- Lorsque le fqdn de l'email retourné par le FI est lié à une ou plusieurs configurations FqdnToProvider elles-mêmes liées à un ou plusieurs FI, nous vérifions que le FI utilisé correspond bien au fqdn. Si ce n'est pas le cas, la connexion n'est pas autorisée.
+- Lorsque le fqdn récupéré n'est lié à aucun FI, il n'est utilisable qu'avec le FI par défaut. Nous vérifions donc que la feature de FI par défaut est bien activée et que le FI utilisé est bien le FI par défaut, si ce n'est pas le cas, la connexion n'est pas autorisée.
+
+Pour l'instant, les connexions non autorisées ne sont pas bloquées mais seulement logguées.

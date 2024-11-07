@@ -91,7 +91,7 @@ _command_register "help" "_command_list" "Display this help: help <search term>"
 
 _command_register "reload-rp" "_reload_rp" "Reload Reverse proxy"
 
-_command_register "compose" "cd ${WORKING_DIR} && ${DOCKER_COMPOSE}" "Alias for docker-compose"
+_command_register "compose" "_compose" "Run a docker compose command on project"
 
 _command_register "llng-configure" "_llng_configure" "Restore LemonLDAP configuration from ./docker/volumes/llng/llng-conf.json dump file"
 

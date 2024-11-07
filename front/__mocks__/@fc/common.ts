@@ -51,4 +51,5 @@ export enum Strings {
   EMPTY_STRING = '',
   WHITE_SPACE = ' ',
   DASH = '-',
+  SLASH = '/',
 }

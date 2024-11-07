@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AccountFca, AccountFcaService } from '@fc/account-fca';
+import { ConfigService } from '@fc/config';
 import { CoreAcrService } from '@fc/core';
 import {
   CoreFcaAgentAccountBlockedException,
@@ -90,6 +91,34 @@ describe('CoreFcaMcpVerifyHandler', () => {
   };
   const interactionAcrMock = 'interactionAcrMock';
 
+  const configServiceMock = {
+    get: jest.fn(),
+  };
+
+  const appConfigMock = {
+    configuration: {
+      claims: {
+        amr: ['amr'],
+        uid: ['uid'],
+        openid: ['sub'],
+        given_name: ['given_name'],
+        email: ['email'],
+        phone: ['phone_number'],
+        organizational_unit: ['organizational_unit'],
+        siren: ['siren'],
+        siret: ['siret'],
+        usual_name: ['usual_name'],
+        belonging_population: ['belonging_population'],
+        chorusdt: ['chorusdt:matricule', 'chorusdt:societe'],
+        idp_id: ['idp_id'],
+        idp_acr: ['idp_acr'],
+        is_service_public: ['is_service_public'],
+        groups: ['groups'],
+        custom: ['custom'],
+      },
+    },
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -101,6 +130,7 @@ describe('CoreFcaMcpVerifyHandler', () => {
         AccountFcaService,
         ServiceProviderAdapterMongoService,
         OidcAcrService,
+        ConfigService,
       ],
     })
       .overrideProvider(LoggerService)
@@ -117,6 +147,8 @@ describe('CoreFcaMcpVerifyHandler', () => {
       .useValue(serviceProviderAdapterMock)
       .overrideProvider(OidcAcrService)
       .useValue(oidcAcrMock)
+      .overrideProvider(ConfigService)
+      .useValue(configServiceMock)
       .compile();
 
     service = module.get<CoreFcaMcpVerifyHandler>(CoreFcaMcpVerifyHandler);
@@ -131,6 +163,28 @@ describe('CoreFcaMcpVerifyHandler', () => {
     });
 
     oidcAcrMock.getInteractionAcr.mockReturnValue(interactionAcrMock);
+
+    configServiceMock.get.mockReturnValue(appConfigMock);
+
+    service['expectedClaims'] = [
+      'belonging_population',
+      'chorusdt:matricule',
+      'chorusdt:societe',
+      'email',
+      'given_name',
+      'idp_acr',
+      'idp_id',
+      'organizational_unit',
+      'phone_number',
+      'uid',
+      'siren',
+      'siret',
+      'sub',
+      'uid',
+      'usual_name',
+      'custom',
+      'is_service_public',
+    ];
   });
 
   it('should be defined', () => {
@@ -253,6 +307,7 @@ describe('CoreFcaMcpVerifyHandler', () => {
       const calledMock = {
         idpIdentity: idpIdentityMock,
         spIdentity: {
+          custom: {},
           given_name: idpIdentityMock.given_name,
           uid: idpIdentityMock.uid,
           idp_id: sessionDataMock.idpId,
@@ -265,6 +320,7 @@ describe('CoreFcaMcpVerifyHandler', () => {
         subs: {
           sp_id: universalSubMock,
         },
+
         accountId: accountIdMock,
         amr: ['pwd'],
       };

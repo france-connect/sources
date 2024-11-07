@@ -11,7 +11,7 @@ import { I18nService } from '@fc/i18n';
 import { StylesProvider } from '@fc/styles';
 
 import { AppConfig } from '../config';
-import translations from '../i18n/fr.json';
+import translations from '../fr.i18n.json';
 import { ApplicationRoutes } from './application.routes';
 
 export function Application() {

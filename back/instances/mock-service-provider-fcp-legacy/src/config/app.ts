@@ -14,9 +14,11 @@ export default {
     key: env.file('HTTPS_SERVER_KEY', { optional: true }),
   },
   fqdn: process.env.FQDN,
-  name: 'MOCK_SERVICE_PROVIDER_FCP_LOW',
+  name: 'MOCK_SERVICE_PROVIDER_FCP_LEGACY',
   urlPrefix: '',
   viewsPaths: env.json('VIEWS_PATHS'),
   idpId: env.string('IDP_ID'),
   dataApis: env.json('DATA_APIS'),
+  environment: env.string('ENVIRONMENT'),
+  allowRevokeToken: false,
 } as AppConfig;

@@ -21,6 +21,8 @@ import {
 } from '@fc/oidc-client';
 import { ISessionService, Session, SessionService } from '@fc/session';
 
+import { AppSession } from '../dto';
+
 @Controller()
 export class OidcClientController {
   // Allowed for dependency injection
@@ -96,7 +98,10 @@ export class OidcClientController {
 
   @Get(OidcClientRoutes.CLIENT_LOGOUT_CALLBACK)
   async logoutCallback(@Res() res) {
-    await this.session.destroy(res);
+    // Set AppSession in SP Session to keep user preferences (mode)
+    const sessionApp = this.session.get<AppSession>('App');
+    await this.session.reset(res);
+    this.session.set('App', sessionApp);
 
     return res.redirect('/');
   }

@@ -24,7 +24,7 @@ const platformName = {
   'fcp-high': 'FranceConnect+',
   'fcp-legacy': 'User-Dashboard FC Legacy',
   'fcp-low': 'FranceConnect',
-  'partners': 'Espace Partenaires',
+  partners: 'Espace Partenaires',
 };
 
 const platform = platformName[process.env.CYPRESS_PLATFORM] || 'N/A';

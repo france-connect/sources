@@ -1,5 +1,3 @@
-version: "2.4"
-
 services:
   ####################
   # Base Site Statique 11Ty
@@ -21,4 +19,5 @@ services:
     networks:
       - public
     tty: true
+    init: true
     command: "pm2 logs"

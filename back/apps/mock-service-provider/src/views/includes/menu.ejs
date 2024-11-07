@@ -1,30 +1,32 @@
 <!-- As a link -->
 <nav class="navbar navbar-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" href="/login">
       <img src="/img/fc_logo_v2.svg" alt="Logo FC" height="42" class="d-inline-block align-top">
     </a>
 
     <% if (locals.accessToken) { %>
-    <form class="form-inline" action="/revocation" method="POST">
-      <input id="access-token" class="form-control" type="hidden" name="accessToken" value="<%= locals.accessToken %>">
-      <input id="revoke-token" class="form-control" type="submit" value="Révoquer token">
-    </form>
-    <form class="form-inline" action="/me" method="POST">
-      <input id="access-token" class="form-control" type="hidden" name="accessToken" value="<%= locals.accessToken %>">
-      <input id="reload-userinfo" class="form-control" type="submit" value="Recharger userinfo">
-    </form>
-    <% if (locals.dataApiActive) { %>
-    <a href="/data" style="text-decoration: none;" data-testid="get-data-link">
-      <button type="button" class="form-control">Récupérer les données utilisateur</button>
-    </a>
-    <% } %>
+      <% if ($config('App.allowRevokeToken')) { %>
+        <form class="form-inline" action="/revocation" method="POST">
+          <input id="access-token" class="form-control" type="hidden" name="accessToken" value="<%= locals.accessToken %>">
+          <input id="revoke-token" class="form-control" type="submit" value="Révoquer token">
+        </form>
+      <% } %>
+      <form class="form-inline" action="/me" method="POST">
+        <input id="access-token" class="form-control" type="hidden" name="accessToken" value="<%= locals.accessToken %>">
+        <input id="reload-userinfo" class="form-control" type="submit" value="Recharger userinfo">
+      </form>
+      <% if (locals.dataApiActive) { %>
+        <a href="/data" style="text-decoration: none;" data-testid="get-data-link">
+          <button type="button" class="form-control">Récupérer les données utilisateur</button>
+        </a>
+      <% } %>
     <% } %>
     <ul class="navbar-nav">
       <% if (locals.idpIdentity) { %>
-      <li class="nav-item">
-        <a class="nav-link nav-logout" href="/logout">Se déconnecter</a>
-      </li>
+        <li class="nav-item">
+          <a class="nav-link nav-logout" href="/logout">Se déconnecter</a>
+        </li>
       <% } %>
     </ul>
   </div>

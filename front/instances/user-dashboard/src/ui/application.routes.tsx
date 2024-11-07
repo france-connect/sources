@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import { ApplicationLayout } from '@fc/layout';
 import { AuthedRoute, UnauthedRoute } from '@fc/routing';
+import { authedFallback, unauthedFallback } from '@fc/user-dashboard';
 
 import {
   Error409Component,
@@ -16,20 +17,19 @@ import {
   TracksPage,
   UserPreferencesPage,
 } from './pages';
-
-enum AUTH_FALLBACK_ROUTES {
-  INDEX = '/',
-  HISTORY = '/history',
-}
+import { FraudFormPage } from './pages/fraud-form';
+import { FraudLoginPage } from './pages/fraud-login';
 
 export const ApplicationRoutes = React.memo(() => (
   <Routes>
     <Route element={<ApplicationLayout />} path="/">
-      <Route element={<AuthedRoute fallback={AUTH_FALLBACK_ROUTES.INDEX} />}>
+      <Route element={<AuthedRoute fallback={authedFallback} />}>
         <Route element={<TracksPage />} path="history" />
         <Route element={<UserPreferencesPage />} path="preferences" />
+        <Route element={<FraudFormPage />} path="fraud/form" />
       </Route>
-      <Route element={<UnauthedRoute fallback={AUTH_FALLBACK_ROUTES.HISTORY} />}>
+      <Route element={<UnauthedRoute fallback={unauthedFallback} />}>
+        <Route element={<FraudLoginPage />} path="fraud" />
         <Route index element={<HomePage />} />
       </Route>
       <Route element={<ErrorPage />} path="error">

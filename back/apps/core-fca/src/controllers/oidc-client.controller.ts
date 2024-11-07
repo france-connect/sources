@@ -139,12 +139,21 @@ export class OidcClientController {
     sessionOidc.set('login_hint', email);
 
     if (identityProviderUid) {
-      const { title: idpLabel } =
+      const { name: idpName, title: idpLabel } =
         await this.identityProvider.getById(identityProviderUid);
       this.logger.debug(
         `Redirect "****@${fqdn}" to selected idp "${idpLabel}" (${identityProviderUid})`,
       );
 
+      const trackingContext: TrackedEventContextInterface = {
+        req,
+        fqdn,
+        idpId: identityProviderUid,
+        idpLabel: idpLabel,
+        idpName: idpName,
+      };
+      const { FC_REDIRECT_TO_IDP } = this.tracking.TrackedEventsMap;
+      await this.tracking.track(FC_REDIRECT_TO_IDP, trackingContext);
       return this.coreFca.redirectToIdp(
         res,
         identityProviderUid,
@@ -169,6 +178,9 @@ export class OidcClientController {
         `Redirect "****@${fqdn}" to unique idp "${idpLabel}" (${idpId})`,
       );
 
+      const trackingContext: TrackedEventContextInterface = { req, fqdn };
+      const { FC_REDIRECT_TO_IDP } = this.tracking.TrackedEventsMap;
+      await this.tracking.track(FC_REDIRECT_TO_IDP, trackingContext);
       // we need to keep idpId as 2nd parameter for the idp_hint
       return this.coreFca.redirectToIdp(res, idpId, authorizeParams);
     }
@@ -259,12 +271,12 @@ export class OidcClientController {
     await this.sessionService.duplicate(res, GetOidcCallbackSessionDto);
     this.logger.debug('Session has been detached and duplicated');
 
-    const { IDP_CALLEDBACK } = this.tracking.TrackedEventsMap;
-    await this.tracking.track(IDP_CALLEDBACK, { req });
-
-    const { idpId, idpNonce, idpState, interactionId, spId } =
+    const { idpId, idpNonce, idpState, interactionId, spId, login_hint } =
       sessionOidc.get();
 
+    const fqdn = this.fqdnService.getFqdnFromEmail(login_hint ?? '');
+    const { IDP_CALLEDBACK } = this.tracking.TrackedEventsMap;
+    await this.tracking.track(IDP_CALLEDBACK, { req, fqdn });
     const tokenParams = {
       state: idpState,
       nonce: idpNonce,
@@ -283,7 +295,7 @@ export class OidcClientController {
       );
 
     const { FC_REQUESTED_IDP_TOKEN } = this.tracking.TrackedEventsMap;
-    await this.tracking.track(FC_REQUESTED_IDP_TOKEN, { req });
+    await this.tracking.track(FC_REQUESTED_IDP_TOKEN, { req, fqdn });
 
     const userInfoParams = {
       accessToken,
@@ -296,9 +308,28 @@ export class OidcClientController {
     );
 
     const { FC_REQUESTED_IDP_USERINFO } = this.tracking.TrackedEventsMap;
-    await this.tracking.track(FC_REQUESTED_IDP_USERINFO, { req });
+    const identityFqdn = this.fqdnService.getFqdnFromEmail(
+      identity.email ?? '',
+    );
+    await this.tracking.track(FC_REQUESTED_IDP_USERINFO, {
+      req,
+      fqdn: identityFqdn,
+    });
 
     await this.validateIdentity(idpId, identity);
+
+    const isAllowedIdpForEmail = await this.fqdnService.isAllowedIdpForEmail(
+      idpId,
+      identity.email,
+    );
+    if (!isAllowedIdpForEmail) {
+      const fqdn = this.fqdnService.getFqdnFromEmail(identity.email);
+      this.logger.warning(
+        `Identity from "${idpId}" using "***@${fqdn}" is not allowed`,
+      );
+      const { FC_FQDN_MISSMATCH } = this.tracking.TrackedEventsMap;
+      await this.tracking.track(FC_FQDN_MISSMATCH, { req });
+    }
 
     const identityExchange: OidcSession = cloneDeep({
       amr,

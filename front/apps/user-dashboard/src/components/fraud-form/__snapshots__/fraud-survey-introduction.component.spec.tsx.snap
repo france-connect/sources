@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FraudSurveyIntroductionComponent should match the snapshot 1`] = `
+<div>
+  <div>
+    <h1
+      class="fr-h3 is-blue-france fr-mb-1w"
+    >
+      <b>
+        Je signale une usurpation
+      </b>
+    </h1>
+    <p>
+      Vous recevez une alerte de connexion dont vous n’êtes pas à l’origine ?
+      <br />
+      Afin de vous protéger contre une éventuelle usurpation de votre identité, laissez-nous vous guider à sécuriser votre accès FranceConnect.
+    </p>
+    <div>
+      SimpleButton
+    </div>
+  </div>
+</div>
+`;

@@ -32,6 +32,6 @@ export const AccountProtocol = {
 
 export const FraudProtocol = {
   Commands: {
-    GET_HELLO: 'GET_HELLO',
+    PROCESS_FRAUD_CASE: 'PROCESS_FRAUD_CASE',
   },
 };

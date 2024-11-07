@@ -14,6 +14,7 @@ export type ICsmrTracksLegacyFieldsData = {
   fiSub: string;
   fsId: string;
   fsSub: string;
+  cinematicID: string;
   scopes?: string;
   userIp: string;
   action: string;

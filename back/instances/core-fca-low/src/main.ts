@@ -38,6 +38,7 @@ async function bootstrap() {
       scriptSrc,
       connectSrc,
       frameAncestors,
+      imgSrc,
     },
   } = configService.get<AppConfig>('App');
 
@@ -87,6 +88,7 @@ async function bootstrap() {
         scriptSrc,
         connectSrc,
         frameAncestors,
+        imgSrc,
         /**
          * We should be able to call to any domain that we need (SPs, IdPs, rnipp), the default "self"
          * is too restricting. We don't have a precise domain to restrain to.

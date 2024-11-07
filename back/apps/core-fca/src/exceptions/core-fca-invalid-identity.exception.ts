@@ -8,13 +8,14 @@ import { Description } from '@fc/exceptions';
 
 import { CoreFcaBaseException } from './core-fca-base.exception';
 
-@Description(
-  "La session de l'utilisateur ne contient pas les informations attendes sur l'usager au retour du fournisseur d'identité. L'utilisateur doit redémarrer sa cinématique. Si cela persiste, contacter le support N3",
-)
+const description =
+  'Nous ne pouvons pas vérifier votre identité auprès de la source officielle : certains éléments ont un format invalide. Nous vous conseillons de contacter le service informatique de votre organisation ou ministère.';
+
+@Description(description)
 export class CoreFcaInvalidIdentityException extends CoreFcaBaseException {
   code = ErrorCode.INVALID_IDENTITY;
   public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
-
+  public description: string = description;
   public displayContact = true;
 
   static ERROR = 'server_error';

@@ -1,0 +1,4 @@
+{
+  "DSFR.stepper.location": "Étape {current} sur {total}",
+  "DSFR.stepper.nextStep": "Étape suivante"
+}

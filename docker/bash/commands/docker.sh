@@ -31,13 +31,18 @@ _halt() {
   $DOCKER_COMPOSE stop
 }
 
+_compose() {
+  cd ${WORKING_DIR}
+  $DOCKER_COMPOSE "${@}"
+}
+
 _exec() {
   app=${1:-empty}
   [ $# -gt 0 ] && shift
 
   case ${app} in
   empty)
-    echo "Usage: docker-stack exec <container_name> <command>"
+    echo "Usage: dks exec <container_name> <command>"
     exit 1
     ;;
   *)
@@ -87,8 +92,7 @@ _pull_failure() {
 
 _prune() {
   _halt
-  docker network prune -f
-  docker container prune -f
+  $DOCKER_COMPOSE down -v --remove-orphans
 }
 
 _prune_all() {
@@ -107,24 +111,7 @@ _prune_all() {
 }
 
 _prune_ci() {
-  local fcContainers=$(docker ps -aq --filter name=^fc)
-  local fcNetworks=$(docker network ls | grep -oE 'fc_[^ ]+' | grep -v "fc_public")
-  echo "${fcContainers}"
-  echo "${fcNetworks}"
-
-  # docker network inspect fc_public
-  # ${DOCKER_COMPOSE} down --remove-orphans
-
-  docker ps
-  for container in ${fcContainers}; do
-    docker container rm -f "${container}"
-  done
-
-  for network in ${fcNetworks}; do
-    docker network rm "${network}"
-  done
-
-  docker volume prune -f
+  ${DOCKER_COMPOSE} down --volumes --remove-orphans
 }
 
 _get_env() {

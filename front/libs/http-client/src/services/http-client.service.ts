@@ -84,7 +84,7 @@ export const post = async (
     const { csrfToken } = await getCSRF();
 
     const method = Methods.POST;
-    const datas = { ...data, _csrf: csrfToken };
+    const datas = { ...data, csrfToken };
     const axiosConfig = { transformRequest: objectToFormData, ...options };
     return await makeRequest(method, endpoint, datas, axiosConfig);
   } catch (err) {

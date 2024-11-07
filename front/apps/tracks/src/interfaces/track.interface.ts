@@ -37,6 +37,7 @@ export interface TrackInterface {
   platform: 'FranceConnect' | 'FranceConnect+';
   interactionAcr: keyof typeof EidasToLabel;
   spLabel?: string;
+  authenticationEventId: string;
   time: number;
   trackId: string;
 }

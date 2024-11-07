@@ -4,6 +4,7 @@
 import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
+import { ConfigConfig } from '@fc/config';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
 import { LoggerConfig } from '@fc/logger';
 import { OidcAcrConfig } from '@fc/oidc-acr';
@@ -18,6 +19,11 @@ export class MockServiceProviderConfig {
   @ValidateNested()
   @Type(() => AppConfig)
   readonly App: AppConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ConfigConfig)
+  readonly Config: ConfigConfig;
 
   @IsObject()
   @ValidateNested()

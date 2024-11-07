@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FraudFormComponent should match the snapshot on desktop layout 1`] = `
+<div>
+  <div
+    class="form fr-mt-4w fr-mb-3w fr-py-6w fr-px-10w"
+  >
+    <form
+      data-testid="fraud-form"
+      id="fraud-form-component"
+    >
+      <h5
+        class="fr-mb-1w"
+      >
+        Formulaire de contact
+      </h5>
+      <p
+        class="fr-text--sm"
+      >
+        * champs obligatoires.
+      </p>
+      <div
+        data-mockid="Field"
+      />
+      <div
+        data-mockid="Field"
+      />
+      <div>
+        TextInputComponent
+      </div>
+      <div>
+        TextInputComponent
+      </div>
+      <div>
+        TextInputComponent
+      </div>
+      <div>
+        TextAreaInputComponent
+      </div>
+      <div>
+        CheckboxInput
+      </div>
+      <div
+        class="text-right"
+      >
+        <div>
+          SimpleButton
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+exports[`FraudFormComponent should match the snapshot on mobile layout 1`] = `
+<div>
+  <div
+    class="form fr-mt-4w fr-mb-3w fr-py-2w fr-px-2w"
+  >
+    <form
+      data-testid="fraud-form"
+      id="fraud-form-component"
+    >
+      <h5
+        class="fr-mb-1w"
+      >
+        Formulaire de contact
+      </h5>
+      <p
+        class="fr-text--sm"
+      >
+        * champs obligatoires.
+      </p>
+      <div
+        data-mockid="Field"
+      />
+      <div
+        data-mockid="Field"
+      />
+      <div>
+        TextInputComponent
+      </div>
+      <div>
+        TextInputComponent
+      </div>
+      <div>
+        TextInputComponent
+      </div>
+      <div>
+        TextAreaInputComponent
+      </div>
+      <div>
+        CheckboxInput
+      </div>
+      <div
+        class="text-right"
+      >
+        <div>
+          SimpleButton
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+`;

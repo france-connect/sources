@@ -25,6 +25,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     # Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé - discov - crypt"
     Et le niveau de sécurité de l'évènement est "Substantiel"
+    Et le code d'identification de l'évènement est affiché
 
   Scénario: Historique Connexion - FC+ - FS public avec scope data
     Etant donné que j'utilise la plateforme "FranceConnect+"
@@ -46,6 +47,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     # Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé - discov - crypt"
     Et le niveau de sécurité de l'évènement est "Substantiel"
+    Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du 1er évènement "Échange de Données" sur "FranceConnect+" du FS "FSP1V2 - Integ" avec le FD "DGFIP"
     Et la plateforme de l'évènement est "FranceConnect+"
     Et le type d'action de l'évènement est "Échange de Données"
@@ -91,6 +93,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     # Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé - discov - crypt"
     Et le niveau de sécurité de l'évènement est "Substantiel"
+    Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect+" du fournisseur de service "FSP2V2 - Integ"
     Et la plateforme de l'évènement est "FranceConnect+"
     Et le type d'action de l'évènement est "Autorisation"
@@ -128,6 +131,7 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     # Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé - discov - crypt"
     Et le niveau de sécurité de l'évènement est "Substantiel"
+    Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect+" du fournisseur de service "FSP2V2 - Integ"
     Et la plateforme de l'évènement est "FranceConnect+"
     Et le type d'action de l'évènement est "Autorisation"
@@ -188,3 +192,4 @@ Fonctionnalité: Historique Connexion sur FC+ (integ01)
     # Et la localisation de l'évènement est affichée
     Et le nom du fournisseur d'identité de l'évènement est "Identity Provider - eIDAS élevé - discov - crypt"
     Et le niveau de sécurité de l'évènement est "Substantiel"
+    Et le code d'identification de l'évènement est affiché

@@ -1,0 +1,166 @@
+const COMMON_EVENT_KEYS = [
+  'level',
+  'time',
+  'pid',
+  'hostname',
+  'event',
+  'category',
+  'step',
+];
+
+export const EIDAS_FLOW_EVENTS_FR_EU = [
+  {
+    event: 'INCOMING_EIDAS_REQUEST',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeDst',
+      'source',
+      'sessionId',
+      'logId',
+    ],
+  },
+  {
+    event: 'REDIRECTED_TO_FC_AUTHORIZE',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeSrc',
+      'countryCodeDst',
+      'source',
+      'sessionId',
+      'eidasLevelRequested',
+      'logId',
+    ],
+  },
+  {
+    event: 'RECEIVED_FC_AUTH_CODE',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeSrc',
+      'countryCodeDst',
+      'source',
+      'sessionId',
+      'eidasLevelRequested',
+      'logId',
+    ],
+  },
+  {
+    event: 'REDIRECTED_TO_EIDAS_FR_NODE',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeSrc',
+      'countryCodeDst',
+      'source',
+      'sessionId',
+      'eidasLevelRequested',
+      'eidasLevelReceived',
+      'idpSub',
+      'spSub',
+      'logId',
+    ],
+  },
+];
+
+export const EIDAS_FLOW_EVENTS_EU_FR = [
+  {
+    event: 'INCOMING_FC_REQUEST',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeSrc',
+      'source',
+      'sessionId',
+      'logId',
+    ],
+  },
+  {
+    event: 'DISPLAYING_CITIZEN_COUNTRY_CHOICE',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeSrc',
+      'source',
+      'sessionId',
+      'eidasLevelRequested',
+      'logId',
+    ],
+  },
+  {
+    event: 'SELECTED_CITIZEN_COUNTRY',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeSrc',
+      'countryCodeDst',
+      'source',
+      'sessionId',
+      'eidasLevelRequested',
+      'logId',
+    ],
+  },
+  {
+    event: 'REDIRECTED_TO_FR_NODE',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeSrc',
+      'countryCodeDst',
+      'source',
+      'sessionId',
+      'eidasLevelRequested',
+      'logId',
+    ],
+  },
+  {
+    event: 'INCOMING_EIDAS_RESPONSE',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeSrc',
+      'countryCodeDst',
+      'source',
+      'sessionId',
+      'eidasLevelRequested',
+      'logId',
+    ],
+  },
+  {
+    event: 'REDIRECTED_TO_FC',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeSrc',
+      'countryCodeDst',
+      'source',
+      'sessionId',
+      'eidasLevelRequested',
+      'eidasLevelReceived',
+      'idpSub',
+      'spSub',
+      'logId',
+    ],
+  },
+  {
+    event: 'RECEIVED_CALL_ON_TOKEN',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeSrc',
+      'countryCodeDst',
+      'source',
+      'sessionId',
+      'eidasLevelRequested',
+      'eidasLevelReceived',
+      'idpSub',
+      'spSub',
+      'logId',
+    ],
+  },
+  {
+    event: 'RECEIVED_CALL_ON_USERINFO',
+    keys: [
+      ...COMMON_EVENT_KEYS,
+      'countryCodeSrc',
+      'countryCodeDst',
+      'source',
+      'sessionId',
+      'eidasLevelRequested',
+      'eidasLevelReceived',
+      'idpSub',
+      'spSub',
+      'logId',
+    ],
+  },
+];

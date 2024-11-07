@@ -1,17 +1,3 @@
 .ac-background-alt-blue-france {
   background-color: #f5f5fe;
 }
-
-.ac-color-alt-grey {
-  color: #161616;
-}
-
-.ac-alt-high-blue-france {
-  color: #000091;
-}
-
-@media only screen and (max-width: 991px) {
-  .ac-background-alt-grey {
-    display: none;
-  }
-}

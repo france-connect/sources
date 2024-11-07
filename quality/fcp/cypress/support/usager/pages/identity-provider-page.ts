@@ -40,8 +40,7 @@ export default class IdentityProviderPage {
       if ($elem.is('select')) {
         cy.wrap($elem).select(idpAcr);
       } else {
-        cy.wrap($elem).clear();
-        cy.wrap($elem).type(idpAcr);
+        cy.wrap($elem).clearThenType(idpAcr);
       }
     });
   }

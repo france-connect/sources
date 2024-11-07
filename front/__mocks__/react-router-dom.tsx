@@ -25,6 +25,7 @@ module.exports = {
   })),
   useNavigate: jest.fn(() => jest.fn()),
   useParams: jest.fn(),
+  useSearchParams: jest.fn(() => [new URLSearchParams(), jest.fn()]),
 };
 
 export {};

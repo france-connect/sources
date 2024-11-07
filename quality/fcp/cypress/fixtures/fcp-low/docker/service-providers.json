@@ -111,5 +111,20 @@
       "logoutButton": "[data-testid='logout-button-component']"
     },
     "authorizeHttpMethod": "get"
+  },
+  {
+    "name": "ud-fraud-login",
+    "descriptions": ["user-dashboard-fraud"],
+    "mocked": false,
+    "url": "https://ud.docker.dev-franceconnect.fr/fraud",
+    "acrValue": "eidas1",
+    "claims": [],
+    "scopes": [],
+    "explicitConsent": false,
+    "selectors": {
+      "fcButton": "[data-testid='LoginConnectButton'] button",
+      "logoutButton": "[data-testid='logout-button-component']"
+    },
+    "authorizeHttpMethod": "get"
   }
 ]

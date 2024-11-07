@@ -6,6 +6,7 @@ const FI = $session('OidcClient.idpName') ?? notProvided;
 const errorId = locals.error.id ?? notProvided;
 const FS = $session('OidcClient.spName') ?? notProvided;
 const messageToDisplay = "Bonjour, je vous signale que j'ai rencontré une erreur dont le code est : " + errorCode + " et dont le message d'erreur est : " + errorMessage  + ". L'id de l'erreur est : " + errorId + ". Je souhaitais me connecter à : " + FS + ". Mon fournisseur d'identité est : " + FI + "." ;
+const contactHref = locals.exception.contactHref ?? `mailto:support@agentconnect.gouv.fr?subject=Signaler l'erreur ${locals.error.code} sur ProConnect&body=${messageToDisplay}`;
 %>
 <section class="fr-grid-row fr-grid-row--center fr-my-5w">
   <div class="fr-col-lg-8 fr-col-md-7 fr-col-sm-12">
@@ -18,13 +19,11 @@ const messageToDisplay = "Bonjour, je vous signale que j'ai rencontré une erreu
         <% } %>
       </h1>
 
-      <p>
-        <%  if (locals.exception.description)  { %>
-          <%= locals.exception.description %>
-        <% } else { %>
-          Nous n'arrivons pas à vous connecter à votre service en ligne pour l'instant.
-        <% } %>
-      </p>
+      <% if (locals.exception.description)  { %>
+        <p class="error-description-with-white-space"><%= locals.exception.description %></p>
+      <% } else { %>
+        <p>Nous n'arrivons pas à vous connecter à votre service en ligne pour l'instant.</p>
+      <% } %>
 
       <% if (locals.error.code) { %>
         <p class="fr-text--xs fr-mt-0 fr-mb-1v" data-testid="error-code">
@@ -57,7 +56,7 @@ const messageToDisplay = "Bonjour, je vous signale que j'ai rencontré une erreu
         </div>
 
         <p class="fr-btn fr-btn--tertiary">
-          <a class="mailto" href="mailto:support@agentconnect.gouv.fr?subject=Signaler l'erreur <%= locals.error.code %> sur AgentConnect&body=<%= messageToDisplay %>">
+          <a class="mailto" href="<%= contactHref %>">
             Signaler l'erreur
             <span class="fr-icon-flag-line fr-pl-1v" aria-hidden="true"></span>
           </a>

@@ -18,6 +18,7 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
   const [opened, toggleOpened] = useToggle(false);
 
   const {
+    authenticationEventId,
     city,
     claims,
     country,
@@ -64,6 +65,7 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
 
       <TrackCardContentComponent
         accessibleId={cardId}
+        authenticationEventId={authenticationEventId}
         city={city}
         claims={claims}
         country={country}

@@ -38,7 +38,14 @@ export class TracksV2Formatter implements TracksFormatterInterface {
   ): ICsmrTracksOutputTrack {
     try {
       const { _id: trackId, _source } = rawTrack;
-      const { event, spName: spLabel, spAcr, interactionAcr, time } = _source;
+      const {
+        event,
+        spName: spLabel,
+        spAcr,
+        interactionAcr,
+        time,
+        browsingSessionId: authenticationEventId,
+      } = _source;
 
       const idpLabel = this.getIdpLabel(_source);
       const claims = this.getClaimsGroups(_source);
@@ -54,6 +61,7 @@ export class TracksV2Formatter implements TracksFormatterInterface {
         claims,
         idpLabel,
         trackId,
+        authenticationEventId,
         platform: this.platform,
       };
 

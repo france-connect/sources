@@ -26,3 +26,6 @@ find . -maxdepth 1 -type f -regextype posix-extended -iregex '.*/tsconfig\..+' |
 
 echo "Removing instances build folder"
 find ./instances -maxdepth 1 -type d -name build | xargs -i rm -rf {}
+
+echo "Removing instances translation files"
+find ./instances -type f -name "*.i18n.json" | xargs -i rm -f {}
