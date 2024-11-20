@@ -39,7 +39,7 @@ const contactHref = locals.exception.contactHref ?? `mailto:support@agentconnect
     
       <% if (locals.error.message) { %>
         <p class="fr-text--xs fr-mt-0 fr-mb-1v" data-testid="error-message">
-          message erreur : "<%= locals.exception.message %>".
+          message erreur : "<%= $translate(locals.error.message, null, { default: 'exceptions.default_message' }) %>".
         </p>
       <% } %>
     </div>

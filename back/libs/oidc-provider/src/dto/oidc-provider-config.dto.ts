@@ -10,6 +10,7 @@ import {
   IsObject,
   IsOptional,
   IsString,
+  IsUrl,
   ValidateNested,
 } from 'class-validator';
 import {
@@ -519,8 +520,6 @@ class AllClientMetadataValidator implements AllClientMetadata {
   readonly token_endpoint_auth_signing_alg?: SigningAlgorithm;
 
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_signed_response_alg?: SigningAlgorithmWithNone;
 
   @IsOptional()
@@ -826,4 +825,7 @@ export class OidcProviderConfig {
   @IsBoolean()
   @IsOptional()
   readonly isLocalhostAllowed?: boolean;
+
+  @IsUrl()
+  readonly errorUriBase?: string;
 }

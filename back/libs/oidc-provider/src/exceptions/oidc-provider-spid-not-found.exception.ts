@@ -3,24 +3,15 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
-import { OidcProviderBaseException } from './oidc-provider-base.exception';
+import { OidcProviderBaseRenderedException } from './oidc-provider-base-rendered.exception';
 
-@Description(
-  "Le client id associé à ce fournisseur de service n'a pas été trouvé dans le contexte. Si le problème persiste, contacter le support N3",
-)
-export class OidcProviderSpIdNotFoundException extends OidcProviderBaseException {
-  public readonly code = ErrorCode.SP_ID_NOT_FOUND;
-  public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
-
+export class OidcProviderSpIdNotFoundException extends OidcProviderBaseRenderedException {
+  static CODE = ErrorCode.SP_ID_NOT_FOUND;
+  static DOCUMENTATION =
+    "Le client id associé à ce fournisseur de service n'a pas été trouvé dans le contexte. Si le problème persiste, contacter le support N3";
   static ERROR = 'invalid_request';
   static ERROR_DESCRIPTION = 'invalid client_id parameter';
-
-  constructor() {
-    super(
-      'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
-    );
-  }
+  static HTTP_STATUS_CODE = HttpStatus.BAD_REQUEST;
+  static UI = 'OidcProvider.exceptions.oidcProviderSpidNotFound';
 }

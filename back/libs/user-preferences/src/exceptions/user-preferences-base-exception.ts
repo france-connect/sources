@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // declarative file
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class UserPreferencesBaseException extends FcException {
-  scope = 31;
+  static SCOPE = 31;
 }

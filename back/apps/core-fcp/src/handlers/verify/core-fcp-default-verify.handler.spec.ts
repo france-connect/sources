@@ -31,10 +31,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
     prompt: {},
 
     params: {
-      // oidc param
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas3',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_id: 'spId',
     },
     uid: uidMock,
@@ -48,9 +45,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
   };
 
   const spIdentityMock = {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Edward',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'TEACH',
     email: 'eteach@fqdn.ext',
   } as RequiredExcept<IOidcIdentity, 'sub' | 'email'>;
@@ -99,19 +94,12 @@ describe('CoreFcpDefaultVerifyHandler', () => {
   };
 
   const rnippIdentityMock = {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     gender: 'gender',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'given_name',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name_array: ['given_name_array'],
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'family_name',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     birthdate: 'birthdate',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     birthplace: 'birthplace',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     birthcountry: 'birthcountry',
   };
   const rnippClaims = {
@@ -256,12 +244,12 @@ describe('CoreFcpDefaultVerifyHandler', () => {
         .mockResolvedValueOnce(rnippIdentityMock);
     });
 
-    it('Should not throw if verified', async () => {
+    it('should not throw if verified', async () => {
       // Then
       await expect(service.handle(handleArgument)).resolves.not.toThrow();
     });
 
-    it('Should call checkAccountBlocked', async () => {
+    it('should call checkAccountBlocked', async () => {
       // Given
       service['checkAccountBlocked'] = jest.fn();
       // When
@@ -273,7 +261,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       );
     });
 
-    it('Should throw if acr is not validated', async () => {
+    it('should throw if acr is not validated', async () => {
       // Given
       const errorMock = new Error('my error 1');
       coreAcrServiceMock.checkIfAcrIsValid.mockImplementation(() => {
@@ -283,7 +271,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
-    it('Should throw if identity provider is not usable', async () => {
+    it('should throw if identity provider is not usable', async () => {
       // Given
       const errorMock = new Error('my error');
       sessionServiceMock.get.mockImplementationOnce(() => {
@@ -293,7 +281,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
-    it('Should throw if service Provider service fails', async () => {
+    it('should throw if service Provider service fails', async () => {
       // Given
       const errorMock = new Error('my error');
       serviceProviderMock.getById.mockReset().mockRejectedValueOnce(errorMock);
@@ -302,7 +290,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
-    it('Should throw if rnipp check refuses identity', async () => {
+    it('should throw if rnipp check refuses identity', async () => {
       // Given
       const errorMock = new Error('my error');
       service['retrieveRnippIdentity'] = jest
@@ -312,7 +300,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
-    it('Should throw if identity storage for service provider fails', async () => {
+    it('should throw if identity storage for service provider fails', async () => {
       // Given
       const errorMock = new Error('my error');
       sessionServiceMock.set.mockImplementationOnce(() => {
@@ -322,7 +310,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
-    it('Should call session set with amr parameter', async () => {
+    it('should call session set with amr parameter', async () => {
       // Given
       const buildRnippClaimsResult = {
         foo: 'bar',
@@ -365,7 +353,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       });
     });
 
-    it('Should call computeFederation()', async () => {
+    it('should call computeFederation()', async () => {
       // When
       await service.handle(handleArgument);
       // Then
@@ -423,11 +411,11 @@ describe('CoreFcpDefaultVerifyHandler', () => {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/134
      *
      * // RNIPP resilience
-     * it('Should pass if rnipp is down and account is known', async () => {});
-     * it('Should throw if rnipp is down and account is unknown', async () => {});
+     * it('should pass if rnipp is down and account is known', async () => {});
+     * it('should throw if rnipp is down and account is unknown', async () => {});
      *
      * // Service provider usability
-     * it('Should throw if service provider is not usable ', async () => {});
+     * it('should throw if service provider is not usable ', async () => {});
      */
   });
 
@@ -445,7 +433,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
   });
 
   describe('checkAccountBlocked', () => {
-    it('Should throw if account is blocked', () => {
+    it('should throw if account is blocked', () => {
       // Given
       const accountMock = { active: false } as Account;
       // Then
@@ -454,14 +442,14 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       );
     });
 
-    it('Should NOT throw if account is not blocked', () => {
+    it('should NOT throw if account is not blocked', () => {
       // Given
       const accountMock = { active: true } as Account;
       // Then
       expect(() => service['checkAccountBlocked'](accountMock)).not.toThrow();
     });
 
-    it('Should NOT throw if account does not exists', () => {
+    it('should NOT throw if account does not exists', () => {
       // Given
       const accountMock = { id: null } as Account;
       // Then
@@ -588,7 +576,6 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       expect(buildFromIdpIdentityResult).toEqual({
         ...rnippClaims,
         ...idpIdentityMock,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         given_name_array: rnippIdentityMock.given_name_array,
       });
     });
@@ -682,9 +669,7 @@ describe('CoreFcpDefaultVerifyHandler', () => {
       // Given
       const input = {
         gender: Symbol('gender value'),
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         given_name: Symbol('given name value'),
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         family_name: Symbol('family_name'),
         birthdate: Symbol('birthdate value'),
         birthplace: Symbol('birthplace value'),

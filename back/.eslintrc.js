@@ -18,6 +18,8 @@ const allowedSnakeCaseParameters = [
   'end_session',
   'end_session_endpoint',
   'error_description',
+  'error_detail',
+  'error_uri',
   'family_name',
   'given_name',
   'given_name_array',
@@ -68,11 +70,10 @@ const allowedSnakeCaseParameters = [
   'userinfo_encrypted_response_enc',
   'userinfo_endpoint',
   'userinfo_signed_response_alg',
-  'usual_name'
-]
+  'usual_name',
+];
 
 const allowedSnakeCaseParametersRegexPattern = `^(${allowedSnakeCaseParameters.join('|')})$`;
-
 
 module.exports = {
   env: {
@@ -80,6 +81,7 @@ module.exports = {
     node: true,
   },
   extends: [
+    'plugin:@eslint-community/eslint-comments/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'prettier',
@@ -110,6 +112,7 @@ module.exports = {
   ],
   root: true,
   rules: {
+    '@eslint-community/eslint-comments/no-unused-disable': 'error',
     '@typescript-eslint/ban-types': [
       'error',
       {
@@ -132,8 +135,8 @@ module.exports = {
         selector: 'variableLike',
         filter: {
           regex: allowedSnakeCaseParametersRegexPattern,
-          match: false
-        }
+          match: false,
+        },
       },
       {
         format: ['camelCase', 'PascalCase', 'UPPER_CASE'],
@@ -142,8 +145,8 @@ module.exports = {
         selector: 'memberLike',
         filter: {
           regex: allowedSnakeCaseParametersRegexPattern,
-          match: false
-        }
+          match: false,
+        },
       },
       {
         format: null,

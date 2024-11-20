@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative file
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class DeviceBaseException extends FcException {
-  scope = 51;
+  static SCOPE = 51;
 }

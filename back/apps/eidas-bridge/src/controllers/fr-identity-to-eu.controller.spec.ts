@@ -190,7 +190,7 @@ describe('FrIdentityToEuController', () => {
       expect(oidcClientConfigServiceMock.get).toHaveBeenCalledTimes(1);
     });
 
-    it('Should generate a random state of 32 characters', async () => {
+    it('should generate a random state of 32 characters', async () => {
       // setup
       sessionServiceOidcMock.set.mockReturnValue(undefined);
       const randSize = 32;
@@ -212,7 +212,7 @@ describe('FrIdentityToEuController', () => {
       expect(frIdentityToEuController['getIdpId']).toHaveBeenCalledWith();
     });
 
-    it('Should init the session', async () => {
+    it('should init the session', async () => {
       // setup
       sessionServiceOidcMock.set.mockReturnValue(undefined);
       cryptographyMock.genRandomString.mockReturnValueOnce('random');
@@ -273,7 +273,7 @@ describe('FrIdentityToEuController', () => {
         .mockReturnValue(idpIdMock);
     });
 
-    it('Should get the eidas request from the session', async () => {
+    it('should get the eidas request from the session', async () => {
       // setup
       sessionServiceOidcMock.set.mockReturnValueOnce('randomStringMockValue');
       // action
@@ -288,7 +288,7 @@ describe('FrIdentityToEuController', () => {
       expect(sessionServiceEidasMock.get).toHaveBeenCalledWith();
     });
 
-    it('Should map eIdas request to Oidc request', async () => {
+    it('should map eIdas request to Oidc request', async () => {
       // Given
       // When
       await frIdentityToEuController.redirectToFcAuthorize(
@@ -303,7 +303,7 @@ describe('FrIdentityToEuController', () => {
       );
     });
 
-    it('Should build the authorize parameters with the oidc params', async () => {
+    it('should build the authorize parameters with the oidc params', async () => {
       sessionServiceOidcMock.set.mockReturnValueOnce('randomStringMockValue');
 
       // action
@@ -322,7 +322,7 @@ describe('FrIdentityToEuController', () => {
       ).toHaveBeenCalledWith();
     });
 
-    it('Should call oidc-client-service to retrieve authorize url', async () => {
+    it('should call oidc-client-service to retrieve authorize url', async () => {
       const authorizeParametersMock = {
         acr_values: oidcRequestMock.acr_values,
         nonce: idpNonceMock,
@@ -369,7 +369,7 @@ describe('FrIdentityToEuController', () => {
       expect(frIdentityToEuController['getIdpId']).toHaveBeenCalledWith();
     });
 
-    it('Should patch the session', async () => {
+    it('should patch the session', async () => {
       sessionServiceOidcMock.set.mockReturnValueOnce(undefined);
 
       // action
@@ -402,7 +402,7 @@ describe('FrIdentityToEuController', () => {
       ).rejects.toThrow();
     });
 
-    it('Should return the authorize url with a 302 status code', async () => {
+    it('should return the authorize url with a 302 status code', async () => {
       // setup
       const expected = { statusCode: 302, url: authorizeUrlMock };
       sessionServiceOidcMock.set.mockResolvedValueOnce(undefined);

@@ -78,7 +78,7 @@ Fonctionnalité: Aidants Connect
     Et je continue sur le fournisseur de service
     Et je suis connecté au fournisseur de service
 
-  @fcpLow @ignoreInteg01
+  @fcpLow @ignoreInteg01 @exceptions
   Scénario: TA05: Aidants Connect - Erreur si aucun périmètre renvoyé par Aidants Connect
     Etant donné que j'utilise un fournisseur de service "avec les périmètres Famille-Scolarité et Travail-Formation"
     Et que je navigue sur la page fournisseur de service

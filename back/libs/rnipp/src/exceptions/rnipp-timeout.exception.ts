@@ -3,21 +3,16 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
 import { RnippBaseException } from './';
 
-@Description(
-  "Erreur de communication avec le RNIPP (pas de réponse du RNIPP). L'utilisateur doit redémarrer sa cinématique. Si cela persiste, contacter le support N3",
-)
 export class RnippTimeoutException extends RnippBaseException {
-  public readonly code = ErrorCode.REQUEST_TIMEOUT;
-  public readonly message =
-    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
-  public readonly httpStatusCode = HttpStatus.GATEWAY_TIMEOUT;
-
+  static CODE = ErrorCode.REQUEST_TIMEOUT;
+  static DOCUMENTATION =
+    "Erreur de communication avec le RNIPP (pas de réponse du RNIPP). L'utilisateur doit redémarrer sa cinématique. Si cela persiste, contacter le support N3";
   static ERROR = 'temporarily_unavailable';
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
+  static HTTP_STATUS_CODE = HttpStatus.GATEWAY_TIMEOUT;
+  static UI = 'Rnipp.exceptions.rnippTimeout';
 }

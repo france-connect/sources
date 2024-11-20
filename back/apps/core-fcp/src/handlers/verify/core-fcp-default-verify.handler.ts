@@ -241,14 +241,10 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
      *
      * We need to replace IdP's sub, by our own sub
      */
-    // oidc claim
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { given_name_array } = rnippIdentity;
     return {
       ...idpIdentity,
       ...rnippClaims,
-      // oidc claims
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       given_name_array,
     };
   }

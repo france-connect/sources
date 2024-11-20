@@ -9,8 +9,6 @@ class MtlsEndpointAliases {
   readonly token_endpoint: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_endpoint: string;
 
   @IsString()
@@ -38,8 +36,6 @@ export class IssuerMetadata {
   readonly jwks_uri: string;
 
   @IsString()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_endpoint: string;
 
   @IsString()

@@ -1,11 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { throwException } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
-import {
-  OidcProviderErrorService,
-  OidcProviderService,
-} from '@fc/oidc-provider';
+import { OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterEnvService } from '@fc/service-provider-adapter-env';
 import { SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
@@ -15,7 +13,12 @@ import { getSessionServiceMock } from '@mocks/session';
 
 import { OidcMiddlewareService } from './oidc-middleware.service';
 
-describe('MockIdentityProviderFcaService', () => {
+jest.mock('@fc/exceptions/helpers', () => ({
+  ...jest.requireActual('@fc/exceptions/helpers'),
+  throwException: jest.fn(),
+}));
+
+describe('OidcMiddlewareService', () => {
   let service: OidcMiddlewareService;
 
   const loggerMock = getLoggerMock();
@@ -39,10 +42,6 @@ describe('MockIdentityProviderFcaService', () => {
     clearCookies: jest.fn(),
   };
 
-  const oidcProviderErrorServiceMock = {
-    throwError: jest.fn(),
-  };
-
   const trackingMock = {
     TrackedEventsMap: {
       RECEIVED_CALL_ON_TOKEN: {},
@@ -51,12 +50,13 @@ describe('MockIdentityProviderFcaService', () => {
     track: jest.fn(),
   };
 
+  const throwExceptionMock = jest.mocked(throwException);
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LoggerService,
         OidcProviderService,
-        OidcProviderErrorService,
         OidcMiddlewareService,
         ServiceProviderAdapterEnvService,
         SessionService,
@@ -65,8 +65,6 @@ describe('MockIdentityProviderFcaService', () => {
     })
       .overrideProvider(OidcProviderService)
       .useValue(oidcProviderServiceMock)
-      .overrideProvider(OidcProviderErrorService)
-      .useValue(oidcProviderErrorServiceMock)
       .overrideProvider(ServiceProviderAdapterEnvService)
       .useValue(serviceProviderEnvServiceMock)
       .overrideProvider(SessionService)
@@ -333,11 +331,8 @@ describe('MockIdentityProviderFcaService', () => {
       // When
       await service['tokenMiddleware'](eventCtxMock);
       // Then
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledWith(
-        eventCtxMock,
-        errorMock,
-      );
+      expect(throwExceptionMock).toHaveBeenCalledTimes(1);
+      expect(throwExceptionMock).toHaveBeenCalledWith(errorMock);
     });
 
     it('should call throwError if tracking.track throw an error', async () => {
@@ -349,11 +344,8 @@ describe('MockIdentityProviderFcaService', () => {
       // When
       await service['tokenMiddleware'](eventCtxMock);
       // Then
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledWith(
-        eventCtxMock,
-        errorMock,
-      );
+      expect(throwExceptionMock).toHaveBeenCalledTimes(1);
+      expect(throwExceptionMock).toHaveBeenCalledWith(errorMock);
     });
   });
 
@@ -392,11 +384,8 @@ describe('MockIdentityProviderFcaService', () => {
       // When
       await service['userinfoMiddleware'](eventCtxMock);
       // Then
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledWith(
-        eventCtxMock,
-        errorMock,
-      );
+      expect(throwExceptionMock).toHaveBeenCalledTimes(1);
+      expect(throwExceptionMock).toHaveBeenCalledWith(errorMock);
     });
 
     it('should call throwError if tracking.track throw an error', async () => {
@@ -408,11 +397,8 @@ describe('MockIdentityProviderFcaService', () => {
       // When
       await service['userinfoMiddleware'](eventCtxMock);
       // Then
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledWith(
-        eventCtxMock,
-        errorMock,
-      );
+      expect(throwExceptionMock).toHaveBeenCalledTimes(1);
+      expect(throwExceptionMock).toHaveBeenCalledWith(errorMock);
     });
   });
 

@@ -10,6 +10,7 @@ import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { LogoutParamsDto, RevocationTokenParamsDTO } from './dto';
+import { OidcProviderRenderedJsonExceptionFilter } from './filters';
 import { OidcProviderController } from './oidc-provider.controller';
 import { OIDC_PROVIDER_CONFIG_APP_TOKEN } from './tokens';
 
@@ -55,6 +56,10 @@ describe('OidcProviderController', () => {
     finishInteraction: jest.fn(),
   };
 
+  const jsonExceptionFilterMock = {
+    catch: jest.fn(),
+  };
+
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [OidcProviderController],
@@ -71,6 +76,8 @@ describe('OidcProviderController', () => {
         LoggerService,
       ],
     })
+      .overrideFilter(OidcProviderRenderedJsonExceptionFilter)
+      .useValue(jsonExceptionFilterMock)
       .overrideProvider(OidcProviderService)
       .useValue(oidcProviderServiceMock)
       .overrideProvider(LoggerService)

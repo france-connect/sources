@@ -36,8 +36,6 @@ class IssuerDto {
 
   @IsUrl()
   @IsOptional()
-  // openid defined property names
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly jwks_uri?: string;
 }
 

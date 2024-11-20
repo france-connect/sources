@@ -49,7 +49,14 @@ export default {
     CoreRoutes.REDIRECT_TO_SP_WITH_ERROR,
   ],
   templateExposed: {
-    OidcClient: { spId: true, spName: true, idpName: true, idpLabel: true },
+    OidcClient: {
+      spId: true,
+      spName: true,
+      spRedirectUri: true,
+      spState: true,
+      idpName: true,
+      idpLabel: true,
+    },
   },
   schema: CoreFcpSession,
   defaultData: {

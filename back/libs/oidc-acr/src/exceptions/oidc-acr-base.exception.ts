@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative file
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class OidcAcrBaseException extends FcException {
-  scope = 52;
+  static SCOPE = 52;
 }

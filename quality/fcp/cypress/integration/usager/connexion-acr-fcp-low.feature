@@ -48,6 +48,7 @@ Fonctionnalité: Connexion ACR
     Et le titre de l'erreur fournisseur de service est "invalid_acr"
     Et la description de l'erreur fournisseur de service est "acr_value is not valid, should be equal one of these values, expected eidas1, got <actualAcr>"
 
+    @exceptions
     Exemples:
       | acrValues      | method | actualAcr |
       | eidas2         | get    | eidas2    |
@@ -81,6 +82,7 @@ Fonctionnalité: Connexion ACR
       | eidas1 | eidas1 | eidas1    |
       | eidas1 | eidas2 | eidas1    |
 
+  @exceptions
   Scénario: Connexion ACR - FCP low - erreur FI retourne un niveau inconnu
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
@@ -96,8 +98,8 @@ Fonctionnalité: Connexion ACR
     Et le code d'erreur FranceConnect est "Y020001"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
 
-  # Absence de FI configuré avec eidas1 seulement en integ01. Scénario à revoir pour être exécutable en integ01 
-  @ignoreInteg01
+  # Absence de FI configuré avec eidas1 seulement en integ01. Scénario à revoir pour être exécutable en integ01
+  @ignoreInteg01 @exceptions
   Scénario: Connexion ACR - FCP low - erreur FI retourne un niveau eidas2
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"

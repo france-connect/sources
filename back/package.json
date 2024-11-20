@@ -60,7 +60,8 @@
     "doc:env": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/config/src/cli/export-env",
     "doc": "yarn doc:exceptions && yarn doc:env",
     "generate-insee:country": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/cog/src/cli/generate-country",
-    "generate-insee:city": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/cog/src/cli/generate-city"
+    "generate-insee:city": "ts-node --dir . -r tsconfig-paths/register --project tsconfig.json libs/cog/src/cli/generate-city",
+    "generate-oidc-provider-exceptions": "./libs/oidc-provider/src/cli/scaffold-exceptions/run.sh"
   },
   "resolutions": {
     "cookie-signature": "1.2.0",
@@ -121,6 +122,7 @@
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
+    "@eslint-community/eslint-plugin-eslint-comments": "^4.4.1",
     "@nestjs/cli": "^10.1.16",
     "@nestjs/schematics": "^10.0.2",
     "@nestjs/testing": "^10.2.3",
@@ -230,7 +232,6 @@
       "^@fc/config(|/.*)$": "<rootDir>/libs/config/src$1",
       "^@mocks/config(|/.*)$": "<rootDir>/libs/config/.mocks$1",
       "^@fc/exceptions-fcp(|/.*)$": "<rootDir>/libs/exceptions-fcp/src$1",
-      "^@fc/exceptions-deprecated(|/.*)$": "<rootDir>/libs/exceptions-deprecated/src$1",
       "^@fc/mongoose(|/.*)$": "<rootDir>/libs/mongoose/src$1",
       "^@fc/redis(|/.*)$": "<rootDir>/libs/redis/src$1",
       "^@mocks/redis(|/.*)$": "<rootDir>/libs/redis/.mocks$1",
@@ -262,8 +263,10 @@
       "^@fc/bridge-http-proxy(|/.*)$": "<rootDir>/apps/bridge-http-proxy/src$1",
       "^@fc/csmr-user-preferences(|/.*)$": "<rootDir>/apps/csmr-user-preferences/src$1",
       "^@fc/data-provider-core-auth(|/.*)$": "<rootDir>/libs/data-provider-core-auth/src/$1",
-      "^@fc/tracks(|/.*)$": "<rootDir>/libs/tracks/src/$1",
+      "^@fc/csmr-tracks-client(|/.*)$": "<rootDir>/libs/csmr-tracks-client/src/$1",
       "^@fc/csmr-fraud-client(|/.*)$": "<rootDir>/libs/csmr-fraud-client/src/$1",
+      "^@fc/csmr-account-client(|/.*)$": "<rootDir>/libs/csmr-account-client/src/$1",
+      "^@fc/tracks-adapter-elasticsearch(|/.*)$": "<rootDir>/libs/tracks-adapter-elasticsearch/src/$1",
       "^@fc/hybridge-http-proxy(|/.*)$": "<rootDir>/libs/hybridge-http-proxy/src$1",
       "^@fc/user-preferences(|/.*)$": "<rootDir>/libs/user-preferences/src$1",
       "^@fc/csmr-tracks(|/.*)$": "<rootDir>/apps/csmr-tracks/src/$1",

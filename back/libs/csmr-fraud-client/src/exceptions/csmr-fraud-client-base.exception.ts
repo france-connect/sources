@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // declarative file
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions';
 
 export class CsmrFraudClientBaseException extends FcException {
-  scope = 53;
+  static SCOPE = 53;
 }

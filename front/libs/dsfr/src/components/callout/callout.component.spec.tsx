@@ -13,7 +13,9 @@ describe('CalloutComponent', () => {
   it('should match the snapshot', () => {
     // When
     const { container } = render(
-      <CalloutComponent title={title}>{childrenContent}</CalloutComponent>,
+      <CalloutComponent icon="information-line" title={title}>
+        {childrenContent}
+      </CalloutComponent>,
     );
 
     // Then
@@ -58,5 +60,18 @@ describe('CalloutComponent', () => {
     // Then
     expect(headingElement).toBeInTheDocument();
     expect(headingElement).toHaveTextContent(title);
+  });
+
+  it('should render the correct class name for the icon', () => {
+    // When
+    const { getByTestId } = render(
+      <CalloutComponent dataTestId="CalloutComponent" icon="information-line" title={title}>
+        Children
+      </CalloutComponent>,
+    );
+    const element = getByTestId('CalloutComponent');
+
+    // Then
+    expect(element).toHaveClass('fr-icon-information-line');
   });
 });

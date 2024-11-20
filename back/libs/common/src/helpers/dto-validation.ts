@@ -116,7 +116,7 @@ function formatErrorMessages(error: ValidationError, prefix: string) {
  *
  * @returns The messages in an array
  */
-function getAllPropertiesErrors(
+export function getAllPropertiesErrors(
   validationErrors: ValidationError[],
   prefix = '',
 ): string[] {

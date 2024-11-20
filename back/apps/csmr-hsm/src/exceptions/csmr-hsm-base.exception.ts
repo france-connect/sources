@@ -1,5 +1,8 @@
-import { FcException } from '@fc/exceptions-deprecated';
+/* istanbul ignore file */
+
+// Declarative file
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class CsmrHsmBaseException extends FcException {
-  scope = 17;
+  static SCOPE = 17;
 }

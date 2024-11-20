@@ -32,6 +32,7 @@ import { OidcClientSession } from '@fc/oidc-client';
 import {
   OidcProviderAuthorizeParamsException,
   OidcProviderService,
+  OidcProviderUserAbortedException,
 } from '@fc/oidc-provider';
 import { OidcProviderRoutes } from '@fc/oidc-provider/enums';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
@@ -53,10 +54,7 @@ import {
   GetLoginOidcClientSessionDto,
 } from '../dto';
 import { ConfirmationType, DataType } from '../enums';
-import {
-  CoreFcpFailedAbortSessionException,
-  CoreFcpInvalidEventKeyException,
-} from '../exceptions';
+import { CoreFcpInvalidEventKeyException } from '../exceptions';
 import { CoreFcpService } from '../services';
 
 const validatorOptions: ValidatorOptions = {
@@ -180,24 +178,16 @@ export class OidcProviderController {
     return next();
   }
 
-  // A controller is an exception to the max-params lint due to decorators
   @Get(CoreRoutes.REDIRECT_TO_SP_WITH_ERROR)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @IsStep()
-  async redirectToSpWithError(
-    @Query() { error, error_description }: OidcError,
-    @Req() req,
-    @Res() res,
+  redirectToSpWithError(
+    @Query() { error, error_description, state }: OidcError,
   ) {
-    try {
-      await this.oidcProvider.abortInteraction(req, res, {
-        error,
-        error_description,
-      });
-    } catch (error) {
-      throw new CoreFcpFailedAbortSessionException(error);
-    }
+    const exception = new Error();
+    Object.assign(exception, { error, error_description, state });
+    throw new OidcProviderUserAbortedException(exception);
   }
 
   private isAnonymous(scopes): boolean {
@@ -257,8 +247,6 @@ export class OidcProviderController {
     await this.tracking.track(eventKey, context);
   }
 
-  // adding a param reached max params limit
-  // eslint-disable-next-line max-params
   @Post(CoreRoutes.INTERACTION_LOGIN)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))

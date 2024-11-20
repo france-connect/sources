@@ -167,7 +167,7 @@ describe('OidcProviderService', () => {
       service['catchErrorEvents'] = jest.fn();
     });
 
-    it('Should create oidc-provider instance', () => {
+    it('should create oidc-provider instance', () => {
       // When
       service.onModuleInit();
       // Then
@@ -233,7 +233,7 @@ describe('OidcProviderService', () => {
   });
 
   describe('getProvider', () => {
-    it('Should return the oidc-provider instance', () => {
+    it('should return the oidc-provider instance', () => {
       // When
       const result = service.getProvider();
       // Then
@@ -538,7 +538,7 @@ describe('OidcProviderService', () => {
 
   describe('getHttpOptions', () => {
     const timeoutMock = 42;
-    it('Should return the timeout http options', () => {
+    it('should return the timeout http options', () => {
       // Given
       const options = {
         timeout: timeoutMock,
@@ -587,26 +587,7 @@ describe('OidcProviderService', () => {
   });
 
   describe('abortInteraction', () => {
-    it('Should throw if', async () => {
-      // given
-      const resMock = Symbol('mock result');
-      const reqMock = Symbol('mock request');
-      const mockErr = 'this is an error message';
-      const mockErrDescription = 'this is an error description';
-
-      const nativeError = new Error('invalid_request');
-      providerMock.interactionFinished.mockRejectedValueOnce(nativeError);
-      // then
-      await expect(
-        // when
-        service.abortInteraction(reqMock, resMock, {
-          error: mockErr,
-          error_description: mockErrDescription,
-        }),
-      ).rejects.toThrow(OidcProviderRuntimeException);
-    });
-
-    it('Should have called this.provider.interactionFinished with parameters if retry params is false', async () => {
+    it('should have called this.provider.interactionFinished with parameters if retry params is false', async () => {
       // given
       const resMock = Symbol('mock result');
       const reqMock = Symbol('mock request');
@@ -631,7 +612,7 @@ describe('OidcProviderService', () => {
       );
     });
 
-    it('Should have called this.provider.interactionFinished with error undefined if retry params is true', async () => {
+    it('should have called this.provider.interactionFinished with error undefined if retry params is true', async () => {
       // given
       const resMock = Symbol('mock result');
       const reqMock = Symbol('mock request');

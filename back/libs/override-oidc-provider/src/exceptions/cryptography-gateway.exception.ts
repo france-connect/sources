@@ -3,21 +3,16 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
 import { CryptographyBaseException } from './cryptography-base.exception';
 
-@Description(
-  "Il y a un problème de communication avec le HSM. L'application est inutilisable pour tous les usagers. Contacter le support N3 en urgence.",
-)
 export class CryptographyGatewayException extends CryptographyBaseException {
-  public readonly code = ErrorCode.GATEWAY;
-  public readonly message =
-    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
-  public readonly httpStatusCode = HttpStatus.BAD_GATEWAY;
-
+  static CODE = ErrorCode.GATEWAY;
+  static DOCUMENTATION =
+    "Il y a un problème de communication avec le HSM. L'application est inutilisable pour tous les usagers. Contacter le support N3 en urgence.";
   static ERROR = 'temporarily_unavailable';
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
+  static HTTP_STATUS_CODE = HttpStatus.BAD_GATEWAY;
+  static UI = 'OverrideOidcProvider.exceptions.cryptographyGateway';
 }

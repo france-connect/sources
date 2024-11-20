@@ -30,8 +30,8 @@ export const UserPreferencesPage = React.memo(() => {
           'fr-mt-8w': gtDesktop,
         })}
         id="page-container">
-        <UserPreferencesIntroductionComponent />
         <UserPreferencesComponent options={config} />
+        <UserPreferencesIntroductionComponent />
       </div>
     </React.Fragment>
   );

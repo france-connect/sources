@@ -4,6 +4,7 @@
 import { UserDashboardConfig } from '@fc/user-dashboard';
 
 import App from './app';
+import Exceptions from './exceptions';
 import FraudBroker from './fraud-broker';
 import I18n from './i18n';
 import IdentityProviderAdapterEnv from './identity-provider-adapter-env';
@@ -20,6 +21,7 @@ import UserPreferencesBroker from './user-preferences-broker';
 
 export default {
   App,
+  Exceptions,
   IdentityProviderAdapterEnv,
   Logger,
   LoggerLegacy,

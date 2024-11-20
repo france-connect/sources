@@ -2,15 +2,28 @@
 
 // Declarative code
 import { Global, Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
+import { CqrsModule } from '@nestjs/cqrs';
 
 import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
-import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import {
+  ExceptionsModule,
+  FcWebHtmlExceptionFilter,
+  HttpExceptionFilter,
+  UnknownHtmlExceptionFilter,
+} from '@fc/exceptions';
 import { OidcAcrModule } from '@fc/oidc-acr';
 import {
   OidcProviderGrantService,
   OidcProviderModule,
 } from '@fc/oidc-provider';
+import {
+  OidcProviderRedirectExceptionFilter,
+  OidcProviderRenderedHtmlExceptionFilter,
+  OidcProviderRenderedJsonExceptionFilter,
+} from '@fc/oidc-provider/filters';
+import { ExceptionOccurredHandler } from '@fc/oidc-provider/handlers';
 import {
   ServiceProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
@@ -29,12 +42,12 @@ import {
   ScenariosService,
 } from './services';
 
-const exceptionModule = ExceptionsModule.withoutTracking();
 @Global()
 @Module({
   imports: [
     AppModule,
-    exceptionModule,
+    CqrsModule,
+    ExceptionsModule,
     AsyncLocalStorageModule,
     ServiceProviderAdapterEnvModule,
     SessionModule,
@@ -42,7 +55,6 @@ const exceptionModule = ExceptionsModule.withoutTracking();
       OidcProviderConfigAppService,
       ServiceProviderAdapterEnvService,
       ServiceProviderAdapterEnvModule,
-      exceptionModule,
     ),
     ViewTemplatesModule,
     OidcAcrModule,
@@ -54,7 +66,34 @@ const exceptionModule = ExceptionsModule.withoutTracking();
     OidcProviderGrantService,
     OidcProviderMiddlewareService,
     ScenariosService,
+    FcWebHtmlExceptionFilter,
+    OidcProviderRenderedHtmlExceptionFilter,
+    OidcProviderRenderedJsonExceptionFilter,
+    OidcProviderRedirectExceptionFilter,
+    ExceptionOccurredHandler,
+    HttpExceptionFilter,
+    UnknownHtmlExceptionFilter,
+    {
+      provide: APP_FILTER,
+      useClass: UnknownHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: OidcProviderRenderedHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: OidcProviderRedirectExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: FcWebHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
-  exports: [OidcProviderConfigAppService],
+  exports: [CqrsModule, OidcProviderConfigAppService],
 })
 export class MockIdentityProviderModule {}

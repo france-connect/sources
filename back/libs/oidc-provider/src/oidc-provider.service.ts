@@ -163,17 +163,13 @@ export class OidcProviderService {
     errorParams: InteractionResults,
     retry: boolean = false,
   ): Promise<void> {
-    try {
-      const result = retry ? {} : errorParams;
-      const interactionFinished = await this.provider.interactionFinished(
-        req,
-        res,
-        result,
-      );
-      return interactionFinished;
-    } catch (error) {
-      throw new OidcProviderRuntimeException(error);
-    }
+    const result = retry ? {} : errorParams;
+    const interactionFinished = await this.provider.interactionFinished(
+      req,
+      res,
+      result,
+    );
+    return interactionFinished;
   }
 
   private async runMiddlewareBeforePattern(

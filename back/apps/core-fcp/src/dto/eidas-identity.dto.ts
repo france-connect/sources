@@ -18,16 +18,12 @@ export class EidasIdentityDto extends MinIdentityDto {
   @MinLength(1)
   @MaxLength(256)
   @Expose()
-  // oidc naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly given_name: string;
 
   @IsString()
   @MinLength(1)
   @MaxLength(256)
   @Expose()
-  // oidc naming convention
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly family_name: string;
 
   @IsString()

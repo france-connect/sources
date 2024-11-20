@@ -3,18 +3,14 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
 import { RnippBaseException } from './';
 
-@Description("Demande identifiée avec le nom d'usage uniquement")
 export class RnippFoundOnlyWithMaritalNameException extends RnippBaseException {
-  public readonly code = ErrorCode.FOUND_ONLY_WITH_MARITAL_NAME;
-  public readonly message =
-    "Un problème lié à vos données d'identité empêche la connexion d'aboutir. Nous vous invitons à nous contacter pour corriger le problème.";
-  public readonly httpStatusCode = HttpStatus.FORBIDDEN;
-
+  static CODE = ErrorCode.FOUND_ONLY_WITH_MARITAL_NAME;
+  static DOCUMENTATION = "Demande identifiée avec le nom d'usage uniquement";
   static ERROR = 'access_denied';
   static ERROR_DESCRIPTION = 'user authentication aborted';
+  static HTTP_STATUS_CODE = HttpStatus.FORBIDDEN;
+  static UI = 'Rnipp.exceptions.rnippFoundOnlyWithMaritalName';
 }

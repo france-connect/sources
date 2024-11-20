@@ -204,7 +204,7 @@ describe('MockDataProviderController', () => {
   });
 
   describe('jwks', () => {
-    it('Should return some status object', () => {
+    it('should return some status object', () => {
       // Given
       const JwkKeyMock = {
         toJWK: jest.fn().mockReturnValueOnce('a').mockReturnValueOnce('b'),

@@ -3,20 +3,15 @@
 // Declarative file
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
 import { CoreBaseException } from './core-base.exception';
 
-@Description("Le fournisseur d'identité n'a pas été trouvé.")
 export class CoreIdentityProviderNotFoundException extends CoreBaseException {
-  code = ErrorCode.IDENTITY_PROVIDER_NOT_FOUND;
-  public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
-
-  message =
-    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
-
+  static CODE = ErrorCode.IDENTITY_PROVIDER_NOT_FOUND;
+  static DOCUMENTATION = "Le fournisseur d'identité n'a pas été trouvé.";
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
+  static HTTP_STATUS_CODE = HttpStatus.BAD_REQUEST;
+  static UI = 'Core.exceptions.coreIdentityProviderNotFound';
 }

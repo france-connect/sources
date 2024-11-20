@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class FeatureHandlerBaseException extends FcException {
-  public readonly scope = 20;
+  static SCOPE = 20;
 }

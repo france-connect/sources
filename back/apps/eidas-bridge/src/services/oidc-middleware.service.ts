@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 
+import { throwException } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import {
   OidcCtx,
-  OidcProviderErrorService,
   OidcProviderMiddlewarePattern,
   OidcProviderMiddlewareStep,
   OidcProviderRoutes,
@@ -21,7 +21,6 @@ export class OidcMiddlewareService {
     private readonly logger: LoggerService,
     private readonly oidcProvider: OidcProviderService,
     private readonly serviceProvider: ServiceProviderAdapterEnvService,
-    private readonly oidcErrorService: OidcProviderErrorService,
     private readonly sessionService: SessionService,
     private readonly tracking: TrackingService,
   ) {}
@@ -129,7 +128,7 @@ export class OidcMiddlewareService {
       await this.tracking.track(RECEIVED_CALL_ON_TOKEN, eventContext);
     } catch (exception) {
       this.logger.err(exception);
-      await this.oidcErrorService.throwError(ctx, exception);
+      await throwException(exception);
     }
   }
 
@@ -141,7 +140,7 @@ export class OidcMiddlewareService {
       await this.tracking.track(RECEIVED_CALL_ON_USERINFO, eventContext);
     } catch (exception) {
       this.logger.err(exception);
-      await this.oidcErrorService.throwError(ctx, exception);
+      await throwException(exception);
     }
   }
 }

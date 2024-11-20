@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative file
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class JwtBaseException extends FcException {
-  scope = 44;
+  static SCOPE = 44;
 }

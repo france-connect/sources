@@ -1,18 +1,14 @@
-import { Description } from '@fc/exceptions-deprecated';
+/* istanbul ignore file */
 
+// Declarative file
 import { ErrorCode } from '../enums';
 import { CsmrHsmBaseException } from './csmr-hsm-base.exception';
 
-/* istanbul ignore file */
-
-// Declarative code
-@Description(
-  "Une erreur s'est produite lors de la signature d'un token par le HSM. Contacter le support N3. Cette erreur n'est normalement pas remontée aux utilisateurs",
-)
 export class CsmrHsmSignException extends CsmrHsmBaseException {
-  code = ErrorCode.HSM_SIGNATURE;
-  message =
-    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
+  static DOCUMENTATION =
+    "Une erreur s'est produite lors de la signature d'un token par le HSM. Contacter le support N3. Cette erreur n'est normalement pas remontée aux utilisateurs";
+  static CODE = ErrorCode.HSM_SIGNATURE;
+  static UI = 'CsmrHsm.exceptions.csmrHsmSign';
 
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =

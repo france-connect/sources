@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
+import { throwException } from '@fc/exceptions/helpers';
 import {
   OidcCtx,
-  OidcProviderErrorService,
   OidcProviderMiddlewarePattern,
   OidcProviderMiddlewareStep,
   OidcProviderRoutes,
@@ -16,13 +16,10 @@ import { ScenariosService } from './scenarios.service';
 
 @Injectable()
 export class OidcProviderMiddlewareService {
-  // Dependency injection can require more than 4 parameters
-  // eslint-disable-next-line max-params
   constructor(
     private readonly oidcProvider: OidcProviderService,
     private readonly scenarios: ScenariosService,
     private readonly session: SessionService,
-    private readonly oidcErrorService: OidcProviderErrorService,
   ) {}
 
   onModuleInit() {
@@ -50,10 +47,7 @@ export class OidcProviderMiddlewareService {
         sessionId,
       );
     } catch (error) {
-      return await this.oidcErrorService.throwError(
-        ctx,
-        new SessionNotFoundException('App'),
-      );
+      return await throwException(new SessionNotFoundException('App'));
     }
 
     const {

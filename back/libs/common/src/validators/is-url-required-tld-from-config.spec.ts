@@ -90,7 +90,6 @@ describe('IsUrlRequiredTldFromConfig', () => {
 
     it.each(valuesToTestLocalhostAllowed)(
       'should return "$expected" if redirect_uris and post_logout_redirect_uris $context',
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ({ value, expected }) => {
         // Given
         configMock.get.mockReturnValueOnce({

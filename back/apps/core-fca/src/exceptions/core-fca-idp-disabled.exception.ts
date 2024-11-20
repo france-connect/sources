@@ -3,26 +3,23 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions';
-
 import { ErrorCode } from '../enums';
 import { CoreFcaBaseException } from './core-fca-base.exception';
 
-@Description(
-  'Le FI est désactivé, si le problème persiste, contacter le support ProConnect',
-)
 export class CoreFcaAgentIdpDisabledException extends CoreFcaBaseException {
-  code = ErrorCode.DISABLED_PROVIDER;
-  public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
-
-  illustration = 'temporary-restricted-error';
-  title = 'Accès indisponible';
-  description =
-    'Un incident technique est en cours. Merci de revenir plus tard.';
-
-  public displayContact = false;
+  static CODE = ErrorCode.DISABLED_PROVIDER;
+  static DOCUMENTATION =
+    'Le FI est désactivé, si le problème persiste, contacter le support ProConnect';
+  static HTTP_STATUS_CODE = HttpStatus.BAD_REQUEST;
 
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
+
+  public illustration = 'temporary-restricted-error';
+  public title = 'Accès indisponible';
+  public description =
+    'Un incident technique est en cours. Merci de revenir plus tard.';
+
+  public displayContact = false;
 }

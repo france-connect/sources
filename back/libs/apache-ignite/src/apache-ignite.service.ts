@@ -150,8 +150,6 @@ export class ApacheIgniteService {
    * @param state A state as defined by IgniteClient.STATE
    * @param reason the reason why the disconnect event was fired
    */
-
-  // eslint-disable-next-line complexity
   private onStateChanged(state: number, reason?: string | Error): void {
     // STATE.CONNECTING is mandatory ignored
     if (state === STATE.CONNECTED) {

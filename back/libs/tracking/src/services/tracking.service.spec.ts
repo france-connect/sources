@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 import { LoggerService } from '@fc/logger';
 import { LoggerService as LoggerLegacyService } from '@fc/logger-legacy';
 
@@ -84,7 +84,7 @@ describe('TrackingService', () => {
   });
 
   describe('onModuleInit()', () => {
-    it('Should set TrackedEventsMap property from config', () => {
+    it('should set TrackedEventsMap property from config', () => {
       // When
       service.onModuleInit();
       // Then

@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -38,6 +38,8 @@ describe('AsyncLocalStorageRequestMiddleware', () => {
     const reqMock = {
       test: 'test',
     } as unknown as Request;
+
+    const resMock = {} as unknown as Response;
     const nextMock = jest.fn();
 
     beforeEach(() => {
@@ -47,19 +49,25 @@ describe('AsyncLocalStorageRequestMiddleware', () => {
 
     it('should set the request in asyncLocalStorage', () => {
       // When
-      middleware.use(reqMock, null, nextMock);
+      middleware.use(reqMock, resMock, nextMock);
 
       // Then
-      expect(asyncLocalStorageMock.set).toHaveBeenCalledTimes(1);
-      expect(asyncLocalStorageMock.set).toHaveBeenCalledWith(
+      expect(asyncLocalStorageMock.set).toHaveBeenCalledTimes(2);
+      expect(asyncLocalStorageMock.set).toHaveBeenNthCalledWith(
+        1,
         'request',
         reqMock,
+      );
+      expect(asyncLocalStorageMock.set).toHaveBeenNthCalledWith(
+        2,
+        'response',
+        resMock,
       );
     });
 
     it('should call next', () => {
       // When
-      middleware.use(reqMock, null, nextMock);
+      middleware.use(reqMock, resMock, nextMock);
 
       // Then
       expect(nextMock).toHaveBeenCalledTimes(1);

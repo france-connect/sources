@@ -554,7 +554,7 @@ describe('OidcClient Controller', () => {
       expect(oidcClientConfigServiceMock.get).toHaveBeenCalledTimes(1);
     });
 
-    it('Should generate a random state of 32 characters', async () => {
+    it('should generate a random state of 32 characters', async () => {
       // Given
       const randSize = 32;
 

@@ -10,6 +10,7 @@ import CryptographyEidas from './cryptography-eidas';
 import CryptographyFcp from './cryptography-fcp';
 import DataProviderAdapterMongo from './data-provider-adapter-mongo';
 import Device from './device';
+import Exceptions from './exceptions';
 import ExceptionsFcp from './exceptions-fcp';
 import I18n from './i18n';
 import IdentityProviderAdapterMongo from './identity-provider-adapter-mongo';
@@ -53,5 +54,6 @@ export default {
   Scopes,
   Tracking,
   I18n,
+  Exceptions,
   ExceptionsFcp,
 } as CoreFcpHighConfig;

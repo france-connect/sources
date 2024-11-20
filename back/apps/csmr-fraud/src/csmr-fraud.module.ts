@@ -4,7 +4,7 @@
 import { Module } from '@nestjs/common';
 
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
-import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import { ExceptionsModule } from '@fc/exceptions';
 import { MailerModule } from '@fc/mailer';
 import { RabbitmqModule } from '@fc/rabbitmq';
 
@@ -16,7 +16,7 @@ import { CsmrFraudDataService, CsmrFraudSupportService } from './services';
     RabbitmqModule.registerFor('Fraud'),
     MailerModule,
     AsyncLocalStorageModule,
-    ExceptionsModule.withoutTracking(),
+    ExceptionsModule,
   ],
   controllers: [CsmrFraudController],
   providers: [CsmrFraudSupportService, CsmrFraudDataService],

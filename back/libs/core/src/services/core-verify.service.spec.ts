@@ -124,7 +124,7 @@ describe('CoreVerifyService', () => {
       expect(result).toBeInstanceOf(Promise);
     });
 
-    it('Should call session.get() with `interactionId`', async () => {
+    it('should call session.get() with `interactionId`', async () => {
       // Given
       // When
       await service.verify(sessionServiceMock, reqMock);
@@ -133,7 +133,7 @@ describe('CoreVerifyService', () => {
       expect(sessionServiceMock.get).toBeCalledWith();
     });
 
-    it('Should call `getFeature` to get instantiated featureHandler class', async () => {
+    it('should call `getFeature` to get instantiated featureHandler class', async () => {
       // Given
       const getFeatureMock = jest.spyOn<CoreVerifyService, any>(
         service,
@@ -149,7 +149,7 @@ describe('CoreVerifyService', () => {
       );
     });
 
-    it('Should call featureHandle.handle() with `sessionService`', async () => {
+    it('should call featureHandle.handle() with `sessionService`', async () => {
       // Given
       const handlerArgument = {
         sessionOidc: sessionServiceMock,

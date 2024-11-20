@@ -26,7 +26,7 @@ import {
   OidcClientService,
   OidcClientSession,
 } from '@fc/oidc-client';
-import { OidcProviderPrompt } from '@fc/oidc-provider';
+import { OidcProviderPrompt } from '@fc/oidc-provider/enums';
 import {
   ISessionService,
   Session,

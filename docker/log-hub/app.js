@@ -108,13 +108,13 @@ function formatLogForDebug(entry) {
     ...data
   } = entry;
 
-  const source = hostname || sourceProp;
+  const source = hostname || sourceProp || "";
 
   if (!awesomeColorCache[source]) {
     awesomeColorCache[source] = geniusColorRoundRobin.shift();
   }
 
-  const date = new Date(time);
+  const date = time ? new Date(time) : new Date();
   const dateTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
 
   const metaStyles = [
@@ -195,8 +195,7 @@ function handleLogData(line) {
 
         console[logFunc](...formatted);
       } catch (error) {
-        console.error("⚠️ Hub error", error);
-        console.info(json);
+        console.log("%c>_", styled("white", "black", "bolder"), line);
       }
     } else if (line.match(/\[[0-9]+/)) {
       // Detect already styled output
@@ -237,7 +236,11 @@ function watchFiles() {
 
   // Handle stderr data (error messages)
   dockerLogs.stderr.on("data", (data) => {
-    console.error(`Error: ${data}`);
+    if (data.indexOf("file truncated") > -1) {
+      console.log("%c♻️", styled("white", "green", "bolder"), data.toString());
+    } else {
+      console.error(`Error: ${data}`);
+    }
   });
 
   // Handle process close
@@ -261,7 +264,7 @@ function watchDir() {
   });
 }
 
-process.on('SIGTERM', () => {
+process.on("SIGTERM", () => {
   process.exit(0);
 });
 

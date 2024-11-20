@@ -6,15 +6,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getTransformed, IPaginationResult } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { CsmrFraudClientService } from '@fc/csmr-fraud-client';
+import {
+  CsmrTracksClientService,
+  TrackDto,
+  TracksOutputInterface,
+  TracksResultsInterface,
+} from '@fc/csmr-tracks-client';
 import { CsrfTokenGuard } from '@fc/csrf';
 import { I18nService } from '@fc/i18n';
 import { TrackingService } from '@fc/tracking';
-import {
-  ICsmrTracksOutputTrack,
-  TrackDto,
-  TracksResults,
-  TracksService,
-} from '@fc/tracks';
 import {
   FormattedIdpDto,
   FormattedIdpSettingDto,
@@ -141,7 +141,7 @@ describe('UserDashboardController', () => {
       controllers: [UserDashboardController],
       providers: [
         ConfigService,
-        TracksService,
+        CsmrTracksClientService,
         CsmrFraudClientService,
         TrackingService,
         UserPreferencesService,
@@ -153,7 +153,7 @@ describe('UserDashboardController', () => {
       .useValue(guardMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
-      .overrideProvider(TracksService)
+      .overrideProvider(CsmrTracksClientService)
       .useValue(tracksServiceMock)
       .overrideProvider(CsmrFraudClientService)
       .useValue(fraudServiceMock)
@@ -357,7 +357,7 @@ describe('UserDashboardController', () => {
 
       const tracksMock = {
         payload: [trackMock1, trackMock2],
-      } as unknown as TracksResults;
+      } as unknown as TracksResultsInterface;
 
       controller['addLabelsToTrack'] = jest
         .fn()
@@ -400,7 +400,7 @@ describe('UserDashboardController', () => {
             provider: {},
           },
         ],
-      } as unknown as ICsmrTracksOutputTrack;
+      } as unknown as TracksOutputInterface;
 
       // When
       const result = controller['addLabelsToTrack'](trackMock);

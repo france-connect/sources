@@ -1,18 +1,14 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
-import { I18nBaseException } from './i18n-base-exception';
+import { I18nBaseException } from './i18n-base.exception';
 
-@Description("La clé de traduction demandée n'a pas été trouvée")
 export class I18nKeyNotFoundException extends I18nBaseException {
-  code = ErrorCode.KEY_NOT_FOUND;
-  message =
-    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
-
+  static DOCUMENTATION = "La clé de traduction demandée n'a pas été trouvée";
+  static CODE = ErrorCode.KEY_NOT_FOUND;
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
+  static UI = 'I18n.exceptions.i18nKeyNotFound';
 }

@@ -14,10 +14,10 @@ exports[`UserPreferencesPage should match the snapshot, display into a desktop v
     id="page-container"
   >
     <div>
-      UserPreferencesIntroductionComponent
+      UserPreferencesComponent
     </div>
     <div>
-      UserPreferencesComponent
+      UserPreferencesIntroductionComponent
     </div>
   </div>
 </div>
@@ -37,10 +37,10 @@ exports[`UserPreferencesPage should match the snapshot, display into a mobile vi
     id="page-container"
   >
     <div>
-      UserPreferencesIntroductionComponent
+      UserPreferencesComponent
     </div>
     <div>
-      UserPreferencesComponent
+      UserPreferencesIntroductionComponent
     </div>
   </div>
 </div>

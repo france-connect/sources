@@ -3,21 +3,16 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
 import { OidcClientBaseException } from './oidc-client-base.exception';
 
-@Description(
-  "Une erreur est survenue lors de la récupération des données d'identité aurès du FI. Recommencer la cinématique depuis le FS. Si le problème persiste, contacter le support N3",
-)
 export class OidcClientUserinfosFailedException extends OidcClientBaseException {
-  code = ErrorCode.USERINFOS_FAILED;
-  message =
-    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
-  public readonly httpStatusCode = HttpStatus.BAD_GATEWAY;
-
+  static CODE = ErrorCode.USERINFOS_FAILED;
+  static DOCUMENTATION =
+    "Une erreur est survenue lors de la récupération des données d'identité aurès du FI. Recommencer la cinématique depuis le FS. Si le problème persiste, contacter le support N3";
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
+  static HTTP_STATUS_CODE = HttpStatus.BAD_GATEWAY;
+  static UI = 'OidcClient.exceptions.oidcClientUserinfosFailed';
 }

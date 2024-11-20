@@ -2,12 +2,19 @@
 
 // Declarative code
 import { Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
+import { CqrsModule } from '@nestjs/cqrs';
 
 import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CsmrFraudClientModule } from '@fc/csmr-fraud-client';
+import { TracksModule } from '@fc/csmr-tracks-client';
 import { CsrfModule } from '@fc/csrf';
-import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import {
+  ExceptionsModule,
+  FcWebJsonExceptionFilter,
+  UnknownJsonExceptionFilter,
+} from '@fc/exceptions';
 import { HttpProxyModule } from '@fc/http-proxy';
 import { I18nModule } from '@fc/i18n';
 import {
@@ -22,7 +29,6 @@ import {
 } from '@fc/service-provider-adapter-env';
 import { SessionModule } from '@fc/session';
 import { TrackingModule } from '@fc/tracking';
-import { TracksModule } from '@fc/tracks';
 import { UserPreferencesModule } from '@fc/user-preferences';
 
 import { OidcClientController, UserDashboardController } from './controllers';
@@ -38,7 +44,8 @@ const oidcClientModule = OidcClientModule.register(
 @Module({
   controllers: [UserDashboardController, OidcClientController],
   imports: [
-    ExceptionsModule.withoutTracking(),
+    CqrsModule,
+    ExceptionsModule,
     AsyncLocalStorageModule,
     SessionModule,
     AppModule,
@@ -53,6 +60,17 @@ const oidcClientModule = OidcClientModule.register(
     CsrfModule,
     I18nModule,
   ],
-  providers: [UserDashboardService],
+  providers: [
+    UserDashboardService,
+    FcWebJsonExceptionFilter,
+    {
+      provide: APP_FILTER,
+      useClass: UnknownJsonExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: FcWebJsonExceptionFilter,
+    },
+  ],
 })
 export class UserDashboardModule {}

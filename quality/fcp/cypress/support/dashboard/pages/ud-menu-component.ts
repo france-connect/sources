@@ -16,7 +16,7 @@ export default class UdMenuComponent {
   getHistoryLink(): ChainableElement {
     return cy.contains(
       'header[role="banner"] nav[role="navigation"] a',
-      'Mon historique de connexion',
+      'Consulter mon historique',
     );
   }
 

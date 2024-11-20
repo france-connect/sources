@@ -9,7 +9,6 @@ import { CustomIdentityDto } from '../dto';
 const env = new ConfigParser(process.env, 'App');
 
 export default {
-  apiOutputContentType: env.string('API_OUTPUT_CONTENT_TYPE'),
   citizenDatabasePath: env.string('CITIZEN_DATABASE_PATH'),
   scenariosDatabasePath: env.string('SCENARIOS_DATABASE_PATH'),
   csvBooleanColumns: [],

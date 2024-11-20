@@ -1,12 +1,13 @@
 import { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
-import { ArgumentsHost, Injectable } from '@nestjs/common';
+import { Injectable, Type } from '@nestjs/common';
 
-import { FcException, FcExceptionFilter } from '@fc/exceptions-deprecated';
+import { throwException } from '@fc/exceptions/helpers';
 
-import { ErrorCode, OidcProviderEvents } from '../enums';
-import { OidcProviderRuntimeException } from '../exceptions';
-import { OidcCtx } from '../interfaces';
+import { OidcProviderEvents } from '../enums';
+import { OidcProviderNoWrapperException } from '../exceptions';
+import { OidcProviderBaseRuntimeException } from '../exceptions/oidc-provider-base-runtime.exception';
+import { exceptionSourceMap } from '../exceptions/runtime';
 
 @Injectable()
 export class OidcProviderErrorService {
@@ -30,16 +31,18 @@ export class OidcProviderErrorService {
     OidcProviderEvents.USERINFO_ERROR,
   ];
 
-  constructor(private readonly exceptionFilter: FcExceptionFilter) {}
-
   /**
    * @param {Provider} provider PANVA provider object
    *
    */
   catchErrorEvents(provider: Provider) {
     this.errorEvents.forEach((eventName) => {
-      provider.on(eventName, this.triggerError.bind(this, eventName));
+      provider.on(eventName, this.listenError.bind(this, eventName));
     });
+  }
+
+  async listenError(eventName: string, ctx: KoaContextWithOIDC, error: Error) {
+    await this.renderError(ctx, '', error);
   }
 
   /**
@@ -51,75 +54,32 @@ export class OidcProviderErrorService {
    * @see https://github.com/panva/node-oidc-provider/tree/master/docs#rendererror
    */
   async renderError(ctx: KoaContextWithOIDC, _out: string, error: any) {
-    // Instantiate our exception
-    const canRedirect = false;
-    const exception = new OidcProviderRuntimeException(
-      error,
-      undefined,
-      canRedirect,
-    );
-    // Call our hacky "thrower"
-    await this.throwError(ctx, exception);
-  }
+    const exceptionClass =
+      OidcProviderErrorService.getRenderedExceptionWrapper(error);
 
-  async triggerError(
-    eventName: OidcProviderEvents,
-    ctx: OidcCtx,
-    error: Error,
-  ) {
-    let wrappedError: FcException;
-
-    if (error instanceof FcException) {
-      wrappedError = error;
-    } else {
-      wrappedError = new OidcProviderRuntimeException(
-        error,
-        ErrorCode[eventName.toUpperCase()],
-      );
-    }
+    const wrappedError = new exceptionClass(error);
 
     /**
      * Flag the request as invalid
-     * to inform async tratment (event listeners)
+     * to inform async treatment (event listeners)
      */
-    ctx.oidc['isError'] = true;
-
-    if (wrappedError.redirect === true) {
-      await this.throwError(ctx, wrappedError);
+    if (ctx?.oidc) {
+      ctx.oidc['isError'] = true;
     }
+
+    await throwException(wrappedError);
   }
 
-  /**
-   * We can't just throw since oidc-provider has its own catch block
-   * which would prevent us of reaching our NestJs exceptionFilter
-   *
-   * Hacky workarround:
-   * 1. Exception filter is injected in the service
-   * 2. Explicit call to the catch method
-   *
-   * We have to construct a fake ArgumentsHost host instance.
-   * @param ctx Koa's `ctx` object
-   * @param exception error to throw
-   */
-  async throwError(ctx, exception) {
-    // Build fake ArgumentsHost host instance
-    const host = FcExceptionFilter.ArgumentHostAdapter(ctx) as ArgumentsHost;
+  static getRenderedExceptionWrapper(
+    exception: Error,
+  ): Type<OidcProviderBaseRuntimeException> {
+    const source = exception.stack
+      .split('\n')?.[1]
+      .match(/node_modules\/oidc-provider\/lib\/(.*):[0-9]/)?.[1];
 
-    // Finally call the exception filter
-    await this.exceptionFilter.catch(exception, host);
-  }
+    const wrapper =
+      exceptionSourceMap[source] || OidcProviderNoWrapperException;
 
-  handleRedirectableError(ctx: OidcCtx, exception: FcException) {
-    if (exception.redirect === true) {
-      const { res, oidc } = ctx;
-      const { redirect_uri: redirectUri } = oidc.params;
-      const {
-        oidc: { error, description },
-      } = exception;
-
-      res.redirect(
-        `${redirectUri}?error=${error}&error_description=${description}`,
-      );
-    }
+    return wrapper;
   }
 }

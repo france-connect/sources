@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative file
-import { FcException } from '@fc/exceptions-deprecated/exceptions';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class FlowStepsBaseException extends FcException {
-  public readonly scope = 42;
+  static SCOPE = 42;
 }

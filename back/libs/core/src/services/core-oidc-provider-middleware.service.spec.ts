@@ -3,6 +3,7 @@ import { mocked } from 'jest-mock';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
+import { throwException } from '@fc/exceptions/helpers';
 import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger';
 import { atHashFromAccessToken } from '@fc/oidc';
@@ -31,8 +32,14 @@ jest.mock('../transforms');
 
 jest.mock('@fc/oidc');
 
+jest.mock('@fc/exceptions/helpers', () => ({
+  ...jest.requireActual('@fc/exceptions/helpers'),
+  throwException: jest.fn(),
+}));
+
 describe('CoreOidcProviderMiddlewareService', () => {
   let service: CoreOidcProviderMiddlewareService;
+  const throwExceptionMock = jest.mocked(throwException);
 
   const loggerServiceMock = getLoggerMock();
 
@@ -472,11 +479,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       expect(serviceProviderServiceMock.getById).toHaveBeenCalledTimes(1);
       expect(serviceProviderServiceMock.getById).toHaveBeenCalledWith(spIdMock);
 
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenNthCalledWith(
-        1,
-        ctxMock,
-        errorMock,
-      );
+      expect(throwExceptionMock).toHaveBeenCalledExactlyOnceWith(errorMock);
     });
 
     it('should not throw if amr claim not requested and not authorized for sp', async () => {
@@ -572,11 +575,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       expect(serviceProviderServiceMock.getById).toHaveBeenCalledTimes(1);
       expect(serviceProviderServiceMock.getById).toHaveBeenCalledWith(spIdMock);
 
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenNthCalledWith(
-        1,
-        ctxMock,
-        errorMock,
-      );
+      expect(throwExceptionMock).toHaveBeenCalledExactlyOnceWith(errorMock);
     });
 
     it('should not throw if amr claim not requested and not authorized for sp', async () => {
@@ -885,11 +884,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       await service['tokenMiddleware'](ctxMock);
       // Then
       expect(service['getEventContext']).toHaveBeenNthCalledWith(1, ctxMock);
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenNthCalledWith(
-        1,
-        ctxMock,
-        errorMock,
-      );
+      expect(throwExceptionMock).toHaveBeenCalledExactlyOnceWith(errorMock);
     });
 
     it('should call throwError if tracking.track throw an error', async () => {
@@ -902,12 +897,9 @@ describe('CoreOidcProviderMiddlewareService', () => {
       service['oidcErrorService']['throwError'] = jest.fn();
       // When
       await service['tokenMiddleware'](ctxMock);
+
       // Then
-      expect(service['oidcErrorService']['throwError']).toHaveBeenCalledTimes(
-        1,
-      );
-      expect(service['oidcErrorService']['throwError']).toHaveBeenCalledWith(
-        ctxMock,
+      expect(throwExceptionMock).toHaveBeenCalledExactlyOnceWith(
         expect.any(Error),
       );
     });
@@ -985,11 +977,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       // When
       await service['userinfoMiddleware'](ctxMock);
       // Then
-      expect(service['getEventContext']).toHaveBeenCalledTimes(1);
-      expect(service['oidcErrorService']['throwError']).toHaveBeenCalledWith(
-        ctxMock,
-        errorMock,
-      );
+      expect(throwExceptionMock).toHaveBeenCalledExactlyOnceWith(errorMock);
     });
 
     it('should call throwError if tracking.track throw an error', async () => {
@@ -1015,10 +1003,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       await service['userinfoMiddleware'](ctxMock);
 
       // Then
-      expect(service['oidcErrorService']['throwError']).toHaveBeenCalledWith(
-        ctxMock,
-        errorMock,
-      );
+      expect(throwExceptionMock).toHaveBeenCalledExactlyOnceWith(errorMock);
     });
   });
 
@@ -1295,7 +1280,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       service['trackRedirectToIdp'] = jest.fn().mockResolvedValue({});
     });
 
-    it('should call oidcErrorService.handleRedirectableError if an idp hint was provided but is NOT valid', async () => {
+    it('should throw Exception if an idp hint was provided but is NOT valid', async () => {
       // Given
       const invalidIdpHintCtx = {
         ...ctxMock,
@@ -1310,13 +1295,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       await service['redirectToHintedIdpMiddleware'](invalidIdpHintCtx);
 
       // Then
-      expect(
-        oidcProviderErrorServiceMock.handleRedirectableError,
-      ).toHaveBeenCalledTimes(1);
-      expect(
-        oidcProviderErrorServiceMock.handleRedirectableError,
-      ).toHaveBeenCalledWith(
-        invalidIdpHintCtx,
+      expect(throwExceptionMock).toHaveBeenCalledExactlyOnceWith(
         expect.any(CoreIdpHintException),
       );
     });
@@ -1404,7 +1383,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
       expect(coreServiceMock.redirectToIdp).not.toHaveBeenCalled();
     });
 
-    it('should call oidcErrorService.throwError() if core.redirectToIdp() throws', async () => {
+    it('should throw Error if core.redirectToIdp() throws', async () => {
       // Given
       const errorMock = new Error('unknownError');
       coreServiceMock.redirectToIdp.mockImplementationOnce(() => {
@@ -1412,12 +1391,9 @@ describe('CoreOidcProviderMiddlewareService', () => {
       });
       // When
       await service['redirectToHintedIdpMiddleware'](ctxMock);
+
       // Then
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
-      expect(oidcProviderErrorServiceMock.throwError).toHaveBeenCalledWith(
-        ctxMock,
-        errorMock,
-      );
+      expect(throwExceptionMock).toHaveBeenCalledExactlyOnceWith(errorMock);
     });
 
     it('should not track if core.redirectToIdp() throws', async () => {

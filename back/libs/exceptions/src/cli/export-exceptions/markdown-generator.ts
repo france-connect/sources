@@ -1,39 +1,63 @@
-import { IExceptionDocumentation } from '../../interfaces';
+import { ExceptionDocumentationInterface } from '../../types';
 
 export default class MarkdownGenerator {
   static removeExceptionsWithoutCode(
-    exception: IExceptionDocumentation,
+    exception: ExceptionDocumentationInterface,
   ): boolean {
-    return exception.code !== undefined;
+    return exception.CODE !== undefined;
   }
 
   static sortByCode(
-    a: IExceptionDocumentation,
-    b: IExceptionDocumentation,
+    a: ExceptionDocumentationInterface,
+    b: ExceptionDocumentationInterface,
   ): number {
-    // Way to compare two numbers
-    // https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Array/sort
-    return a.scope - b.scope || a.code - b.code;
+    return a.errorCode > b.errorCode ? 1 : -1;
   }
 
   static groupExceptionsByScope(
-    acc: Record<number, IExceptionDocumentation[]>,
-    info: IExceptionDocumentation,
-  ) {
-    const { scope } = info;
-    const previousInfos = acc[scope] || [];
+    acc: Record<number, ExceptionDocumentationInterface[]>,
+    info: ExceptionDocumentationInterface,
+  ): { [key: number]: ExceptionDocumentationInterface[] } {
+    const { SCOPE } = info;
+    const previousInfos = acc[SCOPE] || [];
     const nextInfos = [...previousInfos, info];
-    const accumulated = { ...acc, [scope]: nextInfos };
+    const accumulated = { ...acc, [SCOPE]: nextInfos };
     return accumulated;
   }
 
-  static generate(loadedExceptions: IExceptionDocumentation[]): object[] {
-    const groupsOfInfosByCode = loadedExceptions
+  static generate(loadedExceptions: ExceptionDocumentationInterface[]): {
+    [key: number]: ExceptionDocumentationInterface[];
+  } {
+    const sorted = loadedExceptions
       .filter(MarkdownGenerator.removeExceptionsWithoutCode)
-      .sort(MarkdownGenerator.sortByCode)
-      .reduce(MarkdownGenerator.groupExceptionsByScope, {});
+      .sort(MarkdownGenerator.sortByCode);
+
+    MarkdownGenerator.checkForDuplicatedCodes(sorted);
+
+    const groupsOfInfosByCode = sorted.reduce(
+      MarkdownGenerator.groupExceptionsByScope,
+      {},
+    );
 
     const markdownContent = Object.values(groupsOfInfosByCode);
     return markdownContent;
+  }
+
+  static checkForDuplicatedCodes(
+    sorted: ExceptionDocumentationInterface[],
+  ): void {
+    const double = sorted.find(
+      ({ errorCode }, index) => errorCode === sorted[index - 1]?.errorCode,
+    );
+
+    if (double) {
+      /**
+       * @todo #1988 Fix inconsistent usage of codes and scopes across the codebase
+       *
+       * Uncomment the following code once fixed:
+       *  throw new Error(`Error code ${double.errorCode} is duplicated`);
+       */
+      console.log(`Error code ${double.errorCode} is duplicated`);
+    }
   }
 }

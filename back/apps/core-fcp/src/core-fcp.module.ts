@@ -2,6 +2,8 @@
 
 // Declarative code
 import { Global, Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
+import { CqrsModule } from '@nestjs/cqrs';
 
 import { AccountModule } from '@fc/account';
 import { AppModule } from '@fc/app';
@@ -19,7 +21,13 @@ import { CryptographyFcpModule } from '@fc/cryptography-fcp';
 import { CsrfModule, CsrfService } from '@fc/csrf';
 import { DataProviderAdapterMongoModule } from '@fc/data-provider-adapter-mongo';
 import { DeviceModule } from '@fc/device';
-import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import {
+  ExceptionsModule,
+  FcWebHtmlExceptionFilter,
+  FcWebJsonExceptionFilter,
+  HttpExceptionFilter,
+  UnknownHtmlExceptionFilter,
+} from '@fc/exceptions';
 import { ExceptionsFcpModule } from '@fc/exceptions-fcp';
 import { FeatureHandlerModule } from '@fc/feature-handler';
 import { FlowStepsModule } from '@fc/flow-steps';
@@ -39,6 +47,12 @@ import {
   OidcProviderGrantService,
   OidcProviderModule,
 } from '@fc/oidc-provider';
+import {
+  OidcProviderRedirectExceptionFilter,
+  OidcProviderRenderedHtmlExceptionFilter,
+  OidcProviderRenderedJsonExceptionFilter,
+} from '@fc/oidc-provider/filters';
+import { ExceptionOccurredHandler } from '@fc/oidc-provider/handlers';
 import { RnippModule } from '@fc/rnipp';
 import { ScopesModule } from '@fc/scopes';
 import {
@@ -55,6 +69,7 @@ import {
   OidcClientController,
   OidcProviderController,
 } from './controllers';
+import { DataProviderExceptionFilter } from './filters';
 import {
   CoreFcpAidantsConnectAuthorizationHandler,
   CoreFcpAidantsConnectVerifyHandler,
@@ -74,13 +89,11 @@ import {
   OidcProviderConfigAppService,
 } from './services';
 
-const trackingModule = TrackingModule.forRoot(CoreTrackingService);
-
-const exceptionModule = ExceptionsModule.withTracking(trackingModule);
 @Global()
 @Module({
   imports: [
-    exceptionModule,
+    CqrsModule,
+    ExceptionsModule,
     AsyncLocalStorageModule,
     MongooseModule.forRoot(),
     SessionModule,
@@ -98,7 +111,6 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
       OidcProviderConfigAppService,
       ServiceProviderAdapterMongoService,
       ServiceProviderAdapterMongoModule,
-      exceptionModule,
     ),
     ScopesModule,
     OidcClientModule.register(
@@ -109,7 +121,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     ),
     MailerModule,
     /** Inject app specific tracking service */
-    trackingModule,
+    TrackingModule.forRoot(CoreTrackingService),
     NotificationsModule,
     FeatureHandlerModule,
     AppModule,
@@ -144,6 +156,16 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     CoreFcpEidasIdentityCheckHandler,
     CoreFcpDefaultAuthorizationHandler,
     CoreFcpAidantsConnectAuthorizationHandler,
+    FcWebHtmlExceptionFilter,
+    FcWebJsonExceptionFilter,
+    HttpExceptionFilter,
+    OidcProviderRedirectExceptionFilter,
+    OidcProviderRenderedHtmlExceptionFilter,
+    OidcProviderRenderedJsonExceptionFilter,
+    HttpExceptionFilter,
+    UnknownHtmlExceptionFilter,
+    DataProviderExceptionFilter,
+    ExceptionOccurredHandler,
     CsrfService,
     {
       provide: CORE_SERVICE,
@@ -152,6 +174,26 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     OidcProviderGrantService,
     DataProviderService,
     ScopesHelper,
+    {
+      provide: APP_FILTER,
+      useClass: UnknownHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: FcWebHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: OidcProviderRenderedHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: OidcProviderRedirectExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
   // Make `CoreTrackingService` dependencies available
   exports: [
@@ -160,6 +202,7 @@ const exceptionModule = ExceptionsModule.withTracking(trackingModule);
     CoreFcpSendEmailHandler,
     OidcProviderConfigAppService,
     CoreTrackingService,
+    CqrsModule,
   ],
 })
 export class CoreFcpModule {}

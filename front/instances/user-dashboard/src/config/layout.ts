@@ -60,7 +60,7 @@ export const Layout: LayoutConfig = {
   navigation: [
     {
       href: '/history',
-      label: 'Mon historique de connexion',
+      label: 'Consulter mon historique',
     },
     {
       href: '/preferences',

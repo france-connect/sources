@@ -212,7 +212,7 @@ describe('AccountService', () => {
   });
 
   describe('getAccountByIdentityHash()', () => {
-    it('Should return an `Account` object from an `identityHash`', async () => {
+    it('should return an `Account` object from an `identityHash`', async () => {
       // Given
       const identityHashMock = 'identityHashMockValue';
       const accountMock: Account = {
@@ -231,7 +231,7 @@ describe('AccountService', () => {
       await expect(account).resolves.toBe(accountMock);
     });
 
-    it('Should return an empty Account object if no account have been found.', async () => {
+    it('should return an empty Account object if no account have been found.', async () => {
       // Given
       const identityHashMock = 'identityHashMockValue';
       const accountMock: Account = { id: null } as Account;
@@ -246,7 +246,7 @@ describe('AccountService', () => {
   describe('updatePreferences', () => {
     const identityHashMock = 'identityHashMockValue';
 
-    it('Should update `preferences` property of account and return the account before update', async () => {
+    it('should update `preferences` property of account and return the account before update', async () => {
       // Given
       const now = new Date();
 
@@ -285,7 +285,7 @@ describe('AccountService', () => {
       expect(result).toEqual(accountBeforeUpdate);
     });
 
-    it('Should throw an AccountNotFoundException if account has not been found', async () => {
+    it('should throw an AccountNotFoundException if account has not been found', async () => {
       // Given
       const idpListMock = ['foo', 'bar'];
       findOneAndUpdateSpy.mockResolvedValueOnce(null);

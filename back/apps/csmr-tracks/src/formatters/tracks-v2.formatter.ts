@@ -3,27 +3,29 @@ import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
+import { TracksOutputInterface } from '@fc/csmr-tracks-client';
 import { LoggerService } from '@fc/logger';
 import { RichClaimInterface, ScopesService } from '@fc/scopes';
-import { ICsmrTracksOutputTrack } from '@fc/tracks';
+import {
+  GeoFormatterService,
+  Platform,
+  TracksFormatterAbstract,
+  TracksFormatterMappingFailedException,
+  TracksV2FieldsInterface,
+} from '@fc/tracks-adapter-elasticsearch';
 
 import { IdpMappings } from '../dto';
-import { Platform } from '../enums';
-import { CsmrTracksTransformTracksFailedException } from '../exceptions';
-import {
-  ICsmrTracksV2FieldsData,
-  TracksFormatterInterface,
-} from '../interfaces';
-import { CsmrTracksGeoService } from '../services/csmr-tracks-geo.service';
 
 @Injectable()
-export class TracksV2Formatter implements TracksFormatterInterface {
+export class TracksV2Formatter
+  implements TracksFormatterAbstract<TracksOutputInterface>
+{
   // Allowed for DI
   // eslint-disable-next-line max-params
   constructor(
     protected readonly config: ConfigService,
     protected readonly logger: LoggerService,
-    protected readonly geoip: CsmrTracksGeoService,
+    protected readonly geoip: GeoFormatterService,
     protected readonly scopes: ScopesService,
     private readonly platform: Platform,
   ) {}
@@ -34,8 +36,8 @@ export class TracksV2Formatter implements TracksFormatterInterface {
    * that are not required.
    */
   formatTrack(
-    rawTrack: SearchHit<ICsmrTracksV2FieldsData>,
-  ): ICsmrTracksOutputTrack {
+    rawTrack: SearchHit<TracksV2FieldsInterface>,
+  ): TracksOutputInterface {
     try {
       const { _id: trackId, _source } = rawTrack;
       const {
@@ -51,7 +53,7 @@ export class TracksV2Formatter implements TracksFormatterInterface {
       const claims = this.getClaimsGroups(_source);
       const { country, city } = this.geoip.getGeoFromIp(_source);
 
-      const output: ICsmrTracksOutputTrack = {
+      const output: TracksOutputInterface = {
         event,
         time,
         spLabel,
@@ -67,7 +69,7 @@ export class TracksV2Formatter implements TracksFormatterInterface {
 
       return output;
     } catch (error) {
-      throw new CsmrTracksTransformTracksFailedException(error);
+      throw new TracksFormatterMappingFailedException(error);
     }
   }
 
@@ -75,7 +77,7 @@ export class TracksV2Formatter implements TracksFormatterInterface {
   private getClaimsGroups({
     claims,
     scope,
-  }: ICsmrTracksV2FieldsData): RichClaimInterface[] {
+  }: TracksV2FieldsInterface): RichClaimInterface[] {
     if (!claims && !scope) {
       return [];
     }
@@ -93,7 +95,7 @@ export class TracksV2Formatter implements TracksFormatterInterface {
     return richClaims;
   }
 
-  private getIdpLabel({ idpLabel, idpName }: ICsmrTracksV2FieldsData): string {
+  private getIdpLabel({ idpLabel, idpName }: TracksV2FieldsInterface): string {
     const { mappings } = this.config.get<IdpMappings>('IdpMappings');
 
     return idpLabel || mappings[idpName] || idpName;

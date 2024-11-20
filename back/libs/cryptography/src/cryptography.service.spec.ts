@@ -486,16 +486,13 @@ describe('CryptographyService', () => {
 
     it('should retrieve passwordSalt from config', async () => {
       // setup
-      jest
+      jest.spyOn(crypto, 'pbkdf2').mockImplementationOnce(
+        // mocking a native function
         // eslint-disable-next-line max-params
-        .spyOn(crypto, 'pbkdf2')
-        .mockImplementationOnce(
-          // mocking a native function
-          // eslint-disable-next-line max-params
-          (_password, _salt, _iterations, _keylen, _digest, callback) => {
-            callback(undefined, mockDerivatedKey);
-          },
-        );
+        (_password, _salt, _iterations, _keylen, _digest, callback) => {
+          callback(undefined, mockDerivatedKey);
+        },
+      );
 
       // action
       await service.passwordHash(password);
@@ -506,16 +503,13 @@ describe('CryptographyService', () => {
 
     it('should resolve with a hashed password', async () => {
       // setup
-      const mockPbkdf2 = jest
-        .spyOn(crypto, 'pbkdf2')
+      const mockPbkdf2 = jest.spyOn(crypto, 'pbkdf2').mockImplementationOnce(
+        // mocking a native function
         // eslint-disable-next-line max-params
-        .mockImplementationOnce(
-          // mocking a native function
-          // eslint-disable-next-line max-params
-          (_password, _salt, _iterations, _keylen, _digest, callback) => {
-            callback(undefined, mockDerivatedKey);
-          },
-        );
+        (_password, _salt, _iterations, _keylen, _digest, callback) => {
+          callback(undefined, mockDerivatedKey);
+        },
+      );
 
       // action
       const result = await service.passwordHash(password);
@@ -536,16 +530,13 @@ describe('CryptographyService', () => {
     it('should reject with error PasswordHashFailure if the password is not generated', async () => {
       // setup
       const failure = new Error('password hash failed');
-      jest
-        .spyOn(crypto, 'pbkdf2')
+      jest.spyOn(crypto, 'pbkdf2').mockImplementationOnce(
+        // mocking a native function
         // eslint-disable-next-line max-params
-        .mockImplementationOnce(
-          // mocking a native function
-          // eslint-disable-next-line max-params
-          (_password, _salt, _iterations, _keylen, _digest, callback) => {
-            callback(failure, undefined);
-          },
-        );
+        (_password, _salt, _iterations, _keylen, _digest, callback) => {
+          callback(failure, undefined);
+        },
+      );
 
       // action / expect
       await expect(service.passwordHash(password)).rejects.toThrowError(

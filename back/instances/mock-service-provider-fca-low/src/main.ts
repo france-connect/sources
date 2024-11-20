@@ -23,7 +23,6 @@ import { SessionConfig } from '@fc/session';
 import { AppModule } from './app.module';
 import config from './config';
 
-// eslint-disable-next-line complexity
 async function bootstrap() {
   const configService = new ConfigService({
     config,

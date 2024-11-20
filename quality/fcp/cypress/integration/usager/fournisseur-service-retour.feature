@@ -5,6 +5,7 @@ Fonctionnalité: Fournisseur Service - Retour
   # je veux retourner vers le FS
   # afin de recommencer ma cinématique ou choisir un autre moyen de connexion
 
+  @exceptions
   Scénario: Fournisseur Service - Retour après abandon de la connexion sur la mire
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
@@ -14,6 +15,7 @@ Fonctionnalité: Fournisseur Service - Retour
     Et le titre de l'erreur fournisseur de service est "access_denied"
     Et la description de l'erreur fournisseur de service est "User auth aborted"
 
+  @exceptions
   Scénario: Fournisseur Service - Retour après erreur
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect

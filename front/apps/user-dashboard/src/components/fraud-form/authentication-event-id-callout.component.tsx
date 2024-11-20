@@ -4,7 +4,10 @@ import type { PropsWithClassName } from '@fc/common';
 import { CalloutComponent, LinkComponent } from '@fc/dsfr';
 
 export const AuthenticationEventIdCallout = React.memo(({ className }: PropsWithClassName) => (
-  <CalloutComponent className={className} title="Où se trouve le code d’identification ?">
+  <CalloutComponent
+    className={className}
+    icon="information-line"
+    title="Où se trouve le code d’identification ?">
     <p className="fr-callout__text">Le code se trouve dans&nbsp;:</p>
     <ul>
       <li className="fr-mb-1w fr-mt-2w">

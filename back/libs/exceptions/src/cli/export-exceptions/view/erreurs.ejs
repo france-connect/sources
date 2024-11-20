@@ -1,7 +1,10 @@
-# Erreur specs
+# <%= title %>
 
-<% for(var i=0; i < markdown.length; i++) { %>
-| Code d'erreur | Code HTTP | Message utilisateur | Description | Erreur | Erreur Description |
-|---|---|---|---|---|---|<% for(var j=0; j < markdown[i].length; j++) { %>
-| [<%= markdown[i][j].errorCode %>](<%=projectRootPath%><%=markdown[i][j].path%> "<%=markdown[i][j].exception%>") | <%= markdown[i][j].httpStatusCode %> | <%= markdown[i][j].message %> | <%= markdown[i][j].description %> | <%= markdown[i][j].ERROR %> | <%= markdown[i][j].ERROR_DESCRIPTION %> |<% } %>
-<% } %>
+<% markdown.forEach((library) => { %>
+
+## @fc/<%= library[0].path.split('/')[1] %>
+| Code d'erreur | Description | Message utilisateur | Infos techniques |
+|---|---|---|---|<% 
+library.forEach((error) => { const { errorCode, path, DOCUMENTATION, exception, translated, HTTP_STATUS_CODE, ERROR, ERROR_DESCRIPTION } = error; %>
+| [<b><%= errorCode %></b>](<%=projectRootPath%><%=path%>) | <%= DOCUMENTATION?.replaceAll('||', 'OR') %> | <%= translated %> | <b>Classe :</b> [<%= exception %>](<%=projectRootPath%><%=path%>) <br /><b>Code HTTP :</b> <%= HTTP_STATUS_CODE %> <br /><b>error :</b> <%= ERROR %> <br /> <b>error_description :</b> <%= ERROR_DESCRIPTION %> |<%
+})}) %>

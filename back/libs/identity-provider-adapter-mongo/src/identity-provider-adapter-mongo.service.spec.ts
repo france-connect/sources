@@ -821,7 +821,7 @@ describe('IdentityProviderAdapterMongoService', () => {
       expect(result).toEqual(expected);
     });
 
-    it('Should return a blacklisted provider that we want to display', () => {
+    it('should return a blacklisted provider that we want to display', () => {
       // Given
       const isIdpAuthorizedMock = false;
       const showExcludedIdpMock = true;

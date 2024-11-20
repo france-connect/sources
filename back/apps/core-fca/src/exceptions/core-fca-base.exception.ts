@@ -1,7 +1,7 @@
 import { FcException } from '@fc/exceptions';
 
 export class CoreFcaBaseException extends FcException {
-  public readonly scope = 50;
+  static SCOPE = 50;
 
   public title = 'Accès impossible';
   public description =

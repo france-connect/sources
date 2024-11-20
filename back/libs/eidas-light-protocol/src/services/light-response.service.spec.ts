@@ -991,20 +991,10 @@ describe('LightResponseService', () => {
 
   describe('mapValuesToDefinition', () => {
     const pathsObject = {
-      // Paths object format, only way to go
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       'attributes.0.definition._text': 'Gender',
-      // Paths object format, only way to go
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       'attributes.0.value._text': 'male',
-      // Paths object format, only way to go
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       'attributes.1.definition._text': 'BirthName',
-      // Paths object format, only way to go
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       'attributes.1.value.0._text': 'Ωνάσης',
-      // Paths object format, only way to go
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       'attributes.1.value.1._text': 'Onases',
     };
 

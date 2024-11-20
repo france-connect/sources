@@ -1,16 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { IPaginationOptions } from '@fc/common';
-import { CryptographyFcpService } from '@fc/cryptography-fcp';
+import { CsmrAccountClientService } from '@fc/csmr-account-client';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
+import { TracksAdapterElasticsearchService } from '@fc/tracks-adapter-elasticsearch';
 
 import { getLoggerMock } from '@mocks/logger';
 
 import { CsmrTracksService } from './csmr-tracks.service';
-import { CsmrTracksAccountService } from './csmr-tracks-account.service';
-import { CsmrTracksElasticService } from './csmr-tracks-elastic.service';
-import { CsmrTracksFormatterService } from './csmr-tracks-formatter.service';
 
 describe('CsmrTracksService', () => {
   let service: CsmrTracksService;
@@ -18,19 +16,11 @@ describe('CsmrTracksService', () => {
   const loggerMock = getLoggerMock();
 
   const accountMock = {
-    getIdsWithIdentityHash: jest.fn(),
+    getAccountIdsFromIdentity: jest.fn(),
   };
 
-  const elasticMock = {
+  const tracksAdapterMock = {
     getTracks: jest.fn(),
-  };
-
-  const formatterMock = {
-    formatTracks: jest.fn(),
-  };
-
-  const cryptographyFcpMock = {
-    computeIdentityHash: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -41,22 +31,16 @@ describe('CsmrTracksService', () => {
       providers: [
         CsmrTracksService,
         LoggerService,
-        CryptographyFcpService,
-        CsmrTracksAccountService,
-        CsmrTracksElasticService,
-        CsmrTracksFormatterService,
+        CsmrAccountClientService,
+        TracksAdapterElasticsearchService,
       ],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerMock)
-      .overrideProvider(CryptographyFcpService)
-      .useValue(cryptographyFcpMock)
-      .overrideProvider(CsmrTracksAccountService)
+      .overrideProvider(CsmrAccountClientService)
       .useValue(accountMock)
-      .overrideProvider(CsmrTracksElasticService)
-      .useValue(elasticMock)
-      .overrideProvider(CsmrTracksFormatterService)
-      .useValue(formatterMock)
+      .overrideProvider(TracksAdapterElasticsearchService)
+      .useValue(tracksAdapterMock)
       .compile();
 
     service = module.get<CsmrTracksService>(CsmrTracksService);
@@ -69,85 +53,79 @@ describe('CsmrTracksService', () => {
   describe('getTracksForIdentity', () => {
     // Given
     const identityMock = Symbol('identityMock') as unknown as IOidcIdentity;
-    const identityHashMock = Symbol('identityHashMock');
     const accountIdsMock = ['accountIdsMock'];
-    const elasticTracksMock = {
-      meta: Symbol('elasticMetaMock'),
-      payload: Symbol('elasticPayloadMock'),
-    };
+    const totalMock = Symbol('tracksTotalMock');
     const formattedTracksMock = Symbol('formattedTracksMock');
+    const tracksAdapterResultsMock = {
+      total: totalMock,
+      payload: formattedTracksMock,
+    };
     const optionsMock = {} as IPaginationOptions;
+    const paginationResultsMock = {
+      ...optionsMock,
+      total: totalMock,
+    };
+    const tracksResultsMock = {
+      meta: paginationResultsMock,
+      payload: formattedTracksMock,
+    };
 
     beforeEach(() => {
-      cryptographyFcpMock.computeIdentityHash.mockReturnValueOnce(
-        identityHashMock,
-      );
-      elasticMock.getTracks.mockResolvedValueOnce(elasticTracksMock);
-      formatterMock.formatTracks.mockReturnValueOnce(formattedTracksMock);
-      accountMock.getIdsWithIdentityHash.mockResolvedValue(accountIdsMock);
+      accountMock.getAccountIdsFromIdentity.mockResolvedValue(accountIdsMock);
+      tracksAdapterMock.getTracks.mockReturnValueOnce(tracksAdapterResultsMock);
     });
 
-    it('should call cryptographyFcpMock.computeIdentityHash() with identity', async () => {
+    it('should call accountMock.getIdsWithIdentityHash() with identity ', async () => {
       // When
       await service.getTracksForIdentity(identityMock, optionsMock);
 
       // Then
-      expect(cryptographyFcpMock.computeIdentityHash).toHaveBeenCalledTimes(1);
-      expect(cryptographyFcpMock.computeIdentityHash).toHaveBeenCalledWith(
+      expect(accountMock.getAccountIdsFromIdentity).toHaveBeenCalledTimes(1);
+      expect(accountMock.getAccountIdsFromIdentity).toHaveBeenCalledWith(
         identityMock,
       );
     });
 
-    it('should call accountMock.getIdsWithIdentityHash() with identityHash from computeIdentityHash', async () => {
+    it('should call tracks.getTracks() with accountIds from getIdsWithIdentityHash', async () => {
       // When
       await service.getTracksForIdentity(identityMock, optionsMock);
 
       // Then
-      expect(accountMock.getIdsWithIdentityHash).toHaveBeenCalledTimes(1);
-      expect(accountMock.getIdsWithIdentityHash).toHaveBeenCalledWith(
-        identityHashMock,
-      );
-    });
-
-    it('should call elastic.getTracks() with accountIds from getIdsWithIdentityHash', async () => {
-      // When
-      await service.getTracksForIdentity(identityMock, optionsMock);
-
-      // Then
-      expect(elasticMock.getTracks).toHaveBeenCalledTimes(1);
-      expect(elasticMock.getTracks).toHaveBeenCalledWith(
+      expect(tracksAdapterMock.getTracks).toHaveBeenCalledTimes(1);
+      expect(tracksAdapterMock.getTracks).toHaveBeenCalledWith(
         accountIdsMock,
         optionsMock,
       );
     });
 
-    it('should call formatter.formatTracks() with results from elastic', async () => {
+    it('should call this.getPaginationResults() with options and total', async () => {
+      // Given
+      service['getPaginationResults'] = jest.fn();
+
       // When
       await service.getTracksForIdentity(identityMock, optionsMock);
 
       // Then
-      expect(formatterMock.formatTracks).toHaveBeenCalledTimes(1);
-      expect(formatterMock.formatTracks).toHaveBeenCalledWith(
-        elasticTracksMock.payload,
+      expect(service['getPaginationResults']).toHaveBeenCalledTimes(1);
+      expect(service['getPaginationResults']).toHaveBeenCalledWith(
+        optionsMock,
+        tracksAdapterResultsMock.total,
       );
     });
 
-    it('should return an object with formatted tracks and metadata from elastic', async () => {
+    it('should return an object with formatted tracks and metadata', async () => {
       // When
       const tracks = await service.getTracksForIdentity(
         identityMock,
         optionsMock,
       );
       // Then
-      expect(tracks).toEqual({
-        meta: elasticTracksMock.meta,
-        payload: formattedTracksMock,
-      });
+      expect(tracks).toEqual(tracksResultsMock);
     });
 
     it('should return result generateEmptyResults() if no accountIds are found', async () => {
       // Given
-      accountMock.getIdsWithIdentityHash.mockResolvedValueOnce([]);
+      accountMock.getAccountIdsFromIdentity.mockResolvedValueOnce([]);
       const emptyResultMock = Symbol('emptyResultMock');
       service['generateEmptyResults'] = jest
         .fn()
@@ -171,7 +149,7 @@ describe('CsmrTracksService', () => {
       const optionsMock = {
         size: sizeMock,
         offset: offsetMock,
-      };
+      } as unknown as IPaginationOptions;
       const expectedResultMock = {
         meta: {
           total: 0,
@@ -186,6 +164,31 @@ describe('CsmrTracksService', () => {
 
       // Then
       expect(result).toEqual(expectedResultMock);
+    });
+  });
+
+  describe('getPaginationResults', () => {
+    it('should return an object with total and options', () => {
+      // Given
+      const totalMock = Symbol('totalMock') as unknown as number;
+      const sizeMock = Symbol('sizeMock');
+      const offsetMock = Symbol('offsetMock');
+      const optionsMock = {
+        size: sizeMock,
+        offset: offsetMock,
+      } as unknown as IPaginationOptions;
+
+      const paginationResultMock = {
+        total: totalMock,
+        size: sizeMock,
+        offset: offsetMock,
+      };
+
+      // When
+      const result = service['getPaginationResults'](optionsMock, totalMock);
+
+      // Then
+      expect(result).toEqual(paginationResultMock);
     });
   });
 });

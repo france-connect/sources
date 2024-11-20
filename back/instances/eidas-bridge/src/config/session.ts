@@ -13,6 +13,8 @@ import {
   SessionCookieOptionsInterface,
 } from '@fc/session';
 
+import I18nConfig from './i18n';
+
 const env = new ConfigParser(process.env, 'Session');
 
 const sameSite = env.string('COOKIE_SAMESITE') as SameSiteType;
@@ -63,5 +65,9 @@ export default {
     OidcClientRoutes.CLIENT_LOGOUT_CALLBACK,
   ],
   schema: EidasBridgeSession,
-  defaultData: {},
+  defaultData: {
+    I18n: {
+      language: I18nConfig.defaultLanguage,
+    },
+  },
 } as SessionConfig;

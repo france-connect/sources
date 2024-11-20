@@ -3,7 +3,7 @@
 exports[`CalloutComponent should match the snapshot 1`] = `
 <div>
   <div
-    class="fr-callout fr-callout--md fr-icon-information-line"
+    class="fr-icon-information-line fr-callout fr-callout--md"
   >
     <h3
       class="fr-callout__title"

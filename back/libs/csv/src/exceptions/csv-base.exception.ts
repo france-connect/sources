@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class CsvBaseException extends FcException {
-  scope = 25;
+  static SCOPE = 25;
 }

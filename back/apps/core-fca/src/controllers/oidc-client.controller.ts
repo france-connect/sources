@@ -328,7 +328,7 @@ export class OidcClientController {
         `Identity from "${idpId}" using "***@${fqdn}" is not allowed`,
       );
       const { FC_FQDN_MISSMATCH } = this.tracking.TrackedEventsMap;
-      await this.tracking.track(FC_FQDN_MISSMATCH, { req });
+      await this.tracking.track(FC_FQDN_MISSMATCH, { req, fqdn });
     }
 
     const identityExchange: OidcSession = cloneDeep({

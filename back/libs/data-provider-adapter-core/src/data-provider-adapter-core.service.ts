@@ -50,8 +50,6 @@ export class DataProviderAdapterCoreService {
   private async fetchToken(
     accessToken: string,
   ): Promise<Pick<AxiosResponse, 'data' | 'status'>> {
-    // Based on oidc standard
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { client_id, client_secret, checktokenEndpoint } =
       this.config.get<DataProviderAdapterCoreConfig>('DataProviderAdapterCore');
     const checktokenRequest = {

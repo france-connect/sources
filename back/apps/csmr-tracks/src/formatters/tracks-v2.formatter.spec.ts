@@ -6,15 +6,18 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { ScopesService } from '@fc/scopes';
+import {
+  CoreInstance,
+  GeoFormatterService,
+  Platform,
+  TracksFormatterMappingFailedException,
+  TracksV2FieldsInterface,
+} from '@fc/tracks-adapter-elasticsearch';
 
 import { getConfigMock } from '@mocks/config';
 import { getLoggerMock } from '@mocks/logger';
 
 import { IdpMappings } from '../dto';
-import { CoreInstance, Platform } from '../enums';
-import { CsmrTracksTransformTracksFailedException } from '../exceptions';
-import { ICsmrTracksV2FieldsData } from '../interfaces';
-import { CsmrTracksGeoService } from '../services';
 import { TracksV2Formatter } from './tracks-v2.formatter';
 
 describe('TracksV2Formatter', () => {
@@ -49,7 +52,7 @@ describe('TracksV2Formatter', () => {
     constructor(
       protected readonly config: ConfigService,
       protected readonly logger: LoggerService,
-      protected readonly geoip: CsmrTracksGeoService,
+      protected readonly geoip: GeoFormatterService,
       @Inject('ScopesFcpLow') protected readonly scopes: ScopesService,
     ) {
       super(config, logger, geoip, scopes, platformMock);
@@ -63,7 +66,7 @@ describe('TracksV2Formatter', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TestService,
-        CsmrTracksGeoService,
+        GeoFormatterService,
         LoggerService,
         ConfigService,
         {
@@ -76,7 +79,7 @@ describe('TracksV2Formatter', () => {
       .useValue(configMock)
       .overrideProvider(LoggerService)
       .useValue(loggerMock)
-      .overrideProvider(CsmrTracksGeoService)
+      .overrideProvider(GeoFormatterService)
       .useValue(geoIpMock)
       .overrideProvider(ScopesService)
       .useValue(scopesMock)
@@ -94,7 +97,7 @@ describe('TracksV2Formatter', () => {
   describe('getClaimsGroups()', () => {
     it('should return an empty array if no scope are present in source tracks', () => {
       // Given
-      const sourceMock = {} as unknown as ICsmrTracksV2FieldsData;
+      const sourceMock = {} as unknown as TracksV2FieldsInterface;
 
       // When
       const claims = service['getClaimsGroups'](sourceMock);
@@ -107,7 +110,7 @@ describe('TracksV2Formatter', () => {
       // Given
       const sourceMock = {
         claims: 'sub gender family_name birthdate birthplace',
-      } as unknown as ICsmrTracksV2FieldsData;
+      } as unknown as TracksV2FieldsInterface;
 
       const getRichClaimsFromClaimsMockReturnedValue = Symbol(
         'getRichClaimsFromClaimsMockReturnedValue',
@@ -127,7 +130,7 @@ describe('TracksV2Formatter', () => {
       // Given
       const sourceMock = {
         scope: 'gender family_name birthdate birthplace',
-      } as unknown as ICsmrTracksV2FieldsData;
+      } as unknown as TracksV2FieldsInterface;
 
       const getRichClaimsFromScopesMockReturnedValue = Symbol(
         'getRichClaimsFromScopeMockReturnedValue',
@@ -153,7 +156,7 @@ describe('TracksV2Formatter', () => {
       // Given
       const sourceMock = {
         idpLabel: 'idpLabelValue',
-      } as unknown as ICsmrTracksV2FieldsData;
+      } as unknown as TracksV2FieldsInterface;
 
       // When
       const label = service['getIdpLabel'](sourceMock);
@@ -165,7 +168,7 @@ describe('TracksV2Formatter', () => {
       // Given
       const sourceMock = {
         idpName: 'fiTest',
-      } as unknown as ICsmrTracksV2FieldsData;
+      } as unknown as TracksV2FieldsInterface;
 
       // When
       const label = service['getIdpLabel'](sourceMock);
@@ -177,7 +180,7 @@ describe('TracksV2Formatter', () => {
       // Given
       const sourceMock = {
         idpName: 'idpNameValue',
-      } as unknown as ICsmrTracksV2FieldsData;
+      } as unknown as TracksV2FieldsInterface;
 
       // When
       const label = service['getIdpLabel'](sourceMock);
@@ -222,7 +225,7 @@ describe('TracksV2Formatter', () => {
         service: CoreInstance.FCP_LOW,
         browsingSessionId: 'authenticationEventIdValue',
       },
-    } as SearchHit<ICsmrTracksV2FieldsData>;
+    } as SearchHit<TracksV2FieldsInterface>;
 
     beforeEach(() => {
       service['getClaimsGroups'] = jest.fn().mockReturnValueOnce(claimsMock);
@@ -292,7 +295,7 @@ describe('TracksV2Formatter', () => {
 
       // Then / When
       expect(() => service.formatTrack(sourceMock)).toThrow(
-        new CsmrTracksTransformTracksFailedException(errorMock),
+        new TracksFormatterMappingFailedException(errorMock),
       );
     });
   });

@@ -41,6 +41,7 @@ Fonctionnalité: Connexion Usager - session absente
     Et je m'authentifie avec succès
     Et je suis redirigé vers la page confirmation de connexion
 
+  @exceptions
   Scénario: Connexion erreur - session absente sur page sélection du fournisseur d'identité
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
@@ -51,6 +52,7 @@ Fonctionnalité: Connexion Usager - session absente
     Et le code d'erreur FranceConnect est "Y190001"
     Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
 
+  @exceptions
   Scénario: Connexion erreur - session absente au retour du FI
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
@@ -65,6 +67,7 @@ Fonctionnalité: Connexion Usager - session absente
     Et le code d'erreur FranceConnect est "Y420002"
     Et le message d'erreur FranceConnect est "Nous vous invitons à fermer tous les onglets de votre navigateur et à vous authentifier de nouveau en suivant les étapes de connexion."
 
+  @exceptions
   Scénario: Connexion erreur - session absente sur page de consentement
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
@@ -79,6 +82,7 @@ Fonctionnalité: Connexion Usager - session absente
     Et le code d'erreur FranceConnect est "Y190001"
     Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
 
+  @exceptions
   Scénario: Connexion erreur - session absente lors du consentement
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
@@ -93,6 +97,7 @@ Fonctionnalité: Connexion Usager - session absente
     Et le code d'erreur FranceConnect est "Y470001"
     Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
 
+  @exceptions
   Scénario: Connexion erreur - session inconnue sur page sélection du fournisseur d'identité
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
@@ -103,6 +108,7 @@ Fonctionnalité: Connexion Usager - session absente
     Et le code d'erreur FranceConnect est "Y190001"
     Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
 
+  @exceptions
   Scénario: Connexion erreur - session inconnue sur page de consentement
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect

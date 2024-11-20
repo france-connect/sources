@@ -4,36 +4,36 @@ import { isString } from 'class-validator';
 import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
+import { TracksOutputInterface } from '@fc/csmr-tracks-client';
 import { LoggerService } from '@fc/logger';
 import { RichClaimInterface, ScopesService } from '@fc/scopes';
-import { ICsmrTracksOutputTrack } from '@fc/tracks';
+import {
+  GeoFormatterService,
+  Platform,
+  TracksFormatterAbstract,
+  TracksFormatterMappingFailedException,
+  TracksLegacyFieldsInterface,
+} from '@fc/tracks-adapter-elasticsearch';
+import { EVENT_MAPPING } from '@fc/tracks-adapter-elasticsearch/constants';
 
-import { EVENT_MAPPING, LEGACY_SCOPES_SEPARATOR } from '../constants';
+import { LEGACY_SCOPES_SEPARATOR } from '../constants';
 import { IdpMappings } from '../dto';
-import { Platform } from '../enums';
-import {
-  CsmrTracksTransformTracksFailedException,
-  CsmrTracksUnknownActionException,
-} from '../exceptions';
-import {
-  ICsmrTracksLegacyFieldsData,
-  TracksFormatterInterface,
-} from '../interfaces';
-// No barrel file to prevent circular dependency
-import { CsmrTracksGeoService } from '../services/csmr-tracks-geo.service';
+import { CsmrTracksUnknownActionException } from '../exceptions';
 
 @Injectable()
-export class TracksLegacyFormatter implements TracksFormatterInterface {
+export class TracksLegacyFormatter
+  implements TracksFormatterAbstract<TracksOutputInterface>
+{
   constructor(
     private readonly logger: LoggerService,
-    private readonly geoip: CsmrTracksGeoService,
+    private readonly geoip: GeoFormatterService,
     private readonly config: ConfigService,
     @Inject('ScopesFcLegacy') private readonly scopes: ScopesService,
   ) {}
 
   formatTrack(
-    rawTrack: SearchHit<ICsmrTracksLegacyFieldsData>,
-  ): ICsmrTracksOutputTrack {
+    rawTrack: SearchHit<TracksLegacyFieldsInterface>,
+  ): TracksOutputInterface {
     this.logger.debug('formatTracks from Legacy');
     try {
       const { _id: trackId, _source } = rawTrack;
@@ -51,7 +51,7 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
       const claims = this.getClaimsGroups(_source);
       const { country, city } = this.geoip.getGeoFromIp(_source);
 
-      const output: ICsmrTracksOutputTrack = {
+      const output: TracksOutputInterface = {
         event,
         time,
         spLabel,
@@ -67,14 +67,14 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
 
       return output;
     } catch (error) {
-      throw new CsmrTracksTransformTracksFailedException(error);
+      throw new TracksFormatterMappingFailedException(error);
     }
   }
 
   private getEventFromAction({
     action,
     type_action: typeAction,
-  }: ICsmrTracksLegacyFieldsData): string {
+  }: TracksLegacyFieldsInterface): string {
     const key = `${action}/${typeAction}`;
     const event = EVENT_MAPPING[key];
     if (!event) {
@@ -85,7 +85,7 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
 
   private getClaimsGroups({
     scopes,
-  }: ICsmrTracksLegacyFieldsData): RichClaimInterface[] {
+  }: TracksLegacyFieldsInterface): RichClaimInterface[] {
     if (!scopes) {
       return [];
     }
@@ -99,11 +99,11 @@ export class TracksLegacyFormatter implements TracksFormatterInterface {
 
   private getAcrValue({
     eidas = 'eidas1',
-  }: ICsmrTracksLegacyFieldsData): string {
+  }: TracksLegacyFieldsInterface): string {
     return isString(eidas) && eidas.length > 1 ? eidas : `eidas${eidas}`;
   }
 
-  private getIdpLabel({ fi: idpName }: ICsmrTracksLegacyFieldsData): string {
+  private getIdpLabel({ fi: idpName }: TracksLegacyFieldsInterface): string {
     const { mappings } = this.config.get<IdpMappings>('IdpMappings');
 
     return mappings[idpName] || idpName;

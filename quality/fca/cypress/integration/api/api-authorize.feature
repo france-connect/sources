@@ -1,16 +1,16 @@
 #language: fr
 @api @apiAuthorize
 Fonctionnalité: API - authorize
-  Plan du Scénario: API authorize - erreur Y030106 client_id=<clientId>
+  Plan du Scénario: API authorize - erreur Y04A586 client_id=<clientId>
     Etant donné que je prépare une requête "authorize"
     Et que je mets "<clientId>" dans le paramètre "client_id" de la requête
     Quand je lance la requête
-    Alors le statut de la réponse est 500
+    Alors le statut de la réponse est 400
     Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique
-    Et le code d'erreur est "Y030106"
-    Et le message d'erreur est "client is invalid (client not found)"
+    Et le code d'erreur est "Y04A586"
+    Et le message d'erreur est "Client non trouvé (client_id invalide)"
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
     Exemples:
@@ -54,7 +54,7 @@ Fonctionnalité: API - authorize
     Exemples:
       | redirectUri                          | httpCode | error   |
       |                                      | 400      | Y000400 |
-      | https://my-malicious-url.fr/callback | 500      | Y030118 |
+      | https://my-malicious-url.fr/callback | 400      | Y046350 |
       | example.com                          | 400      | Y000400 |
 
   Plan du Scénario: API authorize - Cas nominal prompt=<prompt>
@@ -176,6 +176,6 @@ Fonctionnalité: API - authorize
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
     Exemples:
-      | redirectUri                          | httpCode | error   | errorDescription                                                                    |
-      |                                      | 400      | Y000400 | Bad Request Exception                                                               |
-      | https://my-malicious-url.fr/callback | 500      | Y030118 | redirect_uri did not match any of the client's registered redirect_uris (undefined) |
+      | redirectUri                          | httpCode | error   | errorDescription                                             |
+      |                                      | 400      | Y000400 | Une erreur s'est produite, veuillez réessayer ultérieurement |
+      | https://my-malicious-url.fr/callback | 400      | Y046350 | L’URL de callback n’est pas valide                           |

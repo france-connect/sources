@@ -19,6 +19,11 @@ import {
 
 import { FSA, getTransformed, PartialExcept } from '@fc/common';
 import { CsmrFraudClientService } from '@fc/csmr-fraud-client';
+import {
+  CsmrTracksClientService,
+  TracksOutputInterface,
+  TracksResultsInterface,
+} from '@fc/csmr-tracks-client';
 import { CsrfToken, CsrfTokenGuard } from '@fc/csrf';
 import { I18nService } from '@fc/i18n';
 import { IOidcIdentity, PivotIdentityDto } from '@fc/oidc';
@@ -26,11 +31,6 @@ import { OidcClientSession } from '@fc/oidc-client';
 import { RichClaimInterface } from '@fc/scopes';
 import { ISessionService, Session } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
-import {
-  ICsmrTracksOutputTrack,
-  TracksResults,
-  TracksService,
-} from '@fc/tracks';
 import {
   FormattedIdpSettingDto,
   UserPreferencesService,
@@ -59,7 +59,7 @@ export class UserDashboardController {
   // eslint-disable-next-line max-params
   constructor(
     private readonly tracking: TrackingService,
-    private readonly tracks: TracksService,
+    private readonly tracks: CsmrTracksClientService,
     private readonly fraud: CsmrFraudClientService,
     private readonly userPreferences: UserPreferencesService,
     private readonly userDashboard: UserDashboardService,
@@ -105,14 +105,16 @@ export class UserDashboardController {
     });
   }
 
-  private addLabelsToTracks(tracks: TracksResults): TracksResults {
+  private addLabelsToTracks(
+    tracks: TracksResultsInterface,
+  ): TracksResultsInterface {
     tracks.payload = tracks.payload.map(this.addLabelsToTrack.bind(this));
     return tracks;
   }
 
   private addLabelsToTrack(
-    track: ICsmrTracksOutputTrack,
-  ): ICsmrTracksOutputTrack {
+    track: TracksOutputInterface,
+  ): TracksOutputInterface {
     track.claims = track.claims
       .map((claim: RichClaimInterface) => {
         claim.label = this.i18n.translate(`claim.${claim.identifier}`);
@@ -189,7 +191,6 @@ export class UserDashboardController {
   @Post(UserDashboardBackRoutes.USER_PREFERENCES)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @UseGuards(CsrfTokenGuard)
-  // eslint-disable-next-line complexity
   async updateUserPreferences(
     @Req() req: Request,
     @Res() res,

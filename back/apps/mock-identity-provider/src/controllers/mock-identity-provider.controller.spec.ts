@@ -124,7 +124,7 @@ describe('MockIdentityProviderController', () => {
   });
 
   describe('index', () => {
-    it('Should return some status object', () => {
+    it('should return some status object', () => {
       // action
       const result = controller.index();
       // assert

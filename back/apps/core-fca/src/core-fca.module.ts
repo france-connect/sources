@@ -3,6 +3,7 @@
 // Declarative code
 import { Global, Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
+import { CqrsModule } from '@nestjs/cqrs';
 
 import { AccountModule } from '@fc/account';
 import { AccountFcaModule } from '@fc/account-fca';
@@ -18,10 +19,16 @@ import {
 import { CsrfModule } from '@fc/csrf';
 import { DataProviderAdapterMongoModule } from '@fc/data-provider-adapter-mongo';
 import { ExceptionsModule } from '@fc/exceptions';
+import {
+  FcWebHtmlExceptionFilter,
+  HttpExceptionFilter,
+  UnknownHtmlExceptionFilter,
+} from '@fc/exceptions/filters';
 import { FeatureHandlerModule } from '@fc/feature-handler';
 import { FlowStepsModule } from '@fc/flow-steps';
 import { FqdnToIdpAdapterMongoModule } from '@fc/fqdn-to-idp-adapter-mongo';
 import { HttpProxyModule } from '@fc/http-proxy';
+import { I18nModule } from '@fc/i18n';
 import {
   IdentityProviderAdapterMongoModule,
   IdentityProviderAdapterMongoService,
@@ -36,11 +43,18 @@ import {
   OidcProviderModule,
 } from '@fc/oidc-provider';
 import {
+  OidcProviderRedirectExceptionFilter,
+  OidcProviderRenderedHtmlExceptionFilter,
+  OidcProviderRenderedJsonExceptionFilter,
+} from '@fc/oidc-provider/filters';
+import { ExceptionOccurredHandler } from '@fc/oidc-provider/handlers';
+import {
   ServiceProviderAdapterMongoModule,
   ServiceProviderAdapterMongoService,
 } from '@fc/service-provider-adapter-mongo';
 import { SessionModule } from '@fc/session';
 import { TrackingModule } from '@fc/tracking';
+import { ViewTemplatesModule } from '@fc/view-templates';
 
 import {
   CoreFcaController,
@@ -48,12 +62,7 @@ import {
   OidcClientController,
   OidcProviderController,
 } from './controllers';
-import {
-  FcaDeprecatedExceptionFilter,
-  FcaExceptionFilter,
-  UnhandledExceptionFilter,
-} from './exception-filters';
-import { HttpExceptionFilter } from './exception-filters/http.exception-filter';
+import { DataProviderExceptionFilter } from './filters';
 import { CoreFcaDefaultVerifyHandler } from './handlers';
 import {
   CoreFcaDefaultAuthorizationHandler,
@@ -72,31 +81,11 @@ import { CoreFcaFqdnService } from './services/core-fca-fqdn.service';
 
 const trackingModule = TrackingModule.forRoot(CoreFcaTrackingService);
 
-const exceptionModule = ExceptionsModule.withTracking(trackingModule);
-
-const exceptionFiltersProviders = [
-  {
-    provide: APP_FILTER,
-    useClass: UnhandledExceptionFilter,
-  },
-  {
-    provide: APP_FILTER,
-    useClass: FcaExceptionFilter,
-  },
-  {
-    provide: APP_FILTER,
-    useClass: FcaDeprecatedExceptionFilter,
-  },
-  {
-    provide: APP_FILTER,
-    useClass: HttpExceptionFilter,
-  },
-];
-
 @Global()
 @Module({
   imports: [
-    exceptionModule,
+    CqrsModule,
+    ExceptionsModule,
     AsyncLocalStorageModule,
     SessionModule,
     MongooseModule.forRoot(),
@@ -112,7 +101,6 @@ const exceptionFiltersProviders = [
       OidcProviderConfigAppService,
       ServiceProviderAdapterMongoService,
       ServiceProviderAdapterMongoModule,
-      exceptionModule,
     ),
     OidcClientModule.register(
       IdentityProviderAdapterMongoService,
@@ -127,6 +115,8 @@ const exceptionFiltersProviders = [
     FeatureHandlerModule,
     CsrfModule,
     AccountFcaModule,
+    ViewTemplatesModule,
+    I18nModule,
   ],
   controllers: [
     CoreFcaController,
@@ -135,7 +125,6 @@ const exceptionFiltersProviders = [
     DataProviderController,
   ],
   providers: [
-    ...exceptionFiltersProviders,
     CoreAccountService,
     CoreAcrService,
     CoreFcaService,
@@ -152,9 +141,36 @@ const exceptionFiltersProviders = [
     CoreFcaMcpAuthorizationHandler,
     DataProviderService,
     CoreFcaFqdnService,
+    FcWebHtmlExceptionFilter,
+    HttpExceptionFilter,
+    OidcProviderRedirectExceptionFilter,
+    OidcProviderRenderedHtmlExceptionFilter,
+    OidcProviderRenderedJsonExceptionFilter,
+    DataProviderExceptionFilter,
+    ExceptionOccurredHandler,
     {
       provide: CORE_SERVICE,
       useClass: CoreFcaService,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: UnknownHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: OidcProviderRenderedHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: OidcProviderRedirectExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: FcWebHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
     },
   ],
   // Make `CoreTrackingService` dependencies available
@@ -162,6 +178,7 @@ const exceptionFiltersProviders = [
     CoreFcaDefaultVerifyHandler,
     CoreTrackingService,
     OidcProviderConfigAppService,
+    CqrsModule,
   ],
 })
 export class CoreFcaModule {}

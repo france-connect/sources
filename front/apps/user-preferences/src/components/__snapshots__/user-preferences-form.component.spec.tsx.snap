@@ -6,13 +6,11 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     data-testid="user-preferences-form"
     id="user-preferences-form-component"
   >
-    <h2
+    <h1
       class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
-      <b>
-        Mes réglages :
-      </b>
-    </h2>
+      Mes réglages
+    </h1>
     <p
       class="fr-mt-2w"
     >
@@ -55,13 +53,11 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     data-testid="user-preferences-form"
     id="user-preferences-form-component"
   >
-    <h2
+    <h1
       class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
-      <b>
-        Mes réglages :
-      </b>
-    </h2>
+      Mes réglages
+    </h1>
     <p
       class="fr-mt-2w"
     >
@@ -104,13 +100,11 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     data-testid="user-preferences-form"
     id="user-preferences-form-component"
   >
-    <h2
+    <h1
       class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
-      <b>
-        Mes réglages :
-      </b>
-    </h2>
+      Mes réglages
+    </h1>
     <p
       class="fr-mt-2w"
     >
@@ -170,13 +164,11 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     data-testid="user-preferences-form"
     id="user-preferences-form-component"
   >
-    <h2
+    <h1
       class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
-      <b>
-        Mes réglages :
-      </b>
-    </h2>
+      Mes réglages
+    </h1>
     <p
       class="fr-mt-2w"
     >
@@ -219,13 +211,11 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     data-testid="user-preferences-form"
     id="user-preferences-form-component"
   >
-    <h2
+    <h1
       class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
-      <b>
-        Mes réglages :
-      </b>
-    </h2>
+      Mes réglages
+    </h1>
     <p
       class="fr-mt-2w"
     >
@@ -268,13 +258,11 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
     data-testid="user-preferences-form"
     id="user-preferences-form-component"
   >
-    <h2
+    <h1
       class="title fr-h3 fr-mt-5w fr-mb-2w"
     >
-      <b>
-        Mes réglages :
-      </b>
-    </h2>
+      Mes réglages
+    </h1>
     <p
       class="fr-mt-2w"
     >

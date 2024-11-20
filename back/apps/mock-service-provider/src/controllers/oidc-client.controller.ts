@@ -25,8 +25,6 @@ import { AppSession } from '../dto';
 
 @Controller()
 export class OidcClientController {
-  // Allowed for dependency injection
-  // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
     private readonly oidcClient: OidcClientService,

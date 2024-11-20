@@ -28,10 +28,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
     prompt: {},
 
     params: {
-      // oidc param
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values: 'eidas3',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_id: 'spId',
     },
     uid: uidMock,
@@ -41,9 +38,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
   const sessionServiceMock = getSessionServiceMock();
 
   const spIdentityMock = {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Edward',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'TEACH',
     email: 'eteach@fqdn.ext',
   };
@@ -181,13 +176,13 @@ describe('CoreFcpEidasVerifyHandler', () => {
       serviceProviderMock.getById.mockResolvedValue(spMock);
     });
 
-    it('Should not throw if verified', async () => {
+    it('should not throw if verified', async () => {
       // Then
       await expect(service.handle(handleArgument)).resolves.not.toThrow();
     });
 
     // Dependencies sevices errors
-    it('Should throw if acr is not validated', async () => {
+    it('should throw if acr is not validated', async () => {
       // Given
       const errorMock = new Error('my error 1');
       coreAcrServiceMock.checkIfAcrIsValid.mockImplementation(() => {
@@ -197,7 +192,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
-    it('Should throw if identity provider is not usable', async () => {
+    it('should throw if identity provider is not usable', async () => {
       // Given
       const errorMock = new Error('my error');
       sessionServiceMock.get.mockImplementationOnce(() => {
@@ -207,7 +202,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
-    it('Should throw if identity storage for service provider fails', async () => {
+    it('should throw if identity storage for service provider fails', async () => {
       // Given
       const errorMock = new Error('my error');
       sessionServiceMock.set.mockImplementationOnce(() => {
@@ -217,7 +212,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
       await expect(service.handle(handleArgument)).rejects.toThrow(errorMock);
     });
 
-    it('Should call computeFederation()', async () => {
+    it('should call computeFederation()', async () => {
       // When
       await service.handle(handleArgument);
       // Then
@@ -234,11 +229,11 @@ describe('CoreFcpEidasVerifyHandler', () => {
      * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/134
      *
      * // RNIPP resilience
-     * it('Should pass if rnipp is down and account is known', async () => {});
-     * it('Should throw if rnipp is down and account is unknown', async () => {});
+     * it('should pass if rnipp is down and account is known', async () => {});
+     * it('should throw if rnipp is down and account is unknown', async () => {});
      *
      * // Service provider usability
-     * it('Should throw if service provider is not usable ', async () => {});
+     * it('should throw if service provider is not usable ', async () => {});
      */
 
     it('should call computeIdentityHash with service provider identity on first call', async () => {
@@ -278,7 +273,7 @@ describe('CoreFcpEidasVerifyHandler', () => {
       );
     });
 
-    it('Should save to session ', async () => {
+    it('should save to session ', async () => {
       // Given
       const technicalClaims = { tech: 'claims' };
 

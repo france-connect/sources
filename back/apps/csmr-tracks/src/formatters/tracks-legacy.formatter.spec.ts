@@ -4,17 +4,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
+import {
+  GeoFormatterService,
+  Platform,
+  TracksFormatterMappingFailedException,
+  TracksLegacyFieldsInterface,
+} from '@fc/tracks-adapter-elasticsearch';
 
 import { getLoggerMock } from '@mocks/logger';
 
 import { IdpMappings } from '../dto';
-import { Platform } from '../enums';
-import {
-  CsmrTracksTransformTracksFailedException,
-  CsmrTracksUnknownActionException,
-} from '../exceptions';
-import { ICsmrTracksLegacyFieldsData } from '../interfaces';
-import { CsmrTracksGeoService } from '../services';
+import { CsmrTracksUnknownActionException } from '../exceptions';
 import { TracksLegacyFormatter } from './tracks-legacy.formatter';
 
 describe('TracksLegacyFormatter', () => {
@@ -53,7 +53,7 @@ describe('TracksLegacyFormatter', () => {
       providers: [
         TracksLegacyFormatter,
         ConfigService,
-        CsmrTracksGeoService,
+        GeoFormatterService,
         LoggerService,
         {
           provide: 'ScopesFcLegacy',
@@ -61,7 +61,7 @@ describe('TracksLegacyFormatter', () => {
         },
       ],
     })
-      .overrideProvider(CsmrTracksGeoService)
+      .overrideProvider(GeoFormatterService)
       .useValue(geoIpMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
@@ -119,7 +119,7 @@ describe('TracksLegacyFormatter', () => {
           claims: 'claims',
           cinematicID: 'authenticationEventId',
         },
-      } as unknown as SearchHit<ICsmrTracksLegacyFieldsData>;
+      } as unknown as SearchHit<TracksLegacyFieldsInterface>;
 
       // When
       const formattedTrack = service.formatTrack(inputMock);
@@ -158,7 +158,7 @@ describe('TracksLegacyFormatter', () => {
           claims: 'claims',
           cinematicID: 'authenticationEventId',
         },
-      } as unknown as SearchHit<ICsmrTracksLegacyFieldsData>;
+      } as unknown as SearchHit<TracksLegacyFieldsInterface>;
 
       const errorMock = new Error('error');
 
@@ -168,7 +168,7 @@ describe('TracksLegacyFormatter', () => {
 
       // When
       expect(() => service.formatTrack(inputMock)).toThrow(
-        new CsmrTracksTransformTracksFailedException(errorMock),
+        new TracksFormatterMappingFailedException(errorMock),
       );
     });
   });
@@ -180,7 +180,7 @@ describe('TracksLegacyFormatter', () => {
         action: 'checkedToken',
         // eslint-disable-next-line @typescript-eslint/naming-convention
         type_action: 'verification',
-      } as unknown as ICsmrTracksLegacyFieldsData;
+      } as unknown as TracksLegacyFieldsInterface;
       const resultMock = 'DP_VERIFIED_FC_CHECKTOKEN';
       // When
       const event = service['getEventFromAction'](sourceMock);
@@ -193,7 +193,7 @@ describe('TracksLegacyFormatter', () => {
         action: 'Sarah',
         // eslint-disable-next-line @typescript-eslint/naming-convention
         type_action: 'Connor',
-      } as unknown as ICsmrTracksLegacyFieldsData;
+      } as unknown as TracksLegacyFieldsInterface;
 
       expect(
         // When
@@ -206,7 +206,7 @@ describe('TracksLegacyFormatter', () => {
   describe('getClaimsGroups()', () => {
     it('should return an empty array if no scope are present in source tracks', () => {
       // Given
-      const sourceMock = {} as unknown as ICsmrTracksLegacyFieldsData;
+      const sourceMock = {} as unknown as TracksLegacyFieldsInterface;
 
       // When
       const claims = service['getClaimsGroups'](sourceMock);
@@ -219,7 +219,7 @@ describe('TracksLegacyFormatter', () => {
       // Given
       const sourceMock = {
         scopes: 'gender, family_name, birth, sub',
-      } as unknown as ICsmrTracksLegacyFieldsData;
+      } as unknown as TracksLegacyFieldsInterface;
 
       const resultMock = [
         'sub',
@@ -252,7 +252,7 @@ describe('TracksLegacyFormatter', () => {
       // Given
       const sourceMock = {
         eidas: 3,
-      } as unknown as ICsmrTracksLegacyFieldsData;
+      } as unknown as TracksLegacyFieldsInterface;
 
       // When
       const acrValue = service['getAcrValue'](sourceMock);
@@ -263,7 +263,7 @@ describe('TracksLegacyFormatter', () => {
       // Given
       const sourceMock = {
         eidas: '3',
-      } as unknown as ICsmrTracksLegacyFieldsData;
+      } as unknown as TracksLegacyFieldsInterface;
 
       // When
       const acrValue = service['getAcrValue'](sourceMock);
@@ -275,7 +275,7 @@ describe('TracksLegacyFormatter', () => {
       // Given
       const sourceMock = {
         eidas: 'eidas3',
-      } as unknown as ICsmrTracksLegacyFieldsData;
+      } as unknown as TracksLegacyFieldsInterface;
 
       // When
       const acrValue = service['getAcrValue'](sourceMock);
@@ -285,7 +285,7 @@ describe('TracksLegacyFormatter', () => {
 
     it('should get eidas1 value if eidas is missing', () => {
       // Given
-      const sourceMock = {} as unknown as ICsmrTracksLegacyFieldsData;
+      const sourceMock = {} as unknown as TracksLegacyFieldsInterface;
 
       // When
       const acrValue = service['getAcrValue'](sourceMock);
@@ -299,7 +299,7 @@ describe('TracksLegacyFormatter', () => {
       // Given
       const sourceMock = {
         fi: 'fiLoggedValue',
-      } as ICsmrTracksLegacyFieldsData;
+      } as TracksLegacyFieldsInterface;
 
       // When
       const label = service['getIdpLabel'](sourceMock);
@@ -312,7 +312,7 @@ describe('TracksLegacyFormatter', () => {
       // Given
       const sourceMock = {
         fi: 'NonMappedValue',
-      } as ICsmrTracksLegacyFieldsData;
+      } as TracksLegacyFieldsInterface;
 
       // When
       const label = service['getIdpLabel'](sourceMock);

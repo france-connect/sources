@@ -31,7 +31,7 @@ Fonctionnalité: Connexion Usager - Scope
       | profile                   |
       | identite_pivot            |
 
-  @fcpHigh 
+  @fcpHigh
   Plan du Scénario: Connexion d'un usager - tous les claims rnipp avec usager <userType>
     Etant donné que le fournisseur de service requiert l'accès aux informations des scopes "tous les scopes rnipp (authorize)"
     Et que je navigue sur la page fournisseur de service
@@ -55,11 +55,11 @@ Fonctionnalité: Connexion Usager - Scope
       | avec un prénom contenant un espace |
 
     Exemples:
-      | userType                           |
-      | avec un prénom                     |
-      | avec 3 prénoms                     |
-      | avec prénom composé                |
-      | avec genre indéfini                |
+      | userType            |
+      | avec un prénom      |
+      | avec 3 prénoms      |
+      | avec prénom composé |
+      | avec genre indéfini |
 
   @fcpLow @ci
   Scénario: Connexion d'un usager - scope idp_birthdate
@@ -102,11 +102,11 @@ Fonctionnalité: Connexion Usager - Scope
       | avec un prénom contenant un espace |
 
     Exemples:
-      | userType                           |
-      | avec un prénom                     |
-      | avec 3 prénoms                     |
-      | avec prénom composé                |
-      | avec genre indéfini                |
+      | userType            |
+      | avec un prénom      |
+      | avec 3 prénoms      |
+      | avec prénom composé |
+      | avec genre indéfini |
 
   @fcpLow @fcpHigh
   Scénario: Connexion d'un usager - scope anonyme
@@ -142,7 +142,7 @@ Fonctionnalité: Connexion Usager - Scope
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations des scopes "profile"
 
-  @fcpLow @fcpHigh
+  @fcpLow @fcpHigh @exceptions
   Scénario: Connexion d'un usager - erreur FS non habilité pour ce scope
     Etant donné que j'utilise le fournisseur de service "non habilité à demander le scope cnous_statut_boursier"
     Et que le fournisseur de service requiert l'accès aux informations du scope "cnous_statut_boursier"

@@ -47,9 +47,7 @@ export const UserPreferencesFormComponent: React.FC<UserPreferencesFormComponent
         data-testid="user-preferences-form"
         id="user-preferences-form-component"
         onSubmit={onSubmit}>
-        <h2 className={classnames(styles.title, 'fr-h3 fr-mt-5w fr-mb-2w')}>
-          <b>Mes réglages&nbsp;:</b>
-        </h2>
+        <h1 className={classnames(styles.title, 'fr-h3 fr-mt-5w fr-mb-2w')}>Mes réglages</h1>
         <p className="fr-mt-2w">
           Attention&nbsp;:&nbsp;<strong>Vous devez avoir au moins un compte autorisé</strong> pour
           continuer à utiliser FranceConnect. Nous vous conseillons de ne bloquer que les comptes

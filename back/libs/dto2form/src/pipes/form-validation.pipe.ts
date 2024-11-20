@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import validatorjs from 'validator';
 
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
@@ -29,6 +28,7 @@ export class FormValidationPipe implements PipeTransform {
     private readonly validateIfRules: ValidateIfRulesService,
   ) {}
 
+  // eslint-disable-next-line complexity
   async transform(
     target: Record<string, unknown>,
     { type, metatype, data }: ArgumentMetadata,

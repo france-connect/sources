@@ -1,9 +1,18 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { FcException } from '@fc/exceptions-deprecated';
+import { errors } from 'oidc-provider';
 
-export class OidcProviderBaseException extends FcException {
-  public originalError: Error;
-  public readonly scope = 3;
+import { BaseException } from '@fc/exceptions/exceptions';
+
+export class OriginalError extends errors.OIDCProviderError {
+  caught?: boolean;
+  state?: string;
+}
+export class OidcProviderBaseException extends BaseException {
+  static SCOPE = 3;
+  static ERROR = 'server_error';
+  static ERROR_DESCRIPTION = 'something bad happened';
+
+  public originalError?: OriginalError;
 }

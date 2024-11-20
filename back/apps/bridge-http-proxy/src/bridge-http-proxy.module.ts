@@ -2,10 +2,12 @@
 
 // Declarative code
 import { Global, Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
-import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import { ExceptionsModule, FcWebHtmlExceptionFilter } from '@fc/exceptions';
 import { RabbitmqModule } from '@fc/rabbitmq';
+import { ViewTemplateService } from '@fc/view-templates';
 
 import { BridgeHttpProxyController } from './controllers';
 import { BridgeHttpProxyService } from './services';
@@ -14,11 +16,19 @@ import { BridgeHttpProxyService } from './services';
 @Module({
   imports: [
     AsyncLocalStorageModule,
-    ExceptionsModule.withoutTracking(),
+    ExceptionsModule,
     RabbitmqModule.registerFor('BridgeProxy'),
   ],
   controllers: [BridgeHttpProxyController],
-  providers: [BridgeHttpProxyService],
+  providers: [
+    BridgeHttpProxyService,
+    ViewTemplateService,
+    FcWebHtmlExceptionFilter,
+    {
+      provide: APP_FILTER,
+      useClass: FcWebHtmlExceptionFilter,
+    },
+  ],
   exports: [],
 })
 export class BridgeHttpProxyModule {}

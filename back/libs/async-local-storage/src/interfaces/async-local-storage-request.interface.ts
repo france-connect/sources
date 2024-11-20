@@ -1,8 +1,9 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 export interface AsyncLocalStorageRequestInterface {
   request?: Request;
+  response?: Response;
 }

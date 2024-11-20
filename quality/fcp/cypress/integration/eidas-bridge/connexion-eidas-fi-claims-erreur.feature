@@ -5,6 +5,7 @@ Fonctionnalité: Connexion eIDAS - Validation des claims renvoyés par le fourni
   # je veux m'assurer que les claims obligatoires sont correctement renvoyés par les FI
   # afin que le noeud eIDAS français soit opérationnel
 
+  @exceptions
   Scénario: Connexion FS Européen - Erreur quand FI FR ne renvoit pas un claim obligatoire
     Etant donné que j'utilise un compte usager "par défaut"
     Et que j'utilise le fournisseur de service "eidas-be"
@@ -57,6 +58,7 @@ Fonctionnalité: Connexion eIDAS - Validation des claims renvoyés par le fourni
     Et le fournisseur de service eidas mock a accès aux informations des scopes "eidas"
     Et le sub transmis au fournisseur de service eidas commence par "FR/BE"
 
+  @exceptions
   Scénario: Connexion FS français - Erreur si FI EU ne renvoit pas un claim obligatoire
     Etant donné que j'utilise un compte usager "pour les tests eidas-bridge"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "eidas"

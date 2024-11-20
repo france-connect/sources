@@ -47,7 +47,6 @@ describe('EuIdentityToFrController', () => {
   let euIdentityToFrController: EuIdentityToFrController;
 
   const configMock = {
-    apiOutputContentType: 'html',
     name: 'notUsedValue',
     urlPrefix: '',
     countryIsoList: availableListMock,

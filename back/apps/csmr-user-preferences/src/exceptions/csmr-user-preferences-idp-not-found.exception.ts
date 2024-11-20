@@ -1,20 +1,15 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
 import { CsmrUserPreferencesBaseException } from './csmr-user-preferences-base.exception';
 
-@Description(
-  "Le fournisseur d'identité en entrée n'existe pas dans la liste des idp",
-)
 export class CsmrUserPreferencesIdpNotFoundException extends CsmrUserPreferencesBaseException {
-  code = ErrorCode.IDP_NOT_FOUND;
-  message =
-    'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
-
+  static CODE = ErrorCode.IDP_NOT_FOUND;
+  static DOCUMENTATION =
+    "Le fournisseur d'identité en entrée n'existe pas dans la liste des idp";
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
+  static UI = 'CsmrUserPreferences.exceptions.csmrUserPreferencesIdpNotFound';
 }

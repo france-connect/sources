@@ -22,12 +22,15 @@ if (isError && locals.exception?.constructor) {
 
 const state = hasParams
   ? locals.params.state
-  : undefined;
+  : $session('OidcClient.spState');
+
+const redirect_uri = $session('OidcClient.spRedirectUri');
 
 const params = {
   error,
   error_description,
-  state
+  state,
+  redirect_uri,
 };
 
 const urlParams = Object.entries(params)
@@ -35,7 +38,8 @@ const urlParams = Object.entries(params)
   .map(([key,value]) => `${key}=${value}`)
   .join('&');
 %>
-<% if (!!label) { %>
+
+<% if (Boolean(label)) { %>
 
 <a
   data-testid="back-to-sp-link"

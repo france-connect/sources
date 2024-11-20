@@ -144,7 +144,7 @@ describe('ServiceProviderService', () => {
       },
     ];
 
-    it('Should return true because idp1 is blacklist', async () => {
+    it('should return true because idp1 is blacklist', async () => {
       // Given
       service.getById = jest.fn().mockReturnValueOnce(spListMock[0]);
       // When
@@ -153,7 +153,7 @@ describe('ServiceProviderService', () => {
       expect(result).toBe(true);
     });
 
-    it('Should return false because idp1 is whitelist', async () => {
+    it('should return false because idp1 is whitelist', async () => {
       // Given
       service.getById = jest.fn().mockReturnValueOnce(spListMock[1]);
       // When
@@ -162,7 +162,7 @@ describe('ServiceProviderService', () => {
       expect(result).toBe(false);
     });
 
-    it('Should return false because idp1 is not blacklist', async () => {
+    it('should return false because idp1 is not blacklist', async () => {
       // Given
       service.getById = jest.fn().mockReturnValueOnce(spListMock[2]);
       // When

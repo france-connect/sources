@@ -12,7 +12,7 @@ Core & backoffice applications
 - [@fc/eidas-light-protocol](libs/eidas-light-protocol/README.md)
 - [@fc/eidas-oidc-mapper](libs/eidas-oidc-mapper/README.md)
 - [@fc/eidas-provider](libs/eidas-provider/README.md)
-- [@fc/exceptions-deprecated](libs/exceptions-deprecated/README.md)
+- [@fc/exceptions](libs/exceptions/README.md)
 - [@fc/http-proxy](libs/http-proxy/README.md)
 - [@fc/oidc-client](libs/oidc-client/README.md)
 - [@fc/oidc-provider](libs/oidc-provider/README.md)

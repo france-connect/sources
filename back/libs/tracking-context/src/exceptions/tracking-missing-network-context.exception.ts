@@ -3,20 +3,16 @@
 // Declarative file
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
 import { TrackingBaseException } from './tracking-base.exception';
 
-@Description(
-  "L'application n'a pas trouvé de headers dans l'objet request, c'est probablement un bug, Contacter le support N3",
-)
 export class TrackingMissingNetworkContextException extends TrackingBaseException {
-  public readonly message = 'Missing network context (headers)';
-  public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
-  public readonly code = ErrorCode.MISSING_HEADERS;
-
+  static CODE = ErrorCode.MISSING_HEADERS;
+  static DOCUMENTATION =
+    "L'application n'a pas trouvé de headers dans l'objet request, c'est probablement un bug, Contacter le support N3";
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
+  static HTTP_STATUS_CODE = HttpStatus.BAD_REQUEST;
+  static UI = 'TrackingContext.exceptions.trackingMissingNetworkContext';
 }

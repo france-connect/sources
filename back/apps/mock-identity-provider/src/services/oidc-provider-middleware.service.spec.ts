@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { throwException } from '@fc/exceptions/helpers';
 import {
   OidcCtx,
   OidcProviderErrorService,
@@ -14,8 +15,15 @@ import { getSessionServiceMock } from '@mocks/session';
 import { OidcProviderMiddlewareService } from './oidc-provider-middleware.service';
 import { ScenariosService } from './scenarios.service';
 
+jest.mock('@fc/exceptions/helpers', () => ({
+  ...jest.requireActual('@fc/exceptions/helpers'),
+  throwException: jest.fn(),
+}));
+
 describe('OidcProviderMiddlewareService', () => {
   let service: OidcProviderMiddlewareService;
+
+  const throwExceptionMock = jest.mocked(throwException);
 
   const oidcProviderMock = {
     registerMiddleware: jest.fn(),
@@ -138,7 +146,7 @@ describe('OidcProviderMiddlewareService', () => {
       appSessionMock.getDataFromBackend.mockResolvedValue(sessionDataMock);
     });
 
-    it('should call oidcErrorService.throwError() if session.getDataFromBackend() throws', async () => {
+    it('should call throw Error if session.getDataFromBackend() throws', async () => {
       // Given
       const errorMock = new Error('Session not found');
       appSessionMock.getDataFromBackend
@@ -148,9 +156,7 @@ describe('OidcProviderMiddlewareService', () => {
       // When
       await service['userinfoMiddleware'](ctxMock);
 
-      expect(oidcErrorServiceMock.throwError).toHaveBeenCalledTimes(1);
-      expect(oidcErrorServiceMock.throwError).toHaveBeenCalledWith(
-        ctxMock,
+      expect(throwExceptionMock).toHaveBeenCalledExactlyOnceWith(
         expect.any(SessionNotFoundException),
       );
     });

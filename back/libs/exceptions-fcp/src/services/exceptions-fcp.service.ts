@@ -40,13 +40,13 @@ export class ExceptionsFcpService {
     if (!hasCustomError) {
       return {
         message,
-        title: this.i18n.translate('error.support.title'),
+        title: 'error.support.title',
       };
     }
 
     return {
-      message: this.i18n.translate(customAction.errorMessage),
-      title: this.i18n.translate(customAction.actionTitle),
+      message: customAction.errorMessage,
+      title: customAction.actionTitle,
     };
   }
 

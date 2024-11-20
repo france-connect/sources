@@ -3,6 +3,6 @@
   What to do ?
 </h2>
 <p class="fr-text--md fr-mb-0" data-testid="error-message">
-  <%= locals.error.message %>
+  <%= $translate(locals.error.message, null, { default: 'exceptions.default_message' }) %>
 </p>
 <% } %>

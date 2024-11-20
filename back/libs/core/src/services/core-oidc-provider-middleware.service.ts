@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { AppConfig } from '@fc/app';
 import { ConfigService } from '@fc/config';
+import { throwException } from '@fc/exceptions/helpers';
 import { FlowStepsService } from '@fc/flow-steps';
 import { LoggerService } from '@fc/logger';
 import {
@@ -182,6 +183,7 @@ export class CoreOidcProviderMiddlewareService {
       acr_values: spAcr,
       client_id: spId,
       redirect_uri: spRedirectUri,
+      state,
     } = ctx.oidc.params;
 
     /**
@@ -196,6 +198,7 @@ export class CoreOidcProviderMiddlewareService {
       spId: spId as string,
       spRedirectUri: spRedirectUri as string,
       spName,
+      spState: state,
       isSso,
       /**
        * Explicit stepRoute set
@@ -228,7 +231,7 @@ export class CoreOidcProviderMiddlewareService {
     if (!spAmrIsAuthorized) {
       ctx.oidc['isError'] = true;
       const exception = new CoreClaimAmrException();
-      await this.oidcErrorService.throwError(ctx, exception);
+      await throwException(exception);
     }
   }
 
@@ -248,7 +251,7 @@ export class CoreOidcProviderMiddlewareService {
       await this.tracking.track(SP_REQUESTED_FC_TOKEN, eventContext);
     } catch (exception) {
       ctx.oidc['isError'] = true;
-      await this.oidcErrorService.throwError(ctx, exception);
+      await throwException(exception);
     }
   }
 
@@ -263,7 +266,7 @@ export class CoreOidcProviderMiddlewareService {
       await this.tracking.track(SP_REQUESTED_FC_USERINFO, eventContext);
     } catch (exception) {
       ctx.oidc['isError'] = true;
-      await this.oidcErrorService.throwError(ctx, exception);
+      await throwException(exception);
     }
   }
 
@@ -291,8 +294,7 @@ export class CoreOidcProviderMiddlewareService {
     }
 
     if (!allowedIdpHints.includes(idpHint)) {
-      const exception = new CoreIdpHintException();
-      return this.oidcErrorService.handleRedirectableError(ctx, exception);
+      return throwException(new CoreIdpHintException());
     }
 
     this.flowSteps.setStep(OidcClientRoutes.REDIRECT_TO_IDP);
@@ -302,7 +304,7 @@ export class CoreOidcProviderMiddlewareService {
       await this.sessionService.commit();
       await this.trackRedirectToIdp(ctx);
     } catch (error) {
-      await this.oidcErrorService.throwError(ctx, error);
+      await throwException(error);
     }
   }
 

@@ -6,12 +6,10 @@ exports[`IntroductionComponent should match the snapshot 1`] = `
     <h1
       class="fr-h3 is-blue-france fr-mb-1w"
     >
-      <b>
-        Votre historique de connexion
-      </b>
+      Mon historique de connexion
     </h1>
     <p>
-      Retrouver toutes les connexions et échanges de données effectués via FranceConnect ces six derniers mois.
+      Retrouvez toutes les connexions et échanges de données effectués via FranceConnect ces six derniers mois.
       <br />
       Cliquez sur une connexion pour en afficher les détails.
     </p>

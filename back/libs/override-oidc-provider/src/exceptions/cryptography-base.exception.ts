@@ -1,9 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class CryptographyBaseException extends FcException {
-  public originalError: Error;
-  public readonly scope = 16;
+  static SCOPE = 16;
 }

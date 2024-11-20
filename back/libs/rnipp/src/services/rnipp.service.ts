@@ -11,7 +11,7 @@ import { getDtoErrors, RequiredExcept, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 
 import { CitizenStatus, RnippConfig } from '../dto';
-import { Genders, RnippResponseCodes } from '../enums';
+import { RnippResponseCodes } from '../enums';
 import {
   RnippCitizenStatusFormatException,
   RnippDeceasedException,
@@ -24,6 +24,7 @@ import {
   RnippTimeoutException,
 } from '../exceptions';
 import { IPivotIdentity } from '../interfaces';
+import { getRnippGenderFromGender } from '../mappers';
 import { RnippResponseParserService } from './rnipp-response-parser.service';
 
 @Injectable()
@@ -72,7 +73,7 @@ export class RnippService {
       nom: identity.family_name,
       prenoms: identity.given_name,
       dateNaissance: this.formatDateNaissance(identity.birthdate),
-      sexe: this.formatSexe(identity.gender),
+      sexe: getRnippGenderFromGender(identity.gender),
       codeLieuNaissance: this.formatCodeLieuNaissance(
         identity.birthplace,
         identity.birthcountry,
@@ -82,19 +83,6 @@ export class RnippService {
     const url = `${protocol}://${hostname}${baseUrl}?${stringify(params)}`;
 
     return url;
-  }
-
-  private formatSexe(gender: string): string {
-    switch (gender) {
-      case Genders.MALE:
-        return Genders.ABBR_MALE;
-      case Genders.FEMALE:
-        return Genders.ABBR_FEMALE;
-      case Genders.UNSPECIFIED:
-        return Genders.ABBR_UNSPECIFIED;
-      default:
-        return '';
-    }
   }
 
   private formatDateNaissance(birthdate: string) {

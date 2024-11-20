@@ -9,6 +9,8 @@ import { OidcClientRoutes } from '@fc/oidc-client';
 import { OidcProviderRoutes } from '@fc/oidc-provider';
 import { SessionConfig, SessionCookieOptionsInterface } from '@fc/session';
 
+import I18nConfig from './i18n';
+
 const env = new ConfigParser(process.env, 'Session');
 
 const cookieOptions: SessionCookieOptionsInterface = {
@@ -53,5 +55,9 @@ export default {
     OidcClient: { spName: true, idpName: true },
   },
   schema: CoreFcaSession,
-  defaultData: {},
+  defaultData: {
+    I18n: {
+      language: I18nConfig.defaultLanguage,
+    },
+  },
 } as SessionConfig;

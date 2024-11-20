@@ -132,4 +132,5 @@ export default {
     timeout: parseInt(process.env.REQUEST_TIMEOUT, 10),
   },
   isLocalhostAllowed: env.boolean('IS_LOCALHOST_ALLOWED'),
+  errorUriBase: env.string('ERROR_URI_BASE'),
 } as OidcProviderConfig;

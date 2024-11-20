@@ -261,8 +261,6 @@ describe('Runner', () => {
           Toto_PREFIX: 'string',
         },
         instance2: {
-          // This is the format in environment variables
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           REQUEST_TIMEOUT: 'string',
         },
       };
@@ -292,8 +290,6 @@ describe('Runner', () => {
     it('should work event with cosmetic lines breaks in process.env', () => {
       // Given
       const envMapMock = {};
-      // This is the format in environment variables
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       const expected = { instance3: { REQUEST_TIMEOUT: 'string' } };
 
       // When

@@ -12,6 +12,7 @@ interface CalloutComponentProps extends Required<PropsWithChildren>, PropsWithCl
   dataTestId?: string;
   heading?: HeadingTag;
   size?: Omit<Sizes, Sizes.LARGE>;
+  icon?: string;
 }
 
 export const CalloutComponent = React.memo(
@@ -20,11 +21,18 @@ export const CalloutComponent = React.memo(
     className,
     dataTestId,
     heading: Heading = HeadingTag.H3,
+    icon = undefined,
     size = Sizes.MEDIUM,
     title,
   }: CalloutComponentProps) => (
     <div
-      className={classnames(className, `fr-callout fr-callout--${size} fr-icon-information-line`)}
+      className={classnames(
+        className,
+        {
+          [`fr-icon-${icon}`]: icon,
+        },
+        `fr-callout fr-callout--${size}`,
+      )}
       data-testid={dataTestId}>
       <Heading className="fr-callout__title">{title}</Heading>
       {children}

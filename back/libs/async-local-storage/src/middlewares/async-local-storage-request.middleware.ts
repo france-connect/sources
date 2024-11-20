@@ -11,8 +11,9 @@ export class AsyncLocalStorageRequestMiddleware implements NestMiddleware {
     private readonly asyncLocalStorage: AsyncLocalStorageService<AsyncLocalStorageRequestInterface>,
   ) {}
 
-  use(req: Request, _res: Response, next: NextFunction) {
+  use(req: Request, res: Response, next: NextFunction) {
     this.asyncLocalStorage.set('request', req);
+    this.asyncLocalStorage.set('response', res);
     next();
   }
 }

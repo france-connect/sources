@@ -24,7 +24,7 @@ Fonctionnalité: Préférences FI
     Et le bouton "enregistrer mes réglages" est désactivé
     Et le message d'information "autorisation des futurs fournisseurs d'identité" n'est pas affiché
 
-  @ci
+  @ci @exceptions
   Scénario: Préférences FI - FI bloqué - futur FI autorisé
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du tableau de bord usager
@@ -45,6 +45,7 @@ Fonctionnalité: Préférences FI
     Et le code d'erreur FranceConnect est "Y000011"
     Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
 
+  @exceptions
   Scénario: Préférences FI - FI bloqué - futur FI bloqué
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du tableau de bord usager
@@ -108,6 +109,7 @@ Fonctionnalité: Préférences FI
     Quand je me connecte à FranceConnect
     Alors je suis connecté au fournisseur de service
 
+  @exceptions
   Scénario: Préférences FI - FI ajouté - futur FI bloqué
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du tableau de bord usager
@@ -160,7 +162,7 @@ Fonctionnalité: Préférences FI
     Et je réinitialise les préférences de la configuration par défaut
     Et je me déconnecte du tableau de bord usager
 
-  @ignoreInteg01
+  @ignoreInteg01 @exceptions
   Scénario: Préférences FI - Aidants Connect bloqué quand les futurs FI sont bloqués
     Etant donné que j'utilise un compte usager "pour le test de préférences FI"
     Et que je navigue sur la page d'accueil du tableau de bord usager

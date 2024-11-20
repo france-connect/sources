@@ -34,4 +34,7 @@ export enum ErrorCode {
   GRANT_NOT_SAVED = 26,
   SP_ID_NOT_FOUND = 27,
   PARSE_JSON_CLAIMS = 28,
+  RUNTIME_ERROR = 29,
+  USER_ABORTED = 30,
+  NO_WRAPPER = 31,
 }

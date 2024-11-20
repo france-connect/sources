@@ -86,7 +86,7 @@ Fonctionnalité: Accessibilité
       | tablet landscape |
       | desktop          |
 
-  @ignoreLow
+  @ignoreLow @exceptions
   Plan du Scénario: Accessibilité - page d'erreur (usager désactivé) sur <device>
     Etant donné que j'utilise un navigateur web sur "<device>"
     Et que j'utilise un compte usager "désactivé"

@@ -1,59 +1,65 @@
+import { ExceptionDocumentationInterface } from '@fc/exceptions/types';
+
 import MarkdownGenerator from './markdown-generator';
 
 describe('MarkdownGenerator', () => {
   describe('MarkdownGenerator.removeExceptionsWithoutCode', () => {
-    it('Should remove any error without a code property', () => {
-      const errs = [{ code: 3 }, {}, { code: 2 }];
+    it('should remove any error without a code property', () => {
+      const errs = [
+        { CODE: 3 },
+        {},
+        { CODE: 2 },
+      ] as ExceptionDocumentationInterface[];
       const result = errs.filter(MarkdownGenerator.removeExceptionsWithoutCode);
-      const expected = [{ code: 3 }, { code: 2 }];
+      const expected = [{ CODE: 3 }, { CODE: 2 }];
       expect(result).toStrictEqual(expected);
     });
   });
 
   describe('MarkdownGenerator.sortByCode', () => {
-    it('Should order errors by scope then by code properties', () => {
+    it('should order errors by scope then by code properties', () => {
       const errs = [
-        { code: 3, scope: 2 },
-        { code: 2, scope: 1 },
-        { code: 1, scope: 1 },
-      ];
+        { CODE: 3, SCOPE: 2 },
+        { CODE: 2, SCOPE: 1 },
+        { CODE: 1, SCOPE: 1 },
+      ] as ExceptionDocumentationInterface[];
       const result = errs.sort(MarkdownGenerator.sortByCode);
       const expected = [
-        { code: 1, scope: 1 },
-        { code: 2, scope: 1 },
-        { code: 3, scope: 2 },
+        { CODE: 1, SCOPE: 1 },
+        { CODE: 2, SCOPE: 1 },
+        { CODE: 3, SCOPE: 2 },
       ];
       expect(result).toStrictEqual(expected);
     });
   });
 
   describe('MarkdownGenerator.groupExceptionsByScope', () => {
-    it('Should group exceptions with the same scope property', () => {
+    it('should group exceptions with the same scope property', () => {
       const errs = [
-        { scope: 3, message: '3.1' },
-        { scope: 3, message: '3.2' },
-        { scope: 2, message: '2.1' },
+        { SCOPE: 3, UI: '3.1' },
+        { SCOPE: 3, UI: '3.2' },
+        { SCOPE: 2, UI: '2.1' },
       ];
       const result = errs.reduce(MarkdownGenerator.groupExceptionsByScope, {});
       const expected = {
         3: [
-          { scope: 3, message: '3.1' },
-          { scope: 3, message: '3.2' },
+          { SCOPE: 3, UI: '3.1' },
+          { SCOPE: 3, UI: '3.2' },
         ],
-        2: [{ scope: 2, message: '2.1' }],
+        2: [{ SCOPE: 2, UI: '2.1' }],
       };
       expect(result).toStrictEqual(expected);
     });
   });
 
   describe('MarkdownGenerator.generate', () => {
-    it('Should generate a markdown document from a stack of errors', () => {
+    it('should generate a markdown document from a stack of errors', () => {
       const errors = [
         {
           errorCode: 'Y0101',
-          scope: 1,
-          code: 1,
-          message: 'any',
+          SCOPE: 1,
+          CODE: 1,
+          UI: 'any',
           description: 'any',
           trackable: false,
           loggable: false,
@@ -62,9 +68,9 @@ describe('MarkdownGenerator', () => {
         },
         {
           errorCode: 'Y0201',
-          scope: 2,
-          code: 1,
-          message: 'any',
+          SCOPE: 2,
+          CODE: 1,
+          UI: 'any',
           description: 'any',
           trackable: false,
           loggable: false,
@@ -72,14 +78,16 @@ describe('MarkdownGenerator', () => {
           exception: 'notWorkingBuddy',
         },
       ];
-      const result = MarkdownGenerator.generate(errors);
+      const result = MarkdownGenerator.generate(
+        errors as unknown as ExceptionDocumentationInterface[],
+      );
       const expected = [
         [
           {
             errorCode: 'Y0101',
-            scope: 1,
-            code: 1,
-            message: 'any',
+            SCOPE: 1,
+            CODE: 1,
+            UI: 'any',
             description: 'any',
             trackable: false,
             loggable: false,
@@ -90,9 +98,9 @@ describe('MarkdownGenerator', () => {
         [
           {
             errorCode: 'Y0201',
-            scope: 2,
-            code: 1,
-            message: 'any',
+            SCOPE: 2,
+            CODE: 1,
+            UI: 'any',
             description: 'any',
             trackable: false,
             loggable: false,
@@ -102,6 +110,37 @@ describe('MarkdownGenerator', () => {
         ],
       ];
       expect(result).toStrictEqual(expected);
+    });
+  });
+
+  describe('MarkdownGenerator.checkForDuplicatedCodes', () => {
+    it('should throw an error if there are duplicated error codes', () => {
+      const errors = [
+        { errorCode: 'Y0101' },
+        { errorCode: 'Y0101' },
+        { errorCode: 'Y0201' },
+      ];
+
+      jest.spyOn(console, 'log').mockImplementation(() => {});
+
+      MarkdownGenerator.checkForDuplicatedCodes(
+        errors as unknown as ExceptionDocumentationInterface[],
+      );
+
+      /**
+       * @todo #1988 Fix inconsistent usage of codes and scopes across the codebase
+       *
+       * UT for throwing code:
+       *
+       * expect(() => MarkdownGenerator.checkForDuplicatedCodes(errors)).toThrow(
+       *    'Error code Y0101 is duplicated',
+       *  );
+       *
+       * UT for temporary behavior (just log error):
+       */
+      expect(console.log).toHaveBeenCalledWith(
+        'Error code Y0101 is duplicated',
+      );
     });
   });
 });

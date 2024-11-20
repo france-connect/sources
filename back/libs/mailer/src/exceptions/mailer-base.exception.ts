@@ -1,9 +1,8 @@
-// declarative code
-// istanbul ignore next line
+/* istanbul ignore file */
 
-import { FcException } from '@fc/exceptions-deprecated';
+// Declarative file
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class MailerBaseException extends FcException {
-  public originalError: Error;
-  public readonly scope = 27;
+  static SCOPE = 27;
 }

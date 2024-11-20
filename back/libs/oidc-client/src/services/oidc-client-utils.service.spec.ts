@@ -16,6 +16,7 @@ import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc';
 import { getLoggerMock } from '@mocks/logger';
 
 import {
+  OidcClientFailedToFetchBlacklist,
   OidcClientGetEndSessionUrlException,
   OidcClientIdpBlacklistedException,
   OidcClientIdpDisabledException,
@@ -537,17 +538,15 @@ describe('OidcClientUtilsService', () => {
   describe('checkIdpBlacklisted()', () => {
     it('should return OidcClientRuntimeException isIdpBlacklist throw an error', async () => {
       // Given
-      const errorMock = new Error(
-        'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',
-      );
-      // When
+      const errorMock = new Error();
       serviceProviderServiceMock.shouldExcludeIdp.mockRejectedValueOnce(
         errorMock,
       );
-      // Then
+
+      // When / Then
       await expect(
         service.checkIdpBlacklisted('spId', 'idpId'),
-      ).rejects.toThrow(errorMock);
+      ).rejects.toThrow(OidcClientFailedToFetchBlacklist);
     });
 
     it('should throw OidcClientIdpBlacklistedException because identity provider is blacklisted', async () => {

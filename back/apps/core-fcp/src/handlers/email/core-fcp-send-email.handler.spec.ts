@@ -338,9 +338,7 @@ describe('CoreFcpSendEmailHandler', () => {
 
   const spIdentityWithEmailMock = {
     sub: '42',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     given_name: 'Edward',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     family_name: 'TEACH',
     email: 'eteach@fqdn.ext',
   };

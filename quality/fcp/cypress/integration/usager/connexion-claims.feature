@@ -72,7 +72,7 @@ Fonctionnalité: Connexion avec Claims
       | idpDescription               | amr    |
       | par défaut avec amr 'fc pwd' | fc pwd |
 
-  @fcpLow @fcpHigh @ignoreInteg01
+  @fcpLow @fcpHigh @ignoreInteg01 @exceptions
   Scénario: Connexion avec claims - erreur FS non habilité pour amr
     Etant donné que j'utilise le fournisseur de service "non habilité à demander le claim amr"
     Et que le fournisseur de service requiert le claim "amr"

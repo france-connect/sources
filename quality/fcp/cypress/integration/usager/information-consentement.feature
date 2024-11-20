@@ -100,6 +100,7 @@ Fonctionnalité: Information Consentement
     Et je suis connecté au fournisseur de service
     Et le fournisseur de service a accès aux informations du scope "anonyme"
 
+  @exceptions
   Scénario: Information - erreur Y470002 si consentement avec csrf vide
     Etant donné que j'utilise un fournisseur de service "public"
     Et que le fournisseur de service requiert l'accès aux informations du scope "identite_pivot sans alias"
@@ -112,6 +113,7 @@ Fonctionnalité: Information Consentement
     Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
     Et le lien retour vers le FS est affiché dans la page erreur technique
 
+  @exceptions
   Scénario: Consentement - erreur Y190006 si consentement avec mauvais csrf
     Etant donné que j'utilise un fournisseur de service "privé avec consentement obligatoire"
     Et que le fournisseur de service requiert l'accès aux informations du scope "identite_pivot sans alias"
@@ -125,6 +127,7 @@ Fonctionnalité: Information Consentement
     Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
     Et le lien retour vers le FS est affiché dans la page erreur technique
 
+  @exceptions
   Scénario: Information - erreur Y470002 si consentement sans csrf
     Etant donné que j'utilise un fournisseur de service "public"
     Et que le fournisseur de service requiert l'accès aux informations du scope "identite_pivot sans alias"

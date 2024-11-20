@@ -5,33 +5,26 @@ import { AxiosError } from 'axios';
 
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
 import { ChecktokenBaseException } from './checktoken-base.exception';
 
-@Description(
-  "Impossible de joindre le core. L'utilisateur doit redémarrer sa cinématique. Si cela persiste, contacter le support N3",
-)
 export class ChecktokenHttpStatusException extends ChecktokenBaseException {
-  public readonly code = ErrorCode.CHECKTOKEN_HTTP_STATUS_EXCEPTION;
-  public readonly httpStatusCode: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-  public readonly error: string = 'server_error';
-  public readonly message: string =
-    'The authorization server encountered an unexpected condition that prevented it from fulfilling the request.';
+  static CODE = ErrorCode.CHECKTOKEN_HTTP_STATUS_EXCEPTION;
+  static DOCUMENTATION =
+    "Impossible de joindre le core. L'utilisateur doit redémarrer sa cinématique. Si cela persiste, contacter le support N3";
 
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
+  static HTTP_STATUS_CODE: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+  public readonly error: string = 'server_error';
+  static UI: string = 'DataProviderAdapterCore.exceptions.checktokenHttpStatus';
 
   constructor(error: AxiosError<{ error: string; error_description: string }>) {
     super(error);
-
     const { status, data } = error?.response || {};
     if (data?.error && data?.error_description) {
-      this.httpStatusCode = status;
-      this.error = data.error;
-      this.message = data.error_description;
+      this.log = `status: ${status}, error: ${data.error}, error_description: ${data.error_description}`;
     }
   }
 }

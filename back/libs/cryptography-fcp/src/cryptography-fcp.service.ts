@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
+import { PivotIdentityDto } from '@fc/oidc';
 
 import { CryptographyFcpConfig } from './dto/cryptography-fcp-config';
 import { IPivotIdentity } from './interfaces/pivot-identity.interface';
@@ -20,17 +21,7 @@ export class CryptographyFcpService {
    * @param pivotIdentity
    * @returns the identity hash "hex" digested
    */
-  computeIdentityHash(
-    pivotIdentity: Pick<
-      IPivotIdentity,
-      | 'given_name'
-      | 'family_name'
-      | 'birthdate'
-      | 'gender'
-      | 'birthplace'
-      | 'birthcountry'
-    >,
-  ): string {
+  computeIdentityHash(pivotIdentity: PivotIdentityDto): string {
     const serial =
       pivotIdentity.given_name +
       pivotIdentity.family_name +

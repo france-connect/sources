@@ -4,9 +4,10 @@ import * as xmlParser from 'xml2js';
 import { Injectable } from '@nestjs/common';
 
 import { CitizenStatus, RnippPivotIdentity } from '../dto';
-import { Genders, RnippResponseCodes, RnippXmlSelectors } from '../enums';
+import { RnippResponseCodes, RnippXmlSelectors } from '../enums';
 import { RnippHttpStatusException } from '../exceptions';
 import { GivenNameScopeInterface } from '../interfaces';
+import { getGenderFromRnippGender } from '../mappers';
 
 const FRANCE_COG = '99100';
 
@@ -98,16 +99,8 @@ export class RnippResponseParserService {
   private getGenderFromParsedXml(parsedXml: JSON, path: string): string {
     const rnippGender: string = this.getXmlAttribute(parsedXml, path);
 
-    switch (rnippGender) {
-      case 'F':
-        return Genders.FEMALE;
-      case 'M':
-        return Genders.MALE;
-      case 'U':
-        return Genders.UNSPECIFIED;
-      default:
-        return '';
-    }
+    const gender = getGenderFromRnippGender(rnippGender);
+    return gender;
   }
 
   private getGivenNamesAttribute(

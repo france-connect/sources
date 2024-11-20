@@ -60,9 +60,6 @@ for csmr-tracks :
 }
 ```
 
-Function that get the account hash from account data (identity pivot) :
-[../../libs/cryptography-fcp/src/cryptography-fcp.service.ts](<computeIdentityHash(pivotIdentity)>)
-
 ### Depuis Nest
 
 ```typescript

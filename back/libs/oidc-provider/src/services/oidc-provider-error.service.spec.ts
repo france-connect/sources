@@ -2,40 +2,48 @@ import { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { FcExceptionFilter } from '@fc/exceptions-deprecated';
+import { throwException } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
 
 import { getLoggerMock } from '@mocks/logger';
 
-import { OidcProviderEvents } from '../enums';
 import {
   OidcProviderInitialisationException,
-  OidcProviderRuntimeException,
+  OidcProviderNoWrapperException,
 } from '../exceptions';
-import { OidcCtx } from '../interfaces';
+import { OidcProviderBaseRuntimeException } from '../exceptions/oidc-provider-base-runtime.exception';
 import { OidcProviderErrorService } from './oidc-provider-error.service';
+
+jest.mock('@fc/exceptions/helpers', () => ({
+  ...jest.requireActual('@fc/exceptions/helpers'),
+  throwException: jest.fn(),
+}));
+
+jest.mock('../exceptions/runtime', () => {
+  return {
+    exceptionSourceMap: {
+      'actions/mock-file.js:1': OidcProviderInitialisationException,
+    },
+  };
+});
 
 describe('OidcProviderErrorService', () => {
   let service: OidcProviderErrorService;
 
   const loggerServiceMock = getLoggerMock();
 
-  const exceptionFilterMock = {
-    catch: jest.fn(),
-  };
-
   beforeEach(async () => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FcExceptionFilter, OidcProviderErrorService, LoggerService],
+      providers: [OidcProviderErrorService, LoggerService],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(FcExceptionFilter)
-      .useValue(exceptionFilterMock)
       .compile();
 
     service = module.get<OidcProviderErrorService>(OidcProviderErrorService);
-    jest.resetAllMocks();
   });
 
   describe('catchErrorEvents', () => {
@@ -50,121 +58,89 @@ describe('OidcProviderErrorService', () => {
     });
   });
 
+  describe('listenError', () => {
+    it('should call renderError', async () => {
+      // Given
+      service.renderError = jest.fn();
+      const ctx = {} as KoaContextWithOIDC;
+      const error = new Error('error');
+      const eventName = 'event';
+
+      // When
+      await service.listenError(eventName, ctx, error);
+
+      // Then
+      expect(service.renderError).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('renderError', () => {
-    it('should call exceptionFilter.catch', async () => {
+    let getRenderedExceptionWrapperMock;
+    class ExceptionMock extends OidcProviderBaseRuntimeException {}
+
+    beforeEach(() => {
+      getRenderedExceptionWrapperMock = jest
+        .spyOn(OidcProviderErrorService, 'getRenderedExceptionWrapper')
+        .mockReturnValue(ExceptionMock);
+    });
+
+    it('should call getRenderedExceptionWrapper', async () => {
       // Given
-      const ctx = { res: {} } as KoaContextWithOIDC;
-      const out = '';
-      const error = new Error('foo bar');
+      const ctx = {} as KoaContextWithOIDC;
+      const error = new Error('error');
+
       // When
-      await service['renderError'](ctx, out, error);
+      await service.renderError(ctx, '', error);
       // Then
-      expect(exceptionFilterMock.catch).toHaveBeenCalledTimes(1);
+      expect(getRenderedExceptionWrapperMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('should set isError flag on ctx.oidc', async () => {
+      // Given
+      const ctx = { oidc: {} } as KoaContextWithOIDC;
+      const error = new Error('error');
+      // When
+      await service.renderError(ctx, '', error);
+      // Then
+      expect(ctx.oidc).toHaveProperty('isError', true);
+    });
+
+    it('should call throwException', async () => {
+      // Given
+      const ctx = {} as KoaContextWithOIDC;
+      const error = new Error('error');
+      // When
+      await service.renderError(ctx, '', error);
+      // Then
+      expect(throwException).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('triggerError', () => {
-    it('should call throwError with OidcProviderunTimeException if error is not an FcException', () => {
+  describe('getRenderedExceptionWrapper', () => {
+    it('should return OidcProviderRuntimeException by default', () => {
       // Given
-      const eventName = OidcProviderEvents.SESSION_SAVED;
-      const func = service['triggerError'].bind(service, eventName);
-      const ctxMock = { oidc: {} };
-      const errorMock = Error('some error');
-      service['throwError'] = jest.fn();
-      // When
-      func(ctxMock, errorMock);
-      // Then
-      expect(service['throwError']).toHaveBeenCalledTimes(1);
-      expect(service['throwError']).toHaveBeenCalledWith(
-        ctxMock,
-        expect.any(OidcProviderRuntimeException),
-      );
-    });
-    it('should flag the request as error', () => {
-      // Given
-      const eventName = OidcProviderEvents.SESSION_SAVED;
-      const func = service['triggerError'].bind(service, eventName);
-      const ctxMock = { oidc: {} };
-      const errorMock = Error('some error');
-      service['throwError'] = jest.fn();
-      // When
-      func(ctxMock, errorMock);
-      // Then
-      expect(ctxMock.oidc['isError']).toBe(true);
-    });
-    it('should call throwError with original exception if error is an FcException and does a redirection', () => {
-      // Given
-      const eventName = OidcProviderEvents.SESSION_SAVED;
-      const func = service['triggerError'].bind(service, eventName);
-      const ctxMock = { oidc: {} };
-      const errorMock = new OidcProviderInitialisationException();
-      errorMock.redirect = true;
-      service['throwError'] = jest.fn();
-      // When
-      func(ctxMock, errorMock);
-      // Then
-      expect(service['throwError']).toHaveBeenCalledTimes(1);
-      expect(service['throwError']).toHaveBeenCalledWith(ctxMock, errorMock);
-    });
-    it('should not call throwError with original exception if error is an FcException and does no redirection', () => {
-      // Given
-      const eventName = OidcProviderEvents.SESSION_SAVED;
-      const func = service['triggerError'].bind(service, eventName);
-      const ctxMock = { oidc: {} };
-      const errorMock = new OidcProviderInitialisationException();
-      errorMock.redirect = false;
-      service['throwError'] = jest.fn();
-      // When
-      func(ctxMock, errorMock);
-      // Then
-      expect(service['throwError']).toHaveBeenCalledTimes(0);
-    });
-  });
-
-  describe('handleRedirectableError', () => {
-    const redirectUriMock = 'redirectUriMockValue';
-    const ctxMock = {
-      res: {
-        redirect: jest.fn(),
-      },
-      oidc: {
-        params: {
-          redirect_uri: redirectUriMock,
-        },
-      },
-    } as unknown as OidcCtx;
-
-    it('should call res.redirect if exception.redirect is true', () => {
-      // Given
-      const exceptionMock = {
-        redirect: true,
-        oidc: {
-          error: 'some error',
-          description: 'some description',
-        },
-      } as OidcProviderInitialisationException;
+      const error = new Error('error');
 
       // When
-      service['handleRedirectableError'](ctxMock, exceptionMock);
+      const result =
+        OidcProviderErrorService.getRenderedExceptionWrapper(error);
 
       // Then
-      expect(ctxMock.res.redirect).toHaveBeenCalledTimes(1);
-      expect(ctxMock.res.redirect).toHaveBeenCalledWith(
-        `${redirectUriMock}?error=${exceptionMock.oidc.error}&error_description=${exceptionMock.oidc.description}`,
-      );
+      expect(result).toBe(OidcProviderNoWrapperException);
     });
 
-    it('should not do anything if exception.redirect is false', () => {
+    it('should return a specific exception class', () => {
       // Given
-      const exceptionMock = {
-        redirect: false,
-      } as OidcProviderInitialisationException;
+      const error = new Error('error');
+      error.stack =
+        'Error\nnode_modules/oidc-provider/lib/actions/mock-file.js:1:42';
 
       // When
-      service['handleRedirectableError'](ctxMock, exceptionMock);
+      const result =
+        OidcProviderErrorService.getRenderedExceptionWrapper(error);
 
       // Then
-      expect(ctxMock.res.redirect).toHaveBeenCalledTimes(0);
+      expect(result).toBe(OidcProviderInitialisationException);
     });
   });
 });

@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class DataProviderAdapterMongoBaseException extends FcException {
-  scope = 33;
+  static SCOPE = 33;
 }

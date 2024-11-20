@@ -153,7 +153,7 @@ describe('CoreAccountService', () => {
   });
 
   describe('checkIfAccountIsBlocked()', () => {
-    it('Should go through check if account is not blocked', async () => {
+    it('should go through check if account is not blocked', async () => {
       // Given
       const identityHash = 'hashedIdentity';
       // Then
@@ -162,7 +162,7 @@ describe('CoreAccountService', () => {
       expect(accountServiceMock.isBlocked).toBeCalledTimes(1);
     });
 
-    it('Should throw if account is blocked', async () => {
+    it('should throw if account is blocked', async () => {
       // Given
       accountServiceMock.isBlocked.mockResolvedValue(true);
       const identityHash = 'hashedIdentity';
@@ -174,7 +174,7 @@ describe('CoreAccountService', () => {
       expect(accountServiceMock.isBlocked).toBeCalledTimes(1);
     });
 
-    it('Should throw if account blocked check fails', async () => {
+    it('should throw if account blocked check fails', async () => {
       // Given
       const error = new Error('foo');
       accountServiceMock.isBlocked.mockRejectedValueOnce(error);

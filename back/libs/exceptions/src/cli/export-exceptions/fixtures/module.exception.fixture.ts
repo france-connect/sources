@@ -1,12 +1,15 @@
 /* istanbul ignore file */
-import { FcException } from '@fc/exceptions';
+import { FcException } from '../../../exceptions';
 
 export const anyFunction = () => false;
 
 export class ImportFixture extends FcException {
-  scope = 1;
-  code = 2;
-  message = 'any';
+  static DOCUMENTATION = 'documentation';
+  static SCOPE = 1;
+  static CODE = 2;
   static ERROR = 'error';
   static ERROR_DESCRIPTION = 'error description';
+  static UI = 'ui';
+  readonly message = 'message';
+  static LOG_LEVEL = 20;
 }

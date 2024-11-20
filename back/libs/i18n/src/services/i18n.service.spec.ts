@@ -104,6 +104,27 @@ describe('I18nService', () => {
       expect(() => service.translate(input)).toThrow(I18nKeyNotFoundException);
     });
 
+    it('should use default if provided key has no translation but default is provided', () => {
+      // Given
+      const input = 'missing_key';
+      const options = { default: 'defaultValue' };
+      const translations = { defaultValue: 'defaultValue translated' };
+      service['getTranslations'] = jest.fn().mockReturnValueOnce(translations);
+      service['replaceVariables'] = jest.fn();
+
+      // When
+      service.translate(input, null, {
+        default: options.default,
+      });
+
+      // Then
+      expect(service['replaceVariables']).toHaveBeenCalledExactlyOnceWith(
+        translations.defaultValue,
+        null,
+        options,
+      );
+    });
+
     it('should replace placeholders by variables values', () => {
       // Given
       service['getTranslations'] = jest.fn().mockReturnValueOnce({

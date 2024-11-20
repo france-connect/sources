@@ -360,7 +360,7 @@ describe('CoreTrackingService', () => {
       expect(result).toEqual(expectedResult);
     });
 
-    it('Should return partial data from session.get', () => {
+    it('should return partial data from session.get', () => {
       // Given
       const expectedResult = {
         accountId: 'accountId Mock Value',

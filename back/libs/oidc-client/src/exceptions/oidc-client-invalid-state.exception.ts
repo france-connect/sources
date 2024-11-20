@@ -3,24 +3,15 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
 import { OidcClientBaseException } from './oidc-client-base.exception';
 
-@Description(
-  "La requête reçue au retour du FI n'est pas valide (state invalide), recommencer la cinématique depuis le FS. si le problème persiste, contacter le support N3",
-)
 export class OidcClientInvalidStateException extends OidcClientBaseException {
-  code = ErrorCode.INVALID_STATE;
-  public readonly httpStatusCode = HttpStatus.FORBIDDEN;
-
+  static CODE = ErrorCode.INVALID_STATE;
+  static DOCUMENTATION =
+    "La requête reçue au retour du FI n'est pas valide (state invalide), recommencer la cinématique depuis le FS. si le problème persiste, contacter le support N3";
   static ERROR = 'invalid_request';
   static ERROR_DESCRIPTION = 'invalid state parameter';
-
-  constructor() {
-    super(
-      'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
-    );
-  }
+  static HTTP_STATUS_CODE = HttpStatus.FORBIDDEN;
+  static UI = 'OidcClient.exceptions.oidcClientInvalidState';
 }

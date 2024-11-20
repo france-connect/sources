@@ -3,25 +3,15 @@
 // declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
 import { SessionBaseException } from './session-base.exception';
 
-@Description(
-  'Cette erreur technique est émise lorsque le session id est introuvable dans l\'objet "req". L\'interceptor de la session a-t-il pu récupérer le cookie de session ?',
-)
 export class SessionNoSessionIdException extends SessionBaseException {
-  public readonly code = ErrorCode.NO_SESSION_ID;
-  public readonly httpStatusCode = HttpStatus.UNAUTHORIZED;
-
+  static CODE = ErrorCode.NO_SESSION_ID;
+  static DOCUMENTATION =
+    'Cette erreur technique est émise lorsque le session id est introuvable dans l\'objet "req". L\'interceptor de la session a-t-il pu récupérer le cookie de session ?';
   static ERROR = 'access_denied';
   static ERROR_DESCRIPTION = 'user authentication aborted';
-
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  constructor() {
-    super(
-      'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
-    );
-  }
+  static HTTP_STATUS_CODE = HttpStatus.UNAUTHORIZED;
+  static UI = 'Session.exceptions.sessionNoSessionId';
 }

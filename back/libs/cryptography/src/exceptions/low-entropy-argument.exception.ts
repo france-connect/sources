@@ -1,16 +1,17 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Description } from '@fc/exceptions-deprecated';
-
+import { ErrorCode } from '../enums';
 import { CryptographyBaseException } from './cryptography-base.exception';
 
-@Description(
-  "Problème de configuration dans la librairie de cryptographie (Une fonction de génération d'aléa requiert une longueur minimale pour éviter des collisions)",
-)
 export class LowEntropyArgumentException extends CryptographyBaseException {
+  static CODE = ErrorCode.LOW_ENTROPY;
+  static DOCUMENTATION =
+    "Problème de configuration dans la librairie de cryptographie (Une fonction de génération d'aléa requiert une longueur minimale pour éviter des collisions)";
+  static UI = 'Cryptography.exceptions.lowEntropyArgument';
+
   constructor(length: number) {
     super();
-    this.message = `Entropy must be at least 32 Bytes for random bytes generation, <${length}> given.`;
+    this.log = `${LowEntropyArgumentException.UI}, <${length}> given.`;
   }
 }

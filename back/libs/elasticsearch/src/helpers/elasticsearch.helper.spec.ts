@@ -1,4 +1,4 @@
-import { EVENT_MAPPING } from '@fc/csmr-tracks/constants';
+import { EVENT_MAPPING } from '@fc/tracks-adapter-elasticsearch/constants';
 
 import * as query from './elasticsearch.helper';
 

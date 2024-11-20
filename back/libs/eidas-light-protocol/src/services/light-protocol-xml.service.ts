@@ -73,14 +73,8 @@ export class LightProtocolXmlService {
 
   addDeclarationFields(pathsObject: IPathsObject): IPathsObject {
     return {
-      // Necessary for XML header
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       '_declaration._attributes.version': '1.0',
-      // Necessary for XML header
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       '_declaration._attributes.encoding': 'UTF-8',
-      // Necessary for XML header
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       '_declaration._attributes.standalone': 'yes',
       ...pathsObject,
     };

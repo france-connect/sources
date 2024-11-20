@@ -1,9 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
-
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class MockServiceProviderBaseException extends FcException {
-  scope = 9;
+  static SCOPE = 9;
 }

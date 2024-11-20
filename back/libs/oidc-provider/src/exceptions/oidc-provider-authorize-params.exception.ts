@@ -3,24 +3,18 @@
 // Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions';
 
 import { ErrorCode } from '../enums';
-import { OidcProviderBaseException } from './oidc-provider-base.exception';
 
-@Description(
-  "Un ou plusieurs `params` de la route `authorize` n'a/ont pas été validé par le DTO",
-)
-export class OidcProviderAuthorizeParamsException extends OidcProviderBaseException {
-  public readonly code = ErrorCode.AUTHORIZATION_ERROR;
-  public readonly httpStatusCode = HttpStatus.BAD_REQUEST;
+export class OidcProviderAuthorizeParamsException extends FcException {
+  static SCOPE = 3;
 
+  static CODE = ErrorCode.AUTHORIZATION_ERROR;
+  static DOCUMENTATION =
+    "Un ou plusieurs `params` de la route `authorize` n'a/ont pas été validé par le DTO";
   static ERROR = 'invalid_request';
   static ERROR_DESCRIPTION = 'invalid parameter';
-
-  constructor() {
-    super(
-      'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.',
-    );
-  }
+  static HTTP_STATUS_CODE = HttpStatus.BAD_REQUEST;
+  static UI = 'OidcProvider.exceptions.oidcProviderAuthorizeParams';
 }

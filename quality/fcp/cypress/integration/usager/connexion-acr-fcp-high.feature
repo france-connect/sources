@@ -51,6 +51,7 @@ Fonctionnalité: Connexion ACR
     Et le titre de l'erreur fournisseur de service est "invalid_acr"
     Et la description de l'erreur fournisseur de service est "acr_value is not valid, should be equal one of these values, expected eidas2,eidas3, got <actualAcr>"
 
+    @exceptions
     Exemples:
       | acrValues            | method | actualAcr |
       | eidas1               | get    | eidas1    |
@@ -86,6 +87,7 @@ Fonctionnalité: Connexion ACR
       | eidas2 | eidas3 | eidas3    |
       | eidas3 | eidas3 | eidas3    |
 
+  @exceptions
   Plan du Scénario: Connexion ACR - FCP high - erreur FI retourne un niveau <idpAcr> inférieur à <spAcr>
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
@@ -111,7 +113,7 @@ Fonctionnalité: Connexion ACR
 
 
   # Waiting for an "eidas2" IdP to be available on Integ01
-  @ignoreInteg01
+  @ignoreInteg01 @exceptions
   Scénario: Connexion ACR - FCP high - erreur FI retourne un acr qui ne lui est pas permis (supérieur)
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"
@@ -129,7 +131,7 @@ Fonctionnalité: Connexion ACR
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
 
   # @Todo: check if we can use FIN as an "eidas3 only" provider on Integ01
-  @ignoreInteg01
+  @ignoreInteg01 @exceptions
   Scénario: Connexion ACR - FCP high - erreur FI retourne un acr qui ne lui est pas permis (inférieur)
     Etant donné que j'utilise le fournisseur de service "par défaut"
     Et que le fournisseur de service requiert l'accès aux informations du scope "tous les scopes"

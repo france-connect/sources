@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class EidasBridgeBaseException extends FcException {
-  scope = 5;
+  static SCOPE = 5;
 }

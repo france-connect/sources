@@ -3,20 +3,17 @@ import { Request, Response } from 'express';
 import { HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import {
-  ChecktokenRequestDto,
-  InvalidChecktokenRequestException,
-} from '@fc/core';
+import { ChecktokenRequestDto } from '@fc/core';
 import {
   DataProviderAdapterMongoService,
   DataProviderMetadata,
 } from '@fc/data-provider-adapter-mongo';
-import { DataProviderInvalidCredentialsException } from '@fc/data-provider-adapter-mongo/exceptions';
 import { LoggerService } from '@fc/logger';
 
 import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
+import { DataProviderExceptionFilter } from '../filters';
 import { DataProviderService } from '../services';
 import { DataProviderController } from './data-provider.controller';
 
@@ -78,6 +75,10 @@ describe('DataProviderController', () => {
     },
   };
 
+  const exceptionFilterMock = {
+    catch: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -90,6 +91,8 @@ describe('DataProviderController', () => {
         LoggerService,
       ],
     })
+      .overrideFilter(DataProviderExceptionFilter)
+      .useValue(exceptionFilterMock)
       .overrideProvider(DataProviderAdapterMongoService)
       .useValue(dataProviderAdapterMongoMock)
       .overrideProvider(DataProviderService)
@@ -218,18 +221,6 @@ describe('DataProviderController', () => {
       );
     });
 
-    it('should set the header application/token-introspection+jwt', async () => {
-      // When
-      await dataProviderController.checktoken(reqMock, resMock, bodyMock);
-
-      // Then
-      expect(resMock.set).toHaveBeenCalledTimes(1);
-      expect(resMock.set).toHaveBeenCalledWith(
-        'Content-Type',
-        'application/token-introspection+jwt',
-      );
-    });
-
     it('should set HTTP code 200', async () => {
       // When
       await dataProviderController.checktoken(reqMock, resMock, bodyMock);
@@ -246,91 +237,6 @@ describe('DataProviderController', () => {
       // Then
       expect(resMock.end).toHaveBeenCalledTimes(1);
       expect(resMock.end).toHaveBeenCalledWith(jwtMock);
-    });
-
-    it('should return HTTP code 401 and send error message when getAuthenticatedDataProvider method failed', async () => {
-      dataProviderServiceMock.checkRequestValid.mockResolvedValueOnce(true);
-      dataProviderServiceMock.generateErrorMessage.mockReturnValueOnce({
-        error: 'invalid_client',
-        error_description: 'Client authentication failed.',
-      });
-      dataProviderAdapterMongoMock.getAuthenticatedDataProvider.mockRejectedValueOnce(
-        new DataProviderInvalidCredentialsException(),
-      );
-
-      // When
-      await dataProviderController.checktoken(reqMock, resMock, bodyMock);
-
-      // Then
-      expect(resMock.status).toHaveBeenCalledTimes(1);
-      expect(resMock.status).toHaveBeenCalledWith(401);
-      expect(resMock.json).toHaveBeenCalledTimes(1);
-      expect(resMock.json).toHaveBeenCalledWith({
-        error: 'invalid_client',
-        error_description: 'Client authentication failed.',
-      });
-    });
-
-    it('should return HTTP code 400 and send error message when checkRequest method failed', async () => {
-      // Given
-      dataProviderServiceMock.checkRequestValid.mockRejectedValue(
-        new InvalidChecktokenRequestException(),
-      );
-      dataProviderServiceMock.generateErrorMessage.mockReturnValueOnce({
-        error: 'invalid_request',
-        error_description: 'Required parameter missing or invalid.',
-      });
-
-      // When
-      await dataProviderController.checktoken(reqMock, resMock, bodyMock);
-
-      // Then
-      expect(resMock.status).toHaveBeenCalledTimes(1);
-      expect(resMock.status).toHaveBeenCalledWith(400);
-      expect(resMock.json).toHaveBeenCalledTimes(1);
-      expect(resMock.json).toHaveBeenCalledWith({
-        error: 'invalid_request',
-        error_description: 'Required parameter missing or invalid.',
-      });
-    });
-
-    it('should log a critical error if a catch happens', async () => {
-      // Given
-      const errorMock = new Error('test');
-      dataProviderServiceMock.checkRequestValid.mockRejectedValue(errorMock);
-
-      // When
-      await dataProviderController.checktoken(reqMock, resMock, bodyMock);
-
-      // Then
-      expect(loggerServiceMock.crit).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.crit).toHaveBeenCalledWith(
-        { error: '' },
-        errorMock.message,
-      );
-    });
-
-    it('should return HTTP code 500 and send error message if no httpStatusCode', async () => {
-      // Given
-      dataProviderServiceMock.checkRequestValid.mockRejectedValue(new Error());
-      dataProviderServiceMock.generateErrorMessage.mockReturnValueOnce({
-        error: 'server_error',
-        error_description:
-          'The authorization server encountered an unexpected condition that prevented it from fulfilling the request.',
-      });
-
-      // When
-      await dataProviderController.checktoken(reqMock, resMock, bodyMock);
-
-      // Then
-      expect(resMock.status).toHaveBeenCalledTimes(1);
-      expect(resMock.status).toHaveBeenCalledWith(500);
-      expect(resMock.json).toHaveBeenCalledTimes(1);
-      expect(resMock.json).toHaveBeenCalledWith({
-        error: 'server_error',
-        error_description:
-          'The authorization server encountered an unexpected condition that prevented it from fulfilling the request.',
-      });
     });
 
     it('should return expired JWT if session is not found', async () => {

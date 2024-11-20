@@ -12,6 +12,7 @@ import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import {
   OidcProviderAuthorizeParamsException,
   OidcProviderService,
+  OidcProviderUserAbortedException,
 } from '@fc/oidc-provider';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
@@ -39,7 +40,6 @@ const nextMock = jest.fn();
 
 const loggerServiceMock = getLoggerMock();
 
-const reqMock = Symbol('req');
 const resMock = {
   locals: {},
 };
@@ -352,37 +352,11 @@ describe('OidcProviderController', () => {
   });
 
   describe('redirectToSpWithError', () => {
-    it('should call abortInteraction', async () => {
-      // When
-      await oidcProviderController.redirectToSpWithError(
-        queryErrorMock,
-        reqMock,
-        resMock,
-      );
-
-      // Then
-      expect(oidcProviderServiceMock.abortInteraction).toHaveBeenCalledTimes(1);
-      expect(oidcProviderServiceMock.abortInteraction).toHaveBeenCalledWith(
-        reqMock,
-        resMock,
-        { error: 'error', error_description: 'errorDescription' },
-      );
-    });
-
-    it('should throw an error', async () => {
-      // Given
-      oidcProviderServiceMock.abortInteraction.mockRejectedValueOnce(
-        'Une erreur est survenu.',
-      );
-
-      // Then
-      await expect(
-        oidcProviderController.redirectToSpWithError(
-          queryErrorMock,
-          reqMock,
-          resMock,
-        ),
-      ).rejects.toThrow(Error);
+    it('should throw an OidcProviderUserAbortedException', () => {
+      // When / Then
+      expect(() =>
+        oidcProviderController.redirectToSpWithError(queryErrorMock),
+      ).toThrow(OidcProviderUserAbortedException);
     });
   });
 

@@ -3,13 +3,13 @@
 // Declarative code
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CryptographyModule } from '@fc/cryptography';
 import { CsrfModule } from '@fc/csrf';
-import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import { ExceptionsModule, FcWebHtmlExceptionFilter } from '@fc/exceptions';
 import {
   IdentityProviderAdapterEnvModule,
   IdentityProviderAdapterEnvService,
@@ -39,7 +39,7 @@ const oidcClientModule = OidcClientModule.register(
 @Module({
   imports: [
     AppModule,
-    ExceptionsModule.withoutTracking(),
+    ExceptionsModule,
     AsyncLocalStorageModule,
     SessionModule,
     IdentityProviderAdapterEnvModule,
@@ -53,6 +53,11 @@ const oidcClientModule = OidcClientModule.register(
   providers: [
     MockServiceProviderService,
     { provide: APP_INTERCEPTOR, useClass: AppModeInterceptor },
+    FcWebHtmlExceptionFilter,
+    {
+      provide: APP_FILTER,
+      useClass: FcWebHtmlExceptionFilter,
+    },
   ],
 })
 export class MockServiceProviderModule {}

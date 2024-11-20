@@ -146,8 +146,6 @@ export class CoreFcpService implements CoreFcpServiceInterface {
     const acr_values = this.oidcAcr.getAcrToAskToIdp(spAcr, allowedAcr);
 
     const authorizeParams: CoreFcpAuthorizationParametersInterface = {
-      // acr_values is an oidc defined variable name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       acr_values,
       nonce,
       scope,

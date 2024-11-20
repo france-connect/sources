@@ -24,5 +24,6 @@ generate_18n_files "$1"
 INSTANCE_FOLDER="./instances/$1"
 cd "$INSTANCE_FOLDER"
 
-clear && yarn start
+clear
+yarn start
 # !!! do not exit : vitejs will in HMR watch mode !!!

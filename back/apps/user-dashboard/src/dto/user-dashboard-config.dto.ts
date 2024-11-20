@@ -4,6 +4,7 @@
 import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
+import { ExceptionsConfig } from '@fc/exceptions/dto';
 import { I18nConfig } from '@fc/i18n';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
 import { LoggerConfig } from '@fc/logger';
@@ -23,6 +24,11 @@ export class UserDashboardConfig {
   @ValidateNested()
   @Type(() => AppConfig)
   readonly App: AppConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ExceptionsConfig)
+  readonly Exceptions: ExceptionsConfig;
 
   @IsObject()
   @ValidateNested()

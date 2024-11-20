@@ -43,7 +43,6 @@ import { UserDashboardTokenRevocationException } from '../exceptions';
 
 @Controller()
 export class OidcClientController {
-  // eslint-disable-next-line max-params
   constructor(
     private readonly oidcClient: OidcClientService,
     private readonly identityProvider: IdentityProviderAdapterEnvService,

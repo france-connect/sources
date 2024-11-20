@@ -40,7 +40,6 @@ export class CoreFcaService implements CoreFcaServiceInterface {
     private readonly fqdnService: CoreFcaFqdnService,
     private readonly logger: LoggerService,
   ) {}
-  // eslint-disable-next-line max-params
   async redirectToIdp(
     res: Response,
     idpId: string,

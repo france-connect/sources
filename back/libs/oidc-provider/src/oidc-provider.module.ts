@@ -3,10 +3,8 @@
 // Declarative file
 import { DynamicModule, Module, Type } from '@nestjs/common';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { CqrsModule } from '@nestjs/cqrs';
 
 import { IsUrlRequiredTldFromConfigConstraint } from '@fc/common';
-import { FcExceptionFilter } from '@fc/exceptions-deprecated';
 import { IServiceProviderAdapter } from '@fc/oidc';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc/tokens';
 import { OidcAcrModule } from '@fc/oidc-acr';
@@ -36,7 +34,6 @@ export class OidcProviderModule {
     OidcProviderConfigApp: Type<IOidcProviderConfigAppService>,
     ServiceProviderClass: Type<IServiceProviderAdapter>,
     ServiceProviderModule: Type<ModuleMetadata>,
-    ExceptionModule: DynamicModule,
   ): DynamicModule {
     const serviceProviderProvider = {
       provide: SERVICE_PROVIDER_SERVICE_TOKEN,
@@ -51,15 +48,12 @@ export class OidcProviderModule {
     return {
       module: OidcProviderModule,
       imports: [
-        ExceptionModule,
         RedisModule,
         ServiceProviderModule,
-        CqrsModule,
         OidcAcrModule,
         SessionModule,
       ],
       providers: [
-        FcExceptionFilter,
         oidcProviderConfigApp,
         serviceProviderProvider,
         OidcProviderService,
@@ -74,7 +68,6 @@ export class OidcProviderModule {
         RedisModule,
         oidcProviderConfigApp,
         serviceProviderProvider,
-        FcExceptionFilter,
         OidcProviderErrorService,
         OidcProviderGrantService,
       ],

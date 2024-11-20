@@ -72,9 +72,6 @@ describe('ExceptionsFcpService', () => {
       jest.mocked(configMock.get).mockReturnValueOnce({
         items: [{ active: true, errorCode: 'any_error_code' }],
       });
-      jest
-        .mocked(i18nMock.translate)
-        .mockReturnValueOnce('default_error_title-translated');
 
       // when
       const result = service.getCustomErrorAction({
@@ -83,13 +80,9 @@ describe('ExceptionsFcpService', () => {
       });
 
       // then
-      expect(i18nMock.translate).toHaveBeenNthCalledWith(
-        1,
-        'error.support.title',
-      );
       expect(result).toStrictEqual({
         message: 'default_error_message',
-        title: 'default_error_title-translated',
+        title: 'error.support.title',
       });
     });
 
@@ -109,13 +102,9 @@ describe('ExceptionsFcpService', () => {
       });
 
       // then
-      expect(i18nMock.translate).toHaveBeenNthCalledWith(
-        1,
-        'error.support.title',
-      );
       expect(result).toStrictEqual({
         message: 'default_error_message',
-        title: 'default_error_title-translated',
+        title: 'error.support.title',
       });
     });
 
@@ -146,8 +135,8 @@ describe('ExceptionsFcpService', () => {
 
       // then
       expect(result).toStrictEqual({
-        message: 'any_message-translated',
-        title: 'any_title-translated',
+        message: 'any_errorMessage_mock',
+        title: 'any_actionTitle_mock',
       });
     });
   });

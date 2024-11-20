@@ -37,6 +37,7 @@ Fonctionnalité: API - authorize
     Et je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y030007"
 
+    @exceptions
     Exemples:
       | param         |
       | acr_values    |
@@ -103,6 +104,7 @@ Fonctionnalité: API - authorize
     Et l'url de callback du FS a un paramètre "error" égal à "<error>"
     Et l'url de callback du FS a un paramètre "error_description" égal à "<errorDescription>"
 
+    @exceptions
     Exemples:
       | responseType | error                     | errorDescription                           |
       |              | invalid_request           | missing required parameter 'response_type' |
@@ -122,6 +124,7 @@ Fonctionnalité: API - authorize
     Et l'url de callback du FS a un paramètre "error" égal à "<error>"
     Et l'url de callback du FS a un paramètre "error_description" égal à "<errorDescription>"
 
+    @exceptions
     Exemples:
       | responseType   | error                     | errorDescription                    |
       | id_token       | unsupported_response_type | unsupported response_type requested |
@@ -141,18 +144,19 @@ Fonctionnalité: API - authorize
     Et le code d'erreur FranceConnect est "Y030007"
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
-  Plan du Scénario: API authorize - erreur Y030106 client_id=<clientId>
+  Plan du Scénario: API authorize - erreur Y04A586 client_id=<clientId>
     Etant donné que je prépare une requête "authorize"
     Et je mets "<clientId>" dans le paramètre "client_id" de la requête
     Quand je lance la requête
-    Alors le statut de la réponse est 500
+    Alors le statut de la réponse est 400
     Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y030106"
-    Et le message d'erreur FranceConnect est "client is invalid (client not found)"
+    Et le code d'erreur FranceConnect est "Y04A586"
+    Et le message d'erreur FranceConnect est "Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement."
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
+    @exceptions
     Exemples:
       | clientId                        |
       | inconnu                         |
@@ -174,6 +178,7 @@ Fonctionnalité: API - authorize
       |         | openid scope must be requested when using the acr_values parameter |
       | profile | openid scope must be requested when using the acr_values parameter |
 
+
   Plan du Scénario: API authorize - erreur <error> redirect_uri=<redirectUri>
     Etant donné que je prépare une requête "authorize"
     Et je mets "<redirectUri>" dans le paramètre "redirect_uri" de la requête
@@ -187,8 +192,24 @@ Fonctionnalité: API - authorize
     Et le message d'erreur FranceConnect est "<errorDescription>"
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
 
+    @exceptions
     Exemples:
-      | redirectUri                          | httpCode | error   | errorDescription                                                                            |
-      |                                      | 400      | Y030007 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. |
-      | https://my-malicious-url.fr/callback | 500      | Y030118 | redirect_uri did not match any of the client's registered redirect_uris (undefined)         |
-      | example.com                          | 400      | Y030007 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous. |
+      | redirectUri                          | httpCode | error   | errorDescription                                                                                            |
+      |                                      | 400      | Y030007 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.                 |
+      | https://my-malicious-url.fr/callback | 400      | Y046350 | Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement. |
+      | example.com                          | 400      | Y030007 | Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.                 |
+
+
+  @exceptions
+  Scénario: API authorize - erreur de paramètres : erreur scope et erreur redirect_uri
+    Etant donné que je prépare une requête "authorize"
+    Et je mets "email" dans le paramètre "scope" de la requête
+    Et j'ajoute "/wrong-url" dans le paramètre "redirect_uri" de la requête
+    Quand je lance la requête
+    Alors le statut de la réponse est 400
+    Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
+    Et le corps de la réponse contient une page web
+    Et je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y030031"
+    Et le message d'erreur FranceConnect est "Une erreur s'est produite, veuillez réessayer ultérieurement"
+    Et le lien retour vers le FS n'est pas affiché dans la page erreur technique

@@ -322,9 +322,7 @@
       "sourceRoot": "instances/csmr-user-preferences-high/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
-        "assets": [
-          "../../../instances/csmr-user-preferences-high/**/*.ejs"
-        ]
+        "assets": ["../../../instances/csmr-user-preferences-high/**/*.ejs"]
       }
     },
     "csmr-account-instance": {
@@ -544,15 +542,6 @@
       "sourceRoot": "libs/exceptions-fcp/src",
       "compilerOptions": {
         "tsConfigPath": "libs/exceptions-fcp/tsconfig.lib.json"
-      }
-    },
-    "exceptions-deprecated": {
-      "type": "library",
-      "root": "libs/exceptions-deprecated",
-      "entryFile": "index",
-      "sourceRoot": "libs/exceptions-deprecated/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/exceptions-deprecated/tsconfig.lib.json"
       }
     },
     "mongoose": {
@@ -834,6 +823,15 @@
         "tsConfigPath": "libs/elasticsearch/tsconfig.lib.json"
       }
     },
+    "tracks-adapter-elasticsearch": {
+      "type": "library",
+      "root": "libs/tracks-adapter-elasticsearch",
+      "entryFile": "index",
+      "sourceRoot": "libs/tracks-adapter-elasticsearch/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/tracks-adapter-elasticsearch/tsconfig.lib.json"
+      }
+    },
     "csv": {
       "type": "library",
       "root": "libs/csv",
@@ -879,13 +877,13 @@
         "tsConfigPath": "libs/data-provider-core-auth/tsconfig.lib.json"
       }
     },
-    "tracks": {
+    "csmr-tracks-client": {
       "type": "library",
-      "root": "libs/tracks",
+      "root": "libs/csmr-tracks-client",
       "entryFile": "index",
-      "sourceRoot": "libs/tracks/src",
+      "sourceRoot": "libs/csmr-tracks-client/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/tracks/tsconfig.lib.json"
+        "tsConfigPath": "libs/csmr-tracks-client/tsconfig.lib.json"
       }
     },
     "csmr-fraud-client": {

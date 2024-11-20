@@ -93,20 +93,15 @@ describe('RnippResponseParserService', () => {
 
     it('should throw a "RnippHttpStatusException" with the error thrown by "parseStringPromise"', async () => {
       // setup
-      const parseStringPromiseErrorMessage =
-        'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
       jest.spyOn(xmlParser, 'parseStringPromise').mockRestore();
       jest
         .spyOn(xmlParser, 'parseStringPromise')
-        .mockRejectedValueOnce(new Error(parseStringPromiseErrorMessage));
+        .mockRejectedValueOnce(new Error());
 
       // action
-      try {
-        await service.parseRnippData(rnippCorectResponseXml);
-      } catch (e) {
-        expect(e).toBeInstanceOf(RnippHttpStatusException);
-        expect(e.message).toStrictEqual(parseStringPromiseErrorMessage);
-      }
+      await expect(
+        service.parseRnippData(rnippCorectResponseXml),
+      ).rejects.toThrow(RnippHttpStatusException);
 
       // expect
       expect.hasAssertions();
@@ -330,8 +325,8 @@ describe('RnippResponseParserService', () => {
       expect(result).toStrictEqual(Genders.MALE);
     });
 
-    it('should return "unspecified" if "getXmlAttribute" returns "U"', () => {
-      service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('U');
+    it('should return "unspecified" if "getXmlAttribute" returns "I"', () => {
+      service['getXmlAttribute'] = jest.fn().mockReturnValueOnce('I');
 
       // action
       const result = service['getGenderFromParsedXml'](

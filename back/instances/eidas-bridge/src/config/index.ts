@@ -10,6 +10,8 @@ import CryptographyEidas from './cryptography-eidas';
 import EidasClient from './eidas-client';
 import EidasLightProtocol from './eidas-light-protocol';
 import EidasProvider from './eidas-provider';
+import Exceptions from './exceptions';
+import I18n from './i18n';
 import IdentityProviderAdapterEnv from './identity-provider-adapter-env';
 import Logger from './logger';
 import LoggerLegacy from './logger-legacy';
@@ -37,6 +39,8 @@ export default {
   EidasClient,
   EidasLightProtocol,
   EidasProvider,
+  Exceptions,
+  I18n,
   IdentityProviderAdapterEnv,
   Logger,
   LoggerLegacy,

@@ -2,11 +2,12 @@
 
 // Declarative code
 import { Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 
 import { AccountModule } from '@fc/account';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';
-import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import { ExceptionsModule, FcRmqExceptionFilter } from '@fc/exceptions';
 import { IdentityProviderAdapterMongoModule } from '@fc/identity-provider-adapter-mongo';
 import { MongooseModule } from '@fc/mongoose';
 
@@ -16,7 +17,7 @@ import { CsmrUserPreferencesService } from './services';
 
 @Module({
   imports: [
-    ExceptionsModule.withoutTracking(),
+    ExceptionsModule,
     MongooseModule.forRoot(),
     AsyncLocalStorageModule,
     AccountModule,
@@ -24,7 +25,15 @@ import { CsmrUserPreferencesService } from './services';
     IdentityProviderAdapterMongoModule,
   ],
   controllers: [CsmrUserPreferencesController],
-  providers: [CsmrUserPreferencesService, CsmrUserPreferenceHandler],
+  providers: [
+    CsmrUserPreferencesService,
+    CsmrUserPreferenceHandler,
+    FcRmqExceptionFilter,
+    {
+      provide: APP_FILTER,
+      useClass: FcRmqExceptionFilter,
+    },
+  ],
   exports: [CsmrUserPreferenceHandler],
 })
 export class CsmrUserPreferencesModule {}

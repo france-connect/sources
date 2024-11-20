@@ -413,14 +413,8 @@ describe('LightProtocolXmlService', () => {
 
       // expect
       expect(result).toStrictEqual({
-        // XML field
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         '_declaration._attributes.encoding': 'UTF-8',
-        // XML field
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         '_declaration._attributes.standalone': 'yes',
-        // XML field
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         '_declaration._attributes.version': '1.0',
         pouet: 'pouet',
       });

@@ -2,7 +2,7 @@ import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { ConfigService } from '@fc/config';
-import { ValidationException } from '@fc/exceptions-deprecated';
+import { ValidationException } from '@fc/exceptions';
 import { HsmService } from '@fc/hsm';
 import { LoggerService } from '@fc/logger';
 import { CryptoProtocol } from '@fc/microservices';

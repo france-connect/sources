@@ -7,7 +7,6 @@ import { AppConfig } from '@fc/mock-data-provider';
 const env = new ConfigParser(process.env, 'App');
 
 export default {
-  apiOutputContentType: env.string('API_OUTPUT_CONTENT_TYPE'),
   name: process.env.APP_NAME,
   urlPrefix: '/api',
   httpsOptions: {

@@ -2,7 +2,7 @@
 @api @apiAuthorize
 Fonctionnalité: API - authorize localhost
 
-  @fcpLow @fcpHigh @ignoreInteg01
+  @fcpLow @fcpHigh @ignoreInteg01 @exceptions
   Scénario: API authorize - localhost refusé sur la stack locale
     Etant donné que je prépare une requête "authorize"
     Et je mets "http://localhost/login-callback" dans le paramètre "redirect_uri" de la requête

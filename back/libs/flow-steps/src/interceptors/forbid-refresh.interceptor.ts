@@ -37,7 +37,6 @@ export class ForbidRefreshInterceptor implements NestInterceptor {
     return next.handle();
   }
 
-  // eslint-disable-next-line complexity
   private checkRefresh(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
     const { stepRoute } = this.session.get<OidcSession>('OidcClient') || {};

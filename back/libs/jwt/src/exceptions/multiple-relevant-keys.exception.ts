@@ -2,24 +2,21 @@
 
 // Declarative file
 import { KekAlg, Use } from '@fc/cryptography';
-import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enum';
 import { JwtBaseException } from './jwt-base.exception';
 
-@Description(
-  "Plusieurs clés pertinentes ont été trouvées alors qu'un kid était fourni",
-)
 export class MultipleRelevantKeysException extends JwtBaseException {
-  code = ErrorCode.MULTIPLE_RELEVANT_KEYS;
-
+  static CODE = ErrorCode.MULTIPLE_RELEVANT_KEYS;
+  static DOCUMENTATION =
+    "Plusieurs clés pertinentes ont été trouvées alors qu'un kid était fourni";
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
+  static UI = 'Jwt.exceptions.multipleRelevantKeys';
 
   constructor(alg: KekAlg, use: Use, kid: string) {
-    super(
-      `Multipe relevant keys found alg: ${alg}, kid: ${kid} and use: ${use}`,
-    );
+    super();
+    this.log = `Jwt.exceptions.multipleRelevantKeys alg: ${alg}, kid: ${kid} and use: ${use}`;
   }
 }

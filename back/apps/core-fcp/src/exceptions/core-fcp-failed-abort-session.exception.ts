@@ -2,7 +2,6 @@
 
 // Declarative code
 import { CoreBaseException } from '@fc/core';
-import { Description } from '@fc/exceptions-deprecated';
 
 import { ErrorCode } from '../enums';
 /**
@@ -12,14 +11,12 @@ import { ErrorCode } from '../enums';
  * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/992
  * @ticket 992
  */
-@Description(
-  'Le système a échoué à terminer la session avant une redirection vers le Fournisseur de Service',
-)
 export class CoreFcpFailedAbortSessionException extends CoreBaseException {
-  code = ErrorCode.FAILED_ABORT_SESSION;
-  message =
-    'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
+  static CODE = ErrorCode.FAILED_ABORT_SESSION;
+  static DOCUMENTATION =
+    'Le système a échoué à terminer la session avant une redirection vers le Fournisseur de Service';
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
+  static UI = 'CoreFcp.exceptions.coreFcpFailedAbortSession';
 }

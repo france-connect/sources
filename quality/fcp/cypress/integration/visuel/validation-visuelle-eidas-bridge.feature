@@ -30,7 +30,7 @@ Fonctionnalité: Validation Visuelle
     Et que je paramètre un intercepteur pour forcer un mauvais client_id au prochain appel au fournisseur d'identité
     Quand je clique sur le fournisseur d'identité
     Alors je suis redirigé vers la page erreur technique eidas-bridge
-    Et le code d'erreur FranceConnect est "Y030106"
+    Et le code d'erreur FranceConnect est "Y04A586"
     Et la copie d'écran "erreurMauvaisClientId" correspond à la page actuelle sur "<device>"
 
     Exemples:

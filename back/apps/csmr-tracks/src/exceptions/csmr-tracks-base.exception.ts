@@ -1,9 +1,8 @@
-// declarative code
-// istanbul ignore next line
+/* istanbul ignore file */
 
-import { FcException } from '@fc/exceptions-deprecated';
+// Declarative code
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class CsmrTracksBaseException extends FcException {
-  public originalError: Error;
-  public readonly scope = 28;
+  static SCOPE = 28;
 }

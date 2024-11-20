@@ -3,28 +3,15 @@
 // declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { Description } from '@fc/exceptions-deprecated';
-
 import { ErrorCode } from '../enums';
 import { SessionBaseException } from './session-base.exception';
 
-@Description(
-  "Erreur émise lorsque l'usager n'a plus de session, probablement une fenêtre restée ouverte au delà des 10 minutes. Il faut recommencer la cinématique. Si le problème persiste, contacter le support N3",
-)
 export class SessionNotFoundException extends SessionBaseException {
-  public readonly code = ErrorCode.NOT_FOUND;
-  public readonly httpStatusCode = HttpStatus.UNAUTHORIZED;
-
+  static CODE = ErrorCode.NOT_FOUND;
+  static DOCUMENTATION =
+    "Erreur émise lorsque l'usager n'a plus de session, probablement une fenêtre restée ouverte au delà des 10 minutes. Il faut recommencer la cinématique. Si le problème persiste, contacter le support N3";
   static ERROR = 'access_denied';
   static ERROR_DESCRIPTION = 'user authentication aborted';
-
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  constructor(param: string) {
-    // param désactivé car pas utilisé dans le message usager.
-    // En revanche il est passé dans le code et laissé en param ici
-    // car il sera potentiellement utilisé pour le message pour les développeurs
-    super(
-      'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
-    );
-  }
+  static HTTP_STATUS_CODE = HttpStatus.UNAUTHORIZED;
+  static UI = 'Session.exceptions.sessionNotFound';
 }

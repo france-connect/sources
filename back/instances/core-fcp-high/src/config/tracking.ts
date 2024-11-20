@@ -5,6 +5,7 @@ import { RequestMethod } from '@nestjs/common';
 
 import { CoreRoutes } from '@fc/core';
 import { EventsCategories } from '@fc/core-fcp';
+import { DataProviderInvalidCredentialsException } from '@fc/data-provider-adapter-mongo/exceptions';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import {
   RnippCitizenStatusFormatException,
@@ -224,6 +225,7 @@ export default {
       step: '7.4.1',
       category: EventsCategories.BACK_CINEMATIC,
       event: 'DP_USED_INVALID_CREDENTIAL',
+      exceptions: [DataProviderInvalidCredentialsException],
     },
 
     DP_USED_INVALID_ACCESS_TOKEN: {

@@ -6,6 +6,8 @@ import { IsObject, ValidateNested } from 'class-validator';
 
 import { CoreConfig } from '@fc/core';
 import { DataProviderAdapterMongoConfig } from '@fc/data-provider-adapter-mongo';
+import { ExceptionsConfig } from '@fc/exceptions/dto';
+import { I18nConfig } from '@fc/i18n';
 import { IdentityProviderAdapterMongoConfig } from '@fc/identity-provider-adapter-mongo';
 import { LoggerConfig } from '@fc/logger';
 import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
@@ -32,6 +34,16 @@ export class CoreFcaConfig {
   @ValidateNested()
   @Type(() => AppConfig)
   readonly App: AppConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => I18nConfig)
+  readonly I18n: I18nConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => ExceptionsConfig)
+  readonly Exceptions: ExceptionsConfig;
 
   @IsObject()
   @ValidateNested()

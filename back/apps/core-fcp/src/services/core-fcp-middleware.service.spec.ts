@@ -215,11 +215,7 @@ describe('CoreFcpMiddlewareService', () => {
         oidc: {
           isError: hasError,
           params: {
-            // oidc param
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             acr_values: spAcrMock,
-            // oidc param
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             client_id: spIdMock,
             scope: 'openid givenName gender',
           },
@@ -368,9 +364,7 @@ describe('CoreFcpMiddlewareService', () => {
             'x-forwarded-source-port': '443',
           },
           query: {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             acr_values: 'eidas3',
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             client_id: 'spIdValue',
           },
           sessionId: '42',
@@ -562,8 +556,6 @@ describe('CoreFcpMiddlewareService', () => {
     // Given
     const ctxMock = {
       oidc: {
-        // OIDC defined variable names
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         params: { acr_values: spAcrMock, client_id: spIdMock },
       },
       req: reqMock,

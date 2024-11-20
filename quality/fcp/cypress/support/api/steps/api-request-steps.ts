@@ -28,6 +28,13 @@ Given(
   },
 );
 
+Given(
+  "j'ajoute {string} dans le paramètre {string} de la requête",
+  function (value: string, property: string) {
+    this.apiRequest.qs[property] += value;
+  },
+);
+
 Given('je retire {string} du corps de la requête', function (property: string) {
   expect(this.apiRequest.body[property]).to.exist;
   delete this.apiRequest.body[property];

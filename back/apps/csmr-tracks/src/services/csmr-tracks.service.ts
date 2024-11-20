@@ -1,53 +1,49 @@
 import { Injectable } from '@nestjs/common';
 
-import { IPaginationOptions } from '@fc/common';
-import { CryptographyFcpService } from '@fc/cryptography-fcp';
+import { IPaginationOptions, IPaginationResult } from '@fc/common';
+import { CsmrAccountClientService } from '@fc/csmr-account-client';
+import {
+  TracksOutputInterface,
+  TracksResultsInterface,
+} from '@fc/csmr-tracks-client';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
-import { TracksResults } from '@fc/tracks';
-
-import { CsmrTracksAccountService } from './csmr-tracks-account.service';
-import { CsmrTracksElasticService } from './csmr-tracks-elastic.service';
-import { CsmrTracksFormatterService } from './csmr-tracks-formatter.service';
+import { TracksAdapterElasticsearchService } from '@fc/tracks-adapter-elasticsearch';
 
 @Injectable()
 export class CsmrTracksService {
-  // Allowed for DI
-  // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
-    private readonly account: CsmrTracksAccountService,
-    private readonly elastic: CsmrTracksElasticService,
-    private readonly formatter: CsmrTracksFormatterService,
-    private readonly cryptographyFcp: CryptographyFcpService,
+    private readonly account: CsmrAccountClientService,
+    private readonly tracks: TracksAdapterElasticsearchService<TracksOutputInterface>,
   ) {}
   async getTracksForIdentity(
     identity: IOidcIdentity,
     options: IPaginationOptions,
-  ): Promise<TracksResults> {
-    const identityHash = this.cryptographyFcp.computeIdentityHash(identity);
-    const accountIds = await this.account.getIdsWithIdentityHash(identityHash);
+  ): Promise<TracksResultsInterface> {
+    const accountIds = await this.account.getAccountIdsFromIdentity(identity);
 
     if (!accountIds.length) {
       this.logger.debug('No AccountId found');
       return this.generateEmptyResults(options);
     }
+    const { total, payload } = await this.tracks.getTracks(accountIds, options);
 
-    const { meta, payload: rawTracks } = await this.elastic.getTracks(
-      accountIds,
-      options,
-    );
+    const meta = this.getPaginationResults(options, total);
 
-    const payload = this.formatter.formatTracks(rawTracks);
-
-    const results: TracksResults = { meta, payload };
-
-    return results;
+    return { meta, payload };
   }
 
-  private generateEmptyResults(options: any) {
-    const { size, offset } = options as IPaginationOptions;
-    const results: TracksResults = {
+  private getPaginationResults(
+    options: IPaginationOptions,
+    total: number,
+  ): IPaginationResult {
+    return { ...options, total };
+  }
+
+  private generateEmptyResults(options: IPaginationOptions) {
+    const { size, offset } = options;
+    const results: TracksResultsInterface = {
       meta: {
         total: 0,
         size,

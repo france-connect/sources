@@ -81,21 +81,21 @@ describe('OidcProviderRedisAdapter', () => {
       expect(BoundClass.prototype.constructor.name).toBeDefined();
     });
 
-    it('Should return an instantiable class', () => {
+    it('should return an instantiable class', () => {
       // When
       const result = new BoundClass(nameMock);
       // Then
       expect(result).toBeInstanceOf(OidcProviderRedisAdapter);
     });
 
-    it('Should return an object having injected services', () => {
+    it('should return an object having injected services', () => {
       // When
       const result = new BoundClass(nameMock) as any;
       // Then
       expect(result.redis).toBe(redisMock);
     });
 
-    it('Should return an object having original argument handled', () => {
+    it('should return an object having original argument handled', () => {
       // When
       const result = new BoundClass(nameMock) as any;
       // Then
@@ -280,7 +280,7 @@ describe('OidcProviderRedisAdapter', () => {
   });
 
   describe('saveKey', () => {
-    it('Should throw if JSON.stringiy fails', () => {
+    it('should throw if JSON.stringiy fails', () => {
       // Given
       const payload = { foo: 'bar', circularRef: null };
       const keyMock = 'foo';
@@ -324,7 +324,7 @@ describe('OidcProviderRedisAdapter', () => {
   });
 
   describe('uidKeyFor', () => {
-    it('Should return null if no id is provide', () => {
+    it('should return null if no id is provide', () => {
       // Given
       const uidMock = '';
 
@@ -334,7 +334,7 @@ describe('OidcProviderRedisAdapter', () => {
       // Then
       expect(result).toEqual(null);
     });
-    it('Should return a valid key if id is provide', () => {
+    it('should return a valid key if id is provide', () => {
       // Given
       const uidMock = 'foo';
 
@@ -347,7 +347,7 @@ describe('OidcProviderRedisAdapter', () => {
   });
 
   describe('userCodeKeyFor', () => {
-    it('Should return null if no id is provide', () => {
+    it('should return null if no id is provide', () => {
       // Given
       const codeMock = '';
 
@@ -357,7 +357,7 @@ describe('OidcProviderRedisAdapter', () => {
       // Then
       expect(result).toEqual(null);
     });
-    it('Should return a valid key if id is provide', () => {
+    it('should return a valid key if id is provide', () => {
       // Given
       const codeMock = 'foo';
 
@@ -370,7 +370,7 @@ describe('OidcProviderRedisAdapter', () => {
   });
 
   describe('grantKeyFor', () => {
-    it('Should return null if no id is provide', () => {
+    it('should return null if no id is provide', () => {
       // Given
       const idMock = '';
 
@@ -380,7 +380,7 @@ describe('OidcProviderRedisAdapter', () => {
       // Then
       expect(result).toEqual(null);
     });
-    it('Should return a valid key if id is provide', () => {
+    it('should return a valid key if id is provide', () => {
       // Given
       const idMock = 'foo';
 

@@ -1,15 +1,14 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
+import { TracksResultsInterface } from '@fc/csmr-tracks-client';
 import { LoggerService } from '@fc/logger';
 import { TracksProtocol } from '@fc/microservices';
-import { TracksResults } from '@fc/tracks';
 
 import { CsmrTracksService } from '../services';
 
 @Controller()
 export class CsmrTracksController {
-  // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
     private readonly tracks: CsmrTracksService,
@@ -44,7 +43,7 @@ export class CsmrTracksController {
    *     street_address: "20 avenue de Ségur"
    *   },
    * }
-   * @returns {Promise<FSA<IPaginationResult, ICsmrTracksOutputTrack[]> | 'ERROR'>}
+   * @returns {Promise<FSA<IPaginationResult, TracksOutputInterface[]> | 'ERROR'>}
    */
   @MessagePattern(TracksProtocol.Commands.GET)
   async aggregateTracks(
@@ -55,7 +54,7 @@ export class CsmrTracksController {
      * Date: 20/06/22
      */
     @Payload() payload,
-  ): Promise<TracksResults | 'ERROR'> {
+  ): Promise<TracksResultsInterface | 'ERROR'> {
     this.logger.debug(
       `New message received with pattern "${TracksProtocol.Commands.GET}"`,
     );

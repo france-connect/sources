@@ -1,9 +1,8 @@
 /* istanbul ignore file */
 
 // declarative code
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class SessionBaseException extends FcException {
-  public originalError: Error;
-  public readonly scope = 19;
+  static SCOPE = 19;
 }

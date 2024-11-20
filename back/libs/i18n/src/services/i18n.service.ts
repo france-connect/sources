@@ -33,7 +33,14 @@ export class I18nService {
     options: I18nTranslateOptionsInterface = {},
   ): string {
     const translations = this.getTranslations(options);
-    const output: I18nTermType = translations[key];
+    /**
+     * @note We use nullish coalescing operator on purpose,
+     * to distinguish empty strings (allowed) from undefined (fallback to options.default).
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing
+     */
+    const output: I18nTermType =
+      translations[key] ?? translations[options.default];
 
     if (output === undefined) {
       throw new I18nKeyNotFoundException(key);

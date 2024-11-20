@@ -1,16 +1,17 @@
 /* istanbul ignore file */
 
 // Declarative code
+
 import { Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
-import { CryptographyService } from '@fc/cryptography';
-import { CryptographyFcpModule } from '@fc/cryptography-fcp';
-import { ElasticsearchModule } from '@fc/elasticsearch';
-import { ExceptionsModule } from '@fc/exceptions-deprecated';
-import { GeoipMaxmindModule } from '@fc/geoip-maxmind';
+import { CsmrAccountClientModule } from '@fc/csmr-account-client';
+import { TracksOutputInterface } from '@fc/csmr-tracks-client';
+import { ExceptionsModule, FcRmqExceptionFilter } from '@fc/exceptions';
 import { RabbitmqModule } from '@fc/rabbitmq';
 import { ScopesModule } from '@fc/scopes';
+import { TracksAdapterElasticsearchModule } from '@fc/tracks-adapter-elasticsearch';
 
 import { CsmrTracksController } from './controllers';
 import {
@@ -18,39 +19,35 @@ import {
   TracksFcpLowFormatter,
   TracksLegacyFormatter,
 } from './formatters';
-import {
-  CsmrTracksAccountService,
-  CsmrTracksElasticService,
-  CsmrTracksFormatterService,
-  CsmrTracksGeoService,
-  CsmrTracksService,
-} from './services';
+import { CsmrTracksService } from './services';
 
 @Module({
   imports: [
-    ExceptionsModule.withoutTracking(),
+    ExceptionsModule,
     AsyncLocalStorageModule,
-    CryptographyFcpModule,
-    ScopesModule.forConfig('FcpHigh'),
-    ScopesModule.forConfig('FcpLow'),
-    ScopesModule.forConfig('FcLegacy'),
-    GeoipMaxmindModule,
-    ElasticsearchModule.register(),
+    TracksAdapterElasticsearchModule.forRoot<TracksOutputInterface>(
+      TracksFcpHighFormatter,
+      TracksFcpLowFormatter,
+      TracksLegacyFormatter,
+      {
+        imports: [
+          ScopesModule.forConfig('FcpHigh'),
+          ScopesModule.forConfig('FcpLow'),
+          ScopesModule.forConfig('FcLegacy'),
+        ],
+      },
+    ),
     RabbitmqModule.registerFor('Tracks'),
-    RabbitmqModule.registerFor('AccountHigh'),
-    RabbitmqModule.registerFor('AccountLegacy'),
+    CsmrAccountClientModule,
   ],
   controllers: [CsmrTracksController],
   providers: [
-    TracksFcpHighFormatter,
-    TracksFcpLowFormatter,
-    TracksLegacyFormatter,
-    CsmrTracksGeoService,
     CsmrTracksService,
-    CsmrTracksAccountService,
-    CsmrTracksElasticService,
-    CsmrTracksFormatterService,
-    CryptographyService,
+    FcRmqExceptionFilter,
+    {
+      provide: APP_FILTER,
+      useClass: FcRmqExceptionFilter,
+    },
   ],
 })
 export class CsmrTracksModule {}

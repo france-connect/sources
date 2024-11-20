@@ -34,7 +34,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
@@ -50,7 +49,6 @@
 | AdapterMongo_CLIENT_SECRET_CIPHER_PASS | string |
 | AdapterMongo_DECRYPT_CLIENT_SECRET_FEATURE | boolean |
 | AdapterMongo_DISABLE_IDP_VALIDATION_ON_LEGACY | boolean |
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
 | App_CSP_CONNECT_SRC | json |
@@ -85,6 +83,7 @@
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_CRYPTO_SIG_RS256_PRIV_KEYS | json |
+| OidcProvider_ERROR_URI_BASE | string |
 | OidcProvider_IS_LOCALHOST_ALLOWED | boolean |
 | OidcProvider_PREFIX | string |
 | OverrideOidcProvider_CRYPTO_SIG_HSM_PUB_KEYS | json |
@@ -105,7 +104,6 @@
 | AdapterMongo_CLIENT_SECRET_CIPHER_PASS | string |
 | AdapterMongo_DECRYPT_CLIENT_SECRET_FEATURE | boolean |
 | AdapterMongo_DISABLE_IDP_VALIDATION_ON_LEGACY | boolean |
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
 | App_DSFR_ASSETS_PATHS | json |
@@ -153,6 +151,7 @@
 | OidcClient_SCOPE | string |
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_FAKE_PRIV_KEYS | json |
+| OidcProvider_ERROR_URI_BASE | string |
 | OidcProvider_IS_LOCALHOST_ALLOWED | boolean |
 | OidcProvider_PREFIX | string |
 | OverrideOidcProvider_CRYPTO_SIG_HSM_PUB_KEYS | json |
@@ -182,7 +181,6 @@
 | AdapterMongo_DISABLE_IDP_VALIDATION_ON_LEGACY | boolean |
 | AdapterMongo_PLATFORM | string |
 | App_AIDANTS_CONNECT_UID | string |
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
 | App_DSFR_ASSETS_PATHS | json |
@@ -228,6 +226,7 @@
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_CRYPTO_SIG_RS256_PRIV_KEYS | json |
+| OidcProvider_ERROR_URI_BASE | string |
 | OidcProvider_IS_LOCALHOST_ALLOWED | boolean |
 | OidcProvider_PREFIX | string |
 | OidcProvider_USE_ENCRYPTION | string |
@@ -372,7 +371,6 @@
 | ApacheIgnite_TLS_KEY | file |
 | ApacheIgnite_USERNAME | string |
 | ApacheIgnite_USE_TLS | boolean |
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_CACHE_TTL | number |
 | App_ASSETS_PATHS | json |
 | App_AVAILABLE_COUNTRIES | json |
@@ -426,6 +424,7 @@
 | OidcClient_JWKS | json |
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_FAKE_PRIV_KEYS | json |
+| OidcProvider_ERROR_URI_BASE | string |
 | OidcProvider_ISSUER | string |
 | OidcProvider_PREFIX | string |
 | OverrideOidcProvider_CRYPTO_SIG_HSM_PUB_KEYS | json |
@@ -470,7 +469,6 @@
 |---|---|
 | APP_NAME | string |
 | App_API_AUTH_SECRET | string |
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
@@ -490,7 +488,6 @@
 | Var Name | Inferred type |
 |---|---|
 | App_ALLOW_CUSTOM_IDENTITY | boolean |
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_PATHS | json |
 | App_CITIZEN_DATABASE_PATH | string |
 | App_ENVIRONMENT | string |
@@ -504,6 +501,7 @@
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_CRYPTO_SIG_RS256_PRIV_KEYS | json |
+| OidcProvider_ERROR_URI_BASE | string |
 | OidcProvider_PREFIX | string |
 | OidcProvider_USE_ENCRYPTION | boolean |
 | REQUEST_TIMEOUT | string |
@@ -534,7 +532,6 @@
 |---|---|
 | APP_NAME | string |
 | App_ALLOW_CUSTOM_IDENTITY | boolean |
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_PATHS | json |
 | App_CITIZEN_DATABASE_PATH | string |
 | App_ENVIRONMENT | string |
@@ -548,6 +545,7 @@
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_CRYPTO_SIG_RS256_PRIV_KEYS | json |
+| OidcProvider_ERROR_URI_BASE | string |
 | OidcProvider_PREFIX | string |
 | OidcProvider_USE_ENCRYPTION | boolean |
 | REQUEST_TIMEOUT | string |
@@ -578,7 +576,6 @@
 |---|---|
 | APP_NAME | string |
 | App_ALLOW_CUSTOM_IDENTITY | boolean |
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_PATHS | json |
 | App_CITIZEN_DATABASE_PATH | string |
 | App_ENVIRONMENT | string |
@@ -592,6 +589,7 @@
 | OidcProvider_COOKIES_KEYS | json |
 | OidcProvider_CRYPTO_SIG_ES256_PRIV_KEYS | json |
 | OidcProvider_CRYPTO_SIG_RS256_PRIV_KEYS | json |
+| OidcProvider_ERROR_URI_BASE | string |
 | OidcProvider_PREFIX | string |
 | OidcProvider_USE_ENCRYPTION | boolean |
 | REQUEST_TIMEOUT | string |
@@ -620,7 +618,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |
@@ -631,7 +628,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_PATHS | json |
 | App_DATA_APIS | json |
 | App_ENVIRONMENT | string |
@@ -680,7 +676,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_PATHS | json |
 | App_DATA_APIS | json |
 | App_ENVIRONMENT | string |
@@ -728,7 +723,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_PATHS | json |
 | App_DATA_APIS | json |
 | App_ENVIRONMENT | string |
@@ -779,7 +773,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ASSETS_PATHS | json |
 | App_DATA_APIS | json |
 | App_ENVIRONMENT | string |
@@ -826,7 +819,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ENVIRONMENT | string |
 | App_FQDN | string |
 | App_HTTPS_SERVER_CERT | file |
@@ -876,7 +868,6 @@
 
 | Var Name | Inferred type |
 |---|---|
-| App_API_OUTPUT_CONTENT_TYPE | string |
 | App_ENVIRONMENT | string |
 | App_HTTPS_SERVER_CERT | file |
 | App_HTTPS_SERVER_KEY | file |

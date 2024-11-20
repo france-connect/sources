@@ -555,7 +555,7 @@ describe('OidcClient Controller', () => {
       );
     });
 
-    it('Should throw mock service provider revoke token exception if error is not an instance of OPError', async () => {
+    it('should throw mock service provider revoke token exception if error is not an instance of OPError', async () => {
       // setup
       const unknowError = { foo: 'bar' };
       const body = { accessToken: 'access_token' };

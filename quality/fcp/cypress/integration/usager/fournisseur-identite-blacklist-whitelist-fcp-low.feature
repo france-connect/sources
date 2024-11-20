@@ -17,6 +17,7 @@ Fonctionnalité: Fournisseur Identité - Blacklist et Whitelist - fcp-low
     Et j'utilise un fournisseur d'identité "non blacklisté"
     Et le fournisseur d'identité est actif dans la mire
 
+  @exceptions
   Scénario: Blacklist de FI - erreur si on force la connexion via un FI blacklisté
     Etant donné que j'utilise un fournisseur de service "avec une blacklist de FI"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "profile"
@@ -41,6 +42,7 @@ Fonctionnalité: Fournisseur Identité - Blacklist et Whitelist - fcp-low
     Et j'utilise un fournisseur d'identité "whitelisté"
     Et le fournisseur d'identité est actif dans la mire
 
+  @exceptions
   Scénario: Whitelist de FI - erreur si on force la connexion via un FI non whitelisté
     Etant donné que j'utilise un fournisseur de service "avec une whitelist de FI"
     Et que le fournisseur de service requiert l'accès aux informations des scopes "profile"

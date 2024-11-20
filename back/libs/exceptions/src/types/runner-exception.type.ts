@@ -1,31 +1,24 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { Type } from '@nestjs/common';
-
-import { FcException } from '@fc/exceptions';
+import { BaseException } from '../exceptions';
 
 export type PathAndException = {
   path: string;
-  Exception: Type<FcException>;
+  Exception: typeof BaseException | undefined;
 };
 
 export type ExceptionClass = {
-  [key: string]: {
-    new (...args: any[]): any;
-  };
+  [key: string]: typeof BaseException;
 };
 
 export type PathAndInstantiatedException = {
   path: string;
-  errorInstance: FcException;
-  error: { ERROR: string; ERROR_DESCRIPTION: string };
+  Exception: typeof BaseException;
 };
 
 export type ValidExceptionParams = {
   hasValidScope: boolean;
   hasValidCode: boolean;
   hasValidHttpStatusCode: boolean;
-  hasValidError: boolean;
-  hasValidErrorDescription: boolean;
 };

@@ -1,6 +1,6 @@
 import { Class } from 'type-fest';
 
-import { validateDto } from '@fc/common';
+import { getAllPropertiesErrors, validateDto } from '@fc/common';
 
 import {
   SessionInvalidSessionException,
@@ -33,6 +33,6 @@ export async function checkSession(
      * @todo #587 pass the `errors` to the exception
      * so that the error message is available in logs
      */
-    throw new SessionInvalidSessionException();
+    throw new SessionInvalidSessionException(getAllPropertiesErrors(errors));
   }
 }

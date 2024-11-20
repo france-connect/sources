@@ -3,7 +3,9 @@
 // Declarative code
 import { DynamicModule, Module, Type } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { CqrsModule, EventBus } from '@nestjs/cqrs';
 
+import { ExceptionCaughtHandler } from './handlers';
 import { TrackingInterceptor } from './interceptors';
 import { AppTrackingServiceAbstract } from './interfaces';
 import { TrackingService } from './services';
@@ -20,6 +22,7 @@ export class TrackingModule {
     };
 
     return {
+      imports: [CqrsModule],
       module: TrackingModule,
       providers: [
         TrackingService,
@@ -28,6 +31,8 @@ export class TrackingModule {
           provide: APP_INTERCEPTOR,
           useClass: TrackingInterceptor,
         },
+        ExceptionCaughtHandler,
+        EventBus,
       ],
       exports: [appTrackingServiceProvider, TrackingService],
     };

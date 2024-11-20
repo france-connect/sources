@@ -66,20 +66,6 @@ describe('TemplateInterceptor', () => {
       ).toHaveBeenCalledWith(resMock);
     });
 
-    it('should NOT call viewTemplateService.bindMethodsToResponse if res.locals is not set (non HTTP app)', () => {
-      // Given
-      const RpcResMock = {};
-      httpContextMock.getResponse.mockReset().mockReturnValue(RpcResMock);
-
-      // When
-      interceptor.intercept(contextMock, nextMock);
-
-      // Then
-      expect(
-        ViewTemplateServiceMock.bindMethodsToResponse,
-      ).not.toHaveBeenCalled();
-    });
-
     it('should call next.handle()', () => {
       // When
       interceptor.intercept(contextMock, nextMock);

@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // declarative code
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class TrackingBaseException extends FcException {
-  public readonly scope = 41;
+  static SCOPE = 41;
 }

@@ -57,10 +57,9 @@ export class OidcProviderGrantService {
     }
   }
 
-  // Need to check claims value exist
-  // eslint-disable-next-line complexity
   private isRepScopeRequested(claims: string): boolean {
     try {
+      // Need to check claims value exist
       const claimsRequested = claims ? safelyParseJson(claims) : {};
 
       return !!claimsRequested?.id_token?.rep_scope?.essential;

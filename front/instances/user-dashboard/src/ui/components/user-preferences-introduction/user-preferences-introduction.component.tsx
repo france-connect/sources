@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 import React from 'react';
 
+import { CalloutComponent } from '@fc/dsfr';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { UserPreferencesTutorialComponent } from '../user-preferences-tutorial';
@@ -13,10 +14,9 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
   const gtDesktop = useStylesQuery({ minWidth: breakpointLg });
 
   return (
-    <React.Fragment>
-      <h1 className={classnames(styles.title, 'fr-h3 fr-mb-2w fr-text--bold')}>
-        Pourquoi gérer mes accès dans FranceConnect&nbsp;?
-      </h1>
+    <CalloutComponent
+      className="fr-callout fr-mt-5w"
+      title="Pourquoi gérer mes accès dans FranceConnect&nbsp;?">
       <p className="is-normal fr-mb-5v">
         Pour mieux contr&ocirc;ler votre usage de FranceConnect et vous prot&eacute;ger en cas de
         vol de vos identifiants, vous pouvez bloquer l&rsquo;utilisation des comptes que vous
@@ -73,7 +73,7 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
             // eslint-disable-next-line @typescript-eslint/naming-convention
             'fr-mb-5w': gtDesktop,
           })}
-          img="/images/user-preferences-tutoriel-02.png"
+          img="/images/user-preferences-tutoriel-02-241108.png"
           label="2. L’usurpateur tente d’utiliser un compte préalablement bloqué"
         />
         <UserPreferencesTutorialComponent
@@ -92,7 +92,7 @@ export const UserPreferencesIntroductionComponent: React.FC = React.memo(() => {
           label="4. FranceConnect bloque la connexion"
         />
       </div>
-    </React.Fragment>
+    </CalloutComponent>
   );
 });
 

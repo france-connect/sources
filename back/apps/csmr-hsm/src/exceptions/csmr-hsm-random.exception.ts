@@ -1,5 +1,6 @@
-import { Description } from '@fc/exceptions-deprecated';
+/* istanbul ignore file */
 
+// Declarative file
 import { ErrorCode } from '../enums';
 import { CsmrHsmBaseException } from './csmr-hsm-base.exception';
 
@@ -12,16 +13,11 @@ import { CsmrHsmBaseException } from './csmr-hsm-base.exception';
  * mais passée en paramètre au logger
  */
 
-/* istanbul ignore file */
-
-// Declarative code
-@Description(
-  "Une erreur s'est produite lors de la génération d'un aléa par le HSM. Contacter le support N3. Cette erreur n'est normalement pas remontée aux utilisateurs",
-)
 export class CsmrHsmRandomException extends CsmrHsmBaseException {
-  code = ErrorCode.HSM_RANDOM_GENERATE;
-  message =
-    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.';
+  static DOCUMENTATION =
+    "Une erreur s'est produite lors de la génération d'un aléa par le HSM. Contacter le support N3. Cette erreur n'est normalement pas remontée aux utilisateurs";
+  static CODE = ErrorCode.HSM_RANDOM_GENERATE;
+  static UI = 'CsmrHsm.exceptions.csmrHsmRandom';
 
   static ERROR = 'server_error';
   static ERROR_DESCRIPTION =

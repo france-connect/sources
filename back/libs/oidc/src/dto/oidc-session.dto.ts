@@ -144,6 +144,11 @@ export class OidcSession {
   @IsOptional()
   @IsString()
   @IsNotEmpty()
+  readonly spState?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
   readonly spAcr?: string;
 
   @IsOptional()

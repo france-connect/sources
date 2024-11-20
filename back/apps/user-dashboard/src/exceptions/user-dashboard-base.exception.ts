@@ -1,8 +1,9 @@
-// declarative code
-// istanbul ignore next line
+/* istanbul ignore file */
 
-import { FcException } from '@fc/exceptions-deprecated';
+// Declarative file
+
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class UserDashboardBaseException extends FcException {
-  scope = 9;
+  static SCOPE = 9;
 }

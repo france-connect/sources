@@ -2,7 +2,7 @@
 @usager @apiToken @ignoreInteg01 @ci
 Fonctionnalité: API - token
 
-  @fcpLow @fcpHigh
+  @fcpLow @fcpHigh @exceptions
   Scénario: API token - cas non passant
     Etant donné que je navigue sur la page fournisseur de service
     Et que je me connecte au fournisseur d'identité via FranceConnect
@@ -18,7 +18,8 @@ Fonctionnalité: API - token
     Et l'entête de la réponse n'a pas de propriété "set-cookie"
     Et le corps de la réponse n'a pas de propriété "id_token"
     Et le corps de la réponse a une propriété "error" égale à "invalid_client"
-    Et le corps de la réponse a une propriété "error_description" égale à "client authentication failed"
+    Et le corps de la réponse a une propriété "error_description" égale à "client authentication failed (invalid secret provided)"
+    Et le corps de la réponse a une propriété "error_uri"
 
   @fcpLow @fcpHigh
   Scénario: API token - cas nominal

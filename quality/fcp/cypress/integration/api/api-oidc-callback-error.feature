@@ -35,6 +35,7 @@ Fonctionnalité: API - oidc-callback erreur
     Et je suis redirigé vers la page sélection du fournisseur d'identité
     Et le message d'erreur est présent sur la mire
 
+  @exceptions
   Scénario: API oidc-callback-error - paramètre state manquant
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
@@ -50,6 +51,7 @@ Fonctionnalité: API - oidc-callback erreur
     Et je suis redirigé vers la page erreur technique FranceConnect
     Et le code d'erreur FranceConnect est "Y020021"
 
+  @exceptions
   Scénario: API oidc-callback-error - paramètre state erroné
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect

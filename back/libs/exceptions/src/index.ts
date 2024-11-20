@@ -1,8 +1,7 @@
 /* istanbul ignore file */
 
-// Declarative code
-export * from './decorator';
+// Declarative file
+export * from './dto';
 export * from './exceptions';
 export * from './exceptions.module';
-export * from './exceptions.service';
-export * from './interfaces';
+export * from './filters';

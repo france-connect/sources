@@ -7,6 +7,7 @@ import {
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
+import { throwException } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
@@ -99,20 +100,20 @@ export abstract class OidcProviderAppConfigLibService
       // Retrieve spId from panva context
       const spId = this.getServiceProviderIdFromCtx(ctx);
 
-      await this.checkSpId(ctx, spId);
+      await this.checkSpId(spId);
 
       const { spIdentity, subs } =
         this.sessionService.get<OidcSession>('OidcClient');
 
       const subSp = spId && subs[spId];
-      await this.checkSub(ctx, subSp);
+      await this.checkSub(subSp);
 
       const account = await this.formatAccount(sessionId, spIdentity, subSp);
 
       return account;
     } catch (error) {
       // Hacky throw from oidc-provider
-      await this.errorService.throwError(ctx, error);
+      await throwException(error);
     }
   }
 
@@ -213,27 +214,15 @@ export abstract class OidcProviderAppConfigLibService
     return ctx.oidc?.entities?.Client?.clientId;
   }
 
-  protected async checkSpId(
-    ctx: KoaContextWithOIDC,
-    spId: string,
-  ): Promise<void> {
+  protected async checkSpId(spId: string): Promise<void> {
     if (!spId) {
-      await this.errorService.throwError(
-        ctx,
-        new OidcProviderSpIdNotFoundException(),
-      );
+      await throwException(new OidcProviderSpIdNotFoundException());
     }
   }
 
-  protected async checkSub(
-    ctx: KoaContextWithOIDC,
-    sub: string,
-  ): Promise<void> {
+  protected async checkSub(sub: string): Promise<void> {
     if (!sub) {
-      await this.errorService.throwError(
-        ctx,
-        new SessionSubNotFoundException(),
-      );
+      await throwException(new SessionSubNotFoundException());
     }
   }
 

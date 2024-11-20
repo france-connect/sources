@@ -144,11 +144,7 @@ describe('DataProviderAdapterCoreService', () => {
 
   describe('fetchToken', () => {
     const configMock = {
-      // Based on oidc standard
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_id: 'client_id',
-      // Based on oidc standard
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret: 'client_secret',
       checktokenEndpoint: 'checktokenEndpoint',
     };
@@ -332,8 +328,6 @@ describe('DataProviderAdapterCoreService', () => {
         ...axiosErrorMock,
       } as AxiosError<{
         error: string;
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: string;
       }>;
 
@@ -348,8 +342,6 @@ describe('DataProviderAdapterCoreService', () => {
         ...axiosErrorMock,
       } as AxiosError<{
         error: string;
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: string;
       }>;
 
@@ -364,8 +356,6 @@ describe('DataProviderAdapterCoreService', () => {
         ...axiosErrorMock,
       } as AxiosError<{
         error: string;
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: string;
       }>;
 
@@ -380,8 +370,6 @@ describe('DataProviderAdapterCoreService', () => {
         ...axiosErrorMock,
       } as AxiosError<{
         error: string;
-        // oidc compliant
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         error_description: string;
       }>;
 

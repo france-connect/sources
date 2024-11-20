@@ -2,6 +2,8 @@
 
 // Declarative code
 import { Global, Module } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
+import { CqrsModule } from '@nestjs/cqrs';
 
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CryptographyModule } from '@fc/cryptography';
@@ -13,8 +15,13 @@ import {
   EidasProviderController,
   EidasProviderModule,
 } from '@fc/eidas-provider';
-import { ExceptionsModule } from '@fc/exceptions-deprecated';
+import {
+  ExceptionsModule,
+  FcWebHtmlExceptionFilter,
+  UnknownHtmlExceptionFilter,
+} from '@fc/exceptions';
 import { HttpProxyModule } from '@fc/http-proxy';
+import { I18nModule } from '@fc/i18n';
 import {
   IdentityProviderAdapterEnvModule,
   IdentityProviderAdapterEnvService,
@@ -25,11 +32,18 @@ import {
   OidcProviderModule,
 } from '@fc/oidc-provider';
 import {
+  OidcProviderRedirectExceptionFilter,
+  OidcProviderRenderedHtmlExceptionFilter,
+  OidcProviderRenderedJsonExceptionFilter,
+} from '@fc/oidc-provider/filters';
+import { ExceptionOccurredHandler } from '@fc/oidc-provider/handlers';
+import {
   ServiceProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
 } from '@fc/service-provider-adapter-env';
 import { SessionModule } from '@fc/session';
 import { TrackingModule } from '@fc/tracking';
+import { ViewTemplatesModule } from '@fc/view-templates';
 
 import {
   EuIdentityToFrController,
@@ -44,9 +58,6 @@ import {
 } from './services';
 
 const trackingModule = TrackingModule.forRoot(EidasBridgeTrackingService);
-
-const exceptionModule = ExceptionsModule.withTracking(trackingModule);
-
 const oidcClientModule = OidcClientModule.register(
   IdentityProviderAdapterEnvService,
   IdentityProviderAdapterEnvModule,
@@ -57,17 +68,18 @@ const oidcProviderModule = OidcProviderModule.register(
   OidcProviderConfigAppService,
   ServiceProviderAdapterEnvService,
   ServiceProviderAdapterEnvModule,
-  exceptionModule,
 );
 
 @Global()
 @Module({
   imports: [
-    exceptionModule,
+    ExceptionsModule,
     AsyncLocalStorageModule,
+    CqrsModule,
     SessionModule,
     EidasClientModule,
     EidasProviderModule,
+    I18nModule,
     IdentityProviderAdapterEnvModule,
     HttpProxyModule,
     ServiceProviderAdapterEnvModule,
@@ -78,6 +90,7 @@ const oidcProviderModule = OidcProviderModule.register(
     EidasOidcMapperModule,
     EidasCountryModule,
     trackingModule,
+    ViewTemplatesModule,
   ],
   controllers: [
     FrIdentityToEuController,
@@ -91,7 +104,29 @@ const oidcProviderModule = OidcProviderModule.register(
     OidcMiddlewareService,
     OidcProviderConfigAppService,
     OidcProviderGrantService,
+    FcWebHtmlExceptionFilter,
+    OidcProviderRenderedHtmlExceptionFilter,
+    OidcProviderRenderedJsonExceptionFilter,
+    OidcProviderRedirectExceptionFilter,
+    {
+      provide: APP_FILTER,
+      useClass: UnknownHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: FcWebHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: OidcProviderRenderedHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: OidcProviderRedirectExceptionFilter,
+    },
+
+    ExceptionOccurredHandler,
   ],
-  exports: [OidcProviderConfigAppService],
+  exports: [OidcProviderConfigAppService, CqrsModule],
 })
 export class EidasBridgeModule {}

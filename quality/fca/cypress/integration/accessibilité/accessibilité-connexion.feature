@@ -18,6 +18,7 @@ Fonctionnalité: Accessibilité
       | tablet landscape |
       | desktop          |
 
+  @exceptions
   Plan du Scénario: Accessibilité - page erreur ACR inconnu envoyé par le FI sur <device>
     Etant donné que j'utilise un navigateur web sur "<device>"
     Et que je navigue sur la page fournisseur de service

@@ -179,7 +179,7 @@ describe('CoreFcpService', () => {
       expect(result).toBeInstanceOf(Promise);
     });
 
-    it('Should call `FeatureHandler.get()` to get instantiated featureHandler class', async () => {
+    it('should call `FeatureHandler.get()` to get instantiated featureHandler class', async () => {
       // Given
       sessionServiceMock.get.mockReset().mockReturnValue({
         sentNotificationsForSp: [],
@@ -195,7 +195,7 @@ describe('CoreFcpService', () => {
       );
     });
 
-    it('Should use an empty array if session `Core.sentNotificationsForSp` is not set', async () => {
+    it('should use an empty array if session `Core.sentNotificationsForSp` is not set', async () => {
       // Given
       const spIdMock = Symbol('spIdMockValue');
       sessionServiceMock.get.mockReset().mockReturnValue({ spId: spIdMock });
@@ -211,7 +211,7 @@ describe('CoreFcpService', () => {
       );
     });
 
-    it('Should use an empty array if session `Core` is not set', async () => {
+    it('should use an empty array if session `Core` is not set', async () => {
       // Given
       const spIdMock = Symbol('spIdMockValue');
       sessionServiceMock.get
@@ -229,7 +229,7 @@ describe('CoreFcpService', () => {
       );
     });
 
-    it('Should call featureHandle.handle()', async () => {
+    it('should call featureHandle.handle()', async () => {
       // Given
       sessionServiceMock.get.mockReset().mockReturnValue({
         sentNotificationsForSp: [],
@@ -244,7 +244,7 @@ describe('CoreFcpService', () => {
       ).toHaveBeenCalledExactlyOnceWith();
     });
 
-    it('Should call featureHandle.handle() when notification from another service provider is already sent', async () => {
+    it('should call featureHandle.handle() when notification from another service provider is already sent', async () => {
       // Given
       const anotherSpIdMock = 'another_sp_id';
       sessionServiceMock.get.mockReset().mockReturnValue({
@@ -686,8 +686,6 @@ describe('CoreFcpService', () => {
       redirect: jest.fn(),
     } as unknown as Response;
 
-    // oidc parameters
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const authorizationParametersMock = { acr_values: acrMock };
 
     beforeEach(() => {

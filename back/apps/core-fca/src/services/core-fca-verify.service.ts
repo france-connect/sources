@@ -10,7 +10,6 @@ import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 @Injectable()
 export class CoreFcaVerifyService {
-  // eslint-disable-next-line max-params
   constructor(
     private readonly logger: LoggerService,
     private readonly coreVerify: CoreVerifyService,

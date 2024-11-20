@@ -2,7 +2,10 @@ import { ValidationError } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 
-import { SessionNotFoundException } from '../exceptions';
+import {
+  SessionInvalidSessionException,
+  SessionNotFoundException,
+} from '../exceptions';
 import * as checkSessionHelper from './check-session.helper';
 
 jest.mock('@fc/common');
@@ -54,14 +57,15 @@ describe('checkSession', () => {
 
   it('should throw SessionInvalidSessionException if session validation returns errors', async () => {
     // Given
-    validateDtoMock.mockResolvedValueOnce([
-      new Error('Unknown Error') as unknown as ValidationError,
-    ]);
+    const validationErrors = ['Unknown Error'];
+    validateDtoMock.mockResolvedValueOnce(
+      validationErrors as unknown as ValidationError[],
+    );
     // When
     await expect(
       checkSessionHelper.checkSession(sessionDataMock, moduleNameMock, dtoMock),
       // Then
-    ).rejects.toThrow(new SessionNotFoundException(moduleNameMock));
+    ).rejects.toThrow(new SessionInvalidSessionException(validationErrors));
   });
 
   it('should throw SessionInvalidSessionException if session validation returns errors', async () => {

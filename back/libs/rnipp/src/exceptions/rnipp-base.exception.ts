@@ -1,8 +1,8 @@
 /* istanbul ignore file */
 
 // Declarative code
-import { FcException } from '@fc/exceptions-deprecated';
+import { FcException } from '@fc/exceptions/exceptions';
 
 export class RnippBaseException extends FcException {
-  public readonly scope = 1;
+  static SCOPE = 1;
 }

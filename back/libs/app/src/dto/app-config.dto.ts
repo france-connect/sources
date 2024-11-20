@@ -14,7 +14,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { ApiContentType, Environment } from '../enums';
+import { Environment } from '../enums';
 
 class HttpsOptions {
   @IsString()
@@ -79,9 +79,6 @@ export class AppConfig {
   @IsString({ each: true })
   @IsArray()
   readonly viewsPaths?: string[];
-
-  @IsIn([ApiContentType.HTML, ApiContentType.JSON])
-  readonly apiOutputContentType: string;
 
   @IsOptional()
   @IsString()

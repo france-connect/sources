@@ -143,7 +143,7 @@ describe('OidcProviderConfigService', () => {
   });
 
   describe('url()', () => {
-    it('Should return a relative interaction url with prefix', () => {
+    it('should return a relative interaction url with prefix', () => {
       // Given
       const prefix = '/prefix';
       const ctx = {
@@ -178,7 +178,7 @@ describe('OidcProviderConfigService', () => {
   });
 
   describe('clientBasedCORS', () => {
-    it('Should return false', () => {
+    it('should return false', () => {
       // Given
       const ctx = {} as KoaContextWithOIDC;
       const origin = {};
