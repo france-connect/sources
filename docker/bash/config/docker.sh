@@ -19,7 +19,7 @@ fi
 
 VOLUMES_DIR="${FC_ROOT}/fc/docker/volumes"
 WORKING_DIR="$(cd "$(dirname "${0}")" >/dev/null 2>&1 && pwd)"
-DOCKER_REGISTRY_URI="<france-connect-registry>/fc/nodejs:${NODE_VERSION}-dev"
+DOCKER_REGISTRY_URI="${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev"
 if [ "${FC_DOCKER_COMPOSE}" ]; then
   DOCKER_COMPOSE="${FC_DOCKER_COMPOSE}"
 else
