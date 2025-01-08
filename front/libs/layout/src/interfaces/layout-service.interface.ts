@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import type { SVGComponentInterface } from '@fc/assets';
 
 export interface LayoutServiceInterface {

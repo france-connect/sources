@@ -1,0 +1,15 @@
+{
+  "avec entity_id": {
+    "instance_name": "FS test - qualif",
+    "sp_name": "FS test",
+    "signup_id": "12345",
+    "site": "https://test.franceconnect.gouv.fr",
+    "redirect_uris": "https://test.franceconnect.gouv.fr/callback",
+    "post_logout_redirect_uris": "https://test.franceconnect.gouv.fr/logout",
+    "ipAddresses": "1.1.1.1/32",
+    "id_token_signed_response_alg": "ES256",
+    "userinfo_signed_response_alg": "ES256",
+    "use_entity_id": "oui",
+    "entity_id": "4a858a99-5baf-4068-bd59-ff551ede3619"
+  }
+}

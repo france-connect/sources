@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsByteLength, IsString } from 'class-validator';
 
 export class CryptographyConfig {

@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
-
 // ----- VALIDATOR JS -----
 
 export * from './validator-js/contains-validator.descriptor';

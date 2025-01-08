@@ -201,5 +201,5 @@ const accountsLegacy = [
 // -- ACCOUNTS -----
 print("Initializing user account...");
 accountsLegacy.forEach((account) =>
-  db.account.update({ id: account.id }, account, { upsert: true }),
+  db.account.updateOne({ id: account.id }, { $set: account }, { upsert: true }),
 );

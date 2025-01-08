@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { I18nComplexTermInterface } from './i18n-complex-term.interface';
 
 export type I18nTermKey = string;

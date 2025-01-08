@@ -88,9 +88,9 @@ Fonctionnalité: Validation Visuelle - User Dashboard
     Et que je me connecte pour accéder au formulaire usurpation
     Et que je suis redirigé vers la page formulaire usurpation
     Et que le formulaire usurpation est affiché
-    Et que j'entre les valeurs par défaut sur le formulaire usurpation
-    Et que je coche la case de consentement du formulaire usurpation
-    Quand je valide le formulaire usurpation
+    Quand j'entre les valeurs par défaut sur le formulaire usurpation
+    Et je coche la case de consentement du formulaire usurpation
+    Et je valide le formulaire usurpation
     Alors la demande de support est prise en compte
     Et la copie d'écran "udFraudFormSent" correspond à la page actuelle sur "<device>"
 
@@ -109,8 +109,8 @@ Fonctionnalité: Validation Visuelle - User Dashboard
     Et que je me connecte pour accéder au formulaire usurpation
     Et que je suis redirigé vers la page formulaire usurpation
     Et que le formulaire usurpation est affiché
-    Et que j'entre "bad authentication event id" dans le champ "authenticationEventId" du formulaire usurpation
-    Quand je valide le formulaire usurpation
+    Quand j'entre "bad authentication event id" dans le champ "authenticationEventId" du formulaire usurpation
+    Et je valide le formulaire usurpation
     Alors le champ "authenticationEventId" a une erreur "Le code est erroné, veuillez vérifier sa valeur" dans le formulaire usurpation
     Et le champ "acceptTransmitData" a une erreur "Veuillez cocher cette case si vous souhaitez continuer" dans le formulaire usurpation
     Et la copie d'écran "udFraudFormError" correspond à la page actuelle sur "<device>"
@@ -118,6 +118,54 @@ Fonctionnalité: Validation Visuelle - User Dashboard
     Exemples:
       | device           |
       | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |
+
+  @ignoreInteg01
+  Plan du Scénario: Validation Visuelle - Ticket OTRS avec 1 trace sur <device>
+    Etant donné que les traces "FranceConnect(v2)" contiennent "1 connexion"
+    Et que j'utilise un compte usager "pour les tests de traces"
+    Et que je supprime les mails envoyés à l'usager
+    Et que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page de connexion du formulaire usurpation
+    Et que je force la donnée "fraudSurveyOrigin" à "identite-inconnue" dans le localStorage
+    Et que je me connecte pour accéder au formulaire usurpation
+    Et que je suis redirigé vers la page formulaire usurpation
+    Et que le formulaire usurpation est affiché
+    Quand j'entre les valeurs par défaut sur le formulaire usurpation
+    Et j'entre "1a344d7d-fb1f-432f-99df-01b374c93687" dans le champ "authenticationEventId" du formulaire usurpation
+    Et je coche la case de consentement du formulaire usurpation
+    Et je valide le formulaire usurpation
+    Alors le mail "demande de support" est envoyé
+    Et la copie d'écran "udFraudTicketWithOneTrack" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |
+
+  @ignoreInteg01
+  Plan du Scénario: Validation Visuelle - Ticket OTRS avec 2 traces sur <device>
+    Etant donné que les traces "FranceConnect(v2)" contiennent "2 connexions"
+    Et que j'utilise un compte usager "pour les tests de traces"
+    Et que je supprime les mails envoyés à l'usager
+    Et que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page de connexion du formulaire usurpation
+    Et que je force la donnée "fraudSurveyOrigin" à "identite-inconnue" dans le localStorage
+    Et que je me connecte pour accéder au formulaire usurpation
+    Et que je suis redirigé vers la page formulaire usurpation
+    Et que le formulaire usurpation est affiché
+    Quand j'entre les valeurs par défaut sur le formulaire usurpation
+    Et j'entre "1a344d7d-fb1f-432f-99df-01b374c93687" dans le champ "authenticationEventId" du formulaire usurpation
+    Et je coche la case de consentement du formulaire usurpation
+    Et je valide le formulaire usurpation
+    Alors le mail "demande de support" est envoyé
+    Et la copie d'écran "udFraudTicketWithTwoTracks" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
       | tablet portrait  |
       | tablet landscape |
       | desktop          |

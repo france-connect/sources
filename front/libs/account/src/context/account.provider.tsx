@@ -18,6 +18,10 @@ interface AccountProviderProps extends Required<PropsWithChildren> {
   validator: UserInfosValidatorInterface;
 }
 
+/*
+ * @TODO
+ * Optimiser le nombre de mise à jour du state
+ */
 export const AccountProvider = ({ children, validator }: AccountProviderProps) => {
   const { endpoints } = ConfigService.get<AccountConfig>(Options.CONFIG_NAME);
 
@@ -45,5 +49,7 @@ export const AccountProvider = ({ children, validator }: AccountProviderProps) =
     }
   }, [account.expired, account.connected, codeError, hasError]);
 
-  return <AccountContext.Provider value={account}>{children}</AccountContext.Provider>;
+  return (
+    <AccountContext.Provider value={account}>{account.ready && children}</AccountContext.Provider>
+  );
 };

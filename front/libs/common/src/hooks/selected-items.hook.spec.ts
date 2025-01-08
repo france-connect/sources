@@ -5,10 +5,10 @@ import { useSelectedItems } from './selected-items.hook';
 
 describe('useSelectedItems', () => {
   it('should return default value', () => {
-    // when
+    // When
     const { result } = renderHook(() => useSelectedItems());
 
-    // then
+    // Then
     expect(result.current).toStrictEqual({
       onItemSelect: expect.any(Function),
       selected: [],
@@ -16,7 +16,7 @@ describe('useSelectedItems', () => {
   });
 
   it('should return value from param', () => {
-    // when
+    // When
     const { result } = renderHook((options) => useSelectedItems(options), {
       initialProps: {
         defaultValues: ['id-mock-1'],
@@ -24,7 +24,7 @@ describe('useSelectedItems', () => {
       },
     });
 
-    // then
+    // Then
     expect(result.current).toStrictEqual({
       onItemSelect: expect.any(Function),
       selected: ['id-mock-1'],
@@ -32,13 +32,13 @@ describe('useSelectedItems', () => {
   });
 
   it('should add given mock id to selected array when multiple is true', () => {
-    // given
+    // Given
     const mockId = 'mock-id-1';
     const setSelectedMock = jest.fn();
     const selectedMock = ['mock-id-2', 'mock-id-3'];
     jest.spyOn(React, 'useState').mockImplementationOnce(() => [selectedMock, setSelectedMock]);
 
-    // when
+    // When
     const { result } = renderHook((options) => useSelectedItems(options), {
       initialProps: {
         defaultValues: selectedMock,
@@ -49,18 +49,18 @@ describe('useSelectedItems', () => {
       result.current.onItemSelect(mockId);
     });
 
-    // then
+    // Then
     expect(setSelectedMock).toHaveBeenCalledWith(['mock-id-2', 'mock-id-3', 'mock-id-1']);
   });
 
   it('should remove given mock id to selected array when multiple is true and mock id already exists', () => {
-    // given
+    // Given
     const mockId = 'mock-id-1';
     const setSelectedMock = jest.fn();
     const selectedMock = ['mock-id-2', 'mock-id-3', 'mock-id-1'];
     jest.spyOn(React, 'useState').mockImplementationOnce(() => [selectedMock, setSelectedMock]);
 
-    // when
+    // When
     const { result } = renderHook((options) => useSelectedItems(options), {
       initialProps: {
         defaultValues: selectedMock,
@@ -71,18 +71,18 @@ describe('useSelectedItems', () => {
       result.current.onItemSelect(mockId);
     });
 
-    // then
+    // Then
     expect(setSelectedMock).toHaveBeenCalledWith(['mock-id-2', 'mock-id-3']);
   });
 
   it('should only have mock-id-1 into selected array when multiple is false', () => {
-    // given
+    // Given
     const mockId = 'mock-id-1';
     const setSelectedMock = jest.fn();
     const selectedMock = ['mock-id-2', 'mock-id-3'];
     jest.spyOn(React, 'useState').mockImplementationOnce(() => [selectedMock, setSelectedMock]);
 
-    // when
+    // When
     const { result } = renderHook((options) => useSelectedItems(options), {
       initialProps: {
         defaultValues: selectedMock,
@@ -93,18 +93,18 @@ describe('useSelectedItems', () => {
       result.current.onItemSelect(mockId);
     });
 
-    // then
+    // Then
     expect(setSelectedMock).toHaveBeenCalledWith(['mock-id-1']);
   });
 
   it('should toggle mock-id-1 into selected array when multiple is false and it already exists', () => {
-    // given
+    // Given
     const mockId = 'mock-id-1';
     const setSelectedMock = jest.fn();
     const selectedMock = ['mock-id-1'];
     jest.spyOn(React, 'useState').mockImplementationOnce(() => [selectedMock, setSelectedMock]);
 
-    // when
+    // When
     const { result } = renderHook((options) => useSelectedItems(options), {
       initialProps: {
         defaultValues: selectedMock,
@@ -115,7 +115,7 @@ describe('useSelectedItems', () => {
       result.current.onItemSelect(mockId);
     });
 
-    // then
+    // Then
     expect(setSelectedMock).toHaveBeenCalledWith([]);
   });
 });

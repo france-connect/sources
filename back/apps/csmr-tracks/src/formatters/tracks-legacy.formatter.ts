@@ -8,16 +8,16 @@ import { TracksOutputInterface } from '@fc/csmr-tracks-client';
 import { LoggerService } from '@fc/logger';
 import { RichClaimInterface, ScopesService } from '@fc/scopes';
 import {
+  EVENT_MAPPING,
   GeoFormatterService,
-  Platform,
   TracksFormatterAbstract,
   TracksFormatterMappingFailedException,
   TracksLegacyFieldsInterface,
 } from '@fc/tracks-adapter-elasticsearch';
-import { EVENT_MAPPING } from '@fc/tracks-adapter-elasticsearch/constants';
 
 import { LEGACY_SCOPES_SEPARATOR } from '../constants';
 import { IdpMappings } from '../dto';
+import { Platform } from '../enums';
 import { CsmrTracksUnknownActionException } from '../exceptions';
 
 @Injectable()

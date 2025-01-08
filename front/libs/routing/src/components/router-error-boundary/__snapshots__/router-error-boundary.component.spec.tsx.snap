@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RouterErrorBoundaryComponent should match the snapshot if is not a router error 1`] = `
+<div>
+  <div>
+    {"message":"any message mock"}
+  </div>
+</div>
+`;

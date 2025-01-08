@@ -1,50 +1,129 @@
-/* istanbul ignore file */
-
-// Declarative code
-import { Module } from '@nestjs/common';
+import { DynamicModule, Module, ModuleMetadata, Type } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
 
 import { AccountModule } from '@fc/account';
+import {
+  ExceptionsModule,
+  FcWebHtmlExceptionFilter,
+  HttpExceptionFilter,
+  UnknownHtmlExceptionFilter,
+} from '@fc/exceptions';
+import { FlowStepsModule } from '@fc/flow-steps';
+import { IServiceProviderAdapter } from '@fc/oidc';
 import { OidcAcrModule } from '@fc/oidc-acr';
-import { OidcProviderModule } from '@fc/oidc-provider';
+import { IIdentityProviderAdapter, OidcClientModule } from '@fc/oidc-client';
+import {
+  IOidcProviderConfigAppService,
+  OidcProviderModule,
+} from '@fc/oidc-provider';
+import {
+  OidcProviderRedirectExceptionFilter,
+  OidcProviderRenderedHtmlExceptionFilter,
+  OidcProviderRenderedJsonExceptionFilter,
+} from '@fc/oidc-provider/filters';
+import { ExceptionOccurredHandler } from '@fc/oidc-provider/handlers';
 import { ServiceProviderAdapterMongoModule } from '@fc/service-provider-adapter-mongo';
 import { SessionModule } from '@fc/session';
-import { TrackingModule } from '@fc/tracking';
+import { AppTrackingServiceAbstract, TrackingModule } from '@fc/tracking';
 
+import { CoreServiceInterface } from './interfaces';
 import {
   CoreAccountService,
+  CoreAuthorizationService,
   CoreOidcProviderConfigAppService,
   CoreOidcProviderMiddlewareService,
-  CoreTrackingService,
   CoreVerifyService,
 } from './services';
 import { CoreAcrService } from './services/core-acr.service';
+import { CORE_SERVICE } from './tokens';
 
-const trackingModule = TrackingModule.forRoot(CoreTrackingService);
+@Module({})
+export class CoreModule {
+  // More than 4 parameters authorized for dependency injection
+  // eslint-disable-next-line max-params
+  static register(
+    CoreServiceInterface: Type<CoreServiceInterface>,
+    OidcProviderConfigApp: Type<IOidcProviderConfigAppService>,
+    ServiceProviderClass: Type<IServiceProviderAdapter>,
+    ServiceProviderModule: Type<ModuleMetadata>,
+    IdentityProviderAdapterMongoService: Type<IIdentityProviderAdapter>,
+    IdentityProviderAdapterMongoModule: Type<ModuleMetadata>,
+    AppCoreTrackingService: Type<AppTrackingServiceAbstract>,
+  ): DynamicModule {
+    const trackingModule = TrackingModule.forRoot(AppCoreTrackingService);
 
-@Module({
-  imports: [
-    ServiceProviderAdapterMongoModule,
-    SessionModule,
-    OidcAcrModule,
-    /** Inject app specific tracking service */
-    trackingModule,
-    OidcProviderModule,
-    AccountModule,
-  ],
-  providers: [
-    CoreAccountService,
-    CoreTrackingService,
-    CoreOidcProviderConfigAppService,
-    CoreOidcProviderMiddlewareService,
-    CoreAcrService,
-    CoreVerifyService,
-  ],
-  exports: [
-    CoreAccountService,
-    CoreTrackingService,
-    CoreOidcProviderMiddlewareService,
-    CoreAcrService,
-    CoreVerifyService,
-  ],
-})
-export class CoreModule {}
+    return {
+      module: CoreModule,
+      imports: [
+        ExceptionsModule,
+        FlowStepsModule,
+        ServiceProviderAdapterMongoModule,
+        SessionModule,
+        OidcAcrModule,
+        OidcProviderModule,
+        AccountModule,
+        OidcProviderModule.register(
+          OidcProviderConfigApp,
+          ServiceProviderClass,
+          ServiceProviderModule,
+        ),
+        OidcClientModule.register(
+          IdentityProviderAdapterMongoService,
+          IdentityProviderAdapterMongoModule,
+          ServiceProviderClass,
+          ServiceProviderModule,
+        ),
+        IdentityProviderAdapterMongoModule,
+        trackingModule,
+      ],
+      providers: [
+        CoreAccountService,
+        CoreOidcProviderConfigAppService,
+        {
+          provide: CORE_SERVICE,
+          useExisting: CoreServiceInterface,
+        },
+        CoreOidcProviderMiddlewareService,
+        CoreAcrService,
+        CoreVerifyService,
+        CoreAuthorizationService,
+        ExceptionOccurredHandler,
+        UnknownHtmlExceptionFilter,
+        OidcProviderRenderedHtmlExceptionFilter,
+        OidcProviderRenderedJsonExceptionFilter,
+        OidcProviderRedirectExceptionFilter,
+        FcWebHtmlExceptionFilter,
+        HttpExceptionFilter,
+        {
+          provide: APP_FILTER,
+          useClass: UnknownHtmlExceptionFilter,
+        },
+        {
+          provide: APP_FILTER,
+          useClass: OidcProviderRenderedHtmlExceptionFilter,
+        },
+        {
+          provide: APP_FILTER,
+          useClass: OidcProviderRedirectExceptionFilter,
+        },
+        {
+          provide: APP_FILTER,
+          useClass: FcWebHtmlExceptionFilter,
+        },
+        {
+          provide: APP_FILTER,
+          useClass: HttpExceptionFilter,
+        },
+      ],
+      exports: [
+        CoreAccountService,
+        CoreOidcProviderMiddlewareService,
+        CoreAcrService,
+        CoreVerifyService,
+        CoreOidcProviderConfigAppService,
+        trackingModule,
+        CoreAuthorizationService,
+      ],
+    };
+  }
+}

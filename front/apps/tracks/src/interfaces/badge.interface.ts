@@ -1,10 +1,5 @@
-/* istanbul ignore file */
+import type { BadgeInterface } from '@fc/dsfr';
 
-// declarative file
-import type { IconType } from 'react-icons';
-
-export interface BadgeInterface {
-  colorName: string;
-  Icon: IconType;
-  label: string;
+export interface Badges {
+  [key: string]: BadgeInterface;
 }

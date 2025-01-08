@@ -119,28 +119,37 @@ describe('MarkdownGenerator', () => {
         { errorCode: 'Y0101' },
         { errorCode: 'Y0101' },
         { errorCode: 'Y0201' },
-      ];
+      ] as unknown as ExceptionDocumentationInterface[];
 
-      jest.spyOn(console, 'log').mockImplementation(() => {});
-
-      MarkdownGenerator.checkForDuplicatedCodes(
-        errors as unknown as ExceptionDocumentationInterface[],
-      );
-
-      /**
-       * @todo #1988 Fix inconsistent usage of codes and scopes across the codebase
-       *
-       * UT for throwing code:
-       *
-       * expect(() => MarkdownGenerator.checkForDuplicatedCodes(errors)).toThrow(
-       *    'Error code Y0101 is duplicated',
-       *  );
-       *
-       * UT for temporary behavior (just log error):
-       */
-      expect(console.log).toHaveBeenCalledWith(
+      expect(() => MarkdownGenerator.checkForDuplicatedCodes(errors)).toThrow(
         'Error code Y0101 is duplicated',
       );
+    });
+  });
+
+  describe('MardownGenerator.checkForPathInconsistency', () => {
+    it('should throw an error if there is an inconsistency in the path property', () => {
+      const errors = [
+        { SCOPE: 1, path: 'path1' },
+        { SCOPE: 1, path: 'path2' },
+      ] as unknown as ExceptionDocumentationInterface[];
+
+      expect(() => MarkdownGenerator.checkForPathInconsistency(errors)).toThrow(
+        'Path inconsistency in scope 1: path1 !== path2',
+      );
+    });
+
+    it('should not throw an error if there is no inconsistency in the path property', () => {
+      const errors = [
+        { SCOPE: 1, path: 'path1' },
+        { SCOPE: 1, path: 'path1' },
+        { SCOPE: 2, path: 'path2' },
+        { SCOPE: 2, path: 'path2' },
+      ] as unknown as ExceptionDocumentationInterface[];
+
+      expect(() =>
+        MarkdownGenerator.checkForPathInconsistency(errors),
+      ).not.toThrow();
     });
   });
 });

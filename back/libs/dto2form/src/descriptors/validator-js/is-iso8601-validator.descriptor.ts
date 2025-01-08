@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { ValidatorJs } from '../../enums';
 import { IsISO8601Validator } from '../../interfaces';
 

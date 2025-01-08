@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { ValidatorJs } from '../../enums';
 import { IsMongoIdValidator } from '../../interfaces';
 

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { enGB, frFR } from '@fc/core-fcp/i18n';
 import { I18nConfig } from '@fc/i18n';
 

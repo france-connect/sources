@@ -20,13 +20,32 @@ _mongo_core_shell() {
 _mongo_shell() {
   local server=$1
   local database=$2
+  local TLSClient=$3
+  local TLSClient=${TLSClient:=none}
 
-  echo "starting mongo ${server} database in shell..."
+  echo -n "Starting mongo ${server} database in shell "
 
-  $DOCKER_COMPOSE exec "${server}" \
-    mongo -u ${MONGO_DEFAULT_USER} -p ${MONGO_DEFAULT_PASS} \
-    --authenticationDatabase admin "${database}" \
-    --tls
+  if [ "$TLSClient" = "none" ];then
+
+    echo "Using mongosh cli from inside the mongodb container using docker-compose exec"
+    echo "Without TLS client authentication activated"
+
+    $DOCKER_COMPOSE exec "${server}" \
+      mongosh -u ${MONGO_DEFAULT_USER} -p ${MONGO_DEFAULT_PASS} \
+      --authenticationDatabase admin "${database}" \
+      --tls
+
+  elif [ "$TLSClient" = "tls" ];then
+
+    echo "using mongosh cli using your local mongosh cli"
+    echo "with TLS client authentication activated (Using the local application app.pem certificate)"
+    
+    $MONGO_SH -u ${MONGO_DEFAULT_USER} -p ${MONGO_DEFAULT_PASS} --authenticationDatabase admin "${database}" --tls --tlsCertificateKeyFile ${MONGO_TLS_APP_KEY}  --tlsCAFile ${MONGO_TLS_CA_FILE} --port ${MONGO_FCPHIGH_LOCALPORT}
+    
+  else
+	  echo -e "\nUsage: mongo <server> <database> [tls]. 3rd argument '$3' not valid. Do you mean \"tls\"?"
+	  exit 1
+  fi
 }
 
 _mongo_script() {
@@ -61,7 +80,4 @@ _mongo_shell_core_fcp_high() {
 _mongo_shell_core_fcp_low() {
   _mongo_core_shell "fcp-low"
 
-}
-_mongo_shell_core_legacy() {
-  _mongo_core_shell "legacy"
 }

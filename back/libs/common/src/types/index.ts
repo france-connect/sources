@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './fsa.type';
 export * from './instantiable.type';
 export * from './pagination-options.type';

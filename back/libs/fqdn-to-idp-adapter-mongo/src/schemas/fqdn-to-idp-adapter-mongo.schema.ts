@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { Document } from 'mongoose';
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';

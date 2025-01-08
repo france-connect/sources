@@ -1,9 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
+
+import {
+  TracksResultsInterface,
+  TracksTicketDataInterface,
+} from '../interfaces';
 import { CsmrFraudDataService } from './csmr-fraud-data.service';
+import { CsmrFraudTracksService } from './csmr-fraud-tracks.service';
 
 describe('CsmrFraudDataService', () => {
   let service: CsmrFraudDataService;
+
+  const tracksServiceMock = {
+    getTracksForAuthenticationEventId: jest.fn(),
+  };
+
+  const loggerMock = getLoggerMock();
 
   const identityMock = {
     given_name: 'firstName',
@@ -23,6 +38,18 @@ describe('CsmrFraudDataService', () => {
     phoneNumber: '0678912345',
   };
 
+  const errorMock = Symbol('error') as unknown as string;
+
+  const totalMock = 42;
+
+  const trackMock = Symbol('track') as unknown as TracksTicketDataInterface;
+
+  const tracksResults: TracksResultsInterface = {
+    tracks: [trackMock],
+    error: errorMock,
+    total: totalMock,
+  };
+
   const ticketDataMock = {
     givenName: 'firstName',
     familyName: 'lastName',
@@ -35,6 +62,9 @@ describe('CsmrFraudDataService', () => {
     fraudSurveyOrigin: 'fraudSurveyOriginMock',
     comment: 'commentMock',
     phoneNumber: '0678912345',
+    error: errorMock,
+    total: totalMock,
+    tracks: [trackMock],
   };
 
   beforeEach(async () => {
@@ -42,8 +72,13 @@ describe('CsmrFraudDataService', () => {
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CsmrFraudDataService],
-    }).compile();
+      providers: [CsmrFraudDataService, CsmrFraudTracksService, LoggerService],
+    })
+      .overrideProvider(CsmrFraudTracksService)
+      .useValue(tracksServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerMock)
+      .compile();
 
     service = module.get<CsmrFraudDataService>(CsmrFraudDataService);
   });
@@ -53,12 +88,47 @@ describe('CsmrFraudDataService', () => {
   });
 
   describe('enrichFraudData', () => {
-    it('should return ticket data', () => {
+    beforeEach(() => {
+      tracksServiceMock.getTracksForAuthenticationEventId.mockResolvedValue(
+        tracksResults,
+      );
+    });
+
+    it('should call getTracksForAuthenticationEventId with correct parameters', async () => {
       // When
-      const result = service.enrichFraudData(identityMock, fraudCaseMock);
+      await service.enrichFraudData(identityMock, fraudCaseMock);
+
+      // Then
+      expect(
+        tracksServiceMock.getTracksForAuthenticationEventId,
+      ).toHaveBeenCalledTimes(1);
+
+      expect(
+        tracksServiceMock.getTracksForAuthenticationEventId,
+      ).toHaveBeenCalledWith(identityMock, fraudCaseMock.authenticationEventId);
+    });
+
+    it('should return ticket data', async () => {
+      // When
+      const result = await service.enrichFraudData(identityMock, fraudCaseMock);
 
       // Then
       expect(result).toEqual(ticketDataMock);
+    });
+
+    it('should call logger.debug with error', async () => {
+      // Given
+      const resultWithError = { error: 'message' };
+      tracksServiceMock.getTracksForAuthenticationEventId.mockResolvedValueOnce(
+        resultWithError,
+      );
+
+      // When
+      await service.enrichFraudData(identityMock, fraudCaseMock);
+
+      // Then
+      expect(loggerMock.debug).toHaveBeenCalledOnce();
+      expect(loggerMock.debug).toHaveBeenCalledWith(`message`);
     });
   });
 });

@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardComponent should match the snapshot, with all optionnal values 1`] = `
+<div>
+  <div
+    class="fr-card fr-card--lg fr-card--shadow fr-card--horizontal fr-enlarge-link any-classname-mock"
+    data-testid="CardComponent"
+  >
+    <div
+      class="fr-card__body"
+    >
+      <div
+        class="fr-card__content"
+      >
+        <h1
+          class="fr-card__title"
+          data-testid="CardComponent-title"
+        >
+          <span
+            data-mockid="Link"
+          >
+            Card title mock
+          </span>
+        </h1>
+        <p
+          class="fr-card__desc"
+        >
+          any description text treat as children
+        </p>
+        <div
+          class="fr-card__end"
+        >
+          <div>
+            CardDetailComponent
+          </div>
+        </div>
+        <div
+          class="fr-card__start"
+        >
+          <div>
+            CardMediaComponent
+          </div>
+          <div>
+            BadgeGroupComponent
+          </div>
+          <div>
+            CardDetailComponent
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`CardComponent should match the snapshot, with default values 1`] = `
+<div>
+  <div
+    class="fr-card fr-card--md fr-card--no-background"
+    data-testid="CardComponent"
+  >
+    <div
+      class="fr-card__body"
+    >
+      <div
+        class="fr-card__content"
+      >
+        <h3
+          class="fr-card__title"
+          data-testid="CardComponent-title"
+        >
+          <span
+            data-mockid="Link"
+          >
+            Card title mock
+          </span>
+        </h3>
+        <p
+          class="fr-card__desc"
+        >
+          any description text treat as children
+        </p>
+        <div
+          class="fr-card__start"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

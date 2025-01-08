@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsAscii, IsString, Length } from 'class-validator';
 
 export class Interaction {

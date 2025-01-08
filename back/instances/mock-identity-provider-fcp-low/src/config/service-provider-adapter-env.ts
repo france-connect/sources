@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { hostname } from 'os';
 
 import { ConfigParser } from '@fc/config';

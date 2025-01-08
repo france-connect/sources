@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './app-config.dto';
 export * from './authorize-params.dto';
 export * from './eidas-bridge-config.dto';

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsString, IsUrl, MinLength } from 'class-validator';
 
 export class EidasProviderConfig {

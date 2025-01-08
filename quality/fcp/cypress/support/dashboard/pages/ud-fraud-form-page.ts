@@ -1,4 +1,5 @@
 import { ChainableElement } from '../../common/types';
+import { FraudFormValues } from '../../common/types/fraud-form-values';
 
 export default class UdFraudFormPage {
   udRootUrl: string;
@@ -51,11 +52,11 @@ export default class UdFraudFormPage {
     });
   }
 
-  fillDefaultValues(values: Record<string, string>): void {
+  fillDefaultValues(fraudFormValues: FraudFormValues): void {
     const elementAlreadySet: string[] = [];
     this.getAllFormInputs().each(($el) => {
       const elementName = $el.attr('name');
-      const value = values[elementName];
+      const value = fraudFormValues[elementName];
       // If the html element has not been set already and a value exists
       if (!elementAlreadySet.includes(elementName) && value) {
         this.fillValue(elementName, value);

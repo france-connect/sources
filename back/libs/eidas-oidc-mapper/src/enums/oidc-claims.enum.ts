@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export enum OidcClaims {
   SUB = 'sub',
   GENDER = 'gender',

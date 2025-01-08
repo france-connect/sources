@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsArray, IsEnum, IsString } from 'class-validator';
 
 import { EidasAttributes, EidasLevelOfAssurances } from '../enums';

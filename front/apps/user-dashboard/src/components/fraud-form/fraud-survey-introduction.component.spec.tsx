@@ -37,8 +37,8 @@ describe('FraudSurveyIntroductionComponent', () => {
     expect(SimpleButton).toHaveBeenCalledOnce();
     expect(SimpleButton).toHaveBeenCalledWith(
       {
+        children: 'Commencer la vérification',
         dataTestId: 'fraud-survey-button',
-        label: 'Commencer la vérification',
         onClick: redirectToFraudSurvey,
       },
       {},

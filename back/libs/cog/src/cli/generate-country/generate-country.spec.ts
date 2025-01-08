@@ -1,33 +1,34 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import * as readline from 'readline';
 
+import { Apps, Folder } from '../enums';
 import {
-  createCSV,
-  getCwdForDirectory,
   readCSV,
   replaceAllOccurrences,
+  ReplaceEmptyIsoCode,
+  saveCsvToFile,
 } from '../helpers';
 import { GenerateCountry } from './generate-country';
 
-jest.mock('path');
-jest.mock('fs');
 jest.mock('../helpers');
 
 describe('GenerateCountry', () => {
-  const existsSyncMock = jest.mocked(existsSync);
-  const mkdirSyncMock = jest.mocked(mkdirSync);
-  const writeFileSyncMock = jest.mocked(writeFileSync);
-
   let consoleLogSpy;
-  const targetDirectory = '/path/to/target';
-  const filePath = '/path/to/target/country.csv';
-  const data = [
+
+  const dataFcApps = [
     {
       cog: 99101,
       name: 'libcog',
       oldName: 'ancom',
       geographicCode: 'crpay',
       oldGeographicCode: 'capay',
+    },
+  ];
+
+  const dataEidasBridge = [
+    {
+      CODEISO2: 'FR',
+      COG: 99101,
+      LIBCOG: 'libcog',
     },
   ];
 
@@ -47,8 +48,6 @@ describe('GenerateCountry', () => {
     },
   ];
 
-  const fileContent = 'cog,name,arr\n123,City1,Arr1\n456,City2,Arr2\n';
-
   beforeEach(() => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -57,12 +56,19 @@ describe('GenerateCountry', () => {
   });
 
   describe('run()', () => {
-    const searchInCSVFilesMock = Symbol('csvFile') as any;
+    const generateCsvForFcappsMock = Symbol('csvFile') as any;
+    const generateCsvForEidasBridgeMock = Symbol('csvFile') as any;
 
     beforeEach(() => {
+      jest.clearAllMocks();
+
       jest
-        .spyOn(GenerateCountry, 'searchInCSVFiles')
-        .mockReturnValue(searchInCSVFilesMock);
+        .spyOn(GenerateCountry, 'generateCsvForFcapps')
+        .mockReturnValue(generateCsvForFcappsMock);
+
+      jest
+        .spyOn(GenerateCountry, 'generateCsvForEidasBridge')
+        .mockReturnValue(generateCsvForEidasBridgeMock);
     });
 
     it('should log an error if the 1st CSV file is missing', async () => {
@@ -75,87 +81,201 @@ describe('GenerateCountry', () => {
       );
     });
 
-    it('should call searchInCSVFiles with the correct arguments when CSV file provided', async () => {
+    ///////////
+
+    it('should ask the user to choose an app when apps is not provided and call generateCsvForFcapps by default', async () => {
+      // Given
+      const readlineQuestionMock = jest.fn((_question, callback) => {
+        callback(''); // Simulate default response
+      });
+
+      const readlineCloseMock = jest.fn();
+      jest.spyOn(readline, 'createInterface').mockImplementation(
+        () =>
+          ({
+            question: readlineQuestionMock,
+            close: readlineCloseMock,
+          }) as any,
+      );
+
       // When
       await GenerateCountry.run(['file1.csv']);
 
       // Then
-      expect(GenerateCountry.searchInCSVFiles).toHaveBeenCalledTimes(1);
-      expect(GenerateCountry.searchInCSVFiles).toHaveBeenCalledWith(
+      expect(readlineQuestionMock).toHaveBeenCalledTimes(1);
+      expect(readlineCloseMock).toHaveBeenCalledTimes(1);
+      expect(GenerateCountry.generateCsvForFcapps).toHaveBeenCalledTimes(1);
+      expect(GenerateCountry.generateCsvForFcapps).toHaveBeenCalledWith(
+        'file1.csv',
+      );
+    });
+
+    it('should ask the user to choose an app and call generateCsvForEidasBridge when the user selects option 1', async () => {
+      // Given
+      const readlineQuestionMock = jest.fn((_question, callback) => {
+        callback('1'); // Simulate user choosing option 1
+      });
+
+      const readlineCloseMock = jest.fn();
+      jest.spyOn(readline, 'createInterface').mockImplementation(
+        () =>
+          ({
+            question: readlineQuestionMock,
+            close: readlineCloseMock,
+          }) as any,
+      );
+
+      // When
+      await GenerateCountry.run(['file1.csv']);
+
+      // Then
+      expect(readlineQuestionMock).toHaveBeenCalledTimes(1);
+      expect(readlineCloseMock).toHaveBeenCalledTimes(1);
+      expect(GenerateCountry.generateCsvForEidasBridge).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(GenerateCountry.generateCsvForEidasBridge).toHaveBeenCalledWith(
+        'file1.csv',
+      );
+    });
+
+    it('should ask the user to choose an app and call generateCsvForFcapps when the user selects option 2 or presses Enter', async () => {
+      // Mock readline interface
+      const readlineQuestionMock = jest.fn((_question, callback) => {
+        callback('2'); // Simulate user choosing option 2
+      });
+
+      const readlineCloseMock = jest.fn();
+      jest.spyOn(readline, 'createInterface').mockImplementation(
+        () =>
+          ({
+            question: readlineQuestionMock,
+            close: readlineCloseMock,
+          }) as any,
+      );
+
+      // When
+      await GenerateCountry.run(['file1.csv']);
+
+      // Then
+      expect(readlineQuestionMock).toHaveBeenCalledTimes(1);
+      expect(readlineCloseMock).toHaveBeenCalledTimes(1);
+      expect(GenerateCountry.generateCsvForFcapps).toHaveBeenCalledTimes(1);
+      expect(GenerateCountry.generateCsvForFcapps).toHaveBeenCalledWith(
+        'file1.csv',
+      );
+    });
+
+    //////////
+
+    it('should call generateCsvForFcapps with the correct arguments when CSV file provided', async () => {
+      // When
+      await GenerateCountry.run(['file1.csv', Apps.FCAPPS]);
+
+      // Then
+      expect(GenerateCountry.generateCsvForFcapps).toHaveBeenCalledTimes(1);
+      expect(GenerateCountry.generateCsvForFcapps).toHaveBeenCalledWith(
+        'file1.csv',
+      );
+    });
+
+    it('should call generateCsvForEidasBridge with the correct arguments when CSV file provided', async () => {
+      // When
+      await GenerateCountry.run(['file1.csv', Apps.EIDAS]);
+
+      // Then
+      expect(GenerateCountry.generateCsvForEidasBridge).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(GenerateCountry.generateCsvForEidasBridge).toHaveBeenCalledWith(
         'file1.csv',
       );
     });
   });
 
-  describe('searchInCSVFiles()', () => {
-    const getCwdForDirectoryMock = jest.mocked(getCwdForDirectory);
+  describe('generateCsvForFcapps()', () => {
     const replaceAllOccurrencesMock = jest.mocked(replaceAllOccurrences);
-    const joinMock = jest.mocked(join);
     const readCSVMock = jest.mocked(readCSV);
-    const createCSVMock = jest.mocked(createCSV);
+    const saveCsvToFileMock = jest.mocked(saveCsvToFile);
 
     beforeEach(() => {
       readCSVMock.mockResolvedValue(searchResultFileMock);
-      createCSVMock.mockReturnValue(fileContent);
-      existsSyncMock.mockReturnValue(false);
     });
 
     it('should call readCSVMock to retrieve data inside csv file', async () => {
       // When
-      await GenerateCountry.searchInCSVFiles('file1.csv');
+      await GenerateCountry.generateCsvForFcapps('file1.csv');
 
       // Then
       expect(readCSVMock).toHaveBeenCalledTimes(1);
       expect(readCSVMock).toHaveBeenCalledWith('file1.csv');
     });
 
-    it('should call createCSV to create csv file', async () => {
+    it('should call saveCsvToFileMock to create a fc-apps csv file', async () => {
       // Given
       replaceAllOccurrencesMock
         .mockReturnValueOnce('libcog')
         .mockReturnValueOnce('ancom');
 
       //When
-      await GenerateCountry.searchInCSVFiles('file1.csv');
+      await GenerateCountry.generateCsvForFcapps('file1.csv');
 
       // Then
-      expect(createCSVMock).toHaveBeenCalledTimes(1);
-      expect(createCSVMock).toHaveBeenCalledWith(data);
-    });
-
-    it('should verify and create target directory if not existing', async () => {
-      // Given
-      getCwdForDirectoryMock.mockReturnValue(targetDirectory);
-
-      //When
-      await GenerateCountry.searchInCSVFiles('file1.csv');
-
-      // Then
-      expect(existsSyncMock).toHaveBeenCalledWith(targetDirectory);
-      expect(mkdirSyncMock).toHaveBeenCalledWith(targetDirectory, {
-        recursive: true,
-      });
-      expect(consoleLogSpy).toHaveBeenCalledWith(
-        `Directory "${targetDirectory}" has been created`,
+      expect(saveCsvToFileMock).toHaveBeenCalledTimes(1);
+      expect(saveCsvToFileMock).toHaveBeenCalledWith(
+        dataFcApps,
+        Folder.TARGET_DIRECTORY_FOR_FCAPPS,
       );
-    });
-
-    it('should create csv file', async () => {
-      // Given
-      joinMock.mockReturnValue(filePath);
-
-      //When
-      await GenerateCountry.searchInCSVFiles('file1.csv');
-
-      // Then
-      expect(writeFileSyncMock).toHaveBeenCalledWith(filePath, fileContent);
     });
 
     it('should log an error if there is an error while reading the CSV files', async () => {
       // Given
       readCSVMock.mockRejectedValue(new Error('Read CSV error'));
 
-      await GenerateCountry.searchInCSVFiles('file1.csv');
+      await GenerateCountry.generateCsvForFcapps('file1.csv');
+
+      expect(console.log).toHaveBeenCalledWith('Error:', expect.any(Error));
+    });
+  });
+
+  describe('generateCsvForEidasBridge()', () => {
+    const ReplaceEmptyIsoCodeMock = jest.mocked(ReplaceEmptyIsoCode);
+    const readCSVMock = jest.mocked(readCSV);
+    const saveCsvToFileMock = jest.mocked(saveCsvToFile);
+
+    beforeEach(() => {
+      readCSVMock.mockResolvedValue(searchResultFileMock);
+    });
+
+    it('should call readCSVMock to retrieve data inside csv file', async () => {
+      // When
+      await GenerateCountry.generateCsvForEidasBridge('file1.csv');
+
+      // Then
+      expect(readCSVMock).toHaveBeenCalledTimes(1);
+      expect(readCSVMock).toHaveBeenCalledWith('file1.csv');
+    });
+
+    it('should call saveCsvToFileMock to create an eidas-bridge csv file', async () => {
+      // Given
+      ReplaceEmptyIsoCodeMock.mockReturnValueOnce('FR');
+
+      //When
+      await GenerateCountry.generateCsvForEidasBridge('file1.csv');
+
+      // Then
+      expect(saveCsvToFileMock).toHaveBeenCalledTimes(1);
+      expect(saveCsvToFileMock).toHaveBeenCalledWith(
+        dataEidasBridge,
+        Folder.TARGET_DIRECTORY_FOR_EIDAS,
+      );
+    });
+
+    it('should log an error if there is an error while reading the CSV files', async () => {
+      // Given
+      readCSVMock.mockRejectedValue(new Error('Read CSV error'));
+
+      await GenerateCountry.generateCsvForEidasBridge('file1.csv');
 
       expect(console.log).toHaveBeenCalledWith('Error:', expect.any(Error));
     });

@@ -5,87 +5,86 @@ import type { HttpClientOptionsInterface } from '../interfaces';
 import * as Module from './get-request-options';
 import { slashifyPath } from './slashify-path';
 
-jest.mock('@fc/config');
 jest.mock('./slashify-path');
 
 describe('getTimeout', () => {
   it('should call ConfigService.get with HttpClient identifier from enums Options', () => {
-    // when
+    // When
     Module.getTimeout(expect.any(Object));
 
-    // then
+    // Then
     expect(ConfigService.get).toHaveBeenCalledOnce();
     expect(ConfigService.get).toHaveBeenCalledWith(Options.CONFIG_NAME);
   });
 
   it('should return a timeout from requestOptions', () => {
-    // when
+    // When
     const result = Module.getTimeout({ timeout: 3000 });
 
-    // then
+    // Then
     expect(result).toBe(3000);
   });
 
   it('should return a timeout from serviceConfig', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({ timeout: 2000 });
 
-    // when
+    // When
     const result = Module.getTimeout(undefined as unknown as HttpClientOptionsInterface);
 
-    // then
+    // Then
     expect(result).toBe(2000);
   });
 
   it('should return a timeout from default values', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({});
 
-    // when
+    // When
     const result = Module.getTimeout({});
 
-    // then
+    // Then
     expect(result).toStrictEqual(Options.TIMEOUT);
   });
 });
 
 describe('getBaseURL', () => {
   it('should call ConfigService.get with HttpClient identifier', () => {
-    // when
+    // When
     Module.getBaseURL(expect.any(Object));
 
-    // then
+    // Then
     expect(ConfigService.get).toHaveBeenCalledOnce();
     expect(ConfigService.get).toHaveBeenCalledWith(Options.CONFIG_NAME);
   });
 
   it('should return a baseURL from requestOptions', () => {
-    // when
+    // When
     const result = Module.getBaseURL({
       baseURL: 'http://any-url.com',
     });
 
-    // then
+    // Then
     expect(result).toBe('http://any-url.com');
   });
 
   it('should return a baseURL from serviceConfig', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({ baseURL: 'http://any-url.com' });
-    // when
+    // When
     const result = Module.getBaseURL(undefined as unknown as HttpClientOptionsInterface);
 
-    // then
+    // Then
     expect(result).toBe('http://any-url.com');
   });
 
   it('should return a baseURL from default values', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({});
-    // when
+    // When
     const result = Module.getBaseURL({});
 
-    // then
+    // Then
     expect(result).toBeUndefined();
   });
 });
@@ -98,7 +97,7 @@ describe('getRequestOptions', () => {
   });
 
   it('should call slashifyPath with baseURL parameters from parameters', () => {
-    // when
+    // When
     Module.getRequestOptions(
       {
         data: { key: 'any-mock-value' },
@@ -110,33 +109,33 @@ describe('getRequestOptions', () => {
       },
     );
 
-    // then
+    // Then
     expect(slashifyPath).toHaveBeenCalledOnce();
     expect(slashifyPath).toHaveBeenCalledWith('any-endpoint', 'http://any-url.mock');
   });
 
   it('should call slashifyPath with baseURL parameters from getBaseURL', () => {
-    // given
+    // Given
     jest.mocked(Module.getBaseURL).mockReturnValueOnce('http://any-url-config.mock');
 
-    // when
+    // When
     Module.getRequestOptions({
       data: { key: 'any-mock-value' },
       method: 'get',
       url: 'any-endpoint',
     });
 
-    // then
+    // Then
     expect(slashifyPath).toHaveBeenCalledOnce();
     expect(slashifyPath).toHaveBeenCalledWith('any-endpoint', 'http://any-url-config.mock');
   });
 
   it('should return a merged request object', () => {
-    // given
+    // Given
     jest.mocked(slashifyPath).mockReturnValueOnce('http://any-url.mock/any-endpoint');
     const validateStatusMock = jest.fn();
 
-    // when
+    // When
     const result = Module.getRequestOptions(
       {
         data: { key: 'any-mock-value' },
@@ -149,7 +148,7 @@ describe('getRequestOptions', () => {
       },
     );
 
-    // then
+    // Then
     expect(result).toStrictEqual({
       data: { key: 'any-mock-value' },
       method: 'get',
@@ -160,7 +159,7 @@ describe('getRequestOptions', () => {
   });
 
   it('should have call getBaseUrl', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({});
     const targetRequest = {
       data: expect.any(Object),
@@ -169,15 +168,15 @@ describe('getRequestOptions', () => {
     };
     jest.spyOn(Module, 'getBaseURL');
 
-    // when
+    // When
     Module.getRequestOptions(targetRequest);
 
-    // then
+    // Then
     expect(Module.getBaseURL).toHaveBeenCalledOnce();
   });
 
   it('should have call getTimeout', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({});
     const targetRequest = {
       data: expect.any(Object),
@@ -186,10 +185,10 @@ describe('getRequestOptions', () => {
     };
     jest.spyOn(Module, 'getTimeout');
 
-    // when
+    // When
     Module.getRequestOptions(targetRequest);
 
-    // then
+    // Then
     expect(Module.getTimeout).toHaveBeenCalledOnce();
   });
 });

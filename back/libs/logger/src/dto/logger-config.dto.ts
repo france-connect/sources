@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsEnum, IsNumber, IsString, IsUrl } from 'class-validator';
 
 import { LogLevels } from '../enums';

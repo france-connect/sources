@@ -6,7 +6,6 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import {
   GeoFormatterService,
-  Platform,
   TracksFormatterMappingFailedException,
   TracksLegacyFieldsInterface,
 } from '@fc/tracks-adapter-elasticsearch';
@@ -14,6 +13,7 @@ import {
 import { getLoggerMock } from '@mocks/logger';
 
 import { IdpMappings } from '../dto';
+import { Platform } from '../enums';
 import { CsmrTracksUnknownActionException } from '../exceptions';
 import { TracksLegacyFormatter } from './tracks-legacy.formatter';
 

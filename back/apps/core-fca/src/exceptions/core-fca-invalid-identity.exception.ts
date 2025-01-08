@@ -1,10 +1,6 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { ErrorCode } from '@fc/core';
-
+import { ErrorCode } from '../enums';
 import { CoreFcaBaseException } from './core-fca-base.exception';
 
 export class CoreFcaInvalidIdentityException extends CoreFcaBaseException {

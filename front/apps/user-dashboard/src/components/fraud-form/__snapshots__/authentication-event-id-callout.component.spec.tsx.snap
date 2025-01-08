@@ -38,11 +38,11 @@ exports[`authenticationEventIdCallout should match the snapshot 1`] = `
           >
             votre
              
-            <div
+            <span
               data-mockid="LinkComponent"
             >
               historique de connexion
-            </div>
+            </span>
           </p>
         </li>
         <img

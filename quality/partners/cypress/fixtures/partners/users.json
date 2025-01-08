@@ -2,22 +2,46 @@
   {
     "descriptions": ["default"],
     "credentials": {
-      "username": "test",
+      "username": "bdd_default",
       "password": "123"
     },
     "claims": {
-      "uid": "1",
-      "given_name": "Angela Claire Louise",
+      "uid": "31",
+      "given_name": "Hugo",
       "usual_name": "DUBOIS",
-      "email": "test@abcd.com",
-      "siren": "343293775",
-      "siret": "34329377500037",
-      "organizational_unit": "comptabilite",
-      "belonging_population": "agent",
-      "phone_number": "+331-12-44-45-23",
-      "chorusdt:matricule": "USER_AGC",
-      "chorusdt:societe": "CHT",
+      "email": "hdubois@yopmail.com",
+      "siren": "130025265",
       "is_service_public": "true"
+    }
+  },
+  {
+    "descriptions": ["partenaire sans instance"],
+    "credentials": {
+      "username": "bdd_new",
+      "password": "123"
+    },
+    "claims": {
+      "uid": "32",
+      "given_name": "Marie-Charlène",
+      "usual_name": "GARNIER",
+      "email": "mcgarnier@yopmail.com",
+      "siren": "130025265",
+      "is_service_public": "true"
+    }
+  },
+  {
+    "descriptions": ["partenaire avec une instance"],
+    "credentials": {
+      "username": "bdd_one_instance",
+      "password": "123"
+    },
+    "claims": {
+      "uid": "33",
+      "given_name": "Clara Angela",
+      "usual_name": "CHEVALIER",
+      "email": "cchevalier@yopmail.com",
+      "siren": "999912345",
+      "is_service_public": "false"
     }
   }
 ]

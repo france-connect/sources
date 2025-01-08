@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { Module } from '@nestjs/common';
 
 import { CryptographyFcpModule } from '@fc/cryptography-fcp';

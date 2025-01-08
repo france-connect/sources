@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
-
 import { AppConfig } from '@fc/app';
 import { ConfigParser } from '@fc/config';
 

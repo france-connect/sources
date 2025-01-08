@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { RenderOptions, render } from '@testing-library/react';
 import { PropsWithChildren, ReactElement } from 'react';
 import { Form } from 'react-final-form';

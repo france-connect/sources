@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { Response } from 'express';
 
 import { CoreServiceInterface } from '@fc/core';

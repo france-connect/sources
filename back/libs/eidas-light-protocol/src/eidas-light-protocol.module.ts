@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
-
 /**
  * Eidas documentation
  * @see https://ec.europa.eu/cefdigital/wiki/display/CEFDIGITAL/eIDAS+eID+Profile?preview=/82773108/148898847/eIDAS%20SAML%20Attribute%20Profile%20v1.2%20Final.pdf

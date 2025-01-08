@@ -159,6 +159,8 @@ export class MockServiceProviderController {
     res,
     @Body()
     body: AccessTokenParamsDTO,
+    @Session('OidcClient')
+    sessionOidc: ISessionService<OidcClientSession>,
   ) {
     let response;
     try {
@@ -168,7 +170,8 @@ export class MockServiceProviderController {
        */
       const providerUid = this.getIdpId();
       const { accessToken } = body;
-      await this.oidcClient.utils.revokeToken(accessToken, providerUid);
+
+      await this.revokeToken(providerUid, accessToken, sessionOidc);
 
       const { dataApis } = this.config.get<AppConfig>('App');
 
@@ -241,7 +244,7 @@ export class MockServiceProviderController {
       state: idpState,
       nonce: idpNonce,
     };
-    const { accessToken, idToken, acr, amr } =
+    const { accessToken, idToken, refreshToken, acr, amr } =
       await this.oidcClient.getTokenFromProvider(idpId, tokenParams, req);
 
     const userInfoParams = {
@@ -266,6 +269,7 @@ export class MockServiceProviderController {
       amr,
       idpAccessToken: accessToken,
       idpIdToken: idToken,
+      idpRefreshToken: refreshToken,
     };
 
     sessionOidc.set({ ...identityExchange });
@@ -294,12 +298,20 @@ export class MockServiceProviderController {
        * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/251
        */
       const providerUid = this.getIdpId();
-      const { accessToken } = body;
+
+      const { accessToken, idpRefreshToken } =
+        await this.refreshAccessTokenIfPossible(
+          sessionOidc,
+          providerUid,
+          body.accessToken,
+        );
+
       // OIDC: call idp's /userinfo endpoint
-      const idpIdentity = await this.oidcClient.utils.getUserInfo(
-        accessToken,
-        providerUid,
-      );
+      const idpIdentity =
+        await this.oidcClient.utils.getUserInfo<IOidcIdentity>(
+          accessToken,
+          providerUid,
+        );
 
       const idpIdToken = sessionOidc.get('idpIdToken');
 
@@ -310,6 +322,7 @@ export class MockServiceProviderController {
         accessToken,
         idpIdentity,
         idpIdToken,
+        idpRefreshToken,
         dataApiActive: dataApis?.length > 0,
       };
     } catch (e) {
@@ -319,7 +332,7 @@ export class MockServiceProviderController {
        * @params e.error_description : error description return by panva lib
        *
        * If exception is not return by panva, we throw our custom class exception
-       * when we try to receive userinfo : 'MockServiceProviderUserinfoException'
+       * when we try to receive userinfo or to refresh the token : 'MockServiceProviderUserinfoException'
        */
       if (e.error && e.error_description) {
         const redirect = `/error?error=${e.error}&error_description=${e.error_description}`;
@@ -448,5 +461,44 @@ export class MockServiceProviderController {
     } catch (e) {
       return e;
     }
+  }
+
+  private async revokeToken(
+    providerUid: string,
+    accessToken: string,
+    sessionOidc: ISessionService<OidcClientSession>,
+  ) {
+    /**
+     * Revoking a refresh token implicitly revokes any associated access token
+     */
+    const idpRefreshToken = sessionOidc.get('idpRefreshToken');
+
+    if (idpRefreshToken) {
+      await this.oidcClient.utils.revokeToken(idpRefreshToken, providerUid);
+      sessionOidc.set('idpRefreshToken', undefined);
+    } else {
+      await this.oidcClient.utils.revokeToken(accessToken, providerUid);
+    }
+  }
+
+  private async refreshAccessTokenIfPossible(
+    sessionOidc: ISessionService<OidcClientSession>,
+    providerUid: string,
+    currentAccessToken: string,
+  ): Promise<{ accessToken: string; idpRefreshToken?: string }> {
+    const idpRefreshToken = sessionOidc.get('idpRefreshToken');
+
+    if (idpRefreshToken) {
+      // Exchange for new access token
+      const tokenSet = await this.oidcClient.utils.refreshTokens(
+        idpRefreshToken,
+        providerUid,
+      );
+      // Update access token in session
+      sessionOidc.set('idpAccessToken', tokenSet.access_token);
+      return { accessToken: tokenSet.access_token, idpRefreshToken };
+    }
+
+    return { accessToken: currentAccessToken };
   }
 }

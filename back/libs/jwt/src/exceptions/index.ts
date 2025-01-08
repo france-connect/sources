@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 export * from './can-not-decode-plaintext.exception';
 export * from './can-not-decode-protected-header.exception';
 export * from './can-not-decrypt.exception';

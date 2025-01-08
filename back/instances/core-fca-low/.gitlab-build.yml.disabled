@@ -1,0 +1,19 @@
+include: '/back/.gitlab-build-template.yml'
+
+fca/core-build-image:
+  extends: .base-build
+  environment:
+    name: build-fca
+  variables:
+    APP: core-fca-low
+    MSG: "environments/nubo01-fca-integ/group_vars/all/versions.yml\nenvironments/nubo12-fca-integ/group_vars/all/versions.yml\nfca_core_version:"
+
+fca/core-tag-to-prod-image:
+  extends: .base-tag-to-prod
+  environment:
+    name: build-fca
+  variables:
+    DOCKER_IMAGE: core-fca-low
+    MSG: "environments/nubo01-fca-prod/group_vars/all/versions.yml\nenvironments/nubo12-fca-prod/group_vars/all/versions.yml\nfca_core_version:"
+  needs:
+    - job: fca/core-build-image

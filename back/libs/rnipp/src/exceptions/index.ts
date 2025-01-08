@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './rnipp-base.exception';
 export * from './rnipp-cititizen-status-format.exception';
 export * from './rnipp-deceased.exception';

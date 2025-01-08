@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet-async';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import { TracksListComponent } from '@fc/tracks';
 
-import { AppConfig } from '../../../config';
 import { IntroductionComponent } from './introduction';
 
 export const TracksPage = React.memo(() => {
@@ -28,7 +27,7 @@ export const TracksPage = React.memo(() => {
         })}
         id="page-container">
         <IntroductionComponent />
-        <TracksListComponent options={AppConfig.Tracks} />
+        <TracksListComponent />
       </div>
     </React.Fragment>
   );

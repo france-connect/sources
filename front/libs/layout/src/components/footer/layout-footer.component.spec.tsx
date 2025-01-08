@@ -13,7 +13,7 @@ jest.mock('./content/layout-footer.content');
 
 describe('LayoutFooterComponent', () => {
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({
       features: { showLicence: expect.any(Boolean) },
       footer: { navigation: expect.any(Array) },
@@ -21,56 +21,56 @@ describe('LayoutFooterComponent', () => {
   });
 
   it('should call ConfigService.get with Layout config name', () => {
-    // when
+    // When
     render(<LayoutFooterComponent />);
 
-    // then
+    // Then
     expect(ConfigService.get).toHaveBeenCalledOnce();
     expect(ConfigService.get).toHaveBeenCalledWith('Layout');
   });
 
   it('should call LayoutFooterBrandComponent', () => {
-    // when
+    // When
     render(<LayoutFooterComponent />);
 
-    // then
+    // Then
     expect(LayoutFooterBrandComponent).toHaveBeenCalledOnce();
   });
 
   it('should call LayoutFooterContentComponent', () => {
-    // when
+    // When
     render(<LayoutFooterComponent />);
 
-    // then
+    // Then
     expect(LayoutFooterContentComponent).toHaveBeenCalledOnce();
   });
 
   it('should call LayoutFooterBottomComponent when features.showLicence is true', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({
       features: { showLicence: true },
       footer: { navigation: undefined },
     });
 
-    // when
+    // When
     const { container } = render(<LayoutFooterComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(LayoutFooterBottomComponent).toHaveBeenCalledOnce();
   });
 
   it('should call LayoutFooterBottomComponent when footer.navigation is defined', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({
       features: { showLicence: false },
       footer: { navigation: expect.any(Array) },
     });
 
-    // when
+    // When
     const { container } = render(<LayoutFooterComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(LayoutFooterBottomComponent).toHaveBeenCalledOnce();
   });

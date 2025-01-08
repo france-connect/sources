@@ -1,5 +1,3 @@
-import { EVENT_MAPPING } from '@fc/tracks-adapter-elasticsearch/constants';
-
 /**
  * add 'AND' logic to params for ES Query
  * @param {Array<Object>} list list of params to format
@@ -30,7 +28,7 @@ type andCriteria = {
     must: unknown[];
   };
 };
-type andNotCriteria = {
+export type andNotCriteria = {
   bool: {
     must: unknown[];
     // es naming convention
@@ -64,12 +62,4 @@ export function formatMultiMatchGroup(
     );
 
   return mandatory ? and(results) : or(results);
-}
-
-export function formatV2Query(event: string): andNotCriteria {
-  const query: andNotCriteria = { bool: { must: [{ term: { event } }] } };
-  if (event === EVENT_MAPPING['checkedToken/verification']) {
-    query.bool.must_not = [{ term: { scope: '' } }];
-  }
-  return query;
 }

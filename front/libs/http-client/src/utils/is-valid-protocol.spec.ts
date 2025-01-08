@@ -2,74 +2,74 @@ import { isValidProtocol } from './is-valid-protocol';
 
 describe('isValidProtocol', () => {
   it('should return true, when starts with http', () => {
-    // when
+    // When
     const result = isValidProtocol('http://any-url-mock.com');
 
-    // then
+    // Then
     expect(result).toBeTrue();
   });
 
   it('should return true, when starts with https', () => {
-    // when
+    // When
     const result = isValidProtocol('https://any-url-mock.com');
 
-    // then
+    // Then
     expect(result).toBeTrue();
   });
 
   it('should return true, when starts with ssh', () => {
-    // when
+    // When
     const result = isValidProtocol('ssh://any-url-mock.com');
 
-    // then
+    // Then
     expect(result).toBeTrue();
   });
 
   it('should return true, when starts with ftp', () => {
-    // when
+    // When
     const result = isValidProtocol('ftp://any-url-mock.com');
 
-    // then
+    // Then
     expect(result).toBeTrue();
   });
 
   it('should return false, when url starts with git://', () => {
-    // when
+    // When
     const result = isValidProtocol('git://any-url-mock.com');
 
-    // then
+    // Then
     expect(result).toBeFalse();
   });
 
   it('should return false, when url starts with file://', () => {
-    // when
+    // When
     const result = isValidProtocol('git://any-url-mock.com');
 
-    // then
+    // Then
     expect(result).toBeFalse();
   });
 
   it('should return false, when url starts with ://', () => {
-    // when
+    // When
     const result = isValidProtocol('://any-url-mock.com');
 
-    // then
+    // Then
     expect(result).toBeFalse();
   });
 
   it('should return false, when url starts with //', () => {
-    // when
+    // When
     const result = isValidProtocol('//any-url-mock.com');
 
-    // then
+    // Then
     expect(result).toBeFalse();
   });
 
   it('should return false, when url is an empty string', () => {
-    // when
+    // When
     const result = isValidProtocol('');
 
-    // then
+    // Then
     expect(result).toBeFalse();
   });
 });

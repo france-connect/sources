@@ -4,10 +4,10 @@ import { IntroductionComponent } from './introduction';
 
 describe('IntroductionComponent', () => {
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(<IntroductionComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 });

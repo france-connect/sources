@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsEmail, IsOptional } from 'class-validator';
 
 import { OidcClientSession } from '@fc/oidc-client';

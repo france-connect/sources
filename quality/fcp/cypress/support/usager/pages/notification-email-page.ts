@@ -13,7 +13,7 @@ export default class UsagerNotificationConnection {
   getLastNotificationMessage(
     userEmail: string,
   ): Cypress.Chainable<Email | undefined> {
-    return cy.maildevGetAllMessages().then((messages) => {
+    return cy.maildevGetAllMessages().then((messages: Email[]) => {
       const updateMessage = messages
         .reverse()
         .find((message) => this.isNotificationMessage(message, userEmail));
@@ -22,7 +22,7 @@ export default class UsagerNotificationConnection {
   }
 
   visitLastNotificationMessage(userEmail: string): void {
-    cy.maildevGetAllMessages().then((messages) => {
+    cy.maildevGetAllMessages().then((messages: Email[]) => {
       const updateMessage = messages
         .reverse()
         .find((message) => this.isNotificationMessage(message, userEmail));

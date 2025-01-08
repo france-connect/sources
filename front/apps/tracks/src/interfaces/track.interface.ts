@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import type { DateTime } from 'luxon';
 
 import type { FSAInterface } from '@fc/common';

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export { OIDC_PROVIDER_REDIS_PREFIX } from './adapters';
 export * from './dto';
 export * from './enums';

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { parseFile, ParserOptionsArgs } from '@fast-csv/parse';
 
 import { Csv } from '../interfaces';

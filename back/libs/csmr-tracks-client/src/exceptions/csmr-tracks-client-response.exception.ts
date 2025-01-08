@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
-
 import { ErrorCode } from '../enums';
 import { CsmrTracksClientBaseException } from './csmr-tracks-client-base.exception';
 

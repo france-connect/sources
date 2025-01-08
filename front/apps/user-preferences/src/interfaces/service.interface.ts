@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export interface ServiceInterface {
   uid: string;
   title: string;

@@ -5,17 +5,12 @@ import { useUserPreferencesApi } from '../hooks';
 import type { UserPreferencesDataInterface } from '../interfaces';
 import { UserPreferencesComponent } from './user-preferences.component';
 
-jest.mock('react-final-form');
 jest.mock('../hooks');
 jest.mock('./services-list.component');
 jest.mock('./user-preferences-form.component');
 
 describe('UserPreferencesComponent', () => {
-  // given
-  const optionsMock = {
-    API_ROUTE_CSRF_TOKEN: 'csrf-token-endpoint',
-    API_ROUTE_USER_PREFERENCES: 'any-endpoint',
-  };
+  // Given
   const commitMock = jest.fn();
   const initialValuesMock = { allowFutureIdp: false, idpList: expect.any(Object) };
   const userPreferencesMock = {
@@ -33,81 +28,81 @@ describe('UserPreferencesComponent', () => {
   };
 
   it('should match the snapshot', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesApi).mockReturnValue(hookResultMock);
 
-    // when
-    const { container } = render(<UserPreferencesComponent options={optionsMock} />);
+    // When
+    const { container } = render(<UserPreferencesComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot if showServicesList is false because userpreferences is null', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesApi).mockReturnValue({
       ...hookResultMock,
       userPreferences: null as unknown as UserPreferencesDataInterface,
     });
 
-    // when
-    render(<UserPreferencesComponent options={optionsMock} />);
+    // When
+    render(<UserPreferencesComponent />);
 
-    // then
+    // Then
     expect(Form).toHaveBeenCalledTimes(0);
   });
 
   it('should match the snapshot if showServicesList is false because userpreferences is empty', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesApi).mockReturnValue({
       ...hookResultMock,
       userPreferences: {} as unknown as UserPreferencesDataInterface,
     });
 
-    // when
-    render(<UserPreferencesComponent options={optionsMock} />);
+    // When
+    render(<UserPreferencesComponent />);
 
-    // then
+    // Then
     expect(Form).toHaveBeenCalledTimes(0);
   });
 
   it('should match the snapshot if showServicesList is false because idpList is missing', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesApi).mockReturnValue({
       ...hookResultMock,
       userPreferences: { allowFutureIdp: false, idpList: undefined },
     });
 
-    // when
-    render(<UserPreferencesComponent options={optionsMock} />);
+    // When
+    render(<UserPreferencesComponent />);
 
-    // then
+    // Then
     expect(Form).toHaveBeenCalledTimes(0);
   });
 
   it('should match the snapshot if showServicesList is false because idpList length is null', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesApi).mockReturnValue({
       ...hookResultMock,
       userPreferences: { ...userPreferencesMock, idpList: [] },
     });
 
-    // when
-    render(<UserPreferencesComponent options={optionsMock} />);
+    // When
+    render(<UserPreferencesComponent />);
 
-    // then
+    // Then
     expect(Form).toHaveBeenCalledTimes(0);
   });
 
   it('should have called useUserPreferencesApi', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesApi).mockReturnValue(hookResultMock);
 
-    // when
-    render(<UserPreferencesComponent options={optionsMock} />);
+    // When
+    render(<UserPreferencesComponent />);
 
-    // then
+    // Then
     expect(useUserPreferencesApi).toHaveBeenCalledOnce();
-    expect(useUserPreferencesApi).toHaveBeenCalledWith(optionsMock);
+    expect(useUserPreferencesApi).toHaveBeenCalledWith();
   });
 });

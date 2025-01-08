@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 /**
  * Centralize error codes for this module.
  *

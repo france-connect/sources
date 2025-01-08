@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
-
 import { ErrorCode } from '../enums';
 import { ChecktokenBaseException } from './checktoken-base.exception';
 

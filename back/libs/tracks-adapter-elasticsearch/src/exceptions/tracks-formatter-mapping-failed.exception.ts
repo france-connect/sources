@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { TracksAdapterElasticsearchErrorCode } from '../enums';
 import { TracksAdapterElasticsearchBaseException } from './tracks-adapter-elasticsearch-base.exception';
 

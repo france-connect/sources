@@ -1,0 +1,33 @@
+entity: PartnersServiceProviderInstance
+items:
+  # instance with 3 versions
+  sp1-i1-sandbox:
+    id: '997abfe2-a19a-49c9-a2c2-138798dde859'
+    name: 'Instance de test dev 1'
+    createdAt: '2022-02-22'
+    updatedAt: '2022-05-02'
+    environment: 'SANDBOX'
+
+  # instance with 1 version
+  sp2-i1-sandbox:
+    id: 'efa51522-26e9-4d03-8958-816ff59a74bd'
+    name: 'Instance de test dev 2'
+    createdAt: '2022-02-22T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+    environment: 'SANDBOX'
+
+  # instance for bdd_default
+  sp3-i1-sandbox:
+    id: 'acfacfcf-291b-43bd-abe7-fb234b3d879e'
+    name: 'Instance test modification'
+    createdAt: '2022-02-22T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+    environment: 'SANDBOX'
+
+  # instance for bdd_one_instance
+  sp4-i1-sandbox:
+    id: '50b70101-0e1f-419a-9365-81754c2de689'
+    name: 'Mon unique instance'
+    createdAt: '2022-02-22T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+    environment: 'SANDBOX'

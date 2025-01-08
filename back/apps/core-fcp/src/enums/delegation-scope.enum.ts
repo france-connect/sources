@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export enum DelegationScope {
   PAPIER_CITOYENNETE_ELECTION = 'Papier-Citoyenneté-Elections',
   FAMILLE_SCOLARITE = 'Famille-Scolarité',

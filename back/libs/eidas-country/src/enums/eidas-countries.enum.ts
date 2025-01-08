@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 /**
  * @see https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 for countries correspondence
  */

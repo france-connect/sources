@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declaration only
 export interface PostalCodesDbCurrentInterface {
   '#Code_commune_INSEE': string;
   // CSV format

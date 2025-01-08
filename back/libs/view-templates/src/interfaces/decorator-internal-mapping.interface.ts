@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { Instantiable } from '@fc/common';
 
 export interface InternalMappingInterface {

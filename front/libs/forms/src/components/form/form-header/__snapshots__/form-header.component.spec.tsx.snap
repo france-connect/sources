@@ -1,0 +1,36 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormHeaderComponent should match the snapshot when description and title are both defined 1`] = `
+<div>
+  <h1
+    class="fc-text-align--left-md-center fr-text--title-blue-france"
+  >
+    any-title-mock
+  </h1>
+  <p
+    class="fc-text-align--left-md-center fr-text--lg"
+  >
+    any-description-mock
+  </p>
+</div>
+`;
+
+exports[`FormHeaderComponent should match the snapshot when description is defined 1`] = `
+<div>
+  <p
+    class="fc-text-align--left-md-center fr-text--lg"
+  >
+    any-description-mock
+  </p>
+</div>
+`;
+
+exports[`FormHeaderComponent should match the snapshot when title is defined 1`] = `
+<div>
+  <h1
+    class="fc-text-align--left-md-center fr-text--title-blue-france"
+  >
+    any-title-mock
+  </h1>
+</div>
+`;

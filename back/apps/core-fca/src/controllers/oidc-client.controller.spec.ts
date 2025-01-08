@@ -145,7 +145,7 @@ describe('OidcClient Controller', () => {
   const trackingServiceMock: TrackingService = {
     track: jest.fn(),
     TrackedEventsMap: {
-      FC_FQDN_MISSMATCH: Symbol('FC_FQDN_MISSMATCH'),
+      FC_FQDN_MISMATCH: Symbol('FC_FQDN_MISMATCH'),
       IDP_CALLEDBACK: {},
     },
   } as unknown as TrackingService;
@@ -559,7 +559,8 @@ describe('OidcClient Controller', () => {
     };
     const redirectMock = `/api/v2/interaction/${interactionIdMock}/verify`;
 
-    let validateIdentityMock;
+    let transformIdentityMock;
+
     beforeEach(() => {
       res = {
         redirect: jest.fn(),
@@ -574,11 +575,17 @@ describe('OidcClient Controller', () => {
         identityMock,
       );
 
-      validateIdentityMock = jest.spyOn<OidcClientController, any>(
+      transformIdentityMock = jest.spyOn<OidcClientController, any>(
         controller,
-        'validateIdentity',
+        'transformIdentity',
       );
-      validateIdentityMock.mockResolvedValueOnce();
+      transformIdentityMock.mockResolvedValueOnce({
+        given_name: 'given_name',
+        sub: '1',
+        email: 'complete@identity.fr',
+        usual_name: 'usual_name',
+        uid: 'uid',
+      });
 
       oidcClientServiceMock.utils.checkIdpBlacklisted.mockResolvedValueOnce(
         false,
@@ -628,7 +635,7 @@ describe('OidcClient Controller', () => {
     it('should failed to get identity if validation failed', async () => {
       // arrange
       const errorMock = new Error('Unknown Error');
-      validateIdentityMock.mockReset().mockRejectedValueOnce(errorMock);
+      transformIdentityMock.mockReset().mockRejectedValueOnce(errorMock);
 
       // When
       await expect(
@@ -636,8 +643,8 @@ describe('OidcClient Controller', () => {
       ).rejects.toThrow(errorMock);
 
       // Then
-      expect(validateIdentityMock).toHaveBeenCalledTimes(1);
-      expect(validateIdentityMock).toHaveBeenCalledWith(
+      expect(transformIdentityMock).toHaveBeenCalledTimes(1);
+      expect(transformIdentityMock).toHaveBeenCalledWith(
         idpIdMock,
         identityMock,
       );
@@ -650,7 +657,7 @@ describe('OidcClient Controller', () => {
       // Then
       expect(trackingServiceMock.track).toHaveBeenCalledTimes(4);
       expect(trackingServiceMock.track).toHaveBeenCalledWith(
-        trackingServiceMock.TrackedEventsMap.FC_FQDN_MISSMATCH,
+        trackingServiceMock.TrackedEventsMap.FC_FQDN_MISMATCH,
         { req },
       );
     });
@@ -707,22 +714,25 @@ describe('OidcClient Controller', () => {
     });
   });
 
-  describe('validateIdentity()', () => {
+  describe('transformIdentity()', () => {
     beforeEach(() => {
       jest.spyOn(FcCommon, 'validateDto');
     });
 
     it('should validate a correct identity', async () => {
       // When
-      const res = await controller['validateIdentity'](idpIdMock, identityMock);
+      const res = await controller['transformIdentity'](
+        idpIdMock,
+        identityMock,
+      );
 
       // Then
-      expect(res).toBe(true);
+      expect(res).toBe(identityMock);
     });
 
     it('should validate the OidcIdentityDto with correct params', async () => {
       // When
-      await controller['validateIdentity'](idpIdMock, identityMock);
+      await controller['transformIdentity'](idpIdMock, identityMock);
 
       // Then
       expect(FcCommon.validateDto).toHaveBeenCalledTimes(1);
@@ -745,7 +755,7 @@ describe('OidcClient Controller', () => {
 
       await expect(
         // When
-        controller['validateIdentity'](idpIdMock, incorrectIdentityMock),
+        controller['transformIdentity'](idpIdMock, incorrectIdentityMock),
         // Then
       ).rejects.toThrow(CoreFcaInvalidIdentityException);
     });
@@ -763,18 +773,67 @@ describe('OidcClient Controller', () => {
       expect(errors[0].constraints.isEmail).toContain(`email must be an email`);
     });
 
-    it('should success when phone_number contains list of phones number', async () => {
-      const phoneNumberIdentity = {
-        phone_number: '0634283766,0471432775',
+    it('should delete phone_number claim if the phone_number is invalid', async () => {
+      // Given
+      const invalidIdentity = {
+        ...identityMock,
+        phone_number: 'invalid_phone',
       };
-      const oidcIdentityDto = plainToInstance(
-        OidcIdentityDto,
-        phoneNumberIdentity,
+
+      // When
+      const res = await controller['transformIdentity'](
+        idpIdMock,
+        invalidIdentity,
       );
-      const errors = await validate(oidcIdentityDto, {
-        skipMissingProperties: true,
-      });
-      expect(errors.length).toBe(0);
+
+      // Then
+      expect(res).not.toHaveProperty('phone_number');
+    });
+
+    it('should return a transformed identity if only phone_number is invalid', async () => {
+      // Given
+      const invalidIdentity = {
+        ...identityMock,
+        phone_number: 'invalid_phone',
+      };
+
+      // When
+      const res = await controller['transformIdentity'](
+        idpIdMock,
+        invalidIdentity,
+      );
+
+      // Then
+      expect(res).toEqual({ ...identityMock, phone_number: undefined });
+    });
+
+    it('should throw an exception for any property other than phone_number being invalid', async () => {
+      // Given
+      const invalidIdentity = {
+        ...identityMock,
+        email: 'invalid-email', // Invalid field
+      };
+
+      // When/Then
+      await expect(
+        controller['transformIdentity'](idpIdMock, invalidIdentity),
+      ).rejects.toThrow(CoreFcaInvalidIdentityException);
+    });
+
+    it('should return the original identity if it passes validation', async () => {
+      // Given
+      const validIdentity = {
+        ...identityMock,
+      };
+
+      // When
+      const res = await controller['transformIdentity'](
+        idpIdMock,
+        validIdentity,
+      );
+
+      // Then
+      expect(res).toEqual(validIdentity);
     });
 
     it('should success when organizational_unit contains points and others specifics characters', async () => {
@@ -815,7 +874,7 @@ describe('OidcClient Controller', () => {
       };
 
       // When
-      const res = await controller['validateIdentity'](
+      const res = await controller['transformIdentity'](
         idpIdMock,
         identityMockWithCustomProperties,
       );
@@ -832,7 +891,7 @@ describe('OidcClient Controller', () => {
         },
         { excludeExtraneousValues: true },
       );
-      expect(res).toBe(true);
+      expect(res).toBe(identityMockWithCustomProperties);
     });
   });
 });

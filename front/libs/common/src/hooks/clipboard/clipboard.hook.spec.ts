@@ -5,7 +5,7 @@ import { useCopyToClipboard } from 'usehooks-ts';
 import { useClipboard } from './clipboard.hook';
 
 describe('useClipboard', () => {
-  // given
+  // Given
   const clipboardValueMock = 'clipboard-value-mock';
   const clipboardEventMock = {
     clipboardData: {
@@ -15,53 +15,53 @@ describe('useClipboard', () => {
   } as unknown as ClipboardEvent<Element>;
 
   it('should call useCopyToClipboard hook', () => {
-    // when
+    // When
     renderHook(() => useClipboard(true));
 
-    // then
+    // Then
     expect(useCopyToClipboard).toHaveBeenCalled();
   });
 
   it('should call copy when onCopy is called', () => {
-    // given
+    // Given
     const copyMock = jest.fn();
     jest.mocked(useCopyToClipboard).mockReturnValue([null, copyMock]);
 
-    // when
+    // When
     renderHook(() => {
       const { onCopy } = useClipboard(true);
       onCopy(clipboardValueMock);
     });
 
-    // then
+    // Then
     expect(copyMock).toHaveBeenCalledWith(clipboardValueMock);
   });
 
   it('should return true when user is not allowed to paste', () => {
-    // given
+    // Given
     let result = null;
 
-    // when
+    // When
     renderHook(() => {
       const { onPaste } = useClipboard(false);
       result = onPaste(clipboardEventMock);
     });
 
-    // then
+    // Then
     expect(result).toBeTrue();
   });
 
   it('should call clipboardData.getData from useCopyToClipboard hook when calling onPaste', () => {
-    // given
+    // Given
     let result = null;
 
-    // when
+    // When
     renderHook(() => {
       const { onPaste } = useClipboard(true);
       result = onPaste(clipboardEventMock);
     });
 
-    // then
+    // Then
     expect(clipboardEventMock.preventDefault).toHaveBeenCalled();
     expect(clipboardEventMock.clipboardData.getData).toHaveBeenCalledWith('text');
     expect(result).toBeFalse();

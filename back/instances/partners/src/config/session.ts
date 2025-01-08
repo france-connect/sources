@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { ConfigParser } from '@fc/config';
 import { OidcClientRoutes } from '@fc/oidc-client';
 import { PartnersSession } from '@fc/partners';
@@ -38,6 +35,11 @@ export default {
     // Business
     PartnersBackRoutes.USER_INFO,
     PartnersBackRoutes.INDEX,
+
+    PartnersBackRoutes.SP_INSTANCES,
+    PartnersBackRoutes.SP_INSTANCE,
+
+    PartnersBackRoutes.SP_VERSION_FORM_METADATA,
 
     // Disconnection flow
     PartnersBackRoutes.LOGOUT,

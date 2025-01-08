@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 

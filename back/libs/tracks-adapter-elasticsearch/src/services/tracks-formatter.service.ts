@@ -5,13 +5,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CoreInstance } from '../enums';
 import { TracksFormatterUnknownInstanceException } from '../exceptions';
 import {
-  BaseTracksOutputInterface,
   ElasticTracksType,
   TracksFormatterAbstract,
+  TracksFormatterOutputAbstract,
 } from '../interfaces';
 
 @Injectable()
-export class TracksFormatterService<TOutput extends BaseTracksOutputInterface> {
+export class TracksFormatterService<
+  TOutput extends TracksFormatterOutputAbstract,
+> {
   constructor(
     @Inject('TracksFcpHighFormatter')
     private readonly formatterFcpHigh: TracksFormatterAbstract<TOutput>,

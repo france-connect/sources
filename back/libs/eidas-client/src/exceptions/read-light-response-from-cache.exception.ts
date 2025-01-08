@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { HttpStatus } from '@nestjs/common';
 
 import { ErrorCode } from '../enum';

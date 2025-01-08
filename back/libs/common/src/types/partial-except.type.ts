@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 /**
  * This type can be used if you want only some properties of an object like to be required.
  */

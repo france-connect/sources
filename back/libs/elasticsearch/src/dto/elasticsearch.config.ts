@@ -1,9 +1,8 @@
-/* istanbul ignore file */
 import { IsArray, IsString, IsUrl } from 'class-validator';
 
 export class ElasticsearchConfig {
   @IsString()
-  readonly tracksIndex: string;
+  readonly index: string;
 
   @IsArray()
   @IsUrl(

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 export enum KekAlg {
   HS256 = 'HS256',
   RS256 = 'RS256',

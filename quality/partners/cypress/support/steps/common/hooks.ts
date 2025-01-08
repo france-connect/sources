@@ -23,6 +23,7 @@ Before(function () {
   const pathArray = [platform, testEnv];
   setFixtureContext('environment.json', pathArray, 'env');
   setFixtureContext('users.json', pathArray, 'users');
+  setFixtureContext('instances.json', pathArray, 'instances');
 
   cy.get<UserData[]>('@users').then((users) => {
     this.user = getDefaultUser(users);

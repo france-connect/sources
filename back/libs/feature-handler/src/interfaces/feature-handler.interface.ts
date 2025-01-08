@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
-
 /**
  * The class that implements FeatureHandler
  * must contains a 'handle' function

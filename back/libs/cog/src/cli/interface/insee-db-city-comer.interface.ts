@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declaration only
 export interface InseeDbCityComerInterface {
   COM_COMER: string;
   TNCC: string;

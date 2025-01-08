@@ -1,0 +1,28 @@
+entity: PartnersServiceProvider
+items:
+  # sp with 2 instances
+  sp1-sandbox:
+    id: 'd7d36b81-0b68-4c26-a399-854848164f29'
+    name: 'Service Provider 1'
+    platform: '@france-connect-low'
+    organisation: '@orga-1'
+    createdAt: '2022-02-22T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+
+  # sp with 1 instance
+  sp2-sandbox:
+    id: '25c4e41c-a97d-4bc9-8e05-e353c91eaef5'
+    name: 'Service Provider 2'
+    platform: '@france-connect-low'
+    organisation: '@orga-1'
+    createdAt: '2022-02-22T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+
+  # sp with 0 instance
+  sp3-sandbox:
+    id: 'b66afba8-58b2-4465-a868-6a187ea67f5a'
+    name: 'Service Provider 1'
+    platform: '@france-connect-high'
+    organisation: '@orga-2'
+    createdAt: '2022-02-22T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'

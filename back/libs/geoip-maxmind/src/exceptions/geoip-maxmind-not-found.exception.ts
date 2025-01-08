@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { ErrorCode } from '../enums';
 import { GeoipMaxmindBaseException } from './geoip-maxmind-base.exception';
 

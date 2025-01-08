@@ -20,7 +20,7 @@ export class AuthorizeParamsDto {
 
   @IsString({ each: true })
   @IsArray()
-  @Split(/[ ]+/)
+  @Split(/[ ]+/, { maxLength: 64 })
   readonly acr_values: string;
 
   @IsOptional()
@@ -51,7 +51,7 @@ export class AuthorizeParamsDto {
   readonly scope: string;
 
   @IsString({ each: true })
-  @Split(/[ ]+/)
+  @Split(/[ ]+/, { maxLength: 64 })
   /**
    * @TODO #199 Retourner chez le FS en cas d'erreur
    * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/199

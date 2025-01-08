@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BadgesGroupComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-badge-group"
+  />
+</div>
+`;

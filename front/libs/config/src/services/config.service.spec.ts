@@ -11,18 +11,18 @@ describe('ConfigService', () => {
       });
 
       it('should setup appConfig', () => {
-        // when
+        // When
         ConfigService.initialize({ key: 'current config' });
 
-        // then
+        // Then
         expect(ConfigService.get('key')).toBe('current config');
       });
 
       it('should not override appConfig', () => {
-        // when
+        // When
         ConfigService.initialize({ key: 'will not override current config' });
 
-        // then
+        // Then
         expect(ConfigService.get('key')).toBe('current config');
       });
     });
@@ -35,7 +35,7 @@ describe('ConfigService', () => {
       });
 
       it('should throw, if appConfig is not yet initialized', () => {
-        // then
+        // Then
         expect(() => {
           ConfigService.get('any.string');
         }).toThrow(NotYetInitialized);
@@ -50,21 +50,21 @@ describe('ConfigService', () => {
       });
 
       it('should throw, if name is not a config part', () => {
-        // then
+        // Then
         expect(() => {
           ConfigService.get('any.string');
         }).toThrow(UnknownConfigurationNameError);
       });
 
       it('should throw, if name is an empty string', () => {
-        // then
+        // Then
         expect(() => {
           ConfigService.get('');
         }).toThrow(UnknownConfigurationNameError);
       });
 
       it('should throw, if name is an empty whitespaced string', () => {
-        // then
+        // Then
         expect(() => {
           ConfigService.get('    ');
         }).toThrow(UnknownConfigurationNameError);
@@ -79,50 +79,50 @@ describe('ConfigService', () => {
       });
 
       it('should not throw, if config part is defined', () => {
-        // given
+        // Given
         ConfigService.initialize({ foo: null });
 
-        // then
+        // Then
         expect(() => {
           ConfigService.get('foo');
         }).not.toThrow();
       });
 
       it('should not throw, if config part is null', () => {
-        // given
+        // Given
         ConfigService.initialize({ foo: null });
 
-        // then
+        // Then
         expect(() => {
           ConfigService.get('foo');
         }).not.toThrow();
       });
 
       it('should not throw, if config part is false', () => {
-        // given
+        // Given
         ConfigService.initialize({ foo: false });
 
-        // then
+        // Then
         expect(() => {
           ConfigService.get('foo');
         }).not.toThrow();
       });
 
       it('should not throw, if config part is an empty string', () => {
-        // given
+        // Given
         ConfigService.initialize({ foo: '' });
 
-        // then
+        // Then
         expect(() => {
           ConfigService.get('foo');
         }).not.toThrow();
       });
 
       it('should not throw, if config part is undefined', () => {
-        // given
+        // Given
         ConfigService.initialize({ foo: undefined });
 
-        // then
+        // Then
         expect(() => {
           ConfigService.get('foo');
         }).not.toThrow();
@@ -137,48 +137,48 @@ describe('ConfigService', () => {
       });
 
       it('should return an empty string', () => {
-        // given
+        // Given
         ConfigService.initialize({ foo: '' });
 
-        // when
+        // When
         const result = ConfigService.get('foo');
 
-        // then
+        // Then
         expect(result).toBe('');
       });
 
       it('should return false', () => {
-        // given
+        // Given
         ConfigService.initialize({ foo: false });
 
-        // when
+        // When
         const result = ConfigService.get('foo');
 
-        // then
+        // Then
         expect(result).toBeFalse();
       });
 
       it('should return the value', () => {
-        // given
+        // Given
         const symbol = Symbol('any symbol');
         ConfigService.initialize({ foo: symbol });
 
-        // when
+        // When
         const result = ConfigService.get('foo');
 
-        // then
+        // Then
         expect(result).toStrictEqual(symbol);
       });
 
       it('should return a value, if path is a sibling string', () => {
-        // given
+        // Given
         const symbol = Symbol('any symbol');
         ConfigService.initialize({ foo: { bar: { thevalue: symbol } } });
 
-        // when
+        // When
         const result = ConfigService.get('foo.bar.thevalue');
 
-        // then
+        // Then
         expect(result).toStrictEqual(symbol);
       });
     });

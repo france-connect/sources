@@ -897,7 +897,7 @@ module.exports = {
       1,
       {
         custom: 'enforce',
-        exceptions: ['input'],
+        exceptions: ['input', 'textarea'],
         explicitSpread: 'ignore',
         html: 'enforce',
       },

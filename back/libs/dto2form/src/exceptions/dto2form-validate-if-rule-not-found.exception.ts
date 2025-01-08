@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
-
 import { ErrorCode } from '../enums';
 import { Dto2FormBaseException } from './dto2form-base.exception';
 

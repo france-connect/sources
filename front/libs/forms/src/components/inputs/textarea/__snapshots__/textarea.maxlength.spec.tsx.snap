@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextAreaMaxlengthComponent should match the snapshot, when limit is close to be reached 1`] = `
+<div>
+  <p
+    aria-live="polite"
+    class="fr-text--xs fr-mb-0 fr-mt-1w"
+  >
+    <span
+      class="textareaCloseTolimit"
+    >
+      9
+    </span>
+    Form.textarea.maxlength
+  </p>
+</div>
+`;
+
+exports[`TextAreaMaxlengthComponent should match the snapshot, when limit is reached 1`] = `
+<div>
+  <p
+    aria-live="polite"
+    class="fr-text--xs fr-mb-0 fr-mt-1w"
+  >
+    <span
+      class="textareaOfflimit"
+    >
+      11
+    </span>
+    Form.textarea.maxlength
+  </p>
+</div>
+`;
+
+exports[`TextAreaMaxlengthComponent should match the snapshot, when under limit 1`] = `
+<div>
+  <p
+    aria-live="polite"
+    class="fr-text--xs fr-mb-0 fr-mt-1w"
+  >
+    <span
+      class=""
+    >
+      1
+    </span>
+    Form.textarea.maxlength
+  </p>
+</div>
+`;

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { Transform } from 'class-transformer';
 import {
   ArrayMinSize,

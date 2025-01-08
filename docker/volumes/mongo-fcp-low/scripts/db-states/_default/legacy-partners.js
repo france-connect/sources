@@ -70,5 +70,9 @@ const partners = {
 /* ------------------------------------------------------------------------------- */
 Object.values(partners).forEach((partner) => {
   print(`${partner.email} > Initializing partner: ${partner.email}`);
-  db.partner.update({ email: partner.email }, partner, { upsert: true });
+  db.partner.updateOne(
+    { email: partner.email },
+    { $set: partner },
+    { upsert: true },
+  );
 });

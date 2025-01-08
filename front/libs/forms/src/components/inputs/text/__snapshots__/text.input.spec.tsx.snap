@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextInput should match snapshot 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
+    <div
+      data-mockid="LabelElement"
+    />
+    <input
+      aria-describedby="any name mock-messages"
+      class="any inputClassname mock"
+      data-testid="form-input-text-any name mock--testid"
+      disabled=""
+      id="form-input-text-any name mock"
+      name="any name mock"
+      type="text"
+      value="any input value mock"
+    />
+    <div
+      data-mockid="MessageElement"
+    />
+  </div>
+</div>
+`;

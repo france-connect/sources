@@ -6,7 +6,6 @@ import type {
   RichClaimInterface,
   TrackInterface,
   TrackListType,
-  TracksConfig,
 } from '../interfaces';
 
 export function createUniqueGroupKeyFromTrackDate(track: EnhancedTrackInterface): number {
@@ -22,7 +21,7 @@ export function createUniqueGroupKeyFromTrackDate(track: EnhancedTrackInterface)
 }
 
 export const groupTracksByMonth =
-  (options: TracksConfig) =>
+  (format: string) =>
   (acc: TrackListType[], track: EnhancedTrackInterface, index: number): TrackListType[] => {
     const isFirstTrack = index === 0;
     const previousGroup = isFirstTrack ? [] : acc[acc.length - 1];
@@ -38,10 +37,7 @@ export const groupTracksByMonth =
 
     nextTrackList[1].label = !shouldCreateNewTrackList
       ? nextTrackList[1].label
-      : track.datetime
-          .setZone('Europe/Paris')
-          .setLocale('fr-FR')
-          .toFormat(options.LUXON_FORMAT_MONTH_YEAR);
+      : track.datetime.setZone('Europe/Paris').setLocale('fr-FR').toFormat(format);
 
     nextTrackList[1].tracks = !shouldCreateNewTrackList
       ? [...(previousGroup && previousGroup[1].tracks), track]

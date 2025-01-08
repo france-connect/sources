@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import type { MouseEventHandler } from 'react';
 
 import type { UserInfosInterface } from '@fc/account';

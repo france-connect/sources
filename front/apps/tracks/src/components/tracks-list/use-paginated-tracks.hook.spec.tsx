@@ -1,76 +1,97 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import axios from 'axios';
+import type { AxiosResponse } from 'axios';
 import type { Location } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-import type { TracksConfig } from '../../interfaces';
+import { ConfigService } from '@fc/config';
+import { get } from '@fc/http-client';
+
 import { DEFAULT_OFFSET, DEFAULT_SIZE, usePaginatedTracks } from './use-paginated-tracks.hook';
 
 describe('usePaginatedTracks', () => {
-  // given
-  const options = { API_ROUTE_TRACKS: 'tracks-route' } as TracksConfig;
+  // Given
+  jest.mocked(ConfigService.get).mockReturnValue({
+    endpoints: { tracks: 'any-tracks-route-mock' },
+  });
+
   const tracksMock = ['tracks1', 'tracks2'];
-  const getTracksResponse = { data: tracksMock };
+
+  beforeEach(() => {
+    // Given
+    const response = { data: tracksMock } as unknown as AxiosResponse;
+    jest.mocked(get).mockResolvedValue(response);
+  });
+
+  it('should call ConfigService with Tracks config name as argument', async () => {
+    // When
+    renderHook(() => usePaginatedTracks());
+
+    // Then
+    await waitFor(() => {
+      expect(ConfigService.get).toHaveBeenCalledOnce();
+      expect(ConfigService.get).toHaveBeenCalledWith('Tracks');
+    });
+  });
 
   it('should return tracks with default params at first render', async () => {
-    // given
-    jest.mocked(axios.get).mockResolvedValue(getTracksResponse);
+    // When
+    const { result } = renderHook(() => usePaginatedTracks());
 
-    // when
-    const { result } = renderHook(() => usePaginatedTracks(options));
-
-    // then
+    // Then
     await waitFor(() => {
       expect(result.current).toStrictEqual({
         submitErrors: undefined,
         tracks: tracksMock,
       });
-      expect(axios.get).toHaveBeenCalledOnce();
-      expect(axios.get).toHaveBeenCalledWith(
-        `${options.API_ROUTE_TRACKS}?offset=${DEFAULT_OFFSET}&size=${DEFAULT_SIZE}`,
+      expect(get).toHaveBeenCalledOnce();
+      expect(get).toHaveBeenCalledWith(
+        `any-tracks-route-mock?offset=${DEFAULT_OFFSET}&size=${DEFAULT_SIZE}`,
       );
     });
   });
 
   describe('should get tracks depends on query params', () => {
     it('should call axios.get with formatted endpoint based on query params', async () => {
-      // given
-      const axiosGetMock = jest.mocked(axios.get).mockResolvedValue(getTracksResponse);
-
-      // when
-      renderHook(() => usePaginatedTracks(options));
+      // When
+      renderHook(() => usePaginatedTracks());
       act(() => {
         jest.mocked(useLocation).mockReturnValueOnce({
           search: '?size=2&offset=30',
         } as Location);
       });
 
-      // then
+      // Then
       await waitFor(() => {
-        expect(axios.get).toHaveBeenCalledTimes(2);
-        expect(axiosGetMock.mock.calls).toEqual([
-          [`${options.API_ROUTE_TRACKS}?offset=${DEFAULT_OFFSET}&size=${DEFAULT_SIZE}`],
-          [`${options.API_ROUTE_TRACKS}?offset=30&size=2`],
-        ]);
+        expect(get).toHaveBeenCalledTimes(2);
+        expect(get).toHaveBeenNthCalledWith(
+          1,
+          `any-tracks-route-mock?offset=${DEFAULT_OFFSET}&size=${DEFAULT_SIZE}`,
+        );
+        expect(get).toHaveBeenNthCalledWith(2, `any-tracks-route-mock?offset=30&size=2`);
       });
     });
 
-    it('should resolve axios.get and return tracks', async () => {
-      // given
+    it('should resolve get and return tracks', async () => {
+      // Given
       const mockTracksNextPageMock = ['foo', 'bar'];
-      const mockTracksNextPageResponseMock = { data: mockTracksNextPageMock };
+
+      const response = { data: tracksMock } as unknown as AxiosResponse;
+      const mockTracksNextPageResponseMock = {
+        data: mockTracksNextPageMock,
+      } as unknown as AxiosResponse;
+
       jest
-        .mocked(axios.get)
-        .mockResolvedValueOnce(getTracksResponse)
+        .mocked(get)
+        .mockResolvedValueOnce(response)
         .mockResolvedValueOnce(mockTracksNextPageResponseMock);
       jest.mocked(useLocation).mockReturnValueOnce({
         search: '?size=2&offset=30',
       } as Location);
 
-      // when
-      const { result } = renderHook(() => usePaginatedTracks(options));
+      // When
+      const { result } = renderHook(() => usePaginatedTracks());
 
-      // then
+      // Then
       await waitFor(() => {
         expect(result.current).toStrictEqual({
           submitErrors: undefined,
@@ -79,15 +100,15 @@ describe('usePaginatedTracks', () => {
       });
     });
 
-    it('should reject axios.get and console.error', async () => {
-      // given
+    it('should reject get and console.error', async () => {
+      // Given
       const errorMock = new Error('error');
-      jest.mocked(axios.get).mockRejectedValueOnce(errorMock);
+      jest.mocked(get).mockRejectedValueOnce(errorMock);
 
-      // when
-      const { result } = renderHook(() => usePaginatedTracks(options));
+      // When
+      const { result } = renderHook(() => usePaginatedTracks());
 
-      // then
+      // Then
       await waitFor(() => {
         expect(result.current).toStrictEqual({
           submitErrors: errorMock,

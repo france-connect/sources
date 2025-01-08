@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { I18nTranslationsMapType } from '@fc/i18n';
 import { enGB as enGBClaims } from '@fc/scopes';
 

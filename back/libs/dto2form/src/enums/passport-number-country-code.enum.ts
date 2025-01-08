@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export enum PassportNumberCountryCode {
   AM = 'AM',
   AR = 'AR',

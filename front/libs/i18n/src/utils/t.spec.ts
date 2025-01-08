@@ -13,9 +13,6 @@ describe('t shorthand', () => {
   };
 
   beforeEach(() => {
-    jest.resetAllMocks();
-    jest.restoreAllMocks();
-
     jest.mocked(I18nService.instance).mockReturnValue(mockedService as unknown as I18nService);
     mockedService.translate.mockReturnValue(translateMockReturnValue);
   });

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { Type } from 'class-transformer';
 import {
   IsArray,
@@ -118,6 +115,11 @@ export class OidcSession {
   @IsString()
   @IsJWT()
   readonly idpIdToken?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  idpRefreshToken?: string;
 
   @IsOptional()
   @IsArray()

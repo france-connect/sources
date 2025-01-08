@@ -7,7 +7,7 @@ jest.mock('../styles-context');
 
 describe('useStylesVariables', () => {
   beforeEach(() => {
-    // given
+    // Given
     const cssVariablesMock = new CSSStyleDeclaration();
     cssVariablesMock.setProperty('--any-css-variable-1', 'any-css-value-1');
     cssVariablesMock.setProperty('--any-css-variable-2', 'any-css-value-2');
@@ -15,68 +15,68 @@ describe('useStylesVariables', () => {
   });
 
   it('should retrieve any value from a CSSStyleDeclaration', () => {
-    // when
+    // When
     const { result } = renderHook(() => useStylesVariables('any-css-variable-1'));
 
-    // then
+    // Then
     expect(result.current).toEqual(['any-css-value-1']);
   });
 
   it('should return an array if value is a string', () => {
-    // when
+    // When
     const { result } = renderHook(() => useStylesVariables('any-css-variable-1'));
 
-    // then
+    // Then
     expect(result.current).toEqual(expect.any(Array));
     expect(result.current).toHaveLength(1);
   });
 
   it('should return an array if value is an array', () => {
-    // when
+    // When
     const { result } = renderHook(() =>
       useStylesVariables(['any-css-variable-1', 'any-css-variable-2']),
     );
 
-    // then
+    // Then
     expect(result.current).toEqual(expect.any(Array));
     expect(result.current).toHaveLength(2);
   });
 
   it('should return defined value, param is not double-dash prefixed', () => {
-    // when
+    // When
     const { result } = renderHook(() => useStylesVariables('any-css-variable-1'));
 
-    // then
+    // Then
     expect(result.current).toEqual(['any-css-value-1']);
   });
 
   it('should return defined value, param is double-dash prefixed', () => {
-    // when
+    // When
     const { result } = renderHook(() => useStylesVariables(['--any-css-variable-1']));
 
-    // then
+    // Then
     expect(result.current).toEqual(['any-css-value-1']);
   });
 
   it('should transform the values with a single value/transformer', () => {
-    // given
+    // Given
     const transformer = (value: string) => `transformed-${value}`;
 
-    // when
+    // When
     const { result } = renderHook(() =>
       useStylesVariables(['--any-css-variable-1', '--any-css-variable-2'], transformer),
     );
 
-    // then
+    // Then
     expect(result.current).toEqual(['transformed-any-css-value-1', 'transformed-any-css-value-2']);
   });
 
   it('should transform the values with multiple values/transformers', () => {
-    // given
+    // Given
     const transformer1 = (value: string) => `transformed-1-${value}`;
     const transformer2 = (value: string) => `transformed-2-${value}`;
 
-    // when
+    // When
     const { result } = renderHook(() =>
       useStylesVariables(
         ['any-css-variable-1', 'any-css-variable-2'],
@@ -84,7 +84,7 @@ describe('useStylesVariables', () => {
       ),
     );
 
-    // then
+    // Then
     expect(result.current).toEqual([
       'transformed-1-any-css-value-1',
       'transformed-2-any-css-value-2',
@@ -92,12 +92,12 @@ describe('useStylesVariables', () => {
   });
 
   it('should return undefined if a value is undefined', () => {
-    // when
+    // When
     const { result } = renderHook(() =>
       useStylesVariables(['any-css-variable-1', 'non-existing', 'any-css-variable-2']),
     );
 
-    // then
+    // Then
     expect(result.current).toEqual(['any-css-value-1', undefined, 'any-css-value-2']);
   });
 });

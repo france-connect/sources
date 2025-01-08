@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
-
 /**
  * @see https://openid.net/specs/openid-connect-core-1_0.html#rfc.section.5.1
  */

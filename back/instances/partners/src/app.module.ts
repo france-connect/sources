@@ -1,8 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
-import { PartnersModule } from 'apps/partners/src';
-
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
@@ -12,6 +7,7 @@ import {
   LoggerRequestPlugin,
   LoggerSessionPlugin,
 } from '@fc/logger-plugins';
+import { PartnersModule } from '@fc/partners';
 
 @Module({})
 export class AppModule {

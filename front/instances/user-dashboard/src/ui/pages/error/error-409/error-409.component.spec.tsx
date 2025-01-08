@@ -4,10 +4,10 @@ import { Error409Component } from './error-409.component';
 
 describe('Error409Component', () => {
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(<Error409Component />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 });

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 export interface DeviceInformationInterface {
   // Configuration related data
   readonly maxIdentityNumber: number;

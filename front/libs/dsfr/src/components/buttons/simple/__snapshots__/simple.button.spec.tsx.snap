@@ -4,6 +4,7 @@ exports[`SimpleButton should match the snapshot 1`] = `
 <div>
   <button
     class="fr-btn fr-btn--md"
+    type="button"
   >
     any-label-mock
   </button>
@@ -14,6 +15,7 @@ exports[`SimpleButton should match the snapshot, when size is defined to Sizes.L
 <div>
   <button
     class="fr-btn fr-btn--lg"
+    type="button"
   >
     any-label-mock
   </button>
@@ -24,6 +26,7 @@ exports[`SimpleButton should match the snapshot, when size is defined to Sizes.M
 <div>
   <button
     class="fr-btn fr-btn--md"
+    type="button"
   >
     any-label-mock
   </button>
@@ -34,6 +37,7 @@ exports[`SimpleButton should match the snapshot, when size is defined to Sizes.S
 <div>
   <button
     class="fr-btn fr-btn--sm"
+    type="button"
   >
     any-label-mock
   </button>

@@ -1,8 +1,5 @@
-/* istanbul ignore file */
-
 import { NetworkContextInterface } from '@fc/tracking-context';
 
-// Declarative code
 /**
  * This permissive interface allow us to aknowledge the intention
  * of "business logging" something.

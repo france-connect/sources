@@ -768,9 +768,9 @@ db.provider.createIndex({ name: 1 }, { unique: true });
 
 Object.values(fip).forEach((fi) => {
   print(`FIP > Initializing provider: ${fi.name} - Activated`);
-  db.provider.update(
+  db.provider.updateOne(
     { uid: fi.uid },
-    { ...BASE_DEV_IDP_LOW, ...fi },
+    { $set: { ...BASE_DEV_IDP_LOW, ...fi } },
     { upsert: true },
   );
 });

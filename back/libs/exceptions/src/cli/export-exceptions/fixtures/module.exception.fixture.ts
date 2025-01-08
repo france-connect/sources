@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { FcException } from '../../../exceptions';
 
 export const anyFunction = () => false;

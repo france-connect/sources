@@ -1,4 +1,5 @@
 import {
+  QueryDslQueryContainer,
   SearchHit,
   SearchResponse,
 } from '@elastic/elasticsearch/lib/api/types';
@@ -9,139 +10,35 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { IPaginationOptions } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import {
+  ElasticQueryOptionsInterface,
   ElasticsearchConfig,
-  formatMultiMatchGroup,
-  formatV2Query,
 } from '@fc/elasticsearch';
-import { LoggerService } from '@fc/logger';
-
-import { getLoggerMock } from '@mocks/logger';
 
 import {
   ElasticTracksResultsInterface,
   ElasticTracksType,
   SearchType,
 } from '../interfaces';
-import * as helper from './elastic-tracks.service';
+import { buildEventQuery } from '../utils';
 import { ElasticTracksService } from './elastic-tracks.service';
 
-jest.mock('@fc/elasticsearch');
-
-jest.mock('../constants', () => ({
-  FIELDS_FCP_HIGH: ['fieldHighValue1', 'fieldHighValue2'],
-  FIELDS_FC_LEGACY: ['fieldLegacyValue1', 'fieldLegacyValue2'],
-  EVENT_MAPPING: {
-    'action1/typeAction1': 'eventValue1',
-    'action2/typeAction2': 'eventValue2',
-  },
+jest.mock('../utils');
+jest.mock('@fc/elasticsearch/constants', () => ({
   NOW: 'nowValue',
   SIX_MONTHS_AGO: 'sixMonthAgoValue',
   DEFAULT_OFFSET: 0,
   DEFAULT_SIZE: 10,
+  DEFAULT_ORDER: 'desc',
 }));
-
-describe('buildQuery()', () => {
-  it('should build ES terms based on event and action data', () => {
-    // Given
-    const formatV2QueryResponse = {
-      bool: {
-        must: [
-          {
-            term: {
-              event: 'eventValue1',
-            },
-          },
-        ],
-      },
-    };
-    const formatV2QueryMock = jest.mocked(formatV2Query);
-    formatV2QueryMock.mockReturnValue(formatV2QueryResponse);
-
-    const formatMultiMatchGroupResponse = {
-      bool: {
-        must: [
-          {
-            bool: {
-              must: [
-                {
-                  term: {
-                    action: 'actionValue',
-                  },
-                },
-                {
-                  term: {
-                    // Legacy Tracks Params
-                    // eslint-disable-next-line @typescript-eslint/naming-convention
-                    type_action: 'typeActionValue',
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    };
-    const formatMultiMatchGroupMock = jest.mocked(formatMultiMatchGroup);
-    formatMultiMatchGroupMock.mockReturnValue(formatMultiMatchGroupResponse);
-
-    const data: [string, string] = [
-      'actionValue/typeActionValue',
-      'eventValue1',
-    ];
-    const resultMock = {
-      bool: {
-        should: [
-          {
-            bool: {
-              must: [
-                {
-                  term: {
-                    event: 'eventValue1',
-                  },
-                },
-              ],
-            },
-          },
-          {
-            bool: {
-              must: [
-                {
-                  bool: {
-                    must: [
-                      {
-                        term: {
-                          action: 'actionValue',
-                        },
-                      },
-                      {
-                        term: {
-                          // Legacy Tracks Params
-                          // eslint-disable-next-line @typescript-eslint/naming-convention
-                          type_action: 'typeActionValue',
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    };
-
-    // When
-    const result = helper.buildQuery(data);
-
-    // Then
-    expect(result).toStrictEqual(resultMock);
-  });
-});
+jest.mock('../constants', () => ({
+  EVENT_MAPPING: {
+    'authentication/initial': 'FC_VERIFIED',
+    'consent/demandeIdentity': 'FC_DATATRANSFER_CONSENT_IDENTITY',
+  },
+}));
 
 describe('ElasticTracksService', () => {
   let service: ElasticTracksService;
-
-  const loggerMock = getLoggerMock();
 
   const configMock = {
     get: jest.fn(),
@@ -151,9 +48,23 @@ describe('ElasticTracksService', () => {
     search: jest.fn(),
   };
 
-  const optionsMock: IPaginationOptions = {
+  const elasticQueryOptionsMock: ElasticQueryOptionsInterface = {
     size: 42,
     offset: 12,
+    order: 'asc',
+  };
+
+  const event1TermsMock = Symbol(
+    'eventTerms1Mock',
+  ) as unknown as QueryDslQueryContainer;
+
+  const event2TermsMock = Symbol(
+    'eventTerms2Mock',
+  ) as unknown as QueryDslQueryContainer;
+
+  const eventsTermsMock = {
+    'authentication/initial': event1TermsMock,
+    'consent/demandeIdentity': event2TermsMock,
   };
 
   beforeEach(async () => {
@@ -161,15 +72,8 @@ describe('ElasticTracksService', () => {
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ElasticTracksService,
-        ElasticsearchService,
-        LoggerService,
-        ConfigService,
-      ],
+      providers: [ElasticTracksService, ElasticsearchService, ConfigService],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
       .overrideProvider(ElasticsearchService)
@@ -184,49 +88,96 @@ describe('ElasticTracksService', () => {
   });
 
   describe('onModuleInit()', () => {
-    const queryMock = {
-      bool: {
-        should: ['test'],
-      },
-    };
-
     beforeEach(() => {
-      service['createEventsQuery'] = jest.fn().mockReturnValueOnce(queryMock);
+      service['computeEventsTerms'] = jest
+        .fn()
+        .mockReturnValueOnce(eventsTermsMock);
     });
 
-    it('should create event query params for ES query', () => {
+    it('should compute events terms params for ES query', () => {
       // When
       service.onModuleInit();
+
       // Then
-      expect(service['createEventsQuery']).toHaveBeenCalledTimes(1);
-      expect(service['createEventsQuery']).toHaveBeenCalledWith();
-      expect(service.eventsQuery).toStrictEqual(queryMock);
+      expect(service['computeEventsTerms']).toHaveBeenCalledTimes(1);
+      expect(service['computeEventsTerms']).toHaveBeenCalledWith();
+      expect(service.eventsTerms).toStrictEqual(eventsTermsMock);
     });
   });
 
-  describe('getElasticTracks()', () => {
+  describe('computeEventsTerms()', () => {
+    beforeEach(() => {
+      jest
+        .mocked(buildEventQuery)
+        .mockReturnValueOnce(event1TermsMock)
+        .mockReturnValueOnce(event2TermsMock);
+    });
+
+    it('should return eventTerms', () => {
+      // When
+      const result = service['computeEventsTerms']();
+
+      // Then
+      expect(result).toStrictEqual(eventsTermsMock);
+    });
+
+    it('should use buildEventQuery to create terms query', () => {
+      // When
+      service['computeEventsTerms']();
+
+      // Then
+      expect(buildEventQuery).toHaveBeenCalledTimes(2);
+      expect(buildEventQuery).toHaveBeenNthCalledWith(1, [
+        'authentication/initial',
+        'FC_VERIFIED',
+      ]);
+      expect(buildEventQuery).toHaveBeenNthCalledWith(2, [
+        'consent/demandeIdentity',
+        'FC_DATATRANSFER_CONSENT_IDENTITY',
+      ]);
+    });
+  });
+
+  describe('getElasticTracksForAccountIds()', () => {
     const idsMock = ['idValue1', 'idValue2', 'idValue3'];
-    const dataMock = Symbol('data');
+    const paginationOptionsMock: IPaginationOptions = {
+      size: 42,
+      offset: 12,
+    };
+    const payloadMock = Symbol('payload');
     const totalMock = 42;
     const elasticMock = {
       hits: {
         total: totalMock,
-        hits: dataMock,
+        hits: payloadMock,
       },
+    };
+    const eventsFilterMock = {
+      bool: {
+        should: [event1TermsMock, event2TermsMock],
+      },
+    };
+    const accountIdsFilterMock = {
+      terms: { accountId: ['idValue1', 'idValue2', 'idValue3'] },
     };
 
     beforeEach(() => {
-      service['getElasticLogs'] = jest.fn().mockResolvedValueOnce(elasticMock);
+      service['getElasticLogs'] = jest.fn().mockResolvedValue(elasticMock);
+      service['eventsTerms'] = eventsTermsMock;
     });
 
     it('should call getElasticLogs()', async () => {
       // When
-      await service.getElasticTracks(idsMock, optionsMock);
+      await service.getElasticTracksForAccountIds(
+        idsMock,
+        paginationOptionsMock,
+      );
+
       // Then
       expect(service['getElasticLogs']).toHaveBeenCalledTimes(1);
       expect(service['getElasticLogs']).toHaveBeenCalledWith(
-        idsMock,
-        optionsMock,
+        [accountIdsFilterMock, eventsFilterMock],
+        paginationOptionsMock,
       );
     });
 
@@ -234,125 +185,116 @@ describe('ElasticTracksService', () => {
       // Given
       const resultMock: ElasticTracksResultsInterface = {
         total: totalMock,
-        payload: dataMock as unknown as SearchHit<ElasticTracksType>[],
+        payload: payloadMock as unknown as SearchHit<ElasticTracksType>[],
       };
+
       // When
-      const result = await service.getElasticTracks(idsMock, optionsMock);
+      const result = await service.getElasticTracksForAccountIds(
+        idsMock,
+        paginationOptionsMock,
+      );
+
       // Then
       expect(result).toStrictEqual(resultMock);
     });
   });
 
-  describe('createEventsQuery()', () => {
-    let helperMock;
+  describe('getElasticTracksForAuthenticationEventId()', () => {
+    const authenticationEventIdMock = 'idValue1';
+    const queryOptionsMock: ElasticQueryOptionsInterface = {
+      order: 'asc',
+    };
+    const payloadMock = Symbol('payload');
+    const totalMock = 42;
+    const elasticMock = {
+      hits: {
+        total: totalMock,
+        hits: payloadMock,
+      },
+    };
+
+    const eventsFilterMock = {
+      bool: {
+        should: event1TermsMock,
+      },
+    };
+
+    const authenticationEventIdFilterMock = {
+      bool: {
+        should: [
+          {
+            term: {
+              browsingSessionId: authenticationEventIdMock,
+            },
+          },
+          {
+            term: {
+              cinematicID: authenticationEventIdMock,
+            },
+          },
+        ],
+      },
+    };
 
     beforeEach(() => {
-      helperMock = jest.spyOn(helper, 'buildQuery');
-      helperMock
-        .mockReturnValueOnce(['terms1'])
-        .mockReturnValueOnce(['terms2']);
+      service['getElasticLogs'] = jest.fn().mockResolvedValue(elasticMock);
+      service['eventsTerms'] = eventsTermsMock;
     });
 
-    it('should return event terms for ES query', () => {
-      // Given
-      const resultMock = {
-        bool: {
-          should: [['terms1'], ['terms2']],
-        },
-      };
+    it('should call getElasticLogs()', async () => {
       // When
-      const result = service['createEventsQuery']();
+      await service.getElasticTracksForAuthenticationEventId(
+        authenticationEventIdMock,
+      );
+
+      // Then
+      expect(service['getElasticLogs']).toHaveBeenCalledTimes(1);
+      expect(service['getElasticLogs']).toHaveBeenCalledWith(
+        [authenticationEventIdFilterMock, eventsFilterMock],
+        queryOptionsMock,
+      );
+    });
+
+    it('should return ElasticSearch Search', async () => {
+      // Given
+      const resultMock: ElasticTracksResultsInterface = {
+        total: totalMock,
+        payload: payloadMock as unknown as SearchHit<ElasticTracksType>[],
+      };
+
+      // When
+      const result = await service.getElasticTracksForAuthenticationEventId(
+        authenticationEventIdMock,
+      );
+
       // Then
       expect(result).toStrictEqual(resultMock);
-    });
-
-    it('should use buildQuery helper to create terms query', () => {
-      // When
-      service['createEventsQuery']();
-      // Then
-      expect(helperMock).toHaveBeenCalledTimes(2);
-      expect(helperMock).toHaveBeenNthCalledWith(1, [
-        'action1/typeAction1',
-        'eventValue1',
-      ]);
-      expect(helperMock).toHaveBeenNthCalledWith(2, [
-        'action2/typeAction2',
-        'eventValue2',
-      ]);
     });
   });
 
   describe('getElasticLogs()', () => {
-    const accountIdMock = ['idValue1', 'idValue2'];
     const configDataMock: Partial<ElasticsearchConfig> = {
-      tracksIndex: 'indexValue',
+      index: 'indexValue',
     };
 
-    const fieldsMock = {
-      name: 'nameValue',
-      fiId: 'fiIdValue',
-      fiSub: 'fiSubValue',
-      fsId: 'fsIdValue',
-      fsSub: 'fsSubValue',
-      accountId: 'accountIdValue',
-      scopes: 'scopesValue',
-      userIp: 'userIpValue',
-      action: 'actionValue',
-      // Legacy param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      type_action: 'typeActionValue',
-      fi: 'fiValue',
-      // Legacy param name
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      fs_label: 'fsLabelValue',
-      eidas: 'eidasValue',
-      time: 'timeValue',
-      service: 'serviceValue',
+    const dateQueryMock: QueryDslQueryContainer = {
+      range: { time: { gte: 'sixMonthAgoValue', lte: 'nowValue' } },
     };
 
-    const eventsQueryMock = {
-      bool: {
-        must: [
-          {
-            term: {
-              event: 'termEventValue',
-            },
-          },
-        ],
-      },
-    };
+    const filterMock = Symbol(
+      'filtersMock',
+    ) as unknown as QueryDslQueryContainer;
 
-    const searchMock: SearchResponse<ElasticTracksType> = {
-      hits: {
-        hits: [
-          {
-            _index: 'indexValue',
-            _id: 'idValue',
-            fields: fieldsMock,
-          },
-        ],
-      },
-      took: 42,
-      // ES standard object
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      timed_out: false,
-      _shards: null,
-    };
+    const searchResultsMock = Symbol(
+      'searchResultsMock',
+    ) as unknown as SearchResponse<ElasticTracksType>;
 
-    const queryMock: SearchType = {
+    const partialQueryMock = {
       query: {
         bool: {
-          filter: [
-            { terms: { accountId: ['idValue1', 'idValue2'] } },
-            {
-              range: { time: { gte: 'sixMonthAgoValue', lte: 'nowValue' } },
-            },
-            eventsQueryMock,
-          ],
+          filter: [filterMock, dateQueryMock],
         },
       },
-      sort: [{ time: { order: 'desc' } }],
-
       index: 'indexValue',
       // Elastic Search params
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -360,62 +302,62 @@ describe('ElasticTracksService', () => {
     };
 
     beforeEach(() => {
-      configMock.get.mockReturnValueOnce(configDataMock);
-
-      elasticMock.search.mockResolvedValueOnce(searchMock);
-
-      service.fields = ['field1', 'field2'];
-      service.eventsQuery = eventsQueryMock;
+      configMock.get.mockReturnValue(configDataMock);
+      elasticMock.search.mockResolvedValue(searchResultsMock);
     });
 
     it('should get index from config', async () => {
       // When
-      await service['getElasticLogs'](accountIdMock, optionsMock);
+      await service['getElasticLogs']([filterMock], elasticQueryOptionsMock);
+
       // Then
       expect(configMock.get).toHaveBeenCalledTimes(1);
       expect(configMock.get).toHaveBeenCalledWith('Elasticsearch');
     });
 
-    it('should search tracks with a specific account ids and specific pagination', async () => {
+    it('should call elasticsearch.search with filters and options', async () => {
       // Given
-      const query = {
-        ...queryMock,
+      const query: SearchType = {
+        ...partialQueryMock,
+        sort: [{ time: { order: 'asc' } }],
         from: 12,
         size: 42,
       };
+
       // When
-      await service['getElasticLogs'](accountIdMock, optionsMock);
+      await service['getElasticLogs']([filterMock], elasticQueryOptionsMock);
 
       // Then
       expect(elasticMock.search).toHaveBeenCalledTimes(1);
       expect(elasticMock.search).toHaveBeenCalledWith(query);
     });
 
-    it('should get tracks from ElasticSearch service', async () => {
-      // When
-      const result = await service['getElasticLogs'](
-        accountIdMock,
-        optionsMock,
-      );
-
-      // Then
-      expect(result).toStrictEqual(searchMock);
-    });
-
-    it('should get tracks from ElasticSearch service based on default options', async () => {
+    it('should call elasticsearch.search based on default options', async () => {
       // Given
       const query = {
-        ...queryMock,
+        ...partialQueryMock,
+        sort: [{ time: { order: 'desc' } }],
         from: 0,
         size: 10,
       };
 
       // When
-      await service['getElasticLogs'](accountIdMock);
+      await service['getElasticLogs']([filterMock]);
 
       // Then
       expect(elasticMock.search).toHaveBeenCalledTimes(1);
       expect(elasticMock.search).toHaveBeenCalledWith(query);
+    });
+
+    it('should return search results', async () => {
+      // When
+      const result = await service['getElasticLogs'](
+        [filterMock],
+        elasticQueryOptionsMock,
+      );
+
+      // Then
+      expect(result).toStrictEqual(searchResultsMock);
     });
   });
 });

@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { LayoutHeaderNavigationComponent } from './layout-header.navigation';
 
 describe('LayoutHeaderNavigationComponent', () => {
-  // given
+  // Given
   const navigationMock = [
     {
       href: 'any-href-mock-1',
@@ -19,23 +19,23 @@ describe('LayoutHeaderNavigationComponent', () => {
   ];
 
   it('should match the snapshot, with default props', () => {
-    // when
+    // When
     const { container } = render(<LayoutHeaderNavigationComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot, with navigation defined', () => {
-    // when
+    // When
     const { container } = render(<LayoutHeaderNavigationComponent navigation={navigationMock} />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot, with navigation and without title', () => {
-    // when
+    // When
     const { container } = render(
       <LayoutHeaderNavigationComponent
         navigation={[
@@ -47,15 +47,15 @@ describe('LayoutHeaderNavigationComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call react router Link 2 times', () => {
-    // when
+    // When
     render(<LayoutHeaderNavigationComponent navigation={navigationMock} />);
 
-    // then
+    // Then
     expect(NavLink).toHaveBeenCalledTimes(2);
     expect(NavLink).toHaveBeenNthCalledWith(
       1,

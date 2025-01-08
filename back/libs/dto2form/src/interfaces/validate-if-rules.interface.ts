@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { ValidateIfRule } from '../enums';
 import { FieldValidateIfRuleBase } from './field-validate-if-rule.interface';
 

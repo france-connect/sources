@@ -12,23 +12,23 @@ describe('AppBoundaryComponent', () => {
   });
 
   it('should match the snapshot', () => {
-    // given
+    // Given
     const errorMock = {
       message: 'any error with message mock',
       stack: 'any error with stack mock',
     };
 
-    // when
+    // When
     const { container } = render(
       <AppBoundaryComponent error={errorMock} resetErrorBoundary={expect.any(Function)} />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call useDocumentTitle with the correct title', () => {
-    // when
+    // When
     render(
       <AppBoundaryComponent
         error={new Error('any error with message mock')}
@@ -36,7 +36,7 @@ describe('AppBoundaryComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(useDocumentTitle).toHaveBeenCalledOnce();
     expect(useDocumentTitle).toHaveBeenCalledWith('FranceConnect - Erreur');
   });

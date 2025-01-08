@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { TrackingConfig } from '@fc/tracking';
 import { EventsCategories } from '@fc/user-dashboard';
 

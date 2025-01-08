@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Not to be tested
 import * as CookieParser from 'cookie-parser';
 import { urlencoded } from 'express';
 import helmet from 'helmet';

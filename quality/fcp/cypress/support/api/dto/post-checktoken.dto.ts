@@ -50,20 +50,14 @@ export class ValidTokenIntrospection {
 
   @IsString()
   @MinLength(1)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly family_name: string;
 
   @IsString()
   @MinLength(1)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly given_name: string;
 
   @IsString({ each: true })
   @IsArray()
-  // variable name based on given_name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly given_name_array: string[];
 
   @IsString()
@@ -92,8 +86,6 @@ export class PostChecktokenValidTokenDto {
   @IsObject()
   @ValidateNested()
   @Type(() => ValidTokenIntrospection)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_introspection: ValidTokenIntrospection;
 
   @IsString()
@@ -113,8 +105,6 @@ export class PostChecktokenExpiredTokenDto {
   @IsObject()
   @ValidateNested()
   @Type(() => ExpiredTokenIntrospection)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_introspection: ExpiredTokenIntrospection;
 
   @IsString()

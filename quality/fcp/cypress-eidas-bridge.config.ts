@@ -1,5 +1,3 @@
-// Disable sort-keys to separate base configuration and access env variables
-/* eslint-disable sort-keys-fix/sort-keys-fix, sort-keys */
 import { defineConfig } from 'cypress';
 
 import pluginConfig from './cypress/plugins';
@@ -18,7 +16,7 @@ export default defineConfig({
     ...baseConfig.env,
     // Base Configuration
     PLATFORM: 'fcp-high',
-    TEST_ENV: 'docker',
     TAGS: '@eidasBridge and not @ignore',
+    TEST_ENV: 'docker',
   },
 });

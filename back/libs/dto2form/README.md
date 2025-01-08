@@ -68,7 +68,13 @@ export class MyFormDto {
 
 ### Render the form
 
-To be redacted, there is no service to retrieve the metadata of the form (maybe use a function in FormDtoBase).
+To render the form, you must call the `getDtoMetadata()` method from the `dto2form` service, passing in the DTO for which you want to retrieve metadata.
+
+```typescript
+const payload = this.metadataFormService.getDtoMetadata(
+  MyFormDto,
+);
+```
 
 ### Validation
 

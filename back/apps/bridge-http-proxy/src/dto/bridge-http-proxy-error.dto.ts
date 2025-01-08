@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsNumber, IsString } from 'class-validator';
 
 import { BridgeError } from '@fc/hybridge-http-proxy';

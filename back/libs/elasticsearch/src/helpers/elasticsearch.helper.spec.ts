@@ -1,6 +1,4 @@
-import { EVENT_MAPPING } from '@fc/tracks-adapter-elasticsearch/constants';
-
-import * as query from './elasticsearch.helper';
+import * as helpers from './elasticsearch.helper';
 
 describe('formatMultiMatchGroup()', () => {
   const includeList = [
@@ -31,7 +29,8 @@ describe('formatMultiMatchGroup()', () => {
     };
 
     // When
-    const request = query.formatMultiMatchGroup(undefined);
+    const request = helpers.formatMultiMatchGroup(undefined);
+
     // Then
     expect(request).toStrictEqual(resultMock);
   });
@@ -109,7 +108,8 @@ describe('formatMultiMatchGroup()', () => {
     };
 
     // When
-    const request = query.formatMultiMatchGroup(includeList, true);
+    const request = helpers.formatMultiMatchGroup(includeList, true);
+
     // Then
     expect(request).toStrictEqual(resultMock);
   });
@@ -186,8 +186,10 @@ describe('formatMultiMatchGroup()', () => {
         ],
       },
     };
+
     // When
-    const request = query.formatMultiMatchGroup(includeList);
+    const request = helpers.formatMultiMatchGroup(includeList);
+
     // Then
     expect(request).toStrictEqual(resultMock);
   });
@@ -207,12 +209,15 @@ describe('and()', () => {
     const resultMock = {
       bool: { must: [{ foo: 'barValue' }, { bar: 'fooValue' }] },
     };
+
     // When
-    const result = query.and(params);
+    const result = helpers.and(params);
+
     // Then
     expect(result).toStrictEqual(resultMock);
   });
 });
+
 describe('or()', () => {
   it('should add "should" query around params', () => {
     // Given
@@ -227,40 +232,10 @@ describe('or()', () => {
     const resultMock = {
       bool: { must: [{ foo: 'barValue' }, { bar: 'fooValue' }] },
     };
-    // When
-    const result = query.and(params);
-    // Then
-    expect(result).toStrictEqual(resultMock);
-  });
-});
-describe('formatV2query()', () => {
-  it('should return es query filter by empty scope if event is DP_VERIFIED_FC_CHECKTOKEN', () => {
-    // Given
-    const dpVerifiedFcChecktoken = EVENT_MAPPING['checkedToken/verification'];
-    const resultMock = {
-      bool: {
-        must: [{ term: { event: 'DP_VERIFIED_FC_CHECKTOKEN' } }],
-        // es naming convention
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        must_not: [{ term: { scope: '' } }],
-      },
-    };
-    // When
-    const result = query.formatV2Query(dpVerifiedFcChecktoken);
-    // Then
-    expect(result).toStrictEqual(resultMock);
-  });
 
-  it('should return es query filter without must_not term if event is not DP_VERIFIED_FC_CHECKTOKEN', () => {
-    // Given
-    const fcVerified = EVENT_MAPPING['authentication/initial'];
-    const resultMock = {
-      bool: {
-        must: [{ term: { event: 'FC_VERIFIED' } }],
-      },
-    };
     // When
-    const result = query.formatV2Query(fcVerified);
+    const result = helpers.and(params);
+
     // Then
     expect(result).toStrictEqual(resultMock);
   });

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import React from 'react';
 
 import type { AccountContextState } from '../interfaces';

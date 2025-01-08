@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { MockDataProviderConfig } from '@fc/mock-data-provider';
 
 import App from './app';

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsBoolean, IsString } from 'class-validator';
 
 export class GetFqdnToIdentityProviderMongoDto {

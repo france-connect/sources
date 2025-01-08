@@ -1,7 +1,9 @@
 import type { DateTime } from 'luxon';
 import React from 'react';
 
-import { EidasToLabel } from '../../enums';
+import { ConfigService } from '@fc/config';
+
+import { EidasToLabel, Options } from '../../enums';
 import type { TracksConfig } from '../../interfaces';
 
 type TrackCardConnectionProps = {
@@ -11,7 +13,6 @@ type TrackCardConnectionProps = {
   idpLabel: string;
   interactionAcr: keyof typeof EidasToLabel;
   authenticationEventId: string;
-  options: TracksConfig;
 };
 
 export const ConnectionComponent = React.memo(
@@ -22,12 +23,15 @@ export const ConnectionComponent = React.memo(
     datetime,
     idpLabel,
     interactionAcr,
-    options,
   }: TrackCardConnectionProps) => {
+    const {
+      luxon: { datetimeShortFrFormat },
+    } = ConfigService.get<TracksConfig>(Options.CONFIG_NAME);
+
     const formattedTime = datetime
       .setZone('Europe/Paris')
       .setLocale('fr')
-      .toFormat(options.LUXON_FORMAT_DATETIME_SHORT_FR);
+      .toFormat(datetimeShortFrFormat);
 
     return (
       <ul className="fr-text--md fr-p-0 fr-mb-0 unstyled-list">

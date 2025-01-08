@@ -17,7 +17,7 @@ import {
 } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { CoreVerifyService, ProcessCore } from '@fc/core';
+import { CoreVerifyService } from '@fc/core';
 import { CryptographyService } from '@fc/cryptography';
 import { CsrfTokenGuard } from '@fc/csrf';
 import { ForbidRefresh, IsStep } from '@fc/flow-steps';
@@ -40,10 +40,7 @@ import {
   GetOidcCallbackOidcClientSessionDto,
   GetOidcCallbackSessionDto,
   GetRedirectToIdpOidcClientSessionDto,
-  OidcIdentityDto,
 } from '../dto';
-import { CoreFcpInvalidIdentityException } from '../exceptions';
-import { IIdentityCheckFeatureHandler } from '../interfaces';
 import { CoreFcpService, CoreFcpVerifyService } from '../services';
 
 @Controller()
@@ -182,7 +179,7 @@ export class OidcClientController {
 
     await this.tracking.track(FC_REQUESTED_IDP_USERINFO, trackingContext);
 
-    await this.validateIdentity(idpId, identity);
+    await this.coreFcpVerify.validateIdentity(idpId, identity);
 
     const identityExchange: OidcSession = cloneDeep({
       amr,
@@ -242,19 +239,5 @@ export class OidcClientController {
     await this.sessionService.destroy(res);
 
     return { oidcProviderLogoutForm };
-  }
-
-  private async validateIdentity(idpId: string, identity: OidcIdentityDto) {
-    const identityCheckHandler =
-      await this.coreVerify.getFeature<IIdentityCheckFeatureHandler>(
-        idpId,
-        ProcessCore.ID_CHECK,
-      );
-
-    const errors = await identityCheckHandler.handle(identity);
-    if (errors.length) {
-      this.logger.debug(errors, `Identity from "${idpId}" is invalid`);
-      throw new CoreFcpInvalidIdentityException();
-    }
   }
 }

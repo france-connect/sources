@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export interface UsePaginationInterface {
   currentPage: number;
   gtTablet: boolean;

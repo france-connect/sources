@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsNumber, IsObject, IsString } from 'class-validator';
 
 import { BridgeResponse, ValidateHttpHeaders } from '@fc/hybridge-http-proxy';

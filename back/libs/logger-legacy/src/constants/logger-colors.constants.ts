@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative code
 import { ILoggerColorConstant, ILoggerColorParams } from '../interfaces';
 
 export const loggerTimeColorsConstant: ILoggerColorParams = {

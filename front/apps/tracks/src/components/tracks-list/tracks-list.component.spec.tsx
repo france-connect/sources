@@ -3,6 +3,7 @@ import { DateTime } from 'luxon';
 import React from 'react';
 import * as ReactRouterDom from 'react-router-dom';
 
+import { ConfigService } from '@fc/config';
 import { PaginationComponent } from '@fc/dsfr';
 
 import type { TrackInterface } from '../../interfaces';
@@ -11,12 +12,9 @@ import { TracksGroupComponent } from './tracks-group';
 import { TracksListComponent } from './tracks-list.component';
 import { usePaginatedTracks } from './use-paginated-tracks.hook';
 
-jest.mock('@fc/common');
-jest.mock('@fc/dsfr');
 jest.mock('./tracks-group');
 jest.mock('./use-paginated-tracks.hook');
 jest.mock('./../../utils/tracks.util');
-jest.mock('react-router-dom');
 
 const payloadMock = [
   {
@@ -59,29 +57,32 @@ describe('TracksListComponent', () => {
   const usePaginatedTracksMock = jest.mocked(usePaginatedTracks);
 
   beforeEach(() => {
+    // Given
     usePaginatedTracksMock.mockReturnValue({ submitErrors: undefined, tracks: tracksMock });
+    jest.mocked(ConfigService.get).mockReturnValue({
+      luxon: { monthYearFormat: 'LLLL yyyy' },
+    });
   });
 
-  const options = {
-    API_ROUTE_TRACKS: 'mock_API_ROUTE_TRACKS',
-    API_ROUTE_USER_INFOS: 'mock_API_ROUTE_USER_INFOS',
-    LUXON_FORMAT_DATETIME_SHORT_FR: "D 'à' T",
-    LUXON_FORMAT_DAY: 'DDD',
-    LUXON_FORMAT_HOUR_MINS: 'T',
-    LUXON_FORMAT_MONTH_YEAR: 'LLLL yyyy',
-    LUXON_FORMAT_TIMEZONE: 'z',
-  };
+  it('should call ConfigService.get with the right parameter', () => {
+    // When
+    render(<TracksListComponent />);
+
+    // Then
+    expect(ConfigService.get).toHaveBeenCalledOnce();
+    expect(ConfigService.get).toHaveBeenCalledWith('Tracks');
+  });
 
   it('should match snapshot', () => {
-    // when
-    const { container } = render(<TracksListComponent options={options} />);
+    // When
+    const { container } = render(<TracksListComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match snapshot when data contains no tracks', () => {
-    // given
+    // Given
     const emptyTracksMock = {
       meta: {
         offset: 0,
@@ -93,15 +94,15 @@ describe('TracksListComponent', () => {
       type: 'application',
     };
     usePaginatedTracksMock.mockReturnValue({ submitErrors: undefined, tracks: emptyTracksMock });
-    // when
-    const { container } = render(<TracksListComponent options={options} />);
+    // When
+    const { container } = render(<TracksListComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match snapshot when tracks data are not defined', () => {
-    // given
+    // Given
     usePaginatedTracksMock.mockReturnValue({
       submitErrors: undefined,
       tracks: {
@@ -109,18 +110,18 @@ describe('TracksListComponent', () => {
       },
     });
 
-    // when
-    const { container } = render(<TracksListComponent options={options} />);
+    // When
+    const { container } = render(<TracksListComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should have called usePaginatedTracks hook', () => {
-    // when
-    render(<TracksListComponent options={options} />);
+    // When
+    render(<TracksListComponent />);
 
-    // then
+    // Then
     expect(usePaginatedTracksMock).toHaveBeenCalledOnce();
   });
 
@@ -147,7 +148,7 @@ describe('TracksListComponent', () => {
     });
 
     // When
-    render(<TracksListComponent options={options} />);
+    render(<TracksListComponent />);
 
     // Then
     expect(transformTrackToEnhanced).toHaveBeenNthCalledWith(1, nonNullish1, 0, filteredPayload);
@@ -155,32 +156,31 @@ describe('TracksListComponent', () => {
   });
 
   it('should have called transformTrackToEnhanced', () => {
-    // when
-    render(<TracksListComponent options={options} />);
+    // When
+    render(<TracksListComponent />);
 
-    // then
+    // Then
     expect(transformTrackToEnhanced).toHaveBeenNthCalledWith(1, payloadMock[0], 0, payloadMock);
     expect(transformTrackToEnhanced).toHaveBeenNthCalledWith(2, payloadMock[1], 1, payloadMock);
   });
 
   it('should have called orderGroupByKeyAsc', () => {
-    // when
-    render(<TracksListComponent options={options} />);
+    // When
+    render(<TracksListComponent />);
 
-    // then
+    // Then
     expect(orderGroupByKeyAsc).toHaveBeenCalledOnce();
   });
 
   it('should have called TracksGroupComponent', () => {
-    // when
-    render(<TracksListComponent options={options} />);
+    // When
+    render(<TracksListComponent />);
 
-    // then
+    // Then
     expect(TracksGroupComponent).toHaveBeenNthCalledWith(
       1,
       {
         label: 'Octobre 2021',
-        options,
         tracks: [payloadMock[0]],
       },
       {},
@@ -189,7 +189,6 @@ describe('TracksListComponent', () => {
       2,
       {
         label: 'Novembre 2021',
-        options,
         tracks: [payloadMock[1]],
       },
       {},
@@ -197,23 +196,23 @@ describe('TracksListComponent', () => {
   });
 
   it('should not display TracksGroupComponent if tracks does not exist', () => {
-    // given
+    // Given
     usePaginatedTracksMock.mockReturnValue({
       submitErrors: undefined,
       tracks: { ...tracksMock, payload: undefined },
     });
 
-    // when
-    render(<TracksListComponent options={options} />);
+    // When
+    render(<TracksListComponent />);
 
-    // then
+    // Then
     expect(transformTrackToEnhanced).not.toHaveBeenCalled();
     expect(orderGroupByKeyAsc).not.toHaveBeenCalled();
     expect(TracksGroupComponent).not.toHaveBeenCalled();
   });
 
   it('should redirect to new location', () => {
-    // given
+    // Given
     const indexMock = 20;
     const navigateFuncMock = jest.fn();
     const useCallbackMock = jest.spyOn(React, 'useCallback').mockImplementation(() => jest.fn());
@@ -224,14 +223,14 @@ describe('TracksListComponent', () => {
       </button>
     ));
 
-    // when
-    render(<TracksListComponent options={options} />);
+    // When
+    render(<TracksListComponent />);
     const callback = useCallbackMock.mock.calls[0][0];
     act(() => {
       callback(indexMock);
     });
 
-    // then
+    // Then
     expect(navigateFuncMock).toHaveBeenCalledOnce();
   });
 });

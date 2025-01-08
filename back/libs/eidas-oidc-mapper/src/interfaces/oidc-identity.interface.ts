@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { OidcClaims } from '../enums';
 
 export interface IOidcIdentity {

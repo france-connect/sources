@@ -9,7 +9,7 @@ const fspLegacyPartners = {
     post_logout_redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/logout-callback",
     ],
-    updatedAt: "2019-05-22T14:36:12.516Z",
+    updatedAt: new Date("2019-05-22T14:36:12.516Z"),
     key: "28e9ed103d6b075d371303a8bc5a66446f0cd4c0ce7ec237773276c247d28a95",
     client_secret:
       "4eQRa1ab1h8jIKVs53cW8FBUGIa5KQLlXQpdP/lGe3EJifIwUMHR0w6HKxu3ccGzR0y6+aS2wLAifrmhsT76TtVCvnNQAF5rONzLejQ7Hqy1LBF8TAUpx+8yFak=",
@@ -21,7 +21,7 @@ const fspLegacyPartners = {
     active: true,
     type: "public",
     secretCreatedAt: "2019-05-22T14:36:12.494Z",
-    createdAt: "2019-05-22T14:36:12.493Z",
+    createdAt: new Date("2019-05-22T14:36:12.493Z"),
     credentialsFlow: false,
     scopes: [
       "openid",
@@ -66,7 +66,8 @@ const fspLegacyPartners = {
     active: true,
     type: "private",
     __v: 4,
-    updatedAt: "2019-04-24 17:09:17",
+    updatedAt: new Date("2019-04-24 17:09:17"),
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     blacklistByIdentityProviderActivated: true,
     blacklistByIdentityProvider: {
@@ -102,5 +103,5 @@ const fspLegacyPartners = {
 /* ------------------------------------------------------------------------------- */
 Object.values(fspLegacyPartners).forEach((fs) => {
   print(`${fs.name} > Initializing provider: ${fs.name}`);
-  db.client.update({ name: fs.name }, fs, { upsert: true });
+  db.client.updateOne({ name: fs.name }, { $set: fs }, { upsert: true });
 });

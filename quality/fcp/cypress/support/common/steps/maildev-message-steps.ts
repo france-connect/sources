@@ -9,3 +9,16 @@ Given("je supprime les mails envoyés à l'usager", function () {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(1000);
 });
+
+Given(
+  'je télécharge le fichier csv {string} en pièce jointe',
+  function (fileName: string) {
+    MaildevHelper.downloadAttachment(fileName, this.mail.id).then((content) => {
+      cy.task('parseCsvContent', content).then(
+        (records: Record<string, unknown>[]) => {
+          this.csvFiles[fileName] = records;
+        },
+      );
+    });
+  },
+);

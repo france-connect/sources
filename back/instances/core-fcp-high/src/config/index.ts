@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { CoreFcpHighConfig } from '../dto';
 import App from './app';
 import Config from './config';

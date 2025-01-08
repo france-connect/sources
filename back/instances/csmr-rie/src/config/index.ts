@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
-
 import { CsmrHttpProxyConfig } from '@fc/csmr-http-proxy';
 
 import App from './app';

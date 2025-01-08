@@ -12,12 +12,8 @@
     "url": "https://fsp1-low.docker.dev-franceconnect.fr",
     "clientId": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
     "acrValue": "eidas1",
-    "claims": [
-      "amr"
-    ],
-    "scopes": [
-      "tous les scopes"
-    ],
+    "claims": ["amr"],
+    "scopes": ["tous les scopes"],
     "explicitConsent": false,
     "selectors": {
       "fcButton": "#call-authorize-button",
@@ -40,9 +36,7 @@
     "clientId": "7a79e45107f9ccc6a3a5971d501220dc4fd9e87bb5e3fc62ce4104c756e22775",
     "acrValue": "eidas1",
     "claims": [],
-    "scopes": [
-      "tous les scopes"
-    ],
+    "scopes": ["tous les scopes"],
     "explicitConsent": false,
     "selectors": {
       "fcButton": "#call-authorize-button",
@@ -64,9 +58,7 @@
     "clientId": "5a6e58c6e0cf3cb21de192c567335a8ec121a3f96d0fd48cf58c1f1c48235b63",
     "acrValue": "eidas1",
     "claims": [],
-    "scopes": [
-      "tous les scopes"
-    ],
+    "scopes": ["tous les scopes"],
     "explicitConsent": true,
     "selectors": {
       "fcButton": "#call-authorize-button",
@@ -85,9 +77,7 @@
     "clientId": "6925fb7843c76eded44d32b40c0cb1gyu065f7f003de52712b78985704f39950",
     "acrValue": "eidas1",
     "claims": [],
-    "scopes": [
-      "tous les scopes"
-    ],
+    "scopes": ["tous les scopes"],
     "explicitConsent": false,
     "selectors": {
       "fcButton": "#call-authorize-button",
@@ -97,9 +87,7 @@
   },
   {
     "name": "ud-home",
-    "descriptions": [
-      "user-dashboard"
-    ],
+    "descriptions": ["user-dashboard"],
     "mocked": false,
     "url": "https://ud.docker.dev-franceconnect.fr",
     "acrValue": "eidas1",
@@ -107,7 +95,7 @@
     "scopes": [],
     "explicitConsent": false,
     "selectors": {
-      "fcButton": "[data-testid='LoginConnectButton'] button",
+      "fcButton": "[data-testid='LoginConnectComponent'] button",
       "logoutButton": "[data-testid='logout-button-component']"
     },
     "authorizeHttpMethod": "get"
@@ -122,7 +110,7 @@
     "scopes": [],
     "explicitConsent": false,
     "selectors": {
-      "fcButton": "[data-testid='LoginConnectButton'] button",
+      "fcButton": "[data-testid='LoginConnectComponent'] button",
       "logoutButton": "[data-testid='logout-button-component']"
     },
     "authorizeHttpMethod": "get"

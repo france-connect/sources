@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 export * from './device.service';
 export * from './device-cookie.service';
 export * from './device-entries.service';

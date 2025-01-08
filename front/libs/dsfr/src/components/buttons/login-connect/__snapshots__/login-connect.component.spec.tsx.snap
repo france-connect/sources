@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginConnectComponent should match snapshot, with default props 1`] = `
+<div>
+  <div
+    class="fr-connect-group"
+    data-testid="LoginConnectComponent"
+  >
+    <div
+      data-mockid="LoginConnectButton"
+    />
+  </div>
+</div>
+`;
+
+exports[`LoginConnectComponent should match snapshot, with optionnal props 1`] = `
+<div>
+  <div
+    class="fr-connect-group any-classname-mock"
+    data-testid="LoginConnectComponent"
+  >
+    <div
+      data-mockid="LoginConnectButton"
+    />
+    <div
+      data-mockid="LoginConnectHelp"
+    />
+  </div>
+</div>
+`;

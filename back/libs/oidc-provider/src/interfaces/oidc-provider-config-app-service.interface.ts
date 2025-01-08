@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { KoaContextWithOIDC, Provider } from 'oidc-provider';
 
 import { OidcSession } from '@fc/oidc';

@@ -1,8 +1,8 @@
 import { Request } from 'express';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
-import { CoreRoutes, CoreVerifyService } from '@fc/core';
+import { CORE_VERIFY_SERVICE, CoreRoutes, CoreVerifyService } from '@fc/core';
 import { LoggerService } from '@fc/logger';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ISessionService } from '@fc/session';
@@ -12,6 +12,7 @@ import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 export class CoreFcaVerifyService {
   constructor(
     private readonly logger: LoggerService,
+    @Inject(CORE_VERIFY_SERVICE)
     private readonly coreVerify: CoreVerifyService,
     private readonly tracking: TrackingService,
   ) {}

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export enum VATCountryCode {
   AL = 'AL',
   AR = 'AR',

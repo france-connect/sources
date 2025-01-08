@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { UserDashboardConfig } from '@fc/user-dashboard';
 
 import App from './app';

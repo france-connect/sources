@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 export enum Environment {
   DEVELOPMENT = 'DEVELOPMENT',
   TEST = 'TEST',

@@ -31,7 +31,7 @@ describe('LayoutHeaderMenuComponent', () => {
   ];
 
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValue({
       menuIsOpened: true,
       toggleMenu: toggleMenuMock,
@@ -39,13 +39,13 @@ describe('LayoutHeaderMenuComponent', () => {
   });
 
   it('should match the snapshot, with navigation defined', () => {
-    // when
+    // When
     const { container, getByRole } = render(
       <LayoutHeaderMenuComponent navigation={navigationMock} />,
     );
     const button = getByRole('button');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('fr-header__menu fr-modal no-touch-action');
     expect(container.firstChild).toHaveClass('fr-modal--opened');
@@ -66,17 +66,17 @@ describe('LayoutHeaderMenuComponent', () => {
   });
 
   it('should match the snapshot, whithout navigation defined', () => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValueOnce({
       menuIsOpened: false,
       toggleMenu: toggleMenuMock,
     });
 
-    // when
+    // When
     const { container, getByRole } = render(<LayoutHeaderMenuComponent />);
     const button = getByRole('button');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(button).toBeInTheDocument();
     expect(container.firstChild).toHaveClass('fr-header__menu fr-modal no-touch-action');
@@ -91,21 +91,21 @@ describe('LayoutHeaderMenuComponent', () => {
   });
 
   it('should call useSafeContext with LayoutContext', () => {
-    // when
+    // When
     render(<LayoutHeaderMenuComponent />);
 
-    // then
+    // Then
     expect(useSafeContext).toHaveBeenCalledOnce();
     expect(useSafeContext).toHaveBeenCalledWith(LayoutContext);
   });
 
   it('should call toggleMenu on button click', () => {
-    // when
+    // When
     const { getByRole } = render(<LayoutHeaderMenuComponent />);
     const button = getByRole('button');
     fireEvent.click(button);
 
-    // then
+    // Then
     expect(toggleMenuMock).toHaveBeenCalledOnce();
   });
 });

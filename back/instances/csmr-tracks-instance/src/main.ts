@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Not to be tested
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 

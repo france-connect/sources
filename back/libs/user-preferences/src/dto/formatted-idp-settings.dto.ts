@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { Type } from 'class-transformer';
 import { IsBoolean, IsString, ValidateNested } from 'class-validator';
 

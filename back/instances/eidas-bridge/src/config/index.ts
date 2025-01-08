@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { EidasBridgeConfig } from '@fc/eidas-bridge';
 
 import ApacheIgnite from './apache-ignite';

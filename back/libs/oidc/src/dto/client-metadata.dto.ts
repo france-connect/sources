@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsArray, IsBoolean, IsIn, IsNumber, IsString } from 'class-validator';
 import { ClientAuthMethod, ResponseType } from 'openid-client';
 

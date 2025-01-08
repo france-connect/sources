@@ -8,12 +8,12 @@ import { LayoutFooterComponent } from './footer';
 import { LayoutHeaderComponent } from './header';
 import { ApplicationLayout } from './layout.component';
 
-// given
+// Given
 jest.mock('./footer/layout-footer.component');
 jest.mock('./header/layout-header.component');
 
 describe('ApplicationLayout', () => {
-  // given
+  // Given
   let consoleErrorMock: jest.SpyInstance;
 
   beforeEach(() => {
@@ -35,18 +35,18 @@ describe('ApplicationLayout', () => {
   });
 
   it('should match snapshot', () => {
-    // when
+    // When
     const { container } = render(<ApplicationLayout />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call Helmet component with children', () => {
-    // when
+    // When
     render(<ApplicationLayout />);
 
-    // then
+    // Then
     expect(Helmet).toHaveBeenCalledOnce();
     expect(Helmet).toHaveBeenCalledWith(
       {
@@ -61,28 +61,28 @@ describe('ApplicationLayout', () => {
   });
 
   it('should render LayoutHeaderComponent without props', () => {
-    // when
+    // When
     render(<ApplicationLayout />);
 
-    // then
+    // Then
     expect(LayoutHeaderComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderComponent).toHaveBeenCalledWith({}, {});
   });
 
   it('should render LayoutFooterComponent without props', () => {
-    // when
+    // When
     render(<ApplicationLayout />);
 
-    // then
+    // Then
     expect(LayoutFooterComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderComponent).toHaveBeenCalledWith({}, {});
   });
 
   it('should render Outlet without props', () => {
-    // when
+    // When
     render(<ApplicationLayout />);
 
-    // then
+    // Then
     expect(Outlet).toHaveBeenCalledOnce();
     expect(Outlet).toHaveBeenCalledWith({}, {});
   });

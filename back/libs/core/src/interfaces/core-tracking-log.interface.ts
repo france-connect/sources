@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { TrackingLogInterface } from '@fc/tracking';
 
 export class ICoreTrackingLog extends TrackingLogInterface {

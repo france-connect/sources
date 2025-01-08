@@ -1,27 +1,63 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import * as readline from 'readline';
 
 import { FIND_OCCURENCES, REPLACE_BY_SPACE } from '../constants';
-import { FilesName, Folder } from '../enums';
+import { Apps, Folder } from '../enums';
 import {
-  createCSV,
-  getCwdForDirectory,
   readCSV,
   replaceAllOccurrences,
+  ReplaceEmptyIsoCode,
+  saveCsvToFile,
 } from '../helpers';
-import { SearchDbCountryInterface } from '../interface';
-import { InseeDbCountryCurrentInterface } from '../interface/insee-db-country-current.interface';
+import {
+  InseeDbCountryCurrentInterface,
+  SearchDbCountryInterface,
+} from '../interface';
 
 export class GenerateCountry {
-  static async run([countryFile]: [string?]): Promise<void> {
+  static async run([countryFile, apps]: [string?, string?]): Promise<void> {
     if (!countryFile) {
       console.log('Please provide the path to the CSV file as an argument.');
-    } else {
-      await GenerateCountry.searchInCSVFiles(countryFile);
+      return;
     }
+
+    if (!apps) {
+      // eslint-disable-next-line no-param-reassign
+      apps = await new Promise<string>((resolve) => {
+        const rl = readline.createInterface({
+          input: process.stdin,
+          output: process.stdout,
+        });
+
+        rl.question(
+          `
+────────────────────────────────────────────────────────────────────────────────
+  🎯 No apps specified.
+  ➡️  Do you want to generate for:
+      [1] "eidas"
+      [2] "fc-apps" (default)
+
+  Please choose an option [1 or 2]: 
+────────────────────────────────────────────────────────────────────────────────
+`,
+          (answer) => {
+            rl.close();
+            resolve(answer === '1' ? Apps.EIDAS : Apps.FCAPPS);
+          },
+        );
+      });
+    }
+
+    if (apps === Apps.EIDAS) {
+      console.log('Generate CSV file for eidas-bridge.');
+      await GenerateCountry.generateCsvForEidasBridge(countryFile);
+      return;
+    }
+
+    console.log('Generate CSV file for fc-apps.');
+    await GenerateCountry.generateCsvForFcapps(countryFile);
   }
 
-  static async searchInCSVFiles(countryFile): Promise<void> {
+  static async generateCsvForFcapps(countryFile): Promise<void> {
     try {
       const searchResultFile: InseeDbCountryCurrentInterface[] =
         await readCSV(countryFile);
@@ -45,19 +81,26 @@ export class GenerateCountry {
         }),
       );
 
-      const targetDirectory = getCwdForDirectory(Folder.TARGET_DIRECTORY);
-      const filenameCsv = FilesName.COUNTRY;
-      const fileContent = createCSV(data);
+      saveCsvToFile(data, Folder.TARGET_DIRECTORY_FOR_FCAPPS);
+    } catch (err) {
+      console.log('Error:', err);
+    }
+  }
 
-      if (!existsSync(targetDirectory)) {
-        mkdirSync(targetDirectory, { recursive: true });
-        console.log(`Directory "${targetDirectory}" has been created`);
-      }
+  static async generateCsvForEidasBridge(countryFile): Promise<void> {
+    try {
+      const searchResultFile: InseeDbCountryCurrentInterface[] =
+        await readCSV(countryFile);
 
-      const filePath = join(targetDirectory, filenameCsv);
+      const data: SearchDbCountryInterface[] = searchResultFile
+        .map(({ COG, CRPAY, LIBCOG, CODEISO2 }) => ({
+          COG,
+          LIBCOG,
+          CODEISO2: ReplaceEmptyIsoCode(CODEISO2, CRPAY, searchResultFile),
+        }))
+        .filter((item) => item.CODEISO2 !== undefined);
 
-      writeFileSync(filePath, fileContent);
-      console.log(`${filenameCsv} was created with success into ${filePath}`);
+      saveCsvToFile(data, Folder.TARGET_DIRECTORY_FOR_EIDAS);
     } catch (err) {
       console.log('Error:', err);
     }

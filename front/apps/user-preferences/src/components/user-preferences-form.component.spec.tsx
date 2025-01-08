@@ -27,16 +27,16 @@ describe('UserPreferencesFormComponent', () => {
   };
 
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(useStylesVariables).mockReturnValue([expect.any(String)]);
   });
 
   it('should match the snapshot, display into a desktop viewport', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
     jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
-    // when
+    // When
     const { container } = render(
       <UserPreferencesFormComponent
         isDisabled
@@ -48,16 +48,16 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot, display into a mobile viewport', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
     jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
-    // when
+    // When
     const { container } = render(
       <UserPreferencesFormComponent
         isDisabled
@@ -69,16 +69,16 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot, display into a desktop viewport when form validation button is not disabled', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
     jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
-    // when
+    // When
     const { container } = render(
       <UserPreferencesFormComponent
         dirtyFields={{}}
@@ -90,16 +90,16 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot, display into a mobile viewport when form validation button is not disabled', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
     jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
-    // when
+    // When
     const { container } = render(
       <UserPreferencesFormComponent
         dirtyFields={{}}
@@ -111,16 +111,16 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot, display into a desktop viewport when the form has errors', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
     jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
-    // when
+    // When
     const { container } = render(
       <UserPreferencesFormComponent
         hasValidationErrors
@@ -132,16 +132,16 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot, display into a mobile viewport when the form has errors', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
     jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
-    // when
+    // When
     const { container } = render(
       <UserPreferencesFormComponent
         hasValidationErrors
@@ -153,15 +153,15 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call ServicesListComponent with params', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
-    // when
+    // When
     render(
       <UserPreferencesFormComponent
         isDisabled
@@ -173,7 +173,7 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(ServicesListComponent).toHaveBeenCalledOnce();
     expect(ServicesListComponent).toHaveBeenCalledWith(
       { identityProviders: userPreferencesMock.idpList },
@@ -182,10 +182,10 @@ describe('UserPreferencesFormComponent', () => {
   });
 
   it('should call ToggleInput with params', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
-    // when
+    // When
     render(
       <UserPreferencesFormComponent
         isDisabled
@@ -197,7 +197,7 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(ToggleInput).toHaveBeenCalledOnce();
     expect(ToggleInput).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -211,13 +211,13 @@ describe('UserPreferencesFormComponent', () => {
   });
 
   it('should render AllowFutureIdpSwitchLabelComponent with params, when labelCallback is called', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
     const toggleInputValue = false;
     jest
       .mocked(ToggleInput)
       .mockImplementationOnce(({ label }) => <div>{(label as Function)(toggleInputValue)}</div>);
-    // when
+    // When
     render(
       <UserPreferencesFormComponent
         isDisabled
@@ -229,7 +229,7 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(AllowFutureIdpSwitchLabelComponent).toHaveBeenCalledOnce();
     expect(AllowFutureIdpSwitchLabelComponent).toHaveBeenCalledWith(
       { checked: toggleInputValue },
@@ -238,10 +238,10 @@ describe('UserPreferencesFormComponent', () => {
   });
 
   it('should call AlertComponent with params when the form has errors', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
-    // when
+    // When
     render(
       <UserPreferencesFormComponent
         hasValidationErrors
@@ -253,7 +253,7 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(AlertComponent).toHaveBeenCalledOnce();
     expect(AlertComponent).toHaveBeenCalledWith(
       {
@@ -265,7 +265,7 @@ describe('UserPreferencesFormComponent', () => {
   });
 
   it('should call useUserPreferencesForm with dirtyFields and userPreference when allowingIdPConfirmation is called', () => {
-    // given
+    // Given
     jest.mocked(AlertComponent).mockImplementationOnce(({ children }) => <div>{children}</div>);
     jest.mocked(useUserPreferencesForm).mockReturnValue({
       alertInfoState: {
@@ -275,7 +275,7 @@ describe('UserPreferencesFormComponent', () => {
       allowingIdPConfirmation: jest.fn(),
     });
 
-    // when
+    // When
     const { getByTestId } = render(
       <UserPreferencesFormComponent
         dirtyFields={{}}
@@ -289,7 +289,7 @@ describe('UserPreferencesFormComponent', () => {
     const button = getByTestId('UserPreferenceFormComponent-button-info');
     fireEvent.click(button);
 
-    // then
+    // Then
     expect(useUserPreferencesForm).toHaveBeenCalledOnce();
     expect(useUserPreferencesForm).toHaveBeenCalledWith({
       dirtyFields: {},
@@ -298,10 +298,10 @@ describe('UserPreferencesFormComponent', () => {
   });
 
   it('should not call AlertComponent if there are no errors', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
-    // when
+    // When
     render(
       <UserPreferencesFormComponent
         dirtyFields={{}}
@@ -313,15 +313,15 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(AlertComponent).toHaveBeenCalledTimes(0);
   });
 
   it('should call SimpleButton with params, can not submit', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
-    // when
+    // When
     render(
       <UserPreferencesFormComponent
         isDisabled
@@ -333,12 +333,12 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(SimpleButton).toHaveBeenCalledOnce();
     expect(SimpleButton).toHaveBeenCalledWith(
       expect.objectContaining({
+        children: 'Enregistrer mes réglages',
         disabled: true,
-        label: 'Enregistrer mes réglages',
         type: 'submit',
       }),
       {},
@@ -346,10 +346,10 @@ describe('UserPreferencesFormComponent', () => {
   });
 
   it('should call SimpleButton with params, can submit', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
-    // when
+    // When
     render(
       <UserPreferencesFormComponent
         dirtyFields={{}}
@@ -361,12 +361,12 @@ describe('UserPreferencesFormComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(SimpleButton).toHaveBeenCalledOnce();
     expect(SimpleButton).toHaveBeenCalledWith(
       expect.objectContaining({
+        children: 'Enregistrer mes réglages',
         disabled: false,
-        label: 'Enregistrer mes réglages',
         type: 'submit',
       }),
       {},
@@ -374,10 +374,10 @@ describe('UserPreferencesFormComponent', () => {
   });
 
   it('should show a notification when the form has been submitted', () => {
-    // given
+    // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
 
-    // when
+    // When
     const { getByText } = render(
       <UserPreferencesFormComponent
         isDisabled
@@ -392,7 +392,7 @@ describe('UserPreferencesFormComponent', () => {
       'Une notification récapitulant les modifications va vous être envoyée',
     );
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 });

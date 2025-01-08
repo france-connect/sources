@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './http-error-response.interface';
 export * from './identity.interface';
 export * from './idp-settings-changes.interface';

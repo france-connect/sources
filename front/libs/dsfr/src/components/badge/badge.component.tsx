@@ -1,15 +1,12 @@
 import classnames from 'classnames';
 import React from 'react';
-import type { IconType } from 'react-icons';
 
 import { Sizes } from '../../enums';
+import type { BadgeInterface } from '../../interfaces';
 import styles from './badge.module.scss';
 
-interface BadgeComponentProps {
-  colorName?: string;
-  label: string;
+interface BadgeComponentProps extends BadgeInterface {
   size?: Sizes;
-  icon?: IconType | undefined;
   iconSize?: number;
   dataTestId?: string;
   noIcon?: boolean;
@@ -17,9 +14,9 @@ interface BadgeComponentProps {
 
 export const BadgeComponent = React.memo(
   ({
+    Icon,
     colorName = 'grey',
     dataTestId,
-    icon: Icon,
     iconSize = 18,
     label,
     noIcon = false,

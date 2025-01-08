@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardDetailComponent should match the snapshot 1`] = `
+<div>
+  <p
+    class="fr-card__detail"
+  >
+    This is the card detail content
+  </p>
+</div>
+`;

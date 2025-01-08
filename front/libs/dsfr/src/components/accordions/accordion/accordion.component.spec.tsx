@@ -6,24 +6,24 @@ import { HeadingTag } from '@fc/common';
 import { AccordionComponent } from './accordion.component';
 
 describe('AccordionComponent', () => {
-  // given
+  // Given
   const onAccordionClickMock = jest.fn();
   const useIdMock = jest.spyOn(React, 'useId');
 
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(useIdMock).mockReturnValue('any-localeid-mock');
   });
 
   it('should match the snapshot with default props', () => {
-    // when
+    // When
     const { container } = render(
       <AccordionComponent title="accordion title mock" onClick={onAccordionClickMock}>
         Children
       </AccordionComponent>,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 

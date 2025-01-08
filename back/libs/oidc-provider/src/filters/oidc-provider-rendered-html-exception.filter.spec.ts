@@ -12,10 +12,8 @@ import { ViewTemplateService } from '@fc/view-templates';
 import { getConfigMock } from '@mocks/config';
 import { getLoggerMock } from '@mocks/logger';
 
-import {
-  OidcProviderBaseRenderedException,
-  OriginalError,
-} from '../exceptions';
+import { OidcProviderBaseRenderedException } from '../exceptions';
+import { OriginalError } from '../exceptions/oidc-provider-base.exception';
 import { OidcProviderRenderedHtmlExceptionFilter } from './oidc-provider-rendered-html-exception.filter';
 
 jest.mock('@fc/exceptions/helpers', () => ({

@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
-
 import { ErrorCode } from '../enums';
 import { CsmrFraudClientBaseException } from './csmr-fraud-client-base.exception';
 

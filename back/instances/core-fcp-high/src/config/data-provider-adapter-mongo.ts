@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { ConfigParser } from '@fc/config';
 import { DataProviderAdapterMongoConfig } from '@fc/data-provider-adapter-mongo';
 

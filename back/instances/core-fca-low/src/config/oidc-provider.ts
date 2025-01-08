@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { ConfigParser } from '@fc/config';
 import {
   OidcProviderConfig,
@@ -64,13 +61,15 @@ export default {
     ttl: {
       AccessToken: 60, // 1 minute
       AuthorizationCode: 30, // 30 seconds
-      Grant: 30, // 30 seconds
+      Grant: 7200, // 2h
       IdToken: 60, // 1 minute
       Interaction: 7200, // 2h
       Session: 7200, // 2h
+      RefreshToken: 7200, // 2h
     },
     acrValues: ['eidas1'],
     scopes: ['openid'],
+    issueRefreshToken: () => true,
     claims: {
       amr: ['amr'],
       uid: ['uid'],
@@ -92,7 +91,7 @@ export default {
       custom: ['custom'],
     },
     clientDefaults: {
-      grant_types: ['authorization_code'],
+      grant_types: ['authorization_code', 'refresh_token'],
       id_token_signed_response_alg: 'ES256',
       response_types: ['code'],
       token_endpoint_auth_method: 'client_secret_post',

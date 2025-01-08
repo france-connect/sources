@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Not to be tested
 import { urlencoded } from 'express';
 import helmet from 'helmet';
 

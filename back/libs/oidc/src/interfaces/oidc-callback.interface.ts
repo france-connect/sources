@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { MergeExclusive } from 'type-fest';
 
 import { OidcError as Error } from './oidc-error.interface';

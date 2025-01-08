@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { ConfigParser } from '@fc/config';
 import { EidasBridgeRoutes, EidasBridgeSession } from '@fc/eidas-bridge';
 import { EidasClientRoutes } from '@fc/eidas-client';

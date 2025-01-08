@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextAreaInput should match the snapshot when a max length is defined 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
+    <div
+      data-mockid="LabelElement"
+    />
+    <textarea
+      aria-describedby="any-name-mock-messages"
+      class="any-input-classname-mock"
+      data-testid="form-input-textarea-testid-any-name-mock"
+      maxlength="256"
+      name="any-name-mock"
+      required=""
+    >
+      any-value-mock
+    </textarea>
+    <div
+      data-mockid="MessageElement"
+    />
+  </div>
+</div>
+`;
+
+exports[`TextAreaInput should match the snapshot when input value is invalid 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
+    <div
+      data-mockid="LabelElement"
+    />
+    <textarea
+      aria-describedby="any-name-mock-messages"
+      class="any-input-classname-mock"
+      data-testid="form-input-textarea-testid-any-name-mock"
+      name="any-name-mock"
+      required=""
+    >
+      any-value-mock
+    </textarea>
+    <div
+      data-mockid="MessageElement"
+    />
+  </div>
+</div>
+`;
+
+exports[`TextAreaInput should match the snapshot when value is valid 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
+    <div
+      data-mockid="LabelElement"
+    />
+    <textarea
+      aria-describedby="any-name-mock-messages"
+      class="any-input-classname-mock"
+      data-testid="form-input-textarea-testid-any-name-mock"
+      name="any-name-mock"
+      required=""
+    >
+      any-value-mock
+    </textarea>
+    <div
+      data-mockid="MessageElement"
+    />
+  </div>
+</div>
+`;

@@ -1,13 +1,19 @@
 import * as _ from 'lodash';
+import { Attachment } from 'nodemailer/lib/mailer';
 
 import { Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
+import { generateCSVContent } from '@fc/csv';
 import { MailerService, MailFrom, MailTo } from '@fc/mailer';
 
 import { AppRmqConfig } from '../dto';
 import { EmailsTemplates } from '../enums';
-import { SecurityTicketDataInterface } from '../interfaces';
+import {
+  SecurityTicketDataInterface,
+  TracksTicketDataInterface,
+} from '../interfaces';
+import { getTracksByIdpName, getTracksBySpName } from '../utils';
 
 @Injectable()
 export class CsmrFraudSupportService {
@@ -25,7 +31,9 @@ export class CsmrFraudSupportService {
 
     const body = await this.getMailBodyContent(ticketData);
 
-    await this.sendFraudMail(from, body);
+    const attachments = this.getMailAttachments(ticketData.tracks);
+
+    await this.sendFraudMail(from, body, attachments);
   }
 
   private getMailFrom(
@@ -48,7 +56,40 @@ export class CsmrFraudSupportService {
     return await this.mailer.mailToSend(templateFile, ticketData);
   }
 
-  private async sendFraudMail(from: MailFrom, body: string): Promise<void> {
+  private getMailAttachments(
+    tracks: TracksTicketDataInterface[],
+  ): Attachment[] {
+    if (!tracks || tracks.length === 0) {
+      return [];
+    }
+
+    const tracksBySpName = getTracksBySpName(tracks);
+    const tracksByIdpName = getTracksByIdpName(tracks);
+
+    const spAttachments = Object.entries(tracksBySpName).map(
+      ([spName, spTracks]) => ({
+        filename: `${spName}_connexions.csv`,
+        content: generateCSVContent(spTracks),
+        contentType: 'text/csv',
+      }),
+    );
+
+    const idpAttachments = Object.entries(tracksByIdpName).map(
+      ([idpName, idpTracks]) => ({
+        filename: `${idpName}_connexions.csv`,
+        content: generateCSVContent(idpTracks),
+        contentType: 'text/csv',
+      }),
+    );
+
+    return [...spAttachments, ...idpAttachments];
+  }
+
+  private async sendFraudMail(
+    from: MailFrom,
+    body: string,
+    attachments: Attachment[],
+  ): Promise<void> {
     const { fraudEmailAddress, fraudEmailRecipient, fraudEmailSubject } =
       this.config.get<AppRmqConfig>('App');
 
@@ -65,6 +106,7 @@ export class CsmrFraudSupportService {
       subject: fraudEmailSubject,
       body,
       replyTo: from,
+      attachments,
     });
   }
 }

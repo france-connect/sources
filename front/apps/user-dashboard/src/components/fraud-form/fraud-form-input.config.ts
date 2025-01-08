@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { mustBeEmail, mustBeFilled, mustBePhone, mustBeUUIDv4 } from '../../validators';
 
 export const inputEmailConfig = {

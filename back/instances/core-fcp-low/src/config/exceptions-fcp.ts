@@ -1,14 +1,8 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { ExceptionsFcpConfig } from '@fc/exceptions-fcp';
 
 export default {
   items: [
-    { errorCode: 'Y000001', active: false },
-    { errorCode: 'Y000003', active: false },
-    { errorCode: 'Y000005', active: false },
-    { errorCode: 'Y000007', active: false },
+    { errorCode: 'Y600007', active: false },
     { errorCode: 'Y010004', active: false },
     { errorCode: 'Y010006', active: false },
     { errorCode: 'Y010007', active: false },
@@ -18,8 +12,8 @@ export default {
     { errorCode: 'Y010013', active: false },
     { errorCode: 'Y010015', active: false },
     { errorCode: 'Y020000', active: false },
-    { errorCode: 'Y020001', active: false },
-    { errorCode: 'Y020002', active: false },
+    { errorCode: 'Y100001', active: false },
+    { errorCode: 'Y100002', active: false },
     { errorCode: 'Y020021', active: false },
     { errorCode: 'Y020024', active: false },
     { errorCode: 'Y020025', active: false },
@@ -32,10 +26,10 @@ export default {
     { errorCode: 'Y030004', active: false },
     { errorCode: 'Y030005', active: false },
     { errorCode: 'Y030007', active: false },
-    { errorCode: 'Y030009', active: false },
+    { errorCode: 'Y100009', active: false },
     { errorCode: 'Y030026', active: false },
-    { errorCode: 'Y160001', active: false },
-    { errorCode: 'Y160003', active: false },
+    { errorCode: 'Y150001', active: false },
+    { errorCode: 'Y150003', active: false },
     { errorCode: 'Y160004', active: false },
     { errorCode: 'Y180001', active: false },
     { errorCode: 'Y190005', active: false },

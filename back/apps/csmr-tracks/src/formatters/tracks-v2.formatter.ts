@@ -8,13 +8,13 @@ import { LoggerService } from '@fc/logger';
 import { RichClaimInterface, ScopesService } from '@fc/scopes';
 import {
   GeoFormatterService,
-  Platform,
   TracksFormatterAbstract,
   TracksFormatterMappingFailedException,
   TracksV2FieldsInterface,
 } from '@fc/tracks-adapter-elasticsearch';
 
 import { IdpMappings } from '../dto';
+import { Platform } from '../enums';
 
 @Injectable()
 export class TracksV2Formatter

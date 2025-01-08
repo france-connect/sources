@@ -19,77 +19,77 @@ describe('HomePage', () => {
   });
 
   it('should match the snapshot when session is not expired', () => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValueOnce({ expired: false });
 
-    // when
+    // When
     const { container } = render(<HomePage />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match snapshot when session is expired', () => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValueOnce({ expired: true });
 
-    // when
+    // When
     const { container } = render(<HomePage />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot on mobile layout', () => {
-    // given
+    // Given
     jest.mocked(useStylesQuery).mockReturnValueOnce(false).mockReturnValueOnce(false);
 
-    // when
+    // When
     const { container } = render(<HomePage />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot on desktop layout', () => {
-    // given
+    // Given
     jest.mocked(useStylesQuery).mockReturnValueOnce(true).mockReturnValueOnce(false);
 
-    // when
+    // When
     const { container } = render(<HomePage />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot on tablet layout', () => {
-    // given
+    // Given
     jest.mocked(useStylesQuery).mockReturnValueOnce(false).mockReturnValueOnce(true);
 
-    // when
+    // When
     const { container } = render(<HomePage />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call useSafeContext with AccountContext', () => {
-    // when
+    // When
     render(<HomePage />);
 
-    // then
+    // Then
     expect(useSafeContext).toHaveBeenCalledOnce();
     expect(useSafeContext).toHaveBeenCalledWith(AccountContext);
   });
 
   it('should render the main heading', () => {
-    // given
+    // Given
     const { getByRole } = render(<HomePage />);
 
-    // when
+    // When
     const element = getByRole('heading');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
     expect(element).toHaveTextContent(
       'Pour accéder à votre tableau de bord FranceConnect, veuillez vous connecter',
@@ -97,21 +97,21 @@ describe('HomePage', () => {
   });
 
   it('should have called useLocation hook', () => {
-    // when
+    // When
     render(<HomePage />);
 
-    // then
+    // Then
     expect(useLocation).toHaveBeenCalled();
   });
 
   it('should render the paragraph', () => {
-    // given
+    // Given
     const { getByTestId } = render(<HomePage />);
 
-    // when
+    // When
     const element = getByTestId('paragraph');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
     expect(element).toHaveTextContent(
       'Une fois connecté, vous pourrez consulter l’historique de vos connexions et configurer vos accès FranceConnect.',
@@ -119,13 +119,13 @@ describe('HomePage', () => {
   });
 
   it('should render AlertComponent with specific props if session has expired', () => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValueOnce({ expired: true });
 
-    // when
+    // When
     render(<HomePage />);
 
-    // then
+    // Then
     expect(AlertComponent).toHaveBeenCalledOnce();
     expect(AlertComponent).toHaveBeenCalledWith(
       {
@@ -139,10 +139,10 @@ describe('HomePage', () => {
   });
 
   it('should render LoginFormComponent without redirectUrl', () => {
-    // when
+    // When
     render(<HomePage />);
 
-    // then
+    // Then
     expect(LoginFormComponent).toHaveBeenCalledOnce();
     expect(LoginFormComponent).toHaveBeenCalledWith(
       {
@@ -164,10 +164,10 @@ describe('HomePage', () => {
       state: { from: { pathname: '/any-pathname' } },
     });
 
-    // when
+    // When
     render(<HomePage />);
 
-    // then
+    // Then
     expect(LoginFormComponent).toHaveBeenCalledOnce();
     expect(LoginFormComponent).toHaveBeenCalledWith(
       {

@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-// Declarative code
+// This file should not exist and should be removed, see @todo below
 import { Injectable } from '@nestjs/common';
 
 import { FeatureHandler } from '@fc/feature-handler';

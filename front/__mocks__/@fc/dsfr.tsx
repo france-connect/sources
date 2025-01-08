@@ -1,14 +1,26 @@
+export const LinkButton = jest.fn(() => <div>LinkButton</div>);
+
 export const SimpleButton = jest.fn(() => <div>SimpleButton</div>);
 
 export const CheckboxInput = jest.fn(() => <div>CheckboxInput</div>);
 
 export const ToggleInput = jest.fn(() => <div>ToggleInput</div>);
 
-export const LinkComponent = jest.fn(({ label }) => <div data-mockid="LinkComponent">{label}</div>);
+export const LinkComponent = jest.fn(({ label }) => (
+  <span data-mockid="LinkComponent">{label}</span>
+));
+
+export const CardComponent = jest.fn(() => <div>CardComponent</div>);
+
+export const TileComponent = jest.fn(() => <div>TileComponent</div>);
 
 export const SearchBarComponent = jest.fn(() => <div>SearchBarComponent</div>);
 
 export const BadgeComponent = jest.fn(() => <div>BadgeComponent</div>);
+
+export const BreadCrumbsComponent = jest.fn(() => <div>BreadCrumbsComponent</div>);
+
+export const BadgesGroupComponent = jest.fn(() => <div>BadgesGroupComponent</div>);
 
 export const PaginationComponent = jest.fn(() => <div>PaginationComponent</div>);
 
@@ -30,6 +42,8 @@ export const AlertComponent = jest.fn(({ children }) => (
   </div>
 ));
 
+export const AlertComponentV2 = jest.fn(() => <div data-mockid="AlertComponentV2" />);
+
 export const AccordionComponent = jest.fn(({ children }) => (
   <div data-mockid="AccordionComponent">
     <h3>AccordionComponent</h3>
@@ -44,29 +58,22 @@ export const AccordionGroupComponent = jest.fn(({ children }) => (
   </div>
 ));
 
-export const LoginConnectButton = jest.fn(({ type }) => (
-  <div data-mockid="LoginConnectButton">
+export const LoginConnectComponent = jest.fn(({ type }) => (
+  <div data-mockid="LoginConnectComponent">
     <div>{type}</div>
-    <div>LoginConnectButton</div>
+    <div>LoginConnectComponent</div>
   </div>
 ));
 
 export const ConnectTypes = {
   FRANCE_CONNECT: 'FranceConnect',
-  AGENT_CONNECT: 'AgentConnect',
+  PRO_CONNECT: 'ProConnect',
 };
 
 export const Sizes = {
   LARGE: 'lg',
   MEDIUM: 'md',
   SMALL: 'sm',
-};
-
-export const AlertTypes = {
-  ERROR: 'error',
-  INFO: 'info',
-  SUCCESS: 'success',
-  WARNING: 'warning',
 };
 
 export const IconPlacement = {

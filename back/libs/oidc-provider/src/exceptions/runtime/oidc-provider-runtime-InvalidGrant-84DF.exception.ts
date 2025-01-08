@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 /**
  * Code generated from oidc-provider exceptions
  * @see @fc/oidc-provider/src/cli/scaffold-exceptions/run.sh

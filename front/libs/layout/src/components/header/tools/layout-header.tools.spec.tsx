@@ -11,17 +11,17 @@ jest.mock('../account/layout-header.account');
 
 describe('LayoutHeaderToolsComponent', () => {
   beforeEach(() => {
-    // given
+    // Given
     jest
       .mocked(ConfigService.get)
       .mockReturnValue({ endpoints: { logout: 'any logout url mock' } });
   });
 
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(<LayoutHeaderToolsComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(LayoutHeaderAccountComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderAccountComponent).toHaveBeenCalledWith({}, {});
@@ -33,33 +33,33 @@ describe('LayoutHeaderToolsComponent', () => {
   });
 
   it('should call ConfigService.get with AccountConfig name', () => {
-    // when
+    // When
     render(<LayoutHeaderToolsComponent />);
 
-    // then
+    // Then
     expect(ConfigService.get).toHaveBeenCalledWith('Account');
   });
 
   it('should match the snapshot, when AccountConfig?.endpoints are undefined', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({});
 
-    // when
+    // When
     const { container } = render(<LayoutHeaderToolsComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(LayoutHeaderLogoutButton).not.toHaveBeenCalled();
   });
 
   it('should match the snapshot, when AccountConfig?.endpoints.logout is undefined', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({ endpoints: {} });
 
-    // when
+    // When
     const { container } = render(<LayoutHeaderToolsComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(LayoutHeaderLogoutButton).not.toHaveBeenCalled();
   });

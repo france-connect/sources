@@ -96,7 +96,7 @@
     "scopes": [],
     "explicitConsent": false,
     "selectors": {
-      "fcButton": "[data-testid='LoginConnectButton'] button",
+      "fcButton": "[data-testid='LoginConnectComponent'] button",
       "logoutButton": "[data-testid='logout-button-component']"
     },
     "authorizeHttpMethod": "get"

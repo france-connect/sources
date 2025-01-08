@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 import { useToggle } from 'usehooks-ts';
 
-import type { EnhancedTrackInterface, TracksConfig } from '../../interfaces';
+import type { EnhancedTrackInterface } from '../../interfaces';
 import { TrackCardBadgeComponent } from './card-badge.component';
 import { TrackCardContentComponent } from './card-content.component';
 import { TrackCardHeaderComponent } from './card-header.component';
@@ -11,10 +11,9 @@ export const MISSING_SP_LABEL_VALUE = 'Nom du service non défini';
 
 interface TrackCardProps {
   track: EnhancedTrackInterface;
-  options: TracksConfig;
 }
 
-export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps) => {
+export const TrackCardComponent = React.memo(({ track }: TrackCardProps) => {
   const [opened, toggleOpened] = useToggle(false);
 
   const {
@@ -55,11 +54,15 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
       data-time={datetime}
       type="button"
       onClick={toggleOpened}>
+      {/*
+       // @TODO
+       // instead of using a custom badge
+       // use the BadgeComponent from DSFR
+      */}
       <TrackCardBadgeComponent fromFcPlus={isFromFranceConnectPlus} type={eventType} />
       <TrackCardHeaderComponent
         datetime={datetime}
         opened={opened}
-        options={options}
         serviceProviderLabel={spLabel || MISSING_SP_LABEL_VALUE}
       />
 
@@ -74,7 +77,6 @@ export const TrackCardComponent = React.memo(({ options, track }: TrackCardProps
         idpLabel={idpLabel}
         interactionAcr={interactionAcr}
         opened={opened}
-        options={options}
       />
     </button>
   );

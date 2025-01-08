@@ -1,16 +1,10 @@
-/* istanbul ignore file */
-
-// Declarative code
-export * from './core-base.exception';
 export * from './core-claim-amr.exception';
 export * from './core-failed-persistence-exception';
 export * from './core-identity-provider-not-found.exception';
 export * from './core-idp-blocked-for-account.exception';
-export * from './core-idp-hint.exception';
 export * from './core-invalid-acr.exception';
 export * from './core-invalid-check-token-request.exception';
 export * from './core-low-acr.exception';
 export * from './core-missing-at-hash.exception';
-export * from './core-missing-context.exception';
 export * from './core-missing-identity.exception';
 export * from './core-not-allowed-acr.exception';

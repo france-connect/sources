@@ -3,12 +3,17 @@ import { Request } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { CoreVerifyService } from '@fc/core';
+import { CORE_VERIFY_SERVICE, CoreVerifyService, ProcessCore } from '@fc/core';
+import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
+import { LoggerService } from '@fc/logger';
+import { IOidcIdentity } from '@fc/oidc';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { TrackingService } from '@fc/tracking';
 
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
+import { CoreFcpInvalidIdentityException } from '../exceptions';
 import { CoreFcpVerifyService } from './core-fcp-verify.service';
 
 describe('CoreFcpVerifyService', () => {
@@ -21,6 +26,7 @@ describe('CoreFcpVerifyService', () => {
   const coreVerifyServiceMock = {
     verify: jest.fn(),
     trackVerified: jest.fn(),
+    getFeature: jest.fn(),
   };
 
   const sessionServiceMock = getSessionServiceMock();
@@ -52,6 +58,12 @@ describe('CoreFcpVerifyService', () => {
     abortInteraction: jest.fn(),
   };
 
+  const identityProviderMock = {
+    getById: jest.fn(),
+  };
+
+  const loggerServiceMock = getLoggerMock();
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -59,20 +71,30 @@ describe('CoreFcpVerifyService', () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
         CoreFcpVerifyService,
+        {
+          provide: CORE_VERIFY_SERVICE,
+          useClass: CoreVerifyService,
+        },
         ConfigService,
         CoreVerifyService,
         OidcProviderService,
         TrackingService,
+        LoggerService,
+        IdentityProviderAdapterMongoService,
       ],
     })
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
-      .overrideProvider(CoreVerifyService)
+      .overrideProvider(CORE_VERIFY_SERVICE)
       .useValue(coreVerifyServiceMock)
       .overrideProvider(TrackingService)
       .useValue(trackingMock)
       .overrideProvider(OidcProviderService)
       .useValue(oidcProviderServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerServiceMock)
+      .overrideProvider(IdentityProviderAdapterMongoService)
+      .useValue(identityProviderMock)
       .compile();
 
     service = app.get<CoreFcpVerifyService>(CoreFcpVerifyService);
@@ -174,6 +196,63 @@ describe('CoreFcpVerifyService', () => {
         errorMock,
         true,
       );
+    });
+  });
+
+  describe('validateIdentity()', () => {
+    const idpIdMock = 'idpIdMockValue';
+    const identityMock = {
+      given_name: 'given_name',
+      sub: '1',
+    } as IOidcIdentity;
+
+    let handleFnMock;
+    let handlerMock;
+
+    beforeEach(() => {
+      handleFnMock = jest.fn();
+      handlerMock = {
+        handle: handleFnMock,
+      };
+      coreVerifyServiceMock.getFeature.mockResolvedValueOnce(handlerMock);
+    });
+
+    it('should succeed to get the right handler to validate identity', async () => {
+      // Given
+      handleFnMock.mockResolvedValueOnce([]);
+
+      // When
+      await service.validateIdentity(idpIdMock, identityMock);
+
+      // Then
+      expect(coreVerifyServiceMock.getFeature).toHaveBeenCalledTimes(1);
+      expect(coreVerifyServiceMock.getFeature).toHaveBeenCalledWith(
+        idpIdMock,
+        ProcessCore.ID_CHECK,
+      );
+    });
+
+    it('should succeed validate identity from feature handler', async () => {
+      // Given
+      handleFnMock.mockResolvedValueOnce([]);
+
+      // When
+      await service.validateIdentity(idpIdMock, identityMock);
+
+      // Then
+      expect(handleFnMock).toHaveBeenCalledTimes(1);
+      expect(handleFnMock).toHaveBeenCalledWith(identityMock);
+    });
+
+    it('should failed to validate identity', async () => {
+      // Given
+      handleFnMock.mockResolvedValueOnce(['Unknown Error']);
+
+      await expect(
+        // When
+        service.validateIdentity(idpIdMock, identityMock),
+        // Then
+      ).rejects.toThrow(CoreFcpInvalidIdentityException);
     });
   });
 });

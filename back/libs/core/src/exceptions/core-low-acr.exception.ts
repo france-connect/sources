@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { HttpStatus } from '@nestjs/common';
 
 import { ErrorCode } from '../enums';
@@ -12,6 +9,5 @@ export class CoreLowAcrException extends CoreBaseException {
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
   static HTTP_STATUS_CODE = HttpStatus.INTERNAL_SERVER_ERROR;
-  static SCOPE = 2; // identity provider scope
   static UI = 'Core.exceptions.coreLowAcr';
 }

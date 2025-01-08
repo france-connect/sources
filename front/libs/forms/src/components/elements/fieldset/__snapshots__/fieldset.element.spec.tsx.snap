@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FieldsetElement should match the snapshot with parameters 1`] = `
+<div>
+  <fieldset
+    aria-labelledby="any-name-mock-legend any-name-mock-messages"
+    class="fr-fieldset any-classname-mock fr-fieldset--error fr-fieldset--valid"
+    id="any-name-mock"
+    role="group"
+  >
+    <div>
+      children-mock
+    </div>
+  </fieldset>
+</div>
+`;
+
+exports[`FieldsetElement should match the snapshot without parameters 1`] = `
+<div>
+  <fieldset
+    aria-labelledby="any-name-mock-legend any-name-mock-messages"
+    class="fr-fieldset"
+    id="any-name-mock"
+    role="group"
+  >
+    <div>
+      children-mock
+    </div>
+  </fieldset>
+</div>
+`;

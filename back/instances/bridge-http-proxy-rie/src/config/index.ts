@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { BridgeHttpProxyConfig } from '@fc/bridge-http-proxy';
 
 import App from './app';

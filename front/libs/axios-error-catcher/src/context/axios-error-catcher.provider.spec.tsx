@@ -7,7 +7,7 @@ import { AxiosErrorCatcherProvider } from './axios-error-catcher.provider';
 jest.mock('./axios-error-catcher.context');
 
 describe('AxiosErrorCatcherProvider', () => {
-  // given
+  // Given
   const Provider = () => (
     <AxiosErrorCatcherProvider>
       <div data-testid="ChildComponent" />
@@ -15,45 +15,45 @@ describe('AxiosErrorCatcherProvider', () => {
   );
 
   beforeEach(() => {
-    // given
+    // Given
     jest
       .spyOn(React, 'useState')
       .mockReturnValue([{ codeError: undefined, hasError: false, initialized: false }, jest.fn()]);
   });
 
   it('should return null, if not initialized', () => {
-    // given
+    // Given
     jest.spyOn(React, 'useState').mockReturnValueOnce([{ initialized: false }, jest.fn()]);
 
-    // when
+    // When
     const { container } = render(<Provider />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toBeNull();
   });
 
   it('should render the child component, if initialized', () => {
-    // given
+    // Given
     jest.spyOn(React, 'useState').mockReturnValueOnce([{ initialized: true }, jest.fn()]);
 
-    // when
+    // When
     const { container, getByTestId } = render(<Provider />);
     const element = getByTestId('ChildComponent');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(element).toBeInTheDocument();
   });
 
   it('should initialize the state', () => {
-    // given
+    // Given
     const useStateMock = jest.spyOn(React, 'useState');
 
-    // when
+    // When
     render(<Provider />);
 
-    // then
+    // Then
     expect(useStateMock).toHaveBeenCalledOnce();
     expect(useStateMock).toHaveBeenCalledWith({
       codeError: undefined,
@@ -63,10 +63,10 @@ describe('AxiosErrorCatcherProvider', () => {
   });
 
   it('should initialize axios interceptors on first render only', () => {
-    // given
+    // Given
     const useEffectMock = jest.spyOn(React, 'useEffect');
 
-    // when
+    // When
     const { rerender } = render(<Provider />);
     // @NOTE
     // excessive multiple rerenders (6)
@@ -76,7 +76,7 @@ describe('AxiosErrorCatcherProvider', () => {
     rerender(<Provider />);
     rerender(<Provider />);
 
-    // then
+    // Then
     expect(useEffectMock).toHaveBeenCalledTimes(6);
     expect(useEffectMock).toHaveBeenCalledWith(expect.any(Function), []);
 
@@ -87,16 +87,16 @@ describe('AxiosErrorCatcherProvider', () => {
   });
 
   it('should eject axios interceptors on unmount', () => {
-    // given
+    // Given
     const interceptorNumber = Symbol(123) as unknown as number;
     jest.mocked(axios.interceptors.request.use).mockReturnValue(interceptorNumber);
     jest.mocked(axios.interceptors.response.use).mockReturnValue(interceptorNumber);
 
-    // when
+    // When
     const { unmount } = render(<Provider />);
     unmount();
 
-    // then
+    // Then
     expect(axios.interceptors.request.eject).toHaveBeenCalledOnce();
     expect(axios.interceptors.request.eject).toHaveBeenCalledWith(interceptorNumber);
     expect(axios.interceptors.response.eject).toHaveBeenCalledOnce();
@@ -104,11 +104,11 @@ describe('AxiosErrorCatcherProvider', () => {
   });
 
   it('should update the state on first render only', () => {
-    // given
+    // Given
     const setStateMock = jest.fn();
     jest.spyOn(React, 'useState').mockReturnValueOnce([expect.any(Object), setStateMock]);
 
-    // when
+    // When
     const { rerender } = render(<Provider />);
     // @NOTE
     // excessive multiple rerenders
@@ -118,16 +118,16 @@ describe('AxiosErrorCatcherProvider', () => {
     rerender(<Provider />);
     rerender(<Provider />);
 
-    // then
+    // Then
     expect(setStateMock).toHaveBeenCalledOnce();
     expect(setStateMock).toHaveBeenCalledWith(expect.any(Function));
 
-    // when
+    // When
     // Check the function passed to setState
     const callback = setStateMock.mock.calls[0][0];
     const result = callback({ codeError: undefined, hasError: false, initialized: false });
 
-    // then
+    // Then
     expect(result).toStrictEqual({ codeError: undefined, hasError: false, initialized: true });
   });
 });

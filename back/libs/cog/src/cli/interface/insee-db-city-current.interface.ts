@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declaration only
 export interface InseeDbCityCurrentInterface {
   TYPECOM: string;
   COM: string;

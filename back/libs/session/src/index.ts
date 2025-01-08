@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './decorators';
 export { SessionConfig } from './dto';
 export * from './exceptions';

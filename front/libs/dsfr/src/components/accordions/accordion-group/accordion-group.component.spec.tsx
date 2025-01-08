@@ -9,7 +9,7 @@ import { AccordionGroupComponent } from './accordion-group.component';
 jest.mock('../accordion/accordion.component');
 
 describe('AccordionGroupComponent', () => {
-  // given
+  // Given
   const onItemSelectMock = jest.fn();
   const accordion1 = {
     element: <div>AccordionComponentMock 1</div>,
@@ -32,15 +32,15 @@ describe('AccordionGroupComponent', () => {
   const accordionItemsMock = [accordion1, accordion2, accordion3];
 
   it('should match the snapshot, with required props', () => {
-    // when
+    // When
     const { container } = render(<AccordionGroupComponent items={accordionItemsMock} />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot, and container should have the custom classname', () => {
-    // when
+    // When
     const { container } = render(
       <AccordionGroupComponent
         className="accordion-group-custom-classname"
@@ -48,38 +48,38 @@ describe('AccordionGroupComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('accordion-group-custom-classname');
   });
 
   it('should call useSelectedItems hook once', () => {
-    // when
+    // When
     render(<AccordionGroupComponent items={accordionItemsMock} />);
 
-    // then
+    // Then
     expect(useSelectedItems).toHaveBeenCalledOnce();
   });
 
   it('should call useSelectedItems hook with options props', () => {
-    // given
+    // Given
     const options = Symbol('useSelectedItems_options_mock') as SelectedItemsHook<string>;
 
-    // when
+    // When
     render(<AccordionGroupComponent items={accordionItemsMock} options={options} />);
 
-    // then
+    // Then
     expect(useSelectedItems).toHaveBeenCalledOnce();
     expect(useSelectedItems).toHaveBeenCalledWith(options);
   });
 
   it('should call AccordionComponent 3 times with props', () => {
-    // given
+    // Given
     jest.mocked(useSelectedItems).mockReturnValueOnce({
       onItemSelect: onItemSelectMock,
       selected: [],
     });
-    // when
+    // When
     render(<AccordionGroupComponent items={accordionItemsMock} />);
 
     expect(AccordionComponent).toHaveBeenCalledTimes(3);
@@ -113,15 +113,15 @@ describe('AccordionGroupComponent', () => {
   });
 
   it('should call AccordionComponent 3 times, second element will be opened at startup', () => {
-    // given
+    // Given
     jest.mocked(useSelectedItems).mockReturnValueOnce({
       onItemSelect: onItemSelectMock,
       selected: ['accordion-item-2'],
     });
-    // when
+    // When
     render(<AccordionGroupComponent items={accordionItemsMock} />);
 
-    // then
+    // Then
     expect(AccordionComponent).toHaveBeenCalledTimes(3);
     expect(AccordionComponent).toHaveBeenNthCalledWith(
       2,

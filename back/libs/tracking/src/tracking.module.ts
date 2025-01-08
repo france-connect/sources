@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { DynamicModule, Module, Type } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CqrsModule, EventBus } from '@nestjs/cqrs';

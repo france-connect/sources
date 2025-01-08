@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LabelElement should match the snapshot 1`] = `
+<div>
+  <label
+    class="fr-label any-classname-mock"
+    for="any-name-mock"
+  >
+    hook-label-mock
+    <span
+      class="fr-hint-text"
+    >
+      hook-hint-mock
+    </span>
+  </label>
+</div>
+`;

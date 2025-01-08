@@ -13,7 +13,7 @@ Fonctionnalité: Connexion Usager personalisée bac à sable
     Et que je clique sur le fournisseur d'identité
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Et que j'utilise un compte usager "personnalisé"
-    Quand je saisi manuellement l'identité de l'utilisateur
+    Quand je saisis manuellement l'identité de l'utilisateur
     Et je suis redirigé vers la page confirmation de connexion
     Et les informations demandées par le fournisseur de service correspondent au scope "tous les scopes"
     Et je continue sur le fournisseur de service

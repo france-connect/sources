@@ -54,5 +54,9 @@ const dps = {
 /* ------------------------------------------------------------------------------- */
 Object.values(dps).forEach((dp) => {
   print(`${dp.title} > Initializing data provider: ${dp.title}`);
-  db.dataProvider.update({ title: dp.title }, dp, { upsert: true });
+  db.dataProvider.updateOne(
+    { title: dp.title },
+    { $set: dp },
+    { upsert: true },
+  );
 });

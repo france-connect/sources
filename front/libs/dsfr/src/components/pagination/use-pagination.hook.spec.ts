@@ -12,15 +12,14 @@ import {
 } from './pagination.utils';
 import { usePagination } from './use-pagination.hook';
 
-jest.mock('@fc/styles');
 jest.mock('./pagination.utils.ts');
 
 describe('usePagination', () => {
-  // given
+  // Given
   const scrollToTopMock = jest.fn();
 
   beforeEach(() => {
-    // given
+    // Given
     // @NOTE used to prevent useStylesVariables.useStylesContext to throw
     // useStylesContext requires to be into a StylesProvider context
     jest.mocked(useStylesVariables).mockReturnValueOnce([expect.any(Number), expect.any(Number)]);
@@ -51,7 +50,7 @@ describe('usePagination', () => {
     const onPageClickMock = jest.fn();
 
     it('should return offset 10 if next page equal to 1', () => {
-      // when
+      // When
       const { result } = renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
@@ -62,13 +61,13 @@ describe('usePagination', () => {
 
       result.current.paginationChangeHandler(1);
 
-      // then
+      // Then
       expect(onPageClickMock).toHaveBeenCalledOnce();
       expect(onPageClickMock).toHaveBeenCalledWith(10);
     });
 
     it('should return offset 50 if next page equal to 5', () => {
-      // when
+      // When
       const { result } = renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
@@ -79,13 +78,13 @@ describe('usePagination', () => {
 
       result.current.paginationChangeHandler(5);
 
-      // then
+      // Then
       expect(onPageClickMock).toHaveBeenCalledOnce();
       expect(onPageClickMock).toHaveBeenCalledWith(50);
     });
 
     it('should call scrollToTopMock', () => {
-      // when
+      // When
       const { result } = renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
@@ -97,14 +96,14 @@ describe('usePagination', () => {
         result.current.paginationChangeHandler(3);
       });
 
-      // then
+      // Then
       expect(scrollToTopMock).toHaveBeenCalledOnce();
     });
   });
 
   describe('pagesCount', () => {
     it('should call getPagesCount', () => {
-      // when
+      // When
       renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
@@ -113,7 +112,7 @@ describe('usePagination', () => {
         }),
       );
 
-      // then
+      // Then
       expect(getPagesCount).toHaveBeenCalledOnce();
       expect(getPagesCount).toHaveBeenCalledWith({ itemsPerPage: 10, totalItems: 100 });
     });
@@ -121,7 +120,7 @@ describe('usePagination', () => {
 
   describe('currentPage', () => {
     it('should call getCurrentPage', () => {
-      // when
+      // When
       renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
@@ -130,7 +129,7 @@ describe('usePagination', () => {
         }),
       );
 
-      // then
+      // Then
       expect(getCurrentPage).toHaveBeenCalledOnce();
       expect(getCurrentPage).toHaveBeenCalledWith({
         currentElementIndexIntoTheList: 0,
@@ -141,7 +140,7 @@ describe('usePagination', () => {
 
   describe('navigationNumbers', () => {
     it('should call getNavigationNumbers', () => {
-      // when
+      // When
       renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
@@ -150,7 +149,7 @@ describe('usePagination', () => {
         }),
       );
 
-      // then
+      // Then
       expect(getNavigationNumbers).toHaveBeenCalledOnce();
       expect(getNavigationNumbers).toHaveBeenCalledWith({
         currentPage: 1,
@@ -160,10 +159,10 @@ describe('usePagination', () => {
     });
 
     it('should call getMobileNavigationNumbers', () => {
-      // given
+      // Given
       jest.mocked(useStylesQuery).mockReset().mockReturnValueOnce(false);
 
-      // when
+      // When
       renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 1,
@@ -172,7 +171,7 @@ describe('usePagination', () => {
         }),
       );
 
-      // then
+      // Then
       expect(getMobileNavigationNumbers).toHaveBeenCalledOnce();
       expect(getMobileNavigationNumbers).toHaveBeenCalledWith({ currentPage: 1, pagesCount: 10 });
     });
@@ -180,7 +179,7 @@ describe('usePagination', () => {
 
   describe('getDisplayParameters', () => {
     it('should call getDisplayParameters', () => {
-      // when
+      // When
       renderHook(() =>
         usePagination({
           numberOfPagesShownIntoNavigation: 5,
@@ -189,7 +188,7 @@ describe('usePagination', () => {
         }),
       );
 
-      // then
+      // Then
       expect(getDisplayParameters).toHaveBeenCalledOnce();
       expect(getDisplayParameters).toHaveBeenCalledWith({
         currentPage: 1,

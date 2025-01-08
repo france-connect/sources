@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './eidas-attributes.enum';
 export * from './eidas-loas.enum';
 export * from './eidas-name-id-formats.enum';

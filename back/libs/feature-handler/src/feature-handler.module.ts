@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-// Declarative code
 import { Module } from '@nestjs/common';
 
 import { FeatureHandlerNoHandler } from './handlers';

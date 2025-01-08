@@ -13,76 +13,76 @@ describe('TrackCardBadgeComponent', () => {
   });
 
   it('should match the snapshot when breakpoint is greater than mobile', () => {
-    // given
+    // Given
     jest.mocked(useStylesQuery).mockReturnValue(true);
 
-    // when
+    // When
     const { container } = render(
       <TrackCardBadgeComponent fromFcPlus={false} type={CinematicEvents.FC_VERIFIED} />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot when breakpoint is lower than mobile', () => {
-    // given
+    // Given
     jest.mocked(useStylesQuery).mockReturnValue(false);
 
-    // when
+    // When
     const { container } = render(
       <TrackCardBadgeComponent fromFcPlus={false} type={CinematicEvents.FC_VERIFIED} />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should render the FranceConnect badge', () => {
-    // given
+    // Given
     const { getByText } = render(
       <TrackCardBadgeComponent fromFcPlus={false} type={CinematicEvents.FC_VERIFIED} />,
     );
 
-    // when
+    // When
     const element = getByText('FranceConnect');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
     expect(element).toHaveClass('badgeFranceConnect');
     expect(element).not.toHaveClass('badgeFranceConnectPlus');
   });
 
   it('should render the FranceConnectPlus badge', () => {
-    // given
+    // Given
     const { getByText } = render(
       <TrackCardBadgeComponent fromFcPlus type={CinematicEvents.FC_VERIFIED} />,
     );
 
-    // when
+    // When
     const element = getByText('FranceConnect+');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
     expect(element).toHaveClass('badgeFranceConnectPlus');
     expect(element).not.toHaveClass('badgeFranceConnect');
   });
 
   it('should render the FC_VERIFIED badge', () => {
-    // given
+    // Given
     const { getByText } = render(
       <TrackCardBadgeComponent fromFcPlus type={CinematicEvents.FC_VERIFIED} />,
     );
 
-    // when
+    // When
     const element = getByText('Connexion');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 
   it('should render the FC_DATATRANSFER_CONSENT_IDENTITY badge', () => {
-    // given
+    // Given
     const { getByText } = render(
       <TrackCardBadgeComponent
         fromFcPlus
@@ -90,31 +90,31 @@ describe('TrackCardBadgeComponent', () => {
       />,
     );
 
-    // when
+    // When
     const element = getByText('Autorisation');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 
   it('should render the DP_VERIFIED_FC_CHECKTOKEN badge', () => {
-    // given
+    // Given
     const { getByText } = render(
       <TrackCardBadgeComponent fromFcPlus type={CinematicEvents.DP_VERIFIED_FC_CHECKTOKEN} />,
     );
 
-    // when
+    // When
     const element = getByText('Échange de Données');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 
   it('should not render any type badge', () => {
-    // when
+    // When
     const { getByTestId } = render(<TrackCardBadgeComponent fromFcPlus type={undefined} />);
 
-    // then
+    // Then
     expect(() => getByTestId('badge')).toThrow();
   });
 });

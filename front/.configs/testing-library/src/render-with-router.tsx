@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { render } from '@testing-library/react';
 import { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router-dom';

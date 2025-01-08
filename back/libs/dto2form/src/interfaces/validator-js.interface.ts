@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import validator from 'validator';
 
 import {

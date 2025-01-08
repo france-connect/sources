@@ -1,8 +1,5 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { RichClaimInterface } from '@fc/scopes';
-import { BaseTracksOutputInterface } from '@fc/tracks-adapter-elasticsearch';
+import { TracksFormatterOutputAbstract } from '@fc/tracks-adapter-elasticsearch';
 
 /**
  * This format is the one used by the FC apps.
@@ -21,11 +18,16 @@ import { BaseTracksOutputInterface } from '@fc/tracks-adapter-elasticsearch';
  *   authenticationEventId: 'any-uuid-v4'
  * }
  */
-export type TracksOutputInterface = BaseTracksOutputInterface & {
+export interface TracksOutputInterface extends TracksFormatterOutputAbstract {
+  city?: string;
+  country?: string;
+  idpLabel?: string;
+  platform: string;
+  spLabel: string;
   claims: RichClaimInterface[];
   event: string;
   trackId: string;
   authenticationEventId: string;
   interactionAcr: string;
   time: number;
-};
+}

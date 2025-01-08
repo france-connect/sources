@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { MockServiceProviderConfig } from '@fc/mock-service-provider';
 
 import App from './app';

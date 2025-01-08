@@ -8,7 +8,7 @@ import {
 
 describe('addAxiosCatcherInterceptors', () => {
   it('should create the request and response interceptors', () => {
-    // given
+    // Given
     const updateStateMock = jest.fn();
 
     const axiosInterceptorRequestUseMock = jest
@@ -19,10 +19,10 @@ describe('addAxiosCatcherInterceptors', () => {
       .spyOn(axios.interceptors.response, 'use')
       .mockReturnValueOnce(2);
 
-    // when
+    // When
     const result = addAxiosCatcherInterceptors(updateStateMock);
 
-    // then
+    // Then
     expect(axiosInterceptorRequestUseMock).toHaveBeenCalled();
     expect(axiosInterceptorRequestUseMock).toHaveBeenCalledWith(expect.any(Function), undefined);
     expect(axiosInterceptorResponseUseMock).toHaveBeenCalled();
@@ -32,36 +32,36 @@ describe('addAxiosCatcherInterceptors', () => {
   });
 
   it('should call the success callback with params', () => {
-    // given
+    // Given
     const configMock = Symbol('any-config-mock') as unknown as InternalAxiosRequestConfig;
     const updateStateMock = jest.fn();
     const axiosInterceptorRequestUseMock = jest.spyOn(axios.interceptors.request, 'use');
 
-    // when
+    // When
     addAxiosCatcherInterceptors(updateStateMock);
     const successCallback = axiosInterceptorRequestUseMock.mock.calls[0][0];
     const result = successCallback!(configMock);
 
-    // then
+    // Then
     expect(result).toStrictEqual(configMock);
     expect(updateStateMock).toHaveBeenCalled();
     expect(updateStateMock).toHaveBeenCalledWith(expect.any(Function));
 
-    // when
+    // When
     // Check the function passed to updateState
     const updateStateArg = updateStateMock.mock.calls[0][0];
     const newState = updateStateArg({ codeError: 'some error', hasError: true });
 
-    // then
+    // Then
     expect(newState).toStrictEqual({ codeError: undefined, hasError: false });
   });
 
   it('should call the error callback params', async () => {
-    // given
+    // Given
     const updateStateMock = jest.fn();
     const axiosInterceptorResponseUseMock = jest.spyOn(axios.interceptors.response, 'use');
 
-    // when / then
+    // When / then
     addAxiosCatcherInterceptors(updateStateMock);
     const errorCallback = axiosInterceptorResponseUseMock.mock.calls[0][1];
 
@@ -69,33 +69,33 @@ describe('addAxiosCatcherInterceptors', () => {
       errorCallback!({ response: { status: 401 } } as AxiosError),
     ).rejects.toStrictEqual({ response: { status: 401 } } as AxiosError);
 
-    // then
+    // Then
     expect(updateStateMock).toHaveBeenCalled();
     expect(updateStateMock).toHaveBeenCalledWith(expect.any(Function));
 
-    // when
+    // When
     // Check the function passed to updateState
     const updateStateArg = updateStateMock.mock.calls[0][0];
     const newState = updateStateArg({ codeError: undefined, hasError: false });
 
-    // then
+    // Then
     expect(newState).toStrictEqual({ codeError: 401, hasError: true });
   });
 });
 
 describe('removeAxiosCatcherInterceptors', () => {
   it('should eject the request and response interceptors', () => {
-    // given
+    // Given
     const requestInterceptor = 1;
     const errorInterceptor = 2;
 
     const axiosInterceptorRequestEjectMock = jest.spyOn(axios.interceptors.request, 'eject');
     const axiosInterceptorResponseEjectMock = jest.spyOn(axios.interceptors.response, 'eject');
 
-    // when
+    // When
     removeAxiosCatcherInterceptors([requestInterceptor, errorInterceptor]);
 
-    // then
+    // Then
     expect(axiosInterceptorRequestEjectMock).toHaveBeenCalledWith(requestInterceptor);
     expect(axiosInterceptorResponseEjectMock).toHaveBeenCalledWith(errorInterceptor);
   });

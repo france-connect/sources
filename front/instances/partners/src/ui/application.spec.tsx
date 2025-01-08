@@ -8,6 +8,7 @@ import { ConfigService } from '@fc/config';
 import { AppBoundaryComponent } from '@fc/exceptions';
 import { I18nService } from '@fc/i18n';
 
+import i18n from '../__fixtures__/i18n.fr.json';
 import { AppConfig } from '../config';
 import { Application } from './application';
 import { ApplicationRoutes } from './application.routes';
@@ -16,39 +17,26 @@ jest.mock('./application.routes');
 
 describe('Application', () => {
   it('should match snapshot', () => {
-    // when
+    // When
     const { container } = render(<Application />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call I18nService initialize with config', () => {
-    // when
+    // When
     render(<Application />);
 
-    // then
-    expect(I18nService.initialize).toHaveBeenCalledWith('fr', {
-      // @NOTE This is a sample of the translations that should be in the fr.json file
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      'DSFR.stepper.location': 'Étape {current} sur {total}',
-      // @NOTE This is a sample of the translations that should be in the fr.json file
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      'DSFR.stepper.nextStep': 'Étape suivante',
-      // @NOTE This is a sample of the translations that should be in the fr.json file
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      'TracksPage.nextPage': 'Page suivante',
-      // @NOTE This is a sample of the translations that should be in the fr.json file
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      'TracksPage.previousPage': 'Page précédente',
-    });
+    // Then
+    expect(I18nService.initialize).toHaveBeenCalledWith('fr', i18n);
   });
 
   it('should call ConfigService initialize with config', () => {
-    // when
+    // When
     render(<Application />);
 
-    // then
+    // Then
     expect(ConfigService.initialize).toHaveBeenCalledWith(AppConfig);
   });
 
@@ -90,18 +78,18 @@ describe('Application', () => {
   });
 
   it('should call HelmetProvider', () => {
-    // when
+    // When
     render(<Application />);
 
-    // then
+    // Then
     expect(HelmetProvider).toHaveBeenCalledOnce();
   });
 
   it('should call ApplicationRoutes', () => {
-    // when
+    // When
     render(<Application />);
 
-    // then
+    // Then
     expect(ApplicationRoutes).toHaveBeenCalledOnce();
   });
 });

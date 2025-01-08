@@ -9,7 +9,7 @@ import { ServicesListComponent } from './services-list.component';
 jest.mock('./service.component');
 
 describe('ServicesListComponent', () => {
-  // given
+  // Given
   const identityProvidersMock = [
     {
       active: false,
@@ -30,31 +30,31 @@ describe('ServicesListComponent', () => {
   ];
 
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValue({ userinfos: {} });
   });
 
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(<ServicesListComponent identityProviders={[]} />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call useSafeContext with AccountContext as parameter', () => {
-    // when
+    // When
     render(<ServicesListComponent identityProviders={[]} />);
 
-    // then
+    // Then
     expect(useSafeContext).toHaveBeenCalledWith(AccountContext);
   });
 
   it('should call ServiceComponent with a service', () => {
-    // when
+    // When
     render(<ServicesListComponent identityProviders={identityProvidersMock} />);
 
-    // then
+    // Then
     expect(ServiceComponent).toHaveBeenCalledTimes(2);
     expect(ServiceComponent).toHaveBeenNthCalledWith(
       1,
@@ -69,14 +69,14 @@ describe('ServicesListComponent', () => {
   });
 
   it('should call a ServiceComponent with params when first element is not allowed to be updated', () => {
-    // given
+    // Given
     const userinfos = { idpId: identityProvidersMock[0].uid };
     jest.mocked(useSafeContext).mockReturnValueOnce({ userinfos });
 
-    // when
+    // When
     render(<ServicesListComponent identityProviders={identityProvidersMock} />);
 
-    // then
+    // Then
     expect(ServiceComponent).toHaveBeenCalledTimes(2);
     expect(ServiceComponent).toHaveBeenNthCalledWith(
       1,

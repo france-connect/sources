@@ -9,7 +9,7 @@ const dps = [
     client_id:
       "423dcbdc5a15ece61ed00ff5989d72379c26d9ed4c8e4e05a87cffae019586e0",
     client_secret:
-    // client_secret decrypted : 36aa214e7a0043c8da60ae991d8908947147d637137c5bf14bc2fc53e1055847
+      // client_secret decrypted : 36aa214e7a0043c8da60ae991d8908947147d637137c5bf14bc2fc53e1055847
       "VZdGyhdVO6Axm1yqR3RYKqQdI7r4jHScaiqzCAfvh1ZEEnY5L3g4zPHqMJIx5V70Iff9B6IOfmiQQrw6AeR6Bq16P4CzGe3kC5HNinR7oc6e68STyJhE+T9EMlY=",
     jwks_uri: "https://dpa1-low.docker.dev-franceconnect.fr/api/v1/jwks",
     checktoken_signed_response_alg: "ES256",
@@ -25,7 +25,7 @@ const dps = [
     client_id:
       "71c27fec9540e5aa30b34f8c012154f88f8416530b25f31ba4873a2e58e3d3fe",
     client_secret:
-    // client_secret decrypted : 36aa214e7a0043c8da60ae991d8908947147d637137c5bf14bc2fc53e1055847
+      // client_secret decrypted : 36aa214e7a0043c8da60ae991d8908947147d637137c5bf14bc2fc53e1055847
       "VZdGyhdVO6Axm1yqR3RYKqQdI7r4jHScaiqzCAfvh1ZEEnY5L3g4zPHqMJIx5V70Iff9B6IOfmiQQrw6AeR6Bq16P4CzGe3kC5HNinR7oc6e68STyJhE+T9EMlY=",
     jwks_uri: "https://dpa2-low.docker.dev-franceconnect.fr/api/v1/jwks",
     checktoken_signed_response_alg: "ES256",
@@ -39,16 +39,20 @@ const dps = [
     scopes: ["test"],
     client_id: null,
     client_secret:
-    // client_secret decrypted : 36aa214e7a0043c8da60ae991d8908947147d637137c5bf14bc2fc53e1055847
+      // client_secret decrypted : 36aa214e7a0043c8da60ae991d8908947147d637137c5bf14bc2fc53e1055847
       "VZdGyhdVO6Axm1yqR3RYKqQdI7r4jHScaiqzCAfvh1ZEEnY5L3g4zPHqMJIx5V70Iff9B6IOfmiQQrw6AeR6Bq16P4CzGe3kC5HNinR7oc6e68STyJhE+T9EMlY=",
     jwks_uri: "https://dpa1-low.docker.dev-franceconnect.fr/api/v1/jwks",
     checktoken_signed_response_alg: "ES256",
     checktoken_encrypted_response_alg: "ECDH-ES",
     checktoken_encrypted_response_enc: "A256GCM",
-  }
-]
+  },
+];
 /* ------------------------------------------------------------------------------- */
 dps.forEach((dp) => {
   print(`${dp.title} > Initializing data provider: ${dp.title}`);
-  db.dataProvider.update({ title: dp.title }, dp, { upsert: true });
+  db.dataProvider.updateOne(
+    { title: dp.title },
+    { $set: dp },
+    { upsert: true },
+  );
 });

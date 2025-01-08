@@ -29,8 +29,6 @@ export class IsValidPromptConstraint extends ArrayAtLeastOneConstraint {
   }
 }
 
-// declarative code
-/* istanbul ignore next */
 export function IsValidPrompt(
   validationOptions?: ValidationOptions,
 ): PropertyDecorator {

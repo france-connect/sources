@@ -76,6 +76,7 @@ describe('OidcClientUtilsService', () => {
   const callbackMock = jest.fn();
   const userinfoMock = jest.fn();
   const revokeMock = jest.fn();
+  const refreshMock = jest.fn();
   const endSessionUrlMock = jest.fn();
   const clientMock = {
     authorizationUrl: authorizationUrlMock,
@@ -83,6 +84,7 @@ describe('OidcClientUtilsService', () => {
     callback: callbackMock,
     userinfo: userinfoMock,
     revoke: revokeMock,
+    refresh: refreshMock,
     endSessionUrl: endSessionUrlMock,
     metadata: {
       redirect_uris: ['redirect', 'uris'],
@@ -147,6 +149,7 @@ describe('OidcClientUtilsService', () => {
     callbackMock.mockResolvedValue('callbackMock Resolve Value');
     userinfoMock.mockResolvedValue('userinfoMock Resolve Value');
     revokeMock.mockResolvedValue(void 0);
+    refreshMock.mockResolvedValue('refreshMock Resolve Value');
 
     IssuerProxyMock.discover.mockResolvedValue({
       Client: IssuerClientMock,
@@ -464,6 +467,18 @@ describe('OidcClientUtilsService', () => {
       const result = await service.getUserInfo(accessToken, providerId);
       // Then
       expect(result).toBe('userinfoMock Resolve Value');
+    });
+  });
+
+  describe('refresh()', () => {
+    it('should return refreshed token set', async () => {
+      // Given
+      const refreshToken = 'refreshTokenValue';
+      const providerId = 'providerIdValue';
+      // When
+      const result = await service.refreshTokens(refreshToken, providerId);
+      // Then
+      expect(result).toBe('refreshMock Resolve Value');
     });
   });
 

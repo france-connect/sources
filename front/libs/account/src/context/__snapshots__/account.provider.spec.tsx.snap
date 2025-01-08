@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AccountProvider should render the child component 1`] = `
+exports[`AccountProvider should render the child component if account has been loaded 1`] = `
 <div>
   <div
     data-testid="ChildComponent"

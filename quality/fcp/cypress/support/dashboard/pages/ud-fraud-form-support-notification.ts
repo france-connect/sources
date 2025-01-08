@@ -1,25 +1,29 @@
 import { MaildevHelper } from '../../common/helpers';
-import { Email } from '../../common/types';
+import { ChainableElement, Email } from '../../common/types';
 
 const EMAIL_SUBJECT = 'Demande de support';
 
-const DETAIL_REGEX = /<strong>([^>]+) :<\/strong> ([^\n<]+)/gm;
-
-const fraudFormValuesContentMap = {
-  authenticationEventId: 'Code d’identification de session',
-  comment: 'Commentaire de l’usager',
-  contactEmail: 'Email de communication',
-  fraudSurveyOrigin: 'Provenance questionnaire usurpation',
-  idpEmail: 'Email du compte FI',
-  phoneNumber: 'Numéro de téléphone',
-};
-
-const idPivotValuesContentMap = {
-  birthcountry: 'Pays de naissance',
-  birthdate: 'Date de naissance',
-  birthplace: 'Ville de naissance',
-  firstName: 'Prénom',
-  lastName: 'Nom',
+const CSV_FORMATS = {
+  FI: [
+    'date',
+    'idpName',
+    'idpSub',
+    'platform',
+    'interactionAcr',
+    'city',
+    'country',
+    'ipAddress',
+  ],
+  FS: [
+    'date',
+    'spName',
+    'spSub',
+    'platform',
+    'interactionAcr',
+    'city',
+    'country',
+    'ipAddress',
+  ],
 };
 
 export default class UdFraudFormSupportNotificationPage {
@@ -30,8 +34,8 @@ export default class UdFraudFormSupportNotificationPage {
     );
   }
 
-  getLastSupportRequest(contactEmail: string): Cypress.Chainable<Email> {
-    return cy.maildevGetAllMessages().then((messages) => {
+  visitLastSupportRequest(contactEmail: string): Cypress.Chainable<Email> {
+    return cy.maildevGetAllMessages().then((messages: Email[]) => {
       const supportRequestMessage = messages
         .reverse()
         .find((message) =>
@@ -41,69 +45,35 @@ export default class UdFraudFormSupportNotificationPage {
         supportRequestMessage,
         `No emails sent from '${contactEmail}' concerning support request`,
       ).to.exist;
-      return supportRequestMessage;
+      cy.maildevVisitMessageById(supportRequestMessage.id);
+
+      return cy.wrap(supportRequestMessage);
     });
   }
 
-  parseBodyContent(bodyText: string): Record<string, string> {
-    expect(bodyText).to.exist;
-    const arrContent = [...bodyText.matchAll(DETAIL_REGEX)];
-    const bodyContent = {};
-    arrContent.forEach(([, contentKey, value]) => {
-      bodyContent[contentKey] = value;
-    });
-    return bodyContent;
+  getValueFromContentKey(contentKey: string): ChainableElement {
+    return cy.get(`[data-testid="fraud-form-email-${contentKey}"]`);
   }
 
-  checkBodyContentKeyNotExist(
-    bodyContent: Record<string, string>,
-    contentKey: string,
-  ): void {
-    expect(bodyContent).to.exist;
-    expect(bodyContent[contentKey]).to.be.undefined;
+  checkContentKeyNotExist(contentKey: string): void {
+    this.getValueFromContentKey(contentKey).should('not.exist');
   }
 
-  checkBodyContent(
-    bodyContent: Record<string, string>,
-    contentKey: string,
-    value: string,
-  ): void {
-    expect(bodyContent).to.exist;
-    expect(bodyContent[contentKey]).to.exist;
-    expect(bodyContent[contentKey]).to.equal(value);
+  checkContentKeyHasValue(contentKey: string, value: string): void {
+    this.getValueFromContentKey(contentKey).should('have.text', value);
   }
 
-  checkFraudFormValuesInBodyContent(
-    fraudFormValues: Record<string, string>,
-    bodyContent: Record<string, string>,
+  checkCsvFileHasFormat(
+    records: Record<string, unknown>[],
+    partnerType: string,
   ): void {
-    Object.entries(fraudFormValues).forEach(([key, value]) => {
-      expect(
-        fraudFormValuesContentMap[key],
-        `${key} doesn't exist in the fraudFormValuesContentMap`,
-      ).to.exist;
-      const contentKey = fraudFormValuesContentMap[key];
-      expect(
-        bodyContent[contentKey],
-        `${contentKey} doesn't exist in the bodyContent`,
-      ).to.equal(value);
-    });
-  }
-
-  checkIdPivotValuesInBodyContent(
-    idPivot: Record<string, string>,
-    bodyContent: Record<string, string>,
-  ): void {
-    Object.entries(idPivot).forEach(([key, value]) => {
-      expect(
-        idPivotValuesContentMap[key],
-        `${key} doesn't exist in the idPivotValuesContentMap`,
-      ).to.exist;
-      const contentKey = idPivotValuesContentMap[key];
-      expect(
-        bodyContent[contentKey],
-        `${contentKey} doesn't exist in the bodyContent`,
-      ).to.equal(value);
-    });
+    const format = CSV_FORMATS[partnerType];
+    expect(format, `the "${partnerType}" format doesn't exist`).to.exist;
+    expect(
+      records.length,
+      'impossible to check the format of an empty file',
+    ).to.be.greaterThan(0);
+    const recordKeys = Object.keys(records[0]);
+    expect(recordKeys).to.deep.equal(format);
   }
 }

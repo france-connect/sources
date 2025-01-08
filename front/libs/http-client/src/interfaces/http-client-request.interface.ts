@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import type { Method } from 'axios';
 
 import type { HttpClientDataInterface } from './http-client-data.interface';

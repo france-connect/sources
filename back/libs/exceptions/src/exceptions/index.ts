@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 /**
  * Re export Nestjs built in HttpException
  * to make it easier to import exceptions in other modules

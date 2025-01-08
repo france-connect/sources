@@ -4,18 +4,18 @@ import { AllowFutureIdpSwitchLabelComponent } from './allow-future-idp-switch-la
 
 describe('AllowFutureIdpSwitchLabelComponent', () => {
   it('should render the label when switch is inactive', () => {
-    // when
+    // When
     const { container } = render(<AllowFutureIdpSwitchLabelComponent checked={false} />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should render the label when switch is active', () => {
-    // when
+    // When
     const { container } = render(<AllowFutureIdpSwitchLabelComponent checked />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 });

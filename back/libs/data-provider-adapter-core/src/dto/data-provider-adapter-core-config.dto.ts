@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsEnum, IsNotEmpty, IsObject, IsString, IsUrl } from 'class-validator';
 import { JSONWebKeySet } from 'jose';
 

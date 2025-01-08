@@ -419,5 +419,5 @@ const fsp = {
 // -- FSs ----------
 Object.values(fsp).forEach((fs) => {
   print(`${fs.name} > Initializing provider: ${fs.name}`);
-  db.client.update({ name: fs.name }, fs, { upsert: true });
+  db.client.updateOne({ name: fs.name }, { $set: fs }, { upsert: true });
 });

@@ -1,7 +1,6 @@
 import type { AxiosResponse } from 'axios';
 import axios from 'axios';
 
-import { objectToFormData } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
 import { Options } from '../enums';
@@ -9,25 +8,21 @@ import { AxiosException } from '../errors';
 import { getRequestOptions } from '../utils';
 import * as HttpClientService from './http-client.service';
 
-jest.mock('axios');
-jest.mock('@fc/config');
-jest.mock('@fc/common');
-
 jest.mock('./../utils');
 
 describe('HttpClientService', () => {
-  // given
+  // Given
   const axiosRequestMock = jest.mocked(axios.request);
   const getConfigMock = jest.mocked(ConfigService.get);
   const getRequestOptionsMock = jest.mocked(getRequestOptions);
 
   beforeEach(() => {
-    // given
+    // Given
     getConfigMock.mockReturnValue({ apiCsrfURL: '/any-csrf-token-endpoint' });
   });
 
   describe('makeRequest', () => {
-    // given
+    // Given
     const method = 'get';
     const endpoint = '/any-endpoint';
     const data = { anyValueKey: 'any-value-mock' };
@@ -35,63 +30,63 @@ describe('HttpClientService', () => {
     const axiosOptions = { validateStatus: () => expect.any(Boolean) };
 
     it('should call getRequestOptions with parameters, when axiosOptions is not defined', async () => {
-      // when
+      // When
       await HttpClientService.makeRequest(method, endpoint, data);
 
-      // then
+      // Then
       expect(getRequestOptionsMock).toHaveBeenCalledOnce();
       expect(getRequestOptionsMock).toHaveBeenCalledWith(requestTarget, {});
     });
 
     it('should call getRequestOptions with parameters, when data is an instance of URLSearchParams', () => {
-      // given
+      // Given
       const dataUrlParams = new URLSearchParams();
       const requestWithUrlParams = { data: dataUrlParams, method, url: endpoint };
 
-      // when
+      // When
       HttpClientService.makeRequest(method, endpoint, dataUrlParams);
 
-      // then
+      // Then
       expect(getRequestOptionsMock).toHaveBeenCalledOnce();
       expect(getRequestOptionsMock).toHaveBeenCalledWith(requestWithUrlParams, {});
     });
 
     it('should call getRequestOptions with an empty data object, when data is undefined', () => {
-      // given
+      // Given
       const requestWithoutData = { data: {}, method, url: endpoint };
 
-      // when
+      // When
       HttpClientService.makeRequest(method, endpoint);
 
-      // then
+      // Then
       expect(getRequestOptionsMock).toHaveBeenCalledOnce();
       expect(getRequestOptionsMock).toHaveBeenCalledWith(requestWithoutData, {});
     });
 
     it('should call getRequestOptions with parameters, when axiosOptions is defined', async () => {
-      // when
+      // When
       await HttpClientService.makeRequest(method, endpoint, data, axiosOptions);
 
-      // then
+      // Then
       expect(getRequestOptionsMock).toHaveBeenCalledOnce();
       expect(getRequestOptionsMock).toHaveBeenCalledWith(requestTarget, axiosOptions);
     });
 
     it('should call axios with parameters', async () => {
-      // given
+      // Given
       const requestOptionsMock = { data, method, url: endpoint };
       jest.mocked(getRequestOptionsMock).mockReturnValueOnce(requestOptionsMock);
-      // when
+      // When
       await HttpClientService.makeRequest(method, endpoint, data);
 
-      // then
+      // Then
       expect(axiosRequestMock).toHaveBeenCalledOnce();
       expect(axiosRequestMock).toHaveBeenCalledWith(requestOptionsMock);
     });
   });
 
   describe('with makeRequest', () => {
-    // given
+    // Given
     const endpoint = '/any-endpoint';
     const data = { anyValueKey: 'any-value-mock' };
     const axiosOptions = { validateStatus: () => expect.any(Boolean) };
@@ -100,32 +95,32 @@ describe('HttpClientService', () => {
     const responseMock = { data: 'any-response-data' } as unknown as AxiosResponse;
 
     beforeEach(() => {
-      // given
+      // Given
       jest.spyOn(HttpClientService, 'makeRequest');
       getConfigMock.mockReturnValue({ apiCsrfURL: '/any-csrf-token-endpoint' });
     });
 
     describe('getCSRF', () => {
       it('should call ConfigService.get with parameters', async () => {
-        // given
+        // Given
         jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
 
-        // when
+        // When
         await HttpClientService.getCSRF();
 
-        // then
+        // Then
         expect(getConfigMock).toHaveBeenCalledOnce();
         expect(getConfigMock).toHaveBeenCalledWith(Options.CONFIG_NAME);
       });
 
       it('should call makeRequest with parameters', async () => {
-        // given
+        // Given
         jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
 
-        // when
+        // When
         await HttpClientService.getCSRF();
 
-        // then
+        // Then
         expect(HttpClientService.makeRequest).toHaveBeenCalledOnce();
         expect(HttpClientService.makeRequest).toHaveBeenCalledWith(
           'get',
@@ -134,27 +129,27 @@ describe('HttpClientService', () => {
       });
 
       it('should throw a AxiosException on error', async () => {
-        // given
+        // Given
         jest.mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
 
-        // when
+        // When
         await expect(
           () => HttpClientService.getCSRF(),
 
-          // then
+          // Then
         ).rejects.toThrow(AxiosException);
       });
     });
 
     describe('get', () => {
       it('should call makeRequest with parameters', async () => {
-        // given
+        // Given
         jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
 
-        // when
+        // When
         await HttpClientService.get(endpoint, data, axiosOptions);
 
-        // then
+        // Then
         expect(HttpClientService.makeRequest).toHaveBeenCalledOnce();
         expect(HttpClientService.makeRequest).toHaveBeenCalledWith(
           'get',
@@ -165,12 +160,12 @@ describe('HttpClientService', () => {
       });
 
       it('should throw an AxiosException on error', async () => {
-        // given
+        // Given
         jest.mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
 
-        // then
+        // Then
         await expect(() =>
-          // when
+          // When
           HttpClientService.get(endpoint, data, axiosOptions),
         ).rejects.toThrow(AxiosException);
       });
@@ -178,54 +173,60 @@ describe('HttpClientService', () => {
 
     describe('post', () => {
       beforeEach(() => {
-        // given
+        // Given
         jest.spyOn(HttpClientService, 'getCSRF');
       });
 
       it('should call getCSRF', async () => {
-        // given
+        // Given
         jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
         jest
           .mocked(HttpClientService.getCSRF)
           .mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
 
-        // when
+        // When
         await HttpClientService.post(endpoint, data, axiosOptions);
 
-        // then
+        // Then
         expect(HttpClientService.getCSRF).toHaveBeenCalledOnce();
       });
 
       it('should call makeRequest with parameters', async () => {
-        // given
+        // Given
         jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
         jest
           .mocked(HttpClientService.getCSRF)
           .mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
 
-        // when
+        // When
         await HttpClientService.post(endpoint, data, axiosOptions);
 
-        // then
+        // Then
         expect(HttpClientService.makeRequest).toHaveBeenCalledOnce();
         expect(HttpClientService.makeRequest).toHaveBeenCalledWith(
           'post',
           endpoint,
           { ...data, csrfToken: 'any-csrf-token' },
-          { ...axiosOptions, transformRequest: jest.mocked(objectToFormData) },
+          {
+            ...axiosOptions,
+            headers: {
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          },
         );
       });
 
       it('should throw an AxiosException on error', async () => {
-        // given
+        // Given
         jest.mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
         jest
           .mocked(HttpClientService.getCSRF)
           .mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
 
-        // then
+        // Then
         await expect(() =>
-          // when
+          // When
           HttpClientService.post(endpoint, data, axiosOptions),
         ).rejects.toThrow(AxiosException);
       });

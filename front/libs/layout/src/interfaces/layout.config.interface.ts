@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import type { NavigationLinkInterface } from '@fc/common';
 
 import type { LayoutFeaturesInterface } from './layout-features.interface';

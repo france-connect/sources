@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormErrorComponent should match the snapshot when error is defined 1`] = `
+<div>
+  <div
+    class="fr-alert fr-alert--error fr-alert--sm  fr-mb-6w"
+    role="alert"
+  >
+    <h3
+      class="fr-alert__title"
+    >
+      Form.message.requestFailed
+    </h3>
+    <p>
+      any-error-message-mock
+    </p>
+  </div>
+</div>
+`;
+
+exports[`FormErrorComponent should match the snapshot when error is not defined 1`] = `
+<div>
+  <div
+    class="fr-alert fr-alert--error fr-alert--sm  fr-mb-6w"
+    role="alert"
+  >
+    <h3
+      class="fr-alert__title"
+    >
+      Form.message.requestFailed
+    </h3>
+    <p>
+      any-error-message-mock
+    </p>
+  </div>
+</div>
+`;

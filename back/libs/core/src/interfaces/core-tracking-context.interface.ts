@@ -1,9 +1,6 @@
-/* istanbul ignore file */
-
 import { OidcIdentityDto } from '@fc/oidc';
 import { NetworkContextInterface } from '@fc/tracking-context';
 
-// Declarative code
 export interface ICoreTrackingContext {
   readonly source: NetworkContextInterface;
   readonly accountId?: string;
@@ -28,7 +25,6 @@ export interface ICoreTrackingContext {
   readonly idpName?: string;
   readonly idpLabel?: string;
   readonly idpIdentity?: OidcIdentityDto;
-  readonly rep_scope?: string[];
 
   readonly deviceTrusted?: boolean;
   readonly deviceIsSuspicious?: boolean;

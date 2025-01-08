@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './get-interaction-params.dto';
 export * from './logout-params.dto';
 export * from './oidc-provider-config.dto';

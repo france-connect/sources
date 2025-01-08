@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormRequiredMessageComponent should match the snapshot 1`] = `
+<div>
+  <p
+    class="fr-text--sm fc-text-align--left-md-center"
+  >
+    Form.message.requiredFields
+  </p>
+</div>
+`;

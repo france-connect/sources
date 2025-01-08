@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import type { HeadingTag, PropsWithClassName } from '@fc/common';
 
 export interface AccordionGroupItemInterface extends PropsWithClassName {

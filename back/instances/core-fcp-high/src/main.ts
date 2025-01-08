@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Not to be tested
 /**
  * Override external library for crypto
  * This has to be done before any other import in order

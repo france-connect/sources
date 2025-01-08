@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './dto';
 export { Genders, RnippResponseCodes } from './enums';
 export * from './exceptions';

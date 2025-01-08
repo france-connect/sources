@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { errors } from 'oidc-provider';
 
 import { BaseException } from '@fc/exceptions/exceptions';

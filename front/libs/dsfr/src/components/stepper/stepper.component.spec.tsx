@@ -7,13 +7,13 @@ import { StepperComponent } from './stepper.component';
 
 describe('Stepper', () => {
   it('should match snapshot with current and next titles', () => {
-    // given
+    // Given
     jest
       .mocked(t)
       .mockReturnValueOnce('stepper current mock')
       .mockReturnValueOnce('stepper next step mock');
 
-    // when
+    // When
     const { container, getByText } = render(
       <StepperComponent
         currentStep={1}
@@ -25,7 +25,7 @@ describe('Stepper', () => {
     const titleElt = getByText('current step title mock');
     const nextTitleElt = getByText('next step title mock');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(t).toHaveBeenCalledTimes(2);
     expect(t).toHaveBeenNthCalledWith(1, 'DSFR.stepper.location', { current: 1, total: 5 });
@@ -35,10 +35,10 @@ describe('Stepper', () => {
   });
 
   it('should match snapshot without next title', () => {
-    // given
+    // Given
     jest.mocked(t).mockReturnValueOnce('stepper current mock');
 
-    // when
+    // When
     const { container, getByText } = render(
       <StepperComponent
         currentStep={1}
@@ -48,7 +48,7 @@ describe('Stepper', () => {
     );
     const titleElt = getByText('current step title mock');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(t).toHaveBeenCalledOnce();
     expect(t).toHaveBeenCalledWith('DSFR.stepper.location', { current: 1, total: 5 });
@@ -56,10 +56,10 @@ describe('Stepper', () => {
   });
 
   it('should match snapshot with a custom heading title', () => {
-    // given
+    // Given
     jest.mocked(t).mockReturnValueOnce('stepper current mock');
 
-    // when
+    // When
     const { container, getByTestId } = render(
       <StepperComponent
         currentStep={1}
@@ -70,7 +70,7 @@ describe('Stepper', () => {
     );
     const headingElt = getByTestId('stepper-component-heading-title');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(headingElt).toBeInTheDocument();
     expect(headingElt.tagName).toBe('H3');

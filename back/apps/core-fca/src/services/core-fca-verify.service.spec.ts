@@ -3,7 +3,8 @@ import { Request } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { CoreVerifyService } from '@fc/core';
+import { CORE_VERIFY_SERVICE, CoreVerifyService } from '@fc/core';
+import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
 import { OidcClientSession } from '@fc/oidc-client';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
@@ -60,6 +61,10 @@ describe('CoreFcaVerifyService', () => {
 
   const eventContext = { req };
 
+  const identityProviderAdapterMock = {
+    getById: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -67,25 +72,32 @@ describe('CoreFcaVerifyService', () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
         CoreFcaVerifyService,
+        {
+          provide: CORE_VERIFY_SERVICE,
+          useClass: CoreVerifyService,
+        },
         LoggerService,
         TrackingService,
         CoreVerifyService,
         ConfigService,
         SessionService,
+        IdentityProviderAdapterMongoService,
       ],
     })
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
-      .overrideProvider(TrackingService)
-      .useValue(trackingServiceMock)
-      .overrideProvider(CoreVerifyService)
+      .overrideProvider(CORE_VERIFY_SERVICE)
       .useValue(coreVerifyServiceMock)
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
+      .overrideProvider(TrackingService)
+      .useValue(trackingServiceMock)
       .overrideProvider(ServiceProviderAdapterMongoService)
       .useValue(serviceProviderAdapterMongoService)
+      .overrideProvider(IdentityProviderAdapterMongoService)
+      .useValue(identityProviderAdapterMock)
       .compile();
 
     sessionServiceMock.get.mockResolvedValue(sessionServiceMock);

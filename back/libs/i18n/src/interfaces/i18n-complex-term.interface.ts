@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { RequireAtLeastOne } from 'type-fest';
 
 interface pluralEntry {

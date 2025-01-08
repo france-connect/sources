@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { AxiosResponseHeaders } from 'axios';
 import { Transform } from 'class-transformer';
 import { IsIn, IsObject, IsOptional, IsString, IsUrl } from 'class-validator';

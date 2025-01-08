@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './confirmation-type.enum';
 export * from './data-type.enum';
 export * from './delegation-scope.enum';

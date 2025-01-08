@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { ConfigParser } from '@fc/config';
 import { MockIdentityProviderSession } from '@fc/mock-identity-provider';
 import { MockIdentityProviderRoutes } from '@fc/mock-identity-provider/enums';

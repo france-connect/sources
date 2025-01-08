@@ -41,7 +41,7 @@ When(
   },
 );
 
-When("je saisi manuellement l'identité de l'utilisateur", function () {
+When("je saisis manuellement l'identité de l'utilisateur", function () {
   expect(this.user).to.exist;
 
   identityProviderPage.useCustomIdentity(this.user);

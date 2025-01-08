@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { IsArray, IsOptional, IsString } from 'class-validator';
 
 import { AcrLevels } from '../validators';

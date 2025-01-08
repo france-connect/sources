@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { CsmrAccountClientErrorCode } from '../enums';
 import { CsmrAccountClientBaseException } from './csmr-account-client-base.exception';
 

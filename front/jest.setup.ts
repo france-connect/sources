@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 /* ------------------------------------------------------
  *
  * Jest matchers/plugins setup file

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormErrorScrollComponent should match its snapshot 1`] = `
+<div>
+  <form
+    data-testid="form-wrapper"
+  />
+</div>
+`;

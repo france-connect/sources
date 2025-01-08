@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export enum ValidatorJs {
   CONTAINS = 'contains',
   EQUALS = 'equals',

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export enum IbanCode {
   AD = 'AD',
   AE = 'AE',

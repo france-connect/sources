@@ -50,8 +50,6 @@ export class PostChecktokenValidTokenDto {
   @IsObject()
   @ValidateNested()
   @Type(() => ValidTokenIntrospection)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_introspection: ValidTokenIntrospection;
 
   @IsString()
@@ -71,8 +69,6 @@ export class PostChecktokenExpiredTokenDto {
   @IsObject()
   @ValidateNested()
   @Type(() => ExpiredTokenIntrospection)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_introspection: ExpiredTokenIntrospection;
 
   @IsString()

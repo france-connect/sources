@@ -5,29 +5,29 @@ import { StylesProvider } from './styles.provider';
 
 describe('StylesProvider', () => {
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(
       <StylesProvider>
         <div>Hello World</div>
       </StylesProvider>,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call getComputedStyle with nodeTarget defined param', () => {
-    // given
+    // Given
     const getComputedStyleMock = jest.spyOn(window, 'getComputedStyle');
 
-    // when
+    // When
     render(
       <StylesProvider nodeTarget="any-document-selector">
         <div>Hello World</div>
       </StylesProvider>,
     );
 
-    // then
+    // Then
     expect(getComputedStyleMock).toHaveBeenCalledWith(
       document.documentElement,
       'any-document-selector',
@@ -35,7 +35,7 @@ describe('StylesProvider', () => {
   });
 
   it('should call setState with values from getComputedStyle', () => {
-    // given
+    // Given
     const useStylesVariablesMock = new CSSStyleDeclaration();
     useStylesVariablesMock.setProperty('--color-primary', 'red');
     jest.spyOn(window, 'getComputedStyle').mockReturnValue(useStylesVariablesMock);
@@ -43,14 +43,14 @@ describe('StylesProvider', () => {
     const setStateMock = jest.fn();
     jest.spyOn(React, 'useState').mockReturnValue([expect.any(Object), setStateMock]);
 
-    // when
+    // When
     render(
       <StylesProvider nodeTarget="any-document-selector">
         <div>Hello World</div>
       </StylesProvider>,
     );
 
-    // then
+    // Then
     expect(setStateMock).toHaveBeenCalledWith(useStylesVariablesMock);
   });
 });

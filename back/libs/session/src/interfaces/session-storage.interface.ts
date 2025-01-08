@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import { SESSION_STORE_KEY } from '../tokens';
 
 // Declarative file

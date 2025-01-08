@@ -1,14 +1,10 @@
-/* istanbul ignore file */
-
-// Declarative code
-
 import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
-import { BaseTracksOutputInterface } from './base-tracks-output.interface';
 import { ElasticTracksType } from './elastic-tracks.type';
+import { TracksFormatterOutputAbstract } from './tracks-formatter-output.abstract';
 
 export abstract class TracksFormatterAbstract<
-  TOutput extends BaseTracksOutputInterface,
+  TOutput extends TracksFormatterOutputAbstract,
 > {
   abstract formatTrack(elasticTrack: SearchHit<ElasticTracksType>): TOutput;
 }

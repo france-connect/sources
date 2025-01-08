@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import { ClaimsParameter } from 'oidc-provider';
 
 // Declarative file

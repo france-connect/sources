@@ -1,6 +1,6 @@
 #! /bin/bash
 
-mongo="mongo --host ${Mongoose_HOSTS} -u ${Mongoose_USER} -p ${Mongoose_PASSWORD} ${Mongoose_DATABASE} --quiet --tls"
+mongo="mongosh --host ${Mongoose_HOSTS} -u ${Mongoose_USER} -p ${Mongoose_PASSWORD} ${Mongoose_DATABASE} --quiet --tls"
 script=${1}
 
 cd "$(dirname "$0")"

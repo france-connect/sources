@@ -4,9 +4,9 @@ import { Helmet } from 'react-helmet-async';
 
 import type { AccountContextState } from '@fc/account';
 import { AccountContext } from '@fc/account';
-import { useSafeContext } from '@fc/common';
+import { EventTypes, useSafeContext } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { AlertComponent, AlertTypes, Sizes } from '@fc/dsfr';
+import { AlertComponent, Sizes } from '@fc/dsfr';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import type { FraudConfigInterface } from '@fc/user-dashboard';
 import {
@@ -52,7 +52,7 @@ export const FraudFormPage = React.memo(() => {
           <div>
             <FraudFormIntroductionComponent />
             {submitWithSuccess ? (
-              <AlertComponent dataTestId="success-alert" type={AlertTypes.SUCCESS}>
+              <AlertComponent dataTestId="success-alert" type={EventTypes.SUCCESS}>
                 <p className="fr-alert__title">Votre demande a bien été prise en compte</p>
                 <p>
                   Vous allez recevoir un message de confirmation à l’adresse électronique indiquée
@@ -67,7 +67,7 @@ export const FraudFormPage = React.memo(() => {
                   idpEmail={userinfos?.email}
                 />
                 {submitErrors && (
-                  <AlertComponent size={Sizes.SMALL} type={AlertTypes.ERROR}>
+                  <AlertComponent size={Sizes.SMALL} type={EventTypes.ERROR}>
                     <p className="fr-alert__title">Le message n&rsquo;a pas pu être envoyé</p>
                   </AlertComponent>
                 )}

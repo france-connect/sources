@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { AppRmqConfig } from '@fc/app';
 import { ConfigParser } from '@fc/config';
 

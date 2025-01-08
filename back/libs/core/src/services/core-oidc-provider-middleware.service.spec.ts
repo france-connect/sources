@@ -12,6 +12,7 @@ import { OidcClientRoutes } from '@fc/oidc-client';
 import {
   OidcCtx,
   OidcProviderErrorService,
+  OidcProviderIdpHintException,
   OidcProviderMiddlewarePattern,
   OidcProviderMiddlewareStep,
   OidcProviderService,
@@ -23,7 +24,7 @@ import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
-import { CoreClaimAmrException, CoreIdpHintException } from '../exceptions';
+import { CoreClaimAmrException } from '../exceptions';
 import { CORE_SERVICE } from '../tokens';
 import { pickAcr } from '../transforms';
 import { CoreOidcProviderMiddlewareService } from './core-oidc-provider-middleware.service';
@@ -1296,7 +1297,7 @@ describe('CoreOidcProviderMiddlewareService', () => {
 
       // Then
       expect(throwExceptionMock).toHaveBeenCalledExactlyOnceWith(
-        expect.any(CoreIdpHintException),
+        expect.any(OidcProviderIdpHintException),
       );
     });
 

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DTO2FieldComponent should match the snapshot, should create input field (default) 1`] = `
+<div>
+  <div
+    data-mockid="InputField"
+  />
+</div>
+`;

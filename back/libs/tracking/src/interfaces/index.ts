@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './app-tracking-service.abstract';
 export * from './tracked-event.interface';
 export * from './tracked-event-context.interface';

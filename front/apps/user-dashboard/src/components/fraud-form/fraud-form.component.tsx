@@ -2,7 +2,7 @@ import classnames from 'classnames';
 import React from 'react';
 import { Field, Form } from 'react-final-form';
 
-import { CheckboxInput, SimpleButton, Sizes } from '@fc/dsfr';
+import { ButtonTypes, CheckboxInput, SimpleButton, Sizes } from '@fc/dsfr';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import { TextAreaInputComponent, TextInputComponent } from '@fc/user-dashboard';
 
@@ -68,11 +68,11 @@ export const FraudFormComponent = React.memo(
                 <SimpleButton
                   className="fr-mt-4w"
                   dataTestId="fraud-form-submit-button"
-                  disabled={submitting}
-                  label="Signaler"
+                  disabled={!!submitting}
                   size={Sizes.MEDIUM}
-                  type="submit"
-                />
+                  type={ButtonTypes.SUBMIT}>
+                  Signaler
+                </SimpleButton>
               </div>
             </form>
           )}

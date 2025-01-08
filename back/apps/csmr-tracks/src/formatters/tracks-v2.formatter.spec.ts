@@ -9,7 +9,6 @@ import { ScopesService } from '@fc/scopes';
 import {
   CoreInstance,
   GeoFormatterService,
-  Platform,
   TracksFormatterMappingFailedException,
   TracksV2FieldsInterface,
 } from '@fc/tracks-adapter-elasticsearch';
@@ -18,6 +17,7 @@ import { getConfigMock } from '@mocks/config';
 import { getLoggerMock } from '@mocks/logger';
 
 import { IdpMappings } from '../dto';
+import { Platform } from '../enums';
 import { TracksV2Formatter } from './tracks-v2.formatter';
 
 describe('TracksV2Formatter', () => {

@@ -1,9 +1,9 @@
 import { Response } from 'express';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { CoreAuthorizationService } from '@fc/core';
+import { CORE_AUTH_SERVICE, CoreAuthorizationService } from '@fc/core';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
@@ -35,6 +35,7 @@ export class CoreFcaService implements CoreFcaServiceInterface {
     private readonly config: ConfigService,
     private readonly oidcClient: OidcClientService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,
+    @Inject(CORE_AUTH_SERVICE)
     private readonly coreAuthorization: CoreAuthorizationService,
     private readonly session: SessionService,
     private readonly fqdnService: CoreFcaFqdnService,

@@ -79,4 +79,4 @@ Fonctionnalité: Connexion avec Claims
     Et que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y030009"
+    Et le code d'erreur FranceConnect est "Y100009"

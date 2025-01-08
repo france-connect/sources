@@ -4,8 +4,8 @@
 
 This library is designed to fetch tracks from Elasticsearch and format them according to specified output requirements.
 
-- It is utilized by `csmr-tracks` to extract tracks based on a list of userIds.
-- It will also be used by `csmr-fraud` to extract tracks based on an `authenticationEventId`.
+- It is utilized by `csmr-tracks` to extract tracks based on a list of `accountIds`.
+- It is utilized by `csmr-fraud` to extract tracks based on an `authenticationEventId`.
 
 ## Configuration
 
@@ -23,17 +23,14 @@ import {
   TracksLegacyFormatter,
 } from './formatters';
 
-const tracksAdapterElasticsearchModule =
-  TracksAdapterElasticsearchModule.forRoot<TracksOutputInterface>(
-    TracksFcpHighFormatter,
-    TracksFcpLowFormatter,
-    TracksLegacyFormatter,
-  );
-
 @Module({
   imports: [
     ...
-    tracksAdapterElasticsearchModule,
+    TracksAdapterElasticsearchModule.forRoot<TracksOutputInterface>(
+      TracksFcpHighFormatter,
+      TracksFcpLowFormatter,
+      TracksLegacyFormatter,
+  );
   ],
   controllers: [...],
   providers: [...],
@@ -51,9 +48,10 @@ import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { ScopesService } from '@fc/scopes';
 import { TracksOutputInterface } from '@fc/csmr-tracks-client';
+import { TracksV2FieldsInterface } from '@fc/elasticsearch';
+
 import {
   TracksFormatterAbstract,
-  TracksV2FieldsInterface,
 } from '@fc/tracks-adapter-elasticsearch';
 
 import { Platform } from '../enums';
@@ -89,7 +87,7 @@ export class TracksV2Formatter
 
 ## Usage
 
-Use the asynchronous `getTracks` method to retrieve tracks for a list of userIds:
+Use the asynchronous `getTracksForAccountIds` method to retrieve tracks for a list of accountIds:
 
 ```typescript
 import { IPaginationOptions } from '@fc/common';
@@ -102,7 +100,10 @@ class Foo {
   ) {}
 
   async someMethod(accountIds: string[], options: IPaginationOptions) {
-    const { meta, payload } = await this.tracks.getTracks(accountIds, options);
+    const { total, payload } = await this.tracks.getTracksForAccountIds(
+      accountIds,
+      options,
+    );
 
     console.log(payload);
   }
@@ -118,13 +119,55 @@ class Foo {
     "claims": "['sub','gender','family_name'] | null",
     "time": "2022-06-17T11:58:51.643+02:00",
     "spLabel": "ANTS",
-    "idpLabel": "EDF",
+    "idpLabel": "Ameli",
     "platform": "FranceConnect",
     "interactionAcr": "eidas1",
     "country": "FR",
     "city": "Paris",
     "trackId": "fj8x83sBisV0DqyNyx-s",
     "authenticationEventId": "any-uuid-v4"
+  }
+]
+```
+
+Use the asynchronous `getTracksForAuthenticationEventId` method to retrieve tracks for an authenticationEventId:
+
+```typescript
+import { TracksAdapterElasticsearchService } from '@fc/tracks-adapter-elasticsearch';
+import { TracksOutputInterface } from '../interfaces';
+
+class Foo {
+  constructor(
+    private readonly tracks: TracksAdapterElasticsearchService<TracksOutputInterface>,
+  ) {}
+
+  async someMethod(authenticationEventId: string[]) {
+    const { total, payload } =
+      await this.tracks.getTracksForAuthenticationEventId(
+        authenticationEventId,
+      );
+
+    console.log(payload);
+  }
+}
+```
+
+**Example of log output:**
+
+```json
+[
+  {
+    "date": "17/06/2022 11:58:51",
+    "spName": "ANTS",
+    "idpName": "Ameli",
+    "platform": "FC (v1)",
+    "country": "FR",
+    "city": "Paris",
+    "accountId": "any-string",
+    "spSub": "any-string",
+    "idpSub": "any-string",
+    "interactionAcr": "eidas1",
+    "ipAddress": ["ipAddress"]
   }
 ]
 ```

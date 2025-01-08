@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export interface ICoreTrackingProviders {
   readonly browsingSessionId: string | null;
   readonly accountId: string | null;

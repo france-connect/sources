@@ -1,14 +1,21 @@
 import type { AxiosError, AxiosResponse } from 'axios';
-import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { ConfigService } from '@fc/config';
+import { get } from '@fc/http-client';
+
+import { Options } from '../../enums';
 import type { TracksConfig, UserDashboardTracks } from '../../interfaces';
 
 export const DEFAULT_SIZE = '10';
 export const DEFAULT_OFFSET = '0';
 
-export const usePaginatedTracks = (options: TracksConfig) => {
+export const usePaginatedTracks = () => {
+  const {
+    endpoints: { tracks: tracksEndpoint },
+  } = ConfigService.get<TracksConfig>(Options.CONFIG_NAME);
+
   const { search } = useLocation();
   const [tracks, setTracks] = useState<UserDashboardTracks>({} as UserDashboardTracks);
   const [submitErrors, setSubmitErrors] = useState<AxiosError | Error | undefined>(undefined);
@@ -32,17 +39,16 @@ export const usePaginatedTracks = (options: TracksConfig) => {
       size: query.get('size') || DEFAULT_SIZE,
     });
 
-    const endpoint = `${options.API_ROUTE_TRACKS}?${qs.toString()}`;
+    const endpoint = `${tracksEndpoint}?${qs.toString()}`;
 
-    return axios
-      .get<UserDashboardTracks>(endpoint)
+    return get<UserDashboardTracks>(endpoint)
       .then(getTacksSuccessHandler)
       .catch(getTacksErrorHandler);
-  }, [options.API_ROUTE_TRACKS, search, getTacksErrorHandler, getTacksSuccessHandler]);
+  }, [tracksEndpoint, search, getTacksErrorHandler, getTacksSuccessHandler]);
 
   useEffect(() => {
     getTracks();
-  }, [options, search, getTracks]);
+  }, [search, getTracks]);
 
   return { submitErrors, tracks };
 };

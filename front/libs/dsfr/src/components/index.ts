@@ -1,15 +1,17 @@
-/* istanbul ignore file */
-
-// declarative file
 export * from './accordions';
+export * from './alert-v2';
 export * from './alerts';
 export * from './badge';
+export * from './badges-group';
+export * from './breadcrumbs';
 export * from './button-group';
 export * from './buttons';
 export * from './callout';
+export * from './card';
 export * from './inputs';
 export * from './link';
 export * from './logos';
 export * from './pagination';
 export * from './searchbar';
 export * from './stepper';
+export * from './tile';

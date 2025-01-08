@@ -1,0 +1,107 @@
+fca-low:
+  stage: 'End to end'
+  image: ${E2E_DOCKER_IMAGE}
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "staging" || $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "staging"'
+      variables:
+        BDD_TAGS: 'not @ignore'
+        SKIP_DIFF_CHECK: 'true'
+    - if: '$CI_MERGE_REQUEST_LABELS =~ /CI Test (all|fca-low)/'
+      variables:
+        BDD_TAGS: 'not @ignore'
+        SKIP_DIFF_CHECK: 'true'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      variables:
+        BDD_TAGS: '@ci and not @ignore'
+  timeout: 1h
+  tags:
+    - cypress
+  variables:
+    TZ: 'Europe/Paris'
+    CYPRESS_PLATFORM: 'fca-low'
+    CYPRESS_TEST_ENV: 'docker'
+    CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT: 120000
+  cache:
+    key: ${CACHE_KEY}
+    policy: pull
+    paths:
+      # Back
+      - back/node_modules/
+      # Front
+      - front/node_modules/
+      - front/instances/agent-connect/node_modules/
+      - front/instances/user-dashboard/node_modules/
+      # Quality
+      - quality/node_modules/
+      # Fc-apps
+      - cache/fc-apps/fc-exploitation/node_modules/
+      - cache/fc-apps/fc-support/node_modules/
+      - cache/fc-apps/fc-workers/node_modules/
+      - cache/fc-apps/node_modules/
+      - cache/fc-apps/shared/node_modules/
+      # Cypress
+      - cache/Cypress
+  before_script:
+    - shopt -s expand_aliases
+    - alias docker-stack=$FC_ROOT/fc/docker/docker-stack
+    # build the main app and check if it is impacted by MR
+    - echo "CI_MERGE_REQUEST_LABELS=$CI_MERGE_REQUEST_LABELS"
+    - DIFF_FILES=$(docker-stack detect-back-changes core-fca-low bridge-http-proxy-rie csmr-rie mock-identity-provider-fca-low mock-service-provider-fca-low)
+    - DIFF_CHECK_STATUS=$(echo "$DIFF_FILES" | grep 'STATUS=' | sed 's/STATUS=//')
+    - echo "$DIFF_FILES"
+    - if [ "$DIFF_CHECK_STATUS" == "NO_CHANGES" ]; then exit 0; fi
+    - if [ "$DIFF_CHECK_STATUS" == "ERRORS" ]; then echo "$DIFF_FILES"; exit 1; fi
+    # Test Scope definition
+    - BDD_TAGS=${BDD_TAGS_FCA_LOW:-$BDD_TAGS}
+    - echo "BDD_TAGS=$BDD_TAGS"
+    # Ensure a clean docker environnement
+    - yarn config set proxy $PROXY_EXPLOITATION && yarn config set https-proxy $PROXY_EXPLOITATION
+    - docker-stack prune-ci
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - if [[ ! -d $FC_ROOT/mocks ]]; then cp -R /var/www/mocks $FC_ROOT/; fi
+    - RETURN_CODE=0
+    # Shallow clone depth 1 FC-APP repository
+    - rm -rf $FC_ROOT/fc-apps
+    - git clone -b $FC_APPS_VERSION --depth 1 https://gitlab-ci-token:$CI_JOB_TOKEN@gitlab.dev-franceconnect.fr/france-connect/fc-apps.git $FC_ROOT/fc-apps
+    # Bind sources in docker volumes
+    - ln -s $CI_PROJECT_DIR $FC_ROOT/fc/docker/volumes/src/fc
+    - ln -s $FC_ROOT/fc/front/instances/agent-connect $FC_ROOT/fc/docker/volumes/src/agent-connect
+    - ln -s $FC_ROOT/fc-apps $FC_ROOT/fc/docker/volumes/src/fc-apps
+    # Return to project directory
+    - wait
+    - cd $CI_PROJECT_DIR
+  script:
+    # Up the docker-stack with minimal requirement
+    - docker-stack up bdd-fca-low
+    - docker exec fc_core-fca-low_1 bash -c "yarn config set proxy $PROXY_EXPLOITATION && yarn config set https-proxy $PROXY_EXPLOITATION"
+    - rsync -a $CI_PROJECT_DIR/cache/fc-apps/ $FC_ROOT/fc-apps/ || true
+    - cd $CI_PROJECT_DIR/quality/fca && yarn install --frozen-lockfile
+    - cd $CI_PROJECT_DIR
+    # Start the NodeJS apps
+    - docker-stack start-all-ci
+    # Ensure the required apps are running
+    - docker-stack wait "core-fca-low" "https://core-fca-low.docker.dev-franceconnect.fr/api/v2/.well-known/openid-configuration"
+    - docker-stack wait "exploitation-fca-low" "https://exploitation-fca-low.docker.dev-franceconnect.fr/login"
+    # Starting Cypress Quality checks
+    - cd $CI_PROJECT_DIR/quality/fca
+    # Run Visual BDD tests and abort if failed
+    - $CI_PROJECT_DIR/back/scripts/ci/broadcast.sh "Starting visual checks"
+    - yarn test:low:snapshot -c video=${CYPRESS_VIDEO}
+    # Run Functional BDD tests
+    - $CI_PROJECT_DIR/back/scripts/ci/broadcast.sh "Starting Quality checks with tags $BDD_TAGS"
+    - yarn test:low:chrome-desktop -c video=${CYPRESS_VIDEO} --env TAGS="$BDD_TAGS" || RETURN_CODE=1
+    - yarn report
+    # Extract logs in case of failure
+    - if [ $RETURN_CODE -ne 0 ]; then $CI_PROJECT_DIR/back/scripts/ci/extract-pm2-rp-logs.sh; fi
+    # Exit with return code
+    - exit $RETURN_CODE
+  interruptible: true
+  artifacts:
+    expire_in: 1 hrs
+    when: always
+    paths:
+      - quality/fca/cypress/reports/cucumber/html-report
+      - quality/fca/cypress/snapshots/diff
+      - artifacts-logs
+  after_script:
+    - $FC_ROOT/fc/docker/docker-stack halt

@@ -1,0 +1,45 @@
+entity: PartnersAccount
+items:
+  # test / 123 / fia1
+  user-angela-dubois:
+    id: 'c763dcdb-5220-4ebf-8c23-f59b0a869b5f'
+    sub: '662596fb-6636-4c59-87b9-4d81048609d0'
+    email: 'test@abcd.com'
+    firstname: 'Angela Claire Louise'
+    lastname: 'DUBOIS'
+    createdAt: '2024-02-22'
+    updatedAt: '2024-05-02'
+    siren: '120027016'
+
+  # 12354 / 123 / fia1
+  user-bernard-martinot:
+    id: '4bb3b761-6e52-4cb4-affd-6685b68b8429'
+    sub: 'ca316f86-5847-4125-a470-f7cd62599480'
+    email: 'test@fia1.fr'
+    firstname: 'Bernard'
+    lastname: 'MARTINOT'
+    createdAt: '2024-02-22'
+    updatedAt: '2024-05-02'
+    siren: '120027016'
+
+  # bdd_default / 123 / fia1
+  user-bdd-default:
+    id: '579766b0-c6d8-4c40-9ce3-7c36e35d7a7a'
+    sub: '6d1ce442-e8c9-4a6c-b36c-96d64803aa0f'
+    email: 'hdubois@yopmail.com'
+    firstname: 'Hugo'
+    lastname: 'DUBOIS'
+    createdAt: '2024-02-22'
+    updatedAt: '2024-05-02'
+    siren: '130025265'
+
+  # bdd_one_instance / 123 / fia1
+  user-bdd-one-instance:
+    id: '15451992-56ab-444c-9a89-4f40c13a7821'
+    sub: 'd19db17e-eb51-4466-b12c-a2878ff7ce34'
+    email: 'cchevalier@yopmail.com'
+    firstname: 'Clara Angela'
+    lastname: 'CHEVALIER'
+    createdAt: '2024-02-22'
+    updatedAt: '2024-05-02'
+    siren: '999912345'

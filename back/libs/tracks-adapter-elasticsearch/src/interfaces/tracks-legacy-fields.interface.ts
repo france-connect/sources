@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
-
 import { CoreInstance } from '../enums';
 import { SourceInterface } from './tracks-geo.interface';
 

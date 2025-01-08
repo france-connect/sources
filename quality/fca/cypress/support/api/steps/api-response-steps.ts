@@ -1,4 +1,4 @@
-import { Then } from '@badeball/cypress-cucumber-preprocessor';
+import { Given, Then } from '@badeball/cypress-cucumber-preprocessor';
 
 import { ApiErrorDto } from '../dto/api-error.dto';
 import { validateDto } from '../helpers/class-validator-helper';
@@ -63,6 +63,17 @@ Then(
   "le corps de la réponse n'a pas de propriété {string}",
   function (property: string) {
     cy.get('@apiResponse').its('body').should('not.have.property', property);
+  },
+);
+
+Given(
+  'je mémorise la propriété {string} du corps de la réponse',
+  function (property: string) {
+    cy.get('@apiResponse')
+      .its('body')
+      .its(property)
+      .should('exist')
+      .as(`api:${property}`);
   },
 );
 

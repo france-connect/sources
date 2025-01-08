@@ -41,13 +41,9 @@ export class ValidateHttpHeadersConstraint {
   }
 }
 
-// declarative code
-/* istanbul ignore next */
 export function ValidateHttpHeaders(
   validationOptions?: ValidationOptions,
 ): PropertyDecorator {
-  // declarative code
-  /* istanbul ignore next */
   return ValidateBy(
     {
       name: VALIDATE_HTTP_HEADERS,

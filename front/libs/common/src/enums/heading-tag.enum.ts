@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export enum HeadingTag {
   H1 = 'h1',
   H2 = 'h2',

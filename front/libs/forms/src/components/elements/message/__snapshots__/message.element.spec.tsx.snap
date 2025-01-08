@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MessageElement should match the snapshot when error is not defined 1`] = `
+<div>
+  <div
+    aria-live="assertive"
+    class="fr-messages-group"
+    id="id-mock"
+  >
+    <p
+      class="fr-valid-text"
+      id="id-mock-messages"
+    >
+      Form.message.valid
+    </p>
+  </div>
+</div>
+`;
+
+exports[`MessageElement should match the snapshot when has error 1`] = `
+<div>
+  <div
+    aria-live="assertive"
+    class="fr-messages-group"
+    id="id-mock"
+  >
+    <p
+      class="fr-message fr-message--error"
+      id="id-mock-messages"
+    >
+      error-mock
+    </p>
+  </div>
+</div>
+`;

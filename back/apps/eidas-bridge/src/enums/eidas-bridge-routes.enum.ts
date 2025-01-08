@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 export enum EidasBridgeRoutes {
   BASE = '/oidc-client',
   INIT_SESSION = '/init-session',

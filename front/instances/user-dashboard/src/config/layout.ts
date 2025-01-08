@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { LogoFranceConnect } from '@fc/assets';
 import type { LayoutConfig } from '@fc/layout';
 

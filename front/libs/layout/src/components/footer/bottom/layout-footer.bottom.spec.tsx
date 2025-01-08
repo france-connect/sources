@@ -5,7 +5,7 @@ import { ConfigService } from '@fc/config';
 import { LayoutFooterBottomComponent } from './layout-footer.bottom';
 
 describe('LayoutFooterBottomComponent', () => {
-  // given
+  // Given
   const navigationMock = [
     {
       href: 'any-href-mock-1',
@@ -20,7 +20,7 @@ describe('LayoutFooterBottomComponent', () => {
   ];
 
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({
       features: { showLicence: expect.any(Boolean) },
       footer: { navigation: [expect.any(Object), expect.any(Object)] },
@@ -28,42 +28,42 @@ describe('LayoutFooterBottomComponent', () => {
   });
 
   it('should call ConfigService.get with Layout config name', () => {
-    // when
+    // When
     render(<LayoutFooterBottomComponent />);
 
-    // then
+    // Then
     expect(ConfigService.get).toHaveBeenCalledOnce();
     expect(ConfigService.get).toHaveBeenCalledWith('Layout');
   });
 
   it('should match the snapshot when features.showLicence is true and footer.navigation is defined', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({
       features: { showLicence: true },
       footer: { navigation: navigationMock },
     });
 
-    // when
+    // When
     const { container } = render(<LayoutFooterBottomComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should render the navigation when footer.navigation is defined', async () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({
       features: { showLicence: false },
       footer: { navigation: navigationMock },
     });
 
-    // when
+    // When
     const { container, findAllByRole, getByTitle } = render(<LayoutFooterBottomComponent />);
     const elementLinks = await findAllByRole('link');
     const elementLink1 = getByTitle('any-title-mock-1');
     const elementLink2 = getByTitle('any-title-mock-2');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(elementLinks).toHaveLength(2);
     expect(elementLink1).toBeInTheDocument();
@@ -79,17 +79,17 @@ describe('LayoutFooterBottomComponent', () => {
   });
 
   it('should render the licence when features.showLicence is defined', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({
       features: { showLicence: true },
       footer: { navigation: [] },
     });
 
-    // when
+    // When
     const { container, getByRole } = render(<LayoutFooterBottomComponent />);
     const elementLink = getByRole('link');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(container).toHaveTextContent(
       'Sauf mention contraire, tous les contenus de ce site sont sous licence etalab-2.0',

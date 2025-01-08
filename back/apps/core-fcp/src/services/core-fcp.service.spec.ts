@@ -5,10 +5,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartialExcept } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { CoreAuthorizationService } from '@fc/core';
+import { CORE_AUTH_SERVICE, CoreAuthorizationService } from '@fc/core';
 import { DeviceInformationInterface } from '@fc/device';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
+import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientService } from '@fc/oidc-client';
@@ -18,6 +19,7 @@ import { SessionService } from '@fc/session';
 
 import { getConfigMock } from '@mocks/config';
 import { getCoreAuthorizationServiceMock } from '@mocks/core';
+import { getLoggerMock } from '@mocks/logger';
 import { getSessionServiceMock } from '@mocks/session';
 
 import { CoreFcpService } from './core-fcp.service';
@@ -104,6 +106,8 @@ describe('CoreFcpService', () => {
     },
   };
 
+  const loggerServiceMock = getLoggerMock();
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -111,6 +115,10 @@ describe('CoreFcpService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CoreFcpService,
+        {
+          provide: CORE_AUTH_SERVICE,
+          useClass: CoreAuthorizationService,
+        },
         ConfigService,
         OidcAcrService,
         IdentityProviderAdapterMongoService,
@@ -119,9 +127,9 @@ describe('CoreFcpService', () => {
         ServiceProviderAdapterMongoService,
         OidcClientService,
         CoreAuthorizationService,
+        LoggerService,
       ],
     })
-
       .overrideProvider(ConfigService)
       .useValue(configServiceMock)
       .overrideProvider(OidcAcrService)
@@ -138,8 +146,10 @@ describe('CoreFcpService', () => {
       .useValue(serviceProviderMock)
       .overrideProvider(OidcClientService)
       .useValue(oidcClientServiceMock)
-      .overrideProvider(CoreAuthorizationService)
+      .overrideProvider(CORE_AUTH_SERVICE)
       .useValue(coreAuthorizationServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerServiceMock)
       .compile();
 
     service = module.get<CoreFcpService>(CoreFcpService);

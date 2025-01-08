@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { AppConfig } from '@fc/bridge-http-proxy';
 import { ConfigParser } from '@fc/config';
 

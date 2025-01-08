@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export interface HttpClientConfig {
   apiCsrfURL: string;
   // @NOTE if not defined

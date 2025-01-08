@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { parseBoolean } from '@fc/common';
 import { ConfigParser } from '@fc/config';
 import {

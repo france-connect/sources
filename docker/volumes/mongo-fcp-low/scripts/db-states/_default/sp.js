@@ -22,6 +22,7 @@ const fsp = {
     active: true,
     type: "public",
     __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: [
@@ -89,6 +90,7 @@ const fsp = {
     active: true,
     type: "public",
     __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: [
@@ -160,6 +162,7 @@ const fsp = {
     active: true,
     type: "private",
     __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: [
@@ -232,6 +235,7 @@ const fsp = {
     active: true,
     type: "public",
     __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: [
@@ -294,7 +298,8 @@ const fsp = {
     active: true,
     type: "public",
     __v: 4,
-    updatedAt: "2019-04-24 17:09:17",
+    createdAt: new Date("2019-04-24 17:09:17"),
+    updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: [
       "openid",
@@ -330,5 +335,5 @@ const fsp = {
 /* ------------------------------------------------------------------------------- */
 Object.values(fsp).forEach((fs) => {
   print(`${fs.name} > Initializing provider: ${fs.name}`);
-  db.client.update({ name: fs.name }, fs, { upsert: true });
+  db.client.updateOne({ name: fs.name }, { $set: fs }, { upsert: true });
 });

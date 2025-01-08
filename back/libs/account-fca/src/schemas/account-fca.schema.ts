@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { Document } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 

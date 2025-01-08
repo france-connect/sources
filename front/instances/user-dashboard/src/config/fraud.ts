@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import type { FraudConfigInterface } from '@fc/user-dashboard';
 
 export const Fraud: FraudConfigInterface = {

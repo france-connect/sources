@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export enum LogLevels {
   BUSINESS = 'business',
   EMERGENCY = 'emerg',

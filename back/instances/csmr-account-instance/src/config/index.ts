@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { CsmrAccountConfig } from '@fc/csmr-account';
 
 import AccountBroker from './account-broker';

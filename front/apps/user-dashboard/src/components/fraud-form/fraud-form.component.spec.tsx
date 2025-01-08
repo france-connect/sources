@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { Field, Form } from 'react-final-form';
 
-import { CheckboxInput, SimpleButton } from '@fc/dsfr';
+import { ButtonTypes, CheckboxInput, SimpleButton, Sizes } from '@fc/dsfr';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import { TextAreaInputComponent, TextInputComponent } from '@fc/user-dashboard';
 
@@ -69,7 +69,8 @@ describe('FraudFormComponent', () => {
 
     // Then
     expect(Form).toHaveBeenCalledWith(
-      expect.objectContaining({
+      {
+        children: expect.any(Function),
         initialValues: {
           authenticationEventId: undefined,
           contactEmail: 'email@idp.com',
@@ -78,8 +79,8 @@ describe('FraudFormComponent', () => {
           phoneNumber: undefined,
         },
         onSubmit: commitMock,
-      }),
-      expect.anything(),
+      },
+      {},
     );
   });
 
@@ -97,21 +98,21 @@ describe('FraudFormComponent', () => {
     expect(Field).toHaveBeenCalledTimes(2);
     expect(Field).toHaveBeenNthCalledWith(
       1,
-      expect.objectContaining({
+      {
         component: 'input',
         name: 'fraudSurveyOrigin',
         type: 'hidden',
-      }),
-      expect.anything(),
+      },
+      {},
     );
     expect(Field).toHaveBeenNthCalledWith(
       2,
-      expect.objectContaining({
+      {
         component: 'input',
         name: 'idpEmail',
         type: 'hidden',
-      }),
-      expect.anything(),
+      },
+      {},
     );
   });
 
@@ -127,13 +128,9 @@ describe('FraudFormComponent', () => {
 
     // Then
     expect(TextInputComponent).toHaveBeenCalledTimes(3);
-    expect(TextInputComponent).toHaveBeenNthCalledWith(
-      1,
-      inputAuthenticationEventIdConfig,
-      expect.anything(),
-    );
-    expect(TextInputComponent).toHaveBeenNthCalledWith(2, inputEmailConfig, expect.anything());
-    expect(TextInputComponent).toHaveBeenNthCalledWith(3, inputPhoneConfig, expect.anything());
+    expect(TextInputComponent).toHaveBeenNthCalledWith(1, inputAuthenticationEventIdConfig, {});
+    expect(TextInputComponent).toHaveBeenNthCalledWith(2, inputEmailConfig, {});
+    expect(TextInputComponent).toHaveBeenNthCalledWith(3, inputPhoneConfig, {});
   });
 
   it('should call TextAreaInputComponent', () => {
@@ -148,10 +145,7 @@ describe('FraudFormComponent', () => {
 
     // Then
     expect(TextAreaInputComponent).toHaveBeenCalledOnce();
-    expect(TextAreaInputComponent).toHaveBeenCalledWith(
-      inputTextAreaDescriptionConfig,
-      expect.anything(),
-    );
+    expect(TextAreaInputComponent).toHaveBeenCalledWith(inputTextAreaDescriptionConfig, {});
   });
 
   it('should call CheckboxInput', () => {
@@ -167,11 +161,12 @@ describe('FraudFormComponent', () => {
     // Then
     expect(CheckboxInput).toHaveBeenCalledOnce();
     expect(CheckboxInput).toHaveBeenCalledWith(
-      expect.objectContaining({
+      {
         label:
           'Vous acceptez de transmettre ces données à FranceConnect pour traiter votre demande d’aide.*',
-      }),
-      expect.anything(),
+        name: 'acceptTransmitData',
+      },
+      {},
     );
   });
 
@@ -188,11 +183,15 @@ describe('FraudFormComponent', () => {
     // Then
     expect(SimpleButton).toHaveBeenCalledOnce();
     expect(SimpleButton).toHaveBeenCalledWith(
-      expect.objectContaining({
-        label: 'Signaler',
-        type: 'submit',
-      }),
-      expect.anything(),
+      {
+        children: 'Signaler',
+        className: 'fr-mt-4w',
+        dataTestId: 'fraud-form-submit-button',
+        disabled: expect.any(Boolean),
+        size: Sizes.MEDIUM,
+        type: ButtonTypes.SUBMIT,
+      },
+      {},
     );
   });
 });

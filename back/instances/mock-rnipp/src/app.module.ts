@@ -1,13 +1,9 @@
-/* istanbul ignore file */
-
-// Declarative code
-import { MockRnippModule } from 'apps/mock-rnipp/src';
-
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
 import { LoggerModule } from '@fc/logger';
 import { LoggerRequestPlugin } from '@fc/logger-plugins';
+import { MockRnippModule } from '@fc/mock-rnipp';
 
 @Module({})
 export class AppModule {

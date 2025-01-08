@@ -1,23 +1,23 @@
 import { Injectable } from '@nestjs/common';
 
 import { CoreTrackingService } from '@fc/core';
-import {
-  AppTrackingServiceAbstract,
-  TrackedEventContextInterface,
-  TrackedEventInterface,
-} from '@fc/tracking';
+import { TrackedEventContextInterface } from '@fc/tracking';
 
-import { CoreFcaTrackingLogInterface } from '../interfaces';
+import { CoreFcaTrackingContextInterface } from '../interfaces';
 
 @Injectable()
-export class CoreFcaTrackingService implements AppTrackingServiceAbstract {
-  constructor(private readonly core: CoreTrackingService) {}
-  async buildLog(
-    trackedEvent: TrackedEventInterface,
+export class CoreFcaTrackingService extends CoreTrackingService {
+  protected extractContext(
     ctx: TrackedEventContextInterface,
-  ): Promise<CoreFcaTrackingLogInterface> {
-    const tracking = await this.core.buildLog(trackedEvent, ctx);
+  ): CoreFcaTrackingContextInterface {
+    const baseContext = super.extractContext(ctx);
     const { fqdn } = ctx;
-    return { ...tracking, fqdn };
+
+    const context = {
+      ...baseContext,
+      fqdn,
+    };
+
+    return context;
   }
 }

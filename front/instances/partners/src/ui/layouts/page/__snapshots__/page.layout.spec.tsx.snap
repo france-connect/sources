@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PageLayout should match snapshot 1`] = `
+<div>
+  <main
+    class="fr-container fr-py-8v"
+  >
+    <div
+      class="fr-grid-row fr-grid-row--center"
+    >
+      <div>
+        ReactRouterDom Outlet Component
+      </div>
+    </div>
+  </main>
+</div>
+`;

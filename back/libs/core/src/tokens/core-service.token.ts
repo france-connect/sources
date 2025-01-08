@@ -1,4 +1,4 @@
-/* istanbul ignore file */
-
-// Declarative file
 export const CORE_SERVICE = Symbol('CORE_SERVICE_TOKEN');
+export const CORE_TRACKING_SERVICE = Symbol('CORE_TRACKING_SERVICE_TOKEN');
+export const CORE_AUTH_SERVICE = Symbol('CORE_AUTH_SERVICE_TOKEN');
+export const CORE_VERIFY_SERVICE = Symbol('CORE_VERIFY_SERVICE_TOKEN');

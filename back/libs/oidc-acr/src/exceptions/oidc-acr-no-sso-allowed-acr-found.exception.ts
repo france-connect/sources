@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { ErrorCode } from '../enums';
 import { OidcAcrBaseException } from './oidc-acr-base.exception';
 

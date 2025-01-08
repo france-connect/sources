@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CardMediaComponent should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-card__img"
+  >
+    <img
+      alt="Image alt mock"
+      class="fr-responsive-img"
+      src="test-image.jpg"
+    />
+  </div>
+</div>
+`;

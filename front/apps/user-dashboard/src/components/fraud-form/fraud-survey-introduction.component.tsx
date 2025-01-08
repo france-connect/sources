@@ -14,11 +14,9 @@ export const FraudSurveyIntroductionComponent = React.memo(() => (
       Afin de vous protéger contre une éventuelle usurpation de votre identité, laissez-nous vous
       guider à sécuriser votre accès FranceConnect.
     </p>
-    <SimpleButton
-      dataTestId="fraud-survey-button"
-      label="Commencer la vérification"
-      onClick={redirectToFraudSurvey}
-    />
+    <SimpleButton dataTestId="fraud-survey-button" onClick={redirectToFraudSurvey}>
+      Commencer la vérification
+    </SimpleButton>
   </div>
 ));
 

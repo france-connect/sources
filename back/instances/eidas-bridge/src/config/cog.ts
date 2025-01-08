@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { COG_CITY, COG_COUNTRY, CogConfig } from '@fc/cog';
 import { ConfigParser } from '@fc/config';
 

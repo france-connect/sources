@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 export enum ErrorCode {
   NO_RELEVANT_KEY = 1,
   INVALID_SIGNATURE = 2,

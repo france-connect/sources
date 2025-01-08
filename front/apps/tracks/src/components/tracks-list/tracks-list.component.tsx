@@ -1,23 +1,25 @@
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { ConfigService } from '@fc/config';
 import { PaginationComponent } from '@fc/dsfr';
 
+import { Options } from '../../enums';
 import type { PaginationResultInterface, TrackListType, TracksConfig } from '../../interfaces';
 import { groupTracksByMonth, orderGroupByKeyAsc, transformTrackToEnhanced } from '../../utils';
 import { TracksGroupComponent } from './tracks-group';
 import { usePaginatedTracks } from './use-paginated-tracks.hook';
 
-export type TracksListComponentProps = {
-  options: TracksConfig;
-};
-
 const NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION = 3;
 
-export const TracksListComponent = React.memo(({ options }: TracksListComponentProps) => {
+export const TracksListComponent = React.memo(() => {
+  const {
+    luxon: { monthYearFormat },
+  } = ConfigService.get<TracksConfig>(Options.CONFIG_NAME);
+
   const navigate = useNavigate();
 
-  const { tracks } = usePaginatedTracks(options);
+  const { tracks } = usePaginatedTracks();
 
   const onPageClickHandler = useCallback(
     (offset: number) => {
@@ -37,15 +39,10 @@ export const TracksListComponent = React.memo(({ options }: TracksListComponentP
       {tracks.payload
         ?.filter(Boolean)
         .map(transformTrackToEnhanced)
-        .reduce(groupTracksByMonth(options), [])
+        .reduce(groupTracksByMonth(monthYearFormat), [])
         .sort(orderGroupByKeyAsc)
         .map(([tracksGroupKey, { label, tracks: items }]: TrackListType) => (
-          <TracksGroupComponent
-            key={tracksGroupKey}
-            label={label}
-            options={options}
-            tracks={items}
-          />
+          <TracksGroupComponent key={tracksGroupKey} label={label} tracks={items} />
         ))}
       <div className="flex-columns flex-center" id="tracks-pagination">
         {!!tracks.meta?.total && (

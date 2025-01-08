@@ -6,10 +6,10 @@ import { LinkComponent } from './link.component';
 
 describe('LinkComponent', () => {
   it('should match the snapshot, with default props', () => {
-    // when
+    // When
     const { container } = render(<LinkComponent href="any-url-mock">any-label-mock</LinkComponent>);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(Link).toHaveBeenCalledOnce();
     expect(Link).toHaveBeenCalledWith(
@@ -24,7 +24,7 @@ describe('LinkComponent', () => {
   });
 
   it('should match the snapshot, with all props', () => {
-    // when
+    // When
     const { container } = render(
       <LinkComponent
         external
@@ -38,7 +38,7 @@ describe('LinkComponent', () => {
       </LinkComponent>,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(Link).toHaveBeenCalledOnce();
     expect(Link).toHaveBeenCalledWith(

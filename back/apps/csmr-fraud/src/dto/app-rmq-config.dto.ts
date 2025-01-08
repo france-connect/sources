@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsEmail, IsString } from 'class-validator';
 
 import { AppRmqConfig as AppRmqGenericConfig } from '@fc/app';

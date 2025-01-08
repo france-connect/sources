@@ -21,6 +21,12 @@ export class TokenResultDto implements TokenResults {
   readonly idToken: string;
 
   @IsString()
+  @MinLength(1)
+  @IsAscii()
+  @IsOptional()
+  readonly refreshToken?: string;
+
+  @IsString()
   @IsAlphanumeric()
   readonly acr: string;
 

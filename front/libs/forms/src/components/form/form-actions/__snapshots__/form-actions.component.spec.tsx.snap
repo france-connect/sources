@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormActionsComponent should match the snapshot when reset button is defined 1`] = `
+<div>
+  <div
+    class="flex-end flex-columns"
+  >
+    <div>
+      SimpleButton
+    </div>
+    <div>
+      SimpleButton
+    </div>
+  </div>
+</div>
+`;
+
+exports[`FormActionsComponent should match the snapshot when reset button is not defined 1`] = `
+<div>
+  <div
+    class="flex-end flex-columns"
+  >
+    <div>
+      SimpleButton
+    </div>
+  </div>
+</div>
+`;

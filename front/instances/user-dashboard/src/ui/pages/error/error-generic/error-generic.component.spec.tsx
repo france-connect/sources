@@ -4,10 +4,10 @@ import { ErrorGenericComponent } from './error-generic.component';
 
 describe('ErrorGenericComponent', () => {
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(<ErrorGenericComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 });

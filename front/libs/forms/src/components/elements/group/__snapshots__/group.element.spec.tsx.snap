@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GroupElement should match the snapshot with parameters 1`] = `
+<div>
+  <div
+    class="fr-input-group any-classname-mock fr-input-group--disabled fr-input-group--error fr-input-group--valid"
+  >
+    <div>
+      children-mock
+    </div>
+  </div>
+</div>
+`;
+
+exports[`GroupElement should match the snapshot without parameters 1`] = `
+<div>
+  <div
+    class="fr-input-group"
+  >
+    <div>
+      children-mock
+    </div>
+  </div>
+</div>
+`;

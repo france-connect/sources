@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsEnum, IsNotEmptyObject } from 'class-validator';
 
 import { BridgeProtocol, MessageType } from '@fc/hybridge-http-proxy';

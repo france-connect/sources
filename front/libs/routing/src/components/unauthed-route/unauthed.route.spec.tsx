@@ -9,48 +9,36 @@ import { UnauthedRoute } from './unauthed.route';
 
 describe('UnauthedRoute', () => {
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(useLocation).mockReturnValue(expect.any(Object));
     jest.mocked(useSafeContext).mockReturnValue({ connected: true, ready: true });
   });
 
   it('should retrieve url location parameters', () => {
-    // when
+    // When
     render(<UnauthedRoute fallback="/any-authed-fallback" />);
 
-    // then
+    // Then
     expect(useLocation).toHaveBeenCalledOnce();
   });
 
   it('should retrieve user connection information', () => {
-    // when
+    // When
     render(<UnauthedRoute fallback="/any-authed-fallback" />);
 
-    // then
+    // Then
     expect(useSafeContext).toHaveBeenCalledOnce();
     expect(useSafeContext).toHaveBeenCalledWith(AccountContext);
   });
 
-  it('should render loader element if connection is not ready', () => {
-    // given
-    jest.mocked(useSafeContext).mockReturnValueOnce({ connected: false, ready: false });
-
-    // when
-    const { getByTestId } = render(<UnauthedRoute fallback="/any-authed-fallback" />);
-    const element = getByTestId('route-unauthed-component-loader-div');
-
-    // then
-    expect(element).toBeInTheDocument();
-  });
-
   it('should redirect with parameters if the user is connected', () => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValueOnce({ connected: true, ready: true });
 
-    // when
+    // When
     render(<UnauthedRoute fallback="/any-authed-fallback" />);
 
-    // then
+    // Then
     expect(Navigate).toHaveBeenCalledOnce();
     expect(Navigate).toHaveBeenCalledWith(
       { replace: false, state: { from: expect.any(Object) }, to: '/any-authed-fallback' },
@@ -59,24 +47,24 @@ describe('UnauthedRoute', () => {
   });
 
   it('should show correct page if user is not connected', () => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValueOnce({ connected: false, ready: true });
 
-    // when
+    // When
     render(<UnauthedRoute fallback="/any-authed-fallback" />);
 
-    // then
+    // Then
     expect(Outlet).toHaveBeenCalledOnce();
   });
 
   it('should redirect with default fallback is user is connected', () => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValueOnce({ connected: true, ready: true });
 
-    // when
+    // When
     render(<UnauthedRoute />);
 
-    // then
+    // Then
     expect(Navigate).toHaveBeenCalledOnce();
     expect(Navigate).toHaveBeenCalledWith(
       { replace: false, state: { from: expect.any(Object) }, to: '/' },
@@ -85,16 +73,16 @@ describe('UnauthedRoute', () => {
   });
 
   it('should redirect with parameters is the user is connected', () => {
-    // given
+    // Given
     const fallbackMock = jest.fn(() => '/any-authed-fallback');
     const locationMock = { pathname: '/any-pathname' } as unknown as Location;
     jest.mocked(useLocation).mockReturnValueOnce(locationMock);
     jest.mocked(useSafeContext).mockReturnValueOnce({ connected: true, ready: true });
 
-    // when
+    // When
     render(<UnauthedRoute fallback={fallbackMock} />);
 
-    // then
+    // Then
     expect(Navigate).toHaveBeenCalledOnce();
     expect(Navigate).toHaveBeenCalledWith(
       { replace: false, state: { from: locationMock }, to: '/any-authed-fallback' },

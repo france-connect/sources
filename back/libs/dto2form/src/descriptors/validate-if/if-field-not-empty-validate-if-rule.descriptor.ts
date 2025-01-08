@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { ValidateIfRule } from '../../enums';
 import { IfFieldNotEmptyValidateIfRule } from '../../interfaces';
 

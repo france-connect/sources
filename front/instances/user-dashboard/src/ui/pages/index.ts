@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export * from './error';
 export * from './fraud-form';
 export * from './fraud-login';

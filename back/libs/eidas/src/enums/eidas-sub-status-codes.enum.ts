@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export enum EidasSubStatusCodes {
   AUTHN_FAILED = 'AuthnFailed',
   INVALID_ATTR_NAME_OR_VALUE = 'InvalidAttrNameOrValue',

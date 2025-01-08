@@ -13,34 +13,34 @@ describe('TracksPage', () => {
   TracksListComponentMock.mockReturnValue(<div>FooBar TracksListComponent</div>);
 
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(useStylesVariables).mockReturnValue([expect.any(String)]);
   });
 
   it('should match the snapshot', () => {
-    // given
+    // Given
     jest.mocked(useStylesQuery).mockReturnValue(true);
 
-    // when
+    // When
     const { container } = render(<TracksPage />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call IntroductionComponent', () => {
-    // when
+    // When
     render(<TracksPage />);
 
-    // then
+    // Then
     expect(IntroductionComponent).toHaveBeenCalled();
   });
 
   it('should called TracksListComponent', () => {
-    // when
+    // When
     render(<TracksPage />);
 
-    // then
+    // Then
     expect(TracksListComponent).toHaveBeenCalled();
   });
 });

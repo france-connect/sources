@@ -15,7 +15,7 @@ export default class UdIdpSettingsUpdateMessage {
   }
 
   visitLastUpdateMessage(userEmail: string): void {
-    cy.maildevGetAllMessages().then((messages) => {
+    cy.maildevGetAllMessages().then((messages: Email[]) => {
       const updateMessage = messages
         .reverse()
         .find((message) => this.isUpdateMessage(message, userEmail));

@@ -5,7 +5,7 @@ import type { FraudConfigInterface } from '../interfaces';
 import { useGetFraudSurveyOrigin } from './use-get-fraud-survey-origin.hook';
 
 describe('useGetFraudSurveyOrigin', () => {
-  // given
+  // Given
   const options: FraudConfigInterface = {
     apiRouteFraudForm: 'any-route',
     fraudSupportFormPathname: 'any-pathname',

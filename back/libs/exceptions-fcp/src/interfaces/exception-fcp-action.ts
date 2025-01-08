@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 export interface ExceptionFcpActionInput {
   code: string;
   message: string;

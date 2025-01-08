@@ -1,14 +1,10 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { HttpStatus } from '@nestjs/common';
 
-import { ErrorCode } from '@fc/core';
-
+import { ErrorCode } from '../enums';
 import { EidasBridgeBaseException } from './eidas-bridge-base.exception';
 
 export class EidasBridgeInvalidFRIdentityException extends EidasBridgeBaseException {
-  static CODE = ErrorCode.INVALID_IDENTITY;
+  static CODE = ErrorCode.INVALID_FR_IDENTITY;
   static DOCUMENTATION =
     "L'identité reçue du fournisseur d'identité français n'est pas valide. Contacter le support N3";
   static ERROR = 'access_denied';

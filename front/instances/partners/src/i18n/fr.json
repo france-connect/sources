@@ -1,1 +1,10 @@
-{}
+{
+  "Partners.button.createInstance": "Ajouter une instance de test",
+  "Partners.homepage.sandboxTitle": "Mon Bac à Sable",
+  "Partners.homepage.createTileDescription": "Munissez vous de votre numéro de datapass pour réaliser les tests avec un bac à sable mis à votre disposition.",
+  "Partners.homepage.createTileTitle": "Créer une instance de test",
+  "Partners.homepage.sandboxTileDescription": "Accéder et créer vos instances de test avec les clés publiques. Il n’est pas lié à vos environnement d’intégration et de production.",
+  "Partners.homepage.sandboxTileTitle": "Bac à sable public",
+  "Partners.instance.successCreate": "Votre instance de test a été créée.",
+  "Partners.instance.successUpdate": "Votre instance de test a été mise à jour."
+}

@@ -1147,9 +1147,9 @@ const fip = {
 
 Object.values(fip).forEach((fi) => {
   print(`FIP > Initializing provider: ${fi.name} - Activated`);
-  db.provider.update(
+  db.provider.updateOne(
     { uid: fi.uid },
-    { ...BASE_DEV_IDP_HIGH, ...fi },
+    { $set: { ...BASE_DEV_IDP_HIGH, ...fi } },
     { upsert: true },
   );
 });

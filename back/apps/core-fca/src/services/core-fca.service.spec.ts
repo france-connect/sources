@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { CoreAuthorizationService } from '@fc/core';
+import { CORE_AUTH_SERVICE, CoreAuthorizationService } from '@fc/core';
 import { FqdnToIdpAdapterMongoService } from '@fc/fqdn-to-idp-adapter-mongo';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import { LoggerService } from '@fc/logger';
@@ -95,7 +95,10 @@ describe('CoreFcaService', () => {
         OidcClientService,
         IdentityProviderAdapterMongoService,
         FqdnToIdpAdapterMongoService,
-        CoreAuthorizationService,
+        {
+          provide: CORE_AUTH_SERVICE,
+          useClass: CoreAuthorizationService,
+        },
         SessionService,
         CoreFcaFqdnService,
         LoggerService,
@@ -109,7 +112,7 @@ describe('CoreFcaService', () => {
       .useValue(identityProviderMock)
       .overrideProvider(FqdnToIdpAdapterMongoService)
       .useValue(fqdnToIdpAdapterMongoMock)
-      .overrideProvider(CoreAuthorizationService)
+      .overrideProvider(CORE_AUTH_SERVICE)
       .useValue(coreAuthorizationServiceMock)
       .overrideProvider(SessionService)
       .useValue(sessionServiceMock)

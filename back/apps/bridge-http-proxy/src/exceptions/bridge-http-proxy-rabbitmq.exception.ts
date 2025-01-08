@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { ErrorCode } from '../enums';
 import { BridgeHttpProxyBaseException } from './bridge-http-proxy-base.exception';
 

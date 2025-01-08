@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { ConfigParser } from '@fc/config';
 import { DataProviderAdapterCoreConfig } from '@fc/data-provider-adapter-core';
 

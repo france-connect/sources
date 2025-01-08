@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 

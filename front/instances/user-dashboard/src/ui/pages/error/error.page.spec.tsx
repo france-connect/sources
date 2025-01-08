@@ -8,15 +8,15 @@ import { ErrorPage } from './error.page';
 
 describe('ErrorPage', () => {
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(useStylesVariables).mockReturnValue([expect.any(String)]);
   });
 
   it('should match the snapshot when greater than or equal to desktop', () => {
-    // given
+    // Given
     jest.mocked(useStylesQuery).mockReturnValue(true);
 
-    // when
+    // When
     const { container } = render(<ErrorPage />);
 
     // expect
@@ -24,10 +24,10 @@ describe('ErrorPage', () => {
   });
 
   it('should match the snapshot when lower than desktop', () => {
-    // given
+    // Given
     jest.mocked(useStylesQuery).mockReturnValue(false);
 
-    // when
+    // When
     const { container } = render(<ErrorPage />);
 
     // expect
@@ -35,7 +35,7 @@ describe('ErrorPage', () => {
   });
 
   it('should call react-helmet-async', () => {
-    // when
+    // When
     render(<ErrorPage />);
 
     // expect
@@ -43,7 +43,7 @@ describe('ErrorPage', () => {
   });
 
   it('should call react-router-dom Outlet', () => {
-    // when
+    // When
     render(<ErrorPage />);
 
     // expect
@@ -51,7 +51,7 @@ describe('ErrorPage', () => {
   });
 
   it('should call react-router-dom Link with params', () => {
-    // when
+    // When
     const { getByText } = render(<ErrorPage />);
     const element = getByText('Revenir à l’accueil');
 

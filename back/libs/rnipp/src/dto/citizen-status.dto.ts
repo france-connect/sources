@@ -7,7 +7,7 @@ import { RnippPivotIdentity } from './rnipp-pivot-identity.dto';
 export class CitizenStatus {
   @IsOptional()
   @ValidateNested()
-  @Type(/* istanbul ignore next */ () => RnippPivotIdentity)
+  @Type(() => RnippPivotIdentity)
   identity?: RnippPivotIdentity;
 
   @IsOptional()

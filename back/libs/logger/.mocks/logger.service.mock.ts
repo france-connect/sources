@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// This is a mock
 export function getLoggerMock() {
   return {
     business: jest.fn(),

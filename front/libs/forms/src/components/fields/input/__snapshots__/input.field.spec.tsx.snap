@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InputField should match snapshot and render a text area 1`] = `<div />`;
+
+exports[`InputField should match snapshot and render a text input 1`] = `<div />`;

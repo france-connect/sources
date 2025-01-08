@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 interface IdpNewStateInterface {
   uid: string;
   name: string;

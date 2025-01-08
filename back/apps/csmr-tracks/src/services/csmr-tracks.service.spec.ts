@@ -20,7 +20,7 @@ describe('CsmrTracksService', () => {
   };
 
   const tracksAdapterMock = {
-    getTracks: jest.fn(),
+    getTracksForAccountIds: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -72,10 +72,12 @@ describe('CsmrTracksService', () => {
 
     beforeEach(() => {
       accountMock.getAccountIdsFromIdentity.mockResolvedValue(accountIdsMock);
-      tracksAdapterMock.getTracks.mockReturnValueOnce(tracksAdapterResultsMock);
+      tracksAdapterMock.getTracksForAccountIds.mockReturnValue(
+        tracksAdapterResultsMock,
+      );
     });
 
-    it('should call accountMock.getIdsWithIdentityHash() with identity ', async () => {
+    it('should call accountMock.getAccountIdsFromIdentity() with identity ', async () => {
       // When
       await service.getTracksForIdentity(identityMock, optionsMock);
 
@@ -86,13 +88,13 @@ describe('CsmrTracksService', () => {
       );
     });
 
-    it('should call tracks.getTracks() with accountIds from getIdsWithIdentityHash', async () => {
+    it('should call tracks.getTracks() with accountIds', async () => {
       // When
       await service.getTracksForIdentity(identityMock, optionsMock);
 
       // Then
-      expect(tracksAdapterMock.getTracks).toHaveBeenCalledTimes(1);
-      expect(tracksAdapterMock.getTracks).toHaveBeenCalledWith(
+      expect(tracksAdapterMock.getTracksForAccountIds).toHaveBeenCalledTimes(1);
+      expect(tracksAdapterMock.getTracksForAccountIds).toHaveBeenCalledWith(
         accountIdsMock,
         optionsMock,
       );

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { ErrorCode } from '../enums';
 import { MailerBaseException } from './mailer-base.exception';
 

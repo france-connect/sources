@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declaration only
 export interface SearchDbCityInterface {
   cog: string;
   name: string;

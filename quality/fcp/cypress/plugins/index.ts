@@ -6,6 +6,7 @@ import onProxy from 'cypress-on-fix';
 
 import { log, table } from './console-log-plugin';
 import { createHexaHash } from './crypto-plugin';
+import { parseCsvContent } from './csv-plugin';
 import { getFixturePath } from './fixture-plugin';
 import { getJwtContent, isJwsValid } from './jwt-plugin';
 import {
@@ -44,6 +45,7 @@ const pluginConfig = async (
     injectTracks,
     isJwsValid,
     log,
+    parseCsvContent,
     removeAllTracks,
     removeTracks,
     table,

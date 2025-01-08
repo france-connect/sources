@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { Response } from 'express';
 
 import { AuthorizationParameters } from '@fc/oidc-client';
@@ -11,4 +8,11 @@ export interface CoreServiceInterface {
     idpId: string,
     authorizeParams: AuthorizationParameters,
   ) => Promise<void>;
+}
+
+export interface CoreAuthorizationServiceInterface {
+  getAuthorizeUrl(
+    idpId: string,
+    parameters: AuthorizationParameters,
+  ): Promise<string>;
 }

@@ -322,7 +322,9 @@
       "sourceRoot": "instances/csmr-user-preferences-high/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
-        "assets": ["../../../instances/csmr-user-preferences-high/**/*.ejs"]
+        "assets": [
+          "../../../instances/csmr-user-preferences-high/**/*.ejs"
+        ]
       }
     },
     "csmr-account-instance": {
@@ -1095,6 +1097,69 @@
       "sourceRoot": "libs/logger-plugins/src",
       "compilerOptions": {
         "tsConfigPath": "libs/logger-plugins/tsconfig.lib.json"
+      }
+    },
+    "postgres": {
+      "type": "library",
+      "root": "libs/postgres",
+      "entryFile": "index",
+      "sourceRoot": "libs/postgres/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/postgres/tsconfig.lib.json"
+      }
+    },
+    "partners-account": {
+      "type": "library",
+      "root": "libs/partners-account",
+      "entryFile": "index",
+      "sourceRoot": "libs/partners-account/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/partners-account/tsconfig.lib.json"
+      }
+    },
+    "partners-organisation": {
+      "type": "library",
+      "root": "libs/partners-organisation",
+      "entryFile": "index",
+      "sourceRoot": "libs/partners-organisation/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/partners-organisation/tsconfig.lib.json"
+      }
+    },
+    "partners-service-provider": {
+      "type": "library",
+      "root": "libs/partners-service-provider",
+      "entryFile": "index",
+      "sourceRoot": "libs/partners-service-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/partners-service-provider/tsconfig.lib.json"
+      }
+    },
+    "partners-service-provider-instance": {
+      "type": "library",
+      "root": "libs/partners-service-provider-instance",
+      "entryFile": "index",
+      "sourceRoot": "libs/partners-service-provider-instance/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/partners-service-provider-instance/tsconfig.lib.json"
+      }
+    },
+    "partners-service-provider-instance-version": {
+      "type": "library",
+      "root": "libs/partners-service-provider-instance-version",
+      "entryFile": "index",
+      "sourceRoot": "libs/partners-service-provider-instance-version/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/partners-service-provider-instance-version/tsconfig.lib.json"
+      }
+    },
+    "access-control": {
+      "type": "library",
+      "root": "libs/access-control",
+      "entryFile": "index",
+      "sourceRoot": "libs/access-control/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/access-control/tsconfig.lib.json"
       }
     }
   }

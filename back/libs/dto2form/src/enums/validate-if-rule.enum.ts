@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export enum ValidateIfRule {
   IF_DEFINED = 'ifDefined',
   IF_NOT_EMPTY = 'ifNotEmpty',

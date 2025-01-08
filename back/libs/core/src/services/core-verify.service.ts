@@ -16,9 +16,9 @@ import { IVerifyFeatureHandler } from '../interfaces';
 @Injectable()
 export class CoreVerifyService {
   constructor(
-    private readonly identityProvider: IdentityProviderAdapterMongoService,
+    protected readonly identityProvider: IdentityProviderAdapterMongoService,
     public readonly moduleRef: ModuleRef,
-    private readonly tracking: TrackingService,
+    protected readonly tracking: TrackingService,
   ) {}
 
   async getFeature<T extends IFeatureHandler>(

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative code
 import { Type } from 'class-transformer';
 import {
   IsArray,

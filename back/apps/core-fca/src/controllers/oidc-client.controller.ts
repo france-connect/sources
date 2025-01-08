@@ -302,10 +302,11 @@ export class OidcClientController {
       idpId,
     };
 
-    const identity = await this.oidcClient.getUserInfosFromProvider(
-      userInfoParams,
-      req,
-    );
+    const identity =
+      await this.oidcClient.getUserInfosFromProvider<OidcIdentityDto>(
+        userInfoParams,
+        req,
+      );
 
     const { FC_REQUESTED_IDP_USERINFO } = this.tracking.TrackedEventsMap;
     const identityFqdn = this.fqdnService.getFqdnFromEmail(
@@ -316,19 +317,18 @@ export class OidcClientController {
       fqdn: identityFqdn,
     });
 
-    await this.validateIdentity(idpId, identity);
+    const transformedIdentity = await this.transformIdentity(idpId, identity);
 
     const isAllowedIdpForEmail = await this.fqdnService.isAllowedIdpForEmail(
       idpId,
-      identity.email,
+      transformedIdentity.email,
     );
     if (!isAllowedIdpForEmail) {
-      const fqdn = this.fqdnService.getFqdnFromEmail(identity.email);
       this.logger.warning(
-        `Identity from "${idpId}" using "***@${fqdn}" is not allowed`,
+        `Identity from "${idpId}" using "***@${identityFqdn}" is not allowed`,
       );
-      const { FC_FQDN_MISSMATCH } = this.tracking.TrackedEventsMap;
-      await this.tracking.track(FC_FQDN_MISSMATCH, { req, fqdn });
+      const { FC_FQDN_MISMATCH } = this.tracking.TrackedEventsMap;
+      await this.tracking.track(FC_FQDN_MISMATCH, { req, fqdn: identityFqdn });
     }
 
     const identityExchange: OidcSession = cloneDeep({
@@ -336,7 +336,7 @@ export class OidcClientController {
       idpAccessToken: accessToken,
       idpIdToken: idToken,
       idpAcr: acr,
-      idpIdentity: identity,
+      idpIdentity: transformedIdentity,
     });
     sessionOidc.set(identityExchange);
 
@@ -347,10 +347,10 @@ export class OidcClientController {
     res.redirect(url);
   }
 
-  private async validateIdentity(
+  private async transformIdentity(
     idpId: string,
-    identity: Partial<OidcIdentityDto>,
-  ): Promise<boolean> {
+    identity: OidcIdentityDto,
+  ): Promise<OidcIdentityDto> {
     const validatorOptions: ValidatorOptions = {
       forbidNonWhitelisted: true,
       forbidUnknownValues: true,
@@ -367,11 +367,21 @@ export class OidcClientController {
       transformOptions,
     );
 
-    if (errors.length) {
-      this.logger.debug(errors, `Identity from "${idpId}" is invalid`);
-      throw new CoreFcaInvalidIdentityException();
+    if (errors.length === 0) {
+      return identity;
     }
 
-    return true;
+    const transformedIdentity = { ...identity };
+
+    errors.forEach((error) => {
+      if (error.property === 'phone_number') {
+        delete transformedIdentity.phone_number;
+      } else {
+        this.logger.debug(errors, `Identity from "${idpId}" is invalid`);
+        throw new CoreFcaInvalidIdentityException();
+      }
+    });
+
+    return transformedIdentity;
   }
 }

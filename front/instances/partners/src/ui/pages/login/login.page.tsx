@@ -27,8 +27,9 @@ export const LoginPage = () => {
             service.
           </h2>
           <LoginFormComponent
+            showHelp
             className="flex-rows items-start"
-            connectType={ConnectTypes.AGENT_CONNECT}
+            connectType={ConnectTypes.PRO_CONNECT}
           />
         </div>
       </div>

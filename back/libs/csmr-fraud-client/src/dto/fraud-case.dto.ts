@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsEmail, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class FraudCaseDto {

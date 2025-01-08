@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Testing helper
 import { ValidationArguments, getMetadataStorage } from 'class-validator';
 
 /**

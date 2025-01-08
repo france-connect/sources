@@ -7,7 +7,7 @@ import { LayoutHeaderMobileBurgerButton } from './layout-header.burger';
 
 describe('LayoutHeaderMobileBurgerButton', () => {
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValue({
       menuIsOpened: true,
       toggleMenu: jest.fn(),
@@ -15,53 +15,53 @@ describe('LayoutHeaderMobileBurgerButton', () => {
   });
 
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(<LayoutHeaderMobileBurgerButton />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('fr-header__navbar');
   });
 
   it('should call useSafeContext', () => {
-    // when
+    // When
     render(<LayoutHeaderMobileBurgerButton />);
 
-    // then
+    // Then
     expect(useSafeContext).toHaveBeenCalledOnce();
     expect(useSafeContext).toHaveBeenCalledWith(LayoutContext);
   });
 
   it('should call toggleMenu callback when user click the button', () => {
-    // given
+    // Given
     const toggleMenuMock = jest.fn();
     jest.mocked(useSafeContext).mockReturnValueOnce({
       menuIsOpened: true,
       toggleMenu: toggleMenuMock,
     });
 
-    // when
+    // When
     const { getByRole } = render(<LayoutHeaderMobileBurgerButton />);
     const element = getByRole('button');
     fireEvent.click(element);
 
-    // then
+    // Then
     expect(toggleMenuMock).toHaveBeenCalledOnce();
   });
 
   it('should render the button to open the menu', () => {
-    // given
+    // Given
     const toggleMenuMock = jest.fn();
     jest.mocked(useSafeContext).mockReturnValueOnce({
       menuIsOpened: 'any boolean mock',
       toggleMenu: toggleMenuMock,
     });
 
-    // when
+    // When
     const { getByTestId } = render(<LayoutHeaderMobileBurgerButton />);
     const element = getByTestId('burger-button-mobile-menu');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
     expect(element).toHaveAttribute('aria-controls', 'layout-header-menu-modal');
     expect(element).toHaveAttribute('aria-controls', 'layout-header-menu-modal');

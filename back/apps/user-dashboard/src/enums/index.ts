@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './emails-template.enum';
 export * from './error-code.enum';
 export * from './events-categories.enum';

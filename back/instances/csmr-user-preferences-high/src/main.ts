@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Not to be tested
 import { CsmrUserPreferencesConfig } from 'apps/csmr-user-preferences/src';
 
 import { NestFactory } from '@nestjs/core';

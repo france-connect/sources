@@ -9,6 +9,7 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:import/react',
     'plugin:import/typescript',
+    'plugin:@eslint-community/eslint-comments/recommended',
     'plugin:@typescript-eslint/strict-type-checked',
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
@@ -41,6 +42,7 @@ module.exports = {
   plugins: ['simple-import-sort', 'sort-destructure-keys', 'sort-keys-fix', 'prettier'],
   reportUnusedDisableDirectives: true,
   rules: {
+    '@eslint-community/eslint-comments/no-unused-disable': 'error',
     'class-methods-use-this': [
       2,
       {

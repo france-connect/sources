@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { TrackingLogInterface } from '@fc/tracking';
 
 export interface EidasBridgeTrackingLogInterface extends TrackingLogInterface {

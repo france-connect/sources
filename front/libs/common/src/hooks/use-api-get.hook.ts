@@ -1,11 +1,9 @@
-/* istanbul ignore file */
-
-// @NOTE refacto needed
 // AppContext + useApiGet should be merged
 // the axios wrapper might not be a hook but a function
-import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import { get } from '@fc/http-client';
 
 interface UseApiGetOptionsInterface {
   endpoint: string;
@@ -14,7 +12,6 @@ interface UseApiGetOptionsInterface {
 
 export class ApiException extends Error {}
 
-// @TODO remove this and replace in apps by http-client
 export const useApiGet = <T>(
   { endpoint, errorPath }: UseApiGetOptionsInterface,
   callback?: Function,
@@ -24,7 +21,7 @@ export const useApiGet = <T>(
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.get<T>(endpoint);
+      const response = await get<T>(endpoint);
       setData(response.data);
       callback?.(response.data);
     } catch (error: unknown) {

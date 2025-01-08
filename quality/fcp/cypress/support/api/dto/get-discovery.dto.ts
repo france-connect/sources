@@ -9,11 +9,11 @@ export class GetDiscoveryDto {
 
   @IsString()
   @MinLength(1)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly authorization_endpoint: string;
 
   @IsBoolean()
+  // oidc defined variable name
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly claims_parameter_supported: boolean;
 
   @IsString({ each: true })
@@ -30,14 +30,10 @@ export class GetDiscoveryDto {
 
   @IsString()
   @MinLength(1)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly end_session_endpoint: string;
 
   @IsString({ each: true })
   @IsArray()
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly grant_types_supported: string[];
 
   @IsString({ each: true })
@@ -52,8 +48,6 @@ export class GetDiscoveryDto {
 
   @IsString()
   @MinLength(1)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly jwks_uri: string;
 
   @IsBoolean()
@@ -99,8 +93,6 @@ export class GetDiscoveryDto {
 
   @IsString()
   @MinLength(1)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly token_endpoint: string;
 
   @IsString({ each: true })
@@ -126,8 +118,6 @@ export class GetDiscoveryDto {
 
   @IsString()
   @MinLength(1)
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly userinfo_endpoint: string;
 
   @IsString({ each: true })

@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ChoiceInput should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-fieldset__element"
+  >
+    <div
+      class="fr-radio-group fr-radio-group--lg"
+    >
+      <input
+        data-testid="form-input-radio-any_name_mock-any_choice_value_mock--testid"
+        id="form-input-radio-any_name_mock-any_choice_value_mock"
+        name="any_name_mock"
+        value="any_value_mock"
+      />
+      <div
+        data-mockid="LabelElement"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ChoiceInput should match the snapshot when inline and size are not defined 1`] = `
+<div>
+  <div
+    class="fr-fieldset__element fr-fieldset__element--inline"
+  >
+    <div
+      class="fr-radio-group fr-radio-group--md"
+    >
+      <input
+        data-testid="form-input-radio-any_name_mock-any_choice_value_mock--testid"
+        id="form-input-radio-any_name_mock-any_choice_value_mock"
+        name="any_name_mock"
+        value="any_value_mock"
+      />
+      <div
+        data-mockid="LabelElement"
+      />
+    </div>
+  </div>
+</div>
+`;

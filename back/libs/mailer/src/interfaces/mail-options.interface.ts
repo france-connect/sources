@@ -1,3 +1,5 @@
+import { Attachment } from 'nodemailer/lib/mailer';
+
 interface MailFrom {
   readonly email: string;
   readonly name: string;
@@ -19,4 +21,5 @@ export interface MailOptions {
   readonly from: MailFrom;
   readonly to: MailTo[];
   readonly replyTo?: ReplyTo;
+  readonly attachments?: Attachment[];
 }

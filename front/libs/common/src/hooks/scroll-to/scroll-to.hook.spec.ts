@@ -4,7 +4,7 @@ import { useScrollTo } from './scroll-to.hook';
 
 describe('useScrollTo', () => {
   it('should get to the top of the screen', () => {
-    // given
+    // Given
     jest.spyOn(window, 'scrollTo').mockImplementation(jest.fn());
     const { result } = renderHook(() => useScrollTo());
 

@@ -1,1 +1,10 @@
-{}
+{
+  "Partners.button.createInstance": "Add a test instance",
+  "Partners.homepage.sandboxTitle": "My Sandbox",
+  "Partners.homepage.createTileDescription": "Use your datapass number to perform tests with a sandbox provided for you.",
+  "Partners.homepage.createTileTitle": "Create a test instance",
+  "Partners.homepage.sandboxTileDescription": "Access and create your test instances with public keys. It is not linked to your integration and production environments.",
+  "Partners.homepage.sandboxTileTitle": "Public Sandbox",
+  "Partners.instance.successCreate": "Your test instance has been created.",
+  "Partners.instance.successUpdate": "Your test instance has been updated."
+}

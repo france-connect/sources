@@ -1,6 +1,9 @@
 #language:fr
 @ci
 Fonctionnalité: Connexion Espace Partenaires
+  # En tant qu'utilisateur,
+  # je veux me connecter en utilisant ProConnect
+  # afin d'accéder à l'Espace Partenaires
 
   Scénario: Espace Partenaires - Redirection vers page login
     Quand je navigue sur la page d'accueil de l'espace partenaires

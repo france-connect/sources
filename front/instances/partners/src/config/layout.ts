@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { LogoFranceConnect } from '@fc/assets';
 import type { LayoutConfig } from '@fc/layout';
 
@@ -11,7 +8,7 @@ export const Layout: LayoutConfig = {
   },
   footer: {
     description:
-      'Partenaires France Connect est un dispositif qui permet aux administrateurs FC de gérer les partenaires France Connnect.',
+      'Partenaires FranceConnect est un dispositif qui permet aux administrateurs FC de gérer les partenaires FranceConnect.',
     links: [
       {
         href: 'https://www.legifrance.gouv.fr',
@@ -59,12 +56,8 @@ export const Layout: LayoutConfig = {
   },
   navigation: [
     {
-      href: '/',
-      label: 'Home',
-    },
-    {
-      href: '/mock/steps',
-      label: 'Stepper',
+      href: '/instances',
+      label: 'Mon espace partenaire',
     },
   ],
   service: {

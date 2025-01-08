@@ -84,7 +84,6 @@ describe('CoreTrackingService', () => {
     idpName: undefined,
     idpLabel: undefined,
     idpIdentity: undefined,
-    rep_scope: ['scope1', 'scope2'],
   };
 
   const interactionAcrMock = 'interactionAcrMock';
@@ -181,7 +180,6 @@ describe('CoreTrackingService', () => {
         dpId: 'dp_uid',
         dpClientId: 'dp_client_id',
         dpTitle: 'dp_title',
-        rep_scope: ['scope1', 'scope2'],
       };
       // When
       const result = await service.buildLog(eventMock, contextMock);
@@ -270,14 +268,12 @@ describe('CoreTrackingService', () => {
         dpTitle: 'dp_title',
         interactionId: interactionIdMock,
         sessionId: sessionIdMock,
-        rep_scope: ['scope1', 'scope2'],
       };
       // When
       const result = service['extractContext'](contextMock);
       // Then
       expect(result).toEqual({
         ...extractedValueMock,
-        rep_scope: 'scope1 scope2',
       });
     });
 

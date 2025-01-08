@@ -27,12 +27,26 @@ export default class OidcProviderPage {
     this.getEmailInput().should('be.visible');
   }
 
-  login({ password, username }: UserCredentials): void {
+  checkIsIdpMockVisible(): void {
+    this.getIdpUsernameInput().should('be.visible');
+  }
+
+  // Login function not used as we use ProConnect mock
+  private loginWithProConnect(credentials: UserCredentials): void {
     this.checkIsVisible();
     this.getEmailInput().clearThenType(IDP_MOCK_EMAIL);
     this.getConnectionButton().click();
+    this.loginWithIdpMock(credentials);
+  }
+
+  private loginWithIdpMock({ password, username }: UserCredentials): void {
+    this.checkIsIdpMockVisible();
     this.getIdpUsernameInput().clearThenType(username);
     this.getIdpPasswordInput().clearThenType(password);
     this.getIdpConnectionButton().click();
+  }
+
+  login(credentials: UserCredentials): void {
+    this.loginWithIdpMock(credentials);
   }
 }

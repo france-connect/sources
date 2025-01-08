@@ -16,11 +16,11 @@ describe('PartnersController', () => {
     send: jest.fn(),
   };
 
-  const sessionServiceMock = getSessionServiceMock();
+  const sessionPartnersAccountMock = getSessionServiceMock();
 
   const redirectMock = PartnersFrontRoutes.INDEX;
 
-  const identityMock = {
+  const userInfoMock = {
     email: 'email@email.fr',
     given_name: 'givenName',
     usual_name: 'usualName',
@@ -40,7 +40,7 @@ describe('PartnersController', () => {
 
     controller = app.get<PartnersController>(PartnersController);
 
-    sessionServiceMock.get.mockReturnValue(identityMock);
+    sessionPartnersAccountMock.get.mockReturnValue(userInfoMock);
 
     resMock.json.mockImplementationOnce((arg) => arg);
     jest.mocked(resMock.status).mockReturnValue(resMock);
@@ -65,19 +65,18 @@ describe('PartnersController', () => {
   describe('getUserInfo', () => {
     it('should fetch idpIdentity in oidc session', async () => {
       // When
-      await controller.getUserInfo(resMock, sessionServiceMock);
+      await controller.getUserInfo(resMock, sessionPartnersAccountMock);
 
       // Then
-      expect(sessionServiceMock.get).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.get).toHaveBeenCalledWith('idpIdentity');
+      expect(sessionPartnersAccountMock.get).toHaveBeenCalledTimes(1);
     });
 
     it('should return a 401 if no session', async () => {
       // Given
-      sessionServiceMock.get.mockReturnValueOnce(undefined);
+      sessionPartnersAccountMock.get.mockReturnValueOnce(undefined);
 
       // When
-      await controller.getUserInfo(resMock, sessionServiceMock);
+      await controller.getUserInfo(resMock, sessionPartnersAccountMock);
 
       // Then
       expect(resMock.status).toHaveBeenCalledTimes(1);
@@ -87,22 +86,14 @@ describe('PartnersController', () => {
     });
 
     it('should return an object with lastname, firstname, email and siret used for the connection props', async () => {
-      // Given
-      sessionServiceMock.get.mockReturnValueOnce(identityMock);
-
-      const expected = {
-        firstname: identityMock.given_name,
-        lastname: identityMock.usual_name,
-        email: identityMock.email,
-        siret: identityMock.siret,
-        sub: identityMock.sub,
-      };
-
       // When
-      const result = await controller.getUserInfo(resMock, sessionServiceMock);
+      const result = await controller.getUserInfo(
+        resMock,
+        sessionPartnersAccountMock,
+      );
 
       // Then
-      expect(result).toStrictEqual(expected);
+      expect(result).toStrictEqual(userInfoMock);
     });
   });
 

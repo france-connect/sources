@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { CsmrUserPreferencesConfig } from 'apps/csmr-user-preferences/src';
 
 import App from './app';

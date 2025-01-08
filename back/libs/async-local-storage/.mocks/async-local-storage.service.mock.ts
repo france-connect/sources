@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export function getAsyncLocalStorageMock() {
   const mock = {
     run: jest.fn(),

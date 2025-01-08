@@ -8,8 +8,8 @@ import { I18nConfig, I18nSession } from '../dto';
 import {
   I18nInvalidOrMissingCountVariableException,
   I18nKeyNotFoundException,
+  I18nMissingVariableException,
 } from '../exceptions';
-import { I18nMissingVariableException } from '../exceptions/i18n-missing-variable.exception';
 import {
   I18nComplexTermInterface,
   I18nTermKey,

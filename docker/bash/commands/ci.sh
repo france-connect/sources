@@ -8,13 +8,10 @@ FRONT_PREFIX="front/"
 
 _get_hardcoded_back_files() {
   echo "${BACK_PREFIX}yarn.lock"
-  echo "${BACK_PREFIX}package.json"
-  echo "${BACK_PREFIX}nest-cli.json"
 }
 
 _get_hardcoded_front_files() {
   echo "/${FRONT_PREFIX}yarn.lock"
-  echo "/${FRONT_PREFIX}package.json"
 }
 
 _get_back_app_files() {
@@ -183,6 +180,11 @@ _ci_job_relevant_for_front_apps() {
     exit 0
   fi
 
+  if [[ ${CI_MERGE_REQUEST_LABELS} == *"CI Refresh Cache"* ]]; then
+    echo "Refreshing cache (rm -rf node_modules/)"
+    rm -rf node_modules
+  fi
+
   # Build the apps to obtain the stats file
   cd ${CI_PROJECT_DIR}/front
   yarn install --frozen-lockfile
@@ -198,6 +200,10 @@ _ci_job_relevant_for_front_apps() {
   local files=$(_get_modified_files_for_front_apps "${@}" "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}" 2>&1)
 
   _analyse_diff_results ${FRONT_PREFIX} "${files}"
+
+  if [[ ${CI_MERGE_REQUEST_LABELS} == *"CI Refresh Cache"* ]]; then
+    rm -rf node_modules
+  fi
 }
 
 _analyse_diff_results() {

@@ -1,9 +1,5 @@
-/* istanbul ignore file */
-
-// declarative file
-import { IsStringValidator } from '@fc/dto2form/interfaces';
-
 import { ValidatorCustom } from '../../enums';
+import { IsStringValidator } from '../../interfaces';
 
 export function $IsString(): IsStringValidator {
   return {

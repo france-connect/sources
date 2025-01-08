@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 /*
  * For yet undetermined reason, instanbul ignore stops to work in the files were this package is imported.
  * This barrel file is a workarround to import the package in an empty context,

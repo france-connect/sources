@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { OidcAcrConfig } from '@fc/oidc-acr';
 
 import OidcProvider from './oidc-provider';

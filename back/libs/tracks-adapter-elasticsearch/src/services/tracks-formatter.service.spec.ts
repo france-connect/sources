@@ -4,11 +4,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { CoreInstance } from '../enums';
 import { TracksFormatterUnknownInstanceException } from '../exceptions';
-import { BaseTracksOutputInterface, ElasticTracksType } from '../interfaces';
+import {
+  ElasticTracksType,
+  TracksFormatterOutputAbstract,
+} from '../interfaces';
 import { TracksFormatterService } from './tracks-formatter.service';
 
 describe('TracksFormatterService', () => {
-  let service: TracksFormatterService<BaseTracksOutputInterface>;
+  let service: TracksFormatterService<TracksFormatterOutputAbstract>;
 
   const formatterFcpHighMockFormattedTracksReturnValue = Symbol(
     'formatterFcpHighMockFormattedTracksReturnValue.formattedTracks',
@@ -54,7 +57,7 @@ describe('TracksFormatterService', () => {
       ],
     }).compile();
 
-    service = module.get<TracksFormatterService<BaseTracksOutputInterface>>(
+    service = module.get<TracksFormatterService<TracksFormatterOutputAbstract>>(
       TracksFormatterService,
     );
 

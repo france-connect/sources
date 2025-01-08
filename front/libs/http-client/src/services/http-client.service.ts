@@ -3,13 +3,13 @@
  * https://axios-http.com/docs/req_config
  *
  */
-import type { AxiosResponse, Method } from 'axios';
+import type { AxiosError, AxiosResponse, Method } from 'axios';
 import axios from 'axios';
 
-import { objectToFormData } from '@fc/common';
+import { ContentType, HttpMethods } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
-import { Methods, Options } from '../enums';
+import { Options } from '../enums';
 import { AxiosException } from '../errors';
 import type {
   GetCsrfTokenResponseInterface,
@@ -18,6 +18,14 @@ import type {
   HttpClientOptionsInterface,
 } from '../interfaces';
 import { getRequestOptions } from '../utils';
+
+const DEFAULT_OPTION = {
+  headers: {
+    // Conventional header name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    'Content-Type': ContentType.FORM_URL_ENCODED,
+  },
+};
 
 export const makeRequest = async (
   method: Method,
@@ -39,12 +47,13 @@ export const getCSRF = async (): Promise<GetCsrfTokenResponseInterface> => {
   try {
     const { apiCsrfURL } = ConfigService.get<HttpClientConfig>(Options.CONFIG_NAME);
 
-    const method = Methods.GET;
+    const method = HttpMethods.GET;
     const endpoint = apiCsrfURL;
     const { data } = await makeRequest(method, endpoint);
     return data;
   } catch (err) {
-    throw new AxiosException('Error while trying to get CSRF token');
+    const error = { message: 'Error while trying to get CSRF token' } as AxiosError;
+    throw new AxiosException(error);
   }
 };
 
@@ -61,10 +70,11 @@ export const get = async <T = unknown>(
   options?: HttpClientOptionsInterface,
 ): Promise<AxiosResponse<T>> => {
   try {
-    const method = Methods.GET;
+    const method = HttpMethods.GET;
     return await makeRequest(method, endpoint, data, options);
   } catch (err) {
-    throw new AxiosException((err as Error).message);
+    const error = err as AxiosError;
+    throw new AxiosException(error);
   }
 };
 
@@ -75,19 +85,20 @@ export const get = async <T = unknown>(
  * @param axiosOptions AxiosRequestConfig
  * @returns
  */
-export const post = async (
+export const post = async <T>(
   endpoint: string,
-  data?: HttpClientDataInterface,
+  data: HttpClientDataInterface,
   options?: HttpClientOptionsInterface,
-): Promise<AxiosResponse> => {
+): Promise<AxiosResponse<T>> => {
   try {
     const { csrfToken } = await getCSRF();
-
-    const method = Methods.POST;
     const datas = { ...data, csrfToken };
-    const axiosConfig = { transformRequest: objectToFormData, ...options };
-    return await makeRequest(method, endpoint, datas, axiosConfig);
+    return await makeRequest(HttpMethods.POST, endpoint, datas, {
+      ...DEFAULT_OPTION,
+      ...options,
+    });
   } catch (err) {
-    throw new AxiosException((err as Error).message);
+    const error = err as AxiosError;
+    throw new AxiosException(error);
   }
 };

@@ -7,7 +7,7 @@ import { LayoutProvider } from './layout.provider';
 
 describe('LayoutProvider', () => {
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValue({
       connected: true,
       ready: true,
@@ -19,18 +19,18 @@ describe('LayoutProvider', () => {
   });
 
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(<LayoutProvider>Test</LayoutProvider>);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call useToggle with false as default value', () => {
-    // when
+    // When
     render(<LayoutProvider>Test</LayoutProvider>);
 
-    // then
+    // Then
     expect(useToggle).toHaveBeenCalledOnce();
     expect(useToggle).toHaveBeenCalledWith(false);
   });

@@ -7,31 +7,31 @@ import { LayoutHeaderServiceComponent } from './layout-header.service';
 
 describe('LayoutHeaderServiceComponent', () => {
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({ service: {} });
   });
 
   it('should call ConfigService.get with Layout', () => {
-    // when
+    // When
     render(<LayoutHeaderServiceComponent />);
 
-    // then
+    // Then
     expect(ConfigService.get).toHaveBeenCalledOnce();
     expect(ConfigService.get).toHaveBeenCalledWith('Layout');
   });
 
   it('should call getAccessibleTitle with params', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({
       service: {
         name: 'any service name mock',
       },
     });
 
-    // when
+    // When
     render(<LayoutHeaderServiceComponent />);
 
-    // then
+    // Then
     expect(getAccessibleTitle).toHaveBeenCalledOnce();
     expect(getAccessibleTitle).toHaveBeenCalledWith(
       'Retour à l’accueil du site',
@@ -41,7 +41,7 @@ describe('LayoutHeaderServiceComponent', () => {
   });
 
   it('should render the link, when service.name is defined', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({
       service: {
         homepage: '/any-href-mock',
@@ -52,12 +52,12 @@ describe('LayoutHeaderServiceComponent', () => {
       .mocked(getAccessibleTitle)
       .mockReturnValueOnce('Retour à l’accueil du site - any service name mock');
 
-    // when
+    // When
     const { container, getByTestId } = render(<LayoutHeaderServiceComponent />);
     const elementContainer = getByTestId('layout-header-service-component');
     const elementName = getByTestId('layout-header-service-component-name');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(elementContainer).toBeInTheDocument();
     expect(elementName).toBeInTheDocument();
@@ -70,19 +70,19 @@ describe('LayoutHeaderServiceComponent', () => {
   });
 
   it('should render the baseline, when service.baseline is defined', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({
       service: {
         baseline: 'any service baseline mock',
       },
     });
 
-    // when
+    // When
     const { container, getByTestId } = render(<LayoutHeaderServiceComponent />);
     const elementContainer = getByTestId('layout-header-service-component');
     const elementBaseline = getByTestId('layout-header-service-component-baseline');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(elementContainer).toBeInTheDocument();
     expect(elementBaseline).toBeInTheDocument();
@@ -90,7 +90,7 @@ describe('LayoutHeaderServiceComponent', () => {
   });
 
   it('should render the link and the baseline, when service.name and service.baseline are defined', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({
       service: {
         baseline: 'any service baseline mock',
@@ -104,13 +104,13 @@ describe('LayoutHeaderServiceComponent', () => {
         'Retour à l’accueil du site - any service baseline mock - any service name mock',
       );
 
-    // when
+    // When
     const { container, getByTestId } = render(<LayoutHeaderServiceComponent />);
     const elementContainer = getByTestId('layout-header-service-component');
     const elementName = getByTestId('layout-header-service-component-name');
     const elementBaseline = getByTestId('layout-header-service-component-baseline');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(elementContainer).toBeInTheDocument();
     expect(elementName).toBeInTheDocument();

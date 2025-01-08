@@ -7,10 +7,9 @@ import { PaginationComponent } from './pagination.component';
 import { usePagination } from './use-pagination.hook';
 
 jest.mock('./use-pagination.hook');
-jest.mock('@fc/styles');
 
 describe('PaginationComponent', () => {
-  // given
+  // Given
   const usePaginationMock = {
     currentPage: 2,
     gtTablet: true,
@@ -29,7 +28,7 @@ describe('PaginationComponent', () => {
   });
 
   it('should match the snapshot', () => {
-    // given
+    // Given
     jest.mocked(useStylesQuery).mockReturnValueOnce(false);
     jest.mocked(usePagination).mockReturnValue({
       ...usePaginationMock,
@@ -39,7 +38,7 @@ describe('PaginationComponent', () => {
       showLastPage: true,
     });
 
-    // when
+    // When
     const { container } = render(
       <PaginationComponent
         numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -51,12 +50,12 @@ describe('PaginationComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot in mobile viewport', () => {
-    // given
+    // Given
     jest.mocked(usePagination).mockReturnValue({
       ...usePaginationMock,
       showFirstEllipsis: true,
@@ -66,7 +65,7 @@ describe('PaginationComponent', () => {
     });
     jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
-    // when
+    // When
     const { container } = render(
       <PaginationComponent
         useEdgeArrows
@@ -78,17 +77,17 @@ describe('PaginationComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot with default props values', () => {
-    // given
+    // Given
     jest.mocked(usePagination).mockReturnValue({
       ...usePaginationMock,
     });
 
-    // when
+    // When
     const { container } = render(
       <PaginationComponent
         useEllipsis
@@ -97,7 +96,7 @@ describe('PaginationComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(usePagination).toHaveBeenCalledWith({
       numberOfPagesShownIntoNavigation: DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION,
@@ -107,12 +106,12 @@ describe('PaginationComponent', () => {
   });
 
   it('should match the snapshot with custom props values', () => {
-    // given
+    // Given
     jest.mocked(usePagination).mockReturnValue({
       ...usePaginationMock,
     });
 
-    // when
+    // When
     const { container } = render(
       <PaginationComponent
         useEllipsis
@@ -122,17 +121,17 @@ describe('PaginationComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match the snapshot with ellipsis', () => {
-    // given
+    // Given
     jest.mocked(usePagination).mockReturnValue({
       ...usePaginationMock,
     });
 
-    // when
+    // When
     const { container } = render(
       <PaginationComponent
         numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -141,19 +140,19 @@ describe('PaginationComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call usePagination hook, with params', () => {
-    // given
+    // Given
     const paginationObjectMock = {
       offset: 1,
       size: 10,
       total: 200,
     };
 
-    // when
+    // When
     render(
       <PaginationComponent
         numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -162,7 +161,7 @@ describe('PaginationComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(usePagination).toHaveBeenCalledOnce();
     expect(usePagination).toHaveBeenCalledWith({
       numberOfPagesShownIntoNavigation: DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION,
@@ -173,7 +172,7 @@ describe('PaginationComponent', () => {
 
   describe('navigation', () => {
     it('should call callback when a navigation button is clicked', () => {
-      // when
+      // When
       const { getByText } = render(
         <PaginationComponent
           numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -184,16 +183,16 @@ describe('PaginationComponent', () => {
       const button = getByText(/2/);
       fireEvent.click(button);
 
-      // then
+      // Then
       expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
       expect(onPageClickCallbackMock).toHaveBeenCalledWith(3);
     });
 
     describe('button first page', () => {
       it('should call callback with the first page', () => {
-        // given
+        // Given
 
-        // when
+        // When
         const { getByText } = render(
           <PaginationComponent
             useEdgeArrows
@@ -206,7 +205,7 @@ describe('PaginationComponent', () => {
         const button = getByText(/Première page/);
         fireEvent.click(button);
 
-        // then
+        // Then
         expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
         expect(onPageClickCallbackMock).toHaveBeenCalledWith(0);
       });
@@ -214,9 +213,9 @@ describe('PaginationComponent', () => {
 
     describe('button previous page', () => {
       it('should call callback when the previous button is clicked', () => {
-        // given
+        // Given
 
-        // when
+        // When
         const { getByTestId } = render(
           <PaginationComponent
             useNavArrows
@@ -229,17 +228,17 @@ describe('PaginationComponent', () => {
         const button = getByTestId('PaginationComponent-previous-page-button');
         fireEvent.click(button);
 
-        // then
+        // Then
         expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
         expect(onPageClickCallbackMock).toHaveBeenCalledWith(1);
       });
 
       it('should display : "Page précédente"', () => {
-        // given
+        // Given
 
         jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
-        // when
+        // When
         const { container } = render(
           <PaginationComponent
             useNavArrows
@@ -249,7 +248,7 @@ describe('PaginationComponent', () => {
           />,
         );
 
-        // then
+        // Then
         const button = screen.getByTestId('PaginationComponent-previous-page-button');
 
         expect(container).toMatchSnapshot();
@@ -259,9 +258,9 @@ describe('PaginationComponent', () => {
 
     describe('button next page', () => {
       it('should call callback when the next button is clicked', () => {
-        // given
+        // Given
 
-        // when
+        // When
         const { getByTestId } = render(
           <PaginationComponent
             useNavArrows
@@ -273,15 +272,15 @@ describe('PaginationComponent', () => {
         const button = getByTestId('PaginationComponent-next-page-button');
         fireEvent.click(button);
 
-        // then
+        // Then
         expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
         expect(onPageClickCallbackMock).toHaveBeenCalledWith(3);
       });
 
       it('should not be display if every conditions is set to false', () => {
-        // given
+        // Given
 
-        // when
+        // When
         const { container } = render(
           <PaginationComponent
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -291,12 +290,12 @@ describe('PaginationComponent', () => {
           />,
         );
 
-        // then
+        // Then
         expect(container).toMatchSnapshot();
       });
 
       it('should not be visible if screen size is small', () => {
-        // given
+        // Given
         const { container } = render(
           <PaginationComponent
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -309,7 +308,7 @@ describe('PaginationComponent', () => {
         });
         jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
-        // when
+        // When
         render(
           <PaginationComponent
             useNavArrows
@@ -319,16 +318,16 @@ describe('PaginationComponent', () => {
           />,
         );
 
-        // then
+        // Then
         expect(container).toMatchSnapshot();
       });
     });
 
     describe('button last page', () => {
       it('should call callback with the last page', () => {
-        // given
+        // Given
 
-        // when
+        // When
         const { getByText } = render(
           <PaginationComponent
             useEdgeArrows
@@ -340,7 +339,7 @@ describe('PaginationComponent', () => {
         const button = getByText(/Dernière page/);
         fireEvent.click(button);
 
-        // then
+        // Then
         expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
         expect(onPageClickCallbackMock).toHaveBeenCalledWith(3);
       });
@@ -348,7 +347,7 @@ describe('PaginationComponent', () => {
 
     describe('button first ellipsis', () => {
       it('should call callback if first navigation number is showed in the page whith ellipsis', () => {
-        // given
+        // Given
         const { container } = render(
           <PaginationComponent
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -362,7 +361,7 @@ describe('PaginationComponent', () => {
           showFirstPage: true,
         });
 
-        // when
+        // When
         const { getByText } = render(
           <PaginationComponent
             useEdgeArrows
@@ -376,7 +375,7 @@ describe('PaginationComponent', () => {
         fireEvent.click(button);
         const firstEllipsis = screen.getByTestId('PaginationComponent-first-ellipsis');
 
-        // then
+        // Then
         expect(container).toMatchSnapshot();
         expect(firstEllipsis).toBeInTheDocument();
         expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
@@ -386,7 +385,7 @@ describe('PaginationComponent', () => {
 
     describe('button last ellipsis', () => {
       it('should call callback if last navigation number is showed in the page whith ellipsis', () => {
-        // given
+        // Given
         const { container } = render(
           <PaginationComponent
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -400,7 +399,7 @@ describe('PaginationComponent', () => {
           showLastPage: true,
         });
 
-        // when
+        // When
         const { getByText } = render(
           <PaginationComponent
             useEdgeArrows
@@ -415,7 +414,7 @@ describe('PaginationComponent', () => {
         fireEvent.click(button);
         const lastEllipsis = screen.getByTestId('PaginationComponent-last-ellipsis');
 
-        // then
+        // Then
         expect(container).toMatchSnapshot();
         expect(lastEllipsis).toBeInTheDocument();
         expect(onPageClickCallbackMock).toHaveBeenCalledOnce();
@@ -425,7 +424,7 @@ describe('PaginationComponent', () => {
 
     describe('ellipsis', () => {
       it('should be visible if screen size is small', () => {
-        // given
+        // Given
         const { container } = render(
           <PaginationComponent
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -440,7 +439,7 @@ describe('PaginationComponent', () => {
         });
         jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
-        // when
+        // When
         render(
           <PaginationComponent
             useEllipsis
@@ -451,13 +450,13 @@ describe('PaginationComponent', () => {
         );
         const lastEllipsis = screen.getByTestId('PaginationComponent-last-ellipsis');
 
-        // then
+        // Then
         expect(container).toMatchSnapshot();
         expect(lastEllipsis).toBeInTheDocument();
       });
 
       it('should not be visible if screen size is not small', () => {
-        // given
+        // Given
         const { container } = render(
           <PaginationComponent
             useEllipsis
@@ -473,7 +472,7 @@ describe('PaginationComponent', () => {
         });
         jest.mocked(useStylesQuery).mockReturnValueOnce(false);
 
-        // when
+        // When
         render(
           <PaginationComponent
             useEllipsis
@@ -483,12 +482,12 @@ describe('PaginationComponent', () => {
           />,
         );
 
-        // then
+        // Then
         expect(container).toMatchSnapshot();
       });
 
       it('should not be visible if showLastEllipsis is set to false', () => {
-        // given
+        // Given
         const { container } = render(
           <PaginationComponent
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -503,7 +502,7 @@ describe('PaginationComponent', () => {
         });
         jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
-        // when
+        // When
         render(
           <PaginationComponent
             useEllipsis
@@ -513,12 +512,12 @@ describe('PaginationComponent', () => {
           />,
         );
 
-        // then
+        // Then
         expect(container).toMatchSnapshot();
       });
 
       it('should not be visible if useEllipsis is set to false', () => {
-        // given
+        // Given
         const { container } = render(
           <PaginationComponent
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -533,7 +532,7 @@ describe('PaginationComponent', () => {
         });
         jest.mocked(useStylesQuery).mockReturnValueOnce(true);
 
-        // when
+        // When
         render(
           <PaginationComponent
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -543,12 +542,12 @@ describe('PaginationComponent', () => {
           />,
         );
 
-        // then
+        // Then
         expect(container).toMatchSnapshot();
       });
 
       it('should not be visible if ellipsis params are set to default "false" values', () => {
-        // given
+        // Given
         const { container } = render(
           <PaginationComponent
             numberOfPagesShownIntoNavigation={DEFAULT_NUMBER_OF_PAGES_SHOWN_INTO_NAVIGATION}
@@ -562,7 +561,7 @@ describe('PaginationComponent', () => {
           ...usePaginationMock,
         });
 
-        // when
+        // When
         render(
           <PaginationComponent
             useEllipsis
@@ -572,7 +571,7 @@ describe('PaginationComponent', () => {
           />,
         );
 
-        // then
+        // Then
         expect(container).toMatchSnapshot();
       });
     });

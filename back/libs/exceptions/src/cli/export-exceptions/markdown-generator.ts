@@ -33,6 +33,7 @@ export default class MarkdownGenerator {
       .sort(MarkdownGenerator.sortByCode);
 
     MarkdownGenerator.checkForDuplicatedCodes(sorted);
+    MarkdownGenerator.checkForPathInconsistency(sorted);
 
     const groupsOfInfosByCode = sorted.reduce(
       MarkdownGenerator.groupExceptionsByScope,
@@ -51,13 +52,29 @@ export default class MarkdownGenerator {
     );
 
     if (double) {
-      /**
-       * @todo #1988 Fix inconsistent usage of codes and scopes across the codebase
-       *
-       * Uncomment the following code once fixed:
-       *  throw new Error(`Error code ${double.errorCode} is duplicated`);
-       */
-      console.log(`Error code ${double.errorCode} is duplicated`);
+      throw new Error(`Error code ${double.errorCode} is duplicated`);
     }
+  }
+
+  static checkForPathInconsistency(
+    exceptions: ExceptionDocumentationInterface[],
+  ): void {
+    let scope: number;
+    let lastPath: string;
+
+    exceptions.forEach((exception) => {
+      const path = exception.path.split('/src/exceptions/')[0];
+
+      if (scope !== exception.SCOPE) {
+        scope = exception.SCOPE;
+        lastPath = path;
+      }
+
+      if (lastPath !== path) {
+        throw new Error(
+          `Path inconsistency in scope ${scope}: ${lastPath} !== ${exception.path}`,
+        );
+      }
+    });
   }
 }

@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 

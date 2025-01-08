@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 /**
  * To prevent circular dependencies, helpers are not exposed through
  * module root barrel file.

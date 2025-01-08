@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 type Meta = Record<string, unknown>;
 type Payload = unknown;
 

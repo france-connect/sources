@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import type { AccountConfig } from '@fc/account';
 
 export const Account: AccountConfig = {

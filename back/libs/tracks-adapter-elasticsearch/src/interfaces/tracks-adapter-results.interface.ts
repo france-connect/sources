@@ -1,10 +1,7 @@
-/* istanbul ignore file */
-
-// Declarative code
-import { BaseTracksOutputInterface } from './base-tracks-output.interface';
+import { TracksFormatterOutputAbstract } from './tracks-formatter-output.abstract';
 
 export interface TracksAdapterResultsInterface<
-  TOutput extends BaseTracksOutputInterface,
+  TOutput extends TracksFormatterOutputAbstract,
 > {
   total: number;
   payload: TOutput[];

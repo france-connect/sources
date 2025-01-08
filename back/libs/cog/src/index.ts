@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declaration only
 export * from './cog.module';
 export * from './cog.service';
 export * from './constants';

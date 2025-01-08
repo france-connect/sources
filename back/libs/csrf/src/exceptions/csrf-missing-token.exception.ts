@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative code
 import { ErrorCode } from '../enums';
 import { CsrfBaseException } from './csrf-base.exception';
 

@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { SearchBarComponent } from './searchbar.component';
 
 describe('SearchBarComponent', () => {
-  // given
+  // Given
   const formInputMock = {
     name: 'form-input-name-mock',
     onBlur: jest.fn(),
@@ -13,15 +13,15 @@ describe('SearchBarComponent', () => {
   };
 
   it('should match snapshot, with default props', () => {
-    // when
+    // When
     const { container } = render(<SearchBarComponent input={formInputMock} />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should match snapshot, whith all props defined', () => {
-    // when
+    // When
     const { container } = render(
       <SearchBarComponent
         buttonLabel="any-button-label-mock"
@@ -31,37 +31,37 @@ describe('SearchBarComponent', () => {
       />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should have the class when size lg is defined', () => {
-    // when
+    // When
     const { container } = render(<SearchBarComponent input={formInputMock} size="lg" />);
 
-    // then
+    // Then
     expect(container.firstChild).toHaveClass('fr-search-bar--lg');
   });
 
   it('should show the input label', () => {
-    // when
+    // When
     const { getByText } = render(
       <SearchBarComponent input={formInputMock} inputLabel="any-input-label-mock" />,
     );
     const element = getByText('any-input-label-mock');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 
   it('should show the button label', () => {
-    // when
+    // When
     const { getByText } = render(
       <SearchBarComponent buttonLabel="any-button-label-mock" input={formInputMock} />,
     );
     const element = getByText('any-button-label-mock');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 });

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { ErrorCode } from '../enums';
 import { UserDashboardBaseException } from './user-dashboard-base.exception';
 

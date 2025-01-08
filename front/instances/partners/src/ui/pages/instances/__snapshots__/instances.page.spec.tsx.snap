@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InstancesPage should match snapshot, when items are empties 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-md-6"
+  >
+    <div
+      class="fr-col-12"
+    >
+      <h1
+        data-testid="instances-page-title"
+      >
+        any-sandbox_title
+      </h1>
+    </div>
+    <div
+      class="fr-col-12"
+    >
+      <div>
+        TileComponent
+      </div>
+    </div>
+    <div
+      class="fr-col-12"
+    >
+      <div>
+        TileComponent
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`InstancesPage should match snapshot, when items are not empties 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-md-6"
+  >
+    <div
+      class="fr-col-12"
+    >
+      <h1
+        data-testid="instances-page-title"
+      >
+        any-sandbox_title
+      </h1>
+    </div>
+    <div
+      class="fr-col-12"
+    >
+      <div
+        data-mockid="CreateInstanceButton"
+      />
+    </div>
+    <div
+      class="fr-col-12"
+    >
+      <div
+        data-mockid="InstancesListComponent"
+      />
+    </div>
+    <div
+      class="fr-col-12"
+    >
+      <div>
+        TileComponent
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`InstancesPage should match snapshot, when the alert component is displayed 1`] = `
+<div>
+  <div
+    class="fr-col-12 fr-col-md-6"
+  >
+    <div
+      class="fr-col-12"
+    >
+      <h1
+        data-testid="instances-page-title"
+      >
+        any
+      </h1>
+    </div>
+    <div
+      data-mockid="AlertComponentV2"
+    />
+    <div
+      class="fr-col-12"
+    >
+      <div
+        data-mockid="CreateInstanceButton"
+      />
+    </div>
+    <div
+      class="fr-col-12"
+    >
+      <div
+        data-mockid="InstancesListComponent"
+      />
+    </div>
+    <div
+      class="fr-col-12"
+    >
+      <div>
+        TileComponent
+      </div>
+    </div>
+    <span
+      data-mockid="ScrollRestoration"
+    />
+  </div>
+</div>
+`;

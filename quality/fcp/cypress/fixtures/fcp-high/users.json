@@ -271,7 +271,7 @@
     },
     "eidasClaims": {
       "PersonIdentifier-eidas-mock": "FR/CB/a88de297f2f190ded0bbd17075d9d65d314ee9048ebb51e50b53e29b3372bc91v1",
-      "PlaceOfBirth": "JAPON (JP)",
+      "PlaceOfBirth": "Japon (JP)",
       "birthdate": "1992-11-01"
     }
   },
@@ -297,7 +297,7 @@
     },
     "eidasClaims": {
       "PersonIdentifier-eidas-mock": "FR/CB/0a25f79fb531da2a6ef5eb8e2c3395d2de10d5d9c1dd04aaafdad84b5451b01fv1",
-      "PlaceOfBirth": "JAPON (JP)",
+      "PlaceOfBirth": "Japon (JP)",
       "birthdate": "1992-01-01"
     }
   },

@@ -1,9 +1,8 @@
-/* istanbul ignore file */
-
-// Declarative file
 export enum ErrorCode {
   NO_IDP = 1,
   MISSING_AT_HASH = 2,
+  INVALID_IDENTITY = 6,
+  AGENT_NOT_FOUND = 15,
   DISABLED_PROVIDER = 17,
   PROVIDER_BLACKLISTED_OR_NON_WHITELISTED = 23,
   BLOCKED_ACCOUNT = 24,

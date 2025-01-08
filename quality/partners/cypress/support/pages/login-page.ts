@@ -2,7 +2,7 @@ import { ChainableElement } from '../types';
 
 export default class LoginPage {
   getLoginButton(): ChainableElement {
-    return cy.get('[data-testid="LoginConnectButton"] button');
+    return cy.get('[data-testid="LoginConnectComponent"] button');
   }
 
   checkIsVisible(): void {

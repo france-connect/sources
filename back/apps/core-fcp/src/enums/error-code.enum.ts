@@ -1,6 +1,5 @@
-/* istanbul ignore file */
-
-// Declarative code
 export enum ErrorCode {
-  FAILED_ABORT_SESSION = 1,
+  INVALID_IDENTITY = 6,
+  INVALID_CONSENT_PROCESS = 7,
+  INVALID_REP_SCOPE = 20,
 }

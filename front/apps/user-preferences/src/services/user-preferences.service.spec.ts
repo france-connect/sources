@@ -2,7 +2,7 @@ import { UserPreferencesService } from './user-preferences.service';
 
 describe('UserPreferencesService', () => {
   describe('encodeFormData', () => {
-    // given
+    // Given
     const idpList = {
       uidMock1: false,
       uidMock2: true,
@@ -10,49 +10,32 @@ describe('UserPreferencesService', () => {
       uidMock4: true,
     };
 
-    const csrfToken = 'csrfTokenMockValue';
-
-    it('should return a instance of URLSearchParams', () => {
-      // when
+    it('should return an object with idpList as an array of keys', () => {
+      // When
       const result = UserPreferencesService.encodeFormData({
         allowFutureIdp: false,
-        csrfToken,
         idpList,
       });
 
-      // then
-      expect(result).toBeInstanceOf(URLSearchParams);
+      // Then
+      expect(result).toStrictEqual({
+        allowFutureIdp: false,
+        idpList: ['uidMock2', 'uidMock4'],
+      });
     });
 
-    it('should call URLSearchParams.append atleast 2 times with idpList param', () => {
-      // given
-      const appendSpy = jest.spyOn(URLSearchParams.prototype, 'append');
-
-      // when
-      UserPreferencesService.encodeFormData({
+    it('should return an empty idpList array when idpList is undefined', () => {
+      // When
+      const result = UserPreferencesService.encodeFormData({
         allowFutureIdp: false,
-        csrfToken,
-        idpList,
+        idpList: undefined,
       });
 
-      // then
-      expect(appendSpy).toHaveBeenNthCalledWith(1, 'idpList', 'uidMock2');
-      expect(appendSpy).toHaveBeenNthCalledWith(2, 'idpList', 'uidMock4');
-    });
-
-    it('should call URLSearchParams.append 1 times with allowFutureIdp param', () => {
-      // given
-      const appendSpy = jest.spyOn(URLSearchParams.prototype, 'append');
-
-      // when
-      UserPreferencesService.encodeFormData({
+      // Then
+      expect(result).toStrictEqual({
         allowFutureIdp: false,
-        csrfToken,
-        idpList: {},
+        idpList: [],
       });
-
-      // then
-      expect(appendSpy).toHaveBeenNthCalledWith(1, 'allowFutureIdp', 'false');
     });
   });
 
@@ -95,33 +78,44 @@ describe('UserPreferencesService', () => {
       ],
     };
 
+    it('should return an empty idpList object when idpList argument is undefined', () => {
+      // When
+      const result = UserPreferencesService.parseFormData({
+        allowFutureIdp: true,
+        idpList: undefined,
+      });
+
+      // Then
+      expect(result).toStrictEqual(expect.objectContaining({ allowFutureIdp: true, idpList: {} }));
+    });
+
     it('should return allowFutureIdp as true', () => {
-      // when
+      // When
       const result = UserPreferencesService.parseFormData({
         ...userPreferences,
         allowFutureIdp: true,
       });
 
-      // then
+      // Then
       expect(result).toStrictEqual(expect.objectContaining({ allowFutureIdp: true }));
     });
 
     it('should return allowFutureIdp as false', () => {
-      // when
+      // When
       const result = UserPreferencesService.parseFormData({
         ...userPreferences,
         allowFutureIdp: false,
       });
 
-      // then
+      // Then
       expect(result).toStrictEqual(expect.objectContaining({ allowFutureIdp: false }));
     });
 
     it('should return a parsed list of services', () => {
-      // when
+      // When
       const result = UserPreferencesService.parseFormData(userPreferences);
 
-      // then
+      // Then
       expect(result).toStrictEqual(
         expect.objectContaining({
           idpList: {

@@ -95,7 +95,7 @@ Fonctionnalité: Connexion ACR
     Et que le fournisseur d'identité garantit un niveau de sécurité "inconnu"
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y020001"
+    Et le code d'erreur FranceConnect est "Y100001"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
 
   # Absence de FI configuré avec eidas1 seulement en integ01. Scénario à revoir pour être exécutable en integ01
@@ -113,5 +113,5 @@ Fonctionnalité: Connexion ACR
     Et que le fournisseur d'identité garantit un niveau de sécurité "eidas2"
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y020018"
+    Et le code d'erreur FranceConnect est "Y100018"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."

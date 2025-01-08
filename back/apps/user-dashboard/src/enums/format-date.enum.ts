@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 /**
  * @See { https://github.com/moment/luxon/blob/master/docs/formatting.md }
  */

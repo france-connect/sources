@@ -2,8 +2,15 @@
 ####################
 services:
   pg-exploitation-high:
-    image: postgres:11
+    image: postgres:13-bullseye
+    volumes:
+      - "${VOLUMES_DIR}/postgres/init-multiple-postgresql-databases.sh:/docker-entrypoint-initdb.d/init-multiple-postgresql-databases.sh:ro"
+      - "${VOLUMES_DIR}/postgres/start.sh:/usr/bin/start.sh:ro"
+      - "${VOLUMES_DIR}/postgres/postgresql.conf:/etc/postgresql/postgresql.conf"
+      - "${VOLUMES_DIR}/postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf"
+      - ${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro
     env_file:
       - "${COMPOSE_DIR}/fcp-high/.env/postgres.env"
+    command: ["start.sh"]
     networks:
       - data

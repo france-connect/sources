@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IEidasCountryElement } from '../interfaces';
 
 export default [

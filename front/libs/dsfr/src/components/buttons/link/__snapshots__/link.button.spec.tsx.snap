@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SimpleLink should match the snapshot, with default values 1`] = `
+<div>
+  <span
+    data-mockid="Link"
+  >
+    any-label-mock
+  </span>
+</div>
+`;
+
+exports[`SimpleLink should match the snapshot, with optionnal values 1`] = `
+<div>
+  <span
+    data-mockid="Link"
+  >
+    any-label-mock
+  </span>
+</div>
+`;

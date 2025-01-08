@@ -41,6 +41,17 @@ Given(
 );
 
 Given(
+  'je mets la donnée mémorisée {string} dans la propriété {string} du corps de la requête',
+  function (dataKey: string, property: string) {
+    cy.get(`@api:${dataKey}`)
+      .should('exist')
+      .then((value) => {
+        this.apiRequest.body[property] = value;
+      });
+  },
+);
+
+Given(
   'je configure la requête pour ne pas suivre les redirections',
   function () {
     this.apiRequest.followRedirect = false;

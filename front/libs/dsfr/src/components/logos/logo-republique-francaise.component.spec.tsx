@@ -4,10 +4,10 @@ import { LogoRepubliqueFrancaiseComponent } from './logo-republique-francaise.co
 
 describe('LogoRepubliqueFrancaiseComponent', () => {
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(<LogoRepubliqueFrancaiseComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 });

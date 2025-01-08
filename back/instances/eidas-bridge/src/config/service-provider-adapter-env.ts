@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 /**
  * Rename this librairy into a more appropriate name `adapter`, `mongo`
  * @TODO #246

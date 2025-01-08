@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { BridgeError } from '@fc/hybridge-http-proxy';
 
 import { ErrorCode } from '../enums';

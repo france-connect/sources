@@ -55,6 +55,8 @@ const setupTestFramework = (
   cy.get<UserData[]>('@users').then((users) => {
     ctx.user = getDefaultUser(users);
   });
+  // Stores CSV files content used in scenarios
+  ctx.csvFiles = {};
 
   // Setup interceptions to add basic authorization header on FC requests
   if (isUsingFCBasicAuthorization()) {

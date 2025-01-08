@@ -42,7 +42,7 @@ Fonctionnalité: Préférences FI
     Et que je me déconnecte du tableau de bord usager
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y000011"
+    Et le code d'erreur FranceConnect est "Y100011"
     Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
 
   @exceptions
@@ -60,7 +60,7 @@ Fonctionnalité: Préférences FI
     Et que je me déconnecte du tableau de bord usager
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y000011"
+    Et le code d'erreur FranceConnect est "Y100011"
     Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
 
   @ci
@@ -124,7 +124,7 @@ Fonctionnalité: Préférences FI
     Et que j'utilise le dernier fournisseur d'identité créé
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y000011"
+    Et le code d'erreur FranceConnect est "Y100011"
     Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
 
   Scénario: Préférences FI - FI utilisé pour la connexion au user-dashboard ne peut être bloqué
@@ -176,7 +176,7 @@ Fonctionnalité: Préférences FI
     Et que j'utilise le fournisseur d'identité "Aidants Connect"
     Quand je me connecte au fournisseur d'identité via FranceConnect
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y000011"
+    Et le code d'erreur FranceConnect est "Y100011"
     Et le message d'erreur FranceConnect est "Vous avez bloqué l'utilisation de ce fournisseur d'identité. Pour pouvoir l'utiliser, merci de vous rendre dans vos préférences FranceConnect pour l'autoriser."
 
   @ignoreInteg01

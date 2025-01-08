@@ -3,6 +3,9 @@ import type { DateTime } from 'luxon';
 import React from 'react';
 import { AiOutlineMinus as MinusIcon, AiOutlinePlus as PlusIcon } from 'react-icons/ai';
 
+import { ConfigService } from '@fc/config';
+
+import { Options } from '../../enums';
 import type { TracksConfig } from '../../interfaces';
 import styles from './card-header.module.scss';
 
@@ -10,15 +13,15 @@ type TraceCardHeaderProps = {
   datetime: DateTime;
   serviceProviderLabel: string;
   opened: boolean;
-  options: TracksConfig;
 };
 
 export const TrackCardHeaderComponent = React.memo(
-  ({ datetime, opened, options, serviceProviderLabel }: TraceCardHeaderProps) => {
-    const formattedDay = datetime
-      .setZone('Europe/Paris')
-      .setLocale('fr')
-      .toFormat(options.LUXON_FORMAT_DAY);
+  ({ datetime, opened, serviceProviderLabel }: TraceCardHeaderProps) => {
+    const {
+      luxon: { dayFormat },
+    } = ConfigService.get<TracksConfig>(Options.CONFIG_NAME);
+
+    const formattedDay = datetime.setZone('Europe/Paris').setLocale('fr').toFormat(dayFormat);
     return (
       <div className="fr-pt-3v flex-columns flex-between items-center">
         <div>

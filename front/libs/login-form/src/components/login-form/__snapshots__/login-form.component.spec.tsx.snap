@@ -1,26 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`LoginFormComponent should match the snapshot as AgentConnect 1`] = `
-<div>
-  <form
-    action="login-url-mock"
-    data-testid="login-form-component"
-    method="get"
-  >
-    <div
-      data-mockid="LoginConnectButton"
-    >
-      <div>
-        submit
-      </div>
-      <div>
-        LoginConnectButton
-      </div>
-    </div>
-  </form>
-</div>
-`;
-
 exports[`LoginFormComponent should match the snapshot as FranceConnect 1`] = `
 <div>
   <form
@@ -29,13 +8,34 @@ exports[`LoginFormComponent should match the snapshot as FranceConnect 1`] = `
     method="get"
   >
     <div
-      data-mockid="LoginConnectButton"
+      data-mockid="LoginConnectComponent"
     >
       <div>
         submit
       </div>
       <div>
-        LoginConnectButton
+        LoginConnectComponent
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`LoginFormComponent should match the snapshot as ProConnect 1`] = `
+<div>
+  <form
+    action="login-url-mock"
+    data-testid="login-form-component"
+    method="get"
+  >
+    <div
+      data-mockid="LoginConnectComponent"
+    >
+      <div>
+        submit
+      </div>
+      <div>
+        LoginConnectComponent
       </div>
     </div>
   </form>

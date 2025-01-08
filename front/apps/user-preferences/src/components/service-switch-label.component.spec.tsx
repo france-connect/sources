@@ -4,7 +4,7 @@ import { ServiceSwitchLabelComponent } from './service-switch-label.component';
 
 describe('ServiceSwitchLabelComponent', () => {
   it('should render the label when switch is disabled', () => {
-    // when
+    // When
     const { getByText } = render(
       <ServiceSwitchLabelComponent disabled checked={false} serviceTitle="any-service" />,
     );
@@ -13,13 +13,13 @@ describe('ServiceSwitchLabelComponent', () => {
       /Si vous souhaitez le désactiver, vous devez vous connecter depuis un autre compte./,
     );
 
-    // then
+    // Then
     expect(titleElement).toBeInTheDocument();
     expect(descriptionElement).toBeInTheDocument();
   });
 
   it('should render the label when switch is inactive', () => {
-    // when
+    // When
     const { getByText } = render(
       <ServiceSwitchLabelComponent checked={false} serviceTitle="any-service" />,
     );
@@ -27,14 +27,14 @@ describe('ServiceSwitchLabelComponent', () => {
     const titleElement = getByText(/any-service/);
     const stateElement = getByText(/est actuellement bloquée./);
 
-    // then
+    // Then
     expect(prefixElement).toBeInTheDocument();
     expect(titleElement).toBeInTheDocument();
     expect(stateElement).toBeInTheDocument();
   });
 
   it('should render the label when switch is active', () => {
-    // when
+    // When
     const { getByText } = render(
       <ServiceSwitchLabelComponent checked serviceTitle="any-service" />,
     );
@@ -42,7 +42,7 @@ describe('ServiceSwitchLabelComponent', () => {
     const titleElement = getByText(/any-service/);
     const stateElement = getByText(/est actuellement autorisée./);
 
-    // then
+    // Then
     expect(prefixElement).toBeInTheDocument();
     expect(titleElement).toBeInTheDocument();
     expect(stateElement).toBeInTheDocument();

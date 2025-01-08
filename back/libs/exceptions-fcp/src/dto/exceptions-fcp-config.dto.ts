@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { Type } from 'class-transformer';
 import {
   IsBoolean,

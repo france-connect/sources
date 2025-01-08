@@ -224,7 +224,33 @@
       "@fc/logger-plugins": ["libs/logger-plugins/src"],
       "@fc/logger-plugins/*": ["libs/logger-plugins/src/*"],
       "@mocks/common": ["libs/common/.mocks"],
-      "@mocks/common/*": ["libs/common/.mocks/*"]
+      "@mocks/common/*": ["libs/common/.mocks/*"],
+      "@fc/postgres": ["libs/postgres/src"],
+      "@fc/postgres/*": ["libs/postgres/src/*"],
+      "@mocks/typeorm": ["libs/typeorm/.mocks"],
+      "@mocks/typeorm/*": ["libs/typeorm/.mocks/*"],
+      "@fc/partners-account": ["libs/partners-account/src"],
+      "@fc/partners-account/*": ["libs/partners-account/src/*"],
+      "@fc/partners-organisation": ["libs/partners-organisation/src"],
+      "@fc/partners-organisation/*": ["libs/partners-organisation/src/*"],
+      "@fc/partners-service-provider": ["libs/partners-service-provider/src"],
+      "@fc/partners-service-provider/*": [
+        "libs/partners-service-provider/src/*"
+      ],
+      "@fc/partners-service-provider-instance": [
+        "libs/partners-service-provider-instance/src"
+      ],
+      "@fc/partners-service-provider-instance/*": [
+        "libs/partners-service-provider-instance/src/*"
+      ],
+      "@fc/partners-service-provider-instance-version": [
+        "libs/partners-service-provider-instance-version/src"
+      ],
+      "@fc/partners-service-provider-instance-version/*": [
+        "libs/partners-service-provider-instance-version/src/*"
+      ],
+      "@fc/access-control": ["libs/access-control/src"],
+      "@fc/access-control/*": ["libs/access-control/src/*"]
     }
   },
   "files": ["global.d.ts"],
@@ -233,7 +259,9 @@
     "*.ts",
     "libs/**/*.ts",
     "apps/**/*.ts",
-    "instances/**/*.ts"
+    "instances/**/*.ts",
+    "entities/**/*.ts",
+    "migrations/**/*.ts"
   ],
   "exclude": ["node_modules", "dist", "coverage", "scripts"]
 }

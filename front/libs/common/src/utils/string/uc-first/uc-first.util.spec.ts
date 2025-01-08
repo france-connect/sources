@@ -2,26 +2,26 @@ import { ucfirst } from './uc-first.util';
 
 describe('ucfirst', () => {
   it('should return first letter uppercase, others unchanged (all caps)', () => {
-    // when
+    // When
     const result = ucfirst('ANY WORD');
 
-    // then
+    // Then
     expect(result).toBe('ANY WORD');
   });
 
   it('should return first letter uppercase, others unchanged (caps)', () => {
-    // when
+    // When
     const result = ucfirst('tHiS Is MoRe SuItAbLe');
 
-    // then
+    // Then
     expect(result).toBe('THiS Is MoRe SuItAbLe');
   });
 
   it('should return first letter uppercase, others unchanged (all low)', () => {
-    // when
+    // When
     const result = ucfirst('any word');
 
-    // then
+    // Then
     expect(result).toBe('Any word');
   });
 });

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsNumber, IsString, Min } from 'class-validator';
 
 export class HsmConfig {

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { CsmrHsmConfig } from '@fc/csmr-hsm';
 
 import App from './app';

@@ -2,11 +2,13 @@ import { cloneDeep } from 'lodash';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { AccountPermissionRepository } from '@fc/access-control';
 import { PartialDeep } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { IdentityProviderMetadata } from '@fc/oidc';
 import { OidcClientService } from '@fc/oidc-client';
+import { PartnersAccountService } from '@fc/partners-account';
 import { SessionNotFoundException, SessionService } from '@fc/session';
 
 import { getConfigMock } from '@mocks/config';
@@ -45,6 +47,7 @@ describe('OidcClient Controller', () => {
   const idpIdTokenMock = 'idpIdToken';
 
   const sessionServiceMock = getSessionServiceMock();
+  const sessionPartnersAccountMock = getSessionServiceMock();
 
   const identityProviderServiceMock = {
     getById: jest.fn(),
@@ -60,6 +63,14 @@ describe('OidcClient Controller', () => {
 
   const configServiceMock = getConfigMock();
 
+  const partnersAccountServiceMock = {
+    upsert: jest.fn(),
+  };
+
+  const partnersAccountPermissionMock = {
+    init: jest.fn(),
+  };
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
@@ -71,6 +82,8 @@ describe('OidcClient Controller', () => {
         SessionService,
         ConfigService,
         IdentityProviderAdapterEnvService,
+        PartnersAccountService,
+        AccountPermissionRepository,
       ],
     })
       .overrideProvider(OidcClientService)
@@ -81,6 +94,10 @@ describe('OidcClient Controller', () => {
       .useValue(configServiceMock)
       .overrideProvider(IdentityProviderAdapterEnvService)
       .useValue(identityProviderServiceMock)
+      .overrideProvider(PartnersAccountService)
+      .useValue(partnersAccountServiceMock)
+      .overrideProvider(AccountPermissionRepository)
+      .useValue(partnersAccountPermissionMock)
       .compile();
 
     controller = module.get<OidcClientController>(OidcClientController);
@@ -213,6 +230,9 @@ describe('OidcClient Controller', () => {
     const acrMock = Symbol('acr');
     const identityMock = {
       given_name: 'given_name',
+      usual_name: 'usual_name',
+      email: 'email',
+      siren: 'siren',
       sub: '1',
     };
 
@@ -234,6 +254,11 @@ describe('OidcClient Controller', () => {
 
     const redirectMock = PartnersFrontRoutes.INDEX;
 
+    const idMock = Symbol('partnersAccountIdMock');
+    const partnersAccountIdMock = {
+      identifiers: [{ id: idMock }],
+    };
+
     beforeEach(() => {
       res = {
         redirect: jest.fn(),
@@ -246,6 +271,10 @@ describe('OidcClient Controller', () => {
       oidcClientServiceMock.getUserInfosFromProvider.mockReturnValueOnce(
         identityMock,
       );
+
+      partnersAccountServiceMock.upsert.mockResolvedValue(
+        partnersAccountIdMock,
+      );
     });
 
     it('should throw an error if the session is not found', async () => {
@@ -254,13 +283,23 @@ describe('OidcClient Controller', () => {
 
       // When / Then
       await expect(
-        controller.getOidcCallback(req, res, sessionServiceMock),
+        controller.getOidcCallback(
+          req,
+          res,
+          sessionServiceMock,
+          sessionPartnersAccountMock,
+        ),
       ).rejects.toThrow(SessionNotFoundException);
     });
 
     it('should call token with providerId', async () => {
       // When
-      await controller.getOidcCallback(req, res, sessionServiceMock);
+      await controller.getOidcCallback(
+        req,
+        res,
+        sessionServiceMock,
+        sessionPartnersAccountMock,
+      );
 
       // Then
       expect(oidcClientServiceMock.getTokenFromProvider).toHaveBeenCalledTimes(
@@ -275,7 +314,12 @@ describe('OidcClient Controller', () => {
 
     it('should call userinfo with acesstoken, dto and context', async () => {
       // When
-      await controller.getOidcCallback(req, res, sessionServiceMock);
+      await controller.getOidcCallback(
+        req,
+        res,
+        sessionServiceMock,
+        sessionPartnersAccountMock,
+      );
 
       // Then
       expect(
@@ -291,7 +335,12 @@ describe('OidcClient Controller', () => {
       const cloneDeepMock = jest.mocked(cloneDeep);
 
       // When
-      await controller.getOidcCallback(req, res, sessionServiceMock);
+      await controller.getOidcCallback(
+        req,
+        res,
+        sessionServiceMock,
+        sessionPartnersAccountMock,
+      );
 
       // Then
       expect(cloneDeepMock).toHaveBeenCalledTimes(1);
@@ -304,16 +353,57 @@ describe('OidcClient Controller', () => {
       jest.mocked(cloneDeep).mockReturnValueOnce(clonedIdentityMock);
 
       // action
-      await controller.getOidcCallback(req, res, sessionServiceMock);
+      await controller.getOidcCallback(
+        req,
+        res,
+        sessionServiceMock,
+        sessionPartnersAccountMock,
+      );
 
       // Then
       expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
       expect(sessionServiceMock.set).toHaveBeenCalledWith(clonedIdentityMock);
     });
 
+    //
+    it('should store identity in partner account and partner account session', async () => {
+      // Given
+      const expected = {
+        sub: identityMock.sub,
+        firstname: identityMock.given_name,
+        lastname: identityMock.usual_name,
+        email: identityMock.email,
+        siren: identityMock.siren,
+      };
+
+      // When
+      await controller.getOidcCallback(
+        req,
+        res,
+        sessionServiceMock,
+        sessionPartnersAccountMock,
+      );
+
+      // Then
+      expect(partnersAccountServiceMock.upsert).toHaveBeenCalledTimes(1);
+      expect(partnersAccountServiceMock.upsert).toHaveBeenCalledWith(expected);
+      expect(sessionPartnersAccountMock.set).toHaveBeenCalledTimes(1);
+      expect(sessionPartnersAccountMock.set).toHaveBeenCalledWith({
+        accountId: idMock,
+        ...expected,
+      });
+      expect(partnersAccountPermissionMock.init).toHaveBeenCalledTimes(1);
+      expect(partnersAccountPermissionMock.init).toHaveBeenCalledWith(idMock);
+    });
+
     it('should redirect user after token and userinfo received and saved', async () => {
       // When
-      await controller.getOidcCallback(req, res, sessionServiceMock);
+      await controller.getOidcCallback(
+        req,
+        res,
+        sessionServiceMock,
+        sessionPartnersAccountMock,
+      );
 
       // Then
       expect(res.redirect).toHaveBeenCalledTimes(1);

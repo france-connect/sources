@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginConnectHelp should match snapshot when ConnectType is FranceConnect 1`] = `
+<div>
+  <p>
+    <a
+      href="https://franceconnect.gouv.fr/"
+      title="any-france-connect-mock"
+    >
+      any-france-connect-mock
+    </a>
+  </p>
+</div>
+`;
+
+exports[`LoginConnectHelp should match snapshot when ConnectType is ProConnect 1`] = `
+<div>
+  <p>
+    <a
+      href="https://proconnect.gouv.fr/"
+      title="any-pro-connect-mock"
+    >
+      any-pro-connect-mock
+    </a>
+  </p>
+</div>
+`;
+
+exports[`LoginConnectHelp should match snapshot when showIcon option is true 1`] = `
+<div>
+  <p>
+    <a
+      href="https://proconnect.gouv.fr/"
+      rel="noreferrer"
+      target="_blank"
+      title="any-connect-type-mock - any-new-window-mock"
+    >
+      any-connect-type-mock
+    </a>
+  </p>
+</div>
+`;

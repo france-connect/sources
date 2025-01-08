@@ -17,6 +17,7 @@ import {
   OidcCtx,
   OidcProviderConfig,
   OidcProviderErrorService,
+  OidcProviderIdpHintException,
   OidcProviderMiddlewarePattern,
   OidcProviderMiddlewareStep,
   OidcProviderRoutes,
@@ -28,7 +29,7 @@ import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
 import { CoreConfig } from '../dto';
 import { CoreRoutes } from '../enums';
-import { CoreClaimAmrException, CoreIdpHintException } from '../exceptions';
+import { CoreClaimAmrException } from '../exceptions';
 import { CoreServiceInterface } from '../interfaces';
 import { CORE_SERVICE } from '../tokens';
 import { pickAcr } from '../transforms';
@@ -294,7 +295,7 @@ export class CoreOidcProviderMiddlewareService {
     }
 
     if (!allowedIdpHints.includes(idpHint)) {
-      return throwException(new CoreIdpHintException());
+      return throwException(new OidcProviderIdpHintException());
     }
 
     this.flowSteps.setStep(OidcClientRoutes.REDIRECT_TO_IDP);

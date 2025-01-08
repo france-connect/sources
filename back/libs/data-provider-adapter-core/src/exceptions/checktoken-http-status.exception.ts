@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { AxiosError } from 'axios';
 
 import { HttpStatus } from '@nestjs/common';
@@ -17,7 +14,6 @@ export class ChecktokenHttpStatusException extends ChecktokenBaseException {
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
   static HTTP_STATUS_CODE: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-  public readonly error: string = 'server_error';
   static UI: string = 'DataProviderAdapterCore.exceptions.checktokenHttpStatus';
 
   constructor(error: AxiosError<{ error: string; error_description: string }>) {

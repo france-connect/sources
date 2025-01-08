@@ -19,6 +19,24 @@
     ]
   },
   {
+    "type": "tous les scopes sauf phone",
+    "scopes": [
+      "openid",
+      "uid",
+      "given_name",
+      "usual_name",
+      "email",
+      "siren",
+      "siret",
+      "organizational_unit",
+      "belonging_population",
+      "chorusdt",
+      "idp_id",
+      "idp_acr",
+      "custom"
+    ]
+  },
+  {
     "type": "obligatoires",
     "scopes": ["openid", "uid", "given_name", "usual_name", "email"]
   },

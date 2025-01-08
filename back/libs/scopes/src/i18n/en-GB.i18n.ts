@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
-
 export const enGB = {
   // Caisse nationale de l’assurance maladie
   'claim.droits_assurance_maladie': 'Droits Assurance Maladie',

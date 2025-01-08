@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FieldsetLegendElement should match the snapshot 1`] = `
+<div>
+  <legend
+    class="fr-fieldset__legend--regular fr-fieldset__legend any-classname-mock"
+    id="any-name-mock-legend"
+  >
+    hook-label-mock
+    <span
+      class="fr-hint-text"
+    >
+      hook-hint-mock
+    </span>
+  </legend>
+</div>
+`;

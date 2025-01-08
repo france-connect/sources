@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './core.module';
 export * from './dto';
 export * from './enums';

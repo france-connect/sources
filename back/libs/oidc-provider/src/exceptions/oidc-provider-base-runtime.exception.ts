@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { errors } from 'oidc-provider';
 
 import { OidcProviderBaseRenderedException } from './oidc-provider-base-rendered.exception';

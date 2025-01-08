@@ -1,10 +1,10 @@
 import { Response } from 'express';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 
 import { ConfigService } from '@fc/config';
-import { CoreAuthorizationService } from '@fc/core';
+import { CORE_AUTH_SERVICE, CoreAuthorizationService } from '@fc/core';
 import { DeviceInformationInterface } from '@fc/device';
 import { FeatureHandler } from '@fc/feature-handler';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
@@ -39,6 +39,7 @@ export class CoreFcpService implements CoreFcpServiceInterface {
     private readonly serviceProvider: ServiceProviderAdapterMongoService,
     private readonly oidcAcr: OidcAcrService,
     private readonly oidcClient: OidcClientService,
+    @Inject(CORE_AUTH_SERVICE)
     private readonly coreAuthorization: CoreAuthorizationService,
     private readonly session: SessionService,
   ) {}

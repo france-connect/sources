@@ -4,6 +4,7 @@ source "$INCLUDE_DIR/hooks/fc-apps.sh"
 source "$INCLUDE_DIR/hooks/legacy-fc-commons.sh"
 source "$INCLUDE_DIR/hooks/lemon-ldap.sh"
 source "$INCLUDE_DIR/hooks/mongo.sh"
+source "$INCLUDE_DIR/hooks/partners.sh"
 
 # Container initialisation hooks
 #
@@ -41,6 +42,9 @@ function _init_hooks() {
     ;;
   *"pg-support"*)
     _hook_fc_apps "fc-support"
+    ;;
+  *"partners-back"*)
+    _hook_partners "partners-back"
     ;;
   *"elasticsearch"*)
     # Waiting for ES to be up

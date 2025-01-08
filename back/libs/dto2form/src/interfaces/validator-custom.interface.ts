@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import { ValidatorCustom } from '../enums';
 import { FieldValidatorBase } from './field-validator.interface';
 

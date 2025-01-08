@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { ValidationError } from 'class-validator';
 
 import { IFeatureHandler } from '@fc/feature-handler';

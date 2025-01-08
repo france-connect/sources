@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsIn, IsNotEmpty, IsString } from 'class-validator';
 
 import { AppConfig as AppGenericConfig } from '@fc/app';

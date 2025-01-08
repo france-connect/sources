@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { ErrorCode } from '../enums';
 import { CsmrHsmBaseException } from './csmr-hsm-base.exception';
 

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsOptional, IsString, Length } from 'class-validator';
 
 export class CsrfSession {

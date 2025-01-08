@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsArray, IsString } from 'class-validator';
 
 export class SpAuthorizedFqdnsConfig {

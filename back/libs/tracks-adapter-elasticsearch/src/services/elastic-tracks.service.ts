@@ -1,6 +1,4 @@
 import {
-  Field,
-  QueryDslFieldAndFormat,
   QueryDslQueryContainer,
   SearchRequest,
   SearchResponse,
@@ -12,62 +10,68 @@ import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { IPaginationOptions } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import {
-  ElasticsearchConfig,
-  formatMultiMatchGroup,
-  formatV2Query,
-} from '@fc/elasticsearch';
-import { LoggerService } from '@fc/logger';
-
-import {
   DEFAULT_OFFSET,
+  DEFAULT_ORDER,
   DEFAULT_SIZE,
-  EVENT_MAPPING,
+  ElasticQueryOptionsInterface,
+  ElasticsearchConfig,
   NOW,
   SIX_MONTHS_AGO,
-} from '../constants';
+} from '@fc/elasticsearch';
+
+import { EVENT_MAPPING } from '../constants';
 import {
   ElasticTracksResultsInterface,
   ElasticTracksType,
   SearchType,
 } from '../interfaces';
-
-// Helper
-export const buildQuery = ([legacy, event]: [
-  string,
-  string,
-]): QueryDslQueryContainer => {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const [action, type_action] = legacy.split('/');
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const terms = [{ action, type_action }];
-  const query = {
-    bool: {
-      should: [formatV2Query(event), formatMultiMatchGroup(terms, true)],
-    },
-  };
-  return query;
-};
+import { buildEventQuery } from '../utils';
 
 @Injectable()
 export class ElasticTracksService {
-  fields: (QueryDslFieldAndFormat | Field)[];
-  eventsQuery: QueryDslQueryContainer;
+  eventsTerms: { [key: string]: QueryDslQueryContainer };
 
   constructor(
-    private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly elasticsearch: ElasticsearchService,
   ) {}
 
   onModuleInit() {
-    this.eventsQuery = this.createEventsQuery();
+    this.eventsTerms = this.computeEventsTerms();
   }
 
-  public async getElasticTracks(
-    groupIds: string[],
+  private computeEventsTerms(): { [key: string]: QueryDslQueryContainer } {
+    return Object.fromEntries(
+      Object.entries(EVENT_MAPPING).map(([key, event]) => [
+        key,
+        buildEventQuery([key, event]),
+      ]),
+    );
+  }
+
+  public async getElasticTracksForAccountIds(
+    accountIds: string[],
     options: IPaginationOptions,
   ): Promise<ElasticTracksResultsInterface> {
-    const rawTracks = await this.getElasticLogs(groupIds, options);
+    const eventsFilter: QueryDslQueryContainer = {
+      bool: {
+        should: Object.values(this.eventsTerms),
+      },
+    };
+
+    const accountIdsFilter: QueryDslQueryContainer = {
+      terms: {
+        accountId: accountIds,
+      },
+    };
+
+    const filters = [accountIdsFilter, eventsFilter];
+
+    const queryOptions: ElasticQueryOptionsInterface = {
+      ...options,
+    };
+
+    const rawTracks = await this.getElasticLogs(filters, queryOptions);
 
     const { total, hits: payload } = rawTracks.hits;
 
@@ -80,27 +84,60 @@ export class ElasticTracksService {
     return results;
   }
 
-  private createEventsQuery(): QueryDslQueryContainer {
-    const terms = Object.entries(EVENT_MAPPING).map((group) =>
-      buildQuery(group),
-    );
-
-    const eventsQuery: QueryDslQueryContainer = {
+  public async getElasticTracksForAuthenticationEventId(
+    authenticationEventId: string,
+  ): Promise<ElasticTracksResultsInterface> {
+    const eventsFilter: QueryDslQueryContainer = {
       bool: {
-        should: terms,
+        should: this.eventsTerms['authentication/initial'],
       },
     };
-    return eventsQuery;
+
+    const authenticationEventIdFilter: QueryDslQueryContainer = {
+      bool: {
+        should: [
+          {
+            term: {
+              browsingSessionId: authenticationEventId,
+            },
+          },
+          {
+            term: {
+              cinematicID: authenticationEventId,
+            },
+          },
+        ],
+      },
+    };
+
+    const filters = [authenticationEventIdFilter, eventsFilter];
+
+    const queryOptions: ElasticQueryOptionsInterface = {
+      order: 'asc',
+    };
+
+    const rawTracks = await this.getElasticLogs(filters, queryOptions);
+
+    const { total, hits: payload } = rawTracks.hits;
+
+    const results: ElasticTracksResultsInterface = {
+      // total must be a number (https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html)
+      total: total as number,
+      payload,
+    };
+
+    return results;
   }
 
   private async getElasticLogs(
-    accountIds: string[],
-    options = {} as IPaginationOptions,
+    filters: QueryDslQueryContainer[],
+    options = {} as ElasticQueryOptionsInterface,
   ): Promise<SearchResponse<ElasticTracksType>> {
-    const { offset = DEFAULT_OFFSET, size = DEFAULT_SIZE } = options;
-
-    const { tracksIndex } =
-      this.config.get<ElasticsearchConfig>('Elasticsearch');
+    const {
+      offset = DEFAULT_OFFSET,
+      size = DEFAULT_SIZE,
+      order = DEFAULT_ORDER,
+    } = options;
 
     const dateQuery: QueryDslQueryContainer = {
       range: {
@@ -111,29 +148,25 @@ export class ElasticTracksService {
       },
     };
 
-    const idsQuery: QueryDslQueryContainer = {
-      terms: {
-        accountId: accountIds,
-      },
-    };
+    const { index } = this.config.get<ElasticsearchConfig>('Elasticsearch');
 
     const query: SearchType = {
       // Elastic Search params
       // eslint-disable-next-line @typescript-eslint/naming-convention
       rest_total_hits_as_int: true,
-      index: tracksIndex,
+      index,
       from: offset,
       size,
       sort: [
         {
           time: {
-            order: 'desc',
+            order,
           },
         },
       ],
       query: {
         bool: {
-          filter: [idsQuery, dateQuery, this.eventsQuery],
+          filter: [...filters, dateQuery],
         },
       },
     };

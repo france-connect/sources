@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
-
 import { ErrorCode } from '../enums';
 import { OidcClientBaseException } from './oidc-client-base.exception';
 

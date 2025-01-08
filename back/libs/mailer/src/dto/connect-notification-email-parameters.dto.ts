@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsString, IsUUID } from 'class-validator';
 
 export class ConnectNotificationEmailParameters {

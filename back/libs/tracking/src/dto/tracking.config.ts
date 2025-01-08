@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { IsObject } from 'class-validator';
 
 import { TrackedEventMapType } from '../interfaces';

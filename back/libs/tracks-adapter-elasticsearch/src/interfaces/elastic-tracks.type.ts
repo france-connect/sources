@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { TracksLegacyFieldsInterface } from './tracks-legacy-fields.interface';
 import { TracksV2FieldsInterface } from './tracks-v2-fields.interface';
 

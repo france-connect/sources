@@ -4,8 +4,8 @@ import { useLocation } from 'react-router-dom';
 
 import type { AccountContextState } from '@fc/account';
 import { AccountContext } from '@fc/account';
-import { useSafeContext } from '@fc/common';
-import { AlertComponent, AlertTypes, ConnectTypes, LinkComponent, Sizes } from '@fc/dsfr';
+import { EventTypes, useSafeContext } from '@fc/common';
+import { AlertComponent, ConnectTypes, LinkComponent, Sizes } from '@fc/dsfr';
 import { LoginFormComponent } from '@fc/login-form';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import { getFraudSupportFormUrl, Routes } from '@fc/user-dashboard';
@@ -43,7 +43,7 @@ export const FraudLoginPage = React.memo(() => {
       })}
       id="page-container">
       {expired && (
-        <AlertComponent className="text-left fr-my-3w" size={Sizes.SMALL} type={AlertTypes.WARNING}>
+        <AlertComponent className="text-left fr-my-3w" size={Sizes.SMALL} type={EventTypes.WARNING}>
           <p>Votre session a expiré, veuillez vous reconnecter</p>
         </AlertComponent>
       )}

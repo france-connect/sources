@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 export interface NetworkContextInterface {
   address: string;
   // logs filter and analyses need this format

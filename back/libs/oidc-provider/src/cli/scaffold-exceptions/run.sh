@@ -7,18 +7,19 @@ _generate_oidc_provider_exceptions() {
 
   local pattern="${exceptionDir}/*.exception.ts"
 
-  local istanbulIgnore="/* istanbul ignore file */
-
-/**
+  local header="/**
   * Code generated from oidc-provider exceptions
   * @see @fc/oidc-provider/src/cli/scaffold-exceptions/run.sh
   */
 "
   indexMap="export const exceptionSourceMap = {"
-  local indexImports="${istanbulIgnore}"
-  local i18n="${istanbulIgnore}const DEFAULT_MESSAGE = 'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
+  local indexImports="${header}"
+  local i18nFr="${header}const DEFAULT_MESSAGE = 'Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous.';
   
 export const frFR = {"
+  local i18nEn="${header}const DEFAULT_MESSAGE = 'A technical error has occurred. Please close your browser tab and reconnect.';
+  
+export const enGB = {"
 
   echo "Purging generated exception from ${pattern}"
   rm -f ${pattern}
@@ -62,7 +63,7 @@ ${identifier}"
     local relativeFileName="oidc-provider-runtime-${class}-${identifier}.exception"
     local fileName="${exceptionDir}/${relativeFileName}.ts"
     local className="OidcProviderRuntime_${class}_${identifier}_Exception"
-    local TEMPLATE="${istanbulIgnore}import { OidcProviderBaseRuntimeException } from '../oidc-provider-base-runtime.exception';
+    local TEMPLATE="${header}import { OidcProviderBaseRuntimeException } from '../oidc-provider-base-runtime.exception';
 
 export class ${className} extends OidcProviderBaseRuntimeException {
   static CODE = '${identifier}';
@@ -76,7 +77,10 @@ export class ${className} extends OidcProviderBaseRuntimeException {
     echo "writing ${fileName}"
     echo "${TEMPLATE}" >"${fileName}"
 
-    i18n="${i18n}
+    i18nFr="${i18nFr}
+    '${i18nKey}': DEFAULT_MESSAGE,"
+
+    i18nEn="${i18nEn}
     '${i18nKey}': DEFAULT_MESSAGE,"
 
     indexMap="${indexMap}
@@ -89,12 +93,16 @@ import { ${className} } from './${relativeFileName}';"
   indexMap="${indexMap}
 };
 "
-  i18n="${i18n}
+  i18nFr="${i18nFr}
+};
+"
+  i18nEn="${i18nEn}
 };
 "
 
   local barrelFile="${exceptionDir}/index.ts"
-  local translationlFile="${exceptionDir}/fr-FR.i18n.ts"
+  local translationFrFile="${exceptionDir}/fr-FR.i18n.ts"
+  local translationEnFile="${exceptionDir}/en-GB.i18n.ts"
 
   local idCount=$(echo "${idList}" | wc -l)
   local uniqueIdCount=$(echo "${idList}" | sort | uniq | wc -l)
@@ -110,7 +118,8 @@ import { ${className} } from './${relativeFileName}';"
   echo "${indexMap}" >>"${barrelFile}"
 
   echo "Generate translation file"
-  echo "${i18n}" >"${translationlFile}"
+  echo "${i18nFr}" >"${translationFrFile}"
+  echo "${i18nEn}" >"${translationEnFile}"
 
   cd $FC_ROOT/fc/back
 

@@ -2,15 +2,14 @@ import { Result } from 'axe-core';
 
 import { type OperatorUser } from '../../exploitation/helpers';
 import { type User } from '../helpers';
+import { Email } from './email';
 import { Environment } from './environment';
+import { FraudFormValues } from './fraud-form-values';
 import { IdentityProvider } from './identity-provider';
 import { IdentityProviderConfig } from './identity-provider-config';
 import { ScopeContext, ServiceProvider } from './service-provider';
 import { ServiceProviderConfig } from './service-provider-config';
 import { UserData } from './user';
-
-// Export Email from cypress-maildev plugin
-export type { Email } from 'cypress-maildev/build/types/Email';
 
 // Cypress Alias
 // eslint-disable-next-line no-undef
@@ -38,10 +37,13 @@ declare module 'mocha' {
 
     // BDD context
     env: Environment;
+    fraudFormValues?: FraudFormValues;
     identityProvider: IdentityProvider;
     identityProviders: IdentityProvider[];
     idpConfig?: IdentityProviderConfig;
     idpConfigs: IdentityProviderConfig[];
+    mail?: Email;
+    csvFiles: Record<string, Record<string, unknown>[]>;
     operatorUser?: OperatorUser;
     repScopes: ScopeContext[];
     repScope?: ScopeContext;
@@ -56,6 +58,7 @@ declare module 'mocha' {
   }
 }
 
+export * from './email';
 export * from './environment';
 export * from './identity-provider';
 export * from './identity-provider-config';

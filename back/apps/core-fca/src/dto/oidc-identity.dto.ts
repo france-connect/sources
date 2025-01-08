@@ -7,6 +7,7 @@ import {
   MinLength,
 } from 'class-validator';
 
+import { IsPhoneNumberFca } from '../validators/is-phone-number-fca.validator';
 import { MandatoryIdentityDto } from './mandatory-identity.dto';
 
 export class OidcIdentityDto extends MandatoryIdentityDto {
@@ -46,8 +47,7 @@ export class OidcIdentityDto extends MandatoryIdentityDto {
   @Expose()
   readonly belonging_population?: string;
 
-  @IsString()
-  @MaxLength(256)
+  @IsPhoneNumberFca()
   @IsOptional()
   @Expose()
   readonly phone_number?: string;

@@ -18,7 +18,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger';
 import {
-  IOidcIdentity,
+  BaseOidcIdentityInterface,
   IServiceProviderAdapter,
   SERVICE_PROVIDER_SERVICE_TOKEN,
 } from '@fc/oidc';
@@ -179,15 +179,32 @@ export class OidcClientUtilsService {
     await client.revoke(accessToken);
   }
 
-  async getUserInfo(
+  async getUserInfo<T extends BaseOidcIdentityInterface>(
     accessToken: string,
     idpId: string,
-  ): Promise<IOidcIdentity> {
+  ): Promise<T> {
     const client = await this.issuer.getClient(idpId);
 
-    const userInfo = (await client.userinfo(accessToken)) as IOidcIdentity;
+    const userInfo = await client.userinfo<T>(accessToken);
 
     return userInfo;
+  }
+
+  /**
+   * Exchange a refresh token for a new token set.
+   *
+   * @see https://openid.net/specs/openid-connect-core-1_0.html#rfc.section.12.2
+   *
+   * @param {string} refreshToken A currently valid refresh token
+   * @param {string} idpId The current idp id
+   * @returns {Promise<TokenSet>} If successful, the token set from the refresh response
+   */
+  async refreshTokens(refreshToken: string, idpId: string): Promise<TokenSet> {
+    const client = await this.issuer.getClient(idpId);
+
+    const tokenSet = await client.refresh(refreshToken);
+
+    return tokenSet;
   }
 
   /**

@@ -11,11 +11,7 @@ import type { AuthRouteInterface } from '../../interfaces';
 export const AuthedRoute = React.memo(
   ({ fallback = AuthFallbackRoutes.LOGIN, replace = false }: AuthRouteInterface) => {
     const location = useLocation();
-    const { connected, expired, ready } = useSafeContext<AccountContextState>(AccountContext);
-
-    if (!ready) {
-      return <div data-testid="route-authed-component-loader-div" />;
-    }
+    const { connected, expired } = useSafeContext<AccountContextState>(AccountContext);
 
     if (!connected || expired) {
       const navigateTo = typeof fallback === 'function' ? fallback(location) : fallback;

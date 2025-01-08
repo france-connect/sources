@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { CoreFcaConfig } from '@fc/core-fca';
 
 import App from './app';

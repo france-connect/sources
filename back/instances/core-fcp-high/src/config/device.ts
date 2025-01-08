@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { ConfigParser } from '@fc/config';
 import { DeviceConfig } from '@fc/device';
 

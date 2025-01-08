@@ -1,6 +1,5 @@
 import { getClaimsWithoutRnippPrefix } from '../../common/helpers';
 import { ChainableElement, ScopeContext } from '../../common/types';
-/* eslint-enable @typescript-eslint/naming-convention */
 
 export default class InfoConsentPage {
   getConsentCheckbox(): ChainableElement {

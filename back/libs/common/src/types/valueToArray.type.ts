@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 /**
  * Exemple :
  * { toto: string } => { toto: string[] }

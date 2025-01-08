@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
-
 import { ErrorCode } from '../enums';
 import { I18nBaseException } from './i18n-base.exception';
 

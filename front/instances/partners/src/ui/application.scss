@@ -5,3 +5,23 @@
     max-width: 768px;
   }
 }
+
+/* stylelint-disable-next-line selector-class-pattern */
+.fc-grey-border--full {
+  background-color: var(--background-default-grey);
+  background-image: linear-gradient(0deg, var(--border-default-grey), var(--border-default-grey)),
+    linear-gradient(0deg, var(--border-default-grey), var(--border-default-grey)),
+    linear-gradient(0deg, var(--border-default-grey), var(--border-default-grey)),
+    linear-gradient(0deg, var(--border-default-grey), var(--border-default-grey));
+  background-position:
+    0 100%,
+    0 0,
+    100% 0,
+    100% 0;
+  background-repeat: no-repeat;
+  background-size:
+    100% 1px,
+    1px 100%,
+    1px 100%,
+    100% 1px;
+}

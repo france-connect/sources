@@ -4,43 +4,42 @@ import { useMediaQuery } from 'usehooks-ts';
 import { objectToMediaQuery } from '../../helpers';
 import { useStylesQuery } from './styles-query.hook';
 
-jest.mock('usehooks-ts');
 jest.mock('../../helpers/object-to-media-query/object-to-media-query.helper');
 
 describe('useStylesQuery', () => {
   it('should call objectToMediaQuery with params', () => {
-    // given
+    // Given
     const query = {
       maxWidth: '1024px',
       minWidth: '768px',
     };
 
-    // when
+    // When
     renderHook(() => useStylesQuery(query));
 
-    // then
+    // Then
     expect(objectToMediaQuery).toHaveBeenCalledWith(query);
   });
 
   it('should call useMediaQuery with the correct media query', () => {
-    // given
+    // Given
     jest.mocked(objectToMediaQuery).mockReturnValue('(min-width: 768px) and (max-width: 1024px)');
 
-    // when
+    // When
     renderHook(() => useStylesQuery(expect.any(Object)));
 
-    // then
+    // Then
     expect(useMediaQuery).toHaveBeenCalledWith('(min-width: 768px) and (max-width: 1024px)');
   });
 
   it('should return a boolean as result of useMediaQuery', () => {
-    // given
+    // Given
     jest.mocked(useMediaQuery).mockReturnValue(true);
 
-    // when
+    // When
     const { result } = renderHook(() => useStylesQuery(expect.any(Object)));
 
-    // then
+    // Then
     expect(result.current).toBeTrue();
   });
 });

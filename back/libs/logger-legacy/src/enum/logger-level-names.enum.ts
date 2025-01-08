@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative code
 export enum LoggerLevelNames {
   LOG = 'log',
   VERBOSE = 'verbose',

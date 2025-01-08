@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative code ISessionService
 import { RedisQueryResult } from '../services';
 
 /**

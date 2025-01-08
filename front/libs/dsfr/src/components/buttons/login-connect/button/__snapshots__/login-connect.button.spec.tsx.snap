@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoginConnectButton shoud match snapshot, with a defined button type 1`] = `
+<div>
+  <button
+    class="fr-connect fr-connect--proconnect"
+    type="reset"
+  >
+    <span
+      class="fr-connect__login"
+    >
+      any-autheticate-i81n-mock
+    </span>
+    <span
+      class="fr-connect__brand"
+    >
+      ProConnect
+    </span>
+  </button>
+</div>
+`;
+
+exports[`LoginConnectButton shoud match snapshot, with connect type as FranceConnect 1`] = `
+<div>
+  <button
+    class="fr-connect"
+    type="button"
+  >
+    <span
+      class="fr-connect__login"
+    >
+      any-autheticate-i81n-mock
+    </span>
+    <span
+      class="fr-connect__brand"
+    >
+      FranceConnect
+    </span>
+  </button>
+</div>
+`;
+
+exports[`LoginConnectButton shoud match snapshot, with connect type as ProConnect 1`] = `
+<div>
+  <button
+    class="fr-connect fr-connect--proconnect"
+    type="button"
+  >
+    <span
+      class="fr-connect__login"
+    >
+      any-autheticate-i81n-mock
+    </span>
+    <span
+      class="fr-connect__brand"
+    >
+      ProConnect
+    </span>
+  </button>
+</div>
+`;

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { ArgumentsHost } from '@nestjs/common';
 
 import { BaseException } from '../exceptions';

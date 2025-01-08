@@ -272,11 +272,20 @@
 | Var Name | Inferred type |
 |---|---|
 | APP_NAME | string |
+| AccountHighBroker_QUEUE | string |
+| AccountHighBroker_URLS | json |
+| AccountLegacyBroker_QUEUE | string |
+| AccountLegacyBroker_URLS | json |
 | App_ENVIRONMENT | string |
 | App_FRAUD_EMAIL_ADDRESS | string |
 | App_FRAUD_EMAIL_RECIPIENT | string |
+| Elasticsearch_FRAUD_INDEX | string |
+| Elasticsearch_NODES | json |
+| Elasticsearch_PASSWORD | string |
+| Elasticsearch_USERNAME | string |
 | FraudBroker_QUEUE | string |
 | FraudBroker_URLS | json |
+| GeoIpMaxmind_DATABASE_PATH | string |
 | Logger_THRESHOLD | string |
 | Mailer_HOST | string |
 | Mailer_PORT | number |
@@ -851,6 +860,15 @@
 | OidcClient_POST_LOGOUT_REDIRECT_URI | string |
 | OidcClient_REDIRECT_URI | string |
 | OidcClient_SCOPE | string |
+| Postgres_DATABASE | string |
+| Postgres_HOST | string |
+| Postgres_PASSWORD | string |
+| Postgres_PORT | number |
+| Postgres_SSL_CA | file |
+| Postgres_SSL_CERT | file |
+| Postgres_SSL_KEY | file |
+| Postgres_SSL_REJECT_UNAUTHORIZED | boolean |
+| Postgres_USER | string |
 | REQUEST_TIMEOUT | string |
 | Redis_CACERT | file |
 | Redis_DB | number |

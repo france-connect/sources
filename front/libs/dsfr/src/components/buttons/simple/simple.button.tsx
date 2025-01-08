@@ -1,34 +1,31 @@
 import classnames from 'classnames';
-import type { ButtonHTMLAttributes } from 'react';
+import type { MouseEventHandler } from 'react';
 import React from 'react';
 
-import { IconPlacement, Priorities, Sizes } from '../../../enums';
+import { ButtonTypes, IconPlacement, Priorities, Sizes } from '../../../enums';
+import type { ButtonInterface } from '../../../interfaces/button.interface';
 
-interface SimpleButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  // @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/217284660/Boutons+-+Buttons
-  dataTestId?: string;
-  label: string;
-  size?: Sizes;
-  priority?: Priorities;
-  noOutline?: boolean;
-  icon?: string;
-  iconPlacement?: IconPlacement;
+export interface SimpleButtonProps extends ButtonInterface {
+  title?: string | undefined;
+  type?: ButtonTypes | undefined;
+  disabled?: boolean | undefined;
+  onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
 }
 
 export const SimpleButton = React.memo(
   ({
-    className,
-    dataTestId,
-    disabled,
-    icon,
+    children: label,
+    className = undefined,
+    dataTestId = undefined,
+    disabled = undefined,
+    icon = undefined,
     iconPlacement = IconPlacement.RIGHT,
-    label,
     noOutline = false,
-    onClick,
+    onClick = undefined,
     priority = Priorities.PRIMARY,
     size = Sizes.MEDIUM,
-    title,
-    type: nativeButtonType,
+    title = undefined,
+    type: nativeButtonType = ButtonTypes.BUTTON,
   }: SimpleButtonProps) => (
     <button
       className={classnames(

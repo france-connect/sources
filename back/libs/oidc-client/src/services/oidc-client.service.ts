@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 import { validateDto } from '@fc/common';
 import { LoggerService } from '@fc/logger';
-import { IOidcIdentity } from '@fc/oidc';
+import { BaseOidcIdentityInterface, IOidcIdentity } from '@fc/oidc';
 import { TrackedEventContextInterface } from '@fc/tracking';
 
 import { MinIdentityDto, TokenResultDto } from '../dto';
@@ -56,7 +56,11 @@ export class OidcClientService {
       extraParams,
     );
 
-    const { access_token: accessToken, id_token: idToken } = tokenSet;
+    const {
+      access_token: accessToken,
+      id_token: idToken,
+      refresh_token: refreshToken,
+    } = tokenSet;
     const {
       acr,
       amr = [],
@@ -68,6 +72,7 @@ export class OidcClientService {
       amr,
       accessToken,
       idToken,
+      refreshToken,
       idpRepresentativeScope,
     };
 
@@ -85,14 +90,16 @@ export class OidcClientService {
     return tokenResult;
   }
 
-  async getUserInfosFromProvider(
+  async getUserInfosFromProvider<
+    T extends BaseOidcIdentityInterface = IOidcIdentity,
+  >(
     { accessToken, idpId }: UserInfosParams,
     _context: TrackedEventContextInterface,
-  ): Promise<IOidcIdentity> {
+  ): Promise<T> {
     // OIDC: call idp's /userinfo endpoint
-    let identity: IOidcIdentity;
+    let identity: T;
     try {
-      identity = await this.utils.getUserInfo(accessToken, idpId);
+      identity = await this.utils.getUserInfo<T>(accessToken, idpId);
     } catch (error) {
       this.logger.debug(error.stack);
 

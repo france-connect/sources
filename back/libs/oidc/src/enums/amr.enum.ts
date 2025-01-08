@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 export enum Amr {
   PWD = 'pwd',
   POP = 'pop',

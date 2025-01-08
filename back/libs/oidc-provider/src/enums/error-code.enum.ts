@@ -37,4 +37,5 @@ export enum ErrorCode {
   RUNTIME_ERROR = 29,
   USER_ABORTED = 30,
   NO_WRAPPER = 31,
+  INVALID_IDP_HINT = 32,
 }

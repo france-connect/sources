@@ -10,15 +10,6 @@ import { TracksGroupComponent } from './tracks-group';
 jest.mock('./../track-card/track-card.component');
 
 describe('tracksGroupComponent', () => {
-  const options = {
-    API_ROUTE_TRACKS: 'mock_API_ROUTE_TRACKS',
-    API_ROUTE_USER_INFOS: 'mock_API_ROUTE_USER_INFOS',
-    LUXON_FORMAT_DATETIME_SHORT_FR: 'mock_LUXON_FORMAT_DATETIME_SHORT_FR',
-    LUXON_FORMAT_DAY: 'mock_LUXON_FORMAT_DAY',
-    LUXON_FORMAT_HOUR_MINS: 'mock_LUXON_FORMAT_HOUR_MINS',
-    LUXON_FORMAT_MONTH_YEAR: 'mock_LUXON_FORMAT_MONTH_YEAR',
-    LUXON_FORMAT_TIMEZONE: 'mock_LUXON_FORMAT_TIMEZONE',
-  };
   const oldestTrack: EnhancedTrackInterface = {
     authenticationEventId: 'any',
     city: 'any',
@@ -52,11 +43,11 @@ describe('tracksGroupComponent', () => {
   const allTracks = [oldestTrack, newestTrack];
 
   it('should render the defined label', () => {
-    // given
+    // Given
     const { getByText, unmount } = render(
-      <TracksGroupComponent label="Any Label" options={options} tracks={allTracks} />,
+      <TracksGroupComponent label="Any Label" tracks={allTracks} />,
     );
-    // then
+    // Then
     const element = getByText('Any Label');
 
     expect(element).toBeInTheDocument();
@@ -65,38 +56,32 @@ describe('tracksGroupComponent', () => {
   });
 
   it('orderTracksByDateDesc should have been called', () => {
-    // given
+    // Given
     const sortFunctionSpy = jest.spyOn(TrackUtils, 'orderTracksByDateDesc');
-    const { unmount } = render(
-      <TracksGroupComponent label="Any Label" options={options} tracks={allTracks} />,
-    );
+    const { unmount } = render(<TracksGroupComponent label="Any Label" tracks={allTracks} />);
 
-    // then
+    // Then
     expect(sortFunctionSpy).toHaveBeenCalledOnce();
 
     unmount();
   });
 
   it('trackCardComponent should have been called 2 times', () => {
-    // given
-    const { unmount } = render(
-      <TracksGroupComponent label="Any Label" options={options} tracks={allTracks} />,
-    );
+    // Given
+    const { unmount } = render(<TracksGroupComponent label="Any Label" tracks={allTracks} />);
 
-    // then
+    // Then
     expect(TrackCardComponent).toHaveBeenCalledTimes(2);
 
     unmount();
   });
 
   it('trackCardComponent should have been sorted by tracks.time', () => {
-    // given
-    const { unmount } = render(
-      <TracksGroupComponent label="Any Label" options={options} tracks={allTracks} />,
-    );
+    // Given
+    const { unmount } = render(<TracksGroupComponent label="Any Label" tracks={allTracks} />);
 
-    // then
-    expect(TrackCardComponent).toHaveBeenNthCalledWith(1, { options, track: newestTrack }, {});
+    // Then
+    expect(TrackCardComponent).toHaveBeenNthCalledWith(1, { track: newestTrack }, {});
 
     unmount();
   });

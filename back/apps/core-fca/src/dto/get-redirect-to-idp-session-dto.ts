@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { Expose, Type } from 'class-transformer';
 import { IsIn, IsString } from 'class-validator';
 

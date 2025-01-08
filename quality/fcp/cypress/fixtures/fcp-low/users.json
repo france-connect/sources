@@ -349,7 +349,16 @@
         "username": "test_TRACE_USER",
         "password": "123"
       }
-    ]
+    ],
+    "claims": {
+      "gender": "male",
+      "given_name": "utilisateur traces",
+      "family_name": "TRACE_USER",
+      "birthdate": "1985-01-01",
+      "birthplace": "75107",
+      "birthcountry": "99100",
+      "email": "aucun@email.com"
+    }
   },
   {
     "enabled": true,

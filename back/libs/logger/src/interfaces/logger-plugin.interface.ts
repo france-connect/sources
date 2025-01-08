@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { DynamicModule, ModuleMetadata, Type } from '@nestjs/common';
 
 export interface LoggerPluginServiceInterface {

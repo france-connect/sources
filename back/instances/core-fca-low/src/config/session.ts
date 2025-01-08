@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { ConfigParser } from '@fc/config';
 import { CoreRoutes } from '@fc/core';
 import { CoreFcaSession } from '@fc/core-fca';

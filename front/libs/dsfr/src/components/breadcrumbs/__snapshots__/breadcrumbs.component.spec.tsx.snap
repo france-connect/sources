@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`breadCrumbsComponent should match snapshot 1`] = `
+<div>
+  <nav
+    aria-label="DSFR.breadcrumbs.location"
+    class="fr-breadcrumb"
+    role="navigation"
+  >
+    <div
+      data-mockid="BreadCrumbsToggleButton"
+    />
+    <div
+      class="fr-collapse"
+      data-testid="breadcrumbs::usedid-mock-value"
+      id="breadcrumbs::usedid-mock-value"
+    >
+      <ol
+        class="fr-breadcrumb__list"
+      >
+        <div
+          data-mockid="BreadCrumbComponent"
+        />
+        <div
+          data-mockid="BreadCrumbComponent"
+        />
+      </ol>
+    </div>
+  </nav>
+</div>
+`;

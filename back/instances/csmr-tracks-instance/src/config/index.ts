@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
-
 import { CsmrTracksConfig } from '@fc/csmr-tracks';
 
 import AccountHighBroker from './account-high-broker';

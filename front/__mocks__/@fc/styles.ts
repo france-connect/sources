@@ -5,7 +5,7 @@ export const useStylesQuery = jest.fn();
 
 export const useStylesContext = jest.fn();
 
-export const useStylesVariables = jest.fn();
+export const useStylesVariables = jest.fn(() => []);
 
 export const StylesProvider = jest.fn(
   ({ children }: StylesProviderProps) => children as ReactElement,

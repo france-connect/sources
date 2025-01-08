@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { ErrorCode } from '../enums';
 import { CsmrUserPreferencesBaseException } from './csmr-user-preferences-base.exception';
 

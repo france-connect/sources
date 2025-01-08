@@ -6,29 +6,29 @@ import { StylesContext } from '../../context';
 import { useStylesContext } from './styles-context.hook';
 
 describe('useStylesContext', () => {
-  // given
+  // Given
   const cssVariablesMock = new CSSStyleDeclaration();
   cssVariablesMock.setProperty('--color-primary', 'red');
 
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValue({ cssVariables: cssVariablesMock });
   });
 
   it('should call useSafeContext', () => {
-    // when
+    // When
     renderHook(() => useStylesContext());
 
-    // then
+    // Then
     expect(useSafeContext).toHaveBeenCalledOnce();
     expect(useSafeContext).toHaveBeenCalledWith(StylesContext);
   });
 
   it('should return the values from StylesContext', () => {
-    // when
+    // When
     const { result } = renderHook(() => useStylesContext());
 
-    // then
+    // Then
     expect(result.current).toStrictEqual({ cssVariables: cssVariablesMock });
   });
 });

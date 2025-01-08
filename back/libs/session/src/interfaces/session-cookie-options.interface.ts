@@ -1,8 +1,5 @@
-/* istanbul ignore file */
-
 import { SameSiteType } from '../types';
 
-// declarative code
 /**
  * @todo This interface is not complete, it should have the right attributes
  * that define the expected elements in the cookie's options.

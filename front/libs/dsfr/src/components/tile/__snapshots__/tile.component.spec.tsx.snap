@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TileComponent should match the snapshot, with default values 1`] = `
+<div>
+  <div
+    class="fr-tile fr-tile--md fr-enlarge-link"
+    data-testid="TileComponent"
+  >
+    <div
+      class="fr-tile__body"
+    >
+      <div
+        class="fr-tile__content"
+      >
+        <h3
+          class="fr-tile__title"
+          data-testid="TileComponent-title"
+        >
+          <span
+            data-mockid="Link"
+          >
+            Tile title mock
+          </span>
+        </h3>
+      </div>
+    </div>
+    <div
+      class="fr-tile__header"
+    >
+      <div
+        class="fr-tile__pictogram"
+      >
+        any description text treat as children
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`TileComponent should match the snapshot, with optionnal values 1`] = `
+<div>
+  <div
+    class="fr-tile fr-tile--lg fr-enlarge-link fr-tile--download fr-tile--horizontal"
+    data-testid="any-data-test-id-mock"
+  >
+    <div
+      class="fr-tile__body"
+    >
+      <div
+        class="fr-tile__content"
+      >
+        <h1
+          class="fr-tile__title"
+          data-testid="any-data-test-id-mock-title"
+        >
+          <span
+            data-mockid="Link"
+          >
+            Tile title mock
+          </span>
+        </h1>
+        <p
+          class="fr-tile__desc"
+        >
+          any-description-mock
+        </p>
+        <p
+          class="fr-tile__detail"
+        >
+          any-detail-mock
+        </p>
+      </div>
+    </div>
+    <div
+      class="fr-tile__header"
+    >
+      <div
+        class="fr-tile__pictogram"
+      >
+        any description text treat as children
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPTS_DIR="/opt/scripts/db-states"
-MONGO="mongo --host mongo-fcp-low -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin $MONGO_INITDB_DATABASE --quiet --tls";
+MONGO="mongosh --host mongo-fcp-low -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin $MONGO_INITDB_DATABASE --quiet --tls";
 
 usage() {
   echo "Usage:";

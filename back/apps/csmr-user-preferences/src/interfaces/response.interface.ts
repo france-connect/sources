@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IFormattedIdpSettingsPayload } from './formatted-idp-settings.interface';
 
 /**

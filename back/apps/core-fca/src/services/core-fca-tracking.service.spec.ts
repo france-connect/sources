@@ -1,41 +1,77 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { CoreTrackingService } from '@fc/core';
-import { TrackedEventInterface } from '@fc/tracking';
+import { SessionService } from '@fc/session';
+
+import { getSessionServiceMock } from '@mocks/session';
 
 import { CoreFcaTrackingService } from './core-fca-tracking.service';
 
-jest.mock('@fc/tracking-context');
-jest.mock('@fc/core');
+jest.mock('@fc/tracking-context', () => ({
+  extractNetworkInfoFromHeaders: jest.fn(),
+}));
 
-describe('CoreFcaTrackingService', () => {
+describe('CoreTrackingService', () => {
   let service: CoreFcaTrackingService;
 
   beforeEach(async () => {
     jest.resetAllMocks();
+    jest.restoreAllMocks();
+
+    const sessionServiceMock = getSessionServiceMock();
+
     const module: TestingModule = await Test.createTestingModule({
-      providers: [CoreFcaTrackingService, CoreTrackingService],
-    }).compile();
+      providers: [CoreFcaTrackingService, SessionService],
+    })
+      .overrideProvider(SessionService)
+      .useValue(sessionServiceMock)
+      .compile();
 
-    service = module.get(CoreFcaTrackingService);
+    service = module.get<CoreFcaTrackingService>(CoreFcaTrackingService);
   });
-  describe('buildLog', () => {
-    it('should return a fca track object', async () => {
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  describe('extractContext()', () => {
+    it('should extract specific context property fqdn from fca context', () => {
       // Given
-      const trackedEventMock: TrackedEventInterface = {
-        category: 'categoryMockedValue',
-        event: 'eventMockedValue',
+      const trackedEventContextMock = {
+        fqdn: 'hogwarts@uk',
       };
-
-      const contextMock = {
-        fqdn: 'hogwarts.uk',
-      };
-
-      // When
-      const result = await service.buildLog(trackedEventMock, contextMock);
 
       // Then
-      expect(result).toEqual({ fqdn: 'hogwarts.uk' });
+      expect(service['extractContext'](trackedEventContextMock).fqdn).toEqual(
+        'hogwarts@uk',
+      );
+    });
+
+    it('should not extract other non recognized properties from context', () => {
+      // Given
+      const trackedEventContextMock = {
+        fqdn: 'hogwarts@uk',
+        nonRecognizeProperty: 'nonRecognizeProperty',
+      };
+
+      // Then
+      expect(service['extractContext'](trackedEventContextMock)).toEqual({
+        fqdn: 'hogwarts@uk',
+      });
+    });
+
+    it('should continue to extract other common recognized properties from context', () => {
+      // Given
+      const trackedEventContextMock = {
+        fqdn: 'hogwarts@uk',
+        nonRecognizeProperty: 'nonRecognizeProperty',
+        claims: ['openId', 'email'],
+      };
+
+      // Then
+      expect(service['extractContext'](trackedEventContextMock)).toEqual({
+        fqdn: 'hogwarts@uk',
+        claims: ['openId', 'email'],
+      });
     });
   });
 });

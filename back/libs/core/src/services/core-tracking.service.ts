@@ -55,7 +55,7 @@ export class CoreTrackingService {
     };
   }
 
-  private extractContext(
+  protected extractContext(
     ctx: TrackedEventContextInterface,
   ): ICoreTrackingContext {
     /**
@@ -92,8 +92,6 @@ export class CoreTrackingService {
       newIdentity,
       becameTrusted,
       becameShared,
-
-      rep_scope,
     } = ctx;
     const source = extractNetworkInfoFromHeaders(ctx);
 
@@ -117,7 +115,6 @@ export class CoreTrackingService {
       idpName,
       idpLabel,
       idpIdentity,
-      rep_scope: rep_scope?.join(' '),
 
       deviceTrusted: isTrusted,
       deviceIsSuspicious: isSuspicious,
@@ -130,7 +127,7 @@ export class CoreTrackingService {
   }
 
   // eslint-disable-next-line complexity
-  private getDataFromSession(sessionId: string): ICoreTrackingProviders {
+  protected getDataFromSession(sessionId: string): ICoreTrackingProviders {
     const oidcSession =
       this.sessionService.get<OidcSession>('OidcClient') || {};
 

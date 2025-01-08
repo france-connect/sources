@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
-
 export interface OidcAddress {
   country: string;
   postal_code: string;

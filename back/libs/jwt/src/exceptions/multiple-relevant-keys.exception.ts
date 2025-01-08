@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { KekAlg, Use } from '@fc/cryptography';
 
 import { ErrorCode } from '../enum';

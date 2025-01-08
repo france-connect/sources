@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { Expose } from 'class-transformer';
 import { IsAscii, MinLength } from 'class-validator';
 

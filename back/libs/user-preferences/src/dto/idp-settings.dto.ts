@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { ArrayMinSize, IsArray, IsBoolean, IsString } from 'class-validator';
 
 export class IdpSettingsDto {

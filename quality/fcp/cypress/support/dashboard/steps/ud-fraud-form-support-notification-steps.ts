@@ -1,5 +1,6 @@
 import { Then } from '@badeball/cypress-cucumber-preprocessor';
 
+import { MaildevHelper } from '../../common/helpers';
 import UdFraudFormSupportNotificationPage from '../pages/ud-fraud-form-support-notification';
 
 const udFraudFormSupportNotificationPage =
@@ -11,11 +12,9 @@ Then('le mail "demande de support" est envoyé', function () {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(1000);
   udFraudFormSupportNotificationPage
-    .getLastSupportRequest(contactEmail)
+    .visitLastSupportRequest(contactEmail)
     .then((message) => {
       this.mail = message;
-      this.mailBodyContent =
-        udFraudFormSupportNotificationPage.parseBodyContent(message.html);
     });
 });
 
@@ -51,8 +50,7 @@ Then(
 Then(
   '{string} est {string} dans le mail "demande de support"',
   function (contentKey: string, value: string) {
-    udFraudFormSupportNotificationPage.checkBodyContent(
-      this.mailBodyContent,
+    udFraudFormSupportNotificationPage.checkContentKeyHasValue(
       contentKey,
       value,
     );
@@ -65,9 +63,8 @@ Then(
     const { email } = this.user.claims as {
       email: string;
     };
-    udFraudFormSupportNotificationPage.checkBodyContent(
-      this.mailBodyContent,
-      'Email du compte FI',
+    udFraudFormSupportNotificationPage.checkContentKeyHasValue(
+      'idpEmail',
       email,
     );
   },
@@ -80,45 +77,104 @@ Then(
       birthcountry,
       birthdate,
       birthplace,
-      family_name: lastName,
-      given_name: firstName,
-    } = this.user.claims as {
-      birthcountry: string;
-      birthdate: string;
-      birthplace: string;
-      family_name: string;
-      given_name: string;
-    };
+      family_name: familyName,
+      given_name: givenName,
+    } = this.user.claims;
 
-    udFraudFormSupportNotificationPage.checkIdPivotValuesInBodyContent(
-      {
-        birthcountry,
-        birthdate,
-        birthplace,
-        firstName,
-        lastName,
-      },
-      this.mailBodyContent,
-    );
+    Object.entries({
+      birthcountry,
+      birthdate,
+      birthplace,
+      familyName,
+      givenName,
+    }).forEach(([key, value]) => {
+      udFraudFormSupportNotificationPage.checkContentKeyHasValue(
+        key,
+        value as string,
+      );
+    });
   },
 );
 
 Then(
   `les champs du formulaire sont présents dans le mail "demande de support"`,
   function () {
-    udFraudFormSupportNotificationPage.checkFraudFormValuesInBodyContent(
-      this.fraudFormValues,
-      this.mailBodyContent,
-    );
+    Object.entries(this.fraudFormValues).forEach(([key, value]) => {
+      udFraudFormSupportNotificationPage.checkContentKeyHasValue(key, value);
+    });
   },
 );
 
 Then(
   `{string} n'est pas présent dans le mail "demande de support"`,
   function (contentKey: string) {
-    udFraudFormSupportNotificationPage.checkBodyContentKeyNotExist(
-      this.mailBodyContent,
-      contentKey,
+    udFraudFormSupportNotificationPage.checkContentKeyNotExist(contentKey);
+  },
+);
+
+Then(
+  `le nombre de trace est {int} dans le mail "demande de support"`,
+  function (tracksCount: number) {
+    udFraudFormSupportNotificationPage.checkContentKeyHasValue(
+      'total',
+      tracksCount.toString(),
+    );
+  },
+);
+
+Then(
+  `le message d'erreur est {string} dans le mail "demande de support"`,
+  function (error: string) {
+    udFraudFormSupportNotificationPage.checkContentKeyHasValue('error', error);
+  },
+);
+
+Then(
+  `{string} est {string} pour la trace numéro {int} dans le mail "demande de support"`,
+  function (contentKey: string, value: string, trackIndex: number) {
+    const index = trackIndex - 1;
+    cy.get(`[data-testid="fraud-form-email-track-${index}"]`).within(() => {
+      cy.get(`[data-testid="fraud-form-email-${contentKey}"]`).should(
+        'have.text',
+        value,
+      );
+    });
+  },
+);
+
+Then(
+  `{string} est présent pour la trace numéro {int} dans le mail "demande de support"`,
+  function (contentKey: string, trackIndex: number) {
+    const index = trackIndex - 1;
+    cy.get(`[data-testid="fraud-form-email-track-${index}"]`).within(() => {
+      cy.get(`[data-testid="fraud-form-email-${contentKey}"]`).should(
+        'be.visible',
+      );
+    });
+  },
+);
+
+Then(
+  'le fichier {string} est joint dans le mail "demande de support"',
+  function (fileName: string) {
+    expect(MaildevHelper.hasAttachment(this.mail, fileName)).to.be.true;
+  },
+);
+
+Then(
+  `il n'y a pas de pièce jointe dans le mail "demande de support"`,
+  function () {
+    expect(this.mail.attachments).not.to.exist;
+  },
+);
+
+Then(
+  /^le fichier csv "([^"]+)" contient les traces pour un partenaire de type (FI|FS)$/,
+  function (fileName: string, partnerType: string) {
+    const records = this.csvFiles[fileName];
+    udFraudFormSupportNotificationPage.checkCsvFileHasFormat(
+      records,
+      partnerType,
     );
   },
 );

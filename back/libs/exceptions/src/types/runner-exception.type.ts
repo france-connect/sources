@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { BaseException } from '../exceptions';
 
 export type PathAndException = {

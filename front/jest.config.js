@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 
 /* ------------------------------------------------------
@@ -12,14 +10,15 @@
   ------------------------------------------------------ */
 module.exports = {
   clearMocks: true,
-  collectCoverageFrom: [
-    'apps/**/*.@(ts|tsx)',
-    'libs/**/*.@(ts|tsx)',
-    'instances/**/*.@(ts|tsx)',
-    '!**/*.d.ts',
-    '!.configs/*',
-    '!**/__mocks__/*',
-    '!**/__fixtures__/*',
+  collectCoverageFrom: ['apps/**/*.@(ts|tsx)', 'libs/**/*.@(ts|tsx)', 'instances/**/*.@(ts|tsx)'],
+  coveragePathIgnorePatterns: [
+    '.*.d.ts',
+    '.configs/',
+    '/__mocks__/',
+    '/__fixtures__/',
+    '.+/index.ts',
+    '.+.(context|error|exception).ts',
+    '.+.(routes).tsx',
   ],
   coverageDirectory: '<rootDir>/coverage',
   coverageThreshold: {

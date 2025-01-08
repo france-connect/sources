@@ -1,4 +1,4 @@
-import { TransformFnParams, TransformOptions } from 'class-transformer';
+import { TransformFnParams } from 'class-transformer';
 /**
  * @todo Remove this internal API coupling or make it reliable
  * The defaultMetadataStorage is a class-transformer internal API that can be broken at any time.
@@ -7,8 +7,17 @@ import { TransformFnParams, TransformOptions } from 'class-transformer';
  */
 import { defaultMetadataStorage } from 'class-transformer/cjs/storage';
 
-export function doSplit(separator: string | RegExp = ' ') {
-  return ({ value }: Partial<TransformFnParams>) => {
+import { SplitOptionsInterface } from '../interfaces';
+
+export function doSplit(
+  separator: string | RegExp = ' ',
+  options: SplitOptionsInterface,
+) {
+  return ({ value }: Partial<TransformFnParams>): Array<string> => {
+    if (options.maxLength && value.length > options.maxLength) {
+      return [];
+    }
+
     return typeof value === 'string' ? String(value).split(separator) : [];
   };
 }
@@ -17,9 +26,9 @@ export function doSplit(separator: string | RegExp = ' ') {
 /* istanbul ignore next */
 export function Split(
   separator: string | RegExp,
-  options: TransformOptions = {},
+  options: SplitOptionsInterface = {},
 ): PropertyDecorator {
-  const transformFn = doSplit(separator);
+  const transformFn = doSplit(separator, options);
 
   return function (target: any, propertyName: string | symbol): void {
     defaultMetadataStorage.addTransformMetadata({

@@ -101,7 +101,7 @@ Fonctionnalité: Connexion ACR
     Et que le fournisseur d'identité garantit un niveau de sécurité "<idpAcr>"
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y020001"
+    Et le code d'erreur FranceConnect est "Y100001"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
 
     Exemples:
@@ -127,7 +127,7 @@ Fonctionnalité: Connexion ACR
     Et que le fournisseur d'identité garantit un niveau de sécurité "eidas3"
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y020018"
+    Et le code d'erreur FranceConnect est "Y100018"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
 
   # @Todo: check if we can use FIN as an "eidas3 only" provider on Integ01
@@ -145,7 +145,7 @@ Fonctionnalité: Connexion ACR
     Et que le fournisseur d'identité garantit un niveau de sécurité "eidas2"
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y020018"
+    Et le code d'erreur FranceConnect est "Y100018"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter."
 
 

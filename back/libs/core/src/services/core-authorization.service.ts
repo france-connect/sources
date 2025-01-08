@@ -6,10 +6,14 @@ import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapt
 import { LoggerService } from '@fc/logger';
 import { AuthorizationParameters, OidcClientService } from '@fc/oidc-client';
 
+import { CoreAuthorizationServiceInterface } from '../interfaces';
+
 export const CORE_AUTHORIZATION_FEATURE = 'coreAuthorization';
 
 @Injectable()
-export class CoreAuthorizationService {
+export class CoreAuthorizationService
+  implements CoreAuthorizationServiceInterface
+{
   constructor(
     private readonly logger: LoggerService,
     private readonly identityProvider: IdentityProviderAdapterMongoService,

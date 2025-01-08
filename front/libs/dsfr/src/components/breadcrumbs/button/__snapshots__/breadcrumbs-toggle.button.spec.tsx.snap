@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BreadCrumbsToggleButton should match snapshot 1`] = `
+<div>
+  <button
+    aria-controls="any-uniqid-mock"
+    aria-expanded="any-toggle-value-mock"
+    class="fr-breadcrumb__button"
+  >
+    DSFR.breadcrumbs.show
+  </button>
+</div>
+`;

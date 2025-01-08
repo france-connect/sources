@@ -19,7 +19,7 @@ Fonctionnalité: Connexion eIDAS - Validation des claims renvoyés par le fourni
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec succès
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y000006"
+    Et le code d'erreur FranceConnect est "Y600006"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous"
 
   Scénario: Connexion FS Européen - Pas d'erreur si FI FR ne renvoit pas un claim optionnel
@@ -72,7 +72,7 @@ Fonctionnalité: Connexion eIDAS - Validation des claims renvoyés par le fourni
     Et que je clique sur le pays "Mock Node"
     Quand je m'authentifie avec succès sur le fournisseur d'identité étranger
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y000006"
+    Et le code d'erreur FranceConnect est "Y600006"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous"
 
   Scénario: Connexion FS français - Pas d'erreur si FI FR ne renvoit pas un claim optionnel

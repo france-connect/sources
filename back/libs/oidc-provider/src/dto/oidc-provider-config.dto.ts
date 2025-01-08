@@ -1,5 +1,3 @@
-/* istanbul ignore file */
-
 import { Type } from 'class-transformer';
 import {
   IsArray,
@@ -70,6 +68,11 @@ export type RenderErrorCallback = (
   out: ErrorOut,
   error: any | Error,
 ) => CanBePromise<void>;
+export type IssueRefreshTokenCallback = (
+  ctx: KoaContextWithOIDC,
+  client: any,
+  code: any,
+) => CanBePromise<boolean>;
 
 export class Routes {
   @IsEnum(OidcProviderRoutes)
@@ -225,6 +228,10 @@ class Ttl {
 
   @IsNumber()
   readonly Session: number;
+
+  @IsNumber()
+  @IsOptional()
+  readonly RefreshToken?: number;
 
   @IsNumber()
   readonly Grant: number;
@@ -660,6 +667,19 @@ export class Configuration {
 
   @IsArray()
   readonly grant_types_supported: GrantType[];
+
+  /**
+   * `issueRefreshToken` is a function.
+   * This is not something that should live in a DTO.
+   * Although this is the way `oidc-provider` library offers
+   * to decide whether a refresh token will be issued or not.
+   * @see https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#issuerefreshtoken
+   *
+   * This property is optional because it is injected by the module
+   * rather than by real configuration.
+   */
+  @IsOptional()
+  readonly issueRefreshToken?: IssueRefreshTokenCallback;
 
   @IsObject()
   @ValidateNested()

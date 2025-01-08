@@ -12,5 +12,4 @@ export function validateStatus(status: number) {
  * @param raw
  * @returns
  */
-/* istanbul ignore next line */
 export const rawTransform = (raw) => raw;

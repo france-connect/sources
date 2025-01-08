@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { DelegationScope, DelegationScopeConfig } from '@fc/core-fcp';
 
 export default {

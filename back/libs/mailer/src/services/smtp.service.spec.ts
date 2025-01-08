@@ -1,3 +1,5 @@
+import { Attachment } from 'nodemailer/lib/mailer';
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailerService } from '@nestjs-modules/mailer';
 
@@ -9,6 +11,8 @@ describe('SmtpService', () => {
   const mailerServiceMock = {
     sendMail: jest.fn(),
   };
+
+  const attachment = Symbol('attachments') as unknown as Attachment;
 
   const paramsMock = {
     subject: 'This is a notification',
@@ -27,6 +31,7 @@ describe('SmtpService', () => {
       email: 'reply@to.fr',
       name: 'replyTo',
     },
+    attachments: [attachment],
   };
 
   beforeEach(async () => {
@@ -67,6 +72,7 @@ describe('SmtpService', () => {
           address: 'reply@to.fr',
           name: 'replyTo',
         },
+        attachments: [attachment],
       };
 
       // When

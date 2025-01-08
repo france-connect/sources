@@ -6,8 +6,6 @@ import { ConfigTemplateHelper } from './helpers/config-template.helper';
 @Module({})
 @Global()
 export class ConfigModule {
-  // does not need to be tested
-  // istanbul ignore next
   static forRoot(service): DynamicModule {
     const provider = {
       provide: ConfigService,

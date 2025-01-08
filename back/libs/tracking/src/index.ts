@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './dto';
 export * from './interceptors';
 export * from './interfaces';

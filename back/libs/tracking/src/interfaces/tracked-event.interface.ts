@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { RequestMethod, Type } from '@nestjs/common';
 
 import { FcException } from '@fc/exceptions/exceptions';

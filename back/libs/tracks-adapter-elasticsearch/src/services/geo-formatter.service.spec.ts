@@ -67,6 +67,7 @@ describe('GeoFormatterService', () => {
       };
       // When
       const geoIp = service.getGeoFromIp(sourceMock);
+
       // Then
       expect(geoIp).toStrictEqual(resultMock);
       expect(geoipMaxmindServiceMock.getCityName).toBeCalledTimes(0);
@@ -98,6 +99,7 @@ describe('GeoFormatterService', () => {
       };
       // When
       const geoIp = service.getGeoFromIp(sourceMock);
+
       // Then
       expect(geoIp).toStrictEqual(resultMock);
       expect(geoipMaxmindServiceMock.getCityName).toBeCalledTimes(0);
@@ -117,8 +119,10 @@ describe('GeoFormatterService', () => {
         country: 'FR',
         city: 'Paris',
       };
+
       // When
       const geoIp = service.getGeoFromIp(sourceMock);
+
       // Then
       expect(geoIp).toStrictEqual(resultMock);
       expect(geoipMaxmindServiceMock.getCityName).toBeCalledTimes(1);
@@ -146,8 +150,10 @@ describe('GeoFormatterService', () => {
         country: 'FR',
         city: 'Paris',
       };
+
       // When
       const geoIp = service.getGeoFromIp(sourceMock);
+
       // Then
       expect(geoIp).toStrictEqual(resultMock);
       expect(geoipMaxmindServiceMock.getCityName).toBeCalledTimes(1);
@@ -173,8 +179,10 @@ describe('GeoFormatterService', () => {
         country: undefined,
         city: undefined,
       };
+
       // When
       const geoIp = service.getGeoFromIp(sourceMock);
+
       // Then
       expect(geoIp).toStrictEqual(resultMock);
       expect(geoipMaxmindServiceMock.getCityName).toBeCalledTimes(1);
@@ -194,6 +202,7 @@ describe('GeoFormatterService', () => {
       const trackMock = {
         ip: 'ipHigh',
       } as unknown as TracksV2FieldsInterface;
+
       // When
       const ip = service['getIp'](trackMock);
 
@@ -206,6 +215,7 @@ describe('GeoFormatterService', () => {
       const trackMock = {
         userIp: 'ipLegacy',
       } as unknown as TracksV2FieldsInterface;
+
       // When
       const ip = service['getIp'](trackMock);
 

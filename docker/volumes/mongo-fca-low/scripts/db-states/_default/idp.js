@@ -564,5 +564,5 @@ const fia = {
 // -- Idps ----------
 Object.values(fia).forEach((idp) => {
   print(`${idp.name} > Initializing provider: ${idp.name}`);
-  db.provider.update({ name: idp.name }, idp, { upsert: true });
+  db.provider.updateOne({ name: idp.name }, { $set: idp }, { upsert: true });
 });

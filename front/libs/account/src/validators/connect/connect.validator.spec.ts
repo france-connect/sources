@@ -4,42 +4,42 @@ import { ConnectValidator } from './connect.validator';
 describe('ConnectValidator', () => {
   describe('validate', () => {
     it('should return true if firstname and lastname are provided', () => {
-      // given
+      // Given
       const data = {
         firstname: 'John',
         lastname: 'Doe',
       } as UserInfosInterface;
 
-      // when
+      // When
       const result = ConnectValidator.validate(data);
 
-      // then
+      // Then
       expect(result).toBeTrue();
     });
 
     it('should return false if firstname is missing', () => {
-      // given
+      // Given
       const data = {
         lastname: 'Doe',
       } as UserInfosInterface;
 
-      // when
+      // When
       const result = ConnectValidator.validate(data);
 
-      // then
+      // Then
       expect(result).toBeFalse();
     });
 
     it('should return false if lastname is missing', () => {
-      // given
+      // Given
       const data = {
         firstname: 'John',
       } as UserInfosInterface;
 
-      // when
+      // When
       const result = ConnectValidator.validate(data);
 
-      // then
+      // Then
       expect(result).toBeFalse();
     });
   });

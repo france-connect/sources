@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { BridgeHttpProxyModule } from '@fc/bridge-http-proxy';

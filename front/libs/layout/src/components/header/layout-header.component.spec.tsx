@@ -14,7 +14,7 @@ jest.mock('./brand/layout-header.brand');
 
 describe('LayoutHeaderComponent', () => {
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue(expect.any(Object));
     jest.mocked(useSafeContext).mockReturnValue({
       isUserConnected: true,
@@ -22,16 +22,16 @@ describe('LayoutHeaderComponent', () => {
   });
 
   it('should match the snapshot when user is connected', () => {
-    // given
+    // Given
     const navigationItemsMock = jest.fn();
     jest.mocked(ConfigService.get).mockReturnValue({
       navigation: navigationItemsMock,
     });
 
-    // when
+    // When
     const { container } = render(<LayoutHeaderComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(LayoutHeaderBrandComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderBrandComponent).toHaveBeenCalledWith({}, {});
@@ -47,15 +47,15 @@ describe('LayoutHeaderComponent', () => {
   });
 
   it('should match the snapshot when user is not connected', () => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValue({
       isUserConnected: false,
     });
 
-    // when
+    // When
     const { container } = render(<LayoutHeaderComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(LayoutHeaderBrandComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderBrandComponent).toHaveBeenCalledWith({}, {});

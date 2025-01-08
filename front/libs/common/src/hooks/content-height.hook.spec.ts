@@ -5,7 +5,7 @@ import { useContentHeight } from './content-height.hook';
 
 describe('useAccordionContentHeight', () => {
   it('should return a zero height if clientHeight is not reachable', () => {
-    // given
+    // Given
     jest.spyOn(React, 'useRef');
     // When
     const { result } = renderHook(() => useContentHeight());
@@ -15,7 +15,7 @@ describe('useAccordionContentHeight', () => {
   });
 
   it('should return the height of the content in ref', () => {
-    // given
+    // Given
     const heightMock = expect.any(Number);
     const refMock = { current: { clientHeight: heightMock } };
     jest.spyOn(React, 'useRef').mockReturnValue(refMock);

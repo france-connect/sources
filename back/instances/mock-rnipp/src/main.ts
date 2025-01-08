@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Not to be tested
 import { join } from 'path';
 
 import { renderFile } from 'ejs';

@@ -1,3 +1,5 @@
+import './warmup-imports';
+
 import * as fs from 'fs';
 
 import * as ejs from 'ejs';

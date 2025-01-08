@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 import type { ServiceInterface } from './service.interface';
 
 export interface UserPreferencesDataInterface {

@@ -1,7 +1,6 @@
-/* istanbul ignore file */
+import { TracksTicketDataInterface } from './tracks-results.interface';
 
-// Declarative code
-export type SecurityTicketDataInterface = {
+export interface SecurityTicketDataInterface {
   givenName: string;
   familyName: string;
   birthdate: string;
@@ -11,6 +10,9 @@ export type SecurityTicketDataInterface = {
   idpEmail: string;
   authenticationEventId: string;
   fraudSurveyOrigin: string;
-  comment?: string;
-  phoneNumber?: string;
-};
+  comment: string;
+  phoneNumber: string;
+  error: string;
+  total: number;
+  tracks: TracksTicketDataInterface[];
+}

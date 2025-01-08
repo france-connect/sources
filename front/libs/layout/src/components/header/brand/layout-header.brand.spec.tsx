@@ -15,7 +15,7 @@ jest.mock('../burger/layout-header.burger');
 
 describe('LayoutHeaderBrandComponent', () => {
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({
       features: {
         showServiceTitle: false,
@@ -37,42 +37,42 @@ describe('LayoutHeaderBrandComponent', () => {
   });
 
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(<LayoutHeaderBrandComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should call useSafeContext', () => {
-    // when
+    // When
     render(<LayoutHeaderBrandComponent />);
 
-    // then
+    // Then
     expect(useSafeContext).toHaveBeenCalledOnce();
     expect(useSafeContext).toHaveBeenCalledWith(LayoutContext);
   });
 
   it('should call ConfigService.get with Layout config name', () => {
-    // when
+    // When
     render(<LayoutHeaderBrandComponent />);
 
-    // then
+    // Then
     expect(ConfigService.get).toHaveBeenCalledOnce();
     expect(ConfigService.get).toHaveBeenCalledWith('Layout');
   });
 
   it('should call getAccessibleTitle', () => {
-    // given
+    // Given
     jest
       .mocked(getAccessibleTitle)
       .mockReturnValueOnce(expect.any(String))
       .mockReturnValueOnce('any-service-baseline-mock - any-service-name-mock');
 
-    // when
+    // When
     render(<LayoutHeaderBrandComponent />);
 
-    // then
+    // Then
     expect(getAccessibleTitle).toHaveBeenCalledTimes(2);
     expect(getAccessibleTitle).toHaveBeenNthCalledWith(
       1,
@@ -87,7 +87,7 @@ describe('LayoutHeaderBrandComponent', () => {
   });
 
   it('should call Link component', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({
       features: {
         showServiceTitle: false,
@@ -100,10 +100,10 @@ describe('LayoutHeaderBrandComponent', () => {
       },
     });
 
-    // when
+    // When
     render(<LayoutHeaderBrandComponent />);
 
-    // then
+    // Then
     expect(Link).toHaveBeenCalledOnce();
     expect(Link).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -115,40 +115,40 @@ describe('LayoutHeaderBrandComponent', () => {
   });
 
   it('should call LogoRepubliqueFrancaiseComponent', () => {
-    // when
+    // When
     render(<LayoutHeaderBrandComponent />);
 
-    // then
+    // Then
     expect(LogoRepubliqueFrancaiseComponent).toHaveBeenCalledOnce();
   });
 
   it('should render the logo alt text', () => {
-    // when
+    // When
     const { getByAltText } = render(<LayoutHeaderBrandComponent />);
     const element = getByAltText(
       'Retour à l’accueil du site - any-service-baseline-mock - any-service-name-mock',
     );
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 
   it('should call LayoutHeaderMobileBurgerButton', () => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValueOnce({
       isUserConnected: true,
     });
 
-    // when
+    // When
     render(<LayoutHeaderBrandComponent />);
 
-    // then
+    // Then
     expect(LayoutHeaderMobileBurgerButton).toHaveBeenCalledOnce();
     expect(LayoutHeaderMobileBurgerButton).toHaveBeenCalledWith({}, {});
   });
 
   it('should call LayoutHeaderServiceComponent', () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValueOnce({
       features: {
         showServiceTitle: true,
@@ -161,10 +161,10 @@ describe('LayoutHeaderBrandComponent', () => {
       },
     });
 
-    // when
+    // When
     render(<LayoutHeaderBrandComponent />);
 
-    // then
+    // Then
     expect(LayoutHeaderServiceComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderServiceComponent).toHaveBeenCalledWith({}, {});
   });

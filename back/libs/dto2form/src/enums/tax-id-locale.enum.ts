@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export enum TaxIDLocale {
   'BG_BG' = 'bg-BG',
   'CS_CZ' = 'cs-CZ',

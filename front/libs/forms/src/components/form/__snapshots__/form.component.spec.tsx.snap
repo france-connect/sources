@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormComponent should match snapshot with default values 1`] = `
+<div>
+  <div
+    data-mockid="FormWrapperComponent"
+  />
+</div>
+`;
+
+exports[`FormComponent should match snapshot with noRequired and scrollTopOnSubmit 1`] = `
+<div>
+  <div
+    data-mockid="FormWrapperComponent"
+  />
+</div>
+`;

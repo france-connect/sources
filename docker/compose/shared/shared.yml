@@ -109,6 +109,7 @@ services:
           - doc-partners.docker.dev-franceconnect.fr
           # Espace partenaires
           - partners.docker.dev-franceconnect.fr
+          - mock-proconnect.docker.dev-franceconnect.fr
           # Stack Legacy
           - fcp.docker.dev-franceconnect.fr
           - fip1.docker.dev-franceconnect.fr
@@ -307,13 +308,17 @@ services:
       - data
 
   postgres:
-    # OPS have access to only v11 atm on debian
-    image: postgres:11-buster
+    image: postgres:13-bullseye
     volumes:
       - "${VOLUMES_DIR}/postgres/init-multiple-postgresql-databases.sh:/docker-entrypoint-initdb.d/init-multiple-postgresql-databases.sh:ro"
+      - "${VOLUMES_DIR}/postgres/start.sh:/usr/bin/start.sh:ro"
+      - "${VOLUMES_DIR}/postgres/postgresql.conf:/etc/postgresql/postgresql.conf"
+      - "${VOLUMES_DIR}/postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf"
+      - ${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro
     env_file:
       - "${COMPOSE_DIR}/shared/.env/postgres/base.env"
       - "${COMPOSE_DIR}/shared/.env/postgres/databases.env"
+    command: ["start.sh"]
     ports:
       - "5432:5432"
     networks:
@@ -325,14 +330,14 @@ services:
       context: "${WORKING_DIR}"
       dockerfile: "${WORKING_DIR}/builds/mongodb/Dockerfile"
       args:
-        MONGO_VERSION: "5.0.23"
+        MONGO_VERSION: "6.0.17"
     volumes:
       - "${VOLUMES_DIR}/mongo-fcp-high/scripts:/opt/scripts"
       - "${VOLUMES_DIR}/mongo-fcp-high/initdb.d:/docker-entrypoint-initdb.d"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/mongo-high.env"
     ports:
-      - "27018:27017"
+      - ${MONGO_FCPHIGH_LOCALPORT}:${MONGO_FCPHIGH_PORT}
     networks:
       - data
 
@@ -592,6 +597,7 @@ services:
       - "${VOLUMES_DIR}/log:/var/log/app"
       - "${VOLUMES_DIR}/.home:/home"
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - "${VOLUMES_DIR}/maxmind/database/GeoLite2-City:/var/geoipdb"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/csmr-fraud.env"

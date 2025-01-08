@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SelectInput should match the snapshot when has error 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
+    <div
+      data-mockid="LabelElement"
+    />
+    <select
+      class="fr-select fr-select--valid"
+      name="any-name-mock"
+    >
+      <option
+        disabled=""
+        hidden=""
+        value=""
+      >
+        Form.select.placeholder
+      </option>
+      <option
+        value="mock-value-1"
+      >
+        mock-label-1
+      </option>
+      <option
+        value="mock-value-2"
+      >
+        mock-label-2
+      </option>
+    </select>
+    <div
+      data-mockid="MessageElement"
+    />
+  </div>
+</div>
+`;
+
+exports[`SelectInput should match the snapshot when is valid 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
+    <div
+      data-mockid="LabelElement"
+    />
+    <select
+      class="fr-select fr-select--valid"
+      name="any-name-mock"
+    >
+      <option
+        disabled=""
+        hidden=""
+        value=""
+      >
+        Form.select.placeholder
+      </option>
+      <option
+        value="mock-value-1"
+      >
+        mock-label-1
+      </option>
+      <option
+        value="mock-value-2"
+      >
+        mock-label-2
+      </option>
+    </select>
+    <div
+      data-mockid="MessageElement"
+    />
+  </div>
+</div>
+`;

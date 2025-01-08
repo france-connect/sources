@@ -32,11 +32,11 @@ exports[`FraudLoginPage should match snapshot when session is expired 1`] = `
     >
       Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.
     </p>
-    <div
+    <span
       data-mockid="LinkComponent"
     >
       Je ne peux pas me connecter
-    </div>
+    </span>
   </div>
 </div>
 `;
@@ -61,11 +61,11 @@ exports[`FraudLoginPage should match the snapshot on desktop layout 1`] = `
     >
       Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.
     </p>
-    <div
+    <span
       data-mockid="LinkComponent"
     >
       Je ne peux pas me connecter
-    </div>
+    </span>
   </div>
 </div>
 `;
@@ -90,11 +90,11 @@ exports[`FraudLoginPage should match the snapshot on mobile layout 1`] = `
     >
       Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.
     </p>
-    <div
+    <span
       data-mockid="LinkComponent"
     >
       Je ne peux pas me connecter
-    </div>
+    </span>
   </div>
 </div>
 `;
@@ -119,11 +119,11 @@ exports[`FraudLoginPage should match the snapshot on tablet layout 1`] = `
     >
       Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.
     </p>
-    <div
+    <span
       data-mockid="LinkComponent"
     >
       Je ne peux pas me connecter
-    </div>
+    </span>
   </div>
 </div>
 `;
@@ -148,11 +148,11 @@ exports[`FraudLoginPage should match the snapshot when session is not expired 1`
     >
       Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.
     </p>
-    <div
+    <span
       data-mockid="LinkComponent"
     >
       Je ne peux pas me connecter
-    </div>
+    </span>
   </div>
 </div>
 `;

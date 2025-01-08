@@ -4,7 +4,7 @@ import React from 'react';
 
 import type { EidasToLabel } from '../../enums';
 import { CinematicEvents } from '../../enums';
-import type { RichClaimInterface, TracksConfig } from '../../interfaces';
+import type { RichClaimInterface } from '../../interfaces';
 import { ClaimsComponent } from './claims.component';
 import { ConnectionComponent } from './connection.component';
 
@@ -19,7 +19,6 @@ type TraceCardContentProps = {
   claims: RichClaimInterface[];
   idpLabel: string;
   authenticationEventId: string;
-  options: TracksConfig;
 };
 
 export const TrackCardContentComponent = React.memo(
@@ -34,7 +33,6 @@ export const TrackCardContentComponent = React.memo(
     idpLabel,
     interactionAcr,
     opened,
-    options,
   }: TraceCardContentProps) => {
     const shouldDisplayClaims =
       claims &&
@@ -71,17 +69,11 @@ export const TrackCardContentComponent = React.memo(
             datetime={datetime}
             idpLabel={idpLabel}
             interactionAcr={interactionAcr}
-            options={options}
           />
         )}
 
         {shouldDisplayClaims && (
-          <ClaimsComponent
-            claims={claims}
-            datetime={datetime}
-            eventType={eventType}
-            options={options}
-          />
+          <ClaimsComponent claims={claims} datetime={datetime} eventType={eventType} />
         )}
       </div>
     );

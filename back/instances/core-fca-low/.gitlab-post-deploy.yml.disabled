@@ -1,0 +1,49 @@
+quality-fca-low-release:
+  stage: 'Post-deploy'
+  image: ${E2E_DOCKER_IMAGE}
+  tags:
+    - cypress
+  only:
+    - tags
+  when: manual
+  needs: []
+  environment:
+    name: integ01
+    url: https://fca.integ01.dev-agentconnect.fr
+  variables:
+    BDD_TAGS: 'not @ignore'
+    CYPRESS_PLATFORM: 'fca-low'
+    CYPRESS_TEST_ENV: 'integ01'
+    CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT: 120000
+  cache:
+    key: ${CACHE_KEY}
+    policy: pull
+    paths:
+      - quality/node_modules/
+  before_script:
+    # Test Scope definition
+    - BDD_TAGS=${BDD_TAGS_FCA_LOW:-$BDD_TAGS}
+    - if [ "$(docker ps -aq --filter name=^fc |wc -l) -ge 1" ]; then docker container rm -f $(docker ps -aq --filter name=^fc) || true; docker volume prune -f; fi
+    - yarn config set proxy $PROXY_EXPLOITATION && yarn config set https-proxy $PROXY_EXPLOITATION
+    - shopt -s expand_aliases
+    - alias docker-stack=$FC_ROOT/fc/docker/docker-stack
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - cd $CI_PROJECT_DIR/quality/fca && yarn install --frozen-lockfile
+    - cd $CI_PROJECT_DIR
+  script:
+    # Build the nginx proxy to access /integ01/fca.html
+    - docker-stack up rp-all
+    - cd $CI_PROJECT_DIR/quality/fca
+    - export CYPRESS_EXPLOIT_USER_PASS=$EXPLOIT_FCA_LOW_INT_PWD
+    - export CYPRESS_EXPLOIT_USER_TOTP=$EXPLOIT_FCA_LOW_INT_TOTP
+    - yarn test:low:chrome-desktop -c video=${CYPRESS_VIDEO} --env TAGS="$BDD_TAGS" || RETURN_CODE=1
+    - yarn report
+    - exit $RETURN_CODE
+  dependencies: []
+  artifacts:
+    expire_in: 1 hrs
+    when: always
+    paths:
+      - quality/fca/cypress/reports/cucumber/html-report
+  after_script:
+    - $FC_ROOT/fc/docker/docker-stack halt

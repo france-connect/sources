@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { IsAlpha, IsAscii, Length } from 'class-validator';
+import { IsAlpha, Length } from 'class-validator';
 
 import { CountryInterface } from '../interfaces';
 import { IsCog } from '../validators';
@@ -11,7 +11,6 @@ export class CountryDto implements CountryInterface {
   cog: string;
 
   @Length(1, 70)
-  @IsAscii()
   @Expose()
   libcog: string;
 

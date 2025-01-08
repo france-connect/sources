@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BreadCrumbComponent should match snapshot when is current page 1`] = `
+<div>
+  <li>
+    <span
+      data-mockid="Link"
+    >
+      any-label-mock
+    </span>
+  </li>
+</div>
+`;
+
+exports[`BreadCrumbComponent should match snapshot when is not current page 1`] = `
+<div>
+  <li>
+    <span
+      data-mockid="Link"
+    >
+      any-label-mock
+    </span>
+  </li>
+</div>
+`;
+
+exports[`BreadCrumbComponent should match snapshot when title is defined 1`] = `
+<div>
+  <li>
+    <span
+      data-mockid="Link"
+    >
+      any-label-mock
+    </span>
+  </li>
+</div>
+`;

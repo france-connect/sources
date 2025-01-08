@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { IsOptional } from 'class-validator';
 
 import { OidcClientConfig as OidcClientBaseConfig } from '@fc/oidc-client';

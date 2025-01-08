@@ -34,7 +34,7 @@ export class CsmrFraudController {
     const { identity, fraudCase } = payload;
 
     try {
-      const ticketData = this.data.enrichFraudData(identity, fraudCase);
+      const ticketData = await this.data.enrichFraudData(identity, fraudCase);
       await this.support.createSecurityTicket(ticketData);
 
       return 'SUCCESS';

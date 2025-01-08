@@ -5,24 +5,34 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { IPaginationOptions } from '@fc/common';
 
 import {
-  BaseTracksOutputInterface,
   ElasticTracksResultsInterface,
   ElasticTracksType,
+  TracksFormatterOutputAbstract,
 } from '../interfaces';
 import { ElasticTracksService } from './elastic-tracks.service';
 import { TracksAdapterElasticsearchService } from './tracks-adapter-elasticsearch.service';
 import { TracksFormatterService } from './tracks-formatter.service';
 
 describe('TracksAdapterElasticsearchService', () => {
-  let service: TracksAdapterElasticsearchService<BaseTracksOutputInterface>;
+  let service: TracksAdapterElasticsearchService<TracksFormatterOutputAbstract>;
 
   const elasticServiceMock = {
-    getElasticTracks: jest.fn(),
+    getElasticTracksForAccountIds: jest.fn(),
+    getElasticTracksForAuthenticationEventId: jest.fn(),
   };
 
   const formatterServiceMock = {
     formatTracks: jest.fn(),
   };
+
+  const elasticPayloadMock = Symbol('elasticPayload');
+
+  const elasticTracksMock: ElasticTracksResultsInterface = {
+    total: 2,
+    payload: elasticPayloadMock as unknown as SearchHit<ElasticTracksType>[],
+  };
+
+  const formattedTracksMock = Symbol('formattedTracks');
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -41,7 +51,7 @@ describe('TracksAdapterElasticsearchService', () => {
       .compile();
 
     service = module.get<
-      TracksAdapterElasticsearchService<BaseTracksOutputInterface>
+      TracksAdapterElasticsearchService<TracksFormatterOutputAbstract>
     >(TracksAdapterElasticsearchService);
   });
 
@@ -49,7 +59,7 @@ describe('TracksAdapterElasticsearchService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('getTracks', () => {
+  describe('getTracksForAccountIds', () => {
     const accountIdMock = ['idValue1', 'idValue2'];
 
     const optionsMock: IPaginationOptions = {
@@ -57,35 +67,29 @@ describe('TracksAdapterElasticsearchService', () => {
       offset: 12,
     };
 
-    const elasticPayloadMock = Symbol('elasticPayload');
-
-    const elasticTracksMock: ElasticTracksResultsInterface = {
-      total: 2,
-      payload: elasticPayloadMock as unknown as SearchHit<ElasticTracksType>[],
-    };
-
-    const formattedTracksMock = Symbol('formattedTracks');
-
     beforeEach(() => {
-      elasticServiceMock.getElasticTracks.mockResolvedValue(elasticTracksMock);
+      elasticServiceMock.getElasticTracksForAccountIds.mockResolvedValue(
+        elasticTracksMock,
+      );
       formatterServiceMock.formatTracks.mockReturnValue(formattedTracksMock);
     });
 
-    it('should call elasticService.getElasticTracks with groupIds and options', async () => {
+    it('should call elasticService.getTracksForAccountIds with groupIds and options', async () => {
       // When
-      await service.getTracks(accountIdMock, optionsMock);
+      await service.getTracksForAccountIds(accountIdMock, optionsMock);
 
       // Then
-      expect(elasticServiceMock.getElasticTracks).toHaveBeenCalledTimes(1);
-      expect(elasticServiceMock.getElasticTracks).toHaveBeenCalledWith(
-        accountIdMock,
-        optionsMock,
-      );
+      expect(
+        elasticServiceMock.getElasticTracksForAccountIds,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        elasticServiceMock.getElasticTracksForAccountIds,
+      ).toHaveBeenCalledWith(accountIdMock, optionsMock);
     });
 
     it('should call formatterService.formatTracks with elasticTracks.payload', async () => {
       // When
-      await service.getTracks(accountIdMock, optionsMock);
+      await service.getTracksForAccountIds(accountIdMock, optionsMock);
 
       // Then
       expect(formatterServiceMock.formatTracks).toHaveBeenCalledTimes(1);
@@ -94,9 +98,63 @@ describe('TracksAdapterElasticsearchService', () => {
       );
     });
 
-    it('should return an object with formatted tracks and meta from elasticTracks', async () => {
+    it('should return an object with formatted tracks and total from elasticTracks', async () => {
       // When
-      const result = await service.getTracks(accountIdMock, optionsMock);
+      const result = await service.getTracksForAccountIds(
+        accountIdMock,
+        optionsMock,
+      );
+
+      // Then
+      expect(result).toEqual({
+        total: elasticTracksMock.total,
+        payload: formattedTracksMock,
+      });
+    });
+  });
+
+  describe('getTracksForAuthenticationEventId', () => {
+    const authenticationEventIdMock = 'idValue1';
+
+    beforeEach(() => {
+      elasticServiceMock.getElasticTracksForAuthenticationEventId.mockResolvedValue(
+        elasticTracksMock,
+      );
+      formatterServiceMock.formatTracks.mockReturnValue(formattedTracksMock);
+    });
+
+    it('should call elasticService.getElasticTracksForAuthenticationEventId with authenticationEventId', async () => {
+      // When
+      await service.getTracksForAuthenticationEventId(
+        authenticationEventIdMock,
+      );
+
+      // Then
+      expect(
+        elasticServiceMock.getElasticTracksForAuthenticationEventId,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        elasticServiceMock.getElasticTracksForAuthenticationEventId,
+      ).toHaveBeenCalledWith(authenticationEventIdMock);
+    });
+
+    it('should call formatterService.formatTracks with elasticTracks.payload', async () => {
+      // When
+      await service.getTracksForAuthenticationEventId(
+        authenticationEventIdMock,
+      );
+      // Then
+      expect(formatterServiceMock.formatTracks).toHaveBeenCalledTimes(1);
+      expect(formatterServiceMock.formatTracks).toHaveBeenCalledWith(
+        elasticPayloadMock,
+      );
+    });
+
+    it('should return an object with formatted tracks and total from elasticTracks', async () => {
+      // When
+      const result = await service.getTracksForAuthenticationEventId(
+        authenticationEventIdMock,
+      );
 
       // Then
       expect(result).toEqual({

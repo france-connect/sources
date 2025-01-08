@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { IsObject, IsString, Length } from 'class-validator';
 
 import { I18nTranslationsMapType } from '../interfaces';

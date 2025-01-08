@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { ErrorCode } from '../enum';
 import { AsyncLocalStorageBaseException } from './async-local-storage-base.exception';
 

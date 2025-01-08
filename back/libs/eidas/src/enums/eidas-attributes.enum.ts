@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export enum EidasAttributes {
   PERSON_IDENTIFIER = 'personIdentifier',
   CURRENT_FAMILY_NAME = 'currentFamilyName',

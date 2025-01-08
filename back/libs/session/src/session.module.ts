@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { Global, MiddlewareConsumer, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 

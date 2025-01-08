@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { DynamicModule, Module, Type } from '@nestjs/common';
 import { ModuleMetadata } from '@nestjs/common/interfaces';
 

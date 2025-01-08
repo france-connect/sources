@@ -74,7 +74,7 @@ Fonctionnalité: Connexion Usager - RNIPP
       | né à l'étranger avec un lieu de naissance (texte) |
 
   @fcpLow @fcpHigh
-  Plan du Scénario: Connexion avec erreur Y000006 identité <description> renvoyée par le FI
+  Plan du Scénario: Connexion avec erreur Y600006 identité <description> renvoyée par le FI
     Etant donné que je navigue sur la page fournisseur de service
     Et que je clique sur le bouton FranceConnect
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
@@ -82,7 +82,7 @@ Fonctionnalité: Connexion Usager - RNIPP
     Et que je suis redirigé vers la page login du fournisseur d'identité
     Quand je m'authentifie avec "<username>"
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y000006"
+    Et le code d'erreur FranceConnect est "Y600006"
     Et le message d'erreur FranceConnect est "Une erreur technique est survenue, fermez l’onglet de votre navigateur et reconnectez-vous"
     Et l'événement "FC_REQUESTED_IDP_USERINFO" est journalisé avec "idpId" "non null"
     Et l'événement "FC_REQUESTED_RNIPP" n'est pas journalisé

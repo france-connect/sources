@@ -15,7 +15,7 @@ function _command_register() {
 function _command_run() {
   local key=$1
 
-  if [ -v ${key} ]; then
+  if [ -v "${key}" ]; then
     echo "No command found"
     echo "Use help to see all available commands:"
     echo " > ./docker-stack help"
@@ -24,7 +24,7 @@ function _command_run() {
 
   local cmd=${__CMD_COMMANDS[${key}]}
 
-  if [ -v ${cmd} ]; then
+  if [ -v "${cmd}" ]; then
     echo "Command not found: <${key}>"
     echo "Use help to see all available commands:"
     echo " > ./docker-stack help"

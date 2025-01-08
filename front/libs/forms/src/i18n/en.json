@@ -1,0 +1,11 @@
+{
+  "Form.submit": "Submit",
+  "Form.reset": "Reset the form",
+  "Form.message.valid": "Validation text",
+  "Form.message.required": "This field is required",
+  "Form.message.requestFailed": "The message could not be sent",
+  "Form.message.requiredFields": "All fields with an asterisk are required.",
+  "Form.select.placeholder": "Select an option",
+  "Form.textarea.maxlength": " / {maxLength} characters",
+  "Form.FORM_ERROR": "An error occurred while submitting the form"
+}

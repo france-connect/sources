@@ -4,8 +4,7 @@ services:
     depends_on:
       - "partners-front"
       - "partners-back"
-      - "core-fca-low"
-      - "fia1-low"
+      - "mock-proconnect"
 
   bdd-partners:
     image: alpine

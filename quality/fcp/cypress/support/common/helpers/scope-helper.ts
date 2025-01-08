@@ -40,7 +40,6 @@ const idpClaims = {
   idp_birthdate: 'birthdate',
 };
 
-/* eslint-disable @typescript-eslint/naming-convention */
 const CLAIM_LABELS = {
   address: 'Adresse postale',
   birthcountry: 'Pays de naissance',

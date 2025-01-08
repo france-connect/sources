@@ -91,6 +91,24 @@
   },
   {
     "enabled": true,
+    "criteria": ["personnalisé avec téléphone incorrect"],
+    "claims": {
+      "uid": "27",
+      "given_name": "Augusta Ada",
+      "usual_name": "King Countess of Lovelace",
+      "email": "ada@babbage.co.uk",
+      "siren": "343293775",
+      "siret": "34329377500037",
+      "organizational_unit": "comptabilite",
+      "phone_number": "+331-12-44-45-23/331-12-44-45-23",
+      "belonging_population": "agent",
+      "is_service_public": "false",
+      "acr": "eidas1",
+      "custom": {}
+    }
+  },
+  {
+    "enabled": true,
     "criteria": ["avec plusieurs identités"],
     "claims": {
       "uid": "43",

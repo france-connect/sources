@@ -40,6 +40,7 @@ describe('MockServiceProviderController', () => {
       wellKnownKeys: jest.fn(),
       buildAuthorizeParameters: jest.fn(),
       revokeToken: jest.fn(),
+      refreshTokens: jest.fn(),
     },
     getTokenFromProvider: jest.fn(),
     getUserInfosFromProvider: jest.fn(),
@@ -63,6 +64,7 @@ describe('MockServiceProviderController', () => {
   const idpIdentityMock = 'idpIdentityValue';
   const idpIdTokenMock = 'idpIdTokenMockValue';
   const idpAccessTokenMock = 'idpAccessTokenValue';
+  const idpRefreshTokenMock = 'idpRefreshTokenValue';
   const idpIdMock = 'idpIdMockValue';
 
   const sessionOidcDataMock = {
@@ -71,6 +73,7 @@ describe('MockServiceProviderController', () => {
     idpIdentity: idpIdentityMock,
     idpIdToken: idpIdTokenMock,
     idpAccessToken: idpAccessTokenMock,
+    idpRefreshToken: idpRefreshTokenMock,
     idpId: idpIdMock,
   };
 
@@ -439,66 +442,113 @@ describe('MockServiceProviderController', () => {
   });
 
   describe('revocationToken', () => {
-    beforeEach(() => {
-      controller['getIdpId'] = jest.fn().mockReturnValue(configMock.idpId);
-    });
+    describe('without refresh token', () => {
+      beforeEach(() => {
+        controller['getIdpId'] = jest.fn().mockReturnValue(configMock.idpId);
+        sessionOidcServiceMock.get.mockReturnValueOnce(undefined);
+      });
 
-    it('should get the idpId from the app config', async () => {
-      // Given
-      const body = { accessToken: 'access_token' };
+      it('should get the idpId from the app config', async () => {
+        // Given
+        const body = { accessToken: 'access_token' };
 
-      // When
-      await controller.revocationToken(res, body);
+        // When
+        await controller.revocationToken(res, body, sessionOidcServiceMock);
 
-      // Then
-      expect(controller['getIdpId']).toHaveBeenCalledTimes(1);
-      expect(controller['getIdpId']).toHaveBeenCalledWith();
-    });
+        // Then
+        expect(controller['getIdpId']).toHaveBeenCalledTimes(1);
+        expect(controller['getIdpId']).toHaveBeenCalledWith();
+      });
 
-    it('should display success page when token is revoked', async () => {
-      // Given
-      const body = { accessToken: 'access_token' };
-      // When
-      const result = await controller.revocationToken(res, body);
+      it('should display success page when token is revoked', async () => {
+        // Given
+        const body = { accessToken: 'access_token' };
+        // When
+        const result = await controller.revocationToken(
+          res,
+          body,
+          sessionOidcServiceMock,
+        );
 
-      // Then
-      expect(oidcClientServiceMock.utils.revokeToken).toHaveBeenCalledTimes(1);
-      expect(oidcClientServiceMock.utils.revokeToken).toHaveBeenCalledWith(
-        body.accessToken,
-        configMock.idpId,
-      );
-      expect(result).toEqual({
-        accessToken: 'access_token',
-        titleFront: 'Mock Service Provider - Token révoqué',
-        dataApiActive: false,
+        // Then
+        expect(oidcClientServiceMock.utils.revokeToken).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(oidcClientServiceMock.utils.revokeToken).toHaveBeenCalledWith(
+          body.accessToken,
+          configMock.idpId,
+        );
+        expect(result).toEqual({
+          accessToken: 'access_token',
+          titleFront: 'Mock Service Provider - Token révoqué',
+          dataApiActive: false,
+        });
+      });
+
+      it('should redirect to the error page if revokeToken throw an error', async () => {
+        // Given
+        oidcClientServiceMock.utils.revokeToken.mockRejectedValue(
+          oidcErrorMock,
+        );
+        const body = { accessToken: 'access_token' };
+
+        // When
+        await controller.revocationToken(res, body, sessionOidcServiceMock);
+
+        // Then
+        expect(res.redirect).toHaveBeenCalledTimes(1);
+        expect(res.redirect).toHaveBeenCalledWith(
+          '/error?error=error&error_description=error_description',
+        );
+      });
+
+      it('should throw mock service provider revoke token exception if error is not an instance of OPError', async () => {
+        // Given
+        const unknowError = { foo: 'bar' };
+        const body = { accessToken: 'access_token' };
+        oidcClientServiceMock.utils.revokeToken.mockRejectedValue(unknowError);
+
+        // When / Then
+        await expect(
+          controller.revocationToken(res, body, sessionOidcServiceMock),
+        ).rejects.toThrow(MockServiceProviderTokenRevocationException);
       });
     });
 
-    it('should redirect to the error page if revokeToken throw an error', async () => {
-      // Given
-      oidcClientServiceMock.utils.revokeToken.mockRejectedValue(oidcErrorMock);
-      const body = { accessToken: 'access_token' };
+    describe('with refresh token', () => {
+      beforeEach(() => {
+        controller['getIdpId'] = jest.fn().mockReturnValue(configMock.idpId);
+        sessionOidcServiceMock.get.mockReturnValueOnce(idpRefreshTokenMock);
+      });
 
-      // When
-      await controller.revocationToken(res, body);
+      it('should display success page when token is revoked', async () => {
+        // Given
+        const body = { accessToken: 'access_token' };
+        // When
+        const result = await controller.revocationToken(
+          res,
+          body,
+          sessionOidcServiceMock,
+        );
 
-      // Then
-      expect(res.redirect).toHaveBeenCalledTimes(1);
-      expect(res.redirect).toHaveBeenCalledWith(
-        '/error?error=error&error_description=error_description',
-      );
-    });
-
-    it('should throw mock service provider revoke token exception if error is not an instance of OPError', async () => {
-      // Given
-      const unknowError = { foo: 'bar' };
-      const body = { accessToken: 'access_token' };
-      oidcClientServiceMock.utils.revokeToken.mockRejectedValue(unknowError);
-
-      // When / Then
-      await expect(controller.revocationToken(res, body)).rejects.toThrow(
-        MockServiceProviderTokenRevocationException,
-      );
+        // Then
+        expect(oidcClientServiceMock.utils.revokeToken).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(oidcClientServiceMock.utils.revokeToken).toHaveBeenCalledWith(
+          idpRefreshTokenMock,
+          configMock.idpId,
+        );
+        expect(result).toEqual({
+          accessToken: 'access_token',
+          titleFront: 'Mock Service Provider - Token révoqué',
+          dataApiActive: false,
+        });
+        expect(sessionOidcServiceMock.set).toHaveBeenCalledWith(
+          'idpRefreshToken',
+          undefined,
+        );
+      });
     });
   });
 
@@ -506,68 +556,121 @@ describe('MockServiceProviderController', () => {
     const idpIdTokenMock =
       'eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ikhlcm1hbiIsImZpcnN0X25hbWUiOiJTdMOpcGhhbmUiLCJpYXQiOjE1MTYyMzkwMjJ9.EWgP3XF8uccp5uokOJV9MFgOwGzcXOW1PlNnAoo1D1ScMB6rv352kFdWORzllA2oJqrpvlY4yI_NpyI5FDQzyQ';
 
-    beforeEach(() => {
-      sessionOidcServiceMock.get.mockReturnValueOnce(idpIdTokenMock);
-    });
-
-    it('should retrieve and display userinfo as well as cinematic information on userinfo page', async () => {
-      // Given
-      const body = { accessToken: 'access_token' };
-      oidcClientServiceMock.utils.getUserInfo.mockReturnValueOnce({
-        sub: '1',
-        given_name: 'given_name',
+    describe('with refresh token', () => {
+      beforeEach(() => {
+        sessionOidcServiceMock.get.mockReturnValueOnce(idpRefreshTokenMock);
+        sessionOidcServiceMock.get.mockReturnValueOnce(idpIdTokenMock);
+        oidcClientServiceMock.utils.refreshTokens.mockReturnValueOnce({
+          access_token: idpAccessTokenMock,
+        });
       });
-      const expectedOutput = {
-        accessToken: 'access_token',
-        titleFront: 'Mock Service Provider - Userinfo',
-        idpIdentity: {
+
+      it('should retrieve and display userinfo as well as cinematic information on userinfo page', async () => {
+        // Given
+        const body = { accessToken: 'access_token' };
+        oidcClientServiceMock.utils.getUserInfo.mockReturnValueOnce({
           sub: '1',
           given_name: 'given_name',
-        },
-        idpIdToken: idpIdTokenMock,
-        dataApiActive: false,
-      };
+        });
+        const expectedOutput = {
+          accessToken: idpAccessTokenMock,
+          titleFront: 'Mock Service Provider - Userinfo',
+          idpIdentity: {
+            sub: '1',
+            given_name: 'given_name',
+          },
+          idpIdToken: idpIdTokenMock,
+          dataApiActive: false,
+          idpRefreshToken: idpRefreshTokenMock,
+        };
 
-      // When
-      const result = await controller.retrieveUserinfo(
-        res,
-        body,
-        sessionOidcServiceMock,
-      );
+        // When
+        const result = await controller.retrieveUserinfo(
+          res,
+          body,
+          sessionOidcServiceMock,
+        );
 
-      // Then
-      expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledTimes(1);
-      expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledWith(
-        body.accessToken,
-        configMock.idpId,
-      );
-      expect(result).toEqual(expectedOutput);
+        // Then
+        expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledWith(
+          idpAccessTokenMock,
+          configMock.idpId,
+        );
+        expect(result).toEqual(expectedOutput);
+      });
     });
+    describe('without refresh token', () => {
+      beforeEach(() => {
+        sessionOidcServiceMock.get.mockReturnValueOnce(null);
+        sessionOidcServiceMock.get.mockReturnValueOnce(idpIdTokenMock);
+      });
 
-    it('should redirect to the error page if getUserInfo throw an error', async () => {
-      // Given
-      const body = { accessToken: 'access_token' };
-      oidcClientServiceMock.utils.getUserInfo.mockRejectedValue(oidcErrorMock);
+      it('should retrieve and display userinfo as well as cinematic information on userinfo page', async () => {
+        // Given
+        const body = { accessToken: 'access_token' };
+        oidcClientServiceMock.utils.getUserInfo.mockReturnValueOnce({
+          sub: '1',
+          given_name: 'given_name',
+        });
+        const expectedOutput = {
+          accessToken: 'access_token',
+          titleFront: 'Mock Service Provider - Userinfo',
+          idpIdentity: {
+            sub: '1',
+            given_name: 'given_name',
+          },
+          idpIdToken: idpIdTokenMock,
+          dataApiActive: false,
+        };
 
-      // When
-      await controller.retrieveUserinfo(res, body, sessionOidcServiceMock);
+        // When
+        const result = await controller.retrieveUserinfo(
+          res,
+          body,
+          sessionOidcServiceMock,
+        );
 
-      // Then
-      expect(res.redirect).toHaveBeenCalledTimes(1);
-      expect(res.redirect).toHaveBeenCalledWith(
-        '/error?error=error&error_description=error_description',
-      );
-    });
+        // Then
+        expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledTimes(
+          1,
+        );
+        expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledWith(
+          body.accessToken,
+          configMock.idpId,
+        );
+        expect(result).toEqual(expectedOutput);
+      });
 
-    it('should throw mock service provider userinfo exception if error is not an instance of OPError', async () => {
-      // Given
-      oidcClientServiceMock.utils.getUserInfo.mockRejectedValue({});
-      const body = { accessToken: 'access_token' };
+      it('should redirect to the error page if getUserInfo throw an error', async () => {
+        // Given
+        const body = { accessToken: 'access_token' };
+        oidcClientServiceMock.utils.getUserInfo.mockRejectedValue(
+          oidcErrorMock,
+        );
 
-      // When / Then
-      await expect(
-        controller.retrieveUserinfo(res, body, sessionOidcServiceMock),
-      ).rejects.toThrow(MockServiceProviderUserinfoException);
+        // When
+        await controller.retrieveUserinfo(res, body, sessionOidcServiceMock);
+
+        // Then
+        expect(res.redirect).toHaveBeenCalledTimes(1);
+        expect(res.redirect).toHaveBeenCalledWith(
+          '/error?error=error&error_description=error_description',
+        );
+      });
+
+      it('should throw mock service provider userinfo exception if error is not an instance of OPError', async () => {
+        // Given
+        oidcClientServiceMock.utils.getUserInfo.mockRejectedValue({});
+        const body = { accessToken: 'access_token' };
+
+        // When / Then
+        await expect(
+          controller.retrieveUserinfo(res, body, sessionOidcServiceMock),
+        ).rejects.toThrow(MockServiceProviderUserinfoException);
+      });
     });
   });
 

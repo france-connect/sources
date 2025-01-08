@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { I18nTermType } from '@fc/i18n';
 
 export interface ExceptionDocumentationInterface {

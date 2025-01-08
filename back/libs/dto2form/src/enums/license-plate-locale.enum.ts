@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// declarative file
 export enum LicensePlateLocale {
   CsCZ = 'cs-CZ',
   DeDE = 'de-DE',

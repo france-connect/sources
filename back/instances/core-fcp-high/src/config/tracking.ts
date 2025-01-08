@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Tested by DTO
 import { RequestMethod } from '@nestjs/common';
 
 import { CoreRoutes } from '@fc/core';

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './access-token-params.dto';
 export * from './app-config.dto';
 export * from './app-session.dto';

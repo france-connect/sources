@@ -27,7 +27,10 @@ export class CsmrTracksService {
       this.logger.debug('No AccountId found');
       return this.generateEmptyResults(options);
     }
-    const { total, payload } = await this.tracks.getTracks(accountIds, options);
+    const { total, payload } = await this.tracks.getTracksForAccountIds(
+      accountIds,
+      options,
+    );
 
     const meta = this.getPaginationResults(options, total);
 

@@ -5,12 +5,9 @@ import { Helmet } from 'react-helmet-async';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import { UserPreferencesComponent } from '@fc/user-preferences';
 
-import { AppConfig } from '../../../config';
 import { UserPreferencesIntroductionComponent } from '../../components';
 
 export const UserPreferencesPage = React.memo(() => {
-  const config = AppConfig.UserPreferences;
-
   const [breakpointLg] = useStylesVariables(['breakpoint-lg']);
 
   const gtDesktop = useStylesQuery({ minWidth: breakpointLg });
@@ -30,7 +27,7 @@ export const UserPreferencesPage = React.memo(() => {
           'fr-mt-8w': gtDesktop,
         })}
         id="page-container">
-        <UserPreferencesComponent options={config} />
+        <UserPreferencesComponent />
         <UserPreferencesIntroductionComponent />
       </div>
     </React.Fragment>

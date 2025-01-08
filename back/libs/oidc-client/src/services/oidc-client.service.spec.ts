@@ -33,6 +33,7 @@ describe('OidcClientService', () => {
   const acrMock = 'acrMockValue';
   const amrMock = ['amrMockValue'];
   const accessTokenMock = 'accessTokenMockValue';
+  const refreshTokenMock = 'refreshTokenMockValue';
   const idTokenMock = 'idTokenMockValue';
 
   const contextMock: TrackedEventContextInterface = {
@@ -57,6 +58,7 @@ describe('OidcClientService', () => {
   const tokenResultMock = {
     access_token: accessTokenMock,
     id_token: idTokenMock,
+    refresh_token: refreshTokenMock,
     claims: claimsMock,
   };
 
@@ -154,6 +156,7 @@ describe('OidcClientService', () => {
       const resultMock = {
         accessToken: accessTokenMock,
         idToken: idTokenMock,
+        refreshToken: refreshTokenMock,
         acr: acrMock,
         amr: amrMock,
         idpRepresentativeScope: repScopeMock,

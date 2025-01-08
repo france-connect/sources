@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export * from './oidc-client-get-end-session-url.exception';
 export * from './oidc-client-idp-blacklisted.exception';
 export * from './oidc-client-idp-disabled.exception';

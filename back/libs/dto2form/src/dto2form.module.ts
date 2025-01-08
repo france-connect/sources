@@ -1,16 +1,25 @@
-/* istanbul ignore file */
-
-// declarative file
 import { Module } from '@nestjs/common';
 
-import { ValidateIfRulesService, ValidatorCustomService } from './services';
+import {
+  MetadataFormService,
+  ValidateIfRulesService,
+  ValidatorCustomService,
+} from './services';
 
 @Module({
-  providers: [ValidatorCustomService, ValidateIfRulesService],
+  providers: [
+    ValidatorCustomService,
+    ValidateIfRulesService,
+    MetadataFormService,
+  ],
   /**
    * Pipes seems to behave differently than services and need their dependencies to be exported to be resolved,
    * even if they are not supposed to be injected in any constructor outside of the module.
    */
-  exports: [ValidatorCustomService, ValidateIfRulesService],
+  exports: [
+    ValidatorCustomService,
+    ValidateIfRulesService,
+    MetadataFormService,
+  ],
 })
 export class Dto2formModule {}

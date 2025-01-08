@@ -2,34 +2,34 @@ import { getAccessibleTitle } from './get-accessible-title.helper';
 
 describe('getAccessibleTitle', () => {
   it('should return undefined if no arguments are provided', () => {
-    // when
+    // When
     const result = getAccessibleTitle();
 
-    // then
+    // Then
     expect(result).toBeUndefined();
   });
 
   it('should return the concatenated string if all arguments are defined', () => {
-    // when
+    // When
     const result = getAccessibleTitle('Title', 'Subtitle', 'Description');
 
-    // then
+    // Then
     expect(result).toBe('Title - Subtitle - Description');
   });
 
   it('should ignore undefined arguments and return the concatenated string', () => {
-    // when
+    // When
     const result = getAccessibleTitle('Title', undefined, 'Description');
 
-    // then
+    // Then
     expect(result).toBe('Title - Description');
   });
 
   it('should return undefined if all arguments are undefined', () => {
-    // when
+    // When
     const result = getAccessibleTitle(undefined, undefined, undefined);
 
-    // then
+    // Then
     expect(result).toBeUndefined();
   });
 });

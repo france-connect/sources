@@ -1,7 +1,9 @@
 import type { DateTime } from 'luxon';
 import React from 'react';
 
-import { CinematicEvents } from '../../enums';
+import { ConfigService } from '@fc/config';
+
+import { CinematicEvents, Options } from '../../enums';
 import type { IGroupedClaims, RichClaimInterface, TracksConfig } from '../../interfaces';
 import { groupByDataProvider } from '../../utils';
 
@@ -9,7 +11,6 @@ type ClaimsComponentProps = {
   claims: RichClaimInterface[];
   datetime: DateTime;
   eventType: string;
-  options: TracksConfig;
 };
 
 const IDENTITY_DP = ['FCP_HIGH', 'FCP_LOW'];
@@ -18,11 +19,15 @@ const excludeIdentityProviders = ([dataProvider]: [string, object]) =>
   !IDENTITY_DP.includes(dataProvider);
 
 export const ClaimsComponent = React.memo(
-  ({ claims, datetime, eventType, options }: ClaimsComponentProps) => {
+  ({ claims, datetime, eventType }: ClaimsComponentProps) => {
+    const {
+      luxon: { datetimeShortFrFormat },
+    } = ConfigService.get<TracksConfig>(Options.CONFIG_NAME);
+
     const formattedTime = datetime
       .setZone('Europe/Paris')
       .setLocale('fr')
-      .toFormat(options.LUXON_FORMAT_DATETIME_SHORT_FR);
+      .toFormat(datetimeShortFrFormat);
 
     const filteredClaims = claims.filter(({ label }) => label !== null);
     const groupedClaims: IGroupedClaims = groupByDataProvider(filteredClaims);

@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { KeyLike } from 'crypto';
 
 import { IsObject } from 'class-validator';

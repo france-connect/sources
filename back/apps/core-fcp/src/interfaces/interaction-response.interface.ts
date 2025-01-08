@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
 import { NotificationInterface } from '@fc/notifications';
 import { IdentityProviderMetadata } from '@fc/oidc';
 

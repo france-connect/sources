@@ -87,5 +87,9 @@ db.provider.update(fqdnToProviders, {
 fqdnToProviders.forEach((fqdnToProvider) => {
   print(`Initializing fqdnToProvider :: ${JSON.stringify(fqdnToProvider)}`);
 
-  db.fqdnToProvider.update(fqdnToProvider, fqdnToProvider, { upsert: true });
+  db.fqdnToProvider.updateOne(
+    fqdnToProvider,
+    { $set: fqdnToProvider },
+    { upsert: true },
+  );
 });

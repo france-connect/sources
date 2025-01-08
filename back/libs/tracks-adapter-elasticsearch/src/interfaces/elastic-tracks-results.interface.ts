@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
-
 import { SearchHit } from '@elastic/elasticsearch/lib/api/types';
 
 import { ElasticTracksType } from './elastic-tracks.type';

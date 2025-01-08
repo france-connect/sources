@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { IsAscii, IsString, Matches, MinLength } from 'class-validator';
 
 const SAFE_STRING_REGEX = /^[^.*?{}()|[\]\s\\]*$/;

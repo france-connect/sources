@@ -1,6 +1,5 @@
-/* istanbul ignore file */
-
-// declarative file
 export * from './home';
+export * from './instance-create';
+export * from './instance-update';
+export * from './instances';
 export * from './login';
-export * from './steps';

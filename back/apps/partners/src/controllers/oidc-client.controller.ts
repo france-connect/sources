@@ -10,6 +10,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
+import { AccountPermissionRepository } from '@fc/access-control';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterEnvService } from '@fc/identity-provider-adapter-env';
 import { OidcSession } from '@fc/oidc';
@@ -22,6 +23,10 @@ import {
 } from '@fc/oidc-client';
 import { OidcProviderPrompt } from '@fc/oidc-provider';
 import {
+  PartnersAccountService,
+  PartnersAccountSession,
+} from '@fc/partners-account';
+import {
   ISessionService,
   Session,
   SessionNotFoundException,
@@ -30,29 +35,26 @@ import {
 
 import { AppConfig } from '../dto';
 import { PartnersBackRoutes, PartnersFrontRoutes } from '../enums';
+import { AgentIdentityInterface } from '../interfaces';
 
 @Controller()
 export class OidcClientController {
+  // Dependency injection can require more than 4 parameters
+  // eslint-disable-next-line max-params
   constructor(
     private readonly oidcClient: OidcClientService,
     private readonly identityProvider: IdentityProviderAdapterEnvService,
     private readonly config: ConfigService,
     private readonly sessionService: SessionService,
+    private readonly partnersAccount: PartnersAccountService,
+    private readonly accessControl: AccountPermissionRepository,
   ) {}
 
-  /**
-   * @todo #242 get configured parameters (scope and acr)
-   */
   @Get(OidcClientRoutes.REDIRECT_TO_IDP)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async redirectToIdp(
     @Res() res,
-    /**
-     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
-     * @ticket FC-1020
-     */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
@@ -96,23 +98,16 @@ export class OidcClientController {
     res.redirect(authorizationUrl);
   }
 
-  /**
-   * @TODO #308 ETQ DEV je veux éviter que deux appels Http soient réalisés au lieu d'un à la discovery Url dans le cadre d'oidc client
-   * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/308
-   */
   @Get(OidcClientRoutes.OIDC_CALLBACK)
   @Header('cache-control', 'no-store')
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async getOidcCallback(
     @Req() req,
     @Res() res,
-    /**
-     * @todo #1020 Partage d'une session entre oidc-provider & oidc-client
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1020
-     * @ticket FC-1020
-     */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
+    @Session('PartnersAccount')
+    sessionPartnersAccount: ISessionService<PartnersAccountSession>,
   ) {
     const session: OidcSession = sessionOidc.get();
 
@@ -134,10 +129,11 @@ export class OidcClientController {
       idpId,
     };
 
-    const identity = await this.oidcClient.getUserInfosFromProvider(
-      userInfoParams,
-      req,
-    );
+    const identity =
+      await this.oidcClient.getUserInfosFromProvider<AgentIdentityInterface>(
+        userInfoParams,
+        req,
+      );
 
     const identityExchange: OidcSession = cloneDeep({
       idpAccessToken: accessToken,
@@ -147,6 +143,24 @@ export class OidcClientController {
     });
 
     sessionOidc.set(identityExchange);
+
+    let partnersAccount: PartnersAccountSession = {
+      sub: identity.sub,
+      firstname: identity.given_name,
+      lastname: identity.usual_name,
+      email: identity.email,
+      siren: identity.siren,
+    };
+
+    const { identifiers } = await this.partnersAccount.upsert(partnersAccount);
+
+    partnersAccount = {
+      ...partnersAccount,
+      accountId: identifiers[0].id,
+    };
+    sessionPartnersAccount.set(partnersAccount);
+
+    await this.accessControl.init(identifiers[0].id);
 
     // Temporary redirect
     res.redirect(PartnersFrontRoutes.INDEX);

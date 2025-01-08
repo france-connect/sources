@@ -1,24 +1,36 @@
 import { Request } from 'express';
 import { InteractionResults } from 'oidc-provider';
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { ConfigService } from '@fc/config';
-import { CoreRoutes, CoreVerifyService } from '@fc/core';
+import {
+  CORE_VERIFY_SERVICE,
+  CoreRoutes,
+  CoreVerifyService,
+  ProcessCore,
+} from '@fc/core';
+import { LoggerService } from '@fc/logger';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
 import { ISessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
 
-import { AppConfig } from '../dto';
+import { AppConfig, OidcIdentityDto } from '../dto';
+import { CoreFcpInvalidIdentityException } from '../exceptions';
+import { IIdentityCheckFeatureHandler } from '../interfaces';
 
 @Injectable()
 export class CoreFcpVerifyService {
+  // Dependency injection can require more than 4 parameters
+  // eslint-disable-next-line max-params
   constructor(
     private readonly config: ConfigService,
+    @Inject(CORE_VERIFY_SERVICE)
     private readonly coreVerify: CoreVerifyService,
     private readonly oidcProvider: OidcProviderService,
     private readonly tracking: TrackingService,
+    private readonly logger: LoggerService,
   ) {}
 
   async handleVerifyIdentity(
@@ -67,5 +79,19 @@ export class CoreFcpVerifyService {
       errorParams,
       true,
     );
+  }
+
+  async validateIdentity(idpId: string, identity: OidcIdentityDto) {
+    const identityCheckHandler =
+      await this.coreVerify.getFeature<IIdentityCheckFeatureHandler>(
+        idpId,
+        ProcessCore.ID_CHECK,
+      );
+
+    const errors = await identityCheckHandler.handle(identity);
+    if (errors.length) {
+      this.logger.debug(errors, `Identity from "${idpId}" is invalid`);
+      throw new CoreFcpInvalidIdentityException();
+    }
   }
 }

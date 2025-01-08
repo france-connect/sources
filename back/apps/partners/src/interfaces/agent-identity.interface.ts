@@ -1,6 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative code
 export interface AgentIdentityInterface {
   sub: string;
   given_name: string;

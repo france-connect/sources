@@ -7,7 +7,7 @@ import { LayoutHeaderAccountComponent } from './layout-header.account';
 
 describe('LayoutHeaderAccountComponent', () => {
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValue({
       userinfos: {
         firstname: 'any firstname mock',
@@ -17,40 +17,40 @@ describe('LayoutHeaderAccountComponent', () => {
   });
 
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(<LayoutHeaderAccountComponent />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(container.firstChild).toHaveClass('fr-btn fr-icon-account-line');
   });
 
   it('should call useSafeContext', () => {
-    // when
+    // When
     render(<LayoutHeaderAccountComponent />);
 
-    // then
+    // Then
     expect(useSafeContext).toHaveBeenCalledOnce();
     expect(useSafeContext).toHaveBeenCalledWith(LayoutContext);
   });
 
   it('should render null when userinfos is not defined', () => {
-    // given
+    // Given
     jest.mocked(useSafeContext).mockReturnValue({});
 
-    // when
+    // When
     const { container } = render(<LayoutHeaderAccountComponent />);
 
-    // then
+    // Then
     expect(container.firstChild).toBeNull();
   });
 
   it('should render lastname and firstname', () => {
-    // when
+    // When
     const { getByText } = render(<LayoutHeaderAccountComponent />);
     const elementText = getByText('any firstname mock any lastname mock');
 
-    // then
+    // Then
     expect(elementText).toBeInTheDocument();
   });
 });

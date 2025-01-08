@@ -1,16 +1,16 @@
 import React from 'react';
 
-export const useApiGet = jest.fn(() => null);
-
 export const ucfirst = jest.fn((v) => v);
 
-export const sortBykey = jest.fn();
-
-export const objectToFormData = jest.fn();
+export const sortByKey = jest.fn(() => jest.fn());
 
 export const getAccessibleTitle = jest.fn();
 
 export const useSafeContext = jest.fn();
+
+export const isString = jest.fn();
+
+export const isNotEmpty = jest.fn();
 
 export const useContentHeight = jest.fn(() => ({
   contentHeight: expect.any(Number),
@@ -32,6 +32,10 @@ export const useScrollTo = jest.fn(() => ({
   scrollToTop: jest.fn(),
 }));
 
+export const useScrollToElement = jest.fn(() => ({
+  scrollToElement: jest.fn(),
+}));
+
 export enum HttpStatusCode {
   FORBIDDEN = 403,
   CONFLICT = 409,
@@ -48,8 +52,30 @@ export enum HeadingTag {
 }
 
 export enum Strings {
+  ASTERISK = '*',
   EMPTY_STRING = '',
   WHITE_SPACE = ' ',
   DASH = '-',
   SLASH = '/',
+}
+
+export enum ContentType {
+  JSON = 'application/json',
+  FORM_DATA = 'multipart/form-data',
+  FORM_URL_ENCODED = 'application/x-www-form-urlencoded',
+}
+
+export enum HttpMethods {
+  GET = 'get',
+  PUT = 'put',
+  POST = 'post',
+  PATCH = 'patch',
+  DELETE = 'delete',
+}
+
+export enum EventTypes {
+  ERROR = 'error',
+  INFO = 'info',
+  SUCCESS = 'success',
+  WARNING = 'warning',
 }

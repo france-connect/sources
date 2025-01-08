@@ -1,13 +1,9 @@
-/* istanbul ignore file */
-
-// Declarative code
 import { HttpStatus } from '@nestjs/common';
 
 import { ErrorCode } from '../enums';
 import { CoreBaseException } from './core-base.exception';
 
 export class CoreClaimAmrException extends CoreBaseException {
-  static SCOPE = 3;
   static CODE = ErrorCode.CLAIM_AMR;
   static DOCUMENTATION = `Le claim AMR demandé n'est pas autorisé pour le service provider.`;
   static ERROR = 'server_error';

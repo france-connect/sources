@@ -1,6 +1,8 @@
 import { render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 
+import { ConfigService } from '@fc/config';
+
 import type { RichClaimInterface } from '../../interfaces';
 import { ClaimsComponent } from './claims.component';
 
@@ -28,124 +30,100 @@ describe('ConnexionComponent', () => {
     { zone: 'Europe/Paris' },
   );
 
-  const options = {
-    API_ROUTE_TRACKS: 'mock_API_ROUTE_TRACKS',
-    API_ROUTE_USER_INFOS: 'mock_API_ROUTE_USER_INFOS',
-    LUXON_FORMAT_DATETIME_SHORT_FR: "D 'à' T",
-    LUXON_FORMAT_DAY: 'DDD',
-    LUXON_FORMAT_HOUR_MINS: 'T',
-    LUXON_FORMAT_MONTH_YEAR: 'LLLL yyyy',
-    LUXON_FORMAT_TIMEZONE: 'z',
-  };
-
   const eventTypeMock = 'eventTypeMockValue';
 
+  beforeEach(() => {
+    // Given
+    jest.mocked(ConfigService.get).mockReturnValue({
+      luxon: { datetimeShortFrFormat: "D 'à' T" },
+    });
+  });
+
+  it('should call ConfigService.get with the right parameter', () => {
+    // When
+    render(<ClaimsComponent claims={claimsMock} datetime={date} eventType={eventTypeMock} />);
+
+    // Then
+    expect(ConfigService.get).toHaveBeenCalledOnce();
+    expect(ConfigService.get).toHaveBeenCalledWith('Tracks');
+  });
+
   it('should match snapshot, with default props', () => {
-    // when
+    // When
     const { container } = render(
-      <ClaimsComponent
-        claims={claimsMock}
-        datetime={date}
-        eventType={eventTypeMock}
-        options={options}
-      />,
+      <ClaimsComponent claims={claimsMock} datetime={date} eventType={eventTypeMock} />,
     );
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should render global title for autorisation', () => {
-    // given
+    // Given
     const { getByText } = render(
-      <ClaimsComponent
-        claims={claimsMock}
-        datetime={date}
-        eventType={eventTypeMock}
-        options={options}
-      />,
+      <ClaimsComponent claims={claimsMock} datetime={date} eventType={eventTypeMock} />,
     );
 
-    // when
+    // When
     const element = getByText(
       'Vous avez autorisé la transmission de données personnelles à ce service le :',
     );
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 
   it('should render global title for data transfer', () => {
-    // given
+    // Given
     const { getByText } = render(
-      <ClaimsComponent
-        claims={claimsMock}
-        datetime={date}
-        eventType="DP_VERIFIED_FC_CHECKTOKEN"
-        options={options}
-      />,
+      <ClaimsComponent claims={claimsMock} datetime={date} eventType="DP_VERIFIED_FC_CHECKTOKEN" />,
     );
 
-    // when
+    // When
     const element = getByText('Des données ont été transmises à ce service le :');
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 
   it('should render data provider title for autorisation', () => {
-    // given
+    // Given
     const { getByText } = render(
-      <ClaimsComponent
-        claims={claimsMock}
-        datetime={date}
-        eventType={eventTypeMock}
-        options={options}
-      />,
+      <ClaimsComponent claims={claimsMock} datetime={date} eventType={eventTypeMock} />,
     );
 
-    // when
+    // When
     const element = getByText(
       /^Vous avez autorisé le service à récupérer les données suivantes depuis .+/,
     );
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 
   it('should render data provider title for data transfer', () => {
-    // given
+    // Given
     const { getByText } = render(
-      <ClaimsComponent
-        claims={claimsMock}
-        datetime={date}
-        eventType="DP_VERIFIED_FC_CHECKTOKEN"
-        options={options}
-      />,
+      <ClaimsComponent claims={claimsMock} datetime={date} eventType="DP_VERIFIED_FC_CHECKTOKEN" />,
     );
 
-    // when
+    // When
     const element = getByText(/^Le service a récupéré les données suivantes depuis .+/);
 
-    // then
+    // Then
     expect(element).toBeInTheDocument();
   });
 
   it('should render a list of 2 informations', () => {
-    // given
+    // Given
     const { container } = render(
-      <ClaimsComponent
-        claims={claimsMock}
-        datetime={date}
-        eventType={eventTypeMock}
-        options={options}
-      />,
+      <ClaimsComponent claims={claimsMock} datetime={date} eventType={eventTypeMock} />,
     );
 
-    // when
+    // When
     const elements = container.getElementsByTagName('li');
 
-    // then
+    // Then
     expect(elements).toHaveLength(2);
   });
 });

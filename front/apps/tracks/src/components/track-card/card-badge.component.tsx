@@ -9,7 +9,7 @@ import {
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 
 import { CinematicEvents } from '../../enums';
-import type { BadgeInterface } from '../../interfaces';
+import type { Badges } from '../../interfaces';
 import styles from './card-badge.module.scss';
 
 const TYPE_CONFIG = {
@@ -28,13 +28,16 @@ const TYPE_CONFIG = {
     colorName: 'green-archipel',
     label: 'Connexion',
   },
-} as { [key: string]: BadgeInterface };
+} as Badges;
 
 type TraceCardBadgeProps = {
   type: string | undefined;
   fromFcPlus: boolean;
 };
 
+// @TODO
+// instead of using a custom badge
+// use the BadgeComponent from DSFR
 export const TrackCardBadgeComponent = React.memo(({ fromFcPlus, type }: TraceCardBadgeProps) => {
   const [breakpointSm] = useStylesVariables('breakpoint-sm');
   const gtMobile = useStylesQuery({ minWidth: breakpointSm });
@@ -68,7 +71,7 @@ export const TrackCardBadgeComponent = React.memo(({ fromFcPlus, type }: TraceCa
               'fr-badge--sm': !gtMobile,
             })}
             data-testid="TrackCardBadgeComponent-action-badge">
-            <badge.Icon size={18} />
+            {badge.Icon && <badge.Icon size={18} />}
             <b className="fr-ml-1w">{badge.label}</b>
           </div>
         )}

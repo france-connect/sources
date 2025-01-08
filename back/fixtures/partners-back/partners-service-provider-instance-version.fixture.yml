@@ -1,0 +1,115 @@
+entity: PartnersServiceProviderInstanceVersion
+items:
+  sp1-i1-v1:
+    id: '6b3718be-3c85-48b6-8f48-087465b12ba2'
+    publicationStatus: 'DRAFT'
+    instance: '@sp1-i1-sandbox'
+    data:
+      {
+        id_token_signed_response_alg: 'ES256',
+        instance_name: 'Instance de test dev 1',
+        platform: 'FranceConnect',
+        post_logout_redirect_uris: 'https://test.fr/logout',
+        redirect_uris: 'https://test.fr/callback',
+        site: 'https://test.fr',
+        sp_name: 'sp name',
+        use_entity_id: 'non',
+        userinfo_signed_response_alg: 'ES256',
+      }
+    createdAt: '2023-02-22T23:00:00.000Z'
+    updatedAt: '2023-05-02T22:00:00.000Z'
+
+  sp1-i1-v2:
+    id: '48222f1b-fb58-427b-ada1-7c7a8b3bf833'
+    publicationStatus: 'DRAFT'
+    instance: '@sp1-i1-sandbox'
+    data:
+      {
+        id_token_signed_response_alg: 'ES256',
+        instance_name: 'Instance de test dev 1',
+        platform: 'FranceConnect',
+        post_logout_redirect_uris: 'https://test.fr/logout',
+        redirect_uris: 'https://test.fr/callback',
+        site: 'https://test.fr',
+        sp_name: 'sp name',
+        use_entity_id: 'non',
+        userinfo_signed_response_alg: 'ES256',
+      }
+    createdAt: '2024-02-24T23:00:00.000Z'
+    updatedAt: '2024-05-02T22:00:00.000Z'
+
+  sp1-i1-v3:
+    id: '2aec40fd-db63-4e34-98ef-e55e5cc6985b'
+    publicationStatus: 'DRAFT'
+    instance: '@sp1-i1-sandbox'
+    data:
+      {
+        id_token_signed_response_alg: 'ES256',
+        instance_name: 'Instance de test dev 1',
+        platform: 'FranceConnect',
+        post_logout_redirect_uris: 'https://test.fr/logout',
+        redirect_uris: 'https://test.fr/callback',
+        site: 'https://test.fr',
+        sp_name: 'sp name',
+        use_entity_id: 'non',
+        userinfo_signed_response_alg: 'ES256',
+      }
+    createdAt: '2022-03-26T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+
+  sp2-i1-v1:
+    id: 'd6d04d67-b8be-44d3-98cd-768ac9edb3cf'
+    publicationStatus: 'DRAFT'
+    instance: '@sp2-i1-sandbox'
+    data:
+      {
+        id_token_signed_response_alg: 'ES256',
+        instance_name: 'Instance de test dev 2',
+        platform: 'FranceConnect',
+        post_logout_redirect_uris: 'https://test.fr/logout',
+        redirect_uris: 'https://test.fr/callback',
+        site: 'https://test.fr',
+        sp_name: 'sp name',
+        use_entity_id: 'non',
+        userinfo_signed_response_alg: 'ES256',
+      }
+    createdAt: '2022-03-26T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+
+  sp3-i1-v1:
+    id: '2e8c012f-d6b7-468e-aa11-28ba4990a93a'
+    publicationStatus: 'DRAFT'
+    instance: '@sp3-i1-sandbox'
+    data:
+      {
+        id_token_signed_response_alg: 'ES256',
+        instance_name: 'Instance test modification',
+        platform: 'FranceConnect',
+        post_logout_redirect_uris: 'https://dinum.gouv.fr/logout',
+        redirect_uris: 'https://dinum.gouv.fr/callback',
+        site: 'https://dinum.gouv.fr',
+        sp_name: 'sp name',
+        use_entity_id: 'non',
+        userinfo_signed_response_alg: 'ES256',
+      }
+    createdAt: '2022-03-26T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'
+
+  sp4-i1-v1:
+    id: 'ac299832-ff9f-4b84-bc6e-4ebcbbb345f6'
+    publicationStatus: 'DRAFT'
+    instance: '@sp4-i1-sandbox'
+    data:
+      {
+        id_token_signed_response_alg: 'RS256',
+        instance_name: 'Mon unique instance',
+        platform: 'FranceConnect',
+        post_logout_redirect_uris: 'https://mabanque.fr/logout',
+        redirect_uris: 'https://mabanque.fr/callback',
+        site: 'https://mabanque.fr',
+        sp_name: 'sp name',
+        use_entity_id: 'non',
+        userinfo_signed_response_alg: 'RS256',
+      }
+    createdAt: '2022-03-26T23:00:00.000Z'
+    updatedAt: '2022-05-02T22:00:00.000Z'

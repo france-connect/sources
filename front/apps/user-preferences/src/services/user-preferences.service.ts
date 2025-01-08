@@ -2,33 +2,30 @@ import type { FormValuesInterface, UserPreferencesDataInterface } from '../inter
 
 export interface UserPreferencesServiceInterface {
   allowFutureIdp: boolean;
-  csrfToken: string;
-  idpList: { [key: string]: boolean };
+  idpList: { [key: string]: boolean } | undefined;
 }
 
 export class UserPreferencesService {
-  static encodeFormData({ allowFutureIdp, csrfToken, idpList }: UserPreferencesServiceInterface) {
-    const formData = new URLSearchParams();
-    Object.entries(idpList)
-      .filter(([, value]) => value)
-      .forEach(([key]) => {
-        formData.append('idpList', key);
-      });
-    formData.append('allowFutureIdp', allowFutureIdp.toString());
-    formData.append('csrfToken', csrfToken);
-    return formData;
+  static encodeFormData({ allowFutureIdp, idpList }: UserPreferencesServiceInterface) {
+    const uidList = Object.entries(idpList || {})
+      .filter(([, isChecked]) => !!isChecked)
+      .map(([uid]) => uid);
+
+    return {
+      allowFutureIdp,
+      idpList: uidList,
+    };
   }
 
   static parseFormData({
     allowFutureIdp,
     idpList,
   }: UserPreferencesDataInterface): FormValuesInterface {
-    const list =
-      idpList &&
-      idpList.reduce((acc, { isChecked, uid }) => {
-        const next = { ...acc, [uid]: isChecked };
-        return next;
-      }, {});
-    return { allowFutureIdp, idpList: list };
+    const checkedIdpMap = (idpList || []).reduce((acc, { isChecked, uid }) => {
+      const next = { ...acc, [uid]: isChecked };
+      return next;
+    }, {});
+
+    return { allowFutureIdp, idpList: checkedIdpMap };
   }
 }

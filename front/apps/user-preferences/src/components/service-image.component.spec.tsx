@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { ServiceImageComponent } from './service-image.component';
 
 describe('ServiceImageComponent', () => {
-  // given
+  // Given
   const serviceMock = {
     active: true,
     image: undefined,
@@ -14,51 +14,51 @@ describe('ServiceImageComponent', () => {
   };
 
   it('should match the snapshot', () => {
-    // when
+    // When
     const { container } = render(<ServiceImageComponent service={serviceMock} />);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
   });
 
   it('should show a placeholder instead of an image', () => {
-    // when
+    // When
     const { container, getByText } = render(<ServiceImageComponent service={serviceMock} />);
     const element = getByText('title-mock');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(element).toBeInTheDocument();
     expect(element.tagName).toBe('B');
   });
 
   it('should show an image', () => {
-    // given
+    // Given
     const servicesMockWithImage = { ...serviceMock, image: 'image.mock' };
 
-    // when
+    // When
     const { container, getByAltText } = render(
       <ServiceImageComponent service={servicesMockWithImage} />,
     );
     const element = getByAltText(`fournisseur d'identité title-mock`);
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(element).toBeInTheDocument();
     expect(element.tagName).toBe('IMG');
   });
 
   it('should be in a disabled state', () => {
-    // given
+    // Given
     const servicesMockWithImage = { ...serviceMock, image: 'image.mock' };
 
-    // when
+    // When
     const { container } = render(
       <ServiceImageComponent disabled service={servicesMockWithImage} />,
     );
     const wrapper = container.firstChild;
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(wrapper).toHaveClass('disabled');
     expect(wrapper).toHaveClass('opacity-45');

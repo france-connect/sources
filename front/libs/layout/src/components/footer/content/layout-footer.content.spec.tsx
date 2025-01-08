@@ -5,7 +5,7 @@ import { ConfigService } from '@fc/config';
 import { LayoutFooterContentComponent } from './layout-footer.content';
 
 describe('LayoutFooterContentComponent', () => {
-  // given
+  // Given
   const navigationMock = [
     {
       href: 'any-href-mock-1',
@@ -20,7 +20,7 @@ describe('LayoutFooterContentComponent', () => {
   ];
 
   beforeEach(() => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({
       footer: {
         description: undefined,
@@ -30,16 +30,16 @@ describe('LayoutFooterContentComponent', () => {
   });
 
   it('should call ConfigService.get with Layout config name', () => {
-    // when
+    // When
     render(<LayoutFooterContentComponent />);
 
-    // then
+    // Then
     expect(ConfigService.get).toHaveBeenCalledOnce();
     expect(ConfigService.get).toHaveBeenCalledWith('Layout');
   });
 
   it('should match the snapshot when description and links are defined', async () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({
       footer: {
         description: 'any description mock',
@@ -47,13 +47,13 @@ describe('LayoutFooterContentComponent', () => {
       },
     });
 
-    // when
+    // When
     const { container, findAllByRole, getByTitle } = render(<LayoutFooterContentComponent />);
     const elementLinks = await findAllByRole('link');
     const elementLink1 = getByTitle('any-title-mock-1');
     const elementLink2 = getByTitle('any-title-mock-2');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(container).toHaveTextContent('any description mock');
     expect(elementLinks).toHaveLength(2);
@@ -72,7 +72,7 @@ describe('LayoutFooterContentComponent', () => {
   });
 
   it('should match the snapshot when showIcon is true', async () => {
-    // given
+    // Given
     jest.mocked(ConfigService.get).mockReturnValue({
       footer: {
         description: 'any description mock',
@@ -80,7 +80,7 @@ describe('LayoutFooterContentComponent', () => {
       },
     });
 
-    // when
+    // When
     const { container, findAllByRole, getByTitle } = render(
       <LayoutFooterContentComponent showIcon />,
     );
@@ -88,7 +88,7 @@ describe('LayoutFooterContentComponent', () => {
     const elementLink1 = getByTitle('any-title-mock-1');
     const elementLink2 = getByTitle('any-title-mock-2');
 
-    // then
+    // Then
     expect(container).toMatchSnapshot();
     expect(container).toHaveTextContent('any description mock');
     expect(elementLinks).toHaveLength(2);
