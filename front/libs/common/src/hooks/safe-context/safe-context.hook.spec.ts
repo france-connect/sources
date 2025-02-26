@@ -5,6 +5,12 @@ import { SafeContextException } from '../../exceptions/safe-context.exception';
 import { useSafeContext } from './safe-context.hook';
 
 describe('useSafeContext', () => {
+  beforeEach(() => {
+    // @NOTE hide console.error logs into console
+    // as the code below suposed to throw
+    jest.spyOn(console, 'error').mockImplementation(jest.fn());
+  });
+
   it('should call useContext', () => {
     // Given
     const useContextSpy = jest.spyOn(React, 'useContext');
@@ -21,9 +27,6 @@ describe('useSafeContext', () => {
   it('should throw a SafeContextException if context value is undefined', () => {
     // Given
     const ContextMock = React.createContext<string | undefined>(undefined);
-    // @NOTE hide console.error logs into console
-    // as the code below suposed to throw
-    jest.spyOn(console, 'error').mockImplementation(() => {});
 
     // Then
     expect(() => {

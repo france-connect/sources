@@ -15,6 +15,14 @@ export class ValidateIfRulesService {
     return value !== undefined;
   }
 
+  ifFieldFilled(
+    _value: unknown,
+    targetField: string,
+    { target }: CustomValidationOptionsBase,
+  ): boolean {
+    return this.validatorCustom.isFilled(target[targetField]);
+  }
+
   ifFieldNotEmpty(
     _value: unknown,
     targetField: string,

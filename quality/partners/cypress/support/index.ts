@@ -36,6 +36,30 @@ Cypress.Commands.add(
   },
 );
 
+Cypress.Commands.addQuery(
+  'checkWithinViewport',
+  function (expectedWithinViewport: boolean) {
+    const viewportWidth = Cypress.config('viewportWidth'); // see "bug" below
+    const viewportHeight = Cypress.config('viewportHeight');
+
+    // Cypress retries this function on failure
+    const innerFn = (subject) => {
+      const { bottom, left, right, top } = subject[0].getBoundingClientRect();
+      const isWithinViewport =
+        top >= 0 &&
+        left >= 0 &&
+        right <= viewportWidth &&
+        bottom <= viewportHeight;
+
+      expect(
+        isWithinViewport,
+        `top ${top} left ${left} right ${right} bottom ${bottom}`,
+      ).to.be.equal(expectedWithinViewport);
+    };
+    return innerFn;
+  },
+);
+
 addMatchImageSnapshotCommand({
   blackout: [], // We use a custom blackout in image-snapshot-steps.ts
   capture: 'fullPage',

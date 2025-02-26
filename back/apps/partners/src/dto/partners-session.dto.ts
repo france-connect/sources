@@ -4,6 +4,7 @@ import { IsObject, IsOptional, ValidateNested } from 'class-validator';
 import { CsrfSession } from '@fc/csrf';
 import { I18nSession } from '@fc/i18n';
 import { OidcClientSession } from '@fc/oidc-client';
+import { PartnersAccountSession } from '@fc/partners-account';
 
 export class PartnersSession {
   @IsObject()
@@ -22,4 +23,10 @@ export class PartnersSession {
   @Type(() => OidcClientSession)
   @IsOptional()
   readonly OidcClient?: OidcClientSession;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => PartnersAccountSession)
+  @IsOptional()
+  readonly PartnersAccount?: PartnersAccountSession;
 }

@@ -57,7 +57,7 @@ export class PostgresConfig {
   @IsArray()
   readonly entities: (new () => unknown)[];
 
-  @IsBoolean()
+  @IsIn([false])
   readonly synchronize: false;
 
   @IsObject()

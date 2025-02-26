@@ -5,6 +5,7 @@ import { validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapter-mongo';
 import {
+  MailerHelper,
   MailerNotificationConnectException,
   MailerService,
   MailFrom,
@@ -12,6 +13,7 @@ import {
   NoEmailException,
 } from '@fc/mailer';
 import { OidcSession } from '@fc/oidc';
+import { RnippPivotIdentity } from '@fc/rnipp';
 import { SessionService } from '@fc/session';
 
 import { getSessionServiceMock } from '@mocks/session';
@@ -157,12 +159,12 @@ const template = `
               <![endif]-->
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td 
-                      class="bodycopy" 
+                    <td
+                      class="bodycopy"
                       style="text-align: right; padding-bottom: 16px"
                     >
                       Code d’identification&nbsp;:</br>
-                      <strong 
+                      <strong
                         data-testid="connection-notification-browsing-session-id"
                       >
                         <%= locals.browsingSessionId %>
@@ -261,11 +263,11 @@ const template = `
                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td class="bodycopy">
-                      Pour suivre et contr&ocirc;ler votre utilisation 
-                      de FranceConnect, vous pouvez &eacute;galement 
-                      consulter votre historique de connexion via votre 
-                      <a 
-                        class="underline" 
+                      Pour suivre et contr&ocirc;ler votre utilisation
+                      de FranceConnect, vous pouvez &eacute;galement
+                      consulter votre historique de connexion via votre
+                      <a
+                        class="underline"
                         style="color: #000091;"
                         href="https://tableaudebord.franceconnect.gouv.fr"
                         >tableau de bord</a
@@ -293,8 +295,8 @@ const template = `
                     <td class="bodycopy-small">
                       Si vous ne souhaitez plus recevoir ces notifications, vous
                       pouvez les d&eacute;sactiver
-                      <a 
-                        class="underline" 
+                      <a
+                        class="underline"
                         style="color: #000091;"
                         href="[#DL:UNSUBSCRIBE-0#]"
                         >en&nbsp;cliquant&nbsp;ici</a
@@ -338,10 +340,18 @@ describe('CoreFcpSendEmailHandler', () => {
 
   const spIdentityWithEmailMock = {
     sub: '42',
-    given_name: 'Edward',
+    // @NOTE :  To be fixed, family_name and given_name should be used from the RNIPP identity, different usage for CoreFcpSendEmailHandler.handle() and CoreFcpSendEmailHandler.getConnectNotificationEmailBodyContent()
     family_name: 'TEACH',
+    // @NOTE :  To be fixed, family_name and given_name should be used from the RNIPP identity, different usage for CoreFcpSendEmailHandler.handle() and CoreFcpSendEmailHandler.getConnectNotificationEmailBodyContent()
+    given_name: 'Edward',
+    preferred_username: 'Barbe Noire',
     email: 'eteach@fqdn.ext',
   };
+
+  const rnippIdentityMock = {
+    given_name_array: ['Edward (RNIPP)', 'Edouard (RNIPP)', 'Edouardo (RNIPP)'],
+    family_name: 'TEACH (RNIPP)',
+  } as unknown as RnippPivotIdentity;
 
   const idpIdentityMock = {
     sub: 'some idpSub',
@@ -369,6 +379,7 @@ describe('CoreFcpSendEmailHandler', () => {
     spAcr: 'eidas3',
     spName: 'my great SP',
     spIdentity: spIdentityWithEmailMock,
+    rnippIdentity: rnippIdentityMock,
     browsingSessionId: '4c43a136-871b-409b-ba12-b0087bd556cc',
   };
 
@@ -497,6 +508,7 @@ describe('CoreFcpSendEmailHandler', () => {
       expect(mailerServiceMock.mailToSend).toHaveBeenCalledExactlyOnceWith(
         EmailsTemplates.NOTIFICATION_EMAIL,
         {
+          person: expect.any(String),
           idpTitle: idpMock.title,
           spName: sessionDataMock.spName,
           today: connectNotificationEmailParametersMock.today,
@@ -505,6 +517,43 @@ describe('CoreFcpSendEmailHandler', () => {
           browsingSessionId:
             connectNotificationEmailParametersMock.browsingSessionId,
         },
+      );
+    });
+
+    it('should call MailerHelper.getPerson with givenNameArray', async () => {
+      // Given
+      const givenNameArrayMock = Symbol(
+        'any-given-name-array-mock',
+      ) as unknown as Array<string>;
+
+      sessionServiceMock.get.mockReturnValueOnce({
+        ...sessionDataMock,
+        rnippIdentity: {
+          ...rnippIdentityMock,
+          given_name_array: givenNameArrayMock,
+        } as unknown as RnippPivotIdentity,
+      });
+
+      const personMock = Symbol('any-person-mock') as unknown as string;
+      const getPersonSpy = jest
+        .spyOn(MailerHelper, 'getPerson')
+        .mockReturnValueOnce(personMock);
+
+      // When
+      await service['getConnectNotificationEmailBodyContent']();
+
+      // Then
+      expect(getPersonSpy).toHaveBeenCalledOnce();
+      expect(getPersonSpy).toHaveBeenCalledWith({
+        givenNameArray: givenNameArrayMock,
+        familyName: rnippIdentityMock.family_name,
+        preferredUsername: spIdentityWithEmailMock.preferred_username,
+      });
+      expect(mailerServiceMock.mailToSend).toHaveBeenCalledWith(
+        EmailsTemplates.NOTIFICATION_EMAIL,
+        expect.objectContaining({
+          person: personMock,
+        }),
       );
     });
 

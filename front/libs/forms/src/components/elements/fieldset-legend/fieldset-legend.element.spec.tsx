@@ -56,7 +56,7 @@ describe('FieldsetLegendElement', () => {
         name="any-name-mock"
       />,
     );
-    const hintTextElt = getByText('hook-hint-mock');
+    const hintElt = getByText('hook-hint-mock');
     const labelTextElt = getByText('hook-label-mock');
 
     // Then
@@ -64,7 +64,7 @@ describe('FieldsetLegendElement', () => {
     expect(container.firstChild).toHaveClass('fr-fieldset__legend--regular fr-fieldset__legend');
     expect(container.firstChild).toHaveClass('any-classname-mock');
     expect(labelTextElt).toBeInTheDocument();
-    expect(hintTextElt).toHaveClass('fr-hint-text');
-    expect(hintTextElt).toBeInTheDocument();
+    expect(hintElt).toHaveClass('fr-hint-text');
+    expect(hintElt).toBeInTheDocument();
   });
 });

@@ -1,17 +1,14 @@
 import { renderHook } from '@testing-library/react';
+import type { FieldValidator } from 'final-form';
 import has from 'lodash.has';
-
-import { t } from '@fc/i18n';
 
 import { Validators } from '../../enums';
 import { buildValidator, composeValidators } from '../../helpers';
-import { isRequired } from '../../validators';
 import { useFieldValidate } from './field-validate.hook';
 
 // Given
 jest.mock('lodash.has', () => jest.fn());
 jest.mock('../../enums/validators.enum');
-jest.mock('../../validators/is-required/is-required.validator');
 jest.mock('../../helpers/build-validator/build-validator.helper');
 jest.mock('../../helpers/compose-validators/compose-validators.helper');
 
@@ -61,30 +58,6 @@ describe('useFieldValidate', () => {
     );
   });
 
-  it('should preprend a validator to validators stack when the field is required', () => {
-    // Given
-    const validateFunc = jest.fn();
-    const errorMessageMock = 'any-error-message-mock';
-
-    const validators1 = () => expect.any(String);
-    const validators2 = () => expect.any(String);
-    const validatorsFuncsMock = [validators1, validators2];
-
-    jest.mocked(t).mockReturnValueOnce(errorMessageMock);
-    jest.mocked(isRequired).mockReturnValueOnce(validateFunc);
-    jest.spyOn(Array.prototype, 'map').mockReturnValueOnce(validatorsFuncsMock);
-
-    // When
-    renderHook(() => useFieldValidate({ required: true, validators: [] }));
-
-    // Then
-    expect(t).toHaveBeenCalledOnce();
-    expect(t).toHaveBeenCalledWith('Form.message.required');
-    expect(isRequired).toHaveBeenCalledOnce();
-    expect(isRequired).toHaveBeenCalledWith(errorMessageMock);
-    expect(composeValidators).toHaveBeenCalledWith(validateFunc, validators1, validators2);
-  });
-
   it('should return undefined if the field is disabled', () => {
     // When
     const { result } = renderHook(() =>
@@ -100,11 +73,11 @@ describe('useFieldValidate', () => {
     expect(composeValidators).not.toHaveBeenCalled();
   });
 
-  it('should return undefined if there is no valid validators', () => {
+  it('should return undefined if validators array is empty', () => {
     // When
     const { result } = renderHook(() =>
       useFieldValidate({
-        disabled: true,
+        disabled: false,
         required: false,
         validators: [],
       }),
@@ -115,32 +88,60 @@ describe('useFieldValidate', () => {
     expect(composeValidators).not.toHaveBeenCalled();
   });
 
-  it('should return a validate function', () => {
+  it('should return undefined if there is no valid validators', () => {
     // Given
-    const validators1 = () => expect.any(String);
-    const validators2 = () => expect.any(String);
-    const validatorsFuncsMock = [validators1, validators2];
-
-    const anyValidatorsMock = [expect.any(Object), expect.any(Object)];
-    jest.mocked(has).mockReturnValueOnce(true).mockReturnValueOnce(true);
-    jest.spyOn(validatorsMock, 'map').mockReturnValueOnce(validatorsFuncsMock);
-
-    const validateMock = jest.fn();
-    jest.mocked(buildValidator).mockReturnValueOnce(validators1).mockReturnValueOnce(validators2);
-    jest.mocked(composeValidators).mockReturnValueOnce(validateMock);
+    jest
+      .mocked(has)
+      .mockReturnValueOnce(false)
+      .mockReturnValueOnce(false)
+      .mockReturnValueOnce(false);
 
     // When
     const { result } = renderHook(() =>
       useFieldValidate({
         disabled: false,
         required: false,
-        validators: anyValidatorsMock,
+        validators: validatorsMock,
+      }),
+    );
+
+    // Then
+    expect(result.current).toBeUndefined();
+    expect(composeValidators).not.toHaveBeenCalled();
+  });
+
+  it('should return a validate function', () => {
+    // Given
+    const validateMock1 = jest.fn();
+    const validateMock2 = jest.fn();
+    const validateMock3 = jest.fn();
+    const validators1Mock = jest.fn(() => validateMock1);
+    const validators2Mock = jest.fn(() => validateMock2);
+    const validators3Mock = jest.fn(() => validateMock3);
+    const composedValidateMock = Symbol(
+      'composedValidateMock',
+    ) as unknown as FieldValidator<string>;
+
+    jest.mocked(composeValidators).mockReturnValueOnce(composedValidateMock);
+    jest.mocked(has).mockReturnValueOnce(true).mockReturnValueOnce(true).mockReturnValueOnce(true);
+    jest
+      .mocked(buildValidator)
+      .mockReturnValueOnce(validators1Mock)
+      .mockReturnValueOnce(validators2Mock)
+      .mockReturnValueOnce(validators3Mock);
+
+    // When
+    const { result } = renderHook(() =>
+      useFieldValidate({
+        disabled: false,
+        required: false,
+        validators: validatorsMock,
       }),
     );
 
     // Then
     expect(composeValidators).toHaveBeenCalledOnce();
-    expect(composeValidators).toHaveBeenCalledWith(validators1, validators2);
-    expect(result.current).toStrictEqual(validateMock);
+    expect(composeValidators).toHaveBeenCalledWith(validateMock1, validateMock2, validateMock3);
+    expect(result.current).toStrictEqual(composedValidateMock);
   });
 });

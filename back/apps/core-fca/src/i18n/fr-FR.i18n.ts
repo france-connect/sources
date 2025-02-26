@@ -132,10 +132,6 @@ export const frFR: I18nTranslationsMapType = {
   'FlowSteps.exceptions.unexpectedNavigation':
     'Nous vous invitons à fermer tous les onglets de votre navigateur et à vous authentifier de nouveau en suivant les étapes de connexion.',
 
-  // geoip-maxmind
-  'GeoipMaxmind.exceptions.geoipMaxmindNotFound':
-    'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',
-
   // i18n
   'I18n.exceptions.i18nInvalidOrMissingCountVariable':
     'Une erreur technique est survenue. Si le problème persiste, veuillez nous contacter.',

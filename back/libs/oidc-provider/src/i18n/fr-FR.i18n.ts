@@ -10,6 +10,7 @@ const ERROR_RECONNECT =
 export const frFR: I18nTranslationsMapType = {
   ...runtime,
   // oidc-provider
+  'OidcProvider.exceptions.OidcProviderUserAborted': ERROR_RECONNECT,
   'OidcProvider.exceptions.oidcProviderAuthorizeParams': ERROR_RECONNECT,
   'OidcProvider.exceptions.oidcProviderBinding': ERROR_CONTACT_US,
   'OidcProvider.exceptions.oidcProviderGrantSave': ERROR_CONTACT_US,

@@ -81,7 +81,9 @@ describe('AccessControlSessionInterceptor', () => {
     );
 
     sessionServiceMock.get.mockReturnValue({
-      email: emailMock,
+      identity: {
+        email: emailMock,
+      },
     });
   });
 

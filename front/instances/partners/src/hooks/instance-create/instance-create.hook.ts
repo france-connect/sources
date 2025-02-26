@@ -1,25 +1,29 @@
-import isEmpty from 'lodash.isempty';
+import has from 'lodash.has';
 import { useCallback } from 'react';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 
-import { InstancesService } from '@fc/core-partners';
-import type { JSONFieldType } from '@fc/dto2form';
-import { UNKNOWN_FORM_ERROR } from '@fc/forms';
+import { parseInitialValues, type SchemaFieldType } from '@fc/dto2form';
 import type { HttpClientDataInterface } from '@fc/http-client';
 
 import { RouteLoaderDataIds, SubmitTypes, SubmitTypesMessage } from '../../enums';
+import { InstancesService } from '../../services';
 
 export const useInstanceCreate = () => {
   const navigate = useNavigate();
-  const schema = useRouteLoaderData(RouteLoaderDataIds.VERSION_SCHEMA) as JSONFieldType[];
+  const jsonSchema = useRouteLoaderData(RouteLoaderDataIds.VERSION_SCHEMA) as SchemaFieldType[];
+
+  // @NOTE Temporary solution to resolve client id/secre display
+  // While creating a new instance
+  // @NOTE section are filtered too
+  const schema = jsonSchema.filter((field) => !has(field, 'readonly') || !field.readonly);
+
+  const initialValues = parseInitialValues(jsonSchema, {});
 
   const submitHandler = useCallback(
     async (data: HttpClientDataInterface) => {
-      const response = await InstancesService.create(data);
-
-      const hasSubmissionErrors = !response || !isEmpty(response.payload);
-      if (hasSubmissionErrors) {
-        return (response && response.payload) || UNKNOWN_FORM_ERROR;
+      const errors = await InstancesService.create(data);
+      if (errors) {
+        return errors;
       }
 
       const submitState = {
@@ -33,5 +37,5 @@ export const useInstanceCreate = () => {
     [navigate],
   );
 
-  return { schema, submitHandler };
+  return { initialValues, schema, submitHandler };
 };

@@ -2,11 +2,15 @@
 import * as ClassTransformer from 'class-transformer';
 import * as ClassValidator from 'class-validator';
 
+import { ValidationError } from '@nestjs/common';
+
+import { CommonDtoValidationException } from '../exceptions';
 import {
   filteredByDto,
   getDtoErrors,
   getDtoInputWithErrors,
   getTransformed,
+  getValidDto,
   validateDto,
   validateDtoSync,
 } from './dto-validation';
@@ -43,7 +47,7 @@ describe('DtoValidation', () => {
     it('should call "plainToInstance" from "class-transformer" through "getTransformed" call', async () => {
       // setup
       jest.spyOn(ClassTransformer, 'plainToInstance');
-      // Actual async
+      // Original function is async, so is the mock (not a call here)
       // eslint-disable-next-line require-await
       jest.spyOn(ClassValidator, 'validate').mockImplementation(async () => []);
 
@@ -67,7 +71,7 @@ describe('DtoValidation', () => {
     it('should call "plainToInstance" from "class-transformer" through "getTransformed" call with full options', async () => {
       // setup
       jest.spyOn(ClassTransformer, 'plainToInstance');
-      // Actual async
+      // Original function is async, so is the mock (not a call here)
       // eslint-disable-next-line require-await
       jest.spyOn(ClassValidator, 'validate').mockImplementation(async () => []);
 
@@ -151,6 +155,118 @@ describe('DtoValidation', () => {
       expect(errors).toBeInstanceOf(Array);
       expect(errors.length).toStrictEqual(1);
       expect(errors).toMatchObject(validateResult);
+    });
+  });
+
+  describe('getValidDto', () => {
+    it('should call "plainToInstance" from "class-transformer" through "getTransformed" call', async () => {
+      // setup
+      jest.spyOn(ClassTransformer, 'plainToInstance');
+      // Original function is async, so is the mock (not a call here)
+      // eslint-disable-next-line require-await
+      jest.spyOn(ClassValidator, 'validate').mockImplementation(async () => []);
+
+      class TestClass {}
+      const plain = { foo: 'bar' };
+      const validationOptions = { whitelist: false };
+      const resultValidationOptions = undefined;
+
+      // action
+      await getValidDto(plain, TestClass, validationOptions);
+
+      // expect
+      expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
+      expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
+        TestClass,
+        plain,
+        resultValidationOptions,
+      );
+    });
+
+    it('should call "plainToInstance" from "class-transformer" through "getTransformed" call with full options', async () => {
+      // setup
+      jest.spyOn(ClassTransformer, 'plainToInstance');
+      // Original function is async, so is the mock (not a call here)
+      // eslint-disable-next-line require-await
+      jest.spyOn(ClassValidator, 'validate').mockImplementation(async () => []);
+
+      class TestClass {}
+      const plain = { foo: 'bar' };
+      const validationOptions = { whitelist: false };
+      const transformOptions = { groups: ['hello'] };
+
+      // action
+      await getValidDto(plain, TestClass, validationOptions, transformOptions);
+
+      // expect
+      expect(ClassTransformer.plainToInstance).toHaveBeenCalledTimes(1);
+      expect(ClassTransformer.plainToInstance).toHaveBeenCalledWith(
+        TestClass,
+        plain,
+        transformOptions,
+      );
+    });
+
+    it('should call "validate" from "class-validator" with given Dto', async () => {
+      // setup
+      jest.spyOn(ClassValidator, 'validate').mockResolvedValueOnce([]);
+
+      class TestClass {}
+      const plain = { foo: 'bar' };
+      const validationOptions = {
+        whitelist: false,
+        forbidNonWhitelisted: false,
+      };
+
+      // action
+      await getValidDto(plain, TestClass, validationOptions);
+
+      // expect
+      expect(ClassValidator.validate).toHaveBeenCalledTimes(1);
+      expect(ClassValidator.validate).toHaveBeenCalledWith(
+        plain,
+        validationOptions,
+      );
+    });
+
+    it('should throw a CommonDtoValidationException if errors are found', async () => {
+      // setup
+      jest
+        .spyOn(ClassValidator, 'validate')
+        .mockResolvedValueOnce([
+          Symbol('error'),
+        ] as unknown as ValidationError[]);
+
+      class TestClass {}
+      const plain = { foo: 'bar' };
+      const validationOptions = {
+        whitelist: false,
+        forbidNonWhitelisted: false,
+      };
+
+      // action / expect
+      await expect(
+        getValidDto(plain, TestClass, validationOptions),
+      ).rejects.toThrow(CommonDtoValidationException);
+    });
+
+    it('should return transformed object if no errors are found', async () => {
+      // setup
+      const transformed = Symbol('transformed');
+      jest
+        .spyOn(ClassTransformer, 'plainToInstance')
+        .mockReturnValue(transformed);
+      jest.spyOn(ClassValidator, 'validate').mockResolvedValue([]);
+
+      class TestClass {}
+      const plain = { foo: 'bar' };
+      const validationOptions = { whitelist: false };
+
+      // action
+      const errors = await getValidDto(plain, TestClass, validationOptions);
+
+      // expect
+      expect(errors).toBe(transformed);
     });
   });
 

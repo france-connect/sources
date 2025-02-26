@@ -98,6 +98,10 @@ export class EidasClientController {
 
     const eidasResponse = this.eidasClient.parseLightResponse(lightResponse);
 
+    const { eidasRequest } = sessionEidas.get();
+
+    this.eidasClient.checkEidasResponse(eidasRequest, eidasResponse);
+
     sessionEidas.set('eidasResponse', eidasResponse);
 
     const { redirectAfterResponseHandlingUrl } =

@@ -16,7 +16,7 @@ describe('useClipboard', () => {
 
   it('should call useCopyToClipboard hook', () => {
     // When
-    renderHook(() => useClipboard(true));
+    renderHook(() => useClipboard());
 
     // Then
     expect(useCopyToClipboard).toHaveBeenCalled();
@@ -29,26 +29,12 @@ describe('useClipboard', () => {
 
     // When
     renderHook(() => {
-      const { onCopy } = useClipboard(true);
+      const { onCopy } = useClipboard();
       onCopy(clipboardValueMock);
     });
 
     // Then
     expect(copyMock).toHaveBeenCalledWith(clipboardValueMock);
-  });
-
-  it('should return true when user is not allowed to paste', () => {
-    // Given
-    let result = null;
-
-    // When
-    renderHook(() => {
-      const { onPaste } = useClipboard(false);
-      result = onPaste(clipboardEventMock);
-    });
-
-    // Then
-    expect(result).toBeTrue();
   });
 
   it('should call clipboardData.getData from useCopyToClipboard hook when calling onPaste', () => {
@@ -57,7 +43,7 @@ describe('useClipboard', () => {
 
     // When
     renderHook(() => {
-      const { onPaste } = useClipboard(true);
+      const { onPaste } = useClipboard();
       result = onPaste(clipboardEventMock);
     });
 

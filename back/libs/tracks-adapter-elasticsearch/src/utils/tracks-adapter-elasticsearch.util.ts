@@ -45,7 +45,7 @@ export function getLocationFromTracks(track: ElasticTracksType) {
     city_name: city,
     country_iso_code: country,
     region_name: region,
-  } = track.source.geo;
+  } = track.source.geo || {};
   return { country, city: city || region };
 }
 

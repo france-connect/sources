@@ -31,14 +31,14 @@ export class AccessControlSessionInterceptor implements NestInterceptor {
     _context: ExecutionContext,
     next: CallHandler,
   ): Promise<Observable<unknown>> {
-    const sessionPartnersAccount =
+    const sessionData =
       this.sessionService.get<PartnersAccountSession>('PartnersAccount');
 
     let permissions: PartnersAccountPermission[] = [];
 
-    if (sessionPartnersAccount && sessionPartnersAccount.email) {
+    if (sessionData?.identity?.email) {
       permissions = await this.accountPermission.getByEmail(
-        sessionPartnersAccount.email,
+        sessionData.identity.email,
       );
     }
 

@@ -17,5 +17,6 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
     TAGS: 'not @ignore',
   },
 };
+/* eslint-enable sort-keys-fix/sort-keys-fix, sort-keys */
 
 export default config;

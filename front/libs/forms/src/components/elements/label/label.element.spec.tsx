@@ -51,7 +51,7 @@ describe('LabelElement', () => {
         name="any-name-mock"
       />,
     );
-    const hintTextElt = getByText('hook-hint-mock');
+    const hintElt = getByText('hook-hint-mock');
     const labelTextElt = getByText('hook-label-mock');
 
     // Then
@@ -60,7 +60,7 @@ describe('LabelElement', () => {
     expect(container.firstChild).toHaveClass('any-classname-mock');
     expect(container.firstChild).toHaveAttribute('for', 'any-name-mock');
     expect(labelTextElt).toBeInTheDocument();
-    expect(hintTextElt).toHaveClass('fr-hint-text');
-    expect(hintTextElt).toBeInTheDocument();
+    expect(hintElt).toHaveClass('fr-hint-text');
+    expect(hintElt).toBeInTheDocument();
   });
 });

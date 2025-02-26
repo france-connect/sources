@@ -12,6 +12,14 @@ Then(
   },
 );
 
+Then(/^le message d'information (est|n'est pas) affiché$/, function (text) {
+  const { message } = this.notificationConfig;
+  const expectedNotification = text === 'est' ? message : '';
+  identityProviderSelectionPage.checkIsNotificationMessageDisplayed(
+    expectedNotification,
+  );
+});
+
 Then(
   /^le fournisseur d'identité (est|n'est pas) affiché dans la mire$/,
   function (text) {

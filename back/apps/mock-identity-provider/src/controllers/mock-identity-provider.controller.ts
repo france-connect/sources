@@ -156,7 +156,10 @@ export class MockIdentityProviderController {
       return res.render('interaction-login-custom', { identityForm, data });
     }
 
-    const transformedIdentity = getTransformed(identity, identityDto);
+    const transformedIdentity = getTransformed<MinimalCustomIdentityInterface>(
+      identity,
+      identityDto,
+    );
 
     this.prepareIdentity(transformedIdentity, sessionOidc);
 

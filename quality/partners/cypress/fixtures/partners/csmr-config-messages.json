@@ -1,0 +1,112 @@
+{
+  "CONFIG_CREATE": {
+    "type": "CONFIG_CREATE",
+    "payload": {
+        "active": true,
+        "client_id": "a0f11c8e0fe358a058b571092f902725e17c1b0f8972979ef68ebf640425af58",
+        "client_secret": "ffabf84ed1bfe1f94097b66495d1760282053ab01e77c8c9c65de65b61f0c73a",
+        "type": "public",
+        "scope": [
+            "profile",
+            "phone",
+            "birth",
+            "identite_pivot",
+            "openid",
+            "gender",
+            "birthdate",
+            "birthcountry",
+            "birthplace",
+            "given_name",
+            "family_name",
+            "email",
+            "preferred_username",
+            "address",
+            "idp_birthdate",
+            "amr",
+            "idp_id"
+        ],
+        "claims": [
+            "amr"
+        ],
+        "eidas": 1,
+        "rep_scope": [],
+        "platform": "CORE_FCP",
+        "idpFilterExclude": true,
+        "idpFilterList": [],
+        "identityConsent": false,
+        "ssoDisabled": false,
+        "signupId": "62399",
+        "entityId": "a0f11c8e0fe358a058b571092f902725e17c1b0f8972979ef68ebf640425af58",
+        "name": "Instance de test dev 1",
+        "redirect_uris": "https://test.fr/callback",
+        "post_logout_redirect_uris": "https://test.fr/logout",
+        "IPServerAddressesAndRanges": "1.1.1.1",
+        "id_token_signed_response_alg": "ES256",
+        "id_token_encrypted_response_alg": "",
+        "id_token_encrypted_response_enc": "",
+        "userinfo_signed_response_alg": "ES256",
+        "userinfo_encrypted_response_alg": "",
+        "userinfo_encrypted_response_enc": ""
+    },
+    "meta": {
+        "instanceId": "997abfe2-a19a-49c9-a2c2-138798dde859",
+        "versionId": "3f03fa0a-4135-4198-8297-a0d5c3e183ce",
+        "publicationStatus": "PENDING"
+    }
+  },
+  "CONFIG_UPDATE": {
+    "type": "CONFIG_UPDATE",
+    "payload": {
+        "active": true,
+        "client_id": "a0f11c8e0fe358a058b571092f902725e17c1b0f8972979ef68ebf640425af58",
+        "client_secret": "ffabf84ed1bfe1f94097b66495d1760282053ab01e77c8c9c65de65b61f0c73a",
+        "type": "public",
+        "scope": [
+            "profile",
+            "phone",
+            "birth",
+            "identite_pivot",
+            "openid",
+            "gender",
+            "birthdate",
+            "birthcountry",
+            "birthplace",
+            "given_name",
+            "family_name",
+            "email",
+            "preferred_username",
+            "address",
+            "idp_birthdate",
+            "amr",
+            "idp_id"
+        ],
+        "claims": [
+            "amr"
+        ],
+        "eidas": 1,
+        "rep_scope": [],
+        "platform": "CORE_FCP",
+        "idpFilterExclude": true,
+        "idpFilterList": [],
+        "identityConsent": false,
+        "ssoDisabled": false,
+        "signupId": "62399",
+        "entityId": "a0f11c8e0fe358a058b571092f902725e17c1b0f8972979ef68ebf640425af58",
+        "name": "Instance de test dev 1",
+        "redirect_uris": "https://test.fr/callback",
+        "post_logout_redirect_uris": "https://test.fr/logout",
+        "IPServerAddressesAndRanges": "1.1.1.1",
+        "id_token_signed_response_alg": "ES256",
+        "id_token_encrypted_response_alg": "",
+        "id_token_encrypted_response_enc": "",
+        "userinfo_signed_response_alg": "ES256",
+        "userinfo_encrypted_response_alg": "",
+        "userinfo_encrypted_response_enc": ""
+    },
+    "meta": {
+        "instanceId": "997abfe2-a19a-49c9-a2c2-138798dde859",
+        "versionId": "3f03fa0a-4135-4198-8297-a0d5c3e183ce",
+        "publicationStatus": "PENDING"
+    }
+  }
+}

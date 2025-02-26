@@ -7,7 +7,7 @@ import { TracksOutputInterface } from '@fc/csmr-tracks-client';
 import { LoggerService } from '@fc/logger';
 import { RichClaimInterface, ScopesService } from '@fc/scopes';
 import {
-  GeoFormatterService,
+  getLocationFromTracks,
   TracksFormatterAbstract,
   TracksFormatterMappingFailedException,
   TracksV2FieldsInterface,
@@ -20,12 +20,9 @@ import { Platform } from '../enums';
 export class TracksV2Formatter
   implements TracksFormatterAbstract<TracksOutputInterface>
 {
-  // Allowed for DI
-  // eslint-disable-next-line max-params
   constructor(
     protected readonly config: ConfigService,
     protected readonly logger: LoggerService,
-    protected readonly geoip: GeoFormatterService,
     protected readonly scopes: ScopesService,
     private readonly platform: Platform,
   ) {}
@@ -51,7 +48,7 @@ export class TracksV2Formatter
 
       const idpLabel = this.getIdpLabel(_source);
       const claims = this.getClaimsGroups(_source);
-      const { country, city } = this.geoip.getGeoFromIp(_source);
+      const { country, city } = getLocationFromTracks(_source);
 
       const output: TracksOutputInterface = {
         event,

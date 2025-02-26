@@ -1,1 +1,1 @@
-export * from './json-field.type';
+export * from './schema-field.type';

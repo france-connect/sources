@@ -12,6 +12,17 @@ describe('SimpleButton', () => {
     expect(container).toMatchSnapshot();
   });
 
+  it('should match the snapshot, when label is hidden', () => {
+    // When
+    const { container } = render(
+      <SimpleButton hideLabel icon="any-icon-mock" iconPlacement={'left' as IconPlacement} />,
+    );
+
+    // Then
+    expect(container).toMatchSnapshot();
+    expect(container).not.toHaveClass('fr-btn--icon-left');
+  });
+
   it('should match the snapshot, when size is defined to Sizes.LARGE', () => {
     // When
     const { container } = render(<SimpleButton size={Sizes.LARGE}>any-label-mock</SimpleButton>);

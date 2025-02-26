@@ -8,9 +8,9 @@ export class OidcProviderRuntime_TypeError_518F_Exception extends OidcProviderBa
   static CODE = '518F';
   static ERROR_CLASS = 'TypeError';
   static ERROR_DETAIL =
-    'profile must be ${formatters.formatList([...fapiProfiles], { type: disjunction })}';
+    '"profile" must be ${formatters.formatList([...fapiProfiles], { type: "disjunction" })}';
   static DOCUMENTATION =
-    'profile must be ${formatters.formatList([...fapiProfiles], { type: disjunction })}';
+    '"profile" must be ${formatters.formatList([...fapiProfiles], { type: "disjunction" })}';
   static ERROR_SOURCE = 'helpers/configuration.js:431';
   static UI = 'OidcProvider.exceptions.TypeError.518F';
 }

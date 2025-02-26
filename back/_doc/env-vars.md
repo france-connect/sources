@@ -9,23 +9,25 @@
 3. [core-fcp-high](#core-fcp-high)
 4. [core-fcp-low](#core-fcp-low)
 5. [csmr-account-instance](#csmr-account-instance)
-6. [csmr-fraud-instance](#csmr-fraud-instance)
-7. [csmr-hsm-high](#csmr-hsm-high)
-8. [csmr-rie](#csmr-rie)
-9. [csmr-tracks-instance](#csmr-tracks-instance)
-10. [csmr-user-preferences-high](#csmr-user-preferences-high)
-11. [eidas-bridge](#eidas-bridge)
-12. [mock-data-provider](#mock-data-provider)
-13. [mock-identity-provider-fca-low](#mock-identity-provider-fca-low)
-14. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
-15. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
-16. [mock-rnipp](#mock-rnipp)
-17. [mock-service-provider-fca-low](#mock-service-provider-fca-low)
-18. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
-19. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
-20. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
-21. [partners](#partners)
-22. [user-dashboard](#user-dashboard)
+6. [csmr-config-partners](#csmr-config-partners)
+7. [csmr-config-sandbox-low](#csmr-config-sandbox-low)
+8. [csmr-fraud-instance](#csmr-fraud-instance)
+9. [csmr-hsm-high](#csmr-hsm-high)
+10. [csmr-rie](#csmr-rie)
+11. [csmr-tracks-instance](#csmr-tracks-instance)
+12. [csmr-user-preferences-high](#csmr-user-preferences-high)
+13. [eidas-bridge](#eidas-bridge)
+14. [mock-data-provider](#mock-data-provider)
+15. [mock-identity-provider-fca-low](#mock-identity-provider-fca-low)
+16. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
+17. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
+18. [mock-rnipp](#mock-rnipp)
+19. [mock-service-provider-fca-low](#mock-service-provider-fca-low)
+20. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
+21. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
+22. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
+23. [partners](#partners)
+24. [user-dashboard](#user-dashboard)
 
 ## Variables
 
@@ -267,6 +269,49 @@
 | Mongoose_USER | string |
 | REQUEST_TIMEOUT | string |
 
+### csmr-config-partners
+
+| Var Name | Inferred type |
+|---|---|
+| APP_NAME | string |
+| App_ENVIRONMENT | string |
+| ConfigBroker_QUEUE | string |
+| ConfigBroker_URLS | json |
+| LoggerLegacy_FILE | string |
+| Logger_THRESHOLD | string |
+| Postgres_DATABASE | string |
+| Postgres_HOST | string |
+| Postgres_PASSWORD | string |
+| Postgres_PORT | number |
+| Postgres_SSL_CA | file |
+| Postgres_SSL_CERT | file |
+| Postgres_SSL_KEY | file |
+| Postgres_SSL_REJECT_UNAUTHORIZED | boolean |
+| Postgres_USER | string |
+| REQUEST_TIMEOUT | string |
+
+### csmr-config-sandbox-low
+
+| Var Name | Inferred type |
+|---|---|
+| AdapterMongo_CLIENT_SECRET_CIPHER_PASS | string |
+| App_ENVIRONMENT | string |
+| ConfigBroker_QUEUE | string |
+| ConfigBroker_URLS | json |
+| LoggerLegacy_FILE | string |
+| Logger_THRESHOLD | string |
+| MicroserviceConfigPartners_QUEUE | string |
+| MicroserviceConfigPartners_URLS | json |
+| Mongoose_DATABASE | string |
+| Mongoose_HOSTS | string |
+| Mongoose_PASSWORD | string |
+| Mongoose_TLS | boolean |
+| Mongoose_TLS_ALLOW_INVALID_HOST_NAME | boolean |
+| Mongoose_TLS_CA_FILE | string |
+| Mongoose_TLS_INSECURE | boolean |
+| Mongoose_USER | string |
+| REQUEST_TIMEOUT | string |
+
 ### csmr-fraud-instance
 
 | Var Name | Inferred type |
@@ -285,7 +330,6 @@
 | Elasticsearch_USERNAME | string |
 | FraudBroker_QUEUE | string |
 | FraudBroker_URLS | json |
-| GeoIpMaxmind_DATABASE_PATH | string |
 | Logger_THRESHOLD | string |
 | Mailer_HOST | string |
 | Mailer_PORT | number |
@@ -336,7 +380,6 @@
 | Elasticsearch_PASSWORD | string |
 | Elasticsearch_TRACKS_INDEX | string |
 | Elasticsearch_USERNAME | string |
-| GeoIpMaxmind_DATABASE_PATH | string |
 | Idp_MAPPINGS | json |
 | Logger_THRESHOLD | string |
 | REQUEST_TIMEOUT | string |
@@ -853,6 +896,8 @@
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
 | Logger_THRESHOLD | string |
+| MicroserviceConfigSandboxLow_QUEUE | string |
+| MicroserviceConfigSandboxLow_URLS | json |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
 | OidcClient_HTTPS_CLIENT_KEY | file |

@@ -58,7 +58,7 @@ Fonctionnalité: API - userinfo
     Et l'entête de la réponse n'a pas de propriété "set-cookie"
     Et le corps de la réponse contient le JWT userinfo pour le FS
     Et le JWT n'est pas chiffré
-    Et l'entête du JWS a une propriété "alg" égale à "HS256"
+    Et l'entête du JWS a une propriété "alg" égale à "ES256"
     Et le payload du JWT a une propriété "sub"
     Et le payload du JWT n'a pas de propriété "acr"
     Et le payload du JWT n'a pas de propriété "amr"

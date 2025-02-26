@@ -4,7 +4,9 @@ const fsp = {
   "FSP1-HIGH": {
     name: "FSP - FSP1-HIGH",
     title: "FSP - FSP1-high title",
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp1-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -68,7 +70,6 @@ const fsp = {
     idpFilterList: [],
     eidas: 2,
     identityConsent: false,
-    trustedIdentity: false,
     ssoDisabled: false,
   },
 
@@ -77,7 +78,9 @@ const fsp = {
   "FSP2-HIGH": {
     name: "FSP - FSP2v2",
     title: "FSP - FSP2v2 Title",
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp2-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -122,7 +125,6 @@ const fsp = {
     idpFilterList: ["0cbdf732-aaea-4566-a99e-4430f388ff18"],
     eidas: 2,
     identityConsent: false,
-    trustedIdentity: false,
     ssoDisabled: false,
   },
 
@@ -130,7 +132,9 @@ const fsp = {
   "FSP3-HIGH": {
     name: "Service Provider Example 3 deactivated",
     title: "Service Provider Example 3 deactivated Title",
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp3-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -185,7 +189,9 @@ const fsp = {
   "FSP4-HIGH": {
     name: "SP 4 - deactivated - Only openid and birthdate scopes authorized",
     title: "SP 4 - deactivated Title",
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp1-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -226,7 +232,9 @@ const fsp = {
   "FSP5-HIGH": {
     name: "FSP - FSP5-HIGH",
     title: "FSP - FSP5-HIGH title",
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp5-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -298,7 +306,6 @@ const fsp = {
     ],
     identityConsent: true,
     eidas: 2,
-    trustedIdentity: false,
     ssoDisabled: false,
   },
 
@@ -306,7 +313,9 @@ const fsp = {
   "FSP6-HIGH": {
     name: "FSP - FSP6v2",
     title: "FSP - FSP6v2 title",
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp6-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -356,7 +365,6 @@ const fsp = {
     idpFilterList: [],
     identityConsent: false,
     eidas: 2,
-    trustedIdentity: false,
     ssoDisabled: false,
   },
 
@@ -364,7 +372,9 @@ const fsp = {
   EIDASBRIDGE: {
     name: "Eidas bridge FS",
     title: "Eidas bridge FS Title",
-    site: "https://eidas-bridge.docker.dev-franceconnect.fr",
+    site: [
+      "https://eidas-bridge.docker.dev-franceconnect.fr",
+    ],
     redirect_uris: [
       "https://eidas-bridge.docker.dev-franceconnect.fr/oidc-client/redirect-to-eidas-response-proxy",
     ],

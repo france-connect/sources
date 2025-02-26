@@ -6,9 +6,12 @@ import {
 
 export interface FieldAttributesArguments {
   type?: string;
-  value?: string;
+  initialValue?: string | string[];
   placeholder?: string;
   required?: boolean;
+  readonly?: boolean;
+
+  array?: boolean;
 
   order?: number;
 
@@ -22,8 +25,10 @@ export interface FieldAttributesArguments {
 export interface FieldAttributes extends FieldAttributesArguments {
   type: string;
   name: string;
-  label: string;
   required: boolean;
+  readonly: boolean;
+  array: boolean;
+  initialValue: string | string[];
 
   /*
    ** Should at least have one validator (better safe than sorry ;D)

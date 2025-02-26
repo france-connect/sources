@@ -77,7 +77,7 @@ Fonctionnalité: API - token
     Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
     Et le corps de la réponse contient le JWT id_token pour le FS
     Et le JWT n'est pas chiffré
-    Et l'entête du JWS a une propriété "alg" égale à "HS256"
+    Et l'entête du JWS a une propriété "alg" égale à "ES256"
     Et le payload du JWT a une propriété "sub"
     Et le payload du JWT a une propriété "acr" égale à "eidas1"
     Et le payload du JWT a une propriété "amr"

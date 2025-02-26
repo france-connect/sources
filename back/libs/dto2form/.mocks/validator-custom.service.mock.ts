@@ -4,6 +4,7 @@ export function getValidatorCustomServiceMock() {
     validator2: jest.fn(),
     validator3: jest.fn(),
     validator4: jest.fn(),
+    isFilled: jest.fn(),
     isNotEmpty: jest.fn(),
     isEqualToConfig: jest.fn(),
   };

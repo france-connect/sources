@@ -5,6 +5,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { AccessControlModule } from '@fc/access-control';
 import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
+import { CsmrConfigClientModule } from '@fc/csmr-config-client';
 import { CsrfModule } from '@fc/csrf';
 import { Dto2formModule } from '@fc/dto2form';
 import {
@@ -12,6 +13,7 @@ import {
   FcWebJsonExceptionFilter,
   UnknownJsonExceptionFilter,
 } from '@fc/exceptions';
+import { HttpProxyModule } from '@fc/http-proxy';
 import { I18nModule } from '@fc/i18n';
 import {
   IdentityProviderAdapterEnvModule,
@@ -37,7 +39,13 @@ import {
   PartnersController,
   VersionController,
 } from './controllers/';
+import { FormValidationExceptionFilter } from './filters';
 import { AppPermissionsHandler } from './handlers';
+import {
+  PartnerPublicationService,
+  PartnersI18nService,
+  PartnersInstanceVersionFormService,
+} from './services';
 
 const oidcClientModule = OidcClientModule.register(
   IdentityProviderAdapterEnvService,
@@ -66,9 +74,13 @@ const oidcClientModule = OidcClientModule.register(
     PartnersServiceProviderInstanceVersionModule,
     AccessControlModule.withRolesHandler(AppPermissionsHandler),
     Dto2formModule,
+    CsmrConfigClientModule.registerFor('SandboxLow'),
+    HttpProxyModule,
   ],
   providers: [
     FcWebJsonExceptionFilter,
+    FormValidationExceptionFilter,
+    PartnerPublicationService,
     {
       provide: APP_FILTER,
       useClass: UnknownJsonExceptionFilter,
@@ -77,6 +89,12 @@ const oidcClientModule = OidcClientModule.register(
       provide: APP_FILTER,
       useClass: FcWebJsonExceptionFilter,
     },
+    {
+      provide: APP_FILTER,
+      useClass: FormValidationExceptionFilter,
+    },
+    PartnersI18nService,
+    PartnersInstanceVersionFormService,
   ],
   controllers: [
     InstanceController,

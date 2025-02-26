@@ -5,4 +5,8 @@ export const enGB: I18nTranslationsMapType = {
     'An error occurred while processing your request. Contact us if the problem persists.',
   'EidasClient.exceptions.writeLightRequestInCache':
     'An error occurred while processing your request. Contact us if the problem persists.',
+  'EidasClient.exceptions.invalidResponseId':
+    'An error occurred while processing your request. Contact us if the problem persists.',
+  'EidasClient.exceptions.invalidResponseRelayState':
+    'An error occurred while processing your request. Contact us if the problem persists.',
 };

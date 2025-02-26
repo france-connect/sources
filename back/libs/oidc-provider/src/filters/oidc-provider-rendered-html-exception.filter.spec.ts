@@ -4,7 +4,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { ExceptionCaughtEvent } from '@fc/exceptions/events';
-import { FcWebHtmlExceptionFilter } from '@fc/exceptions/filters';
 import { generateErrorId } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
 import { ViewTemplateService } from '@fc/view-templates';
@@ -13,7 +12,6 @@ import { getConfigMock } from '@mocks/config';
 import { getLoggerMock } from '@mocks/logger';
 
 import { OidcProviderBaseRenderedException } from '../exceptions';
-import { OriginalError } from '../exceptions/oidc-provider-base.exception';
 import { OidcProviderRenderedHtmlExceptionFilter } from './oidc-provider-rendered-html-exception.filter';
 
 jest.mock('@fc/exceptions/helpers', () => ({
@@ -93,6 +91,7 @@ describe('OidcProviderRenderedHtmlExceptionFilter', () => {
 
     originalErrorMock = new Error('originalErrorMockValue');
     exceptionMock = new ExceptionMock(originalErrorMock);
+    exceptionMock.source = 'render';
   });
 
   it('should be defined', () => {
@@ -100,11 +99,7 @@ describe('OidcProviderRenderedHtmlExceptionFilter', () => {
   });
 
   describe('catch', () => {
-    beforeEach(() => {
-      filter['shouldNotRedirect'] = jest.fn().mockReturnValue(false);
-    });
-
-    it('should exit if the exception is already caught', () => {
+    it('should not log nor publish internal message if the exception is already caught', () => {
       // Given
       exceptionMock.originalError.caught = true;
 
@@ -116,25 +111,25 @@ describe('OidcProviderRenderedHtmlExceptionFilter', () => {
       expect(eventBusMock.publish).not.toHaveBeenCalled();
     });
 
+    it('should call errorOutput() if the exception is already caught', () => {
+      // Given
+      exceptionMock.originalError.caught = true;
+      const paramsMock = Symbol('paramsMock');
+      filter['getParams'] = jest.fn().mockReturnValue(paramsMock);
+
+      // When
+      filter.catch(exceptionMock, hostMock as unknown as ArgumentsHost);
+
+      // Then
+      expect(filter['errorOutput']).toHaveBeenCalledExactlyOnceWith(paramsMock);
+    });
+
     it('should mark the original error as caught', () => {
       // When
       filter.catch(exceptionMock, hostMock as unknown as ArgumentsHost);
 
       // Then
       expect(exceptionMock.originalError.caught).toBe(true);
-    });
-
-    it('should use parent method if shouldNotRedirect returns true', () => {
-      // Given
-      const spyParent = jest.spyOn(FcWebHtmlExceptionFilter.prototype, 'catch');
-
-      filter['shouldNotRedirect'] = jest.fn().mockReturnValue(true);
-
-      // When
-      filter.catch(exceptionMock, hostMock as unknown as ArgumentsHost);
-
-      // Then
-      expect(spyParent).toHaveBeenCalledOnce();
     });
 
     it('should log the exception', () => {
@@ -158,96 +153,16 @@ describe('OidcProviderRenderedHtmlExceptionFilter', () => {
         expect.any(ExceptionCaughtEvent),
       );
     });
-  });
 
-  describe('shouldNotRedirect', () => {
-    it('should return false if the exception is not listed', () => {
+    it('should not create an originalError property if it does not exist', () => {
       // Given
-      filter['isListed'] = jest.fn().mockReturnValue(false);
+      const simpleExceptionMock = new ExceptionMock();
 
       // When
-      const result = filter['shouldNotRedirect'](exceptionMock);
+      filter.catch(simpleExceptionMock, hostMock as unknown as ArgumentsHost);
 
       // Then
-      expect(result).toBe(false);
-    });
-
-    it('should return true if the exception is listed', () => {
-      // Given
-      filter['isListed'] = jest.fn().mockReturnValue(true);
-
-      // When
-      const result = filter['shouldNotRedirect'](exceptionMock);
-
-      // Then
-      expect(result).toBe(true);
-    });
-  });
-
-  describe('isListed', () => {
-    it('should return false if the exception has no originalError', () => {
-      // Given
-      exceptionMock.originalError = undefined;
-
-      // When
-      const result = filter['isListed'](exceptionMock);
-
-      // Then
-      expect(result).toBe(false);
-    });
-
-    it('should return false if the exception has an originalError but no message', () => {
-      // Given
-      exceptionMock.originalError = {} as unknown as OriginalError;
-
-      // When
-      const result = filter['isListed'](exceptionMock);
-
-      // Then
-      expect(result).toBe(false);
-    });
-
-    it('should return false if the exception has an originalError with a message but not in the list', () => {
-      // Given
-      exceptionMock.originalError = {
-        error: 'error',
-        error_description: 'not in list',
-      } as unknown as OriginalError;
-
-      // When
-      const result = filter['isListed'](exceptionMock);
-
-      // Then
-      expect(result).toBe(false);
-    });
-
-    it('should return true if the exception has an originalError with a message in the list', () => {
-      // Given
-      exceptionMock.originalError = {
-        error: 'invalid_client',
-        error_description: 'client is invalid',
-      } as unknown as OriginalError;
-
-      // When
-      const result = filter['isListed'](exceptionMock);
-
-      // Then
-      expect(result).toBe(true);
-    });
-
-    it('should return true if the exception has an originalError with a message matching a regex in the list', () => {
-      // Given
-      exceptionMock.originalError = {
-        error: 'invalid_request',
-        error_description:
-          '/unrecognized route or not allowed method (/some/route?foo=bar)',
-      } as unknown as OriginalError;
-
-      // When
-      const result = filter['isListed'](exceptionMock);
-
-      // Then
-      expect(result).toBe(true);
+      expect(simpleExceptionMock.originalError).toBeUndefined();
     });
   });
 });

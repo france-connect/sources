@@ -35,7 +35,7 @@ exports[`FormWrapperComponent should match snapshot 1`] = `
 </div>
 `;
 
-exports[`FormWrapperComponent should match snapshot without description dans title 1`] = `
+exports[`FormWrapperComponent should match snapshot without descriptionn, title and a disable submit button 1`] = `
 <div>
   <form
     data-testid="any-id-mock--testid"
@@ -55,9 +55,6 @@ exports[`FormWrapperComponent should match snapshot without description dans tit
       />
       <div
         data-mockid="FormErrorComponent"
-      />
-      <div
-        data-mockid="FormMentionsComponent"
       />
       <div
         data-mockid="FormErrorScrollComponent"
@@ -86,9 +83,6 @@ exports[`FormWrapperComponent should not render all fields required message 1`] 
         data-mockid="FormErrorComponent"
       />
       <div
-        data-mockid="FormMentionsComponent"
-      />
-      <div
         data-mockid="FormErrorScrollComponent"
       />
     </div>
@@ -110,9 +104,6 @@ exports[`FormWrapperComponent should not render the error message 1`] = `
       </div>
       <div
         data-mockid="FormActionsComponent"
-      />
-      <div
-        data-mockid="FormMentionsComponent"
       />
       <div
         data-mockid="FormErrorScrollComponent"
@@ -138,7 +129,7 @@ exports[`FormWrapperComponent should not render the error scroll component 1`] =
         data-mockid="FormActionsComponent"
       />
       <div
-        data-mockid="FormMentionsComponent"
+        data-mockid="FormErrorScrollComponent"
       />
     </div>
   </form>

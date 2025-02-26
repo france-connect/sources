@@ -14,15 +14,27 @@ describe('AppInterceptor', () => {
     getRequest: jest.fn(),
   };
 
+  const rpcContextMock = {
+    getData: jest.fn(),
+  };
+
   const contextMock = {
+    getType: jest.fn(),
     switchToHttp: () => httpContextMock,
-  } as unknown as ExecutionContext;
+    switchToRpc: () => rpcContextMock,
+  };
 
   const reqMock = {
     fc: { interactionId: '42' },
     ip: '123.123.123.123',
     method: 'GET',
     path: '/some/path',
+  };
+
+  const messageMock = {
+    type: 'message',
+    meta: {},
+    payload: {},
   };
 
   const nextMock = {
@@ -45,6 +57,8 @@ describe('AppInterceptor', () => {
     jest.resetAllMocks();
     nextMock.handle.mockReturnThis();
     httpContextMock.getRequest.mockReturnValue(reqMock);
+    rpcContextMock.getData.mockReturnValue(messageMock);
+    contextMock.getType.mockReturnValue('http');
   });
 
   it('should be defined', () => {
@@ -52,13 +66,73 @@ describe('AppInterceptor', () => {
   });
 
   describe('intercept', () => {
-    it('should log debug when call is intercepted', () => {
+    beforeEach(() => {
+      interceptor['interceptHttp'] = jest.fn();
+      interceptor['interceptRpc'] = jest.fn();
+    });
+
+    it('should call interceptHttp if type is http', () => {
       // When
-      interceptor.intercept(contextMock, nextMock);
+      interceptor.intercept(
+        contextMock as unknown as ExecutionContext,
+        nextMock,
+      );
 
       // Then
-      expect(loggerMock.debug).toHaveBeenCalledTimes(1);
-      expect(loggerMock.debug).toHaveBeenCalledWith('GET /some/path');
+      expect(interceptor['interceptHttp']).toHaveBeenCalledExactlyOnceWith(
+        contextMock,
+      );
+    });
+
+    it('should call interceptRpc if type is rpc', () => {
+      // Given
+      contextMock.getType.mockReturnValue('rpc');
+
+      // When
+      interceptor.intercept(
+        contextMock as unknown as ExecutionContext,
+        nextMock,
+      );
+
+      // Then
+      expect(interceptor['interceptRpc']).toHaveBeenCalledExactlyOnceWith(
+        contextMock,
+      );
+    });
+
+    it('should call next.handle', () => {
+      // When
+      interceptor.intercept(
+        contextMock as unknown as ExecutionContext,
+        nextMock,
+      );
+
+      // Then
+      expect(nextMock.handle).toHaveBeenCalledExactlyOnceWith();
+    });
+  });
+
+  describe('interceptHttp', () => {
+    it('should log request', () => {
+      // When
+      interceptor['interceptHttp'](contextMock as unknown as ExecutionContext);
+
+      // Then
+      expect(loggerMock.debug).toHaveBeenCalledExactlyOnceWith(
+        `${reqMock.method} ${reqMock.path}`,
+      );
+    });
+  });
+
+  describe('interceptRpc', () => {
+    it('should log message', () => {
+      // When
+      interceptor['interceptRpc'](contextMock as unknown as ExecutionContext);
+
+      // Then
+      expect(loggerMock.debug).toHaveBeenCalledExactlyOnceWith(
+        `Message: ${messageMock.type}`,
+      );
     });
   });
 });

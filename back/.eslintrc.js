@@ -61,6 +61,7 @@ const allowedSnakeCaseParameters = [
   'rnipp_given_name_array',
   'rnipp_identite_pivot',
   'rnipp_profile',
+  'signup_id',
   'sp_id',
   'street_address',
   'token_endpoint',

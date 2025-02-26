@@ -23,5 +23,10 @@ load("/opt/scripts/db-states/_default/claims.js");
 
 /* ------------------------------------------------------------------------------- */
 
+print("Initializing notifications...");
+load("/opt/scripts/db-states/_default/notifications.js");
+
+/* ------------------------------------------------------------------------------- */
+
 print("Initializing Data providers...");
 load("/opt/scripts/db-states/_default/dp.js");

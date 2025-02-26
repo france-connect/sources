@@ -1,147 +1,133 @@
+import { Expose } from 'class-transformer';
+
 import {
-  $IsNotEmpty,
+  $IsIpAddressesAndRange,
+  $IsLength,
+  $IsNumeric,
+  $IsRedirectURL,
+  $IsSignedResponseAlg,
   $IsString,
-  $IsURL,
-  $IsUUID,
+  $IsWebsiteURL,
+  $Matches,
   Form,
+  FormDtoBase,
   Input,
+  Text,
 } from '@fc/dto2form';
+import {
+  OidcClientInterface,
+  SignatureAlgorithmEnum,
+} from '@fc/service-provider';
 
 @Form()
-export class ServiceProviderInstanceVersionDto {
+export class ServiceProviderInstanceVersionDto
+  extends FormDtoBase
+  implements Partial<OidcClientInterface>
+{
   @Input({
     required: true,
     order: 1,
-    validators: [$IsNotEmpty(), $IsString()],
+    validators: [$IsString(), $IsLength({ max: 256 })],
   })
-  // oidc fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly instance_name: string;
+  @Expose()
+  readonly name: string;
 
   @Input({
-    required: true,
+    readonly: true,
     order: 2,
-    validators: [$IsNotEmpty(), $IsString()],
+    validators: [$IsString()],
   })
-  // oidc fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly sp_name: string;
+  @Expose()
+  readonly client_id: string;
 
   @Input({
+    readonly: true,
     order: 3,
     validators: [$IsString()],
   })
-  // oidc fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly signup_id: string;
+  @Expose()
+  readonly client_secret: string;
 
-  @Input({
-    required: true,
-    order: 4,
-    validators: [$IsNotEmpty(), $IsURL()],
-  })
-  readonly site: string;
-
-  /**
-   * @TODO Ajout de la gestion des champs multiples (ex URLs) sur la lib dto2form
-   * #1842
-   */
-  @Input({
-    required: true,
-    order: 5,
-    validators: [$IsNotEmpty(), $IsURL()],
-  })
-  readonly redirect_uris: string;
-
-  /**
-   * @TODO Ajout de la gestion des champs multiples (ex URLs) sur la lib dto2form
-   * #1842
-   */
-  @Input({
-    required: true,
-    order: 6,
-    validators: [$IsNotEmpty(), $IsURL()],
-  })
-  readonly post_logout_redirect_uris: string;
-
-  @Input({
-    order: 7,
-    validators: [$IsString()],
-  })
-  readonly ipAddresses: string;
-
-  @Input({
-    required: true,
-    order: 8,
-    validators: [$IsString()], // créer un validateur custom lié au valeur
-    /**
-     * @TODO Ajout de la gestion des champs multiples (ex URLs) sur la lib dto2form
-     * #1842
-     */
-    // options: [
-    //   {
-    //     label: '',
-    //     value: '',
-    //   },
-    //   {
-    //     label: 'HS256',
-    //     value: 'HS256',
-    //   },
-    //   {
-    //     label: 'ES256',
-    //     value: 'ES256',
-    //   },
-    //   {
-    //     label: 'RS256',
-    //     value: 'RS256',
-    //   },
-    // ],
-  })
-  readonly id_token_signed_response_alg: string;
-
-  @Input({
-    required: true,
-    order: 9,
-    validators: [$IsString()], // créer un validateur custom lié au valeur
-    /**
-     * @TODO Ajout de la gestion des champs multiples (ex URLs) sur la lib dto2form
-     * #1842
-     */
-    // options: [
-    //   {
-    //     label: '',
-    //     value: '',
-    //   },
-    //   {
-    //     label: 'HS256',
-    //     value: 'HS256',
-    //   },
-    //   {
-    //     label: 'ES256',
-    //     value: 'ES256',
-    //   },
-    //   {
-    //     label: 'RS256',
-    //     value: 'RS256',
-    //   },
-    // ],
-  })
-  readonly userinfo_signed_response_alg: string;
-
-  @Input({
-    required: true,
+  @Text({
     order: 10,
-    validators: [$IsNotEmpty(), $IsString()], // $IsBoolean
   })
-  // oidc fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly use_entity_id: string;
+  @Expose()
+  readonly spInformationSection: string;
 
   @Input({
     order: 11,
-    validators: [$IsUUID()],
+    validators: [$IsLength({ max: 7 }), $IsNumeric()],
   })
-  // oidc fashion naming
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly entity_id: string;
+  @Expose()
+  readonly signupId: string;
+
+  @Text({
+    order: 20,
+  })
+  @Expose()
+  readonly spConfigurationSection: string;
+
+  @Input({
+    required: true,
+    array: true,
+    order: 21,
+    validators: [$IsWebsiteURL(), $IsLength({ max: 1024 })],
+  })
+  @Expose()
+  readonly site: string[];
+
+  /**
+   * @TODO Ajout de la gestion des champs multiples (ex URLs) sur la lib dto2form
+   * #1842
+   */
+  @Input({
+    required: true,
+    array: true,
+    order: 22,
+    validators: [$IsRedirectURL(), $IsLength({ max: 1024 })],
+  })
+  @Expose()
+  readonly redirect_uris: string[];
+
+  /**
+   * @TODO Ajout de la gestion des champs multiples (ex URLs) sur la lib dto2form
+   * #1842
+   */
+  @Input({
+    required: true,
+    array: true,
+    order: 23,
+    validators: [$IsRedirectURL(), $IsLength({ max: 1024 })],
+  })
+  @Expose()
+  readonly post_logout_redirect_uris: string[];
+
+  @Input({
+    array: true,
+    order: 24,
+    validators: [$IsIpAddressesAndRange()],
+  })
+  @Expose()
+  readonly IPServerAddressesAndRanges: string[];
+
+  @Input({
+    required: true,
+    order: 25,
+    validators: [$IsString(), $IsSignedResponseAlg()],
+  })
+  @Expose()
+  readonly id_token_signed_response_alg: SignatureAlgorithmEnum;
+
+  @Text({
+    order: 30,
+  })
+  @Expose()
+  readonly subSection: string;
+
+  @Input({
+    order: 31,
+    validators: [$IsLength({ max: 64, min: 36 }), $Matches(/^[a-zA-Z0-9-]+$/)],
+  })
+  @Expose()
+  readonly entityId: string;
 }

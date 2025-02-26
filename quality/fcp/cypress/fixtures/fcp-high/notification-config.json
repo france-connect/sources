@@ -1,0 +1,26 @@
+{
+  "actif": {
+    "message": "Ceci est un message d'information à destination des utilisateurs.",
+    "startDate": "2022-02-23",
+    "stopDate": "2122-02-23",
+    "isActive": "true"
+  },
+  "expiré": {
+    "message": "Ce message d'information a expiré et ne doit pas être affiché",
+    "startDate": "2022-02-23",
+    "stopDate": "2022-02-23",
+    "isActive": "true"
+  },
+  "dans le futur": {
+    "message": "Ce message d'information n'est pas pour maintenant et ne doit pas être affiché",
+    "startDate": "2122-02-23",
+    "stopDate": "2122-02-23",
+    "isActive": "true"
+  },
+  "désactivé": {
+    "message": "Ce message d'information est désactivé et ne doit pas être affiché",
+    "startDate": "2022-02-23",
+    "stopDate": "2122-02-23",
+    "isActive": "false"
+  }
+}

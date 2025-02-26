@@ -1,28 +1,32 @@
 import React from 'react';
 
-import { t } from '@fc/i18n';
+import { ConfigService } from '@fc/config';
+import type { DTO2FormConfig } from '@fc/dto2form';
+
+import { MessageErrorElement } from './message-error.element';
+import { MessageValidElement } from './message-valid.element';
 
 interface MessageElementProps {
-  error?: string | undefined;
+  error?: string | string[];
   id: string;
+  dataTestId?: string;
   isValid?: boolean;
 }
 
 export const MessageElement = React.memo(
-  ({ error = undefined, id, isValid = false }: MessageElementProps) => (
-    <div aria-live="assertive" className="fr-messages-group" id={id}>
-      {isValid && (
-        <p className="fr-valid-text" id={`${id}-messages`}>
-          {t('Form.message.valid')}
-        </p>
-      )}
-      {!!error && (
-        <p className="fr-message fr-message--error" id={`${id}-messages`}>
-          {error}
-        </p>
-      )}
-    </div>
-  ),
+  ({ dataTestId = undefined, error = undefined, id, isValid = false }: MessageElementProps) => {
+    const { showFieldValidationMessage } = ConfigService.get<DTO2FormConfig>('DTO2Form');
+
+    const showErrorMessage = !!error;
+    const showValidationMessage = showFieldValidationMessage && isValid;
+
+    return (
+      <div aria-live="assertive" className="fr-messages-group" id={id}>
+        {showValidationMessage && <MessageValidElement dataTestId={dataTestId} id={id} />}
+        {showErrorMessage && <MessageErrorElement dataTestId={dataTestId} error={error} id={id} />}
+      </div>
+    );
+  },
 );
 
 MessageElement.displayName = 'MessageElement';

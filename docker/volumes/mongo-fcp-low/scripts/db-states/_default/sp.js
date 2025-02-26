@@ -4,7 +4,9 @@ const fsp = {
     name: "fsp1-low",
     title: "FSP1 - LOW",
     eidas: 2,
-    site: "https://fsp1-low.docker.dev-franceconnect.fr/login",
+    site: [
+      "https://fsp1-low.docker.dev-franceconnect.fr/login",
+    ],
     redirect_uris: [
       "https://fsp1-low.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -53,16 +55,15 @@ const fsp = {
       "idp_id",
     ],
     claims: ["amr"],
-    id_token_signed_response_alg: "HS256",
+    id_token_signed_response_alg: "ES256",
     id_token_encrypted_response_alg: "",
     id_token_encrypted_response_enc: "",
-    userinfo_signed_response_alg: "HS256",
+    userinfo_signed_response_alg: "ES256",
     userinfo_encrypted_response_alg: "",
     userinfo_encrypted_response_enc: "",
     idpFilterExclude: true,
     idpFilterList: ["77fe5e8c-364c-440e-909f-5ef4f494e170"],
     identityConsent: false,
-    trustedIdentity: false,
     ssoDisabled: false,
     platform: "CORE_FCP",
     rep_scope: [],
@@ -72,7 +73,9 @@ const fsp = {
     name: "fsp2-low",
     title: "FSP2 - LOW",
     eidas: 2,
-    site: "https://fsp2-low.docker.dev-franceconnect.fr/login",
+    site: [
+      "https://fsp2-low.docker.dev-franceconnect.fr/login",
+    ],
     redirect_uris: [
       "https://fsp2-low.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -134,7 +137,6 @@ const fsp = {
       "0adf04be-536e-4986-b639-73ea8d38493e",
     ],
     identityConsent: false,
-    trustedIdentity: false,
     ssoDisabled: false,
     platform: "CORE_FCP",
     rep_scope: [],
@@ -144,7 +146,9 @@ const fsp = {
     name: "fsp3-low",
     title: "FSP3 - LOW",
     eidas: 1,
-    site: "https://fsp3-low.docker.dev-franceconnect.fr/login",
+    site: [
+      "https://fsp3-low.docker.dev-franceconnect.fr/login",
+    ],
     redirect_uris: [
       "https://fsp3-low.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -202,7 +206,6 @@ const fsp = {
     idpFilterExclude: true,
     idpFilterList: ["0adf04be-536e-4986-b639-73ea8d38493e"],
     identityConsent: true,
-    trustedIdentity: false,
     ssoDisabled: false,
     platform: "CORE_FCP",
     rep_scope: [
@@ -217,7 +220,9 @@ const fsp = {
     name: "fsp4-low",
     title: "FSP4 - LOW",
     eidas: 1,
-    site: "https://fsp4-low.docker.dev-franceconnect.fr/login",
+    site: [
+      "https://fsp4-low.docker.dev-franceconnect.fr/login",
+    ],
     redirect_uris: [
       "https://fsp4-low.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -275,7 +280,6 @@ const fsp = {
     idpFilterExclude: false,
     idpFilterList: ["77fe5e8c-364c-440e-909f-5ef4f494e170"],
     identityConsent: false,
-    trustedIdentity: false,
     ssoDisabled: false,
     platform: "CORE_FCP",
     rep_scope: [],
@@ -283,7 +287,9 @@ const fsp = {
   "user dashboard": {
     name: "User Dashboard",
     title: "Tableau de bord",
-    site: "https://ud.docker.dev-franceconnect.fr/",
+    site: [
+      "https://ud.docker.dev-franceconnect.fr/",
+    ],
     redirect_uris: ["https://ud.docker.dev-franceconnect.fr/api/oidc-callback"],
     post_logout_redirect_uris: [
       "https://ud.docker.dev-franceconnect.fr/api/logout-callback",
@@ -324,7 +330,6 @@ const fsp = {
     userinfo_encrypted_response_enc: "",
     jwks_uri:
       "https://ud.docker.dev-franceconnect.fr/api/client/.well-known/keys",
-    trustedIdentity: false,
     eidas: 1,
     ssoDisabled: false,
     platform: "CORE_FCP",

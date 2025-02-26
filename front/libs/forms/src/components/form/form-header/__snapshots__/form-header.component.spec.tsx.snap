@@ -25,6 +25,16 @@ exports[`FormHeaderComponent should match the snapshot when description is defin
 </div>
 `;
 
+exports[`FormHeaderComponent should match the snapshot when title and titleHeading are defined 1`] = `
+<div>
+  <h6
+    class="fc-text-align--left-md-center fr-text--title-blue-france"
+  >
+    any-title-mock
+  </h6>
+</div>
+`;
+
 exports[`FormHeaderComponent should match the snapshot when title is defined 1`] = `
 <div>
   <h1

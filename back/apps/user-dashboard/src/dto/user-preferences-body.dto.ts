@@ -1,11 +1,5 @@
 import { Transform } from 'class-transformer';
-import {
-  ArrayMinSize,
-  IsArray,
-  IsBoolean,
-  IsString,
-  IsUUID,
-} from 'class-validator';
+import { ArrayMinSize, IsArray, IsBoolean, IsUUID } from 'class-validator';
 
 import { enforceArray, enforceBoolean } from '@fc/common';
 
@@ -19,7 +13,4 @@ export class UserPreferencesBodyDto {
   @Transform(enforceBoolean)
   @IsBoolean()
   allowFutureIdp: boolean;
-
-  @IsString()
-  csrfToken: string;
 }

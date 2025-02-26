@@ -8,9 +8,9 @@ export class OidcProviderRuntime_Error_F774_Exception extends OidcProviderBaseRu
   static CODE = 'F774';
   static ERROR_CLASS = 'Error';
   static ERROR_DETAIL =
-    'local purpose PASETO Resource Server paseto.key must be 256 bits long secret key';
+    'local purpose PASETO Resource Server "paseto.key" must be 256 bits long secret key';
   static DOCUMENTATION =
-    'local purpose PASETO Resource Server paseto.key must be 256 bits long secret key';
+    'local purpose PASETO Resource Server "paseto.key" must be 256 bits long secret key';
   static ERROR_SOURCE = 'models/formats/paseto.js:52';
   static UI = 'OidcProvider.exceptions.Error.F774';
 }

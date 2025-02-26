@@ -8,6 +8,7 @@ import {
   EidasLevelOfAssurances,
   EidasPartialRequest,
   EidasRequest,
+  EidasResponse,
 } from '@fc/eidas';
 import { EidasCountries } from '@fc/eidas-country';
 import {
@@ -20,6 +21,8 @@ import {
   ReadLightResponseFromCacheException,
   WriteLightRequestInCacheException,
 } from './exceptions';
+import { InvalidResponseIdException } from './exceptions/invalid-response-id.exception';
+import { InvalidResponseRelayStateException } from './exceptions/invalid-response-relay-state.exception';
 
 describe('EidasClientService', () => {
   let service: EidasClientService;
@@ -423,6 +426,61 @@ describe('EidasClientService', () => {
 
       // expect
       expect(result).toStrictEqual(response);
+    });
+  });
+
+  describe('checkEidasResponse', () => {
+    let requestMock: EidasRequest;
+    let responseMock: EidasResponse;
+
+    beforeEach(() => {
+      requestMock = {
+        id: 'reqId',
+        relayState: 'relayStateMock',
+      } as unknown as EidasRequest;
+
+      responseMock = {
+        id: 'resId',
+        relayState: 'relayStateMock',
+        inResponseToId: 'reqId',
+      } as unknown as EidasResponse;
+    });
+
+    it('should not throw if "inResponseToId" matches the request "id" and the relayState is the same', () => {
+      // When / Then
+      expect(() =>
+        service.checkEidasResponse(requestMock, responseMock),
+      ).not.toThrow();
+    });
+
+    it('should throw InvalidResponseIdException if "inResponseToId" does not match the request "id"', () => {
+      // Given
+      responseMock.inResponseToId = 'bad-req-id';
+
+      // When / Then
+      expect(() =>
+        service.checkEidasResponse(requestMock, responseMock),
+      ).toThrow(InvalidResponseIdException);
+    });
+
+    it('should not throw if the request "relayState" is not defined', () => {
+      // Given
+      delete requestMock.relayState;
+
+      // When / Then
+      expect(() =>
+        service.checkEidasResponse(requestMock, responseMock),
+      ).not.toThrow();
+    });
+
+    it('should throw InvalidResponseRelayStateException if the request "relayState" is defined but does not match the response "relayState"', () => {
+      // Given
+      responseMock.relayState = 'some-other-relayState';
+
+      // When / Then
+      expect(() =>
+        service.checkEidasResponse(requestMock, responseMock),
+      ).toThrow(InvalidResponseRelayStateException);
     });
   });
 });

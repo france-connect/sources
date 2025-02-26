@@ -1,7 +1,3 @@
-/* istanbul ignore file */
-
-// Declarative file
-
 /**
  * This file triggers override of native or installed libraries
  *
@@ -12,6 +8,6 @@
  */
 import * as crypto from 'crypto';
 
-import { OverrideCode } from '../helpers';
+import { OverrideCode } from '@fc/override-code';
 
 OverrideCode.wrap(crypto, 'sign', 'crypto.sign');

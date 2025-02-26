@@ -29,6 +29,31 @@ describe('ValidatorCustomService', () => {
     expect(service).toBeDefined();
   });
 
+  describe('isFilled', () => {
+    const valuesToTest = [
+      [true, 0],
+      [true, 1],
+      [true, {}],
+      [true, /./],
+      [true, true],
+      [true, 'string'],
+      [true, () => null],
+      [true, Symbol()],
+      [false, ''],
+      [false, null],
+      [false, undefined],
+      [false, []],
+    ];
+
+    it.each(valuesToTest)(
+      'should return %p if value is value %p',
+      (expected, value) => {
+        // When / Then
+        expect(service.isFilled(value)).toBe(expected);
+      },
+    );
+  });
+
   describe('isString', () => {
     const valuesToTest = [
       [true, 'string'],
@@ -121,6 +146,79 @@ describe('ValidatorCustomService', () => {
 
       // Then
       expect(result).toBe(false);
+    });
+  });
+
+  describe('isIpAddressesAndRange', () => {
+    it('should return true if value is an IP', () => {
+      // When / Then
+      expect(service.isIpAddressesAndRange('37.65.14.169')).toBe(true);
+    });
+
+    it('should return true if value is an IP range', () => {
+      // When / Then
+      expect(service.isIpAddressesAndRange('1.1.1.1/32')).toBe(true);
+    });
+
+    it('should return false if value is neither IP or IP range', () => {
+      // When / Then
+      expect(service.isIpAddressesAndRange('not_an_ip')).toBe(false);
+    });
+  });
+
+  describe('isSignedResponseAlg', () => {
+    it('should return true if value is ES256', () => {
+      // When / Then
+      expect(service.isSignedResponseAlg('ES256')).toBe(true);
+    });
+
+    it('should return true if value is RS256', () => {
+      // When / Then
+      expect(service.isSignedResponseAlg('RS256')).toBe(true);
+    });
+
+    it('should return false if value is HS256', () => {
+      // When / Then
+      expect(service.isSignedResponseAlg('HS256')).toBe(false);
+    });
+  });
+
+  describe('isWebsiteURL', () => {
+    it('should return true if url has https protocol', () => {
+      // When / Then
+      expect(service.isWebsiteURL('https://franceconnect.gouv.fr')).toBe(true);
+    });
+
+    it('should return false if url has http protocol', () => {
+      // When / Then
+      expect(service.isWebsiteURL('http://franceconnect.gouv.fr')).toBe(false);
+    });
+
+    it('should return false if url has no protocol', () => {
+      // When / Then
+      expect(service.isWebsiteURL('franceconnect.gouv.fr')).toBe(false);
+    });
+  });
+
+  describe('isRedirectURL', () => {
+    it('should return true if url has https protocol', () => {
+      // When / Then
+      expect(service.isRedirectURL('https://franceconnect.gouv.fr')).toBe(true);
+    });
+
+    it('should return false if url has http protocol', () => {
+      // When / Then
+      expect(service.isRedirectURL('http://franceconnect.gouv.fr')).toBe(true);
+    });
+
+    it('should return true if url is localhost', () => {
+      // When / Then
+      expect(service.isRedirectURL('http://localhost/callback')).toBe(true);
+    });
+
+    it('should return false if url has no protocol', () => {
+      // When / Then
+      expect(service.isRedirectURL('franceconnect.gouv.fr')).toBe(false);
     });
   });
 });

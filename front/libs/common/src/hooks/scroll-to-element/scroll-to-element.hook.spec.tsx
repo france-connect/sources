@@ -8,18 +8,21 @@ describe('useScrollToElement', () => {
   // Given
   const classname = '.any-classname-mock';
 
+  beforeEach(() => {
+    // @NOTE hide console.error logs into console
+    // as the code below suposed to throw
+    jest.spyOn(console, 'error').mockImplementation(jest.fn());
+  });
+
   it('should return an object with a scrollTo function', () => {
     // When
     const { result } = renderHook(() => useScrollToElement(classname));
 
     // Then
-    expect(result.current.scrollToElement).toBeInstanceOf(Function);
+    expect(result.current).toBeInstanceOf(Function);
   });
 
   it('should throw an error if classname argument is undefined', () => {
-    // Given
-    jest.spyOn(console, 'error').mockImplementationOnce(() => undefined);
-
     // Then
     expect(() => {
       // When
@@ -37,7 +40,7 @@ describe('useScrollToElement', () => {
 
     // When
     const { result } = renderHook(() => useScrollToElement(classname));
-    result.current.scrollToElement();
+    result.current();
 
     // Then
     expect(querySelectorSpy).not.toHaveBeenCalled();
@@ -61,7 +64,7 @@ describe('useScrollToElement', () => {
       () => useScrollToElement(classname),
       classname.slice(1),
     );
-    result.current.scrollToElement();
+    result.current();
 
     // Then
     jest.advanceTimersByTime(200);
@@ -82,7 +85,7 @@ describe('useScrollToElement', () => {
       () => useScrollToElement(classname),
       classname.slice(1),
     );
-    result.current.scrollToElement();
+    result.current();
 
     // Then
     jest.advanceTimersByTime(200);
@@ -107,7 +110,7 @@ describe('useScrollToElement', () => {
       () => useScrollToElement(classname),
       classname.slice(1),
     );
-    result.current.scrollToElement();
+    result.current();
 
     // Then
     jest.advanceTimersByTime(500);

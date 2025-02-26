@@ -5,6 +5,8 @@ services:
       - "partners-front"
       - "partners-back"
       - "mock-proconnect"
+      - "csmr-config-sandbox-low"
+      - "csmr-config-partners"
 
   bdd-partners:
     image: alpine

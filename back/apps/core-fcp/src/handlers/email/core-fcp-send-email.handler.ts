@@ -7,6 +7,7 @@ import { IdentityProviderAdapterMongoService } from '@fc/identity-provider-adapt
 import {
   ConnectNotificationEmailParameters,
   MailerConfig,
+  MailerHelper,
   MailerNotificationConnectException,
   MailerService,
   MailTo,
@@ -45,12 +46,26 @@ export class CoreFcpSendEmailHandler implements IFeatureHandler<void> {
   }
 
   private async getConnectNotificationEmailBodyContent(): Promise<string> {
-    const { fqdn, udFqdn } = this.config.get<AppConfig>('App');
-    const { idpId, spName, browsingSessionId } =
+    const { idpId, spName, spIdentity, rnippIdentity, browsingSessionId } =
       this.session.get<OidcSession>('OidcClient');
+
+    const { preferred_username: preferredUsername } = spIdentity;
+    const { family_name: familyName, given_name_array: givenNameArray } =
+      rnippIdentity;
+
+    const { fqdn, udFqdn } = this.config.get<AppConfig>('App');
     const { title: idpTitle } = await this.identityProvider.getById(idpId);
+
+    const person = MailerHelper.getPerson({
+      givenNameArray,
+      familyName,
+      preferredUsername,
+    });
+
     const today = this.getTodayFormattedDate(new Date());
+
     const connectNotificationEmailParameters = {
+      person,
       idpTitle,
       spName,
       today,

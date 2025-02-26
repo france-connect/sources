@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextWithRemoveInput should match snapshot 1`] = `
+<div>
+  <div
+    data-mockid="GroupElement"
+  >
+    <div
+      class="flex-columns"
+    >
+      <div
+        data-mockid="InputComponent"
+      />
+      <div
+        data-mockid="ArrayRemoveButton"
+      />
+    </div>
+    <div
+      data-mockid="MessageElement"
+    />
+  </div>
+</div>
+`;

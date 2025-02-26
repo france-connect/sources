@@ -5,6 +5,7 @@ export * from './field-validator.interface';
 export * from './input-attributes.interface';
 export * from './metadata-dto.interface';
 export * from './select-attributes.interface';
+export * from './text-attributes.interface';
 export * from './validate-if-rules.interface';
 export * from './validator-custom.interface';
 export * from './validator-js.interface';

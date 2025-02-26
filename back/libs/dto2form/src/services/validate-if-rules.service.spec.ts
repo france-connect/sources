@@ -70,6 +70,38 @@ describe('ValidateIfRulesService', () => {
     });
   });
 
+  describe('ifFieldFilled', () => {
+    it('should call isFilled with given arguments and the value of the targeted field', () => {
+      // Given
+      const customValidationOptions = { target: { targetField: 'value' } };
+
+      // When
+      service.ifFieldFilled('value', 'targetField', customValidationOptions);
+
+      // Then
+      expect(validatorCustomMock.isFilled).toHaveBeenCalledExactlyOnceWith(
+        'value',
+      );
+    });
+
+    it('should return the result of isFilled call', () => {
+      // Given
+      const customValidationOptions = { target: { targetField: 'value' } };
+      const isFilledResult = Symbol('true');
+      validatorCustomMock.isFilled.mockReturnValueOnce(isFilledResult);
+
+      // When
+      const result = service.ifFieldFilled(
+        'value',
+        'targetField',
+        customValidationOptions,
+      );
+
+      // Then
+      expect(result).toBe(isFilledResult);
+    });
+  });
+
   describe('ifFieldNotEmpty', () => {
     it('should call isNotEmpty with given arguments and the value of the targeted field', () => {
       // Given

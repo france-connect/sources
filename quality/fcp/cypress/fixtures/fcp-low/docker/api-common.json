@@ -43,6 +43,16 @@
     "method": "GET",
     "url": "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/.well-known/openid-configuration"
   },
+  "redirect-to-sp-with-error": {
+    "qs": {
+      "error": "access_denied",
+      "error_description": "user+authentication+aborted",
+      "state": "37098dd31af91b8d4e2684f7dfcd7f3a0b68f3615db783cada58463cdbb93449",
+      "redirect_uri": "https://fsp1-low.docker.dev-franceconnect.fr/oidc-callback"
+    },
+    "method": "GET",
+    "url": "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/redirect-to-sp-with-error"
+  },
   "oidc-callback": {
     "qs": {
       "code": "FRdEP6Pt4zIrHmzytWM_CZfzvkTd_cLEAPUznce_V7R",

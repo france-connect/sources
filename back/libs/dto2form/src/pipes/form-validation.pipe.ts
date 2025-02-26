@@ -1,8 +1,9 @@
+import { omitBy } from 'lodash';
 import validatorjs from 'validator';
 
 import { ArgumentMetadata, Injectable, PipeTransform } from '@nestjs/common';
 
-import { ArrayAsyncHelper } from '@fc/common/helpers/array-async.helper';
+import { ArrayAsyncHelper } from '@fc/common';
 import { LoggerService } from '@fc/logger';
 
 import { FormDtoBase } from '../dto';
@@ -30,9 +31,9 @@ export class FormValidationPipe implements PipeTransform {
 
   // eslint-disable-next-line complexity
   async transform(
-    target: Record<string, unknown>,
+    target: Record<string, unknown | unknown[]>,
     { type, metatype, data }: ArgumentMetadata,
-  ): Promise<Record<string, unknown>> {
+  ): Promise<Record<string, unknown | unknown[]>> {
     const validType = type === 'body' || type === 'query';
     const isSubObject = Boolean(data);
     if (!validType || isSubObject) {
@@ -48,13 +49,32 @@ export class FormValidationPipe implements PipeTransform {
       metatype,
     );
 
-    const errors = await this.validate(target, metadata);
+    const validatedFields = await this.validate(target, metadata);
 
-    if (errors.length > 0) {
-      throw new Dto2FormValidationErrorException(errors);
+    const missingFields = this.validateRequiredField(target, metadata);
+
+    const fieldValidationResults = [...validatedFields, ...missingFields];
+
+    const hasErrors = this.hasValidatorsErrors(fieldValidationResults);
+
+    if (hasErrors) {
+      throw new Dto2FormValidationErrorException(fieldValidationResults);
     }
 
-    return target;
+    const cleanedTarget = this.removeReadonlyFields(target, metadata);
+
+    return cleanedTarget;
+  }
+
+  private removeReadonlyFields(
+    target: Record<string, unknown>,
+    metadata: FieldAttributes[],
+  ): Record<string, unknown> {
+    const readonlyFields = metadata
+      .filter((field) => field.readonly)
+      .map((field) => field.name);
+
+    return omitBy(target, (_value, key) => readonlyFields.includes(key));
   }
 
   private async validate(
@@ -76,10 +96,19 @@ export class FormValidationPipe implements PipeTransform {
 
     const fieldErrors: FieldErrorsInterface = {
       name,
-      errors: [],
+      validators: [],
     };
+
     if (!fieldMetadata) {
-      fieldErrors.errors.push(`${name}_invalidKey_error`);
+      fieldErrors.validators.push({
+        name,
+        errorLabel: `${name}_invalidKey_error`,
+        validationArgs: [],
+      });
+      return fieldErrors;
+    }
+
+    if (fieldMetadata.readonly) {
       return fieldErrors;
     }
 
@@ -93,24 +122,96 @@ export class FormValidationPipe implements PipeTransform {
       return fieldErrors;
     }
 
-    fieldErrors.errors = await ArrayAsyncHelper.reduceAsync<
-      FieldValidator,
-      FieldErrorsInterface['errors']
-    >(
-      fieldMetadata.validators,
-      async (errors, validator) => {
-        const valid = await this.callValidator(validator, target[name], target);
-
-        if (!valid) {
-          errors.push(validator.errorLabel);
-        }
-
-        return errors;
-      },
-      [],
+    fieldErrors.validators = await this.handleFieldValidation(
+      fieldErrors,
+      target,
+      fieldMetadata,
+      name,
     );
 
     return fieldErrors;
+  }
+
+  private async handleFieldValidation(
+    fieldErrors: FieldErrorsInterface,
+    target: Record<string, unknown>,
+    fieldMetadata: FieldAttributes,
+    name: string,
+  ): Promise<(FieldValidator | FieldValidator[])[]> {
+    if (fieldMetadata.array) {
+      fieldErrors.validators = await this.handleArrayValidation(
+        target,
+        fieldMetadata,
+        name,
+      );
+    } else {
+      fieldErrors.validators = await this.handleValidation(
+        target,
+        fieldMetadata,
+        target[name],
+      );
+    }
+
+    return fieldErrors.validators;
+  }
+
+  private async handleArrayValidation(
+    target: Record<string, unknown | unknown[]>,
+    fieldMetadata: FieldAttributes,
+    name: string,
+  ): Promise<(FieldValidator | FieldValidator[])[]> {
+    const errorsMapAsync = await ArrayAsyncHelper.mapAsync<
+      unknown,
+      FieldValidator[]
+    >(target[name] as unknown[], async (value) => {
+      return await this.handleValidation(target, fieldMetadata, value);
+    });
+
+    // Check that there are empty arrays,
+    // which would indicate that there are no errors
+    const isArrayEmpty = errorsMapAsync.every(
+      (item) => Array.isArray(item) && item.length === 0,
+    );
+
+    if (isArrayEmpty) {
+      const errorsMapAsyncFlat = errorsMapAsync.flat();
+      return errorsMapAsyncFlat;
+    }
+
+    return errorsMapAsync;
+  }
+
+  private async handleValidation(
+    target: Record<string, unknown | unknown[]>,
+    fieldMetadata: FieldAttributes,
+    value: unknown,
+  ): Promise<FieldValidator[]> {
+    return await ArrayAsyncHelper.reduceAsync<FieldValidator, FieldValidator[]>(
+      fieldMetadata.validators,
+      async (errors, validator) => {
+        return await this.processValidator(errors, validator, value, target);
+      },
+      [],
+    );
+  }
+
+  private async processValidator(
+    errors: FieldValidator[],
+    validator: FieldValidator,
+    value: unknown,
+    target: Record<string, unknown | unknown[]>,
+  ): Promise<FieldValidator[]> {
+    const valid = await this.callValidator(validator, value, target);
+
+    if (!valid) {
+      errors.push({
+        name: validator.name,
+        errorLabel: validator.errorLabel,
+        validationArgs: validator.validationArgs,
+      });
+    }
+
+    return errors;
   }
 
   private async shouldValidate(
@@ -183,5 +284,31 @@ export class FormValidationPipe implements PipeTransform {
     return Object.keys(target).filter(
       (key) => typeof target[key] !== 'function',
     );
+  }
+
+  private hasValidatorsErrors(target: FieldErrorsInterface[]): boolean {
+    return target.some(({ validators }) => validators.length > 0);
+  }
+
+  private validateRequiredField(
+    target: Record<string, unknown>,
+    metadata: FieldAttributes[],
+  ): FieldErrorsInterface[] {
+    const missingRequireKeys = metadata
+      .filter((item) => item.required)
+      .map((item) => item.name)
+      .filter((key) => !(key in target))
+      .map((key) => ({
+        name: key,
+        validators: [
+          {
+            name: 'isFilled',
+            errorLabel: `isFilled_error`,
+            validationArgs: [],
+          },
+        ],
+      }));
+
+    return missingRequireKeys;
   }
 }

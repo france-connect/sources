@@ -20,6 +20,7 @@ jest.mock('../decorators', () => ({
 }));
 
 jest.mock('rxjs', () => ({
+  ...jest.requireActual('rxjs'),
   tap: jest.fn(),
 }));
 

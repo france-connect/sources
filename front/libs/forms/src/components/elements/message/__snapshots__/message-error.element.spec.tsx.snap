@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MessageErrorElement should match the snapshot, when error is a string 1`] = `
+<div>
+  <p
+    class="fr-message fr-message--error"
+    id="id-mock-messages"
+  >
+    any-error-message
+  </p>
+</div>
+`;
+
+exports[`MessageErrorElement should match the snapshot, when error is an array of string 1`] = `
+<div>
+  <p
+    class="fr-message fr-message--error"
+    id="id-mock-messages"
+  >
+    any-error-message-1
+  </p>
+  <p
+    class="fr-message fr-message--error"
+    id="id-mock-messages"
+  >
+    any-error-message-2
+  </p>
+  <p
+    class="fr-message fr-message--error"
+    id="id-mock-messages"
+  >
+    any-error-message-3
+  </p>
+</div>
+`;

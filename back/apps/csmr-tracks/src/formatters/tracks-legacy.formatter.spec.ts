@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import {
-  GeoFormatterService,
+  getLocationFromTracks,
   TracksFormatterMappingFailedException,
   TracksLegacyFieldsInterface,
 } from '@fc/tracks-adapter-elasticsearch';
@@ -16,6 +16,8 @@ import { IdpMappings } from '../dto';
 import { Platform } from '../enums';
 import { CsmrTracksUnknownActionException } from '../exceptions';
 import { TracksLegacyFormatter } from './tracks-legacy.formatter';
+
+jest.mock('@fc/tracks-adapter-elasticsearch/utils');
 
 describe('TracksLegacyFormatter', () => {
   let service: TracksLegacyFormatter;
@@ -36,13 +38,9 @@ describe('TracksLegacyFormatter', () => {
     getRichClaimsFromScopes: jest.fn(),
   };
 
-  const geoIpMock = {
-    getGeoFromIp: jest.fn(),
-  };
-
-  const geoIpResultMock = {
-    city: 'geo city mock',
-    country: 'geo country mock',
+  const localisationMock = {
+    city: Symbol('City') as unknown as string,
+    country: Symbol('Country') as unknown as string,
   };
 
   beforeEach(async () => {
@@ -53,7 +51,6 @@ describe('TracksLegacyFormatter', () => {
       providers: [
         TracksLegacyFormatter,
         ConfigService,
-        GeoFormatterService,
         LoggerService,
         {
           provide: 'ScopesFcLegacy',
@@ -61,8 +58,6 @@ describe('TracksLegacyFormatter', () => {
         },
       ],
     })
-      .overrideProvider(GeoFormatterService)
-      .useValue(geoIpMock)
       .overrideProvider(ConfigService)
       .useValue(configMock)
       .overrideProvider(LoggerService)
@@ -72,8 +67,7 @@ describe('TracksLegacyFormatter', () => {
     service = module.get<TracksLegacyFormatter>(TracksLegacyFormatter);
 
     configMock.get.mockReturnValue(configDataMock);
-
-    geoIpMock.getGeoFromIp.mockReturnValue(geoIpResultMock);
+    jest.mocked(getLocationFromTracks).mockReturnValue(localisationMock);
   });
 
   it('should be defined', () => {
@@ -85,6 +79,10 @@ describe('TracksLegacyFormatter', () => {
     const getAcrValueMockResult = Symbol('getAcrValueMockResult');
     const getEventFromActionMockResult = Symbol('getEventFromActionMockResult');
     const getClaimsGroupsMockResult = Symbol('getClaimsGroupsMockResult');
+
+    // Legacy field name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const geoMock = { city_name: 'Paris', country_iso_code: 'FR' };
 
     beforeEach(() => {
       service['getIdpLabel'] = jest
@@ -118,6 +116,7 @@ describe('TracksLegacyFormatter', () => {
           type_action: 'typeAction',
           claims: 'claims',
           cinematicID: 'authenticationEventId',
+          source: { geo: geoMock },
         },
       } as unknown as SearchHit<TracksLegacyFieldsInterface>;
 
@@ -131,8 +130,8 @@ describe('TracksLegacyFormatter', () => {
         spLabel: 'spLabel',
         interactionAcr: getAcrValueMockResult,
         idpLabel: getIdpLabelMockResult,
-        country: geoIpResultMock.country,
-        city: geoIpResultMock.city,
+        country: localisationMock.country,
+        city: localisationMock.city,
         claims: getClaimsGroupsMockResult,
         platform: Platform.FCP_LOW,
         trackId: 'trackId',
@@ -157,6 +156,7 @@ describe('TracksLegacyFormatter', () => {
           type_action: 'typeAction',
           claims: 'claims',
           cinematicID: 'authenticationEventId',
+          source: { geo: geoMock },
         },
       } as unknown as SearchHit<TracksLegacyFieldsInterface>;
 

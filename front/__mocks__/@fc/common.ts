@@ -6,11 +6,10 @@ export const sortByKey = jest.fn(() => jest.fn());
 
 export const getAccessibleTitle = jest.fn();
 
+/* ----------------------
+ Hooks
+---------------------- */
 export const useSafeContext = jest.fn();
-
-export const isString = jest.fn();
-
-export const isNotEmpty = jest.fn();
 
 export const useContentHeight = jest.fn(() => ({
   contentHeight: expect.any(Number),
@@ -35,12 +34,6 @@ export const useScrollTo = jest.fn(() => ({
 export const useScrollToElement = jest.fn(() => ({
   scrollToElement: jest.fn(),
 }));
-
-export enum HttpStatusCode {
-  FORBIDDEN = 403,
-  CONFLICT = 409,
-  UNAUTHORIZED = 401,
-}
 
 export enum HeadingTag {
   H1 = 'h1',
@@ -78,4 +71,9 @@ export enum EventTypes {
   INFO = 'info',
   SUCCESS = 'success',
   WARNING = 'warning',
+}
+
+export enum SortOrder {
+  ASC = 'ASC',
+  DESC = 'DESC',
 }

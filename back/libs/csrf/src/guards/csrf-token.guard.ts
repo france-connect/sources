@@ -8,12 +8,14 @@ export class CsrfTokenGuard implements CanActivate {
   constructor(private readonly csrf: CsrfService) {}
 
   canActivate(context: ExecutionContext): boolean | never {
-    const { body } = context.switchToHttp().getRequest();
+    const { body, headers } = context.switchToHttp().getRequest();
 
-    if (!body.csrfToken) {
+    const token = body.csrfToken || headers['x-csrf-token'];
+
+    if (!token) {
       throw new CsrfMissingTokenException();
     }
 
-    return this.csrf.check(body.csrfToken);
+    return this.csrf.check(token);
   }
 }

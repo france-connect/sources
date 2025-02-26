@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
+import { OverrideCode } from '@fc/override-code';
 
 import { getLoggerMock } from '@mocks/logger';
 
@@ -9,7 +10,6 @@ import {
   CryptographyGatewayException,
   CryptographyInvalidPayloadFormatException,
 } from '../exceptions';
-import { OverrideCode } from '../helpers';
 import { CryptoOverrideService } from './crypto-override.service';
 
 describe('CryptoOverrideService', () => {

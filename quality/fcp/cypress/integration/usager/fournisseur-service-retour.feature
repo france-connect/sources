@@ -12,6 +12,7 @@ Fonctionnalité: Fournisseur Service - Retour
     Et que je suis redirigé vers la page sélection du fournisseur d'identité
     Quand je clique sur le lien retour vers le FS sous la mire
     Alors je suis redirigé vers la page erreur du fournisseur de service
+    Et l'url de la page erreur du fournisseur de service a les paramètres "error,error_description,state,iss"
     Et le titre de l'erreur fournisseur de service est "access_denied"
     Et la description de l'erreur fournisseur de service est "User auth aborted"
 
@@ -27,5 +28,6 @@ Fonctionnalité: Fournisseur Service - Retour
     Et que le code d'erreur FranceConnect est "Y600006"
     Quand je clique sur le lien retour vers le FS après une erreur
     Alors je suis redirigé vers la page erreur du fournisseur de service
+    Et l'url de la page erreur du fournisseur de service a les paramètres "error,error_description,state,iss"
     Et le titre de l'erreur fournisseur de service est "server_error"
     Et la description de l'erreur fournisseur de service est "authentication aborted due to a technical error on the authorization server"

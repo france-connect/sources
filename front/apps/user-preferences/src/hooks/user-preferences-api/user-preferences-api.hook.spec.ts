@@ -94,54 +94,72 @@ describe('useUserPreferencesApi', () => {
     });
   });
 
-  it('should fetch user preferences only once', async () => {
-    // When
-    const { rerender, result } = renderHook(() => useUserPreferencesApi());
-    await waitFor(() => {
-      // @NOTE empty wait for
-      // HttpClient.get call is made into the useEffect
+  describe('fetch', () => {
+    it('should fetch user preferences only once', async () => {
+      // When
+      const { rerender, result } = renderHook(() => useUserPreferencesApi());
+      // @NOTE force multiple rerenders
+      rerender();
+      rerender();
+      rerender();
+      rerender();
+
+      await waitFor(() => {
+        // Then
+        expect(get).toHaveBeenCalledOnce();
+        expect(get).toHaveBeenCalledWith('any-user-preferences-route-mock');
+        expect(result.current).toStrictEqual({
+          commit: expect.any(Function),
+          formValues: formValuesMock,
+          submitErrors: undefined,
+          submitWithSuccess: false,
+          userPreferences: responseMock.data,
+          validateHandler: expect.any(Function),
+        });
+      });
     });
 
-    // @NOTE force multiple rerenders
-    rerender();
-    rerender();
-    rerender();
-    rerender();
+    it('should navigate to home page when fetch user preferences failed', async () => {
+      // Given
+      const navigateMock = jest.fn();
 
-    // Then
-    expect(get).toHaveBeenCalledOnce();
-    expect(get).toHaveBeenCalledWith('any-user-preferences-route-mock');
-    expect(result.current).toStrictEqual({
-      commit: expect.any(Function),
-      formValues: formValuesMock,
-      submitErrors: undefined,
-      submitWithSuccess: false,
-      userPreferences: responseMock.data,
-      validateHandler: expect.any(Function),
+      jest.mocked(useNavigate).mockReturnValueOnce(navigateMock);
+      jest.mocked(get).mockRejectedValueOnce({
+        response: { status: 'any-status-code' },
+      });
+
+      // When
+      renderHook(() => useUserPreferencesApi());
+
+      await waitFor(() => {
+        // Then
+        expect(get).toHaveBeenCalledOnce();
+        expect(get).toHaveBeenCalledWith('any-user-preferences-route-mock');
+        expect(navigateMock).toHaveBeenCalledOnce();
+        expect(navigateMock).toHaveBeenCalledWith('/', { replace: true });
+      });
     });
   });
-
-  it.todo('should do something when fetch user preferences fails');
 
   describe('commit', () => {
     it('should update values when form submission successed', async () => {
       // When
       const { result } = renderHook(() => useUserPreferencesApi());
-      await waitFor(() => {
-        result.current.commit({
-          allowFutureIdp: allowFutureIdpMock,
-          idpList: idpListMock,
-        });
+      result.current.commit({
+        allowFutureIdp: allowFutureIdpMock,
+        idpList: idpListMock,
       });
 
-      // Then
-      expect(result.current).toStrictEqual({
-        commit: expect.any(Function),
-        formValues: formValuesMock,
-        submitErrors: undefined,
-        submitWithSuccess: true,
-        userPreferences: responseMock.data,
-        validateHandler: expect.any(Function),
+      await waitFor(() => {
+        // Then
+        expect(result.current).toStrictEqual({
+          commit: expect.any(Function),
+          formValues: formValuesMock,
+          submitErrors: undefined,
+          submitWithSuccess: true,
+          userPreferences: responseMock.data,
+          validateHandler: expect.any(Function),
+        });
       });
     });
 
@@ -151,21 +169,21 @@ describe('useUserPreferencesApi', () => {
 
       // When
       const { result } = renderHook(() => useUserPreferencesApi());
-      await waitFor(() => {
-        result.current.commit({
-          allowFutureIdp: allowFutureIdpMock,
-          idpList: idpListMock,
-        });
+      result.current.commit({
+        allowFutureIdp: allowFutureIdpMock,
+        idpList: idpListMock,
       });
 
-      // Then
-      expect(result.current).toStrictEqual({
-        commit: expect.any(Function),
-        formValues: formValuesMock,
-        submitErrors: new Error('any-error-mock'),
-        submitWithSuccess: false,
-        userPreferences: responseMock.data,
-        validateHandler: expect.any(Function),
+      await waitFor(() => {
+        // Then
+        expect(result.current).toStrictEqual({
+          commit: expect.any(Function),
+          formValues: formValuesMock,
+          submitErrors: new Error('any-error-mock'),
+          submitWithSuccess: false,
+          userPreferences: responseMock.data,
+          validateHandler: expect.any(Function),
+        });
       });
     });
 
@@ -175,28 +193,28 @@ describe('useUserPreferencesApi', () => {
 
       jest.mocked(useNavigate).mockReturnValueOnce(navigateMock);
       jest.mocked(post).mockRejectedValueOnce({
-        response: { status: 409 },
+        status: 409,
       });
 
       // When
       const { result } = renderHook(() => useUserPreferencesApi());
-      await waitFor(() => {
-        result.current.commit({
-          allowFutureIdp: allowFutureIdpMock,
-          idpList: idpListMock,
-        });
+      result.current.commit({
+        allowFutureIdp: allowFutureIdpMock,
+        idpList: idpListMock,
       });
 
-      // Then
-      expect(navigateMock).toHaveBeenCalledOnce();
-      expect(navigateMock).toHaveBeenCalledWith('/error/409', { replace: true });
-      expect(result.current).toStrictEqual({
-        commit: expect.any(Function),
-        formValues: formValuesMock,
-        submitErrors: undefined,
-        submitWithSuccess: false,
-        userPreferences: responseMock.data,
-        validateHandler: expect.any(Function),
+      await waitFor(() => {
+        // Then
+        expect(navigateMock).toHaveBeenCalledOnce();
+        expect(navigateMock).toHaveBeenCalledWith('/error/409', { replace: true });
+        expect(result.current).toStrictEqual({
+          commit: expect.any(Function),
+          formValues: formValuesMock,
+          submitErrors: undefined,
+          submitWithSuccess: false,
+          userPreferences: responseMock.data,
+          validateHandler: expect.any(Function),
+        });
       });
     });
   });
@@ -205,11 +223,6 @@ describe('useUserPreferencesApi', () => {
     it('should return a form error if no idp is selected', async () => {
       // When
       const { result } = renderHook(() => useUserPreferencesApi());
-      await waitFor(() => {
-        // @NOTE empty wait for
-        // Till the get call is made inside a useEffect
-      });
-
       const validation = result.current.validateHandler({
         idpList: {
           anyUid1Mock: false,
@@ -219,20 +232,17 @@ describe('useUserPreferencesApi', () => {
         },
       });
 
-      // Then
-      expect(validation).toStrictEqual({
-        idpList: 'error',
+      await waitFor(() => {
+        // Then
+        expect(validation).toStrictEqual({
+          idpList: 'error',
+        });
       });
     });
 
     it('should return undefined if some idp are selected', async () => {
       // When
       const { result } = renderHook(() => useUserPreferencesApi());
-      await waitFor(() => {
-        // @NOTE empty wait for
-        // Till the get call is made inside a useEffect
-      });
-
       const validation = result.current.validateHandler({
         idpList: {
           anyUid1Mock: false,
@@ -242,8 +252,10 @@ describe('useUserPreferencesApi', () => {
         },
       });
 
-      // Then
-      expect(validation).toBeUndefined();
+      await waitFor(() => {
+        // Then
+        expect(validation).toBeUndefined();
+      });
     });
   });
 });

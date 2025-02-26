@@ -10,11 +10,15 @@ import { MetadataDtoInterface, MetadataFormService } from '@fc/dto2form';
 import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider-instance-version';
 
 import { PartnersBackRoutes } from '../enums';
+import { PartnersI18nService } from '../services';
 
 @Controller()
 @Injectable()
 export class VersionController {
-  constructor(private readonly metadataFormService: MetadataFormService) {}
+  constructor(
+    private readonly metadataFormService: MetadataFormService,
+    private readonly partnersi18n: PartnersI18nService,
+  ) {}
 
   @Get(PartnersBackRoutes.SP_VERSION_FORM_METADATA)
   @RequirePermission({
@@ -27,6 +31,8 @@ export class VersionController {
       ServiceProviderInstanceVersionDto,
     );
 
-    return payload;
+    const payloadI18n = this.partnersi18n.translation(payload);
+
+    return payloadI18n;
   }
 }

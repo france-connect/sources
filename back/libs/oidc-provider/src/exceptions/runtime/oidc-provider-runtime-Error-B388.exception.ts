@@ -8,9 +8,9 @@ export class OidcProviderRuntime_Error_B388_Exception extends OidcProviderBaseRu
   static CODE = 'B388';
   static ERROR_CLASS = 'Error';
   static ERROR_DETAIL =
-    'local purpose PASETO Resource Server requires a paseto.key';
+    'local purpose PASETO Resource Server requires a "paseto.key"';
   static DOCUMENTATION =
-    'local purpose PASETO Resource Server requires a paseto.key';
+    'local purpose PASETO Resource Server requires a "paseto.key"';
   static ERROR_SOURCE = 'models/formats/paseto.js:46';
   static UI = 'OidcProvider.exceptions.Error.B388';
 }

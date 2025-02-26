@@ -14,12 +14,17 @@ export function Input(attributes: InputAttributesArguments) {
     const formMetadata: FieldAttributes[] =
       Reflect.getMetadata(FORM_METADATA_TOKEN, target.constructor) || [];
 
-    const finalAttributes =
+    const fieldWithMissingAttributes =
       FormDecoratorHelper.generateFieldMissingAttributes<InputAttributes>(
         key,
         attributes,
         formMetadata.length,
         'text',
+      );
+
+    const finalAttributes =
+      FormDecoratorHelper.handleRequiredField<InputAttributes>(
+        fieldWithMissingAttributes,
       );
 
     formMetadata.push(finalAttributes);

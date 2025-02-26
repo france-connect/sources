@@ -1,0 +1,110 @@
+[
+  {
+    "required": true,
+    "order": 1,
+    "validators": [
+      {
+        "name": "any-validator-mock-1.1",
+        "errorLabel": "any-error-label-mock-1.1",
+        "validationArgs": []
+      },
+      {
+        "name": "any-validator-mock-1.2",
+        "errorLabel": "any-error-label-mock-1.2",
+        "validationArgs": []
+      },
+      {
+        "name": "any-validator-mock-1.3",
+        "validationArgs": [
+          {
+            "max": 256
+          }
+        ],
+        "errorLabel": "any-error-label-mock-1.3"
+      }
+    ],
+    "type": "any-type-mock-1",
+    "name": "any-name-mock-1",
+    "array": false,
+    "validateIf": [],
+    "label": "any-label-mock-1",
+    "hint": "any-hint-mock-1",
+    "readonly": true
+  },
+  {
+    "required": true,
+    "order": 3,
+    "validators": [
+      {
+        "name": "any-validator-mock-3.1",
+        "errorLabel": "any-error-label-mock-3.1",
+        "validationArgs": []
+      },
+      {
+        "name": "any-validator-mock-3.2",
+        "errorLabel": "any-error-label-mock-3.2",
+        "validationArgs": []
+      },
+      {
+        "name": "any-validator-mock-3.3",
+        "validationArgs": [
+          {
+            "max": 256
+          }
+        ],
+        "errorLabel": "any-error-label-mock-3.3"
+      }
+    ],
+    "type": "any-type-mock-3",
+    "name": "any-name-mock-3",
+    "array": true,
+    "validateIf": [],
+    "label": "any-label-mock-3",
+    "hint": "any-hint-mock-3",
+    "readonly": false
+  },
+  {
+    "label": "any-section-label-mock-2",
+    "order": 2,
+    "type": "section",
+    "name": "any-section-name-mock-2"
+  },
+  {
+    "required": true,
+    "order": 2,
+    "validators": [
+      {
+        "name": "any-validator-mock-2.1",
+        "errorLabel": "any-error-label-mock-2.1",
+        "validationArgs": []
+      },
+      {
+        "name": "any-validator-mock-2.2",
+        "errorLabel": "any-error-label-mock-2.2",
+        "validationArgs": []
+      },
+      {
+        "name": "any-validator-mock-2.3",
+        "validationArgs": [
+          {
+            "max": 256
+          }
+        ],
+        "errorLabel": "any-error-label-mock-2.3"
+      }
+    ],
+    "type": "any-type-mock-2",
+    "name": "any-name-mock-2",
+    "array": true,
+    "validateIf": [],
+    "label": "any-label-mock-2",
+    "hint": "any-hint-mock-2",
+    "readonly": false
+  },
+  {
+    "label": "any-section-label-mock-999999999999999",
+    "order": 999999999999999,
+    "type": "section",
+    "name": "any-section-name-mock-999999999999999"
+  }
+]

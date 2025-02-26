@@ -72,4 +72,8 @@ export class ConfigParser {
 
     throw new Error(`file at path ${filePath} is missing`);
   }
+
+  get root(): ConfigParser {
+    return new ConfigParser(this.source, '', '');
+  }
 }

@@ -3,7 +3,6 @@ import { IsObject, ValidateNested } from 'class-validator';
 
 import { AppRmqConfig } from '@fc/app';
 import { ElasticsearchConfig } from '@fc/elasticsearch';
-import { GeoipMaxmindConfig } from '@fc/geoip-maxmind';
 import { LoggerConfig } from '@fc/logger';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 import { ScopesConfig } from '@fc/scopes';
@@ -55,11 +54,6 @@ export class CsmrTracksConfig {
   @ValidateNested()
   @Type(() => ScopesConfig)
   readonly ScopesFcpLow: ScopesConfig;
-
-  @IsObject()
-  @ValidateNested()
-  @Type(() => GeoipMaxmindConfig)
-  readonly GeoipMaxmind: GeoipMaxmindConfig;
 
   @IsObject()
   @ValidateNested()

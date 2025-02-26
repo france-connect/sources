@@ -27,5 +27,5 @@ export const useScrollToElement = (classname: string) => {
     }, 200);
   }, [classname]);
 
-  return { scrollToElement };
+  return scrollToElement;
 };

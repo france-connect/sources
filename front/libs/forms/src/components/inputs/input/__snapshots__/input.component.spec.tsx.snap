@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InputComponent should match the snapshot, with optional props 1`] = `
+<div>
+  <input
+    aria-describedby="any-name-mock-messages"
+    class="any-classname-mock"
+    data-testid="any-id-mock--testid"
+    disabled=""
+    id="any-id-mock"
+    name="any-name-mock"
+    optional="any-optional-mock"
+    type="any-type-mock"
+  />
+</div>
+`;
+
+exports[`InputComponent should match the snapshot, with required props 1`] = `
+<div>
+  <input
+    aria-describedby="any-name-mock-messages"
+    data-testid="any-id-mock--testid"
+    id="any-id-mock"
+    name="any-name-mock"
+    type="any-type-mock"
+  />
+</div>
+`;

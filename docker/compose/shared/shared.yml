@@ -14,7 +14,7 @@ services:
   ####################
 
   rp-all:
-    image: nginx:1.14.2
+    image: nginx:1.22.1
     container_name: fc-rp-all
     environment:
       DHPARAM_GENERATION: "false"
@@ -153,7 +153,7 @@ services:
     command: -config /etc/docker-gen/config
 
   squid:
-    image: ${FC_DOCKER_REGISTRY}/squid:4.6
+    image: ubuntu/squid:4.13-21.10_beta
     ulimits:
       nofile:
         soft: 1048576
@@ -168,7 +168,7 @@ services:
       - rie
 
   haproxy:
-    image: haproxy:2.3
+    image: haproxy:2.6.12
     hostname: haproxy
     ulimits:
       nofile:
@@ -225,7 +225,7 @@ services:
   ####################
 
   redis-pwd:
-    image: "bitnami/redis:6.0.15"
+    image: "bitnami/redis:7.4.2-debian-12-r0"
     env_file:
       - ${COMPOSE_DIR}/shared/.env/redis.env
     environment:
@@ -243,7 +243,7 @@ services:
         ipv4_address: 172.16.4.105
 
   redis-cluster-master:
-    image: "bitnami/redis:6.0.15"
+    image: "bitnami/redis:7.4.2-debian-12-r0"
     env_file:
       - ${COMPOSE_DIR}/shared/.env/redis.env
     environment:
@@ -259,7 +259,7 @@ services:
         ipv4_address: 172.16.4.100
 
   redis-cluster-replica:
-    image: "bitnami/redis:6.0.15"
+    image: "bitnami/redis:7.4.2-debian-12-r0"
     env_file:
       - ${COMPOSE_DIR}/shared/.env/redis.env
     environment:
@@ -279,7 +279,7 @@ services:
         ipv4_address: 172.16.4.101
 
   redis-sentinel:
-    image: "bitnami/redis-sentinel:6.0.15"
+    image: "bitnami/redis-sentinel:7.4.2-debian-12-r0"
     scale: 3
     env_file:
       - ${COMPOSE_DIR}/shared/.env/redis.env
@@ -453,6 +453,7 @@ services:
       - "${VOLUMES_DIR}/elasticsearch/index/:/index"
       - "${VOLUMES_DIR}/elasticsearch/ingest_pipelines:/ingest_pipelines"
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - "${VOLUMES_DIR}/maxmind/database/GeoLite2-City/GeoLite2-City.mmdb:/usr/share/elasticsearch/modules/ingest-geoip/GeoLite2-City.mmdb:ro"
     networks:
       - data
       - public
@@ -478,7 +479,6 @@ services:
       - "${VOLUMES_DIR}/log:/var/log/app"
       - "${VOLUMES_DIR}/.home:/home"
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
-      - "${VOLUMES_DIR}/maxmind/database/GeoLite2-City:/var/geoipdb"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/csmr-tracks.env"
@@ -508,8 +508,6 @@ services:
       - 'Elasticsearch_NODES=["https://elasticsearch:9200"]'
       - "Elasticsearch_USERNAME=docker-stack"
       - "Elasticsearch_PASSWORD=docker-stack"
-        # GeoIP
-      - "GeoIpMaxmind_DATABASE_PATH=/var/geoipdb/GeoLite2-City.mmdb"
     networks:
       - data
     init: true
@@ -597,7 +595,6 @@ services:
       - "${VOLUMES_DIR}/log:/var/log/app"
       - "${VOLUMES_DIR}/.home:/home"
       - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
-      - "${VOLUMES_DIR}/maxmind/database/GeoLite2-City:/var/geoipdb"
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/csmr-fraud.env"

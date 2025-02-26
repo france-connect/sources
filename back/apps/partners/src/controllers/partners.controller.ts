@@ -29,7 +29,14 @@ export class PartnersController {
       });
     }
 
-    return res.json(userInfo);
+    const data = {
+      ...userInfo?.identity,
+      id: undefined,
+      accountId: userInfo?.identity?.id,
+      accessControl: userInfo?.accessControl,
+    };
+
+    return res.json(data);
   }
 
   @Get(PartnersBackRoutes.INDEX)

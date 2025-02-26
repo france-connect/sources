@@ -17,7 +17,7 @@ module.exports = {
     '/__mocks__/',
     '/__fixtures__/',
     '.+/index.ts',
-    '.+.(context|error|exception).ts',
+    '.+.(context|error|exception|enum).ts',
     '.+.(routes).tsx',
   ],
   coverageDirectory: '<rootDir>/coverage',

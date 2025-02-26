@@ -18,6 +18,15 @@ export interface IfNotEmptyValidateIfRule extends FieldValidateIfRuleBase {
 }
 
 /*
+ ** IfFieldFilledValidateIfRule
+ */
+
+export interface IfFieldFilledValidateIfRule extends FieldValidateIfRuleBase {
+  name: ValidateIfRule.IF_FIELD_FILLED;
+  ruleArgs: [field: string];
+}
+
+/*
  ** IfFieldDefinedValidateIfRule
  */
 

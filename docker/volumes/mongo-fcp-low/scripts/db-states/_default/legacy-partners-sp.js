@@ -1,7 +1,9 @@
 // == FS
 const fspLegacyPartners = {
   MarieDeHem: {
-    site: "https://fsp1.com",
+    site: [
+      "https://fsp1.com",
+    ],
     redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/login-callback",
       "https://fsp1.docker.dev-franceconnect.fr/data-callback",
@@ -39,7 +41,6 @@ const fspLegacyPartners = {
       "dgfip_aft",
     ],
     identityConsent: false,
-    trustedIdentity: false,
     platform: "CORE_LEGACY",
     eidas: 1,
     __v: 0,
@@ -48,7 +49,9 @@ const fspLegacyPartners = {
 
   fsStats: {
     name: "FsStats",
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp2.docker.dev-franceconnect.fr/login-callback",
       "https://fsp2.docker.dev-franceconnect.fr/data-callback",
@@ -89,7 +92,6 @@ const fspLegacyPartners = {
       "cnam_paiements_ij",
     ],
     identityConsent: false,
-    trustedIdentity: false,
     platform: "CORE_LEGACY",
     eidas: 1,
 

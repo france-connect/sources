@@ -8,7 +8,7 @@ import { LoggerService } from '@fc/logger';
 import { ScopesService } from '@fc/scopes';
 import {
   CoreInstance,
-  GeoFormatterService,
+  getLocationFromTracks,
   TracksFormatterMappingFailedException,
   TracksV2FieldsInterface,
 } from '@fc/tracks-adapter-elasticsearch';
@@ -19,6 +19,8 @@ import { getLoggerMock } from '@mocks/logger';
 import { IdpMappings } from '../dto';
 import { Platform } from '../enums';
 import { TracksV2Formatter } from './tracks-v2.formatter';
+
+jest.mock('@fc/tracks-adapter-elasticsearch/utils');
 
 describe('TracksV2Formatter', () => {
   let service: TracksV2Formatter;
@@ -37,13 +39,9 @@ describe('TracksV2Formatter', () => {
     getRichClaimsFromScopes: jest.fn(),
   };
 
-  const geoIpMock = {
-    getGeoFromIp: jest.fn(),
-  };
-
-  const geoIpDataMock = {
-    country: Symbol('Country'),
-    city: Symbol('City'),
+  const localisationMock = {
+    city: Symbol('City') as unknown as string,
+    country: Symbol('Country') as unknown as string,
   };
 
   const platformMock = Platform.FCP_LOW;
@@ -52,10 +50,9 @@ describe('TracksV2Formatter', () => {
     constructor(
       protected readonly config: ConfigService,
       protected readonly logger: LoggerService,
-      protected readonly geoip: GeoFormatterService,
       @Inject('ScopesFcpLow') protected readonly scopes: ScopesService,
     ) {
-      super(config, logger, geoip, scopes, platformMock);
+      super(config, logger, scopes, platformMock);
     }
   }
 
@@ -66,7 +63,6 @@ describe('TracksV2Formatter', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TestService,
-        GeoFormatterService,
         LoggerService,
         ConfigService,
         {
@@ -79,15 +75,13 @@ describe('TracksV2Formatter', () => {
       .useValue(configMock)
       .overrideProvider(LoggerService)
       .useValue(loggerMock)
-      .overrideProvider(GeoFormatterService)
-      .useValue(geoIpMock)
       .overrideProvider(ScopesService)
       .useValue(scopesMock)
       .compile();
 
     service = module.get<TestService>(TestService);
 
-    geoIpMock.getGeoFromIp.mockReturnValue(geoIpDataMock);
+    jest.mocked(getLocationFromTracks).mockReturnValue(localisationMock);
   });
 
   it('should be defined', () => {
@@ -193,22 +187,14 @@ describe('TracksV2Formatter', () => {
   describe('formatTrack()', () => {
     const claimsMock = ['sub', 'given_name', 'gender'];
 
+    // Legacy field name
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const geoMock = { city_name: 'Paris', country_iso_code: 'FR' };
+
     const sourceMock = {
       _id: 'idValue',
       _source: {
-        source: {
-          geo: {
-            // Input data
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            city_name: undefined,
-            // Input data
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            country_iso_code: 'FR',
-            // Input data
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            region_name: 'Ile-de-France',
-          },
-        },
+        source: { geo: geoMock },
         idpId: 'idpIdValue',
         idpAcr: 'idpAcrValue',
         idpLabel: 'idpLabelValue',
@@ -237,8 +223,8 @@ describe('TracksV2Formatter', () => {
     it('should transform source to track data', () => {
       // Given
       const resultMock = {
-        country: geoIpDataMock.country,
-        city: geoIpDataMock.city,
+        country: localisationMock.country,
+        city: localisationMock.city,
         claims: ['sub', 'given_name', 'gender'],
         time: 1664661600000,
         event: 'FC_VERIFIED',
@@ -267,8 +253,8 @@ describe('TracksV2Formatter', () => {
       };
 
       const resultMock = {
-        country: geoIpDataMock.country,
-        city: geoIpDataMock.city,
+        country: localisationMock.country,
+        city: localisationMock.city,
         claims: ['sub', 'given_name', 'gender'],
         time: 1664661600000,
         event: 'FC_VERIFIED',

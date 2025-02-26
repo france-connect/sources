@@ -14,12 +14,17 @@ export function Select(attributes: SelectAttributesArguments) {
     const formMetadata: FieldAttributes[] =
       Reflect.getMetadata(FORM_METADATA_TOKEN, target.constructor) || [];
 
-    const finalAttributes =
+    const fieldWithMissingAttributes =
       FormDecoratorHelper.generateFieldMissingAttributes<SelectAttributes>(
         key,
         attributes,
         formMetadata.length,
         'select',
+      );
+
+    const finalAttributes =
+      FormDecoratorHelper.handleRequiredField<SelectAttributes>(
+        fieldWithMissingAttributes,
       );
 
     formMetadata.push(finalAttributes);

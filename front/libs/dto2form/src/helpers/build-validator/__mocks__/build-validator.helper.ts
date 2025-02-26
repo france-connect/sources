@@ -1,1 +1,1 @@
-export const buildValidator = jest.fn();
+export const buildValidator = jest.fn(() => jest.fn());

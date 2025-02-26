@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TextAreaField should match snapshot and render a text area 1`] = `<div />`;

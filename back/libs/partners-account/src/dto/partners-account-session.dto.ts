@@ -1,9 +1,12 @@
+import { Type } from 'class-transformer';
 import {
+  IsDate,
   IsNotEmpty,
   IsObject,
   IsOptional,
   IsString,
   IsUUID,
+  ValidateNested,
 } from 'class-validator';
 
 import {
@@ -11,7 +14,7 @@ import {
   PermissionsRequestInformationsInterface,
 } from '@fc/access-control';
 
-export class PartnersAccountSession {
+export class PartnersAccountIdentity {
   @IsString()
   @IsNotEmpty()
   readonly sub: string;
@@ -30,7 +33,25 @@ export class PartnersAccountSession {
 
   @IsOptional()
   @IsUUID()
-  readonly accountId?: string;
+  readonly id?: string;
+
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  readonly createdAt?: Date;
+
+  @IsOptional()
+  @IsDate()
+  @Type(() => Date)
+  readonly updatedAt?: Date;
+}
+
+export class PartnersAccountSession {
+  @IsOptional()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => PartnersAccountIdentity)
+  readonly identity?: PartnersAccountIdentity;
 
   @IsOptional()
   @IsObject()

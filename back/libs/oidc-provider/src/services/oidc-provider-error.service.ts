@@ -41,8 +41,12 @@ export class OidcProviderErrorService {
     });
   }
 
-  async listenError(eventName: string, ctx: KoaContextWithOIDC, error: Error) {
-    await this.renderError(ctx, '', error);
+  async listenError(_eventName: string, ctx: KoaContextWithOIDC, error: Error) {
+    const wrappedError = this.wrapError(ctx, error);
+
+    wrappedError.source = 'event';
+
+    await throwException(wrappedError);
   }
 
   /**
@@ -54,6 +58,14 @@ export class OidcProviderErrorService {
    * @see https://github.com/panva/node-oidc-provider/tree/master/docs#rendererror
    */
   async renderError(ctx: KoaContextWithOIDC, _out: string, error: any) {
+    const wrappedError = this.wrapError(ctx, error);
+
+    wrappedError.source = 'render';
+
+    await throwException(wrappedError);
+  }
+
+  private wrapError(ctx: KoaContextWithOIDC, error: Error) {
     const exceptionClass =
       OidcProviderErrorService.getRenderedExceptionWrapper(error);
 
@@ -66,8 +78,7 @@ export class OidcProviderErrorService {
     if (ctx?.oidc) {
       ctx.oidc['isError'] = true;
     }
-
-    await throwException(wrappedError);
+    return wrappedError;
   }
 
   static getRenderedExceptionWrapper(

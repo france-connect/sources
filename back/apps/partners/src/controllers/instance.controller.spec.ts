@@ -1,12 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { EnvironmentEnum } from '@entities/typeorm';
+import { EnvironmentEnum, PublicationStatusEnum } from '@entities/typeorm';
 
 import {
   AccessControlGuard,
   AccountPermissionRepository,
 } from '@fc/access-control';
 import { CsrfTokenGuard } from '@fc/csrf';
+import { FormValidationPipe } from '@fc/dto2form';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import {
   PartnersServiceProviderInstanceVersionService,
@@ -15,6 +16,10 @@ import {
 
 import { getSessionServiceMock } from '@mocks/session';
 
+import {
+  PartnerPublicationService,
+  PartnersInstanceVersionFormService,
+} from '../services';
 import { InstanceController } from './instance.controller';
 
 describe('InstanceController', () => {
@@ -37,6 +42,11 @@ describe('InstanceController', () => {
     addVersionPermission: jest.fn(),
   };
 
+  const partnersServiceMock = {
+    fromFormValues: jest.fn(),
+    toFormValues: jest.fn(),
+  };
+
   const instanceIdMock = 'instanceId';
   const versionIdMock = 'versionId';
   const permissionMock = [
@@ -44,7 +54,7 @@ describe('InstanceController', () => {
   ];
 
   const userInfoMock = {
-    accountId: Symbol('accountId'),
+    id: Symbol('accountId'),
     email: 'email@email.fr',
     given_name: 'givenName',
     usual_name: 'usualName',
@@ -53,9 +63,7 @@ describe('InstanceController', () => {
   };
 
   const body = {
-    // oidc fashion naming
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    instance_name: 'instance name',
+    name: 'instance name',
   } as unknown as ServiceProviderInstanceVersionDto;
 
   const rolesGuardMock = {
@@ -65,6 +73,16 @@ describe('InstanceController', () => {
   const csrfTokenGuardMock = {
     canActivate: () => true,
   };
+
+  const formValidationPipeMock = {
+    transform: () => true,
+  };
+
+  const publicationMock = {
+    publish: jest.fn(),
+  };
+
+  const pendingPublicationStatus = PublicationStatusEnum.PENDING;
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -76,6 +94,8 @@ describe('InstanceController', () => {
         PartnersServiceProviderInstanceService,
         PartnersServiceProviderInstanceVersionService,
         AccountPermissionRepository,
+        PartnerPublicationService,
+        PartnersInstanceVersionFormService,
       ],
     })
       .overrideProvider(PartnersServiceProviderInstanceService)
@@ -84,18 +104,24 @@ describe('InstanceController', () => {
       .useValue(versionMock)
       .overrideProvider(AccountPermissionRepository)
       .useValue(accountPermissionRepositoryMock)
+      .overrideProvider(PartnersInstanceVersionFormService)
+      .useValue(partnersServiceMock)
       .overrideGuard(AccessControlGuard)
       .useValue(rolesGuardMock)
       .overrideGuard(CsrfTokenGuard)
       .useValue(csrfTokenGuardMock)
+      .overridePipe(FormValidationPipe)
+      .useValue(formValidationPipeMock)
+      .overrideProvider(PartnerPublicationService)
+      .useValue(publicationMock)
       .compile();
 
     controller = module.get<InstanceController>(InstanceController);
 
     instanceMock.upsert.mockResolvedValueOnce({ id: instanceIdMock });
     versionMock.create.mockResolvedValueOnce({ id: versionIdMock });
-
-    sessionPartnersAccountMock.get.mockReturnValue(userInfoMock);
+    sessionPartnersAccountMock.get.mockReturnValue({ identity: userInfoMock });
+    partnersServiceMock.fromFormValues.mockResolvedValue(body);
   });
 
   it('should be defined', () => {
@@ -143,7 +169,7 @@ describe('InstanceController', () => {
     it('should return result of getById()', async () => {
       // Given
       const itemMock = Symbol('service provider');
-      instanceMock.getById.mockResolvedValue(itemMock);
+      partnersServiceMock.toFormValues.mockReturnValueOnce(itemMock);
 
       // When
       const result = await controller.retrieveInstance(instanceIdMock);
@@ -160,7 +186,7 @@ describe('InstanceController', () => {
     it('should call service.upsert with instance value from body', async () => {
       // Given
       const expected = {
-        name: body.instance_name,
+        name: body.name,
         environment: EnvironmentEnum.SANDBOX,
       };
 
@@ -177,7 +203,11 @@ describe('InstanceController', () => {
 
       // Then
       expect(versionMock.create).toHaveBeenCalledTimes(1);
-      expect(versionMock.create).toHaveBeenCalledWith(body, instanceIdMock);
+      expect(versionMock.create).toHaveBeenCalledWith(
+        body,
+        instanceIdMock,
+        pendingPublicationStatus,
+      );
     });
 
     it('should call session partner account to retrieve accountId', async () => {
@@ -198,7 +228,7 @@ describe('InstanceController', () => {
       ).toHaveBeenCalledTimes(1);
       expect(
         accountPermissionRepositoryMock.addInstancePermission,
-      ).toHaveBeenCalledWith(userInfoMock.accountId, instanceIdMock);
+      ).toHaveBeenCalledWith(userInfoMock.id, instanceIdMock);
     });
 
     it('should call addVersionPermission with versionId and accountId', async () => {
@@ -211,7 +241,7 @@ describe('InstanceController', () => {
       ).toHaveBeenCalledTimes(1);
       expect(
         accountPermissionRepositoryMock.addVersionPermission,
-      ).toHaveBeenCalledWith(userInfoMock.accountId, versionIdMock);
+      ).toHaveBeenCalledWith(userInfoMock.id, versionIdMock);
     });
   });
 
@@ -228,7 +258,7 @@ describe('InstanceController', () => {
       expect(instanceMock.upsert).toHaveBeenCalledTimes(1);
       expect(instanceMock.upsert).toHaveBeenCalledWith(
         {
-          name: body.instance_name,
+          name: body.name,
         },
         instanceIdMock,
       );
@@ -244,7 +274,11 @@ describe('InstanceController', () => {
 
       // Then
       expect(versionMock.create).toHaveBeenCalledTimes(1);
-      expect(versionMock.create).toHaveBeenCalledWith(body, instanceIdMock);
+      expect(versionMock.create).toHaveBeenCalledWith(
+        body,
+        instanceIdMock,
+        pendingPublicationStatus,
+      );
     });
 
     it('should call session partner account to retrieve accountId', async () => {
@@ -273,7 +307,7 @@ describe('InstanceController', () => {
       ).toHaveBeenCalledTimes(1);
       expect(
         accountPermissionRepositoryMock.addVersionPermission,
-      ).toHaveBeenCalledWith(userInfoMock.accountId, versionIdMock);
+      ).toHaveBeenCalledWith(userInfoMock.id, versionIdMock);
     });
   });
 });

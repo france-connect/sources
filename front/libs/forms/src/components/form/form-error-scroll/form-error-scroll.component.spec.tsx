@@ -6,11 +6,11 @@ import { renderWithFinalForm } from '@fc/testing-library';
 import { FormErrorScrollComponent } from './form-error-scroll.component';
 
 describe('FormErrorScrollComponent', () => {
-  const scrollToMock = jest.fn();
+  const scrollToElementMock = jest.fn();
 
   beforeEach(() => {
     // Given
-    jest.mocked(useScrollToElement).mockImplementation(() => ({ scrollToElement: scrollToMock }));
+    jest.mocked(useScrollToElement).mockImplementation(() => scrollToElementMock);
   });
 
   it('should match its snapshot', () => {
@@ -22,14 +22,16 @@ describe('FormErrorScrollComponent', () => {
   });
 
   it('should render FormSpy mock with a subscription prop', () => {
+    // Given
+    const activeMock = Symbol('active-mock') as unknown as boolean;
+
     // When
-    renderWithFinalForm(<FormErrorScrollComponent />);
+    renderWithFinalForm(<FormErrorScrollComponent active={activeMock} />);
     const { subscription } = jest.mocked(FormSpy).mock.calls[0][0];
 
     // Then
     expect(subscription).toStrictEqual({
-      modifiedSinceLastSubmit: true,
-      submitFailed: true,
+      submitFailed: activeMock,
     });
   });
 
@@ -39,7 +41,7 @@ describe('FormErrorScrollComponent', () => {
     const { onChange } = jest.mocked(FormSpy).mock.calls[0][0];
 
     // Then
-    expect(onChange).toBeInstanceOf(Function);
+    expect(onChange).toBe(scrollToElementMock);
   });
 
   it('should call useScrollToElement when the component is render with classname parameter', () => {
@@ -58,6 +60,6 @@ describe('FormErrorScrollComponent', () => {
     onChange();
 
     // Then
-    expect(scrollToMock).toHaveBeenCalledOnce();
+    expect(scrollToElementMock).toHaveBeenCalledOnce();
   });
 });

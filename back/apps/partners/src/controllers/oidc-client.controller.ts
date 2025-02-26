@@ -23,6 +23,7 @@ import {
 } from '@fc/oidc-client';
 import { OidcProviderPrompt } from '@fc/oidc-provider';
 import {
+  PartnersAccountIdentity,
   PartnersAccountService,
   PartnersAccountSession,
 } from '@fc/partners-account';
@@ -144,7 +145,7 @@ export class OidcClientController {
 
     sessionOidc.set(identityExchange);
 
-    let partnersAccount: PartnersAccountSession = {
+    let partnersAccount: PartnersAccountIdentity = {
       sub: identity.sub,
       firstname: identity.given_name,
       lastname: identity.usual_name,
@@ -156,9 +157,9 @@ export class OidcClientController {
 
     partnersAccount = {
       ...partnersAccount,
-      accountId: identifiers[0].id,
+      id: identifiers[0].id,
     };
-    sessionPartnersAccount.set(partnersAccount);
+    sessionPartnersAccount.set({ identity: partnersAccount });
 
     await this.accessControl.init(identifiers[0].id);
 

@@ -8,6 +8,7 @@ import { AxiosException } from '../errors';
 import { getRequestOptions } from '../utils';
 import * as HttpClientService from './http-client.service';
 
+// Given
 jest.mock('./../utils');
 
 describe('HttpClientService', () => {
@@ -172,6 +173,8 @@ describe('HttpClientService', () => {
     });
 
     describe('post', () => {
+      const csrfTokenMock = 'any-csrf-token';
+
       beforeEach(() => {
         // Given
         jest.spyOn(HttpClientService, 'getCSRF');
@@ -180,9 +183,7 @@ describe('HttpClientService', () => {
       it('should call getCSRF', async () => {
         // Given
         jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
-        jest
-          .mocked(HttpClientService.getCSRF)
-          .mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
+        jest.mocked(HttpClientService.getCSRF).mockResolvedValueOnce({ csrfToken: csrfTokenMock });
 
         // When
         await HttpClientService.post(endpoint, data, axiosOptions);
@@ -194,9 +195,7 @@ describe('HttpClientService', () => {
       it('should call makeRequest with parameters', async () => {
         // Given
         jest.mocked(HttpClientService.makeRequest).mockResolvedValueOnce(responseMock);
-        jest
-          .mocked(HttpClientService.getCSRF)
-          .mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
+        jest.mocked(HttpClientService.getCSRF).mockResolvedValueOnce({ csrfToken: csrfTokenMock });
 
         // When
         await HttpClientService.post(endpoint, data, axiosOptions);
@@ -206,12 +205,16 @@ describe('HttpClientService', () => {
         expect(HttpClientService.makeRequest).toHaveBeenCalledWith(
           'post',
           endpoint,
-          { ...data, csrfToken: 'any-csrf-token' },
+          { ...data },
           {
             ...axiosOptions,
             headers: {
+              // Conventional header name
               // eslint-disable-next-line @typescript-eslint/naming-convention
               'Content-Type': 'application/x-www-form-urlencoded',
+              // Conventional header name
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              'x-csrf-token': csrfTokenMock,
             },
           },
         );
@@ -220,9 +223,7 @@ describe('HttpClientService', () => {
       it('should throw an AxiosException on error', async () => {
         // Given
         jest.mocked(HttpClientService.makeRequest).mockRejectedValueOnce(errorMock);
-        jest
-          .mocked(HttpClientService.getCSRF)
-          .mockResolvedValueOnce({ csrfToken: 'any-csrf-token' });
+        jest.mocked(HttpClientService.getCSRF).mockResolvedValueOnce({ csrfToken: csrfTokenMock });
 
         // Then
         await expect(() =>

@@ -1,0 +1,55 @@
+{
+  "csrf-token": {
+    "method": "GET",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/csrf-token"
+  },
+  "instance-creation": {
+    "headers": {
+      "x-csrf-token": "49fbf16dd64a32216a6fb639426b41e11d678590e2879a55a41705368163aa97"
+    },
+    "body": {
+      "name": "bdd_test API creation",
+      "signupId": "12345",
+      "site[]": "https://test.franceconnect.gouv.fr",
+      "redirect_uris[]": "https://test.franceconnect.gouv.fr/callback",
+      "post_logout_redirect_uris[]": "https://test.franceconnect.gouv.fr/logout",
+      "IPServerAddressesAndRanges[]": "37.65.14.169",
+      "id_token_signed_response_alg": "ES256",
+      "entityId": "4a858a99-5baf-4068-bd59-ff551ede3619"
+    },
+    "form": true,
+    "method": "POST",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/instances"
+  },
+  "instance-modification": {
+    "headers": {
+      "x-csrf-token": "49fbf16dd64a32216a6fb639426b41e11d678590e2879a55a41705368163aa97"
+    },
+    "body": {
+      "name": "bdd_test API modification",
+      "signupId": "12345",
+      "site[]": "https://test.franceconnect.gouv.fr",
+      "redirect_uris[]": "https://test.franceconnect.gouv.fr/callback",
+      "post_logout_redirect_uris[]": "https://test.franceconnect.gouv.fr/logout",
+      "IPServerAddressesAndRanges[]": "37.65.14.169",
+      "id_token_signed_response_alg": "ES256",
+      "entityId": "4a858a99-5baf-4068-bd59-ff551ede3619"
+    },
+    "form": true,
+    "method": "PUT",
+    "url": "https://partners.docker.dev-franceconnect.fr/api/instances/acfacfcf-291b-43bd-abe7-fb234b3d879e"
+  },
+  "authorize": {
+    "qs": {
+      "scope": "openid profile",
+      "acr_values": "eidas1",
+      "client_id": "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
+      "redirect_uri": "https://test.franceconnect.gouv.fr/callback",
+      "response_type": "code",
+      "state": "00919d38c2f28fd6aa362042ee987200b8e8fee50a1a04bd34d192e40fe1186b",
+      "nonce": "f23f6cebd994466d1de0975d21471294fd729a2a6e5b16dbf0d6f6247a2f6917"
+    },
+    "method": "GET",
+    "url": "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/authorize"
+  }
+}

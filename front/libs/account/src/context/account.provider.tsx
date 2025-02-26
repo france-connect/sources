@@ -1,8 +1,9 @@
+import { HttpStatusCode } from 'axios';
 import { type PropsWithChildren, useEffect, useState } from 'react';
 
 import { AxiosErrorCatcherContext } from '@fc/axios-error-catcher';
 import type { AxiosErrorCatcherInterface } from '@fc/axios-error-catcher/src/inferfaces';
-import { HttpStatusCode, useSafeContext } from '@fc/common';
+import { useSafeContext } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
 import { Options } from '../enums';
@@ -42,7 +43,7 @@ export const AccountProvider = ({ children, validator }: AccountProviderProps) =
   }, []);
 
   useEffect(() => {
-    const sessionHasExpired = account.connected && codeError === HttpStatusCode.UNAUTHORIZED;
+    const sessionHasExpired = account.connected && codeError === HttpStatusCode.Unauthorized;
     const shouldUpdateState = sessionHasExpired && !account.expired;
     if (shouldUpdateState) {
       setAccount({ connected: false, expired: true, ready: true, userinfos: undefined });

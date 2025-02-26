@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArrayAddButton should match the snapshot 1`] = `
+<div>
+  <div>
+    SimpleButton
+  </div>
+</div>
+`;
+
+exports[`ArrayAddButton should match the snapshot, when the button is disabled 1`] = `
+<div>
+  <div>
+    SimpleButton
+  </div>
+</div>
+`;

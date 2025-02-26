@@ -14,4 +14,5 @@ export default {
   timezone: 'Europe/Paris',
   agentConnectIdpHint: env.string('IDP_ID'),
   environment: env.string('ENVIRONMENT'),
+  credentialsBytesLength: 32,
 } as AppConfig;

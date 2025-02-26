@@ -8,9 +8,9 @@ export class OidcProviderRuntime_TypeError_DCA5_Exception extends OidcProviderBa
   static CODE = 'DCA5';
   static ERROR_CLASS = 'TypeError';
   static ERROR_DETAIL =
-    'mask can only contain asterisk(*), hyphen-minus(-) and space( ) characters';
+    'mask can only contain asterisk("*"), hyphen-minus("-") and space(" ") characters';
   static DOCUMENTATION =
-    'mask can only contain asterisk(*), hyphen-minus(-) and space( ) characters';
+    'mask can only contain asterisk("*"), hyphen-minus("-") and space(" ") characters';
   static ERROR_SOURCE = 'helpers/configuration.js:479';
   static UI = 'OidcProvider.exceptions.TypeError.DCA5';
 }

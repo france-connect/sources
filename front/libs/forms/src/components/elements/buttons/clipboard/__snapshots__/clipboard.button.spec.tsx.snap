@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ClipboardButton should match the snapshot 1`] = `
+<div>
+  <div>
+    SimpleButton
+  </div>
+</div>
+`;
+
+exports[`ClipboardButton should match the snapshot, when disabled is not defined 1`] = `
+<div>
+  <div>
+    SimpleButton
+  </div>
+</div>
+`;

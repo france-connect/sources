@@ -1,3 +1,5 @@
+import '@fc/common/overrides/json.parse.override';
+
 import { join } from 'path';
 
 import { renderFile } from 'ejs';

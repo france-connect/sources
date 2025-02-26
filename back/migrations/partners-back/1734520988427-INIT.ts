@@ -7,8 +7,9 @@ export class Migrations1734520988427 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "partners_organisation" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_811562b8b7f6e91891e17c36906" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "partners_platform" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, CONSTRAINT "UQ_54a4d9273f48f650fdd1f4af9ef" UNIQUE ("name"), CONSTRAINT "PK_c880748d93504720b995f1ab82f" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "partners_service_provider" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "platformId" uuid, "organisationId" uuid, CONSTRAINT "PK_1095af4f0e1acd71db672a69200" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TYPE "public"."partners_service_provider_instance_version_publicationstatus_enum" AS ENUM('DRAFT', 'PENDING', 'PUBLISHED')`);
+        await queryRunner.query(`CREATE TYPE "public"."partners_service_provider_instance_version_publicationstatus_enum" AS ENUM('DRAFT', 'PENDING', 'PUBLISHED', 'ARCHIVED', 'FAILED')`);
         await queryRunner.query(`CREATE TABLE "partners_service_provider_instance_version" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "publicationStatus" "public"."partners_service_provider_instance_version_publicationstatus_enum" NOT NULL DEFAULT 'DRAFT', "data" json NOT NULL DEFAULT '{}', "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(), "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW(), "instanceId" uuid NOT NULL, CONSTRAINT "PK_37da5fb88529eb780b5fb421ff6" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE UNIQUE INDEX "version_unique_published" ON "partners_service_provider_instance_version" ("instanceId") WHERE "publicationStatus" = 'PUBLISHED'`);
         await queryRunner.query(`CREATE TYPE "public"."partners_service_provider_instance_environment_enum" AS ENUM('SANDBOX', 'PRODUCTION')`);
         await queryRunner.query(`CREATE TABLE "partners_service_provider_instance" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "name" text NOT NULL, "environment" "public"."partners_service_provider_instance_environment_enum" NOT NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT NOW(), "updatedAt" TIMESTAMP NOT NULL DEFAULT NOW(), CONSTRAINT "PK_dea35a5e7b2fca169534896b135" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."partners_account_permission_entity_enum" AS ENUM('ORGANISATION', 'SERVICE_PROVIDER', 'SP_INSTANCE', 'SP_INSTANCE_VERSION')`);
@@ -32,6 +33,7 @@ export class Migrations1734520988427 implements MigrationInterface {
         await queryRunner.query(`DROP TYPE "public"."partners_account_permission_entity_enum"`);
         await queryRunner.query(`DROP TABLE "partners_service_provider_instance"`);
         await queryRunner.query(`DROP TYPE "public"."partners_service_provider_instance_environment_enum"`);
+        await queryRunner.query(`DROP INDEX "public"."version_unique_published"`);
         await queryRunner.query(`DROP TABLE "partners_service_provider_instance_version"`);
         await queryRunner.query(`DROP TYPE "public"."partners_service_provider_instance_version_publicationstatus_enum"`);
         await queryRunner.query(`DROP TABLE "partners_service_provider"`);

@@ -9,7 +9,7 @@ import { LoggerService } from '@fc/logger';
 import { RichClaimInterface, ScopesService } from '@fc/scopes';
 import {
   EVENT_MAPPING,
-  GeoFormatterService,
+  getLocationFromTracks,
   TracksFormatterAbstract,
   TracksFormatterMappingFailedException,
   TracksLegacyFieldsInterface,
@@ -26,7 +26,6 @@ export class TracksLegacyFormatter
 {
   constructor(
     private readonly logger: LoggerService,
-    private readonly geoip: GeoFormatterService,
     private readonly config: ConfigService,
     @Inject('ScopesFcLegacy') private readonly scopes: ScopesService,
   ) {}
@@ -49,7 +48,7 @@ export class TracksLegacyFormatter
       const interactionAcr = this.getAcrValue(_source);
       const event = this.getEventFromAction(_source);
       const claims = this.getClaimsGroups(_source);
-      const { country, city } = this.geoip.getGeoFromIp(_source);
+      const { country, city } = getLocationFromTracks(_source);
 
       const output: TracksOutputInterface = {
         event,

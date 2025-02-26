@@ -70,7 +70,7 @@ describe('OidcProviderErrorService', () => {
       await service.listenError(eventName, ctx, error);
 
       // Then
-      expect(service.renderError).toHaveBeenCalledTimes(1);
+      expect(throwException).toHaveBeenCalledTimes(1);
     });
   });
 

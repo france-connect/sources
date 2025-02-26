@@ -4,36 +4,42 @@ import type { ISODate } from '@fc/common';
 import { CardComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
-import type { Environment } from '../../enums';
 import { InstanceComponent } from './instance.component';
 
 describe('InstanceComponent', () => {
-  // Given
-  const instanceItemMock = {
-    createdAt: 'any-date-mock' as unknown as ISODate,
-    environment: 'Sanbox' as unknown as Environment,
-    id: 'any-id-mock',
-    name: 'any-name-mock',
-    updatedAt: 'any-date-mock' as unknown as ISODate,
-    versions: [expect.any(Object)],
-  };
-
-  beforeEach(() => {
-    // Given
-    jest.mocked(t).mockReturnValue('any-date-value-mock');
-  });
-
   it('should match the snapshot', () => {
+    // Given
+    const idMock = 'any-id-mock';
+    const nameMock = 'any-name-mock';
+    const dataMock = {
+      // @NOTE API interface
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      client_id: 'any-client_id-mock',
+      // @NOTE API interface
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      client_secret: 'any-client_secret-mock',
+    };
+    const createdAtMock = Symbol('any-create-at-mock') as unknown as ISODate;
+
+    jest.mocked(t).mockReturnValueOnce('any-date-value-mock');
+
     // When
-    const { container } = render(<InstanceComponent item={instanceItemMock} />);
+    const { container, getByText } = render(
+      <InstanceComponent createdAt={createdAtMock} data={dataMock} id={idMock} name={nameMock} />,
+    );
+    const clientIdElt = getByText('any-client_id-mock');
+    const clientSecretElt = getByText('any-client_secret-mock');
 
     // Then
     expect(t).toHaveBeenCalledOnce();
-    expect(t).toHaveBeenCalledWith('CorePartners.instance.createdAt', { date: 'any-date-mock' });
+    expect(t).toHaveBeenCalledWith('CorePartners.instance.createdAt', { date: createdAtMock });
     expect(container).toMatchSnapshot();
+    expect(clientIdElt).toBeInTheDocument();
+    expect(clientSecretElt).toBeInTheDocument();
     expect(CardComponent).toHaveBeenCalledOnce();
     expect(CardComponent).toHaveBeenCalledWith(
       {
+        children: expect.any(Object),
         details: {
           top: {
             className: 'fr-icon-arrow-right-line',

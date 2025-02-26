@@ -2,6 +2,9 @@ import { IsString, IsUUID } from 'class-validator';
 
 export class ConnectNotificationEmailParameters {
   @IsString()
+  readonly person: string;
+
+  @IsString()
   readonly idpTitle: string;
 
   @IsString()

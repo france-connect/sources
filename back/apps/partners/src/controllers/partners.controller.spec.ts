@@ -21,11 +21,26 @@ describe('PartnersController', () => {
   const redirectMock = PartnersFrontRoutes.INDEX;
 
   const userInfoMock = {
+    identity: {
+      email: 'email@email.fr',
+      given_name: 'givenName',
+      usual_name: 'usualName',
+      siret: 'siret',
+      sub: 'identityMock.sub value',
+      id: 'id mock',
+    },
+    accessControl: [],
+  };
+
+  const response = {
     email: 'email@email.fr',
     given_name: 'givenName',
     usual_name: 'usualName',
     siret: 'siret',
     sub: 'identityMock.sub value',
+    accountId: 'id mock',
+    accessControl: [],
+    id: undefined,
   };
 
   beforeEach(async () => {
@@ -93,7 +108,7 @@ describe('PartnersController', () => {
       );
 
       // Then
-      expect(result).toStrictEqual(userInfoMock);
+      expect(result).toStrictEqual(response);
     });
   });
 

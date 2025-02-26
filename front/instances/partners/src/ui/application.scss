@@ -6,7 +6,8 @@
   }
 }
 
-/* stylelint-disable-next-line selector-class-pattern */
+// @NOTE DSFR classname
+// stylelint-disable-next-line selector-class-pattern
 .fc-grey-border--full {
   background-color: var(--background-default-grey);
   background-image: linear-gradient(0deg, var(--border-default-grey), var(--border-default-grey)),

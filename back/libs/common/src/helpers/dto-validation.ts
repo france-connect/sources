@@ -14,6 +14,7 @@ import {
 
 import { Type } from '@nestjs/common';
 
+import { CommonDtoValidationException } from '../exceptions';
 import { InputWithErrorsInterface } from '../interfaces';
 
 /**
@@ -21,16 +22,16 @@ import { InputWithErrorsInterface } from '../interfaces';
  * indépendant de NestJS
  * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/428
  */
-export function getTransformed<T = any>(
-  plain: object,
+export function getTransformed<T>(
+  plain: unknown,
   dto: Type<any>,
   options?: ClassTransformOptions,
 ): T {
-  return plainToInstance(dto, plain, options);
+  return plainToInstance<T, unknown>(dto, plain, options);
 }
 
 export async function validateDto(
-  plain: object,
+  plain: unknown,
   dto: Type<any>,
   validatorOptions: ValidatorOptions,
   transformOptions?: ClassTransformOptions,
@@ -48,6 +49,21 @@ export async function validateDto(
    *    action: renvoyer un objet contenant résultat ou erreurs éventuelles.
    */
   return await validate(object, validatorOptions);
+}
+export async function getValidDto<T extends object>(
+  plain: unknown,
+  dto: Type<T>,
+  validatorOptions: ValidatorOptions,
+  transformOptions?: ClassTransformOptions,
+): Promise<T> {
+  const object = getTransformed<T>(plain, dto, transformOptions);
+
+  const errors = await validate(object, validatorOptions);
+  if (errors.length) {
+    throw new CommonDtoValidationException(errors);
+  }
+
+  return object;
 }
 
 export function validateDtoSync(

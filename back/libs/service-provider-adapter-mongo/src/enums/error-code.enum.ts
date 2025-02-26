@@ -1,0 +1,3 @@
+export enum ErrorCode {
+  VALIDATE_SERVICE_PROVIDER_ADAPTER_MONGO_DTO = 1,
+}

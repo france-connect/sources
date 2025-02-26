@@ -2,7 +2,9 @@
 const spLegacy = {
   fsp1: {
     name: "Service Provider Example",
-    site: "https://fsp1.com",
+    site: [
+      "https://fsp1.com",
+    ],
     redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/login-callback",
       "https://fsp1.docker.dev-franceconnect.fr/data-callback",
@@ -46,7 +48,6 @@ const spLegacy = {
       "cnam_paiements_ij",
     ],
     identityConsent: false,
-    trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
     rep_scope: [],
@@ -54,7 +55,9 @@ const spLegacy = {
 
   fsp2: {
     name: "Virtual Private Service Provider for Scopes",
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp2.docker.dev-franceconnect.fr/login-callback",
       "https://fsp2.docker.dev-franceconnect.fr/data-callback",
@@ -96,7 +99,6 @@ const spLegacy = {
       "cnam_paiements_ij",
     ],
     identityConsent: false,
-    trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
     rep_scope: [
@@ -109,7 +111,9 @@ const spLegacy = {
 
   fsp3: {
     name: "Virtual Private Service Provider for Consent",
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp3.docker.dev-franceconnect.fr/login-callback",
       "https://fsp3.docker.dev-franceconnect.fr/data-callback",
@@ -158,7 +162,6 @@ const spLegacy = {
       "api_fc-liste-paiementsv1",
     ],
     identityConsent: true,
-    trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
     rep_scope: [],
@@ -167,7 +170,9 @@ const spLegacy = {
   "fsp1-legacy": {
     name: "fsp1-legacy",
     eidas: 1,
-    site: "https://fsp1-legacy.docker.dev-franceconnect.fr/login",
+    site: [
+      "https://fsp1-legacy.docker.dev-franceconnect.fr/login",
+    ],
     redirect_uris: [
       "https://fsp1-legacy.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -223,7 +228,6 @@ const spLegacy = {
     idpFilterExclude: true,
     idpFilterList: ["77fe5e8c-364c-440e-909f-5ef4f494e170"],
     identityConsent: false,
-    trustedIdentity: false,
     ssoDisabled: false,
     platform: "CORE_LEGACY",
   },
@@ -231,7 +235,9 @@ const spLegacy = {
   "fsp2-legacy": {
     name: "fsp2-legacy",
     eidas: 1,
-    site: "https://fsp2-legacy.docker.dev-franceconnect.fr/login",
+    site: [
+      "https://fsp2-legacy.docker.dev-franceconnect.fr/login",
+    ],
     redirect_uris: [
       "https://fsp2-legacy.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -291,14 +297,15 @@ const spLegacy = {
       "fip3-low": true,
     },
     identityConsent: true,
-    trustedIdentity: false,
     ssoDisabled: false,
     platform: "CORE_LEGACY",
   },
 
   "FS désactivé": {
     name: "FS désactivé",
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fcp.docker.dev-franceconnect.fr/traces/login-callback",
     ],
@@ -331,7 +338,6 @@ const spLegacy = {
       "phone",
     ],
     identityConsent: false,
-    trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
     rep_scope: [],
@@ -339,7 +345,9 @@ const spLegacy = {
 
   fsStats: {
     name: "FsStats",
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp2.docker.dev-franceconnect.fr/login-callback",
       "https://fsp2.docker.dev-franceconnect.fr/data-callback",
@@ -380,7 +388,6 @@ const spLegacy = {
       "cnam_paiements_ij",
     ],
     identityConsent: false,
-    trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
     production_key:
@@ -390,7 +397,9 @@ const spLegacy = {
   },
 
   MarieDeHem: {
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/login-callback",
       "https://fsp1.docker.dev-franceconnect.fr/data-callback",
@@ -428,7 +437,6 @@ const spLegacy = {
       "dgfip_aft",
     ],
     identityConsent: false,
-    trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
     __v: 0,
@@ -437,7 +445,9 @@ const spLegacy = {
 
   // new service pour tester les scopes
   Test_update_old_service_provider: {
-    site: "https://site.com",
+    site: [
+      "https://site.com",
+    ],
     redirect_uris: [
       "https://fsp1.docker.dev-franceconnect.fr/login-callback",
       "https://fsp1.docker.dev-franceconnect.fr/data-callback",
@@ -460,7 +470,6 @@ const spLegacy = {
     secretCreatedAt: "2019-05-22T14:36:12.494Z",
     credentialsFlow: false,
     identityConsent: false,
-    trustedIdentity: false,
     eidas: 1,
     platform: "CORE_LEGACY",
     __v: 0,

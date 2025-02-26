@@ -17,6 +17,7 @@ describe('buildValidator', () => {
 
     // Then
     expect(result).toBeInstanceOf(Function);
+    expect(result(expect.any(String))).toBeInstanceOf(Function);
   });
 
   describe('when calling the built validate function', () => {
@@ -27,22 +28,8 @@ describe('buildValidator', () => {
         name: expect.any(String),
         validationArgs: expect.any(Array),
       });
-      const fieldValue = '     ' as unknown as string;
-      const result = validator(fieldValue);
-
-      // Then
-      expect(result).toBeUndefined();
-    });
-
-    it('should return undefined when the field value is an epty array and allowEmpty is true', () => {
-      // When
-      const validator = buildValidator({
-        errorLabel: expect.any(String),
-        name: expect.any(String),
-        validationArgs: expect.any(Array),
-      });
-      const fieldValue = [] as unknown as string[];
-      const result = validator(fieldValue);
+      const fieldValue = '     ';
+      const result = validator(expect.any(String))(fieldValue);
 
       // Then
       expect(result).toBeUndefined();
@@ -56,7 +43,7 @@ describe('buildValidator', () => {
         validationArgs: expect.any(Array),
       });
       const fieldValue = 0 as unknown as string;
-      const result = validator(fieldValue);
+      const result = validator(expect.any(String))(fieldValue);
 
       // Then
       expect(result).toBeUndefined();
@@ -70,7 +57,7 @@ describe('buildValidator', () => {
         validationArgs: expect.any(Array),
       });
       const fieldValue = null as unknown as string;
-      const result = validator(fieldValue);
+      const result = validator(expect.any(String))(fieldValue);
 
       // Then
       expect(result).toBeUndefined();
@@ -84,7 +71,7 @@ describe('buildValidator', () => {
         validationArgs: expect.any(Array),
       });
       const fieldValue = undefined as unknown as string;
-      const result = validator(fieldValue);
+      const result = validator(expect.any(String))(fieldValue);
 
       // Then
       expect(result).toBeUndefined();
@@ -95,7 +82,7 @@ describe('buildValidator', () => {
       const validValueMock = true;
       const anyValidatorMock = jest.fn(() => validValueMock);
 
-      const valueMock = Symbol('valueMock') as unknown as string;
+      const valueMock = 'any-value-mock';
       const validationArgsMock1 = Symbol('validationArgsMock1') as unknown as string;
       const validationArgsMock2 = Symbol('validationArgsMock2') as unknown as string;
 
@@ -107,7 +94,7 @@ describe('buildValidator', () => {
         name: 'anyValidatorMock',
         validationArgs: [validationArgsMock1, validationArgsMock2],
       });
-      const result = validator(valueMock);
+      const result = validator(expect.any(String))(valueMock);
 
       // Then
       expect(get).toHaveBeenCalledWith(Validators, 'anyValidatorMock');
@@ -124,9 +111,8 @@ describe('buildValidator', () => {
     it('should call "matches" validator with the match regex', () => {
       // Given
       const validValueMock = true;
+      const valueMock = 'any-value-mock';
       const anyValidatorMock = jest.fn(() => validValueMock);
-
-      const valueMock = Symbol('valueMock') as unknown as string;
 
       jest.mocked(get).mockReturnValueOnce(anyValidatorMock);
 
@@ -136,7 +122,7 @@ describe('buildValidator', () => {
         name: 'matches',
         validationArgs: ['(an-regex-mock)'],
       });
-      validator(valueMock);
+      validator(expect.any(String))(valueMock);
 
       // Then
       expect(get).toHaveBeenCalledWith(Validators, 'matches');
@@ -147,9 +133,8 @@ describe('buildValidator', () => {
     it('should call the defined validator and return an error when value is not valid', () => {
       // Given
       const validValueMock = false;
+      const valueMock = 'any-value-mock';
       const anyValidatorMock = jest.fn(() => validValueMock);
-
-      const valueMock = Symbol('valueMock') as unknown as string;
       const errorMessageMock = Symbol('errorMessageMock') as unknown as string;
 
       jest.mocked(get).mockReturnValueOnce(anyValidatorMock);
@@ -159,7 +144,7 @@ describe('buildValidator', () => {
         errorLabel: errorMessageMock,
         name: 'anyValidatorMock',
       });
-      const result = validator(valueMock);
+      const result = validator(errorMessageMock)(valueMock);
 
       // Then
       expect(get).toHaveBeenCalledWith(Validators, 'anyValidatorMock');

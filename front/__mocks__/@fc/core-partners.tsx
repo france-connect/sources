@@ -4,13 +4,22 @@ export const InstanceComponent = jest.fn(() => <div data-mockid="InstanceCompone
 
 export const InstancesListComponent = jest.fn(() => <div data-mockid="InstancesListComponent" />);
 
-export const InstancesService = {
-  create: jest.fn(),
-  loadAll: jest.fn(),
-  read: jest.fn(),
-  update: jest.fn(),
+export const PartnersService = {
+  get: jest.fn(),
+  commit: jest.fn(),
 };
 
-export const VersionsService = {
-  loadSchema: jest.fn(),
-};
+export enum Environment {
+  SANDBOX = 'SANDBOX',
+  PRODUCTION = 'PRODUCTION',
+}
+
+export enum Options {
+  CONFIG_NAME = 'Partners',
+}
+
+export enum PublicationStatus {
+  DRAFT = 'DRAFT',
+  PENDING = 'PENDING',
+  PUBLISHED = 'PUBLISHED',
+}

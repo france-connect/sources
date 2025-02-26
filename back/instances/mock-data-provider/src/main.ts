@@ -1,3 +1,5 @@
+import '@fc/common/overrides/json.parse.override';
+
 import { urlencoded } from 'express';
 import helmet from 'helmet';
 

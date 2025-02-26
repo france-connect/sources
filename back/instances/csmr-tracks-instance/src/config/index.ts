@@ -4,7 +4,6 @@ import AccountHighBroker from './account-high-broker';
 import AccountLegacyBroker from './account-legacy-broker';
 import App from './app';
 import Elasticsearch from './elasticsearch';
-import GeoipMaxmind from './geoip-maxmind';
 import Logger from './logger';
 import IdpMappings from './mappings';
 import ScopesFcLegacy from './scopes-fc-legacy';
@@ -22,6 +21,5 @@ export default {
   ScopesFcLegacy,
   ScopesFcpHigh,
   ScopesFcpLow,
-  GeoipMaxmind,
   IdpMappings,
 } as CsmrTracksConfig;

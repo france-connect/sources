@@ -1,6 +1,8 @@
 import { PartnersConfig } from '@fc/partners';
 
 import App from './app';
+import ConfigSandboxLowMicroService from './config-sandbox-low-microservice';
+import DefaultServiceProviderLowValue from './default-service-provider-low-value';
 import Exceptions from './exceptions';
 import I18n from './i18n';
 import IdentityProviderAdapterEnv from './identity-provider-adapter-env';
@@ -22,4 +24,6 @@ export default {
   Redis,
   Session,
   I18n,
+  ConfigSandboxLowMicroService,
+  DefaultServiceProviderLowValue,
 } as PartnersConfig;

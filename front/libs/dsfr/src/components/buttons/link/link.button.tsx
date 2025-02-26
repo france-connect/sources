@@ -3,10 +3,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { IconPlacement, Priorities, Sizes } from '../../../enums';
-import type { ButtonInterface } from '../../../interfaces/button.interface';
+import type { ButtonInterface } from '../../../interfaces';
 
 export interface LinkButtonProps extends ButtonInterface {
-  title?: string | undefined;
   link: string;
 }
 

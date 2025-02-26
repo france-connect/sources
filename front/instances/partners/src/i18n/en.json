@@ -1,5 +1,7 @@
 {
   "Partners.button.createInstance": "Add a test instance",
+  "Partners.createpage.title": "Create a new instance",
+  "Partners.updatepage.title": "Update an instance",
   "Partners.homepage.sandboxTitle": "My Sandbox",
   "Partners.homepage.createTileDescription": "Use your datapass number to perform tests with a sandbox provided for you.",
   "Partners.homepage.createTileTitle": "Create a test instance",

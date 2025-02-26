@@ -5,6 +5,7 @@ import { ExceptionsConfig } from '@fc/exceptions/dto';
 import { I18nConfig } from '@fc/i18n';
 import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-env';
 import { LoggerConfig } from '@fc/logger';
+import { MicroservicesRmqConfig } from '@fc/microservices-rmq';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { PostgresConfig } from '@fc/postgres';
@@ -12,6 +13,7 @@ import { RedisConfig } from '@fc/redis';
 import { SessionConfig } from '@fc/session';
 
 import { AppConfig } from './app-config.dto';
+import { DefaultServiceProviderLowValueConfig } from './default-service-provider-value.dto';
 
 export class PartnersConfig {
   @IsObject()
@@ -63,4 +65,14 @@ export class PartnersConfig {
   @ValidateNested()
   @Type(() => IdentityProviderAdapterEnvConfig)
   readonly IdentityProviderAdapterEnv: IdentityProviderAdapterEnvConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => MicroservicesRmqConfig)
+  readonly ConfigSandboxLowMicroService: MicroservicesRmqConfig;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => DefaultServiceProviderLowValueConfig)
+  readonly DefaultServiceProviderLowValue: DefaultServiceProviderLowValueConfig;
 }

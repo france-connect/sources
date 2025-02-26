@@ -10,7 +10,9 @@ export const LinkComponent = jest.fn(({ label }) => (
   <span data-mockid="LinkComponent">{label}</span>
 ));
 
-export const CardComponent = jest.fn(() => <div>CardComponent</div>);
+export const CardComponent = jest.fn(({ children }) => (
+  <div data-mockid="CardComponent">{children}</div>
+));
 
 export const TileComponent = jest.fn(() => <div>TileComponent</div>);
 

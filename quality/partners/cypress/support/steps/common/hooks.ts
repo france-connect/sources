@@ -22,6 +22,7 @@ Before(function () {
   const testEnv: string = Cypress.env('TEST_ENV');
   const pathArray = [platform, testEnv];
   setFixtureContext('environment.json', pathArray, 'env');
+  setFixtureContext('api-common.json', pathArray, 'apiRequests');
   setFixtureContext('users.json', pathArray, 'users');
   setFixtureContext('instances.json', pathArray, 'instances');
 
@@ -30,4 +31,28 @@ Before(function () {
   });
 
   cy.intercept('GET', '/api/me').as('api:me');
+});
+
+Before({ tags: '@ignoreDocker' }, function () {
+  if (Cypress.env('TEST_ENV') === 'docker') {
+    this.skip();
+  }
+});
+
+Before({ tags: '@ignoreInteg01' }, function () {
+  if (Cypress.env('TEST_ENV') === 'integ01') {
+    this.skip();
+  }
+});
+
+Before({ tags: '@ignoreRecette' }, function () {
+  if (Cypress.env('TEST_ENV') === 'recette') {
+    this.skip();
+  }
+});
+
+Before({ tags: '@ignoreCI' }, function () {
+  if (Cypress.env('CI')) {
+    this.skip();
+  }
 });

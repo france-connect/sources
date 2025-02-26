@@ -97,6 +97,7 @@ describe('SessionCommitInterceptor', () => {
 
     beforeEach(() => {
       interceptor['getCleanedUpRoutes'] = jest.fn().mockReturnValue(routes);
+      interceptor['shouldCommitSession'] = jest.fn().mockReturnValue(true);
       configServiceMock.get
         .mockReturnValueOnce({
           urlPrefix: '/prefix',
@@ -119,6 +120,7 @@ describe('SessionCommitInterceptor', () => {
       interceptor['getCleanedUpRoutes'] = jest
         .fn()
         .mockReturnValueOnce(['/not/that/route']);
+      interceptor['shouldCommitSession'] = jest.fn().mockReturnValue(false);
 
       // When
       await interceptor['commit'](reqMock as unknown as Request);
@@ -152,6 +154,68 @@ describe('SessionCommitInterceptor', () => {
 
       // Then
       expect(result).toEqual(['/some/route', '/some/other/route']);
+    });
+  });
+
+  describe('shouldCommitSession', () => {
+    it('should return true if "*" is included in allowedRoutes', () => {
+      const allowedRoutes = ['*', '/route1', '/route2'];
+      const currentRoute = '/not-in-list';
+
+      const result = interceptor['shouldCommitSession'](
+        allowedRoutes,
+        currentRoute,
+      );
+
+      expect(result).toBe(true);
+    });
+
+    it('should return true if currentRoute is included in allowedRoutes', () => {
+      const allowedRoutes = ['/route1', '/route2'];
+      const currentRoute = '/route1';
+
+      const result = interceptor['shouldCommitSession'](
+        allowedRoutes,
+        currentRoute,
+      );
+
+      expect(result).toBe(true);
+    });
+
+    it('should return false if neither "*" nor currentRoute is included in allowedRoutes', () => {
+      const allowedRoutes = ['/route1', '/route2'];
+      const currentRoute = '/not-in-list';
+
+      const result = interceptor['shouldCommitSession'](
+        allowedRoutes,
+        currentRoute,
+      );
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false if allowedRoutes is an empty array', () => {
+      const allowedRoutes: string[] = [];
+      const currentRoute = '/any-route';
+
+      const result = interceptor['shouldCommitSession'](
+        allowedRoutes,
+        currentRoute,
+      );
+
+      expect(result).toBe(false);
+    });
+
+    it('should return false if allowedRoutes contains similar routes but not the exact match', () => {
+      const allowedRoutes = ['/route1', '/route2/sub'];
+      const currentRoute = '/route2';
+
+      const result = interceptor['shouldCommitSession'](
+        allowedRoutes,
+        currentRoute,
+      );
+
+      expect(result).toBe(false);
     });
   });
 });

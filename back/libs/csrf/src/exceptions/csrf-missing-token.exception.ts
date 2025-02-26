@@ -1,3 +1,5 @@
+import { HttpStatus } from '@nestjs/common';
+
 import { ErrorCode } from '../enums';
 import { CsrfBaseException } from './csrf-base.exception';
 
@@ -9,4 +11,5 @@ export class CsrfMissingTokenException extends CsrfBaseException {
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
   static UI = 'Csrf.exceptions.csrfMissingToken';
+  static HTTP_STATUS_CODE = HttpStatus.BAD_REQUEST;
 }

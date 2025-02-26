@@ -6,11 +6,11 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
-import { InstancesService, VersionsService } from '@fc/core-partners';
 import { ApplicationLayout } from '@fc/layout';
 import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/routing';
 
 import { RouteLoaderDataIds } from '../enums';
+import { InstancesService, VersionsService } from '../services';
 import { PageLayout } from './layouts';
 import {
   HomePage,

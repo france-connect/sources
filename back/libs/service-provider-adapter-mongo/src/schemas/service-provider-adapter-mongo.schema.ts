@@ -16,6 +16,15 @@ export class ServiceProvider extends Document {
   @Prop({ type: String, index: true })
   entityId: string;
 
+  @Prop({ type: Number })
+  eidas: number;
+
+  @Prop({ type: String })
+  title: string;
+
+  @Prop({ type: [String] })
+  claims: string[];
+
   @Prop({ type: String })
   client_secret: string;
 
@@ -24,6 +33,9 @@ export class ServiceProvider extends Document {
 
   @Prop({ type: [String] })
   redirect_uris: string[];
+
+  @Prop({ type: [String] })
+  post_logout_redirect_uris: string[];
 
   @Prop({ type: String })
   id_token_signed_response_alg: string;
@@ -52,6 +64,9 @@ export class ServiceProvider extends Document {
   @Prop({ type: [String] })
   idpFilterList: string[];
 
+  @Prop({ type: [String] })
+  IPServerAddressesAndRanges: string[];
+
   @Prop({ type: String })
   type: string;
 
@@ -66,6 +81,15 @@ export class ServiceProvider extends Document {
 
   @Prop({ type: [String] })
   rep_scope: string[];
+
+  @Prop({ type: [String] })
+  site: string[];
+
+  @Prop({ type: String })
+  signup_id: string;
+
+  @Prop({ type: String })
+  email: string;
 }
 
 export const ServiceProviderSchema =

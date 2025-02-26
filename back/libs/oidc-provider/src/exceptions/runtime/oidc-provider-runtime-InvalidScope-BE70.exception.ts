@@ -8,9 +8,9 @@ export class OidcProviderRuntime_InvalidScope_BE70_Exception extends OidcProvide
   static CODE = 'BE70';
   static ERROR_CLASS = 'InvalidScope';
   static ERROR_DETAIL =
-    'refresh token missing requested ${formatters.pluralize(scope, missing.length)}, missing.join( )';
+    '"refresh token missing requested ${formatters.pluralize("scope", missing.length)}", missing.join(" ")';
   static DOCUMENTATION =
-    'refresh token missing requested ${formatters.pluralize(scope, missing.length)}, missing.join( )';
+    '"refresh token missing requested ${formatters.pluralize("scope", missing.length)}", missing.join(" ")';
   static ERROR_SOURCE = 'actions/grants/refresh_token.js:82';
   static UI = 'OidcProvider.exceptions.InvalidScope.BE70';
 }

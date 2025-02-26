@@ -1,3 +1,5 @@
+import '@fc/common/overrides/json.parse.override';
+
 import * as CookieParser from 'cookie-parser';
 import { urlencoded } from 'express';
 import helmet from 'helmet';
@@ -95,7 +97,13 @@ async function bootstrap() {
    * Desactivate extended "qs" parser to prevent prototype pollution hazard.
    * @see body-parser.md in the project doc folder for further informations.
    */
-  app.use(urlencoded({ extended: false }));
+  /**
+   * @TODO FC-2083
+   * temporary modification to achieve US-FC-1985
+   * Defining a better architecture to accept JSON is currently in progress
+   * in order to redefine "extended: false".
+   */
+  app.use(urlencoded({ extended: true }));
 
   const { cookieSecrets } = configService.get<SessionConfig>('Session');
   app.use(CookieParser(cookieSecrets));

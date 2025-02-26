@@ -3,6 +3,7 @@ import {
   IsArray,
   IsBoolean,
   IsEmail,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -32,6 +33,11 @@ class IdpConfigSettings implements IdpConfig {
 export class IdpConfigUpdateEmailParameters {
   @IsEmail()
   readonly email: string;
+
+  // @TODO remove optional once UD person has been implemented to the email
+  @IsOptional()
+  @IsString()
+  readonly person: string;
 
   @IsArray()
   @ValidateNested({ each: true })

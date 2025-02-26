@@ -142,7 +142,7 @@ Fonctionnalité: Validation Visuelle - User Dashboard
 
     Exemples:
       | device           |
-      | tablet portrait  |
+      # | tablet portrait  | Deactivated because of diff issues between CI and local stack
       | tablet landscape |
       | desktop          |
 

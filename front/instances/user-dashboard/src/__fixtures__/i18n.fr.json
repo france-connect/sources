@@ -17,6 +17,9 @@
   "Form.select.placeholder": "Sélectionner une option",
   "Form.textarea.maxlength": " / {maxLength} caractères",
   "Form.FORM_ERROR": "Une erreur s'est produite lors de la soumission du formulaire.",
+  "Form.button.copy": "Copier",
+  "Form.multiple.add": "Ajouter une valeur",
+  "Form.multiple.remove": "Supprimer cette valeur",
   "TracksPage.previousPage": "Page précédente",
   "TracksPage.nextPage": "Page suivante"
 }

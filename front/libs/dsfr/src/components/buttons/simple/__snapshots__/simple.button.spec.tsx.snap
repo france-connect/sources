@@ -11,6 +11,15 @@ exports[`SimpleButton should match the snapshot 1`] = `
 </div>
 `;
 
+exports[`SimpleButton should match the snapshot, when label is hidden 1`] = `
+<div>
+  <button
+    class="fr-btn fr-btn--md fr-icon-any-icon-mock"
+    type="button"
+  />
+</div>
+`;
+
 exports[`SimpleButton should match the snapshot, when size is defined to Sizes.LARGE 1`] = `
 <div>
   <button

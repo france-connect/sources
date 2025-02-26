@@ -6,13 +6,13 @@ import { ClientProxy } from '@nestjs/microservices';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { CryptoProtocol } from '@fc/microservices';
+import { OverrideCode } from '@fc/override-code';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
 import {
   CryptographyGatewayException,
   CryptographyInvalidPayloadFormatException,
 } from '../exceptions';
-import { OverrideCode } from '../helpers';
 
 @Injectable()
 export class CryptoOverrideService {

@@ -8,9 +8,9 @@ export class OidcProviderRuntime_InvalidRequestObject_3D7C_Exception extends Oid
   static CODE = '3D7C';
   static ERROR_CLASS = 'InvalidRequestObject';
   static ERROR_DETAIL =
-    'Request Object is not a valid ${parts.length === 5 ? JWE : JWT}';
+    'Request Object is not a valid ${parts.length === 5 ? "JWE" : "JWT"}';
   static DOCUMENTATION =
-    'Request Object is not a valid ${parts.length === 5 ? JWE : JWT}';
+    'Request Object is not a valid ${parts.length === 5 ? "JWE" : "JWT"}';
   static ERROR_SOURCE = 'actions/authorization/check_client.js:64';
   static UI = 'OidcProvider.exceptions.InvalidRequestObject.3D7C';
 }

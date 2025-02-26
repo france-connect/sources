@@ -1,7 +1,9 @@
+import finalFormArrays from 'final-form-arrays';
 import type { PropsWithChildren } from 'react';
+import type { FormRenderProps } from 'react-final-form';
 import { Form } from 'react-final-form';
 
-import type { FormPropsInterface } from '../../interfaces';
+import type { FormInterface } from '../../interfaces';
 import { FormWrapperComponent } from './form-wrapper/form-wrapper.component';
 
 export function FormComponent<T = unknown>({
@@ -13,17 +15,18 @@ export function FormComponent<T = unknown>({
   onSubmit,
   onValidate,
   scrollTopOnSubmit = true,
-}: FormPropsInterface<T> & PropsWithChildren) {
+}: FormInterface<T> & PropsWithChildren) {
   return (
     <Form<T>
       config={config}
       decorators={decorators}
       initialValues={initialValues}
+      mutators={{ ...finalFormArrays }}
       noRequired={noRequired}
       scrollTopOnSubmit={scrollTopOnSubmit}
       validate={onValidate}
       onSubmit={onSubmit}>
-      {(props) =>
+      {(props: FormRenderProps<T>) =>
         FormWrapperComponent({ ...props, children, config, noRequired, scrollTopOnSubmit })
       }
     </Form>

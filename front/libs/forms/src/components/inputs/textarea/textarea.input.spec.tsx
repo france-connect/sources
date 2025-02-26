@@ -89,6 +89,7 @@ describe('TextAreaInput', () => {
     expect(MessageElement).toHaveBeenCalledOnce();
     expect(MessageElement).toHaveBeenCalledWith(
       {
+        dataTestId: 'any-name-mock-messages',
         error: undefined,
         id: 'any-name-mock',
         isValid: true,
@@ -196,6 +197,7 @@ describe('TextAreaInput', () => {
     expect(MessageElement).toHaveBeenCalledOnce();
     expect(MessageElement).toHaveBeenCalledWith(
       {
+        dataTestId: 'any-name-mock-messages',
         error: 'any-error-message-mock',
         id: 'any-name-mock',
         isValid: false,

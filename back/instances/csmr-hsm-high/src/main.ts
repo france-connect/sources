@@ -1,3 +1,5 @@
+import '@fc/common/overrides/json.parse.override';
+
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 

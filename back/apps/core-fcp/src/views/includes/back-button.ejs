@@ -6,9 +6,7 @@ const label = hasParams
   ? locals.spName
   : $session('OidcClient.spName');
 
-const urlBase = hasParams
-  ? locals.params.redirect_uri
-  : '/api/v2/redirect-to-sp-with-error';
+const urlBase = '/api/v2/redirect-to-sp-with-error';
 
 
 let error = 'access_denied';

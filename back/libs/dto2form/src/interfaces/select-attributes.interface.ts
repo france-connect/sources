@@ -8,11 +8,10 @@ export interface SelectAttributesOption {
   value: string;
 }
 
-export interface SelectAttributes extends FieldAttributes {
-  type: 'select';
+export interface SelectAttributesArguments extends FieldAttributesArguments {
   options: SelectAttributesOption[];
 }
 
-export interface SelectAttributesArguments extends FieldAttributesArguments {
+export interface SelectAttributes extends FieldAttributes {
   options: SelectAttributesOption[];
 }

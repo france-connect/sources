@@ -1,5 +1,7 @@
 {
   "Partners.button.createInstance": "Ajouter une instance de test",
+  "Partners.createpage.title": "Création d'une instance",
+  "Partners.updatepage.title": "Modification d'une instance",
   "Partners.homepage.sandboxTitle": "Mon Bac à Sable",
   "Partners.homepage.createTileDescription": "Munissez vous de votre numéro de datapass pour réaliser les tests avec un bac à sable mis à votre disposition.",
   "Partners.homepage.createTileTitle": "Créer une instance de test",

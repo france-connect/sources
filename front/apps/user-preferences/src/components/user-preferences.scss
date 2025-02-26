@@ -1,4 +1,6 @@
 #user-preferences-form-component {
+  // @NOTE DSFR classname
+  // stylelint-disable-next-line selector-class-pattern
   .fr-toggle input[type='checkbox']:not(:disabled) {
     background-color: #ce0500;
     background-color: var(--background-action-high-error);

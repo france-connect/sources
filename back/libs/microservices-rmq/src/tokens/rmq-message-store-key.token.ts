@@ -1,0 +1,1 @@
+export const RMQ_MESSAGE_STORE_KEY = Symbol('RMQ_MESSAGE_STORE_KEY');

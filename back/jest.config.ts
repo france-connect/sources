@@ -9,7 +9,7 @@ const config: Config = {
     'instances/.+/src/main.ts',
     '.mocks/',
     '.+/index.ts',
-    '.+.(config|descriptor|dto|enum|fixture|i18n|interface|module|plugin|schema|type|token).ts',
+    '.+.(config|descriptor|dto|enum|fixture|i18n|interface|module|override|plugin|provider|schema|type|token).ts',
   ],
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: '.',
@@ -118,7 +118,6 @@ const config: Config = {
       '<rootDir>/libs/hybridge-http-proxy/src$1',
     '^@fc/user-preferences(|/.*)$': '<rootDir>/libs/user-preferences/src$1',
     '^@fc/csmr-tracks(|/.*)$': '<rootDir>/apps/csmr-tracks/src/$1',
-    '^@fc/geoip-maxmind(|/.*)$': '<rootDir>/libs/geoip-maxmind/src$1',
     '^@fc/csmr-account(|/.*)$': '<rootDir>/apps/csmr-account/src/$1',
     '^@fc/csmr-fraud(|/.*)$': '<rootDir>/apps/csmr-fraud/src/$1',
     '^@fc/mock-rnipp(|/.*)$': '<rootDir>/apps/mock-rnipp/src/$1',
@@ -162,6 +161,23 @@ const config: Config = {
     '^@fc/partners-service-provider-instance-version(|/.*)$':
       '<rootDir>/libs/partners-service-provider-instance-version/src/$1',
     '^@fc/access-control(|/.*)$': '<rootDir>/libs/access-control/src/$1',
+    '^@fc/microservices-rmq(|/.*)$': '<rootDir>/libs/microservices-rmq/src/$1',
+    '^@mocks/microservices-rmq(|/.*)$':
+      '<rootDir>/libs/microservices-rmq/.mocks/$1',
+    '^@fc/csmr-config-client(|/.*)$':
+      '<rootDir>/libs/csmr-config-client/src/$1',
+    '^@fc/config-mongo-adapter(|/.*)$':
+      '<rootDir>/libs/config-mongo-adapter/src/$1',
+    '^@fc/config-postgres-adapter(|/.*)$':
+      '<rootDir>/libs/config-postgres-adapter/src/$1',
+    '^@fc/csmr-config(|/.*)$': '<rootDir>/apps/csmr-config/src/$1',
+    '^@fc/csmr-config-sandbox-low(|/.*)$':
+      '<rootDir>/apps/csmr-config-sandbox-low/src/$1',
+    '^@fc/csmr-config-partners(|/.*)$':
+      '<rootDir>/apps/csmr-config-partners/src/$1',
+    '^@fc/service-partners(|/.*)$': '<rootDir>/apps/service-partners/src/$1',
+    '^@fc/service-provider(|/.*)$': '<rootDir>/libs/service-provider/src/$1',
+    '^@fc/override-code(|/.*)$': '<rootDir>/libs/override-code/src/$1',
   },
   preset: 'ts-jest',
 };

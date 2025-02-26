@@ -7,8 +7,8 @@ import { OidcProviderBaseRuntimeException } from '../oidc-provider-base-runtime.
 export class OidcProviderRuntime_TypeError_7761_Exception extends OidcProviderBaseRuntimeException {
   static CODE = '7761';
   static ERROR_CLASS = 'TypeError';
-  static ERROR_DETAIL = 'invalid result argument';
-  static DOCUMENTATION = 'invalid result argument';
+  static ERROR_DETAIL = 'invalid "result" argument';
+  static DOCUMENTATION = 'invalid "result" argument';
   static ERROR_SOURCE = 'provider.js:331';
   static UI = 'OidcProvider.exceptions.TypeError.7761';
 }

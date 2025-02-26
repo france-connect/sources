@@ -1,9 +1,10 @@
-import type { AxiosError, AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
+import { HttpStatusCode } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { HttpStatusCode } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import type { AxiosException } from '@fc/http-client';
 import { get, post } from '@fc/http-client';
 
 import { Options } from '../../enums';
@@ -22,7 +23,7 @@ export const useUserPreferencesApi = () => {
     endpoints: { userPreferences: userPreferencesEndpoint },
   } = ConfigService.get<UserPreferencesConfig>(Options.CONFIG_NAME);
 
-  const [submitErrors, setSubmitErrors] = useState<AxiosError | Error | undefined>(undefined);
+  const [submitErrors, setSubmitErrors] = useState<AxiosException | Error | undefined>(undefined);
   const [submitWithSuccess, setSubmitWithSuccess] = useState(false);
   const [formValues, setFormValues] = useState<FormValuesInterface | undefined>(undefined);
   const [userPreferences, setUserPreferences] = useState<UserPreferencesDataInterface | undefined>(
@@ -40,20 +41,21 @@ export const useUserPreferencesApi = () => {
     };
   }, []);
 
-  const fetchErrorHandler = useCallback(
+  const commitErrorHandler = useCallback(
     (err: unknown) => {
-      const { response } = err as AxiosError;
-      if (response?.status === HttpStatusCode.CONFLICT) {
+      const error = err as AxiosException;
+      const isConflictError = error?.status === HttpStatusCode.Conflict;
+      if (isConflictError) {
         navigate('/error/409', { replace: true });
       } else {
-        setSubmitErrors(err as AxiosError | Error);
+        setSubmitErrors(error);
         setSubmitWithSuccess(false);
       }
     },
     [navigate],
   );
 
-  const fetchSuccessHandler = useCallback(
+  const commitSuccessHandler = useCallback(
     ({ data }: AxiosResponse<UserPreferencesDataInterface>) => {
       const { allowFutureIdp, idpList } = UserPreferencesService.parseFormData(data);
       setFormValues({ allowFutureIdp, idpList });
@@ -72,21 +74,30 @@ export const useUserPreferencesApi = () => {
       const data = UserPreferencesService.encodeFormData({ allowFutureIdp, idpList });
 
       return post<UserPreferencesDataInterface>(userPreferencesEndpoint, data, axiosOptions)
-        .then(fetchSuccessHandler)
-        .catch(fetchErrorHandler);
+        .then(commitSuccessHandler)
+        .catch(commitErrorHandler);
     },
-    [fetchSuccessHandler, fetchErrorHandler, userPreferencesEndpoint],
+    [commitSuccessHandler, commitErrorHandler, userPreferencesEndpoint],
+  );
+
+  const fetchErrorHandler = useCallback(() => {
+    navigate('/', { replace: true });
+  }, [navigate]);
+
+  const fetchSuccessHandler = useCallback(
+    (response: AxiosResponse<UserPreferencesDataInterface>) => {
+      setUserPreferences(response.data);
+      const values = UserPreferencesService.parseFormData(response.data);
+      setFormValues(values);
+    },
+    [],
   );
 
   const fetchUserPreferences = useCallback(async () => {
-    // @TODO add try/catch
-    // to throw an error if the api.get is rejected
-    const response = await get<UserPreferencesDataInterface>(userPreferencesEndpoint);
-    setUserPreferences(response.data);
-
-    const values = UserPreferencesService.parseFormData(response.data);
-    setFormValues(values);
-  }, [userPreferencesEndpoint]);
+    get<UserPreferencesDataInterface>(userPreferencesEndpoint)
+      .then(fetchSuccessHandler)
+      .catch(fetchErrorHandler);
+  }, [fetchSuccessHandler, fetchErrorHandler, userPreferencesEndpoint]);
 
   useEffect(() => {
     fetchUserPreferences();

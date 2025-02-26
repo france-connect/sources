@@ -915,15 +915,6 @@
         "tsConfigPath": "instances/csmr-tracks-instance/tsconfig.app.json"
       }
     },
-    "geoip-maxmind": {
-      "type": "library",
-      "root": "libs/geoip-maxmind",
-      "entryFile": "index",
-      "sourceRoot": "libs/geoip-maxmind/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/geoip-maxmind/tsconfig.lib.json"
-      }
-    },
     "csmr-account": {
       "type": "library",
       "root": "apps/csmr-account",
@@ -1160,6 +1151,87 @@
       "sourceRoot": "libs/access-control/src",
       "compilerOptions": {
         "tsConfigPath": "libs/access-control/tsconfig.lib.json"
+      }
+    },
+    "microservices-rmq": {
+      "type": "library",
+      "root": "libs/microservices-rmq",
+      "entryFile": "index",
+      "sourceRoot": "libs/microservices-rmq/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/microservices-rmq/tsconfig.lib.json"
+      }
+    },
+    "csmr-config-client": {
+      "type": "library",
+      "root": "libs/csmr-config-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/csmr-config-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csmr-config-client/tsconfig.lib.json"
+      }
+    },
+    "config-mongo-adapter": {
+      "type": "library",
+      "root": "libs/config-mongo-adapter",
+      "entryFile": "index",
+      "sourceRoot": "libs/config-mongo-adapter/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config-mongo-adapter/tsconfig.lib.json"
+      }
+    },
+    "config-postgres-adapter": {
+      "type": "library",
+      "root": "libs/config-postgres-adapter",
+      "entryFile": "index",
+      "sourceRoot": "libs/config-postgres-adapter/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config-postgres-adapter/tsconfig.lib.json"
+      }
+    },
+    "csmr-config": {
+      "type": "library",
+      "root": "apps/csmr-config",
+      "entryFile": "index",
+      "sourceRoot": "apps/csmr-config/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/csmr-config/tsconfig.lib.json"
+      }
+    },
+    "csmr-config-sandbox-low": {
+      "type": "application",
+      "root": "instances/csmr-config-sandbox-low",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-config-sandbox-low/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-config-sandbox-low/tsconfig.app.json"
+      }
+    },
+    "csmr-config-partners": {
+      "type": "application",
+      "root": "instances/csmr-config-partners",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-config-partners/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-config-partners/tsconfig.app.json"
+      }
+    },
+    "service-provider": {
+      "type": "library",
+      "root": "libs/service-provider",
+      "entryFile": "index",
+      "sourceRoot": "libs/service-provider/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/service-provider/tsconfig.lib.json"
+      }
+    },
+    "override-code": {
+      "type": "library",
+      "root": "libs/override-code",
+      "entryFile": "index",
+      "sourceRoot": "libs/override-code/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/override-code/tsconfig.lib.json"
       }
     }
   }

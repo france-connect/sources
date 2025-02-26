@@ -8,9 +8,9 @@ export class OidcProviderRuntime_TypeError_6640_Exception extends OidcProviderBa
   static CODE = '6640';
   static ERROR_CLASS = 'TypeError';
   static ERROR_DETAIL =
-    'profile must be ${formatters.formatList([...fapiProfiles], { type: disjunction })}';
+    '"profile" must be ${formatters.formatList([...fapiProfiles], { type: "disjunction" })}';
   static DOCUMENTATION =
-    'profile must be ${formatters.formatList([...fapiProfiles], { type: disjunction })}';
+    '"profile" must be ${formatters.formatList([...fapiProfiles], { type: "disjunction" })}';
   static ERROR_SOURCE = 'helpers/configuration.js:436';
   static UI = 'OidcProvider.exceptions.TypeError.6640';
 }

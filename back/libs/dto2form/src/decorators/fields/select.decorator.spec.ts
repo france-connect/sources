@@ -23,6 +23,9 @@ describe('Select', () => {
     jest
       .spyOn(FormDecoratorHelper, 'generateFieldMissingAttributes')
       .mockReturnValue(attributesMock);
+    jest
+      .spyOn(FormDecoratorHelper, 'handleRequiredField')
+      .mockReturnValue(attributesMock);
   });
 
   it('should retrieve metadata for the given class', () => {
@@ -47,6 +50,17 @@ describe('Select', () => {
     expect(
       FormDecoratorHelper.generateFieldMissingAttributes,
     ).toHaveBeenCalledExactlyOnceWith(keyMock, attributesMock, 0, 'select');
+  });
+
+  it('should call handleRequiredField', () => {
+    // When
+    Select(attributesMock)(targetMock, keyMock);
+
+    // Then
+    expect(FormDecoratorHelper.handleRequiredField).toHaveBeenCalledOnce();
+    expect(
+      FormDecoratorHelper.handleRequiredField,
+    ).toHaveBeenCalledExactlyOnceWith(attributesMock);
   });
 
   it('should define metadata with the return of generateFieldMissingAttributes for the given class', () => {

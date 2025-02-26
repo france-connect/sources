@@ -4,4 +4,5 @@ export enum Fields {
   TEXTAREA = 'textarea',
   CHECKBOX = 'checkbox',
   RADIO = 'radio',
+  SECTION = 'section',
 }

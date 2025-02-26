@@ -10,6 +10,16 @@ import { CustomValidationOptionsBase } from '../interfaces';
 export class ValidatorCustomService {
   constructor(private readonly config: ConfigService) {}
 
+  isFilled(value: unknown): boolean {
+    if (this.isString(value)) {
+      return this.isNotEmpty(value as string);
+    }
+    if (Array.isArray(value)) {
+      return value.length > 0;
+    }
+    return value !== null && value !== undefined;
+  }
+
   isString(value: unknown): boolean {
     return typeof value === 'string';
   }
@@ -35,5 +45,34 @@ export class ValidatorCustomService {
       this.config.get<Record<string, unknown>>(configName);
 
     return value === fieldValue;
+  }
+
+  isIpAddressesAndRange(value: string): boolean {
+    return validatorjs.isIP(value) || validatorjs.isIPRange(value);
+  }
+
+  isSignedResponseAlg(value: string): boolean {
+    return ['ES256', 'RS256'].includes(value);
+  }
+
+  isWebsiteURL(value: string): boolean {
+    return validatorjs.isURL(value, {
+      // validatorjs naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      require_protocol: true,
+      protocols: ['https'],
+    });
+  }
+
+  isRedirectURL(value: string): boolean {
+    return validatorjs.isURL(value, {
+      // validatorjs naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      require_protocol: true,
+      protocols: ['http', 'https'],
+      // validatorjs naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      require_tld: false,
+    });
   }
 }

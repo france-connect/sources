@@ -256,4 +256,44 @@ describe('ConfigParser', () => {
       ).toThrow('file at path /some/path/to/read.txt is missing');
     });
   });
+
+  describe('root', () => {
+    // Given
+    const data = {
+      FOO: 'FOO root value',
+      // Follow env variables declaration convention
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      MyNamespace_FOO: 'FOO namespace value',
+    };
+    const namespace = 'MyNamespace';
+
+    it('should return a new instance of ConfigParser', () => {
+      // When
+      const result = reader.root;
+      // Then
+      expect(result).toBeInstanceOf(ConfigParser);
+    });
+
+    it('should allow to retrieve values from the namespace', () => {
+      // Given
+      const parser = new ConfigParser(data, namespace);
+
+      // When
+      const result = parser.string('FOO');
+
+      // Then
+      expect(result).toBe('FOO namespace value');
+    });
+
+    it('should allow to retrieve values from the root', () => {
+      // Given
+      const parser = new ConfigParser(data, namespace);
+
+      // When
+      const result = parser.root.string('FOO');
+
+      // Then
+      expect(result).toBe('FOO root value');
+    });
+  });
 });

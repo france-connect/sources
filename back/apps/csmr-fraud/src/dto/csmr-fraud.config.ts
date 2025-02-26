@@ -2,7 +2,6 @@ import { Type } from 'class-transformer';
 import { IsObject, ValidateNested } from 'class-validator';
 
 import { ElasticsearchConfig } from '@fc/elasticsearch';
-import { GeoipMaxmindConfig } from '@fc/geoip-maxmind';
 import { LoggerConfig } from '@fc/logger';
 import { MailerConfig } from '@fc/mailer';
 import { RabbitmqConfig } from '@fc/rabbitmq';
@@ -44,9 +43,4 @@ export class CsmrFraudConfig {
   @ValidateNested()
   @Type(() => ElasticsearchConfig)
   readonly Elasticsearch: ElasticsearchConfig;
-
-  @IsObject()
-  @ValidateNested()
-  @Type(() => GeoipMaxmindConfig)
-  readonly GeoipMaxmind: GeoipMaxmindConfig;
 }

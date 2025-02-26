@@ -1,3 +1,5 @@
+import '@fc/common/overrides/json.parse.override';
+
 import { CsmrUserPreferencesConfig } from 'apps/csmr-user-preferences/src';
 
 import { NestFactory } from '@nestjs/core';

@@ -57,7 +57,12 @@ export class SessionCommitInterceptor implements NestInterceptor {
      */
     const cleanedUpRoutes = this.getCleanedUpRoutes(middlewareIncludedRoutes);
 
-    if (cleanedUpRoutes.includes(currentRoute)) {
+    const shouldCommit = this.shouldCommitSession(
+      cleanedUpRoutes,
+      currentRoute,
+    );
+
+    if (shouldCommit) {
       /**
        * @todo #1429 Remove try catch block
        *
@@ -77,5 +82,12 @@ export class SessionCommitInterceptor implements NestInterceptor {
 
   private getCleanedUpRoutes(routes: (string | RouteInfo)[]): string[] {
     return routes.map((route: string) => route.replace('$', ''));
+  }
+
+  private shouldCommitSession(
+    allowedRoutes: string[],
+    currentRoute: string,
+  ): boolean {
+    return allowedRoutes.includes('*') || allowedRoutes.includes(currentRoute);
   }
 }

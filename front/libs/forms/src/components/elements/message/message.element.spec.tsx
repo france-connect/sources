@@ -1,37 +1,49 @@
 import { render } from '@testing-library/react';
 
-import { t } from '@fc/i18n';
+import { ConfigService } from '@fc/config';
 
 import { MessageElement } from './message.element';
+import { MessageErrorElement } from './message-error.element';
+import { MessageValidElement } from './message-valid.element';
+
+// Given
+jest.mock('./message-error.element');
+jest.mock('./message-valid.element');
 
 describe('MessageElement', () => {
-  it('should match the snapshot when has error', () => {
-    // When
-    const { container, getByText } = render(<MessageElement error="error-mock" id="id-mock" />);
-    const errorTextElt = getByText('error-mock');
-
-    // Then
-    expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveClass('fr-messages-group');
-    expect(container.firstChild).toHaveAttribute('aria-live', 'assertive');
-    expect(container.firstChild).toHaveAttribute('id', 'id-mock');
-    expect(errorTextElt).toBeInTheDocument();
-    expect(errorTextElt).toHaveAttribute('id', 'id-mock-messages');
-    expect(errorTextElt).toHaveClass('fr-message');
-    expect(errorTextElt).toHaveClass('fr-message--error');
+  beforeEach(() => {
+    // Given
+    jest.mocked(ConfigService.get).mockReturnValue({ showFieldValidationMessage: true });
   });
 
-  it('should match the snapshot when error is not defined', () => {
+  it('should match the snapshot', () => {
+    // Given
+    const errorMock = Symbol('error-mock') as unknown as string;
+
     // When
-    const { container, getByText } = render(<MessageElement isValid id="id-mock" />);
+    const { container } = render(<MessageElement isValid error={errorMock} id="id-mock" />);
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(container.firstChild).toHaveClass('fr-messages-group');
     expect(container.firstChild).toHaveAttribute('aria-live', 'assertive');
     expect(container.firstChild).toHaveAttribute('id', 'id-mock');
-    expect(() => getByText('error-mock')).toThrow();
-    expect(t).toHaveBeenCalledOnce();
-    expect(t).toHaveBeenCalledWith('Form.message.valid');
+    expect(container.firstChild).toHaveClass('fr-messages-group');
+    expect(MessageValidElement).toHaveBeenCalledOnce();
+    expect(MessageValidElement).toHaveBeenCalledWith({ id: 'id-mock' }, {});
+    expect(MessageErrorElement).toHaveBeenCalledOnce();
+    expect(MessageErrorElement).toHaveBeenCalledWith({ error: errorMock, id: 'id-mock' }, {});
+  });
+
+  it('should match the snapshot, when valid and error are not defined', () => {
+    // When
+    const { container } = render(<MessageElement id="id-mock" />);
+
+    // Then
+    expect(container).toMatchSnapshot();
+    expect(container.firstChild).toHaveAttribute('aria-live', 'assertive');
+    expect(container.firstChild).toHaveAttribute('id', 'id-mock');
+    expect(container.firstChild).toHaveClass('fr-messages-group');
+    expect(MessageValidElement).not.toHaveBeenCalled();
+    expect(MessageErrorElement).not.toHaveBeenCalled();
   });
 });

@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArrayField should match the snapshot 1`] = `
+<div>
+  <div
+    class="fr-input-group"
+  >
+    <div
+      data-mockid="LabelElement"
+    />
+    <div />
+    <div
+      data-mockid="ArrayAddButton"
+    />
+  </div>
+</div>
+`;

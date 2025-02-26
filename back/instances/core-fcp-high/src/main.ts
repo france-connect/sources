@@ -4,6 +4,7 @@
  * to wrap references before they are imported
  */
 import '@fc/override-oidc-provider/overrides';
+import '@fc/common/overrides/json.parse.override';
 
 import { join } from 'path';
 

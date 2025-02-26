@@ -232,6 +232,24 @@ describe('getLocationFromTracks()', () => {
     // Then
     expect(result).toStrictEqual(expected);
   });
+
+  it('should return undefined if geo is missing', () => {
+    // Given
+    const track = {
+      source: {},
+    } as unknown as ElasticTracksType;
+
+    const expected = {
+      country: undefined,
+      city: undefined,
+    };
+
+    // When
+    const result = utils.getLocationFromTracks(track);
+
+    // Then
+    expect(result).toStrictEqual(expected);
+  });
 });
 
 describe('getIpAddressFromTracks()', () => {

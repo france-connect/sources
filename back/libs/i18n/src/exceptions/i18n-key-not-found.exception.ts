@@ -8,4 +8,10 @@ export class I18nKeyNotFoundException extends I18nBaseException {
   static ERROR_DESCRIPTION =
     'authentication aborted due to a technical error on the authorization server';
   static UI = 'I18n.exceptions.i18nKeyNotFound';
+
+  constructor(key: string) {
+    super();
+
+    this.log = { key };
+  }
 }

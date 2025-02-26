@@ -121,8 +121,8 @@ Fonctionnalité: API - authorize
     Alors le statut de la réponse est 303
     Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
     Et l'entête de la réponse a une propriété "location" contenant l'url de callback du FS avec l'erreur (fragment)
-    Et l'url de callback du FS a un paramètre "error" égal à "<error>"
-    Et l'url de callback du FS a un paramètre "error_description" égal à "<errorDescription>"
+    Et l'url fragment de callback du FS a un paramètre "error" égal à "<error>"
+    Et l'url fragment de callback du FS a un paramètre "error_description" égal à "<errorDescription>"
 
     @exceptions
     Exemples:

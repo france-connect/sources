@@ -9,16 +9,44 @@ export default class InstanceFormPage {
     cy.get('[id="DTO2Form-instance-update"]').should('be.visible');
   }
 
+  getClientId(): Cypress.Chainable<string> {
+    return cy.get('[name="client_id"]').invoke('val');
+  }
+
+  getCopyClientIdButton(): ChainableElement {
+    return cy.get('[data-testid="form-input-text-client_id-copy-button"]');
+  }
+
+  getClientSecret(): Cypress.Chainable<string> {
+    return cy.get('[name="client_secret"]').invoke('val');
+  }
+
+  getCopyClientSecretButton(): ChainableElement {
+    return cy.get('[data-testid="form-input-text-client_secret-copy-button"]');
+  }
+
   protected getAllFormInputs(): ChainableElement {
     return cy.get('input');
   }
 
   protected getActiveInputFromName(name: string): ChainableElement {
-    return cy.get(`[name=${name}]:not([type="hidden"]):not([disabled])`);
+    return cy.get(`[name="${name}"]:not([type="hidden"]):not([disabled])`);
   }
 
   protected getVisibleInputFromName(name: string): ChainableElement {
-    return cy.get(`[name=${name}]:not([type="hidden"])`);
+    return cy.get(`[name="${name}"]:not([type="hidden"])`);
+  }
+
+  protected getInputErrorMessagesFromName(name: string): ChainableElement {
+    return cy.get(`[data-testid="${name}-messages"].fr-message--error`);
+  }
+
+  getInputAddButton(key: string): ChainableElement {
+    return cy.get(`[data-testid="${key}-add"]`);
+  }
+
+  getInputRemoveButton(name: string): ChainableElement {
+    return cy.get(`[data-testid="${name}-remove"]`);
   }
 
   getValidationButton(): ChainableElement {
@@ -40,10 +68,10 @@ export default class InstanceFormPage {
       } else if ($elem.is('select')) {
         cy.wrap($elem).select(value);
       } else {
-        // eslint-disable-next-line cypress/unsafe-to-chain-command
-        cy.wrap($elem)
-          .clear()
-          .type(value as string);
+        cy.wrap($elem).clear();
+        if (value && typeof value === 'string') {
+          cy.wrap($elem).type(value);
+        }
       }
     });
   }
@@ -61,8 +89,26 @@ export default class InstanceFormPage {
     });
   }
 
+  checkIsFieldVisible(name: string, isVisible: boolean): void {
+    const state = isVisible ? 'be.visible' : 'not.exist';
+    this.getVisibleInputFromName(name).should(state);
+  }
+
+  checkIsFieldWithinViewport(name: string, isWithinViewport: boolean): void {
+    this.getVisibleInputFromName(name).checkWithinViewport(isWithinViewport);
+  }
+
   checkHasValue(name: string, value: string): void {
     this.getVisibleInputFromName(name).should('have.value', value);
+  }
+
+  checkHasError(name: string, hasError: boolean): void {
+    const state = hasError ? 'exist' : 'not.exist';
+    this.getInputErrorMessagesFromName(name).should(state);
+  }
+
+  checkHasErrorMessage(name: string, errorMessage: string): void {
+    this.getInputErrorMessagesFromName(name).should('contain', errorMessage);
   }
 
   checkHasCheckboxValues(name: string, values: string[]): void {

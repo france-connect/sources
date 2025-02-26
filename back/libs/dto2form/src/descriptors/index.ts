@@ -89,12 +89,18 @@ export * from './validator-js/matches-validator.descriptor';
 
 // ----- VALIDATOR CUSTOM -----
 
+export * from './validator-custom/is-filled-validator.descriptor';
+export * from './validator-custom/is-ip-address-validator.descriptor';
 export * from './validator-custom/is-not-empty-validator.descriptor';
+export * from './validator-custom/is-redirect-url-validator.descriptor';
+export * from './validator-custom/is-signed-response-alg-validator.descriptor';
 export * from './validator-custom/is-string-validator.descriptor';
+export * from './validator-custom/is-website-url-validator.descriptor';
 
 // ----- VALIDATE IF -----
 
 export * from './validate-if/if-defined-validate-if-rule.descriptor';
 export * from './validate-if/if-field-defined-validate-if-rule.descriptor';
+export * from './validate-if/if-field-filled-validate-if-rule.descriptor';
 export * from './validate-if/if-field-not-empty-validate-if-rule.descriptor';
 export * from './validate-if/if-not-empty-validate-if-rule.descriptor';

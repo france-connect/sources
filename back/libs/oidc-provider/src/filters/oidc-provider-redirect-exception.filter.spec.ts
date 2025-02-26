@@ -4,11 +4,12 @@ import { ArgumentsHost } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { ApiErrorMessage } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { ExceptionCaughtEvent } from '@fc/exceptions/events';
 import { generateErrorId } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
-import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc';
+import { OidcError, SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc';
 import { ViewTemplateService } from '@fc/view-templates';
 
 import { getConfigMock } from '@mocks/config';
@@ -43,6 +44,7 @@ describe('OidcProviderRedirectExceptionFilter', () => {
   class ExceptionMock extends OidcProviderBaseRedirectException {
     static ERROR = 'ERROR';
     static ERROR_DESCRIPTION = 'ERROR_DESCRIPTION';
+    static UI = 'UI';
   }
 
   const resMock = {
@@ -58,6 +60,7 @@ describe('OidcProviderRedirectExceptionFilter', () => {
 
   const codeMock = Symbol('code');
   const idMock = Symbol('id');
+  const messageMock = Symbol('message');
 
   const serviceProviderMock = {
     getList: jest.fn(),
@@ -132,8 +135,14 @@ describe('OidcProviderRedirectExceptionFilter', () => {
       code: codeMock,
       id: idMock,
     };
+    const errorDetailsMock = {
+      code: codeMock,
+      id: idMock,
+      message: messageMock,
+    };
 
     beforeEach(() => {
+      filter['getErrorDetails'] = jest.fn().mockReturnValue(errorDetailsMock);
       filter['getOidcParams'] = jest.fn().mockReturnValue(paramsMock);
       filter['manualRedirect'] = jest.fn();
     });
@@ -189,17 +198,47 @@ describe('OidcProviderRedirectExceptionFilter', () => {
       await filter.catch(exceptionMock, hostMock as unknown as ArgumentsHost);
 
       // Then
-      expect(filter['manualRedirect']).toHaveBeenCalledExactlyOnceWith(
-        reqMock,
-        resMock,
-        paramsMock,
-        exceptionMock,
-      );
+      expect(filter['manualRedirect']).toHaveBeenCalledExactlyOnceWith({
+        req: reqMock,
+        res: resMock,
+        errorDetails: errorDetailsMock,
+        exception: exceptionMock,
+        params: paramsMock,
+      });
+    });
+  });
+
+  describe('getErrorDetails', () => {
+    it('should return an object with code, id, message', () => {
+      // When
+      const result = filter['getErrorDetails'](exceptionMock);
+
+      // Then
+      expect(result).toEqual({
+        code: codeMock,
+        id: idMock,
+        message: 'UI',
+      });
     });
   });
 
   describe('getOidcParams', () => {
-    it('should return an object with error, error_description, code and id', () => {
+    beforeEach(() => {
+      configMock.get.mockReturnValueOnce({
+        issuer: 'https://foo.bar/api/v2',
+      });
+    });
+
+    it('should call config.get', () => {
+      // When
+      filter['getOidcParams'](exceptionMock);
+
+      // Then
+      expect(configMock.get).toHaveBeenCalledTimes(1);
+      expect(configMock.get).toHaveBeenCalledWith('OidcProvider');
+    });
+
+    it('should return an object with error, error_description, state and iss from the static attributes of the exception', () => {
       // When
       const result = filter['getOidcParams'](exceptionMock);
 
@@ -207,18 +246,19 @@ describe('OidcProviderRedirectExceptionFilter', () => {
       expect(result).toEqual({
         error: 'ERROR',
         error_description: 'ERROR_DESCRIPTION',
-        code: codeMock,
-        id: idMock,
+        iss: 'https://foo.bar/api/v2',
+        state: undefined,
       });
     });
 
-    it('should return an object with error, error_description from error instance if they are set', () => {
+    it('should return an object with error, error_description, state and iss from the original error if they exist', () => {
       // Given
       const originalErrorWitMembers = new Error();
 
       Object.assign(originalErrorWitMembers, {
         error: 'member_error',
         error_description: 'member_error_description',
+        state: 'member_state',
       });
 
       const exceptionWitMembers = new ExceptionMock(originalErrorWitMembers);
@@ -230,14 +270,15 @@ describe('OidcProviderRedirectExceptionFilter', () => {
       expect(result).toEqual({
         error: 'member_error',
         error_description: 'member_error_description',
-        code: codeMock,
-        id: idMock,
+        iss: 'https://foo.bar/api/v2',
+        state: 'member_state',
       });
     });
   });
 
   describe('manualRedirect', () => {
-    const paramsMock = { foo: 'bar' };
+    const paramsMock = { foo: 'bar' } as unknown as OidcError;
+    const errorDetailsMock = { baz: 'qux' } as unknown as ApiErrorMessage;
 
     beforeEach(() => {
       filter['errorOutput'] = jest.fn();
@@ -250,16 +291,17 @@ describe('OidcProviderRedirectExceptionFilter', () => {
       filter['isAuthorizedRedirectUrl'] = jest.fn().mockReturnValue(false);
 
       // When
-      await filter['manualRedirect'](
-        reqMock as unknown as Request,
-        resMock as unknown as Response,
-        paramsMock,
-        exceptionMock,
-      );
+      await filter['manualRedirect']({
+        req: reqMock as unknown as Request,
+        res: resMock as unknown as Response,
+        errorDetails: errorDetailsMock,
+        exception: exceptionMock,
+        params: paramsMock,
+      });
 
       // Then
       expect(filter['errorOutput']).toHaveBeenCalledExactlyOnceWith({
-        ...paramsMock,
+        error: errorDetailsMock,
         exception: exceptionMock,
         res: resMock,
         httpResponseCode: 500,
@@ -268,12 +310,13 @@ describe('OidcProviderRedirectExceptionFilter', () => {
 
     it('should not call errorOutput if redirect_uri is authorized', async () => {
       // When
-      await filter['manualRedirect'](
-        reqMock as unknown as Request,
-        resMock as unknown as Response,
-        {},
-        exceptionMock,
-      );
+      await filter['manualRedirect']({
+        req: reqMock as unknown as Request,
+        res: resMock as unknown as Response,
+        errorDetails: errorDetailsMock,
+        exception: exceptionMock,
+        params: paramsMock,
+      });
 
       // Then
       expect(filter['errorOutput']).not.toHaveBeenCalled();
@@ -285,16 +328,18 @@ describe('OidcProviderRedirectExceptionFilter', () => {
         error: 'ERROR',
         error_description: 'ERROR_DESCRIPTION',
         state: 'state',
+        iss: 'https://foo.bar/api/v2',
       };
-      const redirectUriWithParams = `${redirectUriMock}?error=ERROR&error_description=ERROR_DESCRIPTION&state=state`;
+      const redirectUriWithParams = `${redirectUriMock}?error=ERROR&error_description=ERROR_DESCRIPTION&state=state&iss=https%3A%2F%2Ffoo.bar%2Fapi%2Fv2`;
 
       // When
-      await filter['manualRedirect'](
-        reqMock as unknown as Request,
-        resMock as unknown as Response,
+      await filter['manualRedirect']({
+        req: reqMock as unknown as Request,
+        res: resMock as unknown as Response,
+        errorDetails: errorDetailsMock,
+        exception: exceptionMock,
         params,
-        exceptionMock,
-      );
+      });
 
       // Then
       expect(resMock.redirect).toHaveBeenCalledExactlyOnceWith(

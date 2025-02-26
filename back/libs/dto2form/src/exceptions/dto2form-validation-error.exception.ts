@@ -16,6 +16,6 @@ export class Dto2FormValidationErrorException extends Dto2FormBaseException {
 
   constructor(validationErrors: FieldErrorsInterface[]) {
     super();
-    this.log = JSON.stringify(validationErrors);
+    this.log = validationErrors;
   }
 }

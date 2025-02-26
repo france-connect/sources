@@ -8,12 +8,12 @@ import {
   Put,
   UseGuards,
   UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 
 import {
   EnvironmentEnum,
   PartnersServiceProviderInstance,
+  PublicationStatusEnum,
 } from '@entities/typeorm';
 
 import {
@@ -26,7 +26,9 @@ import {
   RequirePermission,
 } from '@fc/access-control';
 import { FSA, FSAMeta } from '@fc/common';
+import { ActionTypes } from '@fc/csmr-config-client/enums';
 import { CsrfTokenGuard } from '@fc/csrf';
+import { FormValidationPipe } from '@fc/dto2form';
 import { PartnersAccountSession } from '@fc/partners-account';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import {
@@ -36,14 +38,22 @@ import {
 import { ISessionService, Session } from '@fc/session';
 
 import { PartnersBackRoutes } from '../enums';
+import {
+  PartnerPublicationService,
+  PartnersInstanceVersionFormService,
+} from '../services';
 
 @Controller()
 @Injectable()
 export class InstanceController {
+  // More than 4 parameters authorized for a controller
+  // eslint-disable-next-line max-params
   constructor(
     private readonly instance: PartnersServiceProviderInstanceService,
     private readonly version: PartnersServiceProviderInstanceVersionService,
     private readonly accessControl: AccountPermissionRepository,
+    private readonly publication: PartnerPublicationService,
+    private readonly form: PartnersInstanceVersionFormService,
   ) {}
 
   @Get(PartnersBackRoutes.SP_INSTANCES)
@@ -55,11 +65,11 @@ export class InstanceController {
   async retrieveVersions(
     @AccountPermissions() permissions: PermissionInterface[],
   ): Promise<FSA<FSAMeta, PartnersServiceProviderInstance[]>> {
-    const payload = await this.instance.getAllowedInstances(permissions);
+    const instances = await this.instance.getAllowedInstances(permissions);
 
     return {
       type: 'INSTANCE',
-      payload,
+      payload: instances,
     };
   }
 
@@ -70,11 +80,11 @@ export class InstanceController {
     entityIdLocation: { src: 'params', key: 'instanceId' },
   })
   @UseGuards(AccessControlGuard)
-  @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   async retrieveInstance(
     @Param('instanceId') instanceId: string,
   ): Promise<FSA<FSAMeta, PartnersServiceProviderInstance>> {
-    const payload = await this.instance.getById(instanceId);
+    const instance = await this.instance.getById(instanceId);
+    const payload = this.form.toFormValues(instance);
 
     return {
       type: 'INSTANCE',
@@ -88,25 +98,39 @@ export class InstanceController {
     entity: EntityType.SP_INSTANCE,
   })
   @UseGuards(AccessControlGuard)
-  @UsePipes(new ValidationPipe({ transform: true }))
   @UseGuards(CsrfTokenGuard)
+  @UsePipes(FormValidationPipe)
   async createInstance(
-    @Body() data: ServiceProviderInstanceVersionDto,
+    @Body() values: ServiceProviderInstanceVersionDto,
     @Session('PartnersAccount')
     sessionPartnersAccount: ISessionService<PartnersAccountSession>,
   ): Promise<FSA<FSAMeta, unknown>> {
+    const {
+      identity: { id: accountId },
+    } = sessionPartnersAccount.get();
+    const data = await this.form.fromFormValues(values);
     const { id: instanceId } = await this.instance.upsert({
-      name: data.instance_name,
+      name: data.name,
       environment: EnvironmentEnum.SANDBOX,
     });
 
-    const { id: versionId } = await this.version.create(data, instanceId);
-
-    const { accountId } = sessionPartnersAccount.get();
+    // Skip "DRAFT" for sandbox since there is no point to update right after creation
+    const status = PublicationStatusEnum.PENDING;
+    const { id: versionId } = await this.version.create(
+      data,
+      instanceId,
+      status,
+    );
 
     await this.accessControl.addVersionPermission(accountId, versionId);
-
     await this.accessControl.addInstancePermission(accountId, instanceId);
+
+    await this.publication.publish(
+      instanceId,
+      versionId,
+      data,
+      ActionTypes.CONFIG_CREATE,
+    );
 
     return {
       type: 'INSTANCE',
@@ -121,25 +145,43 @@ export class InstanceController {
     entityIdLocation: { src: 'params', key: 'instanceId' },
   })
   @UseGuards(AccessControlGuard)
-  @UsePipes(new ValidationPipe({ transform: true }))
   @UseGuards(CsrfTokenGuard)
+  @UsePipes(FormValidationPipe)
   async updateInstance(
     @Body() data: ServiceProviderInstanceVersionDto,
     @Param('instanceId') instanceId: string,
     @Session('PartnersAccount')
     sessionPartnersAccount: ISessionService<PartnersAccountSession>,
   ): Promise<FSA<FSAMeta, unknown>> {
+    const {
+      identity: { id: accountId },
+    } = sessionPartnersAccount.get();
+
+    const fullData = await this.form.fromFormValues(data, instanceId);
+
     await this.instance.upsert(
       {
-        name: data.instance_name,
+        name: fullData.name,
       },
       instanceId,
     );
 
-    const { id: versionId } = await this.version.create(data, instanceId);
+    // Skip "DRAFT" for sandbox since there is no point to update right after creation
+    const status = PublicationStatusEnum.PENDING;
+    const { id: versionId } = await this.version.create(
+      fullData,
+      instanceId,
+      status,
+    );
 
-    const { accountId } = sessionPartnersAccount.get();
     await this.accessControl.addVersionPermission(accountId, versionId);
+
+    await this.publication.publish(
+      instanceId,
+      versionId,
+      fullData,
+      ActionTypes.CONFIG_UPDATE,
+    );
 
     return {
       type: 'INSTANCE',

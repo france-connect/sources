@@ -1,6 +1,10 @@
 import { ChainableElement } from '../types';
 
 export default class TopMenuComponent {
+  visitHomePage(): void {
+    cy.visit('/');
+  }
+
   getUserLabel(): ChainableElement {
     return cy.get(
       '.fr-header__tools [data-testid="layout-header-tools-account-component"]',
@@ -17,8 +21,13 @@ export default class TopMenuComponent {
     return cy.get('[data-testid="burger-button-mobile-menu"]');
   }
 
-  checkIsUserConnected(isConnected = true): void {
-    const state = isConnected ? 'be.visible' : 'not.exist';
+  checkIsLogoutLinkVisible(isVisible = true): void {
+    const state = isVisible ? 'be.visible' : 'not.exist';
     this.getLogoutLink().should(state);
+  }
+
+  checkIsConnected(isConnected = true): void {
+    const state = isConnected ? 'exist' : 'not.exist';
+    cy.request('/api/me').its('body').its('accountId').should(state);
   }
 }

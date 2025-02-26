@@ -14,10 +14,27 @@ export class AppInterceptor implements NestInterceptor {
   constructor(private readonly logger: LoggerService) {}
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
+    switch (context.getType()) {
+      case 'http':
+        this.interceptHttp(context);
+        break;
+      case 'rpc':
+        this.interceptRpc(context);
+        break;
+    }
+
+    return next.handle();
+  }
+
+  private interceptHttp(context: ExecutionContext): void {
     const req = context.switchToHttp().getRequest();
 
     this.logger.debug(`${req.method} ${req.path}`);
+  }
 
-    return next.handle();
+  private interceptRpc(context: ExecutionContext): void {
+    const message = context.switchToRpc().getData();
+
+    this.logger.debug(`Message: ${message.type}`);
   }
 }

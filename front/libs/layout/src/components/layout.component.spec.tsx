@@ -13,25 +13,14 @@ jest.mock('./footer/layout-footer.component');
 jest.mock('./header/layout-header.component');
 
 describe('ApplicationLayout', () => {
-  // Given
-  let consoleErrorMock: jest.SpyInstance;
-
   beforeEach(() => {
+    // Given
     jest.mocked(useSafeContext).mockReturnValue(expect.any(Object));
-
     // @NOTE by implementation JEST.DOM render component into a <div />
     // <html element cannot be a child of a <div /> element
     // we cannot use JEST.DOM.render(..., { container }) option, because
     // there's no parent container for a html element
-    consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
-  });
-
-  afterEach(() => {
-    // @NOTE by implementation JEST.DOM render component into a <div />
-    // <html element cannot be a child of a <div /> element
-    // we cannot use JEST.DOM.render(..., { container }) option, because
-    // there's no parent container for a html element
-    consoleErrorMock.mockRestore();
+    jest.spyOn(console, 'error').mockImplementation(jest.fn());
   });
 
   it('should match snapshot', () => {

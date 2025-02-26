@@ -1,37 +1,38 @@
 import get from 'lodash.get';
 
 import { Validators } from '../../enums';
-import type { FieldValidator } from '../../interfaces';
+import type { FieldValidatorInterface } from '../../interfaces';
 
-export const buildValidator = (fieldValidator: FieldValidator, allowEmpty: boolean = true) => {
-  const { errorLabel, name, validationArgs } = fieldValidator;
+export const buildValidator = (
+  fieldValidator: FieldValidatorInterface,
+  allowEmptyValue: boolean = true,
+) => {
+  const { name, validationArgs } = fieldValidator;
 
-  function validateFunc(fieldValue: string | string[]) {
-    const dirtyValues = !Array.isArray(fieldValue) ? [fieldValue] : fieldValue;
-    const values = dirtyValues.map((v) => (typeof v === 'string' ? v.trim() : v)).filter((v) => v);
+  const validator = get(Validators, name);
 
-    if (allowEmpty && (!values || !values.length)) {
+  return (msg: string) => (fieldValue: string) => {
+    const cleanValue = fieldValue && fieldValue.trim();
+
+    const isOptionalFieldWithoutValue = allowEmptyValue && !cleanValue;
+    if (isOptionalFieldWithoutValue) {
+      // @NOTE if the field is optional and empty
+      // we don't need to validate it
+      // return undefined means no error
       return undefined;
     }
 
-    const errorMessage = errorLabel;
-    const options = validationArgs || [];
+    let isValid = false;
+    const validatorOptions = validationArgs || [];
 
-    const validator = get(Validators, name);
+    if (name === 'matches') {
+      const str = validatorOptions[0] as string;
+      const regex = new RegExp(str);
+      isValid = validator(cleanValue, regex);
+    } else {
+      isValid = validator(cleanValue, ...validatorOptions);
+    }
 
-    const isValueValid = values.every((v) => {
-      let valid = false;
-      if (name === 'matches') {
-        const str = options[0] as string;
-        const regex = new RegExp(str);
-        valid = validator(v, regex);
-      } else {
-        valid = validator(v, ...options);
-      }
-      return valid;
-    });
-    return isValueValid ? undefined : errorMessage;
-  }
-
-  return validateFunc;
+    return isValid ? undefined : msg;
+  };
 };

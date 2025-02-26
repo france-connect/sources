@@ -1,4 +1,5 @@
 {
+  "Form.button.copy": "Copier",
   "Form.submit": "Submit",
   "Form.reset": "Reset the form",
   "Form.message.valid": "Validation text",
@@ -7,5 +8,7 @@
   "Form.message.requiredFields": "All fields with an asterisk are required.",
   "Form.select.placeholder": "Select an option",
   "Form.textarea.maxlength": " / {maxLength} characters",
-  "Form.FORM_ERROR": "An error occurred while submitting the form"
+  "Form.FORM_ERROR": "An error occurred while submitting the form",
+  "Form.multiple.add": "Add a new value",
+  "Form.multiple.remove": "Remove this value"
 }

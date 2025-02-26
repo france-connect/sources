@@ -17,3 +17,5 @@ services:
       - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
     networks:
       - data
+    ports:
+      - "27017:27017"

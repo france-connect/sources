@@ -1,3 +1,5 @@
+import '@fc/common/overrides/json.parse.override';
+
 import * as CookieParser from 'cookie-parser';
 import { urlencoded } from 'express';
 import helmet from 'helmet';

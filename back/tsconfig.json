@@ -161,14 +161,16 @@
       "@fc/csmr-fraud-client/*": ["libs/csmr-fraud-client/src/*"],
       "@fc/csmr-account-client": ["libs/csmr-account-client/src"],
       "@fc/csmr-account-client/*": ["libs/csmr-account-client/src/*"],
-      "@fc/tracks-adapter-elasticsearch": ["libs/tracks-adapter-elasticsearch/src"],
-      "@fc/tracks-adapter-elasticsearch/*": ["libs/tracks-adapter-elasticsearch/src/*"],
+      "@fc/tracks-adapter-elasticsearch": [
+        "libs/tracks-adapter-elasticsearch/src"
+      ],
+      "@fc/tracks-adapter-elasticsearch/*": [
+        "libs/tracks-adapter-elasticsearch/src/*"
+      ],
       "@fc/hybridge-http-proxy": ["libs/hybridge-http-proxy/src"],
       "@fc/hybridge-http-proxy/*": ["libs/hybridge-http-proxy/src/*"],
       "@fc/user-preferences": ["libs/user-preferences/src"],
       "@fc/user-preferences/*": ["libs/user-preferences/src/*"],
-      "@fc/geoip-maxmind": ["libs/geoip-maxmind/src"],
-      "@fc/geoip-maxmind/*": ["libs/geoip-maxmind/src/*"],
       "@fc/jwt": ["libs/jwt/src"],
       "@fc/jwt/*": ["libs/jwt/src/*"],
       "@mocks/jwt": ["libs/jwt/.mocks"],
@@ -250,7 +252,22 @@
         "libs/partners-service-provider-instance-version/src/*"
       ],
       "@fc/access-control": ["libs/access-control/src"],
-      "@fc/access-control/*": ["libs/access-control/src/*"]
+      "@fc/access-control/*": ["libs/access-control/src/*"],
+      "@fc/microservices-rmq": ["libs/microservices-rmq/src"],
+      "@fc/microservices-rmq/*": ["libs/microservices-rmq/src/*"],
+      "@mocks/microservices-rmq": ["libs/microservices-rmq/.mocks"],
+      "@fc/csmr-config-client": ["libs/csmr-config-client/src"],
+      "@fc/csmr-config-client/*": ["libs/csmr-config-client/src/*"],
+      "@fc/config-mongo-adapter": ["libs/config-mongo-adapter/src"],
+      "@fc/config-mongo-adapter/*": ["libs/config-mongo-adapter/src/*"],
+      "@fc/config-postgres-adapter": ["libs/config-postgres-adapter/src"],
+      "@fc/config-postgres-adapter/*": ["libs/config-postgres-adapter/src/*"],
+      "@fc/csmr-config": ["apps/csmr-config/src"],
+      "@fc/csmr-config/*": ["apps/csmr-config/src/*"],
+      "@fc/service-provider": ["libs/service-provider/src"],
+      "@fc/service-provider/*": ["libs/service-provider/src/*"],
+      "@fc/override-code": ["libs/override-code/src"],
+      "@fc/override-code/*": ["libs/override-code/src/*"]
     }
   },
   "files": ["global.d.ts"],

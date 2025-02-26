@@ -1,0 +1,4 @@
+export enum ActionTypes {
+  CONFIG_CREATE = 'CONFIG_CREATE',
+  CONFIG_UPDATE = 'CONFIG_UPDATE',
+}

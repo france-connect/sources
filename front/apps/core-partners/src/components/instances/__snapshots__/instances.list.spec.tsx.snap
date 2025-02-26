@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`InstancesListComponent should match snapshot 1`] = `
+exports[`InstancesListComponent should match snapshot while calling the sortByKey util 1`] = `
 <div>
   <div
     class="fr-col-12"

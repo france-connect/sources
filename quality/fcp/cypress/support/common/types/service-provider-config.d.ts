@@ -16,7 +16,6 @@ export interface ServiceProviderConfig
   active: string;
   type: string;
   identityConsent: string;
-  trustedIdentity: string;
   eidas: string;
   userinfo_encrypted_response_enc: string;
   userinfo_encrypted_response_alg: string;

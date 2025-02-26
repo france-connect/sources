@@ -30,6 +30,15 @@ export default class ServiceProviderErrorPage {
     expect(match[URL_TYPE_GROUP]).to.equal(delimitor);
   }
 
+  checkParamInCallbackUrl(url: string, key: string, value: string): void {
+    const callbackUrl = new URL(url);
+    expect(
+      callbackUrl.searchParams.has(key),
+      `the parameter '${key}' is missing in the callback url '${url}'`,
+    ).to.be.true;
+    expect(callbackUrl.searchParams.get(key)).to.equal(value);
+  }
+
   checkErrorInCallbackUrl(url: string, error: string): void {
     const encodedError = encodeURIComponent(error);
     const match = url.match(ERROR_URL_REGEXP);

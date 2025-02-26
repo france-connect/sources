@@ -1,7 +1,6 @@
 import { DynamicModule, Module, Type } from '@nestjs/common';
 
 import { ElasticsearchModule } from '@fc/elasticsearch';
-import { GeoipMaxmindModule } from '@fc/geoip-maxmind';
 
 import {
   TracksFormatterAbstract,
@@ -9,7 +8,6 @@ import {
 } from './interfaces';
 import {
   ElasticTracksService,
-  GeoFormatterService,
   TracksAdapterElasticsearchService,
   TracksFormatterService,
 } from './services';
@@ -28,11 +26,7 @@ export class TracksAdapterElasticsearchModule {
   ): DynamicModule {
     return {
       module: TracksAdapterElasticsearchModule,
-      imports: [
-        GeoipMaxmindModule,
-        ElasticsearchModule.register(),
-        ...(options?.imports || []),
-      ],
+      imports: [ElasticsearchModule.register(), ...(options?.imports || [])],
       providers: [
         {
           provide: 'TracksFcpHighFormatter',
@@ -48,10 +42,9 @@ export class TracksAdapterElasticsearchModule {
         },
         TracksFormatterService,
         ElasticTracksService,
-        GeoFormatterService,
         TracksAdapterElasticsearchService,
       ],
-      exports: [TracksAdapterElasticsearchService, GeoFormatterService],
+      exports: [TracksAdapterElasticsearchService],
     };
   }
 }

@@ -1,7 +1,5 @@
 import { ConfigParser } from '@fc/config';
-import { OidcClientRoutes } from '@fc/oidc-client';
 import { PartnersSession } from '@fc/partners';
-import { PartnersBackRoutes } from '@fc/partners/enums';
 import { SessionConfig, SessionCookieOptionsInterface } from '@fc/session';
 
 import I18nConfig from './i18n';
@@ -10,7 +8,7 @@ const env = new ConfigParser(process.env, 'Session');
 
 const cookieOptions: SessionCookieOptionsInterface = {
   signed: true,
-  sameSite: 'strict',
+  sameSite: 'lax',
   httpOnly: true,
   secure: true,
   maxAge: 600000, // 10 minutes
@@ -27,27 +25,7 @@ export default {
   sessionIdLength: 64,
   slidingExpiration: true,
   middlewareExcludedRoutes: [],
-  middlewareIncludedRoutes: [
-    // Connection flow
-    OidcClientRoutes.REDIRECT_TO_IDP,
-    OidcClientRoutes.OIDC_CALLBACK,
-
-    // Business
-    PartnersBackRoutes.USER_INFO,
-    PartnersBackRoutes.INDEX,
-
-    PartnersBackRoutes.SP_INSTANCES,
-    PartnersBackRoutes.SP_INSTANCE,
-
-    PartnersBackRoutes.SP_VERSION_FORM_METADATA,
-
-    // Disconnection flow
-    PartnersBackRoutes.LOGOUT,
-    PartnersBackRoutes.LOGOUT_CALLBACK,
-
-    // Front / Back flow
-    PartnersBackRoutes.CSRF_TOKEN,
-  ],
+  middlewareIncludedRoutes: ['*'],
   schema: PartnersSession,
   defaultData: {
     I18n: {

@@ -6,6 +6,10 @@ export default class IdentityProviderSelectionPage {
     return cy.get('[data-testid="back-to-sp-link"]');
   }
 
+  getNotificationSection(): ChainableElement {
+    return cy.get('section.fr-notice--info');
+  }
+
   getIdpGrid(): ChainableElement {
     return cy.get('[data-testid="main-providers"]');
   }
@@ -43,5 +47,13 @@ export default class IdentityProviderSelectionPage {
       .parent()
       .find('input[name="csrfToken"]')
       .invoke('attr', 'value', csrf);
+  }
+
+  checkIsNotificationMessageDisplayed(message: string): void {
+    if (message) {
+      this.getNotificationSection().should('be.visible').contains(message);
+    } else {
+      this.getNotificationSection().should('not.exist');
+    }
   }
 }

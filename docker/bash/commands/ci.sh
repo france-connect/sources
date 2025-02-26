@@ -187,7 +187,7 @@ _ci_job_relevant_for_front_apps() {
 
   # Build the apps to obtain the stats file
   cd ${CI_PROJECT_DIR}/front
-  yarn install --frozen-lockfile
+  yarn install --frozen-lockfile --ignore-engines
 
   local i
   for ((i = 1; i <= $#; i++)); do

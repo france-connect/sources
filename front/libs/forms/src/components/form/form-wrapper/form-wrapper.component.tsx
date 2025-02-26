@@ -12,7 +12,6 @@ import { FormRequiredMessageComponent } from '../form-required';
 interface FormWrapperComponentProps extends PropsWithChildren {
   config: FormConfigInterface;
   handleSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-  pristine: boolean;
   submitError?: string | undefined;
   submitting: boolean;
   noRequired: boolean;
@@ -24,26 +23,27 @@ export const FormWrapperComponent = ({
   config,
   handleSubmit,
   noRequired,
-  pristine,
   scrollTopOnSubmit,
   submitError,
   submitting,
 }: FormWrapperComponentProps) => {
-  const { description, id, title } = config;
+  const { description, id, mentions, title, titleHeading } = config;
 
-  const canSubmit = !pristine && !submitting;
+  const canSubmit = !submitting;
   const showFormHeader = !!(title || description);
 
   return (
     <form data-testid={`${id}--testid`} id={id} onSubmit={handleSubmit}>
-      {showFormHeader && <FormHeaderComponent description={description} title={title} />}
+      {showFormHeader && (
+        <FormHeaderComponent description={description} title={title} titleHeading={titleHeading} />
+      )}
       <div className="flex-rows">
         {!noRequired && <FormRequiredMessageComponent />}
         {children}
         <FormActionsComponent canSubmit={canSubmit} />
         {submitError && <FormErrorComponent error={submitError} />}
-        <FormMentionsComponent />
-        {scrollTopOnSubmit && <FormErrorScrollComponent />}
+        {mentions && <FormMentionsComponent content={mentions} />}
+        <FormErrorScrollComponent active={scrollTopOnSubmit} />
       </div>
     </form>
   );

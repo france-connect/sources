@@ -2,10 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+
+import { OidcClientInterface } from '@fc/service-provider';
 
 import { PartnersServiceProviderInstance } from './partners-service-provider-instance.entity';
 
@@ -13,9 +16,15 @@ export enum PublicationStatusEnum {
   DRAFT = 'DRAFT',
   PENDING = 'PENDING',
   PUBLISHED = 'PUBLISHED',
+  ARCHIVED = 'ARCHIVED',
+  FAILED = 'FAILED',
 }
 
 @Entity()
+@Index('version_unique_published', ['instance'], {
+  unique: true,
+  where: `"publicationStatus" = 'PUBLISHED'`,
+})
 export class PartnersServiceProviderInstanceVersion {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -37,7 +46,7 @@ export class PartnersServiceProviderInstanceVersion {
     type: 'json',
     default: '{}',
   })
-  data: Record<string, unknown>;
+  data: OidcClientInterface;
 
   @CreateDateColumn({
     default: () => 'NOW()',

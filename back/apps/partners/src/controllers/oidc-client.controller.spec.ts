@@ -389,8 +389,10 @@ describe('OidcClient Controller', () => {
       expect(partnersAccountServiceMock.upsert).toHaveBeenCalledWith(expected);
       expect(sessionPartnersAccountMock.set).toHaveBeenCalledTimes(1);
       expect(sessionPartnersAccountMock.set).toHaveBeenCalledWith({
-        accountId: idMock,
-        ...expected,
+        identity: {
+          id: idMock,
+          ...expected,
+        },
       });
       expect(partnersAccountPermissionMock.init).toHaveBeenCalledTimes(1);
       expect(partnersAccountPermissionMock.init).toHaveBeenCalledWith(idMock);

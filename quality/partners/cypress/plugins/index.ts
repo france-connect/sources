@@ -7,6 +7,9 @@ import onProxy from 'cypress-on-fix';
 import { log, table } from './console-log-plugin';
 import { createHexaHash } from './crypto-plugin';
 import { getFixturePath } from './fixture-plugin';
+import { mongoDeleteOne, mongoFindOne } from './mongo-plugin';
+import { pgFindVersions } from './postgres-plugin';
+import { rmqGetMessage, rmqSendMessage } from './rmq-plugin';
 
 const pluginConfig = async (
   cypressOn: Cypress.PluginEvents,
@@ -21,6 +24,11 @@ const pluginConfig = async (
     createHexaHash,
     getFixturePath,
     log,
+    mongoDeleteOne,
+    mongoFindOne,
+    pgFindVersions,
+    rmqGetMessage,
+    rmqSendMessage,
     table,
   });
 
@@ -49,6 +57,9 @@ const pluginConfig = async (
       return launchOptions;
     },
   );
+
+  // Retrieve CI context in Cypress
+  config.env.CI = process.env.CI;
 
   return config;
 };

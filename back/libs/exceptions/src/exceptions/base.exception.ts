@@ -1,4 +1,4 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 export class BaseException extends Error {
   static DOCUMENTATION: string;
@@ -16,7 +16,7 @@ export class BaseException extends Error {
   public statusCode?: number;
   public status?: number;
 
-  constructor(input?: Error | string) {
+  constructor(input?: Error | HttpException | string) {
     let arg: unknown = input;
 
     if (input instanceof Error) {
@@ -25,8 +25,19 @@ export class BaseException extends Error {
 
     super(arg as string);
 
+    this.addOriginalError(input);
+    this.addStatus(input);
+  }
+
+  private addOriginalError(input: Error | HttpException | string): void {
     if (input instanceof Error) {
       this.originalError = input;
+    }
+  }
+
+  private addStatus(input: Error | HttpException | string): void {
+    if (input instanceof HttpException) {
+      this.status = input.getStatus();
     }
   }
 }

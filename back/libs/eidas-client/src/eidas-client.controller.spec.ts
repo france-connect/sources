@@ -3,6 +3,7 @@ import { Request } from 'express';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
+import { EidasRequest } from '@fc/eidas';
 import { EidasCountries } from '@fc/eidas-country';
 import { TrackingService } from '@fc/tracking';
 
@@ -24,6 +25,7 @@ describe('EidasClientController', () => {
     readLightResponseFromCache: jest.fn(),
     parseLightResponse: jest.fn(),
     completeEidasRequest: jest.fn(),
+    checkEidasResponse: jest.fn(),
   };
 
   const sessionServiceEidasMock = getSessionServiceMock();
@@ -115,6 +117,7 @@ describe('EidasClientController', () => {
     it('should get the eidas partial request from the session', async () => {
       // When
       await controller.redirectToFrNode(query, sessionServiceEidasMock);
+
       // Then
       expect(sessionServiceEidasMock.get).toHaveBeenCalledTimes(1);
       expect(sessionServiceEidasMock.get).toHaveBeenCalledWith();
@@ -123,6 +126,7 @@ describe('EidasClientController', () => {
     it('should complete the eidas request using the partial eidas request from the session and the country from tthe query', async () => {
       // When
       await controller.redirectToFrNode(query, sessionServiceEidasMock);
+
       // Then
       expect(eidasClientServiceMock.completeEidasRequest).toHaveBeenCalledTimes(
         1,
@@ -136,6 +140,7 @@ describe('EidasClientController', () => {
     it('should call the prepareLightRequest with the request object', async () => {
       // When
       await controller.redirectToFrNode(query, sessionServiceEidasMock);
+
       // Then
       expect(eidasClientServiceMock.prepareLightRequest).toHaveBeenCalledTimes(
         1,
@@ -148,6 +153,7 @@ describe('EidasClientController', () => {
     it('should call writeLightRequestInCache with the light request id and the light request', async () => {
       // When
       await controller.redirectToFrNode(query, sessionServiceEidasMock);
+
       // Then
       expect(
         eidasClientServiceMock.writeLightRequestInCache,
@@ -160,6 +166,7 @@ describe('EidasClientController', () => {
     it('should get the connectorRequestCacheUrl from the config', async () => {
       // When
       await controller.redirectToFrNode(query, sessionServiceEidasMock);
+
       // Then
       expect(configServiceMock.get).toHaveBeenCalledTimes(1);
       expect(configServiceMock.get).toHaveBeenCalledWith('EidasClient');
@@ -171,6 +178,7 @@ describe('EidasClientController', () => {
         query,
         sessionServiceEidasMock,
       );
+
       // Then
       expect(result).toStrictEqual({
         connectorRequestCacheUrl,
@@ -192,15 +200,21 @@ describe('EidasClientController', () => {
       statusCode: 302,
     };
 
+    const requestMock = Symbol('requestMock') as unknown as EidasRequest;
+
     beforeEach(() => {
       configServiceMock.get.mockReturnValueOnce({
         redirectAfterResponseHandlingUrl,
+      });
+      sessionServiceEidasMock.get.mockReturnValueOnce({
+        eidasRequest: requestMock,
       });
     });
 
     it('should call readLightResponseFromCache with the token in the given body', async () => {
       // When
       await controller.responseHandler(req, bodyMock, sessionServiceEidasMock);
+
       // Then
       expect(
         eidasClientServiceMock.readLightResponseFromCache,
@@ -215,8 +229,10 @@ describe('EidasClientController', () => {
       eidasClientServiceMock.readLightResponseFromCache.mockReturnValueOnce(
         lightReponse,
       );
+
       // When
       await controller.responseHandler(req, bodyMock, sessionServiceEidasMock);
+
       // Then
       expect(eidasClientServiceMock.parseLightResponse).toHaveBeenCalledTimes(
         1,
@@ -226,17 +242,38 @@ describe('EidasClientController', () => {
       );
     });
 
+    it('should call checkEidasResponse with the eidasRequest and eidasResponse', async () => {
+      // Given
+      eidasClientServiceMock.parseLightResponse.mockReturnValueOnce(
+        responseJson,
+      );
+
+      // When
+      await controller.responseHandler(req, bodyMock, sessionServiceEidasMock);
+
+      // Then
+      expect(eidasClientServiceMock.checkEidasResponse).toHaveBeenCalledTimes(
+        1,
+      );
+      expect(eidasClientServiceMock.checkEidasResponse).toHaveBeenCalledWith(
+        requestMock,
+        responseJson,
+      );
+    });
+
     it('should redirect the user to the redirectAfterResponseHandlingUrl and a 302 status code', async () => {
       // Given
       eidasClientServiceMock.parseLightResponse.mockReturnValueOnce(
         responseJson,
       );
+
       // When
       const result = await controller.responseHandler(
         req,
         bodyMock,
         sessionServiceEidasMock,
       );
+
       // Then
       expect(result).toStrictEqual(responseJson);
     });

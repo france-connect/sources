@@ -1,23 +1,20 @@
 import classnames from 'classnames';
-import type { MouseEventHandler } from 'react';
 import React from 'react';
 
 import { ButtonTypes, IconPlacement, Priorities, Sizes } from '../../../enums';
-import type { ButtonInterface } from '../../../interfaces/button.interface';
+import type { ButtonInterface } from '../../../interfaces';
 
 export interface SimpleButtonProps extends ButtonInterface {
-  title?: string | undefined;
-  type?: ButtonTypes | undefined;
-  disabled?: boolean | undefined;
-  onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
+  hideLabel?: boolean | undefined;
 }
 
 export const SimpleButton = React.memo(
   ({
-    children: label,
+    children: label = undefined,
     className = undefined,
     dataTestId = undefined,
     disabled = undefined,
+    hideLabel = false,
     icon = undefined,
     iconPlacement = IconPlacement.RIGHT,
     noOutline = false,
@@ -40,7 +37,7 @@ export const SimpleButton = React.memo(
           // DSFR classname
           // eslint-disable-next-line @typescript-eslint/naming-convention
           'fr-btn--tertiary-no-outline': priority === Priorities.TERTIARY && noOutline,
-          [`fr-btn--icon-${iconPlacement}`]: !!icon,
+          [`fr-btn--icon-${iconPlacement}`]: !!icon && !hideLabel,
           [`fr-icon-${icon}`]: !!icon,
         },
         className,
@@ -50,7 +47,7 @@ export const SimpleButton = React.memo(
       title={title}
       type={nativeButtonType}
       onClick={onClick}>
-      {label}
+      {!hideLabel && label}
     </button>
   ),
 );

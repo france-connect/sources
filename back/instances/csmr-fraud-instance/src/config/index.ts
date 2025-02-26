@@ -5,7 +5,6 @@ import AccountLegacyBroker from './account-legacy-broker';
 import App from './app';
 import Elasticsearch from './elasticsearch';
 import FraudBroker from './fraud-broker';
-import GeoipMaxmind from './geoip-maxmind';
 import Logger from './logger';
 import Mailer from './mailer';
 
@@ -17,5 +16,4 @@ export default {
   AccountHighBroker,
   AccountLegacyBroker,
   Elasticsearch,
-  GeoipMaxmind,
 } as CsmrFraudConfig;

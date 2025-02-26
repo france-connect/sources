@@ -36,7 +36,7 @@ export class PartnersServiceProviderInstance {
     () => PartnersServiceProviderInstanceVersion,
     (version: PartnersServiceProviderInstanceVersion) => version.instance,
   )
-  versions: PartnersServiceProviderInstance[];
+  versions: PartnersServiceProviderInstanceVersion[];
 
   @CreateDateColumn({
     default: () => 'NOW()',

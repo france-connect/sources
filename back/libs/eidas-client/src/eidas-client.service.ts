@@ -21,6 +21,8 @@ import {
   ReadLightResponseFromCacheException,
   WriteLightRequestInCacheException,
 } from './exceptions';
+import { InvalidResponseIdException } from './exceptions/invalid-response-id.exception';
+import { InvalidResponseRelayStateException } from './exceptions/invalid-response-relay-state.exception';
 
 @Injectable()
 export class EidasClientService {
@@ -141,5 +143,29 @@ export class EidasClientService {
    */
   parseLightResponse(lightResponse: string): EidasResponse {
     return this.lightResponse.parseResponse(lightResponse);
+  }
+
+  /**
+   * Compare request and response parameters to ensure that they match,
+   * and throw exceptions if not.
+   * @param eidasRequest The original request
+   * @param eidasResponse The returned eIDAS response
+   * @throws EidasInvalidResponseIdException
+   * @throws EidasInvalidResponseRelayStateException
+   */
+  checkEidasResponse(
+    eidasRequest: EidasRequest,
+    eidasResponse: EidasResponse,
+  ): void {
+    if (eidasRequest.id !== eidasResponse.inResponseToId) {
+      throw new InvalidResponseIdException();
+    }
+
+    if (
+      eidasRequest.relayState &&
+      eidasRequest.relayState !== eidasResponse.relayState
+    ) {
+      throw new InvalidResponseRelayStateException();
+    }
   }
 }

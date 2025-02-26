@@ -10,15 +10,17 @@ import {
 } from '@nestjs/common';
 import { EventBus } from '@nestjs/cqrs';
 
+import { ApiErrorMessage } from '@fc/app';
 import { ConfigService } from '@fc/config';
 import { FcWebHtmlExceptionFilter } from '@fc/exceptions';
 import { ExceptionCaughtEvent } from '@fc/exceptions/events';
 import { generateErrorId, getClass } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
-import { IServiceProviderAdapter } from '@fc/oidc';
+import { IServiceProviderAdapter, OidcError } from '@fc/oidc';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc/tokens';
 import { ViewTemplateService } from '@fc/view-templates';
 
+import { OidcProviderConfig } from '../dto';
 import { OidcProviderBaseRedirectException } from '../exceptions';
 import { OidcProviderService } from '../oidc-provider.service';
 
@@ -54,9 +56,10 @@ export class OidcProviderRedirectExceptionFilter
     const res = ctx.getResponse();
     const req = ctx.getRequest();
 
+    const errorDetails = this.getErrorDetails(exception);
     const params = this.getOidcParams(exception);
 
-    const { code, id } = params;
+    const { code, id } = errorDetails;
 
     this.logException(code, id, exception);
 
@@ -65,34 +68,59 @@ export class OidcProviderRedirectExceptionFilter
     try {
       await this.oidcProvider.abortInteraction(req, res, params);
     } catch (abortError) {
-      await this.manualRedirect(req, res, params, exception);
+      await this.manualRedirect({ req, res, errorDetails, exception, params });
     }
   }
 
-  private getOidcParams(exception: OidcProviderBaseRedirectException) {
+  private getErrorDetails(
+    exception: OidcProviderBaseRedirectException,
+  ): ApiErrorMessage {
     const exceptionConstructor = getClass(exception);
+    const message = exceptionConstructor.UI;
     const code = this.getExceptionCodeFor(exception);
     const id = generateErrorId();
+
+    const error = {
+      code,
+      id,
+      message,
+    };
+
+    return error;
+  }
+
+  private getOidcParams(
+    exception: OidcProviderBaseRedirectException,
+  ): OidcError {
+    const { issuer } = this.config.get<OidcProviderConfig>('OidcProvider');
+
+    const exceptionConstructor = getClass(exception);
 
     const params = {
       error: exception.originalError?.error || exceptionConstructor.ERROR,
       error_description:
         exception.originalError?.error_description ||
         exceptionConstructor.ERROR_DESCRIPTION,
+      iss: issuer,
       state: exception.originalError?.state,
-      code,
-      id,
     };
 
     return params;
   }
 
-  private async manualRedirect(
-    req: Request,
-    res: Response,
+  private async manualRedirect({
+    req,
+    res,
+    errorDetails,
+    exception,
     params,
-    exception: OidcProviderBaseRedirectException,
-  ) {
+  }: {
+    req: Request;
+    res: Response;
+    errorDetails: ApiErrorMessage;
+    exception: OidcProviderBaseRedirectException;
+    params: OidcError;
+  }) {
     const {
       query: { redirect_uri },
     } = req;
@@ -103,15 +131,14 @@ export class OidcProviderRedirectExceptionFilter
 
     if (!isAuthorizedRedirectUrl) {
       return this.errorOutput({
-        ...params,
+        error: errorDetails,
         exception,
         res,
         httpResponseCode: HttpStatus.INTERNAL_SERVER_ERROR,
       });
     }
 
-    const { error, error_description, state } = params;
-
+    const { error, error_description, iss, state } = params;
     const httpResponseCode = this.getHttpStatus(
       exception,
       HttpStatus.TEMPORARY_REDIRECT,
@@ -122,6 +149,7 @@ export class OidcProviderRedirectExceptionFilter
     redirectUri.searchParams.append('error', error);
     redirectUri.searchParams.append('error_description', error_description);
     redirectUri.searchParams.append('state', state);
+    redirectUri.searchParams.append('iss', iss);
 
     res.status(httpResponseCode).redirect(redirectUri.toString());
   }

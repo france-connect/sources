@@ -29,7 +29,7 @@ describe('SelectInput', () => {
     jest.mocked(useFieldMeta).mockReturnValueOnce({
       errorMessage: undefined,
       hasError: false,
-      inputClassname: undefined,
+      inputClassname: 'any-input-classname-mock',
       isValid: true,
     });
 
@@ -92,7 +92,7 @@ describe('SelectInput', () => {
     jest.mocked(useFieldMeta).mockReturnValueOnce({
       errorMessage: 'any-error-message-mock',
       hasError: true,
-      inputClassname: undefined,
+      inputClassname: 'any-input-classname-mock',
       isValid: false,
     });
 
@@ -155,7 +155,7 @@ describe('SelectInput', () => {
     jest.mocked(useFieldMeta).mockReturnValueOnce({
       errorMessage: 'any-error-message-mock',
       hasError: true,
-      inputClassname: undefined,
+      inputClassname: 'any-input-classname-mock',
       isValid: false,
     });
 

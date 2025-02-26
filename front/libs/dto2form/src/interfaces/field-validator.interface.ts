@@ -1,9 +1,10 @@
-export interface FieldValidatorBase {
+export interface FieldValidateIfRule {
   name: string;
-
-  validationArgs?: unknown[];
+  ruleArgs?: unknown[];
 }
 
-export interface FieldValidator extends FieldValidatorBase {
+export interface FieldValidatorInterface {
+  name: string;
+  validationArgs?: unknown[];
   errorLabel: string;
 }

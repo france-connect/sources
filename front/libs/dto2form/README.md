@@ -3,7 +3,7 @@
 ## Usage
 
 ```
-const schema = loadSchemaFromApi() as JSONFieldType[];
+const schema = loadSchemaFromApi() as SchemaFieldType[];
 
 return (
   <DTO2FormComponent<ProviderFormValues>

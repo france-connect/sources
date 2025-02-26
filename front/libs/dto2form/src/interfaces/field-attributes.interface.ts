@@ -1,31 +1,41 @@
-import type { FieldValidateIfRule } from './field-validate-if-rule.interface';
-import type { FieldValidator, FieldValidatorBase } from './field-validator.interface';
+import type { ChoiceInterface, FieldTypes, PropsWithHintType } from '@fc/forms';
 
-export interface FieldAttributesArguments {
-  type?: string;
-  value?: string;
-  placeholder?: string;
-  required?: boolean;
+import type { FieldValidateIfRule, FieldValidatorInterface } from './field-validator.interface';
 
-  order?: number;
-  maxChars?: number;
-
-  validateIf?: FieldValidateIfRule[];
-  /*
-   ** Should at least have one validator (better safe than sorry ;D)
-   */
-  validators: [FieldValidatorBase, ...FieldValidatorBase[]];
-}
-
-export interface FieldAttributes extends FieldAttributesArguments {
+export interface BaseAttributes {
   type: string;
   name: string;
   label: string;
   order: number;
+}
+
+export interface FieldAttributes extends BaseAttributes, PropsWithHintType {
+  // @TODO this should be refactored
+  type: FieldTypes;
   required: boolean;
+  readonly: boolean;
+
+  value?: string;
+  maxChars?: number;
+  disabled?: boolean;
+  initialValue?: string | string[];
+  validateIf?: FieldValidateIfRule[];
+  options?: ChoiceInterface[];
+
+  /*
+   ** Use ArrayField component
+   */
+  array?: boolean;
 
   /*
    ** Should at least have one validator (better safe than sorry ;D)
    */
-  validators: [FieldValidator, ...FieldValidator[]];
+  validators: [FieldValidatorInterface, ...FieldValidatorInterface[]];
 }
+
+export interface SelectAttributes extends FieldAttributes {
+  type: FieldTypes.SELECT;
+  options: ChoiceInterface[];
+}
+
+export interface SectionAttributes extends BaseAttributes {}
