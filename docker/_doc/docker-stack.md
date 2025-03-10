@@ -113,16 +113,57 @@ export FC_DOCKER_COMPOSE='docker compose'
 
 - Link the cloned repository in the docker volumes
 
+  - If you are an internal developer
+
+  ```bash
+  cd $FC_ROOT/fc/docker/volumes/src
+  ln -s $FC_ROOT/fc
+  ln -s $FC_ROOT/rnipp-mock
+
+  ln -s $FC_ROOT/fc-apps
+
+  ln -s $FC_ROOT/usagers
+  ln -s $FC_ROOT/usagers-fca
+  ln -s $FC_ROOT/formulaire-usagers
+  ```
+
+  - If you are an external developer
+
+  ```bash
+  cd $FC_ROOT/fc/docker/volumes/src
+  ln -s $FC_ROOT/fc
+  ln -s $FC_ROOT/rnipp-mock
+  ```
+
+- If you are an external developer, create stubs for unavailable containers :
+
 ```bash
-cd $FC_ROOT/fc/docker/volumes/src
-ln -s $FC_ROOT/fc
-ln -s $FC_ROOT/rnipp-mock
+cat <<'EOF' >> $FC_ROOT/fc/docker/compose/stubs.yml
+version: '2.4'
 
-ln -s $FC_ROOT/fc-apps
-
-ln -s $FC_ROOT/usagers
-ln -s $FC_ROOT/usagers-fca
-ln -s $FC_ROOT/formulaire-usagers
+services:
+  fc-exploitation:
+    image: alpine
+    hostname: fc-exploitation
+  fc-support:
+    image: alpine
+    hostname: fc-support
+  fc-core:
+    image: alpine
+    hostname: fc-core
+  fsp1:
+    image: alpine
+    hostname: fsp1
+  fsp3:
+    image: alpine
+    hostname: fsp3
+  aidants-connect-mock:
+    image: alpine
+    hostname: aidants-connect-mock
+  fdp1:
+    image: alpine
+    hostname: fdp1
+EOF
 ```
 
 - Add to your host file `/etc/hosts`
