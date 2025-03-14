@@ -3,6 +3,7 @@
 exports[`FormWrapperComponent should match snapshot 1`] = `
 <div>
   <form
+    class="dto2form"
     data-testid="any-id-mock--testid"
     id="any-id-mock"
   >
@@ -13,6 +14,9 @@ exports[`FormWrapperComponent should match snapshot 1`] = `
       class="flex-rows"
     >
       <div
+        data-mockid="FormErrorComponent"
+      />
+      <div
         data-mockid="FormRequiredMessageComponent"
       />
       <div>
@@ -20,9 +24,6 @@ exports[`FormWrapperComponent should match snapshot 1`] = `
       </div>
       <div
         data-mockid="FormActionsComponent"
-      />
-      <div
-        data-mockid="FormErrorComponent"
       />
       <div
         data-mockid="FormMentionsComponent"
@@ -38,12 +39,16 @@ exports[`FormWrapperComponent should match snapshot 1`] = `
 exports[`FormWrapperComponent should match snapshot without descriptionn, title and a disable submit button 1`] = `
 <div>
   <form
+    class="dto2form"
     data-testid="any-id-mock--testid"
     id="any-id-mock"
   >
     <div
       class="flex-rows"
     >
+      <div
+        data-mockid="FormErrorComponent"
+      />
       <div
         data-mockid="FormRequiredMessageComponent"
       />
@@ -52,9 +57,6 @@ exports[`FormWrapperComponent should match snapshot without descriptionn, title 
       </div>
       <div
         data-mockid="FormActionsComponent"
-      />
-      <div
-        data-mockid="FormErrorComponent"
       />
       <div
         data-mockid="FormErrorScrollComponent"
@@ -67,20 +69,21 @@ exports[`FormWrapperComponent should match snapshot without descriptionn, title 
 exports[`FormWrapperComponent should not render all fields required message 1`] = `
 <div>
   <form
+    class="dto2form"
     data-testid="any-id-mock--testid"
     id="any-id-mock"
   >
     <div
       class="flex-rows"
     >
+      <div
+        data-mockid="FormErrorComponent"
+      />
       <div>
         any-children-mock
       </div>
       <div
         data-mockid="FormActionsComponent"
-      />
-      <div
-        data-mockid="FormErrorComponent"
       />
       <div
         data-mockid="FormErrorScrollComponent"
@@ -93,6 +96,7 @@ exports[`FormWrapperComponent should not render all fields required message 1`] 
 exports[`FormWrapperComponent should not render the error message 1`] = `
 <div>
   <form
+    class="dto2form"
     data-testid="any-id-mock--testid"
     id="any-id-mock"
   >
@@ -116,6 +120,7 @@ exports[`FormWrapperComponent should not render the error message 1`] = `
 exports[`FormWrapperComponent should not render the error scroll component 1`] = `
 <div>
   <form
+    class="dto2form"
     data-testid="any-id-mock--testid"
     id="any-id-mock"
   >

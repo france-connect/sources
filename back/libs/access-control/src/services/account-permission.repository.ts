@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PartnersAccountPermission } from '@entities/typeorm';
 
 import { uuid } from '@fc/common';
+import { LoggerService } from '@fc/logger';
 
 import { EntityType, PermissionsType } from '../enums';
 
@@ -14,44 +15,29 @@ export class AccountPermissionRepository {
   constructor(
     @InjectRepository(PartnersAccountPermission)
     private readonly accountPermission: Repository<PartnersAccountPermission>,
+    private readonly logger: LoggerService,
   ) {}
 
-  async init(accountId: uuid): Promise<void> {
+  async insert(
+    accountId: uuid,
+    permissionType: PermissionsType,
+    entity: EntityType,
+    entityId: uuid,
+  ): Promise<void> {
     const data = {
-      account: { id: accountId },
-      entity: EntityType.SP_INSTANCE,
-      permissionType: PermissionsType.LIST,
+      accountId,
+      permissionType,
+      entity,
+      entityId,
     };
 
-    const existingPermission = await this.accountPermission.findOne({
-      where: { ...data },
+    await this.accountPermission.insert(data).catch((error) => {
+      this.logger.warning({
+        msg: 'Tried to insert existing permission',
+        ...data,
+        error,
+      });
     });
-
-    if (!existingPermission) {
-      await this.accountPermission.save(data);
-    }
-  }
-
-  addVersionPermission(accountId: uuid, entityId: uuid): any {
-    const data = {
-      account: { id: accountId },
-      entityId,
-      entity: EntityType.SP_INSTANCE_VERSION,
-      permissionType: PermissionsType.VIEW,
-    };
-
-    return this.accountPermission.save(data);
-  }
-
-  addInstancePermission(accountId: uuid, entityId: uuid): any {
-    const data = {
-      account: { id: accountId },
-      entityId,
-      entity: EntityType.SP_INSTANCE,
-      permissionType: PermissionsType.VIEW,
-    };
-
-    return this.accountPermission.save(data);
   }
 
   async getByEmail(email: string): Promise<PartnersAccountPermission[]> {

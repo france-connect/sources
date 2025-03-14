@@ -78,7 +78,7 @@ export class MockIdentityProviderController {
   // More than 4 parameters authorized for dependency injection
   // eslint-disable-next-line max-params
   @Post(MockIdentityProviderRoutes.INTERACTION_LOGIN)
-  getLogin(
+  async getLogin(
     @Req() req: Request,
     @Res() res: Response,
     @Body() body: SignInDTO,
@@ -91,7 +91,7 @@ export class MockIdentityProviderController {
     sessionOidc: ISessionService<OidcClientSession>,
     @Session('App')
     sessionApp: ISessionService<AppSession>,
-  ): void {
+  ): Promise<void> {
     const { login, password, acr } = body;
     const spIdentity = this.mockIdentityProviderService.getIdentity(login);
 
@@ -122,7 +122,7 @@ export class MockIdentityProviderController {
 
     const session = sessionOidc.get();
 
-    return this.oidcProvider.finishInteraction(req, res, session);
+    await this.oidcProvider.finishInteraction(req, res, session);
   }
 
   @Get(MockIdentityProviderRoutes.INTERACTION_LOGIN_CUSTOM)
@@ -165,7 +165,7 @@ export class MockIdentityProviderController {
 
     const session = sessionOidc.get();
 
-    return this.oidcProvider.finishInteraction(req, res, session);
+    await this.oidcProvider.finishInteraction(req, res, session);
   }
 
   private prepareIdentity(

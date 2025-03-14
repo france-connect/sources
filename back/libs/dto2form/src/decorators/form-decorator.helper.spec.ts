@@ -3,6 +3,7 @@ import * as ClassValidator from 'class-validator';
 import { Fields } from '../enums';
 import { convertRegExpToStrings } from '../helpers';
 import {
+  ChoiceAttributes,
   FieldAttributes,
   FieldAttributesArguments,
   FieldValidateIfRule,
@@ -24,17 +25,17 @@ describe('FormDecoratorHelper', () => {
   const expectedFinalValidators = [
     {
       name: 'required',
-      errorLabel: 'required_error',
+      errorMessage: 'required_error',
       validationArgs: [],
     },
     {
       name: 'minLength',
-      errorLabel: 'minLength_error',
+      errorMessage: 'minLength_error',
       validationArgs: [],
     },
     {
       name: 'maxLength',
-      errorLabel: 'maxLength_error',
+      errorMessage: 'maxLength_error',
       validationArgs: [],
     },
   ] as [FieldValidator, ...FieldValidator[]];
@@ -191,17 +192,17 @@ describe('FormDecoratorHelper', () => {
       const expectedFinalValidators = [
         {
           name: 'any_validator',
-          errorLabel: 'any_validator_error',
+          errorMessage: 'any_validator_error',
           validationArgs: ['Hello', 42],
         },
         {
           name: 'minLength',
-          errorLabel: 'minLength_error',
+          errorMessage: 'minLength_error',
           validationArgs: [5],
         },
         {
           name: 'maxLength',
-          errorLabel: 'maxLength_error',
+          errorMessage: 'maxLength_error',
           validationArgs: [{ foo: 'bar' }],
         },
       ] as [FieldValidator, ...FieldValidator[]];
@@ -251,9 +252,48 @@ describe('FormDecoratorHelper', () => {
     });
   });
 
+  describe('getDefaultAttributes', () => {
+    const defaultValue = Symbol('defaultValue') as unknown as string;
+
+    it('should return the value of the key if it is defined', () => {
+      // Given
+      const keyMock = 'key';
+      const attributesMock = {
+        [keyMock]: Symbol('testValue'),
+      } as unknown as FieldAttributesArguments;
+
+      // When
+      const result = FormDecoratorHelper.getDefaultAttributes<string>(
+        keyMock,
+        attributesMock,
+        defaultValue,
+      );
+
+      // Then
+      expect(result).toBe(attributesMock[keyMock]);
+    });
+
+    it('should return the default value if the key is not defined', () => {
+      // Given
+      const keyMock = 'key';
+      const attributesMock = {} as FieldAttributesArguments;
+
+      // When
+      const result = FormDecoratorHelper.getDefaultAttributes<string>(
+        keyMock,
+        attributesMock,
+        defaultValue,
+      );
+
+      // Then
+      expect(result).toBe(defaultValue);
+    });
+  });
+
   describe('generateFieldMissingAttributes', () => {
     const defaultOrder = 1;
     const defaultType = 'text';
+    const defaultValidateIf = [];
 
     beforeEach(() => {
       jest.restoreAllMocks();
@@ -268,14 +308,16 @@ describe('FormDecoratorHelper', () => {
       // Given
       const validateIfRuleMock = Symbol('validateIfRule');
       const attributes = {
-        type: 'number',
+        type: 'radio',
         required: true,
         array: true,
         readonly: true,
         order: 2,
+        initialValue: [''],
         validateIf: [validateIfRuleMock as unknown as FieldValidateIfRule],
         validators,
       } as FieldAttributesArguments;
+
       const expectedAttributes = {
         type: attributes.type,
         name: key,
@@ -288,6 +330,14 @@ describe('FormDecoratorHelper', () => {
         validators: expectedFinalValidators,
       } as FieldAttributes;
 
+      jest
+        .spyOn(FormDecoratorHelper, 'getDefaultAttributes')
+        .mockReturnValueOnce(attributes.type)
+        .mockReturnValueOnce(attributes.order)
+        .mockReturnValueOnce(attributes.validateIf);
+
+      FormDecoratorHelper['getInitialValue'] = jest.fn().mockReturnValue(['']);
+
       // When
       const result = FormDecoratorHelper.generateFieldMissingAttributes(
         key,
@@ -298,6 +348,39 @@ describe('FormDecoratorHelper', () => {
 
       // Then
       expect(result).toStrictEqual(expectedAttributes);
+
+      expect(
+        FormDecoratorHelper.generateFieldValidatorsMissingAttributes,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        FormDecoratorHelper.generateFieldValidatorsMissingAttributes,
+      ).toHaveBeenCalledWith(attributes.validators);
+
+      expect(FormDecoratorHelper.getDefaultAttributes).toHaveBeenCalledTimes(3);
+      expect(FormDecoratorHelper.getDefaultAttributes).toHaveBeenNthCalledWith(
+        1,
+        'type',
+        attributes,
+        defaultType,
+      );
+      expect(FormDecoratorHelper.getDefaultAttributes).toHaveBeenNthCalledWith(
+        2,
+        'order',
+        attributes,
+        defaultOrder,
+      );
+      expect(FormDecoratorHelper.getDefaultAttributes).toHaveBeenNthCalledWith(
+        3,
+        'validateIf',
+        attributes,
+        defaultValidateIf,
+      );
+
+      expect(FormDecoratorHelper['getInitialValue']).toHaveBeenCalledTimes(1);
+      expect(FormDecoratorHelper['getInitialValue']).toHaveBeenCalledWith(
+        attributes.array,
+        attributes.initialValue,
+      );
     });
 
     it('should generate field attributes with default values', () => {
@@ -317,6 +400,14 @@ describe('FormDecoratorHelper', () => {
         validators: expectedFinalValidators,
       } as FieldAttributes;
 
+      jest
+        .spyOn(FormDecoratorHelper, 'getDefaultAttributes')
+        .mockReturnValueOnce(defaultType)
+        .mockReturnValueOnce(defaultOrder)
+        .mockReturnValueOnce(defaultValidateIf);
+
+      FormDecoratorHelper['getInitialValue'] = jest.fn().mockReturnValue('');
+
       // When
       const result = FormDecoratorHelper.generateFieldMissingAttributes(
         key,
@@ -327,6 +418,70 @@ describe('FormDecoratorHelper', () => {
 
       // Then
       expect(result).toStrictEqual(expectedAttributes);
+
+      expect(
+        FormDecoratorHelper.generateFieldValidatorsMissingAttributes,
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        FormDecoratorHelper.generateFieldValidatorsMissingAttributes,
+      ).toHaveBeenCalledWith(attributes.validators);
+
+      expect(FormDecoratorHelper.getDefaultAttributes).toHaveBeenCalledTimes(3);
+      expect(FormDecoratorHelper.getDefaultAttributes).toHaveBeenNthCalledWith(
+        1,
+        'type',
+        attributes,
+        defaultType,
+      );
+      expect(FormDecoratorHelper.getDefaultAttributes).toHaveBeenNthCalledWith(
+        2,
+        'order',
+        attributes,
+        defaultOrder,
+      );
+      expect(FormDecoratorHelper.getDefaultAttributes).toHaveBeenNthCalledWith(
+        3,
+        'validateIf',
+        attributes,
+        defaultValidateIf,
+      );
+
+      expect(FormDecoratorHelper['getInitialValue']).toHaveBeenCalledTimes(1);
+      expect(FormDecoratorHelper['getInitialValue']).toHaveBeenCalledWith(
+        false,
+        undefined,
+      );
+    });
+  });
+
+  describe('generateInputChoiceMissingAttributes', () => {
+    it('should add inline attribute key to false if no key was defined', () => {
+      // Given
+      const attributes = {
+        type: Fields.RADIO,
+      } as unknown as ChoiceAttributes;
+
+      // When
+      const result =
+        FormDecoratorHelper.generateInputChoiceMissingAttributes(attributes);
+
+      // Then
+      expect(result).toStrictEqual({ ...attributes, inline: false });
+    });
+
+    it('should keep inline attribute key if it was defined', () => {
+      // Given
+      const attributes = {
+        type: Fields.RADIO,
+        inline: true,
+      } as unknown as ChoiceAttributes;
+
+      // When
+      const result =
+        FormDecoratorHelper.generateInputChoiceMissingAttributes(attributes);
+
+      // Then
+      expect(result).toStrictEqual(attributes);
     });
   });
 
@@ -361,7 +516,7 @@ describe('FormDecoratorHelper', () => {
         validators: [
           {
             name: 'isFilled',
-            errorLabel: `isFilled_error`,
+            errorMessage: `isFilled_error`,
             validationArgs: [],
           },
           ...expectedFinalValidators,

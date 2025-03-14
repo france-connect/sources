@@ -3,15 +3,16 @@
 exports[`ChoiceInput should match the snapshot 1`] = `
 <div>
   <div
-    class="fr-fieldset__element"
+    class="fr-fieldset__element fr-fieldset__element--inline"
   >
     <div
       class="fr-radio-group fr-radio-group--lg"
     >
       <input
-        data-testid="form-input-radio-any_name_mock-any_choice_value_mock--testid"
-        id="form-input-radio-any_name_mock-any_choice_value_mock"
+        data-testid="any_name_mock-any_choice_value_mock--testid"
+        id="any_name_mock-any_choice_value_mock"
         name="any_name_mock"
+        type="radio"
         value="any_value_mock"
       />
       <div
@@ -22,18 +23,20 @@ exports[`ChoiceInput should match the snapshot 1`] = `
 </div>
 `;
 
-exports[`ChoiceInput should match the snapshot when inline and size are not defined 1`] = `
+exports[`ChoiceInput should match the snapshot when disabled is true, inline is false and size is not defined 1`] = `
 <div>
   <div
-    class="fr-fieldset__element fr-fieldset__element--inline"
+    class="fr-fieldset__element"
   >
     <div
       class="fr-radio-group fr-radio-group--md"
     >
       <input
-        data-testid="form-input-radio-any_name_mock-any_choice_value_mock--testid"
-        id="form-input-radio-any_name_mock-any_choice_value_mock"
+        data-testid="any_name_mock-any_choice_value_mock--testid"
+        disabled=""
+        id="any_name_mock-any_choice_value_mock"
         name="any_name_mock"
+        type="radio"
         value="any_value_mock"
       />
       <div

@@ -1,3 +1,5 @@
+import { NO_ENTITY_ID } from '@entities/typeorm';
+
 import { uuid } from '@fc/common';
 
 import { EntityType, PermissionsType } from '../enums';
@@ -14,7 +16,7 @@ export class RelatedEntitiesHelper {
     const ids = permissions
       .filter(RelatedEntitiesHelper.permissionFilter(options))
       .map(({ entityId }) => entityId)
-      .filter((id) => id !== null);
+      .filter((id) => id !== NO_ENTITY_ID);
 
     return ids;
   }

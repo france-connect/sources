@@ -121,12 +121,6 @@ export interface OidcClientLegacyInterface {
   eidas: number;
 
   /**
-   * Only used in core-fca
-   * @todo remove if proConnect fork ratified
-   */
-  ssoDisabled: boolean;
-
-  /**
    * Not used anywhere...
    * @todo remove
    */

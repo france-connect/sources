@@ -131,10 +131,9 @@ export class CoreTrackingService {
     const oidcSession =
       this.sessionService.get<OidcSession>('OidcClient') || {};
 
-    // Defaults to undefined rather than null to not pollute AC logs
     const deviceSession = this.sessionService.get<DeviceSession>('Device') || {
-      isTrusted: undefined,
-      isSuspicious: undefined,
+      isTrusted: null,
+      isSuspicious: null,
     };
 
     const {

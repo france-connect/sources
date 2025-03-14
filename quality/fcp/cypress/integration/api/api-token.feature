@@ -2,25 +2,6 @@
 @usager @apiToken @ignoreInteg01 @ci
 Fonctionnalité: API - token
 
-  @fcpLow @fcpHigh @exceptions
-  Scénario: API token - cas non passant
-    Etant donné que je navigue sur la page fournisseur de service
-    Et que je me connecte au fournisseur d'identité via FranceConnect
-    Et que je suis redirigé vers la page d'information
-    Et que je paramètre un intercepteur pour l'appel à la redirect_uri du fournisseur de service
-    Et que je continue sur le fournisseur de service
-    Et que je prépare une requête "token"
-    Et que je mets "wrong-client-secret" dans la propriété "client_secret" du corps de la requête
-    Et que je mets le code renvoyé par FC au FS dans la propriété "code" du corps de la requête
-    Quand je lance la requête
-    Alors le statut de la réponse est 401
-    Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
-    Et l'entête de la réponse n'a pas de propriété "set-cookie"
-    Et le corps de la réponse n'a pas de propriété "id_token"
-    Et le corps de la réponse a une propriété "error" égale à "invalid_client"
-    Et le corps de la réponse a une propriété "error_description" égale à "client authentication failed (invalid secret provided)"
-    Et le corps de la réponse a une propriété "error_uri"
-
   @fcpLow @fcpHigh
   Scénario: API token - cas nominal
     Etant donné que je navigue sur la page fournisseur de service
@@ -83,3 +64,52 @@ Fonctionnalité: API - token
     Et le payload du JWT a une propriété "amr"
     Et le payload du JWT a une propriété "nonce"
     Et le payload du JWT a une propriété "iss" égale à "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2"
+
+  @fcpLow @fcpHigh @exceptions
+  Scénario: API token - erreur mauvais client_secret
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je me connecte au fournisseur d'identité via FranceConnect
+    Et que je suis redirigé vers la page d'information
+    Et que je paramètre un intercepteur pour l'appel à la redirect_uri du fournisseur de service
+    Et que je continue sur le fournisseur de service
+    Et que je prépare une requête "token"
+    Et que je mets "wrong-client-secret" dans la propriété "client_secret" du corps de la requête
+    Et que je mets le code renvoyé par FC au FS dans la propriété "code" du corps de la requête
+    Quand je lance la requête
+    Alors le statut de la réponse est 401
+    Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
+    Et l'entête de la réponse n'a pas de propriété "set-cookie"
+    Et le corps de la réponse contient une erreur
+    Et le corps de la réponse a une propriété "error" égale à "invalid_client"
+    Et le corps de la réponse a une propriété "error_description" égale à "client authentication failed (invalid secret provided)"
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y04A022&id="
+
+  @fcpLow @fcpHigh @exceptions
+  Scénario: API token - erreur code manquant
+    Etant donné que je navigue sur la page fournisseur de service
+    Et que je me connecte au fournisseur d'identité via FranceConnect
+    Et que je suis redirigé vers la page d'information
+    Et que je paramètre un intercepteur pour l'appel à la redirect_uri du fournisseur de service
+    Et que je continue sur le fournisseur de service
+    Et que je prépare une requête "token"
+    Et que je mets "" dans la propriété "code" du corps de la requête
+    Quand je lance la requête
+    Alors le statut de la réponse est 400
+    Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
+    Et l'entête de la réponse n'a pas de propriété "set-cookie"
+    Et le corps de la réponse contient une erreur
+    Et le corps de la réponse a une propriété "error" égale à "invalid_request"
+    Et le corps de la réponse a une propriété "error_description" égale à "missing required parameter 'code' (undefined)"
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y048017&id="
+
+  @fcpLow @fcpHigh @exceptions
+  Scénario: API token - erreur code expiré ou non trouvé
+    Etant donné que je prépare une requête "token"
+    Quand je lance la requête
+    Alors le statut de la réponse est 400
+    Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
+    Et l'entête de la réponse n'a pas de propriété "set-cookie"
+    Et le corps de la réponse contient une erreur
+    Et le corps de la réponse a une propriété "error" égale à "invalid_grant"
+    Et le corps de la réponse a une propriété "error_description" égale à "grant request is invalid (authorization code not found)"
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y047BF6&id="

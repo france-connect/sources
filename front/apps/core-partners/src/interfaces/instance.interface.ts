@@ -7,7 +7,6 @@ export interface InstanceInterface {
   createdAt: ISODate;
   updatedAt: ISODate;
   id: string;
-  name: string;
   environment: Environment;
   versions: VersionInterface[];
 }

@@ -114,11 +114,17 @@ describe('FraudLoginPage', () => {
   it('should render AlertComponent with specific props if session has expired', () => {
     // Given
     jest.mocked(useSafeContext).mockReturnValueOnce({ expired: true });
+    jest
+      .mocked(AlertComponent)
+      .mockImplementationOnce(({ children }) => <div data-testid="AlertComponent">{children}</div>);
 
     // When
-    render(<FraudLoginPage />);
+    const { container, getByText } = render(<FraudLoginPage />);
+    const textElt = getByText('Votre session a expiré, veuillez vous reconnecter');
 
     // Then
+    expect(container).toMatchSnapshot();
+    expect(textElt).toBeInTheDocument();
     expect(AlertComponent).toHaveBeenCalledOnce();
     expect(AlertComponent).toHaveBeenCalledWith(
       {

@@ -1,3 +1,4 @@
 {
-  "CorePartners.instance.createdAt": "Créée le : {date}"
+  "CorePartners.instance.createdAt": "Créée le : {date}",
+  "Form.FORM_ERROR": "Veuillez réessayer ultérieurement"
 }

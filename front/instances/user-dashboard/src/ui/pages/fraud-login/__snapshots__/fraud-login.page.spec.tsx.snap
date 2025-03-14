@@ -156,3 +156,39 @@ exports[`FraudLoginPage should match the snapshot when session is not expired 1`
   </div>
 </div>
 `;
+
+exports[`FraudLoginPage should render AlertComponent with specific props if session has expired 1`] = `
+<div>
+  <div
+    class="large-container fr-m-auto fr-px-2w fr-mt-8w text-center"
+    id="page-container"
+  >
+    <div
+      data-testid="AlertComponent"
+    >
+      <p>
+        Votre session a expiré, veuillez vous reconnecter
+      </p>
+    </div>
+    <h1
+      class="title fr-mb-5w"
+    >
+      Pour signaler un cas d’usurpation d’identité, veuillez vous connecter
+    </h1>
+    <div
+      data-mockid="LoginFormComponent"
+    />
+    <p
+      class="paragraph fr-m-auto fr-mt-7v fr-mb-3w"
+      data-testid="paragraph"
+    >
+      Une fois connecté, vous pourrez contacter le support FranceConnect en remplissant un formulaire.
+    </p>
+    <span
+      data-mockid="LinkComponent"
+    >
+      Je ne peux pas me connecter
+    </span>
+  </div>
+</div>
+`;

@@ -21,6 +21,7 @@ Fonctionnalité: Instance - Création avec erreurs
       | id_token_signed_response_alg | Ce champ est obligatoire                                 |
     Et les champs suivants ne sont pas en erreur dans le formulaire de création d'instance
       | name                          |
+      | platform                      |
       | signupId                      |
       | IPServerAddressesAndRanges[0] |
       | entityId                      |
@@ -63,7 +64,7 @@ Fonctionnalité: Instance - Création avec erreurs
       | redirect_uris[0]              | http://localhost/callback             |
       | post_logout_redirect_uris[0]  | ftp://testIsUrl.com                   |
       | IPServerAddressesAndRanges[0] | 1.1.1.1/32                            |
-      | id_token_signed_response_alg  | HS256                                 |
+      | id_token_signed_response_alg  | ES256                                 |
       | entityId                      | _4a858a99-5baf-4068-bd59-ff551ede3619 |
     Et je valide le formulaire de création d'instance
     Alors je suis sur la page création d'instance
@@ -72,11 +73,11 @@ Fonctionnalité: Instance - Création avec erreurs
       | signupId                     | Veuillez saisir un numéro valide                                              |
       | site[0]                      | Veuillez saisir une url valide                                                |
       | post_logout_redirect_uris[0] | Veuillez saisir une url valide                                                |
-      | id_token_signed_response_alg | Les algorithmes de signature autorisés sont les suivants: ES256 et RS256      |
       | entityId                     | Veuillez saisir le client id de votre fournisseur de service FranceConnect v1 |
     Et les champs suivants ne sont pas en erreur dans le formulaire de création d'instance
       | name                          |
       | name                          |
+      | platform                      |
       | redirect_uris[0]              |
       | IPServerAddressesAndRanges[0] |
 

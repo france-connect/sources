@@ -109,7 +109,7 @@ export class CryptographyService {
    * @param cipher the cipher to decrypt
    * @returns the data decrypted
    */
-  decrypt(key: string, cipher: Buffer): any {
+  decrypt(key: string, cipher: Buffer): string {
     if (Buffer.byteLength(cipher) <= CIPHER_HEAD_LENGTH) {
       /**
        * @TODO #138 throw a specific exception

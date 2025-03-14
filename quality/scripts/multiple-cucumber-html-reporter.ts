@@ -20,7 +20,6 @@ const [
 // Fetch Test Run Context
 
 const platformName = {
-  'fca-low': 'AgentConnect',
   'fcp-high': 'FranceConnect+',
   'fcp-legacy': 'User-Dashboard FC Legacy',
   'fcp-low': 'FranceConnect',

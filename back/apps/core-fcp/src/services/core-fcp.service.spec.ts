@@ -13,6 +13,7 @@ import { LoggerService } from '@fc/logger';
 import { IdentityProviderMetadata, IOidcIdentity, OidcSession } from '@fc/oidc';
 import { OidcAcrService } from '@fc/oidc-acr';
 import { OidcClientService } from '@fc/oidc-client';
+import { InteractionInterface } from '@fc/oidc-provider';
 import { ScopesService } from '@fc/scopes';
 import { ServiceProviderAdapterMongoService } from '@fc/service-provider-adapter-mongo';
 import { SessionService } from '@fc/session';
@@ -562,7 +563,7 @@ describe('CoreFcpService', () => {
   });
 
   describe('getClaimsLabelsForInteraction', () => {
-    const interactionMock = {};
+    const interactionMock = {} as unknown as InteractionInterface;
     const scopesMock = ['openid', 'profile'];
     const getRichClaimsFromScopesReturnedValue = ['foo'];
 
@@ -604,7 +605,7 @@ describe('CoreFcpService', () => {
   });
 
   describe('getClaimsForInteraction', () => {
-    const interactionMock = {};
+    const interactionMock = {} as unknown as InteractionInterface;
     const scopesMock = ['openid', 'profile'];
     const getRawClaimsFromScopesReturnedValue = ['foo'];
 
@@ -644,13 +645,13 @@ describe('CoreFcpService', () => {
   });
 
   describe('getScopesForInteraction', () => {
+    const interactionMock = {
+      params: {
+        scope: 'openid profile',
+      },
+    } as unknown as InteractionInterface;
+
     it('should return scopes extracted and parsed from interaction', () => {
-      // Given
-      const interactionMock = {
-        params: {
-          scope: 'openid profile',
-        },
-      };
       // When
       const result = service.getScopesForInteraction(interactionMock);
       // Then
@@ -658,12 +659,6 @@ describe('CoreFcpService', () => {
     });
 
     it('should return scopes trim extracted and parsed from interaction', () => {
-      // Given
-      const interactionMock = {
-        params: {
-          scope: ' openid profile ',
-        },
-      };
       // When
       const result = service.getScopesForInteraction(interactionMock);
       // Then
@@ -676,7 +671,7 @@ describe('CoreFcpService', () => {
         params: {
           scope: 'openid profile profile',
         },
-      };
+      } as unknown as InteractionInterface;
       // When
       const result = service.getScopesForInteraction(interactionMock);
       // Then

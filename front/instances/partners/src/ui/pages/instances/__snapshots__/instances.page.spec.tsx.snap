@@ -21,13 +21,6 @@ exports[`InstancesPage should match snapshot, when items are empties 1`] = `
         TileComponent
       </div>
     </div>
-    <div
-      class="fr-col-12"
-    >
-      <div>
-        TileComponent
-      </div>
-    </div>
   </div>
 </div>
 `;
@@ -47,7 +40,7 @@ exports[`InstancesPage should match snapshot, when items are not empties 1`] = `
       </h1>
     </div>
     <div
-      class="fr-col-12"
+      class="fr-col-12 fr-mb-3w"
     >
       <div
         data-mockid="CreateInstanceButton"
@@ -59,13 +52,6 @@ exports[`InstancesPage should match snapshot, when items are not empties 1`] = `
       <div
         data-mockid="InstancesListComponent"
       />
-    </div>
-    <div
-      class="fr-col-12"
-    >
-      <div>
-        TileComponent
-      </div>
     </div>
   </div>
 </div>
@@ -86,10 +72,15 @@ exports[`InstancesPage should match snapshot, when the alert component is displa
       </h1>
     </div>
     <div
-      data-mockid="AlertComponentV2"
-    />
+      data-mockid="AlertComponent"
+    >
+      <div>
+        AlertComponent
+      </div>
+      <div />
+    </div>
     <div
-      class="fr-col-12"
+      class="fr-col-12 fr-mb-3w"
     >
       <div
         data-mockid="CreateInstanceButton"
@@ -101,13 +92,6 @@ exports[`InstancesPage should match snapshot, when the alert component is displa
       <div
         data-mockid="InstancesListComponent"
       />
-    </div>
-    <div
-      class="fr-col-12"
-    >
-      <div>
-        TileComponent
-      </div>
     </div>
     <span
       data-mockid="ScrollRestoration"

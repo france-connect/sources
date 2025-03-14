@@ -16,6 +16,7 @@ export interface FieldAttributes extends BaseAttributes, PropsWithHintType {
   readonly: boolean;
 
   value?: string;
+  inline?: boolean;
   maxChars?: number;
   disabled?: boolean;
   initialValue?: string | string[];

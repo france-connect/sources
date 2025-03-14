@@ -8,7 +8,6 @@
   "Form.message.requiredFields": "Tous les champs avec un astérisque sont obligatoires.",
   "Form.select.placeholder": "Sélectionner une option",
   "Form.textarea.maxlength": " / {maxLength} caractères",
-  "Form.FORM_ERROR": "Une erreur s'est produite lors de la soumission du formulaire.",
   "Form.multiple.add": "Ajouter une valeur",
   "Form.multiple.remove": "Supprimer cette valeur"
 }

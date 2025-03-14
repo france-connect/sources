@@ -3,6 +3,8 @@ import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { Reflector } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { NO_ENTITY_ID } from '@entities/typeorm';
+
 import { PartnersAccountSession } from '@fc/partners-account';
 import { SessionService } from '@fc/session';
 
@@ -16,7 +18,7 @@ import { BasePermissionsHandlerService } from './base-permissions-handler.servic
 
 jest.mock('../decorators');
 
-describe('BaseRoleHandlerService', () => {
+describe('BasePermissionsHandlerService', () => {
   let service: BasePermissionsHandlerService;
 
   class AppTest extends BasePermissionsHandlerService {
@@ -242,10 +244,10 @@ describe('BaseRoleHandlerService', () => {
       expect(result).toStrictEqual(resultMock);
     });
 
-    it('should return entityId with null value if no entityIdLocation was provide and user permissions', () => {
+    it('should return entityId with NO_ENTITY_ID value if no entityIdLocation was provide and user permissions', () => {
       // Given
       const resultMock = {
-        entityId: null,
+        entityId: NO_ENTITY_ID,
         userPermissions: userPermissionsMock,
       };
 

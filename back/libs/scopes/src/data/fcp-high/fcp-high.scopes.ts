@@ -9,7 +9,6 @@ export const scopes: ScopesInterface = {
     claims.gender,
     claims.preferred_username,
   ],
-  phone: [claims.phone_number],
   birth: [claims.birthplace, claims.birthcountry],
   // OIDC fashion naming
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -30,7 +29,6 @@ export const scopes: ScopesInterface = {
   family_name: [claims.family_name],
   email: [claims.email],
   preferred_username: [claims.preferred_username],
-  address: [claims.address],
   rnipp_identite_pivot: [
     claims.gender,
     claims.rnipp_gender,

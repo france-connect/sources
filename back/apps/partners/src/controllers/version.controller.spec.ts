@@ -1,10 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AccessControlGuard } from '@fc/access-control';
-import { MetadataFormService } from '@fc/dto2form';
+import { MetadataFormService, PartnersI18nService } from '@fc/dto2form';
 import { ServiceProviderInstanceVersionDto } from '@fc/partners-service-provider-instance-version';
 
-import { PartnersI18nService } from '../services';
 import { VersionController } from './version.controller';
 
 describe('VersionController', () => {

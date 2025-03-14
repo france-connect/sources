@@ -1,12 +1,16 @@
 {
   "Partners.button.createInstance": "Ajouter une instance de test",
-  "Partners.createpage.title": "Création d'une instance",
-  "Partners.updatepage.title": "Modification d'une instance",
-  "Partners.homepage.sandboxTitle": "Mon Bac à Sable",
+  "Partners.loginpage.title": "Mon espace partenaires",
+  "Partners.loginpage.description": "Centralisez toutes les étapes d’implémentation de FranceConnect sur votre fournisseur de service.",
+  "Partners.createpage.title": "Création d’une instance",
+  "Partners.updatepage.title": "Modification d’une instance",
+  "Partners.homepage.sandboxTitle": "Mon instance de test",
   "Partners.homepage.createTileDescription": "Munissez vous de votre numéro de datapass pour réaliser les tests avec un bac à sable mis à votre disposition.",
   "Partners.homepage.createTileTitle": "Créer une instance de test",
-  "Partners.homepage.sandboxTileDescription": "Accéder et créer vos instances de test avec les clés publiques. Il n’est pas lié à vos environnement d’intégration et de production.",
-  "Partners.homepage.sandboxTileTitle": "Bac à sable public",
   "Partners.instance.successCreate": "Votre instance de test a été créée.",
-  "Partners.instance.successUpdate": "Votre instance de test a été mise à jour."
+  "Partners.instance.successUpdate": "Votre instance de test a été mise à jour.",
+  "Partners.page.noticeTitle": "Disponible pour les fournisseurs de service FranceConnect uniquement.",
+  "Partners.page.noticeDescription": "L’espace partenaire sera prochainement disponible pour les fournisseurs de service FranceConnect+",
+  "DSFR.notice.close": "Masquer le message",
+  "Form.message.requestFailed": "Une erreur s’est produite."
 }

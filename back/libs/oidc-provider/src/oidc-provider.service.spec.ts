@@ -641,7 +641,7 @@ describe('OidcProviderService', () => {
   });
 
   describe('finishInteraction()', () => {
-    it('should call call finishInteraction with param', () => {
+    it('should call call finishInteraction with param', async () => {
       // Given
       const reqMock = Symbol('req');
       const resMock = Symbol('res');
@@ -650,7 +650,7 @@ describe('OidcProviderService', () => {
         spIdentity: {},
       };
       // When
-      service.finishInteraction(reqMock, resMock, sessionDataMock);
+      await service.finishInteraction(reqMock, resMock, sessionDataMock);
       // Then
       expect(oidcProviderConfigAppMock.finishInteraction).toHaveBeenCalledTimes(
         1,

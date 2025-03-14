@@ -5,7 +5,7 @@ import { AppConfig as AppGenericConfig } from '@fc/app';
 export class AppConfig extends AppGenericConfig {
   @IsString()
   @IsNotEmpty()
-  readonly agentConnectIdpHint: string;
+  readonly proConnectIdpId: string;
 
   @IsInt()
   readonly credentialsBytesLength: number;

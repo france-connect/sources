@@ -8,35 +8,6 @@
     "tsConfigPath": "instances/core-fcp-high/tsconfig.app.json"
   },
   "projects": {
-    "core-fca-low": {
-      "type": "application",
-      "root": "instances/core-fca-low",
-      "entryFile": "main",
-      "sourceRoot": "instances/core-fca-low/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/core-fca-low/tsconfig.app.json",
-        "assets": [
-          "../../../apps/core-fca/**/*.ejs",
-          "../../../apps/core-fca/**/*.css",
-          "../../../apps/core-fca/**/*.js",
-          "../../../apps/core-fca/**/*.svg",
-          "../../../apps/core-fca/**/*.png",
-          "../../../apps/core-fca/**/*.ico",
-          "../../../apps/core-fca/**/*.woff2",
-          "../../../apps/core-fca/**/*.webmanifest",
-          "../../../apps/core-fca/**/robots.txt",
-          "../../../instances/core-fca-low/src/**/*.js",
-          "../../../instances/core-fca-low/src/**/*.css",
-          "../../../instances/core-fca-low/src/**/*.ejs",
-          "../../../instances/core-fca-low/src/**/*.ico",
-          "../../../instances/core-fca-low/src/**/*.svg",
-          "../../../instances/core-fca-low/src/**/*.png",
-          "../../../instances/core-fca-low/src/**/*.woff2",
-          "../../../instances/core-fca-low/src/**/*.webmanifest",
-          "../../../instances/core-fca-low/src/**/robots.txt"
-        ]
-      }
-    },
     "eidas-bridge-instance": {
       "type": "application",
       "root": "instances/eidas-bridge",
@@ -164,27 +135,6 @@
         ]
       }
     },
-    "mock-service-provider-fca-low": {
-      "type": "application",
-      "root": "instances/mock-service-provider-fca-low",
-      "entryFile": "main",
-      "sourceRoot": "instances/mock-service-provider-fca-low/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/mock-service-provider-fca-low/tsconfig.app.json",
-        "assets": [
-          "../../../apps/mock-service-provider/**/*.js",
-          "../../../apps/mock-service-provider/**/*.ejs",
-          "../../../apps/mock-service-provider/**/*.css",
-          "../../../apps/mock-service-provider/**/*.svg",
-          "../../../apps/mock-service-provider/**/*.png",
-          "../../../instances/mock-service-provider-fca-low/**/*.js",
-          "../../../instances/mock-service-provider-fca-low/**/*.ejs",
-          "../../../instances/mock-service-provider-fca-low/**/*.css",
-          "../../../instances/mock-service-provider-fca-low/**/*.svg",
-          "../../../instances/mock-service-provider-fca-low/**/*.png"
-        ]
-      }
-    },
     "mock-service-provider-fcp-low": {
       "type": "application",
       "root": "instances/mock-service-provider-fcp-low",
@@ -227,24 +177,24 @@
         ]
       }
     },
-    "mock-identity-provider-fca-low": {
+    "mock-proconnect": {
       "type": "application",
-      "root": "instances/mock-identity-provider-fca-low",
+      "root": "instances/mock-proconnect",
       "entryFile": "main",
-      "sourceRoot": "instances/mock-identity-provider-fca-low/src",
+      "sourceRoot": "instances/mock-proconnect/src",
       "compilerOptions": {
-        "tsConfigPath": "instances/mock-identity-provider-fca-low/tsconfig.app.json",
+        "tsConfigPath": "instances/mock-proconnect/tsconfig.app.json",
         "assets": [
           "../../../apps/mock-identity-provider/**/*.ejs",
           "../../../apps/mock-identity-provider/**/*.css",
           "../../../apps/mock-identity-provider/**/*.svg",
           "../../../apps/mock-identity-provider/**/*.png",
           "../../../apps/mock-identity-provider/**/*.csv",
-          "../../../instances/mock-identity-provider-fca-low/**/*.ejs",
-          "../../../instances/mock-identity-provider-fca-low/**/*.css",
-          "../../../instances/mock-identity-provider-fca-low/**/*.svg",
-          "../../../instances/mock-identity-provider-fca-low/**/*.csv",
-          "../../../instances/mock-identity-provider-fca-low/**/*.png"
+          "../../../instances/mock-proconnect/**/*.ejs",
+          "../../../instances/mock-proconnect/**/*.css",
+          "../../../instances/mock-proconnect/**/*.svg",
+          "../../../instances/mock-proconnect/**/*.csv",
+          "../../../instances/mock-proconnect/**/*.png"
         ]
       }
     },
@@ -304,15 +254,6 @@
           "../../../apps/user-dashboard/**/*.png",
           "../../../instances/user-dashboard/**/*.ejs"
         ]
-      }
-    },
-    "bridge-http-proxy-rie": {
-      "type": "application",
-      "root": "instances/bridge-http-proxy-rie",
-      "entryFile": "main",
-      "sourceRoot": "instances/bridge-http-proxy-rie/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/bridge-http-proxy-rie/tsconfig.app.json"
       }
     },
     "csmr-user-preferences-high": {
@@ -463,15 +404,6 @@
       "sourceRoot": "libs/core-fcp-logger/src",
       "compilerOptions": {
         "tsConfigPath": "libs/core-fcp-logger/tsconfig.lib.json"
-      }
-    },
-    "core-fca": {
-      "type": "library",
-      "root": "apps/core-fca",
-      "entryFile": "index",
-      "sourceRoot": "apps/core-fca/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/core-fca/tsconfig.lib.json"
       }
     },
     "eidas-bridge": {
@@ -843,33 +775,6 @@
         "tsConfigPath": "libs/csv/tsconfig.lib.json"
       }
     },
-    "bridge-http-proxy": {
-      "type": "library",
-      "root": "apps/bridge-http-proxy",
-      "entryFile": "index",
-      "sourceRoot": "apps/bridge-http-proxy/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/bridge-http-proxy/tsconfig.lib.json"
-      }
-    },
-    "csmr-http-proxy": {
-      "type": "library",
-      "root": "apps/csmr-http-proxy",
-      "entryFile": "index",
-      "sourceRoot": "apps/csmr-http-proxy/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/csmr-http-proxy/tsconfig.app.json"
-      }
-    },
-    "csmr-rie": {
-      "type": "application",
-      "root": "instances/csmr-rie",
-      "entryFile": "main",
-      "sourceRoot": "instances/csmr-rie/src",
-      "compilerOptions": {
-        "tsConfigPath": "instances/csmr-rie/tsconfig.app.json"
-      }
-    },
     "data-provider-core-auth": {
       "type": "library",
       "root": "libs/data-provider-core-auth",
@@ -895,15 +800,6 @@
       "sourceRoot": "libs/csmr-fraud-client/src",
       "compilerOptions": {
         "tsConfigPath": "libs/csmr-fraud-client/tsconfig.lib.json"
-      }
-    },
-    "hybridge-http-proxy": {
-      "type": "library",
-      "root": "libs/hybridge-http-proxy",
-      "entryFile": "index",
-      "sourceRoot": "libs/hybridge-http-proxy/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/hybridge-http-proxy/tsconfig.lib.json"
       }
     },
     "csmr-tracks-instance": {
@@ -1000,15 +896,6 @@
         "tsConfigPath": "libs/jwt/tsconfig.lib.json"
       }
     },
-    "fqdn-to-idp-adapter-mongo": {
-      "type": "library",
-      "root": "libs/fqdn-to-idp-adapter-mongo",
-      "entryFile": "index",
-      "sourceRoot": "libs/fqdn-to-idp-adapter-mongo/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/fqdn-to-idp-adapter-mongo/tsconfig.lib.json"
-      }
-    },
     "async-local-storage": {
       "type": "library",
       "root": "libs/async-local-storage",
@@ -1052,15 +939,6 @@
       "sourceRoot": "libs/exceptions/src",
       "compilerOptions": {
         "tsConfigPath": "libs/exceptions/tsconfig.lib.json"
-      }
-    },
-    "account-fca": {
-      "type": "library",
-      "root": "libs/account-fca",
-      "entryFile": "index",
-      "sourceRoot": "libs/account-fca/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/account-fca/tsconfig.lib.json"
       }
     },
     "device": {
@@ -1232,6 +1110,15 @@
       "sourceRoot": "libs/override-code/src",
       "compilerOptions": {
         "tsConfigPath": "libs/override-code/tsconfig.lib.json"
+      }
+    },
+    "typeorm": {
+      "type": "library",
+      "root": "libs/typeorm",
+      "entryFile": "index",
+      "sourceRoot": "libs/typeorm/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/typeorm/tsconfig.lib.json"
       }
     }
   }

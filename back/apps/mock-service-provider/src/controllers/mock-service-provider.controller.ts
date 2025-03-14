@@ -164,10 +164,6 @@ export class MockServiceProviderController {
   ) {
     let response;
     try {
-      /**
-       * @TODO #251 ETQ Dev, j'utilise une configuration pour savoir si j'utilise FC, AC, EIDAS, et avoir les valeurs de scope et acr en config et non en dur.
-       * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/251
-       */
       const providerUid = this.getIdpId();
       const { accessToken } = body;
 
@@ -293,10 +289,6 @@ export class MockServiceProviderController {
   ) {
     let response;
     try {
-      /**
-       * @TODO #251 ETQ Dev, j'utilise une configuration pour savoir si j'utilise FC, AC, EIDAS, et avoir les valeurs de scope et acr en config et non en dur.
-       * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/251
-       */
       const providerUid = this.getIdpId();
 
       const { accessToken, idpRefreshToken } =

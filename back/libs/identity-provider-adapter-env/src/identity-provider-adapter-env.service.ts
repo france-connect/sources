@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash';
 
 import { Injectable } from '@nestjs/common';
 
-import { asyncFilter, validateDto } from '@fc/common';
+import { ArrayAsyncHelper, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger';
@@ -36,7 +36,7 @@ export class IdentityProviderAdapterEnvService
       'IdentityProviderAdapterEnv',
     );
 
-    const result: IdentityProviderAdapter[] = await asyncFilter(
+    const result = await ArrayAsyncHelper.filterAsync<IdentityProviderAdapter>(
       list,
       async ({
         clientSecretEncryptKey: _clientSecretEncryptKey,

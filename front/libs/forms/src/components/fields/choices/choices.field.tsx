@@ -14,9 +14,7 @@ interface ChoicesFieldProps {
 export const ChoicesField = React.memo(({ choices, config }: ChoicesFieldProps) => {
   const { hint, label, name, required, type, validate } = config;
 
-  const { meta } = useField(name, {
-    subscription: { error: true, touched: true },
-  });
+  const { meta } = useField(name);
 
   const { errorMessage, hasError, isValid } = useFieldMeta(meta);
 
@@ -35,7 +33,12 @@ export const ChoicesField = React.memo(({ choices, config }: ChoicesFieldProps) 
           value={choice.value}
         />
       ))}
-      <MessageElement error={errorMessage} id={name} isValid={isValid} />
+      <MessageElement
+        dataTestId={`${name}-messages`}
+        error={errorMessage}
+        id={name}
+        isValid={isValid}
+      />
     </FieldsetElement>
   );
 });

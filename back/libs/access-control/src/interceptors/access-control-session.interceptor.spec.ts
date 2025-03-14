@@ -25,6 +25,7 @@ describe('AccessControlSessionInterceptor', () => {
 
   const permissionsMock: PartnersAccountPermission[] = [
     {
+      accountId: undefined,
       id: 'hello',
       account: undefined,
       permissionType: PermissionsType.VIEW,
@@ -32,6 +33,7 @@ describe('AccessControlSessionInterceptor', () => {
       entityId: 'entityIdValue1',
     },
     {
+      accountId: undefined,
       id: 'hello',
       account: undefined,
       permissionType: PermissionsType.EDIT,

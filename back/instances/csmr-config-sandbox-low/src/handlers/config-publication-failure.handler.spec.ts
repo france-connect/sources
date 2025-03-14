@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PublicationStatusEnum } from '@entities/typeorm';
 
 import { ActionTypes, ConfigMessageDto } from '@fc/csmr-config-client';
-import { ExceptionCaughtEvent } from '@fc/exceptions';
+import { BaseException, ExceptionCaughtEvent } from '@fc/exceptions';
 
 import { ConfigPublicationFailureEventHandler } from './config-publication-failure.handler';
 
@@ -24,7 +24,7 @@ describe('ConfigPublicationFailureEventHandler', () => {
     payload: { id: 'payload-mock' },
   } as unknown as ConfigMessageDto;
 
-  const error = new Error('error');
+  const error = new Error('error') as unknown as BaseException;
 
   const eventMock = new ExceptionCaughtEvent(error, ctxMock);
 

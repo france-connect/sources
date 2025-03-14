@@ -7,7 +7,7 @@ import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CsmrConfigClientModule } from '@fc/csmr-config-client';
 import { CsrfModule } from '@fc/csrf';
-import { Dto2formModule } from '@fc/dto2form';
+import { Dto2formModule, FormValidationExceptionFilter } from '@fc/dto2form';
 import {
   ExceptionsModule,
   FcWebJsonExceptionFilter,
@@ -39,12 +39,11 @@ import {
   PartnersController,
   VersionController,
 } from './controllers/';
-import { FormValidationExceptionFilter } from './filters';
 import { AppPermissionsHandler } from './handlers';
 import {
   PartnerPublicationService,
-  PartnersI18nService,
   PartnersInstanceVersionFormService,
+  PartnersOidcClientService,
 } from './services';
 
 const oidcClientModule = OidcClientModule.register(
@@ -52,6 +51,10 @@ const oidcClientModule = OidcClientModule.register(
   IdentityProviderAdapterEnvModule,
   ServiceProviderAdapterEnvService,
   ServiceProviderAdapterEnvModule,
+);
+
+const accessControlModule = AccessControlModule.withRolesHandler(
+  AppPermissionsHandler,
 );
 
 @Module({
@@ -70,9 +73,9 @@ const oidcClientModule = OidcClientModule.register(
     CqrsModule,
     ViewTemplatesModule,
     PostgresModule,
-    PartnersAccountModule,
+    PartnersAccountModule.register(accessControlModule),
     PartnersServiceProviderInstanceVersionModule,
-    AccessControlModule.withRolesHandler(AppPermissionsHandler),
+    accessControlModule,
     Dto2formModule,
     CsmrConfigClientModule.registerFor('SandboxLow'),
     HttpProxyModule,
@@ -93,8 +96,8 @@ const oidcClientModule = OidcClientModule.register(
       provide: APP_FILTER,
       useClass: FormValidationExceptionFilter,
     },
-    PartnersI18nService,
     PartnersInstanceVersionFormService,
+    PartnersOidcClientService,
   ],
   controllers: [
     InstanceController,

@@ -50,9 +50,7 @@ describe('ChoicesField', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(useField).toHaveBeenCalledOnce();
-    expect(useField).toHaveBeenCalledWith('any-name-mock', {
-      subscription: { error: true, touched: true },
-    });
+    expect(useField).toHaveBeenCalledWith('any-name-mock');
     expect(useFieldMeta).toHaveBeenCalledOnce();
     expect(useFieldMeta).toHaveBeenCalledWith(expect.any(Object));
     expect(FieldsetElement).toHaveBeenCalledOnce();
@@ -78,6 +76,7 @@ describe('ChoicesField', () => {
     expect(MessageElement).toHaveBeenCalledOnce();
     expect(MessageElement).toHaveBeenCalledWith(
       {
+        dataTestId: 'any-name-mock-messages',
         error: 'any-errorMessage-mock',
         id: 'any-name-mock',
         isValid: false,

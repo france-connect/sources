@@ -8,13 +8,13 @@ describe('ServiceProviderService', () => {
   let service: ServiceProviderAdapterEnvService;
 
   const validServiceProviderMock = {
-    name: 'FSA - FSA1-LOW',
-    title: 'FSA - FSA1-LOW - TITLE',
+    name: 'FSP - FSP1-LOW',
+    title: 'FSP - FSP1-LOW - TITLE',
     redirect_uris: [
-      'https://core-fca-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fia1-low',
+      'https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/oidc-callback/fip1-low',
     ],
     post_logout_redirect_uris: [
-      'https://core-fca-low.docker.dev-franceconnect.fr/logout-callback',
+      'https://core-fcp-low.docker.dev-franceconnect.fr/logout-callback',
     ],
     client_secret: 'client_secret',
     client_id: '123',
@@ -31,7 +31,7 @@ describe('ServiceProviderService', () => {
     userinfo_encrypted_response_alg: 'RSA-OAEP',
     userinfo_encrypted_response_enc: 'A256GCM',
     jwks_uri:
-      'https://core-fca-low.docker.dev-franceconnect.fr/api/v2/client/.well-known/keys',
+      'https://core-fcp-low.docker.dev-franceconnect.fr/api/v2/client/.well-known/keys',
   };
 
   const configMock = {

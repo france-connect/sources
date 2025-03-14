@@ -15,7 +15,9 @@ describe('FormErrorScrollComponent', () => {
 
   it('should match its snapshot', () => {
     // When
-    const { container } = renderWithFinalForm(<FormErrorScrollComponent />);
+    const { container } = renderWithFinalForm(
+      <FormErrorScrollComponent elementClassName={expect.any(String)} />,
+    );
 
     // Then
     expect(container).toMatchSnapshot();
@@ -26,7 +28,9 @@ describe('FormErrorScrollComponent', () => {
     const activeMock = Symbol('active-mock') as unknown as boolean;
 
     // When
-    renderWithFinalForm(<FormErrorScrollComponent active={activeMock} />);
+    renderWithFinalForm(
+      <FormErrorScrollComponent active={activeMock} elementClassName={expect.any(String)} />,
+    );
     const { subscription } = jest.mocked(FormSpy).mock.calls[0][0];
 
     // Then
@@ -37,7 +41,7 @@ describe('FormErrorScrollComponent', () => {
 
   it('should render FormSpy mock with a onChange prop', () => {
     // When
-    renderWithFinalForm(<FormErrorScrollComponent />);
+    renderWithFinalForm(<FormErrorScrollComponent elementClassName={expect.any(String)} />);
     const { onChange } = jest.mocked(FormSpy).mock.calls[0][0];
 
     // Then
@@ -46,16 +50,16 @@ describe('FormErrorScrollComponent', () => {
 
   it('should call useScrollToElement when the component is render with classname parameter', () => {
     // When
-    renderWithFinalForm(<FormErrorScrollComponent />);
+    renderWithFinalForm(<FormErrorScrollComponent elementClassName="any-elementClassname-mock" />);
 
     // Then
     expect(useScrollToElement).toHaveBeenCalledOnce();
-    expect(useScrollToElement).toHaveBeenCalledWith('.fr-message--error');
+    expect(useScrollToElement).toHaveBeenCalledWith('any-elementClassname-mock');
   });
 
   it('should call useScrollToElement when FormSpy onChange is called', () => {
     // When
-    renderWithFinalForm(<FormErrorScrollComponent />);
+    renderWithFinalForm(<FormErrorScrollComponent elementClassName={expect.any(String)} />);
     const { onChange } = jest.mocked(FormSpy).mock.calls[0][0] as { onChange: () => void };
     onChange();
 

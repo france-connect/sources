@@ -53,6 +53,13 @@ Then(
 );
 
 Then(
+  'le corps de la réponse a une propriété {string} contenant {string}',
+  function (property: string, value: string) {
+    cy.get('@apiResponse').its('body').its(property).should('include', value);
+  },
+);
+
+Then(
   'le corps de la réponse a une propriété {string}',
   function (property: string) {
     cy.get('@apiResponse').its('body').should('have.property', property);

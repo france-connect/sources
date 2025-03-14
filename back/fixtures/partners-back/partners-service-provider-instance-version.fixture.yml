@@ -17,6 +17,7 @@ items:
         id_token_signed_response_alg: 'ES256',
         client_id: '6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950',
         client_secret: 'a970fc88b3111fcfdce515c2ee03488d8a349e5379a3ba2aa48c225dcea243a5',
+        platform: 'CORE_FCP',
       }
     createdAt: '2023-02-22T23:00:00.000Z'
     updatedAt: '2023-05-02T22:00:00.000Z'
@@ -38,6 +39,7 @@ items:
         id_token_signed_response_alg: 'ES256',
         client_id: '6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950',
         client_secret: 'a970fc88b3111fcfdce515c2ee03488d8a349e5379a3ba2aa48c225dcea243a5',
+        platform: 'CORE_FCP',
       }
     createdAt: '2024-02-24T23:00:00.000Z'
     updatedAt: '2024-05-02T22:00:00.000Z'
@@ -59,6 +61,7 @@ items:
         id_token_signed_response_alg: 'ES256',
         client_id: '6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950',
         client_secret: 'a970fc88b3111fcfdce515c2ee03488d8a349e5379a3ba2aa48c225dcea243a5',
+        platform: 'CORE_FCP',
       }
     createdAt: '2022-03-26T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
@@ -76,6 +79,7 @@ items:
         id_token_signed_response_alg: 'ES256',
         client_id: '016db6483500ca9c22b41f3a5c657701e353188345fd4dbf7e8bbe1e954a507f',
         client_secret: '4c9c3cd07d59d0f58ef9b5edd4b8b693d6bb79991074534a17f9ff11d06dc1dd',
+        platform: 'CORE_FCP',
       }
     createdAt: '2022-03-26T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
@@ -93,6 +97,7 @@ items:
         id_token_signed_response_alg: 'ES256',
         client_id: '016db6483500ca9c22b41f3a5c657701e353188345fd4dbf7e8bbe1e954a507f',
         client_secret: '4c9c3cd07d59d0f58ef9b5edd4b8b693d6bb79991074534a17f9ff11d06dc1dd',
+        platform: 'CORE_FCP',
       }
     createdAt: '2022-03-26T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'
@@ -111,6 +116,7 @@ items:
         entityId: 'a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc',
         client_id: '016db6483500ca9c22b41f3a5c657701e353188345fd4dbf7e8bbe1e954a507f',
         client_secret: '4c9c3cd07d59d0f58ef9b5edd4b8b693d6bb79991074534a17f9ff11d06dc1dd',
+        platform: 'CORE_FCP',
       }
     createdAt: '2022-03-26T23:00:00.000Z'
     updatedAt: '2022-05-02T22:00:00.000Z'

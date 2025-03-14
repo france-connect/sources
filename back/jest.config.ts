@@ -31,11 +31,9 @@ const config: Config = {
   moduleNameMapper: {
     '^jose/(.*)$': '<rootDir>/node_modules/jose/dist/node/cjs/$1',
     '@entities/(.*)': '<rootDir>/entities/$1',
-    '^@fc/core-fca(|/.*)$': '<rootDir>/apps/core-fca/src$1',
     '^@fc/user-dashboard(|/.*)$': '<rootDir>/apps/user-dashboard/src$1',
     '^@fc/core-fcp(|/.*)$': '<rootDir>/apps/core-fcp/src$1',
     '^@fc/csmr-hsm(|/.*)$': '<rootDir>/apps/csmr-hsm/src$1',
-    '^@fc/csmr-http-proxy(|/.*)$': '<rootDir>/apps/csmr-http-proxy/src$1',
     '^@fc/mock-service-provider(|/.*)$':
       '<rootDir>/apps/mock-service-provider/src$1',
     '^@fc/eidas-bridge(|/.*)$': '<rootDir>/apps/eidas-bridge/src$1',
@@ -46,8 +44,6 @@ const config: Config = {
       '<rootDir>/libs/identity-provider-adapter-mongo/src$1',
     '^@fc/data-provider-adapter-mongo(|/.*)$':
       '<rootDir>/libs/data-provider-adapter-mongo/src$1',
-    '^@fc/fqdn-to-idp-adapter-mongo(|/.*)$':
-      '<rootDir>/libs/fqdn-to-idp-adapter-mongo/src/$1',
     '^@fc/identity(|/.*)$': '<rootDir>/libs/identity/src$1',
     '^@fc/service-provider-adapter-env(|/.*)$':
       '<rootDir>/libs/service-provider-adapter-env/src$1',
@@ -102,7 +98,6 @@ const config: Config = {
     '^@fc/feature-handler(|/.*)$': '<rootDir>/libs/feature-handler/src$1',
     '^@fc/elasticsearch(|/.*)$': '<rootDir>/libs/elasticsearch/src$1',
     '^@fc/csv(|/.*)$': '<rootDir>/libs/csv/src/$1',
-    '^@fc/bridge-http-proxy(|/.*)$': '<rootDir>/apps/bridge-http-proxy/src$1',
     '^@fc/csmr-user-preferences(|/.*)$':
       '<rootDir>/apps/csmr-user-preferences/src$1',
     '^@fc/data-provider-core-auth(|/.*)$':
@@ -114,8 +109,6 @@ const config: Config = {
       '<rootDir>/libs/csmr-account-client/src/$1',
     '^@fc/tracks-adapter-elasticsearch(|/.*)$':
       '<rootDir>/libs/tracks-adapter-elasticsearch/src/$1',
-    '^@fc/hybridge-http-proxy(|/.*)$':
-      '<rootDir>/libs/hybridge-http-proxy/src$1',
     '^@fc/user-preferences(|/.*)$': '<rootDir>/libs/user-preferences/src$1',
     '^@fc/csmr-tracks(|/.*)$': '<rootDir>/apps/csmr-tracks/src/$1',
     '^@fc/csmr-account(|/.*)$': '<rootDir>/apps/csmr-account/src/$1',
@@ -142,7 +135,6 @@ const config: Config = {
     '^@fc/exceptions(|/.*)$': '<rootDir>/libs/exceptions/src/$1',
     '^@fc/i18n(|/.*)$': '<rootDir>/libs/i18n/src/$1',
     '^@mocks/i18n(|/.*)$': '<rootDir>/libs/i18n/.mocks$1',
-    '^@fc/account-fca(|/.*)$': '<rootDir>/libs/account-fca/src/$1',
     '^@fc/partners(|/.*)$': '<rootDir>/apps/partners/src/$1',
     '^@fc/device(|/.*)$': '<rootDir>/libs/device/src/$1',
     '^@fc/dto2form(|/.*)$': '<rootDir>/libs/dto2form/src/$1',
@@ -150,6 +142,7 @@ const config: Config = {
     '^@fc/logger-plugins(|/.*)$': '<rootDir>/libs/logger-plugins/src/$1',
     '^@mocks/common(|/.*)$': '<rootDir>/libs/common/.mocks/$1',
     '^@mocks/typeorm(|/.*)$': '<rootDir>/libs/typeorm/.mocks/$1',
+    '^@fc/typeorm(|/.*)$': '<rootDir>/libs/typeorm/src/$1',
     '^@fc/postgres(|/.*)$': '<rootDir>/libs/postgres/src/$1',
     '^@fc/partners-account(|/.*)$': '<rootDir>/libs/partners-account/src/$1',
     '^@fc/partners-organisation(|/.*)$':

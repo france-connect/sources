@@ -1,5 +1,64 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`UserPreferencesFormComponent should call AlertComponent with params when the form has errors 1`] = `
+<div>
+  <form
+    data-testid="user-preferences-form"
+    id="user-preferences-form-component"
+  >
+    <h1
+      class="title fr-h3 fr-mt-5w fr-mb-2w"
+    >
+      Mes réglages
+    </h1>
+    <p
+      class="fr-mt-2w"
+    >
+      Attention : 
+      <strong>
+        Vous devez avoir au moins un compte autorisé
+      </strong>
+       pour continuer à utiliser FranceConnect. Nous vous conseillons de ne bloquer que les comptes que vous n’utilisez pas.
+    </p>
+    <div>
+      ServicesListComponent
+    </div>
+    <div
+      data-mockid="AlertComponent"
+    >
+      <p
+        class="fr-alert__title"
+      >
+        Attention, vous devez avoir au moins un compte autorisé pour continuer à utiliser FranceConnect.
+      </p>
+      <p>
+        Veuillez choisir au moins un compte autorisé pour pouvoir enregistrer vos réglages.
+      </p>
+    </div>
+    <p
+      class="fr-my-5w"
+    >
+      Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
+      <strong>
+         Par défaut leur utilisation sera autorisée.
+      </strong>
+      <br />
+      Pour plus de sécurité, vous pouvez les bloquer dès maintenant et pourrez les autoriser à tout moment depuis cette page.
+    </p>
+    <div>
+      ToggleInput
+    </div>
+    <div
+      class="text-center fr-mt-5w"
+    >
+      <div>
+        SimpleButton
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
 exports[`UserPreferencesFormComponent should match the snapshot, display into a desktop viewport 1`] = `
 <div>
   <form
@@ -291,6 +350,53 @@ exports[`UserPreferencesFormComponent should match the snapshot, display into a 
           Veuillez choisir au moins un compte autorisé pour pouvoir enregistrer vos réglages.
         </p>
       </div>
+    </div>
+    <p
+      class="fr-my-5w"
+    >
+      Il est possible que FranceConnect mette à votre disposition dans le futur de nouveaux comptes pour vous connecter à vos services.
+      <strong>
+         Par défaut leur utilisation sera autorisée.
+      </strong>
+      <br />
+      Pour plus de sécurité, vous pouvez les bloquer dès maintenant et pourrez les autoriser à tout moment depuis cette page.
+    </p>
+    <div>
+      ToggleInput
+    </div>
+    <div
+      class="text-center fr-mt-5w"
+    >
+      <div>
+        SimpleButton
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`UserPreferencesFormComponent should not call AlertComponent if there are no errors 1`] = `
+<div>
+  <form
+    data-testid="user-preferences-form"
+    id="user-preferences-form-component"
+  >
+    <h1
+      class="title fr-h3 fr-mt-5w fr-mb-2w"
+    >
+      Mes réglages
+    </h1>
+    <p
+      class="fr-mt-2w"
+    >
+      Attention : 
+      <strong>
+        Vous devez avoir au moins un compte autorisé
+      </strong>
+       pour continuer à utiliser FranceConnect. Nous vous conseillons de ne bloquer que les comptes que vous n’utilisez pas.
+    </p>
+    <div>
+      ServicesListComponent
     </div>
     <p
       class="fr-my-5w"

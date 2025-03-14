@@ -6,7 +6,6 @@ services:
     depends_on:
       - "rp-all"
       - "all-fcp-high"
-      - "all-fca-low"
       - "all-fcp-low"
 
   ####################
@@ -67,21 +66,6 @@ services:
           - fip4-low.docker.dev-franceconnect.fr
           - fip8-low.docker.dev-franceconnect.fr
           - fip9-low.docker.dev-franceconnect.fr
-          # FCA LOW
-          - core-fca-low.docker.dev-franceconnect.fr
-          - bridge-proxy-rie.docker.dev-franceconnect.fr
-          - fca-low-front.docker.dev-franceconnect.fr
-          - fsa1-low.docker.dev-franceconnect.fr
-          - fsa2-low.docker.dev-franceconnect.fr
-          - fsa3-low.docker.dev-franceconnect.fr
-          - fsa4-low.docker.dev-franceconnect.fr
-          - fsa5-low.docker.dev-franceconnect.fr
-          - fia1-low.docker.dev-franceconnect.fr
-          - fia2-low.docker.dev-franceconnect.fr
-          - fia4-low.docker.dev-franceconnect.fr
-          - fia5-low.docker.dev-franceconnect.fr
-          - fia8-low.docker.dev-franceconnect.fr
-          - moncomptepro.docker.dev-franceconnect.fr
           # EIDAS
           - eidas-bridge.docker.dev-franceconnect.fr
           - eidas-fr.docker.dev-franceconnect.fr
@@ -89,10 +73,7 @@ services:
           - eidas-be.docker.dev-franceconnect.fr
           # Aliases to access exploitation from test runner
           # TODO: Move those aliases to exploitation network once runner workaround found
-          - exploitation-fca-low.docker.dev-franceconnect.fr
           - exploitation-high.docker.dev-franceconnect.fr
-          # Usagers FCA
-          - usagers-fca.docker.dev-franceconnect.fr
           # Mock RNIPP
           - mock-rnipp.docker.dev-franceconnect.fr
           # Mock Data Provider
@@ -100,8 +81,6 @@ services:
           - dpp2-high.docker.dev-franceconnect.fr
           - dpp1-low.docker.dev-franceconnect.fr
           - dpp2-low.docker.dev-franceconnect.fr
-          - dpa1-low.docker.dev-franceconnect.fr
-          - dpa2-low.docker.dev-franceconnect.fr
           # Generic
           - docker.dev-franceconnect.fr
           # Stack Documentation 11TY
@@ -130,10 +109,6 @@ services:
           - maildev.docker.dev-franceconnect.fr
           - partenaires.docker.dev-franceconnect.fr
       fc:
-      rie:
-        aliases:
-          - auth.llng.docker.dev-franceconnect.fr
-          - fia-rie-low.docker.dev-franceconnect.fr
       exploitation:
 
   docker-gen:
@@ -149,7 +124,6 @@ services:
       - public
       - fc
       - exploitation
-      - rie
     command: -config /etc/docker-gen/config
 
   squid:
@@ -158,14 +132,10 @@ services:
       nofile:
         soft: 1048576
         hard: 1048576
-    extra_hosts:
-      - auth.llng.docker.dev-franceconnect.fr:172.16.1.254
-      - fia-rie-low.docker.dev-franceconnect.fr:172.16.1.254
     networks:
       - public
       - fc
       - exploitation
-      - rie
 
   haproxy:
     image: haproxy:2.6.12
@@ -238,7 +208,6 @@ services:
       interval: 2s
       start_period: 5s
     networks:
-      rie:
       data:
         ipv4_address: 172.16.4.105
 
@@ -401,11 +370,6 @@ services:
   ####################
   # Shared Mocks
   ####################
-
-  openldap:
-    image: ${FC_DOCKER_REGISTRY}/openldap:0.2
-    networks:
-      - rie
 
   maildev:
     hostname: maildev
@@ -652,7 +616,3 @@ networks:
     ipam:
       config:
         - subnet: 172.16.5.0/24
-  rie:
-    ipam:
-      config:
-        - subnet: 172.16.6.0/24

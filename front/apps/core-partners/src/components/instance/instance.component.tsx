@@ -1,28 +1,29 @@
+import { DateTime } from 'luxon';
 import React from 'react';
 
-import type { ISODate } from '@fc/common';
+import type { ISODate, PropsWithClassName } from '@fc/common';
 import { CardComponent, Sizes } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
 import type { VersionInterface } from '../../interfaces';
 
-interface InstanceComponentProps {
+interface InstanceComponentProps extends PropsWithClassName {
   id: string;
-  name: string;
   createdAt: ISODate;
   data: VersionInterface['data'];
 }
 
 export const InstanceComponent = React.memo(
-  ({ createdAt, data, id, name }: InstanceComponentProps) => {
-    const date = t('CorePartners.instance.createdAt', { date: createdAt });
+  ({ className, createdAt, data, id }: InstanceComponentProps) => {
+    const formattedDate = DateTime.fromISO(createdAt, { zone: 'utc' }).toFormat('dd/MM/yyyy');
+    const date = t('CorePartners.instance.createdAt', { date: formattedDate });
 
-    const clientId = data.client_id;
-    const clientSecret = data.client_secret;
+    const { client_id: clientId, client_secret: clientSecret, name } = data;
 
     return (
       <CardComponent
         enlargeLink
+        className={className}
         details={{
           top: {
             className: 'fr-icon-arrow-right-line',

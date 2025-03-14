@@ -33,7 +33,7 @@ export default class InstancesListPage {
   checkIsVisible(): void {
     cy.contains(
       '[data-testid="instances-page-title"]',
-      'Mon Bac à Sable',
+      'Mon instance de test',
     ).should('be.visible');
   }
 

@@ -45,7 +45,6 @@ describe('ServiceProviderAdapterMongoService', () => {
     idpFilterList: [],
     type: 'public',
     identityConsent: false,
-    ssoDisabled: false,
   };
 
   const invalidServiceProviderMock = {
@@ -211,7 +210,6 @@ describe('ServiceProviderAdapterMongoService', () => {
       post_logout_redirect_uris: true,
       redirect_uris: true,
       scopes: true,
-      ssoDisabled: true,
       title: true,
       type: true,
       userinfo_encrypted_response_alg: true,

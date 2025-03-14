@@ -4,8 +4,8 @@ This section contains the End-to-End tests using the [BDD approach](https://en.w
 
 ## Platforms under test
 
-- [AgentConnect](./fca/README.md)
 - [FranceConnect & FranceConnect+](./fcp/README.md)
+- [Partners](./partners/README.md)
 
 ## Dependencies Upgrade
 

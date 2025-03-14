@@ -33,17 +33,20 @@ export const FormWrapperComponent = ({
   const showFormHeader = !!(title || description);
 
   return (
-    <form data-testid={`${id}--testid`} id={id} onSubmit={handleSubmit}>
+    <form className="dto2form" data-testid={`${id}--testid`} id={id} onSubmit={handleSubmit}>
       {showFormHeader && (
         <FormHeaderComponent description={description} title={title} titleHeading={titleHeading} />
       )}
       <div className="flex-rows">
+        {submitError && <FormErrorComponent error={submitError} />}
         {!noRequired && <FormRequiredMessageComponent />}
         {children}
         <FormActionsComponent canSubmit={canSubmit} />
-        {submitError && <FormErrorComponent error={submitError} />}
         {mentions && <FormMentionsComponent content={mentions} />}
-        <FormErrorScrollComponent active={scrollTopOnSubmit} />
+        <FormErrorScrollComponent
+          active={scrollTopOnSubmit}
+          elementClassName=".fr-message--error"
+        />
       </div>
     </form>
   );

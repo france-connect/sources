@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { asyncFilter, validateDto } from '@fc/common';
+import { ArrayAsyncHelper, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger';
@@ -89,24 +89,25 @@ export class DataProviderAdapterMongoService implements IDataProviderAdapter {
       )
       .lean();
 
-    const dataProviders = await asyncFilter<DataProviderMetadata[]>(
-      rawResult,
-      async (doc: DataProviderMetadata) => {
-        const dto = DataProviderAdapterMongoDTO;
-        const errors = await validateDto(doc, dto, validationOptions);
-        const { uid } = doc;
+    const dataProviders =
+      await ArrayAsyncHelper.filterAsync<DataProviderMetadata>(
+        rawResult,
+        async (doc: DataProviderMetadata) => {
+          const dto = DataProviderAdapterMongoDTO;
+          const errors = await validateDto(doc, dto, validationOptions);
+          const { uid } = doc;
 
-        if (errors.length > 0) {
-          this.logger.alert(
-            `Data provider "${uid}" was excluded at DTO validation`,
-          );
+          if (errors.length > 0) {
+            this.logger.alert(
+              `Data provider "${uid}" was excluded at DTO validation`,
+            );
 
-          this.logger.debug({ errors });
-        }
+            this.logger.debug({ errors });
+          }
 
-        return errors.length === 0;
-      },
-    );
+          return errors.length === 0;
+        },
+      );
 
     return dataProviders;
   }

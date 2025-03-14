@@ -75,7 +75,7 @@ export class CryptoOverrideService {
   // Actually returns a promise
   // eslint-disable-next-line require-await
   async sign(
-    _unusedKey: any,
+    _unusedKey: unknown,
     dataBuffer: Buffer,
     digest = 'sha256',
   ): Promise<Buffer> {

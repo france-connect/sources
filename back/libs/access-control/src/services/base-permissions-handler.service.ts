@@ -1,6 +1,8 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
+import { NO_ENTITY_ID } from '@entities/typeorm';
+
 import { uuid } from '@fc/common';
 import { PartnersAccountSession } from '@fc/partners-account';
 import { SessionService } from '@fc/session';
@@ -64,7 +66,7 @@ export abstract class BasePermissionsHandlerService {
       this.sessionService.get<PartnersAccountSession>('PartnersAccount');
     const { userPermissions } = sessionData[ACCESS_CONTROL_TOKEN];
 
-    let entityId: uuid | null = null;
+    let entityId: uuid = NO_ENTITY_ID;
 
     if (entityIdLocation) {
       entityId = request[entityIdLocation.src]?.[entityIdLocation.key];

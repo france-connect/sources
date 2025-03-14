@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 
-import { CsrfMissingTokenException } from '../exceptions';
 import { CsrfService } from '../services';
 
 @Injectable()
@@ -11,10 +10,6 @@ export class CsrfTokenGuard implements CanActivate {
     const { body, headers } = context.switchToHttp().getRequest();
 
     const token = body.csrfToken || headers['x-csrf-token'];
-
-    if (!token) {
-      throw new CsrfMissingTokenException();
-    }
 
     return this.csrf.check(token);
   }

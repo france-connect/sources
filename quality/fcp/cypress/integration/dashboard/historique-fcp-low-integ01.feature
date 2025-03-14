@@ -20,7 +20,7 @@ Fonctionnalité: Historique Connexion sur FranceConnect(v2) (integ01)
     Et le fournisseur de service de l'évènement est "FSP1 LOW - Integ"
     Et la date et heure de connexion correspondent à maintenant
     # Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW"
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration eIDAS faible"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et le code d'identification de l'évènement est affiché
 
@@ -39,7 +39,7 @@ Fonctionnalité: Historique Connexion sur FranceConnect(v2) (integ01)
     Et le fournisseur de service de l'évènement est "FSP1 LOW - Integ"
     Et la date et heure de connexion correspondent à maintenant
     # Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW"
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration eIDAS faible"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du 1er évènement "Échange de Données" sur "FranceConnect" du FS "FSP1 LOW - Integ" avec le FD "DGFIP"
@@ -82,7 +82,7 @@ Fonctionnalité: Historique Connexion sur FranceConnect(v2) (integ01)
     Et le fournisseur de service de l'évènement est "FSP2 LOW - Integ"
     Et la date et heure de connexion correspondent à maintenant
     # Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW"
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration eIDAS faible"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "FSP2 LOW - Integ"
@@ -118,7 +118,7 @@ Fonctionnalité: Historique Connexion sur FranceConnect(v2) (integ01)
     Et le fournisseur de service de l'évènement est "FSP2 LOW - Integ"
     Et la date et heure de connexion correspondent à maintenant
     # Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW"
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration eIDAS faible"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et le code d'identification de l'évènement est affiché
     Et j'affiche le détail du dernier évènement "Autorisation" sur "FranceConnect" du fournisseur de service "FSP2 LOW - Integ"
@@ -176,6 +176,6 @@ Fonctionnalité: Historique Connexion sur FranceConnect(v2) (integ01)
     Et le fournisseur de service de l'évènement est "FSP2 LOW - Integ"
     Et la date et heure de connexion correspondent à maintenant
     # Et la localisation de l'évènement est affichée
-    Et le nom du fournisseur d'identité de l'évènement est "FIP1-LOW - eIDAS LOW"
+    Et le nom du fournisseur d'identité de l'évènement est "Démonstration eIDAS faible"
     Et le niveau de sécurité de l'évènement est "Faible"
     Et le code d'identification de l'évènement est affiché

@@ -34,7 +34,7 @@ describe('CoreTrackingService', () => {
   });
 
   describe('extractContext()', () => {
-    it('should extract specific context property fqdn from fca context', () => {
+    it('should flatten rep_scope', () => {
       // Given
       const trackedEventContextMock = {
         rep_scope: ['rep_scope1', 'rep_scope2'],

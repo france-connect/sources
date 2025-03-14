@@ -14,9 +14,10 @@ import {
 } from '../exceptions';
 import {
   FieldAttributes,
-  FieldErrorsInterface,
   FieldValidateIfRule,
   FieldValidator,
+  MetadataDtoInterface,
+  ValidatorType,
 } from '../interfaces';
 import { ValidateIfRulesService, ValidatorCustomService } from '../services';
 import { FORM_METADATA_TOKEN } from '../tokens';
@@ -80,7 +81,7 @@ export class FormValidationPipe implements PipeTransform {
   private async validate(
     target: Record<string, unknown>,
     metadata: FieldAttributes[],
-  ): Promise<FieldErrorsInterface[]> {
+  ): Promise<MetadataDtoInterface[]> {
     return await ArrayAsyncHelper.mapAsync(
       this.getAttributeKeys(target),
       this.validateField.bind(this, target, metadata),
@@ -91,10 +92,10 @@ export class FormValidationPipe implements PipeTransform {
     target: Record<string, unknown>,
     metadata: FieldAttributes[],
     name: string,
-  ): Promise<FieldErrorsInterface> {
+  ): Promise<MetadataDtoInterface> {
     const fieldMetadata = metadata.find((field) => field.name === name);
 
-    const fieldErrors: FieldErrorsInterface = {
+    const fieldErrors: MetadataDtoInterface = {
       name,
       validators: [],
     };
@@ -102,7 +103,7 @@ export class FormValidationPipe implements PipeTransform {
     if (!fieldMetadata) {
       fieldErrors.validators.push({
         name,
-        errorLabel: `${name}_invalidKey_error`,
+        errorMessage: `${name}_invalidKey_error`,
         validationArgs: [],
       });
       return fieldErrors;
@@ -133,11 +134,11 @@ export class FormValidationPipe implements PipeTransform {
   }
 
   private async handleFieldValidation(
-    fieldErrors: FieldErrorsInterface,
+    fieldErrors: MetadataDtoInterface,
     target: Record<string, unknown>,
     fieldMetadata: FieldAttributes,
     name: string,
-  ): Promise<(FieldValidator | FieldValidator[])[]> {
+  ): Promise<ValidatorType[]> {
     if (fieldMetadata.array) {
       fieldErrors.validators = await this.handleArrayValidation(
         target,
@@ -159,7 +160,7 @@ export class FormValidationPipe implements PipeTransform {
     target: Record<string, unknown | unknown[]>,
     fieldMetadata: FieldAttributes,
     name: string,
-  ): Promise<(FieldValidator | FieldValidator[])[]> {
+  ): Promise<ValidatorType[]> {
     const errorsMapAsync = await ArrayAsyncHelper.mapAsync<
       unknown,
       FieldValidator[]
@@ -206,7 +207,7 @@ export class FormValidationPipe implements PipeTransform {
     if (!valid) {
       errors.push({
         name: validator.name,
-        errorLabel: validator.errorLabel,
+        errorMessage: validator.errorMessage,
         validationArgs: validator.validationArgs,
       });
     }
@@ -286,14 +287,14 @@ export class FormValidationPipe implements PipeTransform {
     );
   }
 
-  private hasValidatorsErrors(target: FieldErrorsInterface[]): boolean {
+  private hasValidatorsErrors(target: MetadataDtoInterface[]): boolean {
     return target.some(({ validators }) => validators.length > 0);
   }
 
   private validateRequiredField(
     target: Record<string, unknown>,
     metadata: FieldAttributes[],
-  ): FieldErrorsInterface[] {
+  ): MetadataDtoInterface[] {
     const missingRequireKeys = metadata
       .filter((item) => item.required)
       .map((item) => item.name)
@@ -303,7 +304,7 @@ export class FormValidationPipe implements PipeTransform {
         validators: [
           {
             name: 'isFilled',
-            errorLabel: `isFilled_error`,
+            errorMessage: `isFilled_error`,
             validationArgs: [],
           },
         ],

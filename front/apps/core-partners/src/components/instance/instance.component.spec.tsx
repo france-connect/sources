@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
 
-import type { ISODate } from '@fc/common';
 import { CardComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
@@ -10,7 +9,6 @@ describe('InstanceComponent', () => {
   it('should match the snapshot', () => {
     // Given
     const idMock = 'any-id-mock';
-    const nameMock = 'any-name-mock';
     const dataMock = {
       // @NOTE API interface
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -18,21 +16,22 @@ describe('InstanceComponent', () => {
       // @NOTE API interface
       // eslint-disable-next-line @typescript-eslint/naming-convention
       client_secret: 'any-client_secret-mock',
+      name: 'any-name-mock',
     };
-    const createdAtMock = Symbol('any-create-at-mock') as unknown as ISODate;
+    const createdAtMock = '2025-03-03T09:39:17.382Z';
 
     jest.mocked(t).mockReturnValueOnce('any-date-value-mock');
 
     // When
     const { container, getByText } = render(
-      <InstanceComponent createdAt={createdAtMock} data={dataMock} id={idMock} name={nameMock} />,
+      <InstanceComponent createdAt={createdAtMock} data={dataMock} id={idMock} />,
     );
     const clientIdElt = getByText('any-client_id-mock');
     const clientSecretElt = getByText('any-client_secret-mock');
 
     // Then
     expect(t).toHaveBeenCalledOnce();
-    expect(t).toHaveBeenCalledWith('CorePartners.instance.createdAt', { date: createdAtMock });
+    expect(t).toHaveBeenCalledWith('CorePartners.instance.createdAt', { date: '03/03/2025' });
     expect(container).toMatchSnapshot();
     expect(clientIdElt).toBeInTheDocument();
     expect(clientSecretElt).toBeInTheDocument();

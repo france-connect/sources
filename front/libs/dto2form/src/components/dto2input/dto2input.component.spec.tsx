@@ -11,6 +11,7 @@ jest.mock('../../hooks/field-validate/field-validate.hook');
 describe('DTO2InputComponent', () => {
   // Given
   const maxCharsMock = Symbol('maxChars') as unknown as number;
+  const inlineMock = Symbol('inline') as unknown as boolean;
   const readonlyMock = Symbol('readonly') as unknown as boolean;
   const disabledMock = Symbol('disabled') as unknown as boolean;
   const requiredMock = Symbol('required') as unknown as boolean;
@@ -22,6 +23,7 @@ describe('DTO2InputComponent', () => {
   const fieldMock = {
     disabled: disabledMock,
     hint: hintMock,
+    inline: inlineMock,
     label: labelMock,
     maxChars: maxCharsMock,
     name: nameMock,
@@ -68,7 +70,7 @@ describe('DTO2InputComponent', () => {
         choices: [],
         config: {
           hint: hintMock,
-          inline: true,
+          inline: inlineMock,
           label: labelMock,
           maxChars: maxCharsMock,
           name: nameMock,
@@ -111,7 +113,7 @@ describe('DTO2InputComponent', () => {
         choices: optionsMock,
         config: {
           hint: hintMock,
-          inline: true,
+          inline: inlineMock,
           label: labelMock,
           maxChars: maxCharsMock,
           name: nameMock,
@@ -151,7 +153,7 @@ describe('DTO2InputComponent', () => {
         choices: optionsMock,
         config: {
           hint: hintMock,
-          inline: true,
+          inline: inlineMock,
           label: labelMock,
           maxChars: maxCharsMock,
           name: nameMock,
@@ -191,7 +193,7 @@ describe('DTO2InputComponent', () => {
         choices: optionsMock,
         config: {
           hint: hintMock,
-          inline: true,
+          inline: inlineMock,
           label: labelMock,
           maxChars: maxCharsMock,
           name: nameMock,
@@ -221,7 +223,7 @@ describe('DTO2InputComponent', () => {
         choices: [],
         config: {
           hint: hintMock,
-          inline: true,
+          inline: inlineMock,
           label: labelMock,
           maxChars: maxCharsMock,
           name: nameMock,
@@ -254,7 +256,7 @@ describe('DTO2InputComponent', () => {
         choices: [],
         config: {
           hint: hintMock,
-          inline: true,
+          inline: inlineMock,
           label: labelMock,
           maxChars: maxCharsMock,
           name: nameMock,

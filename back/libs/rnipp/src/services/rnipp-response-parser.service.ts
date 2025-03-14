@@ -31,7 +31,7 @@ export class RnippResponseParserService {
   }
 
   private extractXmlAttributes(parsedXml: JSON): any {
-    const rnippCode: string = this.getXmlAttribute(
+    const rnippCode = this.getXmlAttribute<string>(
       parsedXml,
       RnippXmlSelectors.RNIPP_CODE,
     );
@@ -67,7 +67,7 @@ export class RnippResponseParserService {
 
     const identity: RnippPivotIdentity = {
       gender: this.getGenderFromParsedXml(parsedXml, RnippXmlSelectors.GENDER),
-      family_name: this.getXmlAttribute(
+      family_name: this.getXmlAttribute<string>(
         parsedXml,
         RnippXmlSelectors.FAMILY_NAME,
       ),
@@ -88,16 +88,17 @@ export class RnippResponseParserService {
     };
   }
 
-  private getXmlAttribute(
+  private getXmlAttribute<T>(
     parsedXml: JSON,
     path: string,
+    // force lodash to any because get method from lodash waitin any third parameter
     defaultValue: any = '',
-  ): any {
+  ): T {
     return _.get(parsedXml, path, defaultValue);
   }
 
   private getGenderFromParsedXml(parsedXml: JSON, path: string): string {
-    const rnippGender: string = this.getXmlAttribute(parsedXml, path);
+    const rnippGender = this.getXmlAttribute<string>(parsedXml, path);
 
     const gender = getGenderFromRnippGender(rnippGender);
     return gender;
@@ -107,7 +108,7 @@ export class RnippResponseParserService {
     parsedXml: JSON,
     path: string,
   ): GivenNameScopeInterface {
-    const givenNames: string[] = this.getXmlAttribute(parsedXml, path, []);
+    const givenNames = this.getXmlAttribute<string[]>(parsedXml, path, []);
     return {
       givenName: givenNames.join(' '),
       givenNameArray: givenNames,
@@ -115,14 +116,14 @@ export class RnippResponseParserService {
   }
 
   private getDeceasedStateAttribute(parsedXml: JSON, path: string): boolean {
-    return !!this.getXmlAttribute(parsedXml, path, false);
+    return !!this.getXmlAttribute<boolean>(parsedXml, path, false);
   }
 
   private getBirthdateAttribute(
     parsedXml: JSON,
     birthdatePath: string,
   ): string | null {
-    const birthdate = this.getXmlAttribute(parsedXml, birthdatePath);
+    const birthdate = this.getXmlAttribute<string>(parsedXml, birthdatePath);
 
     if (birthdate.length !== 10) {
       if (birthdate.match(/^[0-9]{4}$/)) {
@@ -142,7 +143,7 @@ export class RnippResponseParserService {
     birthplacePath: string,
     birthcountry: string,
   ): string {
-    let birthplace = this.getXmlAttribute(parsedXml, birthplacePath);
+    let birthplace = this.getXmlAttribute<string>(parsedXml, birthplacePath);
 
     if (birthcountry !== FRANCE_COG) {
       birthplace = '';
@@ -156,9 +157,12 @@ export class RnippResponseParserService {
     birthplacePath: string,
     birthcountryPath: string,
   ): string {
-    const birthplace = this.getXmlAttribute(parsedXml, birthplacePath);
+    const birthplace = this.getXmlAttribute<string>(parsedXml, birthplacePath);
 
-    const birthcountry = this.getXmlAttribute(parsedXml, birthcountryPath);
+    const birthcountry = this.getXmlAttribute<string>(
+      parsedXml,
+      birthcountryPath,
+    );
 
     if (!birthplace && !birthcountry) {
       return '';

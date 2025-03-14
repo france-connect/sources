@@ -14,6 +14,14 @@ Given('je prépare une requête {string}', function (requestKey: string) {
 });
 
 Given(
+  "je retire {string} de l'entête de la requête",
+  function (property: string) {
+    expect(this.apiRequest.headers[property]).to.exist;
+    delete this.apiRequest.headers[property];
+  },
+);
+
+Given(
   'je retire le paramètre {string} de la requête',
   function (property: string) {
     expect(this.apiRequest.qs[property]).to.exist;

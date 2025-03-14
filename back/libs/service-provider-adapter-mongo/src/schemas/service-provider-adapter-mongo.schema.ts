@@ -73,9 +73,6 @@ export class ServiceProvider extends Document {
   @Prop({ type: Boolean })
   identityConsent: boolean;
 
-  @Prop({ type: Boolean })
-  ssoDisabled: boolean;
-
   @Prop({ type: String })
   platform: string;
 

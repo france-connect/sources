@@ -83,7 +83,7 @@ describe('ScenarioService', () => {
         scenariosDatabasePath: scenariosDatabasePathMock,
       });
 
-      jest.spyOn(FcCommon, 'asyncFilter');
+      jest.spyOn(FcCommon.ArrayAsyncHelper, 'filterAsync');
       jest.spyOn(FcCommon, 'validateDto');
       mocked(readFileSync).mockReturnValue(scenarioStringMock);
     });
@@ -112,8 +112,8 @@ describe('ScenarioService', () => {
       await service.onModuleInit();
 
       // Then
-      expect(FcCommon.asyncFilter).toHaveBeenCalledTimes(1);
-      expect(FcCommon.asyncFilter).toHaveBeenCalledWith(
+      expect(FcCommon.ArrayAsyncHelper.filterAsync).toHaveBeenCalledTimes(1);
+      expect(FcCommon.ArrayAsyncHelper.filterAsync).toHaveBeenCalledWith(
         scenariosMock,
         expect.any(Function),
       );

@@ -1,5 +1,4 @@
 export * from './array-async.helper';
-export * from './async-filter';
 export * from './difference';
 export * from './dto-validation';
 export * from './override-with-source-if-not-null';

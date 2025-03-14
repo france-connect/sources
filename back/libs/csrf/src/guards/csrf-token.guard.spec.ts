@@ -1,7 +1,6 @@
 import { ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { CsrfMissingTokenException } from '../exceptions';
 import { CsrfService } from '../services';
 import { CsrfTokenGuard } from './csrf-token.guard';
 
@@ -38,16 +37,6 @@ describe('CsrfTokenGuard', () => {
   });
 
   describe('canActivate', () => {
-    it('should throw CsrfMissingTokenException if there is no csrfToken in body and headers ', () => {
-      // Given
-      httpMock.getRequest.mockReturnValueOnce({ body: {}, headers: {} });
-
-      // When / Then
-      expect(() =>
-        guard.canActivate(contextMock as unknown as ExecutionContext),
-      ).toThrow(CsrfMissingTokenException);
-    });
-
     it('should let pass exception from csrf.check() ', () => {
       // Given
       const reqMock = {

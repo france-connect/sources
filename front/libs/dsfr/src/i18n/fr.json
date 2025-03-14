@@ -5,5 +5,6 @@
   "DSFR.breadcrumbs.location": "vous êtes ici :",
   "DSFR.button.loginConnect.whatIs": "Qu’est ce que {connectType} ?",
   "DSFR.button.loginConnect.authenticateWith": "S’identifier avec",
-  "DSFR.alert.close": "Masquer le message"
+  "DSFR.alert.close": "Masquer le message",
+  "DSFR.notice.close": "Masquer le message"
 }

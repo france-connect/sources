@@ -1,7 +1,9 @@
 import type { AxiosResponse } from 'axios';
+import { FORM_ERROR } from 'final-form';
 
 import { type HttpMethods } from '@fc/common';
 import { getCSRF, makeRequest } from '@fc/http-client';
+import { t } from '@fc/i18n';
 
 import { commit } from './partners.commit';
 
@@ -51,6 +53,7 @@ describe('PartnersService.commit', () => {
     const methodMock = 'any-method-mock' as unknown as HttpMethods.POST;
     const response = { response: { data: { payload: 'any-response-mock' }, status: 500 } };
 
+    jest.mocked(t).mockReturnValueOnce('Form.FORM_ERROR-mock');
     jest.mocked(getCSRF).mockResolvedValueOnce({ csrfToken: 'any-csrfToken-mock' });
     jest.mocked(makeRequest).mockRejectedValueOnce(response);
 
@@ -58,6 +61,8 @@ describe('PartnersService.commit', () => {
     const result = await commit(methodMock, 'any-url-mock', { data: 'any-data-mock' });
 
     // Then
+    expect(t).toHaveBeenCalledOnce();
+    expect(t).toHaveBeenCalledWith('Form.FORM_ERROR');
     expect(makeRequest).toHaveBeenCalledOnce();
     expect(makeRequest).toHaveBeenCalledWith(
       methodMock,
@@ -72,8 +77,10 @@ describe('PartnersService.commit', () => {
         },
       },
     );
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    expect(result).toStrictEqual({ 'FINAL_FORM/form-error': 'Form.FORM_ERROR' });
+
+    expect(result).toStrictEqual({
+      [FORM_ERROR]: 'Form.FORM_ERROR-mock',
+    });
   });
 
   it('should return form submission errors if makeRequest fail and status is 422', async () => {

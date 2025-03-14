@@ -43,28 +43,6 @@ _e2e_idp_remove() {
   cd ${WORKING_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fcp-high mongo -u 'fc' -p 'pass' --host mongo-fcp-high --tls  --authenticationDatabase core-fcp-high core-fcp-high /opt/scripts/db-states/e2e-idp/e2e-idp-remove.js
 }
 
-_e2e_fca-low_idp_insert() {
-  echo "Insert idp in `core-fca-low` database..."
-  cd ${WORKING_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fca-low mongo -u 'fc' -p 'pass' --host mongo-fca-low --tls  --authenticationDatabase core-fca-low core-fca-low /opt/scripts/db-states/e2e-idp/e2e-idp-insert.js
-}
-
-_e2e_fca-low_idp_update_activate() {
-  echo "Update idp in database, activate idp..."
-  cd ${WORKING_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fca-low mongo -u 'fc' -p 'pass' --host mongo-fca-low --tls  --authenticationDatabase core-fca-low core-fca-low /opt/scripts/db-states/e2e-idp/e2e-idp-update-activate.js
-}
-
-_e2e_fca-low_idp_update_desactivate() {
-  echo "Update idp in `core-fca-low` database, desactivate idp..."
-  cd ${WORKING_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fca-low mongo -u 'fc' -p 'pass' --host mongo-fca-low --tls  --authenticationDatabase core-fca-low core-fca-low /opt/scripts/db-states/e2e-idp/e2e-idp-update-desactivate.js
-}
-
-_e2e_fca-low_idp_remove() {
-  echo "Remove idp in `core-fca-low` database..."
-  cd ${WORKING_DIR} && ${DOCKER_COMPOSE} exec -T mongo-fca-low mongo -u 'fc' -p 'pass' --host mongo-fca-low --tls  --authenticationDatabase core-fca-low core-fca-low /opt/scripts/db-states/e2e-idp/e2e-idp-remove.js
-}
-
-
-
 script=$0
 action=${1:-help}
 [ $# -gt 0 ] && shift
@@ -91,20 +69,5 @@ case "$action" in
 
   idp_remove)
     _e2e_idp_remove $@
-    ;;
-  fca_idp_insert)
-    _e2e_fca-low_idp_insert $@
-    ;;
-
-  fca_idp_update_activate)
-    _e2e_fca-low_idp_update_activate $@
-    ;;
-
-  fca_idp_update_desactivate)
-    _e2e_fca-low_idp_update_desactivate $@
-    ;;
-
-  fca_idp_remove)
-    _e2e_fca-low_idp_remove $@
     ;;
 esac

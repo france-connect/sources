@@ -10,8 +10,6 @@ export const claims: ClaimsInterface = {
   birthdate: 'birthdate',
   birthplace: 'birthplace',
   birthcountry: 'birthcountry',
-  address: 'address',
-  phone_number: 'phone_number',
   email: 'email',
   idp_birthdate: 'idp_birthdate',
   amr: 'amr',

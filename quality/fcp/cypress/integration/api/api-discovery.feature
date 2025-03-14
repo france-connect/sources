@@ -13,6 +13,7 @@ Fonctionnalité: API - discovery
     Et "acr_values_supported" contient uniquement "eidas1" dans la configuration openid
     Et "scopes_supported" contient "openid profile preferred_username idp_birthdate" dans la configuration openid
     Et "scopes_supported" ne contient pas "offline_access" dans la configuration openid
+    Et "scopes_supported" ne contient pas "address" dans la configuration openid
     Et "claims_supported" contient "sub given_name given_name_array amr acr" dans la configuration openid
     Et "id_token_signing_alg_values_supported" contient uniquement "HS256 ES256 RS256" dans la configuration openid
     Et "id_token_encryption_alg_values_supported" n'est pas présent dans la configuration openid

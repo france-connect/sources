@@ -3,6 +3,10 @@ import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
 import { PartnersAccountPermission } from '@entities/typeorm';
 
+import { LoggerModule, LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
+
 import { EntityType, PermissionsType } from '../enums';
 import { AccountPermissionRepository } from './account-permission.repository';
 
@@ -14,8 +18,12 @@ describe('AccountPermissionRepository', () => {
   const accountPermissionRepositoryMock = {
     find: jest.fn(),
     findOne: jest.fn(),
-    save: jest.fn(),
+    insert: jest.fn(),
+    upsert: jest.fn(),
+    catch: jest.fn(),
   };
+
+  const loggerMock = getLoggerMock();
 
   const accountIdMock = Symbol('accountIdMock') as unknown as string;
   const idMock = Symbol('id') as unknown as string;
@@ -28,12 +36,16 @@ describe('AccountPermissionRepository', () => {
     jest.restoreAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forFeature([PartnersAccountPermission])],
-      providers: [AccountPermissionRepository],
+      imports: [
+        TypeOrmModule.forFeature([PartnersAccountPermission]),
+        LoggerModule,
+      ],
+      providers: [AccountPermissionRepository, LoggerService],
     })
       .overrideProvider(getRepositoryToken(PartnersAccountPermission))
       .useValue(accountPermissionRepositoryMock)
-
+      .overrideProvider(LoggerService)
+      .useValue(loggerMock)
       .compile();
 
     repository = module.get<AccountPermissionRepository>(
@@ -41,89 +53,74 @@ describe('AccountPermissionRepository', () => {
     );
 
     accountPermissionRepositoryMock.find.mockResolvedValueOnce(dataMock);
+    accountPermissionRepositoryMock.insert.mockReturnThis();
   });
 
   it('should be defined', () => {
     expect(repository).toBeDefined();
   });
 
-  describe('init', () => {
+  describe('insert', () => {
     const dataMock = {
-      account: { id: accountIdMock },
+      accountId: accountIdMock,
       entity: EntityType.SP_INSTANCE,
-      permissionType: PermissionsType.LIST,
+      entityId: idMock,
+      permissionType: PermissionsType.CREATE,
     };
 
-    it('should not call the save method if accountId found', async () => {
-      // Given
-      accountPermissionRepositoryMock.findOne.mockResolvedValueOnce(true);
-
+    it('should call accountPermission.insert() method with correct data', async () => {
       // When
-      await repository.init(accountIdMock);
+      await repository.insert(
+        accountIdMock,
+        PermissionsType.CREATE,
+        EntityType.SP_INSTANCE,
+        idMock,
+      );
 
       // Then
-      expect(accountPermissionRepositoryMock.findOne).toHaveBeenCalledTimes(1);
-      expect(accountPermissionRepositoryMock.findOne).toHaveBeenCalledWith({
-        where: dataMock,
-      });
-      expect(accountPermissionRepositoryMock.save).toHaveBeenCalledTimes(0);
-    });
-
-    it('should call the save method if no accountId was found', async () => {
-      // Given
-      accountPermissionRepositoryMock.findOne.mockResolvedValueOnce(false);
-
-      // When
-      await repository.init(accountIdMock);
-
-      // Then
-      expect(accountPermissionRepositoryMock.findOne).toHaveBeenCalledTimes(1);
-      expect(accountPermissionRepositoryMock.save).toHaveBeenCalledTimes(1);
-      expect(accountPermissionRepositoryMock.save).toHaveBeenCalledWith(
+      expect(accountPermissionRepositoryMock.insert).toHaveBeenCalledTimes(1);
+      expect(accountPermissionRepositoryMock.insert).toHaveBeenCalledWith(
         dataMock,
       );
     });
-  });
 
-  describe('addVersionPermission', () => {
-    it('should call the save method with data for version entity', async () => {
-      //Given
-      const expected = {
-        account: { id: accountIdMock },
-        entityId: idMock,
-        entity: EntityType.SP_INSTANCE_VERSION,
-        permissionType: PermissionsType.VIEW,
-      };
+    it('should warn if the permission already exists', async () => {
+      // Given
+      accountPermissionRepositoryMock.insert.mockRejectedValueOnce(
+        new Error('Duplicate entry'),
+      );
 
       // When
-      await repository.addVersionPermission(accountIdMock, idMock);
+      await repository.insert(
+        accountIdMock,
+        PermissionsType.CREATE,
+        EntityType.SP_INSTANCE,
+        idMock,
+      );
 
       // Then
-      expect(accountPermissionRepositoryMock.save).toHaveBeenCalledTimes(1);
-      expect(accountPermissionRepositoryMock.save).toHaveBeenCalledWith(
-        expected,
-      );
-    });
-  });
-
-  describe('addInstancePermission', () => {
-    it('should call the save method with data for instance entity', async () => {
-      //Given
-      const expected = {
-        account: { id: accountIdMock },
-        entityId: idMock,
+      expect(loggerMock.warning).toHaveBeenCalledTimes(1);
+      expect(loggerMock.warning).toHaveBeenCalledWith({
+        msg: 'Tried to insert existing permission',
+        accountId: accountIdMock,
+        permissionType: PermissionsType.CREATE,
         entity: EntityType.SP_INSTANCE,
-        permissionType: PermissionsType.VIEW,
-      };
+        entityId: idMock,
+        error: expect.any(Error),
+      });
+    });
 
+    it('should not warn if the permission does not already exist', async () => {
       // When
-      await repository.addInstancePermission(accountIdMock, idMock);
+      await repository.insert(
+        accountIdMock,
+        PermissionsType.CREATE,
+        EntityType.SP_INSTANCE,
+        idMock,
+      );
 
       // Then
-      expect(accountPermissionRepositoryMock.save).toHaveBeenCalledTimes(1);
-      expect(accountPermissionRepositoryMock.save).toHaveBeenCalledWith(
-        expected,
-      );
+      expect(loggerMock.warning).not.toHaveBeenCalled();
     });
   });
 

@@ -161,40 +161,21 @@ describe('PartnersServiceProviderInstanceService', () => {
     });
   });
 
-  describe('upsert', () => {
-    it('should create instance', async () => {
+  describe('save', () => {
+    it('should save instance', async () => {
       // Given
       const data = Symbol('data');
       const expected = Symbol('save result item');
       repositoryMock.save.mockResolvedValue(expected);
 
       // When
-      const result = await service.upsert(
+      const result = await service.save(
         data as unknown as PartnersServiceProviderInstance,
       );
 
       // Then
       expect(repositoryMock.save).toHaveBeenCalledExactlyOnceWith(data);
       expect(result).toBe(expected);
-    });
-
-    it('should update instance', async () => {
-      // Given
-      const data = { name: 'instance name' };
-      const expected = Symbol('save result item');
-      repositoryMock.save.mockResolvedValue(expected);
-
-      // When
-      await service.upsert(
-        data as unknown as PartnersServiceProviderInstance,
-        idMock,
-      );
-
-      // Then
-      expect(repositoryMock.update).toHaveBeenCalledExactlyOnceWith(
-        { id: idMock },
-        { name: data.name },
-      );
     });
   });
 

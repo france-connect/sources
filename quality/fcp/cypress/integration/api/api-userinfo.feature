@@ -72,3 +72,28 @@ Fonctionnalité: API - userinfo
     Et le payload du JWT a une propriété "birthplace"
     Et le payload du JWT a une propriété "email"
     Et le payload du JWT a une propriété "iss" égale à "https://core-fcp-low.docker.dev-franceconnect.fr/api/v2"
+
+  @fcpLow @fcpHigh @exceptions
+  Scénario: API userinfo - erreur token expiré ou non trouvé
+    Etant donné que je prépare une requête "userinfo"
+    Quand je lance la requête
+    Alors le statut de la réponse est 401
+    Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
+    Et l'entête de la réponse n'a pas de propriété "set-cookie"
+    Et le corps de la réponse contient une erreur
+    Et le corps de la réponse a une propriété "error" égale à "invalid_token"
+    Et le corps de la réponse a une propriété "error_description" égale à "invalid token provided (access token not found)"
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y040001&id="
+
+  @fcpLow @fcpHigh @exceptions
+  Scénario: API userinfo - erreur access_token manquant
+    Etant donné que je prépare une requête "userinfo"
+    Et que je retire "authorization" de l'entête de la requête
+    Quand je lance la requête
+    Alors le statut de la réponse est 400
+    Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
+    Et l'entête de la réponse n'a pas de propriété "set-cookie"
+    Et le corps de la réponse contient une erreur
+    Et le corps de la réponse a une propriété "error" égale à "invalid_request"
+    Et le corps de la réponse a une propriété "error_description" égale à "no access token provided (undefined)"
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y04865C&id="

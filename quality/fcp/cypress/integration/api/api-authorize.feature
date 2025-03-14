@@ -1,5 +1,5 @@
 #language: fr
-@api @apiAuthorize @fcpLow @fcpHigh @ignoreInteg01
+@api @apiAuthorize @fcpLow @fcpHigh @ignoreInteg01 @ci
 Fonctionnalité: API - authorize
 
   Plan du Scénario: API authorize - Cas nominal prompt=<prompt>
@@ -210,6 +210,6 @@ Fonctionnalité: API - authorize
     Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y030031"
+    Et le code d'erreur FranceConnect est "Y040001"
     Et le message d'erreur FranceConnect est "Une erreur s'est produite, veuillez réessayer ultérieurement"
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique

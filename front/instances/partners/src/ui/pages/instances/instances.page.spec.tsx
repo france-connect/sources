@@ -7,7 +7,7 @@ import {
   type InstanceInterface,
   InstancesListComponent,
 } from '@fc/core-partners';
-import { AlertComponentV2, TileComponent } from '@fc/dsfr';
+import { AlertComponent, TileComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
 
 import type { SubmitTypesMessage } from '../../../enums';
@@ -37,9 +37,7 @@ describe('InstancesPage', () => {
       .mocked(t)
       .mockReturnValueOnce('any-sandbox_title')
       .mockReturnValueOnce('any-create_tile_desc')
-      .mockReturnValueOnce('any-create_tile_title')
-      .mockReturnValueOnce('any-sandbox_tile_desc')
-      .mockReturnValueOnce('any-sandbox_tile_title');
+      .mockReturnValueOnce('any-create_tile_title');
 
     // When
     const { container, getByText } = render(<InstancesPage />);
@@ -47,17 +45,14 @@ describe('InstancesPage', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(t).toHaveBeenCalledTimes(5);
+    expect(t).toHaveBeenCalledTimes(3);
     expect(t).toHaveBeenNthCalledWith(1, 'Partners.homepage.sandboxTitle');
     expect(t).toHaveBeenNthCalledWith(2, 'Partners.homepage.createTileDescription');
     expect(t).toHaveBeenNthCalledWith(3, 'Partners.homepage.createTileTitle');
-    expect(t).toHaveBeenNthCalledWith(4, 'Partners.homepage.sandboxTileDescription');
-    expect(t).toHaveBeenNthCalledWith(5, 'Partners.homepage.sandboxTileTitle');
     expect(titleElt).toBeInTheDocument();
     expect(titleElt).toHaveAttribute('data-testid', 'instances-page-title');
-    expect(TileComponent).toHaveBeenCalledTimes(2);
-    expect(TileComponent).toHaveBeenNthCalledWith(
-      1,
+    expect(TileComponent).toHaveBeenCalledOnce();
+    expect(TileComponent).toHaveBeenCalledWith(
       {
         dataTestId: 'instances-page-create-tile',
         description: 'any-create_tile_desc',
@@ -65,18 +60,6 @@ describe('InstancesPage', () => {
         link: 'create',
         size: 'lg',
         title: 'any-create_tile_title',
-      },
-      {},
-    );
-    expect(TileComponent).toHaveBeenNthCalledWith(
-      2,
-      {
-        dataTestId: 'instances-page-sandbox-tile',
-        description: 'any-sandbox_tile_desc',
-        isHorizontal: true,
-        link: '.',
-        size: 'lg',
-        title: 'any-sandbox_tile_title',
       },
       {},
     );
@@ -92,11 +75,7 @@ describe('InstancesPage', () => {
       items: itemsMock,
       submitState: undefined,
     });
-    jest
-      .mocked(t)
-      .mockReturnValueOnce('any-sandbox_title')
-      .mockReturnValueOnce('any-sandbox_tile_desc')
-      .mockReturnValueOnce('any-sandbox_tile_title');
+    jest.mocked(t).mockReturnValueOnce('any-sandbox_title');
 
     // When
     const { container, getByText } = render(<InstancesPage />);
@@ -104,27 +83,13 @@ describe('InstancesPage', () => {
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(t).toHaveBeenCalledTimes(3);
+    expect(t).toHaveBeenCalledOnce();
     expect(t).toHaveBeenNthCalledWith(1, 'Partners.homepage.sandboxTitle');
-    expect(t).toHaveBeenNthCalledWith(2, 'Partners.homepage.sandboxTileDescription');
-    expect(t).toHaveBeenNthCalledWith(3, 'Partners.homepage.sandboxTileTitle');
     expect(titleElt).toBeInTheDocument();
     expect(CreateInstanceButton).toHaveBeenCalledOnce();
     expect(CreateInstanceButton).toHaveBeenCalledWith({}, {});
     expect(InstancesListComponent).toHaveBeenCalledOnce();
     expect(InstancesListComponent).toHaveBeenCalledWith({ items: itemsMock }, {});
-    expect(TileComponent).toHaveBeenCalledOnce();
-    expect(TileComponent).toHaveBeenCalledWith(
-      {
-        dataTestId: 'instances-page-sandbox-tile',
-        description: 'any-sandbox_tile_desc',
-        isHorizontal: true,
-        link: '.',
-        size: 'lg',
-        title: 'any-sandbox_tile_title',
-      },
-      {},
-    );
     expect(ScrollRestoration).not.toHaveBeenCalled();
   });
 
@@ -149,9 +114,10 @@ describe('InstancesPage', () => {
     // Then
     expect(t).toHaveBeenNthCalledWith(2, 'any-submit-i18n-message-mock');
     expect(container).toMatchSnapshot();
-    expect(AlertComponentV2).toHaveBeenCalledOnce();
-    expect(AlertComponentV2).toHaveBeenCalledWith(
+    expect(AlertComponent).toHaveBeenCalledOnce();
+    expect(AlertComponent).toHaveBeenCalledWith(
       {
+        className: 'fr-mb-3w',
         dataTestId: 'instances-page-alert-top',
         onClose: closeAlertHandlerMock,
         title: 'any-submit-message-mock',

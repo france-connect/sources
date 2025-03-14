@@ -2,7 +2,6 @@
 
 source "$INCLUDE_DIR/hooks/fc-apps.sh"
 source "$INCLUDE_DIR/hooks/legacy-fc-commons.sh"
-source "$INCLUDE_DIR/hooks/lemon-ldap.sh"
 source "$INCLUDE_DIR/hooks/mongo.sh"
 source "$INCLUDE_DIR/hooks/partners.sh"
 
@@ -19,12 +18,6 @@ function _init_hooks() {
   local container=$1
 
   case $container in
-  *"lemon-ldap"*)
-    _hook_lemon_ldap
-    ;;
-  *"mongo-fca-low"*)
-    _hook_mongo "mongo-fca-low"
-    ;;
   *"mongo-fcp-low"*)
     _hook_mongo "mongo-fcp-low"
     ;;
@@ -33,9 +26,6 @@ function _init_hooks() {
     ;;
   *"pg-exploitation-high")
     _hook_fc_apps "exploitation-high"
-    ;;
-  *"pg-exploitation-fca-low")
-    _hook_fc_apps "exploitation-fca-low"
     ;;
   *"pg-exploitation")
     _hook_fc_apps "fc-exploitation"

@@ -8,7 +8,7 @@ export const Layout: LayoutConfig = {
   },
   footer: {
     description:
-      'Partenaires FranceConnect est un dispositif qui permet aux administrateurs FC de gérer les partenaires FranceConnect.',
+      'L’Espace partenaires FranceConnect est un dispositif qui permet aux partenaires de gérer leur fournisseur de service FranceConnect.',
     links: [
       {
         href: 'https://www.legifrance.gouv.fr',
@@ -54,16 +54,10 @@ export const Layout: LayoutConfig = {
       },
     ],
   },
-  navigation: [
-    {
-      href: '/instances',
-      label: 'Mon espace partenaire',
-    },
-  ],
   service: {
     baseline: 'Espace Partenaires',
     homepage: '/',
     logo: LogoFranceConnect,
-    name: 'FranceConnect / FranceConnect+',
+    name: 'FranceConnect',
   },
 };

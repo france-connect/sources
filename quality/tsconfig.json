@@ -10,5 +10,5 @@
     "types": ["node"]
   },
   "include": ["**/*.ts"],
-  "exclude": ["fca", "fcp", "partners"]
+  "exclude": ["fcp", "partners"]
 }

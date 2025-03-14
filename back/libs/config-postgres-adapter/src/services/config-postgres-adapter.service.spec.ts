@@ -13,7 +13,7 @@ describe('ConfigPostgresAdapterService', () => {
 
   const instancesMock = {
     getById: jest.fn(),
-    upsert: jest.fn(),
+    save: jest.fn(),
   };
 
   const versionsMock = {
@@ -121,7 +121,7 @@ describe('ConfigPostgresAdapterService', () => {
       const instance = Symbol('instance');
 
       instancesMock.getById.mockReturnValue(null);
-      instancesMock.upsert.mockReturnValue(instance);
+      instancesMock.save.mockReturnValue(instance);
 
       // When
       const result = await service['getInstance'](messageMock);

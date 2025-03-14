@@ -228,7 +228,6 @@ const spLegacy = {
     idpFilterExclude: true,
     idpFilterList: ["77fe5e8c-364c-440e-909f-5ef4f494e170"],
     identityConsent: false,
-    ssoDisabled: false,
     platform: "CORE_LEGACY",
   },
 
@@ -297,7 +296,6 @@ const spLegacy = {
       "fip3-low": true,
     },
     identityConsent: true,
-    ssoDisabled: false,
     platform: "CORE_LEGACY",
   },
 

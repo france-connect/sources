@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { Injectable, Type } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { asyncFilter, validateDto } from '@fc/common';
+import { ArrayAsyncHelper, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger';
@@ -125,36 +125,37 @@ export class IdentityProviderAdapterMongoService
         'IdentityProviderAdapterMongo',
       );
 
-    const identityProviders = await asyncFilter<IdentityProviderMetadata[]>(
-      rawResult,
-      async (doc: IdentityProviderMetadata) => {
-        /**
-         * @todo #902 see issue
-         * A DTO should validate the IdPs even with legacy format
-         * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/902
-         */
-        if (disableIdpValidationOnLegacy) {
-          this.logger.warning(
-            `"${doc.uid}": Skipping DTO validation due to legacy IdP mode.`,
-          );
-          return true;
-        }
+    const identityProviders =
+      await ArrayAsyncHelper.filterAsync<IdentityProviderMetadata>(
+        rawResult,
+        async (doc: IdentityProviderMetadata) => {
+          /**
+           * @todo #902 see issue
+           * A DTO should validate the IdPs even with legacy format
+           * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/902
+           */
+          if (disableIdpValidationOnLegacy) {
+            this.logger.warning(
+              `"${doc.uid}": Skipping DTO validation due to legacy IdP mode.`,
+            );
+            return true;
+          }
 
-        const dto = this.getIdentityProviderDTO(doc.discovery);
-        const errors = await validateDto(doc, dto, validationOptions);
-        const { name, uid } = doc;
+          const dto = this.getIdentityProviderDTO(doc.discovery);
+          const errors = await validateDto(doc, dto, validationOptions);
+          const { name, uid } = doc;
 
-        if (errors.length > 0) {
-          this.logger.alert(
-            `Identity provider "${name}" (${uid}) was excluded at DTO validation`,
-          );
+          if (errors.length > 0) {
+            this.logger.alert(
+              `Identity provider "${name}" (${uid}) was excluded at DTO validation`,
+            );
 
-          this.logger.debug({ errors });
-        }
+            this.logger.debug({ errors });
+          }
 
-        return errors.length === 0;
-      },
-    );
+          return errors.length === 0;
+        },
+      );
 
     return identityProviders;
   }

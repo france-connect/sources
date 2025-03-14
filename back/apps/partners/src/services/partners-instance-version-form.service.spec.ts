@@ -31,7 +31,6 @@ describe('PartnersInstanceVersionFormService', () => {
     idpFilterExclude: true,
     idpFilterList: [],
     identityConsent: false,
-    ssoDisabled: false,
     credentialsBytesLength: credentialsBytesLengthMock,
   };
 

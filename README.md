@@ -1,8 +1,6 @@
-# 🔈 About FranceConnect, AgentConnect and French eIDAS interoperability node
+# 🔈 About FranceConnect and French eIDAS interoperability node
 
 - FranceConnect is the SSO solution developed by the French government for its citizen, based on the OpenID Connect protocol. It allows the citizens to login on many public and private online services using their existing credentials from certified public and private identity providers (IMPOTS, AMELI, La poste identité numérique, ...).
-
-- AgentConnect is the SSO solution developed by the French government for its agents, based on the OpenID Connect protocol. It allows the public servants to login on many internal governmental services using their identities from the existing directories of the agencies where they work.
 
 - The french eIDAS interoperability node is based on the official european SSO. More information on [the official documentation](https://ec.europa.eu/cefdigital/wiki/display/CEFDIGITAL/eIDAS+eID+Profile). In this repository you will find the `eidas-bridge` that is used by FranceConnect to interact with the french eIDAS interoperability node.
 
@@ -53,12 +51,8 @@ See [Quality documentation](./quality/_doc/README.md)
 
 - I've got an error / security concern while using `FranceConnect`
   - please see [the FranceConnect FAQ](https://franceconnect.gouv.fr/faq)
-- I've got an error / security concern while using `AgentConnect`
-  - please see [the AgentConnect FAQ](https://agentconnect.gouv.fr/aide)
 - I'm a professional and I'm integrating / I want to integrate `FranceConnect+`
   - please see [our integration guide](https://github.com/france-connect/Documentation-FranceConnect-Plus)
 - I'm a professional and I'm integrating / I want to integrate `FranceConnect`
   - please see [our integration guide](https://partenaires.franceconnect.gouv.fr/documentation)
   - please see [our FAQ](https://partenaires.franceconnect.gouv.fr/faq)
-- I'm a professional and I'm integrating / I want to integrate `AgentConnect`
-  - please see [our integration guide](https://github.com/france-connect/Documentation-AgentConnect)

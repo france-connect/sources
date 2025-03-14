@@ -474,25 +474,6 @@ describe('EuIdentityToFrController', () => {
           sessionDataMock,
         );
       });
-
-      it('should return the promise from the finishInteraction call', async () => {
-        // setup
-        const expectedInteractionReturn = Symbol('interactionReturn');
-        oidcProviderServiceMock.finishInteraction.mockReturnValueOnce(
-          expectedInteractionReturn,
-        );
-
-        // action
-        const result = await euIdentityToFrController.finishInteraction(
-          req,
-          res,
-          sessionServiceOidcMock,
-          sessionServiceEidasMock,
-        );
-
-        // expect
-        expect(result).toStrictEqual(expectedInteractionReturn);
-      });
     });
 
     describe('eidas response is a failure', () => {

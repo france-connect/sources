@@ -5,7 +5,13 @@ import { SessionService } from '@fc/session';
 
 import { getSessionServiceMock } from '@mocks/session';
 
-import { CsrfBadTokenException } from '../exceptions';
+import {
+  CsrfBadTokenException,
+  CsrfConsumedSessionTokenException,
+  CsrfMissingTokenException,
+  CsrfNoSessionException,
+} from '../exceptions';
+import { CONSUMED_TOKEN } from '../tokens';
 import { CsrfService } from './csrf.service';
 
 const cryptographyServiceMock = {
@@ -70,55 +76,98 @@ describe('CsrfService', () => {
   });
 
   describe('check()', () => {
-    it('should return true if the token is valid', () => {
-      // Given
-      service.isValid = jest.fn().mockReturnValueOnce(true);
-
-      // When
-      const result = service.check('some value');
-
-      // Then
-      expect(result).toBeTrue();
+    beforeEach(() => {
+      service['checkToken'] = jest.fn();
     });
 
-    it('should throw an error if the CSRF token provided and the one stored in session are not the same', () => {
+    it('should call checkToken()', () => {
       // Given
-      service.isValid = jest.fn().mockReturnValueOnce(false);
+      const input = 'input';
+      // When
+      service.check(input);
+
+      // Then
+      expect(service['checkToken']).toHaveBeenCalledExactlyOnceWith(input);
+    });
+
+    it('should set the token as consumed', () => {
+      // Given
+      const input = 'input';
+
+      // When
+      service.check(input);
+
+      // Then
+      expect(sessionServiceMock.set).toHaveBeenCalledExactlyOnceWith('Csrf', {
+        csrfToken: CONSUMED_TOKEN,
+      });
+    });
+
+    it('should not set the token as consumed if checkToken() throws', () => {
+      // Given
+      const input = 'input';
+      service['checkToken'] = jest.fn().mockImplementation(() => {
+        throw new Error();
+      });
 
       // When / Then
-      expect(() => service.check('some value')).toThrow(CsrfBadTokenException);
+      expect(() => service.check(input)).toThrow();
+      expect(sessionServiceMock.set).not.toHaveBeenCalled();
+    });
+
+    it('should return true', () => {
+      // Given
+      const input = 'input';
+
+      // When
+      const result = service.check(input);
+
+      // Then
+      expect(result).toBe(true);
     });
   });
 
-  describe('isValid()', () => {
-    it('should return false if the session is not defined', () => {
+  describe('checkToken()', () => {
+    it('should throw CsrfMissingTokenException if the input is falsy', () => {
       // Given
-      sessionServiceMock.get.mockReturnValueOnce(undefined);
+      sessionServiceMock.get.mockReturnValue({ csrfToken: 'csrfToken' });
 
-      // When
-      const result = service.isValid('some value');
-
-      // Then
-      expect(result).toBeFalse();
+      // When / Then
+      expect(() => service.check('')).toThrow(CsrfMissingTokenException);
     });
 
-    it('should validate the CSRF if the one provided and the one stored in sessions are the same', () => {
-      // When
-      const result = service.isValid(sessionDataMock.csrfToken);
+    it('should throw CsrfNoSessionException if the session does not exist', () => {
+      // Given
+      sessionServiceMock.get.mockReturnValue(null);
 
-      // Then
-      expect(result).toBeTrue();
+      // When / Then
+      expect(() => service.check('input')).toThrow(CsrfNoSessionException);
     });
 
-    it('should throw an error if the CSRF token provided and the one stored in session are not the same', () => {
+    it('should throw CsrfNoSessionException if the session does not have a token', () => {
       // Given
-      const randomMockValue = 'csrfToken-BAD-Value';
+      sessionServiceMock.get.mockReturnValue({});
 
-      // When
-      const result = service.isValid(randomMockValue);
+      // When / Then
+      expect(() => service.check('input')).toThrow(CsrfNoSessionException);
+    });
 
-      // Then
-      expect(result).toBeFalse();
+    it('should throw CsrfConsumedTokenException if the token is already consumed', () => {
+      // Given
+      sessionServiceMock.get.mockReturnValue({ csrfToken: CONSUMED_TOKEN });
+
+      // When / Then
+      expect(() => service.check('input')).toThrow(
+        CsrfConsumedSessionTokenException,
+      );
+    });
+
+    it('should throw CsrfBadTokenException if the token is not the expected one', () => {
+      // Given
+      sessionServiceMock.get.mockReturnValue({ csrfToken: 'anotherToken' });
+
+      // When / Then
+      expect(() => service.check('input')).toThrow(CsrfBadTokenException);
     });
   });
 });

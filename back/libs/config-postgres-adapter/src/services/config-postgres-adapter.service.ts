@@ -46,7 +46,7 @@ export class ConfigPostgresAdapterService
     let instance = this.instances.getById(message.meta.instanceId);
 
     if (!instance) {
-      instance = this.instances.upsert(
+      instance = this.instances.save(
         message.payload as Partial<PartnersServiceProviderInstance>,
       );
     }

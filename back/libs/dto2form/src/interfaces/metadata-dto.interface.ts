@@ -1,28 +1,15 @@
-export interface MetadataDtoValidatorsInterface {
+import { FieldAttributesArguments } from './field-attributes.interface';
+import { FieldValidator } from './field-validator.interface';
+
+export type ValidatorType = FieldValidator | FieldValidator[];
+
+export interface MetadataDtoInterface
+  extends Omit<FieldAttributesArguments, 'validators'> {
   name: string;
-  errorLabel: string;
-  validationArgs: unknown[];
+  validators: ValidatorType[];
 }
 
-export interface MetadataDtoValidateIfInterface {
-  name: string;
-  ruleArgs: string[];
-}
-
-export type ValidatorType = (
-  | MetadataDtoValidatorsInterface
-  | MetadataDtoValidatorsInterface[]
-)[];
-
-export interface MetadataDtoInterface {
-  required: boolean;
-  readonly: boolean;
-  array: boolean;
-  order: number;
-  validators: ValidatorType;
-  validateIf: MetadataDtoValidateIfInterface[];
-  type: string;
-  name: string;
-  label?: string;
+export interface MetadataDtoTranslationInterface extends MetadataDtoInterface {
+  label: string;
   hint?: string;
 }

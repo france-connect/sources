@@ -9,6 +9,8 @@ import {
   $IsString,
   $IsWebsiteURL,
   $Matches,
+  Choice,
+  FieldsChoice,
   Form,
   FormDtoBase,
   Input,
@@ -16,6 +18,8 @@ import {
 } from '@fc/dto2form';
 import {
   OidcClientInterface,
+  PlatformEnum,
+  PlatformTechnicalKeyEnum,
   SignatureAlgorithmEnum,
 } from '@fc/service-provider';
 
@@ -49,20 +53,47 @@ export class ServiceProviderInstanceVersionDto
   readonly client_secret: string;
 
   @Text({
-    order: 10,
+    order: 20,
+  })
+  @Expose()
+  readonly platformSection: string;
+
+  @Choice({
+    type: FieldsChoice.RADIO,
+    required: true,
+    order: 21,
+    options: [
+      {
+        label: PlatformEnum.FRANCECONNECT,
+        value: PlatformTechnicalKeyEnum.CORE_FCP,
+      },
+      {
+        label: PlatformEnum.FRANCECONNECT_PLUS,
+        value: PlatformTechnicalKeyEnum.CORE_FCP_HIGH,
+        disabled: true,
+      },
+    ],
+    initialValue: PlatformTechnicalKeyEnum.CORE_FCP,
+    validators: [$IsString()],
+  })
+  @Expose()
+  readonly platform: PlatformTechnicalKeyEnum;
+
+  @Text({
+    order: 40,
   })
   @Expose()
   readonly spInformationSection: string;
 
   @Input({
-    order: 11,
+    order: 41,
     validators: [$IsLength({ max: 7 }), $IsNumeric()],
   })
   @Expose()
   readonly signupId: string;
 
   @Text({
-    order: 20,
+    order: 60,
   })
   @Expose()
   readonly spConfigurationSection: string;
@@ -70,33 +101,25 @@ export class ServiceProviderInstanceVersionDto
   @Input({
     required: true,
     array: true,
-    order: 21,
+    order: 61,
     validators: [$IsWebsiteURL(), $IsLength({ max: 1024 })],
   })
   @Expose()
   readonly site: string[];
 
-  /**
-   * @TODO Ajout de la gestion des champs multiples (ex URLs) sur la lib dto2form
-   * #1842
-   */
   @Input({
     required: true,
     array: true,
-    order: 22,
+    order: 62,
     validators: [$IsRedirectURL(), $IsLength({ max: 1024 })],
   })
   @Expose()
   readonly redirect_uris: string[];
 
-  /**
-   * @TODO Ajout de la gestion des champs multiples (ex URLs) sur la lib dto2form
-   * #1842
-   */
   @Input({
     required: true,
     array: true,
-    order: 23,
+    order: 63,
     validators: [$IsRedirectURL(), $IsLength({ max: 1024 })],
   })
   @Expose()
@@ -104,28 +127,39 @@ export class ServiceProviderInstanceVersionDto
 
   @Input({
     array: true,
-    order: 24,
+    order: 64,
     validators: [$IsIpAddressesAndRange()],
   })
   @Expose()
   readonly IPServerAddressesAndRanges: string[];
 
-  @Input({
+  @Choice({
+    type: FieldsChoice.RADIO,
     required: true,
-    order: 25,
+    order: 65,
+    options: [
+      {
+        label: SignatureAlgorithmEnum.ES256,
+        value: SignatureAlgorithmEnum.ES256,
+      },
+      {
+        label: SignatureAlgorithmEnum.RS256,
+        value: SignatureAlgorithmEnum.RS256,
+      },
+    ],
     validators: [$IsString(), $IsSignedResponseAlg()],
   })
   @Expose()
   readonly id_token_signed_response_alg: SignatureAlgorithmEnum;
 
   @Text({
-    order: 30,
+    order: 80,
   })
   @Expose()
   readonly subSection: string;
 
   @Input({
-    order: 31,
+    order: 81,
     validators: [$IsLength({ max: 64, min: 36 }), $Matches(/^[a-zA-Z0-9-]+$/)],
   })
   @Expose()

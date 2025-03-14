@@ -4,7 +4,6 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 
 import { PartnersAccountPermission } from './partners-account-permission.entity';
@@ -43,10 +42,19 @@ export class PartnersAccount {
   })
   siren: string | null; // claim `siren`
 
+  @Column({
+    type: 'timestamp',
+    nullable: true,
+  })
+  lastConnection?: Date;
+
   @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @Column({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   updatedAt: Date;
 
   @OneToMany(

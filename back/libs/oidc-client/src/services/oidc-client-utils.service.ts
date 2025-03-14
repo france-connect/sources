@@ -119,7 +119,7 @@ export class OidcClientUtilsService {
   private extractParams(
     callbackParams: CallbackParamsType,
     stateFromSession: string,
-  ): any {
+  ): CallbackParamsType {
     this.checkCode(callbackParams);
     this.checkState(callbackParams, stateFromSession);
 

@@ -7,7 +7,7 @@ import { stringToArray } from '@fc/oidc';
 
 import { OidcProviderParseJsonClaimsException } from '../exceptions';
 import { OidcProviderGrantSaveException } from '../exceptions/oidc-provider-grant-save.exception';
-import { InteractionParams } from '../interfaces';
+import { InteractionInterface } from '../interfaces';
 
 @Injectable()
 export class OidcProviderGrantService {
@@ -21,8 +21,11 @@ export class OidcProviderGrantService {
     res: any,
     accountId: string,
   ): Promise<any> {
-    const details = await provider.interactionDetails(req, res);
-    const { claims, client_id, scope } = details.params as InteractionParams;
+    const details = (await provider.interactionDetails(
+      req,
+      res,
+    )) as InteractionInterface;
+    const { claims, client_id, scope } = details.params;
 
     const grant = new provider.Grant();
 

@@ -73,12 +73,7 @@ export class CoreFcpVerifyService {
     const { IDP_CALLEDBACK_WITH_ERROR } = this.tracking.TrackedEventsMap;
     await this.tracking.track(IDP_CALLEDBACK_WITH_ERROR, trackingContext);
 
-    return await this.oidcProvider.abortInteraction(
-      req,
-      res,
-      errorParams,
-      true,
-    );
+    await this.oidcProvider.abortInteraction(req, res, errorParams, true);
   }
 
   async validateIdentity(idpId: string, identity: OidcIdentityDto) {

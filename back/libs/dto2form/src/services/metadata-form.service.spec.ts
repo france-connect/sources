@@ -46,12 +46,12 @@ describe('MetadataFormService', () => {
           validators: [
             {
               name: 'isString',
-              errorLabel: 'isString_error',
+              errorMessage: 'isString_error',
               validationArgs: [],
             },
             {
               name: 'isNotEmpty',
-              errorLabel: 'isNotEmpty_error',
+              errorMessage: 'isNotEmpty_error',
               validationArgs: [],
             },
           ],
@@ -90,17 +90,17 @@ describe('MetadataFormService', () => {
           validators: [
             {
               name: 'isFilled',
-              errorLabel: 'isFilled_error',
+              errorMessage: 'isFilled_error',
               validationArgs: [],
             },
             {
               name: 'isString',
-              errorLabel: 'isString_error',
+              errorMessage: 'isString_error',
               validationArgs: [],
             },
             {
               name: 'isNotEmpty',
-              errorLabel: 'isNotEmpty_error',
+              errorMessage: 'isNotEmpty_error',
               validationArgs: [],
             },
           ],
@@ -139,7 +139,7 @@ describe('MetadataFormService', () => {
           validators: [
             {
               name: 'isString',
-              errorLabel: 'isString_error',
+              errorMessage: 'isString_error',
               validationArgs: [],
             },
           ],

@@ -3,6 +3,7 @@ export * from './descriptors';
 export * from './dto';
 export * from './dto2form.module';
 export * from './enums';
+export * from './filters';
 export * from './helpers';
 export * from './interfaces';
 export * from './pipes';

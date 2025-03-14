@@ -344,6 +344,9 @@ describe('CoreTrackingService', () => {
         idpName: null,
         idpLabel: null,
         idpSub: null,
+
+        deviceIsSuspicious: null,
+        deviceTrusted: null,
       };
       sessionServiceMock.get
         .mockReturnValueOnce(null)

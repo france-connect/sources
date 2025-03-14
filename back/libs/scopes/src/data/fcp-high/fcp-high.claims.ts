@@ -18,8 +18,6 @@ export const claims: ClaimsInterface = {
   rnipp_birthplace: 'rnipp_birthplace',
   rnipp_birthcountry: 'rnipp_birthcountry',
 
-  address: 'address',
-  phone_number: 'phone_number',
   email: 'email',
   amr: 'amr',
 };

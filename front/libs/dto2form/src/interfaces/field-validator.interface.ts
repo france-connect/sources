@@ -6,5 +6,5 @@ export interface FieldValidateIfRule {
 export interface FieldValidatorInterface {
   name: string;
   validationArgs?: unknown[];
-  errorLabel: string;
+  errorMessage: string;
 }

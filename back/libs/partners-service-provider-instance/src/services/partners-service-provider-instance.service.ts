@@ -10,7 +10,6 @@ import {
   PermissionInterface,
   RelatedEntitiesHelper,
 } from '@fc/access-control';
-import { uuid } from '@fc/common';
 
 @Injectable()
 export class PartnersServiceProviderInstanceService {
@@ -59,17 +58,10 @@ export class PartnersServiceProviderInstanceService {
     return instance;
   }
 
-  async upsert(
+  async save(
     data: Partial<PartnersServiceProviderInstance>,
-    instanceId?: uuid,
   ): Promise<PartnersServiceProviderInstance> {
-    let result: PartnersServiceProviderInstance;
-
-    if (instanceId) {
-      await this.repository.update({ id: instanceId }, { name: data.name });
-    } else {
-      result = await this.repository.save(data);
-    }
+    const result = await this.repository.save(data);
 
     return result;
   }

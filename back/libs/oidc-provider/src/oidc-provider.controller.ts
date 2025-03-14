@@ -37,20 +37,15 @@ export class OidcProviderController {
   @Post(OidcProviderRoutes.REDIRECT_TO_SP)
   @UsePipes(new ValidationPipe({ whitelist: true }))
   @ForbidRefresh()
-  getLogin(
+  async getLogin(
     @Req() req,
     @Res() res,
-    /**
-     * @TODO #1018 Refactoriser la partie API du controller core-fca
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1018
-     * @ticket FC-1018
-     */
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
   ): Promise<void> {
     const session: OidcClientSession = sessionOidc.get();
 
-    return this.oidcProviderConfigApp.finishInteraction(req, res, session);
+    await this.oidcProviderConfigApp.finishInteraction(req, res, session);
   }
 
   @Post(OidcProviderRoutes.TOKEN)

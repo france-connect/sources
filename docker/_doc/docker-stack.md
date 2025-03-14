@@ -2,15 +2,15 @@
 
 ## Description
 
-This directory contains everything to run a local FranceConnect or AgentConnect stack. This local environment is as close as possible to the other distant ones (proxy, rp, a virtual HSM ...). Be careful not to launch too many containers as it could take too much resources (we are working on that).
+This directory contains everything to run a local FranceConnect stack. This local environment is as close as possible to the other distant ones (proxy, rp, a virtual HSM ...). Be careful not to launch too many containers as it could take too much resources (we are working on that).
 
 ## Content
 
-- The core applications (core-\*) which are the main applications of FranceConnect (FC), AgentConnect (AC) and FranceConnect+ (FC+).
+- The core applications (core-\*) which are the main applications of FranceConnect (FC) and FranceConnect+ (FC+).
 - The back office applications (exploitation-\*) used to manage the projects.
-- The identities providers mocks (fip-_ for FC and FC+, fia-_ for AC).
-- The services providers mocks (fsp-_ for FC and FC+, fsa-_ for AC).
-- The user websites for [FC / FC+](https://franceconnect.gouv.fr) and [AC](https://agentconnect.gouv.fr).
+- The identities providers mocks (fip-\_ for FC and FC+).
+- The services providers mocks (fsp-\_ for FC and FC+).
+- The user websites for [FC / FC+](https://franceconnect.gouv.fr)
 - The eIDAS applications which are used for european interoperability.
 - All software needed alongside those apps to make the stack work (MongoDB, Redis, SoftHSM, NginX, Squid, Elasticsearch, ...).
 
@@ -80,7 +80,6 @@ export FC_DOCKER_COMPOSE='docker compose'
 
   # User website, not needed most of the time
   git clone <france-connect-repository>/usagers.git
-  git clone <france-connect-repository>/usagers-fca.git
   git clone <france-connect-repository>/formulaire-usagers.git
 
   # Backoffice apps
@@ -121,7 +120,6 @@ ln -s $FC_ROOT/rnipp-mock
 ln -s $FC_ROOT/fc-apps
 
 ln -s $FC_ROOT/usagers
-ln -s $FC_ROOT/usagers-fca
 ln -s $FC_ROOT/formulaire-usagers
 ```
 
@@ -169,21 +167,6 @@ dks up min-eidas-high
 dks start-all
 ```
 
-### Running AgentConnect
-
-```bash
-dks up min-fca-low
-dks start-all
-```
-
-On https://fsa1-low.docker.dev-franceconnect.fr/, you can test the connexion with :
-
-- On the AgentConnect page use this email: test@fia1.fr
-- Change the login to: test
-- Leave the password empty
-
-You are now connected to fsa1!
-
 ### Testing the installation
 
 You will then find a list of accessible URLs here: https://hello.docker.dev-franceconnect.fr.
@@ -225,8 +208,6 @@ dks help
 dks mongo-shell-core-fcp-high
 # Or
 dks mongo-shell-core-fcp-low
-# Or
-dks mongo-shell-core-fca-low
 ```
 
 ### Reset the MongoDb fixtures
@@ -235,8 +216,6 @@ dks mongo-shell-core-fca-low
 dks reset-db-core-fcp-high
 # Or
 dks reset-db-core-fcp-low
-# Or
-dks reset-db-core-fca-low
 ```
 
 ### Execute a shell command in a container

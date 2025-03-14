@@ -4,10 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { ConfigMessageDto } from '@fc/csmr-config-client';
-import {
-  OidcClientLegacyInterface,
-  ServiceProviderService,
-} from '@fc/service-provider';
+import { ServiceProviderService } from '@fc/service-provider';
 
 import { getConfigMock } from '@mocks/config';
 
@@ -266,65 +263,6 @@ describe('ConfigMongoAdapterService', () => {
       expect(result.userinfo_signed_response_alg).toBe(
         input.id_token_signed_response_alg,
       );
-    });
-
-    it('should cast redirect_uris, post_logout_redirect_uris and site to array', () => {
-      // Given
-      service['castStringToArray'] = jest.fn();
-      const input = {
-        redirect_uris: 'redirect_uris',
-        post_logout_redirect_uris: 'post_logout_redirect_uris',
-        site: 'site',
-      } as unknown as Partial<OidcClientLegacyInterface>;
-
-      // When
-      service['patchPartnerForMongo'](input);
-
-      // Then
-      expect(service['castStringToArray']).toHaveBeenCalledTimes(3);
-      expect(service['castStringToArray']).toHaveBeenNthCalledWith(
-        1,
-        input,
-        'redirect_uris',
-      );
-      expect(service['castStringToArray']).toHaveBeenNthCalledWith(
-        2,
-        input,
-        'post_logout_redirect_uris',
-      );
-      expect(service['castStringToArray']).toHaveBeenNthCalledWith(
-        3,
-        input,
-        'site',
-      );
-    });
-  });
-
-  describe('castStringToArray', () => {
-    it('should cast string to array', () => {
-      // Given
-      const input = {
-        site: 'bar',
-      } as unknown as Partial<OidcClientLegacyInterface>;
-
-      // When
-      service['castStringToArray'](input, 'site');
-
-      // Then
-      expect(input.site).toEqual(['bar']);
-    });
-
-    it('should not wrap property if it is already an array', () => {
-      // Given
-      const input = {
-        site: ['bar'],
-      } as unknown as Partial<OidcClientLegacyInterface>;
-
-      // When
-      service['castStringToArray'](input, 'site');
-
-      // Then
-      expect(input.site).toEqual(['bar']);
     });
   });
 });

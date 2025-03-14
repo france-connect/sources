@@ -2,7 +2,7 @@ export class ArrayAsyncHelper {
   static async filterAsync<T>(
     arr,
     predicate: (value: T, index: number, array: T[]) => Promise<boolean>,
-  ): Promise<T> {
+  ): Promise<T[]> {
     const results = await ArrayAsyncHelper.mapAsync<T, boolean>(arr, predicate);
 
     return arr.filter((_v, index) => results[index]);

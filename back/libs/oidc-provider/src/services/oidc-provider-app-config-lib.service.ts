@@ -131,7 +131,11 @@ export abstract class OidcProviderAppConfigLibService
    * @param {any} res
    * @param {OidcSession} session Object that contains the session info
    */
-  async finishInteraction(req: any, res: any, session: OidcSession) {
+  async finishInteraction(
+    req: any,
+    res: any,
+    session: OidcSession,
+  ): Promise<void> {
     const { amr, interactionAcr: acr }: OidcClientSession = session;
     const sessionId = this.sessionService.getId();
 
@@ -173,7 +177,7 @@ export abstract class OidcProviderAppConfigLibService
     } as InteractionResults;
 
     try {
-      return await this.provider.interactionFinished(req, res, result);
+      await this.provider.interactionFinished(req, res, result);
     } catch (error) {
       throw new OidcProviderRuntimeException(error);
     }

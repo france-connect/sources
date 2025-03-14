@@ -5,5 +5,5 @@ export interface FieldValidatorBase {
 }
 
 export interface FieldValidator extends FieldValidatorBase {
-  errorLabel: string;
+  errorMessage: string;
 }

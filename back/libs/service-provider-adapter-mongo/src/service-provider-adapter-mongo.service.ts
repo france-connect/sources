@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { asyncFilter, validateDto } from '@fc/common';
+import { ArrayAsyncHelper, validateDto } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { CryptographyService } from '@fc/cryptography';
 import { LoggerService } from '@fc/logger';
@@ -85,34 +85,34 @@ export class ServiceProviderAdapterMongoService
         idpFilterList: true,
         type: true,
         identityConsent: true,
-        ssoDisabled: true,
         platform: true,
         rep_scope: true,
       })
       .lean();
 
-    const serviceProviders = await asyncFilter<ServiceProviderMetadata[]>(
-      rawResult,
-      async (doc: ServiceProviderMetadata) => {
-        const { name, uid } = doc;
+    const serviceProviders =
+      await ArrayAsyncHelper.filterAsync<ServiceProviderMetadata>(
+        rawResult,
+        async (doc: ServiceProviderMetadata) => {
+          const { name, uid } = doc;
 
-        const errors = await validateDto(
-          doc,
-          ServiceProviderAdapterMongoDTO,
-          validationOptions,
-        );
-
-        if (errors.length > 0) {
-          this.logger.alert(
-            `Service provider "${name}" (${uid}) was excluded at DTO validation`,
+          const errors = await validateDto(
+            doc,
+            ServiceProviderAdapterMongoDTO,
+            validationOptions,
           );
 
-          this.logger.debug({ errors });
-        }
+          if (errors.length > 0) {
+            this.logger.alert(
+              `Service provider "${name}" (${uid}) was excluded at DTO validation`,
+            );
 
-        return errors.length === 0;
-      },
-    );
+            this.logger.debug({ errors });
+          }
+
+          return errors.length === 0;
+        },
+      );
 
     return serviceProviders;
   }

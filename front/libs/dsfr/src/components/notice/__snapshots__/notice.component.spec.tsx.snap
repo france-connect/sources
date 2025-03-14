@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NoticeComponent should match snapshot 1`] = `
+<div>
+  <div
+    class="fr-notice fr-notice--info"
+  >
+    <div
+      class="fr-container"
+    >
+      <div
+        class="fr-notice__body"
+      >
+        <p>
+          <span
+            class="fr-notice__title"
+          >
+            any-title-mock
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`NoticeComponent should match snapshot with optionnals props 1`] = `
+<div>
+  <div
+    class="fr-notice fr-notice--info"
+  >
+    <div
+      class="fr-container"
+    >
+      <div
+        class="fr-notice__body"
+      >
+        <p>
+          <span
+            class="fr-notice__title"
+          >
+            any-title-mock
+          </span>
+          <span
+            class="fr-notice__desc"
+          >
+            any-description-mock
+          </span>
+          <a
+            class="fr-notice__link"
+            href="any-href-mock"
+            rel="noopener external noreferrer"
+            target="_blank"
+            title="any-link-title-mock - FC.Common.newWindow-mock"
+          >
+            any-link-label-mock
+          </a>
+        </p>
+        <button
+          class="fr-btn--close fr-btn"
+          title="DSFR.notice.close-mock"
+        >
+          DSFR.notice.close-mock
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

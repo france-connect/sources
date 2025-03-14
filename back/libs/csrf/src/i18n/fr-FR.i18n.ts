@@ -5,4 +5,8 @@ export const frFR: I18nTranslationsMapType = {
     'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
   'Csrf.exceptions.csrfMissingToken':
     'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
+  'Csrf.exceptions.csrfNoSession':
+    'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
+  'Csrf.exceptions.csrfConsumedToken':
+    'Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous.',
 };

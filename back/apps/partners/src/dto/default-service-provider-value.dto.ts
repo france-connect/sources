@@ -11,7 +11,7 @@ import {
   ClientTypeEnum,
   EncryptionAlgorithmEnum,
   EncryptionEncodingEnum,
-  PlatformEnum,
+  PlatformTechnicalKeyEnum,
   SignatureAlgorithmEnum,
 } from '@fc/service-provider';
 
@@ -44,14 +44,11 @@ export class DefaultServiceProviderLowValueConfig {
   @IsEnum(ClientTypeEnum)
   readonly type: ClientTypeEnum;
 
-  @IsEnum(PlatformEnum)
-  readonly platform: PlatformEnum;
+  @IsEnum(PlatformTechnicalKeyEnum)
+  readonly platform: PlatformTechnicalKeyEnum;
 
   @IsBoolean()
   readonly identityConsent: boolean;
-
-  @IsBoolean()
-  readonly ssoDisabled: boolean;
 
   @IsString()
   readonly id_token_encrypted_response_alg: EncryptionAlgorithmEnum;

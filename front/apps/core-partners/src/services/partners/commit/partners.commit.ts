@@ -1,12 +1,12 @@
 import type { AxiosError } from 'axios';
 import { HttpStatusCode } from 'axios';
-import type { SubmissionErrors } from 'final-form';
+import { FORM_ERROR, type SubmissionErrors } from 'final-form';
 
 import { ContentType, type HttpMethods } from '@fc/common';
 import type { ResponseErrorInterface } from '@fc/dto2form';
-import { UNKNOWN_FORM_ERROR } from '@fc/forms';
 import type { HttpClientDataInterface } from '@fc/http-client';
 import { getCSRF, makeRequest } from '@fc/http-client';
+import { t } from '@fc/i18n';
 
 import type { VersionInterface } from '../../../interfaces';
 
@@ -35,7 +35,9 @@ export const commit = async (
 
     const isUndefinedError = !isDTO2FormError || !dto2FormErrors;
     if (isUndefinedError) {
-      return UNKNOWN_FORM_ERROR;
+      return {
+        [FORM_ERROR]: t('Form.FORM_ERROR'),
+      };
     }
 
     return dto2FormErrors;

@@ -16,7 +16,7 @@ export const useFieldValidate = ({
   const funcs = validators
     .filter((v) => !!has(Validators, v.name))
     .map((v) => {
-      const msg = v.errorLabel;
+      const msg = v.errorMessage;
       const func = buildValidator(v, !required);
       return func(msg);
     });

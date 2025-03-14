@@ -9,9 +9,9 @@ interface CardDetailComponentProps {
 
 export const CardDetailComponent = React.memo(
   ({ className = undefined, content, dataTestId = undefined }: CardDetailComponentProps) => (
-    <p className={classnames('fr-card__detail', className)} data-testid={dataTestId}>
+    <div className={classnames('fr-card__detail', className)} data-testid={dataTestId}>
       {content}
-    </p>
+    </div>
   ),
 );
 

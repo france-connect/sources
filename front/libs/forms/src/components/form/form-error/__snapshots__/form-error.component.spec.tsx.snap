@@ -3,7 +3,7 @@
 exports[`FormErrorComponent should match the snapshot when error is defined 1`] = `
 <div>
   <div
-    class="fr-alert fr-alert--error fr-alert--sm  fr-mb-6w"
+    class="fr-alert fr-alert--error fr-alert--sm fr-mb-6w"
     role="alert"
   >
     <h3
@@ -15,13 +15,16 @@ exports[`FormErrorComponent should match the snapshot when error is defined 1`] 
       any-error-message-mock
     </p>
   </div>
+  <div
+    data-mockid="FormErrorScrollComponent"
+  />
 </div>
 `;
 
 exports[`FormErrorComponent should match the snapshot when error is not defined 1`] = `
 <div>
   <div
-    class="fr-alert fr-alert--error fr-alert--sm  fr-mb-6w"
+    class="fr-alert fr-alert--error fr-alert--sm fr-mb-6w"
     role="alert"
   >
     <h3
@@ -33,5 +36,8 @@ exports[`FormErrorComponent should match the snapshot when error is not defined 
       any-error-message-mock
     </p>
   </div>
+  <div
+    data-mockid="FormErrorScrollComponent"
+  />
 </div>
 `;

@@ -10,7 +10,7 @@ describe('buildValidator', () => {
   it('should return a validate function', () => {
     // When
     const result = buildValidator({
-      errorLabel: 'errorLabelMock',
+      errorMessage: 'errorMessageMock',
       name: 'any-validator-name',
       validationArgs: ['validationArgsMock'],
     });
@@ -24,7 +24,7 @@ describe('buildValidator', () => {
     it('should return undefined when the field value is "   " and allowEmpty is true', () => {
       // When
       const validator = buildValidator({
-        errorLabel: expect.any(String),
+        errorMessage: expect.any(String),
         name: expect.any(String),
         validationArgs: expect.any(Array),
       });
@@ -38,7 +38,7 @@ describe('buildValidator', () => {
     it('should return undefined when the field value is 0 and allowEmpty is true', () => {
       // When
       const validator = buildValidator({
-        errorLabel: expect.any(String),
+        errorMessage: expect.any(String),
         name: expect.any(String),
         validationArgs: expect.any(Array),
       });
@@ -52,7 +52,7 @@ describe('buildValidator', () => {
     it('should return undefined when the field value is null and allowEmpty is true', () => {
       // When
       const validator = buildValidator({
-        errorLabel: expect.any(String),
+        errorMessage: expect.any(String),
         name: expect.any(String),
         validationArgs: expect.any(Array),
       });
@@ -66,7 +66,7 @@ describe('buildValidator', () => {
     it('should return undefined when the field value is undefined and allowEmpty is true', () => {
       // When
       const validator = buildValidator({
-        errorLabel: expect.any(String),
+        errorMessage: expect.any(String),
         name: expect.any(String),
         validationArgs: expect.any(Array),
       });
@@ -90,7 +90,7 @@ describe('buildValidator', () => {
 
       // When
       const validator = buildValidator({
-        errorLabel: expect.any(String),
+        errorMessage: expect.any(String),
         name: 'anyValidatorMock',
         validationArgs: [validationArgsMock1, validationArgsMock2],
       });
@@ -118,7 +118,7 @@ describe('buildValidator', () => {
 
       // When
       const validator = buildValidator({
-        errorLabel: expect.any(String),
+        errorMessage: expect.any(String),
         name: 'matches',
         validationArgs: ['(an-regex-mock)'],
       });
@@ -141,7 +141,7 @@ describe('buildValidator', () => {
 
       // When
       const validator = buildValidator({
-        errorLabel: errorMessageMock,
+        errorMessage: errorMessageMock,
         name: 'anyValidatorMock',
       });
       const result = validator(errorMessageMock)(valueMock);

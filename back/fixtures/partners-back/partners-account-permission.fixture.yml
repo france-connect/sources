@@ -14,30 +14,6 @@ items:
     entityId: '997abfe2-a19a-49c9-a2c2-138798dde859'
     account: '@user-angela-dubois'
 
-  permissions-sp1iv-1:
-    id: 'fe6e16a2-611c-4315-8261-d06810f261cc'
-    permissionType: 'VIEW'
-    entity: 'SP_INSTANCE_VERSION'
-    # @sp1-i1-v1
-    entityId: '6b3718be-3c85-48b6-8f48-087465b12ba2'
-    account: '@user-angela-dubois'
-
-  permissions-sp1iv-2:
-    id: '25017209-a52a-4f82-8b07-aa8975e516eb'
-    permissionType: 'VIEW'
-    entity: 'SP_INSTANCE_VERSION'
-    # @sp1-i1-v2
-    entityId: '48222f1b-fb58-427b-ada1-7c7a8b3bf833'
-    account: '@user-angela-dubois'
-
-  permissions-sp1iv-3:
-    id: '9b136874-d77f-45cf-bb41-53271f886188'
-    permissionType: 'VIEW'
-    entity: 'SP_INSTANCE_VERSION'
-    # @sp1-i1-v3
-    entityId: '2aec40fd-db63-4e34-98ef-e55e5cc6985b'
-    account: '@user-angela-dubois'
-
   permissions-spi-list-2:
     id: '3fac4288-0a56-48a4-b0ec-b9f9af6cf60a'
     permissionType: 'LIST'

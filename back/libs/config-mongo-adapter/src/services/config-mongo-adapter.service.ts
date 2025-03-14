@@ -1,5 +1,4 @@
 import { Model } from 'mongoose';
-import { ConditionalPick } from 'type-fest';
 
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -72,23 +71,7 @@ export class ConfigMongoAdapterService
       userinfo_signed_response_alg: input.id_token_signed_response_alg,
     };
 
-    this.castStringToArray(output, 'redirect_uris');
-    this.castStringToArray(output, 'post_logout_redirect_uris');
-    this.castStringToArray(output, 'site');
     return output;
-  }
-
-  /**
-   * @todo #1985
-   * Temporary workaround for properties that should be arrays but are strings
-   */
-  private castStringToArray(
-    input: Partial<OidcClientLegacyInterface>,
-    propertyName: keyof ConditionalPick<OidcClientLegacyInterface, string[]>,
-  ): void {
-    if (typeof input[propertyName] === 'string') {
-      input[propertyName] = [input[propertyName]];
-    }
   }
 
   private encryptClientSecret(clientSecret: string): string {

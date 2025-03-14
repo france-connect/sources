@@ -19,7 +19,11 @@ import { PartialExcept, validateDto } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { EidasClientRoutes, EidasClientSession } from '@fc/eidas-client';
 import { EidasCountryService } from '@fc/eidas-country';
-import { EidasToOidcService, OidcToEidasService } from '@fc/eidas-oidc-mapper';
+import {
+  AcrValues,
+  EidasToOidcService,
+  OidcToEidasService,
+} from '@fc/eidas-oidc-mapper';
 import { IOidcIdentity, OidcError } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import { OidcProviderService } from '@fc/oidc-provider';
@@ -78,7 +82,7 @@ export class EuIdentityToFrController {
 
     const eidasPartialRequest = this.oidcToEidas.mapPartialRequest(
       params.scope,
-      params.acr_values,
+      params.acr_values as AcrValues,
     );
 
     sessionEidas.set('eidasPartialRequest', eidasPartialRequest);
@@ -182,7 +186,7 @@ export class EuIdentityToFrController {
 
     await this.tracking.track(REDIRECTED_TO_FC, trackingContext);
 
-    return this.oidcProvider.finishInteraction(req, res, sessionClient);
+    await this.oidcProvider.finishInteraction(req, res, sessionClient);
   }
 
   /**

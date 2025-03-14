@@ -20,12 +20,11 @@ _command_register "migrations-partners-back" "_migrations-postgres partners-back
 _command_register "migrations-generate-partners-back" "_migrations-generate-postgres partners-back" "" # Description to be defined
 _command_register "fixtures-partners-back" "_fixtures-postgres 'partners-back'" ""                     # Description to be defined
 
-_command_register "fixtures" "_hook_fc_apps" "Init postgres FC-Apps : docker-stack fixtures <fc-exploitation | fc-support | exploitation-high | exploitation-fca-low>"
+_command_register "fixtures" "_hook_fc_apps" "Init postgres FC-Apps : docker-stack fixtures <fc-exploitation | fc-support | exploitation-high>"
 
 ### Mongo
 _command_register "reset-db-core-fcp-high" "_reset_db_fcp_high" ""                # Description to be defined # Deprecated
 _command_register "reset-db-core-fcp-low" "_reset_db_fcp_low" ""                  # Description to be defined # Deprecated
-_command_register "reset-db-core-fca-low" "_reset_db_core_fca_low" ""             # Description to be defined # Deprecated
 _command_register "reset-db" "_reset_db_fcp_low" "Alias to reset-db-core-fcp-low" # Backward compatibility entry
 _command_register "reset-mongo" "_reset_mongodb" "reset-mongo <mongo-service-name> : Reset given mongodb container"
 _command_register "reset-mongo-as-prod" "_reset_mongodb_as_prod" "reset-mongo-as-prod <mongo-service-name> : Reset given mongodb container with production IDPs"
@@ -97,15 +96,12 @@ _command_register "reload-rp" "_reload_rp" "Reload Reverse proxy"
 
 _command_register "compose" "_compose" "Run a docker compose command on project"
 
-_command_register "llng-configure" "_llng_configure" "Restore LemonLDAP configuration from ./docker/volumes/llng/llng-conf.json dump file"
-
 _command_register "wait" "wait_for_nodejs" "Wait for a nodejs HTTP service to respond on an URL or try to display logs"
 
 _command_register "log-rotate" "_log_rotate" "log-rotate Rotate the logs and send SIGUSR"
 
 _command_register "mongo" "_mongo_shell" "mongo <server> <database> [tls]: Opens mongo shell [Optional tls argument to activate client authentication]"
 ### Legacy aliases for mongo shell access
-_command_register "mongo-shell-core-fca-low" "_mongo_shell_core_fca_low" "[deprecated] Open mongo shell for core-fca-low "
 _command_register "mongo-shell-core-fcp-high" "_mongo_shell_core_fcp_high" "[deprecated] Open mongo shell for core-fcp-high"
 _command_register "mongo-shell-core-fcp-low" "_mongo_shell_core_fcp_low" "[deprecated] Open mongo shell for core-fcp-low"
 _command_register "mongo-shell-core-legacy" "_mongo_shell_core_legacy" "[deprecated] Open mongo shell for core-legacy"

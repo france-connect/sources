@@ -80,7 +80,10 @@ describe('FormWrapperComponent', () => {
       {},
     );
     expect(FormErrorScrollComponent).toHaveBeenCalledOnce();
-    expect(FormErrorScrollComponent).toHaveBeenCalledWith({ active: scrollTopOnSubmitMock }, {});
+    expect(FormErrorScrollComponent).toHaveBeenCalledWith(
+      { active: scrollTopOnSubmitMock, elementClassName: '.fr-message--error' },
+      {},
+    );
   });
 
   it('should match snapshot without descriptionn, title and a disable submit button', () => {
@@ -191,6 +194,9 @@ describe('FormWrapperComponent', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(FormErrorScrollComponent).toHaveBeenCalledOnce();
-    expect(FormErrorScrollComponent).toHaveBeenCalledWith({ active: false }, {});
+    expect(FormErrorScrollComponent).toHaveBeenCalledWith(
+      { active: false, elementClassName: '.fr-message--error' },
+      {},
+    );
   });
 });

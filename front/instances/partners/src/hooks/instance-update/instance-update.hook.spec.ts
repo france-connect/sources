@@ -17,9 +17,8 @@ describe('useInstanceUpdate', () => {
   const instanceIdMock = 'any-instanceId-mock';
   const paramsMock = { instanceId: instanceIdMock };
   const schemaMock = Symbol('schema-mock') as unknown as SchemaFieldType[];
-  const versionMock = Symbol('data-mock') as unknown as VersionInterface;
+  const versionMock = { name: 'any-name-mock' } as unknown as VersionInterface;
   const payloadMock = {
-    name: 'any-name-mock',
     versions: [{ data: versionMock }],
   };
   const initialValuesMock = {

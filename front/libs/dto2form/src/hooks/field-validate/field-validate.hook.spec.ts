@@ -15,9 +15,9 @@ jest.mock('../../helpers/compose-validators/compose-validators.helper');
 describe('useFieldValidate', () => {
   // Given
   const validatorsMock = [
-    { errorLabel: 'any-error-label-mock-1', name: 'mock1' },
-    { errorLabel: 'any-error-label-mock-2', name: 'mock2' },
-    { errorLabel: 'any-error-label-mock-3', name: 'mock3' },
+    { errorMessage: 'any-error-label-mock-1', name: 'mock1' },
+    { errorMessage: 'any-error-label-mock-2', name: 'mock2' },
+    { errorMessage: 'any-error-label-mock-3', name: 'mock3' },
   ];
 
   it('should call lodash.has for each validator', () => {
@@ -48,12 +48,12 @@ describe('useFieldValidate', () => {
     expect(buildValidator).toHaveBeenCalledTimes(2);
     expect(buildValidator).toHaveBeenNthCalledWith(
       1,
-      { errorLabel: 'any-error-label-mock-1', name: 'mock1' },
+      { errorMessage: 'any-error-label-mock-1', name: 'mock1' },
       true,
     );
     expect(buildValidator).toHaveBeenNthCalledWith(
       2,
-      { errorLabel: 'any-error-label-mock-3', name: 'mock3' },
+      { errorMessage: 'any-error-label-mock-3', name: 'mock3' },
       true,
     );
   });

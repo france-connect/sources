@@ -25,7 +25,10 @@ import {
   OidcProviderInteractionNotFoundException,
   OidcProviderRuntimeException,
 } from './exceptions';
-import { IOidcProviderConfigAppService } from './interfaces';
+import {
+  InteractionInterface,
+  IOidcProviderConfigAppService,
+} from './interfaces';
 import {
   OidcProviderConfigService,
   OidcProviderErrorService,
@@ -143,13 +146,12 @@ export class OidcProviderService {
    * @param req
    * @param res
    */
-  // `oidc-provider` does not provide a type for interaction
-  async getInteraction(req, res): Promise<any> {
+  async getInteraction(req, res): Promise<InteractionInterface> {
     try {
-      const interactionDetails = await this.provider.interactionDetails(
+      const interactionDetails = (await this.provider.interactionDetails(
         req,
         res,
-      );
+      )) as InteractionInterface;
 
       return interactionDetails;
     } catch (error) {
@@ -164,12 +166,7 @@ export class OidcProviderService {
     retry: boolean = false,
   ): Promise<void> {
     const result = retry ? {} : errorParams;
-    const interactionFinished = await this.provider.interactionFinished(
-      req,
-      res,
-      result,
-    );
-    return interactionFinished;
+    await this.provider.interactionFinished(req, res, result);
   }
 
   private async runMiddlewareBeforePattern(
@@ -241,11 +238,15 @@ export class OidcProviderService {
     });
   }
 
-  finishInteraction(req: any, res: any, session: OidcSession) {
-    this.oidcProviderConfigApp.finishInteraction(req, res, session);
+  async finishInteraction(
+    req: any,
+    res: any,
+    session: OidcSession,
+  ): Promise<void> {
+    await this.oidcProviderConfigApp.finishInteraction(req, res, session);
   }
 
-  clearCookies(res: Response) {
+  clearCookies(res: Response): void {
     COOKIES.forEach((cookieName) => {
       res.clearCookie(cookieName);
     });

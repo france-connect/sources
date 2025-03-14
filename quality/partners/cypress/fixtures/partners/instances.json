@@ -7,6 +7,7 @@
     "post_logout_redirect_uris[0]": "https://test.franceconnect.gouv.fr/logout",
     "IPServerAddressesAndRanges[0]": "37.65.14.169",
     "id_token_signed_response_alg": "ES256",
-    "entityId": "4a858a99-5baf-4068-bd59-ff551ede3619"
+    "entityId": "4a858a99-5baf-4068-bd59-ff551ede3619",
+    "platform": "CORE_FCP"
   }
 }

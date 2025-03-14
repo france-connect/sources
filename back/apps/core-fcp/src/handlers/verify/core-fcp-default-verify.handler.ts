@@ -172,7 +172,7 @@ export class CoreFcpDefaultVerifyHandler implements IVerifyFeatureHandler {
       IOidcIdentity,
       'sub' | 'email' | 'preferred_username' | 'rep_scope'
     >,
-    trackingContext: any,
+    trackingContext: TrackedEventContextInterface,
   ): Promise<RnippPivotIdentity> {
     const { FC_REQUESTED_RNIPP, FC_RECEIVED_VALID_RNIPP } =
       this.tracking.TrackedEventsMap;

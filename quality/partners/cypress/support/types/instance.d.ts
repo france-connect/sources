@@ -1,5 +1,6 @@
 export interface Instance extends Record<string, string | string[]> {
   name: string;
+  platform: string;
   signupId: string;
   site: string;
   redirect_uris: string;

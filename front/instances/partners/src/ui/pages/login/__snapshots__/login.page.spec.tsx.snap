@@ -2,6 +2,9 @@
 
 exports[`Login Page shoud match the snapshot, greater than desktop viewport 1`] = `
 <div>
+  <div>
+    NoticeComponent
+  </div>
   <main
     class="fr-container fr-py-8v"
   >
@@ -12,12 +15,12 @@ exports[`Login Page shoud match the snapshot, greater than desktop viewport 1`] 
         class="fr-col-9"
       >
         <h1>
-          Mon espace partenaires
+          Partners.loginpage.title
         </h1>
         <h2
           class="fr-mt-4w"
         >
-          Centralisez toutes les étapes d’implémentation de FranceConnect sur votre fournisseur de service.
+          Partners.loginpage.description
         </h2>
         <div
           data-mockid="LoginFormComponent"
@@ -30,6 +33,9 @@ exports[`Login Page shoud match the snapshot, greater than desktop viewport 1`] 
 
 exports[`Login Page shoud match the snapshot, lower than mobile viewport 1`] = `
 <div>
+  <div>
+    NoticeComponent
+  </div>
   <main
     class="fr-container fr-py-8v"
   >
@@ -40,12 +46,12 @@ exports[`Login Page shoud match the snapshot, lower than mobile viewport 1`] = `
         class="fr-col-9"
       >
         <h1>
-          Mon espace partenaires
+          Partners.loginpage.title
         </h1>
         <h2
           class="fr-mt-4w"
         >
-          Centralisez toutes les étapes d’implémentation de FranceConnect sur votre fournisseur de service.
+          Partners.loginpage.description
         </h2>
         <div
           data-mockid="LoginFormComponent"

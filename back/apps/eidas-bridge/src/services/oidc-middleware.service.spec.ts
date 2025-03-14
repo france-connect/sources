@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { throwException } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
-import { OidcProviderService } from '@fc/oidc-provider';
+import { OidcCtx, OidcProviderService } from '@fc/oidc-provider';
 import { ServiceProviderAdapterEnvService } from '@fc/service-provider-adapter-env';
 import { SessionService } from '@fc/session';
 import { TrackedEventContextInterface, TrackingService } from '@fc/tracking';
@@ -94,9 +94,9 @@ describe('OidcMiddlewareService', () => {
   describe('beforeAuthorizeMiddleware', () => {
     it('should set cookies to nothing if cookies do not exist', () => {
       // Given
-      const ctxMock: any = {
+      const ctxMock = {
         req: { headers: { foo: 'bar' } },
-      };
+      } as unknown as OidcCtx;
 
       // When
       service['beforeAuthorizeMiddleware'](ctxMock);
@@ -109,7 +109,7 @@ describe('OidcMiddlewareService', () => {
 
     it('should set cookies to nothing if cookies exist', () => {
       // Given
-      const ctxMock: any = {
+      const ctxMock = {
         req: {
           headers: {
             cookie: {
@@ -119,7 +119,7 @@ describe('OidcMiddlewareService', () => {
             },
           },
         },
-      };
+      } as unknown as OidcCtx;
 
       // When
       service['beforeAuthorizeMiddleware'](ctxMock);

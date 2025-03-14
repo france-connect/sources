@@ -10,6 +10,7 @@ import { DeviceService } from '@fc/device';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity, OidcSession } from '@fc/oidc';
 import {
+  InteractionInterface,
   OidcProviderAuthorizeParamsException,
   OidcProviderService,
   OidcProviderUserAbortedException,
@@ -562,7 +563,7 @@ describe('OidcProviderController', () => {
   describe('trackDatatransfer()', () => {
     // Given
     const contextMock = {};
-    const interactionMock = {};
+    const interactionMock = {} as unknown as InteractionInterface;
     const spIdMock = 'foo';
     const eventClassMock = 'foo';
 

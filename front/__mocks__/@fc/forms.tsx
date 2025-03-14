@@ -57,5 +57,3 @@ export const ComponentTypes = {
   TEXTAREA: 'textarea',
   CHECKBOX: 'checkbox',
 };
-
-export const UNKNOWN_FORM_ERROR = { 'FINAL_FORM/form-error': 'Form.FORM_ERROR' };

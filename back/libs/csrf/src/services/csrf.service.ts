@@ -4,7 +4,13 @@ import { CryptographyService } from '@fc/cryptography';
 import { SessionService } from '@fc/session';
 
 import { CsrfSession } from '../dto';
-import { CsrfBadTokenException } from '../exceptions';
+import {
+  CsrfBadTokenException,
+  CsrfConsumedSessionTokenException,
+  CsrfMissingTokenException,
+  CsrfNoSessionException,
+} from '../exceptions';
+import { CONSUMED_TOKEN } from '../tokens';
 
 @Injectable()
 export class CsrfService {
@@ -24,20 +30,32 @@ export class CsrfService {
   }
 
   check(input: string): boolean | never {
-    if (!this.isValid(input)) {
-      throw new CsrfBadTokenException();
-    }
+    this.checkToken(input);
+
+    this.session.set('Csrf', { csrfToken: CONSUMED_TOKEN });
 
     return true;
   }
 
-  isValid(input: string): boolean {
+  // Allow us to goup all checks in one place
+  // eslint-disable-next-line complexity
+  private checkToken(input: string): void {
     const session = this.session.get<CsrfSession>('Csrf');
 
-    if (!session) {
-      return false;
+    if (!input) {
+      throw new CsrfMissingTokenException();
     }
 
-    return session.csrfToken === input;
+    if (!session?.csrfToken) {
+      throw new CsrfNoSessionException();
+    }
+
+    if (session.csrfToken === CONSUMED_TOKEN) {
+      throw new CsrfConsumedSessionTokenException();
+    }
+
+    if (session.csrfToken !== input) {
+      throw new CsrfBadTokenException();
+    }
   }
 }

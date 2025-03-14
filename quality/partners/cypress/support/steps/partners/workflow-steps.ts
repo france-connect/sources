@@ -50,7 +50,7 @@ class ConnectionWorkflow {
    * Check that the user is connected on the service provider page
    */
   checkIsConnected(isConnected: boolean): void {
-    topMenuComponent.checkIsLogoutLinkVisible(isConnected);
+    topMenuComponent.checkIsConnected(isConnected);
   }
 }
 

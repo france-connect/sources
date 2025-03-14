@@ -310,26 +310,6 @@ describe('OidcProviderAppConfigLibService', () => {
       sessionServiceMock.getId.mockReturnValue(sessionIdMock);
     });
 
-    it('should return the result of oidc-provider.interactionFinished()', async () => {
-      // Given
-      const resolvedValue = Symbol('resolved value');
-
-      providerMock.interactionFinished.mockResolvedValueOnce(resolvedValue);
-      const sessionDataMock: OidcSession = {
-        spAcr: 'spAcrValue',
-        spIdentity: {},
-      };
-      sessionServiceMock.get.mockReturnValueOnce(sessionDataMock);
-      // When
-      const result = await service.finishInteraction(
-        reqMock,
-        resMock,
-        sessionDataMock,
-      );
-      // Then
-      expect(result).toBe(resolvedValue);
-    });
-
     it('should finish interaction with grant', async () => {
       // Given
       const spAcrMock = 'spAcrValue';

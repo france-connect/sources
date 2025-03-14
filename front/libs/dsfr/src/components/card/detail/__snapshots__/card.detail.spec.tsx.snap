@@ -2,10 +2,10 @@
 
 exports[`CardDetailComponent should match the snapshot 1`] = `
 <div>
-  <p
+  <div
     class="fr-card__detail"
   >
     This is the card detail content
-  </p>
+  </div>
 </div>
 `;

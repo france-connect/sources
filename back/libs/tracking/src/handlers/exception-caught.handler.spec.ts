@@ -1,5 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { BaseException } from '@fc/exceptions';
+
 import { TrackingService } from '../services';
 import { ExceptionCaughtHandler } from './exception-caught.handler';
 
@@ -31,7 +33,7 @@ describe('ExceptionCaughtHandler', () => {
   describe('handle', () => {
     it('should track exception if needed', async () => {
       const event = {
-        exception: new Error('error'),
+        exception: new Error('error') as unknown as BaseException,
         context: {},
       };
 

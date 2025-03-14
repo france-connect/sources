@@ -65,14 +65,6 @@ _reset_db_fcp_low() {
   _reset_mongodb "mongo-fcp-low"
 }
 
-_reset_db_core_fca_low() {
-  _reset_mongodb "mongo-fca-low"
-}
-
-_mongo_shell_core_fca_low() {
-  _mongo_core_shell "fca-low"
-}
-
 _mongo_shell_core_fcp_high() {
   _mongo_core_shell "fcp-high"
 }

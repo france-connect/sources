@@ -22,6 +22,7 @@ export const DTO2InputComponent = React.memo(({ field }: DTO2InputComponentProps
     array,
     disabled,
     hint,
+    inline,
     label,
     maxChars,
     name,
@@ -47,7 +48,7 @@ export const DTO2InputComponent = React.memo(({ field }: DTO2InputComponentProps
 
   const config = {
     hint,
-    inline: true,
+    inline,
     label,
     maxChars,
     name,

@@ -20,12 +20,6 @@ export class PartnersServiceProviderInstance {
   id: string;
 
   @Column({
-    type: 'text',
-    nullable: false,
-  })
-  name: string;
-
-  @Column({
     type: 'enum',
     enum: EnvironmentEnum,
     nullable: false,

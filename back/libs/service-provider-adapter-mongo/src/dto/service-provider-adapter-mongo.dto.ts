@@ -89,9 +89,6 @@ export class ServiceProviderAdapterMongoDTO {
   @IsBoolean()
   readonly identityConsent: boolean;
 
-  @IsBoolean()
-  readonly ssoDisabled: boolean;
-
   @IsOptional()
   @IsEqualToConfig<ServiceProviderAdapterMongoConfig>(
     'ServiceProviderAdapterMongo',

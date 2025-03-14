@@ -73,9 +73,6 @@ export class ConfigCreateMessageDtoPayload
   @IsBoolean()
   readonly identityConsent: boolean;
 
-  @IsBoolean()
-  readonly ssoDisabled: boolean;
-
   @IsString({ each: true })
   readonly redirect_uris: string[];
 

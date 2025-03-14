@@ -1,8 +1,9 @@
 import { render } from '@testing-library/react';
 
 import { AccountContext } from '@fc/account';
-import { useSafeContext } from '@fc/common';
+import { EventTypes, useSafeContext } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { AlertComponent, Sizes } from '@fc/dsfr';
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import type { FraudConfigInterface } from '@fc/user-dashboard';
 import {
@@ -229,5 +230,61 @@ describe('FraudFormPage', () => {
     // Then
     expect(useFraudFormApi).toHaveBeenCalledOnce();
     expect(useFraudFormApi).toHaveBeenCalledWith(fraudConfig);
+  });
+
+  it('should have called AlertComponent when fraudSurveyOrigin is a string and submitted with success', () => {
+    // Given
+    jest.mocked(useGetFraudSurveyOrigin).mockReturnValueOnce('any-string-mock');
+    jest.mocked(useFraudFormApi).mockReturnValueOnce({
+      commit: jest.fn(),
+      submitErrors: undefined,
+      submitWithSuccess: true,
+    });
+
+    // When
+    const { getByText } = render(<FraudFormPage />);
+    const textElt1 = getByText('Votre demande a bien été prise en compte');
+    const textElt2 = getByText(
+      'Vous allez recevoir un message de confirmation à l’adresse électronique indiquée dans le formulaire de contact.',
+    );
+
+    // Then
+    expect(textElt1).toBeInTheDocument();
+    expect(textElt2).toBeInTheDocument();
+    expect(AlertComponent).toHaveBeenCalledOnce();
+    expect(AlertComponent).toHaveBeenCalledWith(
+      {
+        children: expect.any(Array),
+        dataTestId: 'success-alert',
+        type: EventTypes.SUCCESS,
+      },
+      {},
+    );
+  });
+
+  it('should have called AlertComponent when fraudSurveyOrigin is a string and submitted with error', () => {
+    // Given
+    jest.mocked(useGetFraudSurveyOrigin).mockReturnValueOnce('any-string-mock');
+    jest.mocked(useFraudFormApi).mockReturnValueOnce({
+      commit: jest.fn(),
+      submitErrors: new Error('any-error-mock'),
+      submitWithSuccess: false,
+    });
+
+    // When
+    const { getByText } = render(<FraudFormPage />);
+    const textElt = getByText('Le message n’a pas pu être envoyé');
+
+    // Then
+    expect(textElt).toBeInTheDocument();
+    expect(AlertComponent).toHaveBeenCalledOnce();
+    expect(AlertComponent).toHaveBeenCalledWith(
+      {
+        children: expect.any(Object),
+        size: Sizes.SMALL,
+        type: EventTypes.ERROR,
+      },
+      {},
+    );
   });
 });

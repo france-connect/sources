@@ -4,9 +4,7 @@ const fsp = {
   "FSP1-HIGH": {
     name: "FSP - FSP1-HIGH",
     title: "FSP - FSP1-high title",
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp1-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -37,8 +35,6 @@ const fsp = {
       "birthcountry",
       "email",
       "preferred_username",
-      "address",
-      "phone",
       "profile",
       "birth",
       "identite_pivot",
@@ -70,7 +66,6 @@ const fsp = {
     idpFilterList: [],
     eidas: 2,
     identityConsent: false,
-    ssoDisabled: false,
   },
 
   // -- FSP - FSP2v2 - Activated - no post-logout-redirect-uri
@@ -78,9 +73,7 @@ const fsp = {
   "FSP2-HIGH": {
     name: "FSP - FSP2v2",
     title: "FSP - FSP2v2 Title",
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp2-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -125,16 +118,13 @@ const fsp = {
     idpFilterList: ["0cbdf732-aaea-4566-a99e-4430f388ff18"],
     eidas: 2,
     identityConsent: false,
-    ssoDisabled: false,
   },
 
   // -- FSP - FSP3v2 - Deactivated
   "FSP3-HIGH": {
     name: "Service Provider Example 3 deactivated",
     title: "Service Provider Example 3 deactivated Title",
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp3-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -164,8 +154,6 @@ const fsp = {
       "birthcountry",
       "email",
       "preferred_username",
-      "address",
-      "phone",
       "profile",
       "birth",
       "identite_pivot",
@@ -182,16 +170,13 @@ const fsp = {
     idpFilterExclude: true,
     idpFilterList: [],
     identityConsent: false,
-    ssoDisabled: false,
   },
 
   // -- FSP - FSP4v2 - Only openid and birthdate scopes authorized
   "FSP4-HIGH": {
     name: "SP 4 - deactivated - Only openid and birthdate scopes authorized",
     title: "SP 4 - deactivated Title",
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp1-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -224,7 +209,6 @@ const fsp = {
     idpFilterExclude: true,
     idpFilterList: [],
     identityConsent: false,
-    ssoDisabled: false,
   },
 
   // -- FSP - FSP5-HIGH - private FSP and identity consent required
@@ -232,9 +216,7 @@ const fsp = {
   "FSP5-HIGH": {
     name: "FSP - FSP5-HIGH",
     title: "FSP - FSP5-HIGH title",
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp5-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -265,8 +247,6 @@ const fsp = {
       "birthcountry",
       "email",
       "preferred_username",
-      "address",
-      "phone",
       "profile",
       "birth",
       "identite_pivot",
@@ -306,16 +286,13 @@ const fsp = {
     ],
     identityConsent: true,
     eidas: 2,
-    ssoDisabled: false,
   },
 
   // -- FSP - FSP6v2 - private FSP and identity consent not required
   "FSP6-HIGH": {
     name: "FSP - FSP6v2",
     title: "FSP - FSP6v2 title",
-    site: [
-      "https://site.com",
-    ],
+    site: ["https://site.com"],
     redirect_uris: [
       "https://fsp6-high.docker.dev-franceconnect.fr/oidc-callback",
     ],
@@ -346,8 +323,6 @@ const fsp = {
       "birthcountry",
       "email",
       "preferred_username",
-      "address",
-      "phone",
       "profile",
       "birth",
       "identite_pivot",
@@ -365,16 +340,13 @@ const fsp = {
     idpFilterList: [],
     identityConsent: false,
     eidas: 2,
-    ssoDisabled: false,
   },
 
   // Eidas-bridge
   EIDASBRIDGE: {
     name: "Eidas bridge FS",
     title: "Eidas bridge FS Title",
-    site: [
-      "https://eidas-bridge.docker.dev-franceconnect.fr",
-    ],
+    site: ["https://eidas-bridge.docker.dev-franceconnect.fr"],
     redirect_uris: [
       "https://eidas-bridge.docker.dev-franceconnect.fr/oidc-client/redirect-to-eidas-response-proxy",
     ],
@@ -404,7 +376,6 @@ const fsp = {
       "family_name",
       "email",
       "preferred_username",
-      "address",
     ],
     claims: ["amr"],
     id_token_signed_response_alg: "ES256",
@@ -422,7 +393,6 @@ const fsp = {
       "8aa849db-8402-4f2e-bad9-7471dd21ff94",
     ],
     identityConsent: false,
-    ssoDisabled: false,
   },
 };
 

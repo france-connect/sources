@@ -21,7 +21,7 @@ This is mostly because we don't want to reverse engineer the DTO to get the vali
 4. All fields attributes like `name` and `label` are automatically deducted to keep the DTO as simple as possible and easy to manage with internationalization (i18n).:
    - `name` => `<property_name>`
    - `label` => `<property_name>_label`;
-   - `errorLabel` => `<property_name>_<validator_name>_error`;
+   - `errorMessage` => `<property_name>_<validator_name>_error`;
 5. You can order fields by using the `order` attribute. If not set, the fields will be sorted by property name in the class (Please note that EcmaScript does not ensure property order, but most implementations are so).
 6. Each validator **MUST** use a `descriptor` (beginning with `$`) linked to a validation function.
    This is to ensure that the validation function is correctly linked to the DTO as well as keep a clean declarative structure.
@@ -71,9 +71,7 @@ export class MyFormDto {
 To render the form, you must call the `getDtoMetadata()` method from the `dto2form` service, passing in the DTO for which you want to retrieve metadata.
 
 ```typescript
-const payload = this.metadataFormService.getDtoMetadata(
-  MyFormDto,
-);
+const payload = this.metadataFormService.getDtoMetadata(MyFormDto);
 ```
 
 ### Validation

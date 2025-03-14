@@ -1,5 +1,6 @@
 export * from './error-code.enum';
 export * from './fields.enum';
+export * from './fields-choice.enum';
 export * from './iban-code.enum';
 export * from './license-plate-locale.enum';
 export * from './passport-number-country-code.enum';

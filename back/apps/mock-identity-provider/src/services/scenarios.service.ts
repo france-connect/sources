@@ -4,7 +4,7 @@ import { KoaContextWithOIDC } from 'oidc-provider';
 
 import { Injectable } from '@nestjs/common';
 
-import { asyncFilter, validateDto, wait } from '@fc/common';
+import { ArrayAsyncHelper, validateDto, wait } from '@fc/common';
 import { ConfigService, validationOptions } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity } from '@fc/oidc';
@@ -28,7 +28,7 @@ export class ScenariosService {
       readFileSync(scenariosDatabasePath, { encoding: 'utf-8' }),
     );
 
-    this.scenarios = await asyncFilter<ScenarioDto[]>(
+    this.scenarios = await ArrayAsyncHelper.filterAsync<ScenarioDto>(
       scenarios,
       async (scenario) => {
         const { length: error } = await validateDto(

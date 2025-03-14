@@ -94,7 +94,7 @@ Fonctionnalité: Connexion Usager - session absente
     Quand je supprime les cookies FranceConnect
     Et je continue sur le fournisseur de service
     Alors je suis redirigé vers la page erreur technique FranceConnect
-    Et le code d'erreur FranceConnect est "Y470001"
+    Et le code d'erreur FranceConnect est "Y470003"
     Et le message d'erreur FranceConnect est "Votre session a expiré ou est invalide, fermez l’onglet de votre navigateur et reconnectez-vous."
 
   @exceptions

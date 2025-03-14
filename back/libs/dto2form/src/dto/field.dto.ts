@@ -28,7 +28,7 @@ export class ValidatorDto {
 
   @IsString()
   @IsNotEmpty()
-  readonly errorLabel: string;
+  readonly errorMessage: string;
 
   @IsOptional()
   @IsArray()

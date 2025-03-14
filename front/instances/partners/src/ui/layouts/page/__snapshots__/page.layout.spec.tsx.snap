@@ -2,6 +2,9 @@
 
 exports[`PageLayout should match snapshot 1`] = `
 <div>
+  <div>
+    NoticeComponent
+  </div>
   <main
     class="fr-container fr-py-8v"
   >

@@ -240,9 +240,12 @@ describe('UserPreferencesFormComponent', () => {
   it('should call AlertComponent with params when the form has errors', () => {
     // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest
+      .mocked(AlertComponent)
+      .mockImplementationOnce(({ children }) => <div data-mockid="AlertComponent">{children}</div>);
 
     // When
-    render(
+    const { container, getByText } = render(
       <UserPreferencesFormComponent
         hasValidationErrors
         dirtyFields={{}}
@@ -252,8 +255,16 @@ describe('UserPreferencesFormComponent', () => {
         onSubmit={jest.fn()}
       />,
     );
+    const textElt1 = getByText(
+      'Attention, vous devez avoir au moins un compte autorisé pour continuer à utiliser FranceConnect.',
+    );
+    const textElt2 = getByText(
+      'Veuillez choisir au moins un compte autorisé pour pouvoir enregistrer vos réglages.',
+    );
+    const textContainerElt = container.querySelector('.fr-alert__title');
 
     // Then
+    expect(container).toMatchSnapshot();
     expect(AlertComponent).toHaveBeenCalledOnce();
     expect(AlertComponent).toHaveBeenCalledWith(
       {
@@ -262,11 +273,16 @@ describe('UserPreferencesFormComponent', () => {
       },
       {},
     );
+    expect(textContainerElt).toBeInTheDocument();
+    expect(textElt1).toBeInTheDocument();
+    expect(textElt2).toBeInTheDocument();
   });
 
   it('should call useUserPreferencesForm with dirtyFields and userPreference when allowingIdPConfirmation is called', () => {
     // Given
-    jest.mocked(AlertComponent).mockImplementationOnce(({ children }) => <div>{children}</div>);
+    jest
+      .mocked(AlertComponent)
+      .mockImplementationOnce(({ children }) => <div data-mockid="AlertComponent">{children}</div>);
     jest.mocked(useUserPreferencesForm).mockReturnValue({
       alertInfoState: {
         hasInteractedWithAlertInfo: false,
@@ -300,9 +316,12 @@ describe('UserPreferencesFormComponent', () => {
   it('should not call AlertComponent if there are no errors', () => {
     // Given
     jest.mocked(useUserPreferencesForm).mockReturnValueOnce(hookResultMock);
+    jest
+      .mocked(AlertComponent)
+      .mockImplementationOnce(({ children }) => <div data-mockid="AlertComponent">{children}</div>);
 
     // When
-    render(
+    const { container, queryByText } = render(
       <UserPreferencesFormComponent
         dirtyFields={{}}
         hasValidationErrors={false}
@@ -314,7 +333,19 @@ describe('UserPreferencesFormComponent', () => {
     );
 
     // Then
+    expect(container).toMatchSnapshot();
     expect(AlertComponent).toHaveBeenCalledTimes(0);
+    expect(container.querySelector('.fr-alert__title')).not.toBeInTheDocument();
+    expect(
+      queryByText(
+        'Attention, vous devez avoir au moins un compte autorisé pour continuer à utiliser FranceConnect.',
+      ),
+    ).not.toBeInTheDocument();
+    expect(
+      queryByText(
+        'Veuillez choisir au moins un compte autorisé pour pouvoir enregistrer vos réglages.',
+      ),
+    ).not.toBeInTheDocument();
   });
 
   it('should call SimpleButton with params, can not submit', () => {

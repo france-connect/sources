@@ -16,6 +16,8 @@ export const CardComponent = jest.fn(({ children }) => (
 
 export const TileComponent = jest.fn(() => <div>TileComponent</div>);
 
+export const NoticeComponent = jest.fn(() => <div>NoticeComponent</div>);
+
 export const SearchBarComponent = jest.fn(() => <div>SearchBarComponent</div>);
 
 export const BadgeComponent = jest.fn(() => <div>BadgeComponent</div>);
@@ -43,8 +45,6 @@ export const AlertComponent = jest.fn(({ children }) => (
     <div>{children}</div>
   </div>
 ));
-
-export const AlertComponentV2 = jest.fn(() => <div data-mockid="AlertComponentV2" />);
 
 export const AccordionComponent = jest.fn(({ children }) => (
   <div data-mockid="AccordionComponent">

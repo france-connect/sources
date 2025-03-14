@@ -30,6 +30,7 @@ import { LoggerService } from '@fc/logger';
 import { OidcError, OidcSession } from '@fc/oidc';
 import { OidcClientSession } from '@fc/oidc-client';
 import {
+  InteractionInterface,
   OidcProviderAuthorizeParamsException,
   OidcProviderService,
   OidcProviderUserAbortedException,
@@ -231,7 +232,7 @@ export class OidcProviderController {
 
   private async trackDatatransfer(
     trackingContext: TrackedEventContextInterface,
-    interaction: any,
+    interaction: InteractionInterface,
     spId: string,
   ): Promise<void> {
     const scopes = this.core.getScopesForInteraction(interaction);
@@ -284,7 +285,7 @@ export class OidcProviderController {
 
     await this.core.sendNotificationMail(deviceInfo);
 
-    this.oidcProvider.finishInteraction(req, res, session);
+    await this.oidcProvider.finishInteraction(req, res, session);
 
     await this.handleSessionLife(req, res);
   }
