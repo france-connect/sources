@@ -592,6 +592,8 @@ describe('FormValidationPipe', () => {
           valueMock,
           targetMock,
         );
+        // You can't remove the catch argument, it's mandatory
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {}
 
       expect(loggerMock.crit).toHaveBeenCalledWith(
@@ -604,6 +606,8 @@ describe('FormValidationPipe', () => {
     it('should call the validation rule with validator service, value and validation args', async () => {
       // Given
       const valueMock = Symbol('value');
+      // Here "FunctionSafe" type from @fc/commons would not permit to spy on the call method as it would be considered "never" type
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
       jest.spyOn(validatorjs[ValidatorJs.CONTAINS] as Function, 'call');
       const fieldValidatorMock: FieldValidator = {
         name: ValidatorJs.CONTAINS,
@@ -708,7 +712,7 @@ describe('FormValidationPipe', () => {
       const result = service['hasValidatorsErrors'](targetMock);
 
       // Then
-      expect(result).toBeFalse;
+      expect(result).toBeFalse();
     });
 
     it('should return true if error found', () => {
@@ -722,7 +726,7 @@ describe('FormValidationPipe', () => {
       const result = service['hasValidatorsErrors'](targetMock);
 
       // Then
-      expect(result).toBeFalse;
+      expect(result).toBeTrue();
     });
   });
 

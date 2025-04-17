@@ -2,7 +2,7 @@ import { Provider } from 'oidc-provider';
 
 import { Injectable } from '@nestjs/common';
 
-import { safelyParseJson } from '@fc/common';
+import { AsyncFunctionSafe, safelyParseJson } from '@fc/common';
 import { stringToArray } from '@fc/oidc';
 
 import { OidcProviderParseJsonClaimsException } from '../exceptions';
@@ -51,7 +51,7 @@ export class OidcProviderGrantService {
     return grant;
   }
 
-  async saveGrant(grant: { save: Function }): Promise<string> {
+  async saveGrant(grant: { save: AsyncFunctionSafe }): Promise<string> {
     try {
       const result = await grant.save();
       return result;
@@ -60,12 +60,18 @@ export class OidcProviderGrantService {
     }
   }
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   private isRepScopeRequested(claims: string): boolean {
     try {
       // Need to check claims value exist
       const claimsRequested = claims ? safelyParseJson(claims) : {};
 
       return !!claimsRequested?.id_token?.rep_scope?.essential;
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new OidcProviderParseJsonClaimsException();
     }

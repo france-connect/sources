@@ -4,7 +4,6 @@ import { join } from 'path';
 
 import * as CookieParser from 'cookie-parser';
 import { renderFile } from 'ejs';
-import { urlencoded } from 'express';
 import helmet from 'helmet';
 
 import { NestFactory } from '@nestjs/core';
@@ -39,19 +38,6 @@ async function bootstrap() {
   const httpsOptions = key && cert ? { key, cert } : null;
 
   const app = await NestFactory.create<NestExpressApplication>(appModule, {
-    /**
-     * We need to handle the bodyParser ourself because of prototype pollution risk with `body-parser` library.
-     *
-     * Track the handling of this issue on `body-parser` repositoty:
-     * @see https://github.com/expressjs/body-parser/issues/347
-     *
-     * Description of the vulnerability:
-     * @see https://gist.github.com/rgrove/3ea9421b3912235e978f55e291f19d5d/revisions
-     *
-     * More general explanation about prototype pollution/poising:
-     * @see https://medium.com/intrinsic/javascript-prototype-poisoning-vulnerabilities-in-the-wild-7bc15347c96
-     */
-    bodyParser: false,
     httpsOptions,
     bufferLogs: true,
   });
@@ -59,12 +45,6 @@ async function bootstrap() {
   const logger = await app.resolve(NestLoggerService);
 
   app.useLogger(logger);
-
-  /**
-   * @see https://expressjs.com/fr/api.html#app.set
-   * @see https://github.com/expressjs/express/issues/3361
-   */
-  app.set('query parser', 'simple');
 
   app.setGlobalPrefix(urlPrefix);
   /**
@@ -93,18 +73,6 @@ async function bootstrap() {
     }),
   );
   app.use(helmet.permittedCrossDomainPolicies());
-
-  /**
-   * The security concern is on bodyParser.json (see upper comment).
-   * In the application, only the "urlencoded" form is necessary.
-   * therefore, we only activate the "body.urlencoded" middleware
-   *
-   * JSON parsing exists in our app, but it is handled by `jose`.
-   *
-   * Desactivate extended "qs" parser to prevent prototype pollution hazard.
-   * @see body-parser.md in the project doc folder for further informations.
-   */
-  app.use(urlencoded({ extended: false }));
 
   app.setViewEngine('ejs');
   app.engine('ejs', renderFile);

@@ -10,6 +10,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "paths": {
+      "jose-openid-client": ["node_modules/openid-client/node_modules/jose"],
       "@entities/*": ["entities/*"],
       "@fc/rnipp": ["libs/rnipp/src"],
       "@fc/rnipp/*": ["libs/rnipp/src/*"],

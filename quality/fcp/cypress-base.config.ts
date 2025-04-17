@@ -33,8 +33,8 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
     MAILDEV_SMTP_PORT: '1025',
     MAILDEV_API_PORT: '443',
     // Other Configuration
-    LOG_FILE_PATH: '../../docker/volumes/log/core-fcp-low.log',
-    EIDAS_LOG_FILE_PATH: '../../docker/volumes/log/eidas-bridge.log',
+    LOG_FILE_PATH: `${process.env.LOG_VOLUMES_DIR}/core-fcp-low.log`,
+    EIDAS_LOG_FILE_PATH: `${process.env.LOG_VOLUMES_DIR}/eidas-bridge.log`,
     // Keys used on the local stack
     ES256_SIG_PUB_KEY:
       '-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEUvVm7hq8ycQGaKle6kpzUom73IQy\nYINGRdzQC75AXxzKiKAjeHjGNFA8R5fwZ8jJHiZ+Kiq80gY9anv/vHujGQ==\n-----END PUBLIC KEY-----\n',

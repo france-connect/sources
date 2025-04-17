@@ -2,7 +2,7 @@ import client, { Channel, Connection } from 'amqplib';
 
 import { type RmqMessage } from '../support/types';
 
-const BROKER_HOST = process.env.CI ? 'broker' : 'localhost';
+const BROKER_HOST = 'broker';
 const BROKER_URL = `amqp://${BROKER_HOST}:5672`;
 
 interface RmqSendMessageArgs {

@@ -8,7 +8,7 @@ exports[`FormComponent should match snapshot with default values 1`] = `
 </div>
 `;
 
-exports[`FormComponent should match snapshot with noRequired and scrollTopOnSubmit 1`] = `
+exports[`FormComponent should match snapshot with noRequired, scrollTopOnSubmit and submitLabel 1`] = `
 <div>
   <div
     data-mockid="FormWrapperComponent"

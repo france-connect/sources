@@ -3,9 +3,13 @@ import has from 'lodash.has';
 import type { SchemaFieldType } from '../../types';
 
 export const parseInitialValues = <T = string | string[]>(
-  schema: SchemaFieldType[],
+  schema: SchemaFieldType[] | undefined,
   values: Record<string, T>,
 ): Record<string, T> => {
+  if (!schema) {
+    return {};
+  }
+
   const initialValues = schema.reduce((acc, schemaField) => {
     // @TODO this should be refactored
     if (!has(schemaField, 'initialValue')) {

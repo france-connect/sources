@@ -57,7 +57,7 @@ describe('FormComponent', () => {
     );
   });
 
-  it('should match snapshot with noRequired and scrollTopOnSubmit', () => {
+  it('should match snapshot with noRequired, scrollTopOnSubmit and submitLabel', () => {
     // Given
     const submitMock = jest.fn();
     const validateMock = jest.fn();
@@ -67,6 +67,7 @@ describe('FormComponent', () => {
       id: 'any-id-mock',
       title: 'any-title-mock',
     };
+    const submitLabelMock = 'any-submit-label-mock';
 
     // When
     const { container } = render(
@@ -75,6 +76,7 @@ describe('FormComponent', () => {
         config={configMock}
         initialValues={{ any: 'initial-value-mock' }}
         scrollTopOnSubmit={false}
+        submitLabel={submitLabelMock}
         onSubmit={submitMock}
         onValidate={validateMock}>
         {childrenMock}
@@ -105,6 +107,7 @@ describe('FormComponent', () => {
         config: configMock,
         noRequired: true,
         scrollTopOnSubmit: false,
+        submitLabel: submitLabelMock,
       }),
     );
   });

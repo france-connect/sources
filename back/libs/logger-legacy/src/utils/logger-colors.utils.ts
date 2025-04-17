@@ -69,7 +69,7 @@ export function getColorsFromText(context: string): ILoggerColorParams {
  * @param {ILoggerColorParams} color object.
  * @returns {Array<string>} Style to apply to the current Chrome debug tool line.
  */
-export const getStyle: Function = (color: ILoggerColorParams): string =>
+export const getStyle = (color?: ILoggerColorParams): string =>
   [
     'font-size: 11px;',
     'font-weight: 400;',

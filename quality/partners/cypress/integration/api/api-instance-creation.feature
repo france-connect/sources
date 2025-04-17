@@ -1,5 +1,5 @@
 #language: fr
-@api @apiInstanceCreation
+@api @apiInstanceCreation @ci
 Fonctionnalité: API - instance création
 
   Scénario: API instance création - création succès
@@ -31,9 +31,9 @@ Fonctionnalité: API - instance création
     Alors le statut de la réponse est 401
     Et l'entête de la réponse a une propriété "content-type" contenant "application/json"
     Et le corps de la réponse a 3 propriétés
-    Et le corps de la réponse a une propriété "code" égale à "P470001"
+    Et le corps de la réponse a une propriété "code" égale à "P470004"
     Et le corps de la réponse a une propriété "id"
-    Et le corps de la réponse a une propriété "message" égale à "Csrf.exceptions.csrfBadToken"
+    Et le corps de la réponse a une propriété "message" égale à "Csrf.exceptions.csrfConsumedSessionToken"
 
   Scénario: API instance création - erreur champ obligatoire manquant
     Etant donné que je me connecte à l'espace partenaires

@@ -79,6 +79,7 @@ describe('CoreTrackingService', () => {
     spId: undefined,
     spAcr: undefined,
     spName: undefined,
+    spType: undefined,
     idpId: undefined,
     idpAcr: undefined,
     idpName: undefined,
@@ -101,6 +102,7 @@ describe('CoreTrackingService', () => {
     },
     spId: 'clientId',
     spName: 'some spName',
+    spType: 'public',
     spAcr: 'some spAcr',
     spIdentity: {},
 
@@ -337,6 +339,7 @@ describe('CoreTrackingService', () => {
         spId: null,
         spAcr: null,
         spName: null,
+        spType: null,
         spSub: null,
 
         idpId: null,
@@ -371,6 +374,7 @@ describe('CoreTrackingService', () => {
 
         spId: 'clientId',
         spName: 'some spName',
+        spType: 'public',
         spAcr: 'some spAcr',
         spSub: 'sub client id',
 
@@ -398,6 +402,7 @@ describe('CoreTrackingService', () => {
 
         spId: 'spIdMock',
         spName: 'spNameMock',
+        spType: 'public',
         spAcr: 'spAcrMock',
         spSub: 'sub for spIdMock',
 
@@ -410,6 +415,7 @@ describe('CoreTrackingService', () => {
       const sessionMock: OidcSession = {
         spId: 'spIdMock',
         spName: 'spNameMock',
+        spType: 'public',
         spAcr: 'spAcrMock',
         subs: { spIdMock: 'sub for spIdMock' },
         browsingSessionId: browsingSessionIdMock,
@@ -435,6 +441,7 @@ describe('CoreTrackingService', () => {
 
         spId: 'spIdMock',
         spName: 'spNameMock',
+        spType: 'public',
         spAcr: 'spAcrMock',
         spSub: 'sub for spIdMock',
 
@@ -447,6 +454,7 @@ describe('CoreTrackingService', () => {
       const sessionMock: OidcSession = {
         spId: 'spIdMock',
         spName: 'spNameMock',
+        spType: 'public',
         spAcr: 'spAcrMock',
         subs: { spIdMock: 'sub for spIdMock' },
         spIdentity: {},
@@ -473,6 +481,7 @@ describe('CoreTrackingService', () => {
 
         spId: null,
         spName: null,
+        spType: null,
         spAcr: null,
         spSub: null,
 

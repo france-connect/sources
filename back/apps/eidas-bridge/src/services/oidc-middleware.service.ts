@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { AsyncFunctionSafe, FunctionSafe } from '@fc/common';
 import { throwException } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
@@ -54,11 +55,15 @@ export class OidcMiddlewareService {
   protected registerMiddleware(
     step: OidcProviderMiddlewareStep,
     pattern: OidcProviderMiddlewarePattern | OidcProviderRoutes,
-    middleware: Function,
+    middleware: FunctionSafe | AsyncFunctionSafe,
   ) {
     this.oidcProvider.registerMiddleware(step, pattern, middleware.bind(this));
   }
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   private getEventContext(ctx): TrackedEventContextInterface {
     const interactionId: string =
       this.oidcProvider.getInteractionIdFromCtx(ctx);

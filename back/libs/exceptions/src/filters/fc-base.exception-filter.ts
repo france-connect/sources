@@ -38,6 +38,10 @@ export abstract class FcBaseExceptionFilter extends BaseExceptionFilter {
     return exceptionParam;
   }
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   protected getHttpStatus(
     exception: BaseException,
     defaultStatus: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR,

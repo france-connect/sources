@@ -196,6 +196,7 @@ describe('MockServiceProviderController', () => {
 
     res = {
       redirect: jest.fn(),
+      render: jest.fn(),
     };
 
     req = {
@@ -585,11 +586,7 @@ describe('MockServiceProviderController', () => {
         };
 
         // When
-        const result = await controller.retrieveUserinfo(
-          res,
-          body,
-          sessionOidcServiceMock,
-        );
+        await controller.retrieveUserinfo(res, body, sessionOidcServiceMock);
 
         // Then
         expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledTimes(
@@ -599,7 +596,10 @@ describe('MockServiceProviderController', () => {
           idpAccessTokenMock,
           configMock.idpId,
         );
-        expect(result).toEqual(expectedOutput);
+        expect(res.render).toHaveBeenCalledExactlyOnceWith(
+          'login-callback',
+          expectedOutput,
+        );
       });
     });
     describe('without refresh token', () => {
@@ -627,11 +627,7 @@ describe('MockServiceProviderController', () => {
         };
 
         // When
-        const result = await controller.retrieveUserinfo(
-          res,
-          body,
-          sessionOidcServiceMock,
-        );
+        await controller.retrieveUserinfo(res, body, sessionOidcServiceMock);
 
         // Then
         expect(oidcClientServiceMock.utils.getUserInfo).toHaveBeenCalledTimes(
@@ -641,7 +637,10 @@ describe('MockServiceProviderController', () => {
           body.accessToken,
           configMock.idpId,
         );
-        expect(result).toEqual(expectedOutput);
+        expect(res.render).toHaveBeenCalledExactlyOnceWith(
+          'login-callback',
+          expectedOutput,
+        );
       });
 
       it('should redirect to the error page if getUserInfo throw an error', async () => {

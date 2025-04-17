@@ -44,7 +44,6 @@ describe('PartnersOidcClientService', () => {
     given_name: 'given_name',
     usual_name: 'usual_name',
     email: 'email',
-    siren: 'siren',
     sub: '1',
     uid: '42',
   };
@@ -212,7 +211,6 @@ describe('PartnersOidcClientService', () => {
       given_name: 'given_name',
       usual_name: 'usual_name',
       email: 'email',
-      siren: 'siren',
       sub: '1',
     };
 
@@ -296,7 +294,6 @@ describe('PartnersOidcClientService', () => {
       firstname: identityMock.given_name,
       lastname: identityMock.usual_name,
       email: identityMock.email,
-      siren: identityMock.siren,
     };
 
     it('should not init account if it already exists', async () => {

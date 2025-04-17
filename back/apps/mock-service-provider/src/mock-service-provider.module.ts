@@ -1,12 +1,17 @@
 import { HttpModule } from '@nestjs/axios';
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
 import { AppModule } from '@fc/app';
 import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CryptographyModule } from '@fc/cryptography';
 import { CsrfModule } from '@fc/csrf';
-import { ExceptionsModule, FcWebHtmlExceptionFilter } from '@fc/exceptions';
+import {
+  ExceptionsModule,
+  FcWebHtmlExceptionFilter,
+  HttpExceptionFilter,
+  UnknownHtmlExceptionFilter,
+} from '@fc/exceptions';
 import {
   IdentityProviderAdapterEnvModule,
   IdentityProviderAdapterEnvService,
@@ -23,6 +28,7 @@ import {
   MockServiceProviderController,
   OidcClientController,
 } from './controllers';
+import { AuthExceptionFilter } from './filters';
 import { AppModeInterceptor } from './interceptors';
 import { MockServiceProviderService } from './services';
 
@@ -33,11 +39,12 @@ const oidcClientModule = OidcClientModule.register(
   ServiceProviderAdapterEnvModule,
 );
 
+@Global()
 @Module({
   imports: [
     AppModule,
-    ExceptionsModule,
     AsyncLocalStorageModule,
+    ExceptionsModule,
     SessionModule,
     IdentityProviderAdapterEnvModule,
     CryptographyModule,
@@ -51,9 +58,22 @@ const oidcClientModule = OidcClientModule.register(
     MockServiceProviderService,
     { provide: APP_INTERCEPTOR, useClass: AppModeInterceptor },
     FcWebHtmlExceptionFilter,
+
+    {
+      provide: APP_FILTER,
+      useClass: UnknownHtmlExceptionFilter,
+    },
     {
       provide: APP_FILTER,
       useClass: FcWebHtmlExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: AuthExceptionFilter,
     },
   ],
 })

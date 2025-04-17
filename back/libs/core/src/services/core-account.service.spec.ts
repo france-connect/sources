@@ -94,6 +94,8 @@ describe('CoreAccountService', () => {
       // When
       try {
         await service.computeFederation(computeSp);
+        // You can't remove the catch argument, it's mandatory
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {}
 
       // Then

@@ -1,4 +1,5 @@
 export * from './fsa.type';
+export * from './functions.type';
 export * from './instantiable.type';
 export * from './pagination-options.type';
 export * from './pagination-result.type';

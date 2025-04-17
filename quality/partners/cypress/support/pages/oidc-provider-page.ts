@@ -1,4 +1,4 @@
-import { ChainableElement, UserCredentials } from '../types';
+import { ChainableElement, UserCredentials, UserData } from '../types';
 
 const IDP_MOCK_EMAIL = 'test@fia1.fr';
 
@@ -31,12 +31,22 @@ export default class OidcProviderPage {
     this.getIdpUsernameInput().should('be.visible');
   }
 
-  // Login function not used as we use ProConnect mock
-  private loginWithProConnect(credentials: UserCredentials): void {
+  private loginWithProConnect(userDetails: Record<string, string>): void {
     this.checkIsVisible();
     this.getEmailInput().clearThenType(IDP_MOCK_EMAIL);
     this.getConnectionButton().click();
-    this.loginWithIdpMock(credentials);
+    // Login on ProConnect IDP mock
+    cy.get('#email').should('be.visible');
+    cy.get('#open-custom-configuration').click();
+    ['email', 'given_name', 'usual_name', 'is_service_public', 'sub'].forEach(
+      (key) => {
+        if (userDetails[key]) {
+          cy.get(`#${key}`).clearThenType(userDetails[key]);
+        }
+      },
+    );
+    cy.get('#email').click();
+    cy.contains('button[type="submit"]', 'Se connecter').click();
   }
 
   private loginWithIdpMock({ password, username }: UserCredentials): void {
@@ -46,7 +56,11 @@ export default class OidcProviderPage {
     this.getIdpConnectionButton().click();
   }
 
-  login(credentials: UserCredentials): void {
-    this.loginWithIdpMock(credentials);
+  login(user: UserData): void {
+    if (Cypress.env('TEST_ENV') === 'docker') {
+      this.loginWithIdpMock(user.credentials);
+    } else {
+      this.loginWithProConnect(user.claims);
+    }
   }
 }

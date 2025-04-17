@@ -1,3 +1,5 @@
+import { Class } from 'type-fest';
+
 import { Injectable } from '@nestjs/common';
 
 import { Dto2FormInvalidMetadataException } from '../exceptions';
@@ -8,7 +10,7 @@ import { FORM_METADATA_TOKEN } from '../tokens';
 export class MetadataFormService {
   constructor() {}
 
-  getDtoMetadata(dto: Function): MetadataDtoInterface[] {
+  getDtoMetadata(dto: Class<unknown>): MetadataDtoInterface[] {
     const metadata = Reflect.getMetadata(FORM_METADATA_TOKEN, dto);
 
     if (!metadata) {

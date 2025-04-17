@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { Instantiable } from '@fc/common';
+import { FunctionSafe, Instantiable } from '@fc/common';
 
 import { TemplateMethod } from '../decorators';
 import { ViewTemplateServiceNotFoundException } from '../exceptions/view-template-service-not-found.exception';
@@ -137,7 +137,9 @@ describe('ViewTemplateService', () => {
     it('should create an entry with alias for helper', () => {
       // Given
       const helperList = {};
-      const boundHelperMock = Symbol('boundHelperMock') as unknown as Function;
+      const boundHelperMock = Symbol(
+        'boundHelperMock',
+      ) as unknown as FunctionSafe;
 
       // When
       service['exposeHelper'](helperList, alias, boundHelperMock);
@@ -152,7 +154,9 @@ describe('ViewTemplateService', () => {
         existingEntry: () => {},
       };
 
-      const boundHelperMock = Symbol('boundHelperMock') as unknown as Function;
+      const boundHelperMock = Symbol(
+        'boundHelperMock',
+      ) as unknown as FunctionSafe;
 
       // When
       service['exposeHelper'](helperList, alias, boundHelperMock);
@@ -166,7 +170,9 @@ describe('ViewTemplateService', () => {
       // Given
       const helperList = {};
 
-      const boundHelperMock = Symbol('boundHelperMock') as unknown as Function;
+      const boundHelperMock = Symbol(
+        'boundHelperMock',
+      ) as unknown as FunctionSafe;
 
       // When
       service['exposeHelper'](helperList, alias, boundHelperMock);

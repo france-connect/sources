@@ -1,5 +1,83 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`InstanceCreatePage should call AlertComponent with info params 1`] = `
+<div>
+  <h1
+    class="fr-col-12 fr-col-md-8"
+  >
+    Partners-form-createTitle-mock
+  </h1>
+  <div
+    data-mockid="AlertComponent"
+  >
+    <div>
+      AlertComponent
+    </div>
+    <div>
+      <p>
+        Consulter notre
+         
+        <span
+          data-mockid="LinkComponent"
+        >
+          documentation partenaires
+        </span>
+      </p>
+    </div>
+  </div>
+  <div
+    class="fr-col-12 fr-col-md-8 fr-py-6w fc-grey-border--full"
+  >
+    <div
+      class="fr-col-offset-1 fr-col-10"
+    >
+      <div
+        data-mockid="DTO2FormComponent"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`InstanceCreatePage should call LinkComponent with params 1`] = `
+<div>
+  <h1
+    class="fr-col-12 fr-col-md-8"
+  >
+    Partners-form-createTitle-mock
+  </h1>
+  <div
+    data-mockid="AlertComponent"
+  >
+    <div>
+      AlertComponent
+    </div>
+    <div>
+      <p>
+        Consulter notre
+         
+        <span
+          data-mockid="LinkComponent"
+        >
+          documentation partenaires
+        </span>
+      </p>
+    </div>
+  </div>
+  <div
+    class="fr-col-12 fr-col-md-8 fr-py-6w fc-grey-border--full"
+  >
+    <div
+      class="fr-col-offset-1 fr-col-10"
+    >
+      <div
+        data-mockid="DTO2FormComponent"
+      />
+    </div>
+  </div>
+</div>
+`;
+
 exports[`InstanceCreatePage should match the snapshot 1`] = `
 <div>
   <h1
@@ -7,6 +85,24 @@ exports[`InstanceCreatePage should match the snapshot 1`] = `
   >
     Partners-form-createTitle-mock
   </h1>
+  <div
+    data-mockid="AlertComponent"
+  >
+    <div>
+      AlertComponent
+    </div>
+    <div>
+      <p>
+        Consulter notre
+         
+        <span
+          data-mockid="LinkComponent"
+        >
+          documentation partenaires
+        </span>
+      </p>
+    </div>
+  </div>
   <div
     class="fr-col-12 fr-col-md-8 fr-py-6w fc-grey-border--full"
   >

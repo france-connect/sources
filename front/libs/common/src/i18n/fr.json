@@ -1,3 +1,4 @@
 {
-  "FC.Common.newWindow": "Nouvelle fenêtre"
+  "FC.Common.newWindow": "Nouvelle fenêtre",
+  "FC.session.expired": "Votre session a expiré, veuillez vous reconnecter."
 }

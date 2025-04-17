@@ -1,68 +1,67 @@
 import { Injectable } from '@nestjs/common';
 
-import { FraudCaseDto } from '@fc/csmr-fraud-client';
+import {
+  AccountIdsResultsInterface,
+  CsmrAccountClientService,
+} from '@fc/csmr-account-client';
+import { FraudCaseDto, TrackingDataDto } from '@fc/csmr-fraud-client';
 import { LoggerService } from '@fc/logger';
 import { PivotIdentityDto } from '@fc/oidc';
-import _ = require('lodash');
+import {
+  TracksAdapterElasticsearchService,
+  TracksAdapterResultsInterface,
+} from '@fc/tracks-adapter-elasticsearch';
 
-import { SecurityTicketDataInterface } from '../interfaces';
-import { CsmrFraudTracksService } from './csmr-fraud-tracks.service';
+import {
+  SecurityTicketDataInterface,
+  TracksFormatterOutputInterface,
+} from '../interfaces';
+import { getSecurityTicketData, getTrackingData } from '../utils';
 
 @Injectable()
 export class CsmrFraudDataService {
   constructor(
     private readonly logger: LoggerService,
-    private readonly tracks: CsmrFraudTracksService,
+    private readonly account: CsmrAccountClientService,
+    private readonly tracks: TracksAdapterElasticsearchService<TracksFormatterOutputInterface>,
   ) {}
 
   async enrichFraudData(
     identity: PivotIdentityDto,
     fraudCase: FraudCaseDto,
-  ): Promise<SecurityTicketDataInterface> {
-    const {
-      given_name: givenName,
-      family_name: familyName,
-      birthdate,
-      birthplace,
-      birthcountry,
-    } = identity;
-
-    const {
-      contactEmail,
-      idpEmail,
-      authenticationEventId,
-      fraudSurveyOrigin,
-      comment,
-      phoneNumber,
-    } = fraudCase;
-
-    const { error, total, tracks } =
-      await this.tracks.getTracksForAuthenticationEventId(
-        identity,
-        fraudCase.authenticationEventId,
-      );
-
-    if (error) {
-      this.logger.debug(error);
+  ): Promise<{
+    ticketData: SecurityTicketDataInterface;
+    trackingData: TrackingDataDto;
+  }> {
+    let accountIds: AccountIdsResultsInterface;
+    try {
+      accountIds = await this.account.getAccountIdsFromIdentity(identity);
+    } catch (error) {
+      this.logger.err(error);
+      accountIds = {};
     }
 
-    const ticketData: SecurityTicketDataInterface = {
-      givenName,
-      familyName,
-      birthdate,
-      birthplace,
-      birthcountry,
-      contactEmail,
-      idpEmail,
-      authenticationEventId,
-      fraudSurveyOrigin,
-      comment,
-      phoneNumber,
-      error,
-      total,
-      tracks,
-    };
+    let tracks: TracksAdapterResultsInterface<TracksFormatterOutputInterface>;
+    try {
+      tracks = await this.tracks.getTracksForAuthenticationEventId(
+        fraudCase.authenticationEventId,
+      );
+    } catch (error) {
+      this.logger.err(error);
+      tracks = { total: 0, payload: [] };
+    }
+    const { accountIdLow, accountIdHigh } = accountIds;
+    const groupIds = [accountIdLow, accountIdHigh].filter(Boolean);
 
-    return ticketData;
+    const ticketData = getSecurityTicketData(
+      identity,
+      fraudCase,
+      groupIds,
+      tracks,
+    );
+
+    const trackingData = getTrackingData(fraudCase, accountIds, tracks);
+
+    return { ticketData, trackingData };
   }
 }

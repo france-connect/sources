@@ -152,19 +152,27 @@ describe('getContextFromLegacyTracks()', () => {
     const track = {
       // Legacy Tracks Params
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      fs_label: 'serviceProviderLabel',
-      fi: 'identityProviderLabel',
-      fiSub: 'idpSub',
-      fsSub: 'spSub',
-      eidas: 'eidas1',
+      fs_label: 'spNameMock',
+      fsId: 'spIdMock',
+      fi: 'idpNameMock',
+      fiId: 'idpIdMock',
+      fiSub: 'idpSubMock',
+      fsSub: 'spSubMock',
+      eidas: 'interactionAcrMock',
+      cinematicID: 'interactionIdMock',
+      sessionID: 'browsingSessionIdMock',
     } as unknown as TracksLegacyFieldsInterface;
 
     const expected = {
-      spName: 'serviceProviderLabel',
-      idpName: 'identityProviderLabel',
-      idpSub: 'idpSub',
-      spSub: 'spSub',
-      interactionAcr: 'eidas1',
+      spName: 'spNameMock',
+      spId: 'spIdMock',
+      idpName: 'idpNameMock',
+      idpId: 'idpIdMock',
+      idpSub: 'idpSubMock',
+      spSub: 'spSubMock',
+      interactionId: 'interactionIdMock',
+      interactionAcr: 'interactionAcrMock',
+      browsingSessionId: 'browsingSessionIdMock',
     };
 
     // When

@@ -18,7 +18,7 @@ Fonctionnalité: API - core
     Alors le statut de la réponse est 404
     Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
     Et le corps de la réponse contient une page web
-    Et le code d'erreur FranceConnect est "Y049D62"
+    Et le code d'erreur FranceConnect est "Y0499B1"
 
   @exceptions
   Scénario: API core - Page inconue dans le dossier /

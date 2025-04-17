@@ -103,6 +103,7 @@
 |---|---|---|---|
 | [<b>110003</b>](../apps/mock-service-provider/src/exceptions/mock-service-provider-userinfo.exception.ts) | Une erreur s&#39;est produite lors de la récupération des données utilisateurs depuis un FS de démo. Il faut recommencer la cinématique. Si le problème persiste, contacter le support N3 |  | <b>Classe :</b> [MockServiceProviderUserinfoException](../apps/mock-service-provider/src/exceptions/mock-service-provider-userinfo.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
 | [<b>110004</b>](../apps/mock-service-provider/src/exceptions/mock-service-provider-token-revocation.exception.ts) | Une erreur s&#39;est produite lors de la révocation d&#39;un token par un FS de démo. Le token a dû expirer avec révocation. Si le problème persiste, contacter le support N3. |  | <b>Classe :</b> [MockServiceProviderTokenRevocationException](../apps/mock-service-provider/src/exceptions/mock-service-provider-token-revocation.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
+| [<b>110005</b>](../apps/mock-service-provider/src/exceptions/mock-service-provider-auth.exception.ts) | L&#39;usager n&#39;est pas authentifié |  | <b>Classe :</b> [MockServiceProviderAuthException](../apps/mock-service-provider/src/exceptions/mock-service-provider-auth.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b>  <br /> <b>error_description :</b>  |
 
 ## @fc/override-oidc-provider
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
@@ -233,6 +234,7 @@
 | [<b>440008</b>](../libs/jwt/src/exceptions/can-not-sign-jwt.exception.ts) | Impossible de signer le JWT | Impossible de signer le JWT | <b>Classe :</b> [CanNotSignJwtException](../libs/jwt/src/exceptions/can-not-sign-jwt.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
 | [<b>440009</b>](../libs/jwt/src/exceptions/multiple-relevant-keys.exception.ts) | Plusieurs clés pertinentes ont été trouvées alors qu&#39;un kid était fourni | Plusieurs clés pertinentes trouvées | <b>Classe :</b> [MultipleRelevantKeysException](../libs/jwt/src/exceptions/multiple-relevant-keys.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
 | [<b>440010</b>](../libs/jwt/src/exceptions/fetch-jwks-failed.exception.ts) | Impossible pour le jwt service de joindre le JWKS endpoint | Échec de la récupération du JWKS | <b>Classe :</b> [FetchJwksFailedException](../libs/jwt/src/exceptions/fetch-jwks-failed.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> failed to fetch JWKS |
+| [<b>440011</b>](../libs/jwt/src/exceptions/invalid-jwks.exception.ts) | Le format de la JWKS n&#39;est pas valide. Il doit s&#39;agir d&#39;un tableau keys contenant des JWK avec les attributs &#39;use&#39; et &#39;alg&#39;. | Format de la JWKS invalide | <b>Classe :</b> [InvalidJwksException](../libs/jwt/src/exceptions/invalid-jwks.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> invalid JWKS format |
 
 ## @fc/async-local-storage
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
@@ -278,11 +280,6 @@
 | Code d'erreur | Description | Message utilisateur | Infos techniques |
 |---|---|---|---|
 | [<b>520001</b>](../libs/oidc-acr/src/exceptions/oidc-acr-no-sso-allowed-acr-found.exception.ts) | Une connexion SSO a échouée car le niveau ACR n&#39;a pas pu être déterminé | No SSO allowed ACR found | <b>Classe :</b> [OidcAcrNoSsoAllowedAcrFoundException](../libs/oidc-acr/src/exceptions/oidc-acr-no-sso-allowed-acr-found.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
-
-## @fc/csmr-fraud-client
-| Code d'erreur | Description | Message utilisateur | Infos techniques |
-|---|---|---|---|
-| [<b>530001</b>](../libs/csmr-fraud-client/src/exceptions/csmr-fraud-client-response.exception.ts) | Une erreur s&#39;est produite lors du traitement du formulaire usurpation via le broker |  | <b>Classe :</b> [CsmrFraudClientResponseException](../libs/csmr-fraud-client/src/exceptions/csmr-fraud-client-response.exception.ts) <br /><b>Code HTTP :</b> 500 <br /><b>error :</b> server_error <br /> <b>error_description :</b> authentication aborted due to a technical error on the authorization server |
 
 ## @fc/csmr-account-client
 | Code d'erreur | Description | Message utilisateur | Infos techniques |

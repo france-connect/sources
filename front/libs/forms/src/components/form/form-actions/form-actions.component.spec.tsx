@@ -57,4 +57,25 @@ describe('FormActionsComponent', () => {
     expect(t).toHaveBeenCalledTimes(2);
     expect(t).toHaveBeenCalledWith('Form.submit');
   });
+
+  it('should match the snapshot when submit label is defined', () => {
+    // Given
+    const submitLabelMock = 'any-submit-label-mock';
+
+    // When
+    const { container } = render(<FormActionsComponent canSubmit submitLabel={submitLabelMock} />);
+
+    // Then
+    expect(container).toMatchSnapshot();
+    expect(SimpleButton).toHaveBeenCalledOnce();
+    expect(SimpleButton).toHaveBeenCalledWith(
+      {
+        children: 'any-submit-label-mock',
+        disabled: false,
+        size: 'md',
+        type: 'submit',
+      },
+      {},
+    );
+  });
 });

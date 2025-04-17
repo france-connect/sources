@@ -3,7 +3,7 @@
 ## Description
 
 Provides a service to handle communication with the csmr-account.  
-The csmr-account is responsible for extracting both the `accountIdLegacy` and `accountIdHigh` from the `identityHash`.
+The csmr-account is responsible for extracting both the `accountIdLow` and `accountIdHigh` from the `identityHash`.
 
 The `identityHash` is derived from the user's identity pivot using the `computeIdentityHash` function provided by the `cryptographyFcpService`. source code here: [../../libs/cryptography-fcp/src/cryptography-fcp.service.ts](<computeIdentityHash(pivotIdentity)>).
 
@@ -37,7 +37,7 @@ The following environment variables must be defined:
 
 ## Usage
 
-Use the async `getIdsWithIdentityHash` method to retrieve `accountIdLegacy` and `accountIdHigh` from an `identityHash`.
+Use the async `getIdsWithIdentityHash` method to retrieve `accountIdLow` and `accountIdHigh` from an `identityHash`.
 
 ```typescript
 import { CsmrFraudClientService } from '@fc/csmr-fraud-client';

@@ -5,7 +5,7 @@ import { AsyncLocalStorageModule } from '@fc/async-local-storage';
 import { CsmrAccountClientModule } from '@fc/csmr-account-client';
 import { ExceptionsModule, FcRmqExceptionFilter } from '@fc/exceptions';
 import { MailerModule } from '@fc/mailer';
-import { RabbitmqModule } from '@fc/rabbitmq';
+import { MicroservicesRmqModule } from '@fc/microservices-rmq';
 import { TracksAdapterElasticsearchModule } from '@fc/tracks-adapter-elasticsearch';
 
 import { CsmrFraudController } from './controllers';
@@ -15,15 +15,11 @@ import {
   TracksLegacyFormatter,
 } from './formatters';
 import { TracksFormatterOutputInterface } from './interfaces';
-import {
-  CsmrFraudDataService,
-  CsmrFraudSupportService,
-  CsmrFraudTracksService,
-} from './services';
+import { CsmrFraudDataService, CsmrFraudSupportService } from './services';
 
 @Module({
   imports: [
-    RabbitmqModule.registerFor('Fraud'),
+    MicroservicesRmqModule.forSubscriber(),
     MailerModule,
     AsyncLocalStorageModule,
     ExceptionsModule,
@@ -38,7 +34,6 @@ import {
   providers: [
     CsmrFraudSupportService,
     CsmrFraudDataService,
-    CsmrFraudTracksService,
     FcRmqExceptionFilter,
     {
       provide: APP_FILTER,

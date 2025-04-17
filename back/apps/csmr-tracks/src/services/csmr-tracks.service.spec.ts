@@ -53,7 +53,12 @@ describe('CsmrTracksService', () => {
   describe('getTracksForIdentity', () => {
     // Given
     const identityMock = Symbol('identityMock') as unknown as IOidcIdentity;
-    const accountIdsMock = ['accountIdsMock'];
+    const accountIdLowMock = 'accountIdLowMock';
+    const accountIdHighMock = 'accountIdHighMock';
+    const accountIdsMock = {
+      accountIdLow: accountIdLowMock,
+      accountIdHigh: accountIdHighMock,
+    };
     const totalMock = Symbol('tracksTotalMock');
     const formattedTracksMock = Symbol('formattedTracksMock');
     const tracksAdapterResultsMock = {
@@ -89,13 +94,16 @@ describe('CsmrTracksService', () => {
     });
 
     it('should call tracks.getTracks() with accountIds', async () => {
+      // Given
+      const groupIdsMock = [accountIdLowMock, accountIdHighMock];
+
       // When
       await service.getTracksForIdentity(identityMock, optionsMock);
 
       // Then
       expect(tracksAdapterMock.getTracksForAccountIds).toHaveBeenCalledTimes(1);
       expect(tracksAdapterMock.getTracksForAccountIds).toHaveBeenCalledWith(
-        accountIdsMock,
+        groupIdsMock,
         optionsMock,
       );
     });

@@ -6,7 +6,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { NO_ENTITY_ID } from '@entities/typeorm';
 
 import { PartnersAccountSession } from '@fc/partners-account';
-import { SessionService } from '@fc/session';
+import { SessionNotFoundException, SessionService } from '@fc/session';
 
 import { getSessionServiceMock } from '@mocks/session';
 
@@ -197,6 +197,7 @@ describe('BasePermissionsHandlerService', () => {
       [ACCESS_CONTROL_TOKEN]: {
         userPermissions: userPermissionsMock,
       },
+      identity: Symbol('identity'),
     } as unknown as PartnersAccountSession;
 
     beforeEach(() => {
@@ -260,6 +261,19 @@ describe('BasePermissionsHandlerService', () => {
 
       // Then
       expect(result).toStrictEqual(resultMock);
+    });
+
+    it('should return SessionNotFoundException if no identity was found in partner session', () => {
+      // Given
+      sessionServiceMock.get.mockReturnValueOnce(null);
+
+      // When
+      expect(() =>
+        service['extractContextInfo'](
+          ctxMock,
+          controllerPermissionsMock.entityIdLocation,
+        ),
+      ).toThrow(SessionNotFoundException);
     });
   });
 });

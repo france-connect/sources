@@ -102,7 +102,7 @@ export class InstanceController {
   @UsePipes(FormValidationPipe)
   async createInstance(
     @Body() values: ServiceProviderInstanceVersionDto,
-    @Session('PartnersAccount')
+    @Session('PartnersAccount', PartnersAccountSession)
     sessionPartnersAccount: ISessionService<PartnersAccountSession>,
   ): Promise<FSA<FSAMeta, unknown>> {
     const {

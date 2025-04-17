@@ -32,6 +32,7 @@ module.exports = {
   useRouteError: jest.fn(),
   useOutletContext: jest.fn(),
   isRouteErrorResponse: jest.fn(),
+  redirect: jest.fn(),
 };
 
 export {};

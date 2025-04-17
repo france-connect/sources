@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { AsyncFunctionSafe, FunctionSafe } from '@fc/common';
 import { throwException } from '@fc/exceptions/helpers';
 import {
   OidcCtx,
@@ -33,7 +34,7 @@ export class OidcProviderMiddlewareService {
   protected registerMiddleware(
     step: OidcProviderMiddlewareStep,
     pattern: OidcProviderMiddlewarePattern | OidcProviderRoutes,
-    middleware: Function,
+    middleware: FunctionSafe | AsyncFunctionSafe,
   ) {
     this.oidcProvider.registerMiddleware(step, pattern, middleware.bind(this));
   }
@@ -46,6 +47,8 @@ export class OidcProviderMiddlewareService {
       session = await this.session.getDataFromBackend<{ App: AppSession }>(
         sessionId,
       );
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       return await throwException(new SessionNotFoundException('App'));
     }
@@ -60,6 +63,10 @@ export class OidcProviderMiddlewareService {
   /**
    * @todo refactor this method in `@fc/oidc-provider`
    */
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   protected getEventContext(ctx: OidcCtx): TrackedEventContextInterface {
     const interactionId: string =
       this.oidcProvider.getInteractionIdFromCtx(ctx);

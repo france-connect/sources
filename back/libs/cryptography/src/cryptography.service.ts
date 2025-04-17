@@ -132,6 +132,8 @@ export class CryptographyService {
 
     try {
       decipher.final();
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       /**
        * @TODO #138 throw a specific exception

@@ -1,8 +1,8 @@
-import { TracksTicketDataInterface } from '../interfaces';
+import { TicketTracksDataInterface } from '../interfaces';
 
 export function getTracksBySpName(
-  tracks: TracksTicketDataInterface[],
-): Record<string, Partial<TracksTicketDataInterface>[]> {
+  tracks: TicketTracksDataInterface[],
+): Record<string, Partial<TicketTracksDataInterface>[]> {
   return groupTracksByKey(
     tracks.map(
       ({
@@ -17,8 +17,8 @@ export function getTracksBySpName(
 }
 
 export function getTracksByIdpName(
-  tracks: TracksTicketDataInterface[],
-): Record<string, Partial<TracksTicketDataInterface>[]> {
+  tracks: TicketTracksDataInterface[],
+): Record<string, Partial<TicketTracksDataInterface>[]> {
   return groupTracksByKey(
     tracks.map(
       ({
@@ -33,9 +33,9 @@ export function getTracksByIdpName(
 }
 
 function groupTracksByKey(
-  tracks: Partial<TracksTicketDataInterface>[],
+  tracks: Partial<TicketTracksDataInterface>[],
   key: string,
-): Record<string, Partial<TracksTicketDataInterface>[]> {
+): Record<string, Partial<TicketTracksDataInterface>[]> {
   return tracks.reduce(
     (result, track) => {
       const value = track[key];
@@ -48,6 +48,6 @@ function groupTracksByKey(
 
       return result;
     },
-    {} as Record<string, Partial<TracksTicketDataInterface>[]>,
+    {} as Record<string, Partial<TicketTracksDataInterface>[]>,
   );
 }

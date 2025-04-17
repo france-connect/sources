@@ -1,8 +1,8 @@
-import { TracksTicketDataInterface } from '../interfaces';
+import { TicketTracksDataInterface } from '../interfaces';
 import { getTracksByIdpName, getTracksBySpName } from './group-tracks.util';
 
 describe('group-tracks.util', () => {
-  const sampleTracks: TracksTicketDataInterface[] = [
+  const sampleTracks: TicketTracksDataInterface[] = [
     {
       accountIdMatch: true,
       platform: 'FC',

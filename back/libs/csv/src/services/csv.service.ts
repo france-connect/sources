@@ -67,6 +67,8 @@ export class CsvService<T> implements RepositoryInterface<T> {
 
       const data = await this.pickData(rawRows);
       this.collection = data;
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new CsvParsingException();
     }

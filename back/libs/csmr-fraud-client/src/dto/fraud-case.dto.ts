@@ -1,6 +1,9 @@
 import { IsEmail, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class FraudCaseDto {
+  @IsUUID(4)
+  fraudCaseId: string;
+
   @IsEmail()
   contactEmail: string;
 

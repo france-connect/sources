@@ -1,6 +1,19 @@
-import { TracksTicketDataInterface } from './tracks-results.interface';
+export interface TicketTracksDataInterface {
+  date: string;
+  idpName: string;
+  spName: string;
+  idpSub: string;
+  spSub: string;
+  platform: string;
+  interactionAcr: string;
+  city: string;
+  country: string;
+  ipAddress: string[];
+  accountIdMatch: boolean;
+}
 
 export interface SecurityTicketDataInterface {
+  fraudCaseId: string;
   givenName: string;
   familyName: string;
   birthdate: string;
@@ -10,9 +23,9 @@ export interface SecurityTicketDataInterface {
   idpEmail: string;
   authenticationEventId: string;
   fraudSurveyOrigin: string;
-  comment: string;
-  phoneNumber: string;
+  comment?: string;
+  phoneNumber?: string;
   error: string;
   total: number;
-  tracks: TracksTicketDataInterface[];
+  tracks: TicketTracksDataInterface[];
 }

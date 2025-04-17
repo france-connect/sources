@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import * as OidcProvider from 'oidc-provider';
 
 import { HttpAdapterHost } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -85,6 +84,7 @@ describe('OidcProviderService', () => {
     on: jest.fn(),
     interactionDetails: jest.fn(),
     interactionFinished: jest.fn(),
+    callback: jest.fn(),
   };
 
   const redisMock = getRedisServiceMock();
@@ -105,6 +105,12 @@ describe('OidcProviderService', () => {
   };
 
   beforeEach(async () => {
+    jest.resetAllMocks();
+
+    oidcProviderConfigServiceMock.getConfig.mockReturnValueOnce(
+      configOidcProviderMock,
+    );
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LoggerService,
@@ -132,7 +138,6 @@ describe('OidcProviderService', () => {
       .compile();
 
     service = module.get<OidcProviderService>(OidcProviderService);
-    jest.resetAllMocks();
 
     configServiceMock.get.mockImplementation((module) => {
       switch (module) {
@@ -151,12 +156,27 @@ describe('OidcProviderService', () => {
     );
   });
 
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  describe('init', () => {
+    it('should throw if provider can not be initialized', () => {
+      // Given
+      oidcProviderConfigServiceMock.getConfig.mockReturnValueOnce({
+        ...configOidcProviderMock,
+      });
+      service['ProviderProxy'] = BadProviderProxyMock;
+
+      // Then / When
+      expect(() => service.init()).toThrow(OidcProviderInitialisationException);
+    });
+  });
+
   describe('onModuleInit', () => {
     beforeEach(() => {
       // Given
-      oidcProviderConfigServiceMock.getConfig.mockReturnValueOnce(
-        configOidcProviderMock,
-      );
+
       oidcProviderConfigServiceMock.getConfig.mockImplementation(() => ({
         paramsMock: 'paramMocks',
       }));
@@ -165,15 +185,6 @@ describe('OidcProviderService', () => {
       });
       service['registerMiddlewares'] = jest.fn();
       service['catchErrorEvents'] = jest.fn();
-    });
-
-    it('should create oidc-provider instance', () => {
-      // When
-      service.onModuleInit();
-      // Then
-      expect(service).toBeDefined();
-      // Access to private property via []
-      expect(service['provider']).toBeInstanceOf(OidcProvider.Provider);
     });
 
     it('should mount oidc-provider in express', () => {
@@ -185,15 +196,6 @@ describe('OidcProviderService', () => {
        * Sadly we can't test `toHaveBeenCalledWith(service['provider'].callback)`
        * since `̀Provider.callback` is a getter that returns an anonymous function
        */
-    });
-
-    it('should throw if provider can not be instantied', () => {
-      // Given
-      service['ProviderProxy'] = BadProviderProxyMock;
-      // Then
-      expect(() => service.onModuleInit()).toThrow(
-        OidcProviderInitialisationException,
-      );
     });
 
     it('should throw if provider can not be mounted to server', () => {
@@ -225,10 +227,9 @@ describe('OidcProviderService', () => {
       // When
       service.onModuleInit();
       // Then
-      expect(oidcProviderConfigAppMock.setProvider).toHaveBeenCalledTimes(1);
-      expect(oidcProviderConfigAppMock.setProvider).toHaveBeenCalledWith({
-        proxy: true,
-      });
+      expect(
+        oidcProviderConfigAppMock.setProvider,
+      ).toHaveBeenCalledExactlyOnceWith(providerMock);
     });
   });
 
@@ -649,15 +650,26 @@ describe('OidcProviderService', () => {
         spAcr: 'spAcrValue',
         spIdentity: {},
       };
+      const sessionIdMock = Symbol('sessionId') as unknown as string;
       // When
-      await service.finishInteraction(reqMock, resMock, sessionDataMock);
+      await service.finishInteraction(
+        reqMock,
+        resMock,
+        sessionDataMock,
+        sessionIdMock,
+      );
       // Then
       expect(oidcProviderConfigAppMock.finishInteraction).toHaveBeenCalledTimes(
         1,
       );
       expect(
         oidcProviderConfigAppMock.finishInteraction,
-      ).toHaveBeenLastCalledWith(reqMock, resMock, sessionDataMock);
+      ).toHaveBeenLastCalledWith(
+        reqMock,
+        resMock,
+        sessionDataMock,
+        sessionIdMock,
+      );
     });
   });
 

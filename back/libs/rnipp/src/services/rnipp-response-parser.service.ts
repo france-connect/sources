@@ -23,6 +23,8 @@ export class RnippResponseParserService {
     let json;
     try {
       json = await xmlParser.parseStringPromise(xmlData, options);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new RnippHttpStatusException();
     }

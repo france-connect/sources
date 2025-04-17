@@ -4,6 +4,7 @@ import * as pkcs11js from 'pkcs11js';
 
 import { Injectable } from '@nestjs/common';
 
+import { FunctionSafe } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
 import { HsmConfig } from './dto';
@@ -26,7 +27,7 @@ export class HsmService {
    */
   private pkcs11Instance: pkcs11js.PKCS11;
   private pkcs11Session: Buffer;
-  public shutdownConsumer: Function;
+  public shutdownConsumer: FunctionSafe;
 
   constructor(private readonly config: ConfigService) {}
 
@@ -44,6 +45,8 @@ export class HsmService {
   onModuleDestroy() {
     try {
       this.closeCurrentSessionWithTheHsm();
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {}
   }
 
@@ -54,6 +57,10 @@ export class HsmService {
    * @param digest alg used to digest data before signing (default to sha256).
    * @returns signed data
    */
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   sign(data: Buffer, digest: SignatureDigest = SignatureDigest.SHA256): Buffer {
     const { sigKeyCkaLabel } = this.config.get<HsmConfig>('Hsm');
 

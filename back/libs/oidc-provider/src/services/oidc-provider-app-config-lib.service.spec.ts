@@ -335,22 +335,29 @@ describe('OidcProviderAppConfigLibService', () => {
         grantMock,
       );
       oidcProviderGrantServiceMock.saveGrant.mockResolvedValueOnce(grantIdMock);
+      const sessionIdAsArg = 'sessionIdAsArg';
 
       const resultMock = {
         consent: {
           grantId: grantIdMock,
         },
         login: {
-          accountId: sessionIdMock,
+          accountId: sessionIdAsArg,
           acr: interactionAcrMock,
           amr: amrValueMock,
           ts: expect.any(Number),
           remember: false,
         },
       };
+
       providerMock.interactionFinished.mockResolvedValueOnce('ignoredValue');
       // When
-      await service.finishInteraction(reqMock, resMock, sessionDataMock);
+      await service.finishInteraction(
+        reqMock,
+        resMock,
+        sessionDataMock,
+        sessionIdAsArg,
+      );
 
       // Then
       expect(oidcProviderGrantServiceMock.generateGrant).toHaveBeenCalledTimes(
@@ -360,7 +367,7 @@ describe('OidcProviderAppConfigLibService', () => {
         providerMock,
         reqMock,
         resMock,
-        sessionIdMock,
+        sessionIdAsArg,
       );
       expect(oidcProviderGrantServiceMock.saveGrant).toHaveBeenCalledTimes(1);
       expect(oidcProviderGrantServiceMock.saveGrant).toHaveBeenCalledWith(

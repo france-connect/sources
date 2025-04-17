@@ -15,14 +15,14 @@ class ConnectionWorkflow {
    * Login to partners website via an Oidc Provider
    * @returns the current ConnectionWorkflow instance
    */
-  login({ credentials }: UserData): this {
-    const { username } = credentials;
+  login(user: UserData): this {
+    const { username } = user.credentials;
     cy.session(
       username,
       () => {
         topMenuComponent.visitHomePage();
         loginPage.getLoginButton().click();
-        oidcProviderPage.login(credentials);
+        oidcProviderPage.login(user);
       },
       {
         cacheAcrossSpecs: true,

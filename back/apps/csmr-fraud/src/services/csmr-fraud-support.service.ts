@@ -11,7 +11,7 @@ import { AppRmqConfig } from '../dto';
 import { EmailsTemplates } from '../enums';
 import {
   SecurityTicketDataInterface,
-  TracksTicketDataInterface,
+  TicketTracksDataInterface,
 } from '../interfaces';
 import { getTracksByIdpName, getTracksBySpName } from '../utils';
 
@@ -57,7 +57,7 @@ export class CsmrFraudSupportService {
   }
 
   private getMailAttachments(
-    tracks: TracksTicketDataInterface[],
+    tracks: TicketTracksDataInterface[],
   ): Attachment[] {
     if (!tracks || tracks.length === 0) {
       return [];

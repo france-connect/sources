@@ -10,7 +10,7 @@ import {
 } from '../../common/helpers';
 import {
   Environment,
-  IdentityProvider,
+  IdentityProviderInterface,
   ScopeContext,
   ServiceProvider,
 } from '../../common/types';
@@ -24,7 +24,7 @@ export class ConnectionWorkflow {
   allAppsUrl: string;
   fcRootUrl: string;
   serviceProvider: ServiceProvider;
-  identityProvider: IdentityProvider;
+  identityProvider: IdentityProviderInterface;
   serviceProviderPage: ServiceProviderPage;
   scopeContext: ScopeContext;
 
@@ -67,12 +67,7 @@ export class ConnectionWorkflow {
   start(): this {
     const { acrValue, claims } = this.serviceProvider;
 
-    this.serviceProviderPage.startLogin(
-      this.fcRootUrl,
-      this.scopeContext,
-      claims,
-      acrValue,
-    );
+    this.serviceProviderPage.startLogin(this.scopeContext, claims, acrValue);
     return this;
   }
 
@@ -90,7 +85,7 @@ export class ConnectionWorkflow {
    * @param identityProvider the identity provider to select
    * @returns the current ConnectionWorkflow instance
    */
-  selectIdentityProvider(identityProvider: IdentityProvider): this {
+  selectIdentityProvider(identityProvider: IdentityProviderInterface): this {
     this.identityProvider = identityProvider;
     const identityProviderSelectionPage = new IdentityProviderSelectionPage();
     identityProviderSelectionPage.checkIsVisible();

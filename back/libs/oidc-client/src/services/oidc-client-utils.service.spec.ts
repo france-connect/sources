@@ -4,12 +4,13 @@
  * @ticket #FC-1024
  */
 import { isURL } from 'class-validator';
-import { JWK } from 'jose-openid-client';
+import { JWK } from 'jose';
 import { CallbackParamsType } from 'openid-client';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CryptographyService } from '@fc/cryptography';
+import { JwkHelper } from '@fc/jwt';
 import { LoggerService } from '@fc/logger';
 import { SERVICE_PROVIDER_SERVICE_TOKEN } from '@fc/oidc';
 
@@ -36,6 +37,8 @@ jest.mock('class-validator', () => ({
   ...(jest.requireActual('class-validator') as any),
   isURL: jest.fn(),
 }));
+
+jest.mock('@fc/jwt');
 
 describe('OidcClientUtilsService', () => {
   let service: OidcClientUtilsService;
@@ -275,23 +278,20 @@ describe('OidcClientUtilsService', () => {
   describe('wellKnownKeys()', () => {
     it('should return keys', async () => {
       // Given
-      const JwkKeyMock = {
-        toJWK: jest.fn().mockReturnValueOnce('a').mockReturnValueOnce('b'),
-      };
-      const spy = jest.spyOn(JWK, 'asKey').mockReturnValue(JwkKeyMock as any);
-
       oidcClientConfigServiceMock.get.mockReturnValueOnce({
         jwks: { keys: ['foo', 'bar'] },
       });
 
+      jest
+        .mocked(JwkHelper.publicFromPrivate)
+        .mockResolvedValueOnce('A' as unknown as JWK)
+        .mockResolvedValueOnce('B' as unknown as JWK);
+
       // When
       const result = await service.wellKnownKeys();
+
       // Then
-      expect(spy).toHaveBeenCalledTimes(2);
-      expect(spy).toHaveBeenCalledWith('foo');
-      expect(spy).toHaveBeenCalledWith('bar');
-      expect(JwkKeyMock.toJWK).toHaveBeenCalledTimes(2);
-      expect(result).toEqual({ keys: ['a', 'b'] });
+      expect(result).toStrictEqual({ keys: ['A', 'B'] });
     });
   });
 
@@ -646,6 +646,7 @@ describe('OidcClientUtilsService', () => {
     it('should returns true if endSessionUrl was found', async () => {
       // Given
       const isURLMock = jest.mocked(isURL);
+      isURLMock.mockReturnValueOnce(true);
 
       // When
       const result = await service.hasEndSessionUrl(providerUidMock);
@@ -661,7 +662,7 @@ describe('OidcClientUtilsService', () => {
           require_protocol: true,
         },
       );
-      expect(result).toBeTrue;
+      expect(result).toBeTrue();
     });
 
     it('should returns false if no endSessionUrl was found', async () => {
@@ -676,7 +677,7 @@ describe('OidcClientUtilsService', () => {
 
       // Then
       expect(isURLMock).toHaveBeenCalledTimes(0);
-      expect(result).toBeFalse;
+      expect(result).toBeFalse();
     });
   });
 });

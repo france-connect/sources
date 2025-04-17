@@ -104,16 +104,22 @@ export class CoreFcpSendEmailHandler implements IFeatureHandler<void> {
     const { from } = this.config.get<MailerConfig>('Mailer');
     const { platform } = this.config.get<AppConfig>('App');
 
-    const { spName, spIdentity } = this.session.get<OidcSession>('OidcClient');
-    const {
-      email,
-      given_name: givenName,
-      family_name: familyName,
-    } = spIdentity;
+    const { spName, spIdentity, rnippIdentity } =
+      this.session.get<OidcSession>('OidcClient');
+
+    const { email, preferred_username: preferredUsername } = spIdentity;
+    const { family_name: familyName, given_name_array: givenNameArray } =
+      rnippIdentity;
+
+    const person = MailerHelper.getPerson({
+      givenNameArray,
+      familyName,
+      preferredUsername,
+    });
 
     const mailTo: MailTo = {
       email,
-      name: `${givenName} ${familyName}`,
+      name: person,
     };
 
     const errors = await validateDto(mailTo, MailTo, validationOptions);

@@ -124,6 +124,6 @@ const oidcProviderModule = OidcProviderModule.register(
 
     ExceptionOccurredHandler,
   ],
-  exports: [OidcProviderConfigAppService, CqrsModule],
+  exports: [OidcProviderConfigAppService, CqrsModule, trackingModule],
 })
 export class EidasBridgeModule {}

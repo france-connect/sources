@@ -1,5 +1,5 @@
 #language: fr
-@api @apiInstanceModification
+@api @apiInstanceModification @ci
 Fonctionnalité: API - instance modification
 
   Scénario: API instance modification - création succès

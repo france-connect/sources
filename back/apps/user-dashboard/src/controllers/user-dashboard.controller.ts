@@ -7,6 +7,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Inject,
   Injectable,
   Post,
   Query,
@@ -18,7 +19,7 @@ import {
 } from '@nestjs/common';
 
 import { FSA, getTransformed, PartialExcept } from '@fc/common';
-import { CsmrFraudClientService } from '@fc/csmr-fraud-client';
+import { ActionTypes, CsmrFraudClientService } from '@fc/csmr-fraud-client';
 import {
   CsmrTracksClientService,
   TracksOutputInterface,
@@ -58,9 +59,10 @@ const FILTERED_OPTIONS: ClassTransformOptions = {
 export class UserDashboardController {
   // eslint-disable-next-line max-params
   constructor(
+    @Inject('Fraud')
+    private readonly fraud: CsmrFraudClientService,
     private readonly tracking: TrackingService,
     private readonly tracks: CsmrTracksClientService,
-    private readonly fraud: CsmrFraudClientService,
     private readonly userPreferences: UserPreferencesService,
     private readonly userDashboard: UserDashboardService,
     private readonly i18n: I18nService,
@@ -267,6 +269,7 @@ export class UserDashboardController {
   @UseGuards(CsrfTokenGuard)
   async processFraudForm(
     @Res() res,
+    @Req() req,
     @Body() body: FraudFormValuesDto,
     @Session('OidcClient')
     sessionOidc: ISessionService<OidcClientSession>,
@@ -284,7 +287,34 @@ export class UserDashboardController {
       FILTERED_OPTIONS,
     );
 
-    await this.fraud.processFraudCase(identityFiltered, body);
+    const fraudCaseId = uuid();
+
+    const message = {
+      type: ActionTypes.PROCESS_FRAUD_CASE,
+      payload: {
+        identity: identityFiltered,
+        fraudCase: {
+          fraudCaseId,
+          ...body,
+        },
+      },
+    };
+
+    const { payload: fraudCaseTrackingData } =
+      await this.fraud.publish(message);
+
+    const { FRAUD_CASE_OPENED } = this.tracking.TrackedEventsMap;
+
+    const context: TrackedEventContextInterface = {
+      req,
+      identity: idpIdentity,
+      fraudCaseContext: {
+        isAuthenticated: true,
+        ...fraudCaseTrackingData,
+      },
+    };
+
+    await this.tracking.track(FRAUD_CASE_OPENED, context);
 
     return res.status(HttpStatus.OK).send();
   }
@@ -312,10 +342,14 @@ export class UserDashboardController {
     // Global change tracking
     await this.tracking.track(UPDATED_USER_PREFERENCES, {
       req,
-      changeSetId,
-      hasAllowFutureIdpChanged,
-      idpLength: list.length,
       identity,
+      userPreferencesContext: {
+        changeSetId,
+        payload: {
+          hasAllowFutureIdpChanged,
+          idpLength: list.length,
+        },
+      },
     });
 
     // Futures Idp changes tracking
@@ -323,8 +357,12 @@ export class UserDashboardController {
       await this.tracking.track(UPDATED_USER_PREFERENCES_FUTURE_IDP, {
         req,
         identity,
-        futureAllowedNewValue,
-        changeSetId,
+        userPreferencesContext: {
+          changeSetId,
+          payload: {
+            futureAllowedNewValue,
+          },
+        },
       });
     }
 
@@ -332,9 +370,13 @@ export class UserDashboardController {
     list.forEach(async (idpChanges) => {
       await this.tracking.track(UPDATED_USER_PREFERENCES_IDP, {
         req,
-        idpChanges,
         identity,
-        changeSetId,
+        userPreferencesContext: {
+          changeSetId,
+          payload: {
+            ...idpChanges,
+          },
+        },
       });
     });
   }

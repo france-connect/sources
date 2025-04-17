@@ -14,7 +14,6 @@ import {
 import { getLoggerMock } from '@mocks/logger';
 
 import { Platform } from '../enums';
-import { getReadableDateFromTime } from '../utils';
 import { TracksLegacyFormatter } from './tracks-legacy.formatter';
 
 jest.mock('../utils');
@@ -25,18 +24,20 @@ describe('TracksLegacyFormatter', () => {
 
   const loggerMock = getLoggerMock();
 
-  const readableDateMock = '11/11/2024 11:11:11';
-
   // Legacy field name
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const geoMock = { city_name: 'Paris', country_iso_code: 'FR' };
 
   const legacyContextMock = {
     spName: 'spName',
+    spId: 'spId',
     idpName: 'idpName',
+    idpId: 'idpId',
     idpSub: 'idpSub',
     spSub: 'spSub',
+    interactionId: 'interactionId',
     interactionAcr: 'eidas1',
+    browsingSessionId: 'browsingSessionId',
   };
 
   const localisationMock = { city: 'Paris', country: 'FR' };
@@ -58,6 +59,8 @@ describe('TracksLegacyFormatter', () => {
     },
   } as unknown as SearchHit<TracksLegacyFieldsInterface>;
 
+  const timeMock = new Date(inputMock._source.time).getTime();
+
   beforeEach(async () => {
     jest.restoreAllMocks();
     jest.resetAllMocks();
@@ -71,7 +74,6 @@ describe('TracksLegacyFormatter', () => {
 
     service = module.get<TracksLegacyFormatter>(TracksLegacyFormatter);
 
-    jest.mocked(getReadableDateFromTime).mockReturnValue(readableDateMock);
     jest.mocked(getLocationFromTracks).mockReturnValue(localisationMock);
     jest.mocked(getContextFromLegacyTracks).mockReturnValue(legacyContextMock);
     jest.mocked(getIpAddressFromTracks).mockReturnValue(ipAddress);
@@ -89,17 +91,6 @@ describe('TracksLegacyFormatter', () => {
       // Then
       expect(getLocationFromTracks).toHaveBeenCalledTimes(1);
       expect(getLocationFromTracks).toHaveBeenCalledWith(inputMock._source);
-    });
-
-    it('should call getReadableDateFromTime() with time', () => {
-      // When
-      service.formatTrack(inputMock);
-
-      // Then
-      expect(getReadableDateFromTime).toHaveBeenCalledTimes(1);
-      expect(getReadableDateFromTime).toHaveBeenCalledWith(
-        inputMock._source.time,
-      );
     });
 
     it('should call getContextFromLegacyTracks() with _source', () => {
@@ -128,16 +119,20 @@ describe('TracksLegacyFormatter', () => {
 
       // Then
       expect(formattedTrack).toEqual({
-        date: readableDateMock,
+        time: timeMock,
         spName: legacyContextMock.spName,
+        spId: legacyContextMock.spId,
         idpName: legacyContextMock.idpName,
+        idpId: legacyContextMock.idpId,
         country: localisationMock.country,
         city: localisationMock.city,
         platform: Platform.FCP_LEGACY,
         accountId: 'accountId',
         idpSub: 'idpSub',
         spSub: 'spSub',
+        interactionId: legacyContextMock.interactionId,
         interactionAcr: 'eidas1',
+        browsingSessionId: legacyContextMock.browsingSessionId,
         ipAddress,
       });
     });
@@ -145,7 +140,7 @@ describe('TracksLegacyFormatter', () => {
     it('should throw an exception if an error occurs', () => {
       const errorMock = new Error('error');
 
-      jest.mocked(getReadableDateFromTime).mockImplementationOnce(() => {
+      jest.mocked(getLocationFromTracks).mockImplementationOnce(() => {
         throw errorMock;
       });
 

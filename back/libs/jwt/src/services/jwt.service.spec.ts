@@ -1,3 +1,4 @@
+import { ValidationError } from 'class-validator';
 import {
   compactDecrypt,
   CompactDecryptResult,
@@ -5,6 +6,7 @@ import {
   decodeProtectedHeader,
   importJWK,
   JSONWebKeySet,
+  JWK,
   jwtVerify,
   JWTVerifyResult,
   KeyLike,
@@ -16,8 +18,12 @@ import { lastValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { validateDto } from '@fc/common';
 import { DekAlg, KekAlg, Use } from '@fc/cryptography';
 import { FetchJwksFailedException } from '@fc/jwt/exceptions/fetch-jwks-failed.exception';
+import { LoggerService } from '@fc/logger';
+
+import { getLoggerMock } from '@mocks/logger';
 
 import {
   CanNotDecodePlaintextException,
@@ -26,6 +32,7 @@ import {
   CanNotEncryptException,
   CanNotImportJwkException,
   CanNotSignJwtException,
+  InvalidJwksException,
   InvalidSignatureException,
   MultipleRelevantKeysException,
   NoRelevantKeyException,
@@ -34,10 +41,16 @@ import { JwtService } from './jwt.service';
 
 jest.mock('jose');
 jest.mock('rxjs');
+jest.mock('@fc/common', () => ({
+  ...(jest.requireActual('@fc/common') as any),
+  validateDto: jest.fn(),
+}));
 
 const httpServiceMock = {
   get: jest.fn(),
 };
+
+const loggerServiceMock = getLoggerMock();
 
 describe('JwtService', () => {
   let service: JwtService;
@@ -46,10 +59,12 @@ describe('JwtService', () => {
     jest.clearAllMocks();
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [JwtService, HttpService],
+      providers: [LoggerService, JwtService, HttpService],
     })
       .overrideProvider(HttpService)
       .useValue(httpServiceMock)
+      .overrideProvider(LoggerService)
+      .useValue(loggerServiceMock)
       .compile();
 
     service = module.get<JwtService>(JwtService);
@@ -64,7 +79,7 @@ describe('JwtService', () => {
 
     const jwks = {
       keys: [key1, key2, key3, key4],
-    };
+    } as unknown as JSONWebKeySet;
 
     it('should return the first relevant key (sig)', () => {
       // Given
@@ -99,7 +114,7 @@ describe('JwtService', () => {
       const result = () => service.getFirstRelevantKey(jwks, alg, use);
 
       // Then
-      expect(result).toThrowError(NoRelevantKeyException);
+      expect(result).toThrow(NoRelevantKeyException);
     });
 
     it('should throw an error if multiple relevant key are found when a kid is provided', () => {
@@ -110,14 +125,14 @@ describe('JwtService', () => {
 
       const jwksMultipleRelevantKeys = {
         keys: [...jwks.keys, { alg, use, kid }],
-      };
+      } as unknown as JSONWebKeySet;
 
       // When
       const result = () =>
         service.getFirstRelevantKey(jwksMultipleRelevantKeys, alg, use, kid);
 
       // Then
-      expect(result).toThrowError(MultipleRelevantKeysException);
+      expect(result).toThrow(MultipleRelevantKeysException);
     });
 
     it('should return the first relevant key (with kid)', () => {
@@ -158,7 +173,7 @@ describe('JwtService', () => {
   describe('encrypt', () => {
     // Given
     const payload = 'foo';
-    const jwk = { alg: 'RS256', use: 'sig' };
+    const jwk = { alg: 'RS256', use: 'sig' } as unknown as JWK;
     const encoding = DekAlg.A256GCM;
 
     const compactEncryptMockInstance = {
@@ -294,7 +309,7 @@ describe('JwtService', () => {
     const payload = { foo: 'bar' };
     const issuer = 'https://issuer.com';
     const audience = 'client_id';
-    const jwk = { alg: 'RS256', use: 'sig' };
+    const jwk = { alg: 'RS256', use: 'sig' } as JWK;
     const key = Symbol('key');
 
     const signResult = 'foo';
@@ -467,7 +482,7 @@ describe('JwtService', () => {
   });
 
   describe('importJwk', () => {
-    const jwk = { alg: 'RS256', use: 'sig' };
+    const jwk = { alg: 'RS256', use: 'sig' } as JWK;
     const key = Symbol('key') as unknown as KeyLike | Uint8Array;
     const importJWKMock = jest.mocked(importJWK);
 
@@ -515,7 +530,7 @@ describe('JwtService', () => {
       });
 
       // When / Then
-      expect(() => service.retrieveJwtHeaders(jwt)).toThrowError(
+      expect(() => service.retrieveJwtHeaders(jwt)).toThrow(
         CanNotDecodeProtectedHeaderException,
       );
     });
@@ -540,6 +555,7 @@ describe('JwtService', () => {
       // Given
       const urlMock = 'url';
       jest.mocked(lastValueFrom).mockResolvedValue({ data: 'data' });
+      jest.mocked(validateDto).mockResolvedValue([]);
 
       // When
       await service['fetchJwks'](urlMock);
@@ -554,10 +570,35 @@ describe('JwtService', () => {
       const urlMock = 'url';
       const errorMock = new Error('error');
       jest.mocked(lastValueFrom).mockRejectedValue(errorMock);
+      jest.mocked(validateDto).mockResolvedValue([]);
 
       // When / Then
-      await expect(service['fetchJwks'](urlMock)).rejects.toThrowError(
+      await expect(service['fetchJwks'](urlMock)).rejects.toThrow(
         FetchJwksFailedException,
+      );
+    });
+
+    it('should throw if the jwks is invalid', async () => {
+      // Given
+      const urlMock = 'url';
+      const responseMock = { data: 'data' };
+      const validationError: ValidationError = {
+        target: {},
+        property: 'keys',
+        children: [],
+        constraints: { isArray: 'keys must be an array' },
+      };
+      jest.mocked(lastValueFrom).mockResolvedValue(responseMock);
+      jest.mocked(validateDto).mockResolvedValue([validationError]);
+
+      // When / Then
+      await expect(service['fetchJwks'](urlMock)).rejects.toThrow(
+        InvalidJwksException,
+      );
+      expect(loggerServiceMock.debug).toHaveBeenCalledTimes(1);
+      expect(loggerServiceMock.debug).toHaveBeenCalledWith(
+        [validationError],
+        'The JWKS format is invalid',
       );
     });
 
@@ -566,6 +607,7 @@ describe('JwtService', () => {
       const urlMock = 'url';
       const responseMock = { data: 'data' };
       jest.mocked(lastValueFrom).mockResolvedValue(responseMock);
+      jest.mocked(validateDto).mockResolvedValue([]);
 
       // When
       const result = await service['fetchJwks'](urlMock);

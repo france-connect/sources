@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
+import { CryptoProtocol } from '@fc/microservices';
 import { OverrideCode } from '@fc/override-code';
 
 import { getLoggerMock } from '@mocks/logger';
@@ -24,6 +25,7 @@ describe('CryptoOverrideService', () => {
   const messageMock = {
     pipe: jest.fn(),
   };
+  const callbackMock = jest.fn();
 
   const brokerMock = {
     send: jest.fn(),
@@ -59,6 +61,8 @@ describe('CryptoOverrideService', () => {
 
     service = module.get<CryptoOverrideService>(CryptoOverrideService);
     jest.resetAllMocks();
+    jest.clearAllMocks();
+
     brokerMock.send.mockReturnValue(messageMock);
     messageMock.pipe.mockReturnValue(pipeMock);
     pipeMock.subscribe.mockImplementation(({ next }) =>
@@ -101,16 +105,21 @@ describe('CryptoOverrideService', () => {
   });
 
   describe('crypto.sign', () => {
-    it('should call crypto Gateway High Service', async () => {
+    it('should call crypto Gateway High Service', () => {
       // Given
       const alg = 'alg';
       const payload = new Uint8Array([0, 42, 42, 0]);
       const key = Symbol('key');
       service.sign = jest.fn();
+
       // When
-      await service['crypto.sign'](alg, payload, key);
+      service['crypto.sign'](alg, payload, key, callbackMock);
       // Then
-      expect(service.sign).toHaveBeenCalledWith(key, Buffer.from(payload), alg);
+      expect(service.sign).toHaveBeenCalledWith(
+        Buffer.from(payload),
+        alg,
+        callbackMock,
+      );
     });
 
     it('should throw a CryptographyInvalidPayloadFormatException if the payload is not a Uint8Array', () => {
@@ -122,7 +131,12 @@ describe('CryptoOverrideService', () => {
 
       // When / Then
       expect(() =>
-        service['crypto.sign'](alg, payload as unknown as Uint8Array, key),
+        service['crypto.sign'](
+          alg,
+          payload as unknown as Uint8Array,
+          key,
+          callbackMock,
+        ),
       ).toThrow(CryptographyInvalidPayloadFormatException);
     });
   });
@@ -153,77 +167,100 @@ describe('CryptoOverrideService', () => {
 
   describe('sign', () => {
     // Given
-    const keyMock = 'key';
     const dataMock = Buffer.from('data');
     const digestMock = 'digest';
 
-    it('should call reject and throw a `CryptoOverrideService` exception in case of failure', async () => {
+    it('should call reject and throw a `CryptoOverrideService` exception in case of failure', () => {
       // Given
-      const badKeyMock = null;
       const badDataMock = null;
+
       // When
+      service.sign(badDataMock, digestMock, callbackMock);
+
       // Then
-      await expect(service.sign(badKeyMock, badDataMock)).rejects.toThrow(
-        CryptographyGatewayException,
+      expect(callbackMock).toHaveBeenCalledExactlyOnceWith(
+        expect.any(CryptographyGatewayException),
+        null,
       );
     });
 
     it('should call reject with error message', () => {
-      // Given
-      const resolveMock = jest.fn();
-      const rejectMock = jest.fn();
-
       // When
-      service['signSuccess'](resolveMock, rejectMock, 'ERROR');
+      service['signSuccess'](callbackMock, 'ERROR');
 
       // Then
-      expect(rejectMock).toHaveBeenCalledTimes(1);
+      expect(callbackMock).toHaveBeenCalledExactlyOnceWith(
+        expect.any(CryptographyGatewayException),
+        null,
+      );
     });
 
-    it('should reject if response is "ERROR"', async () => {
+    it('should reject if response is "ERROR"', () => {
       // Given
-      const rejectMock = jest.fn();
       const signSuccessMock = jest.spyOn<CryptoOverrideService, any>(
         service,
         'signSuccess',
       );
-
-      // When
       pipeMock.subscribe.mockImplementationOnce(({ next }) => {
         const call = next.bind(service);
-        call(null, rejectMock, 'ERROR');
+        call(null, callbackMock, 'ERROR');
       });
 
-      // Then
-      await expect(service.sign(keyMock, dataMock, digestMock)).rejects.toThrow(
-        CryptographyGatewayException,
-      );
+      // When
+      service.sign(dataMock, digestMock, callbackMock);
 
+      // Then
       expect(signSuccessMock).toHaveBeenCalledTimes(1);
+      expect(callbackMock).toHaveBeenCalledExactlyOnceWith(
+        expect.any(CryptographyGatewayException),
+        null,
+      );
     });
 
-    it('should reject if something turned bad', async () => {
+    it('should reject if something turned bad', () => {
       // Given
       pipeMock.subscribe.mockImplementationOnce(() => {
         throw new CryptographyGatewayException();
       });
 
+      // When
+      service.sign(dataMock, digestMock, callbackMock);
+
       // Then
-      await expect(service.sign(keyMock, dataMock)).rejects.toThrow(
-        CryptographyGatewayException,
+      expect(callbackMock).toHaveBeenCalledExactlyOnceWith(
+        expect.any(CryptographyGatewayException),
+        null,
       );
     });
 
-    it('should reject if observable throws', async () => {
+    it('should reject if observable throws', () => {
       // Given
       const error = Error('not good');
       pipeMock.subscribe.mockImplementationOnce(
         ({ next: _success, error: failure }) => failure(error),
       );
 
+      // When
+      service.sign(dataMock, digestMock, callbackMock);
+
       // Then
-      await expect(service.sign(keyMock, dataMock)).rejects.toThrow(
-        CryptographyGatewayException,
+      expect(callbackMock).toHaveBeenCalledExactlyOnceWith(
+        expect.any(CryptographyGatewayException),
+        null,
+      );
+    });
+
+    it('should use default if no digest is provided', () => {
+      // When
+      service.sign(dataMock, undefined, callbackMock);
+
+      // Then
+      expect(brokerMock.send).toHaveBeenCalledExactlyOnceWith(
+        CryptoProtocol.Commands.SIGN,
+        {
+          data: dataMock.toString('base64'),
+          digest: 'sha256',
+        },
       );
     });
   });

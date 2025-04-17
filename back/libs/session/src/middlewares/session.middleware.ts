@@ -30,6 +30,8 @@ export class SessionMiddleware implements NestMiddleware {
 
     try {
       await this.session.initCache(sessionId);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       return this.session.init(res);
     }

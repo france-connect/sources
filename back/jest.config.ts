@@ -15,7 +15,7 @@ const config: Config = {
   rootDir: '.',
   testRegex: '.spec.ts$',
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    '^.+\\.ts$': 'ts-jest',
   },
   coverageDirectory: './coverage',
   coverageThreshold: {
@@ -30,6 +30,8 @@ const config: Config = {
   roots: ['<rootDir>/apps/', '<rootDir>/libs/', '<rootDir>/instances/'],
   moduleNameMapper: {
     '^jose/(.*)$': '<rootDir>/node_modules/jose/dist/node/cjs/$1',
+    '^jose-openid-client(|/.*)$':
+      '<rootDir>node_modules/openid-client/node_modules/jose$1',
     '@entities/(.*)': '<rootDir>/entities/$1',
     '^@fc/user-dashboard(|/.*)$': '<rootDir>/apps/user-dashboard/src$1',
     '^@fc/core-fcp(|/.*)$': '<rootDir>/apps/core-fcp/src$1',
@@ -171,6 +173,7 @@ const config: Config = {
     '^@fc/service-partners(|/.*)$': '<rootDir>/apps/service-partners/src/$1',
     '^@fc/service-provider(|/.*)$': '<rootDir>/libs/service-provider/src/$1',
     '^@fc/override-code(|/.*)$': '<rootDir>/libs/override-code/src/$1',
+    '^oidc-provider(|/.*)$': '<rootDir>/libs/oidc-provider/mocks/lib/$1',
   },
   preset: 'ts-jest',
 };

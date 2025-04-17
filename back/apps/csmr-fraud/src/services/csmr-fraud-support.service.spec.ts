@@ -7,7 +7,10 @@ import { generateCSVContent } from '@fc/csv';
 import { MailerService } from '@fc/mailer';
 
 import { EmailsTemplates } from '../enums';
-import { TracksTicketDataInterface } from '../interfaces';
+import {
+  SecurityTicketDataInterface,
+  TicketTracksDataInterface,
+} from '../interfaces';
 import { getTracksByIdpName, getTracksBySpName } from '../utils';
 import { CsmrFraudSupportService } from './csmr-fraud-support.service';
 
@@ -26,9 +29,10 @@ describe('CsmrFraudSupportService', () => {
     mailToSend: jest.fn(),
   } as unknown as MailerService;
 
-  const tracksMock = Symbol('tracks') as unknown as TracksTicketDataInterface[];
+  const tracksMock = Symbol('tracks') as unknown as TicketTracksDataInterface[];
 
-  const ticketDataMock = {
+  const ticketDataMock: SecurityTicketDataInterface = {
+    fraudCaseId: 'fraudCaseIdMock',
     givenName: 'firstname',
     familyName: 'lastname',
     birthdate: 'birthdate',
@@ -198,13 +202,13 @@ describe('CsmrFraudSupportService', () => {
   describe('getMailAttachments', () => {
     const sp1TracksMock = Symbol(
       'sp1TracksMock',
-    ) as unknown as Partial<TracksTicketDataInterface>[];
+    ) as unknown as Partial<TicketTracksDataInterface>[];
     const sp2TracksMock = Symbol(
       'sp2TracksMock',
-    ) as unknown as Partial<TracksTicketDataInterface>[];
+    ) as unknown as Partial<TicketTracksDataInterface>[];
     const idp1TracksMock = Symbol(
       'idp1TracksMock',
-    ) as unknown as Partial<TracksTicketDataInterface>[];
+    ) as unknown as Partial<TicketTracksDataInterface>[];
 
     const tracksBySpNameMock = { sp1: sp1TracksMock, sp2: sp2TracksMock };
     const tracksByIdpNameMock = { idp1: idp1TracksMock };

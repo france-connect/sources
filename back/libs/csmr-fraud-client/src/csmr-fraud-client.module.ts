@@ -1,12 +1,20 @@
 import { Module } from '@nestjs/common';
 
-import { RabbitmqModule } from '@fc/rabbitmq';
+import {
+  getRmqServiceProvider,
+  MicroservicesRmqModule,
+} from '@fc/microservices-rmq';
 
 import { CsmrFraudClientService } from './services';
 
+const csmrFraudClientProvider = getRmqServiceProvider<CsmrFraudClientService>(
+  CsmrFraudClientService,
+  'Fraud',
+);
+
 @Module({
-  imports: [RabbitmqModule.registerFor('Fraud')],
-  providers: [CsmrFraudClientService],
-  exports: [CsmrFraudClientService],
+  imports: [MicroservicesRmqModule.forPublisher('Fraud')],
+  providers: [csmrFraudClientProvider],
+  exports: [csmrFraudClientProvider],
 })
 export class CsmrFraudClientModule {}

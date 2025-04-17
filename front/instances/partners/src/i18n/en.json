@@ -9,8 +9,10 @@
   "Partners.homepage.createTileTitle": "Create a test instance",
   "Partners.instance.successCreate": "Your test instance has been created.",
   "Partners.instance.successUpdate": "Your test instance has been updated.",
+  "Partners.instance.noticeTitle": "It is not permitted to register multiple domain names and subdomains on the same test instance",
   "Partners.page.noticeTitle": "Available for FranceConnect service providers only.",
   "Partners.page.noticeDescription": "The partner space will soon be available for FranceConnect+ service providers",
   "DSFR.notice.close": "Hide the message",
+  "Form.submit.label": "Save",
   "Form.message.requestFailed": "An error occurred."
 }

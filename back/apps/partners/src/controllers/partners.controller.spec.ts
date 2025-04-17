@@ -1,4 +1,3 @@
-import { HttpStatus } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { getSessionServiceMock } from '@mocks/session';
@@ -20,7 +19,7 @@ describe('PartnersController', () => {
 
   const redirectMock = PartnersFrontRoutes.INDEX;
 
-  const userInfoMock = {
+  const sessionPartnersMock = {
     identity: {
       email: 'email@email.fr',
       given_name: 'givenName',
@@ -55,7 +54,7 @@ describe('PartnersController', () => {
 
     controller = app.get<PartnersController>(PartnersController);
 
-    sessionPartnersAccountMock.get.mockReturnValue(userInfoMock);
+    sessionPartnersAccountMock.get.mockReturnValue(sessionPartnersMock);
 
     resMock.json.mockImplementationOnce((arg) => arg);
     jest.mocked(resMock.status).mockReturnValue(resMock);
@@ -84,20 +83,6 @@ describe('PartnersController', () => {
 
       // Then
       expect(sessionPartnersAccountMock.get).toHaveBeenCalledTimes(1);
-    });
-
-    it('should return a 401 if no session', async () => {
-      // Given
-      sessionPartnersAccountMock.get.mockReturnValueOnce(undefined);
-
-      // When
-      await controller.getUserInfo(resMock, sessionPartnersAccountMock);
-
-      // Then
-      expect(resMock.status).toHaveBeenCalledTimes(1);
-      expect(resMock.status).toHaveBeenCalledWith(HttpStatus.UNAUTHORIZED);
-      expect(resMock.send).toHaveBeenCalledTimes(1);
-      expect(resMock.send).toHaveBeenCalledWith({ code: 'INVALID_SESSION' });
     });
 
     it('should return an object with lastname, firstname, email and siret used for the connection props', async () => {

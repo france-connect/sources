@@ -11,6 +11,14 @@ describe('parseInitialValues', () => {
     { initialValue: { a: 1, b: 3, c: 2 }, name: 'James' },
   ] as SchemaFieldType[];
 
+  it('should return an empty object when schema is undefined', () => {
+    // When
+    const result = parseInitialValues(undefined, {});
+
+    // Then
+    expect(result).toEqual({});
+  });
+
   it('should return the initialValues, when no values are provided', () => {
     // When
     const result = parseInitialValues(schemaMock, {});

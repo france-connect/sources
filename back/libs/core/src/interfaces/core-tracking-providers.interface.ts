@@ -9,6 +9,7 @@ export interface ICoreTrackingProviders {
   readonly spId: string | null;
   readonly spAcr: string | null;
   readonly spName: string | null;
+  readonly spType: string | null;
   readonly spSub: string | null;
 
   readonly idpId: string | null;

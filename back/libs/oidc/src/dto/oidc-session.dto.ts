@@ -3,6 +3,7 @@ import {
   IsArray,
   IsAscii,
   IsBoolean,
+  IsIn,
   IsJWT,
   IsNotEmpty,
   IsObject,
@@ -174,6 +175,15 @@ export class OidcSession {
   @IsOptional()
   @IsObject()
   readonly spIdentity?: Partial<Omit<IOidcIdentity, 'sub'>>;
+
+  /**
+   * @todo #1020 Should be an enum but this DTO being defined in shared library
+   * we don't want to add more business related files.
+   * The enum should be shared with the DTO that validates service-providers data.
+   */
+  @IsOptional()
+  @IsIn(['private', 'public'])
+  readonly spType?: string;
 
   @IsOptional()
   @IsString()

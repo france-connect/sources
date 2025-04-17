@@ -5,7 +5,7 @@ import {
   AsyncLocalStorageRequestInterface,
   AsyncLocalStorageService,
 } from '@fc/async-local-storage';
-import { NestJsDependencyInjectionWrapper } from '@fc/common';
+import { NestJsDependencyInjectionWrapper, wait } from '@fc/common';
 
 import { ExceptionOccurredCommand } from '../commands';
 import { BaseException } from '../exceptions';
@@ -31,4 +31,9 @@ export async function throwException(exception: BaseException) {
   const command = new ExceptionOccurredCommand(exception, host);
 
   await commandBus.execute(command);
+
+  /**
+   * Detach process from event loop to allow handler to execute.
+   */
+  await wait(1);
 }

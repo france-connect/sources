@@ -68,6 +68,18 @@ import {
   OidcProviderConfigAppService,
 } from './services';
 
+const oidcProviderModule = OidcProviderModule.register(
+  OidcProviderConfigAppService,
+  ServiceProviderAdapterMongoService,
+  ServiceProviderAdapterMongoModule,
+);
+
+const oidcClientModule = OidcClientModule.register(
+  IdentityProviderAdapterMongoService,
+  IdentityProviderAdapterMongoModule,
+  ServiceProviderAdapterMongoService,
+  ServiceProviderAdapterMongoModule,
+);
 @Global()
 @Module({
   imports: [
@@ -85,18 +97,9 @@ import {
     IdentityProviderAdapterMongoModule,
     HttpProxyModule,
     OidcAcrModule,
-    OidcProviderModule.register(
-      OidcProviderConfigAppService,
-      ServiceProviderAdapterMongoService,
-      ServiceProviderAdapterMongoModule,
-    ),
+    oidcProviderModule,
+    oidcClientModule,
     ScopesModule,
-    OidcClientModule.register(
-      IdentityProviderAdapterMongoService,
-      IdentityProviderAdapterMongoModule,
-      ServiceProviderAdapterMongoService,
-      ServiceProviderAdapterMongoModule,
-    ),
     MailerModule,
     NotificationsModule,
     FeatureHandlerModule,
@@ -109,10 +112,8 @@ import {
     ExceptionsFcpModule,
     CoreModule.register(
       CoreFcpService,
-      OidcProviderConfigAppService,
-      ServiceProviderAdapterMongoService,
-      ServiceProviderAdapterMongoModule,
-      IdentityProviderAdapterMongoService,
+      oidcProviderModule,
+      oidcClientModule,
       IdentityProviderAdapterMongoModule,
       CoreFcpTrackingService,
     ),

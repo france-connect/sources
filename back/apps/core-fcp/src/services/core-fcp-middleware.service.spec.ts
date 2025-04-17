@@ -643,7 +643,9 @@ describe('CoreFcpMiddlewareService', () => {
     it('should return new browsingSessionId from uuid execution if it does not exists in session', () => {
       // Given
       sessionServiceMock.get.mockReturnValueOnce(undefined);
-      const newBrowsingSessionId = Symbol('newBrowsingSessionId');
+      const newBrowsingSessionId = Symbol(
+        'newBrowsingSessionId',
+      ) as unknown as Uint8Array;
       uuidMock.mockReturnValueOnce(newBrowsingSessionId);
       // When
       const result = service['getBrowsingSessionId']();

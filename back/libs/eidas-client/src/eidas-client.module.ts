@@ -6,22 +6,13 @@ import { CryptographyModule } from '@fc/cryptography';
  * Import from `/services` to avoid circular dependency
  * (this module is imported in @fc/eidas-bridge)
  */
-import { EidasBridgeTrackingService } from '@fc/eidas-bridge/services';
 import { EidasLightProtocolModule } from '@fc/eidas-light-protocol';
-import { TrackingModule } from '@fc/tracking';
 
 import { EidasClientController } from './eidas-client.controller';
 import { EidasClientService } from './eidas-client.service';
 
-const trackingModule = TrackingModule.forRoot(EidasBridgeTrackingService);
-
 @Module({
-  imports: [
-    ApacheIgniteModule,
-    CryptographyModule,
-    EidasLightProtocolModule,
-    trackingModule,
-  ],
+  imports: [ApacheIgniteModule, CryptographyModule, EidasLightProtocolModule],
   providers: [EidasClientService],
   exports: [EidasClientService],
   controllers: [EidasClientController],

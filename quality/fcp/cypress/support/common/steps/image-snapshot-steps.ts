@@ -29,6 +29,10 @@ const blackout = [
     selector: '[data-testid="fraud-form-email-date"]',
   },
   {
+    selector: '[data-testid="fraud-form-email-fraudCaseId"]',
+    width: 275,
+  },
+  {
     selector: '[data-testid="connection-notification-browsing-session-id"]',
   },
 ];

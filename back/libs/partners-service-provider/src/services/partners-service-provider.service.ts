@@ -38,6 +38,10 @@ export class PartnersServiceProviderService {
     return items.pop();
   }
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   async getByIds(
     serviceProviderIds: string[],
     instancesIds: string[] = [],

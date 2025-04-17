@@ -55,7 +55,7 @@ describe('parseBoolean transform', () => {
     // When
     const result = parseBoolean(input);
     // Then
-    expect(result).toBeUndefined;
+    expect(result).toBeUndefined();
   });
   it('should return undefined with other strings 1/2', () => {
     // Given
@@ -63,7 +63,7 @@ describe('parseBoolean transform', () => {
     // When
     const result = parseBoolean(input);
     // Then
-    expect(result).toBeUndefined;
+    expect(result).toBeUndefined();
   });
   it('should return undefined with other strings 2/2', () => {
     // Given
@@ -71,7 +71,7 @@ describe('parseBoolean transform', () => {
     // When
     const result = parseBoolean(input);
     // Then
-    expect(result).toBeUndefined;
+    expect(result).toBeUndefined();
   });
   it('should return undefined with empty string', () => {
     // Given
@@ -79,7 +79,7 @@ describe('parseBoolean transform', () => {
     // When
     const result = parseBoolean(input);
     // Then
-    expect(result).toBeUndefined;
+    expect(result).toBeUndefined();
   });
   it('should return undefined with truthy expression', () => {
     // Given
@@ -87,7 +87,7 @@ describe('parseBoolean transform', () => {
     // When
     const result = parseBoolean(input);
     // Then
-    expect(result).toBeUndefined;
+    expect(result).toBeUndefined();
   });
   it('should return true with actual true value', () => {
     // Given

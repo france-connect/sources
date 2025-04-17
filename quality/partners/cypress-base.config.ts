@@ -15,6 +15,7 @@ const config: Partial<Cypress.ResolvedConfigOptions<never>> = {
     PLATFORM: 'partners',
     TEST_ENV: 'docker',
     TAGS: 'not @ignore',
+    CI: process.env.CI,
   },
 };
 /* eslint-enable sort-keys-fix/sort-keys-fix, sort-keys */

@@ -78,7 +78,7 @@ describe('ReplaceEmptyIsoCode', () => {
     const result = ReplaceEmptyIsoCode(codeiso2Mock, crpayMock, csvDataMock);
 
     //Then
-    expect(result).toBeUndefined;
+    expect(result).toBe(codeiso2Mock);
   });
 
   it('should return undefined if no crpay is defined', () => {
@@ -90,7 +90,7 @@ describe('ReplaceEmptyIsoCode', () => {
     const result = ReplaceEmptyIsoCode(codeiso2Mock, crpayMock, csvDataMock);
 
     //Then
-    expect(result).toBeUndefined;
+    expect(result).toBeUndefined();
   });
 
   it('should return new codeis2 matching between crpay and cog allowed', () => {

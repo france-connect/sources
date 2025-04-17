@@ -11,11 +11,13 @@ import { InstancesService } from '../../services';
 export const useInstanceUpdate = () => {
   const navigate = useNavigate();
   const { instanceId } = useParams() as unknown as RouteParamsInterface;
-  const { payload } = useLoaderData() as ResponseInterface<InstanceInterface>;
+  const response = useLoaderData() as ResponseInterface<InstanceInterface>;
   const schema = useRouteLoaderData(RouteLoaderDataIds.VERSION_SCHEMA) as SchemaFieldType[];
 
-  const title = payload.versions[0].data.name;
-  const initialValues = parseInitialValues(schema, payload.versions[0].data);
+  const { data: responseData } = response?.payload?.versions[0] || {};
+
+  const title = responseData?.name;
+  const initialValues = parseInitialValues(schema, responseData);
 
   const submitHandler = useCallback(
     async (data: HttpClientDataInterface) => {

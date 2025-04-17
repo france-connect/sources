@@ -1,3 +1,7 @@
+/**
+ * @todo FC-2184 ⚠️
+ */
+// eslint-disable-next-line complexity
 export function getStackTraceArray(exception: any) {
   const { stack = '' } = exception;
   let stackTrace = stack.split('\n');

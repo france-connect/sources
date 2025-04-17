@@ -1,7 +1,7 @@
 import { KeyLike } from 'crypto';
 
-import * as KeyStore from 'oidc-provider/lib/helpers/keystore.js';
-import * as OidcProviderInstance from 'oidc-provider/lib/helpers/weak_cache';
+import KeyStore from 'oidc-provider/lib/helpers/keystore.js';
+import OidcProviderInstance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';

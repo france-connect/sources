@@ -1,14 +1,14 @@
 import { MongoClient } from 'mongodb';
 
-const sslVolumesPath = `${process.env.FC_ROOT}/fc/docker/volumes/ssl`;
+const sslVolumesDir = process.env.SSL_VOLUMES_DIR;
 const mongoOptions = {
   replicaSet: 'rs0',
   tls: true,
-  tlsCAFile: `${sslVolumesPath}/docker-stack-ca.crt`,
-  tlsCertificateKeyFile: `${sslVolumesPath}/app.pem`,
+  tlsCAFile: `${sslVolumesDir}/docker-stack-ca.crt`,
+  tlsCertificateKeyFile: `${sslVolumesDir}/app.pem`,
 };
 
-const MONGO_HOST = process.env.CI ? 'mongo-fcp-low' : 'localhost';
+const MONGO_HOST = 'mongo-fcp-low';
 const getMongoConfig = () => ({
   collection: 'client',
   database: 'core-fcp-low',

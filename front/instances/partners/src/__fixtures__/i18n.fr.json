@@ -9,8 +9,10 @@
   "DSFR.alert.close": "Masquer le message",
   "DSFR.notice.close": "Masquer le message",
   "FC.Common.newWindow": "Nouvelle fenêtre",
+  "FC.session.expired": "Votre session a expiré, veuillez vous reconnecter.",
   "Form.FORM_ERROR": "Veuillez réessayer ultérieurement",
   "Form.submit": "Envoyer ces informations",
+  "Form.submit.label": "Sauvegarder",
   "Form.reset": "Effacer le formulaire",
   "Form.message.valid": "Texte de validation",
   "Form.message.required": "Ce champs est obligatoire",
@@ -34,5 +36,6 @@
   "Partners.homepage.createTileDescription": "Munissez vous de votre numéro de datapass pour réaliser les tests avec un bac à sable mis à votre disposition.",
   "Partners.homepage.createTileTitle": "Créer une instance de test",
   "Partners.instance.successCreate": "Votre instance de test a été créée.",
-  "Partners.instance.successUpdate": "Votre instance de test a été mise à jour."
+  "Partners.instance.successUpdate": "Votre instance de test a été mise à jour.",
+  "Partners.instance.noticeTitle": "Il n’est pas permis de renseigner plusieurs noms de domaine et de sous domaine sur une même instance de test"
 }

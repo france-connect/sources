@@ -115,6 +115,8 @@ export class OidcProviderRedisAdapter implements Adapter {
   private parsedPayload(payload) {
     try {
       return JSON.parse(payload);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new OidcProviderParseRedisResponseException();
     }
@@ -125,6 +127,8 @@ export class OidcProviderRedisAdapter implements Adapter {
 
     try {
       dataFormated = JSON.stringify(data);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       /**
        * Forced to throw using our helper, since `oidc-provider` catches
@@ -139,7 +143,7 @@ export class OidcProviderRedisAdapter implements Adapter {
     const store = hasContext ? { payload: dataFormated } : dataFormated;
 
     const command = hasContext ? 'hmset' : 'set';
-    (multi[command] as Function)(key, store);
+    multi[command](key, store);
   }
 
   private async saveGrantId(

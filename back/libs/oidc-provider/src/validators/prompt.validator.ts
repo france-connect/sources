@@ -7,7 +7,7 @@ import {
 
 import { Injectable } from '@nestjs/common';
 
-import { ArrayAtLeastOneConstraint } from '@fc/common';
+import { ArrayAtLeastOneStringConstraint } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
 import { OidcProviderConfig } from '../dto';
@@ -15,7 +15,7 @@ import { OidcProviderPrompt } from '../enums';
 
 @ValidatorConstraint()
 @Injectable()
-export class IsValidPromptConstraint extends ArrayAtLeastOneConstraint {
+export class IsValidPromptConstraint extends ArrayAtLeastOneStringConstraint {
   configValues: OidcProviderPrompt[];
   constructor(public readonly config: ConfigService) {
     super();

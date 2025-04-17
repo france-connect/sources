@@ -6,6 +6,11 @@ export interface IOidcProviderConfigAppService {
   logoutSource(ctx: KoaContextWithOIDC, form: string);
   postLogoutSuccessSource(ctx: KoaContextWithOIDC);
   findAccount(ctx: KoaContextWithOIDC, sessionId: string);
-  finishInteraction(req: any, res: any, session: OidcSession): Promise<void>;
+  finishInteraction(
+    req: any,
+    res: any,
+    session: OidcSession,
+    sessionId?: string,
+  ): Promise<void>;
   setProvider(provider: Provider);
 }

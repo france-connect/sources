@@ -8,9 +8,9 @@ export class OidcProviderRuntime_TypeError_C008_Exception extends OidcProviderBa
   static CODE = 'C008';
   static ERROR_CLASS = 'TypeError';
   static ERROR_DETAIL =
-    'only supported ${endpoint}EndpointAuthMethods are ${formatters.formatList([...authMethods])}';
+    '"profile" must be ${formatters.formatList([...fapiProfiles], { type: "disjunction" })}';
   static DOCUMENTATION =
-    'only supported ${endpoint}EndpointAuthMethods are ${formatters.formatList([...authMethods])}';
+    '"profile" must be ${formatters.formatList([...fapiProfiles], { type: "disjunction" })}';
   static ERROR_SOURCE = 'helpers/configuration.js:464';
   static UI = 'OidcProvider.exceptions.TypeError.C008';
 }

@@ -1,3 +1,5 @@
 import { Type } from '@nestjs/common';
 
-export type TypeOrToken<T> = string | symbol | Function | Type<T>;
+import { FunctionSafe } from './functions.type';
+
+export type TypeOrToken<T> = string | symbol | FunctionSafe | Type<T>;

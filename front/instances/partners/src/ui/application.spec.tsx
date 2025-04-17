@@ -7,6 +7,7 @@ import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
 import { ConfigService } from '@fc/config';
 import { AppBoundaryComponent } from '@fc/exceptions';
 import { I18nService } from '@fc/i18n';
+import { useMatomo } from '@fc/matomo';
 
 import i18n from '../__fixtures__/i18n.fr.json';
 import { AppConfig } from '../config';
@@ -15,7 +16,18 @@ import { ApplicationRoutes } from './application.routes';
 
 jest.mock('./application.routes');
 
+jest.mock('@fc/matomo', () => ({
+  Options: { CONFIG_NAME: 'matomoConfig' },
+  useMatomo: jest.fn(),
+}));
+
 describe('Application', () => {
+  const matomoConfigMock = Symbol('any-matomo-config-mock');
+
+  beforeEach(() => {
+    jest.mocked(ConfigService.get).mockReturnValue(matomoConfigMock);
+  });
+
   it('should match snapshot', () => {
     // When
     const { container } = render(<Application />);
@@ -38,6 +50,14 @@ describe('Application', () => {
 
     // Then
     expect(ConfigService.initialize).toHaveBeenCalledWith(AppConfig);
+  });
+
+  it('should call useMatomo hook with matomo config', () => {
+    // When
+    render(<Application />);
+
+    // Then
+    expect(useMatomo).toHaveBeenCalledWith(matomoConfigMock);
   });
 
   it('should call ErrorBoundary with props', () => {

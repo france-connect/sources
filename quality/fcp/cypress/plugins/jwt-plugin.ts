@@ -53,7 +53,9 @@ export async function isJwsValid({
 
   try {
     await compactVerify(jws, sigPubJwk);
-  } catch (e) {
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
     return false;
   }
 

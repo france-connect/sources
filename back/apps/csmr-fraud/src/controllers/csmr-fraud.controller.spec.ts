@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { LoggerService } from '@fc/logger';
-import { FraudProtocol } from '@fc/microservices';
+import { FraudMessageDto, TrackingDataDto } from '@fc/csmr-fraud-client';
+import { MicroservicesRmqSubscriberService } from '@fc/microservices-rmq';
 
-import { getLoggerMock } from '@mocks/logger';
+import { getSubscriberMock } from '@mocks/microservices-rmq';
 
+import { SecurityTicketDataInterface } from '../interfaces';
 import { CsmrFraudDataService, CsmrFraudSupportService } from '../services';
 import { CsmrFraudController } from './csmr-fraud.controller';
 
@@ -21,6 +22,7 @@ describe('CsmrFraudController', () => {
   };
 
   const fraudCaseMock = {
+    fraudCaseId: 'fraudCaseIdMock',
     contactEmail: 'email@mock.fr',
     idpEmail: 'email@fi.fr',
     authenticationEventId: '1a344d7d-fb1f-432f-99df-01b374c93687',
@@ -29,21 +31,13 @@ describe('CsmrFraudController', () => {
     phoneNumber: '0678912345',
   };
 
-  const ticketDataMock = {
-    givenName: 'firstName',
-    familyName: 'lastName',
-    birthdate: 'birthdate',
-    birthplace: 'birthplace',
-    birthcountry: 'birthcountry',
-    contactEmail: 'email@mock.fr',
-    idpEmail: 'email@fi.fr',
-    authenticationEventId: '1a344d7d-fb1f-432f-99df-01b374c93687',
-    fraudSurveyOrigin: 'fraudSurveyOriginMock',
-    comment: 'commentMock',
-    phoneNumber: '0678912345',
-  };
+  const ticketDataMock = Symbol(
+    'ticketDataMock',
+  ) as unknown as SecurityTicketDataInterface;
 
-  const loggerMock = getLoggerMock();
+  const trackingDataMock = Symbol(
+    'trackingDataMock',
+  ) as unknown as TrackingDataDto;
 
   const supportServiceMock = {
     createSecurityTicket: jest.fn(),
@@ -53,24 +47,44 @@ describe('CsmrFraudController', () => {
     enrichFraudData: jest.fn(),
   };
 
+  const subscriberMock = getSubscriberMock();
+
+  const messageMock = {
+    type: 'MOCK',
+    meta: { id: 'meta-mock' },
+    payload: { fraudCase: fraudCaseMock, identity: identityMock },
+  } as unknown as FraudMessageDto;
+
+  const responseMock = Symbol('responseMock');
+
   beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
 
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [CsmrFraudController],
-      providers: [CsmrFraudSupportService, CsmrFraudDataService, LoggerService],
+      providers: [
+        CsmrFraudController,
+        CsmrFraudDataService,
+        CsmrFraudSupportService,
+        MicroservicesRmqSubscriberService,
+      ],
     })
-      .overrideProvider(LoggerService)
-      .useValue(loggerMock)
+
       .overrideProvider(CsmrFraudSupportService)
       .useValue(supportServiceMock)
       .overrideProvider(CsmrFraudDataService)
       .useValue(dataServiceMock)
+      .overrideProvider(MicroservicesRmqSubscriberService)
+      .useValue(subscriberMock)
       .compile();
 
     controller = app.get<CsmrFraudController>(CsmrFraudController);
-    dataServiceMock.enrichFraudData.mockReturnValue(ticketDataMock);
+    dataServiceMock.enrichFraudData.mockReturnValue({
+      ticketData: ticketDataMock,
+      trackingData: trackingDataMock,
+    });
+
+    subscriberMock.response.mockReturnValue(responseMock);
   });
 
   it('should be defined', () => {
@@ -78,25 +92,9 @@ describe('CsmrFraudController', () => {
   });
 
   describe('processFraudCase', () => {
-    it('should log a debug message with the correct pattern', async () => {
-      // When
-      await controller.processFraudCase({
-        identity: identityMock,
-        fraudCase: fraudCaseMock,
-      });
-
-      // Then
-      expect(loggerMock.debug).toHaveBeenCalledWith(
-        `New message received with pattern "${FraudProtocol.Commands.PROCESS_FRAUD_CASE}"`,
-      );
-    });
-
     it('should call data.enrichFraudData with correct parameters', async () => {
       // When
-      await controller.processFraudCase({
-        identity: identityMock,
-        fraudCase: fraudCaseMock,
-      });
+      await controller.processFraudCase(messageMock);
 
       // Then
       expect(dataServiceMock.enrichFraudData).toHaveBeenCalledOnce();
@@ -106,13 +104,9 @@ describe('CsmrFraudController', () => {
       );
     });
 
-    it('should call support.createSecurityTicket with correct parameters', async () => {
+    it('should call support.createSecurityTicket with ticketData', async () => {
       // When
-      await controller.processFraudCase({
-        identity: identityMock,
-        fraudCase: fraudCaseMock,
-      });
-
+      await controller.processFraudCase(messageMock);
       // Then
       expect(supportServiceMock.createSecurityTicket).toHaveBeenCalledOnce();
       expect(supportServiceMock.createSecurityTicket).toHaveBeenCalledWith(
@@ -120,52 +114,20 @@ describe('CsmrFraudController', () => {
       );
     });
 
-    it('should return "SUCCESS" when support.createSecurityTicket resolves', async () => {
-      // Given
-      supportServiceMock.createSecurityTicket.mockResolvedValueOnce(undefined);
-
+    it('should call subscriber.response with trackingData', async () => {
       // When
-      const result = await controller.processFraudCase({
-        identity: identityMock,
-        fraudCase: fraudCaseMock,
-      });
-
+      await controller.processFraudCase(messageMock);
       // Then
-      expect(result).toBe('SUCCESS');
+      expect(subscriberMock.response).toHaveBeenCalledOnce();
+      expect(subscriberMock.response).toHaveBeenCalledWith(trackingDataMock);
     });
 
-    it('should call logger.err when support.createSecurityTicket rejects', async () => {
-      // Given
-      const errorMock = new Error('some error');
-      supportServiceMock.createSecurityTicket.mockImplementationOnce(() => {
-        throw errorMock;
-      });
-
+    it('should return result of subscriber.response()', async () => {
       // When
-      await controller.processFraudCase({
-        identity: identityMock,
-        fraudCase: fraudCaseMock,
-      });
+      const result = await controller.processFraudCase(messageMock);
 
       // Then
-      expect(loggerMock.err).toHaveBeenCalledTimes(1);
-    });
-
-    it('should return "ERROR" when support.createSecurityTicket rejects', async () => {
-      // Given
-      const errorMock = new Error('some error');
-      supportServiceMock.createSecurityTicket.mockImplementationOnce(() => {
-        throw errorMock;
-      });
-
-      // When
-      const result = await controller.processFraudCase({
-        identity: identityMock,
-        fraudCase: fraudCaseMock,
-      });
-
-      // Then
-      expect(result).toBe('ERROR');
+      expect(result).toBe(responseMock);
     });
   });
 });

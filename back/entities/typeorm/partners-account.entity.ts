@@ -36,13 +36,6 @@ export class PartnersAccount {
   lastname: string; // claim `usual_name`
 
   @Column({
-    type: 'char',
-    length: 9, // https://portal.hardis-group.com/doccenter/pages/viewpage.action?pageId=120357227
-    nullable: true,
-  })
-  siren: string | null; // claim `siren`
-
-  @Column({
     type: 'timestamp',
     nullable: true,
   })

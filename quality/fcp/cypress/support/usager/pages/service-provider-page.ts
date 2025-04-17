@@ -37,11 +37,6 @@ export default class ServiceProviderPage {
     this.redirectUri = redirectUri;
   }
 
-  isLegacySPMock(): boolean {
-    // Only Legacy SP mocks have clientId and redirectUri in the fixtures
-    return this.mocked && !!this.clientId && !!this.redirectUri;
-  }
-
   getFcButton(): ChainableElement {
     return cy.get(this.fcButtonSelector);
   }
@@ -130,16 +125,10 @@ export default class ServiceProviderPage {
   }
 
   startLogin(
-    fcRootUrl: string,
     scopeContext: ScopeContext,
     claims: string[] = [],
     acrValue: string,
   ): void {
-    // Initiate FS connection from Legacy SP mock
-    if (this.isLegacySPMock()) {
-      this.callAuthorize(fcRootUrl, scopeContext);
-      return;
-    }
     // Initiate FS connection from SP mock
     if (this.mocked) {
       this.setMockRequestedScope(scopeContext);
@@ -151,10 +140,6 @@ export default class ServiceProviderPage {
 
   logout(): void {
     this.getLogoutButton().click();
-    if (this.isLegacySPMock()) {
-      // 2 clicks required on Legacy SP mock
-      cy.get('#fconnect-access .logout a').click();
-    }
   }
 
   getUserInfo(): Cypress.Chainable<Record<string, unknown>> {

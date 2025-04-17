@@ -10,6 +10,8 @@ export function safelyParseJson(input: string): unknown {
   try {
     return JSON.parse(input, cleaner);
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error);
     throw TypeError('JSON not parsable');
   }
 }

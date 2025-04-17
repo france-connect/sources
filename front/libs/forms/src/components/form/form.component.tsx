@@ -15,6 +15,7 @@ export function FormComponent<T = unknown>({
   onSubmit,
   onValidate,
   scrollTopOnSubmit = true,
+  submitLabel = undefined,
 }: FormInterface<T> & PropsWithChildren) {
   return (
     <Form<T>
@@ -27,7 +28,14 @@ export function FormComponent<T = unknown>({
       validate={onValidate}
       onSubmit={onSubmit}>
       {(props: FormRenderProps<T>) =>
-        FormWrapperComponent({ ...props, children, config, noRequired, scrollTopOnSubmit })
+        FormWrapperComponent({
+          ...props,
+          children,
+          config,
+          noRequired,
+          scrollTopOnSubmit,
+          submitLabel,
+        })
       }
     </Form>
   );

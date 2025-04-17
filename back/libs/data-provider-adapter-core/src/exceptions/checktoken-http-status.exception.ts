@@ -16,6 +16,10 @@ export class ChecktokenHttpStatusException extends ChecktokenBaseException {
   static HTTP_STATUS_CODE: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
   static UI: string = 'DataProviderAdapterCore.exceptions.checktokenHttpStatus';
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   constructor(error: AxiosError<{ error: string; error_description: string }>) {
     super(error);
     const { status, data } = error?.response || {};

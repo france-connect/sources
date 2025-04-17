@@ -1,4 +1,5 @@
-import _ = require('lodash');
+import { lowerFirst } from 'lodash';
+
 import {
   EidasAttributes,
   EidasLevelOfAssurances,
@@ -37,7 +38,7 @@ function getGender(
 
   let gender;
   if (eidasGender) {
-    gender = _.lowerFirst(eidasGender);
+    gender = lowerFirst(eidasGender);
   }
 
   return { gender };

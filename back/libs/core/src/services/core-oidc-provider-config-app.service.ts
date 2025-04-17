@@ -67,6 +67,7 @@ export class CoreOidcProviderConfigAppService extends OidcProviderAppConfigLibSe
       spId,
       spAcr,
       spName,
+      spType,
       subs,
     } = session.OidcClient;
 
@@ -84,6 +85,7 @@ export class CoreOidcProviderConfigAppService extends OidcProviderAppConfigLibSe
       spId,
       spAcr,
       spName,
+      spType,
       subs,
     });
 
@@ -96,6 +98,10 @@ export class CoreOidcProviderConfigAppService extends OidcProviderAppConfigLibSe
     await this.logoutFormSessionDestroy(ctx, form, params);
   }
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   private async getSessionId(ctx: OidcCtx): Promise<string> {
     const { oidc } = ctx;
     const alias = oidc.entities?.IdTokenHint?.payload?.at_hash;

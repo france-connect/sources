@@ -1,4 +1,7 @@
-import { ChainableElement, IdentityProvider } from '../../common/types';
+import {
+  ChainableElement,
+  IdentityProviderInterface,
+} from '../../common/types';
 import Modal from './modal-component';
 
 export default class IdentityProviderSelectionPage {
@@ -14,7 +17,7 @@ export default class IdentityProviderSelectionPage {
     return cy.get('[data-testid="main-providers"]');
   }
 
-  getIdpButton(idp: IdentityProvider): ChainableElement {
+  getIdpButton(idp: IdentityProviderInterface): ChainableElement {
     return cy.get(idp.selectors.idpButton);
   }
 
@@ -33,7 +36,7 @@ export default class IdentityProviderSelectionPage {
   }
 
   modifyProviderUidOfIdpButton(
-    idp: IdentityProvider,
+    idp: IdentityProviderInterface,
     providerUid: string,
   ): void {
     this.getIdpButton(idp)
@@ -42,7 +45,7 @@ export default class IdentityProviderSelectionPage {
       .invoke('attr', 'value', providerUid);
   }
 
-  modifyCsrfOfIdpButton(idp: IdentityProvider, csrf: string): void {
+  modifyCsrfOfIdpButton(idp: IdentityProviderInterface, csrf: string): void {
     this.getIdpButton(idp)
       .parent()
       .find('input[name="csrfToken"]')

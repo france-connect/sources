@@ -129,6 +129,10 @@ export class ElasticTracksService {
     return results;
   }
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   private async getElasticLogs(
     filters: QueryDslQueryContainer[],
     options = {} as ElasticQueryOptionsInterface,

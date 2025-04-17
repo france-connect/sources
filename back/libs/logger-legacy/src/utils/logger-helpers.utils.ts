@@ -3,7 +3,7 @@
  *
  * @returns {string} current string date, Ex:
  */
-export const getDateTime: Function = (): string =>
+export const getDateTime = (): string =>
   new Date().toLocaleTimeString([], {
     hour: 'numeric',
     minute: 'numeric',
@@ -18,7 +18,7 @@ export const getDateTime: Function = (): string =>
  *
  * @returns {string} Name of the currently called method's name.
  */
-export const getClassMethodCaller: Function = (): string => {
+export const getClassMethodCaller = (): string => {
   const { stack } = new Error();
   const methodName = stack.split('at ')[3].split(' ')[0];
   return methodName;
@@ -33,7 +33,7 @@ export const getClassMethodCaller: Function = (): string => {
  * @param {string} str string input to convert.
  * @returns {string}
  */
-export const slugLibName: Function = (name: string): string => {
+export const slugLibName = (name: string): string => {
   const SEPARATOR = '-';
 
   return name

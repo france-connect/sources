@@ -22,6 +22,7 @@ export interface TracksV2FieldsInterface {
   interactionAcr?: string;
   claims?: string;
   browsingSessionId: string;
+  interactionId: string;
   scope?: string;
   accountId: string;
 }

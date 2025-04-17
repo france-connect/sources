@@ -71,3 +71,19 @@ Fonctionnalité: Validation Visuelle - Espace Partenaires
       | tablet portrait  |
       | tablet landscape |
       | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Expiration de session
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
+    Et que je supprime tous les cookies
+    Quand je clique sur la première instance
+    Alors je suis redirigé vers la page login de l'espace partenaires
+    Et la copie d'écran "expiration de session" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |

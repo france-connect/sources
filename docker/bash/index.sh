@@ -72,10 +72,33 @@ _command_register "dependencies-all" "_install_dependencies_all" "dependencies-a
 _command_register "dep" "_install_dependencies" "Alias de dependencies"
 _command_register "dep-all" "_install_dependencies_all" "Alias de dependencies-all"
 
+## Test
 _command_register "test" "_test" "Launch tests?"
 _command_register "test-all" "_test_all" "" # Description to be defined
 _command_register "e2e" "_e2e" ""           # Description to be defined
 _command_register "twc" "unit_test_watch_coverage" "twc <path> => Watch unit tests for given path and display coverage only for that path"
+_command_register "cypress" "_cypress" "Run Cypress tests"
+_command_register "bdd-fcp-report" "_bdd_fcp_report" "Generate the test report for fcp workspace"
+_command_register "bdd-eidas-open" "_bdd_eidas_open" "Open Cypress UI for eIDAS bridge"
+_command_register "bdd-eidas-test" "_bdd_eidas_test" "Run Cypress tests on eIDAS bridge"
+_command_register "bdd-eidas-test-visual" "_bdd_eidas_test_visual" "Run Cypress visual tests on eIDAS bridge"
+_command_register "bdd-exploitation-open" "_bdd_exploitation_open" "Open Cypress UI for FC Exploitation"
+_command_register "bdd-exploitation-test" "_bdd_exploitation_test" "Run Cypress tests on FC Exploitation"
+_command_register "bdd-high-open" "_bdd_high_open" "Open Cypress UI for FC+"
+_command_register "bdd-high-test" "_bdd_high_test" "Run Cypress tests on FC+"
+_command_register "bdd-high-test-visual" "_bdd_high_test_visual" "Run Cypress visual tests on FC+"
+_command_register "bdd-low-open" "_bdd_low_open" "Open Cypress UI for FC v2"
+_command_register "bdd-low-test" "_bdd_low_test" "Run Cypress tests on FC v2"
+_command_register "bdd-low-test-visual" "_bdd_low_test_visual" "Run Cypress visual tests on FC v2"
+_command_register "bdd-support-open" "_bdd_support_open" "Open Cypress UI for FC Support"
+_command_register "bdd-support-test" "_bdd_support_test" "Run Cypress tests on FC Support"
+_command_register "bdd-ud-open" "_bdd_ud_open" "Open Cypress UI for User-Dashboard"
+_command_register "bdd-ud-test" "_bdd_ud_test" "Run Cypress tests on User-Dashboard"
+_command_register "bdd-ud-test-visual" "_bdd_ud_test_visual" "Run Cypress visual tests on User-Dashboard"
+_command_register "bdd-partners-report" "_bdd_partners_report" "Generate the test report for partners workspace"
+_command_register "bdd-partners-open" "_bdd_partners_open" "Open Cypress UI for Partners"
+_command_register "bdd-partners-test" "_bdd_partners_test" "Run Cypress tests on Partners"
+_command_register "bdd-partners-test-visual" "_bdd_partners_test_visual" "Run Cypress visual tests on Partners"
 
 ## Docker
 _command_register "prune" "_prune" "Stop and remove all runing containers"
@@ -85,7 +108,7 @@ _command_register "up" "_up" "up <stack name> => Launch a stack"
 _command_register "exec" "_exec" "exec <container_name> <command> => exec a command inside a container"
 _command_register "halt" "_halt" "alt => stop docker-compose and delete containers"
 _command_register "switch" "_switch" "Switch to another stack: performs a prune, an up and a start-all"
-
+_command_register "build-push" "_build_push" "Build and push image to FC Docker registry"
 _command_register "run-prod" "_run_prod" "" # Description to be defined
 _command_register "list" "_list_services" "List available services / stacks: list <search term>"
 

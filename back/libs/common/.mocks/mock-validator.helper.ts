@@ -1,4 +1,4 @@
-import { ValidationArguments, getMetadataStorage } from 'class-validator';
+import { getMetadataStorage, ValidationArguments } from 'class-validator';
 
 /**
  * Helper to mock validator in class-validator
@@ -40,6 +40,8 @@ export function mockValidator<
   const metadatum = metadata.find((a) => {
     const cls = storage.getTargetValidatorConstraints(a.constraintCls);
 
+    // The nested callback does not cause readability issues
+    // eslint-disable-next-line max-nested-callbacks
     return a.propertyName === property && cls.find((a) => a.name === name);
   });
 

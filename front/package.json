@@ -30,6 +30,7 @@
     "@fc/i18n": "^0.1.0",
     "@fc/layout": "^0.1.0",
     "@fc/login-form": "^0.1.0",
+    "@fc/matomo": "^0.1.0",
     "@fc/react-app": "^0.1.0",
     "@fc/routing": "^0.1.0",
     "@fc/stylelint-config-react-app": "^0.1.0",

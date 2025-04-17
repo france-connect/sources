@@ -32,12 +32,26 @@ export const buildEventQuery = ([legacy, event]: [
 export function getContextFromLegacyTracks(track: TracksLegacyFieldsInterface) {
   const {
     fs_label: spName,
+    fsId: spId,
     fi: idpName,
+    fiId: idpId,
     fiSub: idpSub,
     fsSub: spSub,
     eidas: interactionAcr,
+    cinematicID: interactionId,
+    sessionID: browsingSessionId,
   } = track;
-  return { spName, idpName, idpSub, spSub, interactionAcr };
+  return {
+    spName,
+    spId,
+    idpName,
+    idpId,
+    idpSub,
+    spSub,
+    interactionAcr,
+    interactionId,
+    browsingSessionId,
+  };
 }
 
 export function getLocationFromTracks(track: ElasticTracksType) {

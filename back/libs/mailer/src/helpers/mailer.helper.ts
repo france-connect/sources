@@ -1,3 +1,5 @@
+import { capitalizeWords } from '@fc/common';
+
 /**
  * @TODO Move this helper from Mailer lib
  *      To a identity library manager
@@ -5,12 +7,12 @@
 export class MailerHelper {
   static getLastName(familyName?: string, preferredUsername?: string): string {
     const lastName = preferredUsername || familyName || '';
-    return lastName;
+    return capitalizeWords(lastName);
   }
 
   static getFirstName(givenNameArray: string[]): string {
     const firstName = givenNameArray.length > 0 ? givenNameArray[0] : '';
-    return firstName;
+    return capitalizeWords(firstName);
   }
 
   static getPerson({

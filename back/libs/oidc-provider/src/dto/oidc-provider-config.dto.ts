@@ -142,6 +142,10 @@ class Cookies {
 class FeatureSetting {
   @IsBoolean()
   readonly enabled: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  readonly requestUri?: boolean;
 }
 
 class LogoutSourceFeatureSetting extends FeatureSetting {
@@ -201,6 +205,16 @@ class Features {
 
   @IsOptional()
   @ValidateNested()
+  @Type(() => FeatureSetting)
+  readonly requestObjects?: FeatureSetting;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => FeatureSetting)
+  readonly pushedAuthorizationRequests?: FeatureSetting;
+
+  @IsOptional()
+  @ValidateNested()
   @Type(() => LogoutSourceFeatureSetting)
   /**
    * @see https://github.com/panva/node-oidc-provider/blob/v6.x/docs/README.md#featuresrpinitiatedlogout
@@ -240,6 +254,10 @@ class Ttl {
 }
 
 class EnabledJWA {
+  @IsArray()
+  @IsString({ each: true })
+  readonly clientAuthSigningAlgValues: SigningAlgorithm[];
+
   @IsArray()
   @IsString({ each: true })
   authorizationEncryptionAlgValues: EncryptionAlgValues[];
@@ -284,10 +302,6 @@ class EnabledJWA {
 
   @IsArray()
   @IsString({ each: true })
-  introspectionEndpointAuthSigningAlgValues: AsymmetricSigningAlgorithm[];
-
-  @IsArray()
-  @IsString({ each: true })
   introspectionSigningAlgValues: (
     | AsymmetricSigningAlgorithm
     | SymmetricSigningAlgorithm
@@ -304,17 +318,6 @@ class EnabledJWA {
   @IsArray()
   @IsString({ each: true })
   requestObjectSigningAlgValues: (
-    | AsymmetricSigningAlgorithm
-    | SymmetricSigningAlgorithm
-  )[];
-
-  @IsArray()
-  @IsString({ each: true })
-  revocationEndpointAuthSigningAlgValues: AsymmetricSigningAlgorithm[];
-
-  @IsArray()
-  @IsString({ each: true })
-  tokenEndpointAuthSigningAlgValues: (
     | AsymmetricSigningAlgorithm
     | SymmetricSigningAlgorithm
   )[];
@@ -668,7 +671,11 @@ export class Configuration {
   @IsArray()
   readonly grant_types_supported: GrantType[];
 
+  @IsArray()
+  readonly clientAuthMethods: ClientAuthMethod[];
+
   /**
+   *
    * `issueRefreshToken` is a function.
    * This is not something that should live in a DTO.
    * Although this is the way `oidc-provider` library offers

@@ -106,6 +106,13 @@ Then(
 );
 
 Then(
+  `{string} est présent dans le mail "demande de support"`,
+  function (contentKey: string) {
+    udFraudFormSupportNotificationPage.checkContentKeyExist(contentKey);
+  },
+);
+
+Then(
   `{string} n'est pas présent dans le mail "demande de support"`,
   function (contentKey: string) {
     udFraudFormSupportNotificationPage.checkContentKeyNotExist(contentKey);

@@ -74,6 +74,8 @@ export class SessionCommitInterceptor implements NestInterceptor {
        */
       try {
         await this.session.commit();
+        // You can't remove the catch argument, it's mandatory
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         this.logger.info('Could not commit session from interceptor');
       }

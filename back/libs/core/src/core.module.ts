@@ -9,13 +9,8 @@ import {
   UnknownHtmlExceptionFilter,
 } from '@fc/exceptions';
 import { FlowStepsModule } from '@fc/flow-steps';
-import { IServiceProviderAdapter } from '@fc/oidc';
 import { OidcAcrModule } from '@fc/oidc-acr';
-import { IIdentityProviderAdapter, OidcClientModule } from '@fc/oidc-client';
-import {
-  IOidcProviderConfigAppService,
-  OidcProviderModule,
-} from '@fc/oidc-provider';
+import { OidcProviderModule } from '@fc/oidc-provider';
 import {
   OidcProviderRedirectExceptionFilter,
   OidcProviderRenderedHtmlExceptionFilter,
@@ -43,10 +38,8 @@ export class CoreModule {
   // eslint-disable-next-line max-params
   static register(
     CoreServiceInterface: Type<CoreServiceInterface>,
-    OidcProviderConfigApp: Type<IOidcProviderConfigAppService>,
-    ServiceProviderClass: Type<IServiceProviderAdapter>,
-    ServiceProviderModule: Type<ModuleMetadata>,
-    IdentityProviderAdapterMongoService: Type<IIdentityProviderAdapter>,
+    oidcProviderModule,
+    oidcClientModule,
     IdentityProviderAdapterMongoModule: Type<ModuleMetadata>,
     AppCoreTrackingService: Type<AppTrackingServiceAbstract>,
   ): DynamicModule {
@@ -62,17 +55,8 @@ export class CoreModule {
         OidcAcrModule,
         OidcProviderModule,
         AccountModule,
-        OidcProviderModule.register(
-          OidcProviderConfigApp,
-          ServiceProviderClass,
-          ServiceProviderModule,
-        ),
-        OidcClientModule.register(
-          IdentityProviderAdapterMongoService,
-          IdentityProviderAdapterMongoModule,
-          ServiceProviderClass,
-          ServiceProviderModule,
-        ),
+        oidcProviderModule,
+        oidcClientModule,
         IdentityProviderAdapterMongoModule,
         trackingModule,
       ],

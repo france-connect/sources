@@ -9,6 +9,7 @@ export const enGB: I18nTranslationsMapType = {
   'Jwt.exceptions.canNotImportJwk': 'Can not import JWK',
   'Jwt.exceptions.canNotSignJwt': 'Can not sign JWT',
   'Jwt.exceptions.fetchJwksFailed': 'Failed to fetch JWKS',
+  'Jwt.exceptions.invalidJwks': 'invalid JWKS format',
   'Jwt.exceptions.invalidSignature': 'Signature not verified',
   'Jwt.exceptions.multipleRelevantKeys': 'Multiple relevant keys found',
   'Jwt.exceptions.noRelevantKey': 'No relevant key found',

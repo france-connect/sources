@@ -7,10 +7,16 @@ interface FormActionsComponentProps {
   canSubmit: boolean;
   size?: Sizes;
   showReset?: boolean;
+  submitLabel?: string;
 }
 
 export const FormActionsComponent = React.memo(
-  ({ canSubmit, showReset = false, size = Sizes.MEDIUM }: FormActionsComponentProps) => (
+  ({
+    canSubmit,
+    showReset = false,
+    size = Sizes.MEDIUM,
+    submitLabel = t('Form.submit'),
+  }: FormActionsComponentProps) => (
     <div className="flex-end flex-columns">
       {showReset && (
         <SimpleButton
@@ -22,7 +28,7 @@ export const FormActionsComponent = React.memo(
         </SimpleButton>
       )}
       <SimpleButton disabled={!canSubmit} size={size} type={ButtonTypes.SUBMIT}>
-        {t('Form.submit')}
+        {submitLabel}
       </SimpleButton>
     </div>
   ),

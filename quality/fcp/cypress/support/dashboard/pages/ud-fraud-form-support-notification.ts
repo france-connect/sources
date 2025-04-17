@@ -55,6 +55,10 @@ export default class UdFraudFormSupportNotificationPage {
     return cy.get(`[data-testid="fraud-form-email-${contentKey}"]`);
   }
 
+  checkContentKeyExist(contentKey: string): void {
+    this.getValueFromContentKey(contentKey).should('exist');
+  }
+
   checkContentKeyNotExist(contentKey: string): void {
     this.getValueFromContentKey(contentKey).should('not.exist');
   }

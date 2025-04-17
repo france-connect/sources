@@ -8,6 +8,8 @@ import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
 import { ConfigService } from '@fc/config';
 import { AppBoundaryComponent } from '@fc/exceptions';
 import { I18nService } from '@fc/i18n';
+import type { MatomoConfig } from '@fc/matomo';
+import { Options, useMatomo } from '@fc/matomo';
 import { StylesProvider } from '@fc/styles';
 
 import { AppConfig } from '../config';
@@ -17,6 +19,10 @@ import { ApplicationRoutes } from './application.routes';
 export function Application() {
   I18nService.initialize('fr', translations);
   ConfigService.initialize(AppConfig);
+
+  const matomoConfig = ConfigService.get<MatomoConfig>(Options.CONFIG_NAME);
+  useMatomo(matomoConfig);
+
   return (
     <ErrorBoundary FallbackComponent={AppBoundaryComponent}>
       <AxiosErrorCatcherProvider>

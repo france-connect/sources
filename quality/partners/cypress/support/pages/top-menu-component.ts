@@ -28,6 +28,12 @@ export default class TopMenuComponent {
 
   checkIsConnected(isConnected = true): void {
     const state = isConnected ? 'exist' : 'not.exist';
-    cy.request('/api/me').its('body').its('accountId').should(state);
+    cy.request({
+      failOnStatusCode: false,
+      url: '/api/me',
+    })
+      .its('body')
+      .its('accountId')
+      .should(state);
   }
 }

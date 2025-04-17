@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+source "${INCLUDE_DIR}/commands/cypress.sh"
 source "${INCLUDE_DIR}/commands/docker.sh"
 source "${INCLUDE_DIR}/commands/elastic.sh"
 source "${INCLUDE_DIR}/commands/logs.sh"

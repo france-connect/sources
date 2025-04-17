@@ -96,4 +96,4 @@ Fonctionnalité: API - userinfo
     Et le corps de la réponse contient une erreur
     Et le corps de la réponse a une propriété "error" égale à "invalid_request"
     Et le corps de la réponse a une propriété "error_description" égale à "no access token provided (undefined)"
-    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y04865C&id="
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y04ECC9&id="

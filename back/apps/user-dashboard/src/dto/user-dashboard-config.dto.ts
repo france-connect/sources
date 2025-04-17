@@ -7,6 +7,7 @@ import { IdentityProviderAdapterEnvConfig } from '@fc/identity-provider-adapter-
 import { LoggerConfig } from '@fc/logger';
 import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
 import { MailerConfig } from '@fc/mailer';
+import { MicroservicesRmqConfig } from '@fc/microservices-rmq';
 import { OidcAcrConfig } from '@fc/oidc-acr';
 import { OidcClientConfig } from '@fc/oidc-client';
 import { RabbitmqConfig } from '@fc/rabbitmq';
@@ -74,8 +75,8 @@ export class UserDashboardConfig {
 
   @IsObject()
   @ValidateNested()
-  @Type(() => RabbitmqConfig)
-  readonly FraudBroker: RabbitmqConfig;
+  @Type(() => MicroservicesRmqConfig)
+  readonly FraudMicroService: MicroservicesRmqConfig;
 
   @IsObject()
   @ValidateNested()

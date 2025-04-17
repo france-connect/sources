@@ -44,6 +44,12 @@ describe('UserDashboardTrackingService', () => {
     sub: 'identityMock.sub value',
   };
 
+  const fraudCaseContextMock = { fraudProperty: 'fraudCaseValue' };
+
+  const userPreferencesContextMock = {
+    userPreferencesProperty: 'userPreferencesValue',
+  };
+
   const contextMock = {
     req: {
       headers: {
@@ -54,16 +60,8 @@ describe('UserDashboardTrackingService', () => {
       sessionId: sessionIdMock,
     },
     identity: identityMock,
-    idpChanges: {
-      uid: 'uuidValue',
-      name: 'nameValue',
-      title: 'titleValue',
-      allowed: 'allowedValue',
-    },
-    futureAllowedNewValue: true,
-    hasAllowFutureIdpChanged: true,
-    idpLength: 2,
-    changeSetId: 'changeSetIdValue',
+    fraudCaseContext: fraudCaseContextMock,
+    userPreferencesContext: userPreferencesContextMock,
   };
 
   const extractedValueMock: UserDashboardTrackingContextInterface = {
@@ -130,18 +128,10 @@ describe('UserDashboardTrackingService', () => {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           original_addresses: xForwardedForOriginalMock,
         },
-        payload: {
-          futureAllowedNewValue: true,
-          hasAllowFutureIdpChanged: true,
-          idpLength: 2,
-          uid: 'uuidValue',
-          name: 'nameValue',
-          title: 'titleValue',
-          allowed: 'allowedValue',
-        },
-        changeSetId: 'changeSetIdValue',
         sessionId: 'sessionIdValue',
-        sub: identityMock.sub,
+        sub: 'identityMock.sub value',
+        fraudProperty: 'fraudCaseValue',
+        userPreferencesProperty: 'userPreferencesValue',
       };
       // When
       const result = await service.buildLog(eventMock, contextMock);

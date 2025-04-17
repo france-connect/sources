@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { getTransformed, IPaginationResult } from '@fc/common';
 import { ConfigService } from '@fc/config';
-import { CsmrFraudClientService } from '@fc/csmr-fraud-client';
+import { ActionTypes, TrackingDataDto } from '@fc/csmr-fraud-client';
 import {
   CsmrTracksClientService,
   TrackDto,
@@ -53,7 +53,7 @@ describe('UserDashboardController', () => {
     },
   };
 
-  const uuidMockedValue = 'uuid-v4-Mocked-Value';
+  const uuidMockedValue = 'uuid-v4-Mocked-Value' as unknown as Uint8Array;
 
   const i18nMock = getI18nServiceMock();
   const sessionServiceMock = getSessionServiceMock();
@@ -81,8 +81,8 @@ describe('UserDashboardController', () => {
     getList: jest.fn(),
   };
 
-  const fraudServiceMock = {
-    processFraudCase: jest.fn(),
+  const csmrFraudClientMock = {
+    publish: jest.fn(),
   };
 
   const userPreferencesMock = {
@@ -113,6 +113,17 @@ describe('UserDashboardController', () => {
     phoneNumber: '0678912345',
   };
 
+  const fraudMessageMock = {
+    type: ActionTypes.PROCESS_FRAUD_CASE,
+    payload: {
+      identity: identityWithoutIdpIdMock,
+      fraudCase: {
+        fraudCaseId: uuidMockedValue,
+        ...processFraudFormBodyMock,
+      },
+    },
+  };
+
   const userDashboardServiceMock = {
     sendMail: jest.fn(),
     formatUserPreferenceChangeTrackLog: jest.fn(),
@@ -129,6 +140,7 @@ describe('UserDashboardController', () => {
       UPDATED_USER_PREFERENCES: {},
       UPDATED_USER_PREFERENCES_FUTURE_IDP: {},
       UPDATED_USER_PREFERENCES_IDP: {},
+      FRAUD_CASE_OPENED: {},
     },
   };
   const guardMock = { canActivate: jest.fn() };
@@ -140,9 +152,12 @@ describe('UserDashboardController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserDashboardController],
       providers: [
+        {
+          provide: 'Fraud',
+          useValue: csmrFraudClientMock,
+        },
         ConfigService,
         CsmrTracksClientService,
-        CsmrFraudClientService,
         TrackingService,
         UserPreferencesService,
         UserDashboardService,
@@ -155,8 +170,6 @@ describe('UserDashboardController', () => {
       .useValue(configMock)
       .overrideProvider(CsmrTracksClientService)
       .useValue(tracksServiceMock)
-      .overrideProvider(CsmrFraudClientService)
-      .useValue(fraudServiceMock)
       .overrideProvider(TrackingService)
       .useValue(trackingService)
       .overrideProvider(UserPreferencesService)
@@ -683,8 +696,22 @@ describe('UserDashboardController', () => {
       hasAllowFutureIdpChanged: true,
     } as unknown as FormattedIdpSettingDto;
 
+    const idpChangesmock1 = {
+      uid: 'uuid1Value1',
+      name: 'name1Value1',
+      title: 'title1Value1',
+      allowed: 'allowed1Value1',
+    };
+
+    const idpChangesmock2 = {
+      uid: 'uuidValue2',
+      name: 'nameValue2',
+      title: 'titleValue2',
+      allowed: 'allowedValue2',
+    };
+
     const formatUserPreferenceChangeTrackLogReturnValue = {
-      list: [Symbol('idpChanges1'), Symbol('idpChanges2')],
+      list: [idpChangesmock1, idpChangesmock2],
       futureAllowedNewValue: false,
     };
 
@@ -711,12 +738,22 @@ describe('UserDashboardController', () => {
     });
 
     it('should call tracking.track() for global event', async () => {
+      //Given
+      const userPreferencesContextMock = {
+        changeSetId: uuidMockedValue,
+        payload: {
+          idpLength: 2,
+          hasAllowFutureIdpChanged: true,
+        },
+      };
+
       // When
       await controller['trackUserPreferenceChange'](
         reqMock,
         formattedIdpSettingsMock,
         identityMock,
       );
+
       // Then
       expect(controller['tracking'].track).toHaveBeenCalledTimes(4);
       expect(controller['tracking'].track).toHaveBeenNthCalledWith(
@@ -724,50 +761,71 @@ describe('UserDashboardController', () => {
         trackingService.TrackedEventsMap.UPDATED_USER_PREFERENCES,
         {
           req: reqMock,
-          changeSetId: uuidMockedValue,
-          idpLength: 2,
-          hasAllowFutureIdpChanged: true,
+
           identity: identityMock,
+          userPreferencesContext: userPreferencesContextMock,
         },
       );
     });
 
     it('should call tracking.track() for future idp change', async () => {
+      //Given
+      const userPreferencesContextMock = {
+        changeSetId: uuidMockedValue,
+        payload: {
+          futureAllowedNewValue: false,
+        },
+      };
+
       // When
       await controller['trackUserPreferenceChange'](
         reqMock,
         formattedIdpSettingsMock,
         identityMock,
       );
+
       // Then
       expect(controller['tracking'].track).toHaveBeenNthCalledWith(
         2,
         trackingService.TrackedEventsMap.UPDATED_USER_PREFERENCES_FUTURE_IDP,
         {
           req: reqMock,
-          changeSetId: uuidMockedValue,
-          futureAllowedNewValue: false,
           identity: identityMock,
+          userPreferencesContext: userPreferencesContextMock,
         },
       );
     });
 
     it('should call tracking.track() for each changed idp', async () => {
+      //Given
+      const firstUserPreferencesContextMock = {
+        changeSetId: uuidMockedValue,
+        payload: {
+          ...idpChangesmock1,
+        },
+      };
+      const secondUserPreferencesContextMock = {
+        changeSetId: uuidMockedValue,
+        payload: {
+          ...idpChangesmock2,
+        },
+      };
+
       // When
       await controller['trackUserPreferenceChange'](
         reqMock,
         formattedIdpSettingsMock,
         identityMock,
       );
+
       // Then
       expect(controller['tracking'].track).toHaveBeenNthCalledWith(
         3,
         trackingService.TrackedEventsMap.UPDATED_USER_PREFERENCES_IDP,
         {
           req: reqMock,
-          changeSetId: uuidMockedValue,
-          idpChanges: formatUserPreferenceChangeTrackLogReturnValue.list[0],
           identity: identityMock,
+          userPreferencesContext: firstUserPreferencesContextMock,
         },
       );
       expect(controller['tracking'].track).toHaveBeenNthCalledWith(
@@ -775,19 +833,29 @@ describe('UserDashboardController', () => {
         trackingService.TrackedEventsMap.UPDATED_USER_PREFERENCES_IDP,
         {
           req: reqMock,
-          changeSetId: uuidMockedValue,
-          idpChanges: formatUserPreferenceChangeTrackLogReturnValue.list[1],
           identity: identityMock,
+          userPreferencesContext: secondUserPreferencesContextMock,
         },
       );
     });
   });
 
   describe('processFraudForm', () => {
+    const fraudCaseTrackingDataMock = Symbol(
+      'fraudCaseTrackingDataMock',
+    ) as unknown as TrackingDataDto;
+
+    beforeEach(() => {
+      csmrFraudClientMock.publish.mockResolvedValue({
+        payload: fraudCaseTrackingDataMock,
+      });
+    });
+
     it('should fetch session', async () => {
       // When
       await controller.processFraudForm(
         resMock,
+        reqMock,
         processFraudFormBodyMock,
         sessionServiceMock,
       );
@@ -803,6 +871,7 @@ describe('UserDashboardController', () => {
       // When
       await controller.processFraudForm(
         resMock,
+        reqMock,
         processFraudFormBodyMock,
         sessionServiceMock,
       );
@@ -813,19 +882,46 @@ describe('UserDashboardController', () => {
       expect(resMock.send).toHaveBeenCalledWith({ code: 'INVALID_SESSION' });
     });
 
-    it('should call csmrFraudClient.processFraudCase', async () => {
+    it('should call csmrFraudClient.publish', async () => {
       // When
       await controller.processFraudForm(
         resMock,
+        reqMock,
         processFraudFormBodyMock,
         sessionServiceMock,
       );
 
       // Then
-      expect(fraudServiceMock.processFraudCase).toHaveBeenCalledTimes(1);
-      expect(fraudServiceMock.processFraudCase).toHaveBeenCalledWith(
-        identityWithoutIdpIdMock,
+      expect(csmrFraudClientMock.publish).toHaveBeenCalledTimes(1);
+      expect(csmrFraudClientMock.publish).toHaveBeenCalledWith(
+        fraudMessageMock,
+      );
+    });
+
+    it('should call tracking.track() with right parameters', async () => {
+      //Given
+      const fraudCaseContextMock = {
+        isAuthenticated: true,
+        ...fraudCaseTrackingDataMock,
+      };
+
+      // When
+      await controller.processFraudForm(
+        resMock,
+        reqMock,
         processFraudFormBodyMock,
+        sessionServiceMock,
+      );
+
+      // Then
+      expect(controller['tracking'].track).toHaveBeenCalledTimes(1);
+      expect(controller['tracking'].track).toHaveBeenCalledWith(
+        trackingService.TrackedEventsMap.FRAUD_CASE_OPENED,
+        {
+          req: reqMock,
+          identity: identityMock,
+          fraudCaseContext: fraudCaseContextMock,
+        },
       );
     });
 
@@ -833,6 +929,7 @@ describe('UserDashboardController', () => {
       // When
       await controller.processFraudForm(
         resMock,
+        reqMock,
         processFraudFormBodyMock,
         sessionServiceMock,
       );

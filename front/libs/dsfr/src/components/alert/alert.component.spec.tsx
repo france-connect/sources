@@ -70,16 +70,4 @@ describe('AlertComponent', () => {
     expect(buttonElement).toBe(buttonRoleElement);
     expect(buttonElement).toHaveAttribute('data-testid', 'any-data-test-id-mock-close-button');
   });
-
-  it('should match the snapshot, when size is small, title should not be displayed', () => {
-    // When
-    const { container, getByText } = render(
-      <AlertComponent size={Sizes.SMALL} title="any-title-mock" />,
-    );
-
-    // Then
-    expect(() => getByText('any-title-mock')).toThrow();
-
-    expect(container.firstChild).toHaveClass('fr-alert--sm');
-  });
 });

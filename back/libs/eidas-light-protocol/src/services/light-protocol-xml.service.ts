@@ -3,6 +3,8 @@ import { json2xml, xml2json } from 'xml-js';
 
 import { Injectable } from '@nestjs/common';
 
+import { FunctionSafe } from '@fc/common';
+
 import {
   EidasJsonToXmlException,
   EidasXmlToJsonException,
@@ -46,6 +48,10 @@ export class LightProtocolXmlService {
     }
   }
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   jsonToPathsObject(parent: unknown, lastPath = '', tree = {}) {
     if (typeof parent === 'string') {
       tree[lastPath] = parent;
@@ -187,7 +193,7 @@ export class LightProtocolXmlService {
     });
   }
 
-  forEachPath(pathsObject: IPathsObject, callback: Function): IPathsObject {
+  forEachPath(pathsObject: IPathsObject, callback: FunctionSafe): IPathsObject {
     const newPathsObject = {};
 
     Object.entries(pathsObject).forEach(

@@ -22,13 +22,6 @@ When('je navigue sur la page fournisseur de service', function () {
 });
 
 When('je clique sur le bouton FranceConnect', function () {
-  if (serviceProviderPage.isLegacySPMock()) {
-    // when on legacy service provider mock we call directly authorize
-    const { fcRootUrl } = this.env;
-    serviceProviderPage.callAuthorize(fcRootUrl, this.requestedScope);
-    return;
-  }
-
   // Setup the requested scope and eidas on mocked environment
   if (this.serviceProvider.mocked === true) {
     serviceProviderPage.setMockAuthorizeHttpMethod(

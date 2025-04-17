@@ -1,3 +1,5 @@
+import { AsyncFunctionSafe, FunctionSafe } from '@fc/common';
+
 /**
  * The OverrideCode class wraps given functions so that they can be later
  * overridden when used any where, including in external libraries.
@@ -21,8 +23,12 @@
  * ```
  */
 export class OverrideCode {
-  private static originalRefStore: { [key: string]: Function } = {};
-  private static overrideStore: { [key: string]: Function } = {};
+  private static originalRefStore: {
+    [key: string]: FunctionSafe | AsyncFunctionSafe;
+  } = {};
+  private static overrideStore: {
+    [key: string]: FunctionSafe | AsyncFunctionSafe;
+  } = {};
 
   /**
    * Wraps a method / function for latter override
@@ -99,7 +105,10 @@ export class OverrideCode {
    * @param key Name given at wrap time to retrieve function to override
    * @param overrideFunction Function to execute instead of wrapped function
    */
-  static override(key: string, overrideFunction: Function): void {
+  static override(
+    key: string,
+    overrideFunction: FunctionSafe | AsyncFunctionSafe,
+  ): void {
     OverrideCode.overrideStore[key] = overrideFunction;
   }
 
@@ -107,7 +116,7 @@ export class OverrideCode {
     originalObject: object,
     functionName: string,
     key: string,
-    func: Function,
+    func: FunctionSafe | AsyncFunctionSafe,
   ): T {
     OverrideCode.restore(originalObject, functionName, key);
 
@@ -123,7 +132,7 @@ export class OverrideCode {
     originalObject: object,
     functionName: string,
     key: string,
-    func: Function,
+    func: FunctionSafe | AsyncFunctionSafe,
   ): Promise<T> {
     OverrideCode.restore(originalObject, functionName, key);
 

@@ -7,6 +7,7 @@ export interface CustomClientMetadata extends AllClientMetadata {
   idpFilterExclude: boolean;
   idpFilterList: string[];
   rep_scope?: string[];
+  type: string;
 }
 
 /**

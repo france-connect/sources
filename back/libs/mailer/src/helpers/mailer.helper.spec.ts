@@ -1,4 +1,8 @@
+import { capitalizeWords } from '@fc/common';
+
 import { MailerHelper } from './mailer.helper';
+
+jest.mock('@fc/common');
 
 describe('MailerHelper', () => {
   // Given
@@ -6,8 +10,17 @@ describe('MailerHelper', () => {
   const preferredUsernameMock = 'BARBE NOIRE';
   const givenNameArrayMock = ['Edward', 'Edouard', 'Edouardo'];
 
+  const capitalizeWordsMock = jest.mocked(capitalizeWords);
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe('getFirstName', () => {
     it('should return the firstname as en empty string when givenName is an empty array', () => {
+      // Given
+      capitalizeWordsMock.mockReturnValueOnce('');
+
       // When
       const result = MailerHelper.getFirstName([]);
 
@@ -16,16 +29,24 @@ describe('MailerHelper', () => {
     });
 
     it('should return the firstname as the first string of the array', () => {
+      // Given
+      const capitalizedValue = 'Edward';
+      capitalizeWordsMock.mockReturnValueOnce(capitalizedValue);
+
       // When
       const result = MailerHelper.getFirstName(givenNameArrayMock);
 
       // Then
-      expect(result).toEqual('Edward');
+      expect(result).toEqual(capitalizedValue);
     });
   });
 
   describe('getLastName', () => {
     it('should return the preferredUsername when it is defined', () => {
+      // Given
+      const capitalizedValue = 'Barbe Noire';
+      capitalizeWordsMock.mockReturnValueOnce(capitalizedValue);
+
       // When
       const result = MailerHelper.getLastName(
         familyNameStringMock,
@@ -33,23 +54,31 @@ describe('MailerHelper', () => {
       );
 
       // Then
-      expect(result).toEqual('BARBE NOIRE');
+      expect(result).toEqual(capitalizedValue);
     });
 
     it('should return the familyName when preferredUsername is undefined', () => {
+      // Given
+      const capitalizedValue = 'Teach';
+      capitalizeWordsMock.mockReturnValueOnce(capitalizedValue);
+
       // When
       const result = MailerHelper.getLastName(familyNameStringMock);
 
       // Then
-      expect(result).toEqual('Teach');
+      expect(result).toEqual(capitalizedValue);
     });
 
     it('should return an empty string when familyName and preferredUsername are undefined', () => {
+      // Given
+      const expected = '';
+      capitalizeWordsMock.mockReturnValueOnce(expected);
+
       // When
-      const result = MailerHelper.getLastName(undefined);
+      const result = MailerHelper.getLastName();
 
       // Then
-      expect(result).toEqual('');
+      expect(result).toEqual(expected);
     });
   });
 

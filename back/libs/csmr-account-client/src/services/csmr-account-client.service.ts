@@ -11,6 +11,7 @@ import { PivotIdentityDto } from '@fc/oidc';
 import { RabbitmqConfig } from '@fc/rabbitmq';
 
 import { CsmrAccountResponseException } from '../exceptions';
+import { AccountIdsResultsInterface } from '../interfaces';
 
 @Injectable()
 export class CsmrAccountClientService {
@@ -25,10 +26,10 @@ export class CsmrAccountClientService {
 
   async getAccountIdsFromIdentity(
     identity: PivotIdentityDto,
-  ): Promise<string[]> {
+  ): Promise<AccountIdsResultsInterface> {
     const identityHash = this.cryptographyFcp.computeIdentityHash(identity);
 
-    const accountIdLegacy = await this.getAccountId(
+    const accountIdLow = await this.getAccountId(
       this.accountLegacyBroker,
       'AccountLegacyBroker',
       identityHash,
@@ -39,9 +40,7 @@ export class CsmrAccountClientService {
       identityHash,
     );
 
-    const groupIds = [accountIdLegacy, accountIdHigh].filter(Boolean);
-
-    return groupIds;
+    return { accountIdLow, accountIdHigh };
   }
 
   private async getAccountId(

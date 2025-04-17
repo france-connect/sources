@@ -806,8 +806,6 @@
 | App_HTTPS_SERVER_KEY | file |
 | App_IDP_ID | string |
 | FQDN | string |
-| FraudBroker_QUEUE | string |
-| FraudBroker_URLS | json |
 | IdentityProviderAdapterEnv_CLIENT_ID | string |
 | IdentityProviderAdapterEnv_CLIENT_SECRET | string |
 | IdentityProviderAdapterEnv_CLIENT_SECRET_CIPHER_PASS | string |
@@ -834,6 +832,8 @@
 | Mailer_SECURE | boolean |
 | Mailer_TEMPLATES_PATHS | json |
 | Mailer_TRANSPORT | string |
+| MicroserviceFraud_QUEUE | string |
+| MicroserviceFraud_URLS | json |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
 | OidcClient_HTTPS_CLIENT_KEY | file |

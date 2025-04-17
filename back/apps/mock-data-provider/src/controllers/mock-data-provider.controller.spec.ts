@@ -1,10 +1,11 @@
 import { Response } from 'express';
-import { JWK } from 'jose-openid-client';
+import { JWK } from 'jose';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
 import { DataProviderAdapterCoreService } from '@fc/data-provider-adapter-core';
+import { JwkHelper } from '@fc/jwt';
 import { LoggerService } from '@fc/logger';
 import { DataParamsDto } from '@fc/mock-data-provider';
 
@@ -12,6 +13,8 @@ import { getLoggerMock } from '@mocks/logger';
 
 import { MockDataProviderService } from '../services';
 import { MockDataProviderController } from './mock-data-provider.controller';
+
+jest.mock('@fc/jwt');
 
 describe('MockDataProviderController', () => {
   let mockDataProviderController: MockDataProviderController;
@@ -204,26 +207,22 @@ describe('MockDataProviderController', () => {
   });
 
   describe('jwks', () => {
-    it('should return some status object', () => {
+    it('should return some status object', async () => {
       // Given
-      const JwkKeyMock = {
-        toJWK: jest.fn().mockReturnValueOnce('a').mockReturnValueOnce('b'),
-      };
-      const spy = jest.spyOn(JWK, 'asKey').mockReturnValue(JwkKeyMock as any);
-
       configServiceMock.get.mockReturnValueOnce({
         jwks: { keys: ['foo', 'bar'] },
       });
 
+      jest
+        .mocked(JwkHelper.publicFromPrivate)
+        .mockResolvedValueOnce('A' as unknown as JWK)
+        .mockResolvedValueOnce('B' as unknown as JWK);
+
       // When
-      const result = mockDataProviderController.jwks();
+      const result = await mockDataProviderController.jwks();
 
       // Then
-      expect(spy).toHaveBeenCalledTimes(2);
-      expect(spy).toHaveBeenCalledWith('foo');
-      expect(spy).toHaveBeenCalledWith('bar');
-      expect(JwkKeyMock.toJWK).toHaveBeenCalledTimes(2);
-      expect(result).toEqual({ keys: ['a', 'b'] });
+      expect(result).toStrictEqual({ keys: ['A', 'B'] });
     });
   });
 });

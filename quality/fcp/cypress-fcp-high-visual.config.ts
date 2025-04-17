@@ -21,7 +21,7 @@ export default defineConfig({
   env: {
     ...baseConfig.env,
     // Other Configuration
-    LOG_FILE_PATH: '../../docker/volumes/log/core-fcp-high.log',
+    LOG_FILE_PATH: `${process.env.LOG_VOLUMES_DIR}/core-fcp-high.log`,
     // Base Configuration
     PLATFORM: 'fcp-high',
     TAGS: '@fcpHigh and @validationVisuelle and not @ignore',

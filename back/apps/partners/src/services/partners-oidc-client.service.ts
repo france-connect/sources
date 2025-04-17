@@ -116,7 +116,6 @@ export class PartnersOidcClientService {
       firstname: identity.given_name,
       lastname: identity.usual_name,
       email: identity.email,
-      siren: identity.siren,
     };
 
     let accountId =

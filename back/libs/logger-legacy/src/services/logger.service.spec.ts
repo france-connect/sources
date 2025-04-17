@@ -1,4 +1,4 @@
-import * as uuid from 'uuid';
+import { v4 as uuid } from 'uuid';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
@@ -25,6 +25,8 @@ describe('LoggerService', () => {
     error: jest.fn(),
     fatal: jest.fn(),
   };
+
+  const uuidMock = jest.mocked(uuid);
 
   const externalLoggerMock = {
     level: LoggerLevelCodes.INFO,
@@ -72,9 +74,9 @@ describe('LoggerService', () => {
   });
 
   describe('getIdentifiedLog()', () => {
-    const uuidMock = 'uuidMockValue';
+    const uuidMockValue = 'uuidMockValue' as unknown as Uint8Array;
     beforeEach(() => {
-      uuid.v4.mockReturnValue(uuidMock);
+      uuidMock.mockReturnValue(uuidMockValue);
     });
 
     it('should add a `logId` property', () => {
@@ -85,7 +87,7 @@ describe('LoggerService', () => {
       // Then
       expect(result).toEqual({
         foo: 'fooValue',
-        logId: uuidMock,
+        logId: uuidMockValue,
       });
     });
 
@@ -97,7 +99,7 @@ describe('LoggerService', () => {
       // Then
       expect(result).toEqual({
         foo: 'fooValue',
-        logId: uuidMock,
+        logId: uuidMockValue,
       });
     });
   });

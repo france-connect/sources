@@ -568,6 +568,8 @@ describe('CoreFcpSendEmailHandler', () => {
   });
 
   describe('handle()', () => {
+    const personMock = `${rnippIdentityMock.given_name} ${spIdentityWithEmailMock.preferred_username}`;
+
     beforeEach(() => {
       const AppConfigMock = { platform: 'FranceConnect+' };
       serviceProviderMock.getById.mockResolvedValue(spMock);
@@ -581,6 +583,8 @@ describe('CoreFcpSendEmailHandler', () => {
         .mockReturnValue(`connect notification html body content`);
 
       jest.mocked(validateDto).mockResolvedValue([]);
+
+      jest.spyOn(MailerHelper, 'getPerson').mockReturnValueOnce(personMock);
     });
 
     it('should not throw if email is sent', async () => {
@@ -598,11 +602,23 @@ describe('CoreFcpSendEmailHandler', () => {
       ).toHaveBeenCalledExactlyOnceWith();
     });
 
+    it('should call MailerHelper.getPerson', async () => {
+      // When
+      await service.handle();
+
+      // Then
+      expect(MailerHelper.getPerson).toHaveBeenCalledExactlyOnceWith({
+        givenNameArray: rnippIdentityMock.given_name_array,
+        familyName: rnippIdentityMock.family_name,
+        preferredUsername: spIdentityWithEmailMock.preferred_username,
+      });
+    });
+
     it('should send the email to the end-user by calling "mailer.send" (FranceConnect+)', async () => {
       // Given
       const mailTo: MailTo = {
         email: spIdentityWithEmailMock.email,
-        name: `${spIdentityWithEmailMock.given_name} ${spIdentityWithEmailMock.family_name}`,
+        name: personMock,
       };
       const expectedEmailParams = {
         body: `connect notification html body content`,
@@ -624,7 +640,7 @@ describe('CoreFcpSendEmailHandler', () => {
       // Given
       const mailTo: MailTo = {
         email: spIdentityWithEmailMock.email,
-        name: `${spIdentityWithEmailMock.given_name} ${spIdentityWithEmailMock.family_name}`,
+        name: personMock,
       };
       const expectedEmailParams = {
         body: `connect notification html body content`,

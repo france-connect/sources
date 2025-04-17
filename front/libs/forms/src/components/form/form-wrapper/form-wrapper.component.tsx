@@ -16,6 +16,7 @@ interface FormWrapperComponentProps extends PropsWithChildren {
   submitting: boolean;
   noRequired: boolean;
   scrollTopOnSubmit: boolean;
+  submitLabel?: string;
 }
 
 export const FormWrapperComponent = ({
@@ -25,6 +26,7 @@ export const FormWrapperComponent = ({
   noRequired,
   scrollTopOnSubmit,
   submitError,
+  submitLabel = undefined,
   submitting,
 }: FormWrapperComponentProps) => {
   const { description, id, mentions, title, titleHeading } = config;
@@ -41,7 +43,7 @@ export const FormWrapperComponent = ({
         {submitError && <FormErrorComponent error={submitError} />}
         {!noRequired && <FormRequiredMessageComponent />}
         {children}
-        <FormActionsComponent canSubmit={canSubmit} />
+        <FormActionsComponent canSubmit={canSubmit} submitLabel={submitLabel} />
         {mentions && <FormMentionsComponent content={mentions} />}
         <FormErrorScrollComponent
           active={scrollTopOnSubmit}

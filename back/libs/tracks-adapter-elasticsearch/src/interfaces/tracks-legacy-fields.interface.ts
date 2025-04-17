@@ -18,6 +18,7 @@ export interface TracksLegacyFieldsInterface {
   name: string;
   fiId: string;
   fsId: string;
+  sessionID: string;
   cinematicID: string;
   scopes?: string;
   action: string;

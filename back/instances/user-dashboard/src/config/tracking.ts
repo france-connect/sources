@@ -26,5 +26,10 @@ export default {
       category: EventsCategories.USER_PREFERENCES,
       event: 'UPDATED_FUTURE_IDP',
     },
+
+    FRAUD_CASE_OPENED: {
+      category: EventsCategories.FRAUD_CASE,
+      event: 'OPENED',
+    },
   },
 } as TrackingConfig;

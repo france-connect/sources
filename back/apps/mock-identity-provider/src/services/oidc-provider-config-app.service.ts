@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { AsyncFunctionSafe } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 import { IOidcIdentity, stringToArray } from '@fc/oidc';
@@ -34,7 +35,7 @@ export class OidcProviderConfigAppService extends OidcProviderAppConfigLibServic
     sessionId: string,
     spIdentity: Partial<IOidcIdentity>,
     subSp: string,
-  ): Promise<{ accountId: string; claims: Function }> {
+  ): Promise<{ accountId: string; claims: AsyncFunctionSafe }> {
     const { userLogin } = this.sessionService.get<AppSession>('App');
 
     const claims = this.scenarios.deleteClaims(userLogin, spIdentity, subSp);

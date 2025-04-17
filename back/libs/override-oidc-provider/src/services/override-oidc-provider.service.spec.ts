@@ -1,5 +1,5 @@
-import * as KeyStore from 'oidc-provider/lib/helpers/keystore.js';
-import * as OidcProviderInstance from 'oidc-provider/lib/helpers/weak_cache';
+import KeyStore from 'oidc-provider/lib/helpers/keystore.js';
+import OidcProviderInstance from 'oidc-provider/lib/helpers/weak_cache.js';
 
 import { ModuleRef } from '@nestjs/core';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -11,8 +11,6 @@ import { OidcProviderService } from '@fc/oidc-provider';
 import { getLoggerMock } from '@mocks/logger';
 
 import { OverrideOidcProviderService } from './override-oidc-provider.service';
-
-jest.mock('oidc-provider/lib/helpers/keystore.js');
 
 describe('OverrideOidcProviderService', () => {
   let service: OverrideOidcProviderService;
@@ -30,6 +28,10 @@ describe('OverrideOidcProviderService', () => {
 
   const moduleRefMock = {
     get: jest.fn(),
+  };
+
+  const instanceMock = {
+    jwksResponse: {},
   };
 
   const KeyStoreMock = jest.mocked(KeyStore);
@@ -63,6 +65,8 @@ describe('OverrideOidcProviderService', () => {
     jest.resetAllMocks();
     oidcProviderMock.getProvider.mockReturnValue(providerMock);
     configMock.get.mockReturnValue({ sigHsmPubKeys: signHsmPubKeysMock });
+
+    OidcProviderInstance.mockReturnValue(instanceMock);
   });
 
   it('should be defined', () => {
@@ -123,14 +127,11 @@ describe('OverrideOidcProviderService', () => {
     });
 
     it('should affect the keystore to provider instance', () => {
-      // Given
-      const instanceSpy = OidcProviderInstance(providerMock);
-
       // When
       service['overrideJwksResponse']();
 
       // Then
-      expect(instanceSpy.jwksResponse).toEqual({ keys: signHsmPubKeysMock });
+      expect(instanceMock.jwksResponse).toEqual({ keys: signHsmPubKeysMock });
     });
   });
 

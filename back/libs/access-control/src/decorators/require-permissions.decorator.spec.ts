@@ -1,6 +1,8 @@
 import { ExecutionContext, SetMetadata } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
+import { FunctionSafe } from '@fc/common';
+
 import { EntityType, PermissionsType } from '../enums';
 import { RequirePermissionDecoratorInterface } from '../interfaces';
 import { PERMISSION_METADATA_TOKEN } from '../tokens';
@@ -70,7 +72,7 @@ describe('get', () => {
   } as unknown as ExecutionContext;
 
   const requiredPermissions = [Symbol('permission')];
-  const handlerMock = Symbol('handler') as unknown as Function;
+  const handlerMock = Symbol('handler') as unknown as FunctionSafe;
 
   beforeEach(() => {
     jest.resetAllMocks();

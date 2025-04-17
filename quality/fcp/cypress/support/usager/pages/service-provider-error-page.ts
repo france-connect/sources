@@ -54,7 +54,9 @@ export default class ServiceProviderErrorPage {
       /'/g,
       '%27',
     );
-    const match = url.match(ERROR_URL_REGEXP);
+    const encodedUrl = url.replace(/\+/g, '%20');
+
+    const match = encodedUrl.match(ERROR_URL_REGEXP);
     expect(match.length).to.equal(4);
     expect(match[ERROR_DESCRIPTION_GROUP]).to.equal(encodedDescription);
   }

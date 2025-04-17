@@ -285,9 +285,11 @@ export class OidcProviderController {
 
     await this.core.sendNotificationMail(deviceInfo);
 
-    await this.oidcProvider.finishInteraction(req, res, session);
+    const sessionId = this.sessionService.getId();
 
     await this.handleSessionLife(req, res);
+
+    await this.oidcProvider.finishInteraction(req, res, session, sessionId);
   }
 
   private async handleSessionLife(req: Request, res: Response): Promise<void> {

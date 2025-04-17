@@ -1,4 +1,4 @@
-import { Controller, Get, Header, HttpStatus, Res } from '@nestjs/common';
+import { Controller, Get, Header, Res } from '@nestjs/common';
 
 import { CsrfToken } from '@fc/csrf';
 import { PartnersAccountSession } from '@fc/partners-account';
@@ -16,18 +16,16 @@ export class PartnersController {
 
   @Get(PartnersBackRoutes.USER_INFO)
   @Header('cache-control', 'no-store')
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   getUserInfo(
     @Res() res,
-    @Session('PartnersAccount')
+    @Session('PartnersAccount', PartnersAccountSession)
     sessionPartnersAccount: ISessionService<PartnersAccountSession>,
   ): Promise<UserInfosInterface | HttpErrorResponse> {
     const userInfo = sessionPartnersAccount.get();
-
-    if (!userInfo) {
-      return res.status(HttpStatus.UNAUTHORIZED).send({
-        code: 'INVALID_SESSION',
-      });
-    }
 
     const data = {
       ...userInfo?.identity,

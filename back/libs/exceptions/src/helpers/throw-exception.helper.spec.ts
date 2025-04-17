@@ -8,6 +8,7 @@ jest.mock('@fc/common', () => ({
   NestJsDependencyInjectionWrapper: {
     get: jest.fn(),
   },
+  wait: jest.fn(),
 }));
 
 describe('throwException', () => {

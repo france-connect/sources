@@ -1,6 +1,8 @@
 import { ExecutionContext, SetMetadata } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
+import { FunctionSafe } from '@fc/common';
+
 import { FLOW_STEP_FORBID_REFRESH_METADATA } from '../tokens';
 import { ForbidRefresh } from './forbid-refresh.decorator';
 
@@ -43,7 +45,7 @@ describe('get', () => {
   } as unknown as ExecutionContext;
 
   const ForbidRefreshFlag = [Symbol('ForbidRefreshFlag')];
-  const handlerMock = Symbol('handler') as unknown as Function;
+  const handlerMock = Symbol('handler') as unknown as FunctionSafe;
 
   beforeEach(() => {
     jest.resetAllMocks();

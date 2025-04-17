@@ -52,10 +52,10 @@ export const frFR: I18nTranslationsMapType = {
   ...frViewTemplates,
 
   // Libraries overrides
-  'OidcProvider.exceptions.InvalidRequest.9D62': 'Page non trouvée',
-  'OidcProvider.exceptions.InvalidClient.A586':
+  'OidcProvider.exceptions.InvalidRequest.99B1': 'Page non trouvée',
+  'OidcProvider.exceptions.InvalidClient.EA6E':
     'Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement.',
-  'OidcProvider.exceptions.InvalidRedirectUri.6350':
+  'OidcProvider.exceptions.InvalidRedirectUri.C013':
     'Une erreur de communication avec le fournisseur de service est survenue. Veuillez réessayer ultérieurement.',
 
   'CoreFcp.exceptions.coreFcpFailedAbortSession': ERROR_RECONNECT,

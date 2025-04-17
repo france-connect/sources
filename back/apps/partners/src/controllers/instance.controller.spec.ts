@@ -63,6 +63,11 @@ describe('InstanceController', () => {
     sub: 'identityMock.sub value',
   };
 
+  const sessionPartnersMock = {
+    identity: { ...userInfoMock },
+    accessControl: [],
+  };
+
   const body = {
     name: 'instance name',
   } as unknown as ServiceProviderInstanceVersionDto;
@@ -121,7 +126,7 @@ describe('InstanceController', () => {
 
     instanceMock.save.mockResolvedValueOnce({ id: instanceIdMock });
     versionMock.create.mockResolvedValueOnce({ id: versionIdMock });
-    sessionPartnersAccountMock.get.mockReturnValue({ identity: userInfoMock });
+    sessionPartnersAccountMock.get.mockReturnValue(sessionPartnersMock);
     partnersServiceMock.fromFormValues.mockResolvedValue(body);
   });
 

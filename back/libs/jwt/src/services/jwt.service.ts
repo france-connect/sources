@@ -18,9 +18,12 @@ import { lastValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 
+import { validateDto } from '@fc/common';
 import { DekAlg, KekAlg, Use } from '@fc/cryptography';
 import { FetchJwksFailedException } from '@fc/jwt/exceptions/fetch-jwks-failed.exception';
+import { LoggerService } from '@fc/logger';
 
+import { JwksDto } from '../dto';
 import {
   CanNotDecodePlaintextException,
   CanNotDecodeProtectedHeaderException,
@@ -28,6 +31,7 @@ import {
   CanNotEncryptException,
   CanNotImportJwkException,
   CanNotSignJwtException,
+  InvalidJwksException,
   InvalidSignatureException,
   NoRelevantKeyException,
 } from '../exceptions';
@@ -35,7 +39,10 @@ import { MultipleRelevantKeysException } from '../exceptions/multiple-relevant-k
 
 @Injectable()
 export class JwtService {
-  constructor(private readonly http: HttpService) {}
+  constructor(
+    private readonly http: HttpService,
+    private readonly logger: LoggerService,
+  ) {}
 
   getFirstRelevantKey(
     jwks: JSONWebKeySet,
@@ -185,6 +192,11 @@ export class JwtService {
       response = await lastValueFrom(this.http.get(url));
     } catch (error) {
       throw new FetchJwksFailedException(error);
+    }
+    const errors = await validateDto(response.data, JwksDto, {});
+    if (errors.length > 0) {
+      this.logger.debug(errors, 'The JWKS format is invalid');
+      throw new InvalidJwksException();
     }
 
     return response.data as JSONWebKeySet;

@@ -3,7 +3,7 @@ const accountsLegacy = [
   {
     id: "E000001",
     identityHash: "FBazvqZ/4W7b76RmlV86MH9HNzVkofupYc74cHgInnQ=",
-    createdAt: new Date("2019-12-11T11:16:23.540Z"),
+    createdAt: new Date("2025-03-11T11:16:23.540Z"),
     active: false,
     servicesProvidersFederationKeys: [
       {
@@ -26,8 +26,8 @@ const accountsLegacy = [
   {
     id: "utilisateur_français_actif",
     identityHash: "G6I4QnBKE6tWKLhHS7BHswMD9FSkSXmZcbaxy6qC4fo=",
-    updatedAt: ISODate("2020-01-08T14:33:26.495Z"),
-    createdAt: ISODate("2020-01-08T14:33:13.841Z"),
+    updatedAt: ISODate("2025-01-08T14:33:26.495Z"),
+    createdAt: ISODate("2025-01-08T14:33:13.841Z"),
     active: true,
     servicesProvidersFederationKeys: [
       {
@@ -49,8 +49,8 @@ const accountsLegacy = [
   {
     id: "utilisateur_étranger_actif",
     identityHash: "JaT8pFBj02oTgKQt70JOuFdrfk0rji5YTXUMXOMH14c=",
-    updatedAt: ISODate("2020-01-08T14:33:26.495Z"),
-    createdAt: ISODate("2020-01-08T14:33:13.841Z"),
+    updatedAt: ISODate("2025-01-08T14:33:26.495Z"),
+    createdAt: ISODate("2025-01-08T14:33:13.841Z"),
     active: true,
     servicesProvidersFederationKeys: [
       {
@@ -78,8 +78,8 @@ const accountsLegacy = [
   {
     id: "utilisateur_japonais_actif_à_désactiver",
     identityHash: "3sJDedlavuVqQPW4b7f3IVMncImUnvjOJcDDvlx4848=",
-    updatedAt: ISODate("2020-01-08T14:33:26.495Z"),
-    createdAt: ISODate("2020-01-08T14:33:13.841Z"),
+    updatedAt: ISODate("2025-01-08T14:33:26.495Z"),
+    createdAt: ISODate("2025-01-08T14:33:13.841Z"),
     active: true,
     servicesProvidersFederationKeys: [
       {
@@ -101,8 +101,8 @@ const accountsLegacy = [
   {
     id: "utilisateur_dont_on_ne_connaît_pas_le_jour_de_naissance",
     identityHash: "PM0TEdQS4/sfl4I38nkxtXWmmCNqYDrxMNCrJLIIihM=",
-    updatedAt: ISODate("2020-01-08T14:33:26.495Z"),
-    createdAt: ISODate("2020-01-08T14:33:13.841Z"),
+    updatedAt: ISODate("2025-01-08T14:33:26.495Z"),
+    createdAt: ISODate("2025-01-08T14:33:13.841Z"),
     active: true,
     servicesProvidersFederationKeys: [
       {
@@ -124,8 +124,8 @@ const accountsLegacy = [
   {
     id: "utilisateur_dont_on_ne_connaît_pas_le_mois_et_le_jour_de_naissance",
     identityHash: "rOKHO6/MmQxewxsLKHY1sD/0tn5+/nrX4t0GzE/vp4Y=",
-    updatedAt: ISODate("2020-01-08T14:33:26.495Z"),
-    createdAt: ISODate("2020-01-08T14:33:13.841Z"),
+    updatedAt: ISODate("2025-01-08T14:33:26.495Z"),
+    createdAt: ISODate("2025-01-08T14:33:13.841Z"),
     active: true,
     servicesProvidersFederationKeys: [
       {
@@ -154,8 +154,8 @@ const accountsLegacy = [
   {
     id: "utilisateur_français_actif_homonyme_1",
     identityHash: "uM0vHEOW6N9aKS8eQjVRFGcLVuPacH6C6o0/DE0DKFQ=",
-    updatedAt: ISODate("2020-01-08T14:33:26.495Z"),
-    createdAt: ISODate("2020-01-08T14:33:13.841Z"),
+    updatedAt: ISODate("2025-01-08T14:33:26.495Z"),
+    createdAt: ISODate("2025-01-08T14:33:13.841Z"),
     active: true,
     servicesProvidersFederationKeys: [
       {
@@ -177,8 +177,8 @@ const accountsLegacy = [
   {
     id: "utilisateur_français_actif_desactive_homonyme_2",
     identityHash: "QbICB/D3TsJ/6rwO87Fr4HylXTZiMvga+h/JT+AzDBA=",
-    updatedAt: ISODate("2020-01-08T14:33:26.495Z"),
-    createdAt: ISODate("2020-01-08T14:33:13.841Z"),
+    updatedAt: ISODate("2025-01-08T14:33:26.495Z"),
+    createdAt: ISODate("2025-01-08T14:33:13.841Z"),
     active: false,
     servicesProvidersFederationKeys: [
       {

@@ -132,6 +132,10 @@ function formatErrorMessages(error: ValidationError, prefix: string) {
  *
  * @returns The messages in an array
  */
+/**
+ * @todo FC-2184 ⚠️
+ */
+// eslint-disable-next-line complexity
 export function getAllPropertiesErrors(
   validationErrors: ValidationError[],
   prefix = '',

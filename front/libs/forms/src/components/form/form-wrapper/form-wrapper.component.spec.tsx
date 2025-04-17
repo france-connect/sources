@@ -86,8 +86,9 @@ describe('FormWrapperComponent', () => {
     );
   });
 
-  it('should match snapshot without descriptionn, title and a disable submit button', () => {
+  it('should match snapshot without descriptionn, title, submit label and a disable submit button', () => {
     // Given
+    const submitLabelMock = 'any-submit-label-mock';
     const handleSubmitMock = jest.fn();
 
     const childrenMock = <div>any-children-mock</div>;
@@ -102,7 +103,8 @@ describe('FormWrapperComponent', () => {
         handleSubmit={handleSubmitMock}
         noRequired={false}
         scrollTopOnSubmit={scrollTopOnSubmitMock}
-        submitError="any-submit-error-mock">
+        submitError="any-submit-error-mock"
+        submitLabel={submitLabelMock}>
         {childrenMock}
       </FormWrapperComponent>,
     );
@@ -113,6 +115,7 @@ describe('FormWrapperComponent', () => {
     expect(FormActionsComponent).toHaveBeenCalledWith(
       {
         canSubmit: false,
+        submitLabel: submitLabelMock,
       },
       {},
     );

@@ -368,6 +368,145 @@ services:
     command: "pm2 logs"
 
   ####################
+  # Cypress
+  ####################
+
+  cypress:
+    build:
+      context: "${VOLUMES_DIR}/src/fc/quality"
+      dockerfile: "${WORKING_DIR}/builds/cypress/Dockerfile"
+    image: ${FC_DOCKER_REGISTRY}/cypress:${IMAGE_VERSION:-${CYPRESS_IMAGE_VERSION}}
+
+  cypress-fcp:
+    image: ${FC_DOCKER_REGISTRY}/cypress:${CYPRESS_IMAGE_VERSION}
+    user: ${CURRENT_UID}
+    working_dir: /var/www/quality/fcp
+    entrypoint: [""]
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/quality/fcp:/var/www/quality/fcp"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+    environment:
+      - HTTP_PROXY=${PROXY_EXPLOITATION:-}
+      - NO_PROXY
+      - DISPLAY
+      - CYPRESS_TAGS
+      - CYPRESS_PLATFORM
+      - CYPRESS_TEST_ENV
+      - CYPRESS_EXPLOIT_USER_NAME
+      - CYPRESS_EXPLOIT_USER_PASS
+      - CYPRESS_EXPLOIT_USER_TOTP
+      - CYPRESS_SUPPORT_USER_NAME
+      - CYPRESS_SUPPORT_USER_PASS
+      - CYPRESS_SUPPORT_USER_TOTP
+      - CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT
+      - CI
+      - CI_COMMIT_REF_NAME
+      - CI_COMMIT_SHORT_SHA
+      - CI_OPEN_MERGE_REQUESTS
+      - CI_JOB_ID
+
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/cypress.env"
+    networks:
+      - public
+      - data
+
+  cypress-partners:
+    image: ${FC_DOCKER_REGISTRY}/cypress:${CYPRESS_IMAGE_VERSION}
+    user: ${CURRENT_UID}
+    working_dir: /var/www/quality/partners
+    entrypoint: [""]
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/quality/partners:/var/www/quality/partners"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+    environment:
+      - HTTP_PROXY=${PROXY_EXPLOITATION:-}
+      - NO_PROXY
+      - DISPLAY
+      - CYPRESS_TAGS
+      - CYPRESS_PLATFORM
+      - CYPRESS_TEST_ENV
+      - CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT
+      - CI
+      - CI_COMMIT_REF_NAME
+      - CI_COMMIT_SHORT_SHA
+      - CI_OPEN_MERGE_REQUESTS
+      - CI_JOB_ID
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/cypress.env"
+    networks:
+      - public
+      - data
+
+  cypress-exploitation:
+    image: ${FC_DOCKER_REGISTRY}/cypress:${CYPRESS_IMAGE_VERSION}
+    user: ${CURRENT_UID}
+    working_dir: /var/www/quality
+    entrypoint: [""]
+    volumes:
+      - "${VOLUMES_DIR}/src/fc-apps/fc-exploitation/cypress:/var/www/quality/fc-exploitation/cypress"
+      - "${VOLUMES_DIR}/src/fc-apps/fc-exploitation/cypress.config.js:/var/www/quality/fc-exploitation/cypress.config.js"
+      - "${VOLUMES_DIR}/src/fc-apps/shared/cypress:/var/www/quality/shared/cypress"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+    environment:
+      - HTTP_PROXY=${PROXY_EXPLOITATION:-}
+      - NO_PROXY
+      - DISPLAY
+      - CYPRESS_TAGS
+      - CYPRESS_PLATFORM
+      - CYPRESS_TEST_ENV
+      - CI
+      - CI_COMMIT_REF_NAME
+      - CI_COMMIT_SHORT_SHA
+      - CI_OPEN_MERGE_REQUESTS
+      - CI_JOB_ID
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/cypress.env"
+    networks:
+      - public
+      - data
+  
+  cypress-support:
+    image: ${FC_DOCKER_REGISTRY}/cypress:${CYPRESS_IMAGE_VERSION}
+    user: ${CURRENT_UID}
+    working_dir: /var/www/quality
+    entrypoint: [""]
+    volumes:
+      - "${VOLUMES_DIR}/src/fc-apps/fc-support/cypress:/var/www/quality/fc-support/cypress"
+      - "${VOLUMES_DIR}/src/fc-apps/fc-support/cypress.config.js:/var/www/quality/fc-support/cypress.config.js"
+      - "${VOLUMES_DIR}/src/fc-apps/shared/cypress:/var/www/quality/shared/cypress"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - "/tmp/.X11-unix:/tmp/.X11-unix"
+    environment:
+      - HTTP_PROXY=${PROXY_EXPLOITATION:-}
+      - NO_PROXY
+      - DISPLAY
+      - CYPRESS_TAGS
+      - CYPRESS_PLATFORM
+      - CYPRESS_TEST_ENV
+      - CI
+      - CI_COMMIT_REF_NAME
+      - CI_COMMIT_SHORT_SHA
+      - CI_OPEN_MERGE_REQUESTS
+      - CI_JOB_ID
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/cypress.env"
+    networks:
+      - public
+      - data
+
+  ####################
   # Shared Mocks
   ####################
 

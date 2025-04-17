@@ -70,6 +70,10 @@ export class EidasBridgeTrackingService implements AppTrackingServiceAbstract {
     return context;
   }
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   private extractContextFromEuRequest() {
     const sessionOidc = this.session.get<OidcSession>('OidcClient');
     const sessionEidas =
@@ -86,6 +90,10 @@ export class EidasBridgeTrackingService implements AppTrackingServiceAbstract {
     return context;
   }
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   private extractContextFromFrRequest(ctx: TrackedEventContextInterface) {
     const { countryCodeDst } = ctx;
 

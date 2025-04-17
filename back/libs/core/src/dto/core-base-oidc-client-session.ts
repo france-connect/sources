@@ -3,6 +3,7 @@ import {
   IsArray,
   IsAscii,
   IsBoolean,
+  IsIn,
   IsNotEmpty,
   IsObject,
   IsOptional,
@@ -53,6 +54,11 @@ export class CoreBaseOidcClientSessionDto {
   @IsNotEmpty()
   @Expose()
   readonly spName: string;
+
+  @IsString()
+  @IsIn(['public', 'private'])
+  @Expose()
+  readonly spType: string;
 
   @IsString()
   @IsNotEmpty()

@@ -18,4 +18,5 @@ export interface FormInterface<T> {
   decorators?: Decorator<T, Partial<T>>[];
   onValidate?: (values: T) => ValidationErrors | Promise<ValidationErrors>;
   onSubmit: (values: T) => SubmissionErrors | Promise<SubmissionErrors> | void;
+  submitLabel?: string;
 }

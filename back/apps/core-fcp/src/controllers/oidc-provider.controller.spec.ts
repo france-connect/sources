@@ -223,6 +223,7 @@ describe('OidcProviderController', () => {
     sessionServiceMock.reset.mockResolvedValueOnce(sessionIdMock);
     sessionServiceMock.get.mockReturnValueOnce(sessionDataMock);
     sessionServiceMock.set.mockReturnValueOnce(undefined);
+    sessionServiceMock.getId.mockReturnValueOnce(sessionIdMock);
 
     coreSessionServiceMock.get.mockReturnValueOnce([]);
 
@@ -734,6 +735,7 @@ describe('OidcProviderController', () => {
         req,
         res,
         sessionDataMock,
+        sessionIdMock,
       );
     });
 

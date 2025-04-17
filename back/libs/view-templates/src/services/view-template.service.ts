@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { Injectable } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 
-import { Instantiable } from '@fc/common';
+import { FunctionSafe, Instantiable } from '@fc/common';
 
 import { TemplateMethod } from '../decorators';
 import { ViewTemplateServiceNotFoundException } from '../exceptions/view-template-service-not-found.exception';
@@ -24,9 +24,9 @@ export class ViewTemplateService {
   }
 
   private exposeHelper(
-    list: Record<string, Function>,
+    list: Record<string, FunctionSafe>,
     alias: string,
-    helper: Function,
+    helper: FunctionSafe,
   ): void {
     list[`${HELPERS_PREFIX}${alias}`] = helper;
   }
@@ -34,19 +34,24 @@ export class ViewTemplateService {
   private getHelper(
     provider: Instantiable | object,
     methodName: string,
-  ): Function {
+  ): FunctionSafe {
     if (typeof provider === 'object') {
       return this.getInstanceMethod(provider, methodName);
     }
     return this.getStaticMethod(provider, methodName);
   }
 
-  private getInstanceMethod(provider: object, methodName: string): Function {
+  private getInstanceMethod(
+    provider: object,
+    methodName: string,
+  ): FunctionSafe {
     try {
       const service = this.moduleRef.get(provider.constructor, {
         strict: false,
       });
       return service[methodName].bind(service);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new ViewTemplateServiceNotFoundException(provider, methodName);
     }
@@ -55,7 +60,7 @@ export class ViewTemplateService {
   private getStaticMethod(
     provider: Instantiable,
     methodName: string,
-  ): Function {
+  ): FunctionSafe {
     return provider[methodName];
   }
 }

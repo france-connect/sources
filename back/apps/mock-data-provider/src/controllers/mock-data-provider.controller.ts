@@ -1,6 +1,5 @@
 import { Response } from 'express';
 import { JSONWebKeySet } from 'jose';
-import { JWK } from 'jose-openid-client';
 
 import {
   Body,
@@ -13,11 +12,13 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 
+import { ArrayAsyncHelper } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import {
   DataProviderAdapterCoreConfig,
   DataProviderAdapterCoreService,
 } from '@fc/data-provider-adapter-core';
+import { JwkHelper } from '@fc/jwt';
 import { LoggerService } from '@fc/logger';
 import { DataParamsDto } from '@fc/mock-data-provider/dto';
 
@@ -67,15 +68,17 @@ export class MockDataProviderController {
   }
 
   @Get(MockDataProviderRoutes.JWKS)
-  jwks(): JSONWebKeySet {
+  async jwks(): Promise<JSONWebKeySet> {
     const {
       jwks: { keys },
     } = this.config.get<DataProviderAdapterCoreConfig>(
       'DataProviderAdapterCore',
     );
 
-    const publicKeys = keys.map((key) => JWK.asKey(key as any).toJWK());
-
+    const publicKeys = await ArrayAsyncHelper.mapAsync(
+      keys,
+      async (key) => await JwkHelper.publicFromPrivate(key),
+    );
     return { keys: publicKeys } as JSONWebKeySet;
   }
 }

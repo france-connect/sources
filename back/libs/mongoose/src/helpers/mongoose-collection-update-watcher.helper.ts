@@ -3,6 +3,7 @@ import { Document, Model } from 'mongoose';
 
 import { Injectable } from '@nestjs/common';
 
+import { FunctionSafe } from '@fc/common';
 import { LoggerService } from '@fc/logger';
 
 const DEFAULT_OPERATIONS = ['insert', 'update', 'delete', 'rename', 'replace'];
@@ -13,7 +14,7 @@ export class MongooseCollectionOperationWatcherHelper {
 
   constructor(private readonly logger: LoggerService) {}
 
-  watchWith<T extends Document>(model: Model<T>, callback: Function): void {
+  watchWith<T extends Document>(model: Model<T>, callback: FunctionSafe): void {
     MongooseCollectionOperationWatcherHelper.listeners.push({
       model,
       callback,
@@ -21,7 +22,10 @@ export class MongooseCollectionOperationWatcherHelper {
     this.watch<T>(model, callback);
   }
 
-  private watch<T extends Document>(model: Model<T>, callback: Function): void {
+  private watch<T extends Document>(
+    model: Model<T>,
+    callback: FunctionSafe,
+  ): void {
     const watch = model.watch();
     this.logger.notice(
       `Database OperationType watcher initialization for "${model.modelName}".`,
@@ -41,7 +45,7 @@ export class MongooseCollectionOperationWatcherHelper {
 
   private operationTypeWatcher(
     modelName: string,
-    callback: Function,
+    callback: FunctionSafe,
     stream: ChangeStreamDocument,
   ): void {
     const isListenedOperation = DEFAULT_OPERATIONS.includes(

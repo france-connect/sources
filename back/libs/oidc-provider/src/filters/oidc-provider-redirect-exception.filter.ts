@@ -67,6 +67,8 @@ export class OidcProviderRedirectExceptionFilter
 
     try {
       await this.oidcProvider.abortInteraction(req, res, params);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (abortError) {
       await this.manualRedirect({ req, res, errorDetails, exception, params });
     }
@@ -89,6 +91,10 @@ export class OidcProviderRedirectExceptionFilter
     return error;
   }
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   private getOidcParams(
     exception: OidcProviderBaseRedirectException,
   ): OidcError {

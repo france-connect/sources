@@ -8,8 +8,6 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 
-import { PartnersAccountPermission } from '@entities/typeorm';
-
 import { LoggerService } from '@fc/logger';
 import { PartnersAccountSession } from '@fc/partners-account';
 import { SessionService } from '@fc/session';
@@ -34,19 +32,17 @@ export class AccessControlSessionInterceptor implements NestInterceptor {
     const sessionData =
       this.sessionService.get<PartnersAccountSession>('PartnersAccount');
 
-    let permissions: PartnersAccountPermission[] = [];
-
     if (sessionData?.identity?.email) {
-      permissions = await this.accountPermission.getByEmail(
+      const permissions = await this.accountPermission.getByEmail(
         sessionData.identity.email,
       );
-    }
 
-    this.sessionService.set('PartnersAccount', {
-      [ACCESS_CONTROL_TOKEN]: {
-        userPermissions: deepFreeze(permissions),
-      },
-    });
+      this.sessionService.set('PartnersAccount', {
+        [ACCESS_CONTROL_TOKEN]: {
+          userPermissions: deepFreeze(permissions),
+        },
+      });
+    }
 
     return next.handle();
   }

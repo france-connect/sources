@@ -115,6 +115,8 @@ export class EidasClientService {
   ): Promise<void> {
     try {
       await this.connectorRequestCache.put(id, lightRequest);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       throw new WriteLightRequestInCacheException();
     }
@@ -131,6 +133,8 @@ export class EidasClientService {
 
     try {
       return await this.connectorResponseCache.get(id);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       throw new ReadLightResponseFromCacheException();
     }

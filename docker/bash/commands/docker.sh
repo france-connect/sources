@@ -114,6 +114,33 @@ _prune_ci() {
   ${DOCKER_COMPOSE} down --volumes --remove-orphans
 }
 
+_build_push() {
+  local USAGE="Syntax: docker-stack build-push [service] [version]"
+  
+  # Check parameters
+  if [ "$#" -lt 2 ]; then
+    echo ${USAGE}
+  fi
+  # Check whether the Docker Registry environment variables are set
+  if [ "x${FC_DOCKER_REGISTRY}" = "x" ]; then
+    echo "The environment variable FC_DOCKER_REGISTRY is not defined"
+  fi
+  if [ "x${FC_DOCKER_REGISTRY_USER}" = "x" ]; then
+    echo "The environment variables FC_DOCKER_REGISTRY_USER is not defined"
+  fi
+  if [ "x${FC_DOCKER_REGISTRY_PASS}" = "x" ]; then
+    echo "The environment variables FC_DOCKER_REGISTRY_PASS is not defined"
+  fi
+  local SERVICE="$1"
+  local VERSION="$2"
+
+  echo "login to FC Docker Register with ${FC_DOCKER_REGISTRY_USER}"
+  echo ${FC_DOCKER_REGISTRY_PASS} | docker login ${FC_DOCKER_REGISTRY} --username ${FC_DOCKER_REGISTRY_USER} --password-stdin
+  
+  echo "build ${FC_DOCKER_REGISTRY}/${SERVICE}:${VERSION}"
+  IMAGE_VERSION="${VERSION}" ${DOCKER_COMPOSE} build --build-arg CURRENT_UID="${CURRENT_UID}" --no-cache --push ${SERVICE}
+}
+
 _get_env() {
   local app=${1}
   local varName=${2}

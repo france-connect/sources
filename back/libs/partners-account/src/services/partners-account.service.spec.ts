@@ -23,7 +23,6 @@ describe('PartnersAccountService', () => {
     firstname: 'test',
     lastname: 'test',
     email: 'test@test.fr',
-    siren: '123456789',
   };
 
   const insertResult = {

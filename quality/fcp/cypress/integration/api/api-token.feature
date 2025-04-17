@@ -82,7 +82,7 @@ Fonctionnalité: API - token
     Et le corps de la réponse contient une erreur
     Et le corps de la réponse a une propriété "error" égale à "invalid_client"
     Et le corps de la réponse a une propriété "error_description" égale à "client authentication failed (invalid secret provided)"
-    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y04A022&id="
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y0473E3&id="
 
   @fcpLow @fcpHigh @exceptions
   Scénario: API token - erreur code manquant
@@ -112,4 +112,4 @@ Fonctionnalité: API - token
     Et le corps de la réponse contient une erreur
     Et le corps de la réponse a une propriété "error" égale à "invalid_grant"
     Et le corps de la réponse a une propriété "error_description" égale à "grant request is invalid (authorization code not found)"
-    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y047BF6&id="
+    Et le corps de la réponse a une propriété "error_uri" contenant "https://docs.partenaires.franceconnect.gouv.fr/fs/fs-technique/fs-technique-erreurs/?code=Y04ECCB&id="

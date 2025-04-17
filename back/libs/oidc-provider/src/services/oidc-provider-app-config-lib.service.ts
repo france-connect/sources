@@ -6,6 +6,7 @@ import {
 
 import { Injectable } from '@nestjs/common';
 
+import { AsyncFunctionSafe } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { throwException } from '@fc/exceptions/helpers';
 import { LoggerService } from '@fc/logger';
@@ -92,7 +93,7 @@ export abstract class OidcProviderAppConfigLibService
   async findAccount(
     ctx: KoaContextWithOIDC,
     sessionId: string,
-  ): Promise<{ accountId: string; claims: Function }> {
+  ): Promise<{ accountId: string; claims: AsyncFunctionSafe }> {
     try {
       // Use the user session from the service provider request
       await this.sessionService.initCache(sessionId);
@@ -135,9 +136,11 @@ export abstract class OidcProviderAppConfigLibService
     req: any,
     res: any,
     session: OidcSession,
+    sessionId?: string,
   ): Promise<void> {
     const { amr, interactionAcr: acr }: OidcClientSession = session;
-    const sessionId = this.sessionService.getId();
+
+    const accountId = sessionId || this.sessionService.getId();
 
     /**
      * Build Interaction results
@@ -149,7 +152,7 @@ export abstract class OidcProviderAppConfigLibService
       this.provider,
       req,
       res,
-      sessionId,
+      accountId,
     );
 
     const grantId = await this.grantService.saveGrant(grant);
@@ -162,7 +165,7 @@ export abstract class OidcProviderAppConfigLibService
       login: {
         amr,
         acr,
-        accountId: sessionId,
+        accountId,
         ts: Math.floor(Date.now() / 1000),
         remember: false,
       },
@@ -236,7 +239,7 @@ export abstract class OidcProviderAppConfigLibService
     sessionId: string,
     spIdentity: Partial<Omit<IOidcIdentity, 'sub'>>,
     subSp: string,
-  ): Promise<{ accountId: string; claims: Function }> {
+  ): Promise<{ accountId: string; claims: AsyncFunctionSafe }> {
     return {
       /**
        * We used the `sessionId` as `accountId` identifier when building the grant

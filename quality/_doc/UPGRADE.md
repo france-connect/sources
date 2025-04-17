@@ -41,6 +41,46 @@
 9. Run the tests BDD on FC+, FC v2, user-dashboard, FC legacy, formulaire-usagers
 10. Run the tests E2E on FC-APPS
 
+#### How to generate a new Cypress docker image
+
+##### 1. Retrieve an Gitlab access token
+
+In Gitlab, 
+- click on "Preferences" then "Access tokens"
+- Add a new "Personal access tokens" with scope "read_registry, write_registry"
+- Keep the access token
+
+More information <https://docs.gitlab.com/user/project/settings/project_access_tokens/#create-a-project-access-token>
+
+##### 2. Configure the Docker registry environment variables
+
+Edit the file `~/.bashrc` to setup the following environment variables with your access token.
+
+```
+export FC_DOCKER_REGISTRY=registry.gitlab.dev-franceconnect.fr/france-connect/fc
+export FC_DOCKER_REGISTRY_USER=<gitlab user>
+export FC_DOCKER_REGISTRY_PASS=<access token>
+```
+
+##### 3. Build and push a new Cypress docker image
+
+- Update the Cypress Dockerfile: `docker/builds/cypress/Dockerfile`
+- Update the quality dependencies: `quality/package.json`
+- Open a bash terminal, and run the build and push command
+
+```bash
+# docker-stack build-push cypress <version>
+docker-stack build-push cypress 14.0.3
+```
+
+##### 4. Update the CYPRESS_IMAGE_VERSION environment variable
+
+Edit the docker-stack config `docker/bash/config/ci.sh`, in order to set the default value.
+
+```bash
+export CYPRESS_IMAGE_VERSION=${CYPRESS_IMAGE_VERSION:-14.0.3}
+```
+
 ### Known issues when upgrading to Cypress v14.0.3
 
 #### 1. `cypress-maildev`

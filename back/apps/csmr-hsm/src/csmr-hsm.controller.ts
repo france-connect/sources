@@ -40,6 +40,8 @@ export class CsmrHsmController {
       const signedBuffer = this.hsm.sign(dataBuffer, digest);
       const signed = signedBuffer.toString(payloadEncoding);
       return signed;
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       this.logger.err(new CsmrHsmSignException());
       return 'ERROR';
@@ -60,6 +62,8 @@ export class CsmrHsmController {
 
     try {
       return this.hsm.genRandom(length, encoding);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       this.logger.err(new CsmrHsmRandomException());
       return 'ERROR';

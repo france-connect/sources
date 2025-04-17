@@ -21,14 +21,17 @@ export class CsmrTracksService {
     identity: IOidcIdentity,
     options: IPaginationOptions,
   ): Promise<TracksResultsInterface> {
-    const accountIds = await this.account.getAccountIdsFromIdentity(identity);
+    const { accountIdLow, accountIdHigh } =
+      await this.account.getAccountIdsFromIdentity(identity);
 
-    if (!accountIds.length) {
+    const groupIds = [accountIdLow, accountIdHigh].filter(Boolean);
+
+    if (!groupIds.length) {
       this.logger.debug('No AccountId found');
       return this.generateEmptyResults(options);
     }
     const { total, payload } = await this.tracks.getTracksForAccountIds(
-      accountIds,
+      groupIds,
       options,
     );
 

@@ -15,6 +15,7 @@ import { DTO2SectionComponent } from '../dto2section';
 interface DTO2FormComponentProps<T> extends FormInterface<T> {
   // @TODO this should be refactored
   schema: BaseAttributes[];
+  submitLabel?: string;
 }
 
 export function DTO2FormComponent<T extends Record<string, unknown>>({
@@ -23,6 +24,7 @@ export function DTO2FormComponent<T extends Record<string, unknown>>({
   onSubmit,
   onValidate,
   schema,
+  submitLabel = undefined,
 }: DTO2FormComponentProps<T>) {
   const { validateOnSubmit } = ConfigService.get<DTO2FormConfig>(Options.CONFIG_NAME);
   const validateFunc = validateOnSubmit ? onValidate : undefined;
@@ -49,6 +51,7 @@ export function DTO2FormComponent<T extends Record<string, unknown>>({
     <FormComponent
       config={config}
       initialValues={initialValues}
+      submitLabel={submitLabel}
       onSubmit={preSubmitHandler}
       onValidate={validateFunc}>
       {fields}

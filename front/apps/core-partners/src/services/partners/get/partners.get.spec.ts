@@ -1,4 +1,5 @@
 import { type AxiosResponse } from 'axios';
+import { redirect } from 'react-router-dom';
 
 import { get as httpClientGet } from '@fc/http-client';
 
@@ -28,6 +29,20 @@ describe('PartnersService.get', () => {
     const result = await get('any-url-mock');
 
     // Then
+    expect(result).toBeNull();
+  });
+
+  it('should redirect to login and return null when the response status is 401 (UNAUTHORIZED)', async () => {
+    // Given
+    jest.mocked(httpClientGet).mockRejectedValueOnce({
+      status: 401,
+    });
+
+    // When
+    const result = await get('any-url-mock');
+
+    // Then
+    expect(redirect).toHaveBeenCalledWith('/login', 401);
     expect(result).toBeNull();
   });
 

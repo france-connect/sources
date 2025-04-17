@@ -31,6 +31,7 @@ describe('DTO2FormComponent', () => {
   const configMock = {
     id: expect.any(String),
   };
+  const submitLabelMock = 'any-submit-label-mock';
 
   beforeEach(() => {
     // Given
@@ -48,6 +49,7 @@ describe('DTO2FormComponent', () => {
         config={configMock}
         initialValues={initialValuesMock}
         schema={schemaMock}
+        submitLabel={submitLabelMock}
         onSubmit={onSubmitMock}
         onValidate={onValidateMock}
       />,
@@ -65,6 +67,7 @@ describe('DTO2FormComponent', () => {
         initialValues: initialValuesMock,
         onSubmit: preSubmitMock,
         onValidate: onValidateMock,
+        submitLabel: 'any-submit-label-mock',
       },
       {},
     );

@@ -1,9 +1,6 @@
 #language:fr
-@ci @ignoreCI
+@csmrConfig @ignore
 Fonctionnalité: Csmr-Config
-
-  Contexte: Arrêter le cmsr-config-partners
-    Etant donné que j'arrête le service "csmr-config-partners"
 
   Scénario: Csmr-Config - Création d'un FS - erreur
     Etant donné que j'utilise le message RabbitMQ "CONFIG_CREATE" pour "csmr-config"
@@ -49,6 +46,3 @@ Fonctionnalité: Csmr-Config
     Exemples:
       | clientId                                                         |
       | a0f11c8e0fe358a058b571092f902725e17c1b0f8972979ef68ebf640425af58 |
-
-  Scénario: Redémarrer le cmsr-config-partners
-    Quand je démarre le service "csmr-config-partners"

@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 
 import { Injectable } from '@nestjs/common';
 
+import { FunctionSafe } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { EidasResponse } from '@fc/eidas';
 
@@ -194,7 +195,7 @@ export class LightResponseService {
 
   private getMapValuesToDefinitionForPath(state: {
     currentKey: string;
-  }): Function {
+  }): FunctionSafe {
     return (keyPath: string, value: unknown): Array<[string, unknown]> => {
       if (keyPath.match(/definition/) && typeof value === 'string') {
         state.currentKey = keyPath.replace('definition', value);
@@ -222,7 +223,7 @@ export class LightResponseService {
   private getDissociateDefinitionsAndValuesForPath(state: {
     index: number;
     lastDefinition?: string;
-  }): Function {
+  }): FunctionSafe {
     return (keyPath: string, value: unknown): Array<[string, unknown]> => {
       if (!keyPath.match(/attributes\.[a-zA-Z]+/)) {
         return [[keyPath, value]];

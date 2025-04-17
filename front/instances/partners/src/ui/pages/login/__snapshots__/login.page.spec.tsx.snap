@@ -15,12 +15,12 @@ exports[`Login Page shoud match the snapshot, greater than desktop viewport 1`] 
         class="fr-col-9"
       >
         <h1>
-          Partners.loginpage.title
+          any-translation-value
         </h1>
         <h2
           class="fr-mt-4w"
         >
-          Partners.loginpage.description
+          any-translation-value
         </h2>
         <div
           data-mockid="LoginFormComponent"
@@ -46,12 +46,82 @@ exports[`Login Page shoud match the snapshot, lower than mobile viewport 1`] = `
         class="fr-col-9"
       >
         <h1>
-          Partners.loginpage.title
+          any-translation-value
         </h1>
         <h2
           class="fr-mt-4w"
         >
-          Partners.loginpage.description
+          any-translation-value
+        </h2>
+        <div
+          data-mockid="LoginFormComponent"
+        />
+      </div>
+    </div>
+  </main>
+</div>
+`;
+
+exports[`Login Page shoud match the snapshot, when user session has expired 1`] = `
+<div>
+  <div>
+    NoticeComponent
+  </div>
+  <main
+    class="fr-container fr-py-8v"
+  >
+    <div
+      data-mockid="AlertComponent"
+    >
+      <div>
+        AlertComponent
+      </div>
+      <div />
+    </div>
+    <div
+      class="fr-grid-row fr-grid-row--center fr-mt-8w"
+    >
+      <div
+        class="fr-col-9"
+      >
+        <h1>
+          Partners.loginpage.title-mock
+        </h1>
+        <h2
+          class="fr-mt-4w"
+        >
+          Partners.loginpage.description-mock
+        </h2>
+        <div
+          data-mockid="LoginFormComponent"
+        />
+      </div>
+    </div>
+  </main>
+</div>
+`;
+
+exports[`Login Page should match the snapshot 1`] = `
+<div>
+  <div>
+    NoticeComponent
+  </div>
+  <main
+    class="fr-container fr-py-8v"
+  >
+    <div
+      class="fr-grid-row fr-grid-row--center fr-mt-8w"
+    >
+      <div
+        class="fr-col-9"
+      >
+        <h1>
+          Partners.loginpage.title-mock
+        </h1>
+        <h2
+          class="fr-mt-4w"
+        >
+          Partners.loginpage.description-mock
         </h2>
         <div
           data-mockid="LoginFormComponent"

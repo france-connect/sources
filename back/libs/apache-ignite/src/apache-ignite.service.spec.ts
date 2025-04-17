@@ -4,6 +4,7 @@ import { operation, RetryOperation } from 'retry';
 
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { FunctionSafe } from '@fc/common';
 import { ConfigService } from '@fc/config';
 import { LoggerService } from '@fc/logger';
 
@@ -231,7 +232,7 @@ describe('ApacheIgniteService', () => {
 
       it('should setup retryOperation with options', () => {
         // given
-        const functionMock = Symbol('Function') as unknown as () => void;
+        const functionMock = Symbol('Function') as unknown as FunctionSafe;
 
         // when
         service['retryApacheIgnite'](functionMock);
@@ -243,7 +244,7 @@ describe('ApacheIgniteService', () => {
 
       it('should call retryOperation attempt', () => {
         // given
-        const functionMock = Symbol('Function') as unknown as () => void;
+        const functionMock = Symbol('Function') as unknown as FunctionSafe;
 
         // when
         service['retryApacheIgnite'](functionMock);

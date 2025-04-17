@@ -7,8 +7,10 @@ import { OidcProviderBaseRuntimeException } from '../oidc-provider-base-runtime.
 export class OidcProviderRuntime_InvalidClientAuth_73E7_Exception extends OidcProviderBaseRuntimeException {
   static CODE = '73E7';
   static ERROR_CLASS = 'InvalidClientAuth';
-  static ERROR_DETAIL = 'iss (JWT issuer) must be the client_id';
-  static DOCUMENTATION = 'iss (JWT issuer) must be the client_id';
+  static ERROR_DETAIL =
+    'iss (JWT issuer) must be provided in the client_assertion JWT';
+  static DOCUMENTATION =
+    'iss (JWT issuer) must be provided in the client_assertion JWT';
   static ERROR_SOURCE = 'shared/token_jwt_auth.js:28';
   static UI = 'OidcProvider.exceptions.InvalidClientAuth.73E7';
 }

@@ -16,7 +16,7 @@ import {
  * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/issues/1024
  * @ticket #FC-1024
  */
-import { JSONWebKeySet } from 'jose-openid-client';
+import { JSONWebKeySet } from 'jose';
 
 import { IdentityProviderMetadata } from '@fc/oidc';
 

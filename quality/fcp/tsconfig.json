@@ -13,7 +13,8 @@
     "types": [
       "cypress",
       "cypress-axe",
-      "node"
+      "node",
+      "jest"
     ]
   },
   "include": [

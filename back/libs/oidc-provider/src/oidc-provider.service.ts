@@ -10,6 +10,7 @@ import { HttpOptions } from 'openid-client';
 import { Global, Inject, Injectable } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 
+import { AsyncFunctionSafe, FunctionSafe } from '@fc/common';
 import { LoggerService } from '@fc/logger';
 import { OidcSession } from '@fc/oidc';
 import { RedisService } from '@fc/redis';
@@ -64,17 +65,24 @@ export class OidcProviderService {
     private readonly configService: OidcProviderConfigService,
     @Inject(OIDC_PROVIDER_CONFIG_APP_TOKEN)
     private readonly oidcProviderConfigApp: IOidcProviderConfigAppService,
-  ) {}
+  ) {
+    /**
+     * Call init() in constructor rather than onModuleInit().
+     *
+     * The `Provider` instance has to be ready before the `onModuleInit()` part of the cycle,
+     * so that any extending library can use it in its own `onModuleInit()`.
+     * The main usage is middleware registration in apps.
+     */
+    this.init();
+  }
 
   /**
    * Wait for nest to load its own route before binding oidc-provider routes
    * @see https://docs.nestjs.com/faq/http-adapter
    * @see https://docs.nestjs.com/fundamentals/lifecycle-events
    */
-
-  onModuleInit() {
-    const { prefix, issuer, configuration } =
-      this.configService.getConfig(this);
+  init() {
+    const { issuer, configuration } = this.configService.getConfig(this);
     this.configuration = configuration;
 
     try {
@@ -84,8 +92,12 @@ export class OidcProviderService {
       });
       this.provider.proxy = true;
     } catch (error) {
-      throw new OidcProviderInitialisationException();
+      throw new OidcProviderInitialisationException(error);
     }
+  }
+
+  onModuleInit() {
+    const { prefix } = this.configService.getConfig(this);
 
     this.oidcProviderConfigApp.setProvider(this.provider);
 
@@ -94,6 +106,8 @@ export class OidcProviderService {
        * @see https://github.com/panva/node-oidc-provider/blob/main/docs/README.md#mounting-oidc-provider
        */
       this.httpAdapterHost.httpAdapter.use(prefix, this.provider.callback());
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new OidcProviderBindingException();
     }
@@ -171,7 +185,7 @@ export class OidcProviderService {
 
   private async runMiddlewareBeforePattern(
     { step, path, pattern, ctx },
-    middleware: Function,
+    middleware: FunctionSafe | AsyncFunctionSafe,
   ) {
     // run middleware BEFORE pattern occurs
     if (step === OidcProviderMiddlewareStep.BEFORE && path === pattern) {
@@ -181,7 +195,7 @@ export class OidcProviderService {
 
   private async runMiddlewareAfterPattern(
     { step, route, path, pattern, ctx },
-    middleware: Function,
+    middleware: FunctionSafe | AsyncFunctionSafe,
   ) {
     // run middleware AFTER pattern occurred
     if (
@@ -217,9 +231,9 @@ export class OidcProviderService {
   registerMiddleware(
     step: OidcProviderMiddlewareStep,
     pattern: OidcProviderMiddlewarePattern | OidcProviderRoutes,
-    middleware: Function,
+    middleware: FunctionSafe | AsyncFunctionSafe,
   ): void {
-    this.provider.use(async (ctx: KoaContextWithOIDC, next: Function) => {
+    this.provider.use(async (ctx: KoaContextWithOIDC, next: FunctionSafe) => {
       // Extract path and oidc.route from ctx
       const { path, oidc: { route = '' } = {} } = ctx;
 
@@ -242,8 +256,14 @@ export class OidcProviderService {
     req: any,
     res: any,
     session: OidcSession,
+    sessionId?: string,
   ): Promise<void> {
-    await this.oidcProviderConfigApp.finishInteraction(req, res, session);
+    await this.oidcProviderConfigApp.finishInteraction(
+      req,
+      res,
+      session,
+      sessionId,
+    );
   }
 
   clearCookies(res: Response): void {

@@ -136,18 +136,6 @@ export class GetDiscoveryDto {
   @IsArray()
   // oidc defined variable name
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly revocation_endpoint_auth_methods_supported: string[];
-
-  @IsString({ each: true })
-  @IsArray()
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  readonly revocation_endpoint_auth_signing_alg_values_supported: string[];
-
-  @IsString({ each: true })
-  @IsArray()
-  // oidc defined variable name
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   readonly claim_types_supported: string[];
 }
 

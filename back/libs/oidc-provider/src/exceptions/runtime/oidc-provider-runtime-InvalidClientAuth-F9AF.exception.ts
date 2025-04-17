@@ -8,9 +8,9 @@ export class OidcProviderRuntime_InvalidClientAuth_F9AF_Exception extends OidcPr
   static CODE = 'F9AF';
   static ERROR_CLASS = 'InvalidClientAuth';
   static ERROR_DETAIL =
-    'unique jti (JWT ID) must be provided in the client_assertion JWT';
+    'expiration must be specified in the client_assertion JWT';
   static DOCUMENTATION =
-    'unique jti (JWT ID) must be provided in the client_assertion JWT';
+    'expiration must be specified in the client_assertion JWT';
   static ERROR_SOURCE = 'shared/token_jwt_auth.js:20';
   static UI = 'OidcProvider.exceptions.InvalidClientAuth.F9AF';
 }

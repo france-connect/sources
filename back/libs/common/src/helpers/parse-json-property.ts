@@ -18,6 +18,8 @@ export function parseJsonProperty(
 
   try {
     return JSON.parse(input[propertyName]);
+    // You can't remove the catch argument, it's mandatory
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (error) {
     throw TypeError(
       `property "${propertyName}" is not JSON parsable, value was: ${input[propertyName]}`,

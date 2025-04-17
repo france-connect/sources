@@ -8,7 +8,7 @@ export interface IdentityProviderBase {
   url: string;
 }
 
-export interface IdentityProvider extends IdentityProviderBase {
+export interface IdentityProviderInterface extends IdentityProviderBase {
   acrValue: string;
   encryption: string;
   signature: string;

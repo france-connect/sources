@@ -9,4 +9,5 @@ export enum ErrorCode {
   CAN_NOT_SIGN_JWT = 8,
   MULTIPLE_RELEVANT_KEYS = 9,
   FETCH_JWKS_FAILED = 10,
+  INVALID_JWKS = 11,
 }

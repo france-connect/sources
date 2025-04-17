@@ -95,7 +95,7 @@ docker-stack start-all
 1. Run Cypress tests on FCP-LOW against docker environment
 
 ```shell
-yarn test:low
+docker-stack bdd-low-test
 ```
 
 #### Run the tests from Cypress UI
@@ -104,7 +104,7 @@ yarn test:low
 1. Open Cypress UI to run tests on FCP-LOW against docker environment
 
 ```shell
-yarn start:low
+docker-stack bdd-low-open
 ```
 
 ### Run the Cypress tests on FCP-HIGH
@@ -125,7 +125,7 @@ docker-stack start-all
 1. Run Cypress tests on FCP-HIGH against docker environment
 
 ```shell
-yarn test:high
+docker-stack bdd-high-test
 ```
 
 #### Run the tests from Cypress UI for docker environment
@@ -134,7 +134,7 @@ yarn test:high
 1. Open Cypress UI to run tests on FCP-HIGH against docker environment
 
 ```shell
-yarn start:high
+docker-stack bdd-high-open
 ```
 
 #### Run the tests from Cypress UI for integ01 environment
@@ -159,7 +159,7 @@ docker-stack up rp-all
 3. Open Cypress UI to run tests on FCP-HIGH against integ01 environment
 
 ```shell
-yarn start:high
+docker-stack bdd-high-test
 ```
 
 4. Run the `usager` tests (user connection) or `exploitation` tests (if you have an operator user)
@@ -182,7 +182,7 @@ docker-stack start-all
 1. Run Cypress tests on user-dashboard against docker environment
 
 ```shell
-yarn test:ud
+docker-stack bdd-ud-test
 ```
 
 #### Run the tests from Cypress UI
@@ -191,7 +191,7 @@ yarn test:ud
 1. Open Cypress UI to run tests on user-dashboard against docker environment
 
 ```shell
-yarn start:ud
+docker-stack bdd-ud-open
 ```
 
 ### Run the Cypress tests on eidas-bridge
@@ -210,7 +210,7 @@ docker-stack start-all
 1. Run Cypress tests on eidas-bridge against docker environment
 
 ```shell
-yarn test:eidas
+docker-stack bdd-eidas-test
 ```
 
 #### Run the tests from Cypress UI
@@ -219,14 +219,14 @@ yarn test:eidas
 1. Open Cypress UI to run tests on eidas-bridge against docker environment
 
 ```shell
-yarn start:eidas
+docker-stack bdd-eidas-open
 ```
 
 ### Generate the Cucumber HTML report
 
 ```shell
 # Generate the report for fcp-high integ01
-CYPRESS_PLATFORM=fcp-high CYPRESS_TEST_ENV=integ01 yarn report
+CYPRESS_PLATFORM=fcp-high CYPRESS_TEST_ENV=integ01 docker-stack bdd-fcp-report
 ```
 
 ## Accessibility Validation
@@ -240,7 +240,7 @@ Those tests are run alongside the other functional tests on the CI job.
 It is possible to run all the accessibility validations without stopping on the first error, by defining the environment variable `skipFailures` when starting Cypress.
 
 ```shell
-yarn start:high --env skipFailures=true
+docker-stack bdd-high-test --env skipFailures=true
 
 ```
 
@@ -257,25 +257,25 @@ The visual validations are done on Electron 114 headless in the terminal.
 - FCP-HIGH
 
 ```shell
-yarn test:high:snapshot
+docker-stack bdd-high-test-visual
 ```
 
 - FCP-LOW
 
 ```shell
-yarn test:low:snapshot
+docker-stack bdd-low-test-visual
 ```
 
 - USER-DASHBOARD
 
 ```shell
-yarn test:ud:snapshot
+docker-stack bdd-ud-test-visual
 ```
 
 - eIDAS
 
 ```shell
-yarn test:eidas:snapshot
+docker-stack bdd-eidas-test-visual
 ```
 
 #### As in a production environment
@@ -286,21 +286,21 @@ yarn test:eidas:snapshot
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-high
-yarn test:high:snapshot --env 'TAGS=@fcpHigh and @validationVisuelleProduction and not @ignore'
+CYPRESS_TAGS='@fcpHigh and @validationVisuelleProduction and not @ignore' docker-stack bdd-high-test-visual
 ```
 
 - FCP-LOW
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-low
-yarn test:low:snapshot --env 'TAGS=@fcpLow and @validationVisuelleProduction and not @ignore'
+CYPRESS_TAGS='@fcpLow and @validationVisuelleProduction and not @ignore' docker-stack bdd-low-test-visual
 ```
 
 - USER-DASHBOARD
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-low
-yarn test:ud:snapshot --env 'TAGS=@userDashboard and @validationVisuelleProduction and not @ignore'
+CYPRESS_TAGS='@userDashboard and @validationVisuelleProduction and not @ignore' docker-stack bdd-ud-test-visual
 ```
 
 ### Update the base image files for all of your tests
@@ -310,25 +310,25 @@ yarn test:ud:snapshot --env 'TAGS=@userDashboard and @validationVisuelleProducti
 - FCP-HIGH
 
 ```shell
-yarn test:high:snapshot --env updateSnapshots=true
+docker-stack bdd-high-test-visual --env updateSnapshots=true
 ```
 
 - FCP-LOW
 
 ```shell
-yarn test:low:snapshot --env updateSnapshots=true
+docker-stack bdd-low-test-visual --env updateSnapshots=true
 ```
 
 - USER-DASHBOARD
 
 ```shell
-yarn test:ud:snapshot --env updateSnapshots=true
+docker-stack bdd-ud-test-visual --env updateSnapshots=true
 ```
 
 - eIDAS
 
 ```shell
-yarn test:eidas:snapshot --env updateSnapshots=true
+docker-stack bdd-eidas-test-visual --env updateSnapshots=true
 ```
 
 #### As in a production environment
@@ -339,21 +339,21 @@ yarn test:eidas:snapshot --env updateSnapshots=true
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-high
-yarn test:high:snapshot --env 'TAGS=@fcpHigh and @validationVisuelleProduction and not @ignore,updateSnapshots=true'
+CYPRESS_TAGS='@fcpHigh and @validationVisuelleProduction and not @ignore' docker-stack bdd-high-test-visual --env updateSnapshots=true
 ```
 
 - FCP-LOW
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-low
-yarn test:low:snapshot --env 'TAGS=@fcpLow and @validationVisuelleProduction and not @ignore,updateSnapshots=true'
+CYPRESS_TAGS='@fcpLow and @validationVisuelleProduction and not @ignore' docker-stack bdd-low-test-visual --env updateSnapshots=true
 ```
 
 - USER-DASHBOARD
 
 ```shell
 docker-stack reset-mongo-as-prod mongo-fcp-low
-yarn test:ud:snapshot --env 'TAGS=@userDashboard and @validationVisuelleProduction and not @ignore,updateSnapshots=true'
+CYPRESS_TAGS='@userDashboard and @validationVisuelleProduction and not @ignore' docker-stack bdd-ud-test-visual --env updateSnapshots=true
 ```
 
 ### Prevent test failures when an image diff does not pass
@@ -361,25 +361,25 @@ yarn test:ud:snapshot --env 'TAGS=@userDashboard and @validationVisuelleProducti
 - FCP-HIGH
 
 ```shell
-yarn test:high:snapshot --env failOnSnapshotDiff=false
+docker-stack bdd-high-test-visual --env failOnSnapshotDiff=false
 ```
 
 - FCP-LOW
 
 ```shell
-yarn test:low:snapshot --env failOnSnapshotDiff=false
+docker-stack bdd-low-test-visual --env failOnSnapshotDiff=false
 ```
 
 - USER-DASHBOARD
 
 ```shell
-yarn test:ud:snapshot --env failOnSnapshotDiff=false
+docker-stack bdd-ud-test-visual --env failOnSnapshotDiff=false
 ```
 
 - eIDAS
 
 ```shell
-yarn test:eidas:snapshot --env failOnSnapshotDiff=false
+docker-stack bdd-eidas-test-visual --env failOnSnapshotDiff=false
 ```
 
 ## Gitlab test pipeline
@@ -402,7 +402,6 @@ You can create a test pipeline in Gitlab from a merge request or from the stagin
 | SKIP_DIFF_CHECK      | allows to skip the difference check in order to force the BDD test execution | by default "true" for BDD jobs run on staging or MR from staging |
 | BDD_TAGS_FCP_LOW     | tags for the fcp-low BDD tests                                               | by default '@fcpLow and not @ignoreLow and @ci'                  |
 | BDD_TAGS_FCP_HIGH    | tags for the fcp-high BDD tests                                              | by default '@fcpHigh and not @ignoreHigh and @ci'                |
-| BDD_TAGS_FCA_LOW     | tags for the fca-low BDD tests                                               | by default '@ci and not @ignore'                                 |
 | BDD_TAGS_EIDAS       | tags for the eidas-bridge BDD tests                                          | by default '@ci and not @ignore'                                 |
 | BDD_TAGS_UD          | tags for the user-dashboard BDD tests                                        | by default '@ci and not @ignore'                                 |
 

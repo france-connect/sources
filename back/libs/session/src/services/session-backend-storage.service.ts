@@ -38,6 +38,8 @@ export class SessionBackendStorageService {
     let dataCipher: string;
     try {
       dataCipher = await this.redis.client.get(sessionKey);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new SessionStorageException();
     }
@@ -106,6 +108,8 @@ export class SessionBackendStorageService {
     let dataString: string;
     try {
       dataString = JSON.stringify(data);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new SessionBadStringifyException();
     }
@@ -132,6 +136,8 @@ export class SessionBackendStorageService {
 
     try {
       return JSON.parse(dataString);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new SessionBadFormatException();
     }

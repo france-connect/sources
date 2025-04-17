@@ -4,11 +4,19 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "lib": ["ES2022", "dom"],
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
     "module": "nodenext",
     "target": "ES2022",
-    "types": ["node"]
+    "types": [
+      "node",
+      "jest"
+    ]
   },
-  "include": ["**/*.ts"],
-  "exclude": ["fcp", "partners"]
+  "include": [
+    "**/*.ts",
+    "eslint.config.mjs"
+  ],
 }

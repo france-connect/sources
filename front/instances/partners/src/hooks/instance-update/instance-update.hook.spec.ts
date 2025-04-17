@@ -58,6 +58,31 @@ describe('useInstanceUpdate', () => {
     expect(useRouteLoaderData).toHaveBeenCalledWith('dto2form::version::shema');
   });
 
+  it('should return an undefined title and empty object for initialValues, if response.payload is undefined', () => {
+    // Given
+    jest.mocked(parseInitialValues).mockReturnValue({});
+    jest.mocked(useLoaderData).mockReturnValue({ payload: null });
+
+    // When
+    const { result } = renderHook(() => useInstanceUpdate());
+
+    // Then
+    expect(result.current).toStrictEqual({
+      initialValues: {},
+      schema: schemaMock,
+      submitHandler: expect.any(Function),
+      title: undefined,
+    });
+    expect(useNavigate).toHaveBeenCalledOnce();
+    expect(useNavigate).toHaveBeenCalledWith();
+    expect(useParams).toHaveBeenCalledOnce();
+    expect(useParams).toHaveBeenCalledWith();
+    expect(useLoaderData).toHaveBeenCalledOnce();
+    expect(useLoaderData).toHaveBeenCalledWith();
+    expect(useRouteLoaderData).toHaveBeenCalledOnce();
+    expect(useRouteLoaderData).toHaveBeenCalledWith('dto2form::version::shema');
+  });
+
   describe('Submit function', () => {
     it('should call InstancesService.update with data when submit is called', async () => {
       // Given

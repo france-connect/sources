@@ -7,7 +7,7 @@ import { t } from '@fc/i18n';
 
 import { Sizes } from '../../enums';
 
-interface AlertComponentV2Props extends PropsWithClassName, PropsWithChildren {
+interface AlertComponentProps extends PropsWithClassName, PropsWithChildren {
   // @NOTE [DSFR] attribute role="alert"
   // - should be defined if the Component is injected dynamicly into the page
   // - should NOT be defined if the Component is not injected dynamicly into the page
@@ -32,8 +32,7 @@ export const AlertComponent = React.memo(
     size = Sizes.MEDIUM,
     title = undefined,
     type = EventTypes.INFO,
-  }: AlertComponentV2Props) => {
-    const showTitle = size !== Sizes.SMALL && !!title;
+  }: AlertComponentProps) => {
     const closeLabel = (onClose && t('DSFR.alert.close')) || undefined;
 
     return (
@@ -41,7 +40,7 @@ export const AlertComponent = React.memo(
         className={classnames(className, `fr-alert fr-alert--${type} fr-alert--${size}`)}
         data-testid={dataTestId}
         role={noRole ? undefined : 'alert'}>
-        {showTitle && (
+        {title && (
           <Heading className="fr-alert__title" data-testid={`${dataTestId}-title`}>
             {title}
           </Heading>

@@ -5,7 +5,7 @@ import { NO_ENTITY_ID } from '@entities/typeorm';
 
 import { uuid } from '@fc/common';
 import { PartnersAccountSession } from '@fc/partners-account';
-import { SessionService } from '@fc/session';
+import { SessionNotFoundException, SessionService } from '@fc/session';
 
 import { RequirePermission } from '../decorators';
 import {
@@ -64,6 +64,11 @@ export abstract class BasePermissionsHandlerService {
 
     const sessionData =
       this.sessionService.get<PartnersAccountSession>('PartnersAccount');
+
+    if (!sessionData) {
+      throw new SessionNotFoundException('PartnersAccount');
+    }
+
     const { userPermissions } = sessionData[ACCESS_CONTROL_TOKEN];
 
     let entityId: uuid = NO_ENTITY_ID;

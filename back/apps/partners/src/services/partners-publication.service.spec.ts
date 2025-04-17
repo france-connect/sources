@@ -81,6 +81,8 @@ describe('PartnerPublicationService', () => {
       // When
       try {
         await service.publish(instanceId, versionId, payload, type);
+        // You can't remove the catch argument, it's mandatory
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         // Then
         expect(versionMock.updateStatus).toHaveBeenCalledExactlyOnceWith({

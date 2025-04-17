@@ -615,6 +615,8 @@ describe('HsmService', () => {
       // action
       try {
         service['getPrivateKeySlotByLabel'](sigKeyCkaLabel);
+        // You can't remove the catch argument, it's mandatory
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         // expect
         expect(mockPkcs11Instance.C_FindObjectsFinal).toHaveBeenCalledTimes(1);

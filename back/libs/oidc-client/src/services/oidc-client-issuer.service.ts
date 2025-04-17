@@ -1,4 +1,4 @@
-import { JWK } from 'jose';
+import * as jose from 'jose-openid-client';
 import { Client, custom, Issuer } from 'openid-client';
 
 import { Injectable, OnModuleInit } from '@nestjs/common';
@@ -97,7 +97,7 @@ export class OidcClientIssuerService implements OnModuleInit {
 
     const client = new issuer[clientClass](
       idpMetadata.client,
-      jwks as { keys: JWK[] },
+      jwks as { keys: jose.JWK[] },
     );
 
     return client;

@@ -1,3 +1,6 @@
+import * as deepFreeze from 'deep-freeze';
+
+import { ExecutionContext } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { PartnersAccountPermission } from '@entities/typeorm';
@@ -11,8 +14,6 @@ import { EntityType, PermissionsType } from '../enums';
 import { AccountPermissionRepository } from '../services';
 import { ACCESS_CONTROL_TOKEN } from '../tokens';
 import { AccessControlSessionInterceptor } from './access-control-session.interceptor';
-import deepFreeze = require('deep-freeze');
-import { ExecutionContext } from '@nestjs/common';
 
 describe('AccessControlSessionInterceptor', () => {
   let interceptor: AccessControlSessionInterceptor;
@@ -181,25 +182,15 @@ describe('AccessControlSessionInterceptor', () => {
       expect(nextMock.handle).toHaveBeenCalled();
     });
 
-    it('should add permissions to partner account even if session is undefined', async () => {
+    it('should not add permissions to partner account if session is undefined', async () => {
       // Given
-      const expected = {
-        [ACCESS_CONTROL_TOKEN]: {
-          userPermissions: deepFreeze([]),
-        },
-      };
-
       sessionServiceMock.get.mockReturnValue(undefined);
 
       // When
       await interceptor.intercept(ctxMock, nextMock);
 
       // Then
-      expect(sessionServiceMock.set).toHaveBeenCalledTimes(1);
-      expect(sessionServiceMock.set).toHaveBeenCalledWith(
-        'PartnersAccount',
-        expected,
-      );
+      expect(sessionServiceMock.set).toHaveBeenCalledTimes(0);
       expect(nextMock.handle).toHaveBeenCalled();
     });
   });

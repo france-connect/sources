@@ -9,7 +9,6 @@ items:
     lastname: 'DUBOIS'
     createdAt: '2024-02-22'
     updatedAt: '2024-05-02'
-    siren: '120027016'
 
   # 12354 / 123 / fia1
   user-bernard-martinot:
@@ -20,7 +19,6 @@ items:
     lastname: 'MARTINOT'
     createdAt: '2024-02-22'
     updatedAt: '2024-05-02'
-    siren: '120027016'
 
   # bdd_default / 123 / fia1
   user-bdd-default:
@@ -31,7 +29,6 @@ items:
     lastname: 'DUBOIS'
     createdAt: '2024-02-22'
     updatedAt: '2024-05-02'
-    siren: '130025265'
 
   # bdd_one_instance / 123 / fia1
   user-bdd-one-instance:
@@ -42,4 +39,3 @@ items:
     lastname: 'CHEVALIER'
     createdAt: '2024-02-22'
     updatedAt: '2024-05-02'
-    siren: '999912345'

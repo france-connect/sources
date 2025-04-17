@@ -28,9 +28,6 @@ export class PartnersAccountIdentity {
   @IsString()
   readonly lastname: string;
 
-  @IsString()
-  readonly siren: string;
-
   @IsOptional()
   @IsUUID()
   readonly id?: string;
@@ -47,15 +44,13 @@ export class PartnersAccountIdentity {
 }
 
 export class PartnersAccountSession {
-  @IsOptional()
   @IsObject()
   @ValidateNested()
   @Type(() => PartnersAccountIdentity)
-  readonly identity?: PartnersAccountIdentity;
+  readonly identity: PartnersAccountIdentity;
 
-  @IsOptional()
   @IsObject()
-  readonly [ACCESS_CONTROL_TOKEN]?: Pick<
+  readonly [ACCESS_CONTROL_TOKEN]: Pick<
     PermissionsRequestInformationsInterface,
     'userPermissions'
   >;

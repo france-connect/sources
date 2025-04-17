@@ -15,7 +15,6 @@ import {
 import { getLoggerMock } from '@mocks/logger';
 
 import { Platform } from '../enums';
-import { getReadableDateFromTime } from '../utils';
 import { TracksV2Formatter } from './tracks-v2.formatter';
 
 jest.mock('../utils');
@@ -34,21 +33,23 @@ describe('TracksV2Formatter', () => {
 
   const platformMock = Platform.FCP_LOW;
 
-  const readableDateMock = '11/11/2024 11:11:11';
-
   const ipAddress = ['ipAddress'];
 
   const inputMock = {
     _source: {
-      idpName: 'idpNameValue',
-      spName: 'spNameValue',
+      idpName: 'idpNameMock',
+      idpId: 'idpIdMock',
+      spName: 'spNameMock',
+      spId: 'spIdMock',
       time: 1664661600000,
-      accountId: 'accountId',
+      accountId: 'accountIdMock',
       service: CoreInstance.FCP_LOW,
-      idpSub: 'idpSub',
-      spSub: 'spSub',
-      interactionAcr: 'eidas1',
-      spAcr: 'eidas1',
+      idpSub: 'idpSubMock',
+      spSub: 'spSubMock',
+      interactionAcr: 'interactionAcrMock',
+      interactionId: 'interactionIdMock',
+      browsingSessionId: 'browsingSessionIdMock',
+      spAcr: 'spAcrMock',
       source: { geo: geoMock, address: ipAddress },
     },
   } as SearchHit<TracksV2FieldsInterface>;
@@ -73,7 +74,6 @@ describe('TracksV2Formatter', () => {
 
     service = module.get<TestService>(TestService);
 
-    jest.mocked(getReadableDateFromTime).mockReturnValue(readableDateMock);
     jest.mocked(getLocationFromTracks).mockReturnValue(localisationMock);
     jest.mocked(getIpAddressFromTracks).mockReturnValue(ipAddress);
   });
@@ -83,17 +83,6 @@ describe('TracksV2Formatter', () => {
   });
 
   describe('formatTrack()', () => {
-    it('should call getReadableDateFromTime() with time', () => {
-      // When
-      service.formatTrack(inputMock);
-
-      // Then
-      expect(getReadableDateFromTime).toHaveBeenCalledTimes(1);
-      expect(getReadableDateFromTime).toHaveBeenCalledWith(
-        inputMock._source.time,
-      );
-    });
-
     it('should call getLocationFromTracks() with _source', () => {
       // When
       service.formatTrack(inputMock);
@@ -124,14 +113,18 @@ describe('TracksV2Formatter', () => {
       const resultMock = {
         country: localisationMock.country,
         city: localisationMock.city,
-        date: readableDateMock,
-        spName: 'spNameValue',
-        idpName: 'idpNameValue',
+        time: 1664661600000,
+        spName: 'spNameMock',
+        spId: 'spIdMock',
+        idpName: 'idpNameMock',
+        idpId: 'idpIdMock',
         platform: platformMock,
-        accountId: 'accountId',
-        idpSub: 'idpSub',
-        spSub: 'spSub',
-        interactionAcr: 'eidas1',
+        accountId: 'accountIdMock',
+        idpSub: 'idpSubMock',
+        spSub: 'spSubMock',
+        interactionId: 'interactionIdMock',
+        interactionAcr: 'spAcrMock',
+        browsingSessionId: 'browsingSessionIdMock',
         ipAddress,
       };
 
@@ -147,14 +140,18 @@ describe('TracksV2Formatter', () => {
       const resultMock = {
         country: localisationMock.country,
         city: localisationMock.city,
-        date: readableDateMock,
-        spName: 'spNameValue',
-        idpName: 'idpNameValue',
+        time: 1664661600000,
+        spName: 'spNameMock',
+        spId: 'spIdMock',
+        idpName: 'idpNameMock',
+        idpId: 'idpIdMock',
         platform: platformMock,
-        accountId: 'accountId',
-        idpSub: 'idpSub',
-        spSub: 'spSub',
-        interactionAcr: 'eidas1',
+        accountId: 'accountIdMock',
+        idpSub: 'idpSubMock',
+        spSub: 'spSubMock',
+        interactionId: 'interactionIdMock',
+        interactionAcr: 'interactionAcrMock',
+        browsingSessionId: 'browsingSessionIdMock',
         ipAddress,
       };
 
@@ -168,7 +165,7 @@ describe('TracksV2Formatter', () => {
     it('should throw an error if an error occured', () => {
       // Given
       const errorMock = new Error('Test');
-      jest.mocked(getReadableDateFromTime).mockImplementation(() => {
+      jest.mocked(getLocationFromTracks).mockImplementation(() => {
         throw errorMock;
       });
 

@@ -47,7 +47,7 @@ docker-stack switch bdd-partners
 1. Run Cypress tests on PARTNERS against docker environment
 
 ```shell
-yarn test
+docker-stack bdd-partners-test
 ```
 
 #### Run the tests from Cypress UI for docker environment
@@ -56,14 +56,39 @@ yarn test
 1. Open Cypress UI to run tests on PARTNERS against docker environment
 
 ```shell
-yarn start
+docker-stack bdd-partners-open
 ```
 
 #### Generate the Cucumber HTML report
 
 ```shell
-CYPRESS_PLATFORM=partners CYPRESS_TEST_ENV=docker yarn report
+CYPRESS_PLATFORM=partners CYPRESS_TEST_ENV=docker docker-stack bdd-partners-report
 ```
+
+## Visual Validation
+
+We are running visual validation using the cypress plugin [cypress-image-snapshot](https://github.com/simonsmith/cypress-image-snapshot).
+
+The visual validations are done on Electron 114 headless in the terminal.
+
+### Run the snapshot tests
+
+```shell
+yarn test:snapshot
+```
+
+### Update the base image files for all of your tests
+
+```shell
+yarn test:snapshot --env updateSnapshots=true
+```
+
+### Prevent test failures when an image diff does not pass
+
+```shell
+yarn test:snapshot --env failOnSnapshotDiff=false
+```
+
 
 ## Gitlab test pipeline
 

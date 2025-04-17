@@ -5,7 +5,7 @@ import { type User } from '../helpers';
 import { Email } from './email';
 import { Environment } from './environment';
 import { FraudFormValues } from './fraud-form-values';
-import { IdentityProvider } from './identity-provider';
+import { IdentityProviderInterface } from './identity-provider';
 import { IdentityProviderConfig } from './identity-provider-config';
 import { NotificationConfig } from './notification-config';
 import { ScopeContext, ServiceProvider } from './service-provider';
@@ -39,8 +39,8 @@ declare module 'mocha' {
     // BDD context
     env: Environment;
     fraudFormValues?: FraudFormValues;
-    identityProvider: IdentityProvider;
-    identityProviders: IdentityProvider[];
+    identityProvider: IdentityProviderInterface;
+    identityProviders: IdentityProviderInterface[];
     idpConfig?: IdentityProviderConfig;
     idpConfigs: IdentityProviderConfig[];
     notificationConfig?: NotificationConfig;

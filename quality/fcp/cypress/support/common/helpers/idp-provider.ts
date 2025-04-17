@@ -1,4 +1,4 @@
-import { IdentityProvider } from '../../common/types';
+import { IdentityProviderInterface } from '../../common/types';
 
 const DEFAULT_IDP_DESCRIPTION = 'par défaut';
 type IdentityProviderAttributesFilter = {
@@ -9,7 +9,7 @@ type IdentityProviderAttributesFilter = {
 };
 
 export const getIdentityProviderNameByDescription = (
-  identityProviders: IdentityProvider[],
+  identityProviders: IdentityProviderInterface[],
   description: string,
   shouldExist = true,
 ): string | undefined => {
@@ -24,9 +24,9 @@ export const getIdentityProviderNameByDescription = (
 };
 
 export const getIdentityProviderByAttributes = (
-  identityProviders: IdentityProvider[],
+  identityProviders: IdentityProviderInterface[],
   filters: IdentityProviderAttributesFilter,
-): IdentityProvider => {
+): IdentityProviderInterface => {
   const attrFilters = { ...filters };
   attrFilters.usable ??= true;
   const search = Object.entries(attrFilters).filter(
@@ -43,10 +43,10 @@ export const getIdentityProviderByAttributes = (
 };
 
 export const getIdentityProviderByDescription = (
-  identityProviders: IdentityProvider[],
+  identityProviders: IdentityProviderInterface[],
   description: string,
   shouldExist = true,
-): IdentityProvider | undefined => {
+): IdentityProviderInterface | undefined => {
   const identityProvider = identityProviders.find((identityProvider) =>
     identityProvider.descriptions.includes(description),
   );
@@ -60,10 +60,10 @@ export const getIdentityProviderByDescription = (
 };
 
 export const getIdentityProviderByNameOrDescription = (
-  identityProviders: IdentityProvider[],
+  identityProviders: IdentityProviderInterface[],
   idpNameOrDescription: string,
   shouldExist = true,
-): IdentityProvider | undefined => {
+): IdentityProviderInterface | undefined => {
   const identityProvider = identityProviders.find(
     ({ descriptions, name }) =>
       name === idpNameOrDescription ||
@@ -79,6 +79,6 @@ export const getIdentityProviderByNameOrDescription = (
 };
 
 export const getDefaultIdentityProvider = (
-  identityProviders: IdentityProvider[],
-): IdentityProvider =>
+  identityProviders: IdentityProviderInterface[],
+): IdentityProviderInterface =>
   getIdentityProviderByDescription(identityProviders, DEFAULT_IDP_DESCRIPTION);

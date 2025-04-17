@@ -95,7 +95,7 @@ describe('CsmrAccountClientService', () => {
   describe('getAccountIdsFromIdentity', () => {
     const identityMock = {} as unknown as IOidcIdentity;
     const identityHashMock = 'identityHashMock';
-    const accountIdLegacyMock = 'accountIdLegacyMock';
+    const accountIdLowMock = 'accountIdLowMock';
     const accountIdHighMock = 'accountIdHighMock';
 
     beforeEach(() => {
@@ -118,7 +118,7 @@ describe('CsmrAccountClientService', () => {
       // Given
       jest
         .mocked(service['getAccountId'])
-        .mockResolvedValueOnce(accountIdLegacyMock)
+        .mockResolvedValueOnce(accountIdLowMock)
         .mockResolvedValueOnce(accountIdHighMock);
 
       // When
@@ -138,7 +138,7 @@ describe('CsmrAccountClientService', () => {
       // Given
       jest
         .mocked(service['getAccountId'])
-        .mockResolvedValueOnce(accountIdLegacyMock)
+        .mockResolvedValueOnce(accountIdLowMock)
         .mockResolvedValueOnce(accountIdHighMock);
 
       // When
@@ -158,27 +158,37 @@ describe('CsmrAccountClientService', () => {
       // Given
       jest
         .mocked(service['getAccountId'])
-        .mockResolvedValueOnce(accountIdLegacyMock)
+        .mockResolvedValueOnce(accountIdLowMock)
         .mockResolvedValueOnce(accountIdHighMock);
+
+      const accountIdsResultsMock = {
+        accountIdLow: accountIdLowMock,
+        accountIdHigh: accountIdHighMock,
+      };
 
       // When
       const result = await service.getAccountIdsFromIdentity(identityMock);
 
       // Then
-      expect(result).toStrictEqual([accountIdLegacyMock, accountIdHighMock]);
+      expect(result).toStrictEqual(accountIdsResultsMock);
     });
 
     it('should return only the account ids that are defined', async () => {
       // Given
       jest
         .mocked(service['getAccountId'])
-        .mockResolvedValueOnce(accountIdLegacyMock);
+        .mockResolvedValueOnce(accountIdLowMock);
+
+      const accountIdsResultsMock = {
+        accountIdLow: accountIdLowMock,
+        accountIdHigh: undefined,
+      };
 
       // When
       const result = await service.getAccountIdsFromIdentity(identityMock);
 
       // Then
-      expect(result).toStrictEqual([accountIdLegacyMock]);
+      expect(result).toStrictEqual(accountIdsResultsMock);
     });
   });
 

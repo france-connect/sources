@@ -73,7 +73,7 @@ const executeTracksCmd = async (
   cmd: string,
   ctx: string[] = [],
 ): Promise<void> => {
-  const BASE_TRACKS_COMMAND = 'cd $FC_ROOT/fc/quality/fcp && yarn traces';
+  const BASE_TRACKS_COMMAND = 'yarn traces';
   const command = `${[...ctx, 'export CI=1'].join(' ')}; ${BASE_TRACKS_COMMAND} ${cmd}`;
   // eslint-disable-next-line no-console
   console.log(`Call: ${command}`);

@@ -67,12 +67,12 @@ const customData = {
 const metadata = {
   browser: {
     name: 'chrome',
-    version: '116',
+    version: '132',
   },
   device,
   platform: {
     name: 'linux',
-    version: 'Debian 10',
+    version: 'Debian 12',
   },
 };
 

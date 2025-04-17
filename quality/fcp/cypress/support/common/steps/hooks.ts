@@ -10,7 +10,7 @@ import {
   getDefaultUser,
   isUsingFCBasicAuthorization,
 } from '../helpers';
-import { IdentityProvider, ServiceProvider, UserData } from '../types';
+import { IdentityProviderInterface, ServiceProvider, UserData } from '../types';
 
 const setFixtureContext = (
   fixture: string,
@@ -49,9 +49,11 @@ const setupTestFramework = (
   cy.get<ServiceProvider[]>('@serviceProviders').then((serviceProviders) => {
     ctx.serviceProvider = getDefaultServiceProvider(serviceProviders);
   });
-  cy.get<IdentityProvider[]>('@identityProviders').then((identityProviders) => {
-    ctx.identityProvider = getDefaultIdentityProvider(identityProviders);
-  });
+  cy.get<IdentityProviderInterface[]>('@identityProviders').then(
+    (identityProviders) => {
+      ctx.identityProvider = getDefaultIdentityProvider(identityProviders);
+    },
+  );
   cy.get<UserData[]>('@users').then((users) => {
     ctx.user = getDefaultUser(users);
   });

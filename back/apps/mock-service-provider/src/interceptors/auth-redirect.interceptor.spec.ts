@@ -8,7 +8,7 @@ import { SessionService } from '@fc/session';
 
 import { getSessionServiceMock } from '@mocks/session';
 
-import { MockServiceProviderRoutes } from '../enums';
+import { MockServiceProviderAuthException } from '../exceptions';
 import { AuthRedirectInterceptor } from '.';
 
 describe('AuthRedirectInterceptor', () => {
@@ -68,38 +68,24 @@ describe('AuthRedirectInterceptor', () => {
       // Then
       expect(interceptor['redirectIfNotConnected']).toHaveBeenCalledTimes(1);
       expect(interceptor['redirectIfNotConnected']).toHaveBeenCalledWith(
-        resMock,
         sessionOidcDataMock,
       );
     });
   });
 
   describe('redirectIfNotConnected', () => {
-    it('should redirect to login route if no session found', () => {
-      // When
-      interceptor['redirectIfNotConnected'](resMock, undefined);
-      // Then
-      expect(resMock.redirect).toHaveBeenCalledTimes(1);
-      expect(resMock.redirect).toHaveBeenCalledWith(
-        MockServiceProviderRoutes.LOGIN,
+    it('should throw MockServiceProviderAuthException if no session found', () => {
+      // When / Then
+      expect(() => interceptor['redirectIfNotConnected'](undefined)).toThrow(
+        MockServiceProviderAuthException,
       );
     });
 
-    it('should redirect to login route if not connected', () => {
-      // When
-      interceptor['redirectIfNotConnected'](resMock, {});
-      // Then
-      expect(resMock.redirect).toHaveBeenCalledTimes(1);
-      expect(resMock.redirect).toHaveBeenCalledWith(
-        MockServiceProviderRoutes.LOGIN,
-      );
-    });
-
-    it('should not call redirect if connected', () => {
-      // When
-      interceptor['redirectIfNotConnected'](resMock, sessionOidcDataMock);
-      // Then
-      expect(resMock.redirect).toHaveBeenCalledTimes(0);
+    it('should not throw if connected', () => {
+      // When / Then
+      expect(() =>
+        interceptor['redirectIfNotConnected'](sessionOidcDataMock),
+      ).not.toThrow();
     });
   });
 });

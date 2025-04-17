@@ -64,6 +64,10 @@ export class PartnersOrganisationService {
     return items.pop();
   }
 
+  /**
+   * @todo FC-2184 ⚠️
+   */
+  // eslint-disable-next-line complexity
   async getByIds(
     organisationIds: string[],
     serviceProviderIds: string[] = [],

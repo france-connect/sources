@@ -26,13 +26,8 @@ export class UserDashboardTrackingService
     const { ip, port, originalAddresses } = this.extractContext(context);
 
     const { category, event: eventName } = trackedEvent;
-    const {
-      idpChanges,
-      hasAllowFutureIdpChanged,
-      idpLength,
-      changeSetId,
-      futureAllowedNewValue,
-    } = context;
+
+    const { fraudCaseContext, userPreferencesContext } = context;
 
     return {
       category,
@@ -47,13 +42,8 @@ export class UserDashboardTrackingService
       },
       sub: context.identity.sub,
       sessionId: context.req.sessionId,
-      changeSetId,
-      payload: {
-        ...idpChanges,
-        hasAllowFutureIdpChanged,
-        idpLength,
-        futureAllowedNewValue,
-      },
+      ...fraudCaseContext,
+      ...userPreferencesContext,
     };
   }
 

@@ -4,7 +4,6 @@
  * @ticket #FC-1024
  */
 import { isURL } from 'class-validator';
-import { JWK } from 'jose-openid-client';
 import {
   AuthorizationParameters,
   CallbackExtras,
@@ -15,7 +14,9 @@ import {
 
 import { Inject, Injectable } from '@nestjs/common';
 
+import { ArrayAsyncHelper } from '@fc/common';
 import { CryptographyService } from '@fc/cryptography';
+import { JwkHelper } from '@fc/jwt';
 import { LoggerService } from '@fc/logger';
 import {
   BaseOidcIdentityInterface,
@@ -89,13 +90,10 @@ export class OidcClientUtilsService {
       jwks: { keys },
     } = await this.oidcClientConfig.get();
 
-    /**
-     * @TODO #427 Check why `JSONWebKeySet` entries are not compatible with `asKey` method
-     * @see https://gitlab.dev-franceconnect.fr/france-connect/fc/-/merge_requests/427
-     * Maybe we don't need this convertion?
-     */
-
-    const publicKeys = keys.map((key) => JWK.asKey(key as any).toJWK());
+    const publicKeys = await ArrayAsyncHelper.mapAsync(
+      keys,
+      async (key) => await JwkHelper.publicFromPrivate(key),
+    );
 
     return { keys: publicKeys };
   }
@@ -232,6 +230,8 @@ export class OidcClientUtilsService {
         post_logout_redirect_uri: postLogoutRedirectUri,
         state: stateFromSession,
       });
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new OidcClientGetEndSessionUrlException();
     }
@@ -285,6 +285,8 @@ export class OidcClientUtilsService {
     let isIdpExcluded = false;
     try {
       isIdpExcluded = await this.serviceProvider.shouldExcludeIdp(spId, idpId);
+      // You can't remove the catch argument, it's mandatory
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       throw new OidcClientFailedToFetchBlacklist();
     }

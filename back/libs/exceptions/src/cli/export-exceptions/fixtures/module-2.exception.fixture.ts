@@ -1,7 +1,5 @@
 import { FcException } from '../../../exceptions';
 
-export const anyFunction = () => false;
-
 export class ImportFixture2 extends FcException {
   static DOCUMENTATION = 'documentation';
   static SCOPE = 2;
