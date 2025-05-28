@@ -44,7 +44,7 @@ describe('breadCrumbsComponent', () => {
       {
         id: 'breadcrumbs::usedid-mock-value',
       },
-      {},
+      undefined,
     );
     expect(crumbsContainer).toBeInTheDocument();
     expect(crumbsContainer).toHaveAttribute('id', 'breadcrumbs::usedid-mock-value');
@@ -58,7 +58,7 @@ describe('breadCrumbsComponent', () => {
         label: 'any-label-mock-1',
         title: 'any-title-mock-1',
       },
-      {},
+      undefined,
     );
     expect(BreadCrumbComponent).toHaveBeenNthCalledWith(
       2,
@@ -67,7 +67,7 @@ describe('breadCrumbsComponent', () => {
         isCurrent: true,
         label: 'any-label-mock-2',
       },
-      {},
+      undefined,
     );
   });
 });

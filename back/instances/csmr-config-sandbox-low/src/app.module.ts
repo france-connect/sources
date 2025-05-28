@@ -1,9 +1,10 @@
 import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
-import { ConfigMongoAdapterProvider } from '@fc/config-mongo-adapter/providers';
+import { ConfigMongoAdapterProvider } from '@fc/config-mongo-adapter';
 import { CsmrConfigModule } from '@fc/csmr-config';
 import { CsmrConfigClientModule } from '@fc/csmr-config-client';
+import { CsmrProxyClientModule } from '@fc/csmr-proxy-client';
 import { LoggerModule } from '@fc/logger';
 import { LoggerDebugPlugin } from '@fc/logger-plugins';
 import { MongooseModule } from '@fc/mongoose';
@@ -27,6 +28,7 @@ export class AppModule {
         MongooseModule.forRoot(),
         CsmrConfigModule.register(ConfigMongoAdapterProvider),
         CsmrConfigClientModule.registerFor('Partners'),
+        CsmrProxyClientModule,
       ],
       providers: [
         ConfigPublishedEventHandler,

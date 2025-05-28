@@ -34,15 +34,15 @@ describe('LayoutHeaderComponent', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(LayoutHeaderBrandComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderBrandComponent).toHaveBeenCalledWith({}, {});
+    expect(LayoutHeaderBrandComponent).toHaveBeenCalledWith({}, undefined);
     expect(LayoutHeaderToolsComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({}, {});
+    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({}, undefined);
     expect(LayoutHeaderMenuComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderMenuComponent).toHaveBeenCalledWith(
       {
         navigation: navigationItemsMock,
       },
-      {},
+      undefined,
     );
   });
 
@@ -58,7 +58,7 @@ describe('LayoutHeaderComponent', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(LayoutHeaderBrandComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderBrandComponent).toHaveBeenCalledWith({}, {});
+    expect(LayoutHeaderBrandComponent).toHaveBeenCalledWith({}, undefined);
     expect(LayoutHeaderToolsComponent).not.toHaveBeenCalledOnce();
     expect(LayoutHeaderMenuComponent).not.toHaveBeenCalledOnce();
   });

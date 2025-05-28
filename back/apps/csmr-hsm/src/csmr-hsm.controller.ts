@@ -2,16 +2,22 @@ import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
 import { ConfigService } from '@fc/config';
+import {
+  ActionTypes,
+  CsmrHsmClientMessageDto,
+  CsmrHsmRandomMessageDto,
+  RandomPayloadDto,
+} from '@fc/csmr-hsm-client/protocol';
 import { ValidationException } from '@fc/exceptions';
 import { HsmService } from '@fc/hsm';
 import { LoggerService } from '@fc/logger';
-import { CryptoProtocol } from '@fc/microservices';
-import { RabbitmqConfig } from '@fc/rabbitmq';
+import {
+  MicroservicesRmqConfig,
+  MicroservicesRmqMessageValidationPipe,
+  MicroservicesRmqSubscriberService,
+} from '@fc/microservices-rmq';
 
-import { RandomPayloadDto, SignPayloadDto } from './dto';
-import { CsmrHsmRandomException, CsmrHsmSignException } from './exceptions';
-
-const BROKER_NAME = 'CryptographyBroker';
+import { CsmrHsmRandomException } from './exceptions';
 
 @Controller()
 export class CsmrHsmController {
@@ -19,36 +25,40 @@ export class CsmrHsmController {
     private readonly logger: LoggerService,
     private readonly config: ConfigService,
     private readonly hsm: HsmService,
+    private readonly subscriber: MicroservicesRmqSubscriberService,
   ) {}
 
-  @MessagePattern(CryptoProtocol.Commands.SIGN)
-  @UsePipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      exceptionFactory: ValidationException.factory,
-    }),
-  )
-  sign(@Payload() payload: SignPayloadDto) {
-    this.logger.debug(`received new ${CryptoProtocol.Commands.SIGN} command`);
+  @MessagePattern(ActionTypes.SIGN)
+  @UsePipes(MicroservicesRmqMessageValidationPipe)
+  sign(@Payload() { payload }: CsmrHsmClientMessageDto) {
+    this.logger.debug(`received new ${ActionTypes.SIGN} command`);
 
-    const { payloadEncoding } = this.config.get<RabbitmqConfig>(BROKER_NAME);
+    const { payloadEncoding } = this.config.get<MicroservicesRmqConfig>(
+      'CsmrHsmClientMicroService',
+    );
     const { data, digest } = payload;
 
-    try {
-      const dataBuffer = Buffer.from(data, payloadEncoding);
-      const signedBuffer = this.hsm.sign(dataBuffer, digest);
-      const signed = signedBuffer.toString(payloadEncoding);
-      return signed;
-      // You can't remove the catch argument, it's mandatory
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      this.logger.err(new CsmrHsmSignException());
-      return 'ERROR';
-    }
+    const dataBuffer = Buffer.from(data, payloadEncoding);
+    const signedBuffer = this.hsm.sign(dataBuffer, digest);
+    const signed = signedBuffer.toString(payloadEncoding);
+
+    return this.subscriber.response(signed);
   }
 
-  @MessagePattern(CryptoProtocol.Commands.RANDOM)
+  @MessagePattern(ActionTypes.RANDOM_MICROSERVICE)
+  @UsePipes(MicroservicesRmqMessageValidationPipe)
+  random(@Payload() { payload }: CsmrHsmRandomMessageDto) {
+    this.logger.debug(
+      `received new ${ActionTypes.RANDOM_MICROSERVICE} command`,
+    );
+    const { length, encoding } = payload;
+
+    const alea = this.hsm.genRandom(length, encoding);
+
+    return this.subscriber.response(alea);
+  }
+
+  @MessagePattern(ActionTypes.RANDOM)
   @UsePipes(
     new ValidationPipe({
       transform: true,
@@ -56,8 +66,8 @@ export class CsmrHsmController {
       exceptionFactory: ValidationException.factory,
     }),
   )
-  random(@Payload() payload: RandomPayloadDto) {
-    this.logger.debug(`received new ${CryptoProtocol.Commands.RANDOM} command`);
+  randomWithoutMicroService(@Payload() payload: RandomPayloadDto) {
+    this.logger.debug(`received new ${ActionTypes.RANDOM} command`);
     const { length, encoding } = payload;
 
     try {

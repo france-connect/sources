@@ -130,9 +130,10 @@ describe('AppInterceptor', () => {
       interceptor['interceptRpc'](contextMock as unknown as ExecutionContext);
 
       // Then
-      expect(loggerMock.debug).toHaveBeenCalledExactlyOnceWith(
-        `Message: ${messageMock.type}`,
-      );
+      expect(loggerMock.debug).toHaveBeenCalledExactlyOnceWith({
+        msg: `Ms:ReceiveMessage:${messageMock.type}`,
+        message: messageMock,
+      });
     });
   });
 });

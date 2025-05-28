@@ -11,6 +11,8 @@ const Wrapper = ({ children, className }: { className: string; children: React.R
   </div>
 );
 
+// @NOTE mock file
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export const renderWithScrollToElement = (hook: Function, className: string) =>
   renderHook(() => hook(), {
     initialProps: { children: () => 'Mock Element' },

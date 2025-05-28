@@ -78,7 +78,7 @@ describe('LoginFormComponent', () => {
         showHelp: false,
         type: ButtonTypes.SUBMIT,
       }),
-      {},
+      undefined,
     );
   });
 
@@ -94,7 +94,7 @@ describe('LoginFormComponent', () => {
         showHelp: true,
         type: ButtonTypes.SUBMIT,
       }),
-      {},
+      undefined,
     );
   });
 
@@ -116,7 +116,7 @@ describe('LoginFormComponent', () => {
         showHelp: false,
         type: ButtonTypes.SUBMIT,
       }),
-      {},
+      undefined,
     );
   });
 });

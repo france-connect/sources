@@ -58,6 +58,10 @@ export class ScopesIndexService {
     );
   }
 
+  getScopes(): ScopeIndexInterface {
+    return this.scopeIndex;
+  }
+
   private indexGetter<Index extends Map<string, Value>, Value>(
     index: Index,
     indexName: string,

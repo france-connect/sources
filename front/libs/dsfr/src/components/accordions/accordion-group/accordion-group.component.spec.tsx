@@ -89,7 +89,7 @@ describe('AccordionGroupComponent', () => {
         element: accordion1.element,
         title: accordion1.title,
       }),
-      {},
+      undefined,
     );
     expect(AccordionComponent).toHaveBeenNthCalledWith(
       2,
@@ -100,7 +100,7 @@ describe('AccordionGroupComponent', () => {
         title: accordion2.title,
         titleClassname: accordion2.titleClassname,
       }),
-      {},
+      undefined,
     );
     expect(AccordionComponent).toHaveBeenNthCalledWith(
       3,
@@ -108,7 +108,7 @@ describe('AccordionGroupComponent', () => {
         element: accordion3.element,
         title: accordion3.title,
       }),
-      {},
+      undefined,
     );
   });
 
@@ -128,7 +128,7 @@ describe('AccordionGroupComponent', () => {
       expect.objectContaining({
         opened: true,
       }),
-      {},
+      undefined,
     );
   });
 });

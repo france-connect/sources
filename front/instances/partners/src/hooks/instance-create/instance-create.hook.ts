@@ -1,6 +1,6 @@
 import has from 'lodash.has';
 import { useCallback } from 'react';
-import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router';
 
 import { parseInitialValues, type SchemaFieldType } from '@fc/dto2form';
 import type { HttpClientDataInterface } from '@fc/http-client';

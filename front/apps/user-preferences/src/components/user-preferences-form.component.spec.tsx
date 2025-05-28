@@ -177,7 +177,7 @@ describe('UserPreferencesFormComponent', () => {
     expect(ServicesListComponent).toHaveBeenCalledOnce();
     expect(ServicesListComponent).toHaveBeenCalledWith(
       { identityProviders: userPreferencesMock.idpList },
-      {},
+      undefined,
     );
   });
 
@@ -206,7 +206,7 @@ describe('UserPreferencesFormComponent', () => {
         legend: { checked: 'Autorisé', unchecked: 'Bloqué' },
         name: 'allowFutureIdp',
       }),
-      {},
+      undefined,
     );
   });
 
@@ -216,6 +216,7 @@ describe('UserPreferencesFormComponent', () => {
     const toggleInputValue = false;
     jest
       .mocked(ToggleInput)
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
       .mockImplementationOnce(({ label }) => <div>{(label as Function)(toggleInputValue)}</div>);
     // When
     render(
@@ -233,7 +234,7 @@ describe('UserPreferencesFormComponent', () => {
     expect(AllowFutureIdpSwitchLabelComponent).toHaveBeenCalledOnce();
     expect(AllowFutureIdpSwitchLabelComponent).toHaveBeenCalledWith(
       { checked: toggleInputValue },
-      {},
+      undefined,
     );
   });
 
@@ -271,7 +272,7 @@ describe('UserPreferencesFormComponent', () => {
         children: expect.any(Array),
         type: 'error',
       },
-      {},
+      undefined,
     );
     expect(textContainerElt).toBeInTheDocument();
     expect(textElt1).toBeInTheDocument();
@@ -372,7 +373,7 @@ describe('UserPreferencesFormComponent', () => {
         disabled: true,
         type: 'submit',
       }),
-      {},
+      undefined,
     );
   });
 
@@ -400,7 +401,7 @@ describe('UserPreferencesFormComponent', () => {
         disabled: false,
         type: 'submit',
       }),
-      {},
+      undefined,
     );
   });
 

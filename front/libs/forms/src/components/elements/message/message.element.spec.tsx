@@ -29,9 +29,12 @@ describe('MessageElement', () => {
     expect(container.firstChild).toHaveAttribute('id', 'id-mock');
     expect(container.firstChild).toHaveClass('fr-messages-group');
     expect(MessageValidElement).toHaveBeenCalledOnce();
-    expect(MessageValidElement).toHaveBeenCalledWith({ id: 'id-mock' }, {});
+    expect(MessageValidElement).toHaveBeenCalledWith({ id: 'id-mock' }, undefined);
     expect(MessageErrorElement).toHaveBeenCalledOnce();
-    expect(MessageErrorElement).toHaveBeenCalledWith({ error: errorMock, id: 'id-mock' }, {});
+    expect(MessageErrorElement).toHaveBeenCalledWith(
+      { error: errorMock, id: 'id-mock' },
+      undefined,
+    );
   });
 
   it('should match the snapshot, when valid and error are not defined', () => {

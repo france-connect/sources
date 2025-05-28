@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import React from 'react';
 import { Field } from 'react-final-form';
 
@@ -10,11 +11,11 @@ interface ToggleInputProps extends PropsWithClassName {
   // @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/368935138/Interrupteur+-+Toggle+switch
   disabled?: boolean;
   hint?: string;
-  // @NOTE le initialValue est un argument provenant de la lib react-final-Form
-  // son typage de base est `any`, notre wrapper est donc obligé d'hérité de ce type
+  // @NOTE The initialValue is an argument from the react-final-Form lib
+  // its base typing is `any`, so our wrapper is forced to inherit from this type
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialValue?: any;
-  label: string | Function;
+  label: string | ((v: boolean) => string | JSX.Element);
   name: string;
   className?: string;
   legend?: CheckableLegendInterface;

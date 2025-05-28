@@ -21,7 +21,7 @@ describe('GroupElement', () => {
     expect(container.firstChild).toHaveClass('fr-input-group');
     expect(childElt).toBeInTheDocument();
     expect(ChildComponentMock).toHaveBeenCalledOnce();
-    expect(ChildComponentMock).toHaveBeenCalledWith({}, {});
+    expect(ChildComponentMock).toHaveBeenCalledWith({}, undefined);
   });
 
   it('should match the snapshot with parameters', () => {
@@ -50,6 +50,6 @@ describe('GroupElement', () => {
     expect(container.firstChild).toHaveClass('fr-input-group--valid');
     expect(childElt).toBeInTheDocument();
     expect(ChildComponentMock).toHaveBeenCalledOnce();
-    expect(ChildComponentMock).toHaveBeenCalledWith({}, {});
+    expect(ChildComponentMock).toHaveBeenCalledWith({}, undefined);
   });
 });

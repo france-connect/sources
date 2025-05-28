@@ -12,24 +12,16 @@ exports[`LayoutFooterBottomComponent should match the snapshot when features.sho
       <li
         class="fr-footer__bottom-item"
       >
-        <a
-          class="fr-footer__bottom-link"
-          href="any-href-mock-1"
-          title="any-title-mock-1"
-        >
-          any-label-mock-1
-        </a>
+        <span
+          data-mockid="LinkComponent"
+        />
       </li>
       <li
         class="fr-footer__bottom-item"
       >
-        <a
-          class="fr-footer__bottom-link"
-          href="any-href-mock-2"
-          title="any-title-mock-2"
-        >
-          any-label-mock-2
-        </a>
+        <span
+          data-mockid="LinkComponent"
+        />
       </li>
     </ul>
     <div
@@ -38,13 +30,9 @@ exports[`LayoutFooterBottomComponent should match the snapshot when features.sho
       <p>
         Sauf mention contraire, tous les contenus de ce site sont sous
          
-        <a
-          href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
-          rel="noreferrer"
-          target="_blank"
-        >
-          licence etalab-2.0
-        </a>
+        <span
+          data-mockid="LinkComponent"
+        />
       </p>
     </div>
   </div>
@@ -66,13 +54,9 @@ exports[`LayoutFooterBottomComponent should render the licence when features.sho
       <p>
         Sauf mention contraire, tous les contenus de ce site sont sous
          
-        <a
-          href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
-          rel="noreferrer"
-          target="_blank"
-        >
-          licence etalab-2.0
-        </a>
+        <span
+          data-mockid="LinkComponent"
+        />
       </p>
     </div>
   </div>
@@ -91,24 +75,16 @@ exports[`LayoutFooterBottomComponent should render the navigation when footer.na
       <li
         class="fr-footer__bottom-item"
       >
-        <a
-          class="fr-footer__bottom-link"
-          href="any-href-mock-1"
-          title="any-title-mock-1"
-        >
-          any-label-mock-1
-        </a>
+        <span
+          data-mockid="LinkComponent"
+        />
       </li>
       <li
         class="fr-footer__bottom-item"
       >
-        <a
-          class="fr-footer__bottom-link"
-          href="any-href-mock-2"
-          title="any-title-mock-2"
-        >
-          any-label-mock-2
-        </a>
+        <span
+          data-mockid="LinkComponent"
+        />
       </li>
     </ul>
   </div>

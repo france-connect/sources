@@ -60,3 +60,11 @@ export interface IsWebsiteURLValidator extends FieldValidatorBase {
 export interface IsRedirectURLValidator extends FieldValidatorBase {
   name: ValidatorCustom.IS_REDIRECT_URL;
 }
+
+/*
+ ** isValidRedirectURLListValidator
+ */
+
+export interface isValidRedirectURLListValidator extends FieldValidatorBase {
+  name: ValidatorCustom.IS_VALID_REDIRECT_URL_LIST;
+}

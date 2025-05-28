@@ -3,7 +3,7 @@ export interface UsePaginationInterface {
   gtTablet: boolean;
   navigationNumbers: number[];
   pagesCount: number;
-  paginationChangeHandler: Function;
+  paginationChangeHandler: (v: number) => void;
   showFirstEllipsis: boolean;
   showFirstPage: boolean;
   showLastEllipsis: boolean;

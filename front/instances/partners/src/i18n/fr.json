@@ -9,7 +9,7 @@
   "Partners.homepage.createTileTitle": "Créer une instance de test",
   "Partners.instance.successCreate": "Votre instance de test a été créée.",
   "Partners.instance.successUpdate": "Votre instance de test a été mise à jour.",
-  "Partners.instance.noticeTitle": "Il n’est pas permis de renseigner plusieurs noms de domaine et de sous domaine sur une même instance de test",
+  "Partners.instance.noticeTitle": "Il n’est pas possible de renseigner plusieurs noms de domaine et sous domaine pour une même instance sans avoir renseigné l’url sector-identifier.",
   "Partners.page.noticeTitle": "Disponible pour les fournisseurs de service FranceConnect uniquement.",
   "Partners.page.noticeDescription": "L’espace partenaire sera prochainement disponible pour les fournisseurs de service FranceConnect+",
   "DSFR.notice.close": "Masquer le message",

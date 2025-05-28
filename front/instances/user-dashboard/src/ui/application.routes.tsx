@@ -1,8 +1,8 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router';
 
 import { ApplicationLayout } from '@fc/layout';
-import { AuthedRoute, UnauthedRoute } from '@fc/routing';
+import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/routing';
 import { authedFallback, unauthedFallback } from '@fc/user-dashboard';
 
 import {
@@ -10,6 +10,8 @@ import {
   ErrorGenericComponent,
   ErrorPage,
   HomePage,
+  IdentityTheftReportPage,
+  LegalNoticesPage,
   NotFoundPage,
   TracksPage,
   UserPreferencesPage,
@@ -17,9 +19,9 @@ import {
 import { FraudFormPage } from './pages/fraud-form';
 import { FraudLoginPage } from './pages/fraud-login';
 
-export const ApplicationRoutes = React.memo(() => (
-  <Routes>
-    <Route element={<ApplicationLayout />} path="/">
+export const ApplicationRoutes = React.memo(() => {
+  const routes = createRoutesFromElements(
+    <Route element={<ApplicationLayout />} errorElement={<RouterErrorBoundaryComponent />} path="/">
       <Route element={<AuthedRoute fallback={authedFallback} />}>
         <Route element={<TracksPage />} path="history" />
         <Route element={<UserPreferencesPage />} path="preferences" />
@@ -29,13 +31,21 @@ export const ApplicationRoutes = React.memo(() => (
         <Route element={<FraudLoginPage />} path="fraud" />
         <Route index element={<HomePage />} />
       </Route>
+      <Route element={<IdentityTheftReportPage />} path="signalement-usurpation" />
       <Route element={<ErrorPage />} path="error">
         <Route index element={<ErrorGenericComponent />} />
         <Route element={<Error409Component />} path="409" />
       </Route>
+      <Route element={<LegalNoticesPage />} path="/mentions-legales" />
       <Route element={<NotFoundPage />} path="*" />
-    </Route>
-  </Routes>
-));
+    </Route>,
+  );
+
+  const appRouter = createBrowserRouter(routes, {
+    basename: '/',
+  });
+
+  return <RouterProvider router={appRouter} />;
+});
 
 ApplicationRoutes.displayName = 'ApplicationRoutes';

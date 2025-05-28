@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useLoaderData, useNavigate, useParams, useRouteLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigate, useParams, useRouteLoaderData } from 'react-router';
 
 import type { VersionInterface } from '@fc/core-partners';
 import { parseInitialValues, type SchemaFieldType } from '@fc/dto2form';

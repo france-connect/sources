@@ -17,3 +17,5 @@ RUN if [ -n "$PROXY_EXPLOITATION" ]; then \
 RUN yarn install --frozen-lockfile
 
 RUN yarn cypress install
+
+RUN chmod -R 777 /root/.cache/Cypress

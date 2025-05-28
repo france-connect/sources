@@ -1,7 +1,7 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import type { AxiosResponse } from 'axios';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { ConfigService } from '@fc/config';
 import { get, post } from '@fc/http-client';

@@ -72,23 +72,23 @@ There are actually two genreated indexes, the first to get the `claims` for a gi
 
 ## Generated index example (extract from `csmr-tracks`')
 
-### Provider identifier grouped claims 
+### Provider identifier grouped claims
 
 The table below provides a clear view of the technical keys used by the library (named `Grouped claims identifier`), along with the corresponding data provider names and slug"
 
-| Slug | Grouped claims identifier | Provider Label |
-| - | - | - |
-| CNAF_MSA | cnafMsa | Caisse nationale des allocations familiales & Mutualité sociale agricole |
-| CNAM |cnam | Caisse nationale de l’assurance maladie|
-| CNOUS | cnous | Centre national des œuvres universitaires et scolaires |
-| DESK | desk | Gestion d'accès - La Suite numérique |
-| DGFIP | dgfip | Direction générale des Finances publiques |
-| DSS | dss | Sécurité Sociale |
-| fCP_HIGH | fcpHigh | FranceConnect+ |
-| fCP_LOW | fcpLow | FranceConnect |
-| FT | ft | France Travail|
-| MESRI | mesri | Ministère de l’Enseignement supérieur, de la Recherche et de l’Innovation |
-| MI | mi | Ministère de l’Intérieur |
+| Slug     | Grouped claims identifier | Provider Label                                                            |
+| -------- | ------------------------- | ------------------------------------------------------------------------- |
+| CNAF_MSA | cnafMsa                   | Caisse nationale des allocations familiales & Mutualité sociale agricole  |
+| CNAM     | cnam                      | Caisse nationale de l’assurance maladie                                   |
+| CNOUS    | cnous                     | Centre national des œuvres universitaires et scolaires                    |
+| DESK     | desk                      | Gestion d'accès - La Suite numérique                                      |
+| DGFIP    | dgfip                     | Direction générale des Finances publiques                                 |
+| DSS      | dss                       | Sécurité Sociale                                                          |
+| fCP_HIGH | fcpHigh                   | FranceConnect+                                                            |
+| fCP_LOW  | fcpLow                    | FranceConnect                                                             |
+| FT       | ft                        | France Travail                                                            |
+| MESRI    | mesri                     | Ministère de l’Enseignement supérieur, de la Recherche et de l’Innovation |
+| MI       | mi                        | Ministère de l’Intérieur                                                  |
 
 ### `claimIndex`
 
@@ -180,15 +180,6 @@ The table below provides a clear view of the technical keys used by the library 
 
      // [...]
 
-     "mesri_inscription_autre": [
-       "mesri_inscription_autre"
-     ],
-     "mesri_admission": [
-       "mesri_admission"
-     ],
-     "mesri_etablissements": [
-       "mesri_etablissements"
-     ],
      "mi_siv_carte_grise": [
        "mi_siv_carte_grise"
      ],

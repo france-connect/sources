@@ -1,5 +1,5 @@
 #language:fr
-@ci @ignoreCI
+@ci @ignore
 Fonctionnalité: Bout-en-Bout
   # En tant que partenaire,
   # je veux créer une instance
@@ -28,4 +28,3 @@ Fonctionnalité: Bout-en-Bout
     Exemples:
     | clientId |
     | 6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950 |
-

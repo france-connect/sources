@@ -7,10 +7,14 @@ const fsp = {
     site: ["https://site.com"],
     redirect_uris: [
       "https://fsp1-high.docker.dev-franceconnect.fr/oidc-callback",
+      "https://franceconnect.gouv.fr/",
     ],
     post_logout_redirect_uris: [
       "https://fsp1-high.docker.dev-franceconnect.fr/client/logout-callback",
+      "https://franceconnect.gouv.fr/",
     ],
+    sector_identifier_uri:
+      "https://fsp1-high.docker.dev-franceconnect.fr/client/.well-known/sector-identifier",
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
     key: "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
@@ -23,6 +27,7 @@ const fsp = {
     active: true,
     type: "public",
     __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: [
@@ -90,6 +95,7 @@ const fsp = {
     featureHandlers: { none: "" },
     type: "public",
     __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: [
@@ -142,6 +148,7 @@ const fsp = {
     featureHandlers: { none: "" },
     type: "public",
     __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: [
@@ -194,6 +201,7 @@ const fsp = {
     active: true,
     type: "public",
     __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: ["openid", "birthdate"],
@@ -235,6 +243,7 @@ const fsp = {
     active: true,
     type: "private",
     __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: [
@@ -311,6 +320,7 @@ const fsp = {
     active: true,
     type: "private",
     __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: [
@@ -342,6 +352,50 @@ const fsp = {
     eidas: 2,
   },
 
+  // -- FSP - FSP7 - private FSP and identity consent not required and wrong sector_identifier_uri
+  // We use fsp6 URLs because we don't want to pop a real mock, we just need  the config
+  "FSP7-HIGH": {
+    name: "FSP - FSP7v2",
+    title: "FSP - FSP7v2 title",
+    site: ["https://site.com"],
+    redirect_uris: [
+      "https://fsp6-high.docker.dev-franceconnect.fr/oidc-callback",
+    ],
+    post_logout_redirect_uris: [
+      "https://fsp6-high.docker.dev-franceconnect.fr/client/logout-callback",
+    ],
+    sector_identifier_uri:
+      "https://fsp6-high.docker.dev-franceconnect.fr/not-a-valid-uri",
+    client_secret:
+      "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
+    key: "2925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39666",
+    entityId:
+      "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39666",
+    credentialsFlow: false,
+    featureHandlers: { none: "" },
+    email: "fsp6@franceconnect.loc",
+    IPServerAddressesAndRanges: ["1.1.1.1"],
+    active: true,
+    type: "private",
+    __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
+    updatedAt: new Date("2019-04-24 17:09:17"),
+    updatedBy: "admin",
+    scopes: ["openid"],
+    claims: [],
+    id_token_signed_response_alg: "ES256",
+    id_token_encrypted_response_alg: "RSA-OAEP",
+    id_token_encrypted_response_enc: "A256GCM",
+    userinfo_signed_response_alg: "ES256",
+    userinfo_encrypted_response_alg: "RSA-OAEP",
+    userinfo_encrypted_response_enc: "A256GCM",
+    jwks_uri:
+      "https://fsp6-high.docker.dev-franceconnect.fr/client/.well-known/keys",
+    idpFilterExclude: true,
+    idpFilterList: [],
+    identityConsent: false,
+    eidas: 2,
+  },
   // Eidas-bridge
   EIDASBRIDGE: {
     name: "Eidas bridge FS",
@@ -364,6 +418,7 @@ const fsp = {
     featureHandlers: { none: "" },
     type: "public",
     __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
     updatedAt: new Date("2019-04-24 17:09:17"),
     updatedBy: "admin",
     scopes: [

@@ -62,7 +62,7 @@ describe('SelectInput', () => {
         isValid: true,
         type: 'select',
       },
-      {},
+      undefined,
     );
     expect(LabelElement).toHaveBeenCalledOnce();
     expect(LabelElement).toHaveBeenCalledWith(
@@ -72,7 +72,7 @@ describe('SelectInput', () => {
         name: 'any-name-mock',
         required: true,
       },
-      {},
+      undefined,
     );
     expect(MessageElement).toHaveBeenCalledOnce();
     expect(MessageElement).toHaveBeenCalledWith(
@@ -81,7 +81,7 @@ describe('SelectInput', () => {
         id: 'any-name-mock',
         isValid: true,
       },
-      {},
+      undefined,
     );
     expect(t).toHaveBeenCalledOnce();
     expect(t).toHaveBeenCalledWith('Form.select.placeholder');
@@ -125,7 +125,7 @@ describe('SelectInput', () => {
         isValid: false,
         type: 'select',
       },
-      {},
+      undefined,
     );
     expect(LabelElement).toHaveBeenCalledOnce();
     expect(LabelElement).toHaveBeenCalledWith(
@@ -135,7 +135,7 @@ describe('SelectInput', () => {
         name: 'any-name-mock',
         required: true,
       },
-      {},
+      undefined,
     );
     expect(MessageElement).toHaveBeenCalledOnce();
     expect(MessageElement).toHaveBeenCalledWith(
@@ -144,7 +144,7 @@ describe('SelectInput', () => {
         id: 'any-name-mock',
         isValid: false,
       },
-      {},
+      undefined,
     );
     expect(t).toHaveBeenCalledOnce();
     expect(t).toHaveBeenCalledWith('Form.select.placeholder');

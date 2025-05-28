@@ -24,7 +24,7 @@ describe('FormErrorComponent', () => {
         active: true,
         elementClassName: '.fr-alert--error',
       },
-      {},
+      undefined,
     );
   });
 

@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 // 🚦 Get file argument from command line
 const arg = process.argv[2];
@@ -31,17 +31,20 @@ Object.keys(config.projects).forEach((key) => {
   // 📄 Generate JSON content for tsconfig file
   const jsoncontent = JSON.stringify(
     {
-      // @TODO how to read the source config (extends) ?
-      extends: options.extends,
       compilerOptions: {
         // @TODO If not empty
         ...(options.compilerOptions || {}),
         ...(projects[key].compilerOptions || {}),
       },
+
+      exclude: [...(options.exclude || []), ...(projects[key].exclude || [])],
+
+      // @TODO how to read the source config (extends) ?
+      extends: options.extends,
+
+      files: [...(options.files || []), ...(projects[key].files || [])],
       // @TODO add more options to extend
       include: [...(options.include || []), ...(projects[key].include || [])],
-      exclude: [...(options.exclude || []), ...(projects[key].exclude || [])],
-      files: [...(options.files || []), ...(projects[key].files || [])],
     },
     null,
     2,
@@ -60,6 +63,7 @@ Object.keys(config.projects).forEach((key) => {
   // 💾 Write content to output file
   fs.writeFileSync(outputFile, content);
 
-  // Log success message
+  // @NOTE Log success message
+  // eslint-disable-next-line no-console
   console.log(`✅ File generated: ${outputFile}`);
 });

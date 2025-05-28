@@ -59,12 +59,12 @@ describe('ServicesListComponent', () => {
     expect(ServiceComponent).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({ service: identityProvidersMock[0] }),
-      {},
+      undefined,
     );
     expect(ServiceComponent).toHaveBeenNthCalledWith(
       2,
       expect.objectContaining({ service: identityProvidersMock[1] }),
-      {},
+      undefined,
     );
   });
 
@@ -81,12 +81,12 @@ describe('ServicesListComponent', () => {
     expect(ServiceComponent).toHaveBeenNthCalledWith(
       1,
       { allowToBeUpdated: false, service: identityProvidersMock[0] },
-      {},
+      undefined,
     );
     expect(ServiceComponent).toHaveBeenNthCalledWith(
       2,
       { allowToBeUpdated: true, service: identityProvidersMock[1] },
-      {},
+      undefined,
     );
   });
 });

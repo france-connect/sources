@@ -42,7 +42,7 @@ describe('InputField', () => {
         type: FieldTypes.TEXT,
         validate: validateMock,
       },
-      {},
+      undefined,
     );
   });
 });

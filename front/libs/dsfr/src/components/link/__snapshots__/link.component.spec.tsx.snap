@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`LinkComponent should match the snapshot, when external is defined but no rel or target are defined 1`] = `
+<div>
+  <span
+    data-mockid="Link"
+  >
+    any-label-mock
+  </span>
+</div>
+`;
+
 exports[`LinkComponent should match the snapshot, with all props 1`] = `
 <div>
   <span

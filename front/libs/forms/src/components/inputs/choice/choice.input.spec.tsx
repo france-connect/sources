@@ -64,7 +64,7 @@ describe('ChoiceInput', () => {
         label: choiceLabelMock,
         name: 'any_name_mock-any_choice_value_mock',
       },
-      {},
+      undefined,
     );
   });
 

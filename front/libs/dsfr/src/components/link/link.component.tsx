@@ -1,7 +1,7 @@
 import classnames from 'classnames';
 import type { PropsWithChildren } from 'react';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import type { PropsWithClassName } from '@fc/common';
 
@@ -15,6 +15,7 @@ interface LinkComponentProps extends PropsWithChildren, PropsWithClassName {
   label?: string | undefined;
   external?: boolean;
   target?: string;
+  title?: string;
   rel?: string;
   dataTestId?: string;
 }
@@ -32,6 +33,7 @@ export const LinkComponent = React.memo(
     rel,
     size = Sizes.MEDIUM,
     target,
+    title = undefined,
   }: LinkComponentProps) => (
     <Link
       className={classnames(
@@ -43,9 +45,10 @@ export const LinkComponent = React.memo(
         className,
       )}
       data-testid={dataTestId}
-      rel={rel}
+      rel={rel || (external ? 'noopener noreferrer external' : undefined)}
       reloadDocument={external}
-      target={target}
+      target={target || (external ? '_blank' : undefined)}
+      title={title}
       to={href}>
       {label || children}
     </Link>

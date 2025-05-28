@@ -16,68 +16,16 @@ exports[`LayoutFooterContentComponent should match the snapshot when description
       <li
         class="fr-footer__content-item"
       >
-        <a
-          class="fr-footer__content-link"
-          href="any-href-mock-1"
-          title="any-title-mock-1"
-        >
-          any-label-mock-1
-        </a>
+        <span
+          data-mockid="LinkComponent"
+        />
       </li>
       <li
         class="fr-footer__content-item"
       >
-        <a
-          class="fr-footer__content-link"
-          href="any-href-mock-2"
-          title="any-title-mock-2"
-        >
-          any-label-mock-2
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-`;
-
-exports[`LayoutFooterContentComponent should match the snapshot when showIcon is true 1`] = `
-<div>
-  <div
-    class="fr-footer__content"
-  >
-    <p
-      class="fr-footer__content-desc"
-    >
-      any description mock
-    </p>
-    <ul
-      class="fr-footer__content-list"
-    >
-      <li
-        class="fr-footer__content-item"
-      >
-        <a
-          class="fr-footer__content-link"
-          href="any-href-mock-1"
-          rel="noreferrer"
-          target="_blank"
-          title="any-title-mock-1"
-        >
-          any-label-mock-1
-        </a>
-      </li>
-      <li
-        class="fr-footer__content-item"
-      >
-        <a
-          class="fr-footer__content-link"
-          href="any-href-mock-2"
-          rel="noreferrer"
-          target="_blank"
-          title="any-title-mock-2"
-        >
-          any-label-mock-2
-        </a>
+        <span
+          data-mockid="LinkComponent"
+        />
       </li>
     </ul>
   </div>

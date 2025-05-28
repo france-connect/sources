@@ -1,5 +1,7 @@
-import { StylesProviderProps } from '@fc/styles';
-import React, { ReactElement } from 'react';
+import type { ReactElement } from 'react';
+import React from 'react';
+
+import type { StylesProviderProps } from '@fc/styles';
 
 export const useStylesQuery = jest.fn();
 

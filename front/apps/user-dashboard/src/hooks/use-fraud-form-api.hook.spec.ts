@@ -1,7 +1,6 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { useLocalStorage } from 'usehooks-ts';
 
-// import * as ReactRouter from 'react-router-dom';
 import { post } from '@fc/http-client';
 
 import type { FraudConfigInterface, FraudFormValuesInterface } from '../interfaces';

@@ -58,31 +58,31 @@ describe('FormWrapperComponent', () => {
         title: 'any-title-mock',
         titleHeading: HeadingTag.H6,
       },
-      {},
+      undefined,
     );
     expect(FormRequiredMessageComponent).toHaveBeenCalledOnce();
-    expect(FormRequiredMessageComponent).toHaveBeenCalledWith({}, {});
+    expect(FormRequiredMessageComponent).toHaveBeenCalledWith({}, undefined);
     expect(childrenElt).toBeInTheDocument();
     expect(FormActionsComponent).toHaveBeenCalledOnce();
     expect(FormActionsComponent).toHaveBeenCalledWith(
       {
         canSubmit: true,
       },
-      {},
+      undefined,
     );
     expect(FormErrorComponent).toHaveBeenCalledOnce();
-    expect(FormErrorComponent).toHaveBeenCalledWith({ error: 'any-submit-error-mock' }, {});
+    expect(FormErrorComponent).toHaveBeenCalledWith({ error: 'any-submit-error-mock' }, undefined);
     expect(FormMentionsComponent).toHaveBeenCalledOnce();
     expect(FormMentionsComponent).toHaveBeenCalledWith(
       {
         content: 'any-mentions-text-mock',
       },
-      {},
+      undefined,
     );
     expect(FormErrorScrollComponent).toHaveBeenCalledOnce();
     expect(FormErrorScrollComponent).toHaveBeenCalledWith(
       { active: scrollTopOnSubmitMock, elementClassName: '.fr-message--error' },
-      {},
+      undefined,
     );
   });
 
@@ -117,7 +117,7 @@ describe('FormWrapperComponent', () => {
         canSubmit: false,
         submitLabel: submitLabelMock,
       },
-      {},
+      undefined,
     );
   });
 
@@ -199,7 +199,7 @@ describe('FormWrapperComponent', () => {
     expect(FormErrorScrollComponent).toHaveBeenCalledOnce();
     expect(FormErrorScrollComponent).toHaveBeenCalledWith(
       { active: false, elementClassName: '.fr-message--error' },
-      {},
+      undefined,
     );
   });
 });

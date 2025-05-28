@@ -82,12 +82,14 @@ export const enGB = {
 
   // Ministère de l'Enseignement Supérieur de la Recherche et de l'Innovation
   'claim.mesri_identite': 'Identité de l’étudiant',
-  'claim.mesri_inscription_etudiant':
-    'Statut étudiant inscrit | Périmètre formation initiale',
-  'claim.mesri_inscription_autre':
-    'Statut étudiant inscrit | Périmètre formation continue',
-  'claim.mesri_admission': 'Statut étudiant "admis"',
-  'claim.mesri_etablissements': 'Liste des établissements',
+  'claim.mesri_admissions': 'Liste des admissions de l’étudiant',
+  'claim.mesri_admission_inscrit':
+    'Pour chacune des admissions retournées, indique si le statut de l’étudiant est passé à inscrit',
+  'claim.mesri_admission_regime_formation': 'Régime de formation',
+  'claim.mesri_admission_commune_etudes':
+    'Code COG Insee de la commune de l’établissement',
+  'claim.mesri_admission_etablissement_etude':
+    'Appellation et code UAI de l’établissement',
 
   // France Travail
   'claim.api_fc-liste-paiementsv1':

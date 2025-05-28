@@ -68,7 +68,7 @@ describe('TextAreaInput', () => {
         isValid: true,
         type: 'input',
       },
-      {},
+      undefined,
     );
     expect(LabelElement).toHaveBeenCalledOnce();
     expect(LabelElement).toHaveBeenCalledWith(
@@ -78,7 +78,7 @@ describe('TextAreaInput', () => {
         name: 'any-name-mock',
         required: true,
       },
-      {},
+      undefined,
     );
     expect(inputElt).toBeInTheDocument();
     expect(inputElt).toHaveAttribute('aria-describedby', 'any-name-mock-messages');
@@ -94,7 +94,7 @@ describe('TextAreaInput', () => {
         id: 'any-name-mock',
         isValid: true,
       },
-      {},
+      undefined,
     );
     expect(TextAreaMaxlengthComponent).not.toHaveBeenCalledOnce();
   });
@@ -128,7 +128,7 @@ describe('TextAreaInput', () => {
         count: 'any-value-mock'.length,
         maxLength: 255 + 1,
       },
-      {},
+      undefined,
     );
   });
 
@@ -176,7 +176,7 @@ describe('TextAreaInput', () => {
         isValid: false,
         type: 'input',
       },
-      {},
+      undefined,
     );
     expect(LabelElement).toHaveBeenCalledOnce();
     expect(LabelElement).toHaveBeenCalledWith(
@@ -186,7 +186,7 @@ describe('TextAreaInput', () => {
         name: 'any-name-mock',
         required: true,
       },
-      {},
+      undefined,
     );
     expect(inputElt).toBeInTheDocument();
     expect(inputElt).toHaveAttribute('aria-describedby', 'any-name-mock-messages');
@@ -202,7 +202,7 @@ describe('TextAreaInput', () => {
         id: 'any-name-mock',
         isValid: false,
       },
-      {},
+      undefined,
     );
     expect(TextAreaMaxlengthComponent).not.toHaveBeenCalledOnce();
   });

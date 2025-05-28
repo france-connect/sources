@@ -6,4 +6,5 @@ export enum ValidatorCustom {
   IS_SIGNED_RESPONSE_ALG = 'isSignedResponseAlg',
   IS_WEBSITE_URL = 'isWebsiteURL',
   IS_REDIRECT_URL = 'isRedirectURL',
+  IS_VALID_REDIRECT_URL_LIST = 'isValidRedirectURLList',
 }

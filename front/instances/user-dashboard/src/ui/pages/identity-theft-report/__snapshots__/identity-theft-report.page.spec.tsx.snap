@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IdentityTheftReportPage should match the snapshot, display into a desktop viewport 1`] = `
+<div>
+  <div
+    data-mockid="Helmet"
+  >
+    <span
+      data-htmltag="title"
+    >
+      Mon tableau de bord - Signaler une usurpation
+    </span>
+  </div>
+  <div
+    class="fr-m-auto fr-px-2w fr-mt-8w"
+    id="page-container"
+  >
+    <h1>
+      Fishing Report
+    </h1>
+    <p>
+      This is the fishing report page.
+    </p>
+    <p>
+      Hello World !
+    </p>
+  </div>
+</div>
+`;
+
+exports[`IdentityTheftReportPage should match the snapshot, display into a mobile viewport 1`] = `
+<div>
+  <div
+    data-mockid="Helmet"
+  >
+    <span
+      data-htmltag="title"
+    >
+      Mon tableau de bord - Signaler une usurpation
+    </span>
+  </div>
+  <div
+    class="fr-m-auto fr-px-2w fr-mt-5w"
+    id="page-container"
+  >
+    <h1>
+      Fishing Report
+    </h1>
+    <p>
+      This is the fishing report page.
+    </p>
+    <p>
+      Hello World !
+    </p>
+  </div>
+</div>
+`;

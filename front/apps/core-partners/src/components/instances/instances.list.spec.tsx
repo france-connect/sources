@@ -94,7 +94,7 @@ describe('InstancesListComponent', () => {
         },
         id: '1',
       },
-      {},
+      undefined,
     );
     expect(InstanceComponent).toHaveBeenNthCalledWith(
       2,
@@ -112,7 +112,7 @@ describe('InstancesListComponent', () => {
         },
         id: '2',
       },
-      {},
+      undefined,
     );
     expect(InstanceComponent).toHaveBeenNthCalledWith(
       3,
@@ -130,7 +130,7 @@ describe('InstancesListComponent', () => {
         },
         id: '3',
       },
-      {},
+      undefined,
     );
     expect(sortByKey).toHaveBeenCalledOnce();
     expect(sortByKey).toHaveBeenCalledWith('updatedAt', SortOrder.DESC);

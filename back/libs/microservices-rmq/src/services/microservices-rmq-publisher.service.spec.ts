@@ -34,6 +34,7 @@ describe('MicroservicesRmqPublisherService', () => {
   const configMock = getConfigMock();
   const loggerMock = getLoggerMock();
   const brokerMock = {
+    emit: jest.fn(),
     send: jest.fn(),
     pipe: jest.fn(),
   };
@@ -71,12 +72,48 @@ describe('MicroservicesRmqPublisherService', () => {
 
     getServiceTokenMock.mockReturnValue(serviceNameMock);
     configMock.get.mockReturnValue(configDataMock);
+    brokerMock.emit.mockReturnThis();
     brokerMock.send.mockReturnThis();
     lastValueFromMock.mockResolvedValue(resultMock);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('broadcast', () => {
+    it('should send a message with command and payload', async () => {
+      // When
+      await service.broadcast<MessageMock>(commandMock, payloadMock);
+
+      // Then
+      expect(brokerMock.emit).toHaveBeenCalledExactlyOnceWith(
+        commandMock,
+        payloadMock,
+      );
+    });
+
+    it('should use the timeout from configuration', async () => {
+      // When
+      await service.broadcast<MessageMock>(commandMock, payloadMock);
+
+      // Then
+      expect(timeoutMock).toHaveBeenCalledExactlyOnceWith(
+        configDataMock.requestTimeout,
+      );
+    });
+
+    it('should throw a MicroservicesRmqCommunicationException', async () => {
+      // Given
+      brokerMock.emit.mockImplementationOnce(() => {
+        throw new Error();
+      });
+
+      // Then / When
+      await expect(
+        service.broadcast<MessageMock>(commandMock, payloadMock),
+      ).rejects.toThrow(MicroservicesRmqCommunicationException);
+    });
   });
 
   describe('publish', () => {

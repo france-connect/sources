@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
-import type { Location } from 'react-router-dom';
-import { useLoaderData, useLocation, useNavigate } from 'react-router-dom';
+import type { Location } from 'react-router';
+import { useLoaderData, useLocation, useNavigate } from 'react-router';
 
 import { useInstances } from './instances-page.hook';
 

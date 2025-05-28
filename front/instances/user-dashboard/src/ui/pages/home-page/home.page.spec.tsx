@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import { AccountContext } from '@fc/account';
 import { useSafeContext } from '@fc/common';
@@ -140,7 +140,7 @@ describe('HomePage', () => {
         size: 'sm',
         type: 'warning',
       },
-      {},
+      undefined,
     );
   });
 
@@ -156,7 +156,7 @@ describe('HomePage', () => {
         connectType: 'FranceConnect',
         redirectUrl: undefined,
       },
-      {},
+      undefined,
     );
   });
 
@@ -181,7 +181,7 @@ describe('HomePage', () => {
         connectType: 'FranceConnect',
         redirectUrl: '/any-pathname',
       },
-      {},
+      undefined,
     );
   });
 });

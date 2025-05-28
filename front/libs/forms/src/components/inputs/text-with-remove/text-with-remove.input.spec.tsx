@@ -82,7 +82,7 @@ describe('TextWithRemoveInput', () => {
         isValid: isValidMock,
         type: 'input',
       },
-      {},
+      undefined,
     );
     expect(InputComponent).toHaveBeenCalledOnce();
     expect(InputComponent).toHaveBeenCalledWith(
@@ -92,7 +92,7 @@ describe('TextWithRemoveInput', () => {
         id: 'form-input-array-any-name-mock',
         input: inputMock,
       },
-      {},
+      undefined,
     );
     expect(ArrayRemoveButton).toHaveBeenCalledOnce();
     expect(ArrayRemoveButton).toHaveBeenCalledWith(
@@ -101,7 +101,7 @@ describe('TextWithRemoveInput', () => {
         disabled: !isRemovableMock,
         onClick: useCallbackMock,
       },
-      {},
+      undefined,
     );
     expect(MessageElement).toHaveBeenCalledOnce();
     expect(MessageElement).toHaveBeenCalledWith(
@@ -111,7 +111,7 @@ describe('TextWithRemoveInput', () => {
         id: 'form-input-array-any-name-mock',
         isValid: isValidMock,
       },
-      {},
+      undefined,
     );
   });
 

@@ -57,6 +57,10 @@ export class ServiceProvider {
   )
   readonly post_logout_redirect_uris: string[];
 
+  @IsOptional()
+  @IsUrl()
+  readonly sector_identifier_uri?: string;
+
   @IsString()
   readonly scope: string;
 

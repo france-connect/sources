@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
-import { ScrollRestoration } from 'react-router-dom';
 
-import type { EventTypes } from '@fc/common';
+import { type EventTypes, useScrollTo } from '@fc/common';
 import {
   CreateInstanceButton,
   type InstanceInterface,
@@ -18,10 +17,14 @@ jest.mock('../../../hooks/instances/instances-page.hook');
 
 describe('InstancesPage', () => {
   // Given
+  const scrollToTopMock = jest.fn();
   const closeAlertHandlerMock = jest.fn();
 
   beforeEach(() => {
     // Given
+    jest.mocked(useScrollTo).mockReturnValue({
+      scrollToTop: scrollToTopMock,
+    });
     jest.mocked(useInstances).mockReturnValue({
       closeAlertHandler: closeAlertHandlerMock,
       hasItems: false,
@@ -61,9 +64,8 @@ describe('InstancesPage', () => {
         size: 'lg',
         title: 'any-create_tile_title',
       },
-      {},
+      undefined,
     );
-    expect(ScrollRestoration).not.toHaveBeenCalled();
   });
 
   it('should match snapshot, when items are not empties', () => {
@@ -87,10 +89,9 @@ describe('InstancesPage', () => {
     expect(t).toHaveBeenNthCalledWith(1, 'Partners.homepage.sandboxTitle');
     expect(titleElt).toBeInTheDocument();
     expect(CreateInstanceButton).toHaveBeenCalledOnce();
-    expect(CreateInstanceButton).toHaveBeenCalledWith({}, {});
+    expect(CreateInstanceButton).toHaveBeenCalledWith({}, undefined);
     expect(InstancesListComponent).toHaveBeenCalledOnce();
-    expect(InstancesListComponent).toHaveBeenCalledWith({ items: itemsMock }, {});
-    expect(ScrollRestoration).not.toHaveBeenCalled();
+    expect(InstancesListComponent).toHaveBeenCalledWith({ items: itemsMock }, undefined);
   });
 
   it('should match snapshot, when the alert component is displayed', () => {
@@ -123,9 +124,8 @@ describe('InstancesPage', () => {
         title: 'any-submit-message-mock',
         type: 'any-submit-type-mock',
       },
-      {},
+      undefined,
     );
-    expect(ScrollRestoration).toHaveBeenCalledOnce();
-    expect(ScrollRestoration).toHaveBeenCalledWith({}, {});
+    expect(scrollToTopMock).toHaveBeenCalledOnce();
   });
 });

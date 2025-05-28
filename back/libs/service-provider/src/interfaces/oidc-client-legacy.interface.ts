@@ -143,6 +143,7 @@ export interface OidcClientLegacyInterface {
   client_secret: string;
   redirect_uris: string[];
   post_logout_redirect_uris: string[];
+  sector_identifier_uri?: string;
   scopes: string[];
   userinfo_encrypted_response_enc: string;
   userinfo_encrypted_response_alg: string;

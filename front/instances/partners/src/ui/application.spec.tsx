@@ -1,6 +1,6 @@
+import { HelmetProvider } from '@dr.pogodin/react-helmet';
 import { render } from '@testing-library/react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { HelmetProvider } from 'react-helmet-async';
 
 import { AccountProvider, ConnectValidator } from '@fc/account';
 import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
@@ -70,7 +70,7 @@ describe('Application', () => {
       expect.objectContaining({
         FallbackComponent: AppBoundaryComponent,
       }),
-      {},
+      undefined,
     );
   });
 
@@ -85,7 +85,7 @@ describe('Application', () => {
         children: expect.any(Object),
         validator: ConnectValidator,
       },
-      {},
+      undefined,
     );
   });
 

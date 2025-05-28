@@ -24,11 +24,11 @@ describe('LayoutHeaderToolsComponent', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(LayoutHeaderAccountComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderAccountComponent).toHaveBeenCalledWith({}, {});
+    expect(LayoutHeaderAccountComponent).toHaveBeenCalledWith({}, undefined);
     expect(LayoutHeaderLogoutButton).toHaveBeenCalledOnce();
     expect(LayoutHeaderLogoutButton).toHaveBeenCalledWith(
       { endSessionUrl: 'any logout url mock' },
-      {},
+      undefined,
     );
   });
 

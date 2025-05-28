@@ -5,9 +5,11 @@ exports[`TracksPage should match the snapshot 1`] = `
   <div
     data-mockid="Helmet"
   >
-    <title>
+    <span
+      data-htmltag="title"
+    >
       Mon tableau de bord - Historique
-    </title>
+    </span>
   </div>
   <div
     class="fr-m-auto fr-px-2w fr-mt-8w"

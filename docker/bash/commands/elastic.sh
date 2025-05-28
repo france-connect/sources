@@ -12,10 +12,10 @@ _reset_stats() {
   CURL_OPTIONS="-k -u $ES_AUTH"
 
   echo "# Delete indices"
-  $RUN_CONTEXT curl ${CURL_OPTIONS} -XDELETE "$ES_URL/_all"
+  _delete_indices
   echo ""
 
-  echo "# Create log index"
+  echo "# Create franceconnect index"
   $RUN_CONTEXT curl ${CURL_OPTIONS} -XPUT -H "Content-Type:application/json" "$ES_URL/franceconnect" -d "@/index/create_index_business.json"
   echo ""
 
@@ -27,8 +27,12 @@ _reset_stats() {
   $RUN_CONTEXT curl ${CURL_OPTIONS} -XPUT -H "Content-Type:application/json" "$ES_URL/metrics" -d "@/index/create_index_stats.json"
   echo ""
 
-  echo "# Create tracks index"
+  echo "# Create fc_tracks index"
   $RUN_CONTEXT curl ${CURL_OPTIONS} -XPUT -H "Content-Type:application/json" "$ES_URL/fc_tracks" -d "@/index/create_index_tracks.json"
+  echo ""
+
+  echo "# Create tracks alias"
+  _create_es_alias "fc_tracks,franceconnect" "tracks"
   echo ""
 
   echo "# wait indices to be processed..."
@@ -124,24 +128,30 @@ _generate_metrics() {
   $DOCKER_COMPOSE exec $NO_TTY fc-workers bash -c "yarn debug generate-identities.js && ./run InitIdentityES && ./run IndexUserStats --metric=identity"
 }
 
-_delete_indexes() {
+_delete_indices() {
   echo "Delete index in elasticsearch..."
 
-  ES_LOG="http://localhost:9200"
-  ES_STATS="http://localhost:9200"
+  ES_URL="https://localhost:9200"
+  ES_AUTH="docker-stack:docker-stack"
+  CURL_OPTIONS="-k -u $ES_AUTH"
+  RUN_CONTEXT="$DOCKER_COMPOSE exec $NO_TTY elasticsearch"
 
-  echo "Delete All indexes"
+  echo "Delete All indices"
 
   echo "Delete log index"
-  curl -XDELETE "$ES_LOG/fc_evt_v5"
+  $RUN_CONTEXT curl -XDELETE ${CURL_OPTIONS} "$ES_URL/fc_tracks"
+  echo ""
+
+  echo "Delete log index"
+  $RUN_CONTEXT curl -XDELETE ${CURL_OPTIONS} "$ES_URL/franceconnect"
   echo ""
 
   echo "Delete events index"
-  curl -XDELETE "$ES_STATS/events"
+  $RUN_CONTEXT curl -XDELETE ${CURL_OPTIONS} "$ES_URL/events"
   echo ""
 
   echo "Delete metrics index"
-  curl -XDELETE "$ES_STATS/metrics"
+  $RUN_CONTEXT curl -XDELETE ${CURL_OPTIONS} "$ES_URL/metrics"
   echo ""
 
 }

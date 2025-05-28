@@ -52,7 +52,9 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
                 className="fr-pagination__link fr-pagination__link--first"
                 data-testid="PaginationComponent-first-page-button"
                 disabled={isFirstPage}
-                onClick={() => paginationChangeHandler(0)}>
+                onClick={() => {
+                  paginationChangeHandler(0);
+                }}>
                 Première page
               </button>
             </li>
@@ -63,14 +65,20 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
                 className="fr-pagination__link fr-pagination__link--prev fr-pagination__link--lg-label"
                 data-testid="PaginationComponent-previous-page-button"
                 disabled={isFirstPage}
-                onClick={() => paginationChangeHandler(currentPage - 1)}>
+                onClick={() => {
+                  paginationChangeHandler(currentPage - 1);
+                }}>
                 {t('TracksPage.previousPage')}
               </button>
             </li>
           )}
           {useEllipsis && showFirstPage && (
             <li>
-              <button className="fr-pagination__link" onClick={() => paginationChangeHandler(0)}>
+              <button
+                className="fr-pagination__link"
+                onClick={() => {
+                  paginationChangeHandler(0);
+                }}>
                 1
               </button>
             </li>
@@ -90,7 +98,9 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
                   aria-current={isCurrentPage ? 'page' : undefined}
                   className="fr-pagination__link"
                   data-testid={`PaginationComponent-page-${pageNumberLabel}-button`}
-                  onClick={() => paginationChangeHandler(zeroIndexPageNumber)}>
+                  onClick={() => {
+                    paginationChangeHandler(zeroIndexPageNumber);
+                  }}>
                   {pageNumberLabel}
                 </button>
               </li>
@@ -106,7 +116,9 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
               <button
                 className="fr-pagination__link"
                 data-testid={`PaginationComponent-page-${pagesCount}-button`}
-                onClick={() => paginationChangeHandler(pagesCount - 1)}>
+                onClick={() => {
+                  paginationChangeHandler(pagesCount - 1);
+                }}>
                 {pagesCount}
               </button>
             </li>
@@ -117,7 +129,9 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
                 className="fr-pagination__link fr-pagination__link--next fr-pagination__link--lg-label"
                 data-testid="PaginationComponent-next-page-button"
                 disabled={isLastPage}
-                onClick={() => paginationChangeHandler(currentPage + 1)}>
+                onClick={() => {
+                  paginationChangeHandler(currentPage + 1);
+                }}>
                 {t('TracksPage.nextPage')}
               </button>
             </li>
@@ -128,7 +142,9 @@ export const PaginationComponent: React.FC<PaginationComponentProps> = React.mem
                 className="fr-pagination__link fr-pagination__link--last"
                 data-testid="PaginationComponent-last-page-button"
                 disabled={isLastPage}
-                onClick={() => paginationChangeHandler(pagesCount - 1)}>
+                onClick={() => {
+                  paginationChangeHandler(pagesCount - 1);
+                }}>
                 Dernière page
               </button>
             </li>

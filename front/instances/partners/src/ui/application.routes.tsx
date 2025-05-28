@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
-} from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router';
 
 import { ApplicationLayout } from '@fc/layout';
 import { AuthedRoute, RouterErrorBoundaryComponent, UnauthedRoute } from '@fc/routing';
@@ -17,7 +12,9 @@ import {
   InstanceCreatePage,
   InstancesPage,
   InstanceUpdatePage,
+  LegalNoticesPage,
   LoginPage,
+  SitemapPage,
 } from './pages';
 
 export const ApplicationRoutes = React.memo(() => {
@@ -42,6 +39,10 @@ export const ApplicationRoutes = React.memo(() => {
           </Route>
         </Route>
         <Route index element={<HomePage />} />
+      </Route>
+      <Route element={<PageLayout />}>
+        <Route element={<LegalNoticesPage />} path="mentions-legales" />
+        <Route element={<SitemapPage />} path="plan-du-site" />
       </Route>
     </Route>,
   );

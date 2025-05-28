@@ -49,7 +49,7 @@ describe('selectField', () => {
         type: 'select',
         validate: valildateMock,
       },
-      {},
+      undefined,
     );
   });
 });

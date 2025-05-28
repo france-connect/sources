@@ -222,3 +222,32 @@ Fonctionnalité: Validation Visuelle - User Dashboard
       | tablet portrait  |
       | tablet landscape |
       | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Page Mentions Légales sur <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page d'accueil du tableau de bord usager
+    Quand je clique sur le lien "Mentions légales" dans le footer
+    Alors je suis redirigé vers la page mentions légales
+    Et la copie d'écran "legal-notices" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |
+
+  # @TODO
+  # Plan du Scénario: Validation Visuelle - Page Signalement Usurpation sur <device>
+  #   Etant donné que j'utilise un navigateur web sur "<device>"
+  #   Et que je navigue sur la page d'accueil du tableau de bord usager
+  #   Quand je clique sur le lien "Signaler une usurpation" dans le footer
+  #   Alors je suis redirigé vers la page signalement usurpation
+  #   Et la copie d'écran "fishing-report" correspond à la page actuelle sur "<device>"
+
+  #   Exemples:
+  #     | device           |
+  #     | mobile           |
+  #     | tablet portrait  |
+  #     | tablet landscape |
+  #     | desktop          |

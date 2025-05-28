@@ -25,6 +25,7 @@ describe('OidcClientController', () => {
       buildAuthorizeParameters: jest.fn(),
       checkIdpBlacklisted: jest.fn(),
       checkCsrfTokenValidity: jest.fn(),
+      sectorIdentifier: jest.fn(),
     },
   };
 
@@ -374,10 +375,23 @@ describe('OidcClientController', () => {
     it('should call oidc-client-service for wellKnownKeys', async () => {
       // When
       await controller.getWellKnownKeys();
+
       // Then
       expect(oidcClientServiceMock.utils.wellKnownKeys).toHaveBeenCalledTimes(
         1,
       );
+    });
+  });
+
+  describe('getWellKnownSectorIdentifier()', () => {
+    it('should call oidc-client-service for sectorIdentifier', async () => {
+      // When
+      await controller.getWellKnownSectorIdentifier();
+
+      // Then
+      expect(
+        oidcClientServiceMock.utils.sectorIdentifier,
+      ).toHaveBeenCalledTimes(1);
     });
   });
 });

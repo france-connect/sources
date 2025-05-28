@@ -47,4 +47,14 @@ export class ScopesService {
     );
     return Object.keys(provider.scopes);
   }
+
+  getScopesFromClaims(claims: ClaimInterface[]): string[] {
+    const includesClaim = (claim: ClaimInterface) => claims.includes(claim);
+
+    const scopes = this.index.getScopes();
+
+    return Array.from(scopes.entries())
+      .filter(([, scopeClaims]) => scopeClaims.every(includesClaim))
+      .map(([scope]) => scope);
+  }
 }

@@ -9,4 +9,5 @@ export interface LayoutConfig {
   service: LayoutServiceInterface;
   footer: LayoutFooterInterface;
   features: LayoutFeaturesInterface;
+  sitemap?: NavigationLinkInterface[];
 }

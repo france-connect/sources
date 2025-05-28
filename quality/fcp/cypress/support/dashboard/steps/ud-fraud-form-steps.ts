@@ -6,21 +6,16 @@ import UdFraudFormPage from '../pages/ud-fraud-form-page';
 let udFraudFormPage: UdFraudFormPage;
 
 Given(
-  /^je navigue directement vers la page formulaire usurpation(?: avec le paramètre fraudSurveyOrigin égal à "([^"]+)")?$/,
+  /^je navigue directement vers la page formulaire usurpation( avec le paramètre fraudSurveyOrigin égal à "identite-inconnue")?$/,
   function (fraudSurveyOrigin?: string) {
     const { allAppsUrl } = this.env;
+    const appId = fraudSurveyOrigin
+      ? 'ud-fraud-form-unknown-identity'
+      : 'ud-fraud-form';
     navigateTo({
-      appId: 'ud-fraud-form',
+      appId,
       baseUrl: allAppsUrl,
     });
-    if (fraudSurveyOrigin) {
-      cy.url().then((currentUrl) => {
-        const url = new URL(currentUrl);
-        url.searchParams.set('fraudSurveyOrigin', fraudSurveyOrigin);
-
-        cy.visit(url.href);
-      });
-    }
   },
 );
 

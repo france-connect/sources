@@ -1,7 +1,7 @@
 import './application.scss';
 
+import { HelmetProvider } from '@dr.pogodin/react-helmet';
 import { ErrorBoundary } from 'react-error-boundary';
-import { HelmetProvider } from 'react-helmet-async';
 
 import { AccountProvider, ConnectValidator } from '@fc/account';
 import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';

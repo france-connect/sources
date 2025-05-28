@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
-import { ReactNode } from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import type { ReactNode } from 'react';
+import { MemoryRouter } from 'react-router';
 
 const RouterCustomWrapper = MemoryRouter;
 

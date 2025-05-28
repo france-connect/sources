@@ -1,0 +1,7 @@
+/* @NOTE DSFR classname */
+/* stylelint-disable-next-line selector-class-pattern */
+.fr-footer__bottom .fr-footer__bottom-item .fr-link[target='_blank']::after {
+  content: none;
+  margin-left: inherit;
+  margin-right: inherit;
+}

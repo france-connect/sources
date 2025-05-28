@@ -42,7 +42,7 @@ describe('TextAreaField', () => {
         type: FieldTypes.TEXTAREA,
         validate: validateMock,
       },
-      {},
+      undefined,
     );
   });
 });

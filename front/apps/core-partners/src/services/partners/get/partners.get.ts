@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import { redirect } from 'react-router-dom';
+import { redirect } from 'react-router';
 
 import type { AxiosException } from '@fc/http-client';
 import { get as httpClientGet } from '@fc/http-client';

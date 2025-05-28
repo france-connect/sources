@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { IconPlacement, Priorities, Sizes } from '../../../enums';
 import type { ButtonInterface } from '../../../interfaces';

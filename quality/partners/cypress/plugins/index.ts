@@ -9,7 +9,7 @@ import { createHexaHash } from './crypto-plugin';
 import { getFixturePath } from './fixture-plugin';
 import { mongoDeleteOne, mongoFindOne } from './mongo-plugin';
 import { pgFindVersions } from './postgres-plugin';
-import { rmqGetMessage, rmqSendMessage } from './rmq-plugin';
+import { rmqGetMessage, rmqInitQueue, rmqSendMessage } from './rmq-plugin';
 
 const pluginConfig = async (
   cypressOn: Cypress.PluginEvents,
@@ -28,6 +28,7 @@ const pluginConfig = async (
     mongoFindOne,
     pgFindVersions,
     rmqGetMessage,
+    rmqInitQueue,
     rmqSendMessage,
     table,
   });

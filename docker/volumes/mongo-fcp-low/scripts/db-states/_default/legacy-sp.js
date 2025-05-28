@@ -183,7 +183,7 @@ const spLegacy = {
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
     key: "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f30000",
     entityId:
-      "a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc",
+      "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f30000",
     credentialsFlow: false,
     featureHandlers: { none: "" },
     email: "fsp1@franceconnect.loc",
@@ -229,6 +229,7 @@ const spLegacy = {
     idpFilterList: ["77fe5e8c-364c-440e-909f-5ef4f494e170"],
     identityConsent: false,
     platform: "CORE_LEGACY",
+    signup_id: "9991001",
   },
 
   "fsp2-legacy": {
@@ -247,7 +248,7 @@ const spLegacy = {
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
     key: "0225fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f30000",
     entityId:
-      "a0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc",
+      "0225fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f30000",
     credentialsFlow: false,
     featureHandlers: { none: "" },
     email: "fsp2@franceconnect.loc",
@@ -297,6 +298,7 @@ const spLegacy = {
     },
     identityConsent: true,
     platform: "CORE_LEGACY",
+    signup_id: "9991002",
   },
 
   "FS désactivé": {
@@ -339,6 +341,7 @@ const spLegacy = {
     eidas: 1,
     platform: "CORE_LEGACY",
     rep_scope: [],
+    signup_id: "9991003",
   },
 
   fsStats: {

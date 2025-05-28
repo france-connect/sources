@@ -26,7 +26,7 @@ describe('CreateButton', () => {
         noOutline: true,
         priority: 'tertiary',
       },
-      {},
+      undefined,
     );
     expect(t).toHaveBeenCalledOnce();
     expect(t).toHaveBeenCalledWith('Partners.button.createInstance');

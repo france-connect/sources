@@ -111,7 +111,7 @@ describe('TrackCardContentComponent', () => {
         idpLabel: 'idpLabelValue',
         interactionAcr: 'eidas1',
       },
-      {},
+      undefined,
     );
   });
 
@@ -144,7 +144,7 @@ describe('TrackCardContentComponent', () => {
         datetime: date,
         eventType,
       },
-      {},
+      undefined,
     );
   });
 });

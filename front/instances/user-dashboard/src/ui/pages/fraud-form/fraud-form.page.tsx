@@ -1,6 +1,6 @@
+import { Helmet } from '@dr.pogodin/react-helmet';
 import classnames from 'classnames';
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 
 import type { AccountContextState } from '@fc/account';
 import { AccountContext } from '@fc/account';

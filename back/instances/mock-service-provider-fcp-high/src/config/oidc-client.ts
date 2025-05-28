@@ -20,4 +20,5 @@ export default {
   stateLength: 32,
   postLogoutRedirectUri: env.string('POST_LOGOUT_REDIRECT_URI'),
   redirectUri: env.string('REDIRECT_URI'),
+  additionalRedirectUris: env.json('ADDITIONAL_REDIRECT_URIS'),
 } as OidcClientConfig;

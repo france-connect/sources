@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { HeadingTag } from '@fc/common';
 
@@ -92,7 +92,7 @@ describe('CardComponent', () => {
         children: 'Card title mock',
         to: 'any-link-mock',
       },
-      {},
+      undefined,
     );
   });
 
@@ -129,7 +129,7 @@ describe('CardComponent', () => {
         content: 'any-content-bottom-mock',
         dataTestId: 'CardComponent-detail-bottom',
       },
-      {},
+      undefined,
     );
     expect(CardDetailComponent).toHaveBeenNthCalledWith(
       2,
@@ -138,7 +138,7 @@ describe('CardComponent', () => {
         content: 'any-content-top-mock',
         dataTestId: 'CardComponent-detail-top',
       },
-      {},
+      undefined,
     );
   });
 
@@ -159,7 +159,7 @@ describe('CardComponent', () => {
         alt: 'media-alt-mock',
         src: 'media-src-mock',
       },
-      {},
+      undefined,
     );
   });
 
@@ -177,7 +177,7 @@ describe('CardComponent', () => {
       {
         item: [{ label: 'any-badge-mock' }],
       },
-      {},
+      undefined,
     );
   });
 });

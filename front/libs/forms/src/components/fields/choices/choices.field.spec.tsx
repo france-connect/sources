@@ -61,7 +61,7 @@ describe('ChoicesField', () => {
         isValid: false,
         name: 'any-name-mock',
       },
-      {},
+      undefined,
     );
     expect(FieldsetLegendElement).toHaveBeenCalledOnce();
     expect(FieldsetLegendElement).toHaveBeenCalledWith(
@@ -71,7 +71,7 @@ describe('ChoicesField', () => {
         name: 'any-name-mock',
         required: true,
       },
-      {},
+      undefined,
     );
     expect(MessageElement).toHaveBeenCalledOnce();
     expect(MessageElement).toHaveBeenCalledWith(
@@ -81,7 +81,7 @@ describe('ChoicesField', () => {
         id: 'any-name-mock',
         isValid: false,
       },
-      {},
+      undefined,
     );
     expect(Field).toHaveBeenCalledTimes(2);
     expect(Field).toHaveBeenNthCalledWith(
@@ -102,7 +102,7 @@ describe('ChoicesField', () => {
         validate: validateMock,
         value: 'any-choice-value-1',
       },
-      {},
+      undefined,
     );
     expect(Field).toHaveBeenNthCalledWith(
       2,
@@ -122,7 +122,7 @@ describe('ChoicesField', () => {
         validate: validateMock,
         value: 'any-choice-value-2',
       },
-      {},
+      undefined,
     );
   });
 });

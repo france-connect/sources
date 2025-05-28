@@ -338,28 +338,30 @@ const scopeList = [
       "Identité de l’étudiant (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
   },
   {
-    scope: "mesri_inscription_etudiant",
+    scope: "mesri_admissions",
     fd: "MESRI",
-    label:
-      "Statut étudiant inscrit | Périmètre formation initiale (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
+    label: "Liste des admissions de l’étudiant",
   },
   {
-    scope: "mesri_inscription_autre",
+    scope: "mesri_admission_inscrit",
     fd: "MESRI",
     label:
-      "Statut étudiant inscrit | Périmètre formation continue (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
+      "Pour chacune des admissions retournées, indique si le statut de l’étudiant est passé à inscrit",
   },
   {
-    scope: "mesri_admission",
+    scope: "mesri_admission_regime_formation",
     fd: "MESRI",
-    label:
-      "Statut étudiant \"admis\" (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
+    label: "Régime de formation",
   },
   {
-    scope: "mesri_etablissements",
+    scope: "mesri_admission_commune_etudes",
     fd: "MESRI",
-    label:
-      "Liste des établissements (Ministère de l'Enseignement supérieur, de la Recherche et de l'Innovation)",
+    label: "Code COG Insee de la commune de l’établissement",
+  },
+  {
+    scope: "mesri_admission_etablissement_etude",
+    fd: "MESRI",
+    label: "Appellation et code UAI de l’établissement",
   },
   {
     scope: "cnous_statut_boursier",

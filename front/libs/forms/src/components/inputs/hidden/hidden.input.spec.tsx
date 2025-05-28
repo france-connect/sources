@@ -22,7 +22,7 @@ describe('HiddenInput', () => {
         name: 'name-mock',
         type: 'hidden',
       },
-      {},
+      undefined,
     );
   });
 });

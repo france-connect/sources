@@ -59,7 +59,7 @@ describe('InstanceCreatePage', () => {
         schema: schemaMock,
         submitLabel: 'Form.submit.label-mock',
       },
-      {},
+      undefined,
     );
   });
 
@@ -78,7 +78,7 @@ describe('InstanceCreatePage', () => {
         title: 'Partners.instance.noticeTitle-mock',
         type: 'info',
       },
-      {},
+      undefined,
     );
   });
 
@@ -97,7 +97,7 @@ describe('InstanceCreatePage', () => {
         rel: 'noopener noreferrer external',
         target: '_blank',
       },
-      {},
+      undefined,
     );
   });
 });

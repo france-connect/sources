@@ -1,4 +1,4 @@
-import type { Location } from 'react-router-dom';
+import type { Location } from 'react-router';
 
 import type { RouterSubmitStateInterface } from '../interfaces/router-submit-state.interface';
 

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router';
 
 import { LayoutHeaderNavigationComponent } from './layout-header.navigation';
 
@@ -67,7 +67,7 @@ describe('LayoutHeaderNavigationComponent', () => {
         title: navigationMock[0].title,
         to: navigationMock[0].href,
       },
-      {},
+      undefined,
     );
     expect(NavLink).toHaveBeenNthCalledWith(
       2,
@@ -79,7 +79,7 @@ describe('LayoutHeaderNavigationComponent', () => {
         title: navigationMock[1].title,
         to: navigationMock[1].href,
       },
-      {},
+      undefined,
     );
   });
 });

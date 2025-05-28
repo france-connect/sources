@@ -29,6 +29,7 @@ describe('ScopesService', () => {
   const scopesIndexServiceMock = {
     getClaim: jest.fn(),
     getScope: jest.fn(),
+    getScopes: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -184,6 +185,48 @@ describe('ScopesService', () => {
       const result = service.getScopesByProviderSlug(IdentifierMock);
       // Then
       expect(result).toEqual(Object.keys(StaticProvidersMocked['foo'].scopes));
+    });
+  });
+
+  describe('getScopesFromClaims', () => {
+    it('should return the scopes that match all claims', () => {
+      // Given
+      const claimsMock = ['fooClaim1', 'fooClaim2', 'barClaim1'];
+      const scopesMock = {
+        foo: ['fooClaim1', 'fooClaim2'],
+        bar: ['barClaim1'],
+        baz: ['fooClaim1'],
+        bat: ['batClaim1'],
+      };
+
+      const scopeMapMock = new Map(Object.entries(scopesMock));
+      scopesIndexServiceMock.getScopes = jest
+        .fn()
+        .mockReturnValue(scopeMapMock);
+
+      // When
+      const result = service.getScopesFromClaims(claimsMock);
+      // Then
+      expect(result).toEqual(['foo', 'bar', 'baz']);
+    });
+
+    it('should return an empty array if no claims match', () => {
+      // Given
+      const claimsMock = ['fooClaim1', 'fooClaim2', 'barClaim1'];
+      const scopesMock = {
+        fizz: ['fizzClaim1'],
+        buz: ['buzClaim1'],
+      };
+
+      const scopeMapMock = new Map(Object.entries(scopesMock));
+      scopesIndexServiceMock.getScopes = jest
+        .fn()
+        .mockReturnValue(scopeMapMock);
+
+      // When
+      const result = service.getScopesFromClaims(claimsMock);
+      // Then
+      expect(result).toEqual([]);
     });
   });
 });

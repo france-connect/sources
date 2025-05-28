@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { BreadCrumbComponent } from './breadcrumb.component';
 
@@ -19,7 +19,7 @@ describe('BreadCrumbComponent', () => {
         className: 'fr-breadcrumb__link',
         to: 'any-href-mock',
       },
-      {},
+      undefined,
     );
   });
 
@@ -40,7 +40,7 @@ describe('BreadCrumbComponent', () => {
         className: 'fr-breadcrumb__link',
         to: 'any-href-mock',
       },
-      {},
+      undefined,
     );
   });
 
@@ -60,7 +60,7 @@ describe('BreadCrumbComponent', () => {
         title: 'any-title-mock',
         to: 'any-href-mock',
       },
-      {},
+      undefined,
     );
   });
 });

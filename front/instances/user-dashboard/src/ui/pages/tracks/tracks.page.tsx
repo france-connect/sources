@@ -1,6 +1,6 @@
+import { Helmet } from '@dr.pogodin/react-helmet';
 import classnames from 'classnames';
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 import { TracksListComponent } from '@fc/tracks';

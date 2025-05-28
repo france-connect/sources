@@ -69,7 +69,7 @@ describe('DTO2FormComponent', () => {
         onValidate: onValidateMock,
         submitLabel: 'any-submit-label-mock',
       },
-      {},
+      undefined,
     );
   });
 
@@ -132,12 +132,12 @@ describe('DTO2FormComponent', () => {
     expect(orderSorterMock).toHaveBeenCalledTimes(3);
     // input
     expect(DTO2InputComponent).toHaveBeenCalledTimes(3);
-    expect(DTO2InputComponent).toHaveBeenNthCalledWith(1, { field: schemaMock[0] }, {});
-    expect(DTO2InputComponent).toHaveBeenNthCalledWith(2, { field: schemaMock[1] }, {});
-    expect(DTO2InputComponent).toHaveBeenNthCalledWith(3, { field: schemaMock[3] }, {});
+    expect(DTO2InputComponent).toHaveBeenNthCalledWith(1, { field: schemaMock[0] }, undefined);
+    expect(DTO2InputComponent).toHaveBeenNthCalledWith(2, { field: schemaMock[1] }, undefined);
+    expect(DTO2InputComponent).toHaveBeenNthCalledWith(3, { field: schemaMock[3] }, undefined);
     // section
     expect(DTO2SectionComponent).toHaveBeenCalledOnce();
-    expect(DTO2SectionComponent).toHaveBeenNthCalledWith(1, { field: schemaMock[2] }, {});
+    expect(DTO2SectionComponent).toHaveBeenNthCalledWith(1, { field: schemaMock[2] }, undefined);
   });
 
   it('should call FormComponent without the validate function when DTO2Form.validateOnSubmit is false', () => {
@@ -167,7 +167,7 @@ describe('DTO2FormComponent', () => {
         onSubmit: preSubmitMock,
         onValidate: undefined,
       },
-      {},
+      undefined,
     );
   });
 });

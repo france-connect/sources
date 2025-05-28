@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
-import type { Location } from 'react-router-dom';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import type { Location } from 'react-router';
+import { Navigate, Outlet, useLocation } from 'react-router';
 
 import { AccountContext } from '@fc/account';
 import { useSafeContext } from '@fc/common';
@@ -42,7 +42,7 @@ describe('UnauthedRoute', () => {
     expect(Navigate).toHaveBeenCalledOnce();
     expect(Navigate).toHaveBeenCalledWith(
       { replace: false, state: { from: expect.any(Object) }, to: '/any-authed-fallback' },
-      {},
+      undefined,
     );
   });
 
@@ -68,7 +68,7 @@ describe('UnauthedRoute', () => {
     expect(Navigate).toHaveBeenCalledOnce();
     expect(Navigate).toHaveBeenCalledWith(
       { replace: false, state: { from: expect.any(Object) }, to: '/' },
-      {},
+      undefined,
     );
   });
 
@@ -86,7 +86,7 @@ describe('UnauthedRoute', () => {
     expect(Navigate).toHaveBeenCalledOnce();
     expect(Navigate).toHaveBeenCalledWith(
       { replace: false, state: { from: locationMock }, to: '/any-authed-fallback' },
-      {},
+      undefined,
     );
     expect(fallbackMock).toHaveBeenCalledOnce();
     expect(fallbackMock).toHaveBeenCalledWith(locationMock);

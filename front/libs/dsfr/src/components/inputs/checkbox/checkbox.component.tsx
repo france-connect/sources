@@ -6,7 +6,7 @@ interface CheckboxComponentProps {
   // @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/217251933/Case+cocher+-+Checkbox
   disabled?: boolean;
   hint?: string;
-  // @NOTE la regle est desactivée car le type provient de la librairie react-final-form
+  // @NOTE The rule is disabled because the type comes from the react-final-form library
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   input: FieldInputProps<any, HTMLElement>;
   label: string;

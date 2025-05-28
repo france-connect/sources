@@ -35,6 +35,7 @@ export const frFR: I18nTranslationsMapType = {
   'Form.label.site': 'URL du site',
   'Form.label.redirect_uris': 'URL de connexion',
   'Form.label.post_logout_redirect_uris': 'URL de déconnexion',
+  'Form.label.sector_identifier_uri': 'Sector identifier',
   'Form.label.IPServerAddressesAndRanges': 'Adresse IP',
   'Form.label.id_token_signed_response_alg': 'Algorithme de signature',
   'Form.label.entityId': 'Client ID à réutiliser pour générer les subs',
@@ -52,6 +53,8 @@ export const frFR: I18nTranslationsMapType = {
     'Renseignez ici vos urls de callback\r\nExemple : https://www.paris.fr/callback',
   'Form.hint.post_logout_redirect_uris':
     'Renseignez ici vos urls de logout\r\nExemple : https://www.paris.fr/logout',
+  'Form.hint.sector_identifier_uri':
+    'Renseignez ici votre url de sector identifier',
   'Form.hint.IPServerAddressesAndRanges':
     'Renseignez ici les adresses IP utilisées par votre Fournisseur de Service',
   'Form.hint.id_token_signed_response_alg':
@@ -87,6 +90,8 @@ export const frFR: I18nTranslationsMapType = {
   'Form.isRedirectURL_error.redirect_uris': 'Veuillez saisir une url valide',
   'Form.isLength_error.max.redirect_uris':
     'L’url de connexion doit être de {max} caractères maximum',
+  'Form.isValidRedirectURLList_error.redirect_uris':
+    'Veuillez renseigner un seul nom de domaine et de sous domaine',
   // post_logout_redirect_uris
   'Form.isFilled_error.post_logout_redirect_uris':
     'Veuillez saisir votre url de déconnexion (url de logout)',
@@ -94,6 +99,13 @@ export const frFR: I18nTranslationsMapType = {
     'Veuillez saisir une url valide',
   'Form.isLength_error.max.post_logout_redirect_uris':
     'L’url de déconnexion doit être de {max} caractères maximum',
+  // sector_identifier_uri
+  'Form.isFilled_error.sector_identifier_uri':
+    'Veuillez saisir votre url de sector identifier',
+  'Form.isWebsiteURL_error.sector_identifier_uri':
+    'Veuillez saisir une url valide',
+  'Form.isLength_error.max.sector_identifier_uri':
+    'L’url de sector identifier doit être de {max} caractères maximum',
   // IPServerAddressesAndRanges
   'Form.isIpAddressesAndRange_error.IPServerAddressesAndRanges':
     'Veuillez saisir une adresse IP valide',

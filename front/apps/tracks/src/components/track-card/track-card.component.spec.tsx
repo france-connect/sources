@@ -84,7 +84,7 @@ describe('TrackCardComponent', () => {
       // Then
       expect(TrackCardBadgeComponent).toHaveBeenCalledWith(
         { fromFcPlus: false, type: track.event },
-        {},
+        undefined,
       );
     });
 
@@ -99,7 +99,7 @@ describe('TrackCardComponent', () => {
           opened: false,
           serviceProviderLabel: track.spLabel,
         },
-        {},
+        undefined,
       );
     });
 
@@ -121,7 +121,7 @@ describe('TrackCardComponent', () => {
           interactionAcr: track.interactionAcr,
           opened: false,
         },
-        {},
+        undefined,
       );
     });
   });
@@ -151,7 +151,7 @@ describe('TrackCardComponent', () => {
           opened: false,
           serviceProviderLabel: track.spLabel,
         },
-        {},
+        undefined,
       );
     });
   });
@@ -203,11 +203,11 @@ describe('TrackCardComponent', () => {
     expect(element.getAttribute('aria-expanded')).toBe('initial_usetoggle_value_mock');
     expect(TrackCardHeaderComponent).toHaveBeenCalledWith(
       expect.objectContaining({ opened: 'initial_usetoggle_value_mock' }),
-      {},
+      undefined,
     );
     expect(TrackCardContentComponent).toHaveBeenCalledWith(
       expect.objectContaining({ opened: 'initial_usetoggle_value_mock' }),
-      {},
+      undefined,
     );
   });
 });

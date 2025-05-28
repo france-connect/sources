@@ -28,6 +28,23 @@ export class MicroservicesRmqPublisherService {
     private readonly serviceName: string,
   ) {}
 
+  async broadcast<Message>(command: string, payload: Message): Promise<void> {
+    const serviceName = getServiceToken(this.serviceName);
+
+    const { requestTimeout } =
+      this.config.get<MicroservicesRmqConfig>(serviceName);
+
+    this.logger.debug(`Ms:Broadcast:${command}`);
+
+    try {
+      await lastValueFrom(
+        this.broker.emit(command, payload).pipe(timeout(requestTimeout)),
+      );
+    } catch (error) {
+      throw new MicroservicesRmqCommunicationException(error);
+    }
+  }
+
   async publish<Message, Result extends FSA>(
     command: string,
     payload: Message,
@@ -40,7 +57,7 @@ export class MicroservicesRmqPublisherService {
       this.config.get<MicroservicesRmqConfig>(serviceName);
 
     let result: Result | MicroservicesRmqErrorInterface;
-    this.logger.debug(`Publishing message ${command}`);
+    this.logger.debug(`Ms:Publish:${command}`);
 
     try {
       const message = this.broker
@@ -50,7 +67,7 @@ export class MicroservicesRmqPublisherService {
       result = await lastValueFrom<Result | MicroservicesRmqErrorInterface>(
         message,
       );
-      this.logger.debug({ msg: 'Received response', result });
+      this.logger.debug({ msg: 'Ms:ReceiveResponse', result });
     } catch (error) {
       if (error?.type === ResponseStatus.FAILURE) {
         throw new MicroservicesRmqResponseException(error);

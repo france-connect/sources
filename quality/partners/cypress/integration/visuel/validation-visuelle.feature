@@ -87,3 +87,33 @@ Fonctionnalité: Validation Visuelle - Espace Partenaires
       | tablet portrait  |
       | tablet landscape |
       | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Page Plan du Site sur <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page d'accueil de l'espace partenaires
+    Et que je suis redirigé vers la page login de l'espace partenaires
+    Quand je clique sur le lien "Plan du site" dans le footer
+    Alors je suis redirigé vers la page plan du site
+    Et la copie d'écran "sitemap" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |
+
+  Plan du Scénario: Validation Visuelle - Page Mentions Légales sur <device>
+    Etant donné que j'utilise un navigateur web sur "<device>"
+    Et que je navigue sur la page d'accueil de l'espace partenaires
+    Et que je suis redirigé vers la page login de l'espace partenaires
+    Quand je clique sur le lien "Mentions légales" dans le footer
+    Alors je suis redirigé vers la page mentions légales
+    Et la copie d'écran "legal-notices" correspond à la page actuelle sur "<device>"
+
+    Exemples:
+      | device           |
+      | mobile           |
+      | tablet portrait  |
+      | tablet landscape |
+      | desktop          |

@@ -1,14 +1,24 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { objectDiff } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import { diffKeys } from '@fc/config-abstract-adapter';
 import { CryptographyService } from '@fc/cryptography';
 import { ConfigMessageDto } from '@fc/csmr-config-client';
-import { ServiceProviderService } from '@fc/service-provider';
+import {
+  PlatformTechnicalKeyEnum,
+  ServiceProviderService,
+} from '@fc/service-provider';
 
 import { getConfigMock } from '@mocks/config';
 
 import { ConfigMongoAdapterService } from './config-mongo-adapter.service';
+
+jest.mock('@fc/common', () => ({
+  ...jest.requireActual('@fc/common'),
+  objectDiff: jest.fn(),
+}));
 
 describe('ConfigMongoAdapterService', () => {
   let service: ConfigMongoAdapterService;
@@ -17,6 +27,9 @@ describe('ConfigMongoAdapterService', () => {
   const cryptographyMock = {
     encryptSymetric: jest.fn(),
   };
+
+  const diffMock = [];
+  const objectDiffMock = jest.mocked(objectDiff);
 
   const serviceProviderModel = getModelToken('ServiceProvider');
 
@@ -35,19 +48,23 @@ describe('ConfigMongoAdapterService', () => {
   const encryptedSecret = 'encryptedSecret';
 
   const modelMock = {
-    findOneAndUpdate: jest.fn(),
+    findOneAndReplace: jest.fn(),
+    findOne: jest.fn(),
   };
 
   const objectIdMock = Symbol('objectId');
 
   const serviceProviderMock = {
     toLegacy: jest.fn(),
+    fromLegacy: jest.fn(),
   };
 
   const patchedData = {
     ...legacyFormatted,
     someData: 'someData',
   };
+
+  const documentMock = { id: objectIdMock, key: messageMock.payload.client_id };
 
   beforeEach(async () => {
     jest.resetAllMocks();
@@ -75,8 +92,10 @@ describe('ConfigMongoAdapterService', () => {
 
     service = module.get<ConfigMongoAdapterService>(ConfigMongoAdapterService);
 
-    modelMock.findOneAndUpdate.mockResolvedValue({ id: objectIdMock });
+    modelMock.findOneAndReplace.mockResolvedValue(documentMock);
+    modelMock.findOne.mockResolvedValue(documentMock);
     serviceProviderMock.toLegacy.mockReturnValue(legacyFormatted);
+    objectDiffMock.mockReturnValue(diffMock as never[]);
   });
 
   it('should be defined', () => {
@@ -118,6 +137,7 @@ describe('ConfigMongoAdapterService', () => {
       service['encryptClientSecret'] = jest
         .fn()
         .mockReturnValue(encryptedSecret);
+      service['getDiff'] = jest.fn().mockResolvedValue(diffMock);
       service['patchPartnerForMongo'] = jest.fn().mockReturnValue(patchedData);
     });
 
@@ -136,7 +156,7 @@ describe('ConfigMongoAdapterService', () => {
       await service['save'](messageMock);
 
       // Then
-      expect(modelMock.findOneAndUpdate).toHaveBeenCalledWith(
+      expect(modelMock.findOneAndReplace).toHaveBeenCalledWith(
         { key: messageMock.payload.client_id },
         {
           ...patchedData,
@@ -146,12 +166,89 @@ describe('ConfigMongoAdapterService', () => {
       );
     });
 
-    it('should return object id', async () => {
+    it('should return save event properties', async () => {
+      // Given
+      const saveEventPropertiesMock = {
+        id: documentMock.key,
+        diff: diffMock,
+      };
       // When
       const result = await service['save'](messageMock);
 
       // Then
-      expect(result).toBe(objectIdMock);
+      expect(result).toEqual(saveEventPropertiesMock);
+    });
+  });
+
+  describe('getDiff', () => {
+    it('should call findOne with correct query', async () => {
+      // Given
+      const queryMock = { key: messageMock.payload.client_id };
+
+      // When
+      await service['getDiff'](messageMock);
+
+      // Then
+      expect(modelMock.findOne).toHaveBeenCalledExactlyOnceWith(queryMock);
+    });
+
+    it('should return all keys of payload if old document is not found', async () => {
+      // Given
+      const oldDocument = null;
+      modelMock.findOne.mockResolvedValueOnce(oldDocument);
+
+      // When
+      const result = await service['getDiff'](messageMock);
+
+      // Then
+      expect(result).toEqual(Object.keys(messageMock.payload) as diffKeys);
+    });
+
+    it('should return diff of payload and old document', async () => {
+      // Given
+      const oldDocument = { key: 'oldKey' };
+      const oldDocumentFromLegacy = {
+        client_id: 'oldKey',
+      };
+      modelMock.findOne.mockResolvedValueOnce(oldDocument);
+      service['serviceProvider'].fromLegacy = jest
+        .fn()
+        .mockReturnValue(oldDocumentFromLegacy);
+
+      // When
+      await service['getDiff'](messageMock);
+
+      // Then
+      expect(objectDiffMock).toHaveBeenCalledWith(
+        oldDocumentFromLegacy,
+        messageMock.payload,
+      );
+    });
+  });
+
+  describe('findOneSpByQuery', () => {
+    // Given
+    const clientId = Symbol('clientId');
+    const signupId = Symbol('signupId');
+    const queryMock = {
+      platform: PlatformTechnicalKeyEnum.CORE_FCP,
+      $or: [{ signup_id: signupId }, { entityId: clientId }],
+    };
+
+    it('should call findOne with correct query', async () => {
+      // When
+      await service.findOneSpByQuery(queryMock);
+
+      // Then
+      expect(modelMock.findOne).toHaveBeenCalledExactlyOnceWith(queryMock);
+    });
+
+    it('should return document', async () => {
+      // When
+      const result = await service.findOneSpByQuery(queryMock);
+
+      // Then
+      expect(result).toBe(documentMock);
     });
   });
 

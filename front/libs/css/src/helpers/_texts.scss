@@ -29,7 +29,7 @@ Alignments
       Use "@extend %is-full-width !optional" to avoid this error.
   */
   // stylelint-disable-next-line scss/at-extend-no-missing-placeholder
-  @extend .no-wrap;
+  @extend .no-wrap !optional;
 
   text-overflow: ellipsis;
 }

@@ -32,6 +32,8 @@ export const SelectInput = React.memo(
         isValid={isValid}
         type={ComponentTypes.SELECT}>
         <LabelElement hint={hint} label={label} name={name} required={required} />
+        {/* @NOTE input is coming from react-final-form */}
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <select {...input} className="fr-select fr-select--valid">
           <option disabled hidden value="">
             {t('Form.select.placeholder')}

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { getAccessibleTitle, useSafeContext } from '@fc/common';
 import { ConfigService } from '@fc/config';
@@ -110,7 +110,7 @@ describe('LayoutHeaderBrandComponent', () => {
         title: 'Retour à l’accueil du site - any-service-baseline-mock - any-service-name-mock',
         to: '/link-to-homepage-mock',
       }),
-      {},
+      undefined,
     );
   });
 
@@ -144,7 +144,7 @@ describe('LayoutHeaderBrandComponent', () => {
 
     // Then
     expect(LayoutHeaderMobileBurgerButton).toHaveBeenCalledOnce();
-    expect(LayoutHeaderMobileBurgerButton).toHaveBeenCalledWith({}, {});
+    expect(LayoutHeaderMobileBurgerButton).toHaveBeenCalledWith({}, undefined);
   });
 
   it('should call LayoutHeaderServiceComponent', () => {
@@ -166,6 +166,6 @@ describe('LayoutHeaderBrandComponent', () => {
 
     // Then
     expect(LayoutHeaderServiceComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderServiceComponent).toHaveBeenCalledWith({}, {});
+    expect(LayoutHeaderServiceComponent).toHaveBeenCalledWith({}, undefined);
   });
 });

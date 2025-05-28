@@ -3,11 +3,17 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
+import { objectDiff } from '@fc/common';
 import { ConfigService } from '@fc/config';
+import {
+  ConfigDatabaseServiceInterface,
+  ConfigSaveResultInterface,
+  diffKeys,
+} from '@fc/config-abstract-adapter';
 import { CryptographyService } from '@fc/cryptography';
-import { ConfigDatabaseServiceInterface } from '@fc/csmr-config/interfaces';
 import { ConfigMessageDto } from '@fc/csmr-config-client';
 import {
+  OidcClientInterface,
   OidcClientLegacyInterface,
   ServiceProviderService,
 } from '@fc/service-provider';
@@ -15,6 +21,8 @@ import {
   ServiceProvider,
   ServiceProviderAdapterMongoConfig,
 } from '@fc/service-provider-adapter-mongo';
+
+import { QueryInterface } from '../interfaces';
 
 @Injectable()
 export class ConfigMongoAdapterService
@@ -28,15 +36,25 @@ export class ConfigMongoAdapterService
     private readonly serviceProvider: ServiceProviderService,
   ) {}
 
-  async create(message: ConfigMessageDto): Promise<string> {
+  async create(message: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
     return await this.save(message);
   }
 
-  async update(message: ConfigMessageDto): Promise<string> {
+  async update(message: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
     return await this.save(message);
   }
 
-  private async save(message: ConfigMessageDto): Promise<string> {
+  async findOneSpByQuery(
+    query: QueryInterface,
+  ): Promise<ServiceProvider | null> {
+    const document = await this.serviceProviderModel.findOne(query);
+
+    return document;
+  }
+
+  private async save(
+    message: ConfigMessageDto,
+  ): Promise<ConfigSaveResultInterface> {
     const { client_secret } = message.payload;
     /**
      * @todo decrypt client_secret with partner's secret
@@ -46,7 +64,9 @@ export class ConfigMongoAdapterService
     const legacyFormat = this.serviceProvider.toLegacy(message.payload);
     const data = this.patchPartnerForMongo(legacyFormat);
 
-    const document = await this.serviceProviderModel.findOneAndUpdate(
+    const diff = await this.getDiff(message);
+
+    const document = await this.serviceProviderModel.findOneAndReplace(
       { key: data.key },
       {
         ...data,
@@ -58,7 +78,28 @@ export class ConfigMongoAdapterService
       },
     );
 
-    return document.id;
+    return {
+      id: document.key,
+      diff,
+    };
+  }
+
+  private async getDiff(message: ConfigMessageDto): Promise<diffKeys> {
+    const { client_id: key } = message.payload;
+    const oldDocument = await this.serviceProviderModel.findOne({
+      key,
+    });
+
+    if (!oldDocument) {
+      return Object.keys(message.payload) as diffKeys;
+    }
+
+    const diff = objectDiff<OidcClientInterface>(
+      this.serviceProvider.fromLegacy(oldDocument),
+      message.payload,
+    );
+
+    return diff;
   }
 
   private patchPartnerForMongo(

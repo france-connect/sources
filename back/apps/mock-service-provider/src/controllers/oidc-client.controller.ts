@@ -1,3 +1,5 @@
+import { JWK } from 'jose';
+
 import {
   Body,
   Controller,
@@ -112,7 +114,13 @@ export class OidcClientController {
    */
   @Get(OidcClientRoutes.WELL_KNOWN_KEYS)
   @Header('cache-control', 'public, max-age=600')
-  async getWellKnownKeys() {
+  async getWellKnownKeys(): Promise<{ keys: JWK[] }> {
     return await this.oidcClient.utils.wellKnownKeys();
+  }
+
+  @Get(OidcClientRoutes.WELL_KNOWN_SECTOR_IDENTIFIER)
+  @Header('cache-control', 'public, max-age=600')
+  async getWellKnownSectorIdentifier(): Promise<string[]> {
+    return await this.oidcClient.utils.sectorIdentifier();
   }
 }

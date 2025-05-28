@@ -7,7 +7,7 @@ import type { MediaQueryInterface } from '../../interfaces';
 
 const JOINER = `${Strings.WHITE_SPACE}and${Strings.WHITE_SPACE}`;
 
-export function objectToMediaQuery(obj?: MediaQueryInterface | undefined) {
+export function objectToMediaQuery(obj?: MediaQueryInterface) {
   const keys = obj && Object.keys(obj);
   if (!keys || keys.length === 0) {
     return Strings.EMPTY_STRING;

@@ -5,7 +5,10 @@ import {
   PartnersServiceProviderInstanceVersion,
 } from '@entities/typeorm';
 
-import { ConfigDatabaseServiceInterface } from '@fc/csmr-config/interfaces';
+import {
+  ConfigDatabaseServiceInterface,
+  ConfigSaveResultInterface,
+} from '@fc/config-abstract-adapter';
 import { ConfigMessageDto } from '@fc/csmr-config-client';
 import { PartnersServiceProviderInstanceService } from '@fc/partners-service-provider-instance';
 import { PartnersServiceProviderInstanceVersionService } from '@fc/partners-service-provider-instance-version';
@@ -19,15 +22,15 @@ export class ConfigPostgresAdapterService
     private readonly versions: PartnersServiceProviderInstanceVersionService,
   ) {}
 
-  async create(message: ConfigMessageDto): Promise<string> {
+  async create(message: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
     return await this.save(message);
   }
 
-  async update(message: ConfigMessageDto): Promise<string> {
+  async update(message: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
     return await this.save(message);
   }
 
-  async save(message: ConfigMessageDto): Promise<string> {
+  async save(message: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
     const instance = await this.getInstance(message);
     const version = await this.getVersion(message, instance);
 
@@ -37,7 +40,9 @@ export class ConfigPostgresAdapterService
       await this.versions.updateStatus(version);
     }
 
-    return version.id;
+    return {
+      id: version.id,
+    };
   }
 
   private getInstance(

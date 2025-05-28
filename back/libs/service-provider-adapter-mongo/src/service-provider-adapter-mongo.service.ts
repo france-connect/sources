@@ -74,6 +74,7 @@ export class ServiceProviderAdapterMongoService
         claims: true,
         redirect_uris: true,
         post_logout_redirect_uris: true,
+        sector_identifier_uri: true,
         id_token_signed_response_alg: true,
         id_token_encrypted_response_alg: true,
         id_token_encrypted_response_enc: true,

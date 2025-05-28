@@ -7,6 +7,7 @@ import {
   $IsRedirectURL,
   $IsSignedResponseAlg,
   $IsString,
+  $IsValidRedirectURLList,
   $IsWebsiteURL,
   $Matches,
   Choice,
@@ -111,7 +112,11 @@ export class ServiceProviderInstanceVersionDto
     required: true,
     array: true,
     order: 62,
-    validators: [$IsRedirectURL(), $IsLength({ max: 1024 })],
+    validators: [
+      $IsRedirectURL(),
+      $IsValidRedirectURLList(),
+      $IsLength({ max: 1024 }),
+    ],
   })
   @Expose()
   readonly redirect_uris: string[];
@@ -126,8 +131,15 @@ export class ServiceProviderInstanceVersionDto
   readonly post_logout_redirect_uris: string[];
 
   @Input({
-    array: true,
     order: 64,
+    validators: [$IsWebsiteURL(), $IsLength({ max: 1024 })],
+  })
+  @Expose()
+  readonly sector_identifier_uri: string;
+
+  @Input({
+    array: true,
+    order: 70,
     validators: [$IsIpAddressesAndRange()],
   })
   @Expose()
@@ -136,7 +148,7 @@ export class ServiceProviderInstanceVersionDto
   @Choice({
     type: FieldsChoice.RADIO,
     required: true,
-    order: 65,
+    order: 75,
     options: [
       {
         label: SignatureAlgorithmEnum.ES256,

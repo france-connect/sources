@@ -2,12 +2,14 @@
 
 exports[`ApplicationLayout should match snapshot 1`] = `
 <div>
+  <span
+    data-mockid="ScrollRestoration"
+  />
   <div
     data-mockid="Helmet"
   >
-    <html
-      data-fr-theme="light"
-      lang="fr"
+    <span
+      data-htmltag="html"
     />
   </div>
   <div

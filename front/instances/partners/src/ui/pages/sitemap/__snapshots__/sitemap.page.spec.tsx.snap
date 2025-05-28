@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SitemapPage should match the snapshot, when sitemap prop into layout config is defined 1`] = `
+<div>
+  <nav
+    class="fr-col-12 fr-col-md-8"
+    id="plan-du-site"
+  >
+    <h1>
+      Plan du site
+    </h1>
+    <ul
+      class="fr-raw-list"
+    >
+      <li
+        class="blueLink fr-mb-2w"
+      >
+        <span
+          data-mockid="LinkComponent"
+        />
+      </li>
+      <li
+        class="blueLink fr-mb-2w"
+      >
+        <span
+          data-mockid="LinkComponent"
+        />
+      </li>
+    </ul>
+  </nav>
+</div>
+`;
+
+exports[`SitemapPage should match the snapshot, when sitemap prop is not defined 1`] = `
+<div>
+  <nav
+    class="fr-col-12 fr-col-md-8"
+    id="plan-du-site"
+  >
+    <h1>
+      Plan du site
+    </h1>
+    <ul
+      class="fr-raw-list"
+    />
+  </nav>
+</div>
+`;

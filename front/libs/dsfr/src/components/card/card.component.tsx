@@ -1,8 +1,8 @@
 import classnames from 'classnames';
 import type { PropsWithChildren } from 'react';
 import React from 'react';
-import type { To } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import type { To } from 'react-router';
+import { Link } from 'react-router';
 
 import { HeadingTag } from '@fc/common';
 

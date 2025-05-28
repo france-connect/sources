@@ -1,14 +1,12 @@
 import { useCallback } from 'react';
-import { useLoaderData, useLocation, useNavigate } from 'react-router-dom';
-
-import type { InstanceInterface, ResponseInterface } from '@fc/core-partners';
+import { useLoaderData, useLocation, useNavigate } from 'react-router';
 
 import type { LocationWithSubmitStateType } from '../../types';
 
 export const useInstances = () => {
   const navigate = useNavigate();
   const location = useLocation() as LocationWithSubmitStateType;
-  const response = useLoaderData() as ResponseInterface<InstanceInterface[]>;
+  const response = useLoaderData();
 
   const closeAlertHandler = useCallback(() => {
     // @NOTE onCloseAlert

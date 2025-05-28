@@ -29,7 +29,7 @@ describe('LoginConnectComponent', () => {
         onClick: onClickMock,
         type: 'button',
       },
-      {},
+      undefined,
     );
     expect(LoginConnectHelp).not.toHaveBeenCalled();
   });
@@ -61,7 +61,7 @@ describe('LoginConnectComponent', () => {
         onClick: onClickMock,
         type: buttonTypeMock,
       },
-      {},
+      undefined,
     );
     expect(LoginConnectHelp).toHaveBeenCalled();
     expect(LoginConnectHelp).toHaveBeenCalledWith(
@@ -69,7 +69,7 @@ describe('LoginConnectComponent', () => {
         connectType: connectTypeMock,
         showIcon: true,
       },
-      {},
+      undefined,
     );
   });
 });

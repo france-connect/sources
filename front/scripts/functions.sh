@@ -62,6 +62,6 @@ generate_18n_files() {
   fi
 
   print_info "Generating i18n for $1..."
-  node ./scripts/i18n.js $1
+  node ./scripts/i18n.mjs $1
   print_success "Files created successfully !"
 }

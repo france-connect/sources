@@ -34,7 +34,7 @@ describe('ArrayRemoveButton', () => {
         priority: 'tertiary',
         title: 'Form.multiple.remove',
       },
-      {},
+      undefined,
     );
     expect(t).toHaveBeenCalledTimes(2);
     expect(t).toHaveBeenNthCalledWith(1, 'Form.multiple.remove');
@@ -62,7 +62,7 @@ describe('ArrayRemoveButton', () => {
         priority: 'tertiary',
         title: 'Form.multiple.remove',
       },
-      {},
+      undefined,
     );
     expect(t).toHaveBeenCalledTimes(2);
     expect(t).toHaveBeenNthCalledWith(1, 'Form.multiple.remove');

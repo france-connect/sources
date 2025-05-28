@@ -1,7 +1,7 @@
 import { act, render } from '@testing-library/react';
 import { DateTime } from 'luxon';
 import React from 'react';
-import * as ReactRouterDom from 'react-router-dom';
+import * as ReactRouterDom from 'react-router';
 
 import { ConfigService } from '@fc/config';
 import { PaginationComponent } from '@fc/dsfr';
@@ -183,7 +183,7 @@ describe('TracksListComponent', () => {
         label: 'Octobre 2021',
         tracks: [payloadMock[0]],
       },
-      {},
+      undefined,
     );
     expect(TracksGroupComponent).toHaveBeenNthCalledWith(
       2,
@@ -191,7 +191,7 @@ describe('TracksListComponent', () => {
         label: 'Novembre 2021',
         tracks: [payloadMock[1]],
       },
-      {},
+      undefined,
     );
   });
 

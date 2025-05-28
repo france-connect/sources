@@ -12,6 +12,17 @@ services:
       - "dpp1-low"
 
   ####################
+  # CSMR IMPORT CORE
+  ####################
+
+  import-sp:
+    image: alpine
+    depends_on:
+      - "fc-exploitation"
+      - "csmr-import-core"
+      - "hsm"
+
+  ####################
   # BDD FCP LOW
   ####################
 
@@ -37,6 +48,8 @@ services:
       - "dpp2-low"
       # -- Exploitation
       - "fc-exploitation"
+      - "csmr-import-core"
+      - "hsm"
       # -- Mailer
       - "maildev"
 

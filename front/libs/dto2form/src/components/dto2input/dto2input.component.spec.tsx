@@ -82,7 +82,7 @@ describe('DTO2InputComponent', () => {
           value: valueMock,
         },
       },
-      {},
+      undefined,
     );
   });
 
@@ -125,7 +125,7 @@ describe('DTO2InputComponent', () => {
           value: valueMock,
         },
       },
-      {},
+      undefined,
     );
   });
 
@@ -165,7 +165,7 @@ describe('DTO2InputComponent', () => {
           value: valueMock,
         },
       },
-      {},
+      undefined,
     );
   });
 
@@ -205,7 +205,7 @@ describe('DTO2InputComponent', () => {
           value: valueMock,
         },
       },
-      {},
+      undefined,
     );
   });
 
@@ -235,7 +235,7 @@ describe('DTO2InputComponent', () => {
           value: valueMock,
         },
       },
-      {},
+      undefined,
     );
   });
 
@@ -268,7 +268,7 @@ describe('DTO2InputComponent', () => {
           value: valueMock,
         },
       },
-      {},
+      undefined,
     );
   });
 });

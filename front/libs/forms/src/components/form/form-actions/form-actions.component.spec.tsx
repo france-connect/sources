@@ -20,7 +20,7 @@ describe('FormActionsComponent', () => {
         size: 'md',
         type: 'submit',
       },
-      {},
+      undefined,
     );
     expect(t).toHaveBeenCalledOnce();
     expect(t).toHaveBeenCalledWith('Form.submit');
@@ -42,7 +42,7 @@ describe('FormActionsComponent', () => {
         size: 'lg',
         type: 'reset',
       },
-      {},
+      undefined,
     );
     expect(SimpleButton).toHaveBeenNthCalledWith(
       2,
@@ -52,7 +52,7 @@ describe('FormActionsComponent', () => {
         size: 'lg',
         type: 'submit',
       },
-      {},
+      undefined,
     );
     expect(t).toHaveBeenCalledTimes(2);
     expect(t).toHaveBeenCalledWith('Form.submit');
@@ -75,7 +75,7 @@ describe('FormActionsComponent', () => {
         size: 'md',
         type: 'submit',
       },
-      {},
+      undefined,
     );
   });
 });

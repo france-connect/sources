@@ -1,6 +1,6 @@
-import React from 'react';
-import { ScrollRestoration } from 'react-router-dom';
+import React, { useEffect } from 'react';
 
+import { useScrollTo } from '@fc/common';
 import { CreateInstanceButton, InstancesListComponent } from '@fc/core-partners';
 import { AlertComponent, Sizes, TileComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
@@ -8,7 +8,12 @@ import { t } from '@fc/i18n';
 import { useInstances } from '../../../hooks';
 
 export const InstancesPage = React.memo(() => {
+  const { scrollToTop } = useScrollTo();
   const { closeAlertHandler, hasItems, items, submitState } = useInstances();
+
+  useEffect(() => {
+    scrollToTop();
+  }, [submitState, scrollToTop]);
 
   return (
     <div className="fr-col-12 fr-col-md-6">
@@ -46,7 +51,6 @@ export const InstancesPage = React.memo(() => {
           />
         </div>
       )}
-      {submitState && <ScrollRestoration />}
     </div>
   );
 });

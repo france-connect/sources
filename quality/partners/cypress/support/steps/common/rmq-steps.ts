@@ -1,5 +1,11 @@
 import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
+When("j'initialise la queue RabbitMQ {string}", function (queue: string) {
+  cy.task('rmqInitQueue', queue).then((result: boolean) => {
+    expect(result).to.be.true;
+  });
+});
+
 When(
   'je publie le message RabbitMQ dans la queue {string}',
   function (queue: string) {

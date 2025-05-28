@@ -1,7 +1,9 @@
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsBoolean,
   IsEnum,
+  IsNumber,
   IsObject,
   IsOptional,
   IsString,
@@ -16,6 +18,7 @@ import {
   EncryptionAlgorithmEnum,
   EncryptionEncodingEnum,
   OidcClientInterface,
+  PlatformTechnicalKeyEnum,
   SignatureAlgorithmEnum,
 } from '@fc/service-provider';
 
@@ -41,14 +44,17 @@ export class ConfigCreateMessageDtoPayload
   readonly title?: string;
 
   @IsString({ each: true })
+  @IsArray()
   @IsOptional()
   readonly site?: string[];
 
   @IsString({ each: true })
+  @IsArray()
   @IsOptional()
   readonly emails?: string[];
 
   @IsString({ each: true })
+  @IsArray()
   @IsOptional()
   readonly IPServerAddressesAndRanges?: string[];
 
@@ -56,28 +62,38 @@ export class ConfigCreateMessageDtoPayload
   readonly type: ClientTypeEnum;
 
   @IsString({ each: true })
+  @IsArray()
   readonly scope: string[];
 
   @IsString({ each: true })
+  @IsArray()
   readonly claims: string[];
 
   @IsString({ each: true })
+  @IsArray()
   readonly rep_scope: string[];
 
   @IsBoolean()
   readonly idpFilterExclude: boolean;
 
   @IsString({ each: true })
+  @IsArray()
   readonly idpFilterList: string[];
 
   @IsBoolean()
   readonly identityConsent: boolean;
 
   @IsString({ each: true })
+  @IsArray()
   readonly redirect_uris: string[];
 
   @IsString({ each: true })
+  @IsArray()
   readonly post_logout_redirect_uris: string[];
+
+  @IsOptional()
+  @IsString()
+  readonly sector_identifier_uri?: string;
 
   @IsEnum(SignatureAlgorithmEnum)
   readonly id_token_signed_response_alg: SignatureAlgorithmEnum;
@@ -104,6 +120,14 @@ export class ConfigCreateMessageDtoPayload
   @IsString()
   @IsOptional()
   readonly signupId?: string;
+
+  @IsEnum(PlatformTechnicalKeyEnum)
+  @IsOptional()
+  readonly platform?: PlatformTechnicalKeyEnum;
+
+  @IsNumber()
+  @IsOptional()
+  readonly eidas?: number;
 }
 
 export class ConfigMessageDtoMeta implements FSAMeta {
@@ -128,8 +152,9 @@ export class ConfigMessageDto implements FSA<ConfigMessageDtoMeta> {
   @ValidateNested()
   readonly payload: ConfigCreateMessageDtoPayload;
 
+  @IsOptional()
   @IsObject()
   @Type(() => ConfigMessageDtoMeta)
   @ValidateNested()
-  readonly meta: ConfigMessageDtoMeta;
+  readonly meta?: ConfigMessageDtoMeta;
 }

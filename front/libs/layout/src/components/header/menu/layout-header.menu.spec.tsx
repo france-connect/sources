@@ -54,14 +54,14 @@ describe('LayoutHeaderMenuComponent', () => {
     expect(button).toHaveClass('fr-btn--close fr-btn');
     expect(button).toHaveAttribute('aria-controls', 'layout-header-menu-modal');
     expect(LayoutHeaderToolsComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({}, {});
+    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({}, undefined);
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledOnce();
     expect(LayoutHeaderNavigationComponent).toHaveBeenCalledWith(
       {
         navigation: navigationMock,
         onItemClick: toggleMenuMock,
       },
-      {},
+      undefined,
     );
   });
 
@@ -86,7 +86,7 @@ describe('LayoutHeaderMenuComponent', () => {
     expect(button).toHaveClass('fr-btn--close fr-btn');
     expect(button).toHaveAttribute('aria-controls', 'layout-header-menu-modal');
     expect(LayoutHeaderToolsComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({}, {});
+    expect(LayoutHeaderToolsComponent).toHaveBeenCalledWith({}, undefined);
     expect(LayoutHeaderNavigationComponent).not.toHaveBeenCalled();
   });
 

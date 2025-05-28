@@ -9,7 +9,7 @@ import { Sizes } from '../../enums';
 interface SearchBarComponentProps extends PropsWithClassName {
   size?: Omit<Sizes, Sizes.SMALL>;
   buttonLabel?: string;
-  // @NOTE la regle est desactivée car le type provient de la librairie react-final-form
+  // @NOTE The rule is disabled because the type comes from the react-final-form library
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   input: FieldInputProps<any, HTMLElement>;
   inputLabel?: string;

@@ -103,6 +103,7 @@ export interface OidcClientInterface {
   client_secret: string;
   redirect_uris: string[];
   post_logout_redirect_uris: string[];
+  sector_identifier_uri?: string;
   scope: string[];
   claims: string[];
   id_token_signed_response_alg: SignatureAlgorithmEnum;

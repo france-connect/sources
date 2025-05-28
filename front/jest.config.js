@@ -11,6 +11,7 @@
 module.exports = {
   clearMocks: true,
   collectCoverageFrom: ['apps/**/*.@(ts|tsx)', 'libs/**/*.@(ts|tsx)', 'instances/**/*.@(ts|tsx)'],
+  coverageDirectory: '<rootDir>/coverage',
   coveragePathIgnorePatterns: [
     '.*.d.ts',
     '.configs/',
@@ -20,7 +21,6 @@ module.exports = {
     '.+.(context|error|exception|enum).ts',
     '.+.(routes).tsx',
   ],
-  coverageDirectory: '<rootDir>/coverage',
   coverageThreshold: {
     global: {
       branches: 100,
@@ -29,11 +29,11 @@ module.exports = {
       statements: 100,
     },
   },
-  testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^.+\\.(css|scss)$': 'identity-obj-proxy',
   },
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+  testEnvironment: 'jsdom',
   transform: {
     '^.+\\.svg$': 'jest-transformer-svg',
     '^.+\\.tsx?$': [

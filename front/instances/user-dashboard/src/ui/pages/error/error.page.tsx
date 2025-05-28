@@ -1,7 +1,7 @@
+import { Helmet } from '@dr.pogodin/react-helmet';
 import classnames from 'classnames';
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router';
 
 import { useStylesQuery, useStylesVariables } from '@fc/styles';
 

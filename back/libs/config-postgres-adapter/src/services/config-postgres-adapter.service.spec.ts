@@ -100,6 +100,26 @@ describe('ConfigPostgresAdapterService', () => {
       // Then
       expect(versionsMock.updateStatus).toHaveBeenCalledWith(version);
     });
+
+    it('should return result with version id', async () => {
+      // Given
+      const instance = Symbol('instance');
+      const version = {
+        id: Symbol('versionId'),
+        publicationStatus: Symbol('ExistingPublicationStatus'),
+      };
+
+      service['getInstance'] = jest.fn().mockResolvedValue(instance);
+      service['getVersion'] = jest.fn().mockResolvedValue(version);
+
+      // When
+      const result = await service['save'](messageMock);
+
+      // Then
+      expect(result).toEqual({
+        id: version.id,
+      });
+    });
   });
 
   describe('getInstance', () => {

@@ -52,6 +52,7 @@ describe('TextInput', () => {
 
   it('should match snapshot', () => {
     // When
+    // eslint-disable-next-line react/jsx-props-no-spreading
     const { container } = render(<TextInput {...propsMock} />);
 
     // Then
@@ -71,7 +72,7 @@ describe('TextInput', () => {
         isValid: isValidMock,
         type: 'input',
       },
-      {},
+      undefined,
     );
     expect(LabelElement).toHaveBeenCalledOnce();
     expect(LabelElement).toHaveBeenCalledWith(
@@ -80,7 +81,7 @@ describe('TextInput', () => {
         label: 'any-label-mock',
         name: 'any-name-mock',
       },
-      {},
+      undefined,
     );
     expect(MessageElement).toHaveBeenCalledOnce();
     expect(MessageElement).toHaveBeenCalledWith(
@@ -90,7 +91,7 @@ describe('TextInput', () => {
         id: 'any-name-mock',
         isValid: isValidMock,
       },
-      {},
+      undefined,
     );
   });
 
@@ -106,6 +107,7 @@ describe('TextInput', () => {
     };
 
     // When
+    // eslint-disable-next-line react/jsx-props-no-spreading
     const { container } = render(<TextInput {...propsReadOnlyMock} />);
 
     // Then
@@ -118,7 +120,7 @@ describe('TextInput', () => {
         input: propsMock.input,
         inputClassname: 'any-inputClassname-mock',
       },
-      {},
+      undefined,
     );
   });
 
@@ -134,6 +136,7 @@ describe('TextInput', () => {
     };
 
     // When
+    // eslint-disable-next-line react/jsx-props-no-spreading
     const { container } = render(<TextInput {...propsReadOnlyMock} />);
 
     // Then
@@ -145,7 +148,7 @@ describe('TextInput', () => {
         id: 'form-input-text-any-name-mock',
         input: propsMock.input,
       },
-      {},
+      undefined,
     );
   });
 });

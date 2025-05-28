@@ -193,6 +193,74 @@ Fonctionnalité: Instance - Champs multiples
       | post_logout_redirect_uris[0]  |
       | IPServerAddressesAndRanges[0] |
 
+  Scénario: Champs multiples - Création domaines de callback hétérogènes
+    Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
+    Et que je clique sur le lien d'ajout d'une instance
+    Et que je suis redirigé vers la page création d'instance
+    Et que j'utilise l'instance de FS "avec entityId"
+    Et que j'entre les valeurs par défaut pour mon instance
+    Et que j'entre "https://test-1.com/callback" dans le champ "redirect_uris[0]" du formulaire de création d'instance
+    Et que j'ajoute un champ "redirect_uris" dans le formulaire de création d'instance
+    Et que j'entre "https://test-2.com/callback" dans le champ "redirect_uris[1]" du formulaire de création d'instance
+    Quand je valide le formulaire de création d'instance
+    Alors l'erreur du champ "redirect_uris[0]" contient "Veuillez renseigner un seul nom de domaine et de sous domaine" dans le formulaire de création d'instance
+    Et l'erreur du champ "redirect_uris[1]" contient "Veuillez renseigner un seul nom de domaine et de sous domaine" dans le formulaire de création d'instance
+
+  Scénario: Champs multiples - Modification domaines de callback hétérogènes
+    Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
+    Et que je clique sur l'instance "bdd création champs multiples"
+    Et que je suis redirigé vers la page modification d'instance
+    Et que j'entre "https://test-1.com/callback" dans le champ "redirect_uris[0]" du formulaire de création d'instance
+    Et que j'ajoute un champ "redirect_uris" dans le formulaire de création d'instance
+    Et que j'entre "https://test-2.com/callback" dans le champ "redirect_uris[1]" du formulaire de création d'instance
+    Quand je valide le formulaire de modification d'instance
+    Alors l'erreur du champ "redirect_uris[0]" contient "Veuillez renseigner un seul nom de domaine et de sous domaine" dans le formulaire de création d'instance
+    Et l'erreur du champ "redirect_uris[1]" contient "Veuillez renseigner un seul nom de domaine et de sous domaine" dans le formulaire de création d'instance
+
+  Scénario: Champs multiples - Création domaines de callback hétérogènes avec sector_identifier_uri
+    Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
+    Et que je clique sur le lien d'ajout d'une instance
+    Et que je suis redirigé vers la page création d'instance
+    Et que j'utilise l'instance de FS "avec entityId"
+    Et que j'entre les valeurs par défaut pour mon instance
+    Et que j'entre "création avec sector_identifier_uri" dans le champ "name" du formulaire de création d'instance
+    Et que j'entre "https://test-1.com/callback" dans le champ "redirect_uris[0]" du formulaire de création d'instance
+    Et que j'ajoute un champ "redirect_uris" dans le formulaire de création d'instance
+    Et que j'entre "https://test-2.com/callback" dans le champ "redirect_uris[1]" du formulaire de création d'instance
+    Et que j'entre "https://test-1.com/sector-identifier" dans le champ "sector_identifier_uri" du formulaire de création d'instance
+    Quand je valide le formulaire de création d'instance
+    Alors je suis redirigé vers la page liste des instances
+    Et la confirmation de création de l'instance est affichée
+    Et je clique sur l'instance "création avec sector_identifier_uri"
+    Et je suis redirigé vers la page modification d'instance
+    Et les champs suivants sont initialisés dans le formulaire de création d'instance
+      | name                  | value                                |
+      | redirect_uris[0]      | https://test-1.com/callback          |
+      | redirect_uris[1]      | https://test-2.com/callback          |
+      | sector_identifier_uri | https://test-1.com/sector-identifier |
+
+  Scénario: Champs multiples - Modification domaines de callback hétérogènes avec sector_identifier_uri
+    Etant donné que je me connecte à l'espace partenaires
+    Et que je suis sur la page liste des instances
+    Et que je clique sur l'instance "création avec sector_identifier_uri"
+    Et que je suis redirigé vers la page modification d'instance
+    Et que j'entre "https://test-3.com/callback" dans le champ "redirect_uris[0]" du formulaire de création d'instance
+    Et que j'entre "https://test-4.com/callback" dans le champ "redirect_uris[1]" du formulaire de création d'instance
+    Et que j'entre "https://test-3.com/sector-identifier" dans le champ "sector_identifier_uri" du formulaire de création d'instance
+    Quand je valide le formulaire de modification d'instance
+    Alors je suis redirigé vers la page liste des instances
+    Et la confirmation de modification de l'instance est affichée
+    Et je clique sur l'instance "création avec sector_identifier_uri"
+    Et je suis redirigé vers la page modification d'instance
+    Et les champs suivants sont initialisés dans le formulaire de création d'instance
+      | name                  | value                                |
+      | redirect_uris[0]      | https://test-3.com/callback          |
+      | redirect_uris[1]      | https://test-4.com/callback          |
+      | sector_identifier_uri | https://test-3.com/sector-identifier |
+
   Scénario: Champs multiples - Erreur entre deux valeurs valides
     Etant donné que je me connecte à l'espace partenaires
     Et que je suis sur la page liste des instances

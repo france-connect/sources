@@ -1,6 +1,6 @@
 import type { AxiosError, AxiosResponse } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import { ConfigService } from '@fc/config';
 import { get } from '@fc/http-client';

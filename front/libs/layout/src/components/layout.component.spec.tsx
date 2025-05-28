@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
-import { Helmet } from 'react-helmet-async';
-import { Outlet } from 'react-router-dom';
+import { Outlet, ScrollRestoration } from 'react-router';
 
 import { useSafeContext } from '@fc/common';
 
@@ -31,22 +30,13 @@ describe('ApplicationLayout', () => {
     expect(container).toMatchSnapshot();
   });
 
-  it('should call Helmet component with children', () => {
+  it('should render ScrollRestoration', () => {
     // When
     render(<ApplicationLayout />);
 
     // Then
-    expect(Helmet).toHaveBeenCalledOnce();
-    expect(Helmet).toHaveBeenCalledWith(
-      {
-        children: expect.objectContaining({
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          props: { 'data-fr-theme': 'light', lang: 'fr' },
-          type: 'html',
-        }),
-      },
-      {},
-    );
+    expect(ScrollRestoration).toHaveBeenCalledOnce();
+    expect(ScrollRestoration).toHaveBeenCalledWith({}, undefined);
   });
 
   it('should render LayoutHeaderComponent without props', () => {
@@ -55,7 +45,7 @@ describe('ApplicationLayout', () => {
 
     // Then
     expect(LayoutHeaderComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderComponent).toHaveBeenCalledWith({}, {});
+    expect(LayoutHeaderComponent).toHaveBeenCalledWith({}, undefined);
   });
 
   it('should render LayoutFooterComponent without props', () => {
@@ -64,7 +54,7 @@ describe('ApplicationLayout', () => {
 
     // Then
     expect(LayoutFooterComponent).toHaveBeenCalledOnce();
-    expect(LayoutHeaderComponent).toHaveBeenCalledWith({}, {});
+    expect(LayoutHeaderComponent).toHaveBeenCalledWith({}, undefined);
   });
 
   it('should render Outlet without props', () => {
@@ -73,6 +63,6 @@ describe('ApplicationLayout', () => {
 
     // Then
     expect(Outlet).toHaveBeenCalledOnce();
-    expect(Outlet).toHaveBeenCalledWith({}, {});
+    expect(Outlet).toHaveBeenCalledWith({}, undefined);
   });
 });

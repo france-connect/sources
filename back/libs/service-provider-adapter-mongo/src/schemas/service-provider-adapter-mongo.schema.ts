@@ -38,6 +38,9 @@ export class ServiceProvider extends Document {
   post_logout_redirect_uris: string[];
 
   @Prop({ type: String })
+  sector_identifier_uri: string;
+
+  @Prop({ type: String })
   id_token_signed_response_alg: string;
 
   @Prop({ type: String })
@@ -87,6 +90,18 @@ export class ServiceProvider extends Document {
 
   @Prop({ type: String })
   email: string;
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
+
+  @Prop({ type: Date, default: Date.now })
+  updatedAt: Date;
+
+  @Prop({ type: Date, default: Date.now })
+  secretCreatedAt: Date;
+
+  @Prop({ type: Date, default: Date.now })
+  secretUpdatedAt: Date;
 }
 
 export const ServiceProviderSchema =

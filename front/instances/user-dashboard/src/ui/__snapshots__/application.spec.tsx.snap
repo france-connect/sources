@@ -6,19 +6,15 @@ exports[`Application should match snapshot 1`] = `
     data-mockid="ErrorBoundary"
   >
     <div
-      data-mockid="BrowserRouter"
+      data-mockid="AccountProvider"
     >
-      <div
-        data-mockid="AccountProvider"
-      >
-        <div>
-          <div
-            data-mockid="HelmetProvider"
-          >
+      <div>
+        <div
+          data-mockid="HelmetProvider"
+        >
+          <div>
             <div>
-              <div>
-                ApplicationRoutes
-              </div>
+              ApplicationRoutes
             </div>
           </div>
         </div>

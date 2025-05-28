@@ -7,7 +7,7 @@ import { ConfigService } from '@fc/config';
 import { CsmrHsmConfig } from '@fc/csmr-hsm';
 import { HsmService } from '@fc/hsm';
 import { NestLoggerService } from '@fc/logger';
-import { RabbitmqConfig } from '@fc/rabbitmq';
+import { MicroservicesRmqConfig } from '@fc/microservices-rmq';
 
 import { AppModule } from './app.module';
 import configuration from './config';
@@ -21,7 +21,9 @@ async function bootstrap() {
   const configService = new ConfigService(configOptions);
 
   // Fetch broker options from config
-  const options = configService.get<RabbitmqConfig>('CryptographyBroker');
+  const options = configService.get<MicroservicesRmqConfig>(
+    'CsmrHsmClientMicroService',
+  );
 
   const appModule = AppModule.forRoot(configService);
 

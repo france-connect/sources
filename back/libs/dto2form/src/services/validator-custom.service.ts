@@ -1,7 +1,9 @@
+import { isURL } from 'class-validator';
 import validatorjs from 'validator';
 
 import { Injectable } from '@nestjs/common';
 
+import { hasSameHost } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
 import { CustomValidationOptionsBase } from '../interfaces';
@@ -74,5 +76,31 @@ export class ValidatorCustomService {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       require_tld: false,
     });
+  }
+
+  /**
+   * @todo #2235 Extract this custom validator to a dedicated lib or app
+   */
+  isValidRedirectURLList(
+    _value: string,
+    context: CustomValidationOptionsBase,
+  ): boolean {
+    const fieldName = 'redirect_uris';
+
+    /**
+     * Exclude non-URI values to avoid double error messages
+     * on affected fields
+     */
+    const filledFields = (context.target[fieldName] as string[]).filter(
+      (value) => isURL(value),
+    );
+
+    const sameHost = hasSameHost(filledFields);
+
+    const hasSectorIdentifier = Boolean(
+      context.target['sector_identifier_uri'],
+    );
+
+    return hasSectorIdentifier || sameHost;
   }
 }

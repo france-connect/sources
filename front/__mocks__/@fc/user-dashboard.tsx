@@ -39,8 +39,8 @@ export const FraudOptions = {
 };
 
 export const Routes = {
+  FRAUD_FORM: '/fraud/form',
   FRAUD_LOGIN: '/fraud',
   HISTORY: '/history',
   PREFERENCES: '/preferences',
-  FRAUD_FORM: '/fraud/form',
 };

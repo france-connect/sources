@@ -1,4 +1,4 @@
-import type { LoaderFunctionArgs } from 'react-router-dom';
+import type { LoaderFunctionArgs } from 'react-router';
 
 import { ConfigService } from '@fc/config';
 import { PartnersService } from '@fc/core-partners';

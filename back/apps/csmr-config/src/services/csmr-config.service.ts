@@ -1,8 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import {
+  ConfigDatabaseServiceInterface,
+  ConfigSaveResultInterface,
+} from '@fc/config-abstract-adapter';
 import { ConfigMessageDto } from '@fc/csmr-config-client/dto';
 
-import { ConfigDatabaseServiceInterface } from '../interfaces';
 import { CONFIG_DATABASE_SERVICE } from '../tokens';
 
 @Injectable()
@@ -12,15 +15,15 @@ export class CsmrConfigService {
     private readonly configDatabaseService: ConfigDatabaseServiceInterface,
   ) {}
 
-  async create(config: ConfigMessageDto): Promise<string> {
-    const id = await this.configDatabaseService.create(config);
+  async create(config: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
+    const result = await this.configDatabaseService.create(config);
 
-    return id;
+    return result;
   }
 
-  async update(config: ConfigMessageDto): Promise<string> {
-    const id = await this.configDatabaseService.update(config);
+  async update(config: ConfigMessageDto): Promise<ConfigSaveResultInterface> {
+    const result = await this.configDatabaseService.update(config);
 
-    return id;
+    return result;
   }
 }

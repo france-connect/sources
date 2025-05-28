@@ -80,7 +80,7 @@ describe('FraudFormComponent', () => {
         },
         onSubmit: commitMock,
       },
-      {},
+      undefined,
     );
   });
 
@@ -103,7 +103,7 @@ describe('FraudFormComponent', () => {
         name: 'fraudSurveyOrigin',
         type: 'hidden',
       },
-      {},
+      undefined,
     );
     expect(Field).toHaveBeenNthCalledWith(
       2,
@@ -112,7 +112,7 @@ describe('FraudFormComponent', () => {
         name: 'idpEmail',
         type: 'hidden',
       },
-      {},
+      undefined,
     );
   });
 
@@ -128,9 +128,13 @@ describe('FraudFormComponent', () => {
 
     // Then
     expect(TextInputComponent).toHaveBeenCalledTimes(3);
-    expect(TextInputComponent).toHaveBeenNthCalledWith(1, inputAuthenticationEventIdConfig, {});
-    expect(TextInputComponent).toHaveBeenNthCalledWith(2, inputEmailConfig, {});
-    expect(TextInputComponent).toHaveBeenNthCalledWith(3, inputPhoneConfig, {});
+    expect(TextInputComponent).toHaveBeenNthCalledWith(
+      1,
+      inputAuthenticationEventIdConfig,
+      undefined,
+    );
+    expect(TextInputComponent).toHaveBeenNthCalledWith(2, inputEmailConfig, undefined);
+    expect(TextInputComponent).toHaveBeenNthCalledWith(3, inputPhoneConfig, undefined);
   });
 
   it('should call TextAreaInputComponent', () => {
@@ -145,7 +149,7 @@ describe('FraudFormComponent', () => {
 
     // Then
     expect(TextAreaInputComponent).toHaveBeenCalledOnce();
-    expect(TextAreaInputComponent).toHaveBeenCalledWith(inputTextAreaDescriptionConfig, {});
+    expect(TextAreaInputComponent).toHaveBeenCalledWith(inputTextAreaDescriptionConfig, undefined);
   });
 
   it('should call CheckboxInput', () => {
@@ -166,7 +170,7 @@ describe('FraudFormComponent', () => {
           'Vous acceptez de transmettre ces données à FranceConnect pour traiter votre demande d’aide.*',
         name: 'acceptTransmitData',
       },
-      {},
+      undefined,
     );
   });
 
@@ -191,7 +195,7 @@ describe('FraudFormComponent', () => {
         size: Sizes.MEDIUM,
         type: ButtonTypes.SUBMIT,
       },
-      {},
+      undefined,
     );
   });
 });

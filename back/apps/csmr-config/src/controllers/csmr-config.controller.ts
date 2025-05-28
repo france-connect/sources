@@ -14,6 +14,7 @@ import {
 import {} from '@fc/microservices-rmq/pipes/message-validation.pipe';
 
 import { ConfigPublishedEvent } from '../events';
+import { ConfigPublishedEventPropertiesInterface } from '../interfaces';
 import { CsmrConfigService } from '../services';
 
 @Injectable()
@@ -29,9 +30,17 @@ export class CsmrConfigController {
   async createConfig(
     @Payload() message: ConfigMessageDto,
   ): Promise<ConfigResponseDto> {
-    await this.csmrConfigService.create(message);
+    const result = await this.csmrConfigService.create(message);
 
-    this.eventBus.publish(new ConfigPublishedEvent(message));
+    const properties: ConfigPublishedEventPropertiesInterface = {
+      type: ActionTypes.CONFIG_CREATE,
+      payload: {
+        message,
+      },
+      meta: result,
+    };
+
+    this.eventBus.publish(new ConfigPublishedEvent(properties));
 
     return this.subscriber.response(message);
   }
@@ -41,9 +50,17 @@ export class CsmrConfigController {
   async updateConfig(
     @Payload() message: ConfigMessageDto,
   ): Promise<ConfigResponseDto> {
-    await this.csmrConfigService.update(message);
+    const result = await this.csmrConfigService.update(message);
 
-    this.eventBus.publish(new ConfigPublishedEvent(message));
+    const properties: ConfigPublishedEventPropertiesInterface = {
+      type: ActionTypes.CONFIG_UPDATE,
+      payload: {
+        message,
+      },
+      meta: result,
+    };
+
+    this.eventBus.publish(new ConfigPublishedEvent(properties));
 
     return this.subscriber.response(message);
   }

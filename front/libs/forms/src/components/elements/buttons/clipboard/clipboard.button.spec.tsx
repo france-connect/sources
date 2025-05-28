@@ -40,7 +40,7 @@ describe('ClipboardButton', () => {
         priority: Priorities.SECONDARY,
         title: 'any-copy-label-mock-1',
       },
-      {},
+      undefined,
     );
   });
 
@@ -60,7 +60,7 @@ describe('ClipboardButton', () => {
       expect.objectContaining({
         disabled: false,
       }),
-      {},
+      undefined,
     );
   });
 });

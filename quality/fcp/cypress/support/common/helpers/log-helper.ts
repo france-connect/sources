@@ -81,3 +81,40 @@ export function prepareEventVerification(
   }
   return expectedEvent;
 }
+
+export function filterLogs(
+  logs: Record<string, unknown>[],
+  eventFilter: Record<string, unknown>,
+): Record<string, unknown>[] {
+  const REG_EXP_PREFIX = 'RegExp:';
+  const INTEGER_PREFIX = 'int:';
+
+  const isExpectedValue = (
+    actualValue: unknown,
+    expectedValue: unknown,
+  ): boolean => {
+    if (typeof expectedValue !== 'string') {
+      return actualValue === expectedValue;
+    }
+
+    let result = false;
+    if (expectedValue.startsWith(REG_EXP_PREFIX)) {
+      const regExp = new RegExp(expectedValue.replace(REG_EXP_PREFIX, ''));
+      result = typeof actualValue === 'string' && regExp.test(actualValue);
+    } else if (expectedValue.startsWith(INTEGER_PREFIX)) {
+      const intValue = parseInt(expectedValue.replace(INTEGER_PREFIX, ''), 10);
+      result = actualValue === intValue;
+    } else {
+      result = actualValue === expectedValue;
+    }
+    return result;
+  };
+
+  const filteredLogs = logs.filter((log) =>
+    Object.entries(eventFilter).every(([key, value]) =>
+      isExpectedValue(log[key], value),
+    ),
+  );
+
+  return filteredLogs;
+}

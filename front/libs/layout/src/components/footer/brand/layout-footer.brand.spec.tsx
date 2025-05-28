@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { getAccessibleTitle } from '@fc/common';
 import { ConfigService } from '@fc/config';
@@ -105,7 +105,7 @@ describe('LayoutFooterBrandComponent', () => {
         title: 'Retour à l’accueil du site - any-service-baseline-mock - any-service-name-mock',
         to: '/any-service-homepage-mock',
       }),
-      {},
+      undefined,
     );
   });
 

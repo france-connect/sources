@@ -1,7 +1,7 @@
 import type { AxiosResponse } from 'axios';
 import { HttpStatusCode } from 'axios';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 import { ConfigService } from '@fc/config';
 import type { AxiosException } from '@fc/http-client';

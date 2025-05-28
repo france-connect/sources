@@ -10,6 +10,7 @@ import {
   ClaimIndexInterface,
   ProviderMappingsInterface,
   RichClaimInterface,
+  ScopeIndexInterface,
 } from '../interfaces';
 import { CONFIG_NAME } from '../tokens';
 import { ScopesIndexService } from './scopes-index.service';
@@ -188,6 +189,20 @@ describe('ScopesIndexService', () => {
       const result = service.getScope(keyMock);
       // Then
       expect(result).toBe(indexGetterMockReturnValue);
+    });
+  });
+
+  describe('getScopes', () => {
+    it('should return scopeIndex', () => {
+      // Given
+      const expected = Symbol(
+        'scopeIndexMockValue',
+      ) as unknown as ScopeIndexInterface;
+      service['scopeIndex'] = expected;
+      // When
+      const result = service.getScopes();
+      // Then
+      expect(result).toBe(expected);
     });
   });
 

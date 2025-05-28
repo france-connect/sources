@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import { AccountContext } from '@fc/account';
 import { useSafeContext } from '@fc/common';
@@ -133,7 +133,7 @@ describe('FraudLoginPage', () => {
         size: 'sm',
         type: 'warning',
       },
-      {},
+      undefined,
     );
   });
 
@@ -175,7 +175,7 @@ describe('FraudLoginPage', () => {
         connectType: 'FranceConnect',
         redirectUrl: '/fraud/form',
       },
-      {},
+      undefined,
     );
   });
 
@@ -200,7 +200,7 @@ describe('FraudLoginPage', () => {
         connectType: 'FranceConnect',
         redirectUrl: '/fraud/form?param=value',
       },
-      {},
+      undefined,
     );
   });
 
@@ -219,7 +219,7 @@ describe('FraudLoginPage', () => {
         href: 'mock-fraud-support-form-url',
         label: 'Je ne peux pas me connecter',
       },
-      {},
+      undefined,
     );
   });
 });

@@ -128,3 +128,10 @@ Before({ tags: '@ignoreInteg01' }, function () {
     this.skip();
   }
 });
+
+Before({ tags: '@clearExploitBusinessLogs' }, function () {
+  if (Cypress.env('TEST_ENV') === 'docker') {
+    const logPath = Cypress.env('EXPLOIT_LOG_FILE_PATH');
+    clearBusinessLog(logPath);
+  }
+});

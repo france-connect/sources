@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LegalNoticesPage should match the snapshot, display into a desktop viewport 1`] = `
+<div>
+  <div
+    class="fr-container fr-py-8v fr-mt-8w"
+    id="page-container"
+  >
+    <div
+      data-mockid="Helmet"
+    >
+      <span
+        data-htmltag="title"
+      >
+        Mon tableau de bord - Mentions légales
+      </span>
+    </div>
+    <h1>
+      Mentions légales
+    </h1>
+    <h2>
+      Éditeur
+    </h2>
+    <p>
+      Ce site est édité par le programme FranceConnect de la direction interministérielle du numérique (DINUM).
+    </p>
+    <h2>
+      Directrice de publication
+    </h2>
+    <p>
+      Linda Debernardi : Cheffe du pôle fédération d’identité des citoyens chez direction interministérielle du numérique (DINUM).
+    </p>
+    <h2>
+      Conception et gestion du site
+    </h2>
+    <p>
+      Ce site est développé en mode agile, selon un principe d’amélioration continue. Le suivi éditorial et graphique est assuré au quotidien par FranceConnect. Propriété intellectuelle et liens vers franceconnect.gouv.fr
+    </p>
+    <p>
+      Tout site public ou privé est autorisé à établir, sans autorisation préalable, un lien (y compris profond) vers les informations diffusées sur franceconnect.gouv.fr.
+    </p>
+    <p>
+      Sauf mention de propriété intellectuelle détenue par des tiers (notamment un crédit sur certaines images), les contenus de ce site sont proposés sous licence ouverte (licence MIT et licence AGPL-3.0).
+    </p>
+    <p>
+      La mise en place de liens vers nos contenus et documents est cependant à privilégier par rapport à la reproduction sur un site tiers. La mention explicite du site source
+       
+      franceconnect.gouv.fr est recommandée.
+    </p>
+    <h2>
+      Hébergement
+    </h2>
+    <p>
+      Centre Informatique Douanier
+      <br />
+      Direction générale des douanes et droits indirects (DGDDI)
+      <br />
+      Siège : 11 rue des Deux-Communes 93558 Montreuil Cedex
+    </p>
+  </div>
+</div>
+`;
+
+exports[`LegalNoticesPage should match the snapshot, display into a mobile viewport 1`] = `
+<div>
+  <div
+    class="fr-container fr-py-8v fr-mt-5w"
+    id="page-container"
+  >
+    <div
+      data-mockid="Helmet"
+    >
+      <span
+        data-htmltag="title"
+      >
+        Mon tableau de bord - Mentions légales
+      </span>
+    </div>
+    <h1>
+      Mentions légales
+    </h1>
+    <h2>
+      Éditeur
+    </h2>
+    <p>
+      Ce site est édité par le programme FranceConnect de la direction interministérielle du numérique (DINUM).
+    </p>
+    <h2>
+      Directrice de publication
+    </h2>
+    <p>
+      Linda Debernardi : Cheffe du pôle fédération d’identité des citoyens chez direction interministérielle du numérique (DINUM).
+    </p>
+    <h2>
+      Conception et gestion du site
+    </h2>
+    <p>
+      Ce site est développé en mode agile, selon un principe d’amélioration continue. Le suivi éditorial et graphique est assuré au quotidien par FranceConnect. Propriété intellectuelle et liens vers franceconnect.gouv.fr
+    </p>
+    <p>
+      Tout site public ou privé est autorisé à établir, sans autorisation préalable, un lien (y compris profond) vers les informations diffusées sur franceconnect.gouv.fr.
+    </p>
+    <p>
+      Sauf mention de propriété intellectuelle détenue par des tiers (notamment un crédit sur certaines images), les contenus de ce site sont proposés sous licence ouverte (licence MIT et licence AGPL-3.0).
+    </p>
+    <p>
+      La mise en place de liens vers nos contenus et documents est cependant à privilégier par rapport à la reproduction sur un site tiers. La mention explicite du site source
+       
+      franceconnect.gouv.fr est recommandée.
+    </p>
+    <h2>
+      Hébergement
+    </h2>
+    <p>
+      Centre Informatique Douanier
+      <br />
+      Direction générale des douanes et droits indirects (DGDDI)
+      <br />
+      Siège : 11 rue des Deux-Communes 93558 Montreuil Cedex
+    </p>
+  </div>
+</div>
+`;

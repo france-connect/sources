@@ -50,7 +50,7 @@ describe('InstanceComponent', () => {
         size: 'lg',
         title: 'any-name-mock',
       },
-      {},
+      undefined,
     );
   });
 });

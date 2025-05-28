@@ -1,10 +1,12 @@
+@use '../colors';
+
 /**
  Generate helpers classes for colors
  From auto generated file `_colors.scss`
  .is-<color> { setup font-color }
  .bg-<color> { setup background-color }
 */
-@each $name, $value in $theme-palette {
+@each $name, $value in colors.$theme-palette {
   /* generate font colors */
   .is-#{$name} {
     color: $value;

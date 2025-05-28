@@ -2,4 +2,5 @@ export interface NavigationLinkInterface extends React.RefAttributes<HTMLAnchorE
   href: string;
   label: string;
   title?: string;
+  external?: boolean;
 }

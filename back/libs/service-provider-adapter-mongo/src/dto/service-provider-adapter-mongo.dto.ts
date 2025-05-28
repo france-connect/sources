@@ -4,6 +4,7 @@ import {
   IsIn,
   IsOptional,
   IsString,
+  IsUrl,
   MinLength,
 } from 'class-validator';
 
@@ -42,6 +43,10 @@ export class ServiceProviderAdapterMongoDTO {
   @IsUrlRequiredTldFromConfig({ each: true })
   readonly post_logout_redirect_uris: string[];
 
+  @IsOptional()
+  @IsUrl()
+  readonly sector_identifier_uri?: string;
+
   @IsArray()
   @IsString({ each: true })
   readonly scopes: string[];
@@ -70,7 +75,7 @@ export class ServiceProviderAdapterMongoDTO {
   readonly userinfo_encrypted_response_enc: string;
 
   @IsOptional()
-  @IsUrlRequiredTldFromConfig()
+  @IsUrl()
   readonly jwks_uri?: string;
 
   @IsBoolean()

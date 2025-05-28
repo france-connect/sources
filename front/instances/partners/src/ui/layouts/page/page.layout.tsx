@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 
 import { NoticeComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';

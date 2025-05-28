@@ -5,6 +5,7 @@ import ConfigPartnersMicroService from './config-partners-microservice';
 import Exceptions from './exceptions';
 import Logger from './logger';
 import Mongoose from './mongoose';
+import ProxyMicroService from './proxy-microservice';
 import ServiceProviderAdapterMongo from './service-provider-adapter-mongo';
 
 export default {
@@ -15,4 +16,5 @@ export default {
   Mongoose,
   ServiceProviderAdapterMongo,
   ConfigPartnersMicroService,
+  ProxyMicroService,
 } as CsmrConfigSandboxLowConfig;

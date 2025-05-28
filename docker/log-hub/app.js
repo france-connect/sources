@@ -80,6 +80,13 @@ const geniusColorRoundRobin = [
   "Tomato",
 ];
 
+const MS_ACTIONS_MAP = {
+  Broadcast: "⏩",
+  Publish: "▶️",
+  ReceiveResponse: "◀️",
+  ReceiveMessage: "📨",
+};
+
 // --------------------------
 
 // --- Formatting -----------
@@ -142,7 +149,18 @@ function formatLogForDebug(entry) {
     tagAsBusinessLog(data.type_action, meta, metaStyles);
   }
 
+  tagAsMicroserviceEvent(mainMsg, meta, metaStyles);
+
   return ["%c" + meta.join("%c"), ...metaStyles, mainMsg, data];
+}
+
+function tagAsMicroserviceEvent(msg, meta, styles) {
+  const parts = msg.split(":");
+
+  if (parts.length >= 2 && parts[0] === "Ms") {
+    styles.push(styled("white", "yellow", "bold"));
+    meta.push(`🎤 ${MS_ACTIONS_MAP[parts[1]]}`);
+  }
 }
 
 function tagAsBusinessLog(eventName, meta, styles) {

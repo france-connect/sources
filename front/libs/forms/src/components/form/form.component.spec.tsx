@@ -44,7 +44,7 @@ describe('FormComponent', () => {
         scrollTopOnSubmit: true,
         validate: validateMock,
       },
-      {},
+      undefined,
     );
     expect(FormWrapperComponent).toHaveBeenCalledOnce();
     expect(FormWrapperComponent).toHaveBeenCalledWith(
@@ -98,7 +98,7 @@ describe('FormComponent', () => {
         scrollTopOnSubmit: false,
         validate: validateMock,
       },
-      {},
+      undefined,
     );
     expect(FormWrapperComponent).toHaveBeenCalledOnce();
     expect(FormWrapperComponent).toHaveBeenCalledWith(

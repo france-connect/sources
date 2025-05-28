@@ -33,7 +33,7 @@ describe('BadgesGroupComponent', () => {
         colorName: 'red',
         label: 'Red Badge',
       },
-      {},
+      undefined,
     );
     expect(BadgeComponent).toHaveBeenNthCalledWith(
       2,
@@ -41,7 +41,7 @@ describe('BadgesGroupComponent', () => {
         colorName: 'blue',
         label: 'Blue Badge',
       },
-      {},
+      undefined,
     );
     expect(BadgeComponent).toHaveBeenNthCalledWith(
       3,
@@ -49,7 +49,7 @@ describe('BadgesGroupComponent', () => {
         colorName: 'green',
         label: 'Green Badge',
       },
-      {},
+      undefined,
     );
   });
 });

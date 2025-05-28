@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 
 import { NoticeComponent } from '@fc/dsfr';
 import { t } from '@fc/i18n';
@@ -23,14 +23,14 @@ describe('PageLayout', () => {
     expect(t).toHaveBeenNthCalledWith(1, 'Partners.page.noticeTitle');
     expect(t).toHaveBeenNthCalledWith(2, 'Partners.page.noticeDescription');
     expect(Outlet).toHaveBeenCalledOnce();
-    expect(Outlet).toHaveBeenCalledWith({}, {});
+    expect(Outlet).toHaveBeenCalledWith({}, undefined);
     expect(NoticeComponent).toHaveBeenCalledOnce();
     expect(NoticeComponent).toHaveBeenCalledWith(
       {
         description: 'Partners.page.noticeDescription-mock',
         title: 'Partners.page.noticeTitle-mock',
       },
-      {},
+      undefined,
     );
   });
 });

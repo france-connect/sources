@@ -34,7 +34,7 @@ describe('ArrayAddButton', () => {
         priority: 'tertiary',
         title: 'Form.multiple.add',
       },
-      {},
+      undefined,
     );
     expect(t).toHaveBeenCalledTimes(2);
     expect(t).toHaveBeenNthCalledWith(1, 'Form.multiple.add');
@@ -62,7 +62,7 @@ describe('ArrayAddButton', () => {
         priority: 'tertiary',
         title: 'Form.multiple.add',
       },
-      {},
+      undefined,
     );
     expect(t).toHaveBeenCalledTimes(2);
     expect(t).toHaveBeenNthCalledWith(1, 'Form.multiple.add');

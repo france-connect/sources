@@ -7,8 +7,8 @@ interface CheckboxInputProps {
   // @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/217251933/Case+cocher+-+Checkbox
   disabled?: boolean;
   hint?: string;
-  // @NOTE le initialValue est un argument provenant de la lib react-final-Form
-  // son typage de base est `any`, notre wrapper est donc obligé d'hérité de ce type
+  // @NOTE The initialValue is an argument from the react-final-Form library.
+  // Its base type is `any`, so our wrapper must inherit from this type.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   initialValue?: any;
   label: string;

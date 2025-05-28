@@ -62,7 +62,7 @@ describe('InstanceUpdatePage', () => {
         schema: schemaMock,
         submitLabel: 'Form.submit.label-mock',
       },
-      {},
+      undefined,
     );
   });
 
@@ -81,7 +81,7 @@ describe('InstanceUpdatePage', () => {
         title: 'Partners.instance.noticeTitle-mock',
         type: 'info',
       },
-      {},
+      undefined,
     );
   });
 
@@ -100,7 +100,7 @@ describe('InstanceUpdatePage', () => {
         rel: 'noopener noreferrer external',
         target: '_blank',
       },
-      {},
+      undefined,
     );
   });
 });

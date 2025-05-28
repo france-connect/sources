@@ -5,7 +5,7 @@ import { AppRmqConfig } from '@fc/app';
 import { HsmConfig } from '@fc/hsm';
 import { LoggerConfig } from '@fc/logger';
 import { LoggerConfig as LoggerLegacyConfig } from '@fc/logger-legacy';
-import { RabbitmqConfig } from '@fc/rabbitmq';
+import { MicroservicesRmqConfig } from '@fc/microservices-rmq';
 
 export class CsmrHsmConfig {
   @IsObject()
@@ -30,6 +30,6 @@ export class CsmrHsmConfig {
 
   @IsObject()
   @ValidateNested()
-  @Type(() => RabbitmqConfig)
-  readonly CryptographyBroker: RabbitmqConfig;
+  @Type(() => MicroservicesRmqConfig)
+  readonly CsmrHsmClientMicroService: MicroservicesRmqConfig;
 }

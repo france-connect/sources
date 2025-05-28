@@ -18,8 +18,13 @@
 
 import { promises as fs } from 'fs';
 
+import { pick } from 'lodash';
+
 type LogEvent = {
-  event: string;
+  entity?: string;
+  event?: string;
+  action?: string;
+  type_action?: string;
   [key: string]: string;
 };
 
@@ -47,9 +52,7 @@ const interactionHasEvent = async ([
      * rather than having no match at all,
      * usefull for debuging purpose.
      */
-    const foundEvent: LogEvent = logs.find(
-      (log) => log.event === testEvent.event,
-    );
+    const foundEvent = findEvent(logs, testEvent);
 
     if (!foundEvent) {
       // eslint-disable-next-line no-console
@@ -86,6 +89,22 @@ const interactionHasEvent = async ([
     console.error(error);
     process.exit(1);
   }
+};
+
+const EVENT_KEYS = ['action', 'entity', 'event', 'type_action'];
+const findEvent = (
+  logs: LogEvent[],
+  testEvent: LogEvent,
+  eventKeys = EVENT_KEYS,
+): LogEvent | undefined => {
+  const isExpectedEvent = (log: LogEvent, testEvent: LogEvent): boolean => {
+    const searchEvent = pick(testEvent, eventKeys);
+    return Object.entries(searchEvent).every(
+      ([key, value]) => log[key] === value,
+    );
+  };
+  const foundEvent = logs.find((log) => isExpectedEvent(log, testEvent));
+  return foundEvent;
 };
 
 /**

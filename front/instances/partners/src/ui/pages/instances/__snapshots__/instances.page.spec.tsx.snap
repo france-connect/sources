@@ -93,9 +93,6 @@ exports[`InstancesPage should match snapshot, when the alert component is displa
         data-mockid="InstancesListComponent"
       />
     </div>
-    <span
-      data-mockid="ScrollRestoration"
-    />
   </div>
 </div>
 `;

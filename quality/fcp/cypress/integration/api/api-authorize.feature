@@ -27,6 +27,26 @@ Fonctionnalité: API - authorize
     Et le corps de la réponse contient une page web
     Et je suis redirigé vers la page sélection du fournisseur d'identité
 
+  Scénario: API authorize - Cas nominal URL avec domaine différent présent dans sector_identifier
+    Etant donné que je prépare une requête "authorize"
+    Et que je mets "https://franceconnect.gouv.fr/" dans le paramètre "redirect_uri" de la requête
+    Quand je lance la requête
+    Alors le statut de la réponse est 200
+    Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
+    Et le corps de la réponse contient une page web
+    Et je suis redirigé vers la page sélection du fournisseur d'identité
+
+  Scénario: API authorize - sector_identifier URI ne répond pas
+    Etant donné que je prépare une requête "authorize avec un mauvais sector_identifier_uri"
+    Quand je lance la requête
+    Alors le statut de la réponse est 400
+    Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
+    Et le corps de la réponse contient une page web
+    Et je suis redirigé vers la page erreur technique FranceConnect
+    Et le code d'erreur FranceConnect est "Y04A3BD"
+    Et le message d'erreur FranceConnect est "Une erreur de communication avec le fournisseur de service est survenue : Impossible de contacter le \"sector_identifier_uri\"."
+
+
   Plan du Scénario: API authorize - erreur Y030007 <param> manquant
     Etant donné que je prépare une requête "authorize"
     Et je retire le paramètre "<param>" de la requête
@@ -178,7 +198,6 @@ Fonctionnalité: API - authorize
       |         | openid scope must be requested when using the acr_values parameter |
       | profile | openid scope must be requested when using the acr_values parameter |
 
-
   Plan du Scénario: API authorize - erreur <error> redirect_uri=<redirectUri>
     Etant donné que je prépare une requête "authorize"
     Et je mets "<redirectUri>" dans le paramètre "redirect_uri" de la requête
@@ -213,3 +232,12 @@ Fonctionnalité: API - authorize
     Et le code d'erreur FranceConnect est "Y040001"
     Et le message d'erreur FranceConnect est "Une erreur s'est produite, veuillez réessayer ultérieurement"
     Et le lien retour vers le FS n'est pas affiché dans la page erreur technique
+
+  Scénario: API authorize - Paramètre ui_locales autorisé mais non utilisé
+    Etant donné que je prépare une requête "authorize"
+    Et que je mets "fr-FR" dans le paramètre "ui_locales" de la requête
+    Quand je lance la requête
+    Alors le statut de la réponse est 200
+    Et l'entête de la réponse a une propriété "content-type" contenant "text/html"
+    Et le corps de la réponse contient une page web
+    Et je suis redirigé vers la page sélection du fournisseur d'identité

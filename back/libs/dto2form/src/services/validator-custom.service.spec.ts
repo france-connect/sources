@@ -1,10 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { hasSameHost } from '@fc/common';
 import { ConfigService } from '@fc/config';
 
 import { getConfigMock } from '@mocks/config';
 
 import { ValidatorCustomService } from './validator-custom.service';
+
+jest.mock('@fc/common', () => ({
+  hasSameHost: jest.fn(),
+}));
 
 describe('ValidatorCustomService', () => {
   let service: ValidatorCustomService;
@@ -219,6 +224,77 @@ describe('ValidatorCustomService', () => {
     it('should return false if url has no protocol', () => {
       // When / Then
       expect(service.isRedirectURL('franceconnect.gouv.fr')).toBe(false);
+    });
+  });
+
+  describe('isValidRedirectURLList', () => {
+    const hasSameHostMock = jest.mocked(hasSameHost);
+    const value = 'not used in this validator';
+
+    it('should return true if all urls have the same host', () => {
+      // Given
+      const context = {
+        target: {
+          redirect_uris: [],
+        },
+      };
+      hasSameHostMock.mockReturnValue(true);
+
+      // When
+      const result = service.isValidRedirectURLList(value, context);
+
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return false if some urls have different hosts', () => {
+      // Given
+      const context = {
+        target: {
+          redirect_uris: [],
+        },
+      };
+      hasSameHostMock.mockReturnValue(false);
+
+      // When
+      const result = service.isValidRedirectURLList(value, context);
+
+      // Then
+      expect(result).toBe(false);
+    });
+
+    it('should return true if url list has inconsistent domains but sector_identifier_uri is truthy', () => {
+      // Given
+      const context = {
+        target: {
+          redirect_uris: [],
+          sector_identifier_uri: 'https://example.com',
+        },
+      };
+      hasSameHostMock.mockReturnValue(false);
+
+      // When
+      const result = service.isValidRedirectURLList(value, context);
+
+      // Then
+      expect(result).toBe(true);
+    });
+
+    it('should return true even if some of the urls are not valid', () => {
+      // Given
+      const context = {
+        target: {
+          redirect_uris: ['http://foo.bar/1', 'fooo', 'https://foo.bar/2', ''],
+          sector_identifier_uri: 'https://example.com',
+        },
+      };
+      hasSameHostMock.mockReturnValue(true);
+
+      // When
+      const result = service.isValidRedirectURLList(value, context);
+
+      // Then
+      expect(result).toBe(true);
     });
   });
 });

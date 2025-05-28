@@ -13,7 +13,9 @@ import '@testing-library/jest-dom';
 import { expect } from '@jest/globals';
 // @NOTE are we still using more than this one into tests ?
 import { toBeFalse, toBeTrue, toHaveBeenCalledOnce, toThrowWithMessage } from 'jest-extended';
+import { TextEncoder } from 'node:util';
 
+global.TextEncoder = TextEncoder;
 expect.extend({
   toBeFalse,
   toBeTrue,

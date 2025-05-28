@@ -39,4 +39,6 @@ export interface SelectAttributes extends FieldAttributes {
   options: ChoiceInterface[];
 }
 
+// @NOTE keep it as an independent type
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface SectionAttributes extends BaseAttributes {}

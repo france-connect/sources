@@ -45,7 +45,7 @@ _command_register "create-es-alias-v2" "_create_es_alias_v2" "create manual es a
 _command_register "generate-metrics" "_generate_metrics" "" # Description to be defined
 _command_register "generate-stats" "_generate_stats" "generate-stats => restore all stats (logs, event and metrics) index"
 _command_register "generate-events" "_generate_events" "restore logs and events index"
-_command_register "delete-indexes" "_delete_indexes" ""        # Description to be defined
+_command_register "delete-indices" "_delete_indices" "Deletes elasticsearch indices" 
 _command_register "restore-snapshot" "_es_restore_snapshot" "" # Description to be defined # Deprecated
 
 ## Nodejs apps

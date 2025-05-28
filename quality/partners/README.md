@@ -74,36 +74,35 @@ The visual validations are done on Electron 114 headless in the terminal.
 ### Run the snapshot tests
 
 ```shell
-yarn test:snapshot
+docker-stack bdd-partners-test-visual
 ```
 
 ### Update the base image files for all of your tests
 
 ```shell
-yarn test:snapshot --env updateSnapshots=true
+docker-stack bdd-partners-test-visual --env updateSnapshots=true
 ```
 
 ### Prevent test failures when an image diff does not pass
 
 ```shell
-yarn test:snapshot --env failOnSnapshotDiff=false
+docker-stack bdd-partners-test-visual --env failOnSnapshotDiff=false
 ```
-
 
 ## Gitlab test pipeline
 
 You can create a test pipeline in Gitlab from a merge request or from the staging branch
 
-1. Navigate to https://gitlab.dev-franceconnect.fr/france-connect/fc/-/pipelines/new
+1. Navigate to <https://gitlab.dev-franceconnect.fr/france-connect/fc/-/pipelines/new>
 2. Add the pipeline variables (table below)
 3. Click on the "Run pipeline" button
 4. Start the back and front jobs
 
-| Environment Variable | Description                           | Comment                                                        |
-| -------------------- | ------------------------------------- | -------------------------------------------------------------- |
-| CI_PIPELINE_SOURCE   | merge_request_event                   | if pipeline linked to a merge request                          |
-| CI_MERGE_REQUEST_IID | id of the merge request               | for instance 860 for the merge request `/-/merge_requests/860` |
-| BDD_TAGS_PARTNERS    | tags for the partners BDD tests       | by default '@ci and not @ignore'                               |
+| Environment Variable | Description                     | Comment                                                        |
+| -------------------- | ------------------------------- | -------------------------------------------------------------- |
+| CI_PIPELINE_SOURCE   | merge_request_event             | if pipeline linked to a merge request                          |
+| CI_MERGE_REQUEST_IID | id of the merge request         | for instance 860 for the merge request `/-/merge_requests/860` |
+| BDD_TAGS_PARTNERS    | tags for the partners BDD tests | by default '@ci and not @ignore'                               |
 
 ## Plugins VSCode
 

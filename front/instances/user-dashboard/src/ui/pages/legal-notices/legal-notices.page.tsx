@@ -1,0 +1,66 @@
+import { Helmet } from '@dr.pogodin/react-helmet';
+import classnames from 'classnames';
+
+import { useStylesQuery, useStylesVariables } from '@fc/styles';
+
+export const LegalNoticesPage = () => {
+  const [breakpointLg] = useStylesVariables(['breakpoint-lg']);
+  const gtDesktop = useStylesQuery({ minWidth: breakpointLg });
+  return (
+    <div
+      className={classnames('fr-container fr-py-8v', {
+        // Class CSS
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'fr-mt-5w': !gtDesktop,
+        // Class CSS
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        'fr-mt-8w': gtDesktop,
+      })}
+      id="page-container">
+      <Helmet>
+        <title>Mon tableau de bord - Mentions légales</title>
+      </Helmet>
+      <h1>Mentions légales</h1>
+      <h2>Éditeur</h2>
+      <p>
+        Ce site est édité par le programme FranceConnect de la direction interministérielle du
+        numérique (DINUM).
+      </p>
+      <h2>Directrice de publication</h2>
+      <p>
+        Linda Debernardi : Cheffe du pôle fédération d’identité des citoyens chez direction
+        interministérielle du numérique (DINUM).
+      </p>
+      <h2>Conception et gestion du site</h2>
+      <p>
+        Ce site est développé en mode agile, selon un principe d’amélioration continue. Le suivi
+        éditorial et graphique est assuré au quotidien par FranceConnect. Propriété intellectuelle
+        et liens vers franceconnect.gouv.fr
+      </p>
+      <p>
+        Tout site public ou privé est autorisé à établir, sans autorisation préalable, un lien (y
+        compris profond) vers les informations diffusées sur franceconnect.gouv.fr.
+      </p>
+      <p>
+        Sauf mention de propriété intellectuelle détenue par des tiers (notamment un crédit sur
+        certaines images), les contenus de ce site sont proposés sous licence ouverte (licence MIT
+        et licence AGPL-3.0).
+      </p>
+      <p>
+        La mise en place de liens vers nos contenus et documents est cependant à privilégier par
+        rapport à la reproduction sur un site tiers. La mention explicite du site source{' '}
+        franceconnect.gouv.fr est recommandée.
+      </p>
+      <h2>Hébergement</h2>
+      <p>
+        Centre Informatique Douanier
+        <br />
+        Direction générale des douanes et droits indirects (DGDDI)
+        <br />
+        Siège : 11 rue des Deux-Communes 93558 Montreuil Cedex
+      </p>
+    </div>
+  );
+};
+
+LegalNoticesPage.displayName = 'Legal Notices';

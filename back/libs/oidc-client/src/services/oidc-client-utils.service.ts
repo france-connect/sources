@@ -98,6 +98,13 @@ export class OidcClientUtilsService {
     return { keys: publicKeys };
   }
 
+  async sectorIdentifier(): Promise<string[]> {
+    const { redirectUri, postLogoutRedirectUri, additionalRedirectUris } =
+      await this.oidcClientConfig.get();
+
+    return [redirectUri, postLogoutRedirectUri, ...additionalRedirectUris];
+  }
+
   checkState(callbackParams, stateFromSession: string): void {
     if (!callbackParams.state) {
       throw new OidcClientMissingStateException();

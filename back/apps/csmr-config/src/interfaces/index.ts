@@ -1,1 +1,1 @@
-export * from './config-database-service.interface';
+export * from './config-published-event-properties.interface';

@@ -77,6 +77,6 @@ describe('UserPreferencesPage', () => {
 
     // Then
     expect(UserPreferencesComponent).toHaveBeenCalledOnce();
-    expect(UserPreferencesComponent).toHaveBeenCalledWith({}, {});
+    expect(UserPreferencesComponent).toHaveBeenCalledWith({}, undefined);
   });
 });

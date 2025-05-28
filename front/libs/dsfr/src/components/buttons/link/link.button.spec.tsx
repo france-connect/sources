@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { IconPlacement, Priorities, Sizes } from '../../../enums';
 import { LinkButton } from './link.button';
@@ -25,7 +25,7 @@ describe('SimpleLink', () => {
         title: undefined,
         to: 'any-link-mock',
       },
-      {},
+      undefined,
     );
   });
 
@@ -61,7 +61,7 @@ describe('SimpleLink', () => {
         title: 'any-title-mock',
         to: 'any-link-mock',
       },
-      {},
+      undefined,
     );
   });
 });

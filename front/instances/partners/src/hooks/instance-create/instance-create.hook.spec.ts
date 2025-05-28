@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router';
 
 import { parseInitialValues } from '@fc/dto2form';
 import type { HttpClientDataInterface } from '@fc/http-client';

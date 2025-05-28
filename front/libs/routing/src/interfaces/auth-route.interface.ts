@@ -1,4 +1,4 @@
-import type { Location } from 'react-router-dom';
+import type { Location } from 'react-router';
 
 export interface AuthRouteInterface {
   replace?: boolean;

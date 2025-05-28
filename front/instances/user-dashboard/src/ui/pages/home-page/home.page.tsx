@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 import type { AccountContextState } from '@fc/account';
 import { AccountContext } from '@fc/account';

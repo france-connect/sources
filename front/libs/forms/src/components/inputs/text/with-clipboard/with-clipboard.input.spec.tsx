@@ -45,7 +45,7 @@ describe('InputWithClipboard', () => {
         input: inputMock,
         readOnly: true,
       },
-      {},
+      undefined,
     );
     expect(ClipboardButton).toHaveBeenCalledOnce();
     expect(ClipboardButton).toHaveBeenCalledWith(
@@ -53,7 +53,7 @@ describe('InputWithClipboard', () => {
         dataTestId: 'any-id-mock-copy-button',
         onClick: onClickHandlerMock,
       },
-      {},
+      undefined,
     );
   });
 

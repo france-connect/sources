@@ -1,0 +1,46 @@
+services:
+  fc-workers-low:
+    hostname: fc-workers
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app/fc-workers
+    depends_on:
+      - "mongo-fcp-low"
+      - "elasticsearch"
+      - "kibana"
+    volumes:
+      - "${VOLUMES_DIR}/src/fc-apps:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+    env_file:
+      - "${COMPOSE_DIR}/fc-workers/.env/fc-workers-low.env"
+    networks:
+      - exploitation
+      - data
+    init: true
+    command: "pm2 logs"
+
+  fc-workers-high:
+    hostname: fc-workers
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app/fc-workers
+    depends_on:
+      - "mongo-fcp-high"
+      - "elasticsearch"
+      - "kibana"
+    volumes:
+      - "${VOLUMES_DIR}/src/fc-apps:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+    env_file:
+      - "${COMPOSE_DIR}/fc-workers/.env/fc-workers-high.env"
+    networks:
+      - exploitation
+      - data
+    init: true
+    command: "pm2 logs"

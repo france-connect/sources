@@ -5,8 +5,8 @@ export const InstanceComponent = jest.fn(() => <div data-mockid="InstanceCompone
 export const InstancesListComponent = jest.fn(() => <div data-mockid="InstancesListComponent" />);
 
 export const PartnersService = {
-  get: jest.fn(),
   commit: jest.fn(),
+  get: jest.fn(),
 };
 
 export enum Environment {

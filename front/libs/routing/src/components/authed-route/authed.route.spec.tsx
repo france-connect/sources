@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
-import type { Location } from 'react-router-dom';
-import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import type { Location } from 'react-router';
+import { Navigate, Outlet, useLocation } from 'react-router';
 
 import { AccountContext } from '@fc/account';
 import { AxiosErrorCatcherContext } from '@fc/axios-error-catcher';
@@ -64,7 +64,7 @@ describe('AuthedRoute', () => {
         state: { from: locationMock },
         to: '/any-authed-fallback',
       },
-      {},
+      undefined,
     );
     expect(fallbackMock).toHaveBeenCalledOnce();
     expect(fallbackMock).toHaveBeenCalledWith(locationMock);
@@ -96,7 +96,7 @@ describe('AuthedRoute', () => {
         state: { from: expect.any(Object) },
         to: '/login',
       },
-      {},
+      undefined,
     );
   });
 });

@@ -25,7 +25,7 @@ describe('FieldsetElement', () => {
     );
     expect(childElt).toBeInTheDocument();
     expect(ChildElementMock).toHaveBeenCalledOnce();
-    expect(ChildElementMock).toHaveBeenCalledWith({}, {});
+    expect(ChildElementMock).toHaveBeenCalledWith({}, undefined);
   });
 
   it('should match the snapshot with parameters', () => {
@@ -53,6 +53,6 @@ describe('FieldsetElement', () => {
     );
     expect(childElt).toBeInTheDocument();
     expect(ChildElementMock).toHaveBeenCalledOnce();
-    expect(ChildElementMock).toHaveBeenCalledWith({}, {});
+    expect(ChildElementMock).toHaveBeenCalledWith({}, undefined);
   });
 });

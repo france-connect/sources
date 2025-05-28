@@ -2,6 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 import { ConfigModule, ConfigService } from '@fc/config';
 import { CoreFcpModule } from '@fc/core-fcp';
+import { CsmrHsmClientModule } from '@fc/csmr-hsm-client';
 import { LoggerModule } from '@fc/logger';
 import { LoggerModule as LoggerLegacyModule } from '@fc/logger-legacy';
 import {
@@ -30,6 +31,7 @@ export class AppModule {
         // 3. Load other modules
         CoreFcpModule,
         OverrideOidcProviderModule,
+        CsmrHsmClientModule,
       ],
     };
   }

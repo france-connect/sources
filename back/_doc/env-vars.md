@@ -11,19 +11,20 @@
 5. [csmr-config-sandbox-low](#csmr-config-sandbox-low)
 6. [csmr-fraud-instance](#csmr-fraud-instance)
 7. [csmr-hsm-high](#csmr-hsm-high)
-8. [csmr-tracks-instance](#csmr-tracks-instance)
-9. [csmr-user-preferences-high](#csmr-user-preferences-high)
-10. [eidas-bridge](#eidas-bridge)
-11. [mock-data-provider](#mock-data-provider)
-12. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
-13. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
-14. [mock-proconnect](#mock-proconnect)
-15. [mock-rnipp](#mock-rnipp)
-16. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
-17. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
-18. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
-19. [partners](#partners)
-20. [user-dashboard](#user-dashboard)
+8. [csmr-import-core-instance](#csmr-import-core-instance)
+9. [csmr-tracks-instance](#csmr-tracks-instance)
+10. [csmr-user-preferences-high](#csmr-user-preferences-high)
+11. [eidas-bridge](#eidas-bridge)
+12. [mock-data-provider](#mock-data-provider)
+13. [mock-identity-provider-fcp-high](#mock-identity-provider-fcp-high)
+14. [mock-identity-provider-fcp-low](#mock-identity-provider-fcp-low)
+15. [mock-proconnect](#mock-proconnect)
+16. [mock-rnipp](#mock-rnipp)
+17. [mock-service-provider-fcp-high](#mock-service-provider-fcp-high)
+18. [mock-service-provider-fcp-legacy](#mock-service-provider-fcp-legacy)
+19. [mock-service-provider-fcp-low](#mock-service-provider-fcp-low)
+20. [partners](#partners)
+21. [user-dashboard](#user-dashboard)
 
 ## Variables
 
@@ -225,12 +226,15 @@
 |---|---|
 | AdapterMongo_CLIENT_SECRET_CIPHER_PASS | string |
 | App_ENVIRONMENT | string |
+| App_UPDATE_PROXY | boolean |
 | ConfigBroker_QUEUE | string |
 | ConfigBroker_URLS | json |
 | LoggerLegacy_FILE | string |
 | Logger_THRESHOLD | string |
 | MicroserviceConfigPartners_QUEUE | string |
 | MicroserviceConfigPartners_URLS | json |
+| MicroserviceProxy_QUEUE | string |
+| MicroserviceProxy_URLS | json |
 | Mongoose_DATABASE | string |
 | Mongoose_HOSTS | string |
 | Mongoose_PASSWORD | string |
@@ -283,6 +287,30 @@
 | LoggerLegacy_FILE | string |
 | Logger_THRESHOLD | string |
 | REQUEST_TIMEOUT | string |
+
+### csmr-import-core-instance
+
+| Var Name | Inferred type |
+|---|---|
+| APP_NAME | string |
+| AdapterMongo_CLIENT_SECRET_CIPHER_PASS | string |
+| App_ENVIRONMENT | string |
+| CryptographyBroker_QUEUE | string |
+| CryptographyBroker_URLS | json |
+| ImportCoreBroker_QUEUE | string |
+| ImportCoreBroker_URLS | json |
+| Logger_THRESHOLD | string |
+| Mongoose_DATABASE | string |
+| Mongoose_HOSTS | string |
+| Mongoose_PASSWORD | string |
+| Mongoose_TLS | boolean |
+| Mongoose_TLS_ALLOW_INVALID_HOST_NAME | boolean |
+| Mongoose_TLS_CA_FILE | string |
+| Mongoose_TLS_INSECURE | boolean |
+| Mongoose_USER | string |
+| REQUEST_TIMEOUT | string |
+| ServiceProvider_IDP_FILTER_EXCLUDE | boolean |
+| ServiceProvider_IDP_FILTER_LIST | json |
 
 ### csmr-tracks-instance
 
@@ -625,6 +653,7 @@
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
 | JWKS | string |
 | Logger_THRESHOLD | string |
+| OidcClient_ADDITIONAL_REDIRECT_URIS | json |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
 | OidcClient_HTTPS_CLIENT_KEY | file |
@@ -721,6 +750,7 @@
 | IdentityProviderAdapterEnv_USERINFO_ENCRYPTED_RESPONSE_ENC | string |
 | IdentityProviderAdapterEnv_USERINFO_SIGNED_RESPONSE_ALG | string |
 | Logger_THRESHOLD | string |
+| OidcClient_ADDITIONAL_REDIRECT_URIS | json |
 | OidcClient_FAPI | boolean |
 | OidcClient_HTTPS_CLIENT_CERT | file |
 | OidcClient_HTTPS_CLIENT_KEY | file |

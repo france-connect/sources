@@ -4,7 +4,7 @@ import type { FieldInputProps } from 'react-final-form';
 interface ToggleInputComponentProps {
   disabled?: boolean;
   onUpdate?: (v: boolean) => void;
-  // @NOTE la regle est desactivée car le type provient de la librairie react-final-form
+  // @NOTE The rule is disabled because the type comes from the react-final-form library
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   input: FieldInputProps<any, HTMLElement>;
 }

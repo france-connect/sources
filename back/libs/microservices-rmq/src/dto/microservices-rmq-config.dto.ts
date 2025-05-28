@@ -1,4 +1,8 @@
-import { IsIn, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
+
+import { IsBufferEncoding } from '@fc/common';
+
+import { BufferEncodingEnum } from '../enums';
 
 /**
  * Options for NestJs's RabbitMQ module
@@ -16,23 +20,8 @@ export class MicroservicesRmqConfig {
   @IsOptional()
   readonly queueOptions?: object;
 
-  /**
-   * Custom properties
-   */
-  @IsIn([
-    'ascii',
-    'utf8',
-    'utf-8',
-    'utf16le',
-    'ucs2',
-    'ucs-2',
-    'base64',
-    'latin1',
-    'binary',
-    'hex',
-  ])
-  @IsString()
-  readonly payloadEncoding: BufferEncoding;
+  @IsBufferEncoding()
+  readonly payloadEncoding: BufferEncodingEnum;
 
   @IsNumber()
   readonly requestTimeout: number;

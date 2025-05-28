@@ -36,6 +36,7 @@ const config: Config = {
     '^@fc/user-dashboard(|/.*)$': '<rootDir>/apps/user-dashboard/src$1',
     '^@fc/core-fcp(|/.*)$': '<rootDir>/apps/core-fcp/src$1',
     '^@fc/csmr-hsm(|/.*)$': '<rootDir>/apps/csmr-hsm/src$1',
+    '^@fc/csmr-hsm-client(|/.*)$': '<rootDir>/libs/csmr-hsm-client/src/$1',
     '^@fc/mock-service-provider(|/.*)$':
       '<rootDir>/apps/mock-service-provider/src$1',
     '^@fc/eidas-bridge(|/.*)$': '<rootDir>/apps/eidas-bridge/src$1',
@@ -107,6 +108,8 @@ const config: Config = {
     '^@fc/csmr-tracks-client(|/.*)$':
       '<rootDir>/libs/csmr-tracks-client/src/$1',
     '^@fc/csmr-fraud-client(|/.*)$': '<rootDir>/libs/csmr-fraud-client/src/$1',
+    '^@fc/csmr-import-core-client(|/.*)$':
+      '<rootDir>/libs/csmr-import-core-client/src/$1',
     '^@fc/csmr-account-client(|/.*)$':
       '<rootDir>/libs/csmr-account-client/src/$1',
     '^@fc/tracks-adapter-elasticsearch(|/.*)$':
@@ -115,6 +118,7 @@ const config: Config = {
     '^@fc/csmr-tracks(|/.*)$': '<rootDir>/apps/csmr-tracks/src/$1',
     '^@fc/csmr-account(|/.*)$': '<rootDir>/apps/csmr-account/src/$1',
     '^@fc/csmr-fraud(|/.*)$': '<rootDir>/apps/csmr-fraud/src/$1',
+    '^@fc/csmr-import-core(|/.*)$': '<rootDir>/apps/csmr-import-core/src/$1',
     '^@fc/mock-rnipp(|/.*)$': '<rootDir>/apps/mock-rnipp/src/$1',
     '^@fc/oidc-acr(|/.*)$': '<rootDir>/libs/oidc-acr/src/$1',
     '^@fc/flow-steps(|/.*)$': '<rootDir>/libs/flow-steps/src/$1',
@@ -161,6 +165,8 @@ const config: Config = {
       '<rootDir>/libs/microservices-rmq/.mocks/$1',
     '^@fc/csmr-config-client(|/.*)$':
       '<rootDir>/libs/csmr-config-client/src/$1',
+    '^@fc/config-abstract-adapter(|/.*)$':
+      '<rootDir>/libs/config-abstract-adapter/src/$1',
     '^@fc/config-mongo-adapter(|/.*)$':
       '<rootDir>/libs/config-mongo-adapter/src/$1',
     '^@fc/config-postgres-adapter(|/.*)$':
@@ -173,6 +179,7 @@ const config: Config = {
     '^@fc/service-partners(|/.*)$': '<rootDir>/apps/service-partners/src/$1',
     '^@fc/service-provider(|/.*)$': '<rootDir>/libs/service-provider/src/$1',
     '^@fc/override-code(|/.*)$': '<rootDir>/libs/override-code/src/$1',
+    '^@fc/csmr-proxy-client(|/.*)$': '<rootDir>/libs/csmr-proxy-client/src/$1',
     '^oidc-provider(|/.*)$': '<rootDir>/libs/oidc-provider/mocks/lib/$1',
   },
   preset: 'ts-jest',

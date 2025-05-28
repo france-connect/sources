@@ -7,7 +7,7 @@ export const redirectToUrl = (url: string = ''): void => {
     }
     const { href } = new URL(url, window.location.origin);
     window.location.href = href;
-  } catch (e) {
-    throw new RedirectException();
+  } catch (error: unknown) {
+    throw new RedirectException(error as Error);
   }
 };

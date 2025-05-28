@@ -295,6 +295,31 @@ describe('OidcClientUtilsService', () => {
     });
   });
 
+  describe('sectorIdentifier()', () => {
+    it('should return urls from config', async () => {
+      // Given
+      oidcClientConfigServiceMock.get.mockReturnValueOnce({
+        redirectUri: 'redirectUriMock',
+        postLogoutRedirectUri: 'postLogoutRedirectUriMock',
+        additionalRedirectUris: [
+          'additionalRedirectUriMock-1',
+          'additionalRedirectUriMock-2',
+        ],
+      });
+
+      // When
+      const result = await service.sectorIdentifier();
+
+      // Then
+      expect(result).toEqual([
+        'redirectUriMock',
+        'postLogoutRedirectUriMock',
+        'additionalRedirectUriMock-1',
+        'additionalRedirectUriMock-2',
+      ]);
+    });
+  });
+
   describe('buildAuthorizeParameters()', () => {
     it('should call crypto to generate state', async () => {
       // When

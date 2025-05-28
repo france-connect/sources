@@ -81,7 +81,7 @@ describe('tracksGroupComponent', () => {
     const { unmount } = render(<TracksGroupComponent label="Any Label" tracks={allTracks} />);
 
     // Then
-    expect(TrackCardComponent).toHaveBeenNthCalledWith(1, { track: newestTrack }, {});
+    expect(TrackCardComponent).toHaveBeenNthCalledWith(1, { track: newestTrack }, undefined);
 
     unmount();
   });

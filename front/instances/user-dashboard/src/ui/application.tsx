@@ -1,8 +1,7 @@
 import './application.scss';
 
+import { HelmetProvider } from '@dr.pogodin/react-helmet';
 import { ErrorBoundary } from 'react-error-boundary';
-import { HelmetProvider } from 'react-helmet-async';
-import { BrowserRouter } from 'react-router-dom';
 
 import { AccountProvider, ConnectValidator } from '@fc/account';
 import { AxiosErrorCatcherProvider } from '@fc/axios-error-catcher';
@@ -20,17 +19,15 @@ export function Application() {
   ConfigService.initialize(AppConfig);
   return (
     <ErrorBoundary FallbackComponent={AppBoundaryComponent}>
-      <BrowserRouter>
-        <AxiosErrorCatcherProvider>
-          <AccountProvider validator={ConnectValidator}>
-            <HelmetProvider>
-              <StylesProvider>
-                <ApplicationRoutes />
-              </StylesProvider>
-            </HelmetProvider>
-          </AccountProvider>
-        </AxiosErrorCatcherProvider>
-      </BrowserRouter>
+      <AxiosErrorCatcherProvider>
+        <AccountProvider validator={ConnectValidator}>
+          <HelmetProvider>
+            <StylesProvider>
+              <ApplicationRoutes />
+            </StylesProvider>
+          </HelmetProvider>
+        </AccountProvider>
+      </AxiosErrorCatcherProvider>
     </ErrorBoundary>
   );
 }

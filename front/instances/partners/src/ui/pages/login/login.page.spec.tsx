@@ -56,7 +56,7 @@ describe('Login Page', () => {
         description: 'Partners.page.noticeDescription-mock',
         title: 'Partners.page.noticeTitle-mock',
       },
-      {},
+      undefined,
     );
     expect(AlertComponent).not.toHaveBeenCalledOnce();
     expect(loginTitleElt).toBeInTheDocument();
@@ -68,7 +68,7 @@ describe('Login Page', () => {
         connectType: 'ProConnect',
         showHelp: true,
       },
-      {},
+      undefined,
     );
   });
 
@@ -132,7 +132,7 @@ describe('Login Page', () => {
         title: 'FC.session.expired-mock',
         type: 'error',
       },
-      {},
+      undefined,
     );
   });
 });

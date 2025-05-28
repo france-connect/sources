@@ -5,6 +5,7 @@ import { MicroservicesRmqMessageValidationException } from '../exceptions'; // R
 export class MicroservicesRmqMessageValidationPipe extends ValidationPipe {
   constructor() {
     super({
+      whitelist: true,
       forbidNonWhitelisted: true,
       forbidUnknownValues: true,
       exceptionFactory: (errors) => {

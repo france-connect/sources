@@ -257,24 +257,28 @@ The visual validations are done on Electron 114 headless in the terminal.
 - FCP-HIGH
 
 ```shell
+# docker-stack reset-db-core-fcp-high
 docker-stack bdd-high-test-visual
 ```
 
 - FCP-LOW
 
 ```shell
+# docker-stack reset-db-core-fcp-low
 docker-stack bdd-low-test-visual
 ```
 
 - USER-DASHBOARD
 
 ```shell
+# docker-stack reset-db-core-fcp-low
 docker-stack bdd-ud-test-visual
 ```
 
 - eIDAS
 
 ```shell
+# docker-stack reset-db-core-fcp-high
 docker-stack bdd-eidas-test-visual
 ```
 
@@ -310,24 +314,28 @@ CYPRESS_TAGS='@userDashboard and @validationVisuelleProduction and not @ignore' 
 - FCP-HIGH
 
 ```shell
+# docker-stack reset-db-core-fcp-high
 docker-stack bdd-high-test-visual --env updateSnapshots=true
 ```
 
 - FCP-LOW
 
 ```shell
+# docker-stack reset-db-core-fcp-low
 docker-stack bdd-low-test-visual --env updateSnapshots=true
 ```
 
 - USER-DASHBOARD
 
 ```shell
+# docker-stack reset-db-core-fcp-low
 docker-stack bdd-ud-test-visual --env updateSnapshots=true
 ```
 
 - eIDAS
 
 ```shell
+# docker-stack reset-db-core-fcp-high
 docker-stack bdd-eidas-test-visual --env updateSnapshots=true
 ```
 

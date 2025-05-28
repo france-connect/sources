@@ -4,4 +4,5 @@ export enum OidcClientRoutes {
   WELL_KNOWN_KEYS = '/client/.well-known/keys',
   DISCONNECT_FROM_IDP = '/client/disconnect-from-idp',
   CLIENT_LOGOUT_CALLBACK = '/client/logout-callback',
+  WELL_KNOWN_SECTOR_IDENTIFIER = '/client/.well-known/sector-identifier',
 }

@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { isRouteErrorResponse, useRouteError } from 'react-router-dom';
+import { isRouteErrorResponse, useRouteError } from 'react-router';
 
 import { RouterException } from '../../exceptions';
 import { RouterErrorBoundaryComponent } from './router-error-boundary.component';

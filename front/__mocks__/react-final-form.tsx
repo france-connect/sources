@@ -5,9 +5,8 @@ module.exports = {
   Field: jest.fn(({ children, ...rest }) => {
     if (children) {
       return children(rest);
-    } else {
-      return <div data-mockid="Field" />;
     }
+    return <div data-mockid="Field" />;
   }),
   Form: jest.fn(({ children, ...rest }) => children(rest)),
   FormSpy: jest.fn(),

@@ -258,7 +258,7 @@ describe('FraudFormPage', () => {
         dataTestId: 'success-alert',
         type: EventTypes.SUCCESS,
       },
-      {},
+      undefined,
     );
   });
 
@@ -284,7 +284,7 @@ describe('FraudFormPage', () => {
         size: Sizes.SMALL,
         type: EventTypes.ERROR,
       },
-      {},
+      undefined,
     );
   });
 });

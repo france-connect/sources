@@ -3,8 +3,8 @@
  * https://axios-http.com/docs/req_config
  *
  */
-import type { AxiosError, AxiosResponse, Method } from 'axios';
-import axios from 'axios';
+import type { AxiosResponse, Method } from 'axios';
+import axios, { AxiosError } from 'axios';
 
 import { ContentType, HttpMethods } from '@fc/common';
 import { ConfigService } from '@fc/config';
@@ -44,9 +44,11 @@ export const getCSRF = async (): Promise<GetCsrfTokenResponseInterface> => {
     const endpoint = apiCsrfURL;
     const { data } = await makeRequest<GetCsrfTokenResponseInterface>(method, endpoint);
     return data;
-  } catch (err) {
-    const error = { message: 'Error while trying to get CSRF token' } as AxiosError;
-    throw new AxiosException(error);
+    // @NOTE AxiosException already got a message property
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error: unknown) {
+    const err = new AxiosError('Error while trying to get CSRF token');
+    throw new AxiosException(err);
   }
 };
 

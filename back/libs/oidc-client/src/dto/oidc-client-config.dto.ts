@@ -84,4 +84,16 @@ export class OidcClientConfig {
     require_protocol: true,
   })
   readonly postLogoutRedirectUri: string;
+
+  @IsOptional()
+  @IsUrl(
+    {
+      protocols: ['https'],
+      // Validator.js defined property
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      require_protocol: true,
+    },
+    { each: true },
+  )
+  readonly additionalRedirectUris?: string[];
 }

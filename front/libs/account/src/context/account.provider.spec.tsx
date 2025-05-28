@@ -187,7 +187,7 @@ describe('AccountProvider', () => {
         children: expect.any(Object),
         value: accountStateMock,
       },
-      {},
+      undefined,
     );
   });
 });

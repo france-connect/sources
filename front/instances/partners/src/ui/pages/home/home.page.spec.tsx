@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router';
 
 import { HomePage } from './home.page';
 
@@ -11,6 +11,6 @@ describe('HomePage', () => {
     // Then
     expect(container).toMatchSnapshot();
     expect(Navigate).toHaveBeenCalledOnce();
-    expect(Navigate).toHaveBeenCalledWith({ replace: true, to: '/instances' }, {});
+    expect(Navigate).toHaveBeenCalledWith({ replace: true, to: '/instances' }, undefined);
   });
 });

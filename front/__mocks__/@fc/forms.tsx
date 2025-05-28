@@ -41,19 +41,19 @@ export const HiddenInput = jest.fn(() => <div data-mockid="HiddenInput" />);
 export const ChoiceInput = jest.fn(() => <div data-mockid="ChoiceInput" />);
 
 export const FieldTypes = {
-  TEXT: 'text',
+  CHECKBOX: 'checkbox',
   DATE: 'date',
   EMAIL: 'email',
-  RADIO: 'radio',
-  NUMBER: 'number',
   HIDDEN: 'hidden',
+  NUMBER: 'number',
+  RADIO: 'radio',
   SELECT: 'select',
+  TEXT: 'text',
   TEXTAREA: 'textarea',
-  CHECKBOX: 'checkbox',
 };
 
 export const ComponentTypes = {
+  CHECKBOX: 'checkbox',
   INPUT: 'input',
   TEXTAREA: 'textarea',
-  CHECKBOX: 'checkbox',
 };

@@ -44,7 +44,7 @@ export const ServiceComponent = React.memo(
     const inputName = `idpList.${service.uid}`;
     return (
       <li
-        className={classnames('flex-start items-start fr-pt-2w fr-toggle--border-bottom', {
+        className={classnames('flex-start items-start fr-mb-0 fr-pt-2w fr-toggle--border-bottom', {
           disabled: isDisabled,
           // eslint-disable-next-line @typescript-eslint/naming-convention
           'flex-columns': gtMobile,

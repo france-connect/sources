@@ -1,13 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { ConfigService } from '@fc/config';
-import { HsmService, SignatureDigest } from '@fc/hsm';
+import {
+  BufferEncodingEnum,
+  CsmrHsmClientMessageDto,
+  CsmrHsmRandomMessageDto,
+  SignatureDigest,
+} from '@fc/csmr-hsm-client/protocol';
+import { HsmService } from '@fc/hsm';
 import { LoggerService } from '@fc/logger';
+import { MicroservicesRmqSubscriberService } from '@fc/microservices-rmq';
 
 import { getLoggerMock } from '@mocks/logger';
+import { getSubscriberMock } from '@mocks/microservices-rmq';
 
 import { CsmrHsmController } from './csmr-hsm.controller';
-import { CsmrHsmRandomException, CsmrHsmSignException } from './exceptions';
+import { CsmrHsmRandomException } from './exceptions';
 
 describe('CsmrHsmController', () => {
   let csmrHsmController: CsmrHsmController;
@@ -24,19 +32,21 @@ describe('CsmrHsmController', () => {
 
   const loggerServiceMock = getLoggerMock();
 
+  const subscriberMock = getSubscriberMock();
+
   const configServiceMock = {
     get: jest.fn(),
-  };
-
-  const payloadMock = {
-    data: 'some string',
-    digest: 'sha256' as SignatureDigest,
   };
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       controllers: [CsmrHsmController],
-      providers: [LoggerService, ConfigService, HsmService],
+      providers: [
+        LoggerService,
+        ConfigService,
+        HsmService,
+        MicroservicesRmqSubscriberService,
+      ],
     })
       .overrideProvider(LoggerService)
       .useValue(loggerServiceMock)
@@ -44,6 +54,8 @@ describe('CsmrHsmController', () => {
       .useValue(configServiceMock)
       .overrideProvider(HsmService)
       .useValue(hsmServiceMock)
+      .overrideProvider(MicroservicesRmqSubscriberService)
+      .useValue(subscriberMock)
       .compile();
 
     csmrHsmController = app.get<CsmrHsmController>(CsmrHsmController);
@@ -55,65 +67,77 @@ describe('CsmrHsmController', () => {
   });
 
   describe('sign', () => {
+    // Given
+    const payloadMock = {
+      payload: {
+        data: 'some string',
+        digest: SignatureDigest.SHA256,
+      },
+    } as unknown as CsmrHsmClientMessageDto;
+
     it('should call hsm.sign', () => {
       // When
       csmrHsmController.sign(payloadMock);
       // Then
-      expect(signMock).toHaveBeenCalledTimes(1);
-      expect(signMock).toHaveBeenCalledWith(
+      expect(signMock).toHaveBeenCalledExactlyOnceWith(
         expect.any(Buffer),
-        payloadMock.digest,
+        payloadMock.payload.digest,
       );
     });
 
-    it('should resolve to stringified hsm.sign response', () => {
-      const base64result = Buffer.from(signResolvedValue).toString('base64');
-      // When
-      const result = csmrHsmController.sign(payloadMock);
-      // Then
-      expect(result).toBe(base64result);
-    });
-
-    it('should log an error if execution threw', () => {
-      // Given
-      const errorMock = new Error();
-      signMock.mockImplementationOnce(() => {
-        throw errorMock;
-      });
+    it('should call the subscriber.response', () => {
       // When
       csmrHsmController.sign(payloadMock);
       // Then
-      expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.err).toHaveBeenCalledWith(
-        new CsmrHsmSignException(),
+      expect(subscriberMock.response).toHaveBeenCalledExactlyOnceWith(
+        signResolvedValue.toString('base64'),
       );
-    });
-
-    it('should resolve to "ERROR" if execution threw', () => {
-      hsmServiceMock.sign.mockImplementationOnce(() => {
-        throw new Error('something not good');
-      });
-      // When
-      const result = csmrHsmController.sign(payloadMock);
-      // Then
-      expect(result).toBe('ERROR');
     });
   });
 
   describe('random', () => {
     // Given
-    const payload = { length: 64, encoding: 'hex' as BufferEncoding };
+    const payloadMock = {
+      payload: { length: 64, encoding: BufferEncodingEnum.HEX },
+    } as unknown as CsmrHsmRandomMessageDto;
 
-    it('should call hsm.random', () => {
+    it('should call hsm.genRandom', () => {
       // When
-      csmrHsmController.random(payload);
+      csmrHsmController.random(payloadMock);
       // Then
-      expect(hsmServiceMock.genRandom).toHaveBeenCalledTimes(1);
+      expect(hsmServiceMock.genRandom).toHaveBeenCalledExactlyOnceWith(
+        64,
+        'hex',
+      );
+    });
+
+    it('should call the subscriber.response', () => {
+      // When
+      csmrHsmController.random(payloadMock);
+      // Then
+      expect(subscriberMock.response).toHaveBeenCalledExactlyOnceWith(
+        randomString,
+      );
+    });
+  });
+
+  describe('randomWithoutMicroService', () => {
+    // Given
+    const payload = { length: 64, encoding: BufferEncodingEnum.HEX };
+
+    it('should call hsm.genRandom', () => {
+      // When
+      csmrHsmController.randomWithoutMicroService(payload);
+      // Then
+      expect(hsmServiceMock.genRandom).toHaveBeenCalledExactlyOnceWith(
+        64,
+        'hex',
+      );
     });
 
     it('should return stringified hsm.random response', () => {
       // When
-      const result = csmrHsmController.random(payload);
+      const result = csmrHsmController.randomWithoutMicroService(payload);
       // Then
       expect(result).toBe(randomString);
     });
@@ -125,10 +149,9 @@ describe('CsmrHsmController', () => {
         throw errorMock;
       });
       // When
-      csmrHsmController.random(payload);
+      csmrHsmController.randomWithoutMicroService(payload);
       // Then
-      expect(loggerServiceMock.err).toHaveBeenCalledTimes(1);
-      expect(loggerServiceMock.err).toHaveBeenCalledWith(
+      expect(loggerServiceMock.err).toHaveBeenCalledExactlyOnceWith(
         new CsmrHsmRandomException(),
       );
     });
@@ -140,7 +163,7 @@ describe('CsmrHsmController', () => {
         throw errorMock;
       });
       // When
-      const result = csmrHsmController.random(payload);
+      const result = csmrHsmController.randomWithoutMicroService(payload);
       // Then
       expect(result).toEqual('ERROR');
     });

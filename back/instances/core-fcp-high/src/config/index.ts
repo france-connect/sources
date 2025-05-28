@@ -2,9 +2,9 @@ import { CoreFcpHighConfig } from '../dto';
 import App from './app';
 import Config from './config';
 import Core from './core';
-import CryptographyBroker from './cryptography-broker';
 import CryptographyEidas from './cryptography-eidas';
 import CryptographyFcp from './cryptography-fcp';
+import CsmrHsmClientMicroService from './csmr-hsm-client-microservice';
 import DataProviderAdapterMongo from './data-provider-adapter-mongo';
 import Device from './device';
 import Exceptions from './exceptions';
@@ -39,7 +39,6 @@ export default {
   Mongoose,
   Redis,
   Rnipp,
-  CryptographyBroker,
   CryptographyFcp,
   CryptographyEidas,
   Session,
@@ -53,4 +52,5 @@ export default {
   I18n,
   Exceptions,
   ExceptionsFcp,
+  CsmrHsmClientMicroService,
 } as CoreFcpHighConfig;

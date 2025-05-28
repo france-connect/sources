@@ -338,30 +338,7 @@ services:
       - ${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
-    environment:
-      - "DEFAULT_MODE=prod"
-      - "APP_NAME=csmr-hsm-high"
-      - "NESTJS_INSTANCE=csmr-hsm-high"
-      - "PM2_SCRIPT=yarn start:dev csmr-hsm-high"
-      - "PM2_CI_SCRIPT=yarn start:ci csmr-hsm-high"
-      - "REQUEST_TIMEOUT=6000"
-      # LoggerLegacy
-      - "LoggerLegacy_FILE=/var/log/app/csmr-hsm.log"
-      # Hsm
-      - "PROTECCIO_CONF_DIR=/etc/hsm"
-      - "HSM_HOST=hsm"
-      # Locale PKCS11 library
-      #   Use libpkcs11-proxy lib for development HSM (softHSM)
-      #   Use Bull's library for production HSM
-      #
-      # - "HSM_LIB=/etc/hsm/libnethsm.so"
-      - "Hsm_LIB=/etc/hsm/libpkcs11-proxy.so"
-      - "Hsm_PIN=1234"
-      - "Hsm_VIRTUAL_HSM_SLOT=0"
-      - "Hsm_SIG_HSM_PUB_KEY_CKA_LABEL=key-prime256v1"
-      - "PKCS11_PROXY_SOCKET=tcp://hsm:5551"
-      - 'CryptographyBroker_URLS=["amqp://broker:5672"]'
-      - "CryptographyBroker_QUEUE=crypto"
+      - "${COMPOSE_DIR}/shared/.env/csmr-hsm.env"
     networks:
       - data
     init: true
@@ -474,7 +451,7 @@ services:
     networks:
       - public
       - data
-  
+
   cypress-support:
     image: ${FC_DOCKER_REGISTRY}/cypress:${CYPRESS_IMAGE_VERSION}
     user: ${CURRENT_UID}
@@ -545,7 +522,7 @@ services:
   ####################
 
   elasticsearch:
-    image: elasticsearch:7.17.9
+    image: elasticsearch:7.17.28
     volumes:
       - "${VOLUMES_DIR}/elasticsearch/data:/usr/share/elasticsearch/data"
       - "${VOLUMES_DIR}/elasticsearch/config/users:/usr/share/elasticsearch/config/users:ro"
@@ -565,6 +542,20 @@ services:
     environment:
       - "discovery.type=single-node"
       - "ES_JAVA_OPTS=-Xms64m -Xmx256m"
+
+  kibana:
+    image: kibana:7.17.9
+    depends_on:
+      - elasticsearch
+    networks:
+      - data
+      - public
+    ports:
+      - "5601:5601"
+    volumes:
+      - "${VOLUMES_DIR}/elasticsearch/config/elasticsearch.crt:/usr/share/kibana/config/elasticsearch.crt:ro"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/kibana.env"
 
   csmr-tracks:
     hostname: csmr-tracks
@@ -701,6 +692,28 @@ services:
     env_file:
       - "${COMPOSE_DIR}/shared/.env/base-app.env"
       - "${COMPOSE_DIR}/shared/.env/csmr-fraud.env"
+    networks:
+      - data
+    init: true
+    command: "pm2 logs"
+
+  csmr-import-core:
+    hostname: csmr-import-core
+    image: ${FC_DOCKER_REGISTRY}/nodejs:${NODE_VERSION}-dev
+    user: ${CURRENT_UID}
+    working_dir: /var/www/app
+    depends_on:
+      - "broker"
+    volumes:
+      - "${VOLUMES_DIR}/src/fc/back:/var/www/app"
+      - "${VOLUMES_DIR}/app:/opt/scripts"
+      - "${VOLUMES_DIR}/log:/var/log/app"
+      - "${VOLUMES_DIR}/.home:/home"
+      - "${VOLUMES_DIR}/ssl:/etc/ssl/docker_host:ro"
+    env_file:
+      - "${COMPOSE_DIR}/shared/.env/base-app.env"
+      - "${COMPOSE_DIR}/shared/.env/csmr-import-core.env"
+      - "${COMPOSE_DIR}/fcp-low/.env/mongo-fcp-low.env"
     networks:
       - data
     init: true

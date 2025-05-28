@@ -1,6 +1,7 @@
 import { render } from '@testing-library/react';
 
 import { ConfigService } from '@fc/config';
+import { LinkComponent } from '@fc/dsfr';
 
 import { LayoutFooterBottomComponent } from './layout-footer.bottom';
 
@@ -13,6 +14,7 @@ describe('LayoutFooterBottomComponent', () => {
       title: 'any-title-mock-1',
     },
     {
+      external: true,
       href: 'any-href-mock-2',
       label: 'any-label-mock-2',
       title: 'any-title-mock-2',
@@ -58,24 +60,33 @@ describe('LayoutFooterBottomComponent', () => {
     });
 
     // When
-    const { container, findAllByRole, getByTitle } = render(<LayoutFooterBottomComponent />);
-    const elementLinks = await findAllByRole('link');
-    const elementLink1 = getByTitle('any-title-mock-1');
-    const elementLink2 = getByTitle('any-title-mock-2');
+    const { container } = render(<LayoutFooterBottomComponent />);
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(elementLinks).toHaveLength(2);
-    expect(elementLink1).toBeInTheDocument();
-    expect(elementLink1).toHaveAttribute('href', 'any-href-mock-1');
-    expect(elementLink1).toHaveAttribute('title', 'any-title-mock-1');
-    expect(elementLink1).toHaveAttribute('title', 'any-title-mock-1');
-    expect(elementLink1).toHaveTextContent('any-label-mock-1');
-    expect(elementLink2).toBeInTheDocument();
-    expect(elementLink2).toHaveAttribute('href', 'any-href-mock-2');
-    expect(elementLink2).toHaveAttribute('title', 'any-title-mock-2');
-    expect(elementLink2).toHaveAttribute('title', 'any-title-mock-2');
-    expect(elementLink2).toHaveTextContent('any-label-mock-2');
+    expect(LinkComponent).toHaveBeenCalledTimes(2);
+    expect(LinkComponent).toHaveBeenNthCalledWith(
+      1,
+      {
+        children: 'any-label-mock-1',
+        className: 'fr-footer__bottom-link',
+        external: undefined,
+        href: 'any-href-mock-1',
+        title: 'any-title-mock-1',
+      },
+      undefined,
+    );
+    expect(LinkComponent).toHaveBeenNthCalledWith(
+      2,
+      {
+        children: 'any-label-mock-2',
+        className: 'fr-footer__bottom-link',
+        external: true,
+        href: 'any-href-mock-2',
+        title: 'any-title-mock-2',
+      },
+      undefined,
+    );
   });
 
   it('should render the licence when features.showLicence is defined', () => {
@@ -86,17 +97,20 @@ describe('LayoutFooterBottomComponent', () => {
     });
 
     // When
-    const { container, getByRole } = render(<LayoutFooterBottomComponent />);
-    const elementLink = getByRole('link');
+    const { container, getByText } = render(<LayoutFooterBottomComponent />);
+    const textElt = getByText('Sauf mention contraire, tous les contenus de ce site sont sous');
 
     // Then
     expect(container).toMatchSnapshot();
-    expect(container).toHaveTextContent(
-      'Sauf mention contraire, tous les contenus de ce site sont sous licence etalab-2.0',
-    );
-    expect(elementLink).toHaveAttribute(
-      'href',
-      'https://github.com/etalab/licence-ouverte/blob/master/LO.md',
+    expect(textElt).toBeInTheDocument();
+    expect(LinkComponent).toHaveBeenCalledOnce();
+    expect(LinkComponent).toHaveBeenCalledWith(
+      {
+        children: 'licence etalab-2.0',
+        external: true,
+        href: 'https://github.com/etalab/licence-ouverte/blob/master/LO.md',
+      },
+      undefined,
     );
   });
 });

@@ -16,3 +16,11 @@ Then(
     topMenuComponent.checkIsConnected(isConnected);
   },
 );
+
+Then(/^je suis (redirigé vers|sur) la page plan du site$/, function () {
+  cy.url().should('include', '/plan-du-site');
+});
+
+Then(/^je suis (redirigé vers|sur) la page mentions légales$/, function () {
+  cy.url().should('include', '/mentions-legales');
+});

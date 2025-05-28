@@ -41,7 +41,7 @@ describe('FraudSurveyIntroductionComponent', () => {
         dataTestId: 'fraud-survey-button',
         onClick: redirectToFraudSurvey,
       },
-      {},
+      undefined,
     );
   });
 });

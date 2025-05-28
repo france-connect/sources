@@ -7,10 +7,14 @@ const fsp = {
     site: ["https://fsp1-low.docker.dev-franceconnect.fr/login"],
     redirect_uris: [
       "https://fsp1-low.docker.dev-franceconnect.fr/oidc-callback",
+      "https://franceconnect.gouv.fr/",
     ],
     post_logout_redirect_uris: [
       "https://fsp1-low.docker.dev-franceconnect.fr/client/logout-callback",
+      "https://franceconnect.gouv.fr/",
     ],
+    sector_identifier_uri:
+      "https://fsp1-low.docker.dev-franceconnect.fr/client/.well-known/sector-identifier",
     client_secret:
       "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
     key: "6925fb8143c76eded44d32b40c0cb1006065f7f003de52712b78985704f39950",
@@ -62,6 +66,7 @@ const fsp = {
     identityConsent: false,
     platform: "CORE_FCP",
     rep_scope: [],
+    signup_id: "9992001",
   },
   // FSP2-LOW - amr not authorized
   "FSP2-LOW": {
@@ -130,6 +135,7 @@ const fsp = {
     identityConsent: false,
     platform: "CORE_FCP",
     rep_scope: [],
+    signup_id: "9992002",
   },
   // FSP3-LOW - private sp
   "FSP3-LOW": {
@@ -199,6 +205,7 @@ const fsp = {
       "Social-Santé",
       "Travail-Formation",
     ],
+    signup_id: "9992003",
   },
   // FSP4-LOW - whitelist fip8
   "FSP4-LOW": {
@@ -263,6 +270,51 @@ const fsp = {
     identityConsent: false,
     platform: "CORE_FCP",
     rep_scope: [],
+    signup_id: "9992004",
+  },
+
+  // FSP5-LOW: identical to FSP4-LOW but with invalid sector_identifier_uri
+  "FSP5-LOW": {
+    name: "fsp5-low",
+    title: "FSP5 - LOW",
+    eidas: 1,
+    site: ["https://fsp4-low.docker.dev-franceconnect.fr/login"],
+    redirect_uris: [
+      "https://fsp4-low.docker.dev-franceconnect.fr/oidc-callback",
+    ],
+    post_logout_redirect_uris: [
+      "https://fsp4-low.docker.dev-franceconnect.fr/client/logout-callback",
+    ],
+    sector_identifier_uri:
+      "https://fsp4-low.docker.dev-franceconnect.fr/not-a-valid-uri",
+    client_secret:
+      "+sqGL4XE6aqzIMOp/DKC1jWB8I+8qE1jW6iz2tUv8lt+ZZzxjyoCBQeuAcJTFZxfLywkn6cAICK5JPLxYM0+8pk/q7CGHUfr/gzr3ZYRroWWE+egEEDxqRYDYe0=",
+    key: "5925fb7843c76eded44d32b40c0cb1gyu065f7f003de52712b78985704f39950",
+    entityId:
+      "z0cd64372db6ecf39c317c0c74ce90f02d8ad7d510ce054883b759d666a996bc",
+    credentialsFlow: false,
+    email: "fsp4@franceconnect.loc",
+    IPServerAddressesAndRanges: ["1.1.1.1"],
+    active: true,
+    type: "public",
+    __v: 4,
+    createdAt: new Date("2019-04-24 17:09:17"),
+    updatedAt: new Date("2019-04-24 17:09:17"),
+    updatedBy: "admin",
+    scopes: ["openid"],
+    claims: ["amr"],
+    id_token_signed_response_alg: "ES256",
+    id_token_encrypted_response_alg: "",
+    id_token_encrypted_response_enc: "",
+    userinfo_signed_response_alg: "ES256",
+    userinfo_encrypted_response_alg: "",
+    userinfo_encrypted_response_enc: "",
+    idpFilterExclude: false,
+    idpFilterList: ["77fe5e8c-364c-440e-909f-5ef4f494e170"],
+    identityConsent: false,
+    platform: "CORE_FCP",
+    rep_scope: [],
+    signup_id: "9992005",
   },
   "user dashboard": {
     name: "User Dashboard",
@@ -311,6 +363,7 @@ const fsp = {
     eidas: 1,
     platform: "CORE_FCP",
     rep_scope: [],
+    signup_id: "9992100",
   },
 };
 

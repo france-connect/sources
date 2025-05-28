@@ -55,7 +55,7 @@ describe('ServiceComponent', () => {
     expect(ServiceImageComponent).toHaveBeenCalledOnce();
     expect(ServiceImageComponent).toHaveBeenCalledWith(
       expect.objectContaining({ service: serviceMock }),
-      {},
+      undefined,
     );
   });
 
@@ -69,7 +69,7 @@ describe('ServiceComponent', () => {
     expect(ServiceImageComponent).toHaveBeenCalledOnce();
     expect(ServiceImageComponent).toHaveBeenCalledWith(
       expect.objectContaining({ disabled: true }),
-      {},
+      undefined,
     );
   });
 
@@ -85,7 +85,7 @@ describe('ServiceComponent', () => {
     expect(ServiceImageComponent).toHaveBeenCalledOnce();
     expect(ServiceImageComponent).toHaveBeenCalledWith(
       expect.objectContaining({ disabled: false }),
-      {},
+      undefined,
     );
   });
 
@@ -104,7 +104,7 @@ describe('ServiceComponent', () => {
         legend: { checked: 'Autorisé', unchecked: 'Bloqué' },
         name: 'idpList.any-uid',
       }),
-      {},
+      undefined,
     );
   });
 
@@ -128,7 +128,7 @@ describe('ServiceComponent', () => {
       expect(ServiceImageComponent).toHaveBeenCalledOnce();
       expect(ServiceImageComponent).toHaveBeenCalledWith(
         expect.objectContaining({ disabled: true }),
-        {},
+        undefined,
       );
     });
 
@@ -142,7 +142,7 @@ describe('ServiceComponent', () => {
         expect.objectContaining({
           disabled: true,
         }),
-        {},
+        undefined,
       );
     });
   });

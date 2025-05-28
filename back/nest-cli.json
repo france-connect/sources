@@ -263,9 +263,7 @@
       "sourceRoot": "instances/csmr-user-preferences-high/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-user-preferences-high/tsconfig.app.json",
-        "assets": [
-          "../../../instances/csmr-user-preferences-high/**/*.ejs"
-        ]
+        "assets": ["../../../instances/csmr-user-preferences-high/**/*.ejs"]
       }
     },
     "csmr-account-instance": {
@@ -284,9 +282,16 @@
       "sourceRoot": "instances/csmr-fraud-instance/src",
       "compilerOptions": {
         "tsConfigPath": "instances/csmr-fraud-instance/tsconfig.app.json",
-        "assets": [
-          "../../../instances/csmr-fraud-instance/**/*.ejs"
-        ]
+        "assets": ["../../../instances/csmr-fraud-instance/**/*.ejs"]
+      }
+    },
+    "csmr-import-core-instance": {
+      "type": "application",
+      "root": "instances/csmr-import-core-instance",
+      "entryFile": "main",
+      "sourceRoot": "instances/csmr-import-core-instance/src",
+      "compilerOptions": {
+        "tsConfigPath": "instances/csmr-import-core-instance/tsconfig.app.json"
       }
     },
     "rnipp": {
@@ -440,6 +445,15 @@
       "sourceRoot": "apps/csmr-hsm/src",
       "compilerOptions": {
         "tsConfigPath": "apps/csmr-hsm/tsconfig.lib.json"
+      }
+    },
+    "csmr-hsm-client": {
+      "type": "library",
+      "root": "libs/csmr-hsm-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/csmr-hsm-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csmr-hsm-client/tsconfig.lib.json"
       }
     },
     "csmr-tracks": {
@@ -802,6 +816,15 @@
         "tsConfigPath": "libs/csmr-fraud-client/tsconfig.lib.json"
       }
     },
+    "csmr-import-core-client": {
+      "type": "library",
+      "root": "libs/csmr-import-core-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/csmr-import-core-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csmr-import-core-client/tsconfig.lib.json"
+      }
+    },
     "csmr-tracks-instance": {
       "type": "application",
       "root": "instances/csmr-tracks-instance",
@@ -827,6 +850,15 @@
       "sourceRoot": "apps/csmr-fraud/src",
       "compilerOptions": {
         "tsConfigPath": "apps/csmr-fraud/tsconfig.lib.json"
+      }
+    },
+    "csmr-import-core": {
+      "type": "library",
+      "root": "apps/csmr-import-core",
+      "entryFile": "index",
+      "sourceRoot": "apps/csmr-import-core/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/csmr-import-core/tsconfig.lib.json"
       }
     },
     "roles": {
@@ -1047,6 +1079,24 @@
       "sourceRoot": "libs/csmr-config-client/src",
       "compilerOptions": {
         "tsConfigPath": "libs/csmr-config-client/tsconfig.lib.json"
+      }
+    },
+    "csmr-proxy-client": {
+      "type": "library",
+      "root": "libs/csmr-proxy-client",
+      "entryFile": "index",
+      "sourceRoot": "libs/csmr-proxy-client/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/csmr-proxy-client/tsconfig.lib.json"
+      }
+    },
+    "config-abstract-adapter": {
+      "type": "library",
+      "root": "libs/config-abstract-adapter",
+      "entryFile": "index",
+      "sourceRoot": "libs/config-abstract-adapter/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/config-abstract-adapter/tsconfig.lib.json"
       }
     },
     "config-mongo-adapter": {

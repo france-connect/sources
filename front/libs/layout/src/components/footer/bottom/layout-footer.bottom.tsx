@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { ConfigService } from '@fc/config';
+import { LinkComponent } from '@fc/dsfr';
 
 import { Options } from '../../../enums';
 import type { LayoutConfig } from '../../../interfaces';
@@ -14,13 +15,17 @@ export const LayoutFooterBottomComponent = React.memo(() => {
     <div className="fr-footer__bottom" data-testid="sticky-footer-fr-footer__bottom">
       {navigation && (
         <ul className="fr-footer__bottom-list">
-          {navigation.map(({ href, label, title }, index) => {
+          {navigation.map(({ external, href, label, title }, index) => {
             const uniqKey = `layout-footer-bottom-links::${index}`;
             return (
               <li key={uniqKey} className="fr-footer__bottom-item">
-                <a className="fr-footer__bottom-link" href={href} title={title}>
+                <LinkComponent
+                  className="fr-footer__bottom-link"
+                  external={external}
+                  href={href}
+                  title={title}>
                   {label}
-                </a>
+                </LinkComponent>
               </li>
             );
           })}
@@ -30,12 +35,11 @@ export const LayoutFooterBottomComponent = React.memo(() => {
         <div className="fr-footer__bottom-copy">
           <p>
             Sauf mention contraire, tous les contenus de ce site sont sous{' '}
-            <a
-              href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
-              rel="noreferrer"
-              target="_blank">
+            <LinkComponent
+              external
+              href="https://github.com/etalab/licence-ouverte/blob/master/LO.md">
               licence etalab-2.0
-            </a>
+            </LinkComponent>
           </p>
         </div>
       )}

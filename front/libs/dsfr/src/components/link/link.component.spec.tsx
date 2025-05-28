@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 import { IconPlacement } from '../../enums';
 import { LinkComponent } from './link.component';
@@ -19,7 +19,7 @@ describe('LinkComponent', () => {
         reloadDocument: false,
         to: 'any-url-mock',
       },
-      {},
+      undefined,
     );
   });
 
@@ -33,7 +33,8 @@ describe('LinkComponent', () => {
         icon="any-icon-mock"
         iconPlacement={IconPlacement.RIGHT}
         rel="noopener"
-        target="_blank">
+        target="_blank"
+        title="any-title-mock">
         any-label-mock
       </LinkComponent>,
     );
@@ -50,9 +51,30 @@ describe('LinkComponent', () => {
         rel: 'noopener',
         reloadDocument: true,
         target: '_blank',
+        title: 'any-title-mock',
         to: 'any-url-mock',
       },
-      {},
+      undefined,
+    );
+  });
+
+  it('should match the snapshot, when external is defined but no rel or target are defined', () => {
+    // When
+    const { container } = render(
+      <LinkComponent external href="any-url-mock">
+        any-label-mock
+      </LinkComponent>,
+    );
+
+    // Then
+    expect(container).toMatchSnapshot();
+    expect(Link).toHaveBeenCalledOnce();
+    expect(Link).toHaveBeenCalledWith(
+      expect.objectContaining({
+        rel: 'noopener noreferrer external',
+        target: '_blank',
+      }),
+      undefined,
     );
   });
 });

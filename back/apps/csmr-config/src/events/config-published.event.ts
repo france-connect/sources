@@ -1,5 +1,7 @@
-import { ConfigMessageDto } from '@fc/csmr-config-client';
+import { ConfigPublishedEventPropertiesInterface } from '../interfaces';
 
 export class ConfigPublishedEvent {
-  constructor(public readonly message: ConfigMessageDto) {}
+  constructor(
+    public readonly properties: ConfigPublishedEventPropertiesInterface,
+  ) {}
 }

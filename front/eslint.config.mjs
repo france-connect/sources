@@ -1,0 +1,63 @@
+import fcConfigReactApp from '@fc/eslint-config-react-app';
+
+// @NOTE Config file
+// eslint-disable-next-line import/no-default-export
+export default [
+  ...fcConfigReactApp,
+  {
+    files: ['**/*.d.ts'],
+    rules: { '@typescript-eslint/naming-convention': 0 },
+  },
+  {
+    files: ['**/*.spec.ts', '**/*.spec.tsx'],
+    rules: {
+      '@typescript-eslint/no-confusing-void-expression': 0,
+      '@typescript-eslint/no-floating-promises': 0,
+      '@typescript-eslint/no-invalid-void-type': 0,
+      '@typescript-eslint/no-non-null-assertion': 0,
+      '@typescript-eslint/no-unnecessary-type-arguments': 0,
+      '@typescript-eslint/no-unnecessary-type-assertion': 0,
+      '@typescript-eslint/no-unsafe-argument': 0,
+      '@typescript-eslint/no-unsafe-assignment': 0,
+      '@typescript-eslint/no-unsafe-call': 0,
+      '@typescript-eslint/no-unsafe-member-access': 0,
+      '@typescript-eslint/no-unsafe-return': 0,
+      '@typescript-eslint/unbound-method': 0,
+      'jest/max-expects': 0,
+      'jest/no-disabled-tests': 0,
+      'jest/no-hooks': 0,
+      'jest/no-untyped-mock-factory': 0,
+      'jest/prefer-called-with': 0,
+      'jest/prefer-strict-equal': 0,
+      'jest/require-hook': 0,
+      'jest/require-to-throw-message': 0,
+      'jest/unbound-method': 0,
+      'testing-library/no-container': 0,
+      'testing-library/no-node-access': 0,
+      'testing-library/no-wait-for-multiple-assertions': 0,
+    },
+  },
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      '@typescript-eslint/no-extraneous-class': 0,
+      '@typescript-eslint/no-floating-promises': 0,
+      '@typescript-eslint/no-invalid-void-type': 0,
+      '@typescript-eslint/no-misused-promises': 0,
+      '@typescript-eslint/no-mixed-enums': 0,
+      '@typescript-eslint/no-non-null-assertion': 0,
+      '@typescript-eslint/no-redundant-type-constituents': 0,
+      '@typescript-eslint/no-unnecessary-condition': 0,
+      '@typescript-eslint/no-unnecessary-type-arguments': 0,
+      '@typescript-eslint/no-unsafe-argument': 0,
+      '@typescript-eslint/no-unsafe-assignment': 0,
+      '@typescript-eslint/no-unsafe-call': 0,
+      '@typescript-eslint/no-unsafe-enum-comparison': 0,
+      '@typescript-eslint/no-unsafe-member-access': 0,
+      '@typescript-eslint/no-unsafe-return': 0,
+      '@typescript-eslint/prefer-reduce-type-parameter': 0,
+      '@typescript-eslint/require-await': 0,
+      '@typescript-eslint/restrict-template-expressions': 0,
+    },
+  },
+];

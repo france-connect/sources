@@ -1,4 +1,5 @@
 import classnames from 'classnames';
+import type { JSX } from 'react';
 import React from 'react';
 import type { FieldInputProps } from 'react-final-form';
 
@@ -12,10 +13,10 @@ interface ToggleComponentProps extends PropsWithClassName {
   // @SEE https://gouvfr.atlassian.net/wiki/spaces/DB/pages/217251933/Case+cocher+-+Checkbox
   disabled?: boolean;
   hint?: string;
-  // @NOTE la regle est desactivée car le type provient de la librairie react-final-form
+  // @NOTE The rule is disabled because the type comes from the react-final-form library
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   input: FieldInputProps<any, HTMLElement>;
-  label: string | Function;
+  label: string | ((v: boolean) => string | JSX.Element);
   onUpdate?: (v: boolean) => void;
   legend: CheckableLegendInterface | undefined;
 }

@@ -54,7 +54,7 @@ describe('ArrayField', () => {
         name: 'any-name-mock',
         required: true,
       },
-      {},
+      undefined,
     );
     expect(ArrayAddButton).toHaveBeenCalledOnce();
     expect(ArrayAddButton).toHaveBeenCalledWith(
@@ -63,7 +63,7 @@ describe('ArrayField', () => {
         disabled: false,
         onClick: pushHandlerMock,
       },
-      {},
+      undefined,
     );
   });
 });

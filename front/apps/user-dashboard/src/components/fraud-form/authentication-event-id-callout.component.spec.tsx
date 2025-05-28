@@ -31,7 +31,7 @@ describe('authenticationEventIdCallout', () => {
         rel: 'noopener noreferrer',
         target: '_blank',
       },
-      {},
+      undefined,
     );
   });
 });
