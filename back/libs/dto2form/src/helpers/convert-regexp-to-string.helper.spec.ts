@@ -22,7 +22,7 @@ describe('convertRegExpToStrings', () => {
   it('should return validator with complex regExp transform into string', () => {
     // Given
     const validationArgsMock = [
-      /^[A-Za-zÀ-žØ-öø-ÿ0-9\s,.:!\(\)_'\-\u0026-\u002f]+$/,
+      /^[A-Za-zÀ-ÿ0-9\s,.:!\(\)_'\-\u0026-\u002f]+$/,
     ];
 
     const expected = [
